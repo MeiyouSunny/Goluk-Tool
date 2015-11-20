@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 @SuppressLint("InflateParams")
-public class LocalVideoListView implements OnClickListener{
+public class LocalVideoListView implements OnClickListener {
 	private View mRootLayout = null;
 	private Context mContext = null;
 	private TextView mWonderfulText = null;
@@ -24,7 +24,7 @@ public class LocalVideoListView implements OnClickListener{
 	private ImageView mWonderfulLine = null;
 	private ImageView mEmergencyLine = null;
 	private ImageView mLoopLine = null;
-	
+
 	private CustomViewPager mViewPager = null;
 	private LocalVideoAdapter mLocalVideoAdapter = null;
 	private LinearLayout functionLayout = null;
@@ -39,53 +39,53 @@ public class LocalVideoListView implements OnClickListener{
 		mRootLayout = LayoutInflater.from(context).inflate(R.layout.local_video_layout, null, false);
 		initView();
 	}
-	
+
 	private void initView() {
-		functionLayout = (LinearLayout)mRootLayout.findViewById(R.id.functionLayout);
-		mWonderfulText = (TextView)mRootLayout.findViewById(R.id.mWonderfulText);
-		mEmergencyText = (TextView)mRootLayout.findViewById(R.id.mEmergencyText);
-		mLoopText = (TextView)mRootLayout.findViewById(R.id.mLoopText);
-		mWonderfulLine = (ImageView)mRootLayout.findViewById(R.id.mWonderfulLine);
-		mEmergencyLine = (ImageView)mRootLayout.findViewById(R.id.mEmergencyLine);
-		mLoopLine = (ImageView)mRootLayout.findViewById(R.id.mLoopLine);
-		
-		mViewPager = (CustomViewPager)mRootLayout.findViewById(R.id.mViewPager);
+		functionLayout = (LinearLayout) mRootLayout.findViewById(R.id.functionLayout);
+		mWonderfulText = (TextView) mRootLayout.findViewById(R.id.mWonderfulText);
+		mEmergencyText = (TextView) mRootLayout.findViewById(R.id.mEmergencyText);
+		mLoopText = (TextView) mRootLayout.findViewById(R.id.mLoopText);
+		mWonderfulLine = (ImageView) mRootLayout.findViewById(R.id.mWonderfulLine);
+		mEmergencyLine = (ImageView) mRootLayout.findViewById(R.id.mEmergencyLine);
+		mLoopLine = (ImageView) mRootLayout.findViewById(R.id.mLoopLine);
+
+		mViewPager = (CustomViewPager) mRootLayout.findViewById(R.id.mViewPager);
 		mViewPager.setOffscreenPageLimit(3);
 		mLocalVideoAdapter = new LocalVideoAdapter(mContext, from, mPromotionSelectItem);
 		mViewPager.setAdapter(mLocalVideoAdapter);
-		
+
 		setListener();
 	}
-	
+
 	private void setListener() {
 		mRootLayout.findViewById(R.id.mWonderfulVideo).setOnClickListener(this);
 		mRootLayout.findViewById(R.id.mEmergencyVideo).setOnClickListener(this);
 		mRootLayout.findViewById(R.id.mLoopVideo).setOnClickListener(this);
 		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
-			
+
 			@Override
 			public void onPageSelected(int arg0) {
-				if(0 == arg0) {
+				if (0 == arg0) {
 					updateTableState(R.id.mWonderfulVideo);
-				}else if(1 == arg0) {
+				} else if (1 == arg0) {
 					updateTableState(R.id.mEmergencyVideo);
-				}else {
+				} else {
 					updateTableState(R.id.mLoopVideo);
 				}
 			}
-				
+
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				
+
 			}
-				
+
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
-				
+
 			}
 		});
 	}
-	
+
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
@@ -106,7 +106,7 @@ public class LocalVideoListView implements OnClickListener{
 			break;
 		}
 	}
-	
+
 	private void updateTableState(int id) {
 		curTableState = id;
 		mWonderfulText.setTextColor(mContext.getResources().getColor(R.color.photoalbum_title_bg_color));
@@ -118,7 +118,7 @@ public class LocalVideoListView implements OnClickListener{
 		mWonderfulLine.setVisibility(View.INVISIBLE);
 		mEmergencyLine.setVisibility(View.INVISIBLE);
 		mLoopLine.setVisibility(View.INVISIBLE);
-		
+
 		switch (id) {
 		case R.id.mWonderfulVideo:
 			mWonderfulText.setTextColor(mContext.getResources().getColor(R.color.photoalbum_text_color));
@@ -140,15 +140,15 @@ public class LocalVideoListView implements OnClickListener{
 			break;
 		}
 	}
-	
+
 	public View getRootView() {
 		return mRootLayout;
 	}
-	
+
 	public void show() {
 		mRootLayout.setVisibility(View.VISIBLE);
 	}
-	
+
 	public void hide() {
 		mRootLayout.setVisibility(View.GONE);
 	}
@@ -158,17 +158,17 @@ public class LocalVideoListView implements OnClickListener{
 		functionLayout.setVisibility(View.GONE);
 		mLocalVideoAdapter.flush(getType());
 	}
-	
+
 	public void showTopLayout() {
 		mViewPager.setCanScroll(true);
 		functionLayout.setVisibility(View.VISIBLE);
 	}
-	
+
 	public void deleteDataFlush(List<String> deleteData) {
 		mLocalVideoAdapter.deleteDataFlush(getType(), deleteData);
 	}
-	
-	private int getType(){
+
+	private int getType() {
 		int type = 0;
 		switch (curTableState) {
 		case R.id.mWonderfulVideo:
@@ -186,21 +186,21 @@ public class LocalVideoListView implements OnClickListener{
 		}
 		return type;
 	}
-	
+
 	public void updateData(String filename) {
 		if (filename.contains("WND")) {
 			mLocalVideoAdapter.updateData(0);
-		}else if (filename.contains("URG")) {
+		} else if (filename.contains("URG")) {
 			mLocalVideoAdapter.updateData(1);
-		}else if (filename.contains("NRM")) {
+		} else if (filename.contains("NRM")) {
 			mLocalVideoAdapter.updateData(2);
 		}
 	}
-	
+
 	public void onResume() {
-		if(null != mLocalVideoAdapter) {
+		if (null != mLocalVideoAdapter) {
 			mLocalVideoAdapter.onResume();
 		}
 	}
-	
+
 }

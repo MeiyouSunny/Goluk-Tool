@@ -6,8 +6,6 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.LruCache;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -60,9 +58,8 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	private ImageView mDeleteIcon = null;
 	public static final int UPDATELOGINSTATE = -1;
 	public static final int UPDATEDATE = -2;
-//	private Handler mHandler = null;
-	
-	/**活动分享*/
+
+	/** 活动分享 */
 	public static final String ACTIVITY_INFO = "activityinfo";
 	private PromotionSelectItem mPromotionSelectItem;
 
@@ -80,27 +77,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 		}
 		selectedListData = new ArrayList<String>();
 		initView();
-
 		mIsExit = false;
-
-//		mHandler = new Handler() {
-//			@Override
-//			public void handleMessage(Message msg) {
-//				switch (msg.what) {
-//				case UPDATELOGINSTATE:
-//					updateLinkState();
-//					break;
-//				case UPDATEDATE:
-//					if (null != mLocalVideoListView) {
-//						String filename = (String) msg.obj;
-//						mLocalVideoListView.updateData(filename);
-//					}
-//					break;
-//				}
-//
-//				super.handleMessage(msg);
-//			}
-//		};
 		EventBus.getDefault().register(this);
 	}
 
@@ -181,10 +158,6 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 
 	private void updateBtnState(int id) {
 		this.curId = id;
-//		if (null == mLocalVideoListView) {
-//			mLocalVideoListView = new LocalVideoListView(this, from);
-//			mMainLayout.addView(mLocalVideoListView.getRootView());
-//		}
 		switch (id) {
 		case R.id.mLocalVideoBtn:
 			mLocalIcon.setBackgroundResource(R.drawable.my_video_press);
@@ -203,7 +176,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 			mLocalVideoListView.show();
 			if (null != mCloudVideoListView) {
 				mMainLayout.removeView(mCloudVideoListView.getRootView());
-//				mCloudVideoListView.hide();
+				// mCloudVideoListView.hide();
 				mCloudVideoListView = null;
 				System.gc();
 			}
@@ -218,9 +191,9 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 				mCloudVideoListView = new CloudVideoListView(this);
 				mMainLayout.addView(mCloudVideoListView.getRootView());
 			}
-//			mLocalVideoListView.hide();
+			// mLocalVideoListView.hide();
 			mCloudVideoListView.show();
-			if(null != mLocalVideoListView) {
+			if (null != mLocalVideoListView) {
 				mMainLayout.removeView(mLocalVideoListView.getRootView());
 				mLocalVideoListView = null;
 				System.gc();
@@ -237,15 +210,15 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	}
 
 	public void onEventMainThread(EventPhotoUpdateDate event) {
-		if(null == event) {
+		if (null == event) {
 			return;
 		}
 
-		switch(event.getOpCode()) {
+		switch (event.getOpCode()) {
 		case EventConfig.PHOTO_ALBUM_UPDATE_DATE:
 			if (null != mLocalVideoListView) {
 				String filename = event.getMsg();
-				if(null != filename && !filename.equals("")) {
+				if (null != filename && !filename.equals("")) {
 					mLocalVideoListView.updateData(filename);
 				}
 			}
@@ -256,11 +229,11 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	}
 
 	public void onEventMainThread(EventPhotoUpdateLoginState event) {
-		if(null == event) {
+		if (null == event) {
 			return;
 		}
 
-		switch(event.getOpCode()) {
+		switch (event.getOpCode()) {
 		case EventConfig.PHOTO_ALBUM_UPDATE_LOGIN_STATE:
 			updateLinkState();
 			break;
@@ -386,6 +359,24 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 		return selectedListData;
 	}
 
+	/**
+	 * 设置“编辑”按钮显示与隐藏, 在没数据时隐藏，有数据时显示
+	 * 
+	 * @param isShow
+	 *            true/false 显示/隐藏
+	 * @author jyf
+	 */
+	public void setEditBtnState(boolean isShow) {
+		if (null == mEditBtn) {
+			return;
+		}
+		if (isShow) {
+			mEditBtn.setVisibility(View.VISIBLE);
+		} else {
+			mEditBtn.setVisibility(View.GONE);
+		}
+	}
+
 	private void updateEditState() {
 		if (editState) {
 			resetEditState();
@@ -485,11 +476,6 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	@Override
 	protected void onDestroy() {
 		exit();
-//		if(null != mHandler) {
-//			mHandler.removeMessages(UPDATELOGINSTATE);
-//			mHandler.removeMessages(UPDATEDATE);
-//			mHandler = null;
-//		}
 		if (null != mLruCache) {
 			mLruCache.evictAll();
 		}
