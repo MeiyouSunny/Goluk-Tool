@@ -93,7 +93,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	/** 是否允许评论 **/
 	public static final String VIDEO_ISCAN_COMMENT = "iscan_input";
 	private boolean isCanInput = true;
-	private VideoDetailAdapter mAdapter = null;
+	public VideoDetailAdapter mAdapter = null;
 	/** 保存列表一个显示项索引 */
 	private int detailFirstVisible;
 	/** 保存列表显示item个数 */
@@ -270,7 +270,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 					return;
 				}
 			}
-			new DetailDialog(this, mVideoJson.data.avideo.video.videoid).show();
+			new DetailDialog(this, mVideoJson).show();
 			break;
 		case R.id.comment_send:
 			if (!UserUtils.isNetDeviceAvailable(this)) {
@@ -491,7 +491,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 				if (null != mVideoJson && mVideoJson.success) {
 					mRTPullListView.setVisibility(View.VISIBLE);
-					//mCommentLayout.setVisibility(View.VISIBLE);
 					mImageRefresh.setVisibility(View.GONE);
 
 					isClick = true;
@@ -529,7 +528,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private void permitInput() {
 		if (!isCanInput) {
 			mCommentLayout.setVisibility(View.GONE);
-			//mAdapter.closeComment();
 		} else {
 			mCommentLayout.setVisibility(View.VISIBLE);
 		}
@@ -569,7 +567,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			GolukDebugUtils.e("", "----CommentActivity----msg:" + msg + "  param1:" + param1 + "  param2:" + param2);
 
 			updateRefreshTime();
-//			noData(false);
 
 			if (OPERATOR_FIRST == mCurrentOperator) {
 				// 首次进入
@@ -690,11 +687,10 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 			CommentBean bean = JsonUtil.parseAddCommentData(obj.getJSONObject("data"));
 			if (null != bean) {
-//				noData(false);
-				removeFooterView();
 				bean.mCommentTime = GolukUtils.getCurrentCommentTime();
 				if(!"".equals(bean.result)) {
 					if("0".equals(bean.result)) {//成功
+						removeFooterView();
 						this.mAdapter.addFirstData(bean);
 						mEditInput.setText("");
 						switchSendState(false);
@@ -740,7 +736,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				mAdapter.deleteData(mWillDelBean);
 				GolukUtils.showToast(this, "删除成功");
 
-//				noData(mAdapter.getCount() <= 1);
 				if(mAdapter.getCount() <= 1) {
 					addFooterView();
 				} else {
@@ -827,7 +822,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			removeFoot();
 		}
 
-		noData(mAdapter.getCount() <= 0);
 	}
 
 	private void noDataDeal() {
@@ -838,14 +832,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			mRTPullListView.onRefreshComplete(getLastRefreshTime());
 		}
 
-		noData(mAdapter.getCount() <= 0);
-	}
-
-	// 是否显示无数据提示
-	private void noData(boolean isno) {
-		if (isno) {
-			mAdapter.commentNoData();
-		}
 	}
 
 	@Override
