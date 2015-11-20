@@ -2,8 +2,6 @@ package cn.com.mobnote.golukmobile.photoalbum;
 
 import java.util.List;
 
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -13,6 +11,10 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 @SuppressLint("InflateParams")
 public class LocalVideoListView implements OnClickListener {
@@ -26,8 +28,9 @@ public class LocalVideoListView implements OnClickListener {
 	private ImageView mLoopLine = null;
 
 	private CustomViewPager mViewPager = null;
-	private LocalVideoAdapter mLocalVideoAdapter = null;
+	private LocalPagerAdapter mLocalVideoAdapter = null;
 	private LinearLayout functionLayout = null;
+	/** 当前选中的标签 */
 	private int curTableState = -1;
 	private String from = null;
 	private PromotionSelectItem mPromotionSelectItem;
@@ -51,7 +54,8 @@ public class LocalVideoListView implements OnClickListener {
 
 		mViewPager = (CustomViewPager) mRootLayout.findViewById(R.id.mViewPager);
 		mViewPager.setOffscreenPageLimit(3);
-		mLocalVideoAdapter = new LocalVideoAdapter(mContext, from, mPromotionSelectItem);
+		curTableState = R.id.mWonderfulVideo;
+		mLocalVideoAdapter = new LocalPagerAdapter(mContext, this, from, mPromotionSelectItem);
 		mViewPager.setAdapter(mLocalVideoAdapter);
 
 		setListener();
@@ -107,6 +111,20 @@ public class LocalVideoListView implements OnClickListener {
 		}
 	}
 
+	private boolean isHasData() {
+		switch (this.getType()) {
+		case IPCManagerFn.TYPE_SHORTCUT:
+			return mLocalVideoAdapter.isWonderfulHasData();
+		case IPCManagerFn.TYPE_URGENT:
+			return mLocalVideoAdapter.isEmergencyHasData();
+		case IPCManagerFn.TYPE_CIRCULATE:
+			return mLocalVideoAdapter.isLoopHasData();
+		default:
+			break;
+		}
+		return false;
+	}
+
 	private void updateTableState(int id) {
 		curTableState = id;
 		mWonderfulText.setTextColor(mContext.getResources().getColor(R.color.photoalbum_title_bg_color));
@@ -118,6 +136,8 @@ public class LocalVideoListView implements OnClickListener {
 		mWonderfulLine.setVisibility(View.INVISIBLE);
 		mEmergencyLine.setVisibility(View.INVISIBLE);
 		mLoopLine.setVisibility(View.INVISIBLE);
+
+		updateEdit(getType(), isHasData());
 
 		switch (id) {
 		case R.id.mWonderfulVideo:
@@ -139,6 +159,28 @@ public class LocalVideoListView implements OnClickListener {
 		default:
 			break;
 		}
+	}
+	
+	public void updateEdit() {
+		updateEdit(getType(), isHasData());
+	}
+
+	public void updateEdit(int type, boolean isHasData) {
+		GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit11: " + isHasData);
+		if (null == mContext || !(mContext instanceof PhotoAlbumActivity)) {
+			return;
+		}
+		GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit22: ");
+		if (!((PhotoAlbumActivity) mContext).isLocalSelect()) {
+			return;
+		}
+		GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit33: ");
+		if (type != getType()) {
+			return;
+		}
+		GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit44: ");
+		((PhotoAlbumActivity) mContext).setEditBtnState(isHasData);
+
 	}
 
 	public View getRootView() {
@@ -172,13 +214,13 @@ public class LocalVideoListView implements OnClickListener {
 		int type = 0;
 		switch (curTableState) {
 		case R.id.mWonderfulVideo:
-			type = 0;
+			type = IPCManagerFn.TYPE_SHORTCUT;
 			break;
 		case R.id.mEmergencyVideo:
-			type = 1;
+			type = IPCManagerFn.TYPE_URGENT;
 			break;
 		case R.id.mLoopVideo:
-			type = 2;
+			type = IPCManagerFn.TYPE_CIRCULATE;
 			break;
 
 		default:

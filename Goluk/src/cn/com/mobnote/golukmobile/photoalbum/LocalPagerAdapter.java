@@ -9,16 +9,19 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class LocalVideoAdapter extends PagerAdapter {
+public class LocalPagerAdapter extends PagerAdapter {
 	private Context mContext = null;
-	private WonderfulVideoListView mWonderfulVideoLiseView = null;
-	private WonderfulVideoListView mEmergencyVideoLiseView = null;
-	private WonderfulVideoListView mLoopVideoLiseView = null;
+	private LocalVideoListView mLocalVideoListView = null;
+
+	private LocalWonderfulVideoListView mWonderfulVideoLiseView = null;
+	private LocalWonderfulVideoListView mEmergencyVideoLiseView = null;
+	private LocalWonderfulVideoListView mLoopVideoLiseView = null;
 	private String from = null;
 	private PromotionSelectItem mPromotionSelectItem;
 
-	public LocalVideoAdapter(Context c, String from, PromotionSelectItem item) {
+	public LocalPagerAdapter(Context c, LocalVideoListView localVideoListView, String from, PromotionSelectItem item) {
 		this.mContext = c;
+		mLocalVideoListView = localVideoListView;
 		this.from = from;
 		mPromotionSelectItem = item;
 	}
@@ -26,21 +29,42 @@ public class LocalVideoAdapter extends PagerAdapter {
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		if (0 == position) {
-			mWonderfulVideoLiseView = new WonderfulVideoListView(mContext, IPCManagerFn.TYPE_SHORTCUT, from,
-					mPromotionSelectItem);
+			mWonderfulVideoLiseView = new LocalWonderfulVideoListView(mContext, mLocalVideoListView,
+					IPCManagerFn.TYPE_SHORTCUT, from, mPromotionSelectItem);
 			container.addView(mWonderfulVideoLiseView.getRootView());
 			return mWonderfulVideoLiseView.getRootView();
 		} else if (1 == position) {
-			mEmergencyVideoLiseView = new WonderfulVideoListView(mContext, IPCManagerFn.TYPE_URGENT, from,
-					mPromotionSelectItem);
+			mEmergencyVideoLiseView = new LocalWonderfulVideoListView(mContext, mLocalVideoListView,
+					IPCManagerFn.TYPE_URGENT, from, mPromotionSelectItem);
 			container.addView(mEmergencyVideoLiseView.getRootView());
 			return mEmergencyVideoLiseView.getRootView();
 		} else {
-			mLoopVideoLiseView = new WonderfulVideoListView(mContext, IPCManagerFn.TYPE_CIRCULATE, from,
-					mPromotionSelectItem);
+			mLoopVideoLiseView = new LocalWonderfulVideoListView(mContext, mLocalVideoListView, IPCManagerFn.TYPE_CIRCULATE,
+					from, mPromotionSelectItem);
 			container.addView(mLoopVideoLiseView.getRootView());
 			return mLoopVideoLiseView.getRootView();
 		}
+	}
+
+	public boolean isWonderfulHasData() {
+		if (null == mWonderfulVideoLiseView) {
+			return false;
+		}
+		return mWonderfulVideoLiseView.isHasData();
+	}
+
+	public boolean isEmergencyHasData() {
+		if (null == mEmergencyVideoLiseView) {
+			return false;
+		}
+		return mEmergencyVideoLiseView.isHasData();
+	}
+
+	public boolean isLoopHasData() {
+		if (null == mLoopVideoLiseView) {
+			return false;
+		}
+		return mLoopVideoLiseView.isHasData();
 	}
 
 	@Override
@@ -65,9 +89,9 @@ public class LocalVideoAdapter extends PagerAdapter {
 	}
 
 	public void flush(int type) {
-		if (0 == type) {
+		if (IPCManagerFn.TYPE_SHORTCUT == type) {
 			mWonderfulVideoLiseView.flushList();
-		} else if (1 == type) {
+		} else if (IPCManagerFn.TYPE_URGENT == type) {
 			mEmergencyVideoLiseView.flushList();
 		} else {
 			mLoopVideoLiseView.flushList();
@@ -75,9 +99,9 @@ public class LocalVideoAdapter extends PagerAdapter {
 	}
 
 	public void deleteDataFlush(int type, List<String> deleteData) {
-		if (0 == type) {
+		if (IPCManagerFn.TYPE_SHORTCUT == type) {
 			mWonderfulVideoLiseView.deleteListData(deleteData);
-		} else if (1 == type) {
+		} else if (IPCManagerFn.TYPE_URGENT == type) {
 			mEmergencyVideoLiseView.deleteListData(deleteData);
 		} else {
 			mLoopVideoLiseView.deleteListData(deleteData);

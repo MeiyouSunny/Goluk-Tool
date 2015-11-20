@@ -13,11 +13,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.AbsListView;
-import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
@@ -30,22 +30,25 @@ import cn.com.mobnote.golukmobile.player.VitamioPlayerActivity;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 @SuppressLint("InflateParams")
-public class WonderfulVideoListView {
+public class LocalWonderfulVideoListView {
 	private View mRootLayout = null;
 	private Context mContext = null;
+	private LocalVideoListView mLocalVideoListView = null;
 	private PhotoAlbumActivity mActivity = null;
 	private StickyListHeadersListView mStickyListHeadersListView = null;
-	private WonderfulVideoAdapter mWonderfulVideoAdapter = null;
+	private LocalWonderfulVideoAdapter mWonderfulVideoAdapter = null;
 	private List<VideoInfo> mDataList = null;
 	private List<DoubleVideoInfo> mDoubleDataList = null;
 	/** 保存屏幕点击横坐标点 */
 	private float screenX = 0;
 	private int screenWidth = 0;
-	private int type;
+	/** 视频类型，精彩/紧急/循环 */
+	private int mVideoType;
 	private CustomLoadingDialog mCustomProgressDialog = null;
 	private String from = null;
 	private TextView empty = null;
@@ -53,11 +56,13 @@ public class WonderfulVideoListView {
 	private boolean clickLock = false;
 	private PromotionSelectItem mPromotionSelectItem;
 
-	public WonderfulVideoListView(Context context, int type, String from, PromotionSelectItem item) {
+	public LocalWonderfulVideoListView(Context context, LocalVideoListView localVideoListView, int type, String from,
+			PromotionSelectItem item) {
 		this.from = from;
 		this.mContext = context;
+		mLocalVideoListView = localVideoListView;
 		this.mActivity = (PhotoAlbumActivity) context;
-		this.type = type;
+		this.mVideoType = type;
 		this.mDataList = new ArrayList<VideoInfo>();
 		this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
 		this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
@@ -72,8 +77,8 @@ public class WonderfulVideoListView {
 		mCustomProgressDialog = new CustomLoadingDialog(mActivity, null);
 		mStickyListHeadersListView = (StickyListHeadersListView) mRootLayout
 				.findViewById(R.id.mStickyListHeadersListView);
-		mWonderfulVideoAdapter = new WonderfulVideoAdapter(mContext, mStickyListHeadersListView, type, from);
-		loadData(type, true);
+		mWonderfulVideoAdapter = new LocalWonderfulVideoAdapter(mContext, mStickyListHeadersListView, mVideoType, from);
+		loadData(mVideoType, true);
 		setListener();
 	}
 
@@ -138,7 +143,7 @@ public class WonderfulVideoListView {
 						if ((screenX > 0) && (screenX < (screenWidth / 2))) {
 							// 点击列表左边项,跳转到视频播放页面
 							VideoInfo info1 = d.getVideoInfo1();
-							gotoVideoPlayPage(type, info1.videoPath);
+							gotoVideoPlayPage(mVideoType, info1.videoPath);
 							String filename = d.getVideoInfo1().filename;
 							updateNewState(filename);
 
@@ -149,7 +154,7 @@ public class WonderfulVideoListView {
 							VideoInfo info2 = d.getVideoInfo2();
 							if (null == info2)
 								return;
-							gotoVideoPlayPage(type, info2.videoPath);
+							gotoVideoPlayPage(mVideoType, info2.videoPath);
 							String filename = info2.filename;
 							updateNewState(filename);
 
@@ -276,8 +281,16 @@ public class WonderfulVideoListView {
 		task.execute("");
 	}
 
+	public boolean isHasData() {
+		if (mDataList.size() <= 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 	public void updateData() {
-		loadData(type, false);
+		loadData(mVideoType, false);
 	}
 
 	public View getRootView() {
@@ -329,13 +342,24 @@ public class WonderfulVideoListView {
 	}
 
 	private void checkListState() {
+		GolukDebugUtils.e("", "Album------WondowvideoListView------checkListState");
 		if (mDataList.size() <= 0) {
 			empty.setVisibility(View.VISIBLE);
 			mStickyListHeadersListView.setVisibility(View.GONE);
+			updateEditState(false);
 		} else {
+			updateEditState(true);
 			empty.setVisibility(View.GONE);
 			mStickyListHeadersListView.setVisibility(View.VISIBLE);
 		}
+	}
+
+	private void updateEditState(boolean isHasData) {
+		GolukDebugUtils.e("", "Album------WondowvideoListView------updateEditState" + isHasData);
+		if (null == mLocalVideoListView) {
+			return;
+		}
+		mLocalVideoListView.updateEdit(mVideoType, isHasData);
 	}
 
 	public synchronized boolean getClickLock() {

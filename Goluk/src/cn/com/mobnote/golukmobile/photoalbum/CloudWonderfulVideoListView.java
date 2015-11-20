@@ -44,6 +44,7 @@ import android.widget.RelativeLayout;
 public class CloudWonderfulVideoListView implements IPCManagerFn {
 	private View mRootLayout = null;
 	private Context mContext = null;
+	private CloudVideoListView mCloudVideoListView = null;
 	private PhotoAlbumActivity mActivity = null;
 	private StickyListHeadersListView mStickyListHeadersListView = null;
 	private CloudWonderfulVideoAdapter mCloudWonderfulVideoAdapter = null;
@@ -77,11 +78,12 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 	/** 判断服务端是否还有数据 */
 	private boolean isHasData = true;
 
-	public CloudWonderfulVideoListView(Context context, int type) {
+	public CloudWonderfulVideoListView(Context context, CloudVideoListView cloudVideoListView, int type) {
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + type, this);
 		}
 		this.mContext = context;
+		mCloudVideoListView = cloudVideoListView;
 		this.mCurrentType = type;
 		this.mActivity = (PhotoAlbumActivity) context;
 		this.mDataList = new ArrayList<VideoInfo>();
@@ -452,10 +454,28 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 		if (mDataList.size() <= 0) {
 			empty.setVisibility(View.VISIBLE);
 			mStickyListHeadersListView.setVisibility(View.GONE);
+			updateEditState(false);
 		} else {
 			empty.setVisibility(View.GONE);
 			mStickyListHeadersListView.setVisibility(View.VISIBLE);
+			updateEditState(true);
 		}
+	}
+	
+	public boolean isHasData() {
+		if (mDataList.size() <= 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	private void updateEditState(boolean isHasData) {
+		GolukDebugUtils.e("", "Album------WondowvideoListView------updateEditState" + isHasData);
+		if (null == mCloudVideoListView) {
+			return;
+		}
+		mCloudVideoListView.updateEdit(mCurrentType, isHasData);
 	}
 
 	@Override

@@ -35,6 +35,9 @@ import de.greenrobot.event.EventBus;
 
 @SuppressLint("HandlerLeak")
 public class PhotoAlbumActivity extends BaseActivity implements OnClickListener {
+	public static final int UPDATELOGINSTATE = -1;
+	public static final int UPDATEDATE = -2;
+
 	private TextView mTitleName = null;
 	private Button mEditBtn = null;
 	private ImageView mCloudIcon = null;
@@ -48,6 +51,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	private boolean editState = false;
 	/** 图片缓存cache */
 	private LruCache<String, Bitmap> mLruCache = null;
+	/** 表示当前选中的状态，本地 和 行车记录仪视频 */
 	private int curId = -1;
 	private RelativeLayout bottomLayout = null;
 	private ImageButton mBackBtn = null;
@@ -56,8 +60,6 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	private List<String> selectedListData = null;
 	private ImageView mDownLoadIcon = null;
 	private ImageView mDeleteIcon = null;
-	public static final int UPDATELOGINSTATE = -1;
-	public static final int UPDATEDATE = -2;
 
 	/** 活动分享 */
 	public static final String ACTIVITY_INFO = "activityinfo";
@@ -76,7 +78,9 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 			mPromotionSelectItem = (PromotionSelectItem) savedInstanceState.getSerializable(ACTIVITY_INFO);
 		}
 		selectedListData = new ArrayList<String>();
+		initCache();
 		initView();
+		setListener();
 		mIsExit = false;
 		EventBus.getDefault().register(this);
 	}
@@ -114,7 +118,6 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	}
 
 	private void initView() {
-		initCache();
 		bottomLayout = (RelativeLayout) findViewById(R.id.bottomLayout);
 		mEditLayout = (RelativeLayout) findViewById(R.id.mEditLayout);
 		mDownLoadBtn = (LinearLayout) findViewById(R.id.mDownLoadBtn);
@@ -128,11 +131,16 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 		mLocalText = (TextView) findViewById(R.id.mLocalText);
 		mDownLoadIcon = (ImageView) findViewById(R.id.mDownLoadIcon);
 		mDeleteIcon = (ImageView) findViewById(R.id.mDeleteIcon);
-
+		setEditBtnState(false);
 		updateBtnState(R.id.mLocalVideoBtn);
 		updateLinkState();
+	}
 
-		setListener();
+	public boolean isLocalSelect() {
+		if (curId == R.id.mLocalVideoBtn) {
+			return true;
+		}
+		return false;
 	}
 
 	private void updateLinkState() {
@@ -153,7 +161,6 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 		findViewById(R.id.mCloudVideoBtn).setOnClickListener(this);
 		findViewById(R.id.mDownLoadBtn).setOnClickListener(this);
 		findViewById(R.id.mDeleteBtn).setOnClickListener(this);
-
 	}
 
 	private void updateBtnState(int id) {
@@ -174,9 +181,9 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 				mMainLayout.addView(mLocalVideoListView.getRootView());
 			}
 			mLocalVideoListView.show();
+			mLocalVideoListView.updateEdit();
 			if (null != mCloudVideoListView) {
 				mMainLayout.removeView(mCloudVideoListView.getRootView());
-				// mCloudVideoListView.hide();
 				mCloudVideoListView = null;
 				System.gc();
 			}
@@ -191,8 +198,8 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 				mCloudVideoListView = new CloudVideoListView(this);
 				mMainLayout.addView(mCloudVideoListView.getRootView());
 			}
-			// mLocalVideoListView.hide();
 			mCloudVideoListView.show();
+			mCloudVideoListView.updateEdit();
 			if (null != mLocalVideoListView) {
 				mMainLayout.removeView(mLocalVideoListView.getRootView());
 				mLocalVideoListView = null;
