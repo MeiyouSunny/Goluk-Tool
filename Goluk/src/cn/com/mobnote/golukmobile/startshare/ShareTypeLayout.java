@@ -35,7 +35,7 @@ import cn.com.mobnote.golukmobile.promotion.PromotionData;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.map.LngLat;
 import cn.com.mobnote.user.UserUtils;
-import cn.com.mobnote.util.FileUtils;
+import cn.com.mobnote.util.GolukFileUtils;
 import cn.com.mobnote.util.GolukUtils;
 
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
@@ -110,7 +110,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		mLayoutFlater = LayoutInflater.from(mContext);
 		mRootLayout = (RelativeLayout) mLayoutFlater.inflate(R.layout.shareselecttype, null);
 		mPromotionSelectItem = item;
-		bPopup = FileUtils.loadBoolean(FileUtils.SHOW_PROMOTION_POPUP_FLAG, true);
+		bPopup = GolukFileUtils.loadBoolean(GolukFileUtils.SHOW_PROMOTION_POPUP_FLAG, true);
 		loadRes();
 		initView();
 		initData();
@@ -287,7 +287,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			}
 			if (bShowNew) {
 				bShowNew = false;
-				FileUtils.saveString(FileUtils.PROMOTION_LIST_STRING, mMd5String);
+				GolukFileUtils.saveString(GolukFileUtils.PROMOTION_LIST_STRING, mMd5String);
 				refreshPromotionUI(mPromotionSelectItem);
 			}
 			Intent intent = new Intent(mContext, PromotionActivity.class);
@@ -451,7 +451,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		mPopupWindow.showAtLocation(mPromotionTextView, Gravity.NO_GRAVITY,
 				location[0] - offset, location[1] - popHeight);
 		bPopup = false;
-		FileUtils.saveBoolean(FileUtils.SHOW_PROMOTION_POPUP_FLAG, false);
+		GolukFileUtils.saveBoolean(GolukFileUtils.SHOW_PROMOTION_POPUP_FLAG, false);
 	}
 	
 	public void refreshPromotionUI(PromotionSelectItem item) {
@@ -519,7 +519,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		  }
 		}
 
-		mMd5String = FileUtils.loadString(FileUtils.PROMOTION_LIST_STRING, "");
+		mMd5String = GolukFileUtils.loadString(GolukFileUtils.PROMOTION_LIST_STRING, "");
 		if (TextUtils.isEmpty(mMd5String) || !mMd5String.equalsIgnoreCase(md5)) {
 			bShowNew = true;
 			refreshPromotionUI(mPromotionSelectItem);
