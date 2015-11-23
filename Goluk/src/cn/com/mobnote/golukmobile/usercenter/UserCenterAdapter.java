@@ -398,7 +398,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			}
 
 			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber);
-			holder.weiguan.setText(clusterInfo.mVideoEntity.clicknumber + " 围观");
+			holder.weiguan.setText(clusterInfo.mVideoEntity.clicknumber);
 
 			int count = Integer.parseInt(clusterInfo.mVideoEntity.comcount);
 			holder.totalcomments.setText("查看所有" + clusterInfo.mVideoEntity.comcount + "条评论");
@@ -412,8 +412,10 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			initListener(holder, index_v);
 			// 没点过
 			if ("0".equals(clusterInfo.mVideoEntity.ispraise)) {
+				holder.zText.setTextColor(Color.rgb(136, 136, 136));
 				holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like);
 			} else {// 点赞过
+				holder.zText.setTextColor(Color.rgb(59, 151, 245));
 				holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like_press);
 			}
 			if (clusterInfo.mVideoEntity.commentList.size() >= 1) {

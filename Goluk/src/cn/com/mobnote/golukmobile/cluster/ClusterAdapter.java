@@ -395,10 +395,13 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 			initListener(holder, index_v);
 			// 没点过
 			if ("0".equals(clusterInfo.mVideoEntity.ispraise)) {
+				holder.zText.setTextColor(Color.rgb(136, 136, 136));
 				holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like);
 			} else {// 点赞过
+				holder.zText.setTextColor(Color.rgb(59, 151, 245));
 				holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like_press);
 			}
+			
 			if (clusterInfo.mVideoEntity.commentList.size() >= 1) {
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(0);
 				if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname

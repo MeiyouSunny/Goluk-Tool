@@ -154,6 +154,27 @@
             android:background="@drawable/mine_icon_lock"
             android:contentDescription="@string/imgdes"
             android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/weiguan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageView1"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="11dp"
+            android:text="222"
+            android:textColor="#ffffff"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="15dp"
+            android:layout_toLeftOf="@+id/weiguan"
+            android:background="@drawable/icon_eye" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -181,16 +202,16 @@
                 android:layout_height="18dp"
                 android:background="@drawable/videodetail_like"
                 android:contentDescription="@string/def" />
-
+            
             <TextView
-                android:id="@+id/zanText"
+                android:id="@+id/zText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="4dp"
-                android:text="@string/str_usercenter_praise"
-                android:textColor="#888888"
+                android:textColor="#1163a2"
                 android:textSize="12sp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -252,50 +273,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:background="#e5e5e5"
+        android:layout_marginBottom="6dp"
         android:contentDescription="@string/imgdes" />
-
-    <RelativeLayout
-        android:id="@+id/zLayouyt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="6dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="6dp" >
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:gravity="center_vertical" >
-
-            <ImageView
-                android:layout_width="12dp"
-                android:layout_height="10dp"
-                android:background="@drawable/videodetail_likeicon"
-                android:contentDescription="@string/def" />
-
-            <TextView
-                android:id="@+id/zText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingLeft="4dp"
-                android:textColor="#1163a2"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/weiguan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:textColor="#888888"
-            android:textSize="12sp" />
-    </RelativeLayout>
 
     <TextView
         android:id="@+id/detail"
