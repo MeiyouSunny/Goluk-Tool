@@ -255,7 +255,9 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			break;
 		//我的收益
 		case R.id.profit_item:
-			clickAuto(TYPE_PROFIT, 0);
+//			clickAuto(TYPE_PROFIT, 0);
+			Intent itUpdate = new Intent(mContext, UpdateActivity.class);
+			mContext.startActivity(itUpdate);
 			break;
 		}
 	}
