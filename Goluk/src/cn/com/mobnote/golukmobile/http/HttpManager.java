@@ -15,14 +15,11 @@ import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue.RequestFilter;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HurlStack;
-import com.tencent.wns.client.inte.WnsClientFactory;
-import com.tencent.wns.client.inte.WnsService;
+
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 public class HttpManager {
 	  /** Default on-disk cache directory. */
@@ -91,8 +88,7 @@ public class HttpManager {
 
         Cache cache = new DiskBasedCache(cacheDir);
 
-        GolukHurlStack stack = new GolukHurlStack();
-//        HurlStack stack = new HurlStack();
+        HurlStack stack = new HurlStack();
         Network network = new BasicNetwork(stack);
 
         GolukRequestQueue queue = new GolukRequestQueue(cache, network);

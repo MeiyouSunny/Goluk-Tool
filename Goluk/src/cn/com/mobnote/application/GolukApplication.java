@@ -85,13 +85,6 @@ import com.baidu.mapapi.SDKInitializer;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
-// Tecent QCloud
-import com.tencent.base.util.ProcessUtils;
-import com.tencent.base.Global;
-import com.tencent.wns.client.inte.WnsClientFactory;
-import com.tencent.wns.client.inte.WnsService;
-import com.tencent.wns.client.log.WnsClientLog;
-
 import de.greenrobot.event.EventBus;
 
 
@@ -219,9 +212,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		super.onCreate();
 		instance = this;
 		Const.setAppContext(this);
-		
-		// Cloud service
-		startCloudService();
+
 		HttpManager.getInstance();
 		SDKInitializer.initialize(this);
 		// TODO 此处不要做初始化相关的工作
@@ -1745,82 +1736,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		intent.putExtra(LiveActivity.KEY_USERINFO, userInfo);
 		mContext.startActivity(intent);
 		GolukDebugUtils.e(null, "jyf----20150406----MainActivity----startLiveLook");
-	}
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Cloud Service, Micle
-	private void startCloudService() {
-		startWnsService();
-	}
-
-    private WnsService wns;
-	private void startWnsService() {
-		// 初始化WNS全局参数
-        Global.init(this, null);
-        wns = WnsClientFactory.getThirdPartyWnsService();
-        
-        // 判断是否主进程
-        boolean isMain = ProcessUtils.isMainProcess(this);
-
-        // important-只能够在主进程执行
-        if (isMain)
-        {
-            // 初始化app的身份信息，不必在Application中调用，但是必须在使用WnsService接口之前调用
-            int appid = GolukConfig.QQWNS_APPID;
-            String appversion = "1.0.0";					// TODO: 获取版本信息
-            String channelid = "Android";
-            boolean isQuickVerification = false; 		//	是否开启快速验证模式
-            wns.initWnsWithAppInfo(appid, appversion, channelid, isQuickVerification);
-
-            // 启动wns服务
-            wns.startWnsService();
-        }
-	}
-	
-	private int mActivityVisibleCount = 0;
-	private boolean mIgnoreActivityVisibleCountChange = false;
-
-	private void updateActivityVisibleCount(boolean increase, boolean ignore) {
-		if (increase) {
-			final int prev = mActivityVisibleCount;
-			mActivityVisibleCount++;
-			if (prev == 0 && !ignore) {
-				dispatchApplicationEnterForeground();
-			}
-		} else {
-			mActivityVisibleCount--;
-			if (mActivityVisibleCount == 0 && !ignore) {
-				dispatchApplicationEnterBackground();
-			}
-		}
-	}
-
-	private void dispatchApplicationEnterForeground() {
-		wns.setBackgroundMode(false);
-
-	}
-
-	private void dispatchApplicationEnterBackground() {
-		wns.setBackgroundMode(true);
-	}
-
-	@SuppressLint("NewApi")
-	private boolean isActivityConfigChanging(Activity activity) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			return activity.isChangingConfigurations();
-		}
-		return activity.getChangingConfigurations() != 0;
-	}
-
-	public void activityStarted(Activity activity) {
-		updateActivityVisibleCount(true, mIgnoreActivityVisibleCountChange);
-		mIgnoreActivityVisibleCountChange = false;
-
-	}
-
-	public void activityStopped(Activity activity) {
-		mIgnoreActivityVisibleCountChange = isActivityConfigChanging(activity);
-		updateActivityVisibleCount(false, mIgnoreActivityVisibleCountChange);
 	}
 
 }
