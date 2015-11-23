@@ -529,10 +529,9 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	}
 
 	private void connFailed() {
-		GFileUtils.writeLiveLog("WifiLinkCompleteActivity-----------connFailed : " + mStep);
+
 		collectLog("connFailed", "WifiLinkCompleteActivity-----------connFailed : " + mStep);
 		if (0 == mStep) {
-			GFileUtils.writeLiveLog("WifiLinkCompleteActivity-----------connFailed show Dialog 请先将极路客断电5~10秒");
 			collectLog("connFailed", "connFailed show Dialog  please 5~10s");
 			// 弹框提示用户重启GoLUK
 			LiveDialogManager.getManagerInstance()
@@ -540,7 +539,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 							"请先将极路客断电5~10秒，然后上电重新启动，点确认按钮，等待极路客连接到手机");
 			mStep++;
 		} else {
-			GFileUtils.writeLiveLog("WifiLinkCompleteActivity-----------connFailed show Dialog 极路客绑定失败");
 			collectLog("connFailed", "connFailed show Dialog Conn Failed");
 			// 提示用户绑定失败，重新退出程序绑定
 			LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
@@ -577,9 +575,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 				mStep++;
 			}
 		} else if (LiveDialogManager.DIALOG_TYPE_WIFIBIND_FAILED == dialogType) {
-			GFileUtils
-					.writeLiveLog("WifiLinkCompleteActivity-----------dialogManagerCallBack DIALOG_TYPE_WIFIBIND_FAILED");
-
 			collectLog("dialogManagerCallBack", "DIALOG_TYPE_WIFIBIND_FAILED---onclick");
 
 			ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setType(ReportLog.TYPE_FAILED);
