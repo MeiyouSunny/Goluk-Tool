@@ -38,7 +38,7 @@ import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 public class LocalWonderfulVideoListView {
 	private View mRootLayout = null;
 	private Context mContext = null;
-	private LocalVideoListView mLocalVideoListView = null;
+	private LocalVideoManager mLocalVideoListView = null;
 	private PhotoAlbumActivity mActivity = null;
 	private StickyListHeadersListView mStickyListHeadersListView = null;
 	private LocalWonderfulVideoAdapter mWonderfulVideoAdapter = null;
@@ -56,7 +56,7 @@ public class LocalWonderfulVideoListView {
 	private boolean clickLock = false;
 	private PromotionSelectItem mPromotionSelectItem;
 
-	public LocalWonderfulVideoListView(Context context, LocalVideoListView localVideoListView, int type, String from,
+	public LocalWonderfulVideoListView(Context context, LocalVideoManager localVideoListView, int type, String from,
 			PromotionSelectItem item) {
 		this.from = from;
 		this.mContext = context;

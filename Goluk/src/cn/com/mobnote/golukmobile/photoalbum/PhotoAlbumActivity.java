@@ -2,8 +2,6 @@ package cn.com.mobnote.golukmobile.photoalbum;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.LruCache;
@@ -33,10 +31,12 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import de.greenrobot.event.EventBus;
 
-@SuppressLint("HandlerLeak")
 public class PhotoAlbumActivity extends BaseActivity implements OnClickListener {
 	public static final int UPDATELOGINSTATE = -1;
 	public static final int UPDATEDATE = -2;
+
+	/** 最后统一移除监听标识 */
+	private final int[] listener = { IPCManagerFn.TYPE_SHORTCUT, IPCManagerFn.TYPE_URGENT, IPCManagerFn.TYPE_CIRCULATE };
 
 	private TextView mTitleName = null;
 	private Button mEditBtn = null;
@@ -46,8 +46,8 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	private TextView mLocalText = null;
 	private RelativeLayout mMainLayout = null;
 	private String from = null;
-	private LocalVideoListView mLocalVideoListView = null;
-	private CloudVideoListView mCloudVideoListView = null;
+	private LocalVideoManager mLocalVideoListView = null;
+	private CloudVideoManager mCloudVideoListView = null;
 	private boolean editState = false;
 	/** 图片缓存cache */
 	private LruCache<String, Bitmap> mLruCache = null;
@@ -64,6 +64,9 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	/** 活动分享 */
 	public static final String ACTIVITY_INFO = "activityinfo";
 	private PromotionSelectItem mPromotionSelectItem;
+
+	/** 标记当前界面是否退出 */
+	private boolean mIsExit = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +139,21 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 		updateLinkState();
 	}
 
+	private void setListener() {
+		mBackBtn.setOnClickListener(this);
+		mEditBtn.setOnClickListener(this);
+		findViewById(R.id.mLocalVideoBtn).setOnClickListener(this);
+		findViewById(R.id.mCloudVideoBtn).setOnClickListener(this);
+		mDownLoadBtn.setOnClickListener(this);
+		findViewById(R.id.mDeleteBtn).setOnClickListener(this);
+	}
+
+	/**
+	 * 获取当前选择的是否是本地视频标签
+	 * 
+	 * @return true/false 本地/远程
+	 * @author jyf
+	 */
 	public boolean isLocalSelect() {
 		if (curId == R.id.mLocalVideoBtn) {
 			return true;
@@ -154,15 +172,6 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 		}
 	}
 
-	private void setListener() {
-		findViewById(R.id.mBackBtn).setOnClickListener(this);
-		findViewById(R.id.mEditBtn).setOnClickListener(this);
-		findViewById(R.id.mLocalVideoBtn).setOnClickListener(this);
-		findViewById(R.id.mCloudVideoBtn).setOnClickListener(this);
-		findViewById(R.id.mDownLoadBtn).setOnClickListener(this);
-		findViewById(R.id.mDeleteBtn).setOnClickListener(this);
-	}
-
 	private void updateBtnState(int id) {
 		this.curId = id;
 		switch (id) {
@@ -177,7 +186,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 			mCloudText.setTextColor(getResources().getColor(R.color.photoalbum_icon_color_gray));
 
 			if (null == mLocalVideoListView) {
-				mLocalVideoListView = new LocalVideoListView(this, from, mPromotionSelectItem);
+				mLocalVideoListView = new LocalVideoManager(this, from, mPromotionSelectItem);
 				mMainLayout.addView(mLocalVideoListView.getRootView());
 			}
 			mLocalVideoListView.show();
@@ -195,7 +204,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 			mLocalText.setTextColor(getResources().getColor(R.color.photoalbum_icon_color_gray));
 
 			if (null == mCloudVideoListView) {
-				mCloudVideoListView = new CloudVideoListView(this);
+				mCloudVideoListView = new CloudVideoManager(this);
 				mMainLayout.addView(mCloudVideoListView.getRootView());
 			}
 			mCloudVideoListView.show();
@@ -437,11 +446,6 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 		mainParams.addRule(RelativeLayout.ABOVE, R.id.bottomLayout);
 		mMainLayout.setLayoutParams(mainParams);
 	}
-
-	/** 最后统一移除监听标识 */
-	private int[] listener = { IPCManagerFn.TYPE_SHORTCUT, IPCManagerFn.TYPE_URGENT, IPCManagerFn.TYPE_CIRCULATE };
-	/** 标记当前界面是否退出 */
-	private boolean mIsExit = false;
 
 	private void exit() {
 		if (mIsExit) {

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 public class LocalPagerAdapter extends PagerAdapter {
 	private Context mContext = null;
-	private LocalVideoListView mLocalVideoListView = null;
+	private LocalVideoManager mLocalVideoListView = null;
 
 	private LocalWonderfulVideoListView mWonderfulVideoLiseView = null;
 	private LocalWonderfulVideoListView mEmergencyVideoLiseView = null;
@@ -19,7 +19,7 @@ public class LocalPagerAdapter extends PagerAdapter {
 	private String from = null;
 	private PromotionSelectItem mPromotionSelectItem;
 
-	public LocalPagerAdapter(Context c, LocalVideoListView localVideoListView, String from, PromotionSelectItem item) {
+	public LocalPagerAdapter(Context c, LocalVideoManager localVideoListView, String from, PromotionSelectItem item) {
 		this.mContext = c;
 		mLocalVideoListView = localVideoListView;
 		this.from = from;

@@ -12,12 +12,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 @SuppressLint("InflateParams")
-public class LocalVideoListView implements OnClickListener {
+public class CloudVideoManager implements OnClickListener {
 	private View mRootLayout = null;
 	private Context mContext = null;
 	private TextView mWonderfulText = null;
@@ -28,17 +27,13 @@ public class LocalVideoListView implements OnClickListener {
 	private ImageView mLoopLine = null;
 
 	private CustomViewPager mViewPager = null;
-	private LocalPagerAdapter mLocalVideoAdapter = null;
+	private CloudPagerAdapter mCloudVideoAdapter = null;
 	private LinearLayout functionLayout = null;
 	/** 当前选中的标签 */
 	private int curTableState = -1;
-	private String from = null;
-	private PromotionSelectItem mPromotionSelectItem;
 
-	public LocalVideoListView(Context context, String from, PromotionSelectItem item) {
+	public CloudVideoManager(Context context) {
 		this.mContext = context;
-		this.from = from;
-		mPromotionSelectItem = item;
 		mRootLayout = LayoutInflater.from(context).inflate(R.layout.local_video_layout, null, false);
 		initView();
 	}
@@ -54,11 +49,24 @@ public class LocalVideoListView implements OnClickListener {
 
 		mViewPager = (CustomViewPager) mRootLayout.findViewById(R.id.mViewPager);
 		mViewPager.setOffscreenPageLimit(3);
-		curTableState = R.id.mWonderfulVideo;
-		mLocalVideoAdapter = new LocalPagerAdapter(mContext, this, from, mPromotionSelectItem);
-		mViewPager.setAdapter(mLocalVideoAdapter);
-
+		mCloudVideoAdapter = new CloudPagerAdapter(mContext, this);
+		mViewPager.setAdapter(mCloudVideoAdapter);
+		updateTableState(R.id.mWonderfulVideo);
 		setListener();
+	}
+
+	private boolean isHasData() {
+		switch (this.getType()) {
+		case IPCManagerFn.TYPE_SHORTCUT:
+			return mCloudVideoAdapter.isWonderfulHasData();
+		case IPCManagerFn.TYPE_URGENT:
+			return mCloudVideoAdapter.isEmergencyHasData();
+		case IPCManagerFn.TYPE_CIRCULATE:
+			return mCloudVideoAdapter.isLoopHasData();
+		default:
+			break;
+		}
+		return false;
 	}
 
 	private void setListener() {
@@ -111,20 +119,6 @@ public class LocalVideoListView implements OnClickListener {
 		}
 	}
 
-	private boolean isHasData() {
-		switch (this.getType()) {
-		case IPCManagerFn.TYPE_SHORTCUT:
-			return mLocalVideoAdapter.isWonderfulHasData();
-		case IPCManagerFn.TYPE_URGENT:
-			return mLocalVideoAdapter.isEmergencyHasData();
-		case IPCManagerFn.TYPE_CIRCULATE:
-			return mLocalVideoAdapter.isLoopHasData();
-		default:
-			break;
-		}
-		return false;
-	}
-
 	private void updateTableState(int id) {
 		curTableState = id;
 		mWonderfulText.setTextColor(mContext.getResources().getColor(R.color.photoalbum_title_bg_color));
@@ -144,23 +138,26 @@ public class LocalVideoListView implements OnClickListener {
 			mWonderfulText.setTextColor(mContext.getResources().getColor(R.color.photoalbum_text_color));
 			mWonderfulLine.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_text_color));
 			mWonderfulLine.setVisibility(View.VISIBLE);
+			mCloudVideoAdapter.loadData(IPCManagerFn.TYPE_SHORTCUT);
 			break;
 		case R.id.mEmergencyVideo:
 			mEmergencyText.setTextColor(mContext.getResources().getColor(R.color.photoalbum_text_color));
 			mEmergencyLine.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_text_color));
 			mEmergencyLine.setVisibility(View.VISIBLE);
+			mCloudVideoAdapter.loadData(IPCManagerFn.TYPE_URGENT);
 			break;
 		case R.id.mLoopVideo:
 			mLoopText.setTextColor(mContext.getResources().getColor(R.color.photoalbum_text_color));
 			mLoopLine.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_text_color));
 			mLoopLine.setVisibility(View.VISIBLE);
+			mCloudVideoAdapter.loadData(IPCManagerFn.TYPE_CIRCULATE);
 			break;
 
 		default:
 			break;
 		}
 	}
-	
+
 	public void updateEdit() {
 		updateEdit(getType(), isHasData());
 	}
@@ -171,7 +168,7 @@ public class LocalVideoListView implements OnClickListener {
 			return;
 		}
 		GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit22: ");
-		if (!((PhotoAlbumActivity) mContext).isLocalSelect()) {
+		if (((PhotoAlbumActivity) mContext).isLocalSelect()) {
 			return;
 		}
 		GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit33: ");
@@ -198,7 +195,6 @@ public class LocalVideoListView implements OnClickListener {
 	public void hideTopLaoyout() {
 		mViewPager.setCanScroll(false);
 		functionLayout.setVisibility(View.GONE);
-		mLocalVideoAdapter.flush(getType());
 	}
 
 	public void showTopLayout() {
@@ -206,8 +202,18 @@ public class LocalVideoListView implements OnClickListener {
 		functionLayout.setVisibility(View.VISIBLE);
 	}
 
+	public void onResume() {
+		if (null != mCloudVideoAdapter) {
+			mCloudVideoAdapter.onResume();
+		}
+	}
+
 	public void deleteDataFlush(List<String> deleteData) {
-		mLocalVideoAdapter.deleteDataFlush(getType(), deleteData);
+		mCloudVideoAdapter.deleteDataFlush(getType(), deleteData);
+	}
+
+	public void downloadVideoFlush(List<String> deleteData) {
+		mCloudVideoAdapter.downloadVideoFlush(getType(), deleteData);
 	}
 
 	private int getType() {
@@ -222,27 +228,10 @@ public class LocalVideoListView implements OnClickListener {
 		case R.id.mLoopVideo:
 			type = IPCManagerFn.TYPE_CIRCULATE;
 			break;
-
 		default:
 			break;
 		}
 		return type;
-	}
-
-	public void updateData(String filename) {
-		if (filename.contains("WND")) {
-			mLocalVideoAdapter.updateData(0);
-		} else if (filename.contains("URG")) {
-			mLocalVideoAdapter.updateData(1);
-		} else if (filename.contains("NRM")) {
-			mLocalVideoAdapter.updateData(2);
-		}
-	}
-
-	public void onResume() {
-		if (null != mLocalVideoAdapter) {
-			mLocalVideoAdapter.onResume();
-		}
 	}
 
 }
