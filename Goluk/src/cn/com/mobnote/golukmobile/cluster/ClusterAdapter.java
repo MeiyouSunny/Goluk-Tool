@@ -295,7 +295,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 				holder.location = (TextView) convertView.findViewById(R.id.uc_location);
 				holder.videoGoldImg = (ImageView) convertView.findViewById(R.id.user_center_gold);
 				holder.recommentImg = (ImageView) convertView.findViewById(R.id.uc_recommend);
-
+				holder.userInfoLayout = (RelativeLayout) convertView.findViewById(R.id.user_info_layout);
 				holder.time = (TextView) convertView.findViewById(R.id.time);
 				holder.function = (ImageView) convertView.findViewById(R.id.function);
 
@@ -350,23 +350,17 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 				showHead(holder.headimg, clusterInfo.mUserEntity.headportrait);
 			}
 			
+			holder.userInfoLayout.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					startUserCenter(clusterInfo);
+				}
+			});
 			holder.headimg.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// 跳转当前点赞人的个人中心
-					UCUserInfo user = new UCUserInfo();
-					user.uid = clusterInfo.mUserEntity.uid;
-					user.nickname = clusterInfo.mUserEntity.nickname;
-					user.headportrait = clusterInfo.mUserEntity.headportrait;
-					user.introduce = "";
-					user.sex = clusterInfo.mUserEntity.sex;
-					user.customavatar = clusterInfo.mUserEntity.mCustomAvatar;
-					user.praisemenumber = "0";
-					user.sharevideonumber = "0";
-					Intent i = new Intent(mContext, UserCenterActivity.class);
-					i.putExtra("userinfo", user);
-					i.putExtra("type", 0);
-					mContext.startActivity(i);
+					startUserCenter(clusterInfo);
 				}
 			});
 			holder.nikename.setText(clusterInfo.mUserEntity.nickname);
@@ -687,6 +681,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 		ImageView function;
 		ImageView videoGoldImg;
 		ImageView recommentImg;
+		RelativeLayout userInfoLayout;
 
 		LinearLayout praiseLayout;
 		ImageView zanIcon;
@@ -757,6 +752,23 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 			return false;
 		}
 		return true;
+	}
+	
+	public void startUserCenter(VideoSquareInfo clusterInfo){
+		// 跳转当前点赞人的个人中心
+		UCUserInfo user = new UCUserInfo();
+		user.uid = clusterInfo.mUserEntity.uid;
+		user.nickname = clusterInfo.mUserEntity.nickname;
+		user.headportrait = clusterInfo.mUserEntity.headportrait;
+		user.introduce = "";
+		user.sex = clusterInfo.mUserEntity.sex;
+		user.customavatar = clusterInfo.mUserEntity.mCustomAvatar;
+		user.praisemenumber = "0";
+		user.sharevideonumber = "0";
+		Intent i = new Intent(mContext, UserCenterActivity.class);
+		i.putExtra("userinfo", user);
+		i.putExtra("type", 0);
+		mContext.startActivity(i);
 	}
 
 	@Override
