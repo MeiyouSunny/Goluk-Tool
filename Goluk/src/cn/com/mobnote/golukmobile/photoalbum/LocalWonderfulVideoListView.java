@@ -240,11 +240,12 @@ public class LocalWonderfulVideoListView {
 			}
 
 			if (selectedListData.size() == 0) {
-				mActivity.updateTitleName("选择视频");
+				mActivity.updateTitleName(mActivity.getResources().getString(R.string.local_video_title_text));
 				mActivity.updateEditBtnState(false);
 			} else {
 				mActivity.updateEditBtnState(true);
-				mActivity.updateTitleName("已选择" + selectedListData.size() + "个视频");
+				mActivity.updateTitleName(mActivity.getResources().getString(R.string.str_photo_select1)
+						+ selectedListData.size() + mActivity.getResources().getString(R.string.str_photo_select2));
 			}
 		}
 	}
