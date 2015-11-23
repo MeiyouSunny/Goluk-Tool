@@ -107,6 +107,7 @@ public class CommentListViewAdapter extends BaseAdapter {
 			holder.mTime = (TextView) converView.findViewById(R.id.comment_item_time);
 			holder.mContent = (TextView) converView.findViewById(R.id.comment_item_content);
 			holder.mNodataLayout = (RelativeLayout) converView.findViewById(R.id.show_nodata_layout);
+			holder.nTextCommentFloor = (TextView) converView.findViewById(R.id.tv_listview_item_floor);
 			converView.setTag(holder);
 		} else {
 			holder = (ViewHolder) converView.getTag();
@@ -135,6 +136,7 @@ public class CommentListViewAdapter extends BaseAdapter {
 		}
 		// 设置显示时间
 		holder.mTime.setText(GolukUtils.getCommentShowFormatTime(temp.mCommentTime));
+		holder.nTextCommentFloor.setText(temp.mSeq+"楼");
 		// 点击头像跳转到个人主页
 		holder.mHead.setOnClickListener(new OnClickListener() {
 
@@ -166,6 +168,7 @@ public class CommentListViewAdapter extends BaseAdapter {
 		TextView mContent = null;
 		TextView mTime = null;
 		RelativeLayout mNodataLayout = null;
+		TextView nTextCommentFloor ;
 	}
 
 	private String getShowUserName(CommentBean temp) {

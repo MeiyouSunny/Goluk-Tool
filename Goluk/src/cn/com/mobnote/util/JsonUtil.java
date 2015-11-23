@@ -962,6 +962,7 @@ public class JsonUtil {
 				temp.mCommentId = getJsonStringValue(obj, "commentId", "");
 				temp.mCommentTime = getJsonStringValue(obj, "time", "");
 				temp.mCommentTxt = getJsonStringValue(obj, "text", "");
+				temp.mSeq = getJsonStringValue(obj, "seq", "");
 				
 				JSONObject replyObj = obj.getJSONObject("reply");
 				temp.mReplyId = getJsonStringValue(replyObj, "id", "");
@@ -1000,6 +1001,7 @@ public class JsonUtil {
 			bean.mReplyName = getJsonStringValue(dataObj, "replyname", "");
 			bean.customavatar = getJsonStringValue(dataObj, "customavatar", "");
 			bean.result = getJsonStringValue(dataObj, "result", "");
+			bean.mSeq = getJsonStringValue(dataObj, "seq", "");
 
 			return bean;
 		} catch (Exception e) {

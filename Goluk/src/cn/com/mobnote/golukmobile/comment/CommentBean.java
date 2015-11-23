@@ -24,5 +24,8 @@ public class CommentBean {
 	
 	/**正常评论、评论超时、评论重复**/
 	public String result;
+	
+	/**评论楼层**/
+	public String mSeq;
 
 }

@@ -565,6 +565,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		commentHolder.mListLayout = (RelativeLayout) convertView.findViewById(R.id.comment_list_layout);
 		commentHolder.mForbidComment = (TextView) convertView.findViewById(R.id.comment_forbid);
 		commentHolder.mNoDataLayout = (RelativeLayout) convertView.findViewById(R.id.show_nodata_layout);
+		commentHolder.nTextCommentFloor = (TextView) convertView.findViewById(R.id.tv_listview_item_floor);
 
 		convertView.setTag(commentHolder);
 		return convertView;
@@ -614,6 +615,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 				commentHolder.mCommentConennt.setText(temp.mCommentTxt);
 			}
 			commentHolder.mCommentTime.setText(GolukUtils.getCommentShowFormatTime(temp.mCommentTime));
+			commentHolder.nTextCommentFloor.setText(temp.mSeq+"楼");
 
 			commentHolder.mCommentHead.setOnClickListener(new OnClickListener() {
 
@@ -720,6 +722,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		RelativeLayout mListLayout, mNoDataLayout;
 		TextView mForbidComment = null;
 		Uri url = null;
+		TextView nTextCommentFloor;
 		//奖励视频／推荐视频
 		ImageView mImageHeadAward,mActiveImage,mSysImage,mRecomImage;
 		TextView mTextLine1,mTextLine2,mActiveCount,mSysCount,mActiveReason,mSysReason,mRecomReason;
