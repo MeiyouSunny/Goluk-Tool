@@ -413,45 +413,7 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" >
         </activity>
-        
-        
-    	<!-- 腾讯云: Start, by Micle Bu -->
-    	<!-- WNS service,注意进程名为  :wns ，其它组件请不要使用这个进程名 -->
-        <service
-                android:name="com.tencent.wns.service.WnsMain"
-                android:exported="false"
-                android:process=":wns">
-            <intent-filter>
-                <action android:name="com.tencent.wns.service.WnsMain"/>
-            </intent-filter>
-        </service>
-        
-        <!-- 注册WNS心跳接收器 -->
-        <receiver
-                android:name="com.tencent.base.os.clock.AlarmClockReceiver"
-                android:exported="false"
-                android:process=":wns">
-            <intent-filter>
-                <action android:name="wns.heartbeat"/>
-            </intent-filter>
-        </receiver>
-        <!-- 注册WNS push接收器,注意 action需要修改为  wns.push.to.<package name> -->
-        <!-- TODO
-        <receiver
-                android:name="com.example.cloudwns.push.MyPushReceiver"
-                android:exported="false">
-            <intent-filter>
-                <action android:name="wns.push.to.com.example.cloudwns"/>
-            </intent-filter>
-        </receiver>-->
-    	<!-- 腾讯云: End -->
-    	
-    	<!-- 测试支持 -->
-    	<uses-library android:name="android.test.runner"/>
     </application>
-    	<!-- 测试支持 -->
-    <instrumentation android:name="android.test.InstrumentationTestRunner"  
-            android:targetPackage="cn.com.mobnote.golukmobile" android:label="Unit Test"/>
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
