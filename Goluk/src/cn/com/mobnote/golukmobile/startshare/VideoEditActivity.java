@@ -1,10 +1,13 @@
 package cn.com.mobnote.golukmobile.startshare;
 
+import java.util.ArrayList;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,12 +27,15 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
+import cn.com.mobnote.golukmobile.promotion.PromotionItem;
 import cn.com.mobnote.golukmobile.promotion.PromotionListRequest;
 import cn.com.mobnote.golukmobile.promotion.PromotionModel;
+import cn.com.mobnote.golukmobile.promotion.PromotionData;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.util.GolukFileUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -39,7 +45,8 @@ import com.rd.car.editor.FilterPlaybackView;
 import com.rd.car.editor.FilterVideoEditorException;
 
 @SuppressLint("HandlerLeak")
-public class VideoEditActivity extends BaseActivity implements OnClickListener, ICreateNewVideoFn, IUploadVideoFn, IRequestResultListener {
+public class VideoEditActivity extends BaseActivity implements OnClickListener, ICreateNewVideoFn, IUploadVideoFn,
+		IRequestResultListener {
 	public static final int EVENT_COMM_EXIT = 0;
 	/** 自定义播放器支持特效 */
 	public FilterPlaybackView mVVPlayVideo = null;
@@ -99,6 +106,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private PromotionSelectItem mPromotionSelectItem;
 
 	public static final int PROMOTION_ACTIVITY_BACK = 110;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -113,7 +121,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		} else {
 			mFilePath = savedInstanceState.getString("cn.com.mobnote.video.path");
 			mCurrentVideoType = savedInstanceState.getInt("type", 2);
-		    mPromotionSelectItem = (PromotionSelectItem) savedInstanceState.getSerializable(PhotoAlbumActivity.ACTIVITY_INFO);
+			mPromotionSelectItem = (PromotionSelectItem) savedInstanceState
+					.getSerializable(PhotoAlbumActivity.ACTIVITY_INFO);
 		}
 
 		// 获得GolukApplication对象
@@ -149,14 +158,18 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	private void loadData() {
 		PromotionListRequest request = new PromotionListRequest(IPageNotifyFn.PageType_GetPromotion, this);
-		request.get(mTypeLayout.getCurrentLocation());
+		String location = mTypeLayout.getCurrentLocation();
+		if (TextUtils.isEmpty(location)) {
+			location = GolukFileUtils.loadString("loactionAddress", "");
+		}
+		request.get(location);
 	}
 
 	private void getIntentData() {
 		Intent intent = getIntent();
 		mFilePath = intent.getStringExtra("cn.com.mobnote.video.path");
 		mCurrentVideoType = intent.getIntExtra("type", 2);
-	    mPromotionSelectItem = (PromotionSelectItem) intent.getSerializableExtra(PhotoAlbumActivity.ACTIVITY_INFO);
+		mPromotionSelectItem = (PromotionSelectItem) intent.getSerializableExtra(PhotoAlbumActivity.ACTIVITY_INFO);
 	}
 
 	@Override
@@ -169,6 +182,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		outState.putInt("type", mCurrentVideoType);
 		super.onSaveInstanceState(outState);
 	}
+
 	/**
 	 * 加载资源
 	 * 
@@ -467,7 +481,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		mFilterLayout.setExit();
 		mFilterLayout = null;
 
-
 		this.toInitState();
 		if (null != mVVPlayVideo) {
 			mVVPlayVideo.cleanUp();
@@ -498,7 +511,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		stopProgressThread();
 		super.onPause();
 	}
-
 
 	@Override
 	protected void onResume() {
@@ -823,7 +835,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		if (isExit) {
 			return;
 		}
-		if(null != mShareLoading) {
+		if (null != mShareLoading) {
 			mShareLoading.hide();
 			mShareLoading.switchState(ShareLoading.STATE_NONE);
 		}
@@ -832,14 +844,23 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		// TODO Auto-generated method stub
-		switch(requestType) {
+		switch (requestType) {
 		case IPageNotifyFn.PageType_GetPromotion:
 			PromotionModel data = (PromotionModel) result;
 			if (data != null && data.success) {
 				if (mTypeLayout == null) {
 					return;
 				}
-				mTypeLayout.setPromotionList(data.data.PromotionList);
+				ArrayList<PromotionSelectItem> list = new ArrayList<PromotionSelectItem>(2);
+				if (data.data.priorityacts != null) {
+					for (PromotionItem item : data.data.priorityacts) {
+						PromotionSelectItem promotionSelectItem = new PromotionSelectItem();
+						promotionSelectItem.activityid = item.id;
+						promotionSelectItem.activitytitle = item.name;
+						list.add(promotionSelectItem);
+					}
+				}
+				mTypeLayout.setPromotionList(data.data.PromotionList, list);
 			}
 			break;
 		}

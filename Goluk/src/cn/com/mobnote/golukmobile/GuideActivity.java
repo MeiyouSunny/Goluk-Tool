@@ -41,7 +41,6 @@ public class GuideActivity extends BaseActivity {
 		mContext = this;
 		getIntentData();
 
-		GolukApplication.getInstance().setContext(this, "GuideActivity");
 		GolukApplication.getInstance().initSharedPreUtil(this);
 		((GolukApplication) this.getApplication()).initLogic();
 		// 注册信鸽的推送
@@ -51,6 +50,13 @@ public class GuideActivity extends BaseActivity {
 		// 初始化
 		init();
 		// SysApplication.getInstance().addActivity(this);
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		GolukApplication.getInstance().setContext(this, "GuideActivity");
 	}
 
 	private void getIntentData() {
