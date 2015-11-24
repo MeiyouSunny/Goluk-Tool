@@ -45,6 +45,7 @@
         <!-- 中间的布局，包括用户 名称，时间 ，地理位置 ，推荐标识 -->
 
         <RelativeLayout
+            android:id="@+id/user_info_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

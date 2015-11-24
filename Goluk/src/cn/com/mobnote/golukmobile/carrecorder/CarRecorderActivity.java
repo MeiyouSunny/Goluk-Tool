@@ -98,7 +98,7 @@ import de.greenrobot.event.EventBus;
  */
 @SuppressLint("NewApi")
 public class CarRecorderActivity extends BaseActivity implements OnClickListener, OnTouchListener, IPCManagerFn,
-		IPopwindowFn, ILocationFn {
+		IPopwindowFn{
 	private Handler mHandler = null;
 	/** 保存当前录制的视频类型 */
 	public VideoType mCurVideoType = VideoType.idle;
@@ -1149,19 +1149,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	protected void onStop() {
 		super.onStop();
 		GolukDebugUtils.e("xuhw", "YYYYYY======onStop======");
-		// if (isShowPlayer) {
-		// if (null != mRtmpPlayerView) {
-		// rtmpIsOk = false;
-		// mFullScreen.setVisibility(View.GONE);
-		// mRtmpPlayerView.removeCallbacks(retryRunnable);
-		// if (mRtmpPlayerView.isPlaying()) {
-		// isConnecting = false;
-		// mRtmpPlayerView.stopPlayback();
-		// GolukDebugUtils.e("xuhw", "YYYYYY======stopPlayback======");
-		// }
-		// hidePlayer();
-		// }
-		// }
 	}
 
 	@Override
@@ -1178,12 +1165,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		if (mHandler != null) {
 			mHandler.removeMessages(QUERYFILEEXIT);
 			mHandler.removeMessages(MOUNTS);
-			// mHandler.removeMessages(ADDR);
 			mHandler.removeMessages(STARTVIDEORECORD);
 			mHandler.removeMessages(DOWNLOADWONDERFULVIDEO);
-			// mHandler.removeMessages(WIFI_STATE_SUCCESS);
-			// mHandler.removeMessages(WIFI_STATE_FAILED);
-			// mHandler.removeMessages(WIFI_STATE_CONNING);
 			mHandler = null;
 		}
 		if (m8sTimer != null) {
@@ -1277,25 +1260,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			m8sTimer = null;
 		}
 
-		// this.canvasProcess();
 	}
 
 	/**
 	 * 绘画下载进度的view
 	 */
 	private void canvasProcess() {
-		// if (images[0] != null) {
-		// Boolean flog = SettingUtils.getInstance().getBoolean("Local_" +
-		// images[0].getName(), true);
-		// if (flog) {
-		// new1.setVisibility(View.VISIBLE);
-		// } else {
-		// new1.setVisibility(View.GONE);
-		// }
-		// image1.setImageBitmap(images[2].getBitmap());
-		// // image2.setImageBitmap(images[0].getBitmap());
-		//
-		// }
 		downloadSize.setProcess(0);
 		downloadSize.setVisibility(View.VISIBLE);
 	}
@@ -1666,18 +1636,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 							return;
 						}
 
-						// if
-						// ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
-						// if (videoname.equals(filename)) {// 是点击精彩视频按钮拍的文件
-						// image1.setVisibility(View.VISIBLE);
-						// image1.setImageBitmap(images[2].getBitmap());
-						// downloadSize.setVisibility(View.VISIBLE);
-						// int filesize = json.getInt("filesize");
-						// int filerecvsize = json.getInt("filerecvsize");
-						// int process = (filerecvsize * 100) / filesize;
-						// downloadSize.setProcess(process);
-						// }
-						// } else {
 						/**
 						 * 如果下载的是当前文件就不打开新的下载进度
 						 */
@@ -2093,7 +2051,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		return false;
 	}
 
-	@Override
+/*	@Override
 	public void LocationCallBack(String gpsJson) {
 		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
 		if (location == null) {
@@ -2106,7 +2064,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		if (mApp.getContext() instanceof CarRecorderActivity) {
 			GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
 		}
-	}
+	}*/
 
 	public void onEventMainThread(EventLocationFinish event) {
 		if (null == event) {

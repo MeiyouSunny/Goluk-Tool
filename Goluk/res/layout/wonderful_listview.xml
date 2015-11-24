@@ -3,31 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff">
-    
-    <TextView 
-        android:visibility="gone"
+    android:background="#ffffff" >
+
+    <TextView
         android:id="@+id/empty"
-        android:text="@string/photoalbum_no_video_text"
-        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawablePadding="14dp"
+        android:drawableTop="@drawable/album_img_novideo"
         android:gravity="center"
-		android:textColor="@color/photoalbum_icon_color_gray"
-        android:layout_width="match_parent"
-    	android:layout_height="match_parent"
-        />
+        android:text="@string/photoalbum_no_video_text"
+        android:textColor="@color/photoalbum_icon_color_gray"
+        android:textSize="14sp"
+        android:visibility="gone" />
 
     <com.emilsjolander.components.stickylistheaders.StickyListHeadersListView
         android:id="@+id/mStickyListHeadersListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:cacheColorHint="#00000000"
         android:clipToPadding="false"
+        android:divider="#00000000"
         android:dividerHeight="0dp"
         android:fastScrollEnabled="false"
-        android:divider="#00000000"
-        android:scrollbars="none"
         android:listSelector="#00000000"
-        android:cacheColorHint="#00000000"
         android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="none"
         tools:listitem="@layout/test_list_item_layout" />
-    
+
 </RelativeLayout>
