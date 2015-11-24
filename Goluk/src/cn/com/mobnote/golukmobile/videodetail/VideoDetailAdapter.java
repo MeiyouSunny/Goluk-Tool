@@ -210,9 +210,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 		if ("0".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
 			return 2;
 		}
-//		if (0 == mDataList.size()) {
-//			return 2;
-//		}
 		return mDataList.size() + 1;
 	}
 
@@ -275,11 +272,11 @@ public class VideoDetailAdapter extends BaseAdapter {
 
 	public View createHeadView() {
 		View convertView = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.video_detail_head, null);
+		headHolder.mUserCenterLayout = (RelativeLayout) convertView.findViewById(R.id.rl_video_usercenter);
 		headHolder.mImageHead = (ImageView) convertView.findViewById(R.id.user_head);
 		headHolder.mTextName = (TextView) convertView.findViewById(R.id.user_name);
-		headHolder.mTextTime = (TextView) convertView.findViewById(R.id.user_time);
+		headHolder.mTextTime = (TextView) convertView.findViewById(R.id.tv_user_time_location);
 		headHolder.mTextLook = (TextView) convertView.findViewById(R.id.video_detail_count_look);
-		headHolder.mLocationTv = (TextView) convertView.findViewById(R.id.videodetail_location);
 
 		headHolder.mVideoView = (FullScreenVideoView) convertView.findViewById(R.id.video_detail_videoview);
 		headHolder.mImageLayout = (RelativeLayout) convertView.findViewById(R.id.mImageLayout);
@@ -400,7 +397,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 			headHolder.mTextName.setText(mVideoAllData.avideo.user.nickname);
 			headHolder.mTextTime.setText(GolukUtils.getCommentShowFormatTime(mVideoAllData.avideo.video.sharingtime));
 			// 点赞数、评论数、观看数
-			headHolder.mTextLook.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.clicknumber));
+			headHolder.mTextLook.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.clicknumber)+"围观");
 			if (!"0".equals(mVideoAllData.avideo.video.praisenumber)) {
 				headHolder.mTextZan.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.praisenumber));
 				headHolder.mTextZan.setTextColor(Color.rgb(136, 136, 136));
@@ -418,9 +415,9 @@ public class VideoDetailAdapter extends BaseAdapter {
 			
 			final String location = mVideoAllData.avideo.video.mLocation;
 			if (null != location && !"".equals(location)) {
-				headHolder.mLocationTv.setText(location);
+				headHolder.mTextTime.append("  "+location);
 			} else {
-				headHolder.mLocationTv.setText(location);
+				headHolder.mTextTime.append("  "+location);
 			}
 
 			if (0 == mType) {
@@ -522,7 +519,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 				headHolder.mRecomLayout.setVisibility(View.GONE);
 			}
 			
-			headHolder.mImageHead.setOnClickListener(new OnClickListener() {
+			headHolder.mUserCenterLayout.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View arg0) {
@@ -565,7 +562,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 		commentHolder.mCommentName = (TextView) convertView.findViewById(R.id.comment_item_name);
 		commentHolder.mCommentConennt = (TextView) convertView.findViewById(R.id.comment_item_content);
 
-//		commentHolder.mNoData = (ImageView) convertView.findViewById(R.id.comment_item_nodata);
 		commentHolder.mListLayout = (RelativeLayout) convertView.findViewById(R.id.comment_list_layout);
 		commentHolder.mForbidComment = (TextView) convertView.findViewById(R.id.comment_forbid);
 		commentHolder.mNoDataLayout = (RelativeLayout) convertView.findViewById(R.id.show_nodata_layout);
@@ -590,23 +586,12 @@ public class VideoDetailAdapter extends BaseAdapter {
 	// 设置评论数据
 	private void getCommentData(final int index) {
 		GolukDebugUtils.e("newadapter", "================VideoDetailActivity：mDataList.size()==" + mDataList.size());
-//		if (0 == mDataList.size()) {
-//			commentHolder.mListLayout.setVisibility(View.GONE);
-//			commentHolder.mNoDataLayout.setVisibility(View.VISIBLE);
-//			commentHolder.mNoData.setVisibility(View.VISIBLE);
-//			return;
-//		}
 		commentHolder.mListLayout.setVisibility(View.VISIBLE);
 		commentHolder.mNoDataLayout.setVisibility(View.GONE);
-//		commentHolder.mNoData.setVisibility(View.GONE);
 		if ("0".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
 			closeComment();
-			if (mContext instanceof WonderfulActivity) {
-				((WonderfulActivity) mContext).mCommentLayout.setVisibility(View.GONE);
-			}
 		} else {
 			if (0 == mDataList.size()) {
-//				commentHolder.mListLayout.setVisibility(View.GONE);
 				return ;
 			}
 			CommentBean temp = mDataList.get(index);
@@ -708,11 +693,11 @@ public class VideoDetailAdapter extends BaseAdapter {
 
 	public static class ViewHolder {
 		// 详情
+		RelativeLayout mUserCenterLayout = null;
 		ImageView mImageHead = null;
 		TextView mTextName = null;
 		TextView mTextTime = null;
 		TextView mTextLook = null;
-		private TextView mLocationTv = null;
 		FullScreenVideoView mVideoView = null;
 		RelativeLayout mImageLayout = null;
 		ImageView simpleDraweeView = null;

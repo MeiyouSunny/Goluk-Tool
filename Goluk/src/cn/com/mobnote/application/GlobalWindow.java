@@ -142,7 +142,9 @@ public class GlobalWindow {
 		mProgressBar.setProgress(0);
 
 		// 显示顶层窗口
-		mWindowManager.addView(mVideoUploadLayout, mWMParams);
+		if(null != mWindowManager && null != mVideoUploadLayout) {
+			mWindowManager.addView(mVideoUploadLayout, mWMParams);
+		}
 
 		GolukDebugUtils.e("", "jyf----------createVideoUploadWindow:----55555---showTopwindow: ");
 

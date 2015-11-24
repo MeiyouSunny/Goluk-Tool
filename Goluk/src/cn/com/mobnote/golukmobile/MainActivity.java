@@ -617,7 +617,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		switch(event.getOpCode()) {
 		case EventConfig.LOCATION_FINISH:
-			Log.d(TAG, "Location Finished: " + event.getMsg());
+			Log.d(TAG, "Location Finished: " + event.getCityCode());
 			// Start load banner
 			VideoSquareAdapter videoSquareAdapter = mVideoSquareActivity.getVideoSquareAdapter();
 			if(null == videoSquareAdapter) {
@@ -630,16 +630,16 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 			if(!mBannerLoaded) {
 				Log.d(TAG, "Activity first start, fill everything anyway");
-				if(event.getMsg().equals("-1")) {
+				if(event.getCityCode().equals("-1")) {
 					if(null == mCityCode || mCityCode.trim().equals("")) {
-						mCityCode = event.getMsg();
+						mCityCode = event.getCityCode();
 						mSharedPrefUtil.setCityIDString(mCityCode);
 						listView.loadBannerData(mCityCode);
 					} else {
 						listView.loadBannerData(mCityCode);
 					}
 				} else {
-					mCityCode = event.getMsg();
+					mCityCode = event.getCityCode();
 					mSharedPrefUtil.setCityIDString(mCityCode);
 					listView.loadBannerData(mCityCode);
 				}
@@ -648,27 +648,27 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 			if(null == mCityCode || mCityCode.trim().equals("")) {
 				Log.d(TAG, "First located, fill everything anyway");
-				mCityCode = event.getMsg();
+				mCityCode = event.getCityCode();
 				mSharedPrefUtil.setCityIDString(mCityCode);
 				listView.loadBannerData(mCityCode);
 			} else {
 				// In whole nation
 				if("-1".equals(mCityCode)) {
-					if(event.getMsg().equals("-1")) {
+					if(event.getCityCode().equals("-1")) {
 						// do nothing
 					} else {
 						Log.d(TAG, "Switch from whole nation to city");
-						mCityCode = event.getMsg();
+						mCityCode = event.getCityCode();
 						mSharedPrefUtil.setCityIDString(mCityCode);
 						listView.loadBannerData(mCityCode);
 					}
 				} else { // In city
-					if(event.getMsg().equals("-1")) {
+					if(event.getCityCode().equals("-1")) {
 						// do nothing
 					} else {
-						if(!mCityCode.equals(event.getMsg())) {
+						if(!mCityCode.equals(event.getCityCode())) {
 							Log.d(TAG, "Switch from one city to another");
-							mCityCode = event.getMsg();
+							mCityCode = event.getCityCode();
 							mSharedPrefUtil.setCityIDString(mCityCode);
 							listView.loadBannerData(mCityCode);
 						}

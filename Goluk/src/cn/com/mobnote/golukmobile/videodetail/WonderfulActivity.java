@@ -89,7 +89,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 	private VideoSquareManager mVideoSquareManager = null;
 	/** 视频id **/
 	public static final String VIDEO_ID = "videoid";
-	private VideoDetailAdapter mAdapter = null;
+	public VideoDetailAdapter mAdapter = null;
 	/** 保存列表一个显示项索引 */
 	private int detailFirstVisible;
 	/** 保存列表显示item个数 */
@@ -276,7 +276,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 					return;
 				}
 			}
-			new DetailDialog(this, mVideoJson.data.avideo.video.videoid).show();
+			new DetailDialog(this, mVideoJson).show();
 			break;
 		case R.id.comment_send:
 			GolukDebugUtils.e("", "=======wonderfulactivity====mIsReply：" + mIsReply);
@@ -549,7 +549,6 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			int count = Integer.parseInt(dataObj.getString("count"));
 			if (count <= 0) {
 				// 　没数据
-//				noDataDeal();
 				addFooterView();
 				return;
 			}
@@ -564,7 +563,6 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			GolukDebugUtils.e("", "----CommentActivity----msg:" + msg + "  param1:" + param1 + "  param2:" + param2);
 
 			updateRefreshTime();
-//			noData(false);
 
 			if (OPERATOR_FIRST == mCurrentOperator) {
 				// 首次进入
@@ -691,11 +689,10 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 
 			CommentBean bean = JsonUtil.parseAddCommentData(obj.getJSONObject("data"));
 			if (null != bean) {
-//				noData(false);
-				removeFooterView();
 				bean.mCommentTime = GolukUtils.getCurrentCommentTime();
 				if (!"".equals(bean.result)) {
 					if ("0".equals(bean.result)) {// 成功
+						removeFooterView();
 						commentDataList.add(0, bean);
 						this.mAdapter.addFirstData(bean);
 						mEditInput.setText("");
@@ -749,7 +746,6 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 				mAdapter.deleteData(mWillDelBean);
 				GolukUtils.showToast(this, "删除成功");
 
-//				noData(mAdapter.getCount() <= 0);
 				if(mAdapter.getCount() <= 1) {
 					addFooterView();
 				} else {
@@ -836,7 +832,6 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			removeFoot();
 		}
 
-		noData(mAdapter.getCount() <= 0);
 	}
 
 	private void noDataDeal() {
@@ -847,14 +842,6 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 			mRTPullListView.onRefreshComplete(getLastRefreshTime());
 		}
 
-		noData(mAdapter.getCount() <= 0);
-	}
-
-	// 是否显示无数据提示
-	private void noData(boolean isno) {
-		if (isno) {
-			mAdapter.commentNoData();
-		}
 	}
 
 	@Override

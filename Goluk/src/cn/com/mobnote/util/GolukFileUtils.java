@@ -9,7 +9,7 @@ import cn.com.mobnote.application.GolukApplication;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class FileUtils {
+public class GolukFileUtils {
 	public static String APP_PREF_KEY = "goluk_android";
 
 	/** 是否显示活动提示 */

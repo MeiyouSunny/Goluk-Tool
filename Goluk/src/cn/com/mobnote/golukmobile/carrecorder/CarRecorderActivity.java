@@ -47,9 +47,9 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventBindFinish;
 import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.mobnote.eventbus.EventUpdateAddr;
 import cn.com.mobnote.eventbus.EventWifiConnect;
-import cn.com.mobnote.eventbus.EventWifiState;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
@@ -64,7 +64,6 @@ import cn.com.mobnote.golukmobile.carrecorder.util.ReadWifiConfig;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
-import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.LiveSettingBean;
 import cn.com.mobnote.golukmobile.live.LiveSettingPopWindow;
@@ -82,8 +81,6 @@ import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
-
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.player.RtspPlayerView;
@@ -101,7 +98,7 @@ import de.greenrobot.event.EventBus;
  */
 @SuppressLint("NewApi")
 public class CarRecorderActivity extends BaseActivity implements OnClickListener, OnTouchListener, IPCManagerFn,
-		IPopwindowFn, ILocationFn {
+		IPopwindowFn{
 	private Handler mHandler = null;
 	/** 保存当前录制的视频类型 */
 	public VideoType mCurVideoType = VideoType.idle;
@@ -280,8 +277,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private ImageView new2;
 
 	private String SelfContextTag = "carrecorder";
-
-	private IBaiduGeoCoderFn mBaiduGeoCoderFn = null;
+	
+	private String mLocationAddress = "";
+	
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -304,21 +302,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		lsp.setCallBackNotify(this);
 
 		mSettingData = lsp.getCurrentSetting();
+		mLocationAddress =  cn.com.mobnote.util.GolukFileUtils.loadString("loactionAddress", "");
 
-		mApp.addLocationListener(SelfContextTag, this);
-
-		mBaiduGeoCoderFn = new IBaiduGeoCoderFn() {
-
-			@Override
-			public void CallBack_BaiduGeoCoder(int function, Object obj) {
-				if (function == GetBaiduAddress.FUN_GET_ADDRESS && obj != null) {
-					mAddr.setText(((ReverseGeoCodeResult) obj).getAddress());
-				}
-			}
-
-		};
-
-		GetBaiduAddress.getInstance().setCallBackListener(mBaiduGeoCoderFn);
+		EventBus.getDefault().register(this);
 
 		mHandler = new Handler() {
 			public void handleMessage(final android.os.Message msg) {
@@ -329,34 +315,18 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				case MOUNTS:
 					startTrimVideo();
 					break;
-//				case ADDR:
-//					String addr = (String) msg.obj;
-//					if (!TextUtils.isEmpty(addr)) {
-//						mAddr.setText(addr);
-//					}
-//					break;
 				case STARTVIDEORECORD:
 					updateVideoRecordTime();
 					break;
 				case DOWNLOADWONDERFULVIDEO:
 					wonderfulVideoDownloadShow();
 					break;
-//				case WIFI_STATE_SUCCESS:
-//					GolukDebugUtils.e("xuhw", "CarrecorderActivity-------onclick======connect  Sucess");
-//					ipcConnSucess();
-//					break;
-//				case WIFI_STATE_FAILED:
-//					ipcConnFailed();
-//					break;
-//				case WIFI_STATE_CONNING:
-//					ipcConnecting();
-//					break;
 				default:
 					break;
 				}
 			};
 		};
-
+		
 		initView();
 		setListener();
 		initIpcState(ipcState);// 初始化ipc的连接状态
@@ -370,7 +340,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("main", this);
 		}
 
-		EventBus.getDefault().register(this);
 	}
 
 	// 是否綁定过 Goluk
@@ -430,9 +399,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mNotconnected.setVisibility(View.GONE);
 			mConncetLayout.setVisibility(View.VISIBLE);
 			mPalyerLayout.setVisibility(View.GONE);
-//			if (null != MainActivity.mMainHandler) {
-//				MainActivity.mMainHandler.sendEmptyMessage(400);
-//			}
+			// if (null != MainActivity.mMainHandler) {
+			// MainActivity.mMainHandler.sendEmptyMessage(400);
+			// }
 			EventBus.getDefault().post(new EventBindFinish(EventConfig.CAR_RECORDER_BIND_SUCESS));
 		}
 	}
@@ -549,11 +518,13 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 		}
-
-		String addr = GolukApplication.getInstance().mCurAddr;
-		if (!TextUtils.isEmpty(addr)) {
-			mAddr.setText(addr);
+		
+		if("".equals(mLocationAddress)){
+			mAddr.setText("定位中");
+		}else {
+			mAddr.setText(mLocationAddress);
 		}
+
 	}
 
 	/**
@@ -756,11 +727,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	}
 
 	public void onEventMainThread(EventWifiConnect event) {
-		if(null == event) {
+		if (null == event) {
 			return;
 		}
 
-		switch(event.getOpCode()) {
+		switch (event.getOpCode()) {
 		case EventConfig.WIFI_STATE_FAILED:
 			ipcConnFailed();
 			break;
@@ -776,11 +747,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	}
 
 	public void onEventMainThread(EventUpdateAddr event) {
-		if(null == event) {
+		if (null == event) {
 			return;
 		}
 
-		switch(event.getOpCode()) {
+		switch (event.getOpCode()) {
 		case EventConfig.CAR_RECORDER_UPDATE_ADDR:
 			String addr = event.getMsg();
 			if (!TextUtils.isEmpty(addr)) {
@@ -937,9 +908,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			break;
 		case R.id.image1:
 			new1.setVisibility(View.GONE);
-			if (images[0] != null){
-				//如果当前不处于占位图下载过程中，才允许点击
-				if (downloadSize.getVisibility() != View.VISIBLE){
+			if (images[0] != null) {
+				// 如果当前不处于占位图下载过程中，才允许点击
+				if (downloadSize.getVisibility() != View.VISIBLE) {
 					open_shareVideo(images[0].getName());
 				}
 			}
@@ -1147,8 +1118,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			}
 		}
 		// 添加定位通知及反编码通知
-		mApp.addLocationListener(SelfContextTag, this);
-		GetBaiduAddress.getInstance().setCallBackListener(mBaiduGeoCoderFn);
+		// mApp.addLocationListener(SelfContextTag, this);
+		// GetBaiduAddress.getInstance().setCallBackListener(mBaiduGeoCoderFn);
 		initVideoImage();// 初始化相册列表
 	}
 
@@ -1178,19 +1149,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	protected void onStop() {
 		super.onStop();
 		GolukDebugUtils.e("xuhw", "YYYYYY======onStop======");
-		// if (isShowPlayer) {
-		// if (null != mRtmpPlayerView) {
-		// rtmpIsOk = false;
-		// mFullScreen.setVisibility(View.GONE);
-		// mRtmpPlayerView.removeCallbacks(retryRunnable);
-		// if (mRtmpPlayerView.isPlaying()) {
-		// isConnecting = false;
-		// mRtmpPlayerView.stopPlayback();
-		// GolukDebugUtils.e("xuhw", "YYYYYY======stopPlayback======");
-		// }
-		// hidePlayer();
-		// }
-		// }
 	}
 
 	@Override
@@ -1204,15 +1162,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("main");
 		}
-		if (mHandler!= null){
+		if (mHandler != null) {
 			mHandler.removeMessages(QUERYFILEEXIT);
 			mHandler.removeMessages(MOUNTS);
-//			mHandler.removeMessages(ADDR);
 			mHandler.removeMessages(STARTVIDEORECORD);
 			mHandler.removeMessages(DOWNLOADWONDERFULVIDEO);
-//			mHandler.removeMessages(WIFI_STATE_SUCCESS);
-//			mHandler.removeMessages(WIFI_STATE_FAILED);
-//			mHandler.removeMessages(WIFI_STATE_CONNING);
 			mHandler = null;
 		}
 		if (m8sTimer != null) {
@@ -1306,24 +1260,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			m8sTimer = null;
 		}
 
-		// this.canvasProcess();
 	}
 
 	/**
 	 * 绘画下载进度的view
 	 */
 	private void canvasProcess() {
-//		if (images[0] != null) {
-//			Boolean flog = SettingUtils.getInstance().getBoolean("Local_" + images[0].getName(), true);
-//			if (flog) {
-//				new1.setVisibility(View.VISIBLE);
-//			} else {
-//				new1.setVisibility(View.GONE);
-//			}
-//			image1.setImageBitmap(images[2].getBitmap());
-////			image2.setImageBitmap(images[0].getBitmap());
-//
-//		}
 		downloadSize.setProcess(0);
 		downloadSize.setVisibility(View.VISIBLE);
 	}
@@ -1630,18 +1572,19 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				try {
 					JSONObject json = new JSONObject((String) param2);
 					String filename = json.optString("filename");
-					//如果是循环视频，就不做UI上的操作
-					if(filename.indexOf("NRM") >= 0){
-						return ;
+					// 如果是循环视频，就不做UI上的操作
+					if (filename.indexOf("NRM") >= 0) {
+						return;
 					}
 					if (null != json) {
 						String imagename = "";
-//						if ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
-//							imagename = videoname.replace("mp4", "jpg");
-//						} else {
-							imagename = mNowDownloadName.replace("mp4", "jpg");
-//						}
-						
+						// if
+						// ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
+						// imagename = videoname.replace("mp4", "jpg");
+						// } else {
+						imagename = mNowDownloadName.replace("mp4", "jpg");
+						// }
+
 						if (filename.equals(imagename)) {
 							VideoShareInfo vsi = new VideoShareInfo();
 							vsi.setName(filename.replace("jpg", "mp4"));
@@ -1664,7 +1607,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 							} else {
 								images[1] = images[0];
 								image2.setImageBitmap(images[1].getBitmap());
-								boolean flog2 = SettingUtils.getInstance().getBoolean("Local_" + images[0].getName(), true);
+								boolean flog2 = SettingUtils.getInstance().getBoolean("Local_" + images[0].getName(),
+										true);
 								if (flog2) {
 									new2.setVisibility(View.VISIBLE);
 								} else {
@@ -1674,7 +1618,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 								image1.setImageBitmap(vsi.getBitmap());
 								new1.setVisibility(View.VISIBLE);
 							}
-							
+
 						}
 						downloadSize.setVisibility(View.GONE);
 					}
@@ -1687,41 +1631,30 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					JSONObject json = new JSONObject((String) param2);
 					if (null != json) {
 						String filename = json.optString("filename");
-						//如果是循环视频或者下载的是图片，就不做UI上的操作
-						if(filename.indexOf("NRM") >= 0 || filename.indexOf(".jpg") >= 0) {
-							return ;
+						// 如果是循环视频或者下载的是图片，就不做UI上的操作
+						if (filename.indexOf("NRM") >= 0 || filename.indexOf(".jpg") >= 0) {
+							return;
 						}
 
-//						if ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
-//							if (videoname.equals(filename)) {// 是点击精彩视频按钮拍的文件
-//								image1.setVisibility(View.VISIBLE);
-//								image1.setImageBitmap(images[2].getBitmap());
-//								downloadSize.setVisibility(View.VISIBLE);
-//								int filesize = json.getInt("filesize");
-//								int filerecvsize = json.getInt("filerecvsize");
-//								int process = (filerecvsize * 100) / filesize;
-//								downloadSize.setProcess(process);
-//							}
-//						} else {
-							/**
-							 * 如果下载的是当前文件就不打开新的下载进度
-							 */
-							if (!filename.equals(mNowDownloadName)) {
-								this.canvasProcess();
-								mNowDownloadName = filename;
+						/**
+						 * 如果下载的是当前文件就不打开新的下载进度
+						 */
+						if (!filename.equals(mNowDownloadName)) {
+							this.canvasProcess();
+							mNowDownloadName = filename;
+							image1.setVisibility(View.VISIBLE);
+							image1.setImageBitmap(images[2].getBitmap());
+						} else {
+							if (image1.getVisibility() != View.VISIBLE) {
 								image1.setVisibility(View.VISIBLE);
 								image1.setImageBitmap(images[2].getBitmap());
-							} else {
-								if (image1.getVisibility() != View.VISIBLE){
-									image1.setVisibility(View.VISIBLE);
-									image1.setImageBitmap(images[2].getBitmap());
-								}
-								int filesize = json.getInt("filesize");
-								int filerecvsize = json.getInt("filerecvsize");
-								int process = (filerecvsize * 100) / filesize;
-								downloadSize.setProcess(process);
 							}
-//						}
+							int filesize = json.getInt("filesize");
+							int filerecvsize = json.getInt("filerecvsize");
+							int process = (filerecvsize * 100) / filesize;
+							downloadSize.setProcess(process);
+						}
+						// }
 
 					}
 				} catch (JSONException e) {
@@ -1733,9 +1666,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			} else {
 				// 下载失败
 				downloadSize.setVisibility(View.GONE);
-				if (images[0] == null){
+				if (images[0] == null) {
 					image1.setVisibility(View.INVISIBLE);
-				}else{
+				} else {
 					image1.setImageBitmap(images[0].getBitmap());
 				}
 			}
@@ -2118,7 +2051,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		return false;
 	}
 
-	@Override
+/*	@Override
 	public void LocationCallBack(String gpsJson) {
 		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
 		if (location == null) {
@@ -2131,5 +2064,26 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		if (mApp.getContext() instanceof CarRecorderActivity) {
 			GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
 		}
+	}*/
+
+	public void onEventMainThread(EventLocationFinish event) {
+		if (null == event) {
+			return;
+		}
+		
+		if(event.getCityCode().equals("-1")){//定位失败
+			if(mLocationAddress.equals("")){
+				mAddr.setText("未知街道");
+			}else{
+				mAddr.setText(mLocationAddress);
+			}
+		}else{//定位成功
+			if(event.getAddress() != null && !"".equals(event.getAddress())){
+				mLocationAddress = event.getAddress();
+				cn.com.mobnote.util.GolukFileUtils.saveString("loactionAddress", mLocationAddress);
+				mAddr.setText(mLocationAddress);
+			}
+		}
+		
 	}
 }

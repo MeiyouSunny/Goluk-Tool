@@ -9,24 +9,31 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 
 public class DetailDialog extends Dialog implements android.view.View.OnClickListener {
 
 	private TextView tuijian;
 	private TextView jubao;
+	private TextView mShare;
 	private TextView back;
 	private TextView cancle;
 	private Context mContext;
-	private String videoid;
+	private VideoJson mVideoJson = null;
 	private AlertDialog ad;
 	private AlertDialog confirmation;
 
-	public DetailDialog(Context context, String vid) {
+	public DetailDialog(Context context, VideoJson videoJson) {
 		super(context, R.style.CustomDialog);
 		setContentView(R.layout.video_detail_dialog);
-		this.videoid = vid;
+		
+		Window window = this.getWindow();
+		window.setGravity(Gravity.BOTTOM);
+		
+		this.mVideoJson = videoJson;
 		mContext = context;
 		initLayout();
 	}
@@ -34,10 +41,12 @@ public class DetailDialog extends Dialog implements android.view.View.OnClickLis
 	private void initLayout() {
 		this.tuijian = (TextView) findViewById(R.id.tuijian);
 		this.jubao = (TextView) findViewById(R.id.jubao);
+		mShare = (TextView) findViewById(R.id.tv_dialog_item_share);
 		this.cancle = (TextView) findViewById(R.id.cancle);
 		this.back = (TextView) findViewById(R.id.back);
 		tuijian.setOnClickListener(this);
 		jubao.setOnClickListener(this);
+		mShare.setOnClickListener(this);
 		cancle.setOnClickListener(this);
 		back.setOnClickListener(this);
 	}
@@ -48,12 +57,24 @@ public class DetailDialog extends Dialog implements android.view.View.OnClickLis
 		case R.id.tuijian:
 			dismiss();
 			Intent intent = new Intent(mContext, RecomVideoActivity.class);
-			intent.putExtra("videoid", videoid);
+			intent.putExtra("videoid", mVideoJson.data.avideo.video.videoid);
 			mContext.startActivity(intent);
 			break;
 		case R.id.jubao:
 			dismiss();
 			showDialog();
+			break;
+		case R.id.tv_dialog_item_share:
+			dismiss();
+			if(null != mContext) {
+				if(mContext instanceof WonderfulActivity) {
+					((WonderfulActivity)mContext).mAdapter.showLoadingDialog();
+				} else {
+					((VideoDetailActivity)mContext).mAdapter.showLoadingDialog();
+				}
+			}
+			boolean result = GolukApplication.getInstance().getVideoSquareManager()
+					.getShareUrl(mVideoJson.data.avideo.video.videoid, mVideoJson.data.avideo.video.type);
 			break;
 		case R.id.back:
 			dismiss();
@@ -119,7 +140,7 @@ public class DetailDialog extends Dialog implements android.view.View.OnClickLis
 		confirmation.getWindow().findViewById(R.id.sure).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				boolean flog = GolukApplication.getInstance().getVideoSquareManager().report("1", videoid, reporttype);
+				boolean flog = GolukApplication.getInstance().getVideoSquareManager().report("1", mVideoJson.data.avideo.video.videoid, reporttype);
 				if (flog) {
 					GolukUtils.showToast(mContext, "举报成功，我们稍后会进行处理");
 				} else {
