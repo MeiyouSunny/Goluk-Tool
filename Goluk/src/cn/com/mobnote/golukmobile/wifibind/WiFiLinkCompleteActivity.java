@@ -22,7 +22,6 @@ import cn.com.mobnote.eventbus.EventFinishWifiActivity;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
-import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.reportlog.ReportLog;
@@ -106,7 +105,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		mProgressImg = (ImageView) findViewById(R.id.wifilink_progress);
 		init();
 		toSetIPCInfoView();
-
 
 		setIpcLinkInfo();
 		// 6秒后，没有配置成功，直接跳转“等待连接”界面
@@ -216,9 +214,9 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 			collectLog("setIpcLinkWiFiCallBack", "---: 3 failed:  " + connectCount);
 
 			if (connectCount > 3) {
-				GolukUtils.showToast(this, "绑定失败");
+				GolukUtils.showToast(this, this.getResources().getString(R.string.wifi_link_bind_failed));
 			} else {
-				GolukUtils.showToast(this, "绑定失败, 重新连接 ");
+				GolukUtils.showToast(this, this.getResources().getString(R.string.wifi_link_bind_failed_retry));
 				setIpcLinkInfo();
 			}
 		}
@@ -378,7 +376,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		if (null != layout3) {
 			layout3.free();
 		}
-		if (null != mWac){
+		if (null != mWac) {
 			mWac.unbind();
 			mWac = null;
 		}
@@ -407,7 +405,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 					mWac.unbind();
 				}
 				mWac = null;
-				//GolukApplication.getInstance().stopDownloadList();// 停止视频同步
+				// GolukApplication.getInstance().stopDownloadList();// 停止视频同步
 				Intent it = new Intent(WiFiLinkCompleteActivity.this, CarRecorderActivity.class);
 				it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -489,7 +487,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 						}
 					}
 				} catch (Exception e) {
-					GolukUtils.showToast(mContext, "IPC连接热点返回信息不是数组");
+					// GolukUtils.showToast(mContext,
+					// this.getResources().getString(R.string.wifi_link_back_error));
 				}
 				break;
 			default:
@@ -534,15 +533,18 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		if (0 == mStep) {
 			collectLog("connFailed", "connFailed show Dialog  please 5~10s");
 			// 弹框提示用户重启GoLUK
-			LiveDialogManager.getManagerInstance()
-					.showSingleBtnDialog(this, LiveDialogManager.DIALOG_TYPE_WIFIBIND_RESTART_IPC, "提示",
-							"请先将极路客断电5~10秒，然后上电重新启动，点确认按钮，等待极路客连接到手机");
+			LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
+					LiveDialogManager.DIALOG_TYPE_WIFIBIND_RESTART_IPC,
+					getResources().getString(R.string.wifi_link_prompt),
+					getResources().getString(R.string.wifi_link_blackout));
 			mStep++;
 		} else {
 			collectLog("connFailed", "connFailed show Dialog Conn Failed");
 			// 提示用户绑定失败，重新退出程序绑定
 			LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-					LiveDialogManager.DIALOG_TYPE_WIFIBIND_FAILED, "提示", "极路客绑定失败，请您重试");
+					LiveDialogManager.DIALOG_TYPE_WIFIBIND_FAILED,
+					this.getResources().getString(R.string.wifi_link_prompt),
+					getResources().getString(R.string.wifi_link_goluk_bind_failed));
 		}
 	}
 

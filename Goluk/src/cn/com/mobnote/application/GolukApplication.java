@@ -1133,7 +1133,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			}
 			// 如果在wifi连接页面,通知连接成功
 			if (mPageSource == "WiFiLinkList") {
-				((WiFiLinkListActivity) mContext).ipcLinkFailedCallBack();
+				((WiFiLinkListActivity) mContext).ipcFailedCallBack();
 			}
 			break;
 		}
@@ -1145,7 +1145,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if (0 == param1) {
 			// 如果在wifi连接页面,通知连接成功
 			if (mPageSource == "WiFiLinkList") {
-				((WiFiLinkListActivity) mContext).ipcLinkedCallBack();
+				((WiFiLinkListActivity) mContext).ipcSucessCallBack();
 			}
 			// 如果在wifi连接页面,通知连接成功
 			if (mPageSource.equals("WiFiLinkBindAll")) {

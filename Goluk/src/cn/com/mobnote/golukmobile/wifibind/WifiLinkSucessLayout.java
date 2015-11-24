@@ -44,8 +44,10 @@ public class WifiLinkSucessLayout extends ViewFrame implements OnClickListener {
 	private void init() {
 		mRootLayout = (RelativeLayout) mLayoutFlater.inflate(R.layout.wifi_link_sucess, null);
 		mInfoTv = (TextView) mRootLayout.findViewById(R.id.wifi_link_sucess_txt2);
-
-		final String text = "你的极路客<font color=\"#0587ff\"> 成功连接 </font>到手机...";
+		String yourgoluk = mContext.getResources().getString(R.string.wifi_link_complete_your_goluk);
+		String success = mContext.getResources().getString(R.string.wifi_link_complete_sucess_conn);
+		String mobile = mContext.getResources().getString(R.string.wifi_link_complete_mobile);
+		final String text = yourgoluk + "<font color=\"#0587ff\"> " + success + " </font>" + mobile;
 		mInfoTv.setText(Html.fromHtml(text));
 		mInfoTv.getPaint().setFakeBoldText(true);
 
