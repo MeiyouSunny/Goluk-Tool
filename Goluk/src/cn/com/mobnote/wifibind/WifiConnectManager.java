@@ -347,33 +347,40 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	 * @return
 	 */
 	private int getConnState(String ssid, int outTime) {
-		int tempTime = 0;
-		ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		State state = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+		try {
+			int tempTime = 0;
+			ConnectivityManager connectivity = (ConnectivityManager) context
+					.getSystemService(Context.CONNECTIVITY_SERVICE);
+			State state = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
 
-		while (state != State.CONNECTED) {
+			while (state != State.CONNECTED) {
 
-			GolukDebugUtils.e(TAG, "crssssssssss----------------" + state + "");
-			try {
-				int temp_2 = 500;
-				Thread.sleep(temp_2);
-				tempTime += temp_2;
-				if (tempTime > outTime) {
-					return 0;
+				GolukDebugUtils.e(TAG, "crssssssssss----------------" + state + "");
+				try {
+					int temp_2 = 500;
+					Thread.sleep(temp_2);
+					tempTime += temp_2;
+					if (tempTime > outTime) {
+						return 0;
+					}
+					state = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
-				state = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
-
-			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
-		}
-		WifiRsBean bean_temp = wifiSupport.getConnResult();
+			WifiRsBean bean_temp = wifiSupport.getConnResult();
 
-		if (("\"" + ssid + "\"").equals(bean_temp.getPh_ssid())) {
-			return outTime - tempTime;
-		} else {
-			return 0;
+			if (("\"" + ssid + "\"").equals(bean_temp.getPh_ssid())) {
+				return outTime - tempTime;
+			} else {
+				return 0;
+			}
+		} catch (Exception e) {
+
 		}
+
+		return 0;
 
 	}
 
