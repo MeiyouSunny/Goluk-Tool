@@ -421,4 +421,5 @@
     <string name="str_update_prepare_file">正在为您准备升级，请稍候……</string>
     <string name="str_update_ipc_ununited">您好像没有连接摄像头哦。</string>
     <string name="str_no_browser_found">手机没有浏览器？</string>
+    <string name="str_surround_watch">围观</string>
 </resources>
