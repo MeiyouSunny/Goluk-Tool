@@ -973,6 +973,14 @@ public class JsonUtil {
 				temp.mUserName = getJsonStringValue(authorObj, "name", "");
 				temp.mUserHead = getJsonStringValue(authorObj, "avatar", "");
 				temp.customavatar = getJsonStringValue(authorObj, "customavatar", "");
+				
+				if(authorObj.has("label")) {
+					JSONObject labelObj = authorObj.getJSONObject("label");
+					temp.mApprove = getJsonStringValue(labelObj, "approve", "");
+					temp.mApprovelabel = getJsonStringValue(labelObj, "approvelabel", "");
+					temp.mTarento = getJsonStringValue(labelObj, "tarento", "");
+					temp.mHeadplusv = getJsonStringValue(labelObj, "headplusv", "");
+				}
 
 				list.add(temp);
 			}

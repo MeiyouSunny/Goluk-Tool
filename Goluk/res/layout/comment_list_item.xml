@@ -20,6 +20,14 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="8dp"
             android:contentDescription="@string/imgdes" />
+        
+        <ImageView
+            android:id="@+id/im_listview_item_comment_authentication"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/comment_item_head"
+            android:layout_alignRight="@id/comment_item_head"
+            android:contentDescription="@string/imgdes" />
 
         <TextView 
             android:id="@+id/tv_listview_item_floor"
@@ -28,7 +36,6 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-            android:text="1楼"
             android:textSize="12sp"
             android:textColor="#666666"/>
 

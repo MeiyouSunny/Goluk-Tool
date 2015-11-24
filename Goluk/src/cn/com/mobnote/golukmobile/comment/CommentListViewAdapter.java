@@ -108,6 +108,7 @@ public class CommentListViewAdapter extends BaseAdapter {
 			holder.mContent = (TextView) converView.findViewById(R.id.comment_item_content);
 			holder.mNodataLayout = (RelativeLayout) converView.findViewById(R.id.show_nodata_layout);
 			holder.nTextCommentFloor = (TextView) converView.findViewById(R.id.tv_listview_item_floor);
+			holder.nImageCommentAuthentication = (ImageView) converView.findViewById(R.id.im_listview_item_comment_authentication);
 			converView.setTag(holder);
 		} else {
 			holder = (ViewHolder) converView.getTag();
@@ -124,6 +125,19 @@ public class CommentListViewAdapter extends BaseAdapter {
 			// 使用本地头像
 			GlideUtils.loadLocalHead(mContext, holder.mHead, UserUtils.getUserHeadImageResourceId(temp.mUserHead));
 		}
+		String approvelabel = temp.mApprovelabel;
+		String headplusv = temp.mHeadplusv;
+		String tarento = temp.mTarento;
+		holder.nImageCommentAuthentication.setVisibility(View.VISIBLE);
+		if(!"".equals(approvelabel) && "1".equals(approvelabel)) {
+			holder.nImageCommentAuthentication.setImageResource(R.drawable.authentication_bluev_icon);
+		} else if(!"".equals(headplusv) && "1".equals(headplusv)) {
+			holder.nImageCommentAuthentication.setImageResource(R.drawable.authentication_yellowv_icon);
+		} else if(!"".equals(tarento) && "1".equals(tarento)) {
+			holder.nImageCommentAuthentication.setImageResource(R.drawable.authentication_star_icon);
+		} else {
+			holder.nImageCommentAuthentication.setVisibility(View.GONE);
+		}
 
 		// 设置名称
 		holder.mName.setText(getShowUserName(temp));
@@ -136,7 +150,12 @@ public class CommentListViewAdapter extends BaseAdapter {
 		}
 		// 设置显示时间
 		holder.mTime.setText(GolukUtils.getCommentShowFormatTime(temp.mCommentTime));
-		holder.nTextCommentFloor.setText(temp.mSeq+"楼");
+		if(!"".equals(temp.mSeq)) {
+			holder.nTextCommentFloor.setVisibility(View.VISIBLE);
+			holder.nTextCommentFloor.setText(temp.mSeq+"楼");
+		} else {
+			holder.nTextCommentFloor.setVisibility(View.GONE);
+		}
 		// 点击头像跳转到个人主页
 		holder.mHead.setOnClickListener(new OnClickListener() {
 
@@ -169,6 +188,7 @@ public class CommentListViewAdapter extends BaseAdapter {
 		TextView mTime = null;
 		RelativeLayout mNodataLayout = null;
 		TextView nTextCommentFloor ;
+		ImageView nImageCommentAuthentication;
 	}
 
 	private String getShowUserName(CommentBean temp) {

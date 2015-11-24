@@ -8,4 +8,7 @@ public class VideoUserInfo {
 	/** 头像网络地址 */
 	public String customavatar;
 	public String sex;
+	/**认证标识**/
+	public UserLabel mUserLabel;
+	
 }
