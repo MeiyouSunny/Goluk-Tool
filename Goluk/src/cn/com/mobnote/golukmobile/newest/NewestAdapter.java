@@ -160,6 +160,7 @@ public class NewestAdapter extends BaseAdapter {
 		holder.comment1 = (TextView) convertView.findViewById(R.id.comment1);
 		holder.comment2 = (TextView) convertView.findViewById(R.id.comment2);
 		holder.comment3 = (TextView) convertView.findViewById(R.id.comment3);
+		holder.ivLogoVIP = (ImageView) convertView.findViewById(R.id.iv_vip_logo);
 
 		int height = (int) ((float) width / widthHeight);
 		RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
@@ -508,6 +509,7 @@ public class NewestAdapter extends BaseAdapter {
 		TextView nikename;
 		TextView timeLocation;
 		ImageView function;
+		ImageView ivLogoVIP;
 
 		TextView praiseText;
 		TextView commentText;
