@@ -5,10 +5,12 @@ import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Queue;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.Html;
 import android.text.TextUtils;
@@ -96,11 +98,15 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 	private StartShareFunctionDialog mStartShareDialog = null;
 
 	/**活动*/
-	private TextView mPromotionTextView;
+	private TextView mPromotionTextView1;
+	private TextView mPromotionTextView2;
+	private TextView mMorePromotions;
+	private TextView mNewFlagTextView;
 	private PopupWindow mPopupWindow;
 	private boolean bPopup;
 	private PromotionSelectItem mPromotionSelectItem;
 	private ArrayList<PromotionData> mPromotionList;
+	private ArrayList<PromotionSelectItem> mRecommendActivities;
 	private boolean bShowNew = false;
 	private String mMd5String;
 	private Toast mToast;
@@ -111,6 +117,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		mRootLayout = (RelativeLayout) mLayoutFlater.inflate(R.layout.shareselecttype, null);
 		mPromotionSelectItem = item;
 		bPopup = GolukFileUtils.loadBoolean(GolukFileUtils.SHOW_PROMOTION_POPUP_FLAG, true);
+		mRecommendActivities = new ArrayList<PromotionSelectItem>(2);
 		loadRes();
 		initView();
 		initData();
@@ -118,7 +125,6 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		switchTypeUI(TYPE_BG);
 		mLocationState = LOCATION_STATE_ING;
 		refreshLocationUI();
-
 		// 请求位置信息
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 		GetBaiduAddress.getInstance().searchAddress(LngLat.lat, LngLat.lng);
@@ -151,10 +157,16 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		mSgBtn = (TextView) mRootLayout.findViewById(R.id.share_type_sg);
 		mMlBtn = (TextView) mRootLayout.findViewById(R.id.share_type_ml);
 		mSspBtn = (TextView) mRootLayout.findViewById(R.id.share_type_ssp);
-		mPromotionTextView = (TextView) mRootLayout.findViewById(R.id.share_promotion_txt);
-		mPromotionTextView.setOnClickListener(this);
+		mPromotionTextView1 = (TextView) mRootLayout.findViewById(R.id.activity_textview1);
+		mPromotionTextView1.setOnClickListener(this);
 
-		refreshPromotionUI(mPromotionSelectItem);
+		mPromotionTextView2 = (TextView) mRootLayout.findViewById(R.id.activity_textview2);
+		mPromotionTextView2.setOnClickListener(this);
+		
+		mMorePromotions = (TextView) mRootLayout.findViewById(R.id.join_activity_textview);
+		mMorePromotions.setOnClickListener(this);
+		mNewFlagTextView = (TextView) mRootLayout.findViewById(R.id.new_textview);
+		mNewFlagTextView.setOnClickListener(this);
 
 		typeViewArray[0] = mBgBtn;
 		typeViewArray[1] = mSgBtn;
@@ -280,7 +292,37 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		case R.id.share_address_layout:
 			click_location();
 			break;
-		case R.id.share_promotion_txt:
+		case R.id.activity_textview1:
+			PromotionSelectItem item = (PromotionSelectItem) mPromotionTextView1.getTag();
+			if (item == null) {
+				return;
+			}
+			if (mPromotionSelectItem != null && item.activityid.equalsIgnoreCase(mPromotionSelectItem.activityid)) {
+				mPromotionSelectItem = null;
+				mPromotionTextView1.setTextColor(Color.parseColor("#bcbdbd"));
+				mPromotionTextView2.setTextColor(Color.parseColor("#bcbdbd"));
+			} else {
+				mPromotionSelectItem = item;
+				mPromotionTextView1.setTextColor(Color.parseColor("#ffcc00"));
+				mPromotionTextView2.setTextColor(Color.parseColor("#bcbdbd"));
+			}
+			break;
+		case R.id.activity_textview2:
+			PromotionSelectItem item2 = (PromotionSelectItem) mPromotionTextView2.getTag();
+			if (item2 == null) {
+				return;
+			}
+			if (mPromotionSelectItem != null && mPromotionSelectItem.activityid.equalsIgnoreCase(item2.activityid)) {
+				mPromotionSelectItem = null;
+				mPromotionTextView1.setTextColor(Color.parseColor("#bcbdbd"));
+				mPromotionTextView2.setTextColor(Color.parseColor("#bcbdbd"));
+			} else {
+				mPromotionSelectItem = item2;
+				mPromotionTextView2.setTextColor(Color.parseColor("#ffcc00"));
+				mPromotionTextView1.setTextColor(Color.parseColor("#bcbdbd"));
+			}
+			break;
+		case R.id.join_activity_textview:
 			if (!UserUtils.isNetDeviceAvailable(mContext)) {
 				GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.user_net_unavailable));
 				return;
@@ -288,7 +330,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			if (bShowNew) {
 				bShowNew = false;
 				GolukFileUtils.saveString(GolukFileUtils.PROMOTION_LIST_STRING, mMd5String);
-				refreshPromotionUI(mPromotionSelectItem);
+				mNewFlagTextView.setVisibility(View.INVISIBLE);
 			}
 			Intent intent = new Intent(mContext, PromotionActivity.class);
 			if (mPromotionSelectItem != null) {
@@ -300,13 +342,18 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 				intent.putExtra(PromotionActivity.PROMOTION_DATA, mPromotionList);
 			}
 
+			String location = mCurrentAddress;
+			if (TextUtils.isEmpty(location)) {
+				location = GolukFileUtils.loadString("loactionAddress", "");
+			}
+			intent.putExtra(PromotionActivity.PROMOTION_LOCATION, location);
 			((Activity)mContext).startActivityForResult(intent, VideoEditActivity.PROMOTION_ACTIVITY_BACK);
 			break;
 		default:
 			break;
 		}
 	}
-	
+
 	public String getCurrentLocation() {
 		if (LOCATION_STATE_SUCCESS == this.mLocationState) {
 			return this.mCurrentAddress;
@@ -445,32 +492,46 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
 
 		int[] location = new int[2];
-		mPromotionTextView.getLocationOnScreen(location);
-		int offset = (popWidth - mPromotionTextView.getWidth()) / 2;
+		mPromotionTextView1.getLocationOnScreen(location);
 
-		mPopupWindow.showAtLocation(mPromotionTextView, Gravity.NO_GRAVITY,
-				location[0] - offset, location[1] - popHeight);
+		mPopupWindow.showAtLocation(mPromotionTextView1, Gravity.NO_GRAVITY,
+				location[0], location[1] - popHeight);
 		bPopup = false;
 		GolukFileUtils.saveBoolean(GolukFileUtils.SHOW_PROMOTION_POPUP_FLAG, false);
 	}
 	
-	public void refreshPromotionUI(PromotionSelectItem item) {
-		String formatText;
-		if (item == null) {
-			formatText = "#" + mContext.getString(R.string.share_str_join_promotion) + "#";
+	public void refreshPromotionUI() {
+		if (mPromotionSelectItem != null) {
+			mPromotionTextView1.setTextColor(Color.parseColor("#ffcc00"));
+			mPromotionTextView2.setTextColor(Color.parseColor("#bcbdbd"));
+			mPromotionTextView1.setText("#" + mPromotionSelectItem.activitytitle + "#");
+			mPromotionTextView1.setTag(mPromotionSelectItem);
+			/** 移除掉和选中活动相同的活动，把选择的活动放到第一位 */
+			if (mRecommendActivities.size() > 0) {
+				PromotionSelectItem item = mRecommendActivities.get(0);
+				if (!mPromotionSelectItem.activityid.equalsIgnoreCase(item.activityid)) {
+					mPromotionTextView2.setText("#" + item.activitytitle + "#");
+					mPromotionTextView2.setTag(item);
+				} else if (mRecommendActivities.size() > 1) {
+					mPromotionTextView2.setText("#" + mRecommendActivities.get(1).activitytitle + "#");
+					mPromotionTextView2.setTag(mRecommendActivities.get(1));
+				}
+			}
 		} else {
-			formatText = "#" + item.activitytitle + "#";
-		}
-
-		if(bShowNew) {
-			String newtext = " " + mContext.getString(R.string.str_new);
-			String htmlText = "<font color=#ffccoo>"
-					+ formatText
-					+ "</font>" + "<font color=red>" + newtext + "</font>"; 
-			mPromotionTextView.setText(Html.fromHtml(htmlText));
-		} else {
-			mPromotionTextView.setText(formatText);
-		}
+			mPromotionTextView1.setText("");
+			mPromotionTextView2.setText("");
+			for (int i = 0; i < mRecommendActivities.size(); i++) {
+				if (i == 0) {
+					mPromotionTextView1.setText("#" + mRecommendActivities.get(i).activitytitle + "#");
+					mPromotionTextView1.setTag(mRecommendActivities.get(i));
+				} else {
+					mPromotionTextView2.setText("#" + mRecommendActivities.get(i).activitytitle + "#");
+					mPromotionTextView2.setTag(mRecommendActivities.get(i));
+				}
+			}
+			mPromotionTextView1.setTextColor(Color.parseColor("#bcbdbd"));
+			mPromotionTextView2.setTextColor(Color.parseColor("#bcbdbd"));
+		}	
 	}
 
 	public void onActivityResult(int resultCode, Intent data) {
@@ -482,18 +543,20 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		if (mPromotionSelectItem != null && !TextUtils.isEmpty(mPromotionSelectItem.activitytitle)) {
 			switchOpenAndClose(true);
 		}
-		refreshPromotionUI(mPromotionSelectItem);
+		refreshPromotionUI();
 	}
 	
 	public PromotionSelectItem getPromotionSelectItem() {
 		return mPromotionSelectItem;
 	}
 	
-	public void setPromotionList(ArrayList<PromotionData> list) {
+	public void setPromotionList(ArrayList<PromotionData> list, ArrayList<PromotionSelectItem> recommendList) {
 		if (list == null) {
 			return;
 		}
 		mPromotionList = list;
+		mRecommendActivities = recommendList;
+		refreshPromotionUI();
 		showNewFlag();
 	}
 
@@ -522,7 +585,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		mMd5String = GolukFileUtils.loadString(GolukFileUtils.PROMOTION_LIST_STRING, "");
 		if (TextUtils.isEmpty(mMd5String) || !mMd5String.equalsIgnoreCase(md5)) {
 			bShowNew = true;
-			refreshPromotionUI(mPromotionSelectItem);
+			mNewFlagTextView.setVisibility(View.VISIBLE);
 			mMd5String = md5;
 		}
 	}

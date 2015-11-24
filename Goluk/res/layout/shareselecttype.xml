@@ -108,9 +108,8 @@
             android:id="@+id/share_open_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_above="@+id/join_activity"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="10dp"
             android:layout_marginRight="12dp"
             android:background="@drawable/btn_shareselecttype_open"
             android:gravity="center_vertical"
@@ -124,32 +123,6 @@
                 android:contentDescription="@string/imgdes" />
 
         </LinearLayout>
-        <!-- 活动-->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="12dp"
-            android:layout_toLeftOf="@+id/share_open_layout"
-            android:layout_toRightOf="@+id/share_address_layout"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:id="@+id/share_promotion_txt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_shareselecttype_open"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="@string/share_str_join_promotion"
-                android:textColor="#ffcc00"
-                android:textSize="13sp" />
-        </LinearLayout>
-
         <!-- 当前地址 -->
 
         <LinearLayout
@@ -195,7 +168,71 @@
             android:paddingTop="7dp"
             android:textColor="#D8ffffff"
             android:textSize="12sp" />
-
-    </RelativeLayout>
-
+        <LinearLayout
+           android:id="@+id/join_activity"
+           android:layout_width = "wrap_content"
+   	       android:layout_height="wrap_content"
+   	       android:layout_alignParentBottom="true"
+   	       android:layout_alignParentRight="true"
+   	       android:layout_centerHorizontal="true"
+   	       android:layout_marginRight="6dp"
+   	       android:layout_marginLeft="10dp"
+   	       android:layout_marginBottom="10dp"
+   	       android:gravity="center_horizontal"
+   	       android:orientation="vertical">
+           <TextView 
+                android:id="@+id/new_textview"
+                android:layout_width = "wrap_content"
+   	       		android:layout_height="wrap_content"
+   	       		android:paddingLeft="6dp"
+   	       		android:paddingRight="6dp"
+   	       		android:textColor="#FFFFFF"
+   	       		android:textSize="10sp"
+   	       		android:text="@string/str_new"
+   	       		android:visibility="invisible"
+   	       		android:background="@drawable/share_newactivities_bubble"/>
+          <TextView 
+   	       		android:id="@+id/join_activity_textview"
+   	       		android:layout_width = "wrap_content"
+   	       		android:layout_height="wrap_content"
+   	       		android:gravity="center"
+   	       		android:textColor="#bcbdbd"
+           		android:textSize="13sp"
+           		android:text="@string/share_str_join_promotion"
+           		android:background="@drawable/btn_shareselecttype_open"/>
+        </LinearLayout>
+        <LinearLayout 
+		    android:layout_width ="match_parent"
+   	       	android:layout_height="wrap_content"
+   	       	android:layout_marginLeft="5dp"
+		    android:layout_toLeftOf="@+id/join_activity"
+		    android:layout_alignBottom="@+id/join_activity"
+		    android:orientation="horizontal"
+		    android:gravity="center_vertical">
+		    <TextView
+		        android:id="@+id/activity_textview1"
+		        android:layout_width ="0dp"
+   	       		android:layout_height="wrap_content"
+   	       		android:layout_weight="1"
+   	       		android:gravity="center_vertical"
+   	       		android:layout_marginRight="5dp"
+   	       		android:textColor="#bcbdbd"
+   	       		android:singleLine="true"
+   	       		android:ellipsize="end"
+           		android:textSize="13sp"
+   	       		android:background="@drawable/btn_shareselecttype_open"/>
+		   <TextView
+		       android:id="@+id/activity_textview2"
+		        android:layout_width ="0dp"
+   	       		android:layout_height="wrap_content"
+   	       		android:layout_weight="1"
+   	       		android:layout_marginLeft="5dp"
+   	       		android:gravity="center_vertical"
+   	       		android:singleLine="true"
+   	       		android:textColor="#bcbdbd"
+           		android:textSize="13sp"
+           		android:ellipsize="end"
+   	       		android:background="@drawable/btn_shareselecttype_open"/>
+		</LinearLayout>
+        </RelativeLayout>
 </RelativeLayout>

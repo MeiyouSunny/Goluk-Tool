@@ -94,7 +94,7 @@
     <color name="photoalbum_text_color_gray">#eeeeee</color>
     <color name="photoalbum_line_color">#c8c7cc</color>
     <color name="photoalbum_title_bg_color">#242629</color>
-    <color name="photoalbum_icon_color_gray">#a2a4a7</color>
+    <color name="photoalbum_icon_color_gray">#a1a1a1</color>
     
     <!-- 行车记录仪设置颜色 -->
     <color name="setting_black_color">#000000</color>
