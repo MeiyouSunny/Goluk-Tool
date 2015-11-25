@@ -24,5 +24,18 @@ public class CommentBean {
 	
 	/**正常评论、评论超时、评论重复**/
 	public String result;
+	
+	/**评论楼层**/
+	public String mSeq;
+	/**认证描述**/
+	public String mApprove;
+	/**认证标识**/
+	public String mApprovelabel;
+	/**达人标识**/
+	public String mTarento;
+	/**加v标识**/
+	public String mHeadplusv;
+	/**加v描述**/
+	public String mHeadplusvdes;
 
 }

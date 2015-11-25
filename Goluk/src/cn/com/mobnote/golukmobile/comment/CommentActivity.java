@@ -244,6 +244,11 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			startActivity(intent);
 			return;
 		}
+		
+		UserInfo loginUser = mApp.getMyInfo();
+		if(null != mWillDelBean && loginUser.uid.equals(mWillDelBean.mUserId) && mIsReply) {
+			mIsReply = false;
+		}
 
 		if (CommentTimerManager.getInstance().getIsStarting()) {
 			LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,

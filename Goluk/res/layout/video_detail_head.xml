@@ -49,6 +49,14 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:contentDescription="@string/imgdes" />
+            
+            <ImageView 
+                android:id="@+id/im_listview_item_head_authentication"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_alignRight="@id/user_head"
+                android:layout_alignBottom="@id/user_head"
+                android:contentDescription="@string/imgdes"/>
 
             <!-- 用户昵称 -->
             <TextView

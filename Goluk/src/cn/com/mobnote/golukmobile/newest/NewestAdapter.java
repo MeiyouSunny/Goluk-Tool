@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
@@ -12,6 +13,7 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -21,6 +23,8 @@ import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.live.ILive;
+import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videosuqare.CategoryListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.user.UserUtils;
@@ -38,7 +42,6 @@ public class NewestAdapter extends BaseAdapter {
 	private CategoryListView mCategoryListView = null;
 	private final int FIRST_TYPE = 0;
 	private final int OTHERS_TYPE = 1;
-//	private boolean clickLock = false;
 	private RelativeLayout mHeadView;
 	private ViewHolder holder;
 	private final float widthHeight = 1.78f;
@@ -148,21 +151,13 @@ public class NewestAdapter extends BaseAdapter {
 		holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
 		holder.timeLocation = (TextView) convertView.findViewById(R.id.time_location);
 		holder.function = (ImageView) convertView.findViewById(R.id.function);
+		holder.rlHead = convertView.findViewById(R.id.rl_head_img);
 
-		holder.praiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
-		holder.zanIcon = (ImageView) convertView.findViewById(R.id.zanIcon);
-		holder.zanText = (TextView) convertView.findViewById(R.id.zanText);
+		holder.praiseText = (TextView)convertView.findViewById(R.id.tv_newest_list_item_praise);
+		holder.commentText = (TextView)convertView.findViewById(R.id.tv_newest_list_item_comment);
+		holder.shareText = (TextView)convertView.findViewById(R.id.tv_newest_list_item_share);
 
-		holder.commentLayout = (LinearLayout) convertView.findViewById(R.id.commentLayout);
-		holder.commentIcon = (ImageView) convertView.findViewById(R.id.commentIcon);
-		holder.commentText = (TextView) convertView.findViewById(R.id.commentText);
-
-		holder.shareLayout = (LinearLayout) convertView.findViewById(R.id.shareLayout);
-		holder.shareIcon = (ImageView) convertView.findViewById(R.id.shareIcon);
-		holder.shareText = (TextView) convertView.findViewById(R.id.shareText);
-
-		holder.zText = (TextView) convertView.findViewById(R.id.zText);
-		holder.weiguan = (TextView) convertView.findViewById(R.id.weiguan);
+		holder.surroundWatch = (TextView) convertView.findViewById(R.id.tv_newest_list_item_surround);
 		holder.totalcomments = (TextView) convertView.findViewById(R.id.totalcomments);
 		holder.detail = (TextView) convertView.findViewById(R.id.detail);
 		holder.ivReward = (ImageView)convertView.findViewById(R.id.iv_reward_tag);
@@ -170,6 +165,7 @@ public class NewestAdapter extends BaseAdapter {
 		holder.comment1 = (TextView) convertView.findViewById(R.id.comment1);
 		holder.comment2 = (TextView) convertView.findViewById(R.id.comment2);
 		holder.comment3 = (TextView) convertView.findViewById(R.id.comment3);
+		holder.ivLogoVIP = (ImageView) convertView.findViewById(R.id.iv_vip_logo);
 
 		int height = (int) ((float) width / widthHeight);
 		RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
@@ -189,24 +185,32 @@ public class NewestAdapter extends BaseAdapter {
 		// 分享监听
 		ClickShareListener tempShareListener = new ClickShareListener(mContext, mVideoSquareInfo, mNewestListView);
 		tempShareListener.setCategoryListView(mCategoryListView);
-		holder.shareLayout.setOnClickListener(tempShareListener);
+		holder.shareText.setOnClickListener(tempShareListener);
 		// 举报监听
 		holder.function.setOnClickListener(new ClickFunctionListener(mContext, mVideoSquareInfo, false, null));
 		// 评论监听
-		holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
+		holder.commentText.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
 		// 播放区域监听
 		holder.videoImg.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo, mNewestListView));
 		holder.headimg.setOnClickListener(new ClickHeadListener(mContext, mVideoSquareInfo));
 		// 点赞
 		ClickPraiseListener tempPraiseListener = new ClickPraiseListener(mContext, mVideoSquareInfo, mNewestListView);
 		tempPraiseListener.setCategoryListView(mCategoryListView);
-		holder.praiseLayout.setOnClickListener(tempPraiseListener);
+		holder.praiseText.setOnClickListener(tempPraiseListener);
 		// 评论总数监听
 		List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
 		if (comments.size() > 0) {
 			holder.totalcomments.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
 			holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
 		}
+
+		final VideoSquareInfo vsInfo = mVideoSquareInfo;
+		holder.rlHead.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startUserCenter(vsInfo);
+			}
+		});
 	}
 
 	private void initView(int index) {
@@ -252,22 +256,32 @@ public class NewestAdapter extends BaseAdapter {
 		}
 
 		if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
-			holder.zanText.setTextColor(Color.rgb(0x88, 0x88, 0x88));
-			holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like);
+			holder.praiseText.setTextColor(Color.rgb(0x88, 0x88, 0x88));
+			Drawable drawable = mContext.getResources().getDrawable(R.drawable.videodetail_like);
+			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+			holder.praiseText.setCompoundDrawables(drawable, null, null, null);
 		} else {
-			holder.zanText.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
-			holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like_press);
+			holder.praiseText.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
+			Drawable drawable = mContext.getResources().getDrawable(R.drawable.videodetail_like_press);
+			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+			holder.praiseText.setCompoundDrawables(drawable, null, null, null);
 		}
+
 		if ("-1".equals(mVideoSquareInfo.mVideoEntity.praisenumber)) {
-			holder.zText.setText("");
+			holder.praiseText.setText(mContext.getString(R.string.str_usercenter_praise));
 		} else {
-			holder.zText.setText(GolukUtils.getFormatNumber(mVideoSquareInfo.mVideoEntity.praisenumber) + "赞");
+			holder.praiseText.setText(
+					GolukUtils.getFormatNumber(mVideoSquareInfo.mVideoEntity.praisenumber) +
+					mContext.getString(R.string.str_usercenter_praise));
 		}
 
 		if ("-1".equals(mVideoSquareInfo.mVideoEntity.clicknumber)) {
-			holder.weiguan.setText("");
+			holder.surroundWatch.setText("");
+			holder.surroundWatch.setVisibility(View.GONE);
 		} else {
-			holder.weiguan.setText(GolukUtils.getFormatNumber(mVideoSquareInfo.mVideoEntity.clicknumber) + " 围观");
+			holder.surroundWatch.setVisibility(View.VISIBLE);
+			holder.surroundWatch.setText(GolukUtils.getFormatNumber(
+					mVideoSquareInfo.mVideoEntity.clicknumber));
 		}
 
 		if (TextUtils.isEmpty(mVideoSquareInfo.mVideoEntity.describe)) {
@@ -292,11 +306,13 @@ public class NewestAdapter extends BaseAdapter {
 		if (isLive(mVideoSquareInfo)) {
 			// 直播
 			holder.liveImg.setVisibility(View.VISIBLE);
-			holder.commentLayout.setVisibility(View.GONE);
+			holder.commentText.setVisibility(View.GONE);
+			holder.surroundWatch.setVisibility(View.GONE);
 		} else {
 			// 点播
 			holder.liveImg.setVisibility(View.GONE);
-			holder.commentLayout.setVisibility(View.VISIBLE);
+			holder.commentText.setVisibility(View.VISIBLE);
+			holder.surroundWatch.setVisibility(View.VISIBLE);
 		}
 
 		if ("1".equals(mVideoSquareInfo.mVideoEntity.iscomment)) {
@@ -499,28 +515,19 @@ public class NewestAdapter extends BaseAdapter {
 		GlideUtils.loadImage(mContext, image, url, R.drawable.tacitly_pic);
 	}
 
-	public static class ViewHolder {
+	static class ViewHolder {
 		ImageView videoImg;
 		ImageView liveImg;
 		ImageView headimg;
 		TextView nikename;
 		TextView timeLocation;
 		ImageView function;
+		ImageView ivLogoVIP;
 
-		LinearLayout praiseLayout;
-		ImageView zanIcon;
-		TextView zanText;
-
-		LinearLayout commentLayout;
-		ImageView commentIcon;
+		TextView praiseText;
 		TextView commentText;
-
-		LinearLayout shareLayout;
-		ImageView shareIcon;
 		TextView shareText;
-
-		TextView zText;
-		TextView weiguan;
+		TextView surroundWatch;
 		TextView detail;
 		TextView totalcomments;
 
@@ -529,10 +536,28 @@ public class NewestAdapter extends BaseAdapter {
 		TextView comment2;
 		TextView comment3;
 		ImageView ivReward;
+
+		View rlHead;
 	}
 
 	public void setNewestLiseView(NewestListView view) {
 		this.mNewestListView = view;
+	}
+
+	public void startUserCenter(VideoSquareInfo videoSquareInfo) {
+		UCUserInfo user = new UCUserInfo();
+		user.uid = videoSquareInfo.mUserEntity.uid;
+		user.nickname = videoSquareInfo.mUserEntity.nickname;
+		user.headportrait = videoSquareInfo.mUserEntity.headportrait;
+		user.introduce = "";
+		user.sex = videoSquareInfo.mUserEntity.sex;
+		user.customavatar = videoSquareInfo.mUserEntity.mCustomAvatar;
+		user.praisemenumber = "0";
+		user.sharevideonumber = "0";
+		Intent i = new Intent(mContext, UserCenterActivity.class);
+		i.putExtra("userinfo", user);
+		i.putExtra("type", 0);
+		mContext.startActivity(i);
 	}
 
 	public void setCategoryListView(CategoryListView view) {
@@ -550,18 +575,5 @@ public class NewestAdapter extends BaseAdapter {
 				break;
 			}
 		}
-
-	}
-
-//	public synchronized boolean getClickLock() {
-//		return clickLock;
-//	}
-//
-//	public synchronized void setClickLock(boolean lock) {
-//		clickLock = lock;
-//	}
-
-	public void onResume() {
-//		setClickLock(false);
 	}
 }

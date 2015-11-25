@@ -32,6 +32,16 @@ public class VideoDetailParser {
 						user.headportrait = json_user.optString("headportrait");
 						user.customavatar = json_user.optString("customavatar");
 						user.sex = json_user.optString("sex");
+						JSONObject json_label = json_user.optJSONObject("label");
+						if(null != json_label) {
+							UserLabel label = new UserLabel();
+							label.mApprove = json_label.optString("approve");
+							label.mApprovelabel = json_label.optString("approvelabel");
+							label.mTarento = json_label.optString("tarento");
+							label.mHeadplusv = json_label.optString("headplusv");
+							label.mHeadplusvdes = json_label.optString("headplusvdes");
+							user.mUserLabel = label;
+						}
 						videoDetailInfo.user = user;
 					}
 					JSONObject json_video = json_avideo.optJSONObject("video");

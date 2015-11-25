@@ -34,7 +34,6 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventMapQuery;
 import cn.com.mobnote.golukmobile.BaseActivity;
-import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
 import cn.com.mobnote.golukmobile.carrecorder.RecorderMsgReceiverBase;
@@ -44,6 +43,7 @@ import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.TimerManager.ITimerManagerFn;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.videodetail.UserLabel;
 import cn.com.mobnote.golukmobile.videosuqare.BaiduMapView;
 import cn.com.mobnote.golukmobile.videosuqare.JsonCreateUtils;
 import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
@@ -61,6 +61,7 @@ import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
+import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -144,6 +145,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	/** 是否支持声音 */
 	private boolean isCanVoice = true;
 	private ImageView mHead = null;
+	/** 头像认证 */
+	private ImageView mAuthenticationImg = null;
 	/** */
 	private RelativeLayout mMapRootLayout = null;
 	/** 是否成功上传过视频 */
@@ -212,26 +215,28 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		getMyInfo();
 		// 开始预览或开始直播
 		if (isShareLive) {
-			mApp.mSharedPreUtil.setIsLiveNormalExit(false);
+			SharedPrefUtil.setIsLiveNormalExit(false);
 			mCurrentVideoId = getVideoId();
 			startVideoAndLive("");
 			mTitleTv.setText("我的直播");
 			mMoreImg.setVisibility(View.GONE);
 			mNickName.setText(myInfo.nickName);
 			setUserHeadImage(myInfo.head, myInfo.customavatar);
+			setAuthentication(myInfo.mUserLabel);
 
 		} else {
 			if (null != currentUserInfo && null != currentUserInfo.desc) {
 				mDescTv.setText(currentUserInfo.desc);
 			}
 			mMoreImg.setVisibility(View.VISIBLE);
-			mApp.mSharedPreUtil.setIsLiveNormalExit(true);
+			SharedPrefUtil.setIsLiveNormalExit(true);
 			if (null != currentUserInfo) {
 				mLiveCountSecond = currentUserInfo.liveDuration;
 			}
 			mTitleTv.setText(currentUserInfo.nickName + " 的直播");
 			mNickName.setText(currentUserInfo.nickName);
 			setUserHeadImage(currentUserInfo.head, currentUserInfo.customavatar);
+			setAuthentication(currentUserInfo.mUserLabel);
 		}
 		drawPersonsHead();
 		mLiveManager = new TimerManager(10);
@@ -421,6 +426,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		zanBtn = (Button) findViewById(R.id.like_btn);
 		mShareBtn = (Button) findViewById(R.id.share_btn);
 		mHead = (ImageView) findViewById(R.id.live_userhead);
+		mAuthenticationImg = (ImageView) findViewById(R.id.live_head_authentication);
 		mLiveCountDownTv = (TextView) findViewById(R.id.live_countdown);
 		mDescTv = (TextView) findViewById(R.id.live_desc);
 		mPauseBtn = (Button) findViewById(R.id.live_pause);
@@ -495,7 +501,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			break;
 		case MSG_H_TO_GETMAP_PERSONS:
 			Log.d("CK1", "aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-//			MainActivity.mMainHandler.sendEmptyMessage(99);
+			// MainActivity.mMainHandler.sendEmptyMessage(99);
 			EventBus.getDefault().post(new EventMapQuery(EventConfig.LIVE_MAP_QUERY));
 			break;
 		}
@@ -598,6 +604,42 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			liveUploadVideoFailed();
 		}
 	};
+
+	//
+
+	/**
+	 * 设置用户标识，包括 认证，加V, 达人
+	 * 
+	 * @param userLabel
+	 *            用户标签实体类
+	 * @author jyf
+	 */
+	private void setAuthentication(UserLabel userLabel) {
+		if (null == userLabel) {
+			mAuthenticationImg.setVisibility(View.GONE);
+			return;
+		}
+		// 判断是否是认证
+		if (null != userLabel.mApprovelabel && "1".equals(userLabel.mApprovelabel)) {
+			mAuthenticationImg.setVisibility(View.VISIBLE);
+			mAuthenticationImg.setBackgroundResource(R.drawable.authentication_bluev_icon);
+			return;
+		}
+		// 判断是否是加V
+		if (null != userLabel.mHeadplusv && "1".equals(userLabel.mHeadplusv)) {
+			mAuthenticationImg.setVisibility(View.VISIBLE);
+			mAuthenticationImg.setBackgroundResource(R.drawable.authentication_yellowv_icon);
+			return;
+		}
+		// 判断是否是达人
+		if (null != userLabel.mTarento && "1".equals(userLabel.mTarento)) {
+			mAuthenticationImg.setVisibility(View.VISIBLE);
+			mAuthenticationImg.setBackgroundResource(R.drawable.authentication_star_icon);
+			return;
+		}
+
+		mAuthenticationImg.setVisibility(View.GONE);
+	}
 
 	private void setUserHeadImage(String headStr, String neturl) {
 		try {
@@ -1019,8 +1061,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		}
 		LiveDialogManager.getManagerInstance().dismissLiveBackDialog();
 		dissmissAllDialog();
-		//释放资源
-		if (mBaiduMapManage != null){
+		// 释放资源
+		if (mBaiduMapManage != null) {
 			mBaiduMapManage.release();
 			mBaiduMapManage = null;
 		}
@@ -1314,7 +1356,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			return;
 		}
 		isAlreadExit = true;
-		mApp.mSharedPreUtil.setIsLiveNormalExit(true);
+		SharedPrefUtil.setIsLiveNormalExit(true);
 		// 注册回调监听
 		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("live");
 		mVideoSquareManager.removeVideoSquareManagerListener("live");
@@ -1820,7 +1862,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	public void onMapLoaded() {
 		GolukDebugUtils.e("", "jyf-------live----LiveActivity--onMapLoaded:");
 		Log.d("CK1", "onMapLoaded");
-//		MainActivity.mMainHandler.sendEmptyMessage(99);
+		// MainActivity.mMainHandler.sendEmptyMessage(99);
 		EventBus.getDefault().post(new EventMapQuery(EventConfig.LIVE_MAP_QUERY));
 	}
 }

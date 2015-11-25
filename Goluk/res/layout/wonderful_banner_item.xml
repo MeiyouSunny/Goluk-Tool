@@ -10,4 +10,49 @@
         android:layout_width="match_parent"
         android:layout_height="140dp"/>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/ll_text_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#eff0f4"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+            <cn.com.mobnote.view.ParallelogramTextView
+                android:id="@+id/tv_text_banner1"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:gravity="center"
+                android:ellipsize="end"
+                android:textSize="20sp"
+                android:text="G2冲上云霄"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:lines="1"
+                android:textColor="@color/black"
+                android:background="@android:color/transparent"
+                android:layout_weight="1"/>
+            <cn.com.mobnote.view.ParallelogramTextView
+                android:id="@+id/tv_text_banner2"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:text="寻找最牛红绿灯在哪里找呢"
+                android:ellipsize="end"
+                android:lines="1"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textColor="@color/black"
+                android:background="@android:color/transparent"
+                android:layout_weight="1"/>
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>
