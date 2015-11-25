@@ -254,11 +254,17 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 						holder.v.setBackgroundResource(R.drawable.authentication_bluev_icon);
 						holder.v.setVisibility(View.VISIBLE);
 					}else{
-						holder.vText.setVisibility(View.GONE);
 						if("1".equals(userinfo.label.headplusv)){//个人加V
+							if(userinfo.label.headplusvdes != null && !"".equals(userinfo.label.headplusvdes)){
+								holder.vText.setVisibility(View.VISIBLE);
+								holder.vText.setText(userinfo.label.approve);
+							}else{
+								holder.vText.setVisibility(View.GONE);
+							}
 							holder.v.setBackgroundResource(R.drawable.authentication_yellowv_icon);
 							holder.v.setVisibility(View.VISIBLE);
 						}else{
+							holder.vText.setVisibility(View.GONE);
 							if("1".equals(userinfo.label.tarento)){//达人
 								holder.v.setBackgroundResource(R.drawable.authentication_star_icon);
 								holder.v.setVisibility(View.VISIBLE);
