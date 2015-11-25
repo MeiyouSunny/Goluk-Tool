@@ -61,6 +61,7 @@ import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
+import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -212,7 +213,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		getMyInfo();
 		// 开始预览或开始直播
 		if (isShareLive) {
-			mApp.mSharedPreUtil.setIsLiveNormalExit(false);
+			SharedPrefUtil.setIsLiveNormalExit(false);
 			mCurrentVideoId = getVideoId();
 			startVideoAndLive("");
 			mTitleTv.setText("我的直播");
@@ -225,7 +226,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				mDescTv.setText(currentUserInfo.desc);
 			}
 			mMoreImg.setVisibility(View.VISIBLE);
-			mApp.mSharedPreUtil.setIsLiveNormalExit(true);
+			SharedPrefUtil.setIsLiveNormalExit(true);
 			if (null != currentUserInfo) {
 				mLiveCountSecond = currentUserInfo.liveDuration;
 			}
@@ -1314,7 +1315,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			return;
 		}
 		isAlreadExit = true;
-		mApp.mSharedPreUtil.setIsLiveNormalExit(true);
+		SharedPrefUtil.setIsLiveNormalExit(true);
 		// 注册回调监听
 		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("live");
 		mVideoSquareManager.removeVideoSquareManagerListener("live");

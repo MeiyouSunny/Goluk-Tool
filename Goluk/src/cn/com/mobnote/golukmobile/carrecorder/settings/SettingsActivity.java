@@ -16,6 +16,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListe
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
+import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.os.Bundle;
 import android.content.Intent;
@@ -84,8 +85,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.carrecorder_settings);
 		// 固件版本号
-		GolukApplication.getInstance().initSharedPreUtil(this);
-		ipcVersion = GolukApplication.getInstance().mSharedPreUtil.getIPCVersion();
+		ipcVersion = SharedPrefUtil.getIPCVersion();
 		GolukDebugUtils.e("", "=========ipcVersion：" + ipcVersion);
 
 		mIPCName = GolukApplication.getInstance().mIPCControlManager.mProduceName;

@@ -29,6 +29,7 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
+import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -97,7 +98,7 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 		sys_version = GolukUtils.getSystem_version();
 		app_version = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_GetVersion, "fs6:/version");
-		ipc_version = mApp.mSharedPreUtil.getIPCVersion();
+		ipc_version = SharedPrefUtil.getIPCVersion();
 		phone_models = GolukUtils.getPhone_models();
 
 		mOpinionDialog = new OpinionDialog(mContext, this);
