@@ -39,6 +39,7 @@ public class VideoDetailParser {
 							label.mApprovelabel = json_label.optString("approvelabel");
 							label.mTarento = json_label.optString("tarento");
 							label.mHeadplusv = json_label.optString("headplusv");
+							label.mHeadplusvdes = json_label.optString("headplusvdes");
 							user.mUserLabel = label;
 						}
 						videoDetailInfo.user = user;
