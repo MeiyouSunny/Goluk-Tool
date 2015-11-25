@@ -188,7 +188,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		mTextIpcVersion.setText(ipc_version);
 		String size = DataCleanManage.getFormatSize(Double.parseDouble(ipc_size));
 		mTextIpcSize.setText(size);
-		mTextUpdateContent.setText(ipc_content+"\n"+ipc_content+"\n"+ipc_content+"\n"+ipc_content+"\n"+ipc_content+"\n"+ipc_content+"\n"+ipc_content+"\n"+ipc_content+"\n"+ipc_content+"\n"+ipc_content+"\n"+ipc_content+"\n"+ipc_content+"\n"+ipc_content+"\n"+ipc_content+"\n"+ipc_content+"\n");
+		mTextUpdateContent.setText(ipc_content);
 
 		Intent itClick = getIntent();
 		int progressSetup = itClick.getIntExtra(UPDATE_PROGRESS, 0);
@@ -371,6 +371,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				return;
 			}
 			mPrepareDialog = UserUtils.showDialogUpdate(UpdateActivity.this, getString(R.string.str_update_prepare_file));
+			mNoBreakImage.setVisibility(View.VISIBLE);
+			mNoBreakText.setVisibility(View.VISIBLE);
 			break;
 		case EventConfig.UPDATE_IPC_UNUNITED:
 			if (isExit) {
