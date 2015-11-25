@@ -47,5 +47,10 @@ public class ActivityBean {
 	/** 是否可以评论 */
 	@JSONField(name = "iscomment")
 	public String iscomment;
+	
+	/** 活动是否过期 **/
+	@JSONField(name = "expiration")
+	public String expiration;
+	
 
 }

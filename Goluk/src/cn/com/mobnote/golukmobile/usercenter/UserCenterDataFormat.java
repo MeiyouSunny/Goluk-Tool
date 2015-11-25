@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cn.com.mobnote.golukmobile.cluster.bean.UserLabelBean;
 import cn.com.mobnote.golukmobile.newest.JsonParserUtils;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 
@@ -27,17 +28,37 @@ public class UserCenterDataFormat {
 			Boolean success = UserInfo.getBoolean("success");
 			if (success) {
 				JSONObject data = UserInfo.getJSONObject("data");
-				if ("0".equals(data.getString("result"))) {
-					user.praisemenumber = data.getString("praisemenumber");
-					user.sharevideonumber = data.getString("sharevideonumber");
+				if ("0".equals(data.optString("result"))) {
+					user.praisemenumber = data.optString("praisemenumber");
+					user.sharevideonumber = data.optString("sharevideonumber");
 					JSONObject u = data.getJSONObject("user");
-					user.uid = u.getString("uid");
-					user.customavatar = u.getString("customavatar");
-					user.headportrait = u.getString("headportrait");
-					user.sex = u.getString("sex");
-					user.introduce = u.getString("introduce");
-					user.nickname = u.getString("nickname");
-					return user;
+					if(u != null){
+						if(u.has("label")){
+							JSONObject label = u.getJSONObject("label");
+							if(label!=null){
+								UserLabelBean ulb = new UserLabelBean();
+								ulb.approve = label.optString("approve");
+								ulb.approvelabel = label.optString("approvelabel");
+								ulb.headplusv = label.optString("headplusv");
+								ulb.headplusvdes = label.optString("headplusvdes");
+								ulb.tarento = label.optString("tarento");
+								user.label = ulb ;
+							}
+						}
+						user.uid = u.optString("uid");
+						user.customavatar = u.optString("customavatar");
+						user.headportrait = u.optString("headportrait");
+						user.sex = u.optString("sex");
+						user.introduce = u.optString("introduce");
+						if(u.has("nickname")){
+							user.nickname = u.optString("nickname");
+						}
+						System.out.println("sssssssss" + user.nickname);
+						return user;
+					}else{
+						return null;
+					}
+					
 				} else {
 					return null;
 				}
