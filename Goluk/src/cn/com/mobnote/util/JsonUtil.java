@@ -994,6 +994,7 @@ public class JsonUtil {
 					temp.mApprovelabel = getJsonStringValue(labelObj, "approvelabel", "");
 					temp.mTarento = getJsonStringValue(labelObj, "tarento", "");
 					temp.mHeadplusv = getJsonStringValue(labelObj, "headplusv", "");
+					temp.mHeadplusvdes = getJsonStringValue(labelObj, "headplusvdes", "");
 				}
 
 				list.add(temp);

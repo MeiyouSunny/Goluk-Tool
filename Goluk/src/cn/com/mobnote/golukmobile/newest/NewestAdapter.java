@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
@@ -12,6 +13,7 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -21,6 +23,8 @@ import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.live.ILive;
+import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videosuqare.CategoryListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.user.UserUtils;
@@ -147,6 +151,7 @@ public class NewestAdapter extends BaseAdapter {
 		holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
 		holder.timeLocation = (TextView) convertView.findViewById(R.id.time_location);
 		holder.function = (ImageView) convertView.findViewById(R.id.function);
+		holder.rlHead = convertView.findViewById(R.id.rl_head_img);
 
 		holder.praiseText = (TextView)convertView.findViewById(R.id.tv_newest_list_item_praise);
 		holder.commentText = (TextView)convertView.findViewById(R.id.tv_newest_list_item_comment);
@@ -198,6 +203,14 @@ public class NewestAdapter extends BaseAdapter {
 			holder.totalcomments.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
 			holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
 		}
+
+		final VideoSquareInfo vsInfo = mVideoSquareInfo;
+		holder.rlHead.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startUserCenter(vsInfo);
+			}
+		});
 	}
 
 	private void initView(int index) {
@@ -523,10 +536,28 @@ public class NewestAdapter extends BaseAdapter {
 		TextView comment2;
 		TextView comment3;
 		ImageView ivReward;
+
+		View rlHead;
 	}
 
 	public void setNewestLiseView(NewestListView view) {
 		this.mNewestListView = view;
+	}
+
+	public void startUserCenter(VideoSquareInfo videoSquareInfo) {
+		UCUserInfo user = new UCUserInfo();
+		user.uid = videoSquareInfo.mUserEntity.uid;
+		user.nickname = videoSquareInfo.mUserEntity.nickname;
+		user.headportrait = videoSquareInfo.mUserEntity.headportrait;
+		user.introduce = "";
+		user.sex = videoSquareInfo.mUserEntity.sex;
+		user.customavatar = videoSquareInfo.mUserEntity.mCustomAvatar;
+		user.praisemenumber = "0";
+		user.sharevideonumber = "0";
+		Intent i = new Intent(mContext, UserCenterActivity.class);
+		i.putExtra("userinfo", user);
+		i.putExtra("type", 0);
+		mContext.startActivity(i);
 	}
 
 	public void setCategoryListView(CategoryListView view) {
