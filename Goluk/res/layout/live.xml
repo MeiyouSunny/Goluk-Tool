@@ -57,6 +57,15 @@
             android:background="@drawable/live_icon_portrait"
             android:contentDescription="@string/imgdes" />
 
+        <ImageView
+            android:id="@+id/live_head_authentication"
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_alignBottom="@id/live_userhead"
+            android:layout_alignRight="@id/live_userhead"
+            android:contentDescription="@string/imgdes"
+            android:visibility="gone" />
+
         <!-- XX次围观 -->
 
         <TextView

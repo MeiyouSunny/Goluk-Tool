@@ -375,14 +375,14 @@ public class JsonUtil {
 			userInfo.desc = getJsonStringValue(rootObj, "desc", "");
 			userInfo.head = getJsonStringValue(rootObj, "head", "7");
 			userInfo.customavatar = getJsonStringValue(rootObj, "customavatar", "");
-
+			// 解析 用户标签
 			if (rootObj.has("label")) {
 				UserLabel label = new UserLabel();
 				label.mApprove = getJsonStringValue(rootObj, "approve", "");
 				label.mApprovelabel = getJsonStringValue(rootObj, "approvelabel", "0");
 				label.mTarento = getJsonStringValue(rootObj, " tarento", "0");
 				label.mHeadplusv = getJsonStringValue(rootObj, "headplusv", "0");
-
+				label.mHeadplusvdes = getJsonStringValue(rootObj, "Headplusvdes", "");
 				userInfo.mUserLabel = label;
 			}
 
