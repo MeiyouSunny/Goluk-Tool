@@ -52,7 +52,6 @@ public class NetUtil {
 				cancel();
 				break;
 			case MSG_H_TIMEOUT:
-				GFileUtils.writeLiveLog("---Netutil-------handler ------timeout -------------: ");
 				cancelTimer();
 				cancel();
 				sendData(TIMEOUT, null);
@@ -66,9 +65,9 @@ public class NetUtil {
 	public void setMultiCastListener(IMultiCastFn fn) {
 		mFn = fn;
 	}
-	
-	//移除指定监听
-	public void unRemoveMultiCastListener(IMultiCastFn fn){
+
+	// 移除指定监听
+	public void unRemoveMultiCastListener(IMultiCastFn fn) {
 		if (mFn == fn)
 			mFn = null;
 	}
@@ -171,7 +170,6 @@ public class NetUtil {
 	}
 
 	private void receiveSucess(String ssid, String ip) {
-		GFileUtils.writeLiveLog("---Netutil-------receiveSucess-----ssid: " + ssid + "  ip:" + ip);
 		GolukDebugUtils.e("", "+++TestUDP--------receiveSucess-----1111111 recvbuf1=: " + ip);
 		if (ip.contains("/")) {
 			ip = ip.replace("/", "");

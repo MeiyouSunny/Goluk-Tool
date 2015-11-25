@@ -6,10 +6,11 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -140,6 +141,9 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 				LinearLayout.LayoutParams mPreLoadingParams = new LinearLayout.LayoutParams(
 						width, height);
 				bannerHolder.mBannerSlide.setLayoutParams(mPreLoadingParams);
+				bannerHolder.mTextBanner1 = (TextView)convertView.findViewById(R.id.tv_text_banner1);
+				bannerHolder.mTextBanner2 = (TextView)convertView.findViewById(R.id.tv_text_banner2);
+	            bannerHolder.mTextBannerLL = (LinearLayout)convertView.findViewById(R.id.ll_text_banner);
 				convertView.setTag(bannerHolder);
 			}
 		} else {
@@ -224,6 +228,12 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
                     showDefaultImage(bannerHolder.mBannerSlide);
                 }
             }
+
+			bannerHolder.mTextBannerLL.setVisibility(View.VISIBLE);
+
+			Animation slideDown = AnimationUtils.loadAnimation(mContext,
+					R.anim.anim_slide_down);
+			bannerHolder.mTextBannerLL.startAnimation(slideDown);
 		}
 		return convertView;
 	}
@@ -282,5 +292,8 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 
 	static class ViewHolderBanner {
 		SlideShowView mBannerSlide;
+		TextView mTextBanner1;
+		TextView mTextBanner2;
+		LinearLayout mTextBannerLL;
 	}
 }

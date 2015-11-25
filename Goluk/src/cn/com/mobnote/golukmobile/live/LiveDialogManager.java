@@ -340,7 +340,7 @@ public class LiveDialogManager {
 	}
 
 	public void dismissSingleBtnDialog() {
-		if (null != mSingleButtonDialog) {
+		if (null != mSingleButtonDialog && mSingleButtonDialog.isShowing()) {
 			mSingleButtonDialog.dismiss();
 			mSingleButtonDialog = null;
 		}

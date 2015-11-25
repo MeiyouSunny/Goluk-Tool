@@ -15,6 +15,7 @@ import cn.com.mobnote.user.IPCInfo;
 import cn.com.mobnote.user.IpcUpdateManage;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 import android.annotation.SuppressLint;
@@ -160,18 +161,18 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		GolukDebugUtils.e("aaa", "=====mApp.mIpcInfo=====" + mIpcInfo);
 
 		if (null != mIpcInfo) {
-			mApp.mSharedPreUtil.saveIPCDownVersion(mIpcInfo.version);
-			mApp.mSharedPreUtil.saveIpcFileSize(mIpcInfo.filesize);
-			mApp.mSharedPreUtil.saveIpcContent(mIpcInfo.appcontent);
-			mApp.mSharedPreUtil.saveIPCURL(mIpcInfo.url);
-			mApp.mSharedPreUtil.saveIPCPath(mIpcInfo.path);
+			SharedPrefUtil.saveIPCDownVersion(mIpcInfo.version);
+			SharedPrefUtil.saveIpcFileSize(mIpcInfo.filesize);
+			SharedPrefUtil.saveIpcContent(mIpcInfo.appcontent);
+			SharedPrefUtil.saveIPCURL(mIpcInfo.url);
+			SharedPrefUtil.saveIPCPath(mIpcInfo.path);
 		}
 
-		ipc_version = mApp.mSharedPreUtil.getIPCDownVersion();
-		ipc_size = mApp.mSharedPreUtil.getIPCFileSize();
-		ipc_content = mApp.mSharedPreUtil.getIPCContent();
-		ipc_url = mApp.mSharedPreUtil.getIPCURL();
-		ipc_path = mApp.mSharedPreUtil.getIPCPath();
+		ipc_version = SharedPrefUtil.getIPCDownVersion();
+		ipc_size = SharedPrefUtil.getIPCFileSize();
+		ipc_content = SharedPrefUtil.getIPCContent();
+		ipc_url = SharedPrefUtil.getIPCURL();
+		ipc_path = SharedPrefUtil.getIPCPath();
 
 		mTextIpcVersion.setText(ipc_version);
 		String size = DataCleanManage.getFormatSize(Double.parseDouble(ipc_size));
@@ -433,7 +434,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 							.getString(R.string.update_no_connect_ipc_hint));
 					mIsDisConnect = true;
 				} else {
-					String version = mApp.mSharedPreUtil.getIPCVersion();
+					String version = SharedPrefUtil.getIPCVersion();
 					GolukDebugUtils.i("lily", "-------version-----" + version + "------ipc_version-----" + ipc_version);
 //					if(mApp.mIpcUpdateManage.mIpcModel.equals(mApp.mSharedPreUtil.getDownloadIpcModel())){
 						if (version.equals(ipc_version)) {

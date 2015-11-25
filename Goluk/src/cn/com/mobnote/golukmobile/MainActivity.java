@@ -148,7 +148,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private SoundPool mSoundPool;
 	private final static String TAG = "MainActivity";
 	private String mCityCode;
-	private SharedPrefUtil mSharedPrefUtil;
 	private boolean mBannerLoaded;
 
 	private void playDownLoadedSound() {
@@ -171,7 +170,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		super.onCreate(savedInstanceState);
 		// 在使用SDK各组件之前初始化context信息，传入ApplicationContext
 		// 注意该方法要再setContentView方法之前实现
-		((GolukApplication) this.getApplication()).initSharedPreUtil(this);
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		mRootLayout = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.index, null);
 		setContentView(mRootLayout);
@@ -251,8 +249,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			}
 		}
 
-		mSharedPrefUtil = new SharedPrefUtil(this);
-		mCityCode = mSharedPrefUtil.getCityIDString();
+		mCityCode = SharedPrefUtil.getCityIDString();
 		dealPush(itStart_have);
 
 		if (NetworkStateReceiver.isNetworkAvailable(this)) {
@@ -633,14 +630,14 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				if(event.getCityCode().equals("-1")) {
 					if(null == mCityCode || mCityCode.trim().equals("")) {
 						mCityCode = event.getCityCode();
-						mSharedPrefUtil.setCityIDString(mCityCode);
+						SharedPrefUtil.setCityIDString(mCityCode);
 						listView.loadBannerData(mCityCode);
 					} else {
 						listView.loadBannerData(mCityCode);
 					}
 				} else {
-					mCityCode = event.getCityCode();
-					mSharedPrefUtil.setCityIDString(mCityCode);
+					mCityCode = event.getCityCode();;
+					SharedPrefUtil.setCityIDString(mCityCode);
 					listView.loadBannerData(mCityCode);
 				}
 				mBannerLoaded = true;
@@ -649,7 +646,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			if(null == mCityCode || mCityCode.trim().equals("")) {
 				Log.d(TAG, "First located, fill everything anyway");
 				mCityCode = event.getCityCode();
-				mSharedPrefUtil.setCityIDString(mCityCode);
+				SharedPrefUtil.setCityIDString(mCityCode);
 				listView.loadBannerData(mCityCode);
 			} else {
 				// In whole nation
@@ -657,9 +654,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 					if(event.getCityCode().equals("-1")) {
 						// do nothing
 					} else {
-						Log.d(TAG, "Switch from whole nation to city");
 						mCityCode = event.getCityCode();
-						mSharedPrefUtil.setCityIDString(mCityCode);
+						SharedPrefUtil.setCityIDString(mCityCode);
 						listView.loadBannerData(mCityCode);
 					}
 				} else { // In city
@@ -667,9 +663,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 						// do nothing
 					} else {
 						if(!mCityCode.equals(event.getCityCode())) {
-							Log.d(TAG, "Switch from one city to another");
 							mCityCode = event.getCityCode();
-							mSharedPrefUtil.setCityIDString(mCityCode);
+							SharedPrefUtil.setCityIDString(mCityCode);
 							listView.loadBannerData(mCityCode);
 						}
 					}
@@ -778,7 +773,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public void showContinuteLive() {
 		GolukDebugUtils.e("", "jyf----20150406----showContinuteLive----showContinuteLive :");
 		// 标识正常退出
-		mApp.mSharedPreUtil.setIsLiveNormalExit(true);
+		SharedPrefUtil.setIsLiveNormalExit(true);
 		if (mApp.getIpcIsLogin()) {
 			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this, LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE,
 					"提示", "是否继续直播");

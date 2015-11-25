@@ -29,85 +29,93 @@
             android:contentDescription="@string/imgdes" />
     </RelativeLayout>
 
+    <!-- 确认 wifi指示灯闪烁 -->
+
     <TextView
         android:id="@+id/wifilist_textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/title_layout"
-        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="38dp"
         android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/ipcbinding_setp_1"
+        android:drawablePadding="12dp"
+        android:gravity="center"
         android:text="@string/wifi_link_17_text"
         android:textColor="#595959"
         android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/wifilist_textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/wifilist_textView1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="@string/wifi_link_17_2_text"
-        android:textColor="#595959"
-        android:textSize="18sp" />
+    <!-- 动画图片 -->
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/wifilist_textView2"
+        android:layout_width="158dp"
+        android:layout_height="46dp"
+        android:layout_below="@id/wifilist_textView1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="34dp"
+        android:layout_marginTop="30dp"
         android:contentDescription="@string/imgdes"
         android:src="@drawable/connect_gif_ipc_bluelight" />
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/wifilist_textView2"
+        android:layout_width="158dp"
+        android:layout_height="46dp"
+        android:layout_below="@id/wifilist_textView1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="34dp"
         android:background="@anim/ipc_signal"
         android:contentDescription="@string/imgdes" />
 
-    <RelativeLayout
-        android:id="@+id/list_title_layout"
-        android:layout_width="match_parent"
+    <!-- 提示 "切出程序，在手机设置中连接" -->
+
+    <TextView
+        android:id="@+id/wifilist_textView2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/wifilist_textView1"
         android:layout_below="@id/imageView1"
-        android:layout_marginTop="15dp"
-        android:background="#F1F1F1" >
+        android:layout_marginTop="40dp"
+        android:drawableLeft="@drawable/ipcbinding_setp_2"
+        android:drawablePadding="12dp"
+        android:text="@string/wifi_link_17_2_text"
+        android:textColor="#595959"
+        android:textSize="18sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp"
-            android:layout_marginTop="26dp"
-            android:text="@string/wifi_link_8_text"
-            android:textColor="#0587ff"
-            android:textSize="20sp" />
+    <TextView
+        android:id="@+id/wifilist_textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wifilist_textView2"
+        android:layout_marginLeft="75dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/wifi_link_36_text"
+        android:textColor="#595959"
+        android:textSize="18sp" />
 
-        <ImageButton
-            android:id="@+id/refresh_help_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="18dp"
-            android:layout_marginTop="26dp"
-            android:background="@drawable/connect_refresh_btn"
-            android:contentDescription="@string/imgdes" />
+    <ImageView
+        android:id="@+id/wifilist_img"
+        android:layout_width="170dp"
+        android:layout_height="134dp"
+        android:layout_below="@id/wifilist_textView3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/ipcbinding_wifilist_img"
+        android:contentDescription="@string/imgdes" />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/refresh_help_btn"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="18dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/connect_line_green"
-            android:contentDescription="@string/imgdes" />
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/wifilist_textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/wifilist_textView1"
+        android:layout_below="@id/wifilist_img"
+        android:layout_marginTop="40dp"
+        android:drawableLeft="@drawable/ipcbinding_setp_3"
+        android:drawablePadding="12dp"
+        android:gravity="center"
+        android:text="@string/wifi_link_37_text"
+        android:textColor="#595959"
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/next_btn"
@@ -134,31 +142,5 @@
         android:text="@string/wifi_link_33_text"
         android:textColor="#828282"
         android:textSize="16sp" />
-
-    <ListView
-        android:id="@+id/wifi_list_listview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/wifi_link_list_help"
-        android:layout_below="@id/list_title_layout"
-        android:layout_marginBottom="25dp"
-        android:scrollbars="none" >
-    </ListView>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="82dp"
-        android:layout_marginTop="130dp"
-        android:background="@drawable/empolder"
-        android:contentDescription="@string/imgdes"
-        android:visibility="gone" />
-
-    <include
-        android:id="@+id/loading_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout="@layout/loading"
-        android:visibility="gone" />
 
 </RelativeLayout>

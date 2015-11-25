@@ -6,6 +6,7 @@ import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
+import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.tencent.android.tpush.XGIOperateCallback;
@@ -73,7 +74,7 @@ public class XGInit implements XGIOperateCallback {
 		GolukDebugUtils.e("", "jyf----XD----Goluk----XGInit---golukServerRegisterCallBack-----sucess:");
 
 		// 保存TokenId到本地
-		GolukApplication.getInstance().mSharedPreUtil.setTokenId(mTokenId);
+		SharedPrefUtil.setTokenId(mTokenId);
 	}
 
 	@Override
@@ -85,7 +86,7 @@ public class XGInit implements XGIOperateCallback {
 		}
 
 		String token = XGPushConfig.getToken(mContext);
-		String localToken = GolukApplication.getInstance().mSharedPreUtil.getTolenId();
+		String localToken = SharedPrefUtil.getTolenId();
 		if (token.equals(localToken)) {
 			// 本地有Token,说明上传成功过，不需要上传
 			GolukDebugUtils.e("", "jyf----XD----Goluk----XGInit---local have-token, Not Upload:");

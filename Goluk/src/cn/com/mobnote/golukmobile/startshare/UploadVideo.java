@@ -2,6 +2,8 @@ package cn.com.mobnote.golukmobile.startshare;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -14,14 +16,19 @@ import android.os.Message;
 import android.provider.MediaStore.Video.Thumbnails;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.mobnote.util.JsonUtil;
-import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
-public class UploadVideo {
+import com.tencent.upload.task.impl.VideoUploadTask;
+import com.tencent.upload.task.impl.PhotoUploadTask;
+
+import cn.com.mobnote.golukmobile.helper.IUploadRequestListener;
+import cn.com.mobnote.golukmobile.helper.QCloudHelper;
+import cn.com.mobnote.golukmobile.helper.UpLoadVideoRequest;
+import cn.com.mobnote.golukmobile.http.HttpManager;
+
+
+public class UploadVideo implements IUploadRequestListener {
 	/** 上传视频更新进度 */
 	private final int MSG_H_UPLOAD_PROGRESS = 2;
 	/** 上传成功 */
@@ -32,7 +39,6 @@ public class UploadVideo {
 	/** 重新上传 */
 	private final int MSG_H_RETRY_UPLOAD = 8;
 
-	private GolukApplication mApp = null;
 	private Context mContext = null;
 	private final int UPLOAD_FAILED_UP = 3;
 	private int uploadCount = 0;
@@ -47,6 +53,7 @@ public class UploadVideo {
 	private String mVideoName;
 	private boolean mIsExit = false;
 	private String mVideoVid = "";
+	private String mSignTime = "";
 	/** 上传视频是否完成 */
 	private boolean mIsUploadSucess = false;
 	private AlertDialog mErrorDialog = null;
@@ -55,6 +62,9 @@ public class UploadVideo {
 
 	/** 退出提示框 */
 	private AlertDialog mExitPromptDialog = null;
+	
+	/**腾讯云上传文件*/
+	private UpLoadVideoRequest mUpLoadVideoRequest;
 
 	public void setListener(IUploadVideoFn fn) {
 		mFn = fn;
@@ -99,7 +109,7 @@ public class UploadVideo {
 					return;
 				}
 				uploadVideoFile(mVideoPath);
-				break;
+				break;				
 			default:
 				break;
 			}
@@ -109,7 +119,6 @@ public class UploadVideo {
 
 	public UploadVideo(Context context, GolukApplication application, final String videoName) {
 		mContext = context;
-		mApp = application;
 		mVideoName = videoName;
 		createThumb();
 	}
@@ -207,11 +216,20 @@ public class UploadVideo {
 	public String getVideoId() {
 		return this.mVideoVid;
 	}
+	public String getSignTime() {
+		return this.mSignTime;
+	}
 
 	public String getThumbPath() {
 		return thumbFile;
 	}
 
+	/**
+	 * 上传视频文件，支持两种上传途径
+	 * 		1. 上传至自建文件服务器
+	 * 		2. 上传至云服务器（目前是腾讯云的微视频）
+	 * @param videoPath
+	 */
 	public void uploadVideoFile(String videoPath) {
 		if (null == videoPath || "".equals(videoPath)) {
 			return;
@@ -220,11 +238,7 @@ public class UploadVideo {
 		uploadCount++;
 		GolukDebugUtils.e("", "jyf-----VideoShareActivity-------------uploadVideoFile :" + uploadCount);
 		isUploading = true;
-		final String filePath = FileUtils.javaToLibPath(videoPath);
-		boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_UploadVideo, filePath);
-
-		GolukDebugUtils.e("", "Request---------:" + isSucess);
+		uploadToCloud();
 	}
 
 	public boolean isUploading() {
@@ -353,9 +367,8 @@ public class UploadVideo {
 	private void exit(boolean isdestroyTopwindow) {
 		mIsExit = true;
 		// 取消上传
-		if (!mIsUploadSucess) {
-			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_UploadVideo,
-					JsonUtil.getCancelJson());
+		if (isUploading && mUpLoadVideoRequest != null) {
+			mUpLoadVideoRequest.Cancel();
 		}
 		this.dimissErrorDialog();
 		this.dimissExitDialog();
@@ -383,5 +396,40 @@ public class UploadVideo {
 			uploadError();
 		}
 	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// 云存储服务
+	private void uploadToCloud() {
+		// 请求签名
+		mUpLoadVideoRequest = new UpLoadVideoRequest(this);
+		HashMap<String, String> path = new HashMap<String, String>();
+		path.put(QCloudHelper.PHOTO_BUCKET, thumbFile);
+		path.put(QCloudHelper.VIDEO_BUCKET, mVideoPath);
+		mUpLoadVideoRequest.upLoad(path);
+	}
 
+	@Override
+	public void onUploadSucceed(HashMap<String, String> urlMap) {
+		// TODO Auto-generated method stub
+		mVideoVid = mUpLoadVideoRequest.getVideoId();
+		mSignTime = mUpLoadVideoRequest.getSignTime();
+		videoUploadCallBack(UPLOAD_STATE_SUCESS, "qcloud", mVideoVid);
+	}
+
+	@Override
+	public void onUploadProgress(int percent) {
+		// TODO Auto-generated method stub
+		GolukDebugUtils.d("goluk", "上传中! ret:" + percent);
+		Message msg = new Message();
+		msg.what = MSG_H_UPLOAD_PROGRESS;
+		msg.obj = percent;
+		mBaseHandler.sendMessage(msg);
+	}
+
+	@Override
+	public void onUploadFailed(int errorCode, String errorMsg) {
+		// TODO Auto-generated method stub
+		GolukDebugUtils.e("goluk", "上传结果:失败! ret:" + errorCode + " msg:" + errorMsg);
+		mBaseHandler.sendEmptyMessage(MSG_H_UPLOAD_ERROR);
+	}
 }

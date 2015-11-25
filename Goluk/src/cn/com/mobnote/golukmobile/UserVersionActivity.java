@@ -13,6 +13,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.IpcUpdateManage;
+import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -52,8 +53,8 @@ public class UserVersionActivity extends BaseActivity implements OnClickListener
 		mApp = (GolukApplication) getApplication();
 
 		initView();
-		mApp.initSharedPreUtil(this);
-		vIpc = mApp.mSharedPreUtil.getIPCVersion();
+
+		vIpc = SharedPrefUtil.getIPCVersion();
 	}
 
 	@Override
