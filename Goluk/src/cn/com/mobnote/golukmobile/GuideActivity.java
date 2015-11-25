@@ -7,12 +7,21 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.tiros.debug.GolukDebugUtils;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+// OneAPM, Micle
+import com.blueware.agent.android.BlueWare;
 
 /**
  * 
@@ -41,15 +50,18 @@ public class GuideActivity extends BaseActivity {
 		mContext = this;
 		getIntentData();
 
-		GolukApplication.getInstance().initSharedPreUtil(this);
 		((GolukApplication) this.getApplication()).initLogic();
 		// 注册信鸽的推送
 		GolukNotification.getInstance().createXG();
 
 		((GolukApplication) this.getApplication()).startUpgrade();
+		
 		// 初始化
 		init();
-		// SysApplication.getInstance().addActivity(this);
+		
+		// OneAPM
+		BlueWare.withApplicationToken("E18AA269D23C98A1521C6454D1836CE006").start(this.getApplication());
+
 	}
 
 	@Override

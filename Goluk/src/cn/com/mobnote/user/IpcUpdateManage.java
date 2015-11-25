@@ -29,6 +29,7 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
+import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
@@ -171,7 +172,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 * @date 2015年6月24日
 	 */
 	public String getLocalFile(String ipcVersion) {
-		String fileInfo = mApp.mSharedPreUtil.getIpcLocalFileInfo();
+		String fileInfo = SharedPrefUtil.getIpcLocalFileInfo();
 		if (null == fileInfo || "".equals(fileInfo)) {
 			return null;
 		}
@@ -244,7 +245,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 				final String goluk = jsonData.getString("goluk");
 				JSONArray ipc = jsonData.getJSONArray("ipc");
 				// 保存ipc匹配信息
-				mApp.mSharedPreUtil.saveIPCMatchInfo(ipc.toString());
+				SharedPrefUtil.saveIPCMatchInfo(ipc.toString());
 
 				GolukDebugUtils.i(TAG, "===ipc----goluk=------" + goluk);
 
@@ -306,7 +307,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 						if (!mApp.isIpcLoginSuccess && !isbind) {
 							GolukUtils.showToast(mApp.getContext(), "您好像没有连接摄像头哦");
 						} else {
-							String version_new = mApp.mSharedPreUtil.getIPCVersion();
+							String version_new = SharedPrefUtil.getIPCVersion();
 							GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + version_new + "，当前已是最新版本");
 						}
 					} else {
@@ -345,7 +346,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 			} catch (Exception e) {
 				if (FUNCTION_AUTO != mFunction) {
 					GolukDebugUtils.i(TAG, "ipc匹配列表为空");
-					 GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + mApp.mSharedPreUtil.getIPCVersion()
+					 GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + SharedPrefUtil.getIPCVersion()
 							 + "，当前已是最新版本");
 				}
 				e.printStackTrace();
@@ -372,7 +373,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 */
 	public boolean download(String url, String ipcVersion) {
 //		mDownloadIPCModel = mIpcModel;
-		mApp.mSharedPreUtil.saveDownloadIpcModel(mApp.mIPCControlManager.mProduceName);
+		SharedPrefUtil.saveDownloadIpcModel(mApp.mIPCControlManager.mProduceName);
 		String str = JsonUtil.ipcDownLoad(url, ipcVersion, mApp.mIPCControlManager.mProduceName);
 		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_DownloadIPCFile, str);
@@ -488,9 +489,9 @@ public class IpcUpdateManage implements IPCManagerFn {
 				String ipc_filesize = upgradeArray[i].filesize;
 				String ipc_content = upgradeArray[i].appcontent;
 				// 保存ipc文件大小
-				mApp.mSharedPreUtil.saveIpcFileSize(ipc_filesize);
+				SharedPrefUtil.saveIpcFileSize(ipc_filesize);
 				// 保存ipc更新信息
-				mApp.mSharedPreUtil.saveIpcContent(ipc_content);
+				SharedPrefUtil.saveIpcContent(ipc_content);
 	
 				String ipc_isnew = upgradeArray[i].isnew;
 				if ("0".equals(ipc_isnew)) {
@@ -570,7 +571,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 			// 更新当前信息
 			final String downInfo = JsonUtil.getSingleIPCInfoJson(mDownLoadIpcInfo);
 			if (null != downInfo) {
-				mApp.mSharedPreUtil.setIpcLocalFileInfo(downInfo);
+				SharedPrefUtil.setIpcLocalFileInfo(downInfo);
 			}
 			// 当前文件
 
@@ -669,10 +670,10 @@ public class IpcUpdateManage implements IPCManagerFn {
 	public boolean update(String filePath) {
 		boolean u = false;
 		// 当前的版本号
-		String current_version = mApp.mSharedPreUtil.getIPCVersion();
+		String current_version = SharedPrefUtil.getIPCVersion();
 		// 获取升级ipc版本号
 		try {
-			String matchInfo = mApp.mSharedPreUtil.getIPCMatchInfo();
+			String matchInfo = SharedPrefUtil.getIPCMatchInfo();
 			JSONArray jsonArray = new JSONArray(matchInfo);
 			IPCInfo[] upgradeArray = JsonUtil.upgradeJson(jsonArray);
 			int length = 0;
@@ -829,9 +830,9 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 */
 	public boolean ipcConnect() {
 		try {
-			String ipcVersion = mApp.mSharedPreUtil.getIPCVersion();
+			String ipcVersion = SharedPrefUtil.getIPCVersion();
 			GolukDebugUtils.i(TAG, "-----------match-----111-------" + ipcVersion);
-			String matchInfo = mApp.mSharedPreUtil.getIPCMatchInfo();
+			String matchInfo = SharedPrefUtil.getIPCMatchInfo();
 			GolukDebugUtils.i("aaa", "------ipc匹配列表-----" + matchInfo);
 			// 读取本地匹配列表
 			if ("".equals(matchInfo) || null == matchInfo) {

@@ -10,12 +10,14 @@ import java.util.Map.Entry;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -46,7 +48,6 @@ import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.photoalbum.FileInfoManagerUtils;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
-import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.wifibind.WiFiLinkCompleteActivity;
@@ -69,6 +70,7 @@ import cn.com.mobnote.user.UserIdentifyManage;
 import cn.com.mobnote.user.UserLoginManage;
 import cn.com.mobnote.user.UserRegistAndRepwdManage;
 import cn.com.mobnote.util.AssetsFileUtils;
+import cn.com.mobnote.util.GolukConfig;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.SharedPrefUtil;
@@ -81,6 +83,7 @@ import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
 import de.greenrobot.event.EventBus;
+
 
 public class GolukApplication extends Application implements IPageNotifyFn, IPCManagerFn, ITalkFn, ILocationFn {
 	/** JIN接口类 */
@@ -118,8 +121,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private boolean autoRecordFlag = false;
 	/** 停车安防配置 */
 	private int[] motioncfg;
-	/** 保存数据 */
-	public SharedPrefUtil mSharedPreUtil = null;
 
 	private WifiApAdmin wifiAp;
 	/** 当前地址 */
@@ -206,6 +207,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		super.onCreate();
 		instance = this;
 		Const.setAppContext(this);
+
 		HttpManager.getInstance();
 		SDKInitializer.initialize(this);
 		// TODO 此处不要做初始化相关的工作
@@ -230,12 +232,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			}
 		};
 	};
-
-	public void initSharedPreUtil(Activity activity) {
-		if (null == mSharedPreUtil) {
-			mSharedPreUtil = new SharedPrefUtil(activity);
-		}
-	}
 
 	public void initLogic() {
 		if (null != mGoluk) {
@@ -332,7 +328,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 */
 	public void startUpgrade() {
 		// app升级+ipc升级
-		String vIpc = mSharedPreUtil.getIPCVersion();
+		String vIpc = SharedPrefUtil.getIPCVersion();
 		GolukDebugUtils.i("lily", "=====获取当前的vIpc=====" + vIpc);
 		mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_AUTO, vIpc);
 	}
@@ -517,33 +513,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	public Context getContext() {
 		return this.mContext;
-	}
-
-	/**
-	 * 本地视频上传回调
-	 * 
-	 * @param vid
-	 *            ,视频ID
-	 */
-	public void localVideoUpLoadCallBack(int success, Object param1, Object param2) {
-		if (mPageSource == "VideoEdit") {
-			((VideoEditActivity) mContext).videoUploadCallBack(success, param1, param2);
-		}
-	}
-
-	/**
-	 * 本地视频分享回调
-	 * 
-	 * @param data
-	 *            ,分享json数据, {"code":"200","vurl":
-	 *            "http://cdn3.lbs8.com/files/cdcvideo/3dfa8172-8fdc-4acd-b882-f191608f236720141124183820.mp4"
-	 *            ,"vid":"3dfa8172-8fdc-4acd-b882-f191608f236720141124183820"}
-	 */
-	public void localVideoShareCallBack(int success, String data) {
-		if (mPageSource == "VideoEdit") {
-			((VideoEditActivity) mContext).videoShareCallBack(success, data);
-		}
-
 	}
 
 	/**
@@ -861,14 +830,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 
 		switch (type) {
-		case PageType_UploadVideo:
-			// 本地视频编辑页面,点击下一步,在上传页面上传本地视频回调
-			localVideoUpLoadCallBack(success, param1, param2);
-			break;
-		case 2:
-			// 本地视频分享链接请求回调
-			localVideoShareCallBack(success, String.valueOf(param2));
-			break;
 		case 7:
 			// 地图大头针数据
 			if (null != mContext) {
@@ -996,10 +957,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	// 显示
 	public void showContinuteLive() {
-		if (null == mSharedPreUtil) {
-			return;
-		}
-		if (mSharedPreUtil.getIsLiveNormalExit()) {
+
+		if (SharedPrefUtil.getIsLiveNormalExit()) {
 			isCheckContinuteLiveFinish = true;
 			// 不需要续直播
 			return;
@@ -1022,7 +981,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 		isCallContinue = true;
 		GolukDebugUtils
-				.e(null, "jyf----20150406----showContinuteLive----mApp :" + mSharedPreUtil.getIsLiveNormalExit());
+				.e(null, "jyf----20150406----showContinuteLive----mApp :" + SharedPrefUtil.getIsLiveNormalExit());
 
 		if (mContext instanceof MainActivity) {
 			GolukDebugUtils.e(null, "jyf----20150406----showContinuteLive----mApp2222 :");
@@ -1153,8 +1112,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					} else {
 						mIPCControlManager.mProduceName = json.getString("productname");
 					}
-					// 保存设备型号
-					mSharedPreUtil.saveIpcModel(mIPCControlManager.mProduceName);
+					//保存设备型号
+					SharedPrefUtil.saveIpcModel(mIPCControlManager.mProduceName);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -1316,7 +1275,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 								String ipcVersion = json.optString("version");
 								GolukDebugUtils.i("lily", "=====保存当前的ipcVersion=====" + ipcVersion);
 								// 保存ipc版本号
-								mSharedPreUtil.saveIPCVersion(ipcVersion);
+								SharedPrefUtil.saveIPCVersion(ipcVersion);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}

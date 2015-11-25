@@ -16,12 +16,13 @@ public  class UrlHostManager {
 	public static final String USER_CENTER_PATH = "/cdcRegister/modifyUserInfo.htm";
 	public static final String UPLOAD_IMAG_PATH = "/fileService/HeadUploadServlet";
 	public static final String ONLINE_HOST = "http://s.goluk.cn";
+	public static final String QCLOUD_HOST = "http://q.goluk.cn";
 	public static final String TEST_HOST = "http://server.goluk.cn";
 	public static final String DEV_HOST = "http://svr.goluk.cn";
 	public static final String ONLINE_WEBHOST = "http://surl.goluk.cn";
 	public static final String TEST_WEBHOST = "http://surl3.goluk.cn";
 	public static final String DEV_WEBHOST = "http://surl2.goluk.cn";
-
+	public static final String QCLOUD_WEBHOST = "http://qsurl.goluk.cn";
 	private String mHost = "";
 	private static String mWebPageHost = "";
 	private Context mContext;
@@ -35,6 +36,9 @@ public  class UrlHostManager {
 		} else if (flag.equalsIgnoreCase("test")) {
 			mHost = TEST_HOST;
 			mWebPageHost = TEST_WEBHOST;
+		} else if (flag.equalsIgnoreCase("txy")) {
+			mHost = QCLOUD_HOST;
+			mWebPageHost = QCLOUD_WEBHOST;
 		} else {
 			mHost = DEV_HOST;
 			mWebPageHost = DEV_WEBHOST;
