@@ -72,7 +72,6 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 
 		mContext = this;
 		mApp = (GolukApplication) getApplication();
-		mApp.setContext(mContext, "UserStart");
 
 //		SysApplication.getInstance().addActivity(this);
 
@@ -111,6 +110,13 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 
 			}
 		});
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		mApp.setContext(mContext, "UserStart");
 	}
 
 	public void initView() {

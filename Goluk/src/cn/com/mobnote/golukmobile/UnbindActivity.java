@@ -21,6 +21,7 @@ import cn.com.mobnote.golukmobile.wifibind.WiFiLinkIndexActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.user.IpcUpdateManage;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class UnbindActivity extends BaseActivity implements OnClickListener, IPCManagerFn {
@@ -67,8 +68,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 		super.onResume();
 		mApplication.setContext(mContext, "Unbind");
 		// 固件版本号
-		mApplication.initSharedPreUtil(this);
-		vIpc = mApplication.mSharedPreUtil.getIPCVersion();
+		vIpc = SharedPrefUtil.getIPCVersion();
 		/**
 		 * 判断是否是否绑定 true 绑定 显示解绑UI false 未绑定 显示未绑定UI
 		 */
@@ -96,7 +96,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 				}
 			}
 			if (isBindSucess()) {
-				String ipcPwd = mApplication.mSharedPreUtil.getIpcPwd();
+				String ipcPwd = SharedPrefUtil.getIpcPwd();
 				mTextPasswordName.setText(ipcPwd);
 			}
 		}
@@ -157,13 +157,13 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 								//解除绑定后，所有信息置空
 								SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
 								preferences.edit().putString("ipc_bind_name", "").commit();
-								mApplication.mSharedPreUtil.saveIpcPwd("");
-								mApplication.mSharedPreUtil.saveIPCVersion("");
+								SharedPrefUtil.saveIpcPwd("");
+								SharedPrefUtil.saveIPCVersion("");
 								vIpc = "";
 								mTextCameraName.setText("");
 								mTextPasswordName.setText("");
 								mTextVersion.setText("");
-								mApplication.mSharedPreUtil.saveIpcModel("");
+								SharedPrefUtil.saveIpcModel("");
 								mApplication.mIPCControlManager.mProduceName = "";
 								isGetIPCSucess = false;
 								mUnbindBtn.setText("绑定");
@@ -308,7 +308,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 						// 摄像头信息
 						mApSSID = obj.getString("AP_SSID");
 						mApPWD = obj.getString("AP_PWD");
-						mApplication.mSharedPreUtil.saveIpcPwd(mApPWD);
+						SharedPrefUtil.saveIpcPwd(mApPWD);
 						GolukDebugUtils.i("lily", "--------mApPWD------" + mApPWD);
 						if (isBindSucess()) {
 							mTextPasswordName.setText(mApPWD);

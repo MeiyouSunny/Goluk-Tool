@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -16,8 +15,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.eventbus.EventBindFinish;
-import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventFinishWifiActivity;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -28,19 +25,6 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 /**
- * <pre>
- * 1.类命名首字母大写
- * 2.公共函数驼峰式命名
- * 3.属性函数驼峰式命名
- * 4.变量/参数驼峰式命名
- * 5.操作符之间必须加空格
- * 6.注释都在行首写.(枚举除外)
- * 7.编辑器必须显示空白处
- * 8.所有代码必须使用TAB键缩进
- * 9.函数使用块注释,代码逻辑使用行注释
- * 10.文件头部必须写功能说明
- * 11.后续人员开发保证代码格式一致
- * </pre>
  * 
  * @ 功能描述:wifi链接首页
  * 
@@ -50,7 +34,6 @@ import de.greenrobot.event.EventBus;
 
 public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListener {
 
-	private static final String TAG = "WiFiLinkIndexActivity";
 	/** application */
 	private GolukApplication mApp = null;
 	/** 上下文 */
@@ -80,7 +63,6 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 		mApp.setContext(mContext, "WiFiLinkIndex");
 
 		// collectLog("onCreate", "-----111111");
-
 
 		// 断开连接
 		mApp.mIPCControlManager.setIPCWifiState(false, "");
@@ -112,11 +94,18 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 		mBackBtn.setOnClickListener(this);
 		mKeepBtn.setOnClickListener(this);
 		// 修改title说明文字颜色
-		final String showTxt = "需要<font color=\"#0587ff\"> 手机 </font>与<font color=\"#0587ff\"> 极路客 </font>建立WiFi连接";
+		String need = this.getResources().getString(R.string.wifi_link_index_need);
+		String mobile = this.getResources().getString(R.string.wifi_link_index_mobile);
+		String goluk = this.getResources().getString(R.string.app_name);
+		String and = this.getResources().getString(R.string.wifi_link_index_and);
+		String wificonn = this.getResources().getString(R.string.wifi_link_index_wificonn);
+		final String showTxt = need + "<font color=\"#0587ff\"> " + mobile + " </font> " + and
+				+ " <font color=\"#0587ff\"> " + goluk + "  </font>" + wificonn;
 		mDescTitleText2.setText(Html.fromHtml(showTxt));
 
 		mHelpTv = (TextView) findViewById(R.id.wifi_link_index_help);
-		mHelpTv.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); // 下划线
+		// 下划线
+		mHelpTv.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
 		mHelpTv.setOnClickListener(this);
 
 		mDescTitleText1.getPaint().setFakeBoldText(true);
@@ -186,7 +175,7 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 			startActivity(list);
 			break;
 		case R.id.wifi_link_index_help:
-//			GolukUtils.openUrl(GolukUtils.URL_BIND_HELP, this);
+			// GolukUtils.openUrl(GolukUtils.URL_BIND_HELP, this);
 			Intent mHelpIntent = new Intent(this, UserOpenUrlActivity.class);
 			mHelpIntent.putExtra(UserOpenUrlActivity.FROM_TAG, "wifihelp");
 			startActivity(mHelpIntent);

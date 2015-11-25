@@ -32,13 +32,12 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
-public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHeadersAdapter {
+public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 	private PhotoAlbumActivity mActivity = null;
 	private LayoutInflater inflater = null;
 	private StickyListHeadersListView mListView = null;
 	private List<DoubleVideoInfo> mDataList = null;
 	private List<String> mGroupNameList = null;
-	private int count = 0;
 	private float density = 1;
 	private int screenWidth = 0;
 	/** 滚动中锁标识 */
@@ -46,7 +45,7 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 	private String from = null;
 	private int type = 0;
 
-	public WonderfulVideoAdapter(Context c, StickyListHeadersListView listview, int type, String from) {
+	public LocalWonderfulVideoAdapter(Context c, StickyListHeadersListView listview, int type, String from) {
 		this.from = from;
 		this.type = type;
 		this.mActivity = (PhotoAlbumActivity) c;
@@ -63,7 +62,6 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 		mDataList.addAll(data);
 		mGroupNameList.clear();
 		mGroupNameList.addAll(groupname);
-		count = mDataList.size();
 		this.notifyDataSetChanged();
 	}
 
@@ -164,7 +162,7 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 		holder.mVideoCountTime1.setText(mVideoInfo1.countTime);
 		holder.mVideoCreateTime1.setText(mVideoInfo1.videoCreateDate.substring(11));
 		holder.mVideoSize1.setText(mVideoInfo1.videoSize);
-		holder.image1.setTag("image:"+mVideoInfo1.filename);
+		holder.image1.setTag("image:" + mVideoInfo1.filename);
 		displayVideoQuality(mVideoInfo1.videoHP, holder.mVideoQuality1);
 		loadImage(mVideoInfo1.filename, holder.image1);
 		if (mVideoInfo1.isNew) {
@@ -179,7 +177,7 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 			holder.mVideoCountTime2.setText(mVideoInfo2.countTime);
 			holder.mVideoCreateTime2.setText(mVideoInfo2.videoCreateDate.substring(11));
 			holder.mVideoSize2.setText(mVideoInfo2.videoSize);
-			holder.image2.setTag("image:"+mVideoInfo2.filename);
+			holder.image2.setTag("image:" + mVideoInfo2.filename);
 			displayVideoQuality(mVideoInfo2.videoHP, holder.mVideoQuality2);
 			loadImage(mVideoInfo2.filename, holder.image2);
 
@@ -249,27 +247,27 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 		Bitmap mBitmap = mActivity.getBitmap(filename);
 		if (null != mBitmap) {
 			image.setImageBitmap(mBitmap);
-		}else {
+		} else {
 			image.setImageResource(R.drawable.album_default_img);
-//			if (lock) {
-//				return;
-//			}
-			
+			// if (lock) {
+			// return;
+			// }
+
 			String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
-			
-			ImageAsyncTask.getBitmapForCache(filePath + File.separator + filename, new ICallBack(){
+
+			ImageAsyncTask.getBitmapForCache(filePath + File.separator + filename, new ICallBack() {
 				@Override
 				public void SuccessCallback(String url, Bitmap mBitmap) {
-					String filename = url.substring(url.lastIndexOf("/")+1);
+					String filename = url.substring(url.lastIndexOf("/") + 1);
 					if (null == mBitmap) {
 						return;
 					}
-					
+
 					Bitmap b = mActivity.getBitmap(filename);
 					if (null == b) {
 						b = mBitmap;
 						mActivity.putBitmap(filename, mBitmap);
-					}else{
+					} else {
 						if (null != mBitmap) {
 							if (!mBitmap.isRecycled()) {
 								mBitmap.recycle();
@@ -277,9 +275,9 @@ public class WonderfulVideoAdapter extends BaseAdapter implements StickyListHead
 							}
 						}
 					}
-				
+
 					String imagefilename = filename.replace(".jpg", ".mp4");
-					ImageView image = (ImageView)mListView.findViewWithTag("image:"+imagefilename);
+					ImageView image = (ImageView) mListView.findViewWithTag("image:" + imagefilename);
 					if (null != image) {
 						image.setImageBitmap(b);
 					}

@@ -709,7 +709,23 @@ public class GolukUtils {
 				return false;
 			}
 		}
-
 		return true;
 	}
+	
+	/**
+	 * 打开系统wifi列表
+	 * 
+	 * @param context
+	 * @author jyf
+	 */
+	public static void startSystemWifiList(Context context) {
+		if (null == context) {
+			return;
+		}
+		Intent intent = new Intent();
+		intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
+		context.startActivity(intent);
+	}
+	
+	
 }

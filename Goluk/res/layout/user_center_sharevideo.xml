@@ -16,6 +16,7 @@
             android:id="@+id/headimg"
             android:layout_width="37.33dp"
             android:layout_height="37.33dp"
+            android:layout_centerVertical="true"
             android:contentDescription="@string/imgdes" />
 
         <!-- 举报按钮 -->
@@ -101,7 +102,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignRight="@id/uc_video_userInfolayout"
-                android:layout_marginBottom="5dp"
                 android:layout_marginRight="-30dp"
                 android:background="@drawable/together_recommend_icon"
                 android:contentDescription="@string/imgdes"
@@ -203,7 +203,7 @@
                 android:layout_height="18dp"
                 android:background="@drawable/videodetail_like"
                 android:contentDescription="@string/def" />
-            
+
             <TextView
                 android:id="@+id/zText"
                 android:layout_width="wrap_content"
@@ -212,7 +212,6 @@
                 android:paddingLeft="4dp"
                 android:textColor="#1163a2"
                 android:textSize="12sp" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -271,10 +270,10 @@
         android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginBottom="6dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:background="#e5e5e5"
-        android:layout_marginBottom="6dp"
         android:contentDescription="@string/imgdes" />
 
     <TextView

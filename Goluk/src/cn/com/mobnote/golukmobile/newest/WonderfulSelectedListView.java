@@ -60,7 +60,6 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	private int visibleCount;
 	private ImageView shareBg = null;
 	private static final String TAG = "WonderfulSelectedListView";
-	private SharedPrefUtil mSharedPrefUtil;
 
 	private long requestId = 0;
 
@@ -98,7 +97,6 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 			mWonderfulSelectedAdapter = new WonderfulSelectedAdapter(mContext);
 		}
 		mRTPullListView.setAdapter(mWonderfulSelectedAdapter);
-		mSharedPrefUtil = new SharedPrefUtil((android.app.Activity)context);
 		initHistoryData();
 		setViewListBg(false);
 		httpPost(true, "0", "");
@@ -141,7 +139,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 
 				// Save banner data
 				String bannerJson = com.alibaba.fastjson.JSON.toJSONString(model);
-				mSharedPrefUtil.saveBannerListString(bannerJson);
+				SharedPrefUtil.saveBannerListString(bannerJson);
 			} while(false);
 
 			return;
@@ -149,7 +147,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	};
 
 	private void loadHistoryBanner() {
-		String json = mSharedPrefUtil.getBannerListString();
+		String json = SharedPrefUtil.getBannerListString();
 		GolukDebugUtils.d(TAG, "banner string=" + json);
 		if(null != json && !json.trim().equals("")) {
 			BannerModel model = (BannerModel)com.alibaba.fastjson.JSON.parseObject(json, BannerModel.class);
@@ -221,10 +219,10 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 				historyDate = SettingUtils.getInstance().getString("hotHistoryDate", sdf.format(new Date()));
 				SettingUtils.getInstance().putString("hotHistoryDate", sdf.format(new Date()));
 				httpPost(false, "0", "");
-				String cityCode = mSharedPrefUtil.getCityIDString();
+				String cityCode = SharedPrefUtil.getCityIDString();
 
 				if(null == cityCode || cityCode.trim().equals("")) {
-					mSharedPrefUtil.setCityIDString("-1");
+					SharedPrefUtil.setCityIDString("-1");
 					loadBannerData("-1");
 				} else {
 					loadBannerData(cityCode);
@@ -296,6 +294,11 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 				pageCount = JsonParserUtils.parserJXCount((String) param2);
 				if ("0".equals(mJxid)) {
 					mDataList.clear();
+				}
+
+				if(null == list || list.size() <= 0) {
+					Toast.makeText(mContext, mContext.getString(
+							R.string.str_pull_refresh_listview_bottom_reach), Toast.LENGTH_SHORT).show();
 				}
 				initLayout(list);
 			} else {
