@@ -220,6 +220,30 @@ public class NewestAdapter extends BaseAdapter {
 		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
 
 		GlideUtils.loadImage(mContext, holder.videoImg, mVideoSquareInfo.mVideoEntity.picture, R.drawable.tacitly_pic);
+		if(null != mVideoSquareInfo.mUserEntity && null != mVideoSquareInfo.mUserEntity.label) {
+			String approveLabel = mVideoSquareInfo.mUserEntity.label.approvelabel;
+			String approve = mVideoSquareInfo.mUserEntity.label.approve;
+			String tarento = mVideoSquareInfo.mUserEntity.label.tarento;
+			String headplusv = mVideoSquareInfo.mUserEntity.label.headplusv;
+			String headplusvdes = mVideoSquareInfo.mUserEntity.label.headplusvdes;
+			if(null == approveLabel && null == approve &&
+					null == tarento && null == headplusv && null == headplusvdes) {
+				holder.ivLogoVIP.setVisibility(View.GONE);
+			} else {
+				if("1".equals(approveLabel)) {
+					holder.ivLogoVIP.setImageResource(R.drawable.authentication_bluev_icon);
+					holder.ivLogoVIP.setVisibility(View.VISIBLE);
+				} else if("1".equals(tarento)) {
+					holder.ivLogoVIP.setImageResource(R.drawable.authentication_yellowv_icon);
+					holder.ivLogoVIP.setVisibility(View.VISIBLE);
+				} else if("1".equals(headplusv)) {
+					holder.ivLogoVIP.setImageResource(R.drawable.authentication_star_icon);
+					holder.ivLogoVIP.setVisibility(View.VISIBLE);
+				} else {
+					holder.ivLogoVIP.setVisibility(View.GONE);
+				}
+			}
+		}
 
 		String headUrl = mVideoSquareInfo.mUserEntity.mCustomAvatar;
 		if (null != headUrl && !"".equals(headUrl)) {

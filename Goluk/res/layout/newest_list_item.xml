@@ -32,7 +32,6 @@
             android:layout_height="11.33dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:src="@drawable/authentication_yellowv_icon"
             android:contentDescription="@string/imgdes" />
         </RelativeLayout>
         <!-- "更多" 按钮 -->
