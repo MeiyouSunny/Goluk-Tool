@@ -18,6 +18,14 @@
             android:layout_height="64dp"
             android:layout_marginLeft="14dp"
             android:contentDescription="@string/imgdes" />
+        
+        <ImageView 
+            android:id="@+id/v"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/user_head"
+            android:layout_alignBottom="@id/user_head"
+            android:background="@drawable/authentication_bluev_icon"/>
 
         <LinearLayout
             android:id="@+id/user_center_lyout"
@@ -25,8 +33,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="14dp"
-            android:layout_toLeftOf="@+id/title_share"
-            android:layout_toRightOf="@+id/user_head"
+            android:layout_toLeftOf="@id/title_share"
+            android:layout_toRightOf="@id/user_head"
             android:orientation="vertical" >
 
             <TextView
@@ -59,11 +67,20 @@
             android:background="@drawable/user_center_share_btn"
             android:contentDescription="@string/imgdes" />
     </RelativeLayout>
+    
+    <TextView 
+        android:id="@+id/vText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="14dp"
+        android:textColor="#ffffff"
+        android:layout_marginTop="8dp"
+        android:textSize="12sp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal" >
 
         <LinearLayout

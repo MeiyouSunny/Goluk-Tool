@@ -16,11 +16,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
 import android.text.TextUtils.TruncateAt;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
@@ -78,8 +76,6 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 
 	private int currentViewType = 1; // 当前视图类型（推荐列表，最新列表）
 
-	ClusterActivity clusterActivity = null;
-	
 	public boolean isMoreLine = false;
 
 	public ActivityBean headData = null;
@@ -92,7 +88,6 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 
 	public ClusterAdapter(Context context, SharePlatformUtil spf, int tabtype, IClusterInterface ici) {
 		mContext = context;
-		clusterActivity = (ClusterActivity) mContext;
 
 		mIClusterInterface = ici;
 		// 默认进入分享视频列表类别
@@ -225,21 +220,28 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 					}
 				});
 				holder.partakes.setText(headData.participantcount);
-
-				holder.partakeBtn.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View arg0) {
-						Intent photoalbum = new Intent(mContext,PhotoAlbumActivity.class);
-						photoalbum.putExtra("from", "cloud");
-						
-						PromotionSelectItem item = new PromotionSelectItem();
-						item.activityid = headData.activityid;
-						item.activitytitle = headData.activityname;
-						item.channelid = headData.channelid;
-						photoalbum.putExtra(PhotoAlbumActivity.ACTIVITY_INFO, item);
-						mContext.startActivity(photoalbum);
-					}
-				});
+				//活动过期
+				if("1".equals(headData.expiration)){
+					holder.partakeBtn.setText(mContext.getResources().getString(R.string.activity_time_out));
+					holder.partakeBtn.setBackgroundResource(R.drawable.together_join_icon_press);
+				}else{
+					holder.partakeBtn.setText(mContext.getResources().getString(R.string.attend_activity));
+					holder.partakeBtn.setBackgroundResource(R.drawable.together_join_icon);
+					holder.partakeBtn.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View arg0) {
+							Intent photoalbum = new Intent(mContext,PhotoAlbumActivity.class);
+							photoalbum.putExtra("from", "cloud");
+							
+							PromotionSelectItem item = new PromotionSelectItem();
+							item.activityid = headData.activityid;
+							item.activitytitle = headData.activityname;
+							item.channelid = headData.channelid;
+							photoalbum.putExtra(PhotoAlbumActivity.ACTIVITY_INFO, item);
+							mContext.startActivity(photoalbum);
+						}
+					});
+				}
 
 				holder.recommendBtn.setOnClickListener(new OnClickListener() {
 
@@ -298,7 +300,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 				holder.userInfoLayout = (RelativeLayout) convertView.findViewById(R.id.user_info_layout);
 				holder.time = (TextView) convertView.findViewById(R.id.time);
 				holder.function = (ImageView) convertView.findViewById(R.id.function);
-
+				holder.v = (ImageView) convertView.findViewById(R.id.v);
 				holder.praiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
 				holder.zanIcon = (ImageView) convertView.findViewById(R.id.zanIcon);
 				holder.zanText = (TextView) convertView.findViewById(R.id.zanText);
@@ -343,6 +345,26 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 			}
 
 			String headUrl = clusterInfo.mUserEntity.mCustomAvatar;
+			if(clusterInfo.mUserEntity != null && clusterInfo.mUserEntity.label != null){
+				if("1".equals(clusterInfo.mUserEntity.label.approvelabel)){//企业认证
+					holder.v.setBackgroundResource(R.drawable.authentication_bluev_icon);
+					holder.v.setVisibility(View.VISIBLE);
+				}else{
+					if("1".equals(clusterInfo.mUserEntity.label.headplusv)){//个人加V
+						holder.v.setBackgroundResource(R.drawable.authentication_yellowv_icon);
+						holder.v.setVisibility(View.VISIBLE);
+					}else{
+						if("1".equals(clusterInfo.mUserEntity.label.tarento)){//达人
+							holder.v.setBackgroundResource(R.drawable.authentication_star_icon);
+							holder.v.setVisibility(View.VISIBLE);
+						}else{
+							holder.v.setVisibility(View.GONE);
+						}
+					}
+				}
+			}else{
+				holder.v.setVisibility(View.GONE);
+			}
 			if (null != headUrl && !"".equals(headUrl)) {
 				// 使用服务器头像地址
 				GlideUtils.loadNetHead(mContext, holder.headimg, headUrl, R.drawable.editor_head_feault7);
@@ -675,6 +697,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 		String VideoID;
 		ImageView imageLayout;
 		ImageView headimg;
+		ImageView v;
 		TextView nikename;
 		TextView location;
 		TextView time;

@@ -24,4 +24,8 @@ public class UserBean {
 	@JSONField(name="sex")
 	public String sex;
 	
+	/**认证信息**/
+	@JSONField(name="label")
+	public UserLabelBean label;
+	
 }

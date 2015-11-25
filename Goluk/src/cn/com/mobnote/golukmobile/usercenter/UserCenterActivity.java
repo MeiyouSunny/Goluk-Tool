@@ -15,8 +15,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -62,10 +60,8 @@ import de.greenrobot.event.EventBus;
  * 
  */
 
-public class UserCenterActivity extends BaseActivity implements
-		VideoSuqareManagerFn, IClickShareView, IClickPraiseView,
-		OnClickListener, IDialogDealFn, ILiveDialogManagerFn,
-		IUserCenterInterface {
+public class UserCenterActivity extends BaseActivity implements VideoSuqareManagerFn, IClickShareView,
+		IClickPraiseView, OnClickListener, IDialogDealFn, ILiveDialogManagerFn, IUserCenterInterface {
 
 	private static final String TAG = "UserCenterActivity";
 
@@ -82,13 +78,12 @@ public class UserCenterActivity extends BaseActivity implements
 	private Button titlehome;
 	/** 返回按钮 */
 	private ImageButton backbtn;
-//	public static Handler handler = null;
-	
-	/** 所有的数据请求 id*/
+	// public static Handler handler = null;
+
+	/** 所有的数据请求 id */
 	public long mAllDataSequenceId = 0;
 	/** 我的分享视频请求 */
 	private long mMyShareVideoSequenceId = 0;
-	
 
 	class ShareVideoGroup {
 		public List<VideoSquareInfo> videolist = null;
@@ -119,12 +114,6 @@ public class UserCenterActivity extends BaseActivity implements
 	private RelativeLayout mVideoTheEndView = null;
 
 	private TextView title = null;
-	
-//	public static int refristUserInfo = 100;
-	
-	/** 是否刷新头像数据 **/
-	
-	private boolean isRefresh = false;
 
 	@SuppressLint("SimpleDateFormat")
 	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
@@ -138,8 +127,7 @@ public class UserCenterActivity extends BaseActivity implements
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_center);
-		GolukApplication.getInstance().getVideoSquareManager()
-				.addVideoSquareManagerListener(TAG, this);
+		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener(TAG, this);
 
 		mBaseApp.setContext(this, "UserCenterActivity");
 		videogroupdata = new ShareVideoGroup();
@@ -148,49 +136,21 @@ public class UserCenterActivity extends BaseActivity implements
 		praisgroupdata = new PraiseInfoGroup();
 		praisgroupdata.praiselist = new ArrayList<PraiseInfo>();
 		praisgroupdata.isHaveData = false;
-		
-//		handler = new Handler(){
-//			@Override
-//			public void handleMessage(Message msg) {
-//				// TODO Auto-generated method stub
-//				if(msg.what == refristUserInfo){
-//					if (curUser != null) {
-//						if(testUser()){
-//							JSONObject u = UserCenterActivity.this.getUserData();
-//							if(u != null){
-//								try {
-//									curUser.introduce = u.getString("desc");
-//									curUser.headportrait = u.getString("head");
-//									curUser.nickname  = u.getString("nickname");
-//									curUser.customavatar = u.getString("customavatar");
-//									updateViewData(true, 0);
-//								} catch (JSONException e) {
-//									// TODO Auto-generated catch block
-//									e.printStackTrace();
-//								}
-//							}
-//							
-//						}
-//					}
-//				}
-//				super.handleMessage(msg);
-//			}
-//		};
-		
+
 		Intent i = this.getIntent();
 		curUser = (UCUserInfo) i.getSerializableExtra("userinfo");
 		tabtype = i.getIntExtra("type", 0);
-		
+
 		this.init();
-		
+
 		/**
-		 * 如果是自己的主页  先请求个人主页的缓存数据
+		 * 如果是自己的主页 先请求个人主页的缓存数据
 		 */
-		if(testUser()){
-			//请求同步数据接口
+		if (testUser()) {
+			// 请求同步数据接口
 			String historydata = GolukApplication.getInstance().getVideoSquareManager().getUserCenter();
-			//说明本地有缓存数据
-			if(historydata != null && !"".equals(historydata)){
+			// 说明本地有缓存数据
+			if (historydata != null && !"".equals(historydata)) {
 				this.formatAllData(historydata);
 			}
 		}
@@ -200,7 +160,7 @@ public class UserCenterActivity extends BaseActivity implements
 		uca.notifyDataSetChanged();
 		backbtn = (ImageButton) findViewById(R.id.back_btn);
 		title = (TextView) findViewById(R.id.title);
-		titlehome  = (Button) findViewById(R.id.title_home);
+		titlehome = (Button) findViewById(R.id.title_home);
 		backbtn.setOnClickListener(this);
 		titlehome.setOnClickListener(this);
 		if (testUser()) {
@@ -209,29 +169,29 @@ public class UserCenterActivity extends BaseActivity implements
 
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 
-		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this)
-				.inflate(R.layout.video_square_below_loading, null);
+		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading,
+				null);
 
-		mVideoTheEndView = (RelativeLayout) LayoutInflater.from(this).inflate(
-				R.layout.usercenter_videos_below_loading, null);
+		mVideoTheEndView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.usercenter_videos_below_loading,
+				null);
 		EventBus.getDefault().register(this);
 	}
 
 	public void onEventMainThread(EventRefreshUserInfo event) {
-		if(null == event) {
+		if (null == event) {
 			return;
 		}
 
-		switch(event.getOpCode()) {
-			case EventConfig.REFRESH_USER_INFO:
+		switch (event.getOpCode()) {
+		case EventConfig.REFRESH_USER_INFO:
 			if (curUser != null) {
-				if(testUser()) {
+				if (testUser()) {
 					JSONObject u = UserCenterActivity.this.getUserData();
-					if(u != null) {
+					if (u != null) {
 						try {
 							curUser.introduce = u.getString("desc");
 							curUser.headportrait = u.getString("head");
-							curUser.nickname  = u.getString("nickname");
+							curUser.nickname = u.getString("nickname");
 							curUser.customavatar = u.getString("customavatar");
 							updateViewData(true, 0);
 						} catch (JSONException e) {
@@ -251,11 +211,10 @@ public class UserCenterActivity extends BaseActivity implements
 	protected void onResume() {
 		mBaseApp.setContext(this, "UserCenterActivity");
 		super.onResume();
-		GolukApplication.getInstance().getVideoSquareManager()
-				.addVideoSquareManagerListener(TAG, this);
+		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener(TAG, this);
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 	}
-	
+
 	/**
 	 * 个人资料信息
 	 */
@@ -293,8 +252,7 @@ public class UserCenterActivity extends BaseActivity implements
 
 			mRTPullListView.setOnRTScrollListener(new OnRTScrollListener() {
 				@Override
-				public void onScrollStateChanged(AbsListView arg0,
-						int scrollState) {
+				public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 					if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
 
 						if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {
@@ -303,12 +261,9 @@ public class UserCenterActivity extends BaseActivity implements
 									if (videogroupdata.videolist.size() > 0) {
 										if (!videogroupdata.addFooter) {
 											videogroupdata.addFooter = true;
-											mRTPullListView
-													.addFooterView(mBottomLoadingView);
+											mRTPullListView.addFooterView(mBottomLoadingView);
 										}
-										httpGetNextVideo(videogroupdata.videolist
-												.get(videogroupdata.videolist
-														.size() - 1).mVideoEntity.sharingtime);
+										httpGetNextVideo(videogroupdata.videolist.get(videogroupdata.videolist.size() - 1).mVideoEntity.sharingtime);
 									}
 								}
 							} else {// 点赞用户列表
@@ -319,8 +274,7 @@ public class UserCenterActivity extends BaseActivity implements
 				}
 
 				@Override
-				public void onScroll(AbsListView arg0, int firstVisibleItem,
-						int visibleItemCount, int arg3) {
+				public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
 					wonderfulFirstVisible = firstVisibleItem;
 					wonderfulVisibleCount = visibleItemCount;
 				}
@@ -349,8 +303,7 @@ public class UserCenterActivity extends BaseActivity implements
 	 * @date 2015年4月15日
 	 */
 	private void httpPost(String otheruid) {
-		mAllDataSequenceId = GolukApplication.getInstance().getVideoSquareManager()
-				.getUserCenter(curUser.uid);
+		mAllDataSequenceId = GolukApplication.getInstance().getVideoSquareManager().getUserCenter(curUser.uid);
 	}
 
 	/**
@@ -371,8 +324,7 @@ public class UserCenterActivity extends BaseActivity implements
 		if (!isLoginSucess()) {
 			return false;
 		}
-		String info = mBaseApp.mGoluk.GolukLogicCommGet(
-				GolukModule.Goluk_Module_HttpPage, 0, "");
+		String info = mBaseApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
 		GolukDebugUtils.i("lily", "---IndexMore--------" + info);
 		try {
 			JSONObject json = new JSONObject(info);
@@ -388,7 +340,7 @@ public class UserCenterActivity extends BaseActivity implements
 			return false;
 		}
 	}
-	
+
 	private boolean isLoginSucess() {
 		if (mBaseApp.isUserLoginSucess) {
 			// 登录成功
@@ -404,16 +356,17 @@ public class UserCenterActivity extends BaseActivity implements
 
 		return false;
 	}
-	
+
 	/**
 	 * 封装三个请求同时回来的数据
 	 */
-	private void formatAllData(String data){
+	private void formatAllData(String data) {
 		UCUserInfo user = ucdf.getUserInfo(data);
 		if (user != null) {
-			List<VideoSquareInfo> videos = ucdf
-					.getClusterList(data);
+			List<VideoSquareInfo> videos;
+			videos = ucdf.getClusterList(data);
 			List<PraiseInfo> praise = ucdf.getPraises(data);
+
 			// 说明有数据
 			if (videos != null) {
 				mRTPullListView.removeFooterView(mVideoTheEndView);
@@ -456,13 +409,12 @@ public class UserCenterActivity extends BaseActivity implements
 
 			updateViewData(false, 0);
 		}
+
 	}
 
-
 	@Override
-	public void VideoSuqare_CallBack(int event, int msg, int param1,
-			Object param2) {
-		if (event == VSquare_Req_MainPage_Infor  &&  param1 == mAllDataSequenceId) {
+	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
+		if (event == VSquare_Req_MainPage_Infor && param1 == mAllDataSequenceId) {
 			if (RESULE_SUCESS == msg) {
 				this.formatAllData(param2.toString());
 			} else {
@@ -472,8 +424,7 @@ public class UserCenterActivity extends BaseActivity implements
 
 		} else if (event == VSquare_Req_MainPage_List_ShareVideo && param1 == mMyShareVideoSequenceId) {// 个人主页视频列表结果
 			if (RESULE_SUCESS == msg) {
-				List<VideoSquareInfo> videos = JsonParserUtils
-						.parserNewestItemData((String) param2);
+				List<VideoSquareInfo> videos = JsonParserUtils.parserNewestItemData((String) param2);
 				if (videos != null && videos.size() > 0) {
 					int count = videogroupdata.videolist.size();
 					videogroupdata.videolist.addAll(videos);
@@ -523,11 +474,9 @@ public class UserCenterActivity extends BaseActivity implements
 							String username = null != mWillShareVideoSquareInfo ? mWillShareVideoSquareInfo.mUserEntity.nickname
 									: "";
 							describe = username + "：" + describe;
-							CustomShareBoard shareBoard = new CustomShareBoard(
-									this, sharePlatform, shareurl, coverurl,
+							CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shareurl, coverurl,
 									describe, ttl, null, realDesc, videoId);
-							shareBoard.showAtLocation(this.getWindow()
-									.getDecorView(), Gravity.BOTTOM, 0, 0);
+							shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 						}
 
 					} else {
@@ -570,31 +519,30 @@ public class UserCenterActivity extends BaseActivity implements
 
 						String realDesc = "极路客个人主页分享(使用#极路客Goluk#拍摄)";
 
-						CustomShareBoard shareBoard = new CustomShareBoard(
-								this, sharePlatform, shorturl, customavatar,
+						CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shorturl, customavatar,
 								describe, title, null, realDesc, "");
-						shareBoard.showAtLocation(this.getWindow()
-								.getDecorView(), Gravity.BOTTOM, 0, 0);
+						shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-			}else{
+			} else {
 				GolukUtils.showToast(this, "请求异常，请检查网络是否正常");
 			}
 		} else if (VSquare_Req_MainPage_DeleteVideo == event) {
 			callBack_DelVideo(msg, param1, param2);
 		}
 	}
-	
+
 	/**
 	 * 控制theEnd 的显示和 去掉
+	 * 
 	 * @param flog
 	 */
-	public void updateTheEnd(boolean flog){
-		if(flog){
+	public void updateTheEnd(boolean flog) {
+		if (flog) {
 			mRTPullListView.addFooterView(mVideoTheEndView);
-		}else{
+		} else {
 			mRTPullListView.removeFooterView(mVideoTheEndView);
 		}
 	}
@@ -655,25 +603,23 @@ public class UserCenterActivity extends BaseActivity implements
 		for (int i = 0; i < this.videogroupdata.videolist.size(); i++) {
 			VideoSquareInfo vs = this.videogroupdata.videolist.get(i);
 			if (vs.id.equals(mVideoSquareInfo.id)) {
-				int number = Integer
-						.parseInt(mVideoSquareInfo.mVideoEntity.praisenumber);
+				int number = Integer.parseInt(mVideoSquareInfo.mVideoEntity.praisenumber);
 				if ("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
 					number++;
 				} else {
 					number--;
 				}
 
-				this.videogroupdata.videolist.get(i).mVideoEntity.praisenumber = ""
-						+ number;
+				this.videogroupdata.videolist.get(i).mVideoEntity.praisenumber = "" + number;
 				this.videogroupdata.videolist.get(i).mVideoEntity.ispraise = mVideoSquareInfo.mVideoEntity.ispraise;
 				mVideoSquareInfo.mVideoEntity.praisenumber = "" + number;
 				this.uca.notifyDataSetChanged();
 				break;
 			}
 		}
-		
+
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -689,7 +635,7 @@ public class UserCenterActivity extends BaseActivity implements
 			this.finish();
 			break;
 		case R.id.title_home:
-			Intent it = new Intent(this,MainActivity.class);
+			Intent it = new Intent(this, MainActivity.class);
 			startActivity(it);
 			break;
 		default:
@@ -712,7 +658,7 @@ public class UserCenterActivity extends BaseActivity implements
 					}
 				}).setNegativeButton("取消", null).create().show();
 	}
-	
+
 	private void delVideo(String vid) {
 		boolean isSucess = mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
 				VSquare_Req_MainPage_DeleteVideo, JsonUtil.getDelRequestJson(vid));
@@ -737,9 +683,8 @@ public class UserCenterActivity extends BaseActivity implements
 	public void dialogManagerCallBack(int dialogType, int function, String data) {
 		if (LiveDialogManager.DIALOG_TYPE_DEL_VIDEO == dialogType) {
 			LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
-			mBaseApp.mGoluk.GolukLogicCommRequest(
-					GolukModule.Goluk_Module_Square,
-					VSquare_Req_MainPage_DeleteVideo, JsonUtil.getCancelJson());
+			mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_MainPage_DeleteVideo,
+					JsonUtil.getCancelJson());
 		}
 
 	}
@@ -755,14 +700,11 @@ public class UserCenterActivity extends BaseActivity implements
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		if(GolukApplication.getInstance().getVideoSquareManager()!=null){
+		if (GolukApplication.getInstance().getVideoSquareManager() != null) {
 			GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener(TAG);
-			GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener("videosharehotlist");
+			GolukApplication.getInstance().getVideoSquareManager()
+					.removeVideoSquareManagerListener("videosharehotlist");
 		}
-//		if (null != handler){
-//			handler.removeCallbacksAndMessages(null);
-//			handler = null;
-//		}
 		EventBus.getDefault().unregister(this);
 	}
 

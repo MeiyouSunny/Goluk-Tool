@@ -17,6 +17,14 @@
             android:layout_width="37.33dp"
             android:layout_height="37.33dp"
             android:contentDescription="@string/imgdes" />
+        
+        <ImageView 
+            android:id="@+id/v"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_alignRight="@id/headimg"
+            android:layout_alignBottom="@id/headimg"
+            android:background="@drawable/authentication_bluev_icon"/>
 
         <!-- 举报按钮 -->
 
