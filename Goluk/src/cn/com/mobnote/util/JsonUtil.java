@@ -377,12 +377,13 @@ public class JsonUtil {
 			userInfo.customavatar = getJsonStringValue(rootObj, "customavatar", "");
 			// 解析 用户标签
 			if (rootObj.has("label")) {
+				JSONObject labelObj = rootObj.getJSONObject("label");
 				UserLabel label = new UserLabel();
-				label.mApprove = getJsonStringValue(rootObj, "approve", "");
-				label.mApprovelabel = getJsonStringValue(rootObj, "approvelabel", "0");
-				label.mTarento = getJsonStringValue(rootObj, " tarento", "0");
-				label.mHeadplusv = getJsonStringValue(rootObj, "headplusv", "0");
-				label.mHeadplusvdes = getJsonStringValue(rootObj, "Headplusvdes", "");
+				label.mApprove = getJsonStringValue(labelObj, "approve", "");
+				label.mApprovelabel = getJsonStringValue(labelObj, "approvelabel", "0");
+				label.mTarento = getJsonStringValue(labelObj, " tarento", "0");
+				label.mHeadplusv = getJsonStringValue(labelObj, "headplusv", "0");
+				label.mHeadplusvdes = getJsonStringValue(labelObj, "Headplusvdes", "");
 				userInfo.mUserLabel = label;
 			}
 
