@@ -220,6 +220,7 @@ public class JsonParserUtils {
 						ulb.headplusv = label.optString("headplusv");
 						ulb.headplusvdes = label.optString("headplusvdes");
 						ulb.tarento = label.optString("tarento");
+						ulb.tarentodes = label.optString("tarentodes");
 						mUserEntity.label = ulb;
 					}
 				}

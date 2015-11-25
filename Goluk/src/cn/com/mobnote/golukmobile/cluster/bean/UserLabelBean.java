@@ -24,4 +24,9 @@ public class UserLabelBean {
 	@JSONField(name="headplusvdes")
 	public String headplusvdes;
 	
+	/**达人描述**/
+	@JSONField(name="tarentodes")
+	public String tarentodes;
+	
+	
 }
