@@ -53,7 +53,6 @@ public class UserCenterDataFormat {
 						if(u.has("nickname")){
 							user.nickname = u.optString("nickname");
 						}
-						System.out.println("sssssssss" + user.nickname);
 						return user;
 					}else{
 						return null;
