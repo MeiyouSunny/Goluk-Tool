@@ -12,7 +12,7 @@ echo "进入$1目录"
 cd $1
 
 echo "调用ant打包"
-export ANT_OPTS="-javaagent:oneapm/class.rewriter.jar"
+export ANT_OPTS="-javaagent:/home/builder/class.rewriter.jar"
 ant release
 
 echo "拷贝APK文件"
