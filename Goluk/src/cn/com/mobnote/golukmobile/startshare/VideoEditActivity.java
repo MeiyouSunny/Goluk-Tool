@@ -32,13 +32,21 @@ import cn.com.mobnote.golukmobile.promotion.PromotionListRequest;
 import cn.com.mobnote.golukmobile.promotion.PromotionModel;
 import cn.com.mobnote.golukmobile.promotion.PromotionData;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
-import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
+import cn.com.mobnote.golukmobile.startshare.bean.ShareDataBean;
+import cn.com.mobnote.golukmobile.startshare.bean.ShareDataFullBean;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukFileUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
+
+import java.util.LinkedList;
+
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 
 import com.rd.car.editor.Constants;
 import com.rd.car.editor.FilterPlaybackView;
@@ -744,11 +752,11 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private void requestShareInfo() {
 		mShareLoading.switchState(ShareLoading.STATE_GET_SHARE);
 		final String t_vid = this.mUploadVideo.getVideoId();
+		final String t_signTime = this.mUploadVideo.getSignTime();
 		final String t_type = "" + (mCurrentVideoType == 2 ? 2 : 1);
 		final String selectTypeJson = JsonUtil.createShareType("" + mTypeLayout.getCurrentSelectType());
 		final String desc = mTypeLayout.getCurrentDesc();
 		final String isSeque = this.mTypeLayout.isOpenShare() ? "1" : "0";
-		final String t_thumbPath = mUploadVideo.getThumbPath();
 		final String t_location = mTypeLayout.getCurrentLocation();
 		PromotionSelectItem item = mTypeLayout.getPromotionSelectItem();
 		String channelid = "";
@@ -760,17 +768,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			activityid = item.activityid;
 			activityname = item.activitytitle;
 		}
-		final String json = JsonUtil.createShareJson(t_vid, t_type, selectTypeJson, desc, isSeque, t_thumbPath,
-				videoCreateTime, t_location, channelid, activityid, activityname);
-		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity-----------------click_shares json:" + json);
-		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
-				json);
-		GolukDebugUtils.e("", "jyf-----VideoShareActivity -----click_shares---b :  " + b);
-		if (!b) {
-			GolukUtils.showToast(this, "分享失败");
-			toInitState();
-			return;
-		}
+		GetShareAddressRequest request = new GetShareAddressRequest(IPageNotifyFn.PageType_Share, this);
+		request.get(t_vid, t_type, desc, selectTypeJson, isSeque, videoCreateTime, t_signTime, channelid, activityid,
+				activityname, t_location);
 	}
 
 	private void getShareFailed() {
@@ -784,15 +784,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	 * @param json
 	 *            ,分享数据
 	 */
-	public void videoShareCallBack(int success, String json) {
+	public void videoShareCallBack(ShareDataBean shareData) {
 		mShareLoading.switchState(ShareLoading.STATE_SHAREING);
-		if (1 != success) {
-			getShareFailed();
-			return;
-		}
-		GolukDebugUtils.i("", "分享地址回调:" + json.toString());
-		ShareDataBean dataBean = JsonUtil.parseShareCallBackData(json);
-		if (!dataBean.isSucess) {
+		if (shareData == null) {
 			getShareFailed();
 			return;
 		}
@@ -801,7 +795,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		final String describe = getShareDesc();
 		final String sinaTxt = "极路客精彩视频(使用#极路客Goluk#拍摄)";
 
-		this.mShareDealTool.toShare(dataBean.shareurl, dataBean.coverurl, describe, title,
+		this.mShareDealTool.toShare(shareData.shorturl, shareData.coverurl, describe, title,
 				mUploadVideo.getThumbBitmap(), sinaTxt, this.mUploadVideo.getVideoId());
 	}
 
@@ -861,6 +855,14 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 					}
 				}
 				mTypeLayout.setPromotionList(data.data.PromotionList, list);
+			}
+			break;
+		case IPageNotifyFn.PageType_Share:
+			ShareDataFullBean shareDataFull = (ShareDataFullBean) result;
+			if (shareDataFull != null && shareDataFull.success) {
+				videoShareCallBack(shareDataFull.data);
+			} else {
+				getShareFailed();
 			}
 			break;
 		}

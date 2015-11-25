@@ -17,6 +17,7 @@ import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.mobnote.util.JsonUtil;
+import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -45,7 +46,7 @@ public class IPCControlManager implements IPCManagerFn {
 	public IPCControlManager(GolukApplication application) {
 		mApplication = application;
 		mIpcManagerListener = new HashMap<String, IPCManagerFn>();
-		mProduceName = mApplication.mSharedPreUtil.getIpcModel();
+		mProduceName = SharedPrefUtil.getIpcModel();
 		isNeedReportSn = false;
 		// 注册IPC回调
 		mApplication.mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_IPCManager, this);

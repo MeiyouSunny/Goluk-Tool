@@ -70,7 +70,6 @@ public class BaseActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mBaseApp = (GolukApplication) getApplication();
-		mBaseApp.initSharedPreUtil(this);
 		mBaseApp.initLogic();
 	}
 
@@ -89,6 +88,11 @@ public class BaseActivity extends Activity {
 
 	}
 
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+	}
 
 	@Override
 	protected void onStop() {

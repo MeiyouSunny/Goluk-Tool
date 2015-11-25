@@ -35,6 +35,7 @@ import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
+import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -89,8 +90,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 
-		mApp.initSharedPreUtil(this);
-		vIpc = mApp.mSharedPreUtil.getIPCVersion();
+		vIpc = SharedPrefUtil.getIPCVersion();
 		// 页面初始化
 		init();
 		boolean b = SettingUtils.getInstance().getBoolean(AUTO_SWITCH, true);
