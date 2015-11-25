@@ -52,8 +52,8 @@
             
             <ImageView 
                 android:id="@+id/im_listview_item_head_authentication"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
                 android:layout_alignRight="@id/user_head"
                 android:layout_alignBottom="@id/user_head"
                 android:contentDescription="@string/imgdes"/>

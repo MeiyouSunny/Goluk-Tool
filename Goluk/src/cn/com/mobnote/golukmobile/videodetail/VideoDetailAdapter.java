@@ -627,15 +627,15 @@ public class VideoDetailAdapter extends BaseAdapter {
 				String approvelabel = temp.mApprovelabel;
 				String headplusv = temp.mHeadplusv;
 				String tarento = temp.mTarento;
-				headHolder.nHeadAuthentication.setVisibility(View.VISIBLE);
+				commentHolder.nCommentAuthentication.setVisibility(View.VISIBLE);
 				if(!"".equals(approvelabel) && "1".equals(approvelabel)) {
-					headHolder.nHeadAuthentication.setImageResource(R.drawable.authentication_bluev_icon);
+					commentHolder.nCommentAuthentication.setImageResource(R.drawable.authentication_bluev_icon);
 				} else if(!"".equals(headplusv) && "1".equals(headplusv)) {
-					headHolder.nHeadAuthentication.setImageResource(R.drawable.authentication_yellowv_icon);
+					commentHolder.nCommentAuthentication.setImageResource(R.drawable.authentication_yellowv_icon);
 				} else if(!"".equals(tarento) && "1".equals(tarento)) {
-					headHolder.nHeadAuthentication.setImageResource(R.drawable.authentication_star_icon);
+					commentHolder.nCommentAuthentication.setImageResource(R.drawable.authentication_star_icon);
 				} else {
-					headHolder.nHeadAuthentication.setVisibility(View.GONE);
+					commentHolder.nCommentAuthentication.setVisibility(View.GONE);
 				}
 			commentHolder.mCommentName.setText(temp.mUserName);
 			if (!"".equals(temp.mReplyId) && null != temp.mReplyId && !"".equals(temp.mReplyName)
