@@ -13,6 +13,7 @@ import cn.com.mobnote.golukmobile.comment.CommentBean;
 import cn.com.mobnote.golukmobile.live.LiveDataInfo;
 import cn.com.mobnote.golukmobile.live.LiveSettingBean;
 import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.videodetail.UserLabel;
 import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
 import cn.com.mobnote.golukmobile.xdpush.SettingBean;
 import cn.com.mobnote.golukmobile.xdpush.XingGeMsgBean;
@@ -374,6 +375,16 @@ public class JsonUtil {
 			userInfo.desc = getJsonStringValue(rootObj, "desc", "");
 			userInfo.head = getJsonStringValue(rootObj, "head", "7");
 			userInfo.customavatar = getJsonStringValue(rootObj, "customavatar", "");
+
+			if (rootObj.has("label")) {
+				UserLabel label = new UserLabel();
+				label.mApprove = getJsonStringValue(rootObj, "approve", "");
+				label.mApprovelabel = getJsonStringValue(rootObj, "approvelabel", "0");
+				label.mTarento = getJsonStringValue(rootObj, " tarento", "0");
+				label.mHeadplusv = getJsonStringValue(rootObj, "headplusv", "0");
+
+				userInfo.mUserLabel = label;
+			}
 
 			return userInfo;
 		} catch (Exception e) {
@@ -792,7 +803,8 @@ public class JsonUtil {
 	// issquare 是否分享到视频广场 0/1 (否/是)
 	// thumbImgJavaPath: 缩略图路径
 	public static String createShareJson(String videoId, String type, String attribute, String desc, String issquare,
-			String thumbImgJavaPath, String createTime, String location, String channelid, String activityid, String activityname) {
+			String thumbImgJavaPath, String createTime, String location, String channelid, String activityid,
+			String activityname) {
 
 		String json = null;
 		try {
@@ -875,8 +887,9 @@ public class JsonUtil {
 		}
 		return null;
 	}
-	
-	public static String getCommentRequestStr(String id, String type, int operation, String timestamp, int pagesize, String ztid) {
+
+	public static String getCommentRequestStr(String id, String type, int operation, String timestamp, int pagesize,
+			String ztid) {
 		try {
 			JSONObject json = new JSONObject();
 			json.put("topicid", id);
@@ -915,7 +928,8 @@ public class JsonUtil {
 		}
 	}
 
-	public static String getAddCommentJson(String id, String type, String txt,String replyId,String replyName, String ztid) {
+	public static String getAddCommentJson(String id, String type, String txt, String replyId, String replyName,
+			String ztid) {
 		try {
 			JSONObject json = new JSONObject();
 			json.put("topicid", id);
@@ -963,7 +977,7 @@ public class JsonUtil {
 				temp.mCommentTime = getJsonStringValue(obj, "time", "");
 				temp.mCommentTxt = getJsonStringValue(obj, "text", "");
 				temp.mSeq = getJsonStringValue(obj, "seq", "");
-				
+
 				JSONObject replyObj = obj.getJSONObject("reply");
 				temp.mReplyId = getJsonStringValue(replyObj, "id", "");
 				temp.mReplyName = getJsonStringValue(replyObj, "name", "");
@@ -973,8 +987,8 @@ public class JsonUtil {
 				temp.mUserName = getJsonStringValue(authorObj, "name", "");
 				temp.mUserHead = getJsonStringValue(authorObj, "avatar", "");
 				temp.customavatar = getJsonStringValue(authorObj, "customavatar", "");
-				
-				if(authorObj.has("label")) {
+
+				if (authorObj.has("label")) {
 					JSONObject labelObj = authorObj.getJSONObject("label");
 					temp.mApprove = getJsonStringValue(labelObj, "approve", "");
 					temp.mApprovelabel = getJsonStringValue(labelObj, "approvelabel", "");
