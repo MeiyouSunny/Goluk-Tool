@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import cn.com.mobnote.golukmobile.cluster.bean.UserLabelBean;
 import cn.com.mobnote.golukmobile.newest.JsonParserUtils;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
+import cn.com.mobnote.user.User;
 
 public class UserCenterDataFormat {
 
@@ -53,7 +54,6 @@ public class UserCenterDataFormat {
 						if(u.has("nickname")){
 							user.nickname = u.optString("nickname");
 						}
-						System.out.println("sssssssss" + user.nickname);
 						return user;
 					}else{
 						return null;
@@ -131,6 +131,16 @@ public class UserCenterDataFormat {
 							praiseinfo.introduce = map.getString("introduce");
 							praiseinfo.picture = map.getString("picture");
 							praiseinfo.videoid = map.getString("videoid");
+							if(map.has("label")){
+								JSONObject label = map.getJSONObject("label");
+								UserLabelBean ulb = new UserLabelBean();
+								ulb.approve = label.optString("approve");
+								ulb.approvelabel = label.optString("approvelabel");
+								ulb.headplusv = label.optString("headplusv");
+								ulb.headplusvdes = label.optString("headplusvdes");
+								ulb.tarento = label.optString("tarento");
+								praiseinfo.label = ulb;
+							}
 							result.add(praiseinfo);
 						}
 						return result;

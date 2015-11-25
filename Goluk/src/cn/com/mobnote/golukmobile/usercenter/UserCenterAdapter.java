@@ -525,6 +525,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				praiseholder.desc = (TextView) convertView.findViewById(R.id.desc);
 				praiseholder.videoPicLayout = (ImageView) convertView.findViewById(R.id.videopic);
 				praiseholder.userinfo = (LinearLayout) convertView.findViewById(R.id.userinfo);
+				praiseholder.v = (ImageView) convertView.findViewById(R.id.v);
 
 				int nheight = (int) ((float) width / 1.77f);
 				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(nwidth, nheight);
@@ -548,6 +549,28 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				GlideUtils.loadNetHead(mContext, praiseholder.headimg, netHeadUrl, R.drawable.editor_head_feault7);
 			} else {
 				showHead(praiseholder.headimg, prais.headportrait);
+			}
+			
+			
+			if(prais.label != null){
+				if("1".equals(prais.label.approvelabel)){//企业认证
+					praiseholder.v.setBackgroundResource(R.drawable.authentication_bluev_icon);
+					praiseholder.v.setVisibility(View.VISIBLE);
+				}else{
+					if("1".equals(prais.label.headplusv)){//个人加V
+						praiseholder.v.setBackgroundResource(R.drawable.authentication_yellowv_icon);
+						praiseholder.v.setVisibility(View.VISIBLE);
+					}else{
+						if("1".equals(prais.label.tarento)){//达人
+							praiseholder.v.setBackgroundResource(R.drawable.authentication_star_icon);
+							praiseholder.v.setVisibility(View.VISIBLE);
+						}else{
+							praiseholder.v.setVisibility(View.GONE);
+						}
+					}
+				}
+			}else{
+				praiseholder.v.setVisibility(View.GONE);
 			}
 
 			praiseholder.username.setText(prais.nickname);
@@ -862,6 +885,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 		TextView desc;
 		LinearLayout userinfo;
 		ImageView videoPicLayout;
+		ImageView v;
 	}
 
 	public static class NoVideoDataViewHolder {

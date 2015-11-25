@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cn.com.mobnote.golukmobile.cluster.bean.UserLabelBean;
 import cn.com.mobnote.golukmobile.videosuqare.LiveVideoData;
 import cn.com.mobnote.golukmobile.videosuqare.UserEntity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoEntity;
@@ -211,6 +212,16 @@ public class JsonParserUtils {
 					mUserEntity.headportrait = user.optString("headportrait");
 					mUserEntity.sex = user.optString("sex");
 					mUserEntity.mCustomAvatar = user.optString("customavatar");
+					if(user.has("label")){
+						JSONObject label = user.getJSONObject("label");
+						UserLabelBean ulb = new UserLabelBean();
+						ulb.approve = label.optString("approve");
+						ulb.approvelabel = label.optString("approvelabel");
+						ulb.headplusv = label.optString("headplusv");
+						ulb.headplusvdes = label.optString("headplusvdes");
+						ulb.tarento = label.optString("tarento");
+						mUserEntity.label = ulb;
+					}
 				}
 
 				long id = time + i;
