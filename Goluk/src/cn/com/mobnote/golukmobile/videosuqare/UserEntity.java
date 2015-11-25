@@ -1,5 +1,7 @@
 package cn.com.mobnote.golukmobile.videosuqare;
 
+import cn.com.mobnote.golukmobile.cluster.bean.UserLabelBean;
+
 /**
  * 
  * 视频广场用户属性信息
@@ -19,4 +21,6 @@ public class UserEntity {
 	public String sex;
 	/** 用户自定义头像,(头像服务器地址) */
 	public String mCustomAvatar;
+	/**用户认证信息 **/
+	public UserLabelBean label;
 }

@@ -120,6 +120,7 @@ public class VolleyDataFormat {
 						mUserEntity.headportrait = user.headportrait;
 						mUserEntity.sex = user.sex;
 						mUserEntity.mCustomAvatar = user.customavatar;
+						mUserEntity.label = user.label;
 					}
 
 					long id = time + i;

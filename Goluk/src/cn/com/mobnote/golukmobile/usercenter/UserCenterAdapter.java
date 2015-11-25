@@ -195,6 +195,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 					holder.praiselayout = (LinearLayout) convertView.findViewById(R.id.praiselayout);
 					holder.usercenterlyout = (LinearLayout) convertView.findViewById(R.id.user_center_lyout);
 					holder.sharebtn = (ImageView) convertView.findViewById(R.id.title_share);
+					holder.v = (ImageView) convertView.findViewById(R.id.v);
+					holder.vText = (TextView) convertView.findViewById(R.id.vText);
 					convertView.setTag(holder);
 				} else {
 					holder = (UserViewHolder) convertView.getTag();
@@ -240,6 +242,34 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				} else {
 					holder.dz_num.setText("0");
 				}
+				
+				if(userinfo.label != null){
+					if("1".equals(userinfo.label.approvelabel)){//企业认证
+						if(userinfo.label.approve != null && !"".equals(userinfo.label.approve)){
+							holder.vText.setVisibility(View.VISIBLE);
+							holder.vText.setText(userinfo.label.approve);
+						}else{
+							holder.vText.setVisibility(View.GONE);
+						}
+						holder.v.setBackgroundResource(R.drawable.authentication_bluev_icon);
+						holder.v.setVisibility(View.VISIBLE);
+					}else{
+						holder.vText.setVisibility(View.GONE);
+						if("1".equals(userinfo.label.headplusv)){//个人加V
+							holder.v.setBackgroundResource(R.drawable.authentication_yellowv_icon);
+							holder.v.setVisibility(View.VISIBLE);
+						}else{
+							if("1".equals(userinfo.label.tarento)){//达人
+								holder.v.setBackgroundResource(R.drawable.authentication_star_icon);
+								holder.v.setVisibility(View.VISIBLE);
+							}else{
+								holder.v.setVisibility(View.GONE);
+							}
+						}
+					}
+				}else{
+					holder.v.setVisibility(View.GONE);
+				}
 
 				if (currentViewType == ViewType_ShareVideoList) {
 					holder.praise_select.setVisibility(View.INVISIBLE);
@@ -273,18 +303,20 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 					}
 				});
 
+				uca.updateTheEnd(false);
 				if (currentViewType == ViewType_ShareVideoList) {
-					if (videogroupdata.isHaveData) {
-						uca.updateTheEnd(false);
+					if(videogroupdata.videolist != null && videogroupdata.videolist.size() > 0){
+						if(videogroupdata.isHaveData == false){
+							uca.updateTheEnd(true);
+						}
 					}
 
 				} else if (currentViewType == ViewType_PraiseUserList) {
-					uca.updateTheEnd(false);
 					if (praisgroupData.praiselist != null && praisgroupData.praiselist.size() > 0) {
-						uca.updateTheEnd(true);
-					} else {
-						uca.updateTheEnd(false);
-					}
+						if(praisgroupData.isHaveData == false){
+							uca.updateTheEnd(true);
+						}
+					} 
 				}
 
 				holder.sharelayout.setOnClickListener(new OnClickListener() {
@@ -342,7 +374,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				holder.shareText = (TextView) convertView.findViewById(R.id.shareText);
 
 				holder.zText = (TextView) convertView.findViewById(R.id.zText);
-
+				holder.v = (ImageView) convertView.findViewById(R.id.v);
 				holder.weiguan = (TextView) convertView.findViewById(R.id.weiguan);
 				holder.weiguan = (TextView) convertView.findViewById(R.id.weiguan);
 				holder.totalcomments = (TextView) convertView.findViewById(R.id.totalcomments);
@@ -406,6 +438,27 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				holder.totalcomments.setVisibility(View.VISIBLE);
 			} else {
 				holder.totalcomments.setVisibility(View.GONE);
+			}
+			
+			if(clusterInfo.mUserEntity != null && clusterInfo.mUserEntity.label != null){
+				if("1".equals(clusterInfo.mUserEntity.label.approvelabel)){//企业认证
+					holder.v.setBackgroundResource(R.drawable.authentication_bluev_icon);
+					holder.v.setVisibility(View.VISIBLE);
+				}else{
+					if("1".equals(clusterInfo.mUserEntity.label.headplusv)){//个人加V
+						holder.v.setBackgroundResource(R.drawable.authentication_yellowv_icon);
+						holder.v.setVisibility(View.VISIBLE);
+					}else{
+						if("1".equals(clusterInfo.mUserEntity.label.tarento)){//达人
+							holder.v.setBackgroundResource(R.drawable.authentication_star_icon);
+							holder.v.setVisibility(View.VISIBLE);
+						}else{
+							holder.v.setVisibility(View.GONE);
+						}
+					}
+				}
+			}else{
+				holder.v.setVisibility(View.GONE);
 			}
 
 			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber + " 赞");
@@ -472,6 +525,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				praiseholder.desc = (TextView) convertView.findViewById(R.id.desc);
 				praiseholder.videoPicLayout = (ImageView) convertView.findViewById(R.id.videopic);
 				praiseholder.userinfo = (LinearLayout) convertView.findViewById(R.id.userinfo);
+				praiseholder.v = (ImageView) convertView.findViewById(R.id.v);
 
 				int nheight = (int) ((float) width / 1.77f);
 				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(nwidth, nheight);
@@ -495,6 +549,28 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				GlideUtils.loadNetHead(mContext, praiseholder.headimg, netHeadUrl, R.drawable.editor_head_feault7);
 			} else {
 				showHead(praiseholder.headimg, prais.headportrait);
+			}
+			
+			
+			if(prais.label != null){
+				if("1".equals(prais.label.approvelabel)){//企业认证
+					praiseholder.v.setBackgroundResource(R.drawable.authentication_bluev_icon);
+					praiseholder.v.setVisibility(View.VISIBLE);
+				}else{
+					if("1".equals(prais.label.headplusv)){//个人加V
+						praiseholder.v.setBackgroundResource(R.drawable.authentication_yellowv_icon);
+						praiseholder.v.setVisibility(View.VISIBLE);
+					}else{
+						if("1".equals(prais.label.tarento)){//达人
+							praiseholder.v.setBackgroundResource(R.drawable.authentication_star_icon);
+							praiseholder.v.setVisibility(View.VISIBLE);
+						}else{
+							praiseholder.v.setVisibility(View.GONE);
+						}
+					}
+				}
+			}else{
+				praiseholder.v.setVisibility(View.GONE);
 			}
 
 			praiseholder.username.setText(prais.nickname);
@@ -795,6 +871,9 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 		LinearLayout praiselayout;
 
 		LinearLayout usercenterlyout;
+		ImageView v;
+		
+		TextView vText ;
 
 		ImageView sharebtn;
 	}
@@ -806,6 +885,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 		TextView desc;
 		LinearLayout userinfo;
 		ImageView videoPicLayout;
+		ImageView v;
 	}
 
 	public static class NoVideoDataViewHolder {
@@ -846,6 +926,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 		TextView comment1;
 		TextView comment2;
 		TextView comment3;
+		ImageView v;
 
 		ImageView isopen;
 	}

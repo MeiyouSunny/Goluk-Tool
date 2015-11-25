@@ -15,7 +15,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
-
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.multicast.IMultiCastFn;
 import cn.com.mobnote.golukmobile.multicast.NetUtil;
@@ -349,7 +349,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	private int getConnState(String ssid, int outTime) {
 		try {
 			int tempTime = 0;
-			ConnectivityManager connectivity = (ConnectivityManager) context
+			ConnectivityManager connectivity = (ConnectivityManager) GolukApplication.getInstance()
 					.getSystemService(Context.CONNECTIVITY_SERVICE);
 			State state = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
 

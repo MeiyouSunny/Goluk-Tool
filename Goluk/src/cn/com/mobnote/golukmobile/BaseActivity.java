@@ -109,7 +109,6 @@ public class BaseActivity extends Activity {
 	protected void onDestroy() {
 		HttpManager.getInstance().cancelAll(this);
 		mBaseHandler.removeCallbacksAndMessages(null);
-		LiveDialogManager.getManagerInstance().setDialogManageFn(null);
 		super.onDestroy();
 	}
 

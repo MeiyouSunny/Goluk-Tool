@@ -353,7 +353,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 					updateViewData(false, 0);
 				}
 			} else {
-				GolukUtils.showToast(this, "网络异常，请检查网络");
+				
+				GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
 				updateViewData(false, 0);
 				if(isfrist){
 					mBaseHandler.sendEmptyMessageDelayed(ClOSE_ACTIVITY, 2000);
@@ -380,16 +381,16 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 							recommendlist.addAll(list);
 							updateViewData(true, count);
 						} else {
-							GolukUtils.showToast(this, "数据异常，请稍候重试");
+							GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
 						}
 					} else {
-						GolukUtils.showToast(this, "数据异常，请稍候重试");
+						GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
 					}
 				} else {
-					GolukUtils.showToast(this, "数据异常，请稍候重试");
+					GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
 				}
 			} else {
-				GolukUtils.showToast(this, "网络异常，请检查网络");
+				GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
 			}
 
 		} else if (requestType == IPageNotifyFn.PageType_ClusterNews) {
@@ -410,16 +411,16 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 							newslist.addAll(list);
 							updateViewData(true, count);
 						} else {
-							GolukUtils.showToast(this, "数据异常，请稍候重试");
+							GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
 						}
 					} else {
-						GolukUtils.showToast(this, "数据异常，请稍候重试");
+						GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
 					}
 				} else {
-					GolukUtils.showToast(this, "数据异常，请稍候重试");
+					GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
 				}
 			} else {
-				GolukUtils.showToast(this, "网络异常，请检查网络");
+				GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
 			}
 		} else if (requestType == IPageNotifyFn.PageType_ClusterShareUrl) {
 			closeProgressDialog();
@@ -453,16 +454,16 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 							shareBoard.showAtLocation(ClusterActivity.this.getWindow().getDecorView(), Gravity.BOTTOM,
 									0, 0);
 						} else {
-							GolukUtils.showToast(this, "网络异常，请检查网络");
+							GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
 						}
 					} else {
-						GolukUtils.showToast(this, "网络异常，请检查网络");
+						GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
 					}
 				} else {
-					GolukUtils.showToast(this, "网络异常，请检查网络");
+					GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
 				}
 			} else {
-				GolukUtils.showToast(this, "网络异常，请检查网络");
+				GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
 			}
 		}
 	}
@@ -609,13 +610,13 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 						}
 
 					} else {
-						GolukUtils.showToast(this, "网络异常，请检查网络");
+						GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 			} else {
-				GolukUtils.showToast(this, "网络异常，请检查网络");
+				GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
 			}
 		} else if (event == VSquare_Req_VOP_Praise) {
 			if (RESULE_SUCESS == msg) {
@@ -627,7 +628,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 				}
 
 			} else {
-				GolukUtils.showToast(this, "网络异常，请检查网络");
+				GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
 			}
 
 		}

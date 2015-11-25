@@ -2,6 +2,8 @@ package cn.com.mobnote.golukmobile.usercenter;
 
 import java.io.Serializable;
 
+import cn.com.mobnote.golukmobile.cluster.bean.UserLabelBean;
+
 public class UCUserInfo implements Serializable {
 
 	/** */
@@ -39,5 +41,10 @@ public class UCUserInfo implements Serializable {
 	 * 赞你的人总数
 	 */
 	public String praisemenumber;
+	
+	/**
+	 * 用户认证信息
+	 */
+	public UserLabelBean label;
 
 }

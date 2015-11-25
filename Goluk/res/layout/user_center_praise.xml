@@ -16,6 +16,13 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="14dp"
             android:contentDescription="@string/imgdes" />
+        <ImageView 
+            android:id="@+id/v"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_alignRight="@id/userhead"
+            android:layout_alignBottom="@id/userhead"
+            android:background="@drawable/authentication_bluev_icon"/>
 
         <LinearLayout
             android:id="@+id/userinfo"
