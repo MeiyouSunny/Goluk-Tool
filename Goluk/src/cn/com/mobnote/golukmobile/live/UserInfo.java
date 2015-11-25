@@ -43,5 +43,10 @@ public class UserInfo implements Serializable {
 	public String desc;
 	/** 用户加V,认证信息 */
 	public UserLabel mUserLabel;
+	/**分享视频个数**/
+	public int sharevideonumber;
+	/**赞我的人的个数**/
+	public int praisemenumber;
+	
 
 }

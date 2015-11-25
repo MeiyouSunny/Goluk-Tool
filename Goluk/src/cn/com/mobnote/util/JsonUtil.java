@@ -375,6 +375,8 @@ public class JsonUtil {
 			userInfo.desc = getJsonStringValue(rootObj, "desc", "");
 			userInfo.head = getJsonStringValue(rootObj, "head", "7");
 			userInfo.customavatar = getJsonStringValue(rootObj, "customavatar", "");
+			userInfo.sharevideonumber = getJsonIntValue(rootObj, "sharevideonumber", 0);
+			userInfo.praisemenumber = getJsonIntValue(rootObj, "praisemenumber", 0);
 			// 解析 用户标签
 			if (rootObj.has("label")) {
 				UserLabel label = new UserLabel();
