@@ -77,6 +77,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	public final static String UPDATE_DATA = "update_data";
 	/** 升级文件下载中 **/
 	public final static String UPDATE_PROGRESS = "update_progress";
+	/**是否为最新版本**/
+	public final static String UPDATE_IS_NEW = "update_is_new";
 
 	/** 0下载 / 1安装的标志 **/
 	private int mSign = 0;
@@ -155,6 +157,15 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		isExit = false;
 
 		Intent it = getIntent();
+		boolean isNew = it.getBooleanExtra(UPDATE_IS_NEW, false);
+		if(isNew) {
+			mIsDisConnect = true;
+			mBtnDownload.setVisibility(View.GONE);
+			mScrollView.setVisibility(View.GONE);
+			mUpdateNewImage.setVisibility(View.VISIBLE);
+			mUpdateNewText.setVisibility(View.VISIBLE);
+			return ;
+		}
 		mSign = it.getIntExtra(UPDATE_SIGN, 0);
 		mIpcInfo = (IPCInfo) it.getSerializableExtra(UPDATE_DATA);
 

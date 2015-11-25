@@ -22,7 +22,6 @@ import cn.com.mobnote.eventbus.EventIPCUpdate;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UpdateActivity;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
-import cn.com.mobnote.golukmobile.UserStartActivity;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
@@ -292,8 +291,9 @@ public class IpcUpdateManage implements IPCManagerFn {
 						appUpgradeUtils(goluk);
 					}
 				} else if (FUNCTION_SETTING_IPC == mFunction) {
+					mApp.getContext();
 					SharedPreferences preferences = mApp.getContext().getSharedPreferences("ipc_wifi_bind",
-							mApp.getContext().MODE_PRIVATE);
+							Context.MODE_PRIVATE);
 					boolean isbind = preferences.getBoolean("isbind", false);
 					
 					if (!mApp.isIpcLoginSuccess && !isbind) {
@@ -308,7 +308,10 @@ public class IpcUpdateManage implements IPCManagerFn {
 							GolukUtils.showToast(mApp.getContext(), "您好像没有连接摄像头哦");
 						} else {
 							String version_new = SharedPrefUtil.getIPCVersion();
-							GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + version_new + "，当前已是最新版本");
+//							GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + version_new + "，当前已是最新版本");
+							Intent itNew = new Intent(mApp.getContext(), UpdateActivity.class);
+							itNew.putExtra(UpdateActivity.UPDATE_IS_NEW, true);
+							mApp.getContext().startActivity(itNew);
 						}
 					} else {
 						/**
@@ -319,14 +322,6 @@ public class IpcUpdateManage implements IPCManagerFn {
 							// APP不需要升级
 							// 提示下载并升级ipc
 							ipcUpgradeNext(ipcInfo);
-//							final String localBinPath = this.getLocalFile(ipcInfo.version);
-//							if (null == localBinPath) {
-//								// 提示用户下载文件Dialog
-//								ipcUpgrade(TYPE_DOWNLOAD, ipcInfo, ipcInfo.appcontent);
-//							} else {
-//								// 弹框提示用户安装本地的文件 (Dialog)
-//								ipcUpgrade(TYPE_INSTALL, ipcInfo, ipcInfo.appcontent);
-//							}
 						} else {
 							GolukDebugUtils.i(TAG, "--------ipcInfo.version-----" + ipcInfo.version);
 							new AlertDialog.Builder(mApp.getContext()).setTitle("升级提示")
@@ -525,18 +520,6 @@ public class IpcUpdateManage implements IPCManagerFn {
 				ipcUpgrade(TYPE_INSTALL, ipcInfo, ipcInfo.appcontent);
 			}
 		}
-//		if (null != ipcInfo) {
-//			// IPC需要升级
-//			final String localBinPath = this.getLocalFile(ipcInfo.version);
-//			if (null == localBinPath) {
-//				// TODO 提示用户下载文件Dialog
-//				ipcUpgrade(TYPE_DOWNLOAD, ipcInfo, ipcInfo.appcontent);
-//			} else {
-//				// TODO 弹框提示用户安装本地的文件 (Dialog)
-//				ipcUpgrade(TYPE_INSTALL, ipcInfo, ipcInfo.appcontent);
-//			}
-//
-//		}
 	}
 
 	/**
