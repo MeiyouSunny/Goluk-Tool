@@ -212,7 +212,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		// 地图初始化
 		initMap();
 		// 获取我的登录信息
-		getMyInfo();
+		myInfo = mApp.getMyInfo();
 		// 开始预览或开始直播
 		if (isShareLive) {
 			SharedPrefUtil.setIsLiveNormalExit(false);
@@ -306,24 +306,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		}
 		if (null != mLookCountTv) {
 			mLookCountTv.setText("" + GolukUtils.getFormatNumber("" + lookCount));
-		}
-	}
-
-	// 获取当前登录用户的信息
-	private void getMyInfo() {
-		try {
-			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----getMyInfo111 :" + mApp.isUserLoginSucess);
-			if (mApp.isUserLoginSucess) {
-				String userInfo = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
-						IPageNotifyFn.PageType_GetUserInfo_Get, "");
-				if (null != userInfo) {
-					myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(userInfo));
-					GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----getMyInfo :" + userInfo);
-				}
-			}
-			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----getMyInfo 333:");
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -605,8 +587,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		}
 	};
 
-	//
-
 	/**
 	 * 设置用户标识，包括 认证，加V, 达人
 	 * 
@@ -847,7 +827,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		// 开始绘制我的位置
 		if (mApp.isUserLoginSucess) {
 			if (null == myInfo) {
-				this.getMyInfo();
+				myInfo = mApp.getMyInfo();
 			}
 			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---3: " + myInfo.nickName);
 			if (null != myInfo) {
@@ -1375,6 +1355,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		freePlayer();
 
 		LiveDialogManager.getManagerInstance().setDialogManageFn(null);
+		GolukDebugUtils.e("", "next live------------------LIve----setDialogManageFn: set NULL");
 		if (isShareLive) {
 			// 如果是开启直播，则停止上报自己的位置
 			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StopUploadPosition,
@@ -1662,7 +1643,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		if (null != location) {
 			if (mApp.isUserLoginSucess) {
 				if (null == myInfo) {
-					this.getMyInfo();
+					myInfo = mApp.getMyInfo();
 				}
 				if (null != myInfo) {
 					if (LOCATION_TYPE_UNKNOW == this.mCurrentLocationType) {
@@ -1861,7 +1842,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	@Override
 	public void onMapLoaded() {
 		GolukDebugUtils.e("", "jyf-------live----LiveActivity--onMapLoaded:");
-		Log.d("CK1", "onMapLoaded");
 		// MainActivity.mMainHandler.sendEmptyMessage(99);
 		EventBus.getDefault().post(new EventMapQuery(EventConfig.LIVE_MAP_QUERY));
 	}
