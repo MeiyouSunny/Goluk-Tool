@@ -297,6 +297,11 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 				if ("0".equals(mJxid)) {
 					mDataList.clear();
 				}
+
+				if(null == list || list.size() <= 0) {
+					Toast.makeText(mContext, mContext.getString(
+							R.string.str_pull_refresh_listview_bottom_reach), Toast.LENGTH_SHORT).show();
+				}
 				initLayout(list);
 			} else {
 				if (!"0".equals(mJxid)) {

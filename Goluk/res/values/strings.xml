@@ -466,4 +466,5 @@
     <string name="str_today">今天</string>
     <string name="str_yestoday">昨天</string>
     <string name="str_surround_watch">围观</string>
+    <string name="str_pull_refresh_listview_bottom_reach">已经拉到底咯</string>
 </resources>
