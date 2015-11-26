@@ -9,11 +9,11 @@ import org.json.JSONObject;
 
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
+import cn.com.mobnote.golukmobile.cluster.bean.UserLabelBean;
 import cn.com.mobnote.golukmobile.comment.CommentBean;
 import cn.com.mobnote.golukmobile.live.LiveDataInfo;
 import cn.com.mobnote.golukmobile.live.LiveSettingBean;
 import cn.com.mobnote.golukmobile.live.UserInfo;
-import cn.com.mobnote.golukmobile.videodetail.UserLabel;
 import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
 import cn.com.mobnote.golukmobile.xdpush.SettingBean;
 import cn.com.mobnote.golukmobile.xdpush.XingGeMsgBean;
@@ -380,12 +380,12 @@ public class JsonUtil {
 			// 解析 用户标签
 			if (rootObj.has("label")) {
 				JSONObject labelObj = rootObj.getJSONObject("label");
-				UserLabel label = new UserLabel();
-				label.mApprove = getJsonStringValue(labelObj, "approve", "");
-				label.mApprovelabel = getJsonStringValue(labelObj, "approvelabel", "0");
-				label.mTarento = getJsonStringValue(labelObj, " tarento", "0");
-				label.mHeadplusv = getJsonStringValue(labelObj, "headplusv", "0");
-				label.mHeadplusvdes = getJsonStringValue(labelObj, "Headplusvdes", "");
+				UserLabelBean label = new UserLabelBean();
+				label.approve = getJsonStringValue(labelObj, "approve", "");
+				label.approvelabel = getJsonStringValue(labelObj, "approvelabel", "0");
+				label.tarento = getJsonStringValue(labelObj, " tarento", "0");
+				label.headplusv = getJsonStringValue(labelObj, "headplusv", "0");
+				label.headplusvdes = getJsonStringValue(labelObj, "Headplusvdes", "");
 				userInfo.mUserLabel = label;
 			}
 

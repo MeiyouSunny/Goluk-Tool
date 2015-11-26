@@ -255,21 +255,6 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		if(this.mVideoId != null && !"".equals(this.mVideoId)){
 			GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(mCurrentShareType, this.mVideoId);
 		}
-
-		// if (mActivity instanceof VideoEditActivity) {
-		// ((VideoEditActivity) mActivity).shareSucessDeal(true,
-		// mCurrentShareType);
-		// } else if (mActivity instanceof MainActivity) {
-		// ((MainActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
-		// } else if (mActivity instanceof LiveActivity) {
-		// ((LiveActivity) mActivity).shareSucessDeal(true, mCurrentShareType);
-		// } else if (mActivity instanceof VideoSquareDeatilActivity) {
-		// ((VideoSquareDeatilActivity) mActivity).shareSucessDeal(true,
-		// mCurrentShareType);
-		// } else if (mActivity instanceof VideoCategoryActivity) {
-		// ((VideoCategoryActivity) mActivity).shareSucessDeal(true,
-		// mCurrentShareType);
-		// }
 	}
 
 	private void notifyShareState(boolean isSucess) {

@@ -395,9 +395,9 @@ public class VideoDetailAdapter extends BaseAdapter {
 				UserUtils.focusHead(mContext, mVideoAllData.avideo.user.headportrait, headHolder.mImageHead);
 			}
 			if(null != mVideoAllData.avideo.user.mUserLabel) {
-				String approvelabel = mVideoAllData.avideo.user.mUserLabel.mApprovelabel;
-				String headplusv = mVideoAllData.avideo.user.mUserLabel.mHeadplusv;
-				String tarento = mVideoAllData.avideo.user.mUserLabel.mTarento;
+				String approvelabel = mVideoAllData.avideo.user.mUserLabel.approvelabel;
+				String headplusv = mVideoAllData.avideo.user.mUserLabel.headplusv;
+				String tarento = mVideoAllData.avideo.user.mUserLabel.tarento;
 				headHolder.nHeadAuthentication.setVisibility(View.VISIBLE);
 				if(!"".equals(approvelabel) && "1".equals(approvelabel)) {
 					headHolder.nHeadAuthentication.setImageResource(R.drawable.authentication_bluev_icon);
