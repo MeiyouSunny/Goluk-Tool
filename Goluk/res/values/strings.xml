@@ -171,6 +171,8 @@
     <string name="ipc_download_text">已下载</string>
     <string name="ipc_hint_text">下载升级固件前，请确认网络环境正常，下载时请不要切出本页面。
         \n安装升级固件前，请确认摄像头已正常连接；安装升级过程中请不要断电，直到升级完成。</string>
+    <string name="ipc_hint_below_image">固件升级过程中　请不要断开电源</string>
+    <string name="ipc_upgrade_new_text">当前已是最新版本</string>
     <string name="shopping_text">去商店</string>
     <string name="cache_size_text">3.15M</string>
     <string name="user_immediately_ok">立即登录</string>

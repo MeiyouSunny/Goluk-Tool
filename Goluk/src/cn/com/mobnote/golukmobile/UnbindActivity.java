@@ -207,15 +207,6 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 										boolean b = mApplication.mIpcUpdateManage.requestInfo(
 												IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
 									}
-//									String localFile = mApplication.mIpcUpdateManage.getLocalFile(vIpc);
-//									if (null == localFile || "".equals(localFile)) {
-//										boolean b = mApplication.mIpcUpdateManage.requestInfo(
-//												IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
-//									} else {
-//										Intent itent = new Intent(UnbindActivity.this, UpdateActivity.class);
-//										itent.putExtra(UpdateActivity.UPDATE_SIGN, 1);
-//										startActivity(itent);
-//									}
 								} else {
 									Intent it = new Intent(UnbindActivity.this, UpdateActivity.class);
 									it.putExtra(UpdateActivity.UPDATE_PROGRESS,
@@ -237,15 +228,6 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 						itUpdate.putExtra(UpdateActivity.UPDATE_SIGN, 1);
 						startActivity(itUpdate);
 					}
-//					String localFile = mApplication.mIpcUpdateManage.getLocalFile(vIpc);
-//					if (null == localFile || "".equals(localFile)) {
-//						boolean b = mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC,
-//								vIpc);
-//					} else {
-//						Intent itUpdate = new Intent(UnbindActivity.this, UpdateActivity.class);
-//						itUpdate.putExtra(UpdateActivity.UPDATE_SIGN, 1);
-//						startActivity(itUpdate);
-//					}
 				}
 			}
 			break;

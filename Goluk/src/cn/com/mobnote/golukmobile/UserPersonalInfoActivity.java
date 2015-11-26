@@ -316,7 +316,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 		case REQUEST_CODE_SYSTEMHEAD:
 			Bundle bundle3 = data.getExtras();
 			head = bundle3.getString("intentSevenHead");
-
+			customavatar = "";
 			showHead(mImageHead, head);
 
 			if (head.equals("1") || head.equals("2") || head.equals("3")) {
