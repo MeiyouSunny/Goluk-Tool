@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -273,14 +274,28 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 						});
 					}
 
-					Animation slideDown = AnimationUtils.loadAnimation(
+					final Animation slideDown = AnimationUtils.loadAnimation(
 							mContext, R.anim.anim_slide_down);
 					bannerHolder.mTextBannerLL.startAnimation(slideDown);
 				} else {
-					bannerHolder.mTextBannerLL.setVisibility(View.GONE);
-					Animation slideUp = AnimationUtils.loadAnimation(
+					final Animation slideUp = AnimationUtils.loadAnimation(
 							mContext, R.anim.anim_slide_up);
 					bannerHolder.mTextBannerLL.startAnimation(slideUp);
+					final LinearLayout tempLL = bannerHolder.mTextBannerLL;
+					slideUp.setAnimationListener(new AnimationListener() {
+
+						@Override
+						public void onAnimationStart(Animation animation) {
+						}
+
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							tempLL.setVisibility(View.GONE);
+						}
+
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+						}});
 				}
 			}
 		}
@@ -317,7 +332,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 	}
 
 	public void startTextBannerDetail(BannerTextBody body) {
-		if(null == body) {
+		if (null == body) {
 			return;
 		}
 
@@ -328,82 +343,78 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 
 		Intent intent = null;
 
-		if (null != type) {
-			if (PURE_PIC.equals(type)) {
-				// do nothing
-				Log.d(TAG, "pure picture clicked");
-			} else if (VIDEO_DETAIL.equals(type)) {
-				// launch video detail
-				String accessId = body.getAccess();
-				if (null == accessId || accessId.trim().equals("")) {
-					return;
-				} else {
-					intent = new Intent(mContext, VideoDetailActivity.class);
-					intent.putExtra(VideoDetailActivity.VIDEO_ID,
-							body.getAccess());
-					intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT,
-							true);
-					mContext.startActivity(intent);
+		if (PURE_PIC.equals(type)) {
+			// do nothing
+			Log.d(TAG, "pure picture clicked");
+		} else if (VIDEO_DETAIL.equals(type)) {
+			// launch video detail
+			String accessId = body.getAccess();
+			if (null == accessId || accessId.trim().equals("")) {
+				return;
+			} else {
+				intent = new Intent(mContext, VideoDetailActivity.class);
+				intent.putExtra(VideoDetailActivity.VIDEO_ID, body.getAccess());
+				intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
+				mContext.startActivity(intent);
+			}
+		} else if (SPECIAL_LIST.equals(type)) {
+			// launch special list
+			String accessId = body.getAccess();
+			if (null == accessId || accessId.trim().equals("")) {
+				return;
+			} else {
+				intent = new Intent(mContext, SpecialListActivity.class);
+				intent.putExtra("ztid", body.getAccess());
+				intent.putExtra("title", body.getTitle());
+				mContext.startActivity(intent);
+			}
+		} else if (LIVE_VIDEO.equals(type)) {
+			// TODO: This should proceed in future
+			// intent = new Intent(mContext, LiveActivity.class);
+			// intent.putExtra(LiveActivity.KEY_IS_LIVE, false);
+			// intent.putExtra(LiveActivity.KEY_GROUPID, "");
+			// intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+			// intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+			// intent.putExtra(LiveActivity.KEY_USERINFO, user);
+			// mContext.startActivity(intent);
+		} else if (ACTIVITY_TOGETHER.equals(type)) {
+			// launch topic
+			String accessId = body.getAccess();
+			if (null == accessId || accessId.trim().equals("")) {
+				return;
+			} else {
+				intent = new Intent(mContext, ClusterActivity.class);
+				intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID,
+						body.getAccess());
+				// intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
+				String topName = "#" + body.getTitle() + "#";
+				intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
+				mContext.startActivity(intent);
+			}
+		} else if (H5_PAGE.equals(type)) {
+			// launch h5 page
+			String accessId = body.getAccess();
+			if (null == accessId || accessId.trim().equals("")) {
+				return;
+			} else {
+				String url = body.getAccess();
+				intent = new Intent(mContext, UserOpenUrlActivity.class);
+				intent.putExtra("url", url);
+				if (null != body && !body.getTitle().equals("")) {
+					intent.putExtra("slide_h5_title", body.getTitle());
 				}
-			} else if (SPECIAL_LIST.equals(type)) {
-				// launch special list
-				String accessId = body.getAccess();
-				if (null == accessId || accessId.trim().equals("")) {
-					return;
-				} else {
-					intent = new Intent(mContext, SpecialListActivity.class);
-					intent.putExtra("ztid", body.getAccess());
-					intent.putExtra("title", body.getTitle());
-					mContext.startActivity(intent);
-				}
-			} else if (LIVE_VIDEO.equals(type)) {
-				// TODO: This should proceed in future
-				// intent = new Intent(mContext, LiveActivity.class);
-				// intent.putExtra(LiveActivity.KEY_IS_LIVE, false);
-				// intent.putExtra(LiveActivity.KEY_GROUPID, "");
-				// intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
-				// intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
-				// intent.putExtra(LiveActivity.KEY_USERINFO, user);
-				// mContext.startActivity(intent);
-			} else if (ACTIVITY_TOGETHER.equals(type)) {
-				// launch topic
-				String accessId = body.getAccess();
-				if (null == accessId || accessId.trim().equals("")) {
-					return;
-				} else {
-					intent = new Intent(mContext, ClusterActivity.class);
-					intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID,
-							body.getAccess());
-					// intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
-					String topName = "#" + body.getTitle() + "#";
-					intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
-					mContext.startActivity(intent);
-				}
-			} else if (H5_PAGE.equals(type)) {
-				// launch h5 page
-				String accessId = body.getAccess();
-				if (null == accessId || accessId.trim().equals("")) {
-					return;
-				} else {
-					String url = body.getAccess();
-					intent = new Intent(mContext, UserOpenUrlActivity.class);
-					intent.putExtra("url", url);
-					if (null != body && !body.getTitle().equals("")) {
-						intent.putExtra("slide_h5_title", body.getTitle());
-					}
-					mContext.startActivity(intent);
-				}
-			} else if (SPECIAL_SOLO.equals(type)) {
-				String accessId = body.getAccess();
-				if (null == accessId || accessId.trim().equals("")) {
-					return;
-				} else {
-					intent = new Intent(mContext, WonderfulActivity.class);
-//					intent.putExtra("imageurl", body.getPicture());
-					intent.putExtra("ztid", body.getAccess());
-					intent.putExtra("title", body.getTitle());
-					mContext.startActivity(intent);
-				}
+				mContext.startActivity(intent);
+			}
+		} else if (SPECIAL_SOLO.equals(type)) {
+			String accessId = body.getAccess();
+			if (null == accessId || accessId.trim().equals("")) {
+				return;
+			} else {
+				intent = new Intent(mContext, WonderfulActivity.class);
+				// intent.putExtra("imageurl", body.getPicture());
+				intent.putExtra("ztid", body.getAccess());
+				intent.putExtra("title", body.getTitle());
+				mContext.startActivity(intent);
 			}
 		}
 	}

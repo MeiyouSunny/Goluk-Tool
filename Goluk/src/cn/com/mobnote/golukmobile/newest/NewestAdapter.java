@@ -151,7 +151,7 @@ public class NewestAdapter extends BaseAdapter {
 		holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
 		holder.timeLocation = (TextView) convertView.findViewById(R.id.time_location);
 		holder.function = (ImageView) convertView.findViewById(R.id.function);
-		holder.rlHead = convertView.findViewById(R.id.rl_head_img);
+//		holder.rlHead = convertView.findViewById(R.id.rl_head_img);
 
 		holder.praiseText = (TextView)convertView.findViewById(R.id.tv_newest_list_item_praise);
 		holder.commentText = (TextView)convertView.findViewById(R.id.tv_newest_list_item_comment);
@@ -166,6 +166,7 @@ public class NewestAdapter extends BaseAdapter {
 		holder.comment2 = (TextView) convertView.findViewById(R.id.comment2);
 		holder.comment3 = (TextView) convertView.findViewById(R.id.comment3);
 		holder.ivLogoVIP = (ImageView) convertView.findViewById(R.id.iv_vip_logo);
+		holder.rlUserInfo = (RelativeLayout) convertView.findViewById(R.id.rl_user_info);
 
 		int height = (int) ((float) width / widthHeight);
 		RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
@@ -205,7 +206,20 @@ public class NewestAdapter extends BaseAdapter {
 		}
 
 		final VideoSquareInfo vsInfo = mVideoSquareInfo;
-		holder.rlHead.setOnClickListener(new OnClickListener() {
+//		holder.rlHead.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				startUserCenter(vsInfo);
+//			}
+//		});
+
+//		holder.nikename.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				startUserCenter(vsInfo);
+//			}
+//		});
+		holder.rlUserInfo.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				startUserCenter(vsInfo);
@@ -561,7 +575,8 @@ public class NewestAdapter extends BaseAdapter {
 		TextView comment3;
 		ImageView ivReward;
 
-		View rlHead;
+		RelativeLayout rlUserInfo;
+//		View rlHead;
 	}
 
 	public void setNewestLiseView(NewestListView view) {
