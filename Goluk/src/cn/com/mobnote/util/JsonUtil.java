@@ -1028,6 +1028,14 @@ public class JsonUtil {
 			bean.customavatar = getJsonStringValue(dataObj, "customavatar", "");
 			bean.result = getJsonStringValue(dataObj, "result", "");
 			bean.mSeq = getJsonStringValue(dataObj, "seq", "");
+			if (dataObj.has("label")) {
+				JSONObject labelObj = dataObj.getJSONObject("label");
+				bean.mApprove = getJsonStringValue(labelObj, "approve", "");
+				bean.mApprovelabel = getJsonStringValue(labelObj, "approvelabel", "");
+				bean.mTarento = getJsonStringValue(labelObj, "tarento", "");
+				bean.mHeadplusv = getJsonStringValue(labelObj, "headplusv", "");
+				bean.mHeadplusvdes = getJsonStringValue(labelObj, "headplusvdes", "");
+			}
 
 			return bean;
 		} catch (Exception e) {

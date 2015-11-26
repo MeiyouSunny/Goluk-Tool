@@ -15,6 +15,7 @@ import android.os.Environment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -317,6 +318,9 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 					startPush();
 				}
 			}
+			if ((count == visibleCount) && (count > 20) && !mIsHaveData) {
+				GolukUtils.showToast(this, "已经到底咯");
+			}
 		}
 	}
 
@@ -541,7 +545,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 				mCommentLayout.setVisibility(View.VISIBLE);
 			}
 			JSONObject rootObj = new JSONObject((String) param2);
-			GolukDebugUtils.e("newadapter", "================VideoDetailActivity：rootObj==" + rootObj.toString());
+			Log.e("", "================comment：rootObj==" + rootObj.toString());
 			boolean isSucess = rootObj.getBoolean("success");
 			if (!isSucess) {
 				// 请求失败
@@ -685,6 +689,7 @@ public class WonderfulActivity extends BaseActivity implements OnClickListener, 
 		}
 		try {
 			JSONObject obj = new JSONObject((String) param2);
+			Log.e("", "================comment：obj==" + obj.toString());
 			boolean isSucess = obj.getBoolean("success");
 			if (!isSucess) {
 				GolukUtils.showToast(this, "评论失败");

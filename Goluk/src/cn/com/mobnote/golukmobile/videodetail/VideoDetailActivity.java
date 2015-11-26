@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -310,6 +311,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 					startPush();
 				}
 			}
+			if ((count == visibleCount) && (count > 20) && !mIsHaveData) {
+				GolukUtils.showToast(this, "已经到底咯");
+			}
 		}
 	}
 
@@ -548,6 +552,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		}
 		try {
 			JSONObject rootObj = new JSONObject((String) param2);
+			Log.e("", "================comment--zuixin：rootObj==" + rootObj.toString());
 			boolean isSucess = rootObj.getBoolean("success");
 			if (!isSucess) {
 				// 请求失败
