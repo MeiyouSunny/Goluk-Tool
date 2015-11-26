@@ -2,7 +2,7 @@ package cn.com.mobnote.golukmobile.live;
 
 import java.io.Serializable;
 
-import cn.com.mobnote.golukmobile.videodetail.UserLabel;
+import cn.com.mobnote.golukmobile.cluster.bean.UserLabelBean;
 
 public class UserInfo implements Serializable {
 
@@ -42,11 +42,10 @@ public class UserInfo implements Serializable {
 	/** 视频描述 */
 	public String desc;
 	/** 用户加V,认证信息 */
-	public UserLabel mUserLabel;
-	/**分享视频个数**/
+	public UserLabelBean mUserLabel;
+	/** 分享视频个数 **/
 	public int sharevideonumber;
-	/**赞我的人的个数**/
+	/** 赞我的人的个数 **/
 	public int praisemenumber;
-	
 
 }

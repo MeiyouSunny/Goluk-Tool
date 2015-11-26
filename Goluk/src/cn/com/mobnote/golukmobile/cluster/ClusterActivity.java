@@ -198,6 +198,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 											IPageNotifyFn.PageType_ClusterRecommend, ClusterActivity.this);
 									recommendRequest.get(mActivityid, "2",tjtime, "20");
 								}
+							}else{
+								GolukUtils.showToast(ClusterActivity.this,"已经到底啦");
 							}
 						} else {// 最新列表
 							if (newslist != null && newslist.size() >= 20) {// 加载更多视频数据
@@ -208,6 +210,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 									newsRequest.get(mActivityid, "2",
 											newslist.get(newslist.size() - 1).mVideoEntity.sharingtime, "20");
 								}
+							}else{
+								GolukUtils.showToast(ClusterActivity.this,"已经到底啦");
 							}
 						}
 					}

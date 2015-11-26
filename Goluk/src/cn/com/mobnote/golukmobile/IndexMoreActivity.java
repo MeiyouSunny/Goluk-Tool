@@ -371,9 +371,9 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 				showHead(mImageHead,userHead);
 			}
 			if(null != userInfo.mUserLabel) {
-				String approvelabel = userInfo.mUserLabel.mApprovelabel;
-				String headplusv = userInfo.mUserLabel.mHeadplusv;
-				String tarento = userInfo.mUserLabel.mTarento;
+				String approvelabel = userInfo.mUserLabel.approvelabel;
+				String headplusv = userInfo.mUserLabel.headplusv;
+				String tarento = userInfo.mUserLabel.tarento;
 				mImageAuthentication.setVisibility(View.VISIBLE);
 				if(!"".equals(approvelabel) && "1".equals(approvelabel)) {
 					mImageAuthentication.setImageResource(R.drawable.authentication_bluev_icon);

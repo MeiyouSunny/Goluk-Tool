@@ -39,11 +39,11 @@ import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
 import cn.com.mobnote.golukmobile.carrecorder.RecorderMsgReceiverBase;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
+import cn.com.mobnote.golukmobile.cluster.bean.UserLabelBean;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.TimerManager.ITimerManagerFn;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
-import cn.com.mobnote.golukmobile.videodetail.UserLabel;
 import cn.com.mobnote.golukmobile.videosuqare.BaiduMapView;
 import cn.com.mobnote.golukmobile.videosuqare.JsonCreateUtils;
 import cn.com.mobnote.golukmobile.videosuqare.ShareDataBean;
@@ -594,25 +594,25 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	 *            用户标签实体类
 	 * @author jyf
 	 */
-	private void setAuthentication(UserLabel userLabel) {
+	private void setAuthentication(UserLabelBean userLabel) {
 		if (null == userLabel) {
 			mAuthenticationImg.setVisibility(View.GONE);
 			return;
 		}
 		// 判断是否是认证
-		if (null != userLabel.mApprovelabel && "1".equals(userLabel.mApprovelabel)) {
+		if (null != userLabel.approvelabel && "1".equals(userLabel.approvelabel)) {
 			mAuthenticationImg.setVisibility(View.VISIBLE);
 			mAuthenticationImg.setBackgroundResource(R.drawable.authentication_bluev_icon);
 			return;
 		}
 		// 判断是否是加V
-		if (null != userLabel.mHeadplusv && "1".equals(userLabel.mHeadplusv)) {
+		if (null != userLabel.headplusv && "1".equals(userLabel.headplusv)) {
 			mAuthenticationImg.setVisibility(View.VISIBLE);
 			mAuthenticationImg.setBackgroundResource(R.drawable.authentication_yellowv_icon);
 			return;
 		}
 		// 判断是否是达人
-		if (null != userLabel.mTarento && "1".equals(userLabel.mTarento)) {
+		if (null != userLabel.tarento && "1".equals(userLabel.tarento)) {
 			mAuthenticationImg.setVisibility(View.VISIBLE);
 			mAuthenticationImg.setBackgroundResource(R.drawable.authentication_star_icon);
 			return;
