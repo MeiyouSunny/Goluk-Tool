@@ -102,9 +102,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private WifiConnectManager mWac = null;
 
 	/** 首页handler用来接收消息,更新UI */
-//	public static Handler mMainHandler = null;
+	// public static Handler mMainHandler = null;
 	/** 下载完成播放声音文件 */
-//	public String mVideoDownloadSoundFile = "ec_alert5.wav";
+	// public String mVideoDownloadSoundFile = "ec_alert5.wav";
 
 	/** 记录登录状态 **/
 	public SharedPreferences mPreferencesAuto;
@@ -151,13 +151,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private boolean mBannerLoaded;
 
 	private void playDownLoadedSound() {
-		if(null != mSoundPool) {
+		if (null != mSoundPool) {
 			mSoundPool.load(this, R.raw.ec_alert5, 1);
 
-			mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener(){
+			mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
 				@Override
-				public void onLoadComplete(SoundPool soundPool, int sampleId,
-						int status) {
+				public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
 					soundPool.play(sampleId, 1, 1, 1, 0, 1);
 				}
 			});
@@ -368,37 +367,37 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		boolean hotPointState = SettingUtils.getInstance().getBoolean("HotPointState", false);
 		updateHotPointState(hotPointState);
 
-//		// 更新UI handler
-//		mMainHandler = new Handler() {
-//			@Override
-//			public void handleMessage(Message msg) {
-//				int what = msg.what;
-//				switch (what) {
-//				case 1:
-//					// 视频第一针截取成功,刷新页面UI
-//					break;
-//				case 3:
-//					// 检测是否已连接小车本热点
-//					// 网络状态改变
-//					notifyLogicNetWorkState((Boolean) msg.obj);
-//
-//					break;
-//				case 99:
-//					// 请求在线视频轮播数据
-//					mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-//							IPageNotifyFn.PageType_GetPinData, "");
-//					break;
-//				case 400:
-//					// 已经绑定
-//					mApp.mIPCControlManager.setIPCWifiState(false, "");
-//					startWifi();
-//					if (null != mWac) {
-//						mWac.autoWifiManageReset();
-//					}
-//					break;
-//				}
-//			}
-//		};
+		// // 更新UI handler
+		// mMainHandler = new Handler() {
+		// @Override
+		// public void handleMessage(Message msg) {
+		// int what = msg.what;
+		// switch (what) {
+		// case 1:
+		// // 视频第一针截取成功,刷新页面UI
+		// break;
+		// case 3:
+		// // 检测是否已连接小车本热点
+		// // 网络状态改变
+		// notifyLogicNetWorkState((Boolean) msg.obj);
+		//
+		// break;
+		// case 99:
+		// // 请求在线视频轮播数据
+		// mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+		// IPageNotifyFn.PageType_GetPinData, "");
+		// break;
+		// case 400:
+		// // 已经绑定
+		// mApp.mIPCControlManager.setIPCWifiState(false, "");
+		// startWifi();
+		// if (null != mWac) {
+		// mWac.autoWifiManageReset();
+		// }
+		// break;
+		// }
+		// }
+		// };
 	}
 
 	@Override
@@ -423,12 +422,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (null == mApp.mGoluk) {
 			return;
 		}
-		GolukDebugUtils.e("","net-----state-----11111");
+		GolukDebugUtils.e("", "net-----state-----11111");
 		final String connJson = JsonUtil.getNetStateJson(isConnected);
 		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_MessageReport,
 				IMessageReportFn.REPORT_CMD_NET_STATA_CHG, connJson);
 		if (isConnected) {
-			GolukDebugUtils.e("","net-----state-----2222");
+			GolukDebugUtils.e("", "net-----state-----2222");
 			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_CommCmd_RecoveryNetwork, "");
 		}
 	}
@@ -474,11 +473,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==8888===stopDownloadList" + time);
 				updateHotPointState(true);
 
-//				if (null != PhotoAlbumActivity.mHandler) {
-//					Message msg = PhotoAlbumActivity.mHandler.obtainMessage(PhotoAlbumActivity.UPDATEDATE);
-//					msg.obj = filename;
-//					PhotoAlbumActivity.mHandler.sendMessage(msg);
-//				}
+				// if (null != PhotoAlbumActivity.mHandler) {
+				// Message msg =
+				// PhotoAlbumActivity.mHandler.obtainMessage(PhotoAlbumActivity.UPDATEDATE);
+				// msg.obj = filename;
+				// PhotoAlbumActivity.mHandler.sendMessage(msg);
+				// }
 				EventBus.getDefault().post(new EventPhotoUpdateDate(EventConfig.PHOTO_ALBUM_UPDATE_DATE, filename));
 
 				GFileUtils.writeIPCLog("YYYYYY===@@@@@@==2222==downloadfiletime=" + time);
@@ -501,9 +501,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			this.updateRecoderBtn(1);
 			mApp.mWiFiStatus = WIFI_STATE_CONNING;
 
-//			if (CarRecorderActivity.mHandler != null) {
-//				CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_CONNING);
-//			}
+			// if (CarRecorderActivity.mHandler != null) {
+			// CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_CONNING);
+			// }
 			EventBus.getDefault().post(new EventWifiConnect(EventConfig.WIFI_STATE_CONNING));
 			break;
 		case 2:
@@ -526,9 +526,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 */
 	public void updateRecoderBtn(int state) {
 		if (this.isFinishing() == false) {
-
 			AnimationDrawable ad = null;
-
 			if (state == WIFI_STATE_CONNING && isBindSucess()) {
 				indexCarrecoderBtn.setBackgroundResource(R.anim.carrecoder_btn);
 				ad = (AnimationDrawable) indexCarrecoderBtn.getBackground();
@@ -542,9 +540,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				indexCarrecoderBtn.setBackgroundResource(R.drawable.tb_notconnected);
 			} else {
 				indexCarrecoderBtn.setBackgroundResource(R.drawable.tb_notconnected);
-
 			}
-
 		}
 	}
 
@@ -562,21 +558,23 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mBaseHandler.removeMessages(MSG_H_WIFICONN_TIME);
 		mApp.mWiFiStatus = WIFI_STATE_SUCCESS;
 		GolukDebugUtils.e("zh：wifi连接成功 ", mApp.mWiFiStatus + "");
-//		if (CarRecorderActivity.mHandler != null) {
-//			GolukDebugUtils.e("zh：mhandler不为空 ", "");
-//			CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_SUCCESS);
-//		}
+		// if (CarRecorderActivity.mHandler != null) {
+		// GolukDebugUtils.e("zh：mhandler不为空 ", "");
+		// CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_SUCCESS);
+		// }
 		EventBus.getDefault().post(new EventWifiConnect(EventConfig.WIFI_STATE_SUCCESS));
 	}
 
 	// 连接失败
 	private void wifiConnectFailed() {
 		GolukDebugUtils.e("", "wifiCallBack-------------wifiConnectFailed:");
+		mBaseHandler.removeMessages(MSG_H_WIFICONN_TIME);
 		mApp.mWiFiStatus = WIFI_STATE_FAILED;
-//		if (CarRecorderActivity.mHandler != null) {
-//			GolukDebugUtils.e("zh：mhandler不为空 ", "");
-//			CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_FAILED);
-//		}
+		updateRecoderBtn(mApp.mWiFiStatus);
+		// if (CarRecorderActivity.mHandler != null) {
+		// GolukDebugUtils.e("zh：mhandler不为空 ", "");
+		// CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_FAILED);
+		// }
 		EventBus.getDefault().post(new EventWifiConnect(EventConfig.WIFI_STATE_FAILED));
 	}
 
@@ -588,11 +586,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	public void onEventMainThread(EventBindFinish event) {
-		if(null == event) {
+		if (null == event) {
 			return;
 		}
 
-		switch(event.getOpCode()) {
+		switch (event.getOpCode()) {
 		case EventConfig.CAR_RECORDER_BIND_SUCESS:
 			// 已经绑定
 			Log.d(TAG, "Wifi bind success" + mApp.mWiFiStatus);
@@ -608,27 +606,27 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	public void onEventMainThread(EventLocationFinish event) {
-		if(null == event) {
+		if (null == event) {
 			return;
 		}
 
-		switch(event.getOpCode()) {
+		switch (event.getOpCode()) {
 		case EventConfig.LOCATION_FINISH:
 			Log.d(TAG, "Location Finished: " + event.getCityCode());
 			// Start load banner
 			VideoSquareAdapter videoSquareAdapter = mVideoSquareActivity.getVideoSquareAdapter();
-			if(null == videoSquareAdapter) {
+			if (null == videoSquareAdapter) {
 				return;
 			}
 			WonderfulSelectedListView listView = videoSquareAdapter.getWonderfulSelectedListView();
-			if(null == listView) {
+			if (null == listView) {
 				return;
 			}
 
-			if(!mBannerLoaded) {
+			if (!mBannerLoaded) {
 				Log.d(TAG, "Activity first start, fill everything anyway");
-				if(event.getCityCode().equals("-1")) {
-					if(null == mCityCode || mCityCode.trim().equals("")) {
+				if (event.getCityCode().equals("-1")) {
+					if (null == mCityCode || mCityCode.trim().equals("")) {
 						mCityCode = event.getCityCode();
 						SharedPrefUtil.setCityIDString(mCityCode);
 						listView.loadBannerData(mCityCode);
@@ -636,22 +634,23 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 						listView.loadBannerData(mCityCode);
 					}
 				} else {
-					mCityCode = event.getCityCode();;
+					mCityCode = event.getCityCode();
+					;
 					SharedPrefUtil.setCityIDString(mCityCode);
 					listView.loadBannerData(mCityCode);
 				}
 				mBannerLoaded = true;
 			}
 
-			if(null == mCityCode || mCityCode.trim().equals("")) {
+			if (null == mCityCode || mCityCode.trim().equals("")) {
 				Log.d(TAG, "First located, fill everything anyway");
 				mCityCode = event.getCityCode();
 				SharedPrefUtil.setCityIDString(mCityCode);
 				listView.loadBannerData(mCityCode);
 			} else {
 				// In whole nation
-				if("-1".equals(mCityCode)) {
-					if(event.getCityCode().equals("-1")) {
+				if ("-1".equals(mCityCode)) {
+					if (event.getCityCode().equals("-1")) {
 						// do nothing
 					} else {
 						mCityCode = event.getCityCode();
@@ -659,10 +658,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 						listView.loadBannerData(mCityCode);
 					}
 				} else { // In city
-					if(event.getCityCode().equals("-1")) {
+					if (event.getCityCode().equals("-1")) {
 						// do nothing
 					} else {
-						if(!mCityCode.equals(event.getCityCode())) {
+						if (!mCityCode.equals(event.getCityCode())) {
 							mCityCode = event.getCityCode();
 							SharedPrefUtil.setCityIDString(mCityCode);
 							listView.loadBannerData(mCityCode);
@@ -678,15 +677,14 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	public void onEventMainThread(EventMapQuery event) {
-		if(null == event) {
+		if (null == event) {
 			return;
 		}
 
-		switch(event.getOpCode()) {
+		switch (event.getOpCode()) {
 		case EventConfig.LIVE_MAP_QUERY:
 			// 请求在线视频轮播数据
-			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-					IPageNotifyFn.PageType_GetPinData, "");
+			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetPinData, "");
 			break;
 		default:
 			break;
@@ -694,11 +692,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	public void onEventMainThread(EventWifiState event) {
-		if(null == event) {
+		if (null == event) {
 			return;
 		}
 
-		switch(event.getOpCode()) {
+		switch (event.getOpCode()) {
 		case EventConfig.WIFI_STATE:
 			// 检测是否已连接小车本热点
 			// 网络状态改变
@@ -726,7 +724,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("isIPCMatch");
 		}
-		if(null != mSoundPool) {
+		if (null != mSoundPool) {
 			mSoundPool.release();
 			mSoundPool = null;
 		}
@@ -982,11 +980,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		final String address = ((ReverseGeoCodeResult) obj).getAddress();
 		GolukApplication.getInstance().mCurAddr = address;
 		// 更新行车记录仪地址
-//		if (null != CarRecorderActivity.mHandler) {
-//			Message msg = CarRecorderActivity.mHandler.obtainMessage(CarRecorderActivity.ADDR);
-//			msg.obj = address;
-//			CarRecorderActivity.mHandler.sendMessage(msg);
-//		}
+		// if (null != CarRecorderActivity.mHandler) {
+		// Message msg =
+		// CarRecorderActivity.mHandler.obtainMessage(CarRecorderActivity.ADDR);
+		// msg.obj = address;
+		// CarRecorderActivity.mHandler.sendMessage(msg);
+		// }
 		EventBus.getDefault().post(new EventUpdateAddr(EventConfig.CAR_RECORDER_UPDATE_ADDR, address));
 	}
 
