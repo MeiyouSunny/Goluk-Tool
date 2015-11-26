@@ -144,6 +144,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	private boolean isExit = false;
 	/**回调中返回ipc是否断开标识／升级成功后ipc断开连接标识**/
 	private boolean mIsDisConnect = false;
+	private boolean mIsSendFileOk = false;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -159,11 +160,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		Intent it = getIntent();
 		boolean isNew = it.getBooleanExtra(UPDATE_IS_NEW, false);
 		if(isNew) {
-			mIsDisConnect = true;
-			mBtnDownload.setVisibility(View.GONE);
-			mScrollView.setVisibility(View.GONE);
-			mUpdateNewImage.setVisibility(View.VISIBLE);
-			mUpdateNewText.setVisibility(View.VISIBLE);
+			isNewVersion();
 			return ;
 		}
 		mSign = it.getIntExtra(UPDATE_SIGN, 0);
@@ -265,6 +262,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 						return;
 					}
 					mSendOk = UserUtils.showDialogUpdate(UpdateActivity.this, "文件传输成功，正在为您准备升级");
+					mIsSendFileOk = true;
 					break;
 				case UPDATE_UPGRADEING:
 					UserUtils.dismissUpdateDialog(mSendOk);
@@ -289,11 +287,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					}
 					UserUtils
 							.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "恭喜您，极路客固件升级成功，正在重新启动，请稍候……");
-					mIsDisConnect = true;
-					mBtnDownload.setVisibility(View.GONE);
-					mScrollView.setVisibility(View.GONE);
-					mUpdateNewImage.setVisibility(View.VISIBLE);
-					mUpdateNewText.setVisibility(View.VISIBLE);
+					isNewVersion();
 //					mBtnDownload.setText("已安装");
 //					mBtnDownload.setBackgroundResource(R.drawable.icon_more);
 //					mBtnDownload.setEnabled(false);
@@ -312,12 +306,16 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 						return;
 					}
 					UserUtils.showUpdateSuccess(mUpdateDialogFail, UpdateActivity.this, "很抱歉，升级失败。请您重试。");
+					mNoBreakImage.setVisibility(View.GONE);
+					mNoBreakText.setVisibility(View.GONE);
 					break;
 				case UPDATE_UPGRADE_CHECK:
 					if (isExit) {
 						return;
 					}
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "校验不通过");
+					mNoBreakImage.setVisibility(View.GONE);
+					mNoBreakText.setVisibility(View.GONE);
 					break;
 				case UPDATE_IPC_DISCONNECT:
 					timerCancel();
@@ -329,6 +327,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 						return;
 					}
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, "摄像头断开连接，请检查后重试");
+					mNoBreakImage.setVisibility(View.GONE);
+					mNoBreakText.setVisibility(View.GONE);
 					break;
 				case UPDATE_IPC_FIRST_DISCONNECT:
 					timerCancel();
@@ -338,6 +338,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					mSendDialog = null;
 					mApp.mIpcUpdateManage.stopIpcUpgrade();
 					showUpdateFirstDisconnect("很抱歉，升级失败，请先不要关闭摄像头电源，等待摄像头重新启动后再试。");
+					mNoBreakImage.setVisibility(View.GONE);
+					mNoBreakText.setVisibility(View.GONE);
 					break;
 				case UPDATE_IPC_SECOND_DISCONNECT:
 					timerCancel();
@@ -365,6 +367,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				return;
 			}
 			UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, getString(R.string.str_update_file_not_exist));
+			mNoBreakImage.setVisibility(View.GONE);
+			mNoBreakText.setVisibility(View.GONE);
 			break;
 		case EventConfig.UPDATE_PREPARE_FILE:
 			if (isExit) {
@@ -379,6 +383,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				return;
 			}
 			UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, getString(R.string.str_update_ipc_ununited));
+			mNoBreakImage.setVisibility(View.GONE);
+			mNoBreakText.setVisibility(View.GONE);
 			break;
 		default:
 			break;
@@ -451,7 +457,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					GolukDebugUtils.i("lily", "-------version-----" + version + "------ipc_version-----" + ipc_version);
 //					if(mApp.mIpcUpdateManage.mIpcModel.equals(mApp.mSharedPreUtil.getDownloadIpcModel())){
 						if (version.equals(ipc_version)) {
-							GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + version + "，当前已是最新版本");
+//							GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + version + "，当前已是最新版本");
+							isNewVersion();
 						} else {
 							String file = mApp.mIpcUpdateManage.isHasIPCFile(ipc_version);
 							boolean b = mApp.mIpcUpdateManage.ipcInstall(file);
@@ -601,11 +608,23 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				}
 			}
 		} else if(event == ENetTransEvent_IPC_VDCP_ConnectState) {
+			if(mIsSendFileOk) {
+				return ;
+			}
 			if (ConnectionStateMsg_DisConnected == msg) {
 				UserUtils.dismissUpdateDialog(mPrepareDialog);
-					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, this.getResources()
-							.getString(R.string.update_no_connect_ipc_hint));
-					mIsDisConnect = true;
+				UserUtils.dismissUpdateDialog(mUpdateDialogSuccess);
+				UserUtils.dismissUpdateDialog(mSendDialog);
+				UserUtils.dismissUpdateDialog(mSendOk);
+				UserUtils.dismissUpdateDialog(mUpdateDialog);
+				UserUtils.dismissUpdateDialog(mUpdateDialogFail);
+				UserUtils.dismissUpdateDialog(mFirstDialog);
+				UserUtils.dismissUpdateDialog(mSendDialog);
+				UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this,
+						this.getResources().getString(R.string.update_no_connect_ipc_hint));
+				mIsDisConnect = true;
+				mNoBreakImage.setVisibility(View.VISIBLE);
+				mNoBreakText.setVisibility(View.VISIBLE);
 			}
 		}
 	}
@@ -741,9 +760,22 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					}).show();
 		}
 	}
+	
+	/**
+	 * 当前ipc是最新版本UI显示
+	 */
+	public void isNewVersion() {
+		mIsDisConnect = true;
+		mBtnDownload.setVisibility(View.GONE);
+		mScrollView.setVisibility(View.GONE);
+		mUpdateNewImage.setVisibility(View.VISIBLE);
+		mUpdateNewText.setVisibility(View.VISIBLE);
+	}
 
 	public void exit() {
 		isExit = true;
+		mIsSendFileOk = false;
+		mIsDisConnect = false;
 		finish();
 		timerCancel();
 		if(null != mUpdateDialogSuccess) {

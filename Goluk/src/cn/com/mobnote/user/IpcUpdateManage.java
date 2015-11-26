@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.KeyEvent;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventConfig;
@@ -625,23 +626,17 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 * ipc安装升级
 	 */
 	public boolean ipcInstall(String filePath) {
-		// 判断网络是否连接
-//		if (!UserUtils.isNetDeviceAvailable(mApp.getContext())) {
-//			GolukUtils.showToast(mApp.getContext(), "当前网络连接异常，请检查网络后重试");
-//			return false;
-//		} else {
-			// 判断摄像头是否连接
-			if (GolukApplication.getInstance().getIpcIsLogin()) {
-				return update(filePath);
-			} else {
-//				if (UpdateActivity.mUpdateHandler != null){
-//					UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_IPC_UNUNITED);
-//				}
-				EventBus.getDefault().post(new EventIPCUpdate(EventConfig.UPDATE_IPC_UNUNITED));
-				return false;
-			}
+		// 判断摄像头是否连接
+		if (GolukApplication.getInstance().getIpcIsLogin()) {
+			return update(filePath);
+		} else {
+//			if (UpdateActivity.mUpdateHandler != null){
+//				UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_IPC_UNUNITED);
+//			}
+			EventBus.getDefault().post(new EventIPCUpdate(EventConfig.UPDATE_IPC_UNUNITED));
+			return false;
+		}
 
-//		}
 	}
 
 	/**
@@ -668,7 +663,10 @@ public class IpcUpdateManage implements IPCManagerFn {
 			for (int i = 0; i < length; i++) {
 				String update_version = upgradeArray[i].version;
 				if (current_version.equals(update_version)) {
-					GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + current_version + "，当前已是最新版本");
+//					GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + current_version + "，当前已是最新版本");
+					if (mApp.getContext() != null && mApp.getContext() instanceof UpdateActivity) {
+						((UpdateActivity) mApp.getContext()).isNewVersion();
+					}
 				} else {
 					// 判断是否有升级文件
 					boolean isHasFile = UserUtils.fileIsExists(filePath);
@@ -680,6 +678,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 //								UpdateActivity.mUpdateHandler.sendEmptyMessage(UpdateActivity.UPDATE_PREPARE_FILE);
 //							}
 							EventBus.getDefault().post(new EventIPCUpdate(EventConfig.UPDATE_PREPARE_FILE));
+							Log.e("", "-----------preparefile-------准备升级文件");
 						}
 						return u;
 					} else {
