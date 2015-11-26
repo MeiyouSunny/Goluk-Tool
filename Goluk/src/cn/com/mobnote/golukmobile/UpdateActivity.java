@@ -708,6 +708,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 
 	public void exit() {
 		isExit = true;
+		mUpdateHandler.removeCallbacksAndMessages(null);
 		finish();
 		timerCancel();
 		if(null != mUpdateDialogSuccess) {
