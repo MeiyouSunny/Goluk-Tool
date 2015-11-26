@@ -213,7 +213,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			switchMiddleLayout(true, true);
 			break;
 		case 101:
-			mTypeLayout.showPopUp();
+			if (mTypeLayout != null) {
+				mTypeLayout.showPopUp();
+			}
 			break;
 		case 105:
 			mPlayImgLayout.setVisibility(View.GONE);
@@ -474,7 +476,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			return;
 		}
 		isExit = true;
-
+		mBaseHandler.removeCallbacksAndMessages(null);
 		stopProgressThread();
 		mTypeLayout.setExit();
 		mTypeLayout = null;

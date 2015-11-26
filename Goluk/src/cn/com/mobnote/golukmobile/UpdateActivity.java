@@ -623,6 +623,21 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		if(mApp.mIpcUpdateManage != null){
 			mApp.mIpcUpdateManage.dimissLoadingDialog();
 		}
+
+		if(null != mPrepareDialog) {
+			UserUtils.dismissUpdateDialog(mPrepareDialog);
+			mPrepareDialog = null;
+		}
+
+		if(null != mSendDialog) {
+			UserUtils.dismissUpdateDialog(mSendDialog);
+			mSendDialog = null;
+		}
+
+		if(null != mUpdateDialog) {
+			UserUtils.dismissUpdateDialog(mUpdateDialog);
+			mUpdateDialog = null;
+		}
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("carupgrade");
 		}
@@ -693,6 +708,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 
 	public void exit() {
 		isExit = true;
+		mUpdateHandler.removeCallbacksAndMessages(null);
 		finish();
 		timerCancel();
 		if(null != mUpdateDialogSuccess) {
