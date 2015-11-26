@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
@@ -440,6 +440,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 	private void noDataCallBack() {
 		if (uptype == 1) {// 上拉刷新
+			Toast.makeText(mContext, R.string.str_pull_refresh_listview_bottom_reach, Toast.LENGTH_SHORT).show();
 			this.removeFoot();
 		} else if (uptype == 2) {// 下拉刷新
 			// 如果是 直播，下拉刷新后，没有数据，則直接清空列表，证明当前没有直播
