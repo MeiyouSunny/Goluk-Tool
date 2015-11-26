@@ -1,8 +1,5 @@
 package cn.com.mobnote.wifibind;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,16 +7,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.NetworkInfo.State;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.multicast.IMultiCastFn;
 import cn.com.mobnote.golukmobile.multicast.NetUtil;
-import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
@@ -28,7 +20,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	private static final String WIFICONFIG = "wifi.config";
 	private WifiConnCallBack callback = null;
 	private static final int WAITTIME = 90 * 1000;
-	private static final int CONNWAITTIME = 20 * 1000;
 	private WifiManager wifiManager = null;
 	private WifiConnectManagerSupport wifiSupport = null;
 	private Context context = null;
@@ -36,7 +27,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	ConnectivityManager connectivity = null;
 	WifiApManagerSupport apManagesupport = null;
 	private NetUtil netUtil = null;
-	private int ccount = 1;
 
 	// 构造函数
 	public WifiConnectManager(WifiManager wifiManager, Object callback) {
@@ -49,17 +39,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 		apManagesupport = new WifiApManagerSupport(wifiManager);
 		netUtil = NetUtil.getInstance();
 		netUtil.setMultiCastListener(this);
-	}
-
-	/**
-	 * 通过用户名，密码连接ipc
-	 * 
-	 * @param ssid
-	 * @param password
-	 * @param type
-	 */
-	public void connectWifi(String ssid, String password, WifiCipherType type) {
-		connectWifi(ssid, password, "", type, CONNWAITTIME);
 	}
 
 	/**
@@ -260,131 +239,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	};
 
 	/**
-	 * 提供一个外部接口，传入要连接的无线网
-	 * 
-	 * @param ssid
-	 * @param password
-	 * @param type
-	 * @param outTime
-	 */
-	private void connectWifi(final String ssid, final String password, final String mac, final WifiCipherType type,
-			final int outTime) {
-
-		Runnable runnable = new Runnable() {
-			Message msg = new Message();
-
-			public void run() {
-				GolukDebugUtils.i(TAG, "加入IPC  wifi....1 关闭热点");
-				// 关闭WiFi
-				wifiSupport.closeWifi();
-				// 如果当前网络未开启 连接失败后 需要再关闭网络
-				boolean doClose = false;
-				// 1：打开wifi
-				int openTime = openWifi(false, outTime);
-				// 代表当前网络已经开启
-				if (openTime != outTime) {
-					doClose = true;
-				}
-				// 处理超时
-				if (openTime == 0) {
-					if (doClose) {
-						wifiSupport.closeWifi();
-					}
-					msg.what = -21;
-					handler.sendMessage(msg);
-					return;
-				}
-
-				boolean connFlag = wifiSupport.joinWifiInfo(ssid, password, type);
-
-				// 连接wifi指令成功
-				if (connFlag) {
-
-					openTime = getConnState(ssid, openTime);
-					// 超时 报错返回
-					if (openTime == 0) {
-						if (ccount < 3) {
-							connectWifi(ssid, password, mac, type, CONNWAITTIME);
-							ccount++;
-							return;
-						} else {
-							wifiSupport.disConnWifi();
-							if (doClose) {
-								wifiSupport.closeWifi();
-							}
-
-							msg.what = -24;
-							handler.sendMessage(msg);
-
-							return;
-						}
-
-					}
-					msg.what = 21;
-					msg.obj = wifiSupport.getConnResult();
-					handler.sendMessage(msg);
-					return;
-				} else { // 连接失败
-					wifiSupport.disConnWifi();
-
-					wifiSupport.closeWifi();
-
-					msg.what = -24;
-					msg.obj = null;
-					handler.sendMessage(msg);
-				}
-			};
-		};
-		Thread mythread = new Thread(runnable);
-		mythread.start();
-
-	}
-
-	/**
-	 * 获取是否连接状态
-	 * 
-	 * @param outTime
-	 * @return
-	 */
-	private int getConnState(String ssid, int outTime) {
-		try {
-			int tempTime = 0;
-			ConnectivityManager connectivity = (ConnectivityManager) GolukApplication.getInstance()
-					.getSystemService(Context.CONNECTIVITY_SERVICE);
-			State state = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
-
-			while (state != State.CONNECTED) {
-
-				GolukDebugUtils.e(TAG, "crssssssssss----------------" + state + "");
-				try {
-					int temp_2 = 500;
-					Thread.sleep(temp_2);
-					tempTime += temp_2;
-					if (tempTime > outTime) {
-						return 0;
-					}
-					state = connectivity.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
-
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			WifiRsBean bean_temp = wifiSupport.getConnResult();
-
-			if (("\"" + ssid + "\"").equals(bean_temp.getPh_ssid())) {
-				return outTime - tempTime;
-			} else {
-				return 0;
-			}
-		} catch (Exception e) {
-
-		}
-
-		return 0;
-
-	}
-
-	/**
 	 * 通过关键字查询列表信息
 	 * 
 	 * @param matching
@@ -462,57 +316,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 			}
 		}
 		GolukDebugUtils.e(TAG, "opentime----------------" + (outTime - tempTime) + "-------------");
-		return outTime - tempTime;
-	}
-
-	/**
-	 * 获取wifi列表
-	 * 
-	 * @param outTime
-	 * @param beans
-	 *            用于返回
-	 * @return
-	 */
-	private int getwifiList(List<WifiRsBean> beans, String ssid, int type, int reset, int outTime) {
-		int tempTime = 0;
-		GolukDebugUtils.e(TAG, "sagetwifiListn----------------start-------------");
-		// 扫描不到wifi列表 多扫描几次
-		int count = 0;
-		while (wifiSupport.getScanResult(ssid, 1) == null) {
-			try {
-				int temp_1 = 200;
-				Thread.sleep(temp_1);
-				tempTime += temp_1;
-				// 如果等待了5秒钟还没有 断开网络重新寻找
-				if (reset == 1 && count == 10) {
-					wifiSupport.closeWifi();
-					wifiSupport.openWifi(true);
-				}
-				count++;
-				if (tempTime > outTime) {
-					GolukDebugUtils.e(TAG, "sagetwifiListn----------------chaoshi-------------");
-					return 0;
-				}
-			} catch (InterruptedException e) {
-
-				e.printStackTrace();
-			}
-		}
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		GolukDebugUtils.e(TAG, "sagetwifiListn----------------" + tempTime + "-------------");
-
-		WifiRsBean[] wifiArray = wifiSupport.getScanResult(ssid, null);
-		if (wifiArray != null) {
-			for (WifiRsBean temp : wifiArray) {
-				beans.add(temp);
-			}
-
-		}
-		// beans= wifiSupport.getScanResult("");
 		return outTime - tempTime;
 	}
 
@@ -911,52 +714,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 	private void isConnectIPC(int outTime) {
 		// TODO Auto-generated method stub
 
-	}
-
-	private int vaviAutoWifi(String ssid, int outTime) {
-		Message msg = new Message();
-		WifiRsBean[] beans = null;
-		int openTime = 0;
-		// 么有开启网络
-		openTime = this.openWifi(true, outTime);
-		if (openTime == 0) { // 超时了
-			msg.what = -51;
-			msg.obj = null;
-			handler.sendMessage(msg);
-			return 0;
-		}
-		// wifi 打开后进行连接 检查用时
-		List<WifiRsBean> list = new ArrayList<WifiRsBean>();
-
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		openTime += 500;
-
-		openTime = getwifiList(list, ssid, 1, 0, openTime);
-		if (list.size() > 0) {
-			beans = (WifiRsBean[]) list.toArray(new WifiRsBean[0]);
-		}
-		// 超时 报错返回
-		if (openTime == 0) {
-			msg.what = -51;
-			msg.obj = null;
-			handler.sendMessage(msg);
-			return 0;
-		}
-		// 如果周围没有连接不再继续进行--------------------------------------
-		if (beans == null) {
-			msg.what = -52;
-			msg.obj = null;
-			handler.sendMessage(msg);
-			return 0;
-		}
-		//
-
-		return outTime;
 	}
 
 	@Override

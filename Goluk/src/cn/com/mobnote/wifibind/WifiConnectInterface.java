@@ -3,14 +3,7 @@ package cn.com.mobnote.wifibind;
 import cn.com.mobnote.wifibind.WifiConnectManagerSupport.WifiCipherType;
 
 public interface WifiConnectInterface {
-	/**
-	 * 通过用户名，密码连接ipc
-	 * 
-	 * @param ssid
-	 * @param password
-	 * @param type
-	 */
-	public void connectWifi(String ssid, String password, WifiCipherType type);
+
 
 	/**
 	 * 启动软件后自动管理wifi
