@@ -63,6 +63,7 @@
             android:layout_height="13dp"
             android:layout_alignBottom="@id/live_userhead"
             android:layout_alignRight="@id/live_userhead"
+            android:layout_marginBottom="-7dp"
             android:contentDescription="@string/imgdes"
             android:visibility="gone" />
 

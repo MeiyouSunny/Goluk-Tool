@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -17,8 +21,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
+import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
+import cn.com.mobnote.golukmobile.special.SpecialListActivity;
+import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
+import cn.com.mobnote.golukmobile.videodetail.WonderfulActivity;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.view.SlideShowView;
@@ -35,6 +44,15 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 	private final static int VIDEO_ITEM = 1;
 	private BannerDataModel mBannerData = null;
 	private final static String FAKE_CONTENT = "fake";
+
+    private final static String PURE_PIC = "0";
+    private final static String VIDEO_DETAIL = "1";
+    private final static String SPECIAL_LIST = "2";
+    private final static String LIVE_VIDEO = "3";
+    private final static String ACTIVITY_TOGETHER = "4";
+    private final static String H5_PAGE = "5";
+    private final static String SPECIAL_SOLO = "6";
+    private final static String TAG = "WonderfulSelectedAdapter";
 
 	public WonderfulSelectedAdapter(Context context) {
 		mContext = context;
@@ -208,6 +226,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
             BannerDataModel model = (BannerDataModel)mDataList.get(position);
             if(null == model || null == model.getSlides()) {
                 showDefaultImage(bannerHolder.mBannerSlide);
+                bannerHolder.mTextBannerLL.setVisibility(View.GONE);
             } else {
                 if(null != model && "0".equals(model.getResult())) {
                     List<BannerSlideBody> slidesList = model.getSlides();
@@ -229,11 +248,56 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
                 }
             }
 
-			bannerHolder.mTextBannerLL.setVisibility(View.VISIBLE);
+			if (null != model && null != model.getTexts()) {
+				List<BannerTextBody> bannerTextList = model.getTexts();
+				if (null != bannerTextList && bannerTextList.size() >= 2) {
+					bannerHolder.mTextBannerLL.setVisibility(View.VISIBLE);
+					final BannerTextBody body0 = bannerTextList.get(0);
+					if(null != body0) {
+						bannerHolder.mTextBanner1.setText(body0.getTitle());
+						bannerHolder.mTextBanner1.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								startTextBannerDetail(body0);
+							}
+						});
+					}
 
-			Animation slideDown = AnimationUtils.loadAnimation(mContext,
-					R.anim.anim_slide_down);
-			bannerHolder.mTextBannerLL.startAnimation(slideDown);
+					final BannerTextBody body1 = bannerTextList.get(1);
+					if(null != body1) {
+						bannerHolder.mTextBanner2.setText(body1.getTitle());
+						bannerHolder.mTextBanner2.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								startTextBannerDetail(body1);
+							}
+						});
+					}
+
+					final Animation slideDown = AnimationUtils.loadAnimation(
+							mContext, R.anim.anim_slide_down);
+					bannerHolder.mTextBannerLL.startAnimation(slideDown);
+				} else {
+					final Animation slideUp = AnimationUtils.loadAnimation(
+							mContext, R.anim.anim_slide_up);
+					bannerHolder.mTextBannerLL.startAnimation(slideUp);
+					final LinearLayout tempLL = bannerHolder.mTextBannerLL;
+					slideUp.setAnimationListener(new AnimationListener() {
+
+						@Override
+						public void onAnimationStart(Animation animation) {
+						}
+
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							tempLL.setVisibility(View.GONE);
+						}
+
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+						}});
+				}
+			}
 		}
 		return convertView;
 	}
@@ -265,6 +329,94 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		}
 
 		return name;
+	}
+
+	public void startTextBannerDetail(BannerTextBody body) {
+		if (null == body) {
+			return;
+		}
+
+		String type = body.getType();
+		if (null == type || type.trim().equals("")) {
+			return;
+		}
+
+		Intent intent = null;
+
+		if (PURE_PIC.equals(type)) {
+			// do nothing
+			Log.d(TAG, "pure picture clicked");
+		} else if (VIDEO_DETAIL.equals(type)) {
+			// launch video detail
+			String accessId = body.getAccess();
+			if (null == accessId || accessId.trim().equals("")) {
+				return;
+			} else {
+				intent = new Intent(mContext, VideoDetailActivity.class);
+				intent.putExtra(VideoDetailActivity.VIDEO_ID, body.getAccess());
+				intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
+				mContext.startActivity(intent);
+			}
+		} else if (SPECIAL_LIST.equals(type)) {
+			// launch special list
+			String accessId = body.getAccess();
+			if (null == accessId || accessId.trim().equals("")) {
+				return;
+			} else {
+				intent = new Intent(mContext, SpecialListActivity.class);
+				intent.putExtra("ztid", body.getAccess());
+				intent.putExtra("title", body.getTitle());
+				mContext.startActivity(intent);
+			}
+		} else if (LIVE_VIDEO.equals(type)) {
+			// TODO: This should proceed in future
+			// intent = new Intent(mContext, LiveActivity.class);
+			// intent.putExtra(LiveActivity.KEY_IS_LIVE, false);
+			// intent.putExtra(LiveActivity.KEY_GROUPID, "");
+			// intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+			// intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+			// intent.putExtra(LiveActivity.KEY_USERINFO, user);
+			// mContext.startActivity(intent);
+		} else if (ACTIVITY_TOGETHER.equals(type)) {
+			// launch topic
+			String accessId = body.getAccess();
+			if (null == accessId || accessId.trim().equals("")) {
+				return;
+			} else {
+				intent = new Intent(mContext, ClusterActivity.class);
+				intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID,
+						body.getAccess());
+				// intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
+				String topName = "#" + body.getTitle() + "#";
+				intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
+				mContext.startActivity(intent);
+			}
+		} else if (H5_PAGE.equals(type)) {
+			// launch h5 page
+			String accessId = body.getAccess();
+			if (null == accessId || accessId.trim().equals("")) {
+				return;
+			} else {
+				String url = body.getAccess();
+				intent = new Intent(mContext, UserOpenUrlActivity.class);
+				intent.putExtra("url", url);
+				if (null != body && !body.getTitle().equals("")) {
+					intent.putExtra("slide_h5_title", body.getTitle());
+				}
+				mContext.startActivity(intent);
+			}
+		} else if (SPECIAL_SOLO.equals(type)) {
+			String accessId = body.getAccess();
+			if (null == accessId || accessId.trim().equals("")) {
+				return;
+			} else {
+				intent = new Intent(mContext, WonderfulActivity.class);
+				// intent.putExtra("imageurl", body.getPicture());
+				intent.putExtra("ztid", body.getAccess());
+				intent.putExtra("title", body.getTitle());
+				mContext.startActivity(intent);
+			}
+		}
 	}
 
 	private void loadImage(ImageView mPlayerLayout, ImageView iconView, String url, String iconUrl) {
