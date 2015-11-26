@@ -211,6 +211,13 @@ public class NewestAdapter extends BaseAdapter {
 				startUserCenter(vsInfo);
 			}
 		});
+
+		holder.nikename.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startUserCenter(vsInfo);
+			}
+		});
 	}
 
 	private void initView(int index) {
