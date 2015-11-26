@@ -78,6 +78,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		itIndexMore = getIntent();
 		WebSettings webSettings = mWebView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
+		mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);  //设置 缓存模式
 		mWebView.setDownloadListener(this);
 		mWebView.setWebViewClient(new WebViewClient() {
 
