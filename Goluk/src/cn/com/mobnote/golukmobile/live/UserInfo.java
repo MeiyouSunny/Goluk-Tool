@@ -2,6 +2,8 @@ package cn.com.mobnote.golukmobile.live;
 
 import java.io.Serializable;
 
+import cn.com.mobnote.golukmobile.cluster.bean.UserLabelBean;
+
 public class UserInfo implements Serializable {
 
 	private static final long serialVersionUID = -8534844170998963067L;
@@ -39,5 +41,11 @@ public class UserInfo implements Serializable {
 	public int liveDuration;
 	/** 视频描述 */
 	public String desc;
+	/** 用户加V,认证信息 */
+	public UserLabelBean mUserLabel;
+	/** 分享视频个数 **/
+	public int sharevideonumber;
+	/** 赞我的人的个数 **/
+	public int praisemenumber;
 
 }

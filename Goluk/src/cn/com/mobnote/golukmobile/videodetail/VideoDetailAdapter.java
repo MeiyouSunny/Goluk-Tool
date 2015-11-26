@@ -274,6 +274,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		View convertView = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.video_detail_head, null);
 		headHolder.mUserCenterLayout = (RelativeLayout) convertView.findViewById(R.id.rl_video_usercenter);
 		headHolder.mImageHead = (ImageView) convertView.findViewById(R.id.user_head);
+		headHolder.nHeadAuthentication = (ImageView) convertView.findViewById(R.id.im_listview_item_head_authentication);
 		headHolder.mTextName = (TextView) convertView.findViewById(R.id.user_name);
 		headHolder.mTextTime = (TextView) convertView.findViewById(R.id.tv_user_time_location);
 		headHolder.mTextLook = (TextView) convertView.findViewById(R.id.video_detail_count_look);
@@ -392,6 +393,23 @@ public class VideoDetailAdapter extends BaseAdapter {
 				GlideUtils.loadNetHead(mContext, headHolder.mImageHead, netUrlHead, R.drawable.my_head_moren7);
 			} else {
 				UserUtils.focusHead(mContext, mVideoAllData.avideo.user.headportrait, headHolder.mImageHead);
+			}
+			if(null != mVideoAllData.avideo.user.mUserLabel) {
+				String approvelabel = mVideoAllData.avideo.user.mUserLabel.approvelabel;
+				String headplusv = mVideoAllData.avideo.user.mUserLabel.headplusv;
+				String tarento = mVideoAllData.avideo.user.mUserLabel.tarento;
+				headHolder.nHeadAuthentication.setVisibility(View.VISIBLE);
+				if(!"".equals(approvelabel) && "1".equals(approvelabel)) {
+					headHolder.nHeadAuthentication.setImageResource(R.drawable.authentication_bluev_icon);
+				} else if(!"".equals(headplusv) && "1".equals(headplusv)) {
+					headHolder.nHeadAuthentication.setImageResource(R.drawable.authentication_yellowv_icon);
+				} else if(!"".equals(tarento) && "1".equals(tarento)) {
+					headHolder.nHeadAuthentication.setImageResource(R.drawable.authentication_star_icon);
+				} else {
+					headHolder.nHeadAuthentication.setVisibility(View.GONE);
+				}
+			} else {
+				headHolder.nHeadAuthentication.setVisibility(View.GONE);
 			}
 
 			headHolder.mTextName.setText(mVideoAllData.avideo.user.nickname);
@@ -561,10 +579,12 @@ public class VideoDetailAdapter extends BaseAdapter {
 		commentHolder.mCommentTime = (TextView) convertView.findViewById(R.id.comment_item_time);
 		commentHolder.mCommentName = (TextView) convertView.findViewById(R.id.comment_item_name);
 		commentHolder.mCommentConennt = (TextView) convertView.findViewById(R.id.comment_item_content);
+		commentHolder.nCommentAuthentication = (ImageView) convertView.findViewById(R.id.im_listview_item_comment_authentication);
 
 		commentHolder.mListLayout = (RelativeLayout) convertView.findViewById(R.id.comment_list_layout);
 		commentHolder.mForbidComment = (TextView) convertView.findViewById(R.id.comment_forbid);
 		commentHolder.mNoDataLayout = (RelativeLayout) convertView.findViewById(R.id.show_nodata_layout);
+		commentHolder.nTextCommentFloor = (TextView) convertView.findViewById(R.id.tv_listview_item_floor);
 
 		convertView.setTag(commentHolder);
 		return convertView;
@@ -604,6 +624,19 @@ public class VideoDetailAdapter extends BaseAdapter {
 				GlideUtils.loadLocalHead(mContext, commentHolder.mCommentHead,
 						UserUtils.getUserHeadImageResourceId(temp.mUserHead));
 			}
+				String approvelabel = temp.mApprovelabel;
+				String headplusv = temp.mHeadplusv;
+				String tarento = temp.mTarento;
+				commentHolder.nCommentAuthentication.setVisibility(View.VISIBLE);
+				if(!"".equals(approvelabel) && "1".equals(approvelabel)) {
+					commentHolder.nCommentAuthentication.setImageResource(R.drawable.authentication_bluev_icon);
+				} else if(!"".equals(headplusv) && "1".equals(headplusv)) {
+					commentHolder.nCommentAuthentication.setImageResource(R.drawable.authentication_yellowv_icon);
+				} else if(!"".equals(tarento) && "1".equals(tarento)) {
+					commentHolder.nCommentAuthentication.setImageResource(R.drawable.authentication_star_icon);
+				} else {
+					commentHolder.nCommentAuthentication.setVisibility(View.GONE);
+				}
 			commentHolder.mCommentName.setText(temp.mUserName);
 			if (!"".equals(temp.mReplyId) && null != temp.mReplyId && !"".equals(temp.mReplyName)
 					&& null != temp.mReplyName) {
@@ -613,7 +646,15 @@ public class VideoDetailAdapter extends BaseAdapter {
 				// 普通评论
 				commentHolder.mCommentConennt.setText(temp.mCommentTxt);
 			}
+		
 			commentHolder.mCommentTime.setText(GolukUtils.getCommentShowFormatTime(temp.mCommentTime));
+			if(!"".equals(temp.mSeq)) {
+				commentHolder.nTextCommentFloor.setVisibility(View.VISIBLE);
+				commentHolder.nTextCommentFloor.setText(temp.mSeq+"楼");
+			} else {
+				commentHolder.nTextCommentFloor.setVisibility(View.GONE);
+				commentHolder.nTextCommentFloor.setText("");
+			}
 
 			commentHolder.mCommentHead.setOnClickListener(new OnClickListener() {
 
@@ -701,6 +742,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		FullScreenVideoView mVideoView = null;
 		RelativeLayout mImageLayout = null;
 		ImageView simpleDraweeView = null;
+		ImageView nHeadAuthentication = null;
 
 		ImageView mPlayBtn = null;
 		SeekBar mSeekBar = null;
@@ -720,6 +762,8 @@ public class VideoDetailAdapter extends BaseAdapter {
 		RelativeLayout mListLayout, mNoDataLayout;
 		TextView mForbidComment = null;
 		Uri url = null;
+		TextView nTextCommentFloor;
+		ImageView nCommentAuthentication;
 		//奖励视频／推荐视频
 		ImageView mImageHeadAward,mActiveImage,mSysImage,mRecomImage;
 		TextView mTextLine1,mTextLine2,mActiveCount,mSysCount,mActiveReason,mSysReason,mRecomReason;

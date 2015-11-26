@@ -34,12 +34,12 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventMapQuery;
 import cn.com.mobnote.golukmobile.BaseActivity;
-import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
 import cn.com.mobnote.golukmobile.carrecorder.RecorderMsgReceiverBase;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
+import cn.com.mobnote.golukmobile.cluster.bean.UserLabelBean;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.TimerManager.ITimerManagerFn;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
@@ -145,6 +145,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	/** 是否支持声音 */
 	private boolean isCanVoice = true;
 	private ImageView mHead = null;
+	/** 头像认证 */
+	private ImageView mAuthenticationImg = null;
 	/** */
 	private RelativeLayout mMapRootLayout = null;
 	/** 是否成功上传过视频 */
@@ -210,7 +212,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		// 地图初始化
 		initMap();
 		// 获取我的登录信息
-		getMyInfo();
+		myInfo = mApp.getMyInfo();
 		// 开始预览或开始直播
 		if (isShareLive) {
 			SharedPrefUtil.setIsLiveNormalExit(false);
@@ -220,6 +222,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			mMoreImg.setVisibility(View.GONE);
 			mNickName.setText(myInfo.nickName);
 			setUserHeadImage(myInfo.head, myInfo.customavatar);
+			setAuthentication(myInfo.mUserLabel);
 
 		} else {
 			if (null != currentUserInfo && null != currentUserInfo.desc) {
@@ -233,6 +236,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			mTitleTv.setText(currentUserInfo.nickName + " 的直播");
 			mNickName.setText(currentUserInfo.nickName);
 			setUserHeadImage(currentUserInfo.head, currentUserInfo.customavatar);
+			setAuthentication(currentUserInfo.mUserLabel);
 		}
 		drawPersonsHead();
 		mLiveManager = new TimerManager(10);
@@ -302,24 +306,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		}
 		if (null != mLookCountTv) {
 			mLookCountTv.setText("" + GolukUtils.getFormatNumber("" + lookCount));
-		}
-	}
-
-	// 获取当前登录用户的信息
-	private void getMyInfo() {
-		try {
-			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----getMyInfo111 :" + mApp.isUserLoginSucess);
-			if (mApp.isUserLoginSucess) {
-				String userInfo = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
-						IPageNotifyFn.PageType_GetUserInfo_Get, "");
-				if (null != userInfo) {
-					myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(userInfo));
-					GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----getMyInfo :" + userInfo);
-				}
-			}
-			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----getMyInfo 333:");
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -422,6 +408,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		zanBtn = (Button) findViewById(R.id.like_btn);
 		mShareBtn = (Button) findViewById(R.id.share_btn);
 		mHead = (ImageView) findViewById(R.id.live_userhead);
+		mAuthenticationImg = (ImageView) findViewById(R.id.live_head_authentication);
 		mLiveCountDownTv = (TextView) findViewById(R.id.live_countdown);
 		mDescTv = (TextView) findViewById(R.id.live_desc);
 		mPauseBtn = (Button) findViewById(R.id.live_pause);
@@ -496,7 +483,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			break;
 		case MSG_H_TO_GETMAP_PERSONS:
 			Log.d("CK1", "aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-//			MainActivity.mMainHandler.sendEmptyMessage(99);
+			// MainActivity.mMainHandler.sendEmptyMessage(99);
 			EventBus.getDefault().post(new EventMapQuery(EventConfig.LIVE_MAP_QUERY));
 			break;
 		}
@@ -599,6 +586,40 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			liveUploadVideoFailed();
 		}
 	};
+
+	/**
+	 * 设置用户标识，包括 认证，加V, 达人
+	 * 
+	 * @param userLabel
+	 *            用户标签实体类
+	 * @author jyf
+	 */
+	private void setAuthentication(UserLabelBean userLabel) {
+		if (null == userLabel) {
+			mAuthenticationImg.setVisibility(View.GONE);
+			return;
+		}
+		// 判断是否是认证
+		if (null != userLabel.approvelabel && "1".equals(userLabel.approvelabel)) {
+			mAuthenticationImg.setVisibility(View.VISIBLE);
+			mAuthenticationImg.setBackgroundResource(R.drawable.authentication_bluev_icon);
+			return;
+		}
+		// 判断是否是加V
+		if (null != userLabel.headplusv && "1".equals(userLabel.headplusv)) {
+			mAuthenticationImg.setVisibility(View.VISIBLE);
+			mAuthenticationImg.setBackgroundResource(R.drawable.authentication_yellowv_icon);
+			return;
+		}
+		// 判断是否是达人
+		if (null != userLabel.tarento && "1".equals(userLabel.tarento)) {
+			mAuthenticationImg.setVisibility(View.VISIBLE);
+			mAuthenticationImg.setBackgroundResource(R.drawable.authentication_star_icon);
+			return;
+		}
+
+		mAuthenticationImg.setVisibility(View.GONE);
+	}
 
 	private void setUserHeadImage(String headStr, String neturl) {
 		try {
@@ -806,7 +827,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		// 开始绘制我的位置
 		if (mApp.isUserLoginSucess) {
 			if (null == myInfo) {
-				this.getMyInfo();
+				myInfo = mApp.getMyInfo();
 			}
 			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---3: " + myInfo.nickName);
 			if (null != myInfo) {
@@ -1020,8 +1041,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		}
 		LiveDialogManager.getManagerInstance().dismissLiveBackDialog();
 		dissmissAllDialog();
-		//释放资源
-		if (mBaiduMapManage != null){
+		// 释放资源
+		if (mBaiduMapManage != null) {
 			mBaiduMapManage.release();
 			mBaiduMapManage = null;
 		}
@@ -1334,6 +1355,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		freePlayer();
 
 		LiveDialogManager.getManagerInstance().setDialogManageFn(null);
+		GolukDebugUtils.e("", "next live------------------LIve----setDialogManageFn: set NULL");
 		if (isShareLive) {
 			// 如果是开启直播，则停止上报自己的位置
 			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StopUploadPosition,
@@ -1621,7 +1643,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		if (null != location) {
 			if (mApp.isUserLoginSucess) {
 				if (null == myInfo) {
-					this.getMyInfo();
+					myInfo = mApp.getMyInfo();
 				}
 				if (null != myInfo) {
 					if (LOCATION_TYPE_UNKNOW == this.mCurrentLocationType) {
@@ -1820,8 +1842,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	@Override
 	public void onMapLoaded() {
 		GolukDebugUtils.e("", "jyf-------live----LiveActivity--onMapLoaded:");
-		Log.d("CK1", "onMapLoaded");
-//		MainActivity.mMainHandler.sendEmptyMessage(99);
+		// MainActivity.mMainHandler.sendEmptyMessage(99);
 		EventBus.getDefault().post(new EventMapQuery(EventConfig.LIVE_MAP_QUERY));
 	}
 }

@@ -391,6 +391,11 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			startActivity(intent);
 			return;
 		}
+		
+		UserInfo loginUser = mApp.getMyInfo();
+		if(null != mWillDelBean && loginUser.uid.equals(mWillDelBean.mUserId) && mIsReply) {
+			mIsReply = false;
+		}
 
 		if (CommentTimerManager.getInstance().getIsStarting()) {
 			LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,

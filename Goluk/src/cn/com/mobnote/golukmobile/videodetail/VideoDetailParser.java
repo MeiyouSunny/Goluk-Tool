@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cn.com.mobnote.golukmobile.cluster.bean.UserLabelBean;
+
 public class VideoDetailParser {
 
 	public static VideoJson parseDataFromJson(String json) {
@@ -32,6 +34,16 @@ public class VideoDetailParser {
 						user.headportrait = json_user.optString("headportrait");
 						user.customavatar = json_user.optString("customavatar");
 						user.sex = json_user.optString("sex");
+						JSONObject json_label = json_user.optJSONObject("label");
+						if(null != json_label) {
+							UserLabelBean label = new UserLabelBean();
+							label.approve = json_label.optString("approve");
+							label.approvelabel = json_label.optString("approvelabel");
+							label.tarento = json_label.optString("tarento");
+							label.headplusv = json_label.optString("headplusv");
+							label.headplusvdes = json_label.optString("headplusvdes");
+							user.mUserLabel = label;
+						}
 						videoDetailInfo.user = user;
 					}
 					JSONObject json_video = json_avideo.optJSONObject("video");
