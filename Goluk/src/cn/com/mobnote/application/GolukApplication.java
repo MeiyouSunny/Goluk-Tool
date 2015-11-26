@@ -102,6 +102,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	/** 登录IPC是否登录成功 */
 	public boolean isIpcLoginSuccess = false;
+	/** 实时反应IPC连接状态 */
+	public boolean isIpcConnSuccess = false;
 	/** 　用户是否登录小车本服务器成功 */
 	public boolean isUserLoginSucess = false;
 	/** CC视频上传地址 */
@@ -282,6 +284,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mPageSource = "";
 		mMainActivity = null;
 		isIpcLoginSuccess = false;
+		isIpcConnSuccess = false;
 		isUserLoginSucess = false;
 		mCCUrl = null;
 		mCurrentUId = null;
@@ -1033,6 +1036,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	// 设置连接状态
 	private void setIpcLoginState(boolean isSucess) {
 		isIpcLoginSuccess = isSucess;
+		isIpcConnSuccess = isSucess;
 		if (isSucess) {
 			showContinuteLive();
 		}
@@ -1089,6 +1093,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		// msg = 0 初始化消息
 		// param1 = 0 成功 | 失败
 		if (0 == param1) {
+			isIpcConnSuccess = true;
 			// 如果在wifi连接页面,通知连接成功
 			if (mPageSource == "WiFiLinkList") {
 				((WiFiLinkListActivity) mContext).ipcSucessCallBack();
@@ -1097,6 +1102,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			if (mPageSource.equals("WiFiLinkBindAll")) {
 				((WiFiLinkCompleteActivity) mContext).ipcLinkWiFiCallBack();
 			}
+			
 			SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
 			boolean isbind = preferences.getBoolean("isbind", false);
 			if (isbind) {

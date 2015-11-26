@@ -21,6 +21,7 @@ import cn.com.mobnote.eventbus.EventFinishWifiActivity;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.reportlog.ReportLogManager;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
@@ -36,7 +37,7 @@ import de.greenrobot.event.EventBus;
  * Wifi扫描列表
  *
  */
-public class WiFiLinkListActivity extends BaseActivity implements OnClickListener, WifiConnCallBack {
+public class WiFiLinkListActivity extends BaseActivity implements OnClickListener, WifiConnCallBack, ForbidBack {
 
 	private static final String TAG = "WiFiLinkListActivity";
 	private static final String CONNECT_IPC_IP = "192.168.62.1";
@@ -167,49 +168,46 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		mDescTitleText4.getPaint().setFakeBoldText(true);
 	}
 
-	private void dealAutoConn() {
-		collectLog("dealAutoConn", "-----1");
+	private boolean isGetWifiBean() {
 		if (null == mWac) {
-			return;
+			connFailed();
+			return false;
 		}
-		collectLog("dealAutoConn", "-----2");
-		// 获取当前连接的wifi
 		WifiRsBean bean = mWac.getConnResult();
-		collectLog("dealAutoConn", "-----3");
+		collectLog("isGetWifiBean", "-----1");
 		if (null == bean) {
-			collectLog("dealAutoConn", "-----4 NULL");
-			GolukDebugUtils.e("", "WiFiLinkListActivity 通知logic连接ipc---dealAutoConn--------NULL---没有连接上WIFI");
-			mCurrentState = STATE_FAILED;
-			setStateSwitch();
-			return;
+			GolukDebugUtils.e("", "bindbind-------------isGetWifiBean---failed2  :");
+			collectLog("isGetWifiBean", "-----2");
+			connFailed();
+			return false;
 		}
 		collectLog("dealAutoConn", "-----5 NOT  NULL");
-		WifiRsBean[] beanArray = new WifiRsBean[1];
-		beanArray[0] = bean;
 		sWillConnName2 = bean.getIpc_ssid();
 		sWillConnMac2 = bean.getIpc_bssid();
 		if (sWillConnName2 == null || null == sWillConnMac2 || sWillConnName2.length() <= 0
 				|| sWillConnMac2.length() <= 0) {
+			GolukDebugUtils.e("", "bindbind-------------isGetWifiBean---failed3  :");
+			collectLog("isGetWifiBean", "-----3");
 			// 连接失败
-			mCurrentState = STATE_FAILED;
-			setStateSwitch();
+			connFailed();
+			return false;
+		}
+		collectLog("isGetWifiBean", "willConnName2:" + sWillConnName2 + "  willConnMac2:" + sWillConnMac2);
+		saveConnectWifiMsg(sWillConnName2, "", sWillConnMac2);
+		return true;
+	}
+
+	private void dealAutoConn() {
+		collectLog("dealAutoConn", "-----1");
+		// 获取当前连接的wifi
+		if (!isGetWifiBean()) {
 			return;
 		}
-		saveConnectWifiMsg(sWillConnName2, "", sWillConnMac2);
-		collectLog("dealAutoConn", "willConnName2:" + sWillConnName2 + "  willConnMac2:" + sWillConnMac2);
+		collectLog("dealAutoConn", "-----2");
 		GolukDebugUtils.e("", "WiFiLinkListActivity 通知logic连接ipc---dealAutoConn--------连接上了：" + sWillConnName2);
-		if (mApp.isIpcLoginSuccess) {
-			collectLog("dealAutoConn", "-----6");
-			// 直接显示在列表中
-			this.nextCan();
-			mCurrentState = STATE_SUCCESS;
-			this.setStateSwitch();
-		} else {
-			// 去连接IPC
-			collectLog("dealAutoConn", "-----7--------sendLogicLinkIpc");
-			// isAutoConn = true;
-			sendLogicLinkIpc();
-		}
+		// 去连接IPC
+		// isAutoConn = true;
+		sendLogicLinkIpc();
 	}
 
 	private void collectLog(String method, String msg) {
@@ -240,31 +238,29 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	 */
 	private void sendLogicLinkIpc() {
 		collectLog("sendLogicLinkIpc", "--------1");
-		// 先获取ipc是否已连接
-		boolean isLogin = mApp.getIpcIsLogin();
-		GolukDebugUtils.e("", "WiFiLinkListActivity ipc连接状态---WiFiLinkListActivity---b---" + isLogin);
-		collectLog("sendLogicLinkIpc", "--------2---isLogin---: " + isLogin);
-		if (!isLogin) {
-			// 连接ipc热点wifi---调用ipc接口
-			GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1");
-			collectLog("sendLogicLinkIpc", "--------3------: ");
-			mIsCanAcceptIPC = true;
-			boolean b = mApp.mIPCControlManager.setIPCWifiState(true, CONNECT_IPC_IP);
-			if (b) {
-				this.showLoadingDialog();
-				mCurrentState = STATE_CONNING;
-				this.setStateSwitch();
-			} else {
-				mCurrentState = STATE_FAILED;
-				this.setStateSwitch();
-			}
-			GolukDebugUtils.e("", "WiFiLinkListActivity 通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
-			collectLog("sendLogicLinkIpc", "--------4---b---: " + b);
+		// 连接ipc热点wifi---调用ipc接口
+		GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1");
+		mIsCanAcceptIPC = true;
+		boolean b = mApp.mIPCControlManager.setIPCWifiState(true, CONNECT_IPC_IP);
+		GolukDebugUtils.e("", "bindbind-------------sendLogicLinkIpc  :" + b);
+		collectLog("sendLogicLinkIpc", "--------3------: " + b);
+		if (b) {
+			this.showLoadingDialog();
+			mCurrentState = STATE_CONNING;
+			this.setStateSwitch();
 		} else {
-			// ipc已连接
-			mIsCanAcceptIPC = true;
-			ipcSucessCallBack();
+			connFailed();
 		}
+		GolukDebugUtils.e("", "WiFiLinkListActivity 通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
+	}
+
+	private void connFailed() {
+		collectLog("connFailed", "--------1------: ");
+		this.dimissLoadingDialog();
+		mApp.mIPCControlManager.setIPCWifiState(false, "");
+		mApp.isIpcConnSuccess = false;
+		mCurrentState = STATE_FAILED;
+		setStateSwitch();
 	}
 
 	private void showLoadingDialog() {
@@ -272,6 +268,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			return;
 		}
 		mConnectingDialog = new CustomLoadingDialog(this, getResources().getString(R.string.wifi_link_38_text));
+		mConnectingDialog.setListener(this);
 		mConnectingDialog.show();
 	}
 
@@ -289,6 +286,9 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		// if (!mIsCanAcceptIPC) {
 		// return;
 		// }
+
+		GolukDebugUtils.e("", "bindbind-------------ipcFailedCallBack  :");
+
 		collectLog("ipcLinkFailedCallBack", "--------2");
 		mIsCanAcceptIPC = false;
 		this.dimissLoadingDialog();
@@ -306,10 +306,11 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		if (!mIsCanAcceptIPC) {
 			return;
 		}
+		collectLog("ipcLinkedCallBack", "ipc Conn----sucess!!!: ");
+		GolukDebugUtils.e("", "bindbind-------------ipcSucessCallBack  :");
 		mIsCanAcceptIPC = false;
 		// isAutoConn = false;
 		GolukDebugUtils.e("", "WiFiLinkListActivity   ipc连接成功回调---ipcLinkedCallBack---1");
-		collectLog("ipcLinkedCallBack", "ipc Conn----sucess!!!: ");
 		this.dimissLoadingDialog();
 		// 标识已连接ipc热点,可以点击下一步
 		this.nextCan();
@@ -321,10 +322,27 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	protected void onResume() {
 		mApp.setContext(this, "WiFiLinkList");
 		super.onResume();
-		if (STATE_FAILED == mCurrentState) {
-			collectLog("onResume", "----auto Conn");
-			dealAutoConn();
+		collectLog("onResume", "----auto Conn--1:" + mApp.isIpcConnSuccess);
+		if (mApp.isIpcConnSuccess) {
+			GolukDebugUtils.e("", "bindbind-------------onResume:" + mApp.isIpcLoginSuccess);
+			if (isGetWifiBean()) {
+				collectLog("onResume", "----auto Conn--2");
+				// 连接成功，直接改变状态
+				this.nextCan();
+				mCurrentState = STATE_SUCCESS;
+				this.setStateSwitch();
+			}
+		} else {
+			GolukDebugUtils.e("", "bindbind-------------onResume 22 :" + mCurrentState);
+			collectLog("onResume", "----auto Conn--3: " + mCurrentState);
+			if (STATE_FAILED == mCurrentState || mCurrentState == STATE_SUCCESS) {
+				if (mCurrentState == STATE_SUCCESS) {
+					mApp.mIPCControlManager.setIPCWifiState(false, "");
+				}
+				dealAutoConn();
+			}
 		}
+
 	}
 
 	@Override
@@ -419,6 +437,13 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	@Override
 	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
 
+	}
+
+	@Override
+	public void forbidBackKey(int backKey) {
+		if (1 == backKey) {
+			connFailed();
+		}
 	}
 
 }

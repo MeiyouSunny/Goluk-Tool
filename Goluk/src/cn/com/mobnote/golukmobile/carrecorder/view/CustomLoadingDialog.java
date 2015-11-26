@@ -26,15 +26,15 @@ public class CustomLoadingDialog {
 		}
 
 	}
-	
-	public void setListener(ForbidBack forbidInterface){
-		if(null != forbidInterface){
+
+	public void setListener(ForbidBack forbidInterface) {
+		if (null != forbidInterface) {
 			this.forbidInterface = forbidInterface;
 		}
 	}
-	
-	private void setData(int key){
-		if(null != forbidInterface){
+
+	private void setData(int key) {
+		if (null != forbidInterface) {
 			forbidInterface.forbidBackKey(key);
 		}
 	}
@@ -62,19 +62,21 @@ public class CustomLoadingDialog {
 		customDialog.setCanceledOnTouchOutside(false);
 		customDialog.show();
 		customDialog.getWindow().setContentView(R.layout.video_square_loading);
-		
+
 		customDialog.setOnKeyListener(new OnKeyListener() {
-			
+
 			@Override
 			public boolean onKey(DialogInterface arg0, int arg1, KeyEvent arg2) {
-				GolukDebugUtils.e("", "------------------customDialog-------------back");
-				setData(1);
+
+				if (arg2.getAction() == KeyEvent.ACTION_UP) {
+					GolukDebugUtils.e("", "------------------customDialog-------------back");
+					setData(1);
+				}
 				return false;
 			}
 		});
 
 	}
-	
 
 	public void close() {
 		if (customDialog != null) {
@@ -94,9 +96,10 @@ public class CustomLoadingDialog {
 
 		return false;
 	}
-	
-	public interface ForbidBack{
+
+	public interface ForbidBack {
 		public static final int BACK_OK = 1;
+
 		void forbidBackKey(int backKey);
 	}
 
