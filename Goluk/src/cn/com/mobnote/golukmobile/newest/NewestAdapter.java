@@ -247,10 +247,10 @@ public class NewestAdapter extends BaseAdapter {
 				if("1".equals(approveLabel)) {
 					holder.ivLogoVIP.setImageResource(R.drawable.authentication_bluev_icon);
 					holder.ivLogoVIP.setVisibility(View.VISIBLE);
-				} else if("1".equals(tarento)) {
+				} else if("1".equals(headplusv)) {
 					holder.ivLogoVIP.setImageResource(R.drawable.authentication_yellowv_icon);
 					holder.ivLogoVIP.setVisibility(View.VISIBLE);
-				} else if("1".equals(headplusv)) {
+				} else if("1".equals(tarento)) {
 					holder.ivLogoVIP.setImageResource(R.drawable.authentication_star_icon);
 					holder.ivLogoVIP.setVisibility(View.VISIBLE);
 				} else {

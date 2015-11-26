@@ -723,6 +723,7 @@ public class GolukUtils {
 			return;
 		}
 		Intent intent = new Intent();
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
 		context.startActivity(intent);
 	}
