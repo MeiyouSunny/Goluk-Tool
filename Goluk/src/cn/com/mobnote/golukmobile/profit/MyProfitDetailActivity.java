@@ -127,7 +127,9 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 			if (count == visibleCount && mIsHaveData) {
 				startPush();
 			}
-			
+			if ((count == visibleCount) && (count > 20) && !mIsHaveData) {
+				GolukUtils.showToast(this, "已经到底咯");
+			}
 		}
 	}
 
