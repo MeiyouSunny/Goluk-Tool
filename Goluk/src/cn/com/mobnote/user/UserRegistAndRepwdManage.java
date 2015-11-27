@@ -41,6 +41,10 @@ public class UserRegistAndRepwdManage {
 	public boolean registAndRepwd(boolean b, String phone, String password, String vCode) {
 		String jsonStr = JsonUtil.registAndRepwdJson(phone, password, vCode);
 		// TODO 判断获取验证码的次数，判断输入的验证码格式
+		if(null == mApp || null == mApp.mGoluk) {
+			return false;
+		}
+
 		if (b) {
 			return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 					IPageNotifyFn.PageType_Register, jsonStr);
