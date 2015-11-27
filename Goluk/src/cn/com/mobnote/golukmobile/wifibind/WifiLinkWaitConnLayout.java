@@ -42,7 +42,7 @@ public class WifiLinkWaitConnLayout extends ViewFrame implements OnClickListener
 		final String text = wait + "<font color=\"#0587ff\"> " + conn + " </font>" + mobile;
 		mInfoTv = (TextView) mRootLayout.findViewById(R.id.wifi_link_waitconn_txt);
 		mInfoTv.setText(Html.fromHtml(text));
-		mInfoTv.getPaint().setFakeBoldText(true);
+		// mInfoTv.getPaint().setFakeBoldText(true);
 
 		mHelpTv = (TextView) mRootLayout.findViewById(R.id.wifi_link_waitconn_help);
 		mHelpTv.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);

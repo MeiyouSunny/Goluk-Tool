@@ -49,10 +49,10 @@ public class WifiLinkSucessLayout extends ViewFrame implements OnClickListener {
 		String mobile = mContext.getResources().getString(R.string.wifi_link_complete_mobile);
 		final String text = yourgoluk + "<font color=\"#0587ff\"> " + success + " </font>" + mobile;
 		mInfoTv.setText(Html.fromHtml(text));
-		mInfoTv.getPaint().setFakeBoldText(true);
+		// mInfoTv.getPaint().setFakeBoldText(true);
 
 		mWifi_link_sucess_txt1 = (TextView) mRootLayout.findViewById(R.id.wifi_link_sucess_txt1);
-		mWifi_link_sucess_txt1.getPaint().setFakeBoldText(true);
+		// mWifi_link_sucess_txt1.getPaint().setFakeBoldText(true);
 
 		mModifyPwdTv = (TextView) mRootLayout.findViewById(R.id.wifi_link_sucess_modify);
 		// 设置下画线
@@ -77,6 +77,8 @@ public class WifiLinkSucessLayout extends ViewFrame implements OnClickListener {
 		case R.id.wifi_link_sucess_modify:
 			EventBus.getDefault().post(new EventFinishWifiActivity());
 			Intent i = new Intent(mContext, UnbindActivity.class);
+			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			mContext.startActivity(i);
 			break;
 		}

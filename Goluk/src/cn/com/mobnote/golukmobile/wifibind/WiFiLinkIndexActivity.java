@@ -108,8 +108,8 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 		mHelpTv.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
 		mHelpTv.setOnClickListener(this);
 
-		mDescTitleText1.getPaint().setFakeBoldText(true);
-		mDescTitleText2.getPaint().setFakeBoldText(true);
+		// mDescTitleText1.getPaint().setFakeBoldText(true);
+		// mDescTitleText2.getPaint().setFakeBoldText(true);
 
 		mMiddleImg = (ImageView) findViewById(R.id.imageView1);
 		mProgressImg = (ImageView) findViewById(R.id.wifilink_progress);
