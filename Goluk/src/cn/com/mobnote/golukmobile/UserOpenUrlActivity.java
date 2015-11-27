@@ -21,7 +21,6 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
-import cn.com.mobnote.golukmobile.http.UrlHostManager;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.user.MyProgressWebView;
@@ -157,8 +156,15 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					if (mErrorState) {
 						return;
 					}
-					GolukDebugUtils.e("", "======profitproblem======url："+UrlHostManager.getWebPageHost());
-					mWebView.loadUrl(UrlHostManager.getWebPageHost()+"/faq/gb.html");
+					mWebView.loadUrl(getRtmpAddress() + "?type=8");
+				} else if (from_tag.equals("cash")) {
+					String uid = itIndexMore.getStringExtra("uid").toString();
+					String phone = itIndexMore.getStringExtra("phone").toString();
+					mTextTitle.setText("申请提现");
+					if (mErrorState) {
+						return;
+					}
+					mWebView.loadUrl(getRtmpAddress() + "?type=7&phone=" + phone + "&uid=" + uid);
 				}
 			} else {
 				String title = itIndexMore.getStringExtra("slide_h5_title");

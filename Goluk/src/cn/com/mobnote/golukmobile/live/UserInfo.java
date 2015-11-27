@@ -47,5 +47,7 @@ public class UserInfo implements Serializable {
 	public int sharevideonumber;
 	/** 赞我的人的个数 **/
 	public int praisemenumber;
+	/**手机号**/
+	public String phone;
 
 }

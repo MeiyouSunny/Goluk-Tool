@@ -125,15 +125,12 @@ public class CommentListViewAdapter extends BaseAdapter {
 			// 使用本地头像
 			GlideUtils.loadLocalHead(mContext, holder.mHead, UserUtils.getUserHeadImageResourceId(temp.mUserHead));
 		}
-		String approvelabel = temp.mApprovelabel;
-		String headplusv = temp.mHeadplusv;
-		String tarento = temp.mTarento;
 		holder.nImageCommentAuthentication.setVisibility(View.VISIBLE);
-		if(!"".equals(approvelabel) && "1".equals(approvelabel)) {
+		if ("1".equals(temp.mApprovelabel)) {
 			holder.nImageCommentAuthentication.setImageResource(R.drawable.authentication_bluev_icon);
-		} else if(!"".equals(headplusv) && "1".equals(headplusv)) {
+		} else if ("1".equals(temp.mHeadplusv)) {
 			holder.nImageCommentAuthentication.setImageResource(R.drawable.authentication_yellowv_icon);
-		} else if(!"".equals(tarento) && "1".equals(tarento)) {
+		} else if ("1".equals(temp.mTarento)) {
 			holder.nImageCommentAuthentication.setImageResource(R.drawable.authentication_star_icon);
 		} else {
 			holder.nImageCommentAuthentication.setVisibility(View.GONE);
@@ -142,7 +139,7 @@ public class CommentListViewAdapter extends BaseAdapter {
 		// 设置名称
 		holder.mName.setText(getShowUserName(temp));
 		// 设置评论内容
-		if (!"".equals(temp.mReplyId) && null != temp.mReplyId && !"".equals(temp.mReplyName)
+		if (null != temp.mReplyId && !"".equals(temp.mReplyId) && !"".equals(temp.mReplyName)
 				&& null != temp.mReplyName) {
 			UserUtils.showText(holder.mContent, temp.mReplyName, temp.mCommentTxt);
 		} else {
@@ -150,9 +147,9 @@ public class CommentListViewAdapter extends BaseAdapter {
 		}
 		// 设置显示时间
 		holder.mTime.setText(GolukUtils.getCommentShowFormatTime(temp.mCommentTime));
-		if(!"".equals(temp.mSeq)) {
+		if (null != temp.mSeq && !"".equals(temp.mSeq)) {
 			holder.nTextCommentFloor.setVisibility(View.VISIBLE);
-			holder.nTextCommentFloor.setText(temp.mSeq+"楼");
+			holder.nTextCommentFloor.setText(temp.mSeq + "楼");
 		} else {
 			holder.nTextCommentFloor.setVisibility(View.GONE);
 		}

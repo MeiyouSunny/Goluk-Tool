@@ -366,6 +366,7 @@ public class JsonUtil {
 			userInfo.lat = getJsonStringValue(rootObj, "lat", "");
 			userInfo.speed = String.valueOf(getJsonIntValue(rootObj, "speed", 0));
 			userInfo.active = getJsonStringValue(rootObj, "active", "");
+			userInfo.phone = getJsonStringValue(rootObj, "phone", "");
 
 			userInfo.tag = getJsonStringValue(rootObj, "tag", "");
 			userInfo.groupId = getJsonStringValue(rootObj, "gid", "");
