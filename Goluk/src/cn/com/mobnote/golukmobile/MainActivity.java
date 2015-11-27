@@ -317,8 +317,14 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		MobclickAgent.setDebugMode(false);
 		MobclickAgent.setCatchUncaughtExceptions(false);
 		// 添加腾讯崩溃统计 初始化SDK
+		String appId = CrashReportUtil.BUGLY_RELEASE_APPID_GOLUK;
+		boolean isDebug = false;
+		if (GolukUtils.isTestServer()) {
+			appId = CrashReportUtil.BUGLY_DEV_APPID_GOLUK;
+			isDebug = true;
+		}
 		CrashReport
-				.initCrashReport(getApplicationContext(), CrashReportUtil.BUGLY_APPID_GOLUK, CrashReportUtil.isDebug);
+				.initCrashReport(getApplicationContext(), appId, isDebug);
 		final String mobileId = Tapi.getMobileId();
 		CrashReport.setUserId(mobileId);
 		GolukDebugUtils.e("", "jyf-----MainActivity-----mobileId:" + mobileId);
