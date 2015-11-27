@@ -47,19 +47,19 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_height="37.33dp">
-            <ImageView
-                android:id="@+id/headimg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/imgdes" />
+                <ImageView
+                    android:id="@+id/headimg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/imgdes" />
 
-            <ImageView
-                android:id="@+id/iv_vip_logo"
-                android:layout_width="11.33dp"
-                android:layout_height="11.33dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:contentDescription="@string/imgdes" />
+                <ImageView
+                    android:id="@+id/iv_vip_logo"
+                    android:layout_width="11.33dp"
+                    android:layout_height="11.33dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:contentDescription="@string/imgdes" />
             </RelativeLayout>
 
             <LinearLayout
