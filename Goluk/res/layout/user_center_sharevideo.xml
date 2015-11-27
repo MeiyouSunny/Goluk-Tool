@@ -9,13 +9,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp" >
-
-        <!-- 头像 -->
+        
+         <RelativeLayout
+                android:id="@+id/rl_head_img"
+                android:layout_width="37.33dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_height="37.33dp">
+             <!-- 头像 -->
 
         <ImageView
             android:id="@+id/headimg"
-            android:layout_width="37.33dp"
-            android:layout_height="37.33dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:contentDescription="@string/imgdes" />
         
@@ -26,6 +32,9 @@
             android:layout_alignRight="@id/headimg"
             android:layout_alignBottom="@id/headimg"
             android:background="@drawable/authentication_bluev_icon"/>
+        </RelativeLayout>
+
+       
 
         <!-- 举报按钮 -->
 
@@ -43,7 +52,7 @@
         <ImageView
             android:id="@+id/user_center_gold"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@id/function"
@@ -60,7 +69,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toLeftOf="@id/user_center_gold"
-            android:layout_toRightOf="@+id/headimg" >
+            android:layout_toRightOf="@+id/rl_head_img" >
 
             <LinearLayout
                 android:id="@+id/uc_video_userInfolayout"

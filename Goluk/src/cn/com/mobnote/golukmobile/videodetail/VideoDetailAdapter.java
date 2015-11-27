@@ -399,11 +399,11 @@ public class VideoDetailAdapter extends BaseAdapter {
 				String headplusv = mVideoAllData.avideo.user.mUserLabel.headplusv;
 				String tarento = mVideoAllData.avideo.user.mUserLabel.tarento;
 				headHolder.nHeadAuthentication.setVisibility(View.VISIBLE);
-				if(!"".equals(approvelabel) && "1".equals(approvelabel)) {
+				if("1".equals(approvelabel)) {
 					headHolder.nHeadAuthentication.setImageResource(R.drawable.authentication_bluev_icon);
-				} else if(!"".equals(headplusv) && "1".equals(headplusv)) {
+				} else if("1".equals(headplusv)) {
 					headHolder.nHeadAuthentication.setImageResource(R.drawable.authentication_yellowv_icon);
-				} else if(!"".equals(tarento) && "1".equals(tarento)) {
+				} else if("1".equals(tarento)) {
 					headHolder.nHeadAuthentication.setImageResource(R.drawable.authentication_star_icon);
 				} else {
 					headHolder.nHeadAuthentication.setVisibility(View.GONE);
@@ -653,7 +653,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 				commentHolder.nTextCommentFloor.setText(temp.mSeq+"楼");
 			} else {
 				commentHolder.nTextCommentFloor.setVisibility(View.GONE);
-				commentHolder.nTextCommentFloor.setText("");
 			}
 
 			commentHolder.mCommentHead.setOnClickListener(new OnClickListener() {
