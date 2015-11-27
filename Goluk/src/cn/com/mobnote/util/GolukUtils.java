@@ -44,8 +44,6 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class GolukUtils {
-	/** Goluk綁定视频连接地址 */
-	public static final String URL_BIND_HELP = "http://surl.goluk.cn/faq/video.html";
 	/** Goluk绑定连接出现问题URL */
 	public static final String URL_BIND_CONN_PROBLEM = "http://surl.goluk.cn/faq/link.html";
 

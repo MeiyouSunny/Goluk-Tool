@@ -24,7 +24,9 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.reportlog.ReportLogManager;
+import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
+import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
@@ -366,9 +368,22 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			}
 			break;
 		case R.id.wifi_link_list_help:
-			GolukUtils.openUrl(GolukUtils.URL_BIND_CONN_PROBLEM, this);
+			String url = getRtmpAddress() + "?type=2";
+			GolukUtils.openUrl(url, this);
+			break;
+		default:
 			break;
 		}
+	}
+
+	/**
+	 * 读取UrlConfig
+	 */
+	private String getRtmpAddress() {
+		String rtmpUrl = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_GetServerAddress,
+				IGetServerAddressType.GetServerAddress_HttpServer, "UrlRedirect");
+		GolukDebugUtils.e("", "jyf-----MainActivity-----test:" + rtmpUrl);
+		return rtmpUrl;
 	}
 
 	private void setDefaultInfo() {
