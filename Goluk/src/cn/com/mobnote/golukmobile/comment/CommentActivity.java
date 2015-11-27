@@ -98,6 +98,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	private CommentBean mWillDelBean = null;
 	/**false评论／false删除／true回复**/
 	private boolean mIsReply = false;
+	/**回复评论的dialog**/
+	private ReplyDialog mReplyDialog = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -224,6 +226,10 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		mVideoSquareManager.removeVideoSquareManagerListener(TAG);
 		mIsReply = false;
 		CommentTimerManager.getInstance().cancelTimer();
+		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
+		if(null != mReplyDialog) {
+			mReplyDialog.dismiss();
+		}
 		finish();
 	}
 
@@ -252,7 +258,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 		if (CommentTimerManager.getInstance().getIsStarting()) {
 			LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-					LiveDialogManager.DIALOG_TYPE_COMMENT_TIMEOUT, "", "您评论的速度太快了，请休息一下再评论。");
+					LiveDialogManager.DIALOG_TYPE_COMMENT_TIMEOUT, "", this.getResources().getString(R.string.comment_sofast_text));
 			return;
 		}
 
@@ -525,6 +531,9 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			if (count == visibleCount && mIsHaveData) {
 				startPush();
 			}
+			if ((count == visibleCount) && (count > 20) && !mIsHaveData) {
+				GolukUtils.showToast(this, this.getResources().getString(R.string.str_pull_refresh_listview_bottom_reach));
+			}
 		}
 	}
 
@@ -632,7 +641,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 					} else {
 						mIsReply = true;
 					}
-					new ReplyDialog(this, mWillDelBean, mEditText, mIsReply).show();
+					mReplyDialog = new ReplyDialog(this, mWillDelBean, mEditText, mIsReply);
+					mReplyDialog.show();
 				}
 			}
 		} catch (Exception e) {

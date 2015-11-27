@@ -46,7 +46,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 	private LinearLayout mBottomLayout;
 	private ImageView mImageRefresh;
 	/**用户id**/
-	private String uid;
+	private String uid, phone;
 	/**进入页面的loading**/
 	private CustomLoadingDialog mLoadingDialog = null;
 	
@@ -94,6 +94,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 	private void initData() {
 		Intent itUser = getIntent();
 		uid = itUser.getStringExtra("uid").toString();
+		phone = itUser.getStringExtra("phone").toString();
 		if(null != uid || !"".equals(uid)) {
 			showLoadingDialog();
 			profitJsonRequest = new ProfitJsonRequest(IPageNotifyFn.PageType_MyProfit, this);
@@ -116,7 +117,12 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 			break;
 		//提现
 		case R.id.my_profit_leave_btn:
-			clickCashBtn();
+//			clickCashBtn();
+			Intent itCash = new Intent(this, UserOpenUrlActivity.class);
+			itCash.putExtra(UserOpenUrlActivity.FROM_TAG, "cash");
+			itCash.putExtra("uid", uid);
+			itCash.putExtra("phone", phone);
+			startActivity(itCash);
 			break;
 		//常见问题
 		case R.id.profit_problem:

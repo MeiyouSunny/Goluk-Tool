@@ -128,7 +128,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 				startPush();
 			}
 			if ((count == visibleCount) && (count > 20) && !mIsHaveData) {
-				GolukUtils.showToast(this, "已经到底咯");
+				GolukUtils.showToast(this, this.getResources().getString(R.string.str_pull_refresh_listview_bottom_reach));
 			}
 		}
 	}

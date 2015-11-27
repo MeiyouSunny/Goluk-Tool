@@ -154,7 +154,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 		mVideoJson = videoJsonData;
 		mDataList.clear();
 
-		GolukDebugUtils.e("newadapter", "================VideoDetailAdapter：commentData==" + commentData);
 		if (null != commentData) {
 			mDataList.addAll(commentData);
 		}
@@ -164,7 +163,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 	public void appendData(ArrayList<CommentBean> data) {
 		mDataList.addAll(data);
 		this.notifyDataSetChanged();
-		GolukDebugUtils.e("", "========appendData====mDataList===" + mDataList.size());
 	}
 
 	public void addFirstData(CommentBean data) {
@@ -259,7 +257,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 		if (FIRST_TYPE == type) {
 			convertView = getHeadView(convertView);
 		} else {
-			GolukDebugUtils.e("newadapter", "================VideoDetailActivity：arg0==" + arg0);
 			convertView = loadLayout(convertView, arg0 - 1);
 		}
 		if (null == mVideoJson) {
@@ -394,7 +391,8 @@ public class VideoDetailAdapter extends BaseAdapter {
 			} else {
 				UserUtils.focusHead(mContext, mVideoAllData.avideo.user.headportrait, headHolder.mImageHead);
 			}
-			if(null != mVideoAllData.avideo.user.mUserLabel) {
+			if (null != mVideoAllData && null != mVideoAllData.avideo && null != mVideoAllData.avideo.user
+					&& null != mVideoAllData.avideo.user.mUserLabel) {
 				String approvelabel = mVideoAllData.avideo.user.mUserLabel.approvelabel;
 				String headplusv = mVideoAllData.avideo.user.mUserLabel.headplusv;
 				String tarento = mVideoAllData.avideo.user.mUserLabel.tarento;
@@ -611,7 +609,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		if ("0".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
 			closeComment();
 		} else {
-			if (0 == mDataList.size()) {
+			if (null != mDataList && 0 == mDataList.size()) {
 				return ;
 			}
 			CommentBean temp = mDataList.get(index);
@@ -624,19 +622,18 @@ public class VideoDetailAdapter extends BaseAdapter {
 				GlideUtils.loadLocalHead(mContext, commentHolder.mCommentHead,
 						UserUtils.getUserHeadImageResourceId(temp.mUserHead));
 			}
-				String approvelabel = temp.mApprovelabel;
-				String headplusv = temp.mHeadplusv;
-				String tarento = temp.mTarento;
-				commentHolder.nCommentAuthentication.setVisibility(View.VISIBLE);
-				if(!"".equals(approvelabel) && "1".equals(approvelabel)) {
+			commentHolder.nCommentAuthentication.setVisibility(View.VISIBLE);
+			if (null != temp) {
+				if ("1".equals(temp.mApprovelabel)) {
 					commentHolder.nCommentAuthentication.setImageResource(R.drawable.authentication_bluev_icon);
-				} else if(!"".equals(headplusv) && "1".equals(headplusv)) {
+				} else if ("1".equals(temp.mHeadplusv)) {
 					commentHolder.nCommentAuthentication.setImageResource(R.drawable.authentication_yellowv_icon);
-				} else if(!"".equals(tarento) && "1".equals(tarento)) {
+				} else if ("1".equals(temp.mTarento)) {
 					commentHolder.nCommentAuthentication.setImageResource(R.drawable.authentication_star_icon);
 				} else {
 					commentHolder.nCommentAuthentication.setVisibility(View.GONE);
 				}
+			}
 			commentHolder.mCommentName.setText(temp.mUserName);
 			if (!"".equals(temp.mReplyId) && null != temp.mReplyId && !"".equals(temp.mReplyName)
 					&& null != temp.mReplyName) {
@@ -648,7 +645,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 			}
 		
 			commentHolder.mCommentTime.setText(GolukUtils.getCommentShowFormatTime(temp.mCommentTime));
-			if(!"".equals(temp.mSeq)) {
+			if(null != temp.mSeq && !"".equals(temp.mSeq)) {
 				commentHolder.nTextCommentFloor.setVisibility(View.VISIBLE);
 				commentHolder.nTextCommentFloor.setText(temp.mSeq+"楼");
 			} else {
@@ -686,10 +683,8 @@ public class VideoDetailAdapter extends BaseAdapter {
 
 	// 没有评论
 	public void commentNoData() {
-		if (0 == mDataList.size()) {
+		if (null != mDataList && 0 == mDataList.size()) {
 			commentHolder.mListLayout.setVisibility(View.GONE);
-//			commentHolder.mNoDataLayout.setVisibility(View.VISIBLE);
-//			commentHolder.mNoData.setVisibility(View.VISIBLE);
 			return;
 		}
 	}
@@ -698,7 +693,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 	public void closeComment() {
 		commentHolder.mListLayout.setVisibility(View.GONE);
 		commentHolder.mNoDataLayout.setVisibility(View.VISIBLE);
-//		commentHolder.mNoData.setVisibility(View.GONE);
 		commentHolder.mForbidComment.setVisibility(View.VISIBLE);
 	}
 

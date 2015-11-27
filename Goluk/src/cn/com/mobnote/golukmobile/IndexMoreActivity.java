@@ -83,7 +83,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	private MainActivity ma;
 
 	/** 用户信息 **/
-	private String userHead, userName, userDesc, userUId, userSex,customavatar;
+	private String userHead, userName, userDesc, userUId, userSex,customavatar, userPhone;
 	private int shareCount, praiseCount;
 	
 	/**个人中心**/
@@ -279,6 +279,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 				} else if(type == TYPE_PROFIT) {
 					Intent itProfit = new Intent(mContext,MyProfitActivity.class);
 					itProfit.putExtra("uid", userUId);
+					itProfit.putExtra("phone", userPhone);
 					mContext.startActivity(itProfit);
 				}
 			} else {
@@ -363,6 +364,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			userUId = userInfo.uid;
 			userSex = userInfo.sex;
 			customavatar = userInfo.customavatar;
+			userPhone = userInfo.phone;
 			
 			if(customavatar != null && !"".equals(customavatar)){
 				mImageHead.setImageURI(Uri.parse(customavatar));
@@ -371,15 +373,12 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 				showHead(mImageHead,userHead);
 			}
 			if(null != userInfo.mUserLabel) {
-				String approvelabel = userInfo.mUserLabel.approvelabel;
-				String headplusv = userInfo.mUserLabel.headplusv;
-				String tarento = userInfo.mUserLabel.tarento;
 				mImageAuthentication.setVisibility(View.VISIBLE);
-				if(!"".equals(approvelabel) && "1".equals(approvelabel)) {
+				if("1".equals(userInfo.mUserLabel.approvelabel)) {
 					mImageAuthentication.setImageResource(R.drawable.authentication_bluev_icon);
-				} else if(!"".equals(headplusv) && "1".equals(headplusv)) {
+				} else if( "1".equals(userInfo.mUserLabel.headplusv)) {
 					mImageAuthentication.setImageResource(R.drawable.authentication_yellowv_icon);
-				} else if(!"".equals(tarento) && "1".equals(tarento)) {
+				} else if("1".equals(userInfo.mUserLabel.tarento)) {
 					mImageAuthentication.setImageResource(R.drawable.authentication_star_icon);
 				} else {
 					mImageAuthentication.setVisibility(View.GONE);
