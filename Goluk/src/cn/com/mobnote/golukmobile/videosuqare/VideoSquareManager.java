@@ -255,8 +255,11 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	public boolean clickNumberUpload(String channel, List<VideoSquareInfo> mDataList) {
 		String json = JsonCreateUtils.getClickVideoUploadRequestJson(channel, mDataList);
 		GolukDebugUtils.e("", "VideoSuqare_CallBack=@@@@===json=" + json);
-		return mApplication.mGoluk
+		if(null != mApplication && null != mApplication.mGoluk) {
+			return mApplication.mGoluk
 				.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_VOP_ClickUp, json);
+		}
+		return false;
 	}
 
 	/**
@@ -274,7 +277,10 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 */
 	public boolean clickPraise(String channel, String videoid, String type) {
 		String json = JsonCreateUtils.getClickPraiseRequestJson(channel, videoid, type);
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_VOP_Praise, json);
+		if(null != mApplication && null != mApplication.mGoluk) {
+			return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_VOP_Praise, json);
+		}
+		return false;
 	}
 
 	/**

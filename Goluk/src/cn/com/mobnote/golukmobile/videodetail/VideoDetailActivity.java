@@ -122,6 +122,10 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private boolean mIsReply = false;
 	/**底部无评论的footer**/
 	private View mNoDataView = null;
+	/**回复评论的dialog**/
+	private ReplyDialog mReplyDialog = null;
+	/**右侧操作按钮的dialog**/
+	private DetailDialog mDetailDialog = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -271,7 +275,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 					return;
 				}
 			}
-			new DetailDialog(this, mVideoJson).show();
+			mDetailDialog = new DetailDialog(this, mVideoJson);
+			mDetailDialog.show();
 			break;
 		case R.id.comment_send:
 			if (!UserUtils.isNetDeviceAvailable(this)) {
@@ -312,7 +317,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				}
 			}
 			if ((count == visibleCount) && (count > 20) && !mIsHaveData) {
-				GolukUtils.showToast(this, "已经到底咯");
+				GolukUtils.showToast(this, this.getResources().getString(R.string.str_pull_refresh_listview_bottom_reach));
 			}
 		}
 	}
@@ -403,7 +408,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 		if (CommentTimerManager.getInstance().getIsStarting()) {
 			LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-					LiveDialogManager.DIALOG_TYPE_COMMENT_TIMEOUT, "", "您评论的速度太快了，请休息一下再评论。");
+					LiveDialogManager.DIALOG_TYPE_COMMENT_TIMEOUT, "", this.getResources().getString(R.string.comment_sofast_text));
 			return;
 		}
 
@@ -816,6 +821,13 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		GolukUtils.isCanClick = true;
 		GolukUtils.cancelTimer();
 		CommentTimerManager.getInstance().cancelTimer();
+		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
+		if(null != mReplyDialog) {
+			mReplyDialog.dismiss();
+		}
+		if(null != mDetailDialog) {
+			mDetailDialog.dismiss();
+		}
 		mIsReply = false;
 		if (null != mAdapter.headHolder && null != mAdapter.headHolder.mVideoView) {
 			mAdapter.headHolder.mVideoView.stopPlayback();
@@ -901,7 +913,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 					} else {
 						mIsReply = true;
 					}
-					new ReplyDialog(this, mWillDelBean, mEditInput, mIsReply).show();
+					mReplyDialog = new ReplyDialog(this, mWillDelBean, mEditInput, mIsReply);
+					mReplyDialog.show();
 				}
 			}
 		}

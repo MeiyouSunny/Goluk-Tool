@@ -200,7 +200,6 @@ public class UserUtils {
 	public static void dismissUpdateDialog(AlertDialog showUpdateDialog) {
 		if (null != showUpdateDialog) {
 			showUpdateDialog.dismiss();
-			showUpdateDialog = null;
 		}
 	}
 

@@ -620,6 +620,14 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				UserUtils.dismissUpdateDialog(mUpdateDialogFail);
 				UserUtils.dismissUpdateDialog(mFirstDialog);
 				UserUtils.dismissUpdateDialog(mSendDialog);
+				mPrepareDialog = null;
+				mUpdateDialogSuccess = null;
+				mSendDialog = null;
+				mSendOk = null;
+				mUpdateDialog = null;
+				mUpdateDialogFail = null;
+				mFirstDialog = null;
+				mSendDialog = null;
 				UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this,
 						this.getResources().getString(R.string.update_no_connect_ipc_hint));
 				mIsDisConnect = true;
@@ -791,32 +799,42 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		isExit = true;
 		mIsSendFileOk = false;
 		mIsDisConnect = false;
-		mUpdateHandler.removeCallbacksAndMessages(null);
+		if(null != mUpdateHandler) {
+			mUpdateHandler.removeCallbacksAndMessages(null);
+		}
 		finish();
 		timerCancel();
 		if(null != mUpdateDialogSuccess) {
 			UserUtils.dismissUpdateDialog(mUpdateDialogSuccess);
+			mUpdateDialogSuccess = null;
 		}
 		if(null != mPrepareDialog) {
 			UserUtils.dismissUpdateDialog(mPrepareDialog);
+			mPrepareDialog = null;
 		}
 		if(null != mSendDialog) {
 			UserUtils.dismissUpdateDialog(mSendDialog);
+			mSendDialog = null;
 		}
 		if(null != mSendOk) {
 			UserUtils.dismissUpdateDialog(mSendOk);
+			mSendOk = null;
 		}
 		if(null != mUpdateDialog) {
 			UserUtils.dismissUpdateDialog(mUpdateDialog);
+			mUpdateDialog = null;
 		}
 		if(null != mUpdateDialogFail) {
 			UserUtils.dismissUpdateDialog(mUpdateDialogFail);
+			mUpdateDialogFail = null;
 		}
 		if(null != mFirstDialog) {
 			UserUtils.dismissUpdateDialog(mFirstDialog);
+			mFirstDialog = null;
 		}
 		if(null != mSecondDialog) {
 			UserUtils.dismissUpdateDialog(mSendDialog);
+			mSendDialog = null;
 		}
 		
 	}
