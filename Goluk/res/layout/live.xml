@@ -47,25 +47,30 @@
 
         <!-- 用户头像 -->
 
-        <ImageView
-            android:id="@+id/live_userhead"
+        <RelativeLayout
+            android:id="@+id/live_name_layout"
             android:layout_width="31dp"
             android:layout_height="31dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/live_icon_portrait"
-            android:contentDescription="@string/imgdes" />
+            android:layout_marginLeft="10dp" >
 
-        <ImageView
-            android:id="@+id/live_head_authentication"
-            android:layout_width="13dp"
-            android:layout_height="13dp"
-            android:layout_alignBottom="@id/live_userhead"
-            android:layout_alignRight="@id/live_userhead"
-            android:layout_marginBottom="-7dp"
-            android:contentDescription="@string/imgdes"
-            android:visibility="gone" />
+            <ImageView
+                android:id="@+id/live_userhead"
+                android:layout_width="31dp"
+                android:layout_height="31dp"
+                android:background="@drawable/live_icon_portrait"
+                android:contentDescription="@string/imgdes" />
+
+            <ImageView
+                android:id="@+id/live_head_authentication"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:contentDescription="@string/imgdes"
+                android:visibility="gone" />
+        </RelativeLayout>
 
         <!-- XX次围观 -->
 
@@ -102,7 +107,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="6dp"
             android:layout_toLeftOf="@id/live_lookcount"
-            android:layout_toRightOf="@id/live_userhead"
+            android:layout_toRightOf="@id/live_name_layout"
             android:singleLine="true"
             android:text="My"
             android:textColor="@color/name_color"
