@@ -69,47 +69,47 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 
 	private IClusterInterface mIClusterInterface = null;
 
-	static final int ViewType_Head = 0;
-	static final int ViewType_RecommendVideoList = 1; // 推荐视频列表
-	static final int ViewType_NewsVideoList = 2; // 最新视频列表
-	static final int ViewType_NoData = 3;
+	static final int sViewType_Head = 0;
+	static final int sViewType_RecommendVideoList = 1; // 推荐视频列表
+	static final int sViewType_NewsVideoList = 2; // 最新视频列表
+	static final int sViewType_NoData = 3;
 
-	private int currentViewType = 1; // 当前视图类型（推荐列表，最新列表）
+	private int mCurrentViewType = 1; // 当前视图类型（推荐列表，最新列表）
 
-	public boolean isMoreLine = false;
+	public boolean mIsMoreLine = false;
 
-	public ActivityBean headData = null;
-	public List<VideoSquareInfo> recommendlist = null;
-	public List<VideoSquareInfo> newslist = null;
+	public ActivityBean mHeadData = null;
+	public List<VideoSquareInfo> mRecommendlist = null;
+	public List<VideoSquareInfo> mNewslist = null;
 
-	private int firstItemHeight = 0;
+	private int mFirstItemHeight = 0;
 
-	private int width = 0;
+	private int mWidth = 0;
 
 	public ClusterAdapter(Context context, SharePlatformUtil spf, int tabtype, IClusterInterface ici) {
 		mContext = context;
 
 		mIClusterInterface = ici;
 		// 默认进入分享视频列表类别
-		currentViewType = tabtype;
+		mCurrentViewType = tabtype;
 
-		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
+		mWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 	}
 
 	/**
 	 * 填充数据
 	 */
 	public void setDataInfo(ActivityBean head, List<VideoSquareInfo> recommend, List<VideoSquareInfo> news) {
-		this.headData = head;
-		this.recommendlist = recommend;
-		this.newslist = news;
+		this.mHeadData = head;
+		this.mRecommendlist = recommend;
+		this.mNewslist = news;
 	}
 
 	/**
 	 * 获取当前分类列表类型
 	 */
 	public int getCurrentViewType() {
-		return currentViewType;
+		return mCurrentViewType;
 	}
 
 	// 每个convert view都会调用此方法，获得当前所需要的view样式
@@ -117,18 +117,18 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 	public int getItemViewType(int position) {
 		int p = position;
 		if (p == 0) {
-			return ViewType_Head;
+			return sViewType_Head;
 		} else {
-			if (currentViewType == ViewType_RecommendVideoList) {
-				if (recommendlist == null || recommendlist.size() == 0) {
-					return ViewType_NoData;
+			if (mCurrentViewType == sViewType_RecommendVideoList) {
+				if (mRecommendlist == null || mRecommendlist.size() == 0) {
+					return sViewType_NoData;
 				}
 			} else {
-				if (newslist == null || newslist.size() == 0) {
-					return ViewType_NoData;
+				if (mNewslist == null || mNewslist.size() == 0) {
+					return sViewType_NoData;
 				}
 			}
-			return currentViewType;
+			return mCurrentViewType;
 		}
 	}
 
@@ -139,22 +139,22 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 
 	@Override
 	public int getCount() {
-		if (this.headData == null) {
+		if (this.mHeadData == null) {
 			return 0;
 		} else {
 			int datacount = 0;
 
-			if (this.currentViewType == ViewType_RecommendVideoList) {
-				if(recommendlist != null && recommendlist.size() > 0){
-					datacount = this.recommendlist.size() + 1;
+			if (this.mCurrentViewType == sViewType_RecommendVideoList) {
+				if(mRecommendlist != null && mRecommendlist.size() > 0){
+					datacount = this.mRecommendlist.size() + 1;
 				}else{
 					datacount++;
 				}
 				
 			} else {
 				
-				if(newslist != null && newslist.size() > 0){
-					datacount = this.newslist.size() + 1;
+				if(mNewslist != null && mNewslist.size() > 0){
+					datacount = this.mNewslist.size() + 1;
 				}else{
 					datacount++;
 				}
@@ -174,8 +174,8 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 		int type = getItemViewType(position);
 
 		switch (type) {
-		case ViewType_Head:
-			if (headData != null) {
+		case sViewType_Head:
+			if (mHeadData != null) {
 				HeadViewHolder holder = null;
 				if (convertView == null) {
 					convertView = LayoutInflater.from(mContext).inflate(R.layout.cluster_head, null);
@@ -191,15 +191,15 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 				} else {
 					holder = (HeadViewHolder) convertView.getTag();
 				}
-				int height = (int) ((float) width / 1.77f);
-				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
+				int height = (int) ((float) mWidth / 1.77f);
+				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(mWidth, height);
 				mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
 				holder.headImg.setLayoutParams(mPlayerLayoutParams);
 				
-				GlideUtils.loadImage(mContext, holder.headImg, headData.picture,
+				GlideUtils.loadImage(mContext, holder.headImg, mHeadData.picture,
 						R.drawable.tacitly_pic);
-				holder.describe.setText(headData.activitycontent);
-				if(isMoreLine){
+				holder.describe.setText(mHeadData.activitycontent);
+				if(mIsMoreLine){
 					holder.describe.setMaxLines(100);
 					holder.describe.setEllipsize(null);
 				}else{
@@ -211,17 +211,17 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 					
 					@Override
 					public void onClick(View view) {
-						if(isMoreLine){
-							isMoreLine = false;
+						if(mIsMoreLine){
+							mIsMoreLine = false;
 						}else{
-							isMoreLine = true;
+							mIsMoreLine = true;
 						}
 						notifyDataSetChanged();
 					}
 				});
-				holder.partakes.setText(headData.participantcount);
+				holder.partakes.setText(mHeadData.participantcount);
 				//活动过期
-				if("1".equals(headData.expiration)){
+				if("1".equals(mHeadData.expiration)){
 					holder.partakeBtn.setText(mContext.getResources().getString(R.string.activity_time_out));
 					holder.partakeBtn.setBackgroundResource(R.drawable.together_join_icon_press);
 				}else{
@@ -234,9 +234,9 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 							photoalbum.putExtra("from", "cloud");
 							
 							PromotionSelectItem item = new PromotionSelectItem();
-							item.activityid = headData.activityid;
-							item.activitytitle = headData.activityname;
-							item.channelid = headData.channelid;
+							item.activityid = mHeadData.activityid;
+							item.activitytitle = mHeadData.activityname;
+							item.channelid = mHeadData.channelid;
 							photoalbum.putExtra(PhotoAlbumActivity.ACTIVITY_INFO, item);
 							mContext.startActivity(photoalbum);
 						}
@@ -247,8 +247,8 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 
 					@Override
 					public void onClick(View arg0) {
-						if (currentViewType == ViewType_NewsVideoList) {
-							currentViewType = ViewType_RecommendVideoList;
+						if (mCurrentViewType == sViewType_NewsVideoList) {
+							mCurrentViewType = sViewType_RecommendVideoList;
 							notifyDataSetChanged();
 						}
 					}
@@ -258,14 +258,14 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 
 					@Override
 					public void onClick(View arg0) {
-						if (currentViewType == ViewType_RecommendVideoList) {
-							currentViewType = ViewType_NewsVideoList;
+						if (mCurrentViewType == sViewType_RecommendVideoList) {
+							mCurrentViewType = sViewType_NewsVideoList;
 							notifyDataSetChanged();
 						}
 					}
 				});
 
-				if (currentViewType == ViewType_RecommendVideoList) {
+				if (mCurrentViewType == sViewType_RecommendVideoList) {
 					holder.recommendBtn.setTextColor(Color.rgb(9, 132, 255));
 					holder.newsBtn.setTextColor(Color.rgb(51, 51, 51));
 				} else {
@@ -274,17 +274,17 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 				}
 
 				// 计算第一项的高度
-				this.firstItemHeight = convertView.getBottom();
+				this.mFirstItemHeight = convertView.getBottom();
 			}
 			break;
-		case ViewType_NewsVideoList:
-		case ViewType_RecommendVideoList:
+		case sViewType_NewsVideoList:
+		case sViewType_RecommendVideoList:
 			int index_v = position - 1;
 			final VideoSquareInfo clusterInfo;
-			if (currentViewType == ViewType_RecommendVideoList) {
-				clusterInfo = this.recommendlist.get(index_v);
+			if (mCurrentViewType == sViewType_RecommendVideoList) {
+				clusterInfo = this.mRecommendlist.get(index_v);
 			} else {
-				clusterInfo = this.newslist.get(index_v);
+				clusterInfo = this.mNewslist.get(index_v);
 			}
 
 			ViewHolder holder = null;
@@ -326,8 +326,8 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 				holder.comment2 = (TextView) convertView.findViewById(R.id.comment2);
 				holder.comment3 = (TextView) convertView.findViewById(R.id.comment3);
 				holder.isopen = (ImageView) convertView.findViewById(R.id.isopen);
-				int height = (int) ((float) width / 1.77f);
-				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
+				int height = (int) ((float) mWidth / 1.77f);
+				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(mWidth, height);
 				mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
 				holder.imageLayout.setLayoutParams(mPlayerLayoutParams);
 				convertView.setTag(holder);
@@ -458,7 +458,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 			}
 			break;
 
-		case ViewType_NoData:
+		case sViewType_NoData:
 			NoVideoDataViewHolder noVideoDataViewHolder = null;
 			if (convertView == null) {
 				convertView = LayoutInflater.from(mContext).inflate(R.layout.user_center_novideodata, null);
@@ -471,18 +471,18 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 			}
 
 			if (noVideoDataViewHolder.bMeasureHeight == false) {
-				if (this.firstItemHeight > 0) {
+				if (this.mFirstItemHeight > 0) {
 					noVideoDataViewHolder.bMeasureHeight = true;
 					RelativeLayout rl = (RelativeLayout) convertView.findViewById(R.id.subject_ll);
 					LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) rl.getLayoutParams();
-					lp.height = mIClusterInterface.OnGetListViewHeight() - this.firstItemHeight;
+					lp.height = mIClusterInterface.OnGetListViewHeight() - this.mFirstItemHeight;
 					rl.setLayoutParams(lp);
 				}
 			}
 
 			boolean bNeedRefrush = false;
 			
-			if(currentViewType == ViewType_NewsVideoList){
+			if(mCurrentViewType == sViewType_NewsVideoList){
 				noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.together_noactivity_text);
 			}else{
 				noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.together_norecommend_text);
@@ -538,10 +538,10 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 
 		VideoSquareInfo mVideoSquareInfo = null;
 
-		if (currentViewType == ViewType_RecommendVideoList) {
-			mVideoSquareInfo = this.recommendlist.get(index);
+		if (mCurrentViewType == sViewType_RecommendVideoList) {
+			mVideoSquareInfo = this.mRecommendlist.get(index);
 		} else {
-			mVideoSquareInfo = this.newslist.get(index);
+			mVideoSquareInfo = this.mNewslist.get(index);
 		}
 
 		// 分享监听
