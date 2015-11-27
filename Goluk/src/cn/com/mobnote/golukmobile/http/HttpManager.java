@@ -35,7 +35,7 @@ public class HttpManager {
     private HttpManager() {
 		mContext = GolukApplication.getInstance();
         mRequestQueue = newRequestQueue();
-        mUrlHostManager = new UrlHostManager(mContext);
+        mUrlHostManager = new UrlHostManager();
     }
 
 	public static synchronized HttpManager getInstance() {

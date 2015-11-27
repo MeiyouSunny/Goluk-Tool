@@ -8,6 +8,7 @@ import java.util.Map;
 
 import android.content.Context;
 import android.util.Log;
+import cn.com.mobnote.util.GolukUtils;
 
 import com.android.volley.AuthFailureError;
 
@@ -25,11 +26,12 @@ public  class UrlHostManager {
 	public static final String QCLOUD_WEBHOST = "http://qsurl.goluk.cn";
 	private String mHost = "";
 	private static String mWebPageHost = "";
-	private Context mContext;
+
 	private final String SERVER_FLAG_NAME = "serverflag";
-	UrlHostManager(Context context) {
-		mContext = context;
-		String flag = getFromAsset(SERVER_FLAG_NAME);
+
+	UrlHostManager() {
+
+		String flag = GolukUtils.getAssestFileContent(SERVER_FLAG_NAME).trim();
 		if (flag.equalsIgnoreCase("nvd")) {
 			mHost = ONLINE_HOST;
 			mWebPageHost = ONLINE_WEBHOST;
@@ -68,21 +70,6 @@ public  class UrlHostManager {
 					+ paramsEncoding, uee);
 		}
 	}
-
-    private String getFromAsset(String fileName) {
-    	String Result="";
-    	try { 
-            InputStreamReader inputReader = new InputStreamReader(mContext.getAssets().open(fileName) ); 
-           BufferedReader bufReader = new BufferedReader(inputReader);
-           String line="";
-           while((line = bufReader.readLine()) != null)
-               Result += line;
-           return Result;
-       } catch (Exception e) { 
-           e.printStackTrace(); 
-       }
-    	return Result;
-    }
 
     public String getHost() {
     	return mHost;

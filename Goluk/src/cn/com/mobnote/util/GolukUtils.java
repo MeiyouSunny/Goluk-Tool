@@ -630,14 +630,14 @@ public class GolukUtils {
 		return time;
 	}
 
-	public static String getAssestFileContent(Context context, String fileName) {
-		if (null == context || null == fileName || "".equals(fileName)) {
+	public static String getAssestFileContent(String fileName) {
+		if (null == fileName || "".equals(fileName)) {
 			return "";
 		}
 		String result = "";
 		InputStream is = null;
 		try {
-			is = context.getAssets().open(fileName);
+			is = GolukApplication.getInstance().getAssets().open(fileName);
 			int size = is.available();
 			byte[] buffer = new byte[size];
 			is.read(buffer);
@@ -728,5 +728,13 @@ public class GolukUtils {
 		context.startActivity(intent);
 	}
 	
-	
+	public static boolean isTestServer() {
+		String serverSign = GolukUtils.getAssestFileContent("serverflag");
+		GolukDebugUtils.e("aaa", "serverSign: " + serverSign);
+		if (null != serverSign && (serverSign.trim().equals("test") || serverSign.trim().equals("dev"))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
