@@ -9,7 +9,7 @@
         android:id="@+id/user_info_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14sp"
+        android:layout_marginTop="14dp"
         android:gravity="center_vertical" >
 
         <ImageView

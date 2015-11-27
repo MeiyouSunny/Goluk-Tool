@@ -8,8 +8,6 @@ package cn.com.mobnote.util;
  */
 public class CrashReportUtil {
 
-	/** true代表App处于调试阶段，false代表App发布阶段 */
-	public static final boolean isDebug = false;
 	/** 定位程序，腾讯appid */
 	public static final String BUGLY_APPID_LOCATION = "900001749";
 	/** 声音服务，腾讯appid */
@@ -20,7 +18,9 @@ public class CrashReportUtil {
 	public static final String BUGLY_APPID_TALK = "900001740";
 	/** 娱乐程序，腾讯appid */
 	public static final String BUGLY_APPID_ENTERTAINMENT = "900001559";
-	/** 手机客户端 腾讯appid */
-	public static final String BUGLY_APPID_GOLUK = "900002451";
+	/** 手机客户端 腾讯dev appid */
+	public static final String BUGLY_DEV_APPID_GOLUK = "900002451";
+	/** 手机客户端 腾讯release appid */
+	public static final String BUGLY_RELEASE_APPID_GOLUK = "900012751";
 
 }

@@ -39,11 +39,11 @@
         android:layout_marginLeft="38dp"
         android:layout_marginTop="10dp"
         android:drawableLeft="@drawable/ipcbinding_setp_1"
-        android:drawablePadding="12dp"
+        android:drawablePadding="10dp"
         android:gravity="center"
         android:text="@string/wifi_link_17_text"
         android:textColor="#595959"
-        android:textSize="18sp" />
+        android:textSize="14sp" />
 
     <!-- 动画图片 -->
 
@@ -61,9 +61,9 @@
         android:id="@+id/imageView2"
         android:layout_width="158dp"
         android:layout_height="46dp"
+        android:layout_alignTop="@id/imageView1"
         android:layout_below="@id/wifilist_textView1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="34dp"
         android:background="@anim/ipc_signal"
         android:contentDescription="@string/imgdes" />
 
@@ -75,23 +75,22 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/wifilist_textView1"
         android:layout_below="@id/imageView1"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:drawableLeft="@drawable/ipcbinding_setp_2"
-        android:drawablePadding="12dp"
+        android:drawablePadding="10dp"
         android:text="@string/wifi_link_17_2_text"
         android:textColor="#595959"
-        android:textSize="18sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/wifilist_textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/wifilist_textView2"
-        android:layout_marginLeft="75dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginLeft="68dp"
         android:text="@string/wifi_link_36_text"
         android:textColor="#595959"
-        android:textSize="18sp" />
+        android:textSize="14sp" />
 
     <ImageView
         android:id="@+id/wifilist_img"
@@ -109,13 +108,13 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/wifilist_textView1"
         android:layout_below="@id/wifilist_img"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:drawableLeft="@drawable/ipcbinding_setp_3"
-        android:drawablePadding="12dp"
+        android:drawablePadding="10dp"
         android:gravity="center"
         android:text="@string/wifi_link_37_text"
         android:textColor="#595959"
-        android:textSize="18sp" />
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/next_btn"
@@ -141,6 +140,6 @@
         android:drawablePadding="5dp"
         android:text="@string/wifi_link_33_text"
         android:textColor="#828282"
-        android:textSize="16sp" />
+        android:textSize="12sp" />
 
 </RelativeLayout>

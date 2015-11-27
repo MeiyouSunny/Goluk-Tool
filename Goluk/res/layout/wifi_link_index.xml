@@ -25,7 +25,6 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-           
             android:contentDescription="@string/imgdes" />
     </RelativeLayout>
 
@@ -35,8 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="90dp"
-        android:contentDescription="@string/imgdes"
-        />
+        android:contentDescription="@string/imgdes" />
 
     <TextView
         android:id="@+id/textView1"
@@ -46,7 +44,7 @@
         android:layout_centerHorizontal="true"
         android:text="@string/wifi_link_1_text"
         android:textColor="#595959"
-        android:textSize="20sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/textView2"
@@ -57,7 +55,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/wifi_link_2_text"
         android:textColor="#595959"
-        android:textSize="20sp" />
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/keep_btn"
@@ -83,6 +81,6 @@
         android:drawablePadding="5dp"
         android:text="@string/wifi_link_34_text"
         android:textColor="#828282"
-        android:textSize="16sp" />
+        android:textSize="12sp" />
 
 </RelativeLayout>

@@ -126,12 +126,12 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 				+ getResources().getString(R.string.wifi_link_wifi_light) + " </font>"
 				+ getResources().getString(R.string.wifi_link_twinkle);
 		mDescTitleText.setText(Html.fromHtml(connStr1));
-		mDescTitleText.getPaint().setFakeBoldText(true);
+		// mDescTitleText.getPaint().setFakeBoldText(true);
 		final String connStr2 = getResources().getString(R.string.wifi_link_wifi_name)
 				+ "<font color=\"#0587ff\"> Goluk xxxxxx </font>"
 				+ getResources().getString(R.string.wifi_link_wifi_name2);
 		mDescTitleText2.setText(Html.fromHtml(connStr2));
-		mDescTitleText2.getPaint().setFakeBoldText(true);
+		// mDescTitleText2.getPaint().setFakeBoldText(true);
 
 		this.nextCan();
 		setStateSwitch();
@@ -165,7 +165,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		final String connStr2 = getResources().getString(R.string.wifi_link_success_conn) + " <font color=\"#0587ff\">"
 				+ wifiname + "</font>";
 		mDescTitleText4.setText(Html.fromHtml(connStr2));
-		mDescTitleText4.getPaint().setFakeBoldText(true);
+		// mDescTitleText4.getPaint().setFakeBoldText(true);
 	}
 
 	private boolean isGetWifiBean() {

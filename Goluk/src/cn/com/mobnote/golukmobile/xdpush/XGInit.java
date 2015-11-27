@@ -31,7 +31,7 @@ public class XGInit implements XGIOperateCallback {
 	}
 
 	public void init() {
-		if (isTestServer()) {
+		if (GolukUtils.isTestServer()) {
 			XGPushConfig.setAccessId(mContext, TEST_ACCESS_ID);
 			XGPushConfig.setAccessKey(mContext, TEST_ACCESS_KEY);
 		} else {
@@ -42,16 +42,6 @@ public class XGInit implements XGIOperateCallback {
 		XGPushConfig.enableDebug(mContext, isDebug);
 		// 注册接口
 		XGPushManager.registerPush(mContext.getApplicationContext(), this);
-	}
-
-	public boolean isTestServer() {
-		String serverSign = GolukUtils.getAssestFileContent(mContext, "serverflag");
-		GolukDebugUtils.e("aaa", "serverSign: " + serverSign);
-		if (null != serverSign && (serverSign.trim().equals("test") || serverSign.trim().equals("dev"))) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	@Override

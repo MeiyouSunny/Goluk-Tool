@@ -57,10 +57,10 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 			if (signBean != null && signBean.success && signBean.data != null) {
 				mSignDataBean = signBean.data;
 				if (!uploadPhotoToCloud()) {
-					mListener.onUploadFailed(-1, "上传封面失败");
+					mListener.onUploadFailed(-1, "upload photo failed");
 				}
 			} else {
-				mListener.onUploadFailed(-1, "获取签名失败");
+				mListener.onUploadFailed(-1, "get sign failed");
 			}
 		}
 	}
@@ -75,7 +75,7 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 				mUrl.put(QCloudHelper.PHOTO_BUCKET, fileInfo.url);
 				mPhotoUploadtask = null;
 				if (!uploadVideoToCloud()) {
-					mListener.onUploadFailed(-1, "上传视频失败");
+					mListener.onUploadFailed(-1, "upload video failed");
 				}
 			}
 
@@ -85,7 +85,7 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 
 			@Override
 			public void onUploadFailed(int errorCode, String errorMsg) {
-				mListener.onUploadFailed(-1, "上传封面失败");
+				mListener.onUploadFailed(-1, "upload photo failed");
 				mPhotoUploadtask = null;
 			}
 

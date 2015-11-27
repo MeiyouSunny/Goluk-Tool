@@ -35,7 +35,7 @@ public class WifiLinkSetIpcLayout extends ViewFrame {
 		String wifi = mContext.getResources().getString(R.string.wifi_link_complete_golukwifi);
 		final String text = foryou + "<font color=\"#0587ff\">" + config + " </font>" + wifi;
 		mInfoTv.setText(Html.fromHtml(text));
-		mInfoTv.getPaint().setFakeBoldText(true);
+//		mInfoTv.getPaint().setFakeBoldText(true);
 
 		mLoadingImg = (ImageView) mRootLayout.findViewById(R.id.wifi_link_setipc_img2);
 		mLoadingImg.setImageDrawable(mLoadingAnimal.getAnimationDrawable());
