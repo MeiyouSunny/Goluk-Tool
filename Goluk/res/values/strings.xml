@@ -454,7 +454,7 @@
     <string name="str_update_ipc_ununited">您好像没有连接摄像头哦。</string>
     <string name="str_no_browser_found">手机没有浏览器？</string>
     <string name="attend_activity">我要参加</string>
-    <string name="activity_time_out">活动已过期</string>
+    <string name="activity_time_out">活动已结束</string>
     <string name="network_error">网络异常，请检查网络</string>
     <string name="request_data_error">数据异常，请稍候重试</string>
     
