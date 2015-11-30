@@ -208,11 +208,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 										GolukUtils.showToast(ClusterActivity.this,ClusterActivity.this.getResources().getString(R.string.str_pull_refresh_listview_bottom_reach));
 									}
 								}
-							}else{
-								GolukUtils.showToast(ClusterActivity.this,ClusterActivity.this.getResources().getString(R.string.str_pull_refresh_listview_bottom_reach));
 							}
 						} else {// 最新列表
-							if (mNewslist != null && mNewslist.size() >= 20) {// 加载更多视频数据
+							if (mNewslist != null && mNewslist.size() > 0) {// 加载更多视频数据
 								if (mIsNewsLoad) {
 									mRTPullListView.addFooterView(mBottomLoadingView);
 									mNewsRequest = new NewsBeanRequest(IPageNotifyFn.PageType_ClusterNews,
@@ -226,8 +224,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 										GolukUtils.showToast(ClusterActivity.this,ClusterActivity.this.getResources().getString(R.string.str_pull_refresh_listview_bottom_reach));
 									}
 								}
-							}else{
-								GolukUtils.showToast(ClusterActivity.this,ClusterActivity.this.getResources().getString(R.string.str_pull_refresh_listview_bottom_reach));
 							}
 						}
 					}
