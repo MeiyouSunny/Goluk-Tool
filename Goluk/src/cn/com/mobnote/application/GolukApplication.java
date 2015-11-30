@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -207,8 +208,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		instance = this;
 		Const.setAppContext(this);
 
-		HttpManager.getInstance();
-		SDKInitializer.initialize(this);
+		if (isMainProcess()) {
+			HttpManager.getInstance();
+			SDKInitializer.initialize(this);
+		}
 		// TODO 此处不要做初始化相关的工作
 	}
 
@@ -1672,4 +1675,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		GolukDebugUtils.e(null, "jyf----20150406----MainActivity----startLiveLook");
 	}
 
+	private boolean isMainProcess() {
+		int pid = android.os.Process.myPid();
+		ActivityManager mActivityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
+		for (ActivityManager.RunningAppProcessInfo appProcess : mActivityManager.getRunningAppProcesses()) {
+			if (appProcess.pid == pid && this.getPackageName().equals(appProcess.processName)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

@@ -75,19 +75,16 @@ public class FastjsonRequest<T> extends Request<T> {
     public final Class<T> getClazz() {
         return clazz;
     }
- 
-    @Override
-    protected Response<T> parseNetworkResponse(NetworkResponse response) {
-        try {
-            String json = new String(
-                    response.data, HttpHeaderParser.parseCharset(response.headers));
-            System.out.println("ddjson : " + json);
-            return Response.success(
-            		JSON.parseObject(json, clazz), HttpHeaderParser.parseCacheHeaders(response));
-        } catch (UnsupportedEncodingException e) {
-            return Response.error(new ParseError(e));
-        } catch (Exception e) {
-            return Response.error(new ParseError(e));
-        }
-    }
+
+	@Override
+	protected Response<T> parseNetworkResponse(NetworkResponse response) {
+		try {
+			String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+			return Response.success(JSON.parseObject(json, clazz), HttpHeaderParser.parseCacheHeaders(response));
+		} catch (UnsupportedEncodingException e) {
+			return Response.error(new ParseError(e));
+		} catch (Exception e) {
+			return Response.error(new ParseError(e));
+		}
+	}
 }
