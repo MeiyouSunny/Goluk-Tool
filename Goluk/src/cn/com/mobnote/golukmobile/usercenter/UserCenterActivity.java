@@ -186,19 +186,20 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 		case EventConfig.REFRESH_USER_INFO:
 			if (curUser != null) {
 				if (testUser()) {
-					JSONObject u = UserCenterActivity.this.getUserData();
-					if (u != null) {
-						try {
-							curUser.introduce = u.getString("desc");
-							curUser.headportrait = u.getString("head");
-							curUser.nickname = u.getString("nickname");
-							curUser.customavatar = u.getString("customavatar");
-							updateViewData(true, 0);
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
+//					JSONObject u = UserCenterActivity.this.getUserData();
+//					if (u != null) {
+//						try {
+//							curUser.introduce = u.getString("desc");
+//							curUser.headportrait = u.getString("head");
+//							curUser.nickname = u.getString("nickname");
+//							curUser.customavatar = u.getString("customavatar");
+//							updateViewData(true, 0);
+//						} catch (JSONException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//					}
+					httpPost("");
 				}
 			}
 			break;
