@@ -54,6 +54,9 @@ public class CreateNewVideo implements FilterPlaybackView.FilterVideoEditorListe
 	public void onSaveVideo() {
 		try {
 			mVideoSavePath = mNewVideoFilePath + "newvideo.mp4";
+			if (mVVPlayVideo.isPlaying()) {
+				mVVPlayVideo.stop();
+			}
 			mVVPlayVideo.saveVideo(mVideoSavePath, getNewVideoParams(), this);
 		} catch (FilterVideoEditorException e) {
 			sendData(ICreateNewVideoFn.EVENT_ERROR, null, null, null);

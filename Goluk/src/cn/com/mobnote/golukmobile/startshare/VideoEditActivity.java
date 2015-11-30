@@ -114,7 +114,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private PromotionSelectItem mPromotionSelectItem;
 
 	public static final int PROMOTION_ACTIVITY_BACK = 110;
-
+	private boolean mIsResume = false;
+	private boolean mIsFirstLoad = true;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -330,6 +331,12 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			public void onPrepared(MediaPlayerControl mpc) {
 				// 视频播放已就绪
 				GolukDebugUtils.e("", "VideoEditActivity----onPrepared---video---加载完成");
+				if (mIsResume && mIsFirstLoad) {
+					mVVPlayVideo.start();
+					mIsFirstLoad = false;
+				} else {
+					mPlayStatusImage.setVisibility(View.VISIBLE);
+				}
 				updateVideoProgress();
 				if (mPlayImgLayout.getVisibility() == View.VISIBLE) {
 					mBaseHandler.sendEmptyMessageDelayed(105, 800);
@@ -356,7 +363,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			// 设置视频源
 			mVVPlayVideo.setVideoPath(mFilePath);
 			mVVPlayVideo.switchFilterId(0);
-			mVVPlayVideo.start();
+//			mVVPlayVideo.start();
 
 		} catch (FilterVideoEditorException e) {
 			e.printStackTrace();
@@ -506,6 +513,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	@Override
 	protected void onPause() {
+		mIsResume = false;
 		if (mVVPlayVideo != null) {
 			if (mVVPlayVideo.isPlaying()) {
 				mVVPlayVideo.stop();
@@ -521,6 +529,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	@Override
 	protected void onResume() {
+		mIsResume = true;
 		if (mVVPlayVideo != null) {
 			mVVPlayVideo.onResume();
 		}
