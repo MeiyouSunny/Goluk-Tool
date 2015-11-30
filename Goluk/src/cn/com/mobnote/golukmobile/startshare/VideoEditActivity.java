@@ -166,11 +166,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	private void loadData() {
 		PromotionListRequest request = new PromotionListRequest(IPageNotifyFn.PageType_GetPromotion, this);
-		String location = mTypeLayout.getCurrentLocation();
-		if (TextUtils.isEmpty(location)) {
-			location = GolukFileUtils.loadString("loactionAddress", "");
-		}
-		request.get(location);
+		request.get();
 	}
 
 	private void getIntentData() {

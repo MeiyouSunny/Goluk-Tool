@@ -8,6 +8,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.http.request.GolukFastjsonRequest;
 import cn.com.mobnote.map.LngLat;
+import cn.com.mobnote.util.SharedPrefUtil;
 
 public class PromotionListRequest extends GolukFastjsonRequest<PromotionModel> {
 
@@ -29,7 +30,7 @@ public class PromotionListRequest extends GolukFastjsonRequest<PromotionModel> {
 		return "list";
 	}
 
-	public void get(String location) {
+	public void get() {
 		HashMap<String, String> headers = (HashMap<String, String>) getHeader();
 		headers.put("lat", "" + LngLat.lat);
 		headers.put("lon", "" + LngLat.lng);
@@ -39,9 +40,10 @@ public class PromotionListRequest extends GolukFastjsonRequest<PromotionModel> {
 		} else {
 			headers.put("uid", uid);
 		}
-		if (!TextUtils.isEmpty(location)) {
-			headers.put("location", location);
+		String cityCode = SharedPrefUtil.getCityIDString();
+		if (!TextUtils.isEmpty(cityCode)) {
+			headers.put("location", cityCode);
 		}
-		get();
+		super.get();
 	}
 }

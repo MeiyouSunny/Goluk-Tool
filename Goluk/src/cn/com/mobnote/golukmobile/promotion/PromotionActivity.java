@@ -26,11 +26,9 @@ public class PromotionActivity extends BaseActivity implements OnClickListener, 
 	private PromotionDataAdapter mPromotionDataAdapter;
 	public static final String PROMOTION_SELECTED_ITEM = "selected_item";
 	public static final String PROMOTION_DATA = "promotion_data";
-	public static final String PROMOTION_LOCATION = "promotion_location";
 	private String mSelectedId;
 	private ArrayList<PromotionData> mPromotionList;
 	private CustomLoadingDialog mCustomProgressDialog;
-	private String mLocation = "";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -39,11 +37,9 @@ public class PromotionActivity extends BaseActivity implements OnClickListener, 
 		if (savedInstanceState == null) {
 			mSelectedId = getIntent().getStringExtra(PROMOTION_SELECTED_ITEM);
 			mPromotionList = (ArrayList<PromotionData>) getIntent().getSerializableExtra(PROMOTION_DATA);
-			mLocation = getIntent().getStringExtra(PROMOTION_LOCATION);
 		} else {
 			mSelectedId = savedInstanceState.getString(PROMOTION_SELECTED_ITEM);
 			mPromotionList = (ArrayList<PromotionData>) savedInstanceState.getSerializable(PROMOTION_DATA);
-			mLocation = savedInstanceState.getString(PROMOTION_LOCATION);
 		}
 		initView();
 		loadData();
@@ -56,7 +52,6 @@ public class PromotionActivity extends BaseActivity implements OnClickListener, 
 			outState.putSerializable(PROMOTION_DATA, mPromotionList);
 			outState.putString(PROMOTION_SELECTED_ITEM, mSelectedId);
 		}
-		outState.putString(PROMOTION_LOCATION, mLocation);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -71,7 +66,7 @@ public class PromotionActivity extends BaseActivity implements OnClickListener, 
 		if (mPromotionList == null) {
 			mCustomProgressDialog.show();
 			PromotionListRequest request = new PromotionListRequest(IPageNotifyFn.PageType_GetPromotion, this);
-			request.get(mLocation);
+			request.get();
 		} else {
 			mPromotionDataAdapter.setData(mPromotionList);
 			mPromotionDataAdapter.notifyDataSetChanged();

@@ -344,11 +344,6 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 				intent.putExtra(PromotionActivity.PROMOTION_DATA, mPromotionList);
 			}
 
-			String location = mCurrentAddress;
-			if (TextUtils.isEmpty(location)) {
-				location = GolukFileUtils.loadString("loactionAddress", "");
-			}
-			intent.putExtra(PromotionActivity.PROMOTION_LOCATION, location);
 			((Activity)mContext).startActivityForResult(intent, VideoEditActivity.PROMOTION_ACTIVITY_BACK);
 			break;
 		default:
