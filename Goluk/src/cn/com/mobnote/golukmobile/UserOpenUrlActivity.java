@@ -47,6 +47,8 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 	private boolean mErrorState = false;
 
 	private RelativeLayout mErrorLayout = null;
+	/**收益页面UI修改**/
+	private boolean mProfitChangeUI = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,14 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		}
 
 		itIndexMore = getIntent();
+		mProfitChangeUI = itIndexMore.getBooleanExtra("isChangeUI", false);
+		if (mProfitChangeUI) {
+			mTextRight.setVisibility(View.GONE);
+			mBackBtn.setBackgroundResource(R.drawable.browser_close_btn);
+		} else {
+			mTextRight.setVisibility(View.VISIBLE);
+			mBackBtn.setBackgroundResource(R.drawable.cross_screen_arrow_icon1);
+		}
 		WebSettings webSettings = mWebView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
 		mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);  //设置 缓存模式
@@ -212,6 +222,10 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 				mErrorState = false;
 				return true;
 			}
+			if(mProfitChangeUI) {
+				finish();
+				return true;
+			}
 			if (mWebView.canGoBack()) {
 				mWebView.goBack();
 			} else {
@@ -232,6 +246,10 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 				finish();
 				mErrorState = false;
 				return;
+			}
+			if(mProfitChangeUI) {
+				finish();
+				return ;
 			}
 			if (mWebView.canGoBack()) {
 				mWebView.goBack();

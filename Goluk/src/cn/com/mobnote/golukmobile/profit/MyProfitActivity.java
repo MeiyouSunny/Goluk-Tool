@@ -128,6 +128,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 			}
 			Intent itCash = new Intent(this, UserOpenUrlActivity.class);
 			itCash.putExtra(UserOpenUrlActivity.FROM_TAG, "cash");
+			itCash.putExtra("isChangeUI", true);
 			itCash.putExtra("uid", uid);
 			itCash.putExtra("phone", phone);
 			startActivity(itCash);
