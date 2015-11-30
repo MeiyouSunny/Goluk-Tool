@@ -303,8 +303,8 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 	 * @author xuhw
 	 * @date 2015年4月15日
 	 */
-	private void httpPost(String otheruid) {
-		mAllDataSequenceId = GolukApplication.getInstance().getVideoSquareManager().getUserCenter(curUser.uid);
+	public void httpPost(String otheruid) {
+		mAllDataSequenceId = GolukApplication.getInstance().getVideoSquareManager().getUserCenter(otheruid);
 	}
 
 	/**
@@ -416,6 +416,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
 		if (event == VSquare_Req_MainPage_Infor && param1 == mAllDataSequenceId) {
+			closeProgressDialog();
 			if (RESULE_SUCESS == msg) {
 				this.formatAllData(param2.toString());
 			} else {

@@ -83,6 +83,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 	final int ItemType_noDataInfo = 3;
 	private int firstItemHeight = 0;
 	UserCenterActivity uca = null;
+	
+	private boolean mBneedRefrush = false;
 
 	public UserCenterAdapter(Context context, SharePlatformUtil spf, IUserCenterInterface iUser, int tabtype) {
 		mContext = context;
@@ -242,38 +244,38 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				} else {
 					holder.dz_num.setText("0");
 				}
-				
-				if(userinfo.label != null){
-					if("1".equals(userinfo.label.approvelabel)){//企业认证
-						if(userinfo.label.approve != null && !"".equals(userinfo.label.approve)){
+
+				if (userinfo.label != null) {
+					if ("1".equals(userinfo.label.approvelabel)) {// 企业认证
+						if (userinfo.label.approve != null && !"".equals(userinfo.label.approve)) {
 							holder.vText.setVisibility(View.VISIBLE);
 							holder.vText.setText(userinfo.label.approve);
-						}else{
+						} else {
 							holder.vText.setVisibility(View.GONE);
 						}
 						holder.v.setBackgroundResource(R.drawable.authentication_bluev_icon);
 						holder.v.setVisibility(View.VISIBLE);
-					}else{
-						if("1".equals(userinfo.label.headplusv)){//个人加V
-							if(userinfo.label.headplusvdes != null && !"".equals(userinfo.label.headplusvdes)){
+					} else {
+						if ("1".equals(userinfo.label.headplusv)) {// 个人加V
+							if (userinfo.label.headplusvdes != null && !"".equals(userinfo.label.headplusvdes)) {
 								holder.vText.setVisibility(View.VISIBLE);
 								holder.vText.setText(userinfo.label.headplusvdes);
-							}else{
+							} else {
 								holder.vText.setVisibility(View.GONE);
 							}
 							holder.v.setBackgroundResource(R.drawable.authentication_yellowv_icon);
 							holder.v.setVisibility(View.VISIBLE);
-						}else{
+						} else {
 							holder.vText.setVisibility(View.GONE);
-							if("1".equals(userinfo.label.tarento)){//达人
+							if ("1".equals(userinfo.label.tarento)) {// 达人
 								holder.v.setBackgroundResource(R.drawable.authentication_star_icon);
 								holder.v.setVisibility(View.VISIBLE);
-							}else{
+							} else {
 								holder.v.setVisibility(View.GONE);
 							}
 						}
 					}
-				}else{
+				} else {
 					holder.v.setVisibility(View.GONE);
 				}
 
@@ -311,18 +313,18 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 
 				uca.updateTheEnd(false);
 				if (currentViewType == ViewType_ShareVideoList) {
-					if(videogroupdata.videolist != null && videogroupdata.videolist.size() > 0){
-						if(videogroupdata.isHaveData == false){
+					if (videogroupdata.videolist != null && videogroupdata.videolist.size() > 0) {
+						if (videogroupdata.isHaveData == false) {
 							uca.updateTheEnd(true);
 						}
 					}
 
 				} else if (currentViewType == ViewType_PraiseUserList) {
 					if (praisgroupData.praiselist != null && praisgroupData.praiselist.size() > 0) {
-						if(praisgroupData.isHaveData == false){
+						if (praisgroupData.isHaveData == false) {
 							uca.updateTheEnd(true);
 						}
-					} 
+					}
 				}
 
 				holder.sharelayout.setOnClickListener(new OnClickListener() {
@@ -445,25 +447,25 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			} else {
 				holder.totalcomments.setVisibility(View.GONE);
 			}
-			
-			if(clusterInfo.mUserEntity != null && clusterInfo.mUserEntity.label != null){
-				if("1".equals(clusterInfo.mUserEntity.label.approvelabel)){//企业认证
+
+			if (clusterInfo.mUserEntity != null && clusterInfo.mUserEntity.label != null) {
+				if ("1".equals(clusterInfo.mUserEntity.label.approvelabel)) {// 企业认证
 					holder.v.setBackgroundResource(R.drawable.authentication_bluev_icon);
 					holder.v.setVisibility(View.VISIBLE);
-				}else{
-					if("1".equals(clusterInfo.mUserEntity.label.headplusv)){//个人加V
+				} else {
+					if ("1".equals(clusterInfo.mUserEntity.label.headplusv)) {// 个人加V
 						holder.v.setBackgroundResource(R.drawable.authentication_yellowv_icon);
 						holder.v.setVisibility(View.VISIBLE);
-					}else{
-						if("1".equals(clusterInfo.mUserEntity.label.tarento)){//达人
+					} else {
+						if ("1".equals(clusterInfo.mUserEntity.label.tarento)) {// 达人
 							holder.v.setBackgroundResource(R.drawable.authentication_star_icon);
 							holder.v.setVisibility(View.VISIBLE);
-						}else{
+						} else {
 							holder.v.setVisibility(View.GONE);
 						}
 					}
 				}
-			}else{
+			} else {
 				holder.v.setVisibility(View.GONE);
 			}
 
@@ -556,26 +558,25 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			} else {
 				showHead(praiseholder.headimg, prais.headportrait);
 			}
-			
-			
-			if(prais.label != null){
-				if("1".equals(prais.label.approvelabel)){//企业认证
+
+			if (prais.label != null) {
+				if ("1".equals(prais.label.approvelabel)) {// 企业认证
 					praiseholder.v.setBackgroundResource(R.drawable.authentication_bluev_icon);
 					praiseholder.v.setVisibility(View.VISIBLE);
-				}else{
-					if("1".equals(prais.label.headplusv)){//个人加V
+				} else {
+					if ("1".equals(prais.label.headplusv)) {// 个人加V
 						praiseholder.v.setBackgroundResource(R.drawable.authentication_yellowv_icon);
 						praiseholder.v.setVisibility(View.VISIBLE);
-					}else{
-						if("1".equals(prais.label.tarento)){//达人
+					} else {
+						if ("1".equals(prais.label.tarento)) {// 达人
 							praiseholder.v.setBackgroundResource(R.drawable.authentication_star_icon);
 							praiseholder.v.setVisibility(View.VISIBLE);
-						}else{
+						} else {
 							praiseholder.v.setVisibility(View.GONE);
 						}
 					}
 				}
-			}else{
+			} else {
 				praiseholder.v.setVisibility(View.GONE);
 			}
 
@@ -642,17 +643,19 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				}
 			}
 
-			boolean bNeedRefrush = false;
+			
 			if (this.currentViewType == ViewType_ShareVideoList) {
 				// 分享视频列表
 				if (this.videogroupdata.loadfailed == true) {
 					noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_qitadifang);
-					bNeedRefrush = true;
+					mBneedRefrush = true;
 				} else {
 					if (uca.testUser()) {
 						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_novideo);
+						mBneedRefrush = false;
 					} else {
 						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_tavideo);
+						mBneedRefrush = false;
 					}
 
 				}
@@ -660,29 +663,33 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				// 被点赞人信息列表
 				if (this.praisgroupData.loadfailed == true) {
 					noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_qitadifang);
-					bNeedRefrush = true;
+					mBneedRefrush = true;
 				} else {
 
 					if (uca.testUser()) {
 						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_nolike);
+						mBneedRefrush = false;
 					} else {
 						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_talike);
+						mBneedRefrush = false;
 					}
 
 				}
 			}
-			if (bNeedRefrush == true) {
-				noVideoDataViewHolder.tipsimage.setOnClickListener(new OnClickListener() {
 
-					@Override
-					public void onClick(View v) {
+			noVideoDataViewHolder.tipsimage.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					if (mBneedRefrush == true) {
 						if (mUserCenterInterface != null) {
-							mUserCenterInterface.OnRefrushMainPageData();
+							uca.httpPost(userinfo.uid);
+							uca.showProgressDialog();
 						}
 					}
+				}
 
-				});
-			}
+			});
 			break;
 
 		default:
@@ -719,12 +726,13 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				holder.recommentImg.setVisibility(View.GONE);
 			}
 			// 获得聚合字符串
-			if(clusterInfo.mVideoEntity.videoExtra.topicname == null || "".equals(clusterInfo.mVideoEntity.videoExtra.topicname)){
+			if (clusterInfo.mVideoEntity.videoExtra.topicname == null
+					|| "".equals(clusterInfo.mVideoEntity.videoExtra.topicname)) {
 				got = "";
-			}else{
+			} else {
 				got = "#" + clusterInfo.mVideoEntity.videoExtra.topicname + "#";
 			}
-			
+
 		} else {
 			holder.videoGoldImg.setVisibility(View.GONE);
 			holder.recommentImg.setVisibility(View.GONE);
@@ -878,8 +886,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 
 		LinearLayout usercenterlyout;
 		ImageView v;
-		
-		TextView vText ;
+
+		TextView vText;
 
 		ImageView sharebtn;
 	}
