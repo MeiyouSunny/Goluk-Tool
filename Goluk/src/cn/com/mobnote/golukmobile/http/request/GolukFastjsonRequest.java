@@ -24,7 +24,7 @@ public abstract class GolukFastjsonRequest<T> {
     private  Map<String, String> mParams = new HashMap<String, String>();
     private  IRequestResultListener mListener;
     private Object mTag;
-    private boolean bCache;
+    private boolean bCache = false;
     private int mRequestType;// requestType for call back
     private GolukRetryPolicy mDefaultRetryPolicy;
 	public GolukFastjsonRequest(int requestType, Class<T> clazz, IRequestResultListener listener) {

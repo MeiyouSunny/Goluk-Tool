@@ -30,7 +30,7 @@ public class ShareDeal implements OnClickListener {
 		mActivity = activity;
 		mYouMengRootLayout = rootLayout;
 		mSharePlatform = new SharePlatformUtil(mActivity);
-		mSharePlatform.configPlatforms();// 设置分享平台的参数
+//		mSharePlatform.configPlatforms();// 设置分享平台的参数
 
 		txtColor = mActivity.getResources().getColor(R.color.youmeng_share_txt_color);
 
