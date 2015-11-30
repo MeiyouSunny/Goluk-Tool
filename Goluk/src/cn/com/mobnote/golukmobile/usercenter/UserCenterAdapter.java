@@ -257,7 +257,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 						if("1".equals(userinfo.label.headplusv)){//个人加V
 							if(userinfo.label.headplusvdes != null && !"".equals(userinfo.label.headplusvdes)){
 								holder.vText.setVisibility(View.VISIBLE);
-								holder.vText.setText(userinfo.label.approve);
+								holder.vText.setText(userinfo.label.headplusvdes);
 							}else{
 								holder.vText.setVisibility(View.GONE);
 							}
