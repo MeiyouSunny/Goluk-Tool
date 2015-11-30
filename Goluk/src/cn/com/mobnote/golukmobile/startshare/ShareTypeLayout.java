@@ -507,15 +507,16 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			/** 移除掉和选中活动相同的活动，把选择的活动放到第一位 */
 			if (mRecommendActivities.size() > 0) {
 				PromotionSelectItem item = mRecommendActivities.get(0);
+				String title = null;
 				if (!mPromotionSelectItem.activityid.equalsIgnoreCase(item.activityid)) {
-					mPromotionTextView2.setText("#" + item.activitytitle + "#");
-					mPromotionTextView2.setTag(item);
-					mPromotionTextView1.setVisibility(View.VISIBLE);
+					title = "#" + item.activitytitle + "#";
 				} else if (mRecommendActivities.size() > 1) {
-					mPromotionTextView2.setText("#" + mRecommendActivities.get(1).activitytitle + "#");
-					mPromotionTextView2.setTag(mRecommendActivities.get(1));
-					mPromotionTextView2.setVisibility(View.VISIBLE);
+					item = mRecommendActivities.get(1);
 				}
+				title = "#" + item.activitytitle + "#";
+				mPromotionTextView2.setText(title);
+				mPromotionTextView2.setTag(item);
+				mPromotionTextView2.setVisibility(View.VISIBLE);
 			}
 		} else {
 			mPromotionTextView1.setText("");
