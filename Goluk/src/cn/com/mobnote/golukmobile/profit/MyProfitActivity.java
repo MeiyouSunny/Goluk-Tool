@@ -93,8 +93,12 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 	 */
 	private void initData() {
 		Intent itUser = getIntent();
-		uid = itUser.getStringExtra("uid").toString();
-		phone = itUser.getStringExtra("phone").toString();
+		if(null != itUser.getStringExtra("uid")) {
+			uid = itUser.getStringExtra("uid").toString();
+		}
+		if(null != itUser.getStringExtra("phone")) {
+			phone = itUser.getStringExtra("phone").toString();
+		}
 		if(null != uid || !"".equals(uid)) {
 			showLoadingDialog();
 			profitJsonRequest = new ProfitJsonRequest(IPageNotifyFn.PageType_MyProfit, this);

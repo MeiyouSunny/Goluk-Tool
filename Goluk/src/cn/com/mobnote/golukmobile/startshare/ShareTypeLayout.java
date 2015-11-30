@@ -554,7 +554,9 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		mPromotionList = list;
 		mRecommendActivities = recommendList;
 		refreshPromotionUI();
-		showNewFlag();
+		if (mPromotionList.size() > 0) {
+			showNewFlag();
+		}
 	}
 
 	private void showNewFlag() {

@@ -377,6 +377,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 			if("profit".equals(justLogin)) {
 				Intent itProfit = new Intent(UserLoginActivity.this,MyProfitActivity.class);
 				itProfit.putExtra("uid", uid);
+				itProfit.putExtra("phone", phone);
 				startActivity(itProfit);
 			}
 			this.finish();
