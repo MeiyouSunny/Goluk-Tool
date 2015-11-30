@@ -67,7 +67,7 @@
     <string name="wifi_link_15_text">请重新安装Goluk App</string>
     <string name="wifi_link_16_text">更多帮助</string>
     <string name="wifi_link_17_text">确认WiFi指示灯闪烁</string>
-    <string name="wifi_link_17_2_text">切出程序，在手机设置中连接</string>
+    <string name="wifi_link_17_2_text">点击下方的 \"去连接\"，在手机设置中连接</string>
     <string name="wifi_link_18_text">2.</string>
     <string name="wifi_link_19_text">跳过</string>
     <string name="wifi_link_20_text">2.修改Goluk WiFi热点信息</string>
