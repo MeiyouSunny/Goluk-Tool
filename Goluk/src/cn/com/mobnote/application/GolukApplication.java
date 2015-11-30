@@ -82,7 +82,6 @@ import com.rd.car.RecorderStateException;
 
 import de.greenrobot.event.EventBus;
 
-
 public class GolukApplication extends Application implements IPageNotifyFn, IPCManagerFn, ITalkFn, ILocationFn {
 	/** JIN接口类 */
 	public GolukLogic mGoluk = null;
@@ -1105,7 +1104,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			if (mPageSource.equals("WiFiLinkBindAll")) {
 				((WiFiLinkCompleteActivity) mContext).ipcLinkWiFiCallBack();
 			}
-			
+
 			SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
 			boolean isbind = preferences.getBoolean("isbind", false);
 			if (isbind) {
@@ -1118,7 +1117,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					} else {
 						mIPCControlManager.mProduceName = json.getString("productname");
 					}
-					//保存设备型号
+					// 保存设备型号
 					SharedPrefUtil.saveIpcModel(mIPCControlManager.mProduceName);
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -1365,13 +1364,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 */
 	private void getVideoEncodeCfg() {
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					boolean flag = GolukApplication.getInstance().getIPCControlManager().getVideoEncodeCfg(0);
-					System.out.println("YYY============getVideoEncodeCfg=========flag=" + flag);
-				}
-			}).start();
+			GolukApplication.getInstance().getIPCControlManager().getVideoEncodeCfg(0);
 		}
 	}
 
