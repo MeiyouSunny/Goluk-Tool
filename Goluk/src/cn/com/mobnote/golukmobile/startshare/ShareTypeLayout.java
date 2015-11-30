@@ -502,17 +502,21 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			mPromotionTextView1.setTextColor(Color.parseColor("#ffcc00"));
 			mPromotionTextView2.setTextColor(Color.parseColor("#bcbdbd"));
 			mPromotionTextView1.setText("#" + mPromotionSelectItem.activitytitle + "#");
+			mPromotionTextView1.setVisibility(View.VISIBLE);
 			mPromotionTextView1.setTag(mPromotionSelectItem);
 			/** 移除掉和选中活动相同的活动，把选择的活动放到第一位 */
 			if (mRecommendActivities.size() > 0) {
 				PromotionSelectItem item = mRecommendActivities.get(0);
+				String title = null;
 				if (!mPromotionSelectItem.activityid.equalsIgnoreCase(item.activityid)) {
-					mPromotionTextView2.setText("#" + item.activitytitle + "#");
-					mPromotionTextView2.setTag(item);
+					title = "#" + item.activitytitle + "#";
 				} else if (mRecommendActivities.size() > 1) {
-					mPromotionTextView2.setText("#" + mRecommendActivities.get(1).activitytitle + "#");
-					mPromotionTextView2.setTag(mRecommendActivities.get(1));
+					item = mRecommendActivities.get(1);
 				}
+				title = "#" + item.activitytitle + "#";
+				mPromotionTextView2.setText(title);
+				mPromotionTextView2.setTag(item);
+				mPromotionTextView2.setVisibility(View.VISIBLE);
 			}
 		} else {
 			mPromotionTextView1.setText("");
@@ -521,9 +525,11 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 				if (i == 0) {
 					mPromotionTextView1.setText("#" + mRecommendActivities.get(i).activitytitle + "#");
 					mPromotionTextView1.setTag(mRecommendActivities.get(i));
+					mPromotionTextView1.setVisibility(View.VISIBLE);
 				} else {
 					mPromotionTextView2.setText("#" + mRecommendActivities.get(i).activitytitle + "#");
 					mPromotionTextView2.setTag(mRecommendActivities.get(i));
+					mPromotionTextView2.setVisibility(View.VISIBLE);
 				}
 			}
 			mPromotionTextView1.setTextColor(Color.parseColor("#bcbdbd"));

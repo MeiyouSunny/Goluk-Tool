@@ -220,7 +220,8 @@
    	       		android:singleLine="true"
    	       		android:ellipsize="end"
            		android:textSize="13sp"
-   	       		android:background="@drawable/btn_shareselecttype_open"/>
+   	       		android:background="@drawable/btn_shareselecttype_open"
+   	       		android:visibility="invisible"/>
 		   <TextView
 		       android:id="@+id/activity_textview2"
 		        android:layout_width ="0dp"
@@ -232,7 +233,8 @@
    	       		android:textColor="#bcbdbd"
            		android:textSize="13sp"
            		android:ellipsize="end"
-   	       		android:background="@drawable/btn_shareselecttype_open"/>
+   	       		android:background="@drawable/btn_shareselecttype_open"
+   	       		android:visibility="invisible"/>
 		</LinearLayout>
         </RelativeLayout>
 </RelativeLayout>
