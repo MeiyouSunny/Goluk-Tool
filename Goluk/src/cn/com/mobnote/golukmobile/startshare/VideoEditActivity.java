@@ -472,6 +472,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			return;
 		}
 		isExit = true;
+		isBack = true;
 		mBaseHandler.removeCallbacksAndMessages(null);
 		stopProgressThread();
 		mTypeLayout.setExit();
