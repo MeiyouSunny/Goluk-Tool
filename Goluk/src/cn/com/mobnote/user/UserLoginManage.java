@@ -71,6 +71,8 @@ public class UserLoginManage {
 				GolukDebugUtils.i("lily", "-----UserLoginManage-----" + data);
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
+				JSONObject jsonData = json.optJSONObject("data");
+				String uid = jsonData.optString("uid");
 				switch (code) {
 				case 200:
 					// 登录成功后，存储用户的登录信息
@@ -79,8 +81,11 @@ public class UserLoginManage {
 					mEditor.putBoolean("FirstLogin", false);
 					// 提交
 					mEditor.commit();
-					// ---------------------------登录成功的状态
-					// 1------------------------------
+					
+					mSharedPreferences = mApp.getContext().getSharedPreferences("setup", Context.MODE_PRIVATE);
+					mEditor = mSharedPreferences.edit();
+					mEditor.putString("uid", uid);
+					mEditor.commit();
 					// 登录成功跳转
 					if (mApp.registStatus != 2) {
 						GolukUtils.showToast(mApp.getContext(),
