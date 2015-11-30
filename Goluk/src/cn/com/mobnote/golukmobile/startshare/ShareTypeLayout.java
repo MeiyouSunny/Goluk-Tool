@@ -303,6 +303,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 				mPromotionTextView2.setTextColor(Color.parseColor("#bcbdbd"));
 			} else {
 				mPromotionSelectItem = item;
+				switchOpenAndClose(true);
 				mPromotionTextView1.setTextColor(Color.parseColor("#ffcc00"));
 				mPromotionTextView2.setTextColor(Color.parseColor("#bcbdbd"));
 			}
@@ -318,6 +319,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 				mPromotionTextView2.setTextColor(Color.parseColor("#bcbdbd"));
 			} else {
 				mPromotionSelectItem = item2;
+				switchOpenAndClose(true);
 				mPromotionTextView2.setTextColor(Color.parseColor("#ffcc00"));
 				mPromotionTextView1.setTextColor(Color.parseColor("#bcbdbd"));
 			}
