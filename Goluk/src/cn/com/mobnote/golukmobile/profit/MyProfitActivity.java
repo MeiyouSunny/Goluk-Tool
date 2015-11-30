@@ -118,6 +118,10 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		//提现
 		case R.id.my_profit_leave_btn:
 //			clickCashBtn();
+			if (!UserUtils.isNetDeviceAvailable(this)) {
+				GolukUtils.showToast(this, "网络不给力");
+				return;
+			}
 			Intent itCash = new Intent(this, UserOpenUrlActivity.class);
 			itCash.putExtra(UserOpenUrlActivity.FROM_TAG, "cash");
 			itCash.putExtra("uid", uid);
