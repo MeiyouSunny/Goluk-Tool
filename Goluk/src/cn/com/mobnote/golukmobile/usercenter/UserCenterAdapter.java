@@ -249,7 +249,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 					if ("1".equals(userinfo.label.approvelabel)) {// 企业认证
 						if (userinfo.label.approve != null && !"".equals(userinfo.label.approve)) {
 							holder.vText.setVisibility(View.VISIBLE);
-							holder.vText.setText(userinfo.label.approve);
+							holder.vText.setText(mContext.getResources().getString(R.string.str_add_v_txt) + "  "+ userinfo.label.approve);
 						} else {
 							holder.vText.setVisibility(View.GONE);
 						}
@@ -259,7 +259,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 						if ("1".equals(userinfo.label.headplusv)) {// 个人加V
 							if (userinfo.label.headplusvdes != null && !"".equals(userinfo.label.headplusvdes)) {
 								holder.vText.setVisibility(View.VISIBLE);
-								holder.vText.setText(userinfo.label.headplusvdes);
+								holder.vText.setText(mContext.getResources().getString(R.string.str_add_v_txt)+"  " + userinfo.label.headplusvdes);
 							} else {
 								holder.vText.setVisibility(View.GONE);
 							}

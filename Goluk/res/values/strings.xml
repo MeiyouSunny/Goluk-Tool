@@ -473,4 +473,5 @@
     <string name="str_yestoday">昨天</string>
     <string name="str_surround_watch">围观</string>
     <string name="str_pull_refresh_listview_bottom_reach">已经拉到底咯</string>
+    <string name="str_add_v_txt">认证信息: </string>
 </resources>
