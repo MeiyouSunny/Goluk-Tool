@@ -197,6 +197,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 									mRecommendRequest = new RecommendBeanRequest(
 											IPageNotifyFn.PageType_ClusterRecommend, ClusterActivity.this);
 									mRecommendRequest.get(mActivityid, "2",mTjtime, "20");
+									mIsRecommendLoad = false;
 								}
 							}else{
 								GolukUtils.showToast(ClusterActivity.this,ClusterActivity.this.getResources().getString(R.string.str_pull_refresh_listview_bottom_reach));
@@ -209,6 +210,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 											ClusterActivity.this);
 									mNewsRequest.get(mActivityid, "2",
 											mNewslist.get(mNewslist.size() - 1).mVideoEntity.sharingtime, "20");
+									mIsNewsLoad = false;
 								}
 							}else{
 								GolukUtils.showToast(ClusterActivity.this,ClusterActivity.this.getResources().getString(R.string.str_pull_refresh_listview_bottom_reach));
@@ -385,15 +387,19 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 							mRecommendlist.addAll(list);
 							updateViewData(true, count);
 						} else {
+							mIsRecommendLoad = false;
 							GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
 						}
 					} else {
+						mIsRecommendLoad = true;
 						GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
 					}
 				} else {
+					mIsRecommendLoad = true;
 					GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
 				}
 			} else {
+				mIsRecommendLoad = true;
 				GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
 			}
 
@@ -415,15 +421,19 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 							mNewslist.addAll(list);
 							updateViewData(true, count);
 						} else {
+							mIsNewsLoad = false;
 							GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
 						}
 					} else {
+						mIsNewsLoad = true;
 						GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
 					}
 				} else {
+					mIsNewsLoad = true;
 					GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
 				}
 			} else {
+				mIsNewsLoad = true;
 				GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
 			}
 		} else if (requestType == IPageNotifyFn.PageType_ClusterShareUrl) {
