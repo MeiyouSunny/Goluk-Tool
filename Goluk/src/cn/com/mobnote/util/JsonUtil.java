@@ -384,9 +384,9 @@ public class JsonUtil {
 				UserLabelBean label = new UserLabelBean();
 				label.approve = getJsonStringValue(labelObj, "approve", "");
 				label.approvelabel = getJsonStringValue(labelObj, "approvelabel", "0");
-				label.tarento = getJsonStringValue(labelObj, " tarento", "0");
+				label.tarento = getJsonStringValue(labelObj, "tarento", "0");
 				label.headplusv = getJsonStringValue(labelObj, "headplusv", "0");
-				label.headplusvdes = getJsonStringValue(labelObj, "Headplusvdes", "");
+				label.headplusvdes = getJsonStringValue(labelObj, "headplusvdes", "");
 				userInfo.mUserLabel = label;
 			}
 

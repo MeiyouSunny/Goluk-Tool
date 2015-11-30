@@ -745,12 +745,18 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 				String data = (String) obj;
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
+				JSONObject jsonData = json.optJSONObject("data");
+				String uid = jsonData.optString("uid");
 				switch (code) {
 				case 200:
 					// 登录成功后，存储用户的登录信息
 					mSharedPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
 					mEditor = mSharedPreferences.edit();
 					mEditor.putBoolean("FirstLogin", false);
+					mEditor.commit();
+					mSharedPreferences = mApp.getContext().getSharedPreferences("setup", Context.MODE_PRIVATE);
+					mEditor = mSharedPreferences.edit();
+					mEditor.putString("uid", uid);
 					mEditor.commit();
 					// 登录成功跳转
 					mApp.loginStatus = 1;// 登录成功
@@ -761,7 +767,6 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 
 					Intent it = null;
 					mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
-					String uid = mSharedPreferences.getString("uid", "");
 					if ("fromStart".equals(intentRegistInter)) {
 						it = new Intent(UserIdentifyActivity.this, MainActivity.class);
 						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -781,6 +786,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 					} else if("fromProfit".equals(intentRegistInter)) {
 						it = new Intent(UserIdentifyActivity.this,MyProfitActivity.class);
 						it.putExtra("uid", uid);
+						it.putExtra("phone", title_phone.replaceAll("-", ""));
 						it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						startActivity(it);
 						UserUtils.exit();
