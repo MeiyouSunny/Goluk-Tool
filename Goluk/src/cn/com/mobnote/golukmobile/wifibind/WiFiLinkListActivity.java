@@ -20,6 +20,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventFinishWifiActivity;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
@@ -368,8 +369,12 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			}
 			break;
 		case R.id.wifi_link_list_help:
-			String url = getRtmpAddress() + "?type=2";
-			GolukUtils.openUrl(url, this);
+			// String url = getRtmpAddress() + "?type=2";
+			// GolukUtils.openUrl(url, this);
+
+			Intent itSkill = new Intent(this, UserOpenUrlActivity.class);
+			itSkill.putExtra(UserOpenUrlActivity.FROM_TAG, "skill");
+			this.startActivity(itSkill);
 			break;
 		default:
 			break;
