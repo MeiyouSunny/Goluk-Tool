@@ -187,12 +187,12 @@ public class PromotionDataAdapter extends BaseAdapter {
 		return getItemViewType(position) != TYPE_CATEGORY_ITEM;
 	}
 
-	private class ItemViewHolder {
+	private static class ItemViewHolder {
 		TextView title;
 		LinearLayout itemLayout;
 	}
 
-	private class GroupViewHolder {
+	private static class GroupViewHolder {
 		TextView title;
 	}
 
