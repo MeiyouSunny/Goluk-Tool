@@ -1,6 +1,7 @@
 package cn.com.mobnote.golukmobile.wifibind;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -10,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.util.GolukAnimal;
-import cn.com.mobnote.util.GolukUtils;
 
 public class WifiLinkWaitConnLayout extends ViewFrame implements OnClickListener {
 	private Context mContext = null;
@@ -66,7 +67,11 @@ public class WifiLinkWaitConnLayout extends ViewFrame implements OnClickListener
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.wifi_link_waitconn_help:
-			GolukUtils.openUrl(GolukUtils.URL_BIND_CONN_PROBLEM, mContext);
+			// GolukUtils.openUrl(GolukUtils.URL_BIND_CONN_PROBLEM, mContext);
+
+			Intent itSkill = new Intent(mContext, UserOpenUrlActivity.class);
+			itSkill.putExtra(UserOpenUrlActivity.FROM_TAG, "skill");
+			mContext.startActivity(itSkill);
 			break;
 		}
 	}
