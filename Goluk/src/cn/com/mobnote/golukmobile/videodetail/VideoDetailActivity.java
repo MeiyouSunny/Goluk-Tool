@@ -44,16 +44,20 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentBean;
 import cn.com.mobnote.golukmobile.comment.CommentTimerManager;
 import cn.com.mobnote.golukmobile.comment.ICommentFn;
+import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.videoclick.NewestVideoClickRequest;
+import cn.com.mobnote.golukmobile.videoclick.VideoClickInfo;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
@@ -67,7 +71,8 @@ import cn.com.tiros.debug.GolukDebugUtils;
  *
  */
 public class VideoDetailActivity extends BaseActivity implements OnClickListener, OnRefreshListener,
-		OnRTScrollListener, VideoSuqareManagerFn, ICommentFn, TextWatcher, ILiveDialogManagerFn, OnItemClickListener {
+		OnRTScrollListener, VideoSuqareManagerFn, ICommentFn, TextWatcher, ILiveDialogManagerFn, OnItemClickListener,
+		IRequestResultListener{
 
 	/** application */
 	public GolukApplication mApp = null;
@@ -517,6 +522,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 						// 下拉刷新
 						pullCallBack(count, mVideoJson, commentDataList);
 					}
+					clickVideoNumber();
 				} else {
 					dealCondition();
 				}
@@ -1004,6 +1010,42 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			mRTPullListView.removeFooterView(mNoDataView);
 			mNoDataView.setVisibility(View.GONE);
 			mNoDataView = null;
+		}
+	}
+	
+	/**
+	 * 视频围观数上报
+	 */
+	private void clickVideoNumber() {
+		try {
+			if (null != mVideoJson && null != mVideoJson.data && null != mVideoJson.data.avideo
+					&& null != mVideoJson.data.avideo.video && null != mVideoJson.data.avideo.video.videoid) {
+				NewestVideoClickRequest videoClickRequest = new NewestVideoClickRequest(
+						IPageNotifyFn.PageType_VideoClick, this);
+				JSONArray array = new JSONArray();
+				JSONObject jsonVideo = new JSONObject();
+				jsonVideo.put("videoid", mVideoJson.data.avideo.video.videoid);
+				jsonVideo.put("number", "1");
+				array.put(jsonVideo);
+				if (null != array) {
+					videoClickRequest.get("100", "1", array.toString());
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onLoadComplete(int requestType, Object result) {
+		if (requestType == IPageNotifyFn.PageType_VideoClick) {
+			VideoClickInfo clickInfo = (VideoClickInfo) result;
+			boolean b = clickInfo.success;
+			if (b) {
+				//围观次数上报成功
+			} else {
+				//围观次数上报失败
+			}
 		}
 	}
 

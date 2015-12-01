@@ -86,6 +86,8 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_ClusterShareUrl = 42;
 	/* Banner */
 	public static final int PageType_BannerGet = 43;
+	/**最新视频点击次数上报**/
+	public static final int PageType_VideoClick = 44;
 
 	/**
 	 * 

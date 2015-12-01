@@ -378,24 +378,24 @@ public class VideoDetailAdapter extends BaseAdapter {
 
 	// 设置详情数据
 	@SuppressLint("HandlerLeak")
-	private void getHeadData(final VideoAllData mVideoAllData, boolean isStartPlay) {
+	private void getHeadData(final VideoAllData videoAllData, boolean isStartPlay) {
 		if (!mVideoJson.success) {
 			// TODO 后台数据异常
-			GolukDebugUtils.e("lily", "---------后台服务器数据异常-------" + mVideoAllData);
+			GolukDebugUtils.e("lily", "---------后台服务器数据异常-------" + videoAllData);
 			GolukUtils.showToast(mContext, "数据异常，请重试");
 		} else {
-			String netUrlHead = mVideoAllData.avideo.user.customavatar;
+			String netUrlHead = videoAllData.avideo.user.customavatar;
 			if (null != netUrlHead && !"".equals(netUrlHead)) {
 				// 使用网络地址
 				GlideUtils.loadNetHead(mContext, headHolder.mImageHead, netUrlHead, R.drawable.my_head_moren7);
 			} else {
-				UserUtils.focusHead(mContext, mVideoAllData.avideo.user.headportrait, headHolder.mImageHead);
+				UserUtils.focusHead(mContext, videoAllData.avideo.user.headportrait, headHolder.mImageHead);
 			}
-			if (null != mVideoAllData && null != mVideoAllData.avideo && null != mVideoAllData.avideo.user
-					&& null != mVideoAllData.avideo.user.mUserLabel) {
-				String approvelabel = mVideoAllData.avideo.user.mUserLabel.approvelabel;
-				String headplusv = mVideoAllData.avideo.user.mUserLabel.headplusv;
-				String tarento = mVideoAllData.avideo.user.mUserLabel.tarento;
+			if (null != videoAllData && null != videoAllData.avideo && null != videoAllData.avideo.user
+					&& null != videoAllData.avideo.user.mUserLabel) {
+				String approvelabel = videoAllData.avideo.user.mUserLabel.approvelabel;
+				String headplusv = videoAllData.avideo.user.mUserLabel.headplusv;
+				String tarento = videoAllData.avideo.user.mUserLabel.tarento;
 				headHolder.nHeadAuthentication.setVisibility(View.VISIBLE);
 				if("1".equals(approvelabel)) {
 					headHolder.nHeadAuthentication.setImageResource(R.drawable.authentication_bluev_icon);
@@ -410,26 +410,26 @@ public class VideoDetailAdapter extends BaseAdapter {
 				headHolder.nHeadAuthentication.setVisibility(View.GONE);
 			}
 
-			headHolder.mTextName.setText(mVideoAllData.avideo.user.nickname);
-			headHolder.mTextTime.setText(GolukUtils.getCommentShowFormatTime(mVideoAllData.avideo.video.sharingtime));
+			headHolder.mTextName.setText(videoAllData.avideo.user.nickname);
+			headHolder.mTextTime.setText(GolukUtils.getCommentShowFormatTime(videoAllData.avideo.video.sharingtime));
 			// 点赞数、评论数、观看数
-			headHolder.mTextLook.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.clicknumber)+"围观");
-			if (!"0".equals(mVideoAllData.avideo.video.praisenumber)) {
-				headHolder.mTextZan.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.praisenumber));
+			headHolder.mTextLook.setText(GolukUtils.getFormatNumber(videoAllData.avideo.video.clicknumber)+"围观");
+			if (!"0".equals(videoAllData.avideo.video.praisenumber)) {
+				headHolder.mTextZan.setText(GolukUtils.getFormatNumber(videoAllData.avideo.video.praisenumber));
 				headHolder.mTextZan.setTextColor(Color.rgb(136, 136, 136));
 			}
 			headHolder.mZanImage.setImageResource(R.drawable.videodetail_like);
 			headHolder.mTextZanName.setTextColor(Color.rgb(136, 136, 136));
-			headHolder.mTextComment.setText(GolukUtils.getFormatNumber(mVideoAllData.avideo.video.comment.comcount));
+			headHolder.mTextComment.setText(GolukUtils.getFormatNumber(videoAllData.avideo.video.comment.comcount));
 			//TODO 在视频描述之后添加活动标签
-			if(null == mVideoAllData.avideo.video.recom || "".equals(mVideoAllData.avideo.video.recom)
-					|| null == mVideoAllData.avideo.video.recom.topicname || "".equals(mVideoAllData.avideo.video.recom.topicname)) {
-				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe, "");
+			if(null == videoAllData.avideo.video.recom || "".equals(videoAllData.avideo.video.recom)
+					|| null == videoAllData.avideo.video.recom.topicname || "".equals(videoAllData.avideo.video.recom.topicname)) {
+				showTopicText(headHolder.mTextDescribe, videoAllData.avideo.video.describe, "");
 			} else {
-				showTopicText(headHolder.mTextDescribe, mVideoAllData.avideo.video.describe+"    ", "#"+mVideoAllData.avideo.video.recom.topicname+"#");
+				showTopicText(headHolder.mTextDescribe, videoAllData.avideo.video.describe+"    ", "#"+videoAllData.avideo.video.recom.topicname+"#");
 			}
 			
-			final String location = mVideoAllData.avideo.video.mLocation;
+			final String location = videoAllData.avideo.video.mLocation;
 			if (null != location && !"".equals(location)) {
 				headHolder.mTextTime.append("  "+location);
 			} else {
@@ -438,20 +438,20 @@ public class VideoDetailAdapter extends BaseAdapter {
 
 			if (0 == mType) {
 				headHolder.mTextAuthor.setVisibility(View.VISIBLE);
-				headHolder.mTextAuthor.setText("感谢作者  " + mVideoAllData.avideo.user.nickname);
+				headHolder.mTextAuthor.setText("感谢作者  " + videoAllData.avideo.user.nickname);
 			} else {
 				headHolder.mTextAuthor.setVisibility(View.GONE);
 			}
-			GlideUtils.loadImage(mContext, headHolder.simpleDraweeView, mVideoAllData.avideo.video.picture,
+			GlideUtils.loadImage(mContext, headHolder.simpleDraweeView, videoAllData.avideo.video.picture,
 					R.drawable.tacitly_pic);
 
 			// 外链接
-			if (null != mVideoAllData.link) {
-				if ("0".equals(mVideoAllData.link.showurl)) {
+			if (null != videoAllData.link) {
+				if ("0".equals(videoAllData.link.showurl)) {
 					headHolder.mTextLink.setVisibility(View.GONE);
 				} else {
 					headHolder.mTextLink.setVisibility(View.VISIBLE);
-					headHolder.mTextLink.setText(mVideoAllData.link.outurlname);
+					headHolder.mTextLink.setText(videoAllData.link.outurlname);
 				}
 			}
 
@@ -476,15 +476,15 @@ public class VideoDetailAdapter extends BaseAdapter {
 			//TODO　没有活动奖励视频没有奖励信息这个模块
 			//头部获奖视频icon显示
 			//获奖／推荐
-			if(null != mVideoAllData.avideo.video.recom) {
-				if("1".equals(mVideoAllData.avideo.video.recom.isreward)) {
+			if(null != videoAllData.avideo.video.recom) {
+				if("1".equals(videoAllData.avideo.video.recom.isreward)) {
 					headHolder.mImageHeadAward.setVisibility(View.VISIBLE);
 				} else {
 					headHolder.mImageHeadAward.setVisibility(View.GONE);
 				}
 				
-				if(!"1".equals(mVideoAllData.avideo.video.recom.atflag) && !"1".equals(mVideoAllData.avideo.video.recom.sysflag)
-						&&!"1".equals(mVideoAllData.avideo.video.recom.isrecommend)) {
+				if(!"1".equals(videoAllData.avideo.video.recom.atflag) && !"1".equals(videoAllData.avideo.video.recom.sysflag)
+						&&!"1".equals(videoAllData.avideo.video.recom.isrecommend)) {
 					headHolder.mTextLine1.setVisibility(View.GONE);
 					headHolder.mTextLine2.setVisibility(View.GONE);
 				} else {
@@ -492,36 +492,36 @@ public class VideoDetailAdapter extends BaseAdapter {
 					headHolder.mTextLine2.setVisibility(View.VISIBLE);
 				}
 				
-				if("1".equals(mVideoAllData.avideo.video.recom.atflag)) {
+				if("1".equals(videoAllData.avideo.video.recom.atflag)) {
 					headHolder.mActiveLayout.setVisibility(View.VISIBLE);
-					if("".equals(mVideoAllData.avideo.video.recom.atreason)) {
+					if("".equals(videoAllData.avideo.video.recom.atreason)) {
 						headHolder.mActiveReason.setText("理由：活动参与积极奖～");
 					} else {
-						headHolder.mActiveReason.setText("理由："+mVideoAllData.avideo.video.recom.atreason);
+						headHolder.mActiveReason.setText("理由："+videoAllData.avideo.video.recom.atreason);
 					}
-					headHolder.mActiveCount.setText("+"+UserUtils.formatNumber(mVideoAllData.avideo.video.recom.atgold)+"Ｇ币");
+					headHolder.mActiveCount.setText("+"+UserUtils.formatNumber(videoAllData.avideo.video.recom.atgold)+"Ｇ币");
 				} else {
 					headHolder.mActiveLayout.setVisibility(View.GONE);
 				}
 				
-				if("1".equals(mVideoAllData.avideo.video.recom.sysflag)) {
+				if("1".equals(videoAllData.avideo.video.recom.sysflag)) {
 					headHolder.mSysLayout.setVisibility(View.VISIBLE);
-					if("".equals(mVideoAllData.avideo.video.recom.sysreason)) {
+					if("".equals(videoAllData.avideo.video.recom.sysreason)) {
 						headHolder.mSysReason.setText("理由：活动参与积极奖～");
 					} else {
-						headHolder.mSysReason.setText("理由："+mVideoAllData.avideo.video.recom.sysreason);
+						headHolder.mSysReason.setText("理由："+videoAllData.avideo.video.recom.sysreason);
 					}
-					headHolder.mSysCount.setText("+"+UserUtils.formatNumber(mVideoAllData.avideo.video.recom.sysgold)+"Ｇ币");
+					headHolder.mSysCount.setText("+"+UserUtils.formatNumber(videoAllData.avideo.video.recom.sysgold)+"Ｇ币");
 				} else {
 					headHolder.mSysLayout.setVisibility(View.GONE);
 				}
 				
-				if("1".equals(mVideoAllData.avideo.video.recom.isrecommend)) {
+				if("1".equals(videoAllData.avideo.video.recom.isrecommend)) {
 					headHolder.mRecomLayout.setVisibility(View.VISIBLE);
-					if("".equals(mVideoAllData.avideo.video.recom.reason)) {
+					if("".equals(videoAllData.avideo.video.recom.reason)) {
 						headHolder.mRecomReason.setText("理由：活动参与积极奖～");
 					} else {
-						headHolder.mRecomReason.setText("理由："+mVideoAllData.avideo.video.recom.reason);
+						headHolder.mRecomReason.setText("理由："+videoAllData.avideo.video.recom.reason);
 					}
 				} else {
 					headHolder.mRecomLayout.setVisibility(View.GONE);
@@ -541,7 +541,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 				public void onClick(View arg0) {
 					Intent it = new Intent(mContext, UserCenterActivity.class);
 
-					VideoUserInfo videoUser = mVideoAllData.avideo.user;
+					VideoUserInfo videoUser = videoAllData.avideo.user;
 					UCUserInfo user = new UCUserInfo();
 					user.uid = videoUser.uid;
 					user.nickname = videoUser.nickname;
