@@ -59,8 +59,8 @@ public class GuideActivity extends BaseActivity {
 		// 初始化
 		init();
 		
-		// OneAPM
-		BlueWare.withApplicationToken("E18AA269D23C98A1521C6454D1836CE006").start(this.getApplication());
+//		// OneAPM
+//		BlueWare.withApplicationToken("E18AA269D23C98A1521C6454D1836CE006").start(this.getApplication());
 
 	}
 
