@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-// OneAPM, Micle
-import com.blueware.agent.android.BlueWare;
+//// OneAPM, Micle
+//import com.blueware.agent.android.BlueWare;
 
 /**
  * 
