@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Message;
@@ -17,7 +19,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventFinishWifiActivity;
+import cn.com.mobnote.eventbus.EventWifiState;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
@@ -75,6 +79,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	public String mLinkWiFiName = null;
 
 	private boolean mIsCanAcceptIPC = false;
+	private boolean mIsCanAcceptNetState = false;
 
 	/** 用于表示当前的状态 0/1/2 未连接/连接中/已连接 */
 	private int mCurrentState = STATE_FAILED;
@@ -207,7 +212,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			return;
 		}
 		collectLog("dealAutoConn", "-----2");
-		GolukDebugUtils.e("", "WiFiLinkListActivity 通知logic连接ipc---dealAutoConn--------连接上了：" + sWillConnName2);
 		// 去连接IPC
 		// isAutoConn = true;
 		sendLogicLinkIpc();
@@ -325,11 +329,22 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	protected void onResume() {
 		mApp.setContext(this, "WiFiLinkList");
 		super.onResume();
-		collectLog("onResume", "----auto Conn--1:" + mApp.isIpcConnSuccess);
+		autoConnWifi();
+		mIsCanAcceptNetState = true;
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		mIsCanAcceptNetState = false;
+	}
+
+	private void autoConnWifi() {
+		collectLog("autoConnWifi", "----auto Conn--1:" + mApp.isIpcConnSuccess);
 		if (mApp.isIpcConnSuccess) {
 			GolukDebugUtils.e("", "bindbind-------------onResume:" + mApp.isIpcLoginSuccess);
 			if (isGetWifiBean()) {
-				collectLog("onResume", "----auto Conn--2");
+				collectLog("autoConnWifi", "----auto Conn--2");
 				// 连接成功，直接改变状态
 				this.nextCan();
 				mCurrentState = STATE_SUCCESS;
@@ -337,7 +352,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			}
 		} else {
 			GolukDebugUtils.e("", "bindbind-------------onResume 22 :" + mCurrentState);
-			collectLog("onResume", "----auto Conn--3: " + mCurrentState);
+			collectLog("autoConnWifi", "----auto Conn--3: " + mCurrentState);
 			if (STATE_FAILED == mCurrentState || mCurrentState == STATE_SUCCESS) {
 				if (mCurrentState == STATE_SUCCESS) {
 					mApp.mIPCControlManager.setIPCWifiState(false, "");
@@ -345,7 +360,29 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 				dealAutoConn();
 			}
 		}
+	}
 
+	public void onEventMainThread(EventWifiState event) {
+		if (!mIsCanAcceptNetState) {
+			return;
+		}
+		if (EventConfig.WIFI_STATE == event.getOpCode() && event.getMsg()) {
+			// 连接网络成功
+			if (isWifiConnected(this)) {
+				GolukDebugUtils.e("", "WifiLinkList------------wifi Change wifi");
+				this.autoConnWifi();
+			}
+		}
+	}
+
+	public static boolean isWifiConnected(Context context) {
+		ConnectivityManager connectivityManager = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo wifiNetworkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+		if (wifiNetworkInfo.isConnected()) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -379,16 +416,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		default:
 			break;
 		}
-	}
-
-	/**
-	 * 读取UrlConfig
-	 */
-	private String getRtmpAddress() {
-		String rtmpUrl = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_GetServerAddress,
-				IGetServerAddressType.GetServerAddress_HttpServer, "UrlRedirect");
-		GolukDebugUtils.e("", "jyf-----MainActivity-----test:" + rtmpUrl);
-		return rtmpUrl;
 	}
 
 	private void setDefaultInfo() {
