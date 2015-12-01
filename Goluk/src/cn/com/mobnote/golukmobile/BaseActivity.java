@@ -14,10 +14,6 @@ import android.os.Message;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.http.HttpManager;
-import cn.com.mobnote.golukmobile.live.LiveDialogManager;
-import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
-import cn.com.tiros.debug.GolukDebugUtils;
-
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -89,12 +85,6 @@ public class BaseActivity extends Activity {
 	}
 
 	@Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
-	}
-
-	@Override
 	protected void onStop() {
 		super.onStop();
 		if (isBackground(this)) {
@@ -129,6 +119,15 @@ public class BaseActivity extends Activity {
 	 */
 	public void setJumpToNext() {
 		m_bJumpActivity = true;
+	}
+
+	/**
+	 * 设置界面可以跳转
+	 * 
+	 * @author jyf
+	 */
+	public void setCanJump() {
+		m_bJumpActivity = false;
 	}
 
 	/**

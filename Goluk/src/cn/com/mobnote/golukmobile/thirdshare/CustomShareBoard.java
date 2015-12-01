@@ -252,7 +252,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	public void shareUp() {
 
 		GolukDebugUtils.e("", "jyf----thirdshare--------share up: " + "   mVideoId:" + mVideoId);
-		if(this.mVideoId != null && !"".equals(this.mVideoId)){
+		if (this.mVideoId != null && !"".equals(this.mVideoId)) {
 			GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(mCurrentShareType, this.mVideoId);
 		}
 	}
@@ -289,10 +289,13 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 					notifyShareState(true);
 				} else {
 					notifyShareState(false);
-					if(eCode != 40000){
+					if (eCode != 40000) {
 						GolukUtils.showToast(mActivity, "分享失败");
 					}
-					
+					// 分享失败的时候，保证下次还可以点击
+					if (null != mActivity && mActivity instanceof BaseActivity) {
+						((BaseActivity) mActivity).setCanJump();
+					}
 				}
 
 				GolukDebugUtils.e("", "jyf----thirdshare--------onComplete eCode: " + eCode + "   mCurrentShareType:"
