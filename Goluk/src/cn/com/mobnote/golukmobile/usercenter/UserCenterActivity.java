@@ -695,7 +695,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 	@Override
 	public void OnRefrushMainPageData() {
 		// 下拉刷新个人中心所有数据
-		httpPost("");// 请求数据
+		httpPost(curUser.uid);// 请求数据
 		mRTPullListView.firstFreshState();
 	}
 
