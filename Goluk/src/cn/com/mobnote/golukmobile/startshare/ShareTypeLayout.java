@@ -497,6 +497,12 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 		GolukFileUtils.saveBoolean(GolukFileUtils.SHOW_PROMOTION_POPUP_FLAG, false);
 	}
 	
+	public void dismissPopup() {
+		if (mPopupWindow != null && mPopupWindow.isShowing()) {
+			mPopupWindow.dismiss();
+		}
+	}
+
 	public void refreshPromotionUI() {
 		if (mPromotionSelectItem != null) {
 			mPromotionTextView1.setTextColor(Color.parseColor("#ffcc00"));
