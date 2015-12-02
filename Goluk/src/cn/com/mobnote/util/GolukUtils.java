@@ -127,7 +127,7 @@ public class GolukUtils {
 			Uri content_url = Uri.parse(url);
 			intent.setData(content_url);
 			mContext.startActivity(intent);
-		} catch(ActivityNotFoundException anfe) {
+		} catch (ActivityNotFoundException anfe) {
 			Toast.makeText(mContext, mContext.getString(R.string.str_no_browser_found), Toast.LENGTH_SHORT).show();
 			anfe.printStackTrace();
 		}
@@ -684,7 +684,8 @@ public class GolukUtils {
 	}
 
 	public static boolean isNetworkConnected(Context context) {
-		ConnectivityManager mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
 		if (mNetworkInfo != null) {
 			return mNetworkInfo.isAvailable();
@@ -709,7 +710,7 @@ public class GolukUtils {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 打开系统wifi列表
 	 * 
@@ -721,11 +722,11 @@ public class GolukUtils {
 			return;
 		}
 		Intent intent = new Intent();
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		// intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
 		context.startActivity(intent);
 	}
-	
+
 	public static boolean isTestServer() {
 		String serverSign = GolukUtils.getAssestFileContent("serverflag");
 		GolukDebugUtils.e("aaa", "serverSign: " + serverSign);

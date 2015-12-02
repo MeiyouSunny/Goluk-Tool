@@ -246,7 +246,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	private void sendLogicLinkIpc() {
 		collectLog("sendLogicLinkIpc", "--------1");
 		// 连接ipc热点wifi---调用ipc接口
-		GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1");
 		mIsCanAcceptIPC = true;
 		boolean b = mApp.mIPCControlManager.setIPCWifiState(true, CONNECT_IPC_IP);
 		GolukDebugUtils.e("", "bindbind-------------sendLogicLinkIpc  :" + b);
@@ -329,6 +328,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	protected void onResume() {
 		mApp.setContext(this, "WiFiLinkList");
 		super.onResume();
+		collectLog("onResume", "----1:");
 		autoConnWifi();
 		mIsCanAcceptNetState = true;
 	}
@@ -364,12 +364,14 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
 	public void onEventMainThread(EventWifiState event) {
 		if (!mIsCanAcceptNetState) {
+			collectLog("onEventMainThread", "wifi-----111");
 			return;
 		}
 		if (EventConfig.WIFI_STATE == event.getOpCode() && event.getMsg()) {
 			// 连接网络成功
 			if (isWifiConnected(this)) {
 				GolukDebugUtils.e("", "WifiLinkList------------wifi Change wifi");
+				collectLog("onEventMainThread", "wifi-----222");
 				this.autoConnWifi();
 			}
 		}
@@ -379,7 +381,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		ConnectivityManager connectivityManager = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo wifiNetworkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-		if (wifiNetworkInfo.isConnected()) {
+		if (null != wifiNetworkInfo && wifiNetworkInfo.isConnected()) {
 			return true;
 		}
 		return false;
@@ -406,9 +408,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			}
 			break;
 		case R.id.wifi_link_list_help:
-			// String url = getRtmpAddress() + "?type=2";
-			// GolukUtils.openUrl(url, this);
-
 			Intent itSkill = new Intent(this, UserOpenUrlActivity.class);
 			itSkill.putExtra(UserOpenUrlActivity.FROM_TAG, "skill");
 			this.startActivity(itSkill);
