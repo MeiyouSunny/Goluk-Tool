@@ -955,7 +955,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 
 			@Override
 			public void run() {
-				mHandler.sendEmptyMessage(1);
+				if (mHandler != null) {
+					mHandler.sendEmptyMessage(1);
+				}
 			}
 		}, 0, 1000);
 	}
