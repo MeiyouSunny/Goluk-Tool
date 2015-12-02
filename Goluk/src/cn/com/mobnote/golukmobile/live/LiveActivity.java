@@ -668,7 +668,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		} else {
 			LiveDialogManager.getManagerInstance().dismissProgressDialog();
 			// 断开，提示用户是否继续上传
-			if (!isAlreadExit) {
+			if (!isAlreadExit && !this.isFinishing() && !this.isDestroyed()) {
 				LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
 						LiveDialogManager.DIALOG_TYPE_LIVE_RELOAD_UPLOAD, LIVE_DIALOG_TITLE, LIVE_UPLOAD_FIRST_ERROR);
 			}
@@ -1041,6 +1041,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		}
 		LiveDialogManager.getManagerInstance().dismissLiveBackDialog();
 		dissmissAllDialog();
+		LiveDialogManager.getManagerInstance().dismissTwoButtonDialog();
 		// 释放资源
 		if (mBaiduMapManage != null) {
 			mBaiduMapManage.release();
