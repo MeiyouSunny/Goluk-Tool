@@ -354,6 +354,10 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	 * 个人资料信息
 	 */
 	public void initData() {
+		if(null == ma || null == ma.mApp) {
+			return;
+		}
+
 		UserInfo userInfo = ma.mApp.getMyInfo();
 		if(null != userInfo) {
 			userHead = userInfo.head;

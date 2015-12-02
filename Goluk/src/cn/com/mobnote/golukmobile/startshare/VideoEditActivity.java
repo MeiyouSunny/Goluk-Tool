@@ -542,6 +542,14 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		super.onResume();
 	}
 
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		if (mTypeLayout != null) {
+			mTypeLayout.dismissPopup();
+		}
+		super.onStop();
+	}
 	/**
 	 * 点击“下一步”
 	 * 
