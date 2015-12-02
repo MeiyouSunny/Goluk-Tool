@@ -668,7 +668,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		} else {
 			LiveDialogManager.getManagerInstance().dismissProgressDialog();
 			// 断开，提示用户是否继续上传
-			if (!isAlreadExit && !this.isFinishing() && !this.isDestroyed()) {
+			if (!isAlreadExit && GolukUtils.isActivityAlive(this)) {
 				LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
 						LiveDialogManager.DIALOG_TYPE_LIVE_RELOAD_UPLOAD, LIVE_DIALOG_TITLE, LIVE_UPLOAD_FIRST_ERROR);
 			}
