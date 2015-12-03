@@ -30,6 +30,10 @@ then
 	then
 		echo "build nvd"
 		cp -f 	version_nvd/version $3/assets/version
+	elif [ $1 = "txy" ];
+	then
+		echo "build txy"
+		cp -f 	version_nvd/version $3/assets/version
 	else
 		echo "$1 error"
 	fi
