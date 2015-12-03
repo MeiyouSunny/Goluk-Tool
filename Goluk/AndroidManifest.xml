@@ -292,7 +292,7 @@
         </activity>
         <!-- ###################Glide使用volley传输###################### -->
         <meta-data
-            android:name="com.bumptech.glide.integration.volley.VolleyGlideModule"
+            android:name="cn.com.mobnote.util.GlideConfiguration"
             android:value="GlideModule" />
         <!-- ###################添加UmengAppkey###################### -->
         <meta-data

@@ -53,7 +53,7 @@ public class LocalWonderfulVideoListView {
 	private String from = null;
 	private TextView empty = null;
 	private float density = 1;
-	private boolean clickLock = false;
+//	private boolean clickLock = false;
 	private PromotionSelectItem mPromotionSelectItem;
 
 	public LocalWonderfulVideoListView(Context context, LocalVideoManager localVideoListView, int type, String from,
@@ -98,13 +98,13 @@ public class LocalWonderfulVideoListView {
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				switch (scrollState) {
 				case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-					mWonderfulVideoAdapter.lock();
+//					mWonderfulVideoAdapter.lock();
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-					mWonderfulVideoAdapter.unlock();
+//					mWonderfulVideoAdapter.unlock();
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-					mWonderfulVideoAdapter.lock();
+//					mWonderfulVideoAdapter.lock();
 					break;
 
 				default:
@@ -185,11 +185,11 @@ public class LocalWonderfulVideoListView {
 	 * @param path
 	 */
 	private void gotoVideoPlayPage(int type, String path) {
-		if (getClickLock()) {
-			return;
-		}
+//		if (getClickLock()) {
+//			return;
+//		}
 
-		setClickLock(true);
+//		setClickLock(true);
 		if (!TextUtils.isEmpty(path)) {
 			if ("cloud".equals(from)) {
 				if (1 != type) {
@@ -363,16 +363,16 @@ public class LocalWonderfulVideoListView {
 		mLocalVideoListView.updateEdit(mVideoType, isHasData);
 	}
 
-	public synchronized boolean getClickLock() {
-		return clickLock;
-	}
-
-	public synchronized void setClickLock(boolean lock) {
-		clickLock = lock;
-	}
+//	public synchronized boolean getClickLock() {
+//		return clickLock;
+//	}
+//
+//	public synchronized void setClickLock(boolean lock) {
+//		clickLock = lock;
+//	}
 
 	public void onResume() {
-		setClickLock(false);
+//		setClickLock(false);
 	}
 
 }

@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile.photoalbum;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListe
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import de.greenrobot.event.EventBus;
 
@@ -57,7 +59,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	private CloudVideoManager mCloudVideoListView = null;
 	private boolean editState = false;
 	/** 图片缓存cache */
-	private LruCache<String, Bitmap> mLruCache = null;
+//	private LruCache<String, Bitmap> mLruCache = null;
 	/** 表示当前选中的状态，本地 和 行车记录仪视频 */
 	private int curId = -1;
 	private RelativeLayout bottomLayout = null;
@@ -109,24 +111,25 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	}
 
 	private void initCache() {
-		int maxSize = (int) (Runtime.getRuntime().maxMemory() / 6);
-		mLruCache = new LruCache<String, Bitmap>(maxSize) {
-			@Override
-			protected int sizeOf(String key, Bitmap bitmap) {
-				if (bitmap == null) {
-					return 0;
-				}
-				return bitmap.getRowBytes() * bitmap.getHeight();
-			}
-		};
+//		int maxSize = (int) (Runtime.getRuntime().maxMemory() / 6);
+//		mLruCache = new LruCache<String, Bitmap>(maxSize) {
+//			@Override
+//			protected int sizeOf(String key, Bitmap bitmap) {
+//				if (bitmap == null) {
+//					return 0;
+//				}
+//				return bitmap.getRowBytes() * bitmap.getHeight();
+//			}
+//		};
 	}
 
 	public Bitmap getBitmap(String filename) {
-		return mLruCache.get(filename);
+//		return mLruCache.get(filename);
+		return null;
 	}
 
 	public void putBitmap(String filename, Bitmap mBitmap) {
-		mLruCache.put(filename, mBitmap);
+//		mLruCache.put(filename, mBitmap);
 	}
 
 	private void initView() {
@@ -200,11 +203,15 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 			}
 			mLocalVideoListView.show();
 			mLocalVideoListView.updateEdit();
-			if (null != mCloudVideoListView) {
-				mMainLayout.removeView(mCloudVideoListView.getRootView());
-				mCloudVideoListView = null;
-				System.gc();
+			if(null != mCloudVideoListView) {
+				mCloudVideoListView.hide();
 			}
+			GlideUtils.clearMemory(this);
+//			if (null != mCloudVideoListView) {
+//				mMainLayout.removeView(mCloudVideoListView.getRootView());
+//				mCloudVideoListView = null;
+//				System.gc();
+//			}
 			break;
 		case R.id.mCloudVideoBtn:
 			mCloudIcon.setBackgroundResource(R.drawable.my_cloud_press);
@@ -218,11 +225,15 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 			}
 			mCloudVideoListView.show();
 			mCloudVideoListView.updateEdit();
-			if (null != mLocalVideoListView) {
-				mMainLayout.removeView(mLocalVideoListView.getRootView());
-				mLocalVideoListView = null;
-				System.gc();
+			if(null != mLocalVideoListView) {
+				mLocalVideoListView.hide();
 			}
+//			if (null != mLocalVideoListView) {
+//				mMainLayout.removeView(mLocalVideoListView.getRootView());
+//				mLocalVideoListView = null;
+//				System.gc();
+//			}
+			GlideUtils.clearMemory(this);
 			break;
 		default:
 			break;
@@ -592,9 +603,10 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	@Override
 	protected void onDestroy() {
 		exit();
-		if (null != mLruCache) {
-			mLruCache.evictAll();
-		}
+//		if (null != mLruCache) {
+//			mLruCache.evictAll();
+//		}
+		GlideUtils.clearMemory(this);
 		EventBus.getDefault().unregister(this);
 		super.onDestroy();
 	}
