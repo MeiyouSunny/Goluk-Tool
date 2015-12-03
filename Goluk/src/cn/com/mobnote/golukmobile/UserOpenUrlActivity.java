@@ -168,8 +168,8 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					}
 					mWebView.loadUrl(getRtmpAddress() + "?type=8");
 				} else if (from_tag.equals("cash")) {
-					String uid = itIndexMore.getStringExtra("uid").toString();
-					String phone = itIndexMore.getStringExtra("phone").toString();
+					String uid = itIndexMore.getStringExtra("uid");
+					String phone = itIndexMore.getStringExtra("phone");
 					mTextTitle.setText("申请提现");
 					if (mErrorState) {
 						return;

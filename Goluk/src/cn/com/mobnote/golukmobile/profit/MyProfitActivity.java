@@ -1,11 +1,13 @@
 package cn.com.mobnote.golukmobile.profit;
 
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
+import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
@@ -130,6 +132,9 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 			itCash.putExtra(UserOpenUrlActivity.FROM_TAG, "cash");
 			itCash.putExtra("isChangeUI", true);
 			itCash.putExtra("uid", uid);
+			if (null == phone || "".equals(phone)) {
+				phone = getUserInfo();
+			}
 			itCash.putExtra("phone", phone);
 			startActivity(itCash);
 			break;
@@ -326,6 +331,19 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		super.onDestroy();
 		closeAlertDialog();
 		closeLoadingDialog();
+	}
+	
+	/**
+	 * 获取当前登录用户的手机号
+	 * @return
+	 */
+	private String getUserInfo() {
+		String phone = "";
+		UserInfo userInfo = GolukApplication.getInstance().getMyInfo();
+		if (null != userInfo) {
+			phone = userInfo.phone;
+		}
+		return phone;
 	}
 	
 }
