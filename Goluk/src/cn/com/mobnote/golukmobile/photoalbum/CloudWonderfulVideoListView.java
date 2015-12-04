@@ -142,10 +142,10 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				switch (scrollState) {
 				case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-					mCloudWonderfulVideoAdapter.lock();
+//					mCloudWonderfulVideoAdapter.lock();
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-					mCloudWonderfulVideoAdapter.unlock();
+//					mCloudWonderfulVideoAdapter.unlock();
 					GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====11111111111=");
 					if (mStickyListHeadersListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
 						GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====22222222=");
@@ -171,7 +171,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 					}
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-					mCloudWonderfulVideoAdapter.lock();
+//					mCloudWonderfulVideoAdapter.lock();
 					break;
 
 				default:

@@ -642,7 +642,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			GlobalWindow.getInstance().createVideoUploadWindow("视频传输取消");
 		}
 		GlobalWindow.getInstance().toFailed("视频传输取消");
-		GolukUtils.showToast(mContext, "剩余空间不足");
+		GolukUtils.showToast(getApplicationContext(), "剩余空间不足");
 	}
 
 	/**
