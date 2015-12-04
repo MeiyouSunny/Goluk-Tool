@@ -51,9 +51,9 @@ public abstract class GolukFastjsonRequest<T> {
 	 * 继承实现，添加不变的Header,Header中要变化的参数在addHeader中添加
 	 */
 	protected void addDefaultHeader() {
-		String verName = GolukApplication.getInstance().mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_GetVersion, "fs6:/version");
-		mHeaders.put("commappversion", verName);
+//		String verName = GolukApplication.getInstance().mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
+//				IPageNotifyFn.PageType_GetVersion, "fs6:/version");
+//		mHeaders.put("commappversion", verName);
 		mHeaders.put("commdevmodel", android.os.Build.MODEL);
 		mHeaders.put("commlat", "" + LngLat.lat);
 		mHeaders.put("commlon", "" + LngLat.lng);
