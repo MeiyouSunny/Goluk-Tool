@@ -603,7 +603,6 @@ public class VideoDetailAdapter extends BaseAdapter {
 
 	// 设置评论数据
 	private void getCommentData(final int index) {
-		GolukDebugUtils.e("newadapter", "================VideoDetailActivity：mDataList.size()==" + mDataList.size());
 		commentHolder.mListLayout.setVisibility(View.VISIBLE);
 		commentHolder.mNoDataLayout.setVisibility(View.GONE);
 		if ("0".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
@@ -612,7 +611,15 @@ public class VideoDetailAdapter extends BaseAdapter {
 			if (null != mDataList && 0 == mDataList.size()) {
 				return ;
 			}
-			CommentBean temp = mDataList.get(index);
+			CommentBean temp = null;
+			try {
+				temp = mDataList.get(index);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if(null == temp) {
+				return ;
+			}
 			String netHeadUrl = temp.customavatar;
 			if (null != netHeadUrl && !"".equals(netHeadUrl)) {
 				// 使用网络地址

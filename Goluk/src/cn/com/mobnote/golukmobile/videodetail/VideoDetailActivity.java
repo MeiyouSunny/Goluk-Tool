@@ -1040,11 +1040,13 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	public void onLoadComplete(int requestType, Object result) {
 		if (requestType == IPageNotifyFn.PageType_VideoClick) {
 			VideoClickInfo clickInfo = (VideoClickInfo) result;
-			boolean b = clickInfo.success;
-			if (b) {
-				//围观次数上报成功
-			} else {
-				//围观次数上报失败
+			if (null != clickInfo) {
+				boolean b = clickInfo.success;
+				if (b) {
+					// 围观次数上报成功
+				} else {
+					// 围观次数上报失败
+				}
 			}
 		}
 	}
