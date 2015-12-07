@@ -52,7 +52,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 	/**进入页面的loading**/
 	private CustomLoadingDialog mLoadingDialog = null;
 	/**数据回调是否回来**/
-	private boolean mDataBack = true;
+	private boolean mIsDataBack = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,15 +61,23 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		setContentView(R.layout.my_profit);
 		
 		initView();
+		Intent itUser = getIntent();
+		if(null != itUser.getStringExtra("uid")) {
+			uid = itUser.getStringExtra("uid").toString();
+		}
+		if(null != itUser.getStringExtra("phone")) {
+			phone = itUser.getStringExtra("phone").toString();
+		}
+		showLoadingDialog();
+		profitJsonRequest = new ProfitJsonRequest(IPageNotifyFn.PageType_MyProfit, this);
+		profitJsonRequest.get(uid, "100");
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (mDataBack) {
+		if (mIsDataBack) {
 			initData();
-		} else {
-			GolukUtils.showToast(this, "数据请求中…");
 		}
 	}
 	
@@ -103,15 +111,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 	 * 初始化数据
 	 */
 	private void initData() {
-		Intent itUser = getIntent();
-		if(null != itUser.getStringExtra("uid")) {
-			uid = itUser.getStringExtra("uid").toString();
-		}
-		if(null != itUser.getStringExtra("phone")) {
-			phone = itUser.getStringExtra("phone").toString();
-		}
-		if(null != uid || !"".equals(uid)) {
-			showLoadingDialog();
+		if (null != uid || !"".equals(uid)) {
 			profitJsonRequest = new ProfitJsonRequest(IPageNotifyFn.PageType_MyProfit, this);
 			profitJsonRequest.get(uid, "100");
 		}
@@ -174,7 +174,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 	private void exit() {
 		closeAlertDialog();
 		closeLoadingDialog();
-		mDataBack = false;
+		mIsDataBack = false;
 		this.finish();
 	}
 	
@@ -264,7 +264,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		closeLoadingDialog();
 		mImageRefresh.setVisibility(View.GONE);
 		if(requestType == IPageNotifyFn.PageType_MyProfit) {
-			mDataBack = true;
+			mIsDataBack = true;
 			profitInfo = (ProfitInfo)result;
 			if (null != profitInfo && profitInfo.success && null != profitInfo.data) {
 				mProfitBgLayout.setVisibility(View.VISIBLE);
@@ -287,12 +287,8 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 				mTextTotalCount.setText(UserUtils.formatNumber(profitInfo.data.hgold)+"个Ｇ币");
 				mTextLeaveCount.setText(UserUtils.formatNumber(profitInfo.data.agold)+"个Ｇ币");
 			} else {
-				//TODO 异常处理
 				unusual();
 			}
-			
-		} else {
-			mDataBack = false;
 		}
 	}
 	
@@ -318,6 +314,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 	private void unusual() {
 		mImageRefresh.setVisibility(View.VISIBLE);
 		GolukUtils.showToast(this, "网络数据异常");
+		mIsDataBack = true;
 	}
 	
 	@Override
@@ -344,6 +341,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		super.onDestroy();
 		closeAlertDialog();
 		closeLoadingDialog();
+		mIsDataBack = false;
 	}
 	
 	/**
