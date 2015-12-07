@@ -53,6 +53,8 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 	private CustomLoadingDialog mLoadingDialog = null;
 	/**数据回调是否回来**/
 	private boolean mIsDataBack = false;
+	/**是否显示猛戳我刷新的图片**/
+	private boolean mIsVisibleImage = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -175,6 +177,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		closeAlertDialog();
 		closeLoadingDialog();
 		mIsDataBack = false;
+		mIsVisibleImage = false;
 		this.finish();
 	}
 	
@@ -267,6 +270,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 			mIsDataBack = true;
 			profitInfo = (ProfitInfo)result;
 			if (null != profitInfo && profitInfo.success && null != profitInfo.data) {
+				mIsVisibleImage = true;
 				mProfitBgLayout.setVisibility(View.VISIBLE);
 				mBottomLayout.setVisibility(View.VISIBLE);
 				if(null == profitInfo.data.lgold || "".equals(profitInfo.data.lgold) || "0".equals(profitInfo.data.lgold)) {
@@ -312,9 +316,11 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 	 * 处理异常信息
 	 */
 	private void unusual() {
-		mImageRefresh.setVisibility(View.VISIBLE);
-		GolukUtils.showToast(this, "网络数据异常");
-		mIsDataBack = true;
+		if (!mIsVisibleImage) {
+			mImageRefresh.setVisibility(View.VISIBLE);
+			GolukUtils.showToast(this, "网络数据异常");
+			mIsDataBack = true;
+		}
 	}
 	
 	@Override
@@ -342,6 +348,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		closeAlertDialog();
 		closeLoadingDialog();
 		mIsDataBack = false;
+		mIsVisibleImage = false;
 	}
 	
 	/**
