@@ -51,6 +51,8 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 	private String uid, phone;
 	/**进入页面的loading**/
 	private CustomLoadingDialog mLoadingDialog = null;
+	/**数据回调是否回来**/
+	private boolean mDataBack = true;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +61,16 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		setContentView(R.layout.my_profit);
 		
 		initView();
-		
-		initData();
-		
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (mDataBack) {
+			initData();
+		} else {
+			GolukUtils.showToast(this, "数据请求中…");
+		}
 	}
 	
 	private void initView() {
@@ -165,6 +174,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 	private void exit() {
 		closeAlertDialog();
 		closeLoadingDialog();
+		mDataBack = false;
 		this.finish();
 	}
 	
@@ -254,6 +264,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		closeLoadingDialog();
 		mImageRefresh.setVisibility(View.GONE);
 		if(requestType == IPageNotifyFn.PageType_MyProfit) {
+			mDataBack = true;
 			profitInfo = (ProfitInfo)result;
 			if (null != profitInfo && profitInfo.success && null != profitInfo.data) {
 				mProfitBgLayout.setVisibility(View.VISIBLE);
@@ -280,6 +291,8 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 				unusual();
 			}
 			
+		} else {
+			mDataBack = false;
 		}
 	}
 	
