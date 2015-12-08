@@ -174,6 +174,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					if (mErrorState) {
 						return;
 					}
+					mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 					mWebView.loadUrl(getRtmpAddress() + "?type=7&phone=" + phone + "&uid=" + uid);
 				}
 			} else {
