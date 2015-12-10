@@ -801,6 +801,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	 *            ,分享数据
 	 */
 	public void videoShareCallBack(ShareDataBean shareData) {
+		if (mShareLoading == null || mUploadVideo == null || mShareDealTool == null) {
+			return;
+		}
 		mShareLoading.switchState(ShareLoading.STATE_SHAREING);
 		if (shareData == null) {
 			getShareFailed();
