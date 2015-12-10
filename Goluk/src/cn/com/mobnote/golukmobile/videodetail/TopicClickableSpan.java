@@ -24,11 +24,13 @@ public class TopicClickableSpan extends ClickableSpan {
 	@Override
 	public void onClick(View view) {
 		// 启动活动聚合页
+		if (mVideoJson.data.avideo.video == null || mVideoJson.data.avideo.video.recom == null) {
+			return;
+		}
 		Intent intent = new Intent(mContext, ClusterActivity.class);
 		intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, mVideoJson.data.avideo.video.recom.topicid);
 		intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, mVideoJson.data.avideo.video.recom.topicname);
 		mContext.startActivity(intent);
-		
 	}
 	
 	@Override

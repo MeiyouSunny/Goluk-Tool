@@ -27,7 +27,6 @@ import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
-import cn.com.mobnote.golukmobile.videodetail.WonderfulActivity;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.view.SlideShowView;
@@ -410,7 +409,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 			if (null == accessId || accessId.trim().equals("")) {
 				return;
 			} else {
-				intent = new Intent(mContext, WonderfulActivity.class);
+				intent = new Intent(mContext, VideoDetailActivity.class);
 				// intent.putExtra("imageurl", body.getPicture());
 				intent.putExtra("ztid", body.getAccess());
 				intent.putExtra("title", body.getTitle());

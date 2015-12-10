@@ -97,10 +97,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustResize" />
         <activity
-            android:name="cn.com.mobnote.golukmobile.videodetail.WonderfulActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustResize" />
-        <activity
             android:name="cn.com.mobnote.golukmobile.ImageClipActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />

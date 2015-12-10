@@ -86,27 +86,4 @@
             android:background="#e5e5e5" >
         </LinearLayout>
     </RelativeLayout>
-
-    <!-- 无数据显示 -->
-
-<RelativeLayout 
-    android:id="@+id/show_nodata_layout"
-    android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:background="@color/white"
-    android:layout_centerHorizontal="true" >
-    
-    <!-- 评论关闭 -->
-
-    <TextView
-        android:id="@+id/comment_forbid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/str_comment_no_input"
-        android:textColor="@color/red"
-        android:textSize="14sp"
-        android:visibility="gone" />
-</RelativeLayout>
-
 </RelativeLayout>

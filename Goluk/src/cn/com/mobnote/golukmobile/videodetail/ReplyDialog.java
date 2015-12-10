@@ -79,16 +79,7 @@ public class ReplyDialog extends Dialog implements android.view.View.OnClickList
 			GolukUtils.showSoft(mEditText);
 			mEditText.setHint("回复＠" + mCommentBean.mUserName + "：");
 		} else {
-			String requestStr = JsonUtil.getDelCommentJson(mCommentBean.mCommentId);
-			boolean isSucess = GolukApplication.getInstance().mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
-					VideoSuqareManagerFn.VSquare_Req_Del_Comment, requestStr);
-			if (!isSucess) {
-				// 失败
-				GolukUtils.showToast(mContext, "删除失败");
-				return;
-			}
-			LiveDialogManager.getManagerInstance().showCommProgressDialog(mContext,
-					LiveDialogManager.DIALOG_TYPE_COMMENT_PROGRESS_DELETE, "", "正在删除", true);
+			((VideoDetailActivity) mContext).httpPost_requestDel(mCommentBean.mCommentId);
 		}
 		
 	}

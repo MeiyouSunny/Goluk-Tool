@@ -25,7 +25,6 @@ import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
-import cn.com.mobnote.golukmobile.videodetail.WonderfulActivity;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 
@@ -380,7 +379,8 @@ public class GolukNotification {
 			return;
 		}
 		Context context = GolukApplication.getInstance().getContext();
-		Intent intent = new Intent(context, WonderfulActivity.class);
+		Intent intent = new Intent(context, VideoDetailActivity.class);
+		intent.putExtra(VideoDetailActivity.TYPE, "Wonderful");
 		intent.putExtra("ztid", ztid);
 		intent.putExtra("title", "");
 		context.startActivity(intent);

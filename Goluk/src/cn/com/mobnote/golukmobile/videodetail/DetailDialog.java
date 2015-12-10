@@ -67,14 +67,10 @@ public class DetailDialog extends Dialog implements android.view.View.OnClickLis
 		case R.id.tv_dialog_item_share:
 			dismiss();
 			if(null != mContext) {
-				if(mContext instanceof WonderfulActivity) {
-					((WonderfulActivity)mContext).mAdapter.showLoadingDialog();
-				} else {
-					((VideoDetailActivity)mContext).mAdapter.showLoadingDialog();
+				if(mContext instanceof VideoDetailActivity) {
+					((VideoDetailActivity)mContext).getShare();
 				}
 			}
-			boolean result = GolukApplication.getInstance().getVideoSquareManager()
-					.getShareUrl(mVideoJson.data.avideo.video.videoid, mVideoJson.data.avideo.video.type);
 			break;
 		case R.id.back:
 			dismiss();

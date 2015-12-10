@@ -34,7 +34,6 @@ import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.newest.BannerSlideBody;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
-import cn.com.mobnote.golukmobile.videodetail.WonderfulActivity;
 
 /**
  * ViewPager实现的轮播图广告自定义视图，如京东首页的广告轮播图效果；
@@ -193,7 +192,8 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
                 if(null == accessId || accessId.trim().equals("")) {
                     return;
                 } else {
-                    intent = new Intent(mContext, WonderfulActivity.class);
+                    intent = new Intent(mContext, VideoDetailActivity.class);
+                    intent.putExtra(VideoDetailActivity.TYPE, "Wonderful");
                     intent.putExtra("imageurl", tag.data.getPicture());
                     intent.putExtra("ztid", tag.data.getAccess());
                     intent.putExtra("title", tag.data.getTitle());

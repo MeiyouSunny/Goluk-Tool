@@ -92,11 +92,11 @@ public abstract class GolukFastjsonRequest<T> {
     	mDefaultRetryPolicy.setCurrentRetryCount(retryCount);
     }
 
-	public void get() {
+    protected void get() {
 		addRequest(Method.GET);
 	}
 	
-	public void post() {
+    protected void post() {
 		addRequest(Method.POST);
 	}
 	
