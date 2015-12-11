@@ -142,14 +142,18 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 		// 获取ISP模式
 		boolean getISPMode = GolukApplication.getInstance().getIPCControlManager().getISPMode();
-		GolukDebugUtils.e("", "--------------SettingsActivity-----getISOMode：" + getISPMode);
+		GolukDebugUtils.e("", "--------------SettingsActivity-----getISPMode：" + getISPMode);
 		
-		//获取疲劳驾驶
+		//照片质量false
+		boolean getPhotoQualityMode = GolukApplication.getInstance().getIPCControlManager().getPhotoQualityMode();
+		GolukDebugUtils.e("", "--------------SettingsActivity-----getPhotoQualityMode：" + getPhotoQualityMode);
+		//获取疲劳驾驶、图像自动翻转、停车休眠模式
+		boolean getFunctionMode = GolukApplication.getInstance().getIPCControlManager().getFunctionMode();
+		GolukDebugUtils.e("", "--------------SettingsActivity-----getFunctionMode：" + getFunctionMode);
+		//获取遥控器按键功能false
+		boolean getKitMode = GolukApplication.getInstance().getIPCControlManager().getKitMode();
+		GolukDebugUtils.e("", "--------------SettingsActivity-----getKitMode：" + getKitMode);
 		
-		//获取图像自动翻转
-		
-		//获取停车休眠模式
-
 		showLoading();
 	}
 
@@ -658,6 +662,18 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				getISPModeCallback(event, msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_SetISPMode) {
 				setISPModeCallback(event, msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_GetPicCfg) {// 获取照片质量
+				getPhotoQualityCallback(event, msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_SetPicCfg) {// 设置照片质量
+				setPhotoQualityCallback(event, msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_GetFunctionSwitch) {// 获取疲劳驾驶、图像自动翻转、停车休眠模式
+				getFunctionCallback(event, msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_SetFunctionSwitch) {// 设置疲劳驾驶、图像自动翻转、停车休眠模式
+				setFunctionCallback(event, msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_GetKitCfg) {// 获取遥控器按键功能
+				getKitConfigCallback(event, msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_SetKitCfg) {// 设置遥控器按键功能
+				setKitConfigCallback(event, msg, param1, param2);
 			}
 		}
 	}
@@ -716,6 +732,36 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mISPSwitch = 0;
 			mISPBtn.setBackgroundResource(R.drawable.set_close_btn);
 		}
+	}
+	
+	private void getPhotoQualityCallback(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg
+				+ "==data:" + (String) param2+"---param1:"+param1);
+	}
+
+	private void setPhotoQualityCallback(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg
+				+ "==data:" + (String) param2+"---param1:"+param1);
+	}
+
+	private void getFunctionCallback(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg
+				+ "==data:" + (String) param2+"---param1:"+param1);
+	}
+
+	private void setFunctionCallback(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg
+				+ "==data:" + (String) param2+"---param1:"+param1);
+	}
+
+	private void getKitConfigCallback(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg
+				+ "==data:" + (String) param2+"---param1:"+param1);
+	}
+
+	private void setKitConfigCallback(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg
+				+ "==data:" + (String) param2+"---param1:"+param1);
 	}
 
 	/**

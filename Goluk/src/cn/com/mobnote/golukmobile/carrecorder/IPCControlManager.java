@@ -29,14 +29,14 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * @author xuhw
  */
 public class IPCControlManager implements IPCManagerFn {
-	
+
 	public static final String G1_SIGN = "G1";
 
 	/** IPC回调监听列表 */
 	private HashMap<String, IPCManagerFn> mIpcManagerListener = null;
 	/** Application实例,用于调用JNI的对象 */
 	private GolukApplication mApplication = null;
-	/**IPC设备型号**/
+	/** IPC设备型号 **/
 	public String mProduceName = "";
 	/** 当前设备的Sn号 */
 	public String mDeviceSn = null;
@@ -663,7 +663,7 @@ public class IPCControlManager implements IPCManagerFn {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_SetSpeakerSwitch, status);
 	}
-	
+
 	/**
 	 * 获取isp模式
 	 * 
@@ -676,13 +676,14 @@ public class IPCControlManager implements IPCManagerFn {
 
 	/**
 	 * 设置isp模式
+	 * 
 	 * @return
 	 */
 	public boolean setISPMode(String status) {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_SetISPMode, status);
 	}
-	
+
 	/**
 	 * 获取照片质量
 	 * 
@@ -690,73 +691,57 @@ public class IPCControlManager implements IPCManagerFn {
 	 */
 	public boolean getPhotoQualityMode() {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
-				IPCManagerFn.IPC_VDCPCmd_GetISPMode, "");
+				IPCManagerFn.IPC_VDCPCmd_GetPicCfg, "");
 	}
 
 	/**
 	 * 设置照片质量
+	 * 
 	 * @return
 	 */
 	public boolean setPhotoQualityMode(String status) {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
-				IPCManagerFn.IPC_VDCPCmd_SetISPMode, status);
-	}
-	
-	/**
-	 * 获取疲劳驾驶
-	 * 
-	 * @return
-	 */
-	public boolean getFatigueMode() {
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
-				IPCManagerFn.IPC_VDCPCmd_GetISPMode, "");
+				IPCManagerFn.IPC_VDCPCmd_SetPicCfg, status);
 	}
 
 	/**
-	 * 设置疲劳驾驶
-	 * @return
-	 */
-	public boolean setFatigueMode(String status) {
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
-				IPCManagerFn.IPC_VDCPCmd_SetISPMode, status);
-	}
-	
-	/**
-	 * 获取图像自动翻转
+	 * 获取疲劳驾驶、图像自动翻转、停车休眠
 	 * 
 	 * @return
 	 */
-	public boolean getImageFlipMode() {
+	public boolean getFunctionMode() {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
-				IPCManagerFn.IPC_VDCPCmd_GetISPMode, "");
+				IPCManagerFn.IPC_VDCPCmd_GetFunctionSwitch, "");
 	}
 
 	/**
-	 * 设置图像自动翻转
-	 * @return
-	 */
-	public boolean setImageFlipMode(String status) {
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
-				IPCManagerFn.IPC_VDCPCmd_SetISPMode, status);
-	}
-	
-	/**
-	 * 获取停车休眠模式
+	 * 设置疲劳驾驶、图像自动翻转、停车休眠
 	 * 
 	 * @return
 	 */
-	public boolean getParkingSleepMode() {
+	public boolean setFunctionMode(String status) {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
-				IPCManagerFn.IPC_VDCPCmd_GetISPMode, "");
+				IPCManagerFn.IPC_VDCPCmd_SetFunctionSwitch, status);
 	}
 
 	/**
-	 * 设置停车休眠模式
+	 * 获取遥控器功能
+	 * 
 	 * @return
 	 */
-	public boolean setParkingSleepMode(String status) {
+	public boolean getKitMode() {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
-				IPCManagerFn.IPC_VDCPCmd_SetISPMode, status);
+				IPCManagerFn.IPC_VDCPCmd_GetKitCfg, "");
+	}
+
+	/**
+	 * 设置遥控器功能
+	 * 
+	 * @return
+	 */
+	public boolean setKitMode(String status) {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetKitCfg, status);
 	}
 
 	@Override
