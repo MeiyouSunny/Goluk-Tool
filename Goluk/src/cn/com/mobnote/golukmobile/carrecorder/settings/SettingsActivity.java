@@ -81,7 +81,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private String[] mArrayText = null;
 	/**照片质量line**/
 	private RelativeLayout mPhotoQualityLayout;
-	private Button mPhotoQualityBtn = null;
+//	private Button mPhotoQualityBtn = null;
 	/**疲劳驾驶**/
 	private RelativeLayout mFatigueLayout;
 	private Button mFatigueBtn = null;
@@ -182,7 +182,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mWonderfulLayout = (RelativeLayout) findViewById(R.id.jcsp_line);
 		mWonderVideoBtn = (Button) findViewById(R.id.jcsp);
 		mPhotoQualityLayout = (RelativeLayout) findViewById(R.id.photographic_quality_line);
-		mPhotoQualityBtn = (Button) findViewById(R.id.btn_settings_photographic_quality);
 		mFatigueLayout = (RelativeLayout) findViewById(R.id.fatigue_line);
 		mFatigueBtn = (Button) findViewById(R.id.btn_settings_fatigue);
 		mImageFlipLayout = (RelativeLayout) findViewById(R.id.image_flip_line);
@@ -254,7 +253,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		findViewById(R.id.bbxx_line).setOnClickListener(this);// 版本信息
 		findViewById(R.id.mBugLayout).setOnClickListener(this);// 购买降压线
 		
-		mPhotoQualityBtn.setOnClickListener(this);//照片质量
 		mFatigueBtn.setOnClickListener(this);//疲劳驾驶
 		mImageFlipBtn.setOnClickListener(this);//图像自动翻转
 		mParkingSleepBtn.setOnClickListener(this);//停车休眠模式
@@ -417,10 +415,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					closeLoading();
 					GolukUtils.showToast(this, "设置失败");
 				}
-				break;
-			//照片质量
-			case R.id.btn_settings_photographic_quality:
-				
 				break;
 			//疲劳驾驶
 			case R.id.btn_settings_fatigue:
