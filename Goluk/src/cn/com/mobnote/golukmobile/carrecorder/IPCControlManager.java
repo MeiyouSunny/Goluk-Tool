@@ -682,6 +682,82 @@ public class IPCControlManager implements IPCManagerFn {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_SetISPMode, status);
 	}
+	
+	/**
+	 * 获取照片质量
+	 * 
+	 * @return
+	 */
+	public boolean getPhotoQualityMode() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetISPMode, "");
+	}
+
+	/**
+	 * 设置照片质量
+	 * @return
+	 */
+	public boolean setPhotoQualityMode(String status) {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetISPMode, status);
+	}
+	
+	/**
+	 * 获取疲劳驾驶
+	 * 
+	 * @return
+	 */
+	public boolean getFatigueMode() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetISPMode, "");
+	}
+
+	/**
+	 * 设置疲劳驾驶
+	 * @return
+	 */
+	public boolean setFatigueMode(String status) {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetISPMode, status);
+	}
+	
+	/**
+	 * 获取图像自动翻转
+	 * 
+	 * @return
+	 */
+	public boolean getImageFlipMode() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetISPMode, "");
+	}
+
+	/**
+	 * 设置图像自动翻转
+	 * @return
+	 */
+	public boolean setImageFlipMode(String status) {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetISPMode, status);
+	}
+	
+	/**
+	 * 获取停车休眠模式
+	 * 
+	 * @return
+	 */
+	public boolean getParkingSleepMode() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetISPMode, "");
+	}
+
+	/**
+	 * 设置停车休眠模式
+	 * @return
+	 */
+	public boolean setParkingSleepMode(String status) {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetISPMode, status);
+	}
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {

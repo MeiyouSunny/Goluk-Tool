@@ -79,6 +79,20 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private String[] mResolutionArray = null;
 	private String[] mBitrateArray = null;
 	private String[] mArrayText = null;
+	/**照片质量line**/
+	private RelativeLayout mPhotoQualityLayout;
+	private Button mPhotoQualityBtn = null;
+	/**疲劳驾驶**/
+	private RelativeLayout mFatigueLayout;
+	private Button mFatigueBtn = null;
+	/**图像自动翻转**/
+	private RelativeLayout mImageFlipLayout;
+	private Button mImageFlipBtn = null;
+	/**停车休眠模式**/
+	private RelativeLayout mParkingSleepLayout;
+	private Button mParkingSleepBtn = null;
+	/**遥控器按键功能**/
+	private RelativeLayout mHandsetLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -129,8 +143,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		// 获取ISP模式
 		boolean getISPMode = GolukApplication.getInstance().getIPCControlManager().getISPMode();
 		GolukDebugUtils.e("", "--------------SettingsActivity-----getISOMode：" + getISPMode);
+		
+		//获取疲劳驾驶
+		
+		//获取图像自动翻转
+		
+		//获取停车休眠模式
 
-		GolukDebugUtils.e("xuhw", "YYYYYY=========getMotionCfg=========" + motionCfg);
 		showLoading();
 	}
 
@@ -154,13 +173,22 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mISPBtn = (Button) findViewById(R.id.hdr);
 		mWonderfulLayout = (RelativeLayout) findViewById(R.id.jcsp_line);
 		mWonderVideoBtn = (Button) findViewById(R.id.jcsp);
+		mPhotoQualityLayout = (RelativeLayout) findViewById(R.id.photographic_quality_line);
+		mPhotoQualityBtn = (Button) findViewById(R.id.btn_settings_photographic_quality);
+		mFatigueLayout = (RelativeLayout) findViewById(R.id.fatigue_line);
+		mFatigueBtn = (Button) findViewById(R.id.btn_settings_fatigue);
+		mImageFlipLayout = (RelativeLayout) findViewById(R.id.image_flip_line);
+		mImageFlipBtn = (Button) findViewById(R.id.btn_settings_image_flip);
+		mParkingSleepLayout = (RelativeLayout) findViewById(R.id.parking_sleep_line);
+		mParkingSleepBtn = (Button) findViewById(R.id.btn_settings_parking_sleep);
+		mHandsetLayout = (RelativeLayout) findViewById(R.id.handset_line);
 		// ipc设备型号
-		if (mIPCName.equals("G1")) {
-			mISPLayout.setVisibility(View.GONE);
-			mWonderfulLayout.setVisibility(View.GONE);
-		} else {
+		if (!mIPCName.equals("G1")) {
 			mISPLayout.setVisibility(View.VISIBLE);
-			mWonderfulLayout.setVisibility(View.VISIBLE);
+//			mWonderfulLayout.setVisibility(View.VISIBLE);
+		} else {
+			mISPLayout.setVisibility(View.GONE);
+//			mWonderfulLayout.setVisibility(View.GONE);
 		}
 
 		mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
@@ -194,6 +222,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		findViewById(R.id.hfccsz_line).setOnClickListener(this);// 恢复出厂设置
 		findViewById(R.id.bbxx_line).setOnClickListener(this);// 版本信息
 		findViewById(R.id.mBugLayout).setOnClickListener(this);// 购买降压线
+		
+		mPhotoQualityBtn.setOnClickListener(this);//照片质量
+		mFatigueBtn.setOnClickListener(this);//疲劳驾驶
+		mImageFlipBtn.setOnClickListener(this);//图像自动翻转
+		mParkingSleepBtn.setOnClickListener(this);//停车休眠模式
+		mHandsetLayout.setOnClickListener(this);//遥控器按键功能
 	}
 
 	/**
@@ -352,6 +386,26 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					closeLoading();
 					GolukUtils.showToast(this, "设置失败");
 				}
+				break;
+			//照片质量
+			case R.id.btn_settings_photographic_quality:
+				
+				break;
+			//疲劳驾驶
+			case R.id.btn_settings_fatigue:
+				
+				break;
+			//图像自动翻转
+			case R.id.btn_settings_image_flip:
+				
+				break;
+			//停车休眠
+			case R.id.btn_settings_parking_sleep:
+				
+				break;
+			//遥控器按键功能
+			case R.id.handset_line:
+				
 				break;
 			default:
 				break;
