@@ -424,15 +424,48 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				break;
 			//疲劳驾驶
 			case R.id.btn_settings_fatigue:
-				
+				if (driveFatigue == 1) {
+					driveFatigue = 0;
+				} else {
+					driveFatigue = 1;
+				}
+
+				boolean fatigue = GolukApplication.getInstance().getIPCControlManager().setFunctionMode(getSetJson());
+				if (fatigue) {
+					GolukUtils.showToast(this, "设置...");
+				} else {
+					GolukUtils.showToast(this, "设置失败");
+				}
 				break;
 			//图像自动翻转
 			case R.id.btn_settings_image_flip:
-				
+				if (autoRotation == 1) {
+					autoRotation = 0;
+				} else {
+					autoRotation = 1;
+				}
+
+				boolean imageFlip = GolukApplication.getInstance().getIPCControlManager().setFunctionMode(getSetJson());
+				if (imageFlip) {
+					GolukUtils.showToast(this, "设置成功");
+				} else {
+					GolukUtils.showToast(this, "设置失败");
+				}
 				break;
 			//停车休眠
 			case R.id.btn_settings_parking_sleep:
-				
+				if (dormant == 1) {
+					dormant = 0;
+				} else {
+					dormant = 1;
+				}
+
+				boolean parkingSleep = GolukApplication.getInstance().getIPCControlManager().setFunctionMode(getSetJson());
+				if (parkingSleep) {
+					GolukUtils.showToast(this, "设置成功");
+				} else {
+					GolukUtils.showToast(this, "设置失败");
+				}
 				break;
 			//遥控器按键功能
 			case R.id.handset_line:
@@ -774,11 +807,35 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private void getFunctionCallback(int event, int msg, int param1, Object param2) {
 		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg
 				+ "==data:" + (String) param2+"---param1:"+param1);
+		if (RESULE_SUCESS == param1) {
+			parseJson((String) param2);
+		}
 	}
 
 	private void setFunctionCallback(int event, int msg, int param1, Object param2) {
 		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg
 				+ "==data:" + (String) param2+"---param1:"+param1);
+		if (RESULE_SUCESS == param1) {
+			if (1 == dormant) {
+				mParkingSleepBtn.setBackgroundResource(R.drawable.set_open_btn);
+			} else {
+				mParkingSleepBtn.setBackgroundResource(R.drawable.set_close_btn);
+			}
+			
+			if (1 == driveFatigue) {
+				mFatigueBtn.setBackgroundResource(R.drawable.set_open_btn);
+			} else {
+				mFatigueBtn.setBackgroundResource(R.drawable.set_close_btn);
+			}
+
+			if (1 == autoRotation) {
+				mImageFlipBtn.setBackgroundResource(R.drawable.set_open_btn);
+			} else {
+				mImageFlipBtn.setBackgroundResource(R.drawable.set_close_btn);
+			}
+		} else {
+			GolukUtils.showToast(this, "设置功能设置失败");
+		}
 	}
 
 	private void getKitConfigCallback(int event, int msg, int param1, Object param2) {
@@ -789,6 +846,73 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private void setKitConfigCallback(int event, int msg, int param1, Object param2) {
 		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg
 				+ "==data:" + (String) param2+"---param1:"+param1);
+	}
+	
+	int recbySec = 0;
+	int moveMonitor = 0;
+	// 停车休眠
+	int dormant = 0;
+	int recLight = 0;
+	int wifiLight = 0;
+	int securityLight = 0;
+	// 图像翻转
+	int autoRotation = 0;
+	// 疲劳驾驶
+	int driveFatigue = 0;
+
+	private void parseJson(String str) {
+		try {
+			JSONObject obj = new JSONObject(str);
+			recbySec = obj.optInt("RecbySec");
+			moveMonitor = obj.optInt("MoveMonitor");
+			dormant = obj.optInt("Dormant");
+			recLight = obj.optInt("RecLight");
+			wifiLight = obj.optInt("WifiLight");
+
+			securityLight = obj.optInt("SecurityLight");
+			autoRotation = obj.optInt("AutoRotation");
+			driveFatigue = obj.optInt("DriveFatigue");
+
+			if (1 == dormant) {
+				mParkingSleepBtn.setBackgroundResource(R.drawable.set_open_btn);
+			} else {
+				mParkingSleepBtn.setBackgroundResource(R.drawable.set_close_btn);
+			}
+
+			if (1 == driveFatigue) {
+				mFatigueBtn.setBackgroundResource(R.drawable.set_open_btn);
+			} else {
+				mFatigueBtn.setBackgroundResource(R.drawable.set_close_btn);
+			}
+
+			if (1 == autoRotation) {
+				mImageFlipBtn.setBackgroundResource(R.drawable.set_open_btn);
+			} else {
+				mImageFlipBtn.setBackgroundResource(R.drawable.set_close_btn);
+			}
+		} catch (Exception e) {
+
+		}
+	}
+
+	private String getSetJson() {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("RecbySec", recbySec);
+			obj.put("MoveMonitor", moveMonitor);
+			obj.put("Dormant", dormant);
+			obj.put("RecLight", recLight);
+			obj.put("WifiLight", wifiLight);
+			obj.put("SecurityLight", securityLight);
+			obj.put("AutoRotation", autoRotation);
+			obj.put("DriveFatigue", driveFatigue);
+
+			return obj.toString();
+
+		} catch (Exception e) {
+
+		}
+		return "";
 	}
 
 	/**
