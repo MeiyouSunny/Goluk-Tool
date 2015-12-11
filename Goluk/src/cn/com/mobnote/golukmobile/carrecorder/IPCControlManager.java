@@ -31,6 +31,8 @@ import cn.com.tiros.debug.GolukDebugUtils;
 public class IPCControlManager implements IPCManagerFn {
 
 	public static final String G1_SIGN = "G1";
+	public static final String G2_SIGN = "G2";
+	public static final String T1_SIGN = "GOLUK T1";
 
 	/** IPC回调监听列表 */
 	private HashMap<String, IPCManagerFn> mIpcManagerListener = null;
@@ -47,12 +49,43 @@ public class IPCControlManager implements IPCManagerFn {
 		mApplication = application;
 		mIpcManagerListener = new HashMap<String, IPCManagerFn>();
 		mProduceName = SharedPrefUtil.getIpcModel();
+		if ("".equals(mProduceName)) {
+			setProduceName(G1_SIGN);
+		}
 		isNeedReportSn = false;
 		// 注册IPC回调
 		mApplication.mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_IPCManager, this);
 
 		// 设置连接模式
-		String json = JsonUtil.getIPCConnModeJson(IPCMgrMode_IPCDirect);
+		setIpcMode();
+	}
+
+	public void setProduceName(String name) {
+		mProduceName = name;
+	}
+
+	public void setIpcMode() {
+		if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName)) {
+			setIpcMode(IPCMgrMode_IPCDirect);
+		} else if (T1_SIGN.equals(mProduceName)) {
+			setIpcMode(IPCMgrMode_T1);
+		} else {
+			// 不处理
+		}
+	}
+
+	/**
+	 * 设置IPC 连接模式
+	 * 
+	 * @param mode
+	 *            0/1/2
+	 * @author jyf
+	 */
+	private void setIpcMode(int mode) {
+		if (mode < 0) {
+			return;
+		}
+		String json = JsonUtil.getIPCConnModeJson(mode);
 		mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_SetMode, json);
 	}
 

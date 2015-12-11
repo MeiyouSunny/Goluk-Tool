@@ -98,7 +98,7 @@ import de.greenrobot.event.EventBus;
  */
 @SuppressLint("NewApi")
 public class CarRecorderActivity extends BaseActivity implements OnClickListener, OnTouchListener, IPCManagerFn,
-		IPopwindowFn{
+		IPopwindowFn {
 	private Handler mHandler = null;
 	/** 保存当前录制的视频类型 */
 	public VideoType mCurVideoType = VideoType.idle;
@@ -277,9 +277,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private ImageView new2;
 
 	private String SelfContextTag = "carrecorder";
-	
+
 	private String mLocationAddress = "";
-	
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -302,7 +301,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		lsp.setCallBackNotify(this);
 
 		mSettingData = lsp.getCurrentSetting();
-		mLocationAddress =  cn.com.mobnote.util.GolukFileUtils.loadString("loactionAddress", "");
+		mLocationAddress = cn.com.mobnote.util.GolukFileUtils.loadString("loactionAddress", "");
 
 		EventBus.getDefault().register(this);
 
@@ -326,7 +325,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				}
 			};
 		};
-		
+
 		initView();
 		setListener();
 		initIpcState(ipcState);// 初始化ipc的连接状态
@@ -518,10 +517,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 		}
-		
-		if("".equals(mLocationAddress)){
+
+		if ("".equals(mLocationAddress)) {
 			mAddr.setText("定位中");
-		}else {
+		} else {
 			mAddr.setText(mLocationAddress);
 		}
 
@@ -714,16 +713,25 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	public void start() {
 		if (null != mRtspPlayerView) {
 			mRtspPlayerView.setVisibility(View.VISIBLE);
-			String preUrl = getResources().getString(R.string.default_rtsp_pre);
-			String backUrl = getResources().getString(R.string.default_rtsp_back);
-			String url = preUrl + mApp.mIpcIp + backUrl;
-
-			GolukDebugUtils.e("xuhw", "CarrecorderActivity-------start--YYYYYY======url==" + url);
-
+			String url = getRtspUrl();
+			GolukDebugUtils.e("xuhw", "CarrecorderActivity-------start--YYYYYY======url==" + url + "   "
+					+ mApp.mIPCControlManager.mProduceName);
 			mRtspPlayerView.setDataSource(url);
-
 			mRtspPlayerView.start();
 		}
+	}
+
+	private String getRtspUrl() {
+		if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+			return "rtsp://" + GolukApplication.mIpcIp + "/stream1";
+		} else if (IPCControlManager.G1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
+				|| IPCControlManager.G2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+			String preUrl = getResources().getString(R.string.default_rtsp_pre);
+			String backUrl = getResources().getString(R.string.default_rtsp_back);
+			String url = preUrl + GolukApplication.mIpcIp + backUrl;
+			return url;
+		}
+		return "";
 	}
 
 	public void onEventMainThread(EventWifiConnect event) {
@@ -1251,7 +1259,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * @date 2015年3月8日
 	 */
 	private void stopTrimVideo() {
-		mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT, CarRecorderActivity.QUERYFILETIME);
+		if (!IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+			mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT, CarRecorderActivity.QUERYFILETIME);
+		}
 		mShootTime = 0;
 		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 		if (null != m8sTimer) {
@@ -1453,34 +1463,41 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					+ param2);
 			GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord====1111111========param1=" + param1
 					+ "=====param2=" + param2);
-			TriggerRecord record = IpcDataParser.parseTriggerRecordResult((String) param2);
-			if (null != record) {
-				if (RESULE_SUCESS == param1) {
-					mRecordVideFileName = record.fileName;
-					videoname = mRecordVideFileName;
-					GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===555555========type=" + record.type);
-					GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord====222222========mRecordVideFileName="
-							+ mRecordVideFileName);
-					// 精彩视频
-					if (TYPE_SHORTCUT == record.type) {
-						GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord==333333==========MOUNTS========");
-						mHandler.sendEmptyMessage(MOUNTS);
+			if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+				mHandler.sendEmptyMessage(MOUNTS);
+			} else {
+				TriggerRecord record = IpcDataParser.parseTriggerRecordResult((String) param2);
+				if (null != record) {
+					if (RESULE_SUCESS == param1) {
+						mRecordVideFileName = record.fileName;
+						videoname = mRecordVideFileName;
+						GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===555555========type="
+								+ record.type);
+						GFileUtils
+								.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord====222222========mRecordVideFileName="
+										+ mRecordVideFileName);
+						// 精彩视频
+						if (TYPE_SHORTCUT == record.type) {
+							GFileUtils
+									.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord==333333==========MOUNTS========");
+							mHandler.sendEmptyMessage(MOUNTS);
+						} else {
+							GFileUtils
+									.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===444444=========EMERGENCY========");
+							mHandler.sendEmptyMessage(EMERGENCY);
+						}
 					} else {
 						GFileUtils
-								.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===444444=========EMERGENCY========");
-						mHandler.sendEmptyMessage(EMERGENCY);
+								.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===66666======= not success ==========");
+						videoTriggerFail();
 					}
 				} else {
+					GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===6666====not success====");
 					GFileUtils
-							.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===66666======= not success ==========");
+							.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===77777======= not success ==========");
 					videoTriggerFail();
 				}
-			} else {
-				GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===6666====not success====");
-				GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===77777======= not success ==========");
-				videoTriggerFail();
 			}
-
 			break;
 		// 单文件查询
 		case IPC_VDCPCmd_SingleQuery:
@@ -1920,10 +1937,25 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		if (names != null && names.size() > 0) {
 			for (int i = 0; i < names.size(); i++) {
 				String[] videos = names.get(i).split("_");
-				Long time = Long.parseLong(videos[1]);
-
+				int len = videos.length;
+				if (len < 3) {
+					break;
+				}
+				if (!TextUtils.isDigitsOnly(videos[len - 2])) {
+					break;
+				}
+				Long time = Long.parseLong(videos[len - 2]);
 				for (int j = i + 1; j < names.size(); j++) {
-					Long date = Long.parseLong(names.get(j).split("_")[1]);
+					String[] videos1 = names.get(j).split("_");
+					
+					int lenth = videos1.length;
+					if (lenth < 3) {
+						return names;
+					}
+					if (!TextUtils.isDigitsOnly(videos1[len - 2])) {
+						return names;
+					}
+					Long date = Long.parseLong(videos1[len - 2]);
 					if (time < date) {
 						String name = names.get(i);
 						names.set(i, names.get(j));
@@ -2051,39 +2083,35 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		return false;
 	}
 
-/*	@Override
-	public void LocationCallBack(String gpsJson) {
-		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
-		if (location == null) {
-			return;
-		}
-		// 保存经纬度
-		LngLat.lng = location.rawLon;
-		LngLat.lat = location.rawLat;
-
-		if (mApp.getContext() instanceof CarRecorderActivity) {
-			GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
-		}
-	}*/
+	/*
+	 * @Override public void LocationCallBack(String gpsJson) { BaiduPosition
+	 * location = JsonUtil.parseLocatoinJson(gpsJson); if (location == null) {
+	 * return; } // 保存经纬度 LngLat.lng = location.rawLon; LngLat.lat =
+	 * location.rawLat;
+	 * 
+	 * if (mApp.getContext() instanceof CarRecorderActivity) {
+	 * GetBaiduAddress.getInstance().searchAddress(location.rawLat,
+	 * location.rawLon); } }
+	 */
 
 	public void onEventMainThread(EventLocationFinish event) {
 		if (null == event) {
 			return;
 		}
-		
-		if(event.getCityCode().equals("-1")){//定位失败
-			if(mLocationAddress.equals("")){
+
+		if (event.getCityCode().equals("-1")) {// 定位失败
+			if (mLocationAddress.equals("")) {
 				mAddr.setText("未知街道");
-			}else{
+			} else {
 				mAddr.setText(mLocationAddress);
 			}
-		}else{//定位成功
-			if(event.getAddress() != null && !"".equals(event.getAddress())){
+		} else {// 定位成功
+			if (event.getAddress() != null && !"".equals(event.getAddress())) {
 				mLocationAddress = event.getAddress();
 				cn.com.mobnote.util.GolukFileUtils.saveString("loactionAddress", mLocationAddress);
 				mAddr.setText(mLocationAddress);
 			}
 		}
-		
+
 	}
 }
