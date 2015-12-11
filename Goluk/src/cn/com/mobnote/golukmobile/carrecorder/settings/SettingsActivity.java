@@ -914,6 +914,30 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		}
 		return "";
 	}
+	
+	int quality = 0;
+	String resolution = "";
+	
+	private void parsePhotoQualityJson(String str){
+		try {
+			JSONObject obj = new JSONObject(str);
+			obj.optInt("quality");
+			obj.optString("resolution");
+			if("1080P".equals(resolution)) {
+				
+			} else if ("720P".equals(resolution)) {
+				
+			} else if ("480P".equals(resolution)) {
+				
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void setPhotoQualityJson(){
+		
+	}
 
 	/**
 	 * 容量大小转字符串
