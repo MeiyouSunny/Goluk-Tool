@@ -713,25 +713,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	public void start() {
 		if (null != mRtspPlayerView) {
 			mRtspPlayerView.setVisibility(View.VISIBLE);
-			String url = getRtspUrl();
+			String url = PlayUrlManager.getRtspUrl();
 			GolukDebugUtils.e("xuhw", "CarrecorderActivity-------start--YYYYYY======url==" + url + "   "
 					+ mApp.mIPCControlManager.mProduceName);
 			mRtspPlayerView.setDataSource(url);
 			mRtspPlayerView.start();
 		}
-	}
-
-	private String getRtspUrl() {
-		if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
-			return "rtsp://" + GolukApplication.mIpcIp + "/stream1";
-		} else if (IPCControlManager.G1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
-				|| IPCControlManager.G2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
-			String preUrl = getResources().getString(R.string.default_rtsp_pre);
-			String backUrl = getResources().getString(R.string.default_rtsp_back);
-			String url = preUrl + GolukApplication.mIpcIp + backUrl;
-			return url;
-		}
-		return "";
 	}
 
 	public void onEventMainThread(EventWifiConnect event) {

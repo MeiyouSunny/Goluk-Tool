@@ -265,12 +265,6 @@
     <!-- 行车记录仪 		START -->
 
     <string name="filemanager_title">文件浏览</string>
-    <!-- 其它人看 -->
-    <string name="default_live_url">rtmp://211.103.234.234/live/test100</string>
-    <!-- 自己看 -->
-    <string name="default_rtsp_url">rtsp://admin:123456@192.168.43.234/sub</string>
-    <string name="default_rtsp_pre">rtsp://admin:123456@</string>
-    <string name="default_rtsp_back">/sub</string>
     <string name="def">默认</string>
     <string name="setting_title_text">设置</string>
     <string name="setting_tcaf_title">停车安防</string>
