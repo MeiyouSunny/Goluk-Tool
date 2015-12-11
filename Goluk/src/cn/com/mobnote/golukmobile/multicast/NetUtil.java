@@ -6,7 +6,6 @@ import java.net.SocketException;
 
 import android.os.Handler;
 import android.os.Message;
-import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -21,6 +20,8 @@ public class NetUtil {
 	private static final int MSG_H_ACCEPT_ERROR = 6;
 	/** 超时 */
 	private static final int MSG_H_TIMEOUT = 7;
+	
+	private static final String PRE_CONNECT_SIGN = "Goluk,good";
 
 	private DatagramPacket mPacket = null;
 	private byte[] recvbuf = new byte[256];
@@ -143,7 +144,7 @@ public class NetUtil {
 						int length = mPacket.getLength();
 						byte[] data = mPacket.getData();
 						String s = new String(data, 0, length - 1, "GBK");
-						if (s.equals("Goluk,good luck!")) {
+						if (s.startsWith(PRE_CONNECT_SIGN)) {
 							String address2 = mPacket.getAddress().toString();
 							receiveSucess(ssid, address2);
 							break;

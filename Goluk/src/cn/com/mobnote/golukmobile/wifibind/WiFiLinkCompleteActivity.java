@@ -1,5 +1,7 @@
 package cn.com.mobnote.golukmobile.wifibind;
 
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -17,11 +19,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import cn.com.mobnote.application.GolukApplication;
-
 import cn.com.mobnote.eventbus.EventFinishWifiActivity;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.reportlog.ReportLog;
@@ -172,21 +174,65 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
 		collectLog("getSetIPCJson", "----1");
 
-		// 连接ipc热点wifi---调用ipc接口
-		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---1");
-		String json = "";
-		if (null != WiFiInfo.IPC_PWD && !"".equals(WiFiInfo.IPC_PWD)) {
-			json = "{\"AP_SSID\":\"" + WiFiInfo.IPC_SSID + "\",\"AP_PWD\":\"" + WiFiInfo.IPC_PWD
-					+ "\",\"GolukSSID\":\"" + WiFiInfo.MOBILE_SSID + "\",\"GolukPWD\":\"" + WiFiInfo.MOBILE_PWD
-					+ "\",\"GolukIP\":\"" + DEFAULT_IP + "\",\"GolukGateway\":\"" + DEFAULT_WAY + "\" }";
-		} else {
-			json = "{\"GolukSSID\":\"" + WiFiInfo.MOBILE_SSID + "\",\"GolukPWD\":\"" + WiFiInfo.MOBILE_PWD
-					+ "\",\"GolukIP\":\"" + DEFAULT_IP + "\",\"GolukGateway\":\"" + DEFAULT_WAY + "\" }";
+		// // 连接ipc热点wifi---调用ipc接口
+		// GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---1");
+		// String json = "";
+		// if (null != WiFiInfo.IPC_PWD && !"".equals(WiFiInfo.IPC_PWD)) {
+		// json = "{\"AP_SSID\":\"" + WiFiInfo.IPC_SSID + "\",\"AP_PWD\":\"" +
+		// WiFiInfo.IPC_PWD
+		// + "\",\"GolukSSID\":\"" + WiFiInfo.MOBILE_SSID + "\",\"GolukPWD\":\""
+		// + WiFiInfo.MOBILE_PWD
+		// + "\",\"GolukIP\":\"" + DEFAULT_IP + "\",\"GolukGateway\":\"" +
+		// DEFAULT_WAY + "\" }";
+		// } else {
+		// json = "{\"GolukSSID\":\"" + WiFiInfo.MOBILE_SSID +
+		// "\",\"GolukPWD\":\"" + WiFiInfo.MOBILE_PWD
+		// + "\",\"GolukIP\":\"" + DEFAULT_IP + "\",\"GolukGateway\":\"" +
+		// DEFAULT_WAY + "\" }";
+		// }
+		//
+		// collectLog("getSetIPCJson", "---json: " + json);
+
+		String testJson = getSetIpcJson11();
+
+		GolukDebugUtils.e("", "WifiLink----------setIpc----Json:" + testJson);
+
+		return testJson;
+	}
+
+	private boolean strIsValid(String str) {
+		if (null == str) {
+			return false;
+		}
+		if (str.equals("")) {
+			return false;
+		}
+		return true;
+	}
+
+	private String getSetIpcJson11() {
+		try {
+			JSONObject rootObj = new JSONObject();
+			if (!IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+				if (strIsValid(WiFiInfo.IPC_PWD)) {
+					rootObj.put("AP_SSID", WiFiInfo.IPC_SSID);
+					rootObj.put("AP_PWD", WiFiInfo.IPC_PWD);
+				}
+			}
+
+			// Station模式
+			rootObj.put("GolukSSID", WiFiInfo.MOBILE_SSID);
+			rootObj.put("GolukPWD", WiFiInfo.MOBILE_PWD);
+
+			rootObj.put("GolukIP", DEFAULT_IP);
+			rootObj.put("GolukGateway", DEFAULT_WAY);
+
+			return rootObj.toString();
+
+		} catch (Exception e) {
+			return "";
 		}
 
-		collectLog("getSetIPCJson", "---json: " + json);
-
-		return json;
 	}
 
 	/**
@@ -359,7 +405,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	@Override
 	protected void onDestroy() {
 		EventBus.getDefault().unregister(this);
-		if (null != mWac){
+		if (null != mWac) {
 			mWac.unbind();
 			mWac = null;
 		}

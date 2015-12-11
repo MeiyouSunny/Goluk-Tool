@@ -29,14 +29,16 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * @author xuhw
  */
 public class IPCControlManager implements IPCManagerFn {
-	
+
 	public static final String G1_SIGN = "G1";
+	public static final String G2_SIGN = "G2";
+	public static final String T1_SIGN = "Goluk T1";
 
 	/** IPC回调监听列表 */
 	private HashMap<String, IPCManagerFn> mIpcManagerListener = null;
 	/** Application实例,用于调用JNI的对象 */
 	private GolukApplication mApplication = null;
-	/**IPC设备型号**/
+	/** IPC设备型号 **/
 	public String mProduceName = "";
 	/** 当前设备的Sn号 */
 	public String mDeviceSn = null;
@@ -47,12 +49,43 @@ public class IPCControlManager implements IPCManagerFn {
 		mApplication = application;
 		mIpcManagerListener = new HashMap<String, IPCManagerFn>();
 		mProduceName = SharedPrefUtil.getIpcModel();
+		if ("".equals(mProduceName)) {
+			setProduceName(G1_SIGN);
+		}
 		isNeedReportSn = false;
 		// 注册IPC回调
 		mApplication.mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_IPCManager, this);
 
 		// 设置连接模式
-		String json = JsonUtil.getIPCConnModeJson(IPCMgrMode_IPCDirect);
+		setIpcMode();
+	}
+
+	public void setProduceName(String name) {
+		mProduceName = name;
+	}
+
+	public void setIpcMode() {
+		if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName)) {
+			setIpcMode(IPCMgrMode_IPCDirect);
+		} else if (T1_SIGN.equals(mProduceName)) {
+			setIpcMode(IPCMgrMode_T1);
+		} else {
+			// 不处理
+		}
+	}
+
+	/**
+	 * 设置IPC 连接模式
+	 * 
+	 * @param mode
+	 *            0/1/2
+	 * @author jyf
+	 */
+	private void setIpcMode(int mode) {
+		if (mode < 0) {
+			return;
+		}
+		String json = JsonUtil.getIPCConnModeJson(mode);
 		mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_SetMode, json);
 	}
 
@@ -663,7 +696,7 @@ public class IPCControlManager implements IPCManagerFn {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_SetSpeakerSwitch, status);
 	}
-	
+
 	/**
 	 * 获取isp模式
 	 * 
@@ -676,6 +709,7 @@ public class IPCControlManager implements IPCManagerFn {
 
 	/**
 	 * 设置isp模式
+	 * 
 	 * @return
 	 */
 	public boolean setISPMode(String status) {

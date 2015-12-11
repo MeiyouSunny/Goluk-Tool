@@ -133,13 +133,13 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCP_Msg_RecErase = 1032;
 	/** 获取IPC系统WIFI配置 */
 	public static final int IPC_VDCP_Msg_GetWifiCfg = 1033;
-	/**获取IPC系统语音播报开关状态**/
+	/** 获取IPC系统语音播报开关状态 **/
 	public static final int IPC_VDCP_Msg_GetSpeakerSwitch = 1034;
-	/**设置IPC系统语音播报开关状态**/
+	/** 设置IPC系统语音播报开关状态 **/
 	public static final int IPC_VDCP_Msg_SetSpeakerSwitch = 1035;
-	/**获取isp模式**/
+	/** 获取isp模式 **/
 	public static final int IPC_VDCP_Msg_GetISPMode = 1041;
-	/**设置isp模式**/
+	/** 设置isp模式 **/
 	public static final int IPC_VDCP_Msg_SetISPMode = 1042;
 
 	/**
@@ -161,6 +161,8 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPCMgrMode_IPCDirect = 0;
 	/** 与Mobnote中转连接 */
 	public static final int IPCMgrMode_Mobnote = 1;
+	/** T1模式 */
+	public static final int IPCMgrMode_T1 = 2;
 
 	/**
 	 * 
@@ -244,15 +246,15 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCPCmd_PicErase = 1031;
 	/** 获取IPC系统WIFI配置 */
 	public static final int IPC_VDCPCmd_GetWifiCfg = 1032;
-	/**IPC设备升级停止**/
+	/** IPC设备升级停止 **/
 	public static final int IPC_VDCPCmd_StopIPCUpgrade = 1033;
-	/**获取IPC系统语音播报开关状态**/
+	/** 获取IPC系统语音播报开关状态 **/
 	public static final int IPC_VDCPCmd_GetSpeakerSwitch = 1034;
-	/**设置IPC系统语音播报开关状态**/
+	/** 设置IPC系统语音播报开关状态 **/
 	public static final int IPC_VDCPCmd_SetSpeakerSwitch = 1035;
-	/**获取isp模式**/
+	/** 获取isp模式 **/
 	public static final int IPC_VDCPCmd_GetISPMode = 1041;
-	/**设置isp模式**/
+	/** 设置isp模式 **/
 	public static final int IPC_VDCPCmd_SetISPMode = 1042;
 
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2);

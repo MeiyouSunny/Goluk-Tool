@@ -25,13 +25,12 @@ import cn.com.mobnote.eventbus.EventWifiState;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
+import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.reportlog.ReportLogManager;
-import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
-import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
@@ -48,6 +47,9 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
 	private static final String TAG = "WiFiLinkListActivity";
 	private static final String CONNECT_IPC_IP = "192.168.62.1";
+
+	private final String T1_WIFINAME_SIGN = "Goluk_T1";
+	private final String G1G2_WIFINAME_SIGN = "Goluk";
 
 	/** 未连接或连接失败 */
 	private static final int STATE_FAILED = 0;
@@ -134,12 +136,10 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 				+ getResources().getString(R.string.wifi_link_wifi_light) + " </font>"
 				+ getResources().getString(R.string.wifi_link_twinkle);
 		mDescTitleText.setText(Html.fromHtml(connStr1));
-		// mDescTitleText.getPaint().setFakeBoldText(true);
 		final String connStr2 = getResources().getString(R.string.wifi_link_wifi_name)
 				+ "<font color=\"#0587ff\"> Goluk xxxxxx </font>"
 				+ getResources().getString(R.string.wifi_link_wifi_name2);
 		mDescTitleText2.setText(Html.fromHtml(connStr2));
-		// mDescTitleText2.getPaint().setFakeBoldText(true);
 
 		this.nextCan();
 		setStateSwitch();
@@ -173,7 +173,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		final String connStr2 = getResources().getString(R.string.wifi_link_success_conn) + " <font color=\"#0587ff\">"
 				+ wifiname + "</font>";
 		mDescTitleText4.setText(Html.fromHtml(connStr2));
-		// mDescTitleText4.getPaint().setFakeBoldText(true);
 	}
 
 	private boolean isGetWifiBean() {
@@ -202,7 +201,25 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		}
 		collectLog("isGetWifiBean", "willConnName2:" + sWillConnName2 + "  willConnMac2:" + sWillConnMac2);
 		saveConnectWifiMsg(sWillConnName2, "", sWillConnMac2);
+		setIpcMode(sWillConnName2);
 		return true;
+	}
+
+	private void setIpcMode(String wifiSsid) {
+		if (null == wifiSsid) {
+			return;
+		}
+
+		GolukDebugUtils.e("", "wifiBind-------------setIpcMode:" + wifiSsid);
+
+		if (wifiSsid.startsWith(T1_WIFINAME_SIGN)) {
+			mApp.mIPCControlManager.setProduceName(IPCControlManager.T1_SIGN);
+		} else if (wifiSsid.startsWith(G1G2_WIFINAME_SIGN)) {
+			mApp.mIPCControlManager.setProduceName(IPCControlManager.G1_SIGN);
+		} else {
+
+		}
+		mApp.mIPCControlManager.setIpcMode();
 	}
 
 	private void dealAutoConn() {
@@ -227,10 +244,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 				.getReportData();
 		mApp.uploadMsg(jsonData, false);
 		ReportLogManager.getInstance().removeKey(IMessageReportFn.KEY_WIFI_BIND);
-	}
-
-	@Override
-	protected void hMessage(Message msg) {
 	}
 
 	private void saveConnectWifiMsg(String wifiName, String pwd, String mac) {
@@ -430,7 +443,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		setDefaultInfo();
 		// 跳转到修改热点密码页面
 		Intent modifyPwd = new Intent(WiFiLinkListActivity.this, WiFiLinkCompleteActivity.class);
-		modifyPwd.putExtra("cn.com.mobnote.golukmobile.wifiname", mLinkWiFiName);
+		modifyPwd.putExtra("cn.com.mobnote.golukmobile.wifiname", WiFiInfo.IPC_SSID);
 		startActivity(modifyPwd);
 	}
 

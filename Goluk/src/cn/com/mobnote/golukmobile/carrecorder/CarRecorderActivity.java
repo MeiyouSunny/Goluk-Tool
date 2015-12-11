@@ -716,8 +716,16 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mRtspPlayerView.setVisibility(View.VISIBLE);
 			String preUrl = getResources().getString(R.string.default_rtsp_pre);
 			String backUrl = getResources().getString(R.string.default_rtsp_back);
-			String url = preUrl + mApp.mIpcIp + backUrl;
+			String url = preUrl + GolukApplication.mIpcIp + backUrl;
 
+			GolukDebugUtils.e("xuhw", "CarrecorderActivity-------start--YYYYYY======url==" + url);
+			
+			if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+				
+			}
+			
+			url = "rtsp://192.168.62.1/stream1";
+			
 			GolukDebugUtils.e("xuhw", "CarrecorderActivity-------start--YYYYYY======url==" + url);
 
 			mRtspPlayerView.setDataSource(url);

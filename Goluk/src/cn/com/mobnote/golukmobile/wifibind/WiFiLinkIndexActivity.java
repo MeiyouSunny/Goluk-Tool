@@ -40,8 +40,6 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 	private Context mContext = null;
 	/** 返回按钮 */
 	private ImageButton mBackBtn = null;
-	/** 说明文字 */
-	private TextView mDescTitleText1 = null;
 	private TextView mDescTitleText2 = null;
 	/** 继续按钮 */
 	private Button mKeepBtn = null;
@@ -61,8 +59,6 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(mContext, "WiFiLinkIndex");
-
-		// collectLog("onCreate", "-----111111");
 
 		// 断开连接
 		mApp.mIPCControlManager.setIPCWifiState(false, "");
@@ -87,7 +83,6 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 	private void init() {
 		// 获取页面元素
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
-		mDescTitleText1 = (TextView) findViewById(R.id.textView1);
 		mDescTitleText2 = (TextView) findViewById(R.id.textView2);
 		mKeepBtn = (Button) findViewById(R.id.keep_btn);
 		// 注册事件
@@ -108,27 +103,12 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 		mHelpTv.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
 		mHelpTv.setOnClickListener(this);
 
-		// mDescTitleText1.getPaint().setFakeBoldText(true);
-		// mDescTitleText2.getPaint().setFakeBoldText(true);
-
 		mMiddleImg = (ImageView) findViewById(R.id.imageView1);
 		mProgressImg = (ImageView) findViewById(R.id.wifilink_progress);
 
 		mMiddleImg.setImageBitmap(mMiddleBitmap);
 		mProgressImg.setImageBitmap(mProgressBitmap);
 	}
-
-	// private void collectLog(String method, String msg) {
-	// mApp.uploadMsg(
-	// JsonUtil.getReportJson(IMessageReportFn.KEY_WIFI_BIND,
-	// JsonUtil.getReportData(TAG, method, msg)), false);
-	// }
-
-	// private void collectLog(String method, String msg) {
-	// ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND)
-	// .addLogData(JsonUtil.getReportData(TAG, method, msg));
-	//
-	// }
 
 	@Override
 	protected void onResume() {
@@ -140,11 +120,9 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 		if (null != mMiddleImg) {
 			GolukUtils.freeBitmap(mMiddleBitmap);
 		}
-
 		if (null != mProgressImg) {
 			GolukUtils.freeBitmap(mProgressBitmap);
 		}
-
 	}
 
 	public void onEventMainThread(EventFinishWifiActivity event) {
@@ -161,24 +139,22 @@ public class WiFiLinkIndexActivity extends BaseActivity implements OnClickListen
 
 	@Override
 	public void onClick(View v) {
-		int id = v.getId();
+		final int id = v.getId();
 		switch (id) {
 		case R.id.back_btn:
 			// 返回
 			finish();
 			break;
 		case R.id.keep_btn:
-			// 新版需求,直接跳转到wifi列表页面
-			// collectLog("onClick", "-----jump----to----WiFiLinkListActivity");
-
 			Intent list = new Intent(WiFiLinkIndexActivity.this, WiFiLinkListActivity.class);
 			startActivity(list);
 			break;
 		case R.id.wifi_link_index_help:
-			// GolukUtils.openUrl(GolukUtils.URL_BIND_HELP, this);
 			Intent mHelpIntent = new Intent(this, UserOpenUrlActivity.class);
 			mHelpIntent.putExtra(UserOpenUrlActivity.FROM_TAG, "wifihelp");
 			startActivity(mHelpIntent);
+			break;
+		default:
 			break;
 		}
 	}
