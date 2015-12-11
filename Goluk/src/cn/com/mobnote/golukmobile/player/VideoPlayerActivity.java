@@ -29,6 +29,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -44,8 +45,10 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
@@ -264,16 +267,24 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		} else if (from.equals("suqare")) {
 			videoUrl = getIntent().getStringExtra("playUrl");
 		} else if (from.equals("ipc")) {
-			String fileName = filename;
-			fileName = fileName.replace(".mp4", ".jpg");
-			image = filePath + File.separator + fileName;
-			int type = getIntent().getIntExtra("type", -1);
-			if (4 == type) {
-				videoUrl = "http://" + ip + ":5080/rec/wonderful/" + filename;
-			} else if (2 == type) {
-				videoUrl = "http://" + ip + ":5080/rec/urgent/" + filename;
+			if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)) {
+				String fileName = filename;
+				fileName = fileName.replace(".mp4", "");
+				videoUrl = "http://" + ip + "/api/video?id=" + fileName;
+				Log.v("dengting", "videoUrl =" + videoUrl);
+				image = "http://" + ip + "/api/thumb?id=" + fileName;
 			} else {
-				videoUrl = "http://" + ip + ":5080/rec/normal/" + filename;
+				String fileName = filename;
+				fileName = fileName.replace(".mp4", ".jpg");
+				image = filePath + File.separator + fileName;
+				int type = getIntent().getIntExtra("type", -1);
+				if (4 == type) {
+					videoUrl = "http://" + ip + ":5080/rec/wonderful/" + filename;
+				} else if (2 == type) {
+					videoUrl = "http://" + ip + ":5080/rec/urgent/" + filename;
+				} else {
+					videoUrl = "http://" + ip + ":5080/rec/normal/" + filename;
+				}
 			}
 		}
 

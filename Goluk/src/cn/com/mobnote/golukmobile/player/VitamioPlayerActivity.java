@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.SurfaceHolder;
@@ -44,6 +45,7 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
@@ -181,17 +183,26 @@ public class VitamioPlayerActivity extends BaseActivity implements OnCompletionL
 		} else if (from.equals("suqare")) {
 			playUrl = getIntent().getStringExtra("playUrl");
 		} else if (from.equals("ipc")) {
-			String fileName = filename;
-			fileName = fileName.replace(".mp4", ".jpg");
-			image = filePath + File.separator + fileName;
-			int type = getIntent().getIntExtra("type", -1);
-			if (4 == type) {
-				playUrl = "http://" + ip + ":5080/rec/wonderful/" + filename;
-			} else if (2 == type) {
-				playUrl = "http://" + ip + ":5080/rec/urgent/" + filename;
+			if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)) {
+				String fileName = filename;
+				fileName = fileName.replace(".mp4", "");
+				playUrl = "http://192.168.62.1/api/video?id=" + fileName;
+				Log.v("dengting", "playUrl =" + playUrl);
+				image = "http://192.168.62.1/api/thumb?id=" + fileName;
 			} else {
-				playUrl = "http://" + ip + ":5080/rec/normal/" + filename;
+				String fileName = filename;
+				fileName = fileName.replace(".mp4", ".jpg");
+				image = filePath + File.separator + fileName;
+				int type = getIntent().getIntExtra("type", -1);
+				if (4 == type) {
+					playUrl = "http://" + ip + ":5080/rec/wonderful/" + filename;
+				} else if (2 == type) {
+					playUrl = "http://" + ip + ":5080/rec/urgent/" + filename;
+				} else {
+					playUrl = "http://" + ip + ":5080/rec/normal/" + filename;
+				}
 			}
+			
 		}
 
 		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==playUrl=" + playUrl);
