@@ -1934,21 +1934,36 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * @throws
 	 */
 	public List<String> shortNames(List<String> names) {
-//		if (names != null && names.size() > 0) {
-//			for (int i = 0; i < names.size(); i++) {
-//				String[] videos = names.get(i).split("_");
-//				Long time = Long.parseLong(videos[1]);
-//
-//				for (int j = i + 1; j < names.size(); j++) {
-//					Long date = Long.parseLong(names.get(j).split("_")[1]);
-//					if (time < date) {
-//						String name = names.get(i);
-//						names.set(i, names.get(j));
-//						names.set(j, name);
-//					}
-//				}
-//			}
-//		}
+		if (names != null && names.size() > 0) {
+			for (int i = 0; i < names.size(); i++) {
+				String[] videos = names.get(i).split("_");
+				int len = videos.length;
+				if (len < 3) {
+					break;
+				}
+				if (!TextUtils.isDigitsOnly(videos[len - 2])) {
+					break;
+				}
+				Long time = Long.parseLong(videos[len - 2]);
+				for (int j = i + 1; j < names.size(); j++) {
+					String[] videos1 = names.get(j).split("_");
+					
+					int lenth = videos1.length;
+					if (lenth < 3) {
+						return names;
+					}
+					if (!TextUtils.isDigitsOnly(videos1[len - 2])) {
+						return names;
+					}
+					Long date = Long.parseLong(videos1[len - 2]);
+					if (time < date) {
+						String name = names.get(i);
+						names.set(i, names.get(j));
+						names.set(j, name);
+					}
+				}
+			}
+		}
 
 		return names;
 	}
