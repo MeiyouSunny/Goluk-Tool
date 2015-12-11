@@ -98,7 +98,7 @@ import de.greenrobot.event.EventBus;
  */
 @SuppressLint("NewApi")
 public class CarRecorderActivity extends BaseActivity implements OnClickListener, OnTouchListener, IPCManagerFn,
-		IPopwindowFn{
+		IPopwindowFn {
 	private Handler mHandler = null;
 	/** 保存当前录制的视频类型 */
 	public VideoType mCurVideoType = VideoType.idle;
@@ -277,9 +277,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private ImageView new2;
 
 	private String SelfContextTag = "carrecorder";
-	
+
 	private String mLocationAddress = "";
-	
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -302,7 +301,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		lsp.setCallBackNotify(this);
 
 		mSettingData = lsp.getCurrentSetting();
-		mLocationAddress =  cn.com.mobnote.util.GolukFileUtils.loadString("loactionAddress", "");
+		mLocationAddress = cn.com.mobnote.util.GolukFileUtils.loadString("loactionAddress", "");
 
 		EventBus.getDefault().register(this);
 
@@ -326,7 +325,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				}
 			};
 		};
-		
+
 		initView();
 		setListener();
 		initIpcState(ipcState);// 初始化ipc的连接状态
@@ -518,10 +517,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 		}
-		
-		if("".equals(mLocationAddress)){
+
+		if ("".equals(mLocationAddress)) {
 			mAddr.setText("定位中");
-		}else {
+		} else {
 			mAddr.setText(mLocationAddress);
 		}
 
@@ -714,24 +713,25 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	public void start() {
 		if (null != mRtspPlayerView) {
 			mRtspPlayerView.setVisibility(View.VISIBLE);
+			String url = getRtspUrl();
+			GolukDebugUtils.e("xuhw", "CarrecorderActivity-------start--YYYYYY======url==" + url + "   "
+					+ mApp.mIPCControlManager.mProduceName);
+			mRtspPlayerView.setDataSource(url);
+			mRtspPlayerView.start();
+		}
+	}
+
+	private String getRtspUrl() {
+		if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+			return "rtsp://" + GolukApplication.mIpcIp + "/stream1";
+		} else if (IPCControlManager.G1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
+				|| IPCControlManager.G2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
 			String preUrl = getResources().getString(R.string.default_rtsp_pre);
 			String backUrl = getResources().getString(R.string.default_rtsp_back);
 			String url = preUrl + GolukApplication.mIpcIp + backUrl;
-
-			GolukDebugUtils.e("xuhw", "CarrecorderActivity-------start--YYYYYY======url==" + url);
-			
-			if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
-				
-			}
-			
-			url = "rtsp://192.168.62.1/stream1";
-			
-			GolukDebugUtils.e("xuhw", "CarrecorderActivity-------start--YYYYYY======url==" + url);
-
-			mRtspPlayerView.setDataSource(url);
-
-			mRtspPlayerView.start();
+			return url;
 		}
+		return "";
 	}
 
 	public void onEventMainThread(EventWifiConnect event) {
@@ -2059,39 +2059,35 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		return false;
 	}
 
-/*	@Override
-	public void LocationCallBack(String gpsJson) {
-		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
-		if (location == null) {
-			return;
-		}
-		// 保存经纬度
-		LngLat.lng = location.rawLon;
-		LngLat.lat = location.rawLat;
-
-		if (mApp.getContext() instanceof CarRecorderActivity) {
-			GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
-		}
-	}*/
+	/*
+	 * @Override public void LocationCallBack(String gpsJson) { BaiduPosition
+	 * location = JsonUtil.parseLocatoinJson(gpsJson); if (location == null) {
+	 * return; } // 保存经纬度 LngLat.lng = location.rawLon; LngLat.lat =
+	 * location.rawLat;
+	 * 
+	 * if (mApp.getContext() instanceof CarRecorderActivity) {
+	 * GetBaiduAddress.getInstance().searchAddress(location.rawLat,
+	 * location.rawLon); } }
+	 */
 
 	public void onEventMainThread(EventLocationFinish event) {
 		if (null == event) {
 			return;
 		}
-		
-		if(event.getCityCode().equals("-1")){//定位失败
-			if(mLocationAddress.equals("")){
+
+		if (event.getCityCode().equals("-1")) {// 定位失败
+			if (mLocationAddress.equals("")) {
 				mAddr.setText("未知街道");
-			}else{
+			} else {
 				mAddr.setText(mLocationAddress);
 			}
-		}else{//定位成功
-			if(event.getAddress() != null && !"".equals(event.getAddress())){
+		} else {// 定位成功
+			if (event.getAddress() != null && !"".equals(event.getAddress())) {
 				mLocationAddress = event.getAddress();
 				cn.com.mobnote.util.GolukFileUtils.saveString("loactionAddress", mLocationAddress);
 				mAddr.setText(mLocationAddress);
 			}
 		}
-		
+
 	}
 }

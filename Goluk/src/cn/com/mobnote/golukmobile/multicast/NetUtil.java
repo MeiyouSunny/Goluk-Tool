@@ -20,7 +20,7 @@ public class NetUtil {
 	private static final int MSG_H_ACCEPT_ERROR = 6;
 	/** 超时 */
 	private static final int MSG_H_TIMEOUT = 7;
-	
+
 	private static final String PRE_CONNECT_SIGN = "Goluk,good";
 
 	private DatagramPacket mPacket = null;
@@ -140,10 +140,13 @@ public class NetUtil {
 						mPacket = new DatagramPacket(recvbuf, 256);
 						GolukDebugUtils.e("", "++TestUDP--------findServerIpAddress-----accept socket Data");
 						mUdpSocket.receive(mPacket);
-						GolukDebugUtils.e("", "++TestUDP--------findServerIpAddress----accept Sucess!!!!!!!!");
+
 						int length = mPacket.getLength();
 						byte[] data = mPacket.getData();
 						String s = new String(data, 0, length - 1, "GBK");
+
+						GolukDebugUtils.e("", "++TestUDP--------findServerIpAddress----accept Sucess!!!!!!!!:	" + s);
+
 						if (s.startsWith(PRE_CONNECT_SIGN)) {
 							String address2 = mPacket.getAddress().toString();
 							receiveSucess(ssid, address2);
