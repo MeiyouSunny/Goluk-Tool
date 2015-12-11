@@ -93,6 +93,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private Button mParkingSleepBtn = null;
 	/**遥控器按键功能**/
 	private RelativeLayout mHandsetLayout;
+	/**停车休眠模式提示文字**/
+	private TextView mParkingSleepHintText = null;
+	/**停车安防模式提示文字**/
+	private TextView mParkingSecurityHintText = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -186,13 +190,36 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mParkingSleepLayout = (RelativeLayout) findViewById(R.id.parking_sleep_line);
 		mParkingSleepBtn = (Button) findViewById(R.id.btn_settings_parking_sleep);
 		mHandsetLayout = (RelativeLayout) findViewById(R.id.handset_line);
+		mParkingSleepHintText = (TextView) findViewById(R.id.tv_settings_parking_sleep_hint_text);
+		mParkingSecurityHintText = (TextView) findViewById(R.id.tv_settings_security_hint_text);
 		// ipc设备型号
-		if (!mIPCName.equals("G1")) {
-			mISPLayout.setVisibility(View.VISIBLE);
-//			mWonderfulLayout.setVisibility(View.VISIBLE);
-		} else {
+		if (mIPCName.equals("G1")) {
 			mISPLayout.setVisibility(View.GONE);
-//			mWonderfulLayout.setVisibility(View.GONE);
+			mPhotoQualityLayout.setVisibility(View.GONE);
+			mHandsetLayout.setVisibility(View.GONE);
+			mFatigueLayout.setVisibility(View.VISIBLE);
+			mImageFlipLayout.setVisibility(View.VISIBLE);
+			mParkingSleepLayout.setVisibility(View.VISIBLE);
+			mParkingSleepHintText.setText(this.getResources().getString(R.string.str_settings_sleep_hint_text_g1));
+			mParkingSecurityHintText.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g1));
+		} else if (mIPCName.equals("G2")) {
+			mISPLayout.setVisibility(View.VISIBLE);
+			mPhotoQualityLayout.setVisibility(View.GONE);
+			mFatigueLayout.setVisibility(View.GONE);
+			mImageFlipLayout.setVisibility(View.GONE);
+			mParkingSleepLayout.setVisibility(View.GONE);
+			mHandsetLayout.setVisibility(View.GONE);
+			mParkingSleepHintText.setVisibility(View.GONE);
+			mParkingSecurityHintText.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g2));
+		} else {
+			mISPLayout.setVisibility(View.VISIBLE);
+			mPhotoQualityLayout.setVisibility(View.VISIBLE);
+			mFatigueLayout.setVisibility(View.VISIBLE);
+			mImageFlipLayout.setVisibility(View.VISIBLE);
+			mParkingSleepLayout.setVisibility(View.VISIBLE);
+			mHandsetLayout.setVisibility(View.VISIBLE);
+			mParkingSleepHintText.setText(this.getResources().getString(R.string.str_settings_sleep_hint_text_t1));
+			mParkingSecurityHintText.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g1));
 		}
 
 		mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
