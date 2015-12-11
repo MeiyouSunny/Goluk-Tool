@@ -1259,7 +1259,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * @date 2015年3月8日
 	 */
 	private void stopTrimVideo() {
-		mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT, CarRecorderActivity.QUERYFILETIME);
+		if (!IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+			mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT, CarRecorderActivity.QUERYFILETIME);
+		}
 		mShootTime = 0;
 		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 		if (null != m8sTimer) {
@@ -1461,34 +1463,41 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					+ param2);
 			GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord====1111111========param1=" + param1
 					+ "=====param2=" + param2);
-			TriggerRecord record = IpcDataParser.parseTriggerRecordResult((String) param2);
-			if (null != record) {
-				if (RESULE_SUCESS == param1) {
-					mRecordVideFileName = record.fileName;
-					videoname = mRecordVideFileName;
-					GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===555555========type=" + record.type);
-					GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord====222222========mRecordVideFileName="
-							+ mRecordVideFileName);
-					// 精彩视频
-					if (TYPE_SHORTCUT == record.type) {
-						GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord==333333==========MOUNTS========");
-						mHandler.sendEmptyMessage(MOUNTS);
+			if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+				mHandler.sendEmptyMessage(MOUNTS);
+			} else {
+				TriggerRecord record = IpcDataParser.parseTriggerRecordResult((String) param2);
+				if (null != record) {
+					if (RESULE_SUCESS == param1) {
+						mRecordVideFileName = record.fileName;
+						videoname = mRecordVideFileName;
+						GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===555555========type="
+								+ record.type);
+						GFileUtils
+								.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord====222222========mRecordVideFileName="
+										+ mRecordVideFileName);
+						// 精彩视频
+						if (TYPE_SHORTCUT == record.type) {
+							GFileUtils
+									.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord==333333==========MOUNTS========");
+							mHandler.sendEmptyMessage(MOUNTS);
+						} else {
+							GFileUtils
+									.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===444444=========EMERGENCY========");
+							mHandler.sendEmptyMessage(EMERGENCY);
+						}
 					} else {
 						GFileUtils
-								.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===444444=========EMERGENCY========");
-						mHandler.sendEmptyMessage(EMERGENCY);
+								.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===66666======= not success ==========");
+						videoTriggerFail();
 					}
 				} else {
+					GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===6666====not success====");
 					GFileUtils
-							.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===66666======= not success ==========");
+							.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===77777======= not success ==========");
 					videoTriggerFail();
 				}
-			} else {
-				GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===6666====not success====");
-				GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===77777======= not success ==========");
-				videoTriggerFail();
 			}
-
 			break;
 		// 单文件查询
 		case IPC_VDCPCmd_SingleQuery:
@@ -1925,21 +1934,21 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * @throws
 	 */
 	public List<String> shortNames(List<String> names) {
-		if (names != null && names.size() > 0) {
-			for (int i = 0; i < names.size(); i++) {
-				String[] videos = names.get(i).split("_");
-				Long time = Long.parseLong(videos[1]);
-
-				for (int j = i + 1; j < names.size(); j++) {
-					Long date = Long.parseLong(names.get(j).split("_")[1]);
-					if (time < date) {
-						String name = names.get(i);
-						names.set(i, names.get(j));
-						names.set(j, name);
-					}
-				}
-			}
-		}
+//		if (names != null && names.size() > 0) {
+//			for (int i = 0; i < names.size(); i++) {
+//				String[] videos = names.get(i).split("_");
+//				Long time = Long.parseLong(videos[1]);
+//
+//				for (int j = i + 1; j < names.size(); j++) {
+//					Long date = Long.parseLong(names.get(j).split("_")[1]);
+//					if (time < date) {
+//						String name = names.get(i);
+//						names.set(i, names.get(j));
+//						names.set(j, name);
+//					}
+//				}
+//			}
+//		}
 
 		return names;
 	}
