@@ -90,7 +90,6 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);  //设置 缓存模式
 		mWebView.setDownloadListener(this);
 		mWebView.setWebViewClient(new WebViewClient() {
-
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				GolukDebugUtils.e("", "Error--------------------url:" + url);
@@ -121,9 +120,16 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 				mErrorState = true;
 				mWebView.setVisibility(View.GONE);
-				mErrorLayout.setVisibility(View.VISIBLE);
+				if(!TextUtils.isEmpty(failingUrl) && !TextUtils.isEmpty(description) &&
+						description.contains("ERR_UNKNOWN_URL_SCHEME")) {
+					Intent i = new Intent(Intent.ACTION_VIEW);
+					i.setData(Uri.parse(failingUrl));
+					startActivity(i);
+					mErrorLayout.setVisibility(View.GONE);
+				} else {
+					mErrorLayout.setVisibility(View.VISIBLE);
+				}
 			}
-
 		});
 
 		if (!itIndexMore.getExtras().toString().equals("")) {
