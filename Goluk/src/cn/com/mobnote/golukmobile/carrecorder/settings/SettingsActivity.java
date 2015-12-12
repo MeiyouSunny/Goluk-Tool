@@ -60,8 +60,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private TextView mSensitivityText = null;
 	/** HDR模式 **/
 	private Button mISPBtn = null;
-	/**HDR模式line**/
-	private RelativeLayout mISPLayout ,mWonderfulLayout;
+	/** HDR模式line **/
+	private RelativeLayout mISPLayout, mWonderfulLayout;
 	/** HDR模式 0关闭 1打开 **/
 	private int mISPSwitch = 0;
 	/** 精彩视频拍摄提示音 **/
@@ -79,23 +79,24 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private String[] mResolutionArray = null;
 	private String[] mBitrateArray = null;
 	private String[] mArrayText = null;
-	/**照片质量line**/
+	/** 照片质量line **/
 	private RelativeLayout mPhotoQualityLayout;
-//	private Button mPhotoQualityBtn = null;
-	/**疲劳驾驶**/
+	private TextView mPhotoQualityText = null;
+	/** 疲劳驾驶 **/
 	private RelativeLayout mFatigueLayout;
 	private Button mFatigueBtn = null;
-	/**图像自动翻转**/
+	/** 图像自动翻转 **/
 	private RelativeLayout mImageFlipLayout;
 	private Button mImageFlipBtn = null;
-	/**停车休眠模式**/
+	/** 停车休眠模式 **/
 	private RelativeLayout mParkingSleepLayout;
 	private Button mParkingSleepBtn = null;
-	/**遥控器按键功能**/
+	/** 遥控器按键功能 **/
 	private RelativeLayout mHandsetLayout;
-	/**停车休眠模式提示文字**/
+	private TextView mHandsetText = null;
+	/** 停车休眠模式提示文字 **/
 	private TextView mParkingSleepHintText = null;
-	/**停车安防模式提示文字**/
+	/** 停车安防模式提示文字 **/
 	private TextView mParkingSecurityHintText = null;
 
 	@Override
@@ -147,17 +148,17 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		// 获取ISP模式
 		boolean getISPMode = GolukApplication.getInstance().getIPCControlManager().getISPMode();
 		GolukDebugUtils.e("", "--------------SettingsActivity-----getISPMode：" + getISPMode);
-		
-		//照片质量false
+
+		// 照片质量false
 		boolean getPhotoQualityMode = GolukApplication.getInstance().getIPCControlManager().getPhotoQualityMode();
 		GolukDebugUtils.e("", "--------------SettingsActivity-----getPhotoQualityMode：" + getPhotoQualityMode);
-		//获取疲劳驾驶、图像自动翻转、停车休眠模式
+		// 获取疲劳驾驶、图像自动翻转、停车休眠模式
 		boolean getFunctionMode = GolukApplication.getInstance().getIPCControlManager().getFunctionMode();
 		GolukDebugUtils.e("", "--------------SettingsActivity-----getFunctionMode：" + getFunctionMode);
-		//获取遥控器按键功能false
+		// 获取遥控器按键功能false
 		boolean getKitMode = GolukApplication.getInstance().getIPCControlManager().getKitMode();
 		GolukDebugUtils.e("", "--------------SettingsActivity-----getKitMode：" + getKitMode);
-		
+
 		showLoading();
 	}
 
@@ -191,6 +192,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mHandsetLayout = (RelativeLayout) findViewById(R.id.handset_line);
 		mParkingSleepHintText = (TextView) findViewById(R.id.tv_settings_parking_sleep_hint_text);
 		mParkingSecurityHintText = (TextView) findViewById(R.id.tv_settings_security_hint_text);
+		mPhotoQualityText = (TextView) findViewById(R.id.tv_settings_photographic_quality);
+		mHandsetText = (TextView) findViewById(R.id.tv_settings_handset);
 		// ipc设备型号
 		if (mIPCName.equals("G1")) {
 			mISPLayout.setVisibility(View.GONE);
@@ -200,7 +203,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mImageFlipLayout.setVisibility(View.VISIBLE);
 			mParkingSleepLayout.setVisibility(View.VISIBLE);
 			mParkingSleepHintText.setText(this.getResources().getString(R.string.str_settings_sleep_hint_text_g1));
-			mParkingSecurityHintText.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g1));
+			mParkingSecurityHintText
+					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g1));
 		} else if (mIPCName.equals("G2")) {
 			mISPLayout.setVisibility(View.VISIBLE);
 			mPhotoQualityLayout.setVisibility(View.GONE);
@@ -209,7 +213,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mParkingSleepLayout.setVisibility(View.GONE);
 			mHandsetLayout.setVisibility(View.GONE);
 			mParkingSleepHintText.setVisibility(View.GONE);
-			mParkingSecurityHintText.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g2));
+			mParkingSecurityHintText
+					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g2));
 		} else {
 			mISPLayout.setVisibility(View.VISIBLE);
 			mPhotoQualityLayout.setVisibility(View.VISIBLE);
@@ -218,7 +223,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mParkingSleepLayout.setVisibility(View.VISIBLE);
 			mHandsetLayout.setVisibility(View.VISIBLE);
 			mParkingSleepHintText.setText(this.getResources().getString(R.string.str_settings_sleep_hint_text_t1));
-			mParkingSecurityHintText.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g1));
+			mParkingSecurityHintText
+					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g1));
 		}
 
 		mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
@@ -252,11 +258,11 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		findViewById(R.id.hfccsz_line).setOnClickListener(this);// 恢复出厂设置
 		findViewById(R.id.bbxx_line).setOnClickListener(this);// 版本信息
 		findViewById(R.id.mBugLayout).setOnClickListener(this);// 购买降压线
-		
-		mFatigueBtn.setOnClickListener(this);//疲劳驾驶
-		mImageFlipBtn.setOnClickListener(this);//图像自动翻转
-		mParkingSleepBtn.setOnClickListener(this);//停车休眠模式
-		mHandsetLayout.setOnClickListener(this);//遥控器按键功能
+
+		mFatigueBtn.setOnClickListener(this);// 疲劳驾驶
+		mImageFlipBtn.setOnClickListener(this);// 图像自动翻转
+		mParkingSleepBtn.setOnClickListener(this);// 停车休眠模式
+		mHandsetLayout.setOnClickListener(this);// 遥控器按键功能
 	}
 
 	/**
@@ -416,7 +422,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					GolukUtils.showToast(this, "设置失败");
 				}
 				break;
-			//疲劳驾驶
+			// 疲劳驾驶
 			case R.id.btn_settings_fatigue:
 				if (driveFatigue == 1) {
 					driveFatigue = 0;
@@ -426,12 +432,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 				boolean fatigue = GolukApplication.getInstance().getIPCControlManager().setFunctionMode(getSetJson());
 				if (fatigue) {
-					GolukUtils.showToast(this, "设置...");
+					GolukUtils.showToast(this, "设置成功");
 				} else {
 					GolukUtils.showToast(this, "设置失败");
 				}
 				break;
-			//图像自动翻转
+			// 图像自动翻转
 			case R.id.btn_settings_image_flip:
 				if (autoRotation == 1) {
 					autoRotation = 0;
@@ -446,7 +452,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					GolukUtils.showToast(this, "设置失败");
 				}
 				break;
-			//停车休眠
+			// 停车休眠
 			case R.id.btn_settings_parking_sleep:
 				if (dormant == 1) {
 					dormant = 0;
@@ -454,16 +460,31 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					dormant = 1;
 				}
 
-				boolean parkingSleep = GolukApplication.getInstance().getIPCControlManager().setFunctionMode(getSetJson());
+				boolean parkingSleep = GolukApplication.getInstance().getIPCControlManager()
+						.setFunctionMode(getSetJson());
 				if (parkingSleep) {
 					GolukUtils.showToast(this, "设置成功");
 				} else {
 					GolukUtils.showToast(this, "设置失败");
 				}
 				break;
-			//遥控器按键功能
+			// 遥控器按键功能
 			case R.id.handset_line:
-				
+				if (1 == record && 1 == snapshot) {
+					record = 1;
+					snapshot = 0;
+					mHandsetText.setText("精彩视频+照片");
+				} else if (1 == record && 0 == snapshot) {
+					record = 1;
+					snapshot = 1;
+					mHandsetText.setText("精彩视频");
+				}
+				boolean handset = GolukApplication.getInstance().getIPCControlManager().setKitMode(setKitJson());
+				if (handset) {
+					GolukUtils.showToast(this, "设置成功");
+				} else {
+					GolukUtils.showToast(this, "设置失败");
+				}
 				break;
 			default:
 				break;
@@ -787,35 +808,35 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mISPBtn.setBackgroundResource(R.drawable.set_close_btn);
 		}
 	}
-	
+
 	private void getPhotoQualityCallback(int event, int msg, int param1, Object param2) {
-		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg
-				+ "==data:" + (String) param2+"---param1:"+param1);
+		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
+				+ (String) param2 + "---param1:" + param1);
 	}
 
 	private void setPhotoQualityCallback(int event, int msg, int param1, Object param2) {
-		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg
-				+ "==data:" + (String) param2+"---param1:"+param1);
+		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
+				+ (String) param2 + "---param1:" + param1);
 	}
 
 	private void getFunctionCallback(int event, int msg, int param1, Object param2) {
-		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg
-				+ "==data:" + (String) param2+"---param1:"+param1);
+		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
+				+ (String) param2 + "---param1:" + param1);
 		if (RESULE_SUCESS == param1) {
 			parseJson((String) param2);
 		}
 	}
 
 	private void setFunctionCallback(int event, int msg, int param1, Object param2) {
-		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg
-				+ "==data:" + (String) param2+"---param1:"+param1);
+		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
+				+ (String) param2 + "---param1:" + param1);
 		if (RESULE_SUCESS == param1) {
 			if (1 == dormant) {
 				mParkingSleepBtn.setBackgroundResource(R.drawable.set_open_btn);
 			} else {
 				mParkingSleepBtn.setBackgroundResource(R.drawable.set_close_btn);
 			}
-			
+
 			if (1 == driveFatigue) {
 				mFatigueBtn.setBackgroundResource(R.drawable.set_open_btn);
 			} else {
@@ -833,15 +854,25 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	}
 
 	private void getKitConfigCallback(int event, int msg, int param1, Object param2) {
-		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg
-				+ "==data:" + (String) param2+"---param1:"+param1);
+		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
+				+ (String) param2 + "---param1:" + param1);
+		parseKitJson((String) param2);
 	}
 
 	private void setKitConfigCallback(int event, int msg, int param1, Object param2) {
-		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg
-				+ "==data:" + (String) param2+"---param1:"+param1);
+		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
+				+ (String) param2 + "---param1:" + param1);
+		if (RESULE_SUCESS == param1) {
+			if (1 == record && 1 == snapshot) {
+				mHandsetText.setText("精彩视频+照片");
+			} else if (1 == record && 0 == snapshot) {
+				mHandsetText.setText("精彩视频");
+			}
+		} else {
+			GolukUtils.showToast(this, "设置功能设置失败");
+		}
 	}
-	
+
 	int recbySec = 0;
 	int moveMonitor = 0;
 	// 停车休眠
@@ -908,29 +939,71 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		}
 		return "";
 	}
-	
+
 	int quality = 0;
 	String resolution = "";
-	
-	private void parsePhotoQualityJson(String str){
+	int interval = 0;
+
+	private void parsePhotoQualityJson(String str) {
 		try {
 			JSONObject obj = new JSONObject(str);
 			obj.optInt("quality");
 			obj.optString("resolution");
-			if("1080P".equals(resolution)) {
-				
-			} else if ("720P".equals(resolution)) {
-				
-			} else if ("480P".equals(resolution)) {
-				
+			if ("1080P".equals(resolution) || "1080p".equals(resolution) || "1080".equals(resolution)) {
+				mPhotoQualityText.setText("1080P高质量");
+			} else if ("720P".equals(resolution) || "720p".equals(resolution) || "720".equals(resolution)) {
+				mPhotoQualityText.setText("720P中");
+			} else if ("480P".equals(resolution) || "480p".equals(resolution) || "480".equals(resolution)) {
+				mPhotoQualityText.setText("480P低");
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	private void setPhotoQualityJson(){
-		
+
+	private String setPhotoQualityJson() {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("quality", quality);
+			obj.put("resolution", resolution);
+			obj.put("interval", interval);
+
+			return obj.toString();
+		} catch (Exception e) {
+
+		}
+		return "";
+	}
+
+	int record = 0;
+	int snapshot = 0;
+	int wifi = 0;
+	int long_shut = 0;
+
+	private void parseKitJson(String str) {
+		try {
+			JSONObject obj = new JSONObject(str);
+			obj.optInt("record");
+			obj.optInt("snapshot");
+			obj.optInt("wifi");
+			obj.optInt("long_shut");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private String setKitJson() {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("record", record);
+			obj.put("snapshot", snapshot);
+			obj.put("wifi", wifi);
+			obj.put("long_shut", long_shut);
+			return obj.toString();
+		} catch (Exception e) {
+
+		}
+		return "";
 	}
 
 	/**
