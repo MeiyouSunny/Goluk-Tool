@@ -29,7 +29,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -271,7 +270,6 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 				String fileName = filename;
 				fileName = fileName.replace(".mp4", "");
 				videoUrl = "http://" + ip + "/api/video?id=" + fileName;
-				Log.v("dengting", "videoUrl =" + videoUrl);
 				image = "http://" + ip + "/api/thumb?id=" + fileName;
 			} else {
 				String fileName = filename;
