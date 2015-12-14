@@ -133,6 +133,25 @@
         <item>720P高质量</item>
         <item>720P中等质量</item>
     </string-array>
+    <string-array name="list_quality_list">
+        <item>1080P</item>
+        <item>720P</item>
+        <item>480P</item>
+    </string-array>
+    
+     <string-array name="list_photo_quality_ui">
+        <item>1080P高</item>
+        <item>720P中</item>
+        <item>480低</item>
+    </string-array>
+    <string-array name="list_photo_quality_list">
+        <item>1080p</item>
+        <item>720p</item>
+        <item>480p</item>
+    </string-array>
+    
+   
+    
     <!-- G1分辨率 -->
     <string-array name="list_quality_resolution1">
         <item>1080P</item>

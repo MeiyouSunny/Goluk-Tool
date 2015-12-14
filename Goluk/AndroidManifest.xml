@@ -218,6 +218,11 @@
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.settings.PhotoQualityActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
             android:name="cn.com.mobnote.golukmobile.carrecorder.settings.StorageCpacityQueryActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >

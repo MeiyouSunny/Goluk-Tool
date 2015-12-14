@@ -3,6 +3,15 @@ package cn.com.mobnote.golukmobile.carrecorder.settings;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -12,22 +21,14 @@ import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.entity.RecordStorgeState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.util.GolukFastJsonUtil;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
-import android.os.Bundle;
-import android.content.Intent;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 /**
  * 
@@ -85,7 +86,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private String[] mArrayText = null;
 	/** 照片质量line **/
 	private RelativeLayout mPhotoQualityLayout;
-	// private Button mPhotoQualityBtn = null;
+
+	private TextView mPhotoQualityText = null;
 	/** 疲劳驾驶 **/
 	private RelativeLayout mFatigueLayout;
 	private Button mFatigueBtn = null;
@@ -97,6 +99,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private Button mParkingSleepBtn = null;
 	/** 遥控器按键功能 **/
 	private RelativeLayout mHandsetLayout;
+	private TextView mHandsetText = null;
+
 	/** 停车休眠模式提示文字 **/
 	private TextView mParkingSleepHintText = null;
 	/** 停车安防模式提示文字 **/
@@ -156,9 +160,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		boolean getISPMode = GolukApplication.getInstance().getIPCControlManager().getISPMode();
 		GolukDebugUtils.e("", "--------------SettingsActivity-----getISPMode：" + getISPMode);
 
-		// 照片质量false
-		boolean getPhotoQualityMode = GolukApplication.getInstance().getIPCControlManager().getPhotoQualityMode();
-		GolukDebugUtils.e("", "--------------SettingsActivity-----getPhotoQualityMode：" + getPhotoQualityMode);
 		// 获取疲劳驾驶、图像自动翻转、停车休眠模式
 		boolean getFunctionMode = GolukApplication.getInstance().getIPCControlManager().getFunctionMode();
 		GolukDebugUtils.e("", "--------------SettingsActivity-----getFunctionMode：" + getFunctionMode);
@@ -168,7 +169,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
 			boolean t1VoiceState = GolukApplication.getInstance().getIPCControlManager().getAudioCfg_T1();
-
+			// 照片质量false
+			boolean getPhotoQualityMode = GolukApplication.getInstance().getIPCControlManager().getPhotoQualityMode();
+			GolukDebugUtils.e("", "--------------SettingsActivity-----getPhotoQualityMode：" + getPhotoQualityMode);
 			GolukDebugUtils.e("", "--------------SettingsActivity-----t1VoiceState：" + t1VoiceState);
 		}
 
@@ -178,6 +181,27 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private void checkGetState() {
 		if (getRecordState && getMotionCfg) {
 			closeLoading();
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		GolukDebugUtils.e("", "photo------requestCode :" + requestCode + "   resultCode:" + resultCode);
+		if (10 == requestCode) {
+			if (20 == resultCode) {
+				if (null != data) {
+					String photoselect = data.getStringExtra("photoselect");
+					mPhtoBean.resolution = photoselect;
+					mCurrentResolution = photoselect;
+					refreshPhotoQuality();
+					
+					String requestS = GolukFastJsonUtil.setParseObj(mPhtoBean);
+					
+					GolukDebugUtils.e("", "photo------requestS :" + requestS);
+					GolukApplication.getInstance().getIPCControlManager().setPhotoQualityMode(requestS);
+				}
+			}
 		}
 	}
 
@@ -205,6 +229,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mHandsetLayout = (RelativeLayout) findViewById(R.id.handset_line);
 		mParkingSleepHintText = (TextView) findViewById(R.id.tv_settings_parking_sleep_hint_text);
 		mParkingSecurityHintText = (TextView) findViewById(R.id.tv_settings_security_hint_text);
+		mPhotoQualityText = (TextView) findViewById(R.id.tv_settings_photographic_quality);
+		mHandsetText = (TextView) findViewById(R.id.tv_settings_handset);
 		// ipc设备型号
 		if (mIPCName.equals("G1")) {
 			mISPLayout.setVisibility(View.GONE);
@@ -269,6 +295,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		findViewById(R.id.hfccsz_line).setOnClickListener(this);// 恢复出厂设置
 		findViewById(R.id.bbxx_line).setOnClickListener(this);// 版本信息
 		findViewById(R.id.mBugLayout).setOnClickListener(this);// 购买降压线
+
+		mPhotoQualityLayout.setOnClickListener(this);
 
 		mFatigueBtn.setOnClickListener(this);// 疲劳驾驶
 		mImageFlipBtn.setOnClickListener(this);// 图像自动翻转
@@ -431,7 +459,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 				boolean fatigue = GolukApplication.getInstance().getIPCControlManager().setFunctionMode(getSetJson());
 				if (fatigue) {
-					GolukUtils.showToast(this, "设置...");
+					GolukUtils.showToast(this, "设置成功");
 				} else {
 					GolukUtils.showToast(this, "设置失败");
 				}
@@ -470,6 +498,26 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			// 遥控器按键功能
 			case R.id.handset_line:
 
+				if (1 == record && 1 == snapshot) {
+					record = 1;
+					snapshot = 0;
+					mHandsetText.setText("精彩视频+照片");
+				} else if (1 == record && 0 == snapshot) {
+					record = 1;
+					snapshot = 1;
+					mHandsetText.setText("精彩视频");
+				}
+				boolean handset = GolukApplication.getInstance().getIPCControlManager().setKitMode(setKitJson());
+				if (handset) {
+					GolukUtils.showToast(this, "设置成功");
+				} else {
+					GolukUtils.showToast(this, "设置失败");
+				}
+
+				break;
+			case R.id.photographic_quality_line:
+				// 点击图片质量
+				click_photoQuality();
 				break;
 			default:
 				break;
@@ -477,6 +525,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		} else {
 			dialog();
 		}
+	}
+
+	// 点击照片质量
+	private void click_photoQuality() {
+		Intent intent = new Intent(this, PhotoQualityActivity.class);
+		intent.putExtra("photoselect", mCurrentResolution);
+		this.startActivityForResult(intent, 10);
 	}
 
 	/** T1设备的 声音录制 开关 */
@@ -749,9 +804,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			} else if (msg == IPC_VDCP_Msg_SetISPMode) {
 				setISPModeCallback(event, msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_GetPicCfg) {// 获取照片质量
-				getPhotoQualityCallback(event, msg, param1, param2);
+				IPCCallBackGetPhotoQuality(event, msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_SetPicCfg) {// 设置照片质量
-				setPhotoQualityCallback(event, msg, param1, param2);
+				IPCCallBackSetPhotoQuality(event, msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_GetFunctionSwitch) {// 获取疲劳驾驶、图像自动翻转、停车休眠模式
 				getFunctionCallback(event, msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_SetFunctionSwitch) {// 设置疲劳驾驶、图像自动翻转、停车休眠模式
@@ -767,6 +822,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			}
 		}
 	}
+	
+	
 
 	private void IPCCallBack_setRecAudioCfg(int msg, int param1, Object param2) {
 		closeLoading();
@@ -862,14 +919,21 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		}
 	}
 
-	private void getPhotoQualityCallback(int event, int msg, int param1, Object param2) {
+	private void IPCCallBackGetPhotoQuality(int event, int msg, int param1, Object param2) {
 		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
 				+ (String) param2 + "---param1:" + param1);
+		this.closeLoading();
+		if (RESULE_SUCESS == param1) {
+			parsePhotoQualityJson((String) param2);
+		}
 	}
 
-	private void setPhotoQualityCallback(int event, int msg, int param1, Object param2) {
+	private void IPCCallBackSetPhotoQuality(int event, int msg, int param1, Object param2) {
 		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
 				+ (String) param2 + "---param1:" + param1);
+		if (RESULE_SUCESS == param1) {
+			GolukApplication.getInstance().getIPCControlManager().getPhotoQualityMode();
+		}
 	}
 
 	private void getFunctionCallback(int event, int msg, int param1, Object param2) {
@@ -909,11 +973,22 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private void getKitConfigCallback(int event, int msg, int param1, Object param2) {
 		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
 				+ (String) param2 + "---param1:" + param1);
+		parseKitJson((String) param2);
 	}
 
 	private void setKitConfigCallback(int event, int msg, int param1, Object param2) {
 		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
 				+ (String) param2 + "---param1:" + param1);
+
+		if (RESULE_SUCESS == param1) {
+			if (1 == record && 1 == snapshot) {
+				mHandsetText.setText("精彩视频+照片");
+			} else if (1 == record && 0 == snapshot) {
+				mHandsetText.setText("精彩视频");
+			}
+		} else {
+			GolukUtils.showToast(this, "设置功能设置失败");
+		}
 	}
 
 	int recbySec = 0;
@@ -986,25 +1061,85 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	int quality = 0;
 	String resolution = "";
 
+	int interval = 0;
+
+	IPCSettingPhotoBean mPhtoBean = null;
+
+	public static final int PHOTO_1080 = 0;
+	public static final int PHOTO_720 = 1;
+	public static final int PHOTO_480 = 2;
+
+	private String mCurrentResolution = "";
+
 	private void parsePhotoQualityJson(String str) {
+
+		mPhtoBean = GolukFastJsonUtil.getParseObj(str, IPCSettingPhotoBean.class);
+		if (null == mPhtoBean) {
+			return;
+		}
+		refreshPhotoQuality();
+
+	}
+
+	private void refreshPhotoQuality() {
+		if ("1080P".equals(mPhtoBean.resolution) || "1080p".equals(mPhtoBean.resolution)
+				|| "1080".equals(mPhtoBean.resolution)) {
+			mPhotoQualityText.setText("1080P高质量");
+			mCurrentResolution = mPhtoBean.resolution;
+		} else if ("720P".equals(mPhtoBean.resolution) || "720p".equals(mPhtoBean.resolution)
+				|| "720".equals(mPhtoBean.resolution)) {
+			mPhotoQualityText.setText("720P中");
+			mCurrentResolution = mPhtoBean.resolution;
+		} else if ("480P".equals(mPhtoBean.resolution) || "480p".equals(mPhtoBean.resolution)
+				|| "480".equals(mPhtoBean.resolution)) {
+			mPhotoQualityText.setText("480P低");
+			mCurrentResolution = mPhtoBean.resolution;
+		}
+	}
+
+	private String setPhotoQualityJson() {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("quality", quality);
+			obj.put("resolution", resolution);
+			obj.put("interval", interval);
+
+			return obj.toString();
+		} catch (Exception e) {
+
+		}
+		return "";
+	}
+
+	int record = 0;
+	int snapshot = 0;
+	int wifi = 0;
+	int long_shut = 0;
+
+	private void parseKitJson(String str) {
 		try {
 			JSONObject obj = new JSONObject(str);
-			obj.optInt("quality");
-			obj.optString("resolution");
-			if ("1080P".equals(resolution)) {
-
-			} else if ("720P".equals(resolution)) {
-
-			} else if ("480P".equals(resolution)) {
-
-			}
+			obj.optInt("record");
+			obj.optInt("snapshot");
+			obj.optInt("wifi");
+			obj.optInt("long_shut");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void setPhotoQualityJson() {
+	private String setKitJson() {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("record", record);
+			obj.put("snapshot", snapshot);
+			obj.put("wifi", wifi);
+			obj.put("long_shut", long_shut);
+			return obj.toString();
+		} catch (Exception e) {
 
+		}
+		return "";
 	}
 
 	/**

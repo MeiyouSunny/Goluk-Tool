@@ -640,7 +640,6 @@
                     android:layout_toLeftOf="@+id/imagebtn_settings_handset"
                     android:gravity="center_vertical"
                     android:paddingRight="10dp"
-                    android:text="视频＋图片"
                     android:textColor="@color/setting_right_text_color"
                     android:textSize="15sp" />
 
