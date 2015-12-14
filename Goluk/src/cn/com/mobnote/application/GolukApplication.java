@@ -1239,6 +1239,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					getVideoEncodeCfg();
 				}
 				break;
+			case IPC_VDCPCmd_SetRecAudioCfg:
+				// T1的设置声音录制开关回调
+				if (param1 == RESULE_SUCESS) {
+					getVideoEncoderCtg_T1();
+				}
+				break;
 			case IPC_VDCP_Msg_IPCKit:
 				SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
 				boolean isbind = preferences.getBoolean("isbind", false);
@@ -1356,6 +1362,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public void TalkNotifyCallBack(int type, String data) {
 	}
 
+	// 获取T1设备的 声音录制的开关
+	private void getVideoEncoderCtg_T1() {
+		if (GolukApplication.getInstance().getIpcIsLogin()) {
+			mIPCControlManager.getAudioCfg_T1();
+		}
+	}
+
 	/**
 	 * 获取音视频配置信息
 	 * 
@@ -1364,7 +1377,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 */
 	private void getVideoEncodeCfg() {
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
-			GolukApplication.getInstance().getIPCControlManager().getVideoEncodeCfg(0);
+			getIPCControlManager().getVideoEncodeCfg(0);
 		}
 	}
 

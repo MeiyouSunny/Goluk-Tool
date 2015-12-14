@@ -549,6 +549,17 @@ public class JsonUtil {
 		return null;
 	}
 
+	public static String getVideoConfigJson_T1(int state) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("AudioEnable", state);
+
+			return obj.toString();
+		} catch (Exception e) {
+			return "";
+		}
+	}
+
 	public static BaiduPosition parseLocatoinJson(String jsonData) {
 		if (null == jsonData || "".equals(jsonData) || 0 >= jsonData.length()) {
 			return null;

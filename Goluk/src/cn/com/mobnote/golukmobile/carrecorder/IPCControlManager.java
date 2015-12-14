@@ -441,6 +441,17 @@ public class IPCControlManager implements IPCManagerFn {
 				IPC_VDCPCmd_SetVideoEncodeCfg, json);
 	}
 
+	public boolean setAudioCfg_T1(int state) {
+		String json = JsonUtil.getVideoConfigJson_T1(state);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPC_VDCPCmd_SetRecAudioCfg, json);
+	}
+
+	public boolean getAudioCfg_T1() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPC_VDCPCmd_GetRecAudioCfg, "");
+	}
+
 	/**
 	 * 设置IPC行车影像开始录制
 	 * 
