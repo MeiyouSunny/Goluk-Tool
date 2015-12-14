@@ -27,7 +27,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
-
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.SurfaceHolder;
@@ -186,6 +185,10 @@ public class VitamioPlayerActivity extends BaseActivity implements OnCompletionL
 			if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)) {
 				String fileName = filename;
 				fileName = fileName.replace(".mp4", "");
+				int index = fileName.lastIndexOf("TX");
+				if (index > 0) {
+					fileName = fileName.substring(0, index - 1);
+				}
 				playUrl = "http://" + ip + "/api/video?id=" + fileName;
 				image = "http://" + ip + "/api/thumb?id=" + fileName;
 			} else {

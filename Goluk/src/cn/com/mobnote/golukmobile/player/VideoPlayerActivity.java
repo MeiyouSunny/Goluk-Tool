@@ -269,6 +269,10 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 			if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)) {
 				String fileName = filename;
 				fileName = fileName.replace(".mp4", "");
+				int index = fileName.lastIndexOf("TX");
+				if (index > 0) {
+					fileName = fileName.substring(0, index - 1);
+				}
 				videoUrl = "http://" + ip + "/api/video?id=" + fileName;
 				image = "http://" + ip + "/api/thumb?id=" + fileName;
 			} else {
