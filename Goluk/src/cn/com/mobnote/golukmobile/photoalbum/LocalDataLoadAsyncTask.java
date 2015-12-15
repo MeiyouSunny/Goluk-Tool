@@ -49,7 +49,7 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 				String videoPath = mFilePath + videoPaths[type] + fileName;
 				File videoFile = new File(videoPath);
 				if (videoFile.exists()) {
-					String size = FileInfoManagerUtils.getFileSize(videoFile);
+					String size = String.format("%.1f", videoFile.length() / 1024.f / 1024.f) + "MB";
 					// 判断视频类别,WND1_,URG1_文件已这种格式开头为 8s/紧急
 					String[] names = fileName.split("_");
 					int hp = 0;

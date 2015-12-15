@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile.photoalbum;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,12 +124,12 @@ public class FileInfoManagerUtils {
 	 */
 	public static List<String> getVideoConfigFile(String path) {
 		List<String> data = new ArrayList<String>();
-
+		FileInputStream fin = null;
 		File file = new File(path);
 		if (file.exists()) {
 			String str = "";
 			try {
-				FileInputStream fin = new FileInputStream(path);
+				fin = new FileInputStream(path);
 				int length = fin.available();
 				if (length <= 0) {
 					fin.close();
@@ -143,6 +144,14 @@ public class FileInfoManagerUtils {
 					return data;
 				}
 			} catch (Exception e) {
+				if (fin != null) {
+					try {
+						fin.close();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
 				e.printStackTrace();
 			}
 
@@ -176,7 +185,16 @@ public class FileInfoManagerUtils {
 			fis = new FileInputStream(f);
 			int fileLen = fis.available();
 			size = String.format("%.1f", fileLen / 1024.f / 1024.f) + "MB";
+			fis.close();
 		} catch (Exception e) {
+			if (fis != null) {
+				try {
+					fis.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
 			e.printStackTrace();
 		}
 		return size;
