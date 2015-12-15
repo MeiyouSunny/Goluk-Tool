@@ -232,6 +232,7 @@ public class AssetsFileUtils {
 	 * 方法追加文件：使用FileWriter
 	 */
 	public static void appendFileData(String path, String content) {
+		FileWriter writer = null;
 		try {
 			File file = new File(path);
 			if(!file.exists()){
@@ -241,12 +242,20 @@ public class AssetsFileUtils {
 				file.createNewFile();
 			}
 			//打开一个写文件器，构造函数中的第二个参数true表示以追加形式写文件
-			FileWriter writer = new FileWriter(path, true);
+			writer = new FileWriter(path, true);
 			writer.write(content);
-			writer.close();
 		}
 		catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 	
