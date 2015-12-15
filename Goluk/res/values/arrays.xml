@@ -150,7 +150,11 @@
         <item>480p</item>
     </string-array>
     
-   
+    <string-array name="kit_setting_ui">
+        <item>精彩视频+照片</item>
+        <item>精彩视频</item>
+    </string-array>
+
     
     <!-- G1分辨率 -->
     <string-array name="list_quality_resolution1">

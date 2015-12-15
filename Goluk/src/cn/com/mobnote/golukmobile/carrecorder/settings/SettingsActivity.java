@@ -42,6 +42,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private final int STATE_CLOSE = 0;
 	private final int STATE_OPEN = 1;
 
+	public static final int RESULT_CODE_PHOTO = 20;
+	public static final int RESULT_CODE_KIT = 30;
+
 	/** 录制状态 */
 	private boolean recordState = false;
 	/** 自动循环录像开关按钮 */
@@ -118,7 +121,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		GolukDebugUtils.e("", "=========mIPCName：" + mIPCName);
 		initView();
 		setListener();
-
+		mKitShowUI = getResources().getStringArray(R.array.kit_setting_ui);
 		mArrayText = getResources().getStringArray(R.array.list_quality_ui);
 		mResolutionArray = SettingsUtil.returnResolution(this, mIPCName);
 		mBitrateArray = SettingsUtil.returnBitrate(this, mIPCName);
@@ -189,17 +192,22 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		super.onActivityResult(requestCode, resultCode, data);
 		GolukDebugUtils.e("", "photo------requestCode :" + requestCode + "   resultCode:" + resultCode);
 		if (10 == requestCode) {
-			if (20 == resultCode) {
+			if (RESULT_CODE_PHOTO == resultCode) {
 				if (null != data) {
 					String photoselect = data.getStringExtra("photoselect");
 					mPhtoBean.resolution = photoselect;
 					mCurrentResolution = photoselect;
 					refreshPhotoQuality();
-					
 					String requestS = GolukFastJsonUtil.setParseObj(mPhtoBean);
-					
 					GolukDebugUtils.e("", "photo------requestS :" + requestS);
 					GolukApplication.getInstance().getIPCControlManager().setPhotoQualityMode(requestS);
+				}
+			} else if (RESULT_CODE_KIT == resultCode) {
+				if (null != data) {
+					record = data.getIntExtra("record", 1);
+					snapshot = data.getIntExtra("snapshot", 0);
+					refreshKitUi();
+					GolukApplication.getInstance().getIPCControlManager().setKitMode(setKitJson());
 				}
 			}
 		}
@@ -313,8 +321,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private void dialog() {
 		CustomDialog d = new CustomDialog(this);
 		d.setCancelable(false);
-		d.setMessage("请检查摄像头是否正常连接");
-		d.setLeftButton("确定", new OnLeftClickListener() {
+		d.setMessage(this.getResources().getString(R.string.str_ipc_dialog_normal));
+		d.setLeftButton(this.getResources().getString(R.string.str_button_ok), new OnLeftClickListener() {
 			@Override
 			public void onClickListener() {
 				exit();
@@ -332,8 +340,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			switch (arg0.getId()) {
 			case R.id.mVideoDefinition:// 视频质量
-				Intent mVideoDefinition = new Intent(SettingsActivity.this, VideoQualityActivity.class);
-				startActivity(mVideoDefinition);
+				click_videQuality();
 				break;
 			case R.id.zdxhlx:// 自动循环录像
 				showLoading();
@@ -358,7 +365,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				break;
 			case R.id.sylz:// 声音录制
 				click_SoundRecord();
-
 				break;
 			case R.id.pzgylmd_line:// 碰撞感应灵敏度
 				Intent pzgylmd_line = new Intent(SettingsActivity.this, ImpactSensitivityActivity.class);
@@ -373,19 +379,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				startActivity(sjsz_line);
 				break;
 			case R.id.hfccsz_line:// 恢复出厂设置
-				CustomDialog mCustomDialog = new CustomDialog(this);
-				mCustomDialog.setMessage("是否确认恢复Goluk出厂设置", Gravity.CENTER);
-				mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
-					@Override
-					public void onClickListener() {
-						if (GolukApplication.getInstance().getIpcIsLogin()) {
-							boolean a = GolukApplication.getInstance().getIPCControlManager().restoreIPC();
-							GolukDebugUtils.e("xuhw", "YYYYYY=================restoreIPC============a=" + a);
-						}
-					}
-				});
-				mCustomDialog.setRightButton("取消", null);
-				mCustomDialog.show();
+				click_reset();
 				break;
 			case R.id.bbxx_line:// 版本信息
 				Intent bbxx = new Intent(SettingsActivity.this, VersionActivity.class);
@@ -398,122 +392,30 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				break;
 			// HDR模式
 			case R.id.hdr:
-				showLoading();
-				int ispStatus = 0;
-				if (0 == mISPSwitch) {
-					ispStatus = 1;
-				} else {
-					ispStatus = 0;
-				}
-				String ispCondi = "{\"ISPMode\":" + ispStatus + "}";
-				boolean setISP = GolukApplication.getInstance().getIPCControlManager().setISPMode(ispCondi);
-				GolukDebugUtils.e("", "----------setISPMode-----setISP：" + setISP);
-				if (!setISP) {
-					closeLoading();
-					GolukUtils.showToast(this, "设置失败");
-				}
+				click_hdr();
 				break;
 			case R.id.kgjtsy:// 开关机提示音
-				judgeSwitch = true;
-				showLoading();
-				int status = 1;
-				if (0 == speakerSwitch) {
-					status = 1;
-				} else {
-					status = 0;
-				}
-				String condi = JsonUtil.getSpeakerSwitchJson(status, mWonderfulSwitchStatus);
-				boolean b = GolukApplication.getInstance().getIPCControlManager().setIPCSwitchState(condi);
-				GolukDebugUtils.e("lily", "---------点击开关结果-----------" + b);
-				if (!b) {
-					closeLoading();
-					GolukUtils.showToast(this, "设置失败");
-				}
+				click_opencloseVoice();
 				break;
 			// 精彩视频拍摄提示音
 			case R.id.jcsp:
-				showLoading();
-				judgeSwitch = false;
-				// 精彩视频
-				int wonderfulStatus = 1;
-				if (0 == mWonderfulSwitchStatus) {
-					wonderfulStatus = 1;
-				} else {
-					wonderfulStatus = 0;
-				}
-				String json = JsonUtil.getSpeakerSwitchJson(speakerSwitch, wonderfulStatus);
-				boolean setWonderful = GolukApplication.getInstance().getIPCControlManager().setIPCSwitchState(json);
-				GolukDebugUtils.e("", "----------setWonderfulMode-----setWonderful：" + setWonderful);
-				if (!setWonderful) {
-					closeLoading();
-					GolukUtils.showToast(this, "设置失败");
-				}
+				click_wonderfulVoice();
 				break;
 			// 疲劳驾驶
 			case R.id.btn_settings_fatigue:
-				if (driveFatigue == 1) {
-					driveFatigue = 0;
-				} else {
-					driveFatigue = 1;
-				}
-
-				boolean fatigue = GolukApplication.getInstance().getIPCControlManager().setFunctionMode(getSetJson());
-				if (fatigue) {
-					GolukUtils.showToast(this, "设置成功");
-				} else {
-					GolukUtils.showToast(this, "设置失败");
-				}
+				click_Fatigue();
 				break;
-			// 图像自动翻转
 			case R.id.btn_settings_image_flip:
-				if (autoRotation == 1) {
-					autoRotation = 0;
-				} else {
-					autoRotation = 1;
-				}
-
-				boolean imageFlip = GolukApplication.getInstance().getIPCControlManager().setFunctionMode(getSetJson());
-				if (imageFlip) {
-					GolukUtils.showToast(this, "设置成功");
-				} else {
-					GolukUtils.showToast(this, "设置失败");
-				}
+				// 图像自动翻转
+				click_imageFlip();
 				break;
-			// 停车休眠
 			case R.id.btn_settings_parking_sleep:
-				if (dormant == 1) {
-					dormant = 0;
-				} else {
-					dormant = 1;
-				}
-
-				boolean parkingSleep = GolukApplication.getInstance().getIPCControlManager()
-						.setFunctionMode(getSetJson());
-				if (parkingSleep) {
-					GolukUtils.showToast(this, "设置成功");
-				} else {
-					GolukUtils.showToast(this, "设置失败");
-				}
+				// 停车休眠
+				click_parkingSleep();
 				break;
-			// 遥控器按键功能
 			case R.id.handset_line:
-
-				if (1 == record && 1 == snapshot) {
-					record = 1;
-					snapshot = 0;
-					mHandsetText.setText("精彩视频+照片");
-				} else if (1 == record && 0 == snapshot) {
-					record = 1;
-					snapshot = 1;
-					mHandsetText.setText("精彩视频");
-				}
-				boolean handset = GolukApplication.getInstance().getIPCControlManager().setKitMode(setKitJson());
-				if (handset) {
-					GolukUtils.showToast(this, "设置成功");
-				} else {
-					GolukUtils.showToast(this, "设置失败");
-				}
-
+				// 遥控器按键功能
+				click_handset();
 				break;
 			case R.id.photographic_quality_line:
 				// 点击图片质量
@@ -525,6 +427,186 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		} else {
 			dialog();
 		}
+	}
+
+	/**
+	 * 精彩视频拍摄提示音
+	 * 
+	 * @author jyf
+	 */
+	private void click_wonderfulVoice() {
+		showLoading();
+		judgeSwitch = false;
+		// 精彩视频
+		int wonderfulStatus = 1;
+		if (0 == mWonderfulSwitchStatus) {
+			wonderfulStatus = 1;
+		} else {
+			wonderfulStatus = 0;
+		}
+		String json = JsonUtil.getSpeakerSwitchJson(speakerSwitch, wonderfulStatus);
+		boolean setWonderful = GolukApplication.getInstance().getIPCControlManager().setIPCSwitchState(json);
+		GolukDebugUtils.e("", "----------setWonderfulMode-----setWonderful：" + setWonderful);
+		if (!setWonderful) {
+			closeLoading();
+			GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
+		}
+	}
+
+	/**
+	 * 开关机提示音
+	 * 
+	 * @author jyf
+	 */
+	private void click_opencloseVoice() {
+		judgeSwitch = true;
+		showLoading();
+		int status = 1;
+		if (0 == speakerSwitch) {
+			status = 1;
+		} else {
+			status = 0;
+		}
+		String condi = JsonUtil.getSpeakerSwitchJson(status, mWonderfulSwitchStatus);
+		boolean b = GolukApplication.getInstance().getIPCControlManager().setIPCSwitchState(condi);
+		GolukDebugUtils.e("lily", "---------点击开关结果-----------" + b);
+		if (!b) {
+			closeLoading();
+			GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
+		}
+	}
+
+	/**
+	 * HDR模式
+	 * 
+	 * @author jyf
+	 */
+	private void click_hdr() {
+		showLoading();
+		int ispStatus = 0;
+		if (0 == mISPSwitch) {
+			ispStatus = 1;
+		} else {
+			ispStatus = 0;
+		}
+		String ispCondi = "{\"ISPMode\":" + ispStatus + "}";
+		boolean setISP = GolukApplication.getInstance().getIPCControlManager().setISPMode(ispCondi);
+		GolukDebugUtils.e("", "----------setISPMode-----setISP：" + setISP);
+		if (!setISP) {
+			closeLoading();
+			GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
+		}
+	}
+
+	/**
+	 * 恢复出厂设置
+	 * 
+	 * @author jyf
+	 */
+	private void click_reset() {
+		CustomDialog mCustomDialog = new CustomDialog(this);
+		mCustomDialog.setMessage("是否确认恢复Goluk出厂设置", Gravity.CENTER);
+		mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
+			@Override
+			public void onClickListener() {
+				if (GolukApplication.getInstance().getIpcIsLogin()) {
+					boolean a = GolukApplication.getInstance().getIPCControlManager().restoreIPC();
+					GolukDebugUtils.e("xuhw", "YYYYYY=================restoreIPC============a=" + a);
+				}
+			}
+		});
+		mCustomDialog.setRightButton("取消", null);
+		mCustomDialog.show();
+	}
+
+	/**
+	 * 视频质量界面
+	 * 
+	 * @author jyf
+	 */
+	private void click_videQuality() {
+		Intent mVideoDefinition = new Intent(SettingsActivity.this, VideoQualityActivity.class);
+		startActivity(mVideoDefinition);
+	}
+
+	/**
+	 * 疲劳驾驶
+	 * 
+	 * @author jyf
+	 */
+	private void click_Fatigue() {
+		if (driveFatigue == 1) {
+			driveFatigue = 0;
+		} else {
+			driveFatigue = 1;
+		}
+
+		boolean fatigue = GolukApplication.getInstance().getIPCControlManager().setFunctionMode(getSetJson());
+		if (!fatigue) {
+			GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
+		}
+	}
+
+	/**
+	 * 图像自动翻转
+	 * 
+	 * @author jyf
+	 */
+	private void click_imageFlip() {
+		if (autoRotation == 1) {
+			autoRotation = 0;
+		} else {
+			autoRotation = 1;
+		}
+		boolean imageFlip = GolukApplication.getInstance().getIPCControlManager().setFunctionMode(getSetJson());
+		if (!imageFlip) {
+			GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
+		}
+	}
+
+	/**
+	 * 停车休眠
+	 * 
+	 * @author jyf
+	 */
+	private void click_parkingSleep() {
+		if (dormant == 1) {
+			dormant = 0;
+		} else {
+			dormant = 1;
+		}
+		boolean parkingSleep = GolukApplication.getInstance().getIPCControlManager().setFunctionMode(getSetJson());
+		if (!parkingSleep) {
+			GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
+		}
+	}
+
+	/** UI显示 **/
+	private String[] mKitShowUI = null;
+
+	private void refreshKitUi() {
+		try {
+			if (1 == record && 1 == snapshot) {
+				mHandsetText.setText(mKitShowUI[0]);
+			} else if (1 == record && 0 == snapshot) {
+				mHandsetText.setText(mKitShowUI[1]);
+			}
+		} catch (Exception e) {
+
+		}
+
+	}
+
+	/**
+	 * 遥控器按键功能
+	 * 
+	 * @author jyf
+	 */
+	private void click_handset() {
+		Intent intent = new Intent(this, CarrecoderKitSettingActivity.class);
+		intent.putExtra("record", record);
+		intent.putExtra("snapshot", snapshot);
+		this.startActivityForResult(intent, 10);
 	}
 
 	// 点击照片质量
@@ -545,7 +627,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			if (isSuccess) {
 				showLoading();
 			} else {
-				GolukUtils.showToast(this, "设置声音开关失败");
+				GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
 			}
 		} else {
 			if (null != mVideoConfigState) {
@@ -558,7 +640,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				if (a) {
 					showLoading();
 				} else {
-					GolukUtils.showToast(this, "设置声音开关失败");
+					GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
 				}
 			}
 		}
@@ -598,7 +680,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
 	}
 
 	@Override
@@ -822,8 +903,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			}
 		}
 	}
-	
-	
 
 	private void IPCCallBack_setRecAudioCfg(int msg, int param1, Object param2) {
 		closeLoading();
@@ -974,6 +1053,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
 				+ (String) param2 + "---param1:" + param1);
 		parseKitJson((String) param2);
+		refreshKitUi();
 	}
 
 	private void setKitConfigCallback(int event, int msg, int param1, Object param2) {
@@ -981,11 +1061,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				+ (String) param2 + "---param1:" + param1);
 
 		if (RESULE_SUCESS == param1) {
-			if (1 == record && 1 == snapshot) {
-				mHandsetText.setText("精彩视频+照片");
-			} else if (1 == record && 0 == snapshot) {
-				mHandsetText.setText("精彩视频");
-			}
+			GolukApplication.getInstance().getIPCControlManager().getKitMode();
 		} else {
 			GolukUtils.showToast(this, "设置功能设置失败");
 		}
@@ -1058,16 +1134,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		return "";
 	}
 
-	int quality = 0;
-	String resolution = "";
-
 	int interval = 0;
-
-	IPCSettingPhotoBean mPhtoBean = null;
-
-	public static final int PHOTO_1080 = 0;
-	public static final int PHOTO_720 = 1;
-	public static final int PHOTO_480 = 2;
+	/** 照片质量实体类 */
+	private IPCSettingPhotoBean mPhtoBean = null;
 
 	private String mCurrentResolution = "";
 
@@ -1097,20 +1166,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		}
 	}
 
-	private String setPhotoQualityJson() {
-		try {
-			JSONObject obj = new JSONObject();
-			obj.put("quality", quality);
-			obj.put("resolution", resolution);
-			obj.put("interval", interval);
-
-			return obj.toString();
-		} catch (Exception e) {
-
-		}
-		return "";
-	}
-
 	int record = 0;
 	int snapshot = 0;
 	int wifi = 0;
@@ -1119,10 +1174,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private void parseKitJson(String str) {
 		try {
 			JSONObject obj = new JSONObject(str);
-			obj.optInt("record");
-			obj.optInt("snapshot");
-			obj.optInt("wifi");
-			obj.optInt("long_shut");
+			record = obj.optInt("record");
+			snapshot = obj.optInt("snapshot");
+			if (0 == record) {
+				record = 1;
+			}
+			wifi = obj.optInt("wifi");
+			long_shut = obj.optInt("long_shut");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

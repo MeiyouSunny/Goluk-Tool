@@ -12,7 +12,6 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 
 /**
  * 
@@ -23,7 +22,7 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
  * @author jiayf
  */
 @SuppressLint("InflateParams")
-public class PhotoQualityActivity extends CarRecordBaseActivity implements OnClickListener, IPCManagerFn {
+public class PhotoQualityActivity extends CarRecordBaseActivity implements OnClickListener {
 
 	public static final String TAG = "PhotoQualityActivity";
 
@@ -35,11 +34,6 @@ public class PhotoQualityActivity extends CarRecordBaseActivity implements OnCli
 	private ImageButton mCloseIcon = null;
 	private ImageButton mLowIcon = null;
 	private ImageButton mMiddleIcon = null;
-
-	/** 视频质量类型　1080高 1080低 720高 720低 */
-	public static enum SensitivityType {
-		_1080h, _1080l, _720h, _720l
-	};
 
 	/** UI显示 **/
 	private String[] mArrayText = null;
@@ -54,15 +48,10 @@ public class PhotoQualityActivity extends CarRecordBaseActivity implements OnCli
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addContentView(LayoutInflater.from(this).inflate(R.layout.carrecorder_video_photo_quality, null));
-		setTitle("图片质量");
+		setTitle(this.getResources().getString(R.string.str_carrecoder_setting_photo_title));
 		mCurrentResolution = getIntent().getStringExtra("photoselect");
 		initView();
 		setListener();
-
-		if (null != GolukApplication.getInstance().getIPCControlManager()) {
-			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener(TAG, this);
-		}
-
 		setData2UI();
 	}
 
@@ -146,19 +135,11 @@ public class PhotoQualityActivity extends CarRecordBaseActivity implements OnCli
 		super.onDestroy();
 	}
 
-	@Override
-	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-
-	}
-
 	public void exit() {
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			Intent intent = new Intent();
 			intent.putExtra("photoselect", mCurrentResolution);
-			setResult(20, intent);
-		}
-		if (null != GolukApplication.getInstance().getIPCControlManager()) {
-			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener(TAG);
+			setResult(SettingsActivity.RESULT_CODE_PHOTO, intent);
 		}
 		finish();
 	}

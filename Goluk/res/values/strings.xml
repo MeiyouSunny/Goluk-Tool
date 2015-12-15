@@ -491,4 +491,11 @@
 		入超低功耗的停车休眠模式,以便保护您的电瓶不会亏电。如果您的车在停车熄火后,点烟器仍可正常供电,则强烈建议开启此项。</string>
     <string name="str_settings_sleep_hint_text_t1">此项开启后,当检测到车辆静止时间超过 10 分钟以上,且未开启停车安防功能,则自动进入
         超低功耗的停车休眠模式,以便保护您的电瓶不会亏电。如果您的车在停车熄火后,点烟器仍可正常供电,则强烈建议开启此项。</string>
+
+	<string name="str_carrecoder_setting_kit_title">遥控器按键功能</string>
+	<string name="str_carrecoder_setting_photo_title">图片质量</string>
+	<string name="str_ipc_dialog_normal">请检查摄像头是否正常连接</string>
+	<string name="str_carrecoder_setting_failed">设置失败</string>
+
+
 </resources>
