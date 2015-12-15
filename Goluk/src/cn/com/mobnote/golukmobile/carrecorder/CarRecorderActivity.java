@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -28,7 +30,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -78,9 +79,11 @@ import cn.com.mobnote.module.location.BaiduPosition;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
+import cn.com.mobnote.util.SortByDate;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.player.RtspPlayerView;
@@ -713,25 +716,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	public void start() {
 		if (null != mRtspPlayerView) {
 			mRtspPlayerView.setVisibility(View.VISIBLE);
-			String url = getRtspUrl();
+			String url = PlayUrlManager.getRtspUrl();
 			GolukDebugUtils.e("xuhw", "CarrecorderActivity-------start--YYYYYY======url==" + url + "   "
 					+ mApp.mIPCControlManager.mProduceName);
 			mRtspPlayerView.setDataSource(url);
 			mRtspPlayerView.start();
 		}
-	}
-
-	private String getRtspUrl() {
-		if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
-			return "rtsp://" + GolukApplication.mIpcIp + "/stream1";
-		} else if (IPCControlManager.G1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
-				|| IPCControlManager.G2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
-			String preUrl = getResources().getString(R.string.default_rtsp_pre);
-			String backUrl = getResources().getString(R.string.default_rtsp_back);
-			String url = preUrl + GolukApplication.mIpcIp + backUrl;
-			return url;
-		}
-		return "";
 	}
 
 	public void onEventMainThread(EventWifiConnect event) {
@@ -775,7 +765,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	public void onClick(View arg0) {
 		if (!isAllowedClicked())
 			return;
-		Log.e("", "GGGGGGGGGGG-------------id=" + arg0.getId());
+
 		switch (arg0.getId()) {
 		case R.id.back_btn:
 			if (m_bIsFullScreen) {
@@ -1836,15 +1826,16 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			names.addAll(urgents);
 		}
 
-		List<String> newvideo = this.shortNames(names);// 拿到最新的4个视频
+		Collections.sort(names, new SortByDate());
+
 
 		String videoname1 = "";
 		String videoname2 = "";
 
-		if (newvideo != null && newvideo.size() > 0) {
-			videoname1 = newvideo.get(0);
-			if (newvideo.size() > 1) {
-				videoname2 = newvideo.get(1);
+		if (names != null && names.size() > 0) {
+			videoname1 = names.get(0);
+			if (names.size() > 1) {
+				videoname2 = names.get(1);
 			}
 		}
 
@@ -1921,51 +1912,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		}
 
 		images[2] = defpic;
-	}
-
-	/**
-	 * 冒泡排序把日期最新的排前面
-	 * 
-	 * @Title: shortNames
-	 * @Description: TODO
-	 * @param names
-	 * @return List<String>
-	 * @author 曾浩
-	 * @throws
-	 */
-	public List<String> shortNames(List<String> names) {
-		if (names != null && names.size() > 0) {
-			for (int i = 0; i < names.size(); i++) {
-				String[] videos = names.get(i).split("_");
-				int len = videos.length;
-				if (len < 3) {
-					break;
-				}
-				if (!TextUtils.isDigitsOnly(videos[len - 2])) {
-					break;
-				}
-				Long time = Long.parseLong(videos[len - 2]);
-				for (int j = i + 1; j < names.size(); j++) {
-					String[] videos1 = names.get(j).split("_");
-					
-					int lenth = videos1.length;
-					if (lenth < 3) {
-						return names;
-					}
-					if (!TextUtils.isDigitsOnly(videos1[len - 2])) {
-						return names;
-					}
-					Long date = Long.parseLong(videos1[len - 2]);
-					if (time < date) {
-						String name = names.get(i);
-						names.set(i, names.get(j));
-						names.set(j, name);
-					}
-				}
-			}
-		}
-
-		return names;
 	}
 
 	public List<String> getNewVideoByType(String uri, int type) {

@@ -2,6 +2,7 @@ package cn.com.mobnote.application;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -72,6 +73,7 @@ import cn.com.mobnote.util.AssetsFileUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.SharedPrefUtil;
+import cn.com.mobnote.util.SortByDate;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -1258,14 +1260,15 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					if (kit.size() > 0) {
 						for (int i = 0; i < kit.size(); i++) {
 							ExternalEventsDataInfo info = kit.get(i);
-							if (!mDownLoadFileList.contains(info.location)) {
-								mDownLoadFileList.add(info.location);
 
-								boolean flag = GolukApplication.getInstance().getIPCControlManager()
-										.querySingleFile(info.location);
-								GolukDebugUtils.e("xuhw", "YYYYYY=====querySingleFile=====type=" + info.type
-										+ "==flag=" + flag);
-							}
+//							if (!mDownLoadFileList.contains(info.location)) {
+//								mDownLoadFileList.add(info.location);
+
+							boolean flag = GolukApplication.getInstance().getIPCControlManager()
+									.querySingleFile(info.location);
+							GolukDebugUtils.e("xuhw", "YYYYYY=====querySingleFile=====type=" + info.type + "==flag="
+									+ flag);
+//							}
 						}
 					}
 				}
@@ -1567,9 +1570,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				GolukDebugUtils.e("xuhw",
 						"BBBB=====stopDownloadList==11111===stopDownloadList" + mDownLoadFileList.size()
 								+ mDownLoadFileList);
-				List<String> order = FileInfoManagerUtils.bubbleSort(mDownLoadFileList, true);
-				mDownLoadFileList.clear();
-				mDownLoadFileList.addAll(order);
+				
+				Collections.sort(mDownLoadFileList, new SortByDate());
 				GolukDebugUtils.e("xuhw",
 						"BBBB=====stopDownloadList==22222===stopDownloadList" + mDownLoadFileList.size()
 								+ mDownLoadFileList);
@@ -1577,8 +1579,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList=====stopDownloadList");
 					autodownloadfile = true;
 				}
-
-				for (int i = 0; i < mDownLoadFileList.size(); i++) {
+				int len = mDownLoadFileList.size() - 1;
+				for (int i = len; i >= 0; i--) {
 					String name = mDownLoadFileList.get(i);
 					boolean flag = GolukApplication.getInstance().getIPCControlManager().querySingleFile(name);
 					GolukDebugUtils.e("xuhw", "YYYYYY=====querySingleFile=====name=" + name + "==flag=" + flag);

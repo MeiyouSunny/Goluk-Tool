@@ -44,6 +44,7 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
@@ -181,17 +182,29 @@ public class VitamioPlayerActivity extends BaseActivity implements OnCompletionL
 		} else if (from.equals("suqare")) {
 			playUrl = getIntent().getStringExtra("playUrl");
 		} else if (from.equals("ipc")) {
-			String fileName = filename;
-			fileName = fileName.replace(".mp4", ".jpg");
-			image = filePath + File.separator + fileName;
-			int type = getIntent().getIntExtra("type", -1);
-			if (4 == type) {
-				playUrl = "http://" + ip + ":5080/rec/wonderful/" + filename;
-			} else if (2 == type) {
-				playUrl = "http://" + ip + ":5080/rec/urgent/" + filename;
+			if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)) {
+				String fileName = filename;
+				fileName = fileName.replace(".mp4", "");
+				int index = fileName.lastIndexOf("TX");
+				if (index > 0) {
+					fileName = fileName.substring(0, index - 1);
+				}
+				playUrl = "http://" + ip + "/api/video?id=" + fileName;
+				image = "http://" + ip + "/api/thumb?id=" + fileName;
 			} else {
-				playUrl = "http://" + ip + ":5080/rec/normal/" + filename;
+				String fileName = filename;
+				fileName = fileName.replace(".mp4", ".jpg");
+				image = filePath + File.separator + fileName;
+				int type = getIntent().getIntExtra("type", -1);
+				if (4 == type) {
+					playUrl = "http://" + ip + ":5080/rec/wonderful/" + filename;
+				} else if (2 == type) {
+					playUrl = "http://" + ip + ":5080/rec/urgent/" + filename;
+				} else {
+					playUrl = "http://" + ip + ":5080/rec/normal/" + filename;
+				}
 			}
+			
 		}
 
 		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==playUrl=" + playUrl);

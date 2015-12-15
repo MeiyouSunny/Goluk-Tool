@@ -35,6 +35,7 @@ import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventMapQuery;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.PlayUrlManager;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
 import cn.com.mobnote.golukmobile.carrecorder.RecorderMsgReceiverBase;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
@@ -283,10 +284,10 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	}
 
 	private void getURL() {
-		VIEW_SELF_PLAY = "rtsp://admin:123456@" + GolukApplication.mIpcIp + "/sub";
+		VIEW_SELF_PLAY = PlayUrlManager.getRtspUrl();
 		mRtmpUrl = this.getRtmpAddress();
 		if (null == mRtmpUrl) {
-			mRtmpUrl = UPLOAD_VOIDE_PRE;
+			mRtmpUrl = PlayUrlManager.UPLOAD_VOIDE_PRE;
 		}
 	}
 
@@ -582,7 +583,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 		@Override
 		public void onLiveRecordFailed(Context context, int nResult, String strResultInfo) {
-			GolukDebugUtils.e("", "jyf------TTTTT------------onLiveRecordFailed----2222:" + nResult);
+			GolukDebugUtils.e("", "jyf------TTTTT------------onLiveRecordFailed----2222:" + nResult + "   " + strResultInfo);
 			liveUploadVideoFailed();
 		}
 	};
