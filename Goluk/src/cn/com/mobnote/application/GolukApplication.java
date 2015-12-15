@@ -586,10 +586,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 
 				isDownloading = true;
-				if (IPCManagerFn.TYPE_SNAPSHOT == type) {
-					boolean a = mIPCControlManager.downloadFile(fileName, "snapshotdownload", savePath, time);
-					return;
-				}
+
 				AssetsFileUtils.appendFileData(FileUtils.libToJavaPath(configPath), fileName + ",");
 
 				// 调用下载视频接口
