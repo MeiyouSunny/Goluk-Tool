@@ -240,7 +240,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mPhotoQualityText = (TextView) findViewById(R.id.tv_settings_photographic_quality);
 		mHandsetText = (TextView) findViewById(R.id.tv_settings_handset);
 		// ipc设备型号
-		if (mIPCName.equals("G1")) {
+		if (mIPCName.equals(IPCControlManager.G1_SIGN)) {
 			mISPLayout.setVisibility(View.GONE);
 			mPhotoQualityLayout.setVisibility(View.GONE);
 			mHandsetLayout.setVisibility(View.GONE);
@@ -269,7 +269,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mHandsetLayout.setVisibility(View.VISIBLE);
 			mParkingSleepHintText.setText(this.getResources().getString(R.string.str_settings_sleep_hint_text_t1));
 			mParkingSecurityHintText
-					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g1));
+					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g2));
 		}
 
 		mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);

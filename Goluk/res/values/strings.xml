@@ -490,6 +490,14 @@
 	<string name="str_carrecoder_setting_photo_title">图片质量</string>
 	<string name="str_ipc_dialog_normal">请检查摄像头是否正常连接</string>
 	<string name="str_carrecoder_setting_failed">设置失败</string>
+	<string name="str_carrecoder_auto_gpstime">自动同步 GPS 时间</string>
+	<string name="str_carrecoder_auto">自动同步手机时间</string>
+	<string name="str_carrecoder_no_login">IPC断开连接</string>
+	<string name="str_year">年</string>
+	<string name="str_month">月</string>
+	<string name="str_day">日</string>
+	<string name="str_hour">时</string>
+	<string name="str_minute">分</string>
 
 
 </resources>

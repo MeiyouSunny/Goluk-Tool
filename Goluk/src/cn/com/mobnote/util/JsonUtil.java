@@ -244,6 +244,26 @@ public class JsonUtil {
 		return null;
 	}
 
+	public static String getGpsTimeJson(int state) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("gpstimesync", state);
+
+			return obj.toString();
+		} catch (Exception e) {
+		}
+		return "";
+	}
+
+	public static int parseGpsTimeState(String json) {
+		try {
+			JSONObject obj = new JSONObject(json);
+			return obj.optInt("gpstimesync");
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+
 	// vid 为视频id
 	public static String getStartLiveJson(String vid, LiveSettingBean beanData) {
 		try {

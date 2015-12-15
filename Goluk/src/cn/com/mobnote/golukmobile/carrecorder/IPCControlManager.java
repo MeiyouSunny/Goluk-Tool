@@ -376,6 +376,17 @@ public class IPCControlManager implements IPCManagerFn {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetTime, "");
 	}
 
+	public boolean getTimeSyncCfg() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPC_VDCP_Msg_GetTimeSyncCfg, "");
+	}
+	
+	public boolean setTimeSyncCfg (int state) {
+		String json = JsonUtil.getGpsTimeJson(state);
+		return mApplication.mGoluk
+				.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCP_Msg_SetTimeSyncCfg, json);
+	}
+
 	/**
 	 * 设置IPC系统WIFI配置
 	 * 

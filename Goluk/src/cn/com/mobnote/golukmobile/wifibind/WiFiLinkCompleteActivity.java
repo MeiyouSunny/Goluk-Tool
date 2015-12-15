@@ -213,12 +213,14 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	private String getSetIpcJson11() {
 		try {
 			JSONObject rootObj = new JSONObject();
-			if (!IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
-				if (strIsValid(WiFiInfo.IPC_PWD)) {
-					rootObj.put("AP_SSID", WiFiInfo.IPC_SSID);
-					rootObj.put("AP_PWD", WiFiInfo.IPC_PWD);
-				}
+			// if
+			// (!IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName))
+			// {
+			if (strIsValid(WiFiInfo.IPC_PWD)) {
+				rootObj.put("AP_SSID", WiFiInfo.IPC_SSID);
+				rootObj.put("AP_PWD", WiFiInfo.IPC_PWD);
 			}
+			// }
 
 			// Station模式
 			rootObj.put("GolukSSID", WiFiInfo.MOBILE_SSID);
