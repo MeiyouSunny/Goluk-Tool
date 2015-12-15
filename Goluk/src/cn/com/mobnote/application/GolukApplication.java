@@ -1,6 +1,7 @@
 package cn.com.mobnote.application;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,8 +19,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventIpcConnState;
@@ -190,6 +193,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	private boolean mIsExit = true;
 
+	private static final String SNAPSHOT_DIR = "fs1:/pic/";
 	static {
 		System.loadLibrary("golukmobile");
 	}
@@ -547,7 +551,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				} else if (IPCManagerFn.TYPE_URGENT == type) {
 					savePath = mVideoSavePath + "urgent/";
 					configPath = savePath + "urgent.txt";
-				} else {
+				} else{
 					savePath = mVideoSavePath + "loop/";
 					configPath = savePath + "loop.txt";
 				}
@@ -582,6 +586,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 
 				isDownloading = true;
+
 				AssetsFileUtils.appendFileData(FileUtils.libToJavaPath(configPath), fileName + ",");
 
 				// 调用下载视频接口
@@ -590,6 +595,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				GolukDebugUtils.e("xuhw", "YYYYYY====start==VideoDownLoad===flag=" + a + "===data=" + data);
 				// 下载视频第一帧截图
 				String imgFileName = fileName.replace("mp4", "jpg");
+				
 				String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 				File file = new File(filePath + File.separator + fileName);
 				if (!file.exists()) {
@@ -786,6 +792,20 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						GlobalWindow.getInstance().toFailed("视频传输失败");
 					}
 				}
+			} else if (tag.equals("snapshotdownload") && 0 == success) {
+					 // 其次把文件插入到系统图库
+				String path = FileUtils.libToJavaPath(SNAPSHOT_DIR);
+				    try {
+						JSONObject json = new JSONObject(data);
+						String filename = json.optString("filename");
+				        MediaStore.Images.Media.insertImage(getContentResolver(),
+				        		path + filename, filename, "Goluk");
+				    } catch (FileNotFoundException e) {
+				        e.printStackTrace();
+				    }
+				    // 最后通知图库更新
+				    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
+
 			}
 
 		} catch (JSONException e) {
@@ -1194,8 +1214,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			case IPC_VDCP_Msg_SingleQuery:
 				// msg = 1001 单文件查询
 				// 拍摄8秒视频成功之后,接口会自动调用查询这个文件,收到这个回调之后可以根据文件名去下载视频
-				GolukDebugUtils.e("xuhw", "YYYYYY==@@@@==IPC_VDCP_Msg_SingleQuery==param1=" + param1 + "==param2="
-						+ param2);
 				ipcVideoSingleQueryCallBack(param1, (String) param2);
 				break;
 			case IPC_VDCP_Msg_Erase:
@@ -1252,8 +1270,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				if (!isbind) {
 					return;
 				}
-				GolukDebugUtils.e("xuhw", "YYYYYY======IPC_VDCP_Msg_IPCKit=====param1=" + param1 + "===param2="
-						+ param2);
 				if (param1 == RESULE_SUCESS) {
 					List<ExternalEventsDataInfo> kit = IpcDataParser.parseKitData((String) param2);
 					if (kit.size() > 0) {
@@ -1262,11 +1278,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 //							if (!mDownLoadFileList.contains(info.location)) {
 //								mDownLoadFileList.add(info.location);
+							if (info.type == 9) {
 
-							boolean flag = GolukApplication.getInstance().getIPCControlManager()
-									.querySingleFile(info.location);
-							GolukDebugUtils.e("xuhw", "YYYYYY=====querySingleFile=====type=" + info.type + "==flag="
-									+ flag);
+								File file = new File(FileUtils.libToJavaPath(SNAPSHOT_DIR));
+								if (!file.exists()) {
+									file.mkdirs();
+								}
+								boolean a = mIPCControlManager.downloadFile(info.location, "snapshotdownload", SNAPSHOT_DIR, IPC_VDCP_Msg_IPCKit);
+							} else {
+								boolean flag = GolukApplication.getInstance().getIPCControlManager()
+										.querySingleFile(info.location);
+							}
 //							}
 						}
 					}
@@ -1343,7 +1365,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				// 文件传输中消息 msg = 0
 				// param1 = 0,下载完成
 				// param1 = 1,下载中
-				GolukDebugUtils.e("xuhw", "YYYYYY==@@@@@==IPC_VDTP_Msg_File===param1=" + param1);
 				ipcVideoDownLoadCallBack(param1, (String) param2);
 				break;
 			}
