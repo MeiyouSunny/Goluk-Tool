@@ -381,6 +381,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mPalyerLayout.setVisibility(View.VISIBLE);
 			mNotconnected.setVisibility(View.GONE);
 			mConncetLayout.setVisibility(View.GONE);
+			if (mApp.isIpcLoginSuccess && !this.isT1()) {
+				liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon);
+			} else {
+				liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+			}
 			break;
 		default:
 			break;
@@ -883,18 +888,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					it.putExtra("isInfo", "back");
 					startActivity(it);
 				} else {
-					Intent intent = new Intent(this, LiveActivity.class);
-					String desc = et.getText().toString();
-					if (null == desc || "".equals(desc)) {
-						desc = "极路客精彩直播";
+					if (!this.isT1()) {
+						toLive();
 					}
-					mSettingData.desc = desc;
-					intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
-					intent.putExtra(LiveActivity.KEY_GROUPID, "");
-					intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
-					intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
-					intent.putExtra(LiveActivity.KEY_LIVE_SETTING_DATA, mSettingData);
-					startActivity(intent);
+					
 				}
 
 			}
@@ -953,6 +950,26 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		default:
 			break;
 		}
+	}
+
+	/**
+	 * 启动直播
+	 * 
+	 * @author jyf
+	 */
+	private void toLive() {
+		Intent intent = new Intent(this, LiveActivity.class);
+		String desc = et.getText().toString();
+		if (null == desc || "".equals(desc)) {
+			desc = "极路客精彩直播";
+		}
+		mSettingData.desc = desc;
+		intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
+		intent.putExtra(LiveActivity.KEY_GROUPID, "");
+		intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+		intent.putExtra(LiveActivity.KEY_LIVE_SETTING_DATA, mSettingData);
+		startActivity(intent);
 	}
 
 	/**
@@ -1064,7 +1081,16 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 		mSettingBtn.setBackgroundResource(R.drawable.carrecorder_setting);
 		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
-		liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon);
+		if (!isT1()) {
+			liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon);
+		} else {
+			liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+		}
+		
+	}
+	
+	private boolean isT1() {
+		return IPCControlManager.T1_SIGN.equals(mApp.getIPCControlManager().mProduceName);
 	}
 
 	@Override
@@ -1822,7 +1848,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		}
 
 		Collections.sort(names, new SortByDate());
-
 
 		String videoname1 = "";
 		String videoname2 = "";
