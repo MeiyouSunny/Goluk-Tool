@@ -81,8 +81,6 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 	private String strYear = "";
 	private String strMonth = "";
 	private String strDay = "";
-	private String strhour = "";
-	private String strMinute = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,16 +93,13 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 		initView();
 		getSystemTime();
 		readPreState();
-		this.switchUIState();
+		switchUIState();
 	}
 
 	private void loadRes() {
 		strYear = this.getResources().getString(R.string.str_year);
 		strMonth = this.getResources().getString(R.string.str_month);
-
 		strDay = this.getResources().getString(R.string.str_day);
-		strhour = this.getResources().getString(R.string.str_hour);
-		strMinute = this.getResources().getString(R.string.str_minute);
 	}
 
 	private void readPreState() {
@@ -365,9 +360,8 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 				mCurrentState = STATE_AUTO;
 			}
 		}
-
+		this.saveCurrentState();
 		this.switchUIState();
-
 	}
 
 	private void ipcCallBack_SetTimeSynCfg(int param1, Object param2) {
@@ -402,7 +396,7 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 			minute = calendar.get(Calendar.MINUTE);
 			seconds = calendar.get(Calendar.SECOND);
 
-			mDateText.setText(year + strYear+ month + strMonth+ day + strDay);
+			mDateText.setText(year + strYear + month + strMonth + day + strDay);
 			if (minute < 10) {
 				mTimeText.setText(hour + ":0" + minute);
 			} else {
