@@ -179,6 +179,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			GolukDebugUtils.e("", "--------------SettingsActivity-----getPhotoQualityMode：" + getPhotoQualityMode);
 			GolukDebugUtils.e("", "--------------SettingsActivity-----t1VoiceState：" + t1VoiceState);
 		}
+		//获取T1图像自动翻转
 		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
 			boolean t1GetAutoRotaing = GolukApplication.getInstance().getIPCControlManager().getT1AutoRotaing();
 			GolukDebugUtils.e("", "--------------SettingsActivity-----t1GetAutoRotaing：" + t1GetAutoRotaing);
@@ -973,7 +974,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	
 	private void setT1AutoRotaingCallback(int msg, int param1, Object param2) {
 		if(RESULE_SUCESS == param1) {
-			GolukDebugUtils.e("", "------------setT1AutoRotaingCallback------param2:"+(String)param2);
 			if(0 == t1AutpRotaingEnable) {
 				t1AutpRotaingEnable = 1;
 				mImageFlipBtn.setBackgroundResource(R.drawable.set_open_btn);
@@ -989,6 +989,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		try {
 			JSONObject obj = new JSONObject();
 			obj.put("enable", t1AutpRotaingEnable);
+			return obj.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
