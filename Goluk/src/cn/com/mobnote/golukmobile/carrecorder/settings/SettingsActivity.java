@@ -117,6 +117,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		ipcVersion = SharedPrefUtil.getIPCVersion();
 		GolukDebugUtils.e("", "=========ipcVersion：" + ipcVersion);
 
+		loadRes();
+
 		mIPCName = GolukApplication.getInstance().mIPCControlManager.mProduceName;
 		GolukDebugUtils.e("", "=========mIPCName：" + mIPCName);
 		initView();
@@ -1202,32 +1204,32 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	int interval = 0;
 	/** 照片质量实体类 */
 	private IPCSettingPhotoBean mPhtoBean = null;
-
 	private String mCurrentResolution = "";
+	/** 图片质量相关 */
+	private String[] mPhotoText = null;
+	private String[] mPhotoValue = null;
+
+	private void loadRes() {
+		mPhotoText = getResources().getStringArray(R.array.list_photo_quality_ui);
+		mPhotoValue = getResources().getStringArray(R.array.list_photo_quality_list);
+	}
 
 	private void parsePhotoQualityJson(String str) {
-
 		mPhtoBean = GolukFastJsonUtil.getParseObj(str, IPCSettingPhotoBean.class);
 		if (null == mPhtoBean) {
 			return;
 		}
 		refreshPhotoQuality();
-
 	}
 
 	private void refreshPhotoQuality() {
-		if ("1080P".equals(mPhtoBean.resolution) || "1080p".equals(mPhtoBean.resolution)
-				|| "1080".equals(mPhtoBean.resolution)) {
-			mPhotoQualityText.setText("1080P高质量");
-			mCurrentResolution = mPhtoBean.resolution;
-		} else if ("720P".equals(mPhtoBean.resolution) || "720p".equals(mPhtoBean.resolution)
-				|| "720".equals(mPhtoBean.resolution)) {
-			mPhotoQualityText.setText("720P中");
-			mCurrentResolution = mPhtoBean.resolution;
-		} else if ("480P".equals(mPhtoBean.resolution) || "480p".equals(mPhtoBean.resolution)
-				|| "480".equals(mPhtoBean.resolution)) {
-			mPhotoQualityText.setText("480P低");
-			mCurrentResolution = mPhtoBean.resolution;
+		final int length = mPhotoText.length;
+		for (int i = 0; i < length; i++) {
+			if (mPhtoBean.quality.equals(mPhotoValue[i])) {
+				mPhotoQualityText.setText(mPhotoText[i]);
+				mCurrentResolution = mPhtoBean.quality;
+				break;
+			}
 		}
 	}
 
