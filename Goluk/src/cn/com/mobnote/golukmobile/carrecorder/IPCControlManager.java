@@ -380,11 +380,11 @@ public class IPCControlManager implements IPCManagerFn {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPC_VDCP_Msg_GetTimeSyncCfg, "");
 	}
-	
-	public boolean setTimeSyncCfg (int state) {
+
+	public boolean setTimeSyncCfg(int state) {
 		String json = JsonUtil.getGpsTimeJson(state);
-		return mApplication.mGoluk
-				.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCP_Msg_SetTimeSyncCfg, json);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPC_VDCP_Msg_SetTimeSyncCfg, json);
 	}
 
 	/**
@@ -797,6 +797,26 @@ public class IPCControlManager implements IPCManagerFn {
 	public boolean setKitMode(String status) {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_SetKitCfg, status);
+	}
+
+	/**
+	 * 获取T1图像自动翻转
+	 * 
+	 * @return
+	 */
+	public boolean getT1AutoRotaing() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetAutoRotationCfg, "");
+	}
+
+	/**
+	 * 设置T1图像自动翻转
+	 * 
+	 * @return
+	 */
+	public boolean setT1AutoRotaing(String status) {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetAutoRotationCfg, status);
 	}
 
 	@Override

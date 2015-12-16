@@ -165,6 +165,10 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCP_Msg_GetTimeSyncCfg = 1049;
 	/**设置ipc时间同步配置**/
 	public static final int IPC_VDCP_Msg_SetTimeSyncCfg = 1050;
+	/**获取ipc时间同步配置**/
+	public static final int IPC_VDCP_Msg_GetAutoRotationCfg = 1051;
+	/**设置ipc时间同步配置**/
+	public static final int IPC_VDCP_Msg_SetAutoRotationCfg = 1052;
 
 	/**
 	 * 
@@ -304,6 +308,10 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCPCmd_GetTimeSyncCfg = 1049;
 	/**设置ipc时间同步配置**/
 	public static final int IPC_VDCPCmd_SetTimeSyncCfg = 1050;
+	/**获取ipc时间同步配置**/
+	public static final int IPC_VDCPCmd_GetAutoRotationCfg = 1051;
+	/**设置ipc时间同步配置**/
+	public static final int IPC_VDCPCmd_SetAutoRotationCfg = 1052;
 
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2);
 }
