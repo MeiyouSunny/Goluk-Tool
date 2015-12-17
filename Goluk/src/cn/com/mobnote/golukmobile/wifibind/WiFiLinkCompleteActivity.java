@@ -171,32 +171,9 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	}
 
 	private String getSetIPCJson() {
-
 		collectLog("getSetIPCJson", "----1");
-
-		// // 连接ipc热点wifi---调用ipc接口
-		// GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---1");
-		// String json = "";
-		// if (null != WiFiInfo.IPC_PWD && !"".equals(WiFiInfo.IPC_PWD)) {
-		// json = "{\"AP_SSID\":\"" + WiFiInfo.IPC_SSID + "\",\"AP_PWD\":\"" +
-		// WiFiInfo.IPC_PWD
-		// + "\",\"GolukSSID\":\"" + WiFiInfo.MOBILE_SSID + "\",\"GolukPWD\":\""
-		// + WiFiInfo.MOBILE_PWD
-		// + "\",\"GolukIP\":\"" + DEFAULT_IP + "\",\"GolukGateway\":\"" +
-		// DEFAULT_WAY + "\" }";
-		// } else {
-		// json = "{\"GolukSSID\":\"" + WiFiInfo.MOBILE_SSID +
-		// "\",\"GolukPWD\":\"" + WiFiInfo.MOBILE_PWD
-		// + "\",\"GolukIP\":\"" + DEFAULT_IP + "\",\"GolukGateway\":\"" +
-		// DEFAULT_WAY + "\" }";
-		// }
-		//
-		// collectLog("getSetIPCJson", "---json: " + json);
-
 		String testJson = getSetIpcJson11();
-
 		GolukDebugUtils.e("", "WifiLink----------setIpc----Json:" + testJson);
-
 		return testJson;
 	}
 
