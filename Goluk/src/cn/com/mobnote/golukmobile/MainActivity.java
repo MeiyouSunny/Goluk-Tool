@@ -323,8 +323,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			appId = CrashReportUtil.BUGLY_DEV_APPID_GOLUK;
 			isDebug = true;
 		}
-		CrashReport
-				.initCrashReport(getApplicationContext(), appId, isDebug);
+		CrashReport.initCrashReport(getApplicationContext(), appId, isDebug);
 		final String mobileId = Tapi.getMobileId();
 		CrashReport.setUserId(mobileId);
 		GolukDebugUtils.e("", "jyf-----MainActivity-----mobileId:" + mobileId);
@@ -1027,36 +1026,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 */
 	public void setIpcLinkWiFiCallBack(int state) {
 
-	}
-
-	private void wifiCallBack_3(int state, int process, String message, Object arrays) {
-		if (state == 0) {
-			switch (process) {
-			case 0:
-				// 创建热点成功
-				break;
-			case 1:
-				// ipc成功连接上热点
-				try {
-					WifiRsBean[] bean = (WifiRsBean[]) arrays;
-					if (null != bean) {
-						GolukDebugUtils.e("", "IPC连接上WIFI热点回调---length---" + bean.length);
-						if (bean.length > 0) {
-							sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
-						}
-					}
-				} catch (Exception e) {
-					GolukUtils.showToast(mContext, "IPC连接热点返回信息不是数组");
-
-				}
-				break;
-			default:
-				GolukUtils.showToast(mContext, message);
-				break;
-			}
-		} else {
-			GolukUtils.showToast(mContext, message);
-		}
 	}
 
 	private void wifiCallBack_5(int state, int process, String message, Object arrays) {

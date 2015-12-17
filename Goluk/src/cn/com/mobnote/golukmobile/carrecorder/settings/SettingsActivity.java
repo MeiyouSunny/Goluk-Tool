@@ -197,16 +197,18 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		GolukDebugUtils.e("", "photo------requestCode :" + requestCode + "   resultCode:" + resultCode);
+		GolukDebugUtils.e("", "SettingsActivity----onActivityResult----requestCode :" + requestCode + "   resultCode:"
+				+ resultCode);
 		if (10 == requestCode) {
 			if (RESULT_CODE_PHOTO == resultCode) {
 				if (null != data) {
 					String photoselect = data.getStringExtra("photoselect");
-					mPhtoBean.resolution = photoselect;
+					mPhtoBean.quality = photoselect;
 					mCurrentResolution = photoselect;
+					GolukDebugUtils.e("", "SettingsActivity----onActivityResult----photo------mCurrentResolution :" + mCurrentResolution);
 					refreshPhotoQuality();
 					String requestS = GolukFastJsonUtil.setParseObj(mPhtoBean);
-					GolukDebugUtils.e("", "photo------requestS :" + requestS);
+					GolukDebugUtils.e("", "SettingsActivity----onActivityResult----photo------requestS :" + requestS);
 					GolukApplication.getInstance().getIPCControlManager().setPhotoQualityMode(requestS);
 				}
 			} else if (RESULT_CODE_KIT == resultCode) {
