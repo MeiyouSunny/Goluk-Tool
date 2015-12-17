@@ -69,7 +69,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	/** HDR模式 **/
 	private Button mISPBtn = null;
 	/** HDR模式line **/
-	private RelativeLayout mISPLayout, mWonderfulLayout;
+	private RelativeLayout mISPLayout;
 	/** HDR模式 0关闭 1打开 **/
 	private int mISPSwitch = 0;
 	/** 精彩视频拍摄提示音 **/
@@ -234,7 +234,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mSwitchBtn = (Button) findViewById(R.id.kgjtsy);
 		mISPLayout = (RelativeLayout) findViewById(R.id.hdr_line);
 		mISPBtn = (Button) findViewById(R.id.hdr);
-		mWonderfulLayout = (RelativeLayout) findViewById(R.id.jcsp_line);
 		mWonderVideoBtn = (Button) findViewById(R.id.jcsp);
 		mPhotoQualityLayout = (RelativeLayout) findViewById(R.id.photographic_quality_line);
 		mFatigueLayout = (RelativeLayout) findViewById(R.id.fatigue_line);

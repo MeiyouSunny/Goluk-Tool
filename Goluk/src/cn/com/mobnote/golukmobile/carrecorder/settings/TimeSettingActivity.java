@@ -67,8 +67,6 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 	private int hour;
 	/** 分 */
 	private int minute;
-	/** 秒 */
-	private int seconds;
 	/** 保存自动同步时间开关状态 */
 	private boolean systemtime;
 	private RelativeLayout mDateLayout = null;
@@ -196,7 +194,6 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 		day = calendar.get(Calendar.DAY_OF_MONTH);
 		hour = calendar.get(Calendar.HOUR_OF_DAY);
 		minute = calendar.get(Calendar.MINUTE);
-		seconds = calendar.get(Calendar.SECOND);
 
 		mDateText.setText(year + strYear + month + strMonth + day + strDay);
 		if (minute < 10) {
@@ -394,7 +391,6 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 			day = calendar.get(Calendar.DAY_OF_MONTH);
 			hour = calendar.get(Calendar.HOUR_OF_DAY);
 			minute = calendar.get(Calendar.MINUTE);
-			seconds = calendar.get(Calendar.SECOND);
 
 			mDateText.setText(year + strYear + month + strMonth + day + strDay);
 			if (minute < 10) {
