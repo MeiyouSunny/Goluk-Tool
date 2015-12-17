@@ -587,7 +587,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 				isDownloading = true;
 
-				AssetsFileUtils.appendFileData(FileUtils.libToJavaPath(configPath), fileName + ",");
+//				AssetsFileUtils.appendFileData(FileUtils.libToJavaPath(configPath), fileName + ",");
 
 				// 调用下载视频接口
 				downloadCount++;
