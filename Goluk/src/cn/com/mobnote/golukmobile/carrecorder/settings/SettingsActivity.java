@@ -179,7 +179,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			GolukDebugUtils.e("", "--------------SettingsActivity-----getPhotoQualityMode：" + getPhotoQualityMode);
 			GolukDebugUtils.e("", "--------------SettingsActivity-----t1VoiceState：" + t1VoiceState);
 		}
-		//获取T1图像自动翻转
+		// 获取T1图像自动翻转
 		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
 			boolean t1GetAutoRotaing = GolukApplication.getInstance().getIPCControlManager().getT1AutoRotaing();
 			GolukDebugUtils.e("", "--------------SettingsActivity-----t1GetAutoRotaing：" + t1GetAutoRotaing);
@@ -921,9 +921,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				IPCCallBack_getRecAudioCfg(msg, param1, param2);
 			} else if (IPC_VDCP_Msg_SetRecAudioCfg == msg) {
 				IPCCallBack_setRecAudioCfg(msg, param1, param2);
-			} else if(msg == IPC_VDCP_Msg_GetAutoRotationCfg) {//获取T1图像自动翻转
+			} else if (msg == IPC_VDCP_Msg_GetAutoRotationCfg) {// 获取T1图像自动翻转
 				getT1AutoRotaingCallback(msg, param1, param2);
-			} else if(msg == IPC_VDCP_Msg_SetAutoRotationCfg) {//设置T1图像自动翻转
+			} else if (msg == IPC_VDCP_Msg_SetAutoRotationCfg) {// 设置T1图像自动翻转
 				setT1AutoRotaingCallback(msg, param1, param2);
 			}
 		}
@@ -952,14 +952,14 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			}
 		}
 	}
-	
+
 	int t1AutpRotaingEnable = 0;
-	
+
 	private void getT1AutoRotaingCallback(int msg, int param1, Object param2) {
 		if (RESULE_SUCESS == param1) {
 			try {
 				JSONObject obj = new JSONObject((String) param2);
-				GolukDebugUtils.e("", "------------getT1AutoRotaingCallback------param2:"+(String)param2);
+				GolukDebugUtils.e("", "------------getT1AutoRotaingCallback------param2:" + (String) param2);
 				t1AutpRotaingEnable = obj.optInt("enable");
 				if (1 == t1AutpRotaingEnable) {
 					mImageFlipBtn.setBackgroundResource(R.drawable.set_open_btn);
@@ -971,20 +971,21 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			}
 		}
 	}
-	
+
 	private void setT1AutoRotaingCallback(int msg, int param1, Object param2) {
-		if(RESULE_SUCESS == param1) {
-			if(0 == t1AutpRotaingEnable) {
-				t1AutpRotaingEnable = 1;
+		if (RESULE_SUCESS == param1) {
+			GolukDebugUtils.e("", "------------setT1AutoRotaingCallback------param2:" + (String) param2);
+			if (1 == t1AutpRotaingEnable) {
 				mImageFlipBtn.setBackgroundResource(R.drawable.set_open_btn);
 			} else {
-				t1AutpRotaingEnable = 0;
 				mImageFlipBtn.setBackgroundResource(R.drawable.set_close_btn);
 			}
-			
+
+		} else {
+			GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
 		}
 	}
-	
+
 	private String setT1AutoRotaingJson() {
 		try {
 			JSONObject obj = new JSONObject();
@@ -1201,7 +1202,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		}
 		return "";
 	}
-	
+
 	int interval = 0;
 	/** 照片质量实体类 */
 	private IPCSettingPhotoBean mPhtoBean = null;
