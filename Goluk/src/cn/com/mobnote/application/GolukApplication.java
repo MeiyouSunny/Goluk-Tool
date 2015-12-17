@@ -1140,7 +1140,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					}
 					// 保存设备型号
 					SharedPrefUtil.saveIpcModel(mIPCControlManager.mProduceName);
-				} catch (JSONException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				// ipc控制初始化成功,可以看画面和拍摄8s视频
