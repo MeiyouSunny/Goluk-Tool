@@ -1109,10 +1109,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				mFatigueBtn.setBackgroundResource(R.drawable.set_close_btn);
 			}
 
-			if (1 == autoRotation) {
-				mImageFlipBtn.setBackgroundResource(R.drawable.set_open_btn);
-			} else {
-				mImageFlipBtn.setBackgroundResource(R.drawable.set_close_btn);
+			if (!IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+				if (1 == autoRotation) {
+					mImageFlipBtn.setBackgroundResource(R.drawable.set_open_btn);
+				} else {
+					mImageFlipBtn.setBackgroundResource(R.drawable.set_close_btn);
+				}
 			}
 		} else {
 			GolukUtils.showToast(this, "设置功能设置失败");
@@ -1174,10 +1176,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				mFatigueBtn.setBackgroundResource(R.drawable.set_close_btn);
 			}
 
-			if (1 == autoRotation) {
-				mImageFlipBtn.setBackgroundResource(R.drawable.set_open_btn);
-			} else {
-				mImageFlipBtn.setBackgroundResource(R.drawable.set_close_btn);
+			if (!IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+				if (1 == autoRotation) {
+					mImageFlipBtn.setBackgroundResource(R.drawable.set_open_btn);
+				} else {
+					mImageFlipBtn.setBackgroundResource(R.drawable.set_close_btn);
+				}
 			}
 		} catch (Exception e) {
 
