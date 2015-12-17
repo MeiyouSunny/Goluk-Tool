@@ -173,6 +173,11 @@
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.settings.CarrecoderKitSettingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
             android:name="cn.com.mobnote.golukmobile.live.LiveActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
@@ -198,11 +203,7 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
-        <activity
-            android:name="cn.com.mobnote.golukmobile.carrecorder.settings.RestoreFactorySettingsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
+
         <activity
             android:name="cn.com.mobnote.golukmobile.carrecorder.settings.ImpactSensitivityActivity"
             android:screenOrientation="portrait"
@@ -210,6 +211,11 @@
         </activity>
         <activity
             android:name="cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.settings.PhotoQualityActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>

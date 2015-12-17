@@ -16,8 +16,10 @@ public class SettingsUtil {
 		String[] resolution = null;
 		if ("G1".equals(ipcName)) {
 			resolution = context.getResources().getStringArray(R.array.list_quality_resolution1);
-		} else {
+		} else if ("G2".equals(ipcName)) {
 			resolution = context.getResources().getStringArray(R.array.list_quality_resolution2);
+		} else {
+			resolution = context.getResources().getStringArray(R.array.list_quality_resolution_t1);
 		}
 		return resolution;
 	}
@@ -34,8 +36,10 @@ public class SettingsUtil {
 		String[] bitrate = null;
 		if ("G1".equals(ipcName)) {
 			bitrate = context.getResources().getStringArray(R.array.list_quality_bitrate1);
-		} else {
+		} else if ("G2".equals(ipcName)) {
 			bitrate = context.getResources().getStringArray(R.array.list_quality_bitrate2);
+		} else {
+			bitrate = context.getResources().getStringArray(R.array.list_quality_bitrate_t1);
 		}
 		return bitrate;
 	}

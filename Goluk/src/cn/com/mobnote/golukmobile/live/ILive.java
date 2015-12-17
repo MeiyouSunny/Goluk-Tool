@@ -35,9 +35,6 @@ public interface ILive {
 
 	public final int DURATION_TIMEOUT = 90 * 1000;
 
-	/** 视频上传地址 */
-	public static final String UPLOAD_VOIDE_PRE = "rtmp://goluk.8686c.com/live/";
-
 	/** 是否是直播 */
 	public static final String KEY_IS_LIVE = "isLive";
 	/** 要加入的群组ID */

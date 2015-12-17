@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -28,7 +29,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -68,19 +69,18 @@ import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.LiveSettingBean;
 import cn.com.mobnote.golukmobile.live.LiveSettingPopWindow;
 import cn.com.mobnote.golukmobile.live.LiveSettingPopWindow.IPopwindowFn;
+import cn.com.mobnote.golukmobile.photoalbum.FileInfoManagerUtils;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.golukmobile.videosuqare.RingView;
 import cn.com.mobnote.golukmobile.wifibind.WiFiLinkIndexActivity;
-import cn.com.mobnote.map.LngLat;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.mobnote.module.location.BaiduPosition;
-import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.mobnote.util.JsonUtil;
+import cn.com.mobnote.util.SortByDate;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.player.RtspPlayerView;
@@ -98,7 +98,7 @@ import de.greenrobot.event.EventBus;
  */
 @SuppressLint("NewApi")
 public class CarRecorderActivity extends BaseActivity implements OnClickListener, OnTouchListener, IPCManagerFn,
-		IPopwindowFn{
+		IPopwindowFn {
 	private Handler mHandler = null;
 	/** 保存当前录制的视频类型 */
 	public VideoType mCurVideoType = VideoType.idle;
@@ -277,9 +277,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private ImageView new2;
 
 	private String SelfContextTag = "carrecorder";
-	
+
 	private String mLocationAddress = "";
-	
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -302,7 +301,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		lsp.setCallBackNotify(this);
 
 		mSettingData = lsp.getCurrentSetting();
-		mLocationAddress =  cn.com.mobnote.util.GolukFileUtils.loadString("loactionAddress", "");
+		mLocationAddress = cn.com.mobnote.util.GolukFileUtils.loadString("loactionAddress", "");
 
 		EventBus.getDefault().register(this);
 
@@ -326,7 +325,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				}
 			};
 		};
-		
+
 		initView();
 		setListener();
 		initIpcState(ipcState);// 初始化ipc的连接状态
@@ -384,6 +383,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mPalyerLayout.setVisibility(View.VISIBLE);
 			mNotconnected.setVisibility(View.GONE);
 			mConncetLayout.setVisibility(View.GONE);
+			if (mApp.isIpcLoginSuccess && !this.isT1()) {
+				liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon);
+			} else {
+				liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+			}
 			break;
 		default:
 			break;
@@ -518,10 +522,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 		}
-		
-		if("".equals(mLocationAddress)){
+
+		if ("".equals(mLocationAddress)) {
 			mAddr.setText("定位中");
-		}else {
+		} else {
 			mAddr.setText(mLocationAddress);
 		}
 
@@ -714,14 +718,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	public void start() {
 		if (null != mRtspPlayerView) {
 			mRtspPlayerView.setVisibility(View.VISIBLE);
-			String preUrl = getResources().getString(R.string.default_rtsp_pre);
-			String backUrl = getResources().getString(R.string.default_rtsp_back);
-			String url = preUrl + mApp.mIpcIp + backUrl;
-
-			GolukDebugUtils.e("xuhw", "CarrecorderActivity-------start--YYYYYY======url==" + url);
-
+			String url = PlayUrlManager.getRtspUrl();
+			GolukDebugUtils.e("xuhw", "CarrecorderActivity-------start--YYYYYY======url==" + url + "   "
+					+ mApp.mIPCControlManager.mProduceName);
 			mRtspPlayerView.setDataSource(url);
-
 			mRtspPlayerView.start();
 		}
 	}
@@ -767,7 +767,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	public void onClick(View arg0) {
 		if (!isAllowedClicked())
 			return;
-		Log.e("", "GGGGGGGGGGG-------------id=" + arg0.getId());
+
 		switch (arg0.getId()) {
 		case R.id.back_btn:
 			if (m_bIsFullScreen) {
@@ -890,18 +890,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					it.putExtra("isInfo", "back");
 					startActivity(it);
 				} else {
-					Intent intent = new Intent(this, LiveActivity.class);
-					String desc = et.getText().toString();
-					if (null == desc || "".equals(desc)) {
-						desc = "极路客精彩直播";
+					if (!this.isT1()) {
+						toLive();
 					}
-					mSettingData.desc = desc;
-					intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
-					intent.putExtra(LiveActivity.KEY_GROUPID, "");
-					intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
-					intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
-					intent.putExtra(LiveActivity.KEY_LIVE_SETTING_DATA, mSettingData);
-					startActivity(intent);
+					
 				}
 
 			}
@@ -960,6 +952,26 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		default:
 			break;
 		}
+	}
+
+	/**
+	 * 启动直播
+	 * 
+	 * @author jyf
+	 */
+	private void toLive() {
+		Intent intent = new Intent(this, LiveActivity.class);
+		String desc = et.getText().toString();
+		if (null == desc || "".equals(desc)) {
+			desc = "极路客精彩直播";
+		}
+		mSettingData.desc = desc;
+		intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
+		intent.putExtra(LiveActivity.KEY_GROUPID, "");
+		intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+		intent.putExtra(LiveActivity.KEY_LIVE_SETTING_DATA, mSettingData);
+		startActivity(intent);
 	}
 
 	/**
@@ -1071,7 +1083,16 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 		mSettingBtn.setBackgroundResource(R.drawable.carrecorder_setting);
 		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
-		liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon);
+		if (!isT1()) {
+			liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon);
+		} else {
+			liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+		}
+		
+	}
+	
+	private boolean isT1() {
+		return IPCControlManager.T1_SIGN.equals(mApp.getIPCControlManager().mProduceName);
 	}
 
 	@Override
@@ -1251,7 +1272,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * @date 2015年3月8日
 	 */
 	private void stopTrimVideo() {
-		mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT, CarRecorderActivity.QUERYFILETIME);
+		if (!IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+			mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT, CarRecorderActivity.QUERYFILETIME);
+		}
 		mShootTime = 0;
 		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 		if (null != m8sTimer) {
@@ -1453,34 +1476,41 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					+ param2);
 			GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord====1111111========param1=" + param1
 					+ "=====param2=" + param2);
-			TriggerRecord record = IpcDataParser.parseTriggerRecordResult((String) param2);
-			if (null != record) {
-				if (RESULE_SUCESS == param1) {
-					mRecordVideFileName = record.fileName;
-					videoname = mRecordVideFileName;
-					GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===555555========type=" + record.type);
-					GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord====222222========mRecordVideFileName="
-							+ mRecordVideFileName);
-					// 精彩视频
-					if (TYPE_SHORTCUT == record.type) {
-						GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord==333333==========MOUNTS========");
-						mHandler.sendEmptyMessage(MOUNTS);
+			if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+				mHandler.sendEmptyMessage(MOUNTS);
+			} else {
+				TriggerRecord record = IpcDataParser.parseTriggerRecordResult((String) param2);
+				if (null != record) {
+					if (RESULE_SUCESS == param1) {
+						mRecordVideFileName = record.fileName;
+						videoname = mRecordVideFileName;
+						GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===555555========type="
+								+ record.type);
+						GFileUtils
+								.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord====222222========mRecordVideFileName="
+										+ mRecordVideFileName);
+						// 精彩视频
+						if (TYPE_SHORTCUT == record.type) {
+							GFileUtils
+									.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord==333333==========MOUNTS========");
+							mHandler.sendEmptyMessage(MOUNTS);
+						} else {
+							GFileUtils
+									.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===444444=========EMERGENCY========");
+							mHandler.sendEmptyMessage(EMERGENCY);
+						}
 					} else {
 						GFileUtils
-								.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===444444=========EMERGENCY========");
-						mHandler.sendEmptyMessage(EMERGENCY);
+								.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===66666======= not success ==========");
+						videoTriggerFail();
 					}
 				} else {
+					GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===6666====not success====");
 					GFileUtils
-							.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===66666======= not success ==========");
+							.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===77777======= not success ==========");
 					videoTriggerFail();
 				}
-			} else {
-				GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===6666====not success====");
-				GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===77777======= not success ==========");
-				videoTriggerFail();
 			}
-
 			break;
 		// 单文件查询
 		case IPC_VDCPCmd_SingleQuery:
@@ -1800,12 +1830,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 		images = new VideoShareInfo[3];
 
-		String[] filePaths = { "wonderful/wonderful.txt", "urgent/urgent.txt" };
+//		String[] filePaths = { "wonderful/wonderful.txt", "urgent/urgent.txt" };
 		Bitmap bitmap = ImageManager.getBitmapFromResource(R.drawable.tacitly_pic);
 
-		List<String> wonderfuls = this.getNewVideoByType(filePaths[0], 1);// 最新的精彩视频
-		List<String> urgents = this.getNewVideoByType(filePaths[1], 2);// 最新的紧急视频
-
+		List<String> wonderfuls = this.getNewVideoByType(1);// 最新的精彩视频
+		List<String> urgents = this.getNewVideoByType(2);// 最新的紧急视频
 		List<String> names = new ArrayList<String>();
 
 		VideoShareInfo defpic = new VideoShareInfo();
@@ -1819,15 +1848,15 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			names.addAll(urgents);
 		}
 
-		List<String> newvideo = this.shortNames(names);// 拿到最新的4个视频
+		Collections.sort(names, new SortByDate());
 
 		String videoname1 = "";
 		String videoname2 = "";
 
-		if (newvideo != null && newvideo.size() > 0) {
-			videoname1 = newvideo.get(0);
-			if (newvideo.size() > 1) {
-				videoname2 = newvideo.get(1);
+		if (names != null && names.size() > 0) {
+			videoname1 = names.get(0);
+			if (names.size() > 1) {
+				videoname2 = names.get(1);
 			}
 		}
 
@@ -1906,42 +1935,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		images[2] = defpic;
 	}
 
-	/**
-	 * 冒泡排序把日期最新的排前面
-	 * 
-	 * @Title: shortNames
-	 * @Description: TODO
-	 * @param names
-	 * @return List<String>
-	 * @author 曾浩
-	 * @throws
-	 */
-	public List<String> shortNames(List<String> names) {
-		if (names != null && names.size() > 0) {
-			for (int i = 0; i < names.size(); i++) {
-				String[] videos = names.get(i).split("_");
-				Long time = Long.parseLong(videos[1]);
+	public List<String> getNewVideoByType(int type) {
+//		String file = mFilePath + uri;
+//		List<String> list = this.getVideoConfigFile(file);
 
-				for (int j = i + 1; j < names.size(); j++) {
-					Long date = Long.parseLong(names.get(j).split("_")[1]);
-					if (time < date) {
-						String name = names.get(i);
-						names.set(i, names.get(j));
-						names.set(j, name);
-					}
-				}
-			}
-		}
-
-		return names;
-	}
-
-	public List<String> getNewVideoByType(String uri, int type) {
-		String file = mFilePath + uri;
-		List<String> list = this.getVideoConfigFile(file);
-
-		String videoname1 = "";
-		String videoname2 = "";
+//		String videoname1 = "";
+//		String videoname2 = "";
 
 		String path = "";
 		if (type == 1) {
@@ -1949,43 +1948,51 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		} else if (type == 2) {
 			path = Environment.getExternalStorageDirectory().getPath() + "/goluk/video/urgent/";
 		}
+		List<String> list = FileInfoManagerUtils.getFileNames(path, "(.+?mp4)");
+//
+//		int flog = 0;
+//		String vn = "";
 
-		int flog = 0;
-		String vn = "";
-
-		if (list != null && list.size() > 0) {
-			File vfile = null;
-			for (int i = list.size() - 1; i >= 0; i--) {
-				vn = list.get(i);
-				vfile = new File(path + vn);
-
-				if (vfile.exists()) {
-					flog++;
-					if (flog <= 1) {
-						videoname1 = vn;
-					} else if (flog == 2) {
-						videoname2 = vn;
-					} else {
-						break;
-					}
-
-				}
-			}
-
-			List<String> result = new ArrayList<String>();
-
-			if (!"".equals(videoname1)) {
-				result.add(videoname1);
-			}
-
-			if (!"".equals(videoname2)) {
-				result.add(videoname2);
-			}
-
-			return result;
-		} else {
-			return null;
+		List<String> result = new ArrayList<String>();
+		if (list.size() > 0) {
+			result.add(list.get(list.size() - 1));
 		}
+		if (list.size() > 1) {
+			result.add(list.get(list.size() - 2));
+		}
+		return result;
+//		if (list != null && list.size() > 0) {
+//			File vfile = null;
+//			for (int i = list.size() - 1; i >= 0; i--) {
+//				vn = list.get(i);
+//				vfile = new File(path + vn);
+//
+//				if (vfile.exists()) {
+//					flog++;
+//					if (flog <= 1) {
+//						videoname1 = vn;
+//					} else if (flog == 2) {
+//						videoname2 = vn;
+//					} else {
+//						break;
+//					}
+//
+//				}
+//			}
+//
+//
+//			if (!"".equals(videoname1)) {
+//				result.add(videoname1);
+//			}
+//
+//			if (!"".equals(videoname2)) {
+//				result.add(videoname2);
+//			}
+//
+//			return result;
+//		} else {
+//			return null;
+//		}
 
 	}
 
@@ -2051,39 +2058,35 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		return false;
 	}
 
-/*	@Override
-	public void LocationCallBack(String gpsJson) {
-		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
-		if (location == null) {
-			return;
-		}
-		// 保存经纬度
-		LngLat.lng = location.rawLon;
-		LngLat.lat = location.rawLat;
-
-		if (mApp.getContext() instanceof CarRecorderActivity) {
-			GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
-		}
-	}*/
+	/*
+	 * @Override public void LocationCallBack(String gpsJson) { BaiduPosition
+	 * location = JsonUtil.parseLocatoinJson(gpsJson); if (location == null) {
+	 * return; } // 保存经纬度 LngLat.lng = location.rawLon; LngLat.lat =
+	 * location.rawLat;
+	 * 
+	 * if (mApp.getContext() instanceof CarRecorderActivity) {
+	 * GetBaiduAddress.getInstance().searchAddress(location.rawLat,
+	 * location.rawLon); } }
+	 */
 
 	public void onEventMainThread(EventLocationFinish event) {
 		if (null == event) {
 			return;
 		}
-		
-		if(event.getCityCode().equals("-1")){//定位失败
-			if(mLocationAddress.equals("")){
+
+		if (event.getCityCode().equals("-1")) {// 定位失败
+			if (mLocationAddress.equals("")) {
 				mAddr.setText("未知街道");
-			}else{
+			} else {
 				mAddr.setText(mLocationAddress);
 			}
-		}else{//定位成功
-			if(event.getAddress() != null && !"".equals(event.getAddress())){
+		} else {// 定位成功
+			if (event.getAddress() != null && !"".equals(event.getAddress())) {
 				mLocationAddress = event.getAddress();
 				cn.com.mobnote.util.GolukFileUtils.saveString("loactionAddress", mLocationAddress);
 				mAddr.setText(mLocationAddress);
 			}
 		}
-		
+
 	}
 }

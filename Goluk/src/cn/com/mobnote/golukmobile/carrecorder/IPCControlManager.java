@@ -29,14 +29,16 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * @author xuhw
  */
 public class IPCControlManager implements IPCManagerFn {
-	
+
 	public static final String G1_SIGN = "G1";
+	public static final String G2_SIGN = "G2";
+	public static final String T1_SIGN = "T1";
 
 	/** IPC回调监听列表 */
 	private HashMap<String, IPCManagerFn> mIpcManagerListener = null;
 	/** Application实例,用于调用JNI的对象 */
 	private GolukApplication mApplication = null;
-	/**IPC设备型号**/
+	/** IPC设备型号 **/
 	public String mProduceName = "";
 	/** 当前设备的Sn号 */
 	public String mDeviceSn = null;
@@ -47,12 +49,43 @@ public class IPCControlManager implements IPCManagerFn {
 		mApplication = application;
 		mIpcManagerListener = new HashMap<String, IPCManagerFn>();
 		mProduceName = SharedPrefUtil.getIpcModel();
+		if ("".equals(mProduceName)) {
+			setProduceName(G1_SIGN);
+		}
 		isNeedReportSn = false;
 		// 注册IPC回调
 		mApplication.mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_IPCManager, this);
 
 		// 设置连接模式
-		String json = JsonUtil.getIPCConnModeJson(IPCMgrMode_IPCDirect);
+		setIpcMode();
+	}
+
+	public void setProduceName(String name) {
+		mProduceName = name;
+	}
+
+	public void setIpcMode() {
+		if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName)) {
+			setIpcMode(IPCMgrMode_IPCDirect);
+		} else if (T1_SIGN.equals(mProduceName)) {
+			setIpcMode(IPCMgrMode_T1);
+		} else {
+			// 不处理
+		}
+	}
+
+	/**
+	 * 设置IPC 连接模式
+	 * 
+	 * @param mode
+	 *            0/1/2
+	 * @author jyf
+	 */
+	private void setIpcMode(int mode) {
+		if (mode < 0) {
+			return;
+		}
+		String json = JsonUtil.getIPCConnModeJson(mode);
 		mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_SetMode, json);
 	}
 
@@ -343,6 +376,17 @@ public class IPCControlManager implements IPCManagerFn {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetTime, "");
 	}
 
+	public boolean getTimeSyncCfg() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPC_VDCP_Msg_GetTimeSyncCfg, "");
+	}
+
+	public boolean setTimeSyncCfg(int state) {
+		String json = JsonUtil.getGpsTimeJson(state);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPC_VDCP_Msg_SetTimeSyncCfg, json);
+	}
+
 	/**
 	 * 设置IPC系统WIFI配置
 	 * 
@@ -406,6 +450,17 @@ public class IPCControlManager implements IPCManagerFn {
 		String json = JsonUtil.getVideoConfig(mVideoConfigState);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPC_VDCPCmd_SetVideoEncodeCfg, json);
+	}
+
+	public boolean setAudioCfg_T1(int state) {
+		String json = JsonUtil.getVideoConfigJson_T1(state);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPC_VDCPCmd_SetRecAudioCfg, json);
+	}
+
+	public boolean getAudioCfg_T1() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPC_VDCPCmd_GetRecAudioCfg, "");
 	}
 
 	/**
@@ -663,7 +718,7 @@ public class IPCControlManager implements IPCManagerFn {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_SetSpeakerSwitch, status);
 	}
-	
+
 	/**
 	 * 获取isp模式
 	 * 
@@ -676,11 +731,92 @@ public class IPCControlManager implements IPCManagerFn {
 
 	/**
 	 * 设置isp模式
+	 * 
 	 * @return
 	 */
 	public boolean setISPMode(String status) {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_SetISPMode, status);
+	}
+
+	/**
+	 * 获取照片质量
+	 * 
+	 * @return
+	 */
+	public boolean getPhotoQualityMode() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetPicCfg, "");
+	}
+
+	/**
+	 * 设置照片质量
+	 * 
+	 * @return
+	 */
+	public boolean setPhotoQualityMode(String status) {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetPicCfg, status);
+	}
+
+	/**
+	 * 获取疲劳驾驶、图像自动翻转、停车休眠
+	 * 
+	 * @return
+	 */
+	public boolean getFunctionMode() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetFunctionSwitch, "");
+	}
+
+	/**
+	 * 设置疲劳驾驶、图像自动翻转、停车休眠
+	 * 
+	 * @return
+	 */
+	public boolean setFunctionMode(String status) {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetFunctionSwitch, status);
+	}
+
+	/**
+	 * 获取遥控器功能
+	 * 
+	 * @return
+	 */
+	public boolean getKitMode() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetKitCfg, "");
+	}
+
+	/**
+	 * 设置遥控器功能
+	 * 
+	 * @return
+	 */
+	public boolean setKitMode(String status) {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetKitCfg, status);
+	}
+
+	/**
+	 * 获取T1图像自动翻转
+	 * 
+	 * @return
+	 */
+	public boolean getT1AutoRotaing() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetAutoRotationCfg, "");
+	}
+
+	/**
+	 * 设置T1图像自动翻转
+	 * 
+	 * @return
+	 */
+	public boolean setT1AutoRotaing(String status) {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetAutoRotationCfg, status);
 	}
 
 	@Override

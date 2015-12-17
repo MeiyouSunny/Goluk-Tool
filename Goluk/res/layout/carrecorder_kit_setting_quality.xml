@@ -6,30 +6,32 @@
     android:paddingTop="42dp" >
 
     <RelativeLayout
-        android:id="@+id/time_setting_gpslayout"
+        android:id="@+id/carrecoder_kti_close"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="42dp"
         android:layout_marginTop="15dp"
         android:background="@color/setting_white_color" >
 
         <TextView
+            android:id="@+id/carrecoder_kti_closeText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:text="@string/str_carrecoder_auto_gpstime"
             android:textColor="@color/setting_black_color"
             android:textSize="16sp" />
 
-        <Button
-            android:id="@+id/time_gps_mAutoBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageButton
+            android:id="@+id/carrecoder_kti_cRight"
+            android:layout_width="20dp"
+            android:layout_height="14dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:background="@drawable/set_open_btn" />
+            android:background="@drawable/setup_icon_hook"
+            android:contentDescription="@string/def"
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="match_parent"
@@ -37,7 +39,6 @@
             android:background="@color/setting_line_color" />
 
         <TextView
-            android:id="@+id/time_gps_line"
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_alignParentBottom="true"
@@ -46,75 +47,37 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/carrecoder_kti_low"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="42dp"
         android:background="@color/setting_white_color" >
 
         <TextView
+            android:id="@+id/carrecoder_kti_lowText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:text="@string/str_carrecoder_auto"
             android:textColor="@color/setting_black_color"
             android:textSize="16sp" />
 
-        <Button
-            android:id="@+id/mAutoBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageButton
+            android:id="@+id/carrecoder_kti_dRight"
+            android:layout_width="20dp"
+            android:layout_height="14dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:background="@drawable/set_open_btn" />
+            android:background="@drawable/setup_icon_hook"
+            android:contentDescription="@string/def"
+            android:visibility="gone" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/setting_line_color" />
-
-        <TextView
-            android:id="@+id/line"
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="15dp"
-            android:background="@color/setting_line_color" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/mDateLayout"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/setting_white_color" >
-
-        <TextView
-            android:id="@+id/mDateText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/mTimeText"
-            android:gravity="center_vertical"
-            android:paddingRight="25dp"
-            android:textColor="@color/photoalbum_text_color"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/mTimeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
-            android:gravity="center_vertical"
-            android:textColor="@color/photoalbum_text_color"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_alignParentBottom="true"
             android:background="@color/setting_line_color" />
     </RelativeLayout>
 

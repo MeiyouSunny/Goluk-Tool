@@ -7,6 +7,7 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -258,7 +259,6 @@ public class LocalWonderfulVideoListView {
 				}
 			}
 		}
-
 		LocalDataLoadAsyncTask task = new LocalDataLoadAsyncTask(type, new DataCallBack() {
 			@Override
 			public void onSuccess(int type, List<VideoInfo> mLocalListData, List<String> mGroupListName) {
@@ -279,7 +279,7 @@ public class LocalWonderfulVideoListView {
 				checkListState();
 			}
 		});
-		task.execute("");
+		task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
 	}
 
 	public boolean isHasData() {

@@ -9,20 +9,20 @@
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:background="@color/photoalbum_title_bg_color" >
-  
+
         <ImageButton
             android:id="@+id/back_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:background="@drawable/live_btn_back"
-            android:contentDescription="@string/def"  />
+            android:contentDescription="@string/def" />
 
         <TextView
-            android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
             android:text="@string/setting_title_text"
             android:textColor="@color/white"
             android:textSize="18sp" />
@@ -36,32 +36,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
-            
+
             <!-- 存储容量查询 -->
-             <RelativeLayout
+
+            <RelativeLayout
                 android:id="@+id/rlcx_line"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginTop="15dp"
                 android:background="@color/setting_white_color" >
-				
+
                 <TextView
-                    android:paddingLeft="15dp"
-                	android:paddingRight="15dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
                     android:text="@string/rlcx_title"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
-                
+
                 <TextView
                     android:id="@+id/mStorayeText"
-                	android:paddingRight="10dp"
-                	android:layout_toLeftOf="@+id/sc_right"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/sc_right"
                     android:gravity="center_vertical"
+                    android:paddingRight="10dp"
                     android:text="0KB/0KB"
                     android:textColor="@color/setting_right_text_color"
                     android:textSize="15sp" />
@@ -75,18 +76,17 @@
                     android:layout_marginRight="15dp"
                     android:background="@drawable/icon_next_press"
                     android:contentDescription="@string/def" />
-                
-                <TextView 
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:background="@color/setting_line_color"/>
-                
-                <TextView 
+                    android:background="@color/setting_line_color" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/setting_line_color"/>
-                
+                    android:background="@color/setting_line_color" />
             </RelativeLayout>
 
             <!-- 视频质量栏目 -->
@@ -96,26 +96,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginTop="15dp"
-                android:background="@color/setting_white_color"
-                 >
+                android:background="@color/setting_white_color" >
 
                 <TextView
-                    android:paddingLeft="15dp"
-                	android:paddingRight="15dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
                     android:text="@string/spzl_title"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
-                
+
                 <TextView
                     android:id="@+id/mVideoText"
-                	android:paddingRight="10dp"
-                	android:layout_toLeftOf="@+id/vd_r"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/vd_r"
                     android:gravity="center_vertical"
+                    android:paddingRight="10dp"
                     android:text="1080P高质量"
                     android:textColor="@color/setting_right_text_color"
                     android:textSize="15sp" />
@@ -129,36 +128,35 @@
                     android:layout_marginRight="15dp"
                     android:background="@drawable/icon_next_press"
                     android:contentDescription="@string/def" />
-                
-                <TextView 
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:background="@color/setting_line_color"/>
-                
-                <TextView 
+                    android:background="@color/setting_line_color" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_marginLeft="15dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/setting_line_color"/>
-                
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
             </RelativeLayout>
-            
+
             <!-- HDR模式 -->
+
             <RelativeLayout
                 android:id="@+id/hdr_line"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color"
-                 >
+                android:background="@color/setting_white_color" >
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:text="@string/hdr_title"
                     android:paddingLeft="15dp"
-                	android:paddingRight="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/hdr_title"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
 
@@ -170,30 +168,29 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:background="@drawable/set_open_btn" />
-                
-                <TextView 
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_marginLeft="15dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/setting_line_color"/>
-                
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
             </RelativeLayout>
-            
+
             <!-- 自动循环录像 -->
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color"
-                 >
+                android:background="@color/setting_white_color" >
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:text="@string/zdxhlx_title"
                     android:paddingLeft="15dp"
-                	android:paddingRight="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/zdxhlx_title"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
 
@@ -205,31 +202,30 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:background="@drawable/set_open_btn" />
-                
-                <TextView 
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_marginLeft="15dp"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/setting_line_color"/>
-                
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
             </RelativeLayout>
-            
+
             <!-- 声音录制开关 -->
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color"
-                >
+                android:background="@color/setting_white_color" >
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
                     android:text="@string/sylz_title"
                     android:textColor="@color/setting_black_color"
-                    android:paddingLeft="15dp"
-                	android:paddingRight="15dp" 
                     android:textSize="16sp" />
 
                 <Button
@@ -240,16 +236,67 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:background="@drawable/set_open_btn" />
-                
-                <TextView 
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/setting_line_color"/>
-                
+                    android:background="@color/setting_line_color" />
             </RelativeLayout>
             
+            <!-- 照片质量 -->
+
+            <RelativeLayout
+                android:id="@+id/photographic_quality_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_photographic_quality_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_settings_photographic_quality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/imagebtn_settings_photographic_quality"
+                    android:gravity="center_vertical"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+                <ImageButton
+                    android:id="@+id/imagebtn_settings_photographic_quality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+
             <!-- 开关机提示音 -->
+
             <RelativeLayout
                 android:id="@+id/kgjtsy_line"
                 android:layout_width="match_parent"
@@ -258,11 +305,11 @@
                 android:background="@color/setting_white_color" >
 
                 <TextView
-                    android:paddingLeft="15dp"
-                	android:paddingRight="15dp" 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
                     android:text="开关机提示音"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
@@ -275,21 +322,22 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:background="@drawable/set_open_btn" />
-                
-                <TextView 
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:background="@color/setting_line_color"/>
-                
-                <TextView 
+                    android:background="@color/setting_line_color" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/setting_line_color"/>
-                
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
             </RelativeLayout>
             
             <!-- 精彩视频拍摄提示音 -->
+
             <RelativeLayout
                 android:id="@+id/jcsp_line"
                 android:layout_width="match_parent"
@@ -297,11 +345,11 @@
                 android:background="@color/setting_white_color" >
 
                 <TextView
-                    android:paddingLeft="15dp"
-                	android:paddingRight="15dp" 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
                     android:text="@string/jcsp_title"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
@@ -314,34 +362,75 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:background="@drawable/set_open_btn" />
-                
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
             </RelativeLayout>
             
+            <!-- 疲劳驾驶语音提示 -->
+
+            <RelativeLayout
+                android:id="@+id/fatigue_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_fatigue_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btn_settings_fatigue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+
             <!-- 碰撞感应灵敏度 -->
+
             <RelativeLayout
                 android:id="@+id/pzgylmd_line"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color"
-                >
+                android:layout_marginTop="15dp"
+                android:background="@color/setting_white_color" >
 
                 <TextView
-                    android:paddingLeft="15dp"
-                	android:paddingRight="15dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
                     android:text="@string/pzgy_title"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
-                
+
                 <TextView
                     android:id="@+id/mSensitivityText"
-                	android:paddingRight="10dp"
-                	android:layout_toLeftOf="@+id/pzgy"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/pzgy"
                     android:gravity="center_vertical"
+                    android:paddingRight="10dp"
                     android:text="关闭"
                     android:textColor="@color/setting_right_text_color"
                     android:textSize="15sp" />
@@ -355,47 +444,115 @@
                     android:layout_marginRight="15dp"
                     android:background="@drawable/icon_next_press"
                     android:contentDescription="@string/def" />
-                
-                <TextView 
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:background="@color/setting_line_color"/>
-                
-                <TextView 
+                    android:background="@color/setting_line_color" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/setting_line_color"/>
-                
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
             </RelativeLayout>
-			
-            <!--  
-            <TextView
+
+            <!-- 图像自动翻转 -->
+
+            <RelativeLayout
+                android:id="@+id/image_flip_line"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/pzgy_text"
-                android:textColor="@color/setting_right_text_color"
-                android:textSize="10sp" />
-                -->
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_image_flip_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btn_settings_image_flip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+
+            <!-- 停车休眠模式 -->
+
+            <RelativeLayout
+                android:id="@+id/parking_sleep_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_parking_sleep_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btn_settings_parking_sleep"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
             
+            <TextView
+                android:id="@+id/tv_settings_parking_sleep_hint_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp"
+                android:text="@string/str_settings_sleep_hint_text_t1"
+                android:textColor="#999999"
+                android:textSize="12sp" />
+
             <!-- 停车安防开关 -->
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginTop="20dp"
-                android:background="@color/setting_white_color"
-                >
+                android:background="@color/setting_white_color" >
 
                 <TextView
-                    android:paddingLeft="15dp"
-                	android:paddingRight="15dp" 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:text="停车安防开关"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_security_title"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
 
@@ -407,78 +564,127 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:background="@drawable/set_open_btn" />
-                
-                <TextView 
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:background="@color/setting_line_color"/>
-                
-                <TextView 
+                    android:background="@color/setting_line_color" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/setting_line_color"/>
-                
+                    android:background="@color/setting_line_color" />
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/tv_settings_security_hint_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:paddingTop="10dp"
-                android:text="启动此项后，极路客将自动判断车辆当前的状态：当车辆处于行驶状态，则极路客会根据自动循环录像的开关状态进行工作；当车辆处于停车状态，则极路客会触发1秒1拍，同时会打开异常振动（触发前8秒+后8秒视频）与移动侦测（触发前8秒+后8秒视频）功能。"
+                android:text="@string/str_settings_security_hint_text_g1"
                 android:textColor="#999999"
                 android:textSize="12sp" />
-            
-            <LinearLayout 
+
+            <LinearLayout
                 android:id="@+id/mBugLayout"
-                android:gravity="center_vertical"
-                android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:contentDescription="@string/def" 
-                >
-                
+                android:layout_marginTop="8dp"
+                android:contentDescription="@string/def"
+                android:gravity="center_vertical" >
+
                 <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:background="@drawable/my_shopping_car_icon" 
-                android:contentDescription="@string/def" />
-                
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/my_shopping_car_icon"
+                    android:contentDescription="@string/def" />
+
                 <TextView
-                android:layout_marginLeft="3dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="立即购买极路客专用降压线"
-                android:textColor="#047cf3"
-                android:textSize="10sp" 
-                android:contentDescription="@string/def" />
-                
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:contentDescription="@string/def"
+                    android:text="立即购买极路客专用降压线"
+                    android:textColor="#047cf3"
+                    android:textSize="10sp" />
             </LinearLayout>
             
+            <!-- 遥控器按键功能 -->
+
+            <RelativeLayout
+                android:id="@+id/handset_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_handset_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_settings_handset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/imagebtn_settings_handset"
+                    android:gravity="center_vertical"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+                <ImageButton
+                    android:id="@+id/imagebtn_settings_handset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+
             <!-- 时间设置 -->
+
             <RelativeLayout
                 android:id="@+id/sjsz_line"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginTop="15dp"
-                android:background="@color/setting_white_color"
-                >
+                android:background="@color/setting_white_color" >
 
                 <TextView
-                    android:paddingLeft="15dp"
-                	android:paddingRight="15dp" 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
                     android:text="@string/sjsz"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
 
-               <ImageButton
+                <ImageButton
                     android:id="@+id/sjsz"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -487,40 +693,39 @@
                     android:layout_marginRight="15dp"
                     android:background="@drawable/icon_next_press"
                     android:contentDescription="@string/def" />
-               
-               <TextView 
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:background="@color/setting_line_color"/>
-                
-                <TextView 
+                    android:background="@color/setting_line_color" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/setting_line_color"/>
-               
+                    android:background="@color/setting_line_color" />
             </RelativeLayout>
-            
+
             <!-- 版本信息 -->
+
             <RelativeLayout
                 android:id="@+id/bbxx_line"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginTop="15dp"
-                android:background="@color/setting_white_color"
-                >
+                android:background="@color/setting_white_color" >
 
                 <TextView
-                    android:paddingLeft="15dp"
-                	android:paddingRight="15dp" 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
                     android:text="@string/bbxx"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
 
-               <ImageButton
+                <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -528,41 +733,40 @@
                     android:layout_marginRight="15dp"
                     android:background="@drawable/icon_next_press"
                     android:contentDescription="@string/def" />
-               
-               <TextView 
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:background="@color/setting_line_color"/>
-                
-                <TextView 
+                    android:background="@color/setting_line_color" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/setting_line_color"/>
-               
+                    android:background="@color/setting_line_color" />
             </RelativeLayout>
-            
-            <!-- 恢复出厂设置-->
+
+            <!-- 恢复出厂设置 -->
+
             <RelativeLayout
                 android:id="@+id/hfccsz_line"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
-                android:background="@color/setting_white_color"
-                >
+                android:background="@color/setting_white_color" >
 
                 <TextView
-                    android:paddingLeft="15dp"
-                	android:paddingRight="15dp" 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
                     android:text="@string/hfcc"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
 
-               <ImageButton
+                <ImageButton
                     android:id="@+id/hfcc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -571,20 +775,18 @@
                     android:layout_marginRight="15dp"
                     android:background="@drawable/icon_next_press"
                     android:contentDescription="@string/def" />
-               
-               <TextView 
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:background="@color/setting_line_color"/>
-                
-                <TextView 
+                    android:background="@color/setting_line_color" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/setting_line_color"/>
-               
+                    android:background="@color/setting_line_color" />
             </RelativeLayout>
-            
         </LinearLayout>
     </ScrollView>
 

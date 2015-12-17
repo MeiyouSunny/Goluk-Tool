@@ -133,14 +133,42 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCP_Msg_RecErase = 1032;
 	/** 获取IPC系统WIFI配置 */
 	public static final int IPC_VDCP_Msg_GetWifiCfg = 1033;
-	/**获取IPC系统语音播报开关状态**/
+	/** 获取IPC系统语音播报开关状态 **/
 	public static final int IPC_VDCP_Msg_GetSpeakerSwitch = 1034;
-	/**设置IPC系统语音播报开关状态**/
+	/** 设置IPC系统语音播报开关状态 **/
 	public static final int IPC_VDCP_Msg_SetSpeakerSwitch = 1035;
-	/**获取isp模式**/
+	/**获取停车休眠参数**/
+	public static final int IPC_VDCP_Msg_GetHiberatePara = 1036;
+	/**设置停车休眠参数**/
+	public static final int IPC_VDCP_Msg_SetHiberatePara = 1037;
+	/**获取功能开关状态**/
+	public static final int IPC_VDCP_Msg_GetFunctionSwitch = 1038;
+	/**设置功能开关状态**/
+	public static final int IPC_VDCP_Msg_SetFunctionSwitch = 1039;
+	/** 获取isp模式 **/
 	public static final int IPC_VDCP_Msg_GetISPMode = 1041;
-	/**设置isp模式**/
+	/** 设置isp模式 **/
 	public static final int IPC_VDCP_Msg_SetISPMode = 1042;
+	/**获取IPC录制声音配置**/
+	public static final int IPC_VDCP_Msg_GetRecAudioCfg = 1043;
+	/**设置IPC录制声音**/
+	public static final int IPC_VDCP_Msg_SetRecAudioCfg = 1044;
+	/**获取抓图质量配置**/
+	public static final int IPC_VDCP_Msg_GetPicCfg = 1045;
+	/**设置抓图质量配置**/
+	public static final int IPC_VDCP_Msg_SetPicCfg = 1046;
+	/**获取kit功能配置**/
+	public static final int IPC_VDCP_Msg_GetKitCfg = 1047;
+	/**设置kit功能配置**/
+	public static final int IPC_VDCP_Msg_SetKitCfg = 1048;
+	/**获取ipc时间同步配置**/
+	public static final int IPC_VDCP_Msg_GetTimeSyncCfg = 1049;
+	/**设置ipc时间同步配置**/
+	public static final int IPC_VDCP_Msg_SetTimeSyncCfg = 1050;
+	/**获取ipc时间同步配置**/
+	public static final int IPC_VDCP_Msg_GetAutoRotationCfg = 1051;
+	/**设置ipc时间同步配置**/
+	public static final int IPC_VDCP_Msg_SetAutoRotationCfg = 1052;
 
 	/**
 	 * 
@@ -161,6 +189,8 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPCMgrMode_IPCDirect = 0;
 	/** 与Mobnote中转连接 */
 	public static final int IPCMgrMode_Mobnote = 1;
+	/** T1模式 */
+	public static final int IPCMgrMode_T1 = 2;
 
 	/**
 	 * 
@@ -244,16 +274,44 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCPCmd_PicErase = 1031;
 	/** 获取IPC系统WIFI配置 */
 	public static final int IPC_VDCPCmd_GetWifiCfg = 1032;
-	/**IPC设备升级停止**/
+	/** IPC设备升级停止 **/
 	public static final int IPC_VDCPCmd_StopIPCUpgrade = 1033;
-	/**获取IPC系统语音播报开关状态**/
+	/** 获取IPC系统语音播报开关状态 **/
 	public static final int IPC_VDCPCmd_GetSpeakerSwitch = 1034;
-	/**设置IPC系统语音播报开关状态**/
+	/** 设置IPC系统语音播报开关状态 **/
 	public static final int IPC_VDCPCmd_SetSpeakerSwitch = 1035;
-	/**获取isp模式**/
+	/**获取停车休眠参数**/
+	public static final int IPC_VDCPCmd_GetHiberatePara = 1036;
+	/**设置停车休眠参数**/
+	public static final int IPC_VDCPCmd_SetHiberatePara = 1037;
+	/**获取功能开关状态**/
+	public static final int IPC_VDCPCmd_GetFunctionSwitch = 1038;
+	/**设置功能开关状态**/
+	public static final int IPC_VDCPCmd_SetFunctionSwitch = 1039;
+	/** 获取isp模式 **/
 	public static final int IPC_VDCPCmd_GetISPMode = 1041;
-	/**设置isp模式**/
+	/** 设置isp模式 **/
 	public static final int IPC_VDCPCmd_SetISPMode = 1042;
+	/**获取IPC录制声音配置**/
+	public static final int IPC_VDCPCmd_GetRecAudioCfg = 1043;
+	/**设置IPC录制声音**/
+	public static final int IPC_VDCPCmd_SetRecAudioCfg = 1044;
+	/**获取抓图质量配置**/
+	public static final int IPC_VDCPCmd_GetPicCfg = 1045;
+	/**设置抓图质量配置**/
+	public static final int IPC_VDCPCmd_SetPicCfg = 1046;
+	/**获取kit功能配置**/
+	public static final int IPC_VDCPCmd_GetKitCfg = 1047;
+	/**设置kit功能配置**/
+	public static final int IPC_VDCPCmd_SetKitCfg = 1048;
+	/**获取ipc时间同步配置**/
+	public static final int IPC_VDCPCmd_GetTimeSyncCfg = 1049;
+	/**设置ipc时间同步配置**/
+	public static final int IPC_VDCPCmd_SetTimeSyncCfg = 1050;
+	/**获取ipc时间同步配置**/
+	public static final int IPC_VDCPCmd_GetAutoRotationCfg = 1051;
+	/**设置ipc时间同步配置**/
+	public static final int IPC_VDCPCmd_SetAutoRotationCfg = 1052;
 
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2);
 }

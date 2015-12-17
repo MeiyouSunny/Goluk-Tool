@@ -19,6 +19,7 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.photoalbum.VideoDataManagerUtils;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import android.text.TextUtils;
+import android.util.Log;
 
 public class IpcDataParser {
 

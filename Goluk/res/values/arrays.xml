@@ -66,7 +66,7 @@
         <item>15</item>
     </integer-array>
 
-    <item type="id" name="tag_slideshow_item"></item>
+    <item name="tag_slideshow_item" type="id"></item>
 
     <string-array name="list_ma_live_value">
         <item>0</item>
@@ -125,7 +125,7 @@
         <item>8</item>
         <item>9</item>
     </string-array>
-    
+
     <!-- 视频质量 -->
     <string-array name="list_quality_ui">
         <item>1080P高质量</item>
@@ -133,6 +133,26 @@
         <item>720P高质量</item>
         <item>720P中等质量</item>
     </string-array>
+    <string-array name="list_quality_list">
+        <item>1080P</item>
+        <item>720P</item>
+        <item>480P</item>
+    </string-array>
+    <string-array name="list_photo_quality_ui">
+        <item>高质量</item>
+        <item>中质量</item>
+        <item>低质量</item>
+    </string-array>
+    <string-array name="list_photo_quality_list">
+        <item>90</item>
+        <item>70</item>
+        <item>50</item>
+    </string-array>
+    <string-array name="kit_setting_ui">
+        <item>精彩视频+照片</item>
+        <item>精彩视频</item>
+    </string-array>
+
     <!-- G1分辨率 -->
     <string-array name="list_quality_resolution1">
         <item>1080P</item>
@@ -143,6 +163,13 @@
     <!-- G2分辨率 -->
     <string-array name="list_quality_resolution2">
         <item>1080P</item>
+        <item>1080P</item>
+        <item>720P</item>
+        <item>720P</item>
+    </string-array>
+    <!-- T1分辨率 -->
+    <string-array name="list_quality_resolution_t1">
+       	<item>1080P</item>
         <item>1080P</item>
         <item>720P</item>
         <item>720P</item>
@@ -160,6 +187,13 @@
         <item>8192</item>
         <item>5120</item>
         <item>4096</item>
+    </string-array>
+    <!-- T1码率 -->
+    <string-array name="list_quality_bitrate_t1">
+        <item>14336</item>
+        <item>10240</item>
+        <item>7168</item>
+        <item>5120</item>
     </string-array>
 
 </resources>
