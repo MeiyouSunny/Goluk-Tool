@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f7f9fa"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/conn_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="48dp"
+        android:text="@string/unbind_select_connect_ing"
+        android:textColor="#343434"
+        android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/conn_head_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="50dp"
+        android:layout_toRightOf="@id/conn_txt"
+        android:contentDescription="@string/def"
+        android:src="@drawable/connect_wifi_icon_1" />
+
+    <RelativeLayout
+        android:id="@+id/goluk_conn_layout"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_below="@id/conn_txt"
+        android:layout_marginTop="18dp"
+        android:background="#ffffff" >
+
+        <ImageView
+            android:id="@+id/goluk_del_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:contentDescription="@string/def"
+            android:src="@drawable/connect_del_icon" />
+
+        <ImageView
+            android:id="@+id/goluk_t1_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/goluk_del_icon"
+            android:contentDescription="@string/def"
+            android:src="@drawable/connect_g1_img" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/goluk_t1_icon"
+            android:text="@string/unbind_select_type_t1"
+            android:textColor="#565656"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

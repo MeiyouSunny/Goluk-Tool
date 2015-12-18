@@ -22,9 +22,9 @@
     <string name="share_filter">滤镜</string>
     <string name="share_str_open">公开(发布到广场)</string>
     <string name="share_str_no_location">定位中&#8230;</string>
-     <string name="share_str_join_promotion">更多活动</string>
-     <string name="share_select_promotion">选择活动</string>
-     <string name="share_str_join_int">快来参加活动，努力被小编选为精选，赢取活动奖励。</string>
+    <string name="share_str_join_promotion">更多活动</string>
+    <string name="share_select_promotion">选择活动</string>
+    <string name="share_str_join_int">快来参加活动，努力被小编选为精选，赢取活动奖励。</string>
     <string name="share_str_close">不公开</string>
     <string name="share_str_sayother">说点其它的!</string>
     <string name="share_str_type_bg">曝光台</string>
@@ -241,8 +241,8 @@
     <string name="my_profit_cash_less">至少需要1000G币才能提现哟，加油赚G币吧~</string>
     <string name="my_profit_cash_greater">自助提现功能正在研发中，目前提现请发送注册手机号、提现金额、
         银行卡号、银行名称、持卡人信息到邮箱service@goluk.com</string>
-     <string name="comment_repeat_text">请勿连续发送相同的评论内容。</string>
-     <string name="comment_sofast_text">您评论的速度太快了，请休息一下再评论。</string>
+    <string name="comment_repeat_text">请勿连续发送相同的评论内容。</string>
+    <string name="comment_sofast_text">您评论的速度太快了，请休息一下再评论。</string>
 
     <string-array name="video_share_class">
         <item>曝光台</item>
@@ -417,22 +417,18 @@
     <string name="logout">注销</string>
     <string name="setting_notify_comment">有人给我评论</string>
     <string name="setting_notify_parise">有人给我点赞</string>
-    
     <string name="dialog_str_confirm">举报不良内容</string>
     <string name="dialog_str_del">删除这个视频</string>
     <string name="dialog_str_tuijian">推荐这个视频</string>
     <string name="dialog_str_share">分享这个视频</string>
     <string name="dialog_str_cancel">取消</string>
     <string name="dialog_str_goback">返回首页</string>
-    
     <string name="carrecorder_tcaf_all">移动和振动侦测</string>
     <string name="carrecorder_tcaf_move">移动侦测</string>
     <string name="carrecorder_tcaf_vibration">振动侦测</string>
     <string name="carrecorder_tcaf_close">关闭</string>
-    <string name="carrecorder_hint_text1">
-        开启停车安防功能会自动判断车辆当前状态：当车辆处于停车状态极路客会触发1秒钟拍1张照片；</string>
-    <string name="carrecorder_hint_text2">
-        开启停车安防同时具备侦测功能，分为振动侦测（触发前8秒+后8秒视频）与移动侦测（触发前8秒+后8秒视频）两种。</string>
+    <string name="carrecorder_hint_text1">        开启停车安防功能会自动判断车辆当前状态：当车辆处于停车状态极路客会触发1秒钟拍1张照片；</string>
+    <string name="carrecorder_hint_text2">        开启停车安防同时具备侦测功能，分为振动侦测（触发前8秒+后8秒视频）与移动侦测（触发前8秒+后8秒视频）两种。</string>
     <string name="str_usercenter_praise">赞</string>
     <string name="str_usercenter_comment">评论</string>
     <string name="str_usercenter_share">分享</string>
@@ -446,7 +442,7 @@
     <string name="str_video_close_hint">您刚刚取消了公开视频</string>
     <string name="str_main_page_mine">我的</string>
     <string name="str_button_ok">确定</string>
-    
+
     <!-- 聚合 -->
     <string name="cluster_comment_txt">写评论，有机会赢大奖</string>
     <string name="str_update_file_not_exist">没有找到升级文件。</string>
@@ -457,7 +453,6 @@
     <string name="activity_time_out">活动已结束</string>
     <string name="network_error">网络异常，请检查网络</string>
     <string name="request_data_error">数据异常，请稍候重试</string>
-    
     <string name="str_ipc_disconnect">摄像头断开，正在为您重连…</string>
     <string name="str_ipc_no_connect">您好像没有连接摄像头哦。</string>
     <string name="str_ipc_no_connect_str">未连接记录仪</string>
@@ -475,29 +470,35 @@
     <string name="str_pull_refresh_listview_bottom_reach">已经拉到底咯</string>
     <string name="str_add_v_txt">认证信息: </string>
     <string name="str_load_below_txt">正在加载...</string>
-    
     <string name="str_settings_security_hint_text_g1">启动此项后，极路客将自动判断车辆当前的状态：当车辆处于行驶状态，
         则极路客会根据自动循环录像的开关状态进行工作；当车辆处于停车状态，则极路客会触发1秒1拍，同时会打开异常振动
         （触发前8秒+后8秒视频）与移动侦测（触发前8秒+后8秒视频）功能。</string>
     <string name="str_settings_security_hint_text_g2">此项启动后,当车辆处于停车状态,极路客会停止循环视频的录制,但同时会打开振动侦
 		测(触发前 8 秒+后 8 秒视频)与移动侦测(触发前 8 秒+后 8 秒视频)功能。</string>
-	<string name="str_settings_sleep_hint_text_g1">此项开启后,当检测到车辆静止时间超过 20 分钟以上,且未开启停车安防功能,则自动进
+    <string name="str_settings_sleep_hint_text_g1">此项开启后,当检测到车辆静止时间超过 20 分钟以上,且未开启停车安防功能,则自动进
 		入超低功耗的停车休眠模式,以便保护您的电瓶不会亏电。如果您的车在停车熄火后,点烟器仍可正常供电,则强烈建议开启此项。</string>
     <string name="str_settings_sleep_hint_text_t1">此项开启后,当检测到车辆静止时间超过 10 分钟以上,且未开启停车安防功能,则自动进入
         超低功耗的停车休眠模式,以便保护您的电瓶不会亏电。如果您的车在停车熄火后,点烟器仍可正常供电,则强烈建议开启此项。</string>
-
-	<string name="str_carrecoder_setting_kit_title">遥控器按键功能</string>
-	<string name="str_carrecoder_setting_photo_title">图片质量</string>
-	<string name="str_ipc_dialog_normal">请检查摄像头是否正常连接</string>
-	<string name="str_carrecoder_setting_failed">设置失败</string>
-	<string name="str_carrecoder_auto_gpstime">自动同步 GPS 时间</string>
-	<string name="str_carrecoder_auto">自动同步手机时间</string>
-	<string name="str_carrecoder_no_login">IPC断开连接</string>
-	<string name="str_year">年</string>
-	<string name="str_month">月</string>
-	<string name="str_day">日</string>
-	<string name="str_hour">时</string>
-	<string name="str_minute">分</string>
-
-
+    <string name="str_carrecoder_setting_kit_title">遥控器按键功能</string>
+    <string name="str_carrecoder_setting_photo_title">图片质量</string>
+    <string name="str_ipc_dialog_normal">请检查摄像头是否正常连接</string>
+    <string name="str_carrecoder_setting_failed">设置失败</string>
+    <string name="str_carrecoder_auto_gpstime">自动同步 GPS 时间</string>
+    <string name="str_carrecoder_auto">自动同步手机时间</string>
+    <string name="str_carrecoder_no_login">IPC断开连接</string>
+    <string name="str_year">年</string>
+    <string name="str_month">月</string>
+    <string name="str_day">日</string>
+    <string name="str_hour">时</string>
+    <string name="str_minute">分</string>
+    <string name="unbind_select_type_title">选择您的极路客进行配对</string>
+    <string name="unbind_select_type_t1">Goluk T1</string>
+    <string name="unbind_select_type_g2">Goluk G2</string>
+    <string name="unbind_select_type_g1">Goluk G1</string>
+	<string name="unbind_select_title_txt">选择设备</string>    
+	<string name="unbind_select_connect_ing">连接中</string>
+	<string name="unbind_select_connect_no">未连接</string>
+	<string name="unbind_select_connect_yes">已连接</string>
+	<string name="unbind_select_history_txt">历史记录</string>
+	<string name="unbind_add_mobile_btn">添加新设备</string>
 </resources>

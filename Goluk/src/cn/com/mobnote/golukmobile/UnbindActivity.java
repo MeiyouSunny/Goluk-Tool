@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.wifibind.WiFiLinkIndexActivity;
+import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectTypeActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.user.IpcUpdateManage;
 import cn.com.mobnote.util.GolukUtils;
@@ -142,38 +143,41 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 			this.finish();
 			break;
 		case R.id.unbind_layout_btn:
-			if (mUnbindBtn.getText().toString().equals("解除设备绑定连接")) {
-				new AlertDialog.Builder(this).setTitle("提示")
-						.setMessage(this.getResources().getString(R.string.unbind_hint_message))
-						.setNegativeButton("取消", null).setPositiveButton("确定", new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
-								toUnbind();
-								mPwdLayout.setEnabled(false);
-								mApplication.mIPCControlManager.setIPCWifiState(false, "");
-								mApplication.setIpcLoginOut();
-								GolukUtils.showToast(mContext, "解除绑定成功");
-								//解除绑定后，所有信息置空
-								SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-								preferences.edit().putString("ipc_bind_name", "").commit();
-								SharedPrefUtil.saveIpcPwd("");
-								SharedPrefUtil.saveIPCVersion("");
-								vIpc = "";
-								mTextCameraName.setText("");
-								mTextPasswordName.setText("");
-								mTextVersion.setText("");
-								SharedPrefUtil.saveIpcModel("");
-								mApplication.mIPCControlManager.mProduceName = "";
-								isGetIPCSucess = false;
-								mUnbindBtn.setText("绑定");
-							}
-						}).create().show();
-			} else if (mUnbindBtn.getText().toString().equals("绑定")) {
-				GolukDebugUtils.i("lily", "-------绑定设备------");
-				Intent itWifiLink = new Intent(UnbindActivity.this, WiFiLinkIndexActivity.class);
-				startActivity(itWifiLink);
-			}
+			Intent intent = new Intent(this, WifiUnbindSelectTypeActivity.class);
+			startActivity(intent);
+			
+//			if (mUnbindBtn.getText().toString().equals("解除设备绑定连接")) {
+//				new AlertDialog.Builder(this).setTitle("提示")
+//						.setMessage(this.getResources().getString(R.string.unbind_hint_message))
+//						.setNegativeButton("取消", null).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//
+//							@Override
+//							public void onClick(DialogInterface arg0, int arg1) {
+//								toUnbind();
+//								mPwdLayout.setEnabled(false);
+//								mApplication.mIPCControlManager.setIPCWifiState(false, "");
+//								mApplication.setIpcLoginOut();
+//								GolukUtils.showToast(mContext, "解除绑定成功");
+//								//解除绑定后，所有信息置空
+//								SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
+//								preferences.edit().putString("ipc_bind_name", "").commit();
+//								SharedPrefUtil.saveIpcPwd("");
+//								SharedPrefUtil.saveIPCVersion("");
+//								vIpc = "";
+//								mTextCameraName.setText("");
+//								mTextPasswordName.setText("");
+//								mTextVersion.setText("");
+//								SharedPrefUtil.saveIpcModel("");
+//								mApplication.mIPCControlManager.mProduceName = "";
+//								isGetIPCSucess = false;
+//								mUnbindBtn.setText("绑定");
+//							}
+//						}).create().show();
+//			} else if (mUnbindBtn.getText().toString().equals("绑定")) {
+//				GolukDebugUtils.i("lily", "-------绑定设备------");
+//				Intent itWifiLink = new Intent(UnbindActivity.this, WiFiLinkIndexActivity.class);
+//				startActivity(itWifiLink);
+//			}
 			break;
 		case R.id.unbind_layout_password:
 			if (!isGetIPCSucess) {
