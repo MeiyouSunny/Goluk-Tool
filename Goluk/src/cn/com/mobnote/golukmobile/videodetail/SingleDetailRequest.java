@@ -2,8 +2,9 @@ package cn.com.mobnote.golukmobile.videodetail;
 
 import java.util.HashMap;
 
-import org.apache.http.util.TextUtils;
 
+
+import android.text.TextUtils;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.http.request.GolukFastjsonRequest;
 
