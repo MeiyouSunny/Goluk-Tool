@@ -23,6 +23,7 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukFastJsonUtil;
 import cn.com.mobnote.util.GolukUtils;
@@ -38,7 +39,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  *
  * @author xuhw
  */
-public class SettingsActivity extends BaseActivity implements OnClickListener, IPCManagerFn {
+public class SettingsActivity extends BaseActivity implements OnClickListener, IPCManagerFn, ForbidBack {
 	private final int STATE_CLOSE = 0;
 	private final int STATE_OPEN = 1;
 
@@ -205,7 +206,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					String photoselect = data.getStringExtra("photoselect");
 					mPhtoBean.quality = photoselect;
 					mCurrentResolution = photoselect;
-					GolukDebugUtils.e("", "SettingsActivity----onActivityResult----photo------mCurrentResolution :" + mCurrentResolution);
+					GolukDebugUtils.e("", "SettingsActivity----onActivityResult----photo------mCurrentResolution :"
+							+ mCurrentResolution);
 					refreshPhotoQuality();
 					String requestS = GolukFastJsonUtil.setParseObj(mPhtoBean);
 					GolukDebugUtils.e("", "SettingsActivity----onActivityResult----photo------requestS :" + requestS);
@@ -1302,6 +1304,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private void showLoading() {
 		if (!mCustomProgressDialog.isShowing()) {
 			mCustomProgressDialog.show();
+			mCustomProgressDialog.setListener(this);
 		}
 	}
 
@@ -1324,6 +1327,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			return true;
 		} else
 			return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public void forbidBackKey(int backKey) {
+		if (1 == backKey) {
+			exit();
+		}
 	}
 
 }
