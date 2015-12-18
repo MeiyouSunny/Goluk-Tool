@@ -1642,7 +1642,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		GolukDebugUtils.e("", "jyf----20150406----LiveActivity----LocationCallBack  : " + gpsJson);
 
 		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
-		if (null != location && null != mApp) {
+		if (null != location && null != mApp && null != mBaiduMapManage) {
 			if (mApp.isUserLoginSucess) {
 				if (null == myInfo) {
 					myInfo = mApp.getMyInfo();
