@@ -1147,6 +1147,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				setIpcLoginState(true);
 				// 获取音视频配置信息
 				getVideoEncodeCfg();
+				//获取设备编号
+				getIPCNumber();
 				// 发起获取自动循环录制状态
 				// updateAutoRecordState();
 				// 获取停车安防配置信息
@@ -1376,6 +1378,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			final IPCIdentityState mVersionState = IpcDataParser.parseVersionState((String) param2);
 			if (null != mVersionState && null != mIPCControlManager) {
 				mIPCControlManager.mDeviceSn = mVersionState.name;
+				SharedPrefUtil.saveIPCNumber(mIPCControlManager.mDeviceSn);
 				mIPCControlManager.reportBindMsg();
 			}
 		}
@@ -1401,6 +1404,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private void getVideoEncodeCfg() {
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			getIPCControlManager().getVideoEncodeCfg(0);
+		}
+	}
+	
+	private void getIPCNumber() {
+		if (GolukApplication.getInstance().getIpcIsLogin()) {
+			getIPCControlManager().getIPCIdentity();
 		}
 	}
 
