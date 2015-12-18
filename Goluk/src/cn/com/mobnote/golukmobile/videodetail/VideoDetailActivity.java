@@ -98,7 +98,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  *
  */
 public class VideoDetailActivity extends BaseActivity implements OnClickListener, OnRefreshListener,
-		OnRTScrollListener, VideoSuqareManagerFn, ICommentFn, TextWatcher, ILiveDialogManagerFn, OnItemClickListener,
+		OnRTScrollListener, ICommentFn, TextWatcher, ILiveDialogManagerFn, OnItemClickListener,
 		IRequestResultListener {
 
 	/** application */
@@ -119,8 +119,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	/** 详情 **/
 	private VideoJson mVideoJson = null;
 
-	/** 监听管理类 **/
-	private VideoSquareManager mVideoSquareManager = null;
+//	/** 监听管理类 **/
+//	private VideoSquareManager mVideoSquareManager = null;
 	/** 视频id **/
 	public static final String VIDEO_ID = "videoid";
 	/** 是否允许评论 **/
@@ -216,7 +216,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		sharePlatform.configPlatforms();// 设置分享平台的参数
 		historyDate = GolukUtils.getCurrentFormatTime();
 
-		setListener();
+//		setListener();
 		initListener();
 
 		getDetailData();
@@ -308,11 +308,11 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		}
 
 		if (mType == 0) {
-			SingleVideoRequest request = new SingleVideoRequest(VSquare_Req_Get_VideoDetail, this);
+			SingleVideoRequest request = new SingleVideoRequest(IPageNotifyFn.PageType_VideoDetail, this);
 			b = request.get(ztId);
 			GolukDebugUtils.e("", "----WonderfulActivity-----b====: " + b);
 		} else {
-			SingleDetailRequest request = new SingleDetailRequest(VSquare_Req_Get_VideoDetail, this);
+			SingleDetailRequest request = new SingleDetailRequest(IPageNotifyFn.PageType_VideoDetail, this);
 			b = request.get(mVideoId);
 			GolukDebugUtils.e("", "----VideoDetailActivity-----b====: " + b);
 		}
@@ -341,7 +341,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		if (mType == 0) {
 			type = ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO;
 		}
-		CommentListRequest request = new CommentListRequest(VSquare_Req_List_Comment, this);
+		CommentListRequest request = new CommentListRequest(IPageNotifyFn.PageType_CommentList, this);
 		request.get(mVideoJson.data.avideo.video.videoid, type, operation, timestamp);
 		// final String requestStr =
 		// JsonUtil.getCommentRequestStr(mVideoJson.data.avideo.video.videoid,
@@ -359,17 +359,17 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		// }
 	}
 
-	// 注册监听
-	private void setListener() {
-		// 注册监听
-		mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
-		if (null != mVideoSquareManager) {
-			if (mVideoSquareManager.checkVideoSquareManagerListener(LISTENER_TAG)) {
-				mVideoSquareManager.removeVideoSquareManagerListener(LISTENER_TAG);
-			}
-			mVideoSquareManager.addVideoSquareManagerListener(LISTENER_TAG, this);
-		}
-	}
+//	// 注册监听
+//	private void setListener() {
+//		// 注册监听
+//		mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
+//		if (null != mVideoSquareManager) {
+//			if (mVideoSquareManager.checkVideoSquareManagerListener(LISTENER_TAG)) {
+//				mVideoSquareManager.removeVideoSquareManagerListener(LISTENER_TAG);
+//			}
+//			mVideoSquareManager.addVideoSquareManagerListener(LISTENER_TAG, this);
+//		}
+//	}
 
 	@Override
 	public void onClick(View view) {
@@ -534,7 +534,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 	// 删除评论
 	public void httpPost_requestDel(String id) {
-		CommentDeleteRequest request = new CommentDeleteRequest(VSquare_Req_Del_Comment, this);
+		CommentDeleteRequest request = new CommentDeleteRequest(IPageNotifyFn.PageType_DelComment, this);
 		boolean isSucess = request.get(id);
 		if (!isSucess) {
 			// 失败
@@ -555,7 +555,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		if (mType == 0) {
 			type = ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO;
 		}
-		CommentAddRequest request = new CommentAddRequest(VSquare_Req_Add_Comment, this);
+		CommentAddRequest request = new CommentAddRequest(IPageNotifyFn.PageType_AddComment, this);
 		boolean isSucess = false;
 		if (mIsReply) {
 			isSucess = request.get(mVideoJson.data.avideo.video.videoid, type, txt, mWillDelBean.mUserId,
@@ -574,7 +574,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 	//点赞请求
 	public boolean sendPraiseRequest() {
-		PraiseRequest request = new PraiseRequest(VSquare_Req_VOP_Praise, this);
+		PraiseRequest request = new PraiseRequest(IPageNotifyFn.PageType_Praise, this);
 		return request.get("1", mVideoJson.data.avideo.video.videoid, "1");
 	}
 
@@ -845,9 +845,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	}
 
 	private void exit() {
-		if (null != mVideoSquareManager) {
-			mVideoSquareManager.removeVideoSquareManagerListener(LISTENER_TAG);
-		}
+//		if (null != mVideoSquareManager) {
+//			mVideoSquareManager.removeVideoSquareManagerListener(LISTENER_TAG);
+//		}
 
 		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
 		if (null != mReplyDialog) {
@@ -1066,7 +1066,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			return;
 		}
 		showLoadingDialog();
-		ShareVideoShortUrlRequest request = new ShareVideoShortUrlRequest(VSquare_Req_VOP_GetShareURL_Video, this);
+		ShareVideoShortUrlRequest request = new ShareVideoShortUrlRequest(IPageNotifyFn.PageType_GetShareURL, this);
 		boolean result = request.get(mVideoJson.data.avideo.video.videoid, mVideoJson.data.avideo.video.type);
 		GolukDebugUtils.i("detail", "--------result-----Onclick------" + result);
 		if (!result) {
@@ -1102,7 +1102,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		// TODO Auto-generated method stub
 		closeLoadingDialog();
 		switch (requestType) {
-		case VSquare_Req_Get_VideoDetail:
+		case IPageNotifyFn.PageType_VideoDetail:
 			mVideoJson = (VideoJson) result;
 			if (mVideoJson != null && mVideoJson.success) {
 
@@ -1183,7 +1183,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				dealCondition();
 			}
 			break;
-		case VSquare_Req_List_Comment:
+		case IPageNotifyFn.PageType_CommentList:
 
 			CommentResultBean resultBean = (CommentResultBean) result;
 			if (resultBean != null && resultBean.success && resultBean.data != null) {
@@ -1245,7 +1245,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				callBackFailed();
 			}
 			break;
-		case VSquare_Req_Del_Comment:
+		case IPageNotifyFn.PageType_DelComment:
 			LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
 			CommentDelResultBean DelResultBean = (CommentDelResultBean) result;
 			if (null != DelResultBean && DelResultBean.success) {
@@ -1269,11 +1269,10 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				}
 			} else {
 				GolukUtils.showToast(this, "删除失败");
-				mWillDelBean = null;
 			}
 			mWillDelBean = null;
 			break;
-		case VSquare_Req_Add_Comment:
+		case IPageNotifyFn.PageType_AddComment:
 			LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
 			CommentAddResultBean addResultBean = (CommentAddResultBean) result;
 			if (null != addResultBean && addResultBean.success) {
@@ -1337,7 +1336,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				GolukUtils.showToast(this, "评论失败");
 			}
 			break;
-		case VSquare_Req_VOP_GetShareURL_Video:
+		case IPageNotifyFn.PageType_GetShareURL:
 			closeLoadingDialog();
 			if (!isHasData()) {
 				return;
@@ -1368,7 +1367,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				GolukUtils.showToast(this, "网络连接超时，请检查网络");
 			}
 			break;
-		case VSquare_Req_VOP_Praise:
+		case IPageNotifyFn.PageType_Praise:
 			PraiseResultBean praiseResultBean = (PraiseResultBean) result;
 			if (praiseResultBean == null || !praiseResultBean.success) {
 				GolukUtils.showToast(this, "当前网络不可用，请检查网络");
@@ -1381,12 +1380,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			Log.e("", "======onLoadComplete result==" + result.toString());
 			break;
 		}
-	}
-
-	@Override
-	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/** 头部视频详情holder **/

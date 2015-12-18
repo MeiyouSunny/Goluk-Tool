@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile.videodetail;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.comment.CommentActivity;
 import cn.com.mobnote.golukmobile.comment.CommentBean;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.logic.GolukModule;
@@ -79,7 +80,11 @@ public class ReplyDialog extends Dialog implements android.view.View.OnClickList
 			GolukUtils.showSoft(mEditText);
 			mEditText.setHint("回复＠" + mCommentBean.mUserName + "：");
 		} else {
-			((VideoDetailActivity) mContext).httpPost_requestDel(mCommentBean.mCommentId);
+			if (mContext instanceof VideoDetailActivity) {
+				((VideoDetailActivity) mContext).httpPost_requestDel(mCommentBean.mCommentId);
+			} else if (mContext instanceof CommentActivity) {
+				((CommentActivity) mContext).httpPost_requestDel(mCommentBean.mCommentId);
+			}
 		}
 		
 	}
