@@ -1031,6 +1031,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private void ipcConnecting() {
 		mConnectTip.setText(wifiname);
 		mFullScreen.setVisibility(View.GONE);
+		mSettingBtn.setVisibility(View.GONE);
 		if (isBindSucess()) {
 			mPalyerLayout.setVisibility(View.GONE);
 			mNotconnected.setVisibility(View.GONE);
@@ -1081,7 +1082,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 		mNotconnected.setVisibility(View.GONE);
 		mConncetLayout.setVisibility(View.GONE);
-
+		
+		mSettingBtn.setVisibility(View.GONE);
 		mSettingBtn.setBackgroundResource(R.drawable.carrecorder_setting);
 		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 		if (!isT1()) {
