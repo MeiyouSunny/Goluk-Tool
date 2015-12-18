@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -75,15 +76,27 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		
 		historyDate = GolukUtils.getCurrentFormatTime();
 		initView();
-		
-		Intent it = getIntent();
-		uid = it.getStringExtra("uid").toString();
+		if (savedInstanceState == null) {
+			Intent it = getIntent();
+			uid = it.getStringExtra("uid");
+		} else {
+			uid = savedInstanceState.getString("uid");
+		}
 		
 		firstEnter();
 		mRTPullListView.firstFreshState();
 		
 	}
 	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		if (!TextUtils.isEmpty(uid)) {
+			outState.putString("uid", uid);
+		}
+		super.onSaveInstanceState(outState);
+	}
+
 	private void initView() {
 		mBtnBack = (ImageButton) findViewById(R.id.profit_detail_back);
 		mRTPullListView = (RTPullListView) findViewById(R.id.profit_detail_RTPullListView);
@@ -205,8 +218,6 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		//点击刷新
 		case R.id.video_detail_click_refresh:
 			showLoadingDialog();
-			Intent it = getIntent();
-			uid = it.getStringExtra("uid").toString();
 			firstEnter();
 			break;
 		default:
