@@ -40,6 +40,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_layout"
         android:layout_marginTop="10dp" >
+        
+        <ImageView 
+            android:id="@+id/changeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/recorder_changeipc_icon"/>
 
         <TextView
             android:id="@+id/mConnectTip"
