@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.webkit.DownloadListener;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -106,8 +108,11 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					return true;
 				}
 
-				view.loadUrl(url);
-				return false;
+				if (null != url && url.startsWith("http")) {
+					view.loadUrl(url);
+					return true;
+				}
+				return super.shouldOverrideUrlLoading(view, url);
 			}
 
 			@Override
@@ -120,15 +125,14 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 				mErrorState = true;
 				mWebView.setVisibility(View.GONE);
-				if(!TextUtils.isEmpty(failingUrl) && !TextUtils.isEmpty(description) &&
-						description.contains("ERR_UNKNOWN_URL_SCHEME")) {
-					Intent i = new Intent(Intent.ACTION_VIEW);
-					i.setData(Uri.parse(failingUrl));
-					startActivity(i);
-					mErrorLayout.setVisibility(View.GONE);
-				} else {
-					mErrorLayout.setVisibility(View.VISIBLE);
-				}
+				mErrorLayout.setVisibility(View.VISIBLE);
+			}
+			
+			@Override
+			public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+				// TODO Auto-generated method stub
+				handler.proceed();
+				super.onReceivedSslError(view, handler, error);
 			}
 		});
 
