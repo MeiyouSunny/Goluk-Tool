@@ -35,6 +35,7 @@ public class MyProfitDetailAdapter extends BaseAdapter {
 	
 	public void setData(List<ProfitDetailResult> incomeList) {
 		this.mIncomeList = incomeList;
+		this.notifyDataSetChanged();
 	}
 	
 	public void appendData(List<ProfitDetailResult> incomeList) {

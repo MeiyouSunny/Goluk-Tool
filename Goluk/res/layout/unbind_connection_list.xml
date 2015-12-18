@@ -34,14 +34,6 @@
         android:textColor="#047cf3"
         android:textSize="14sp" />
     
-    
-    <ListView 
-        android:id="@+id/listView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/edit_btn"
-        android:layout_above="@id/addMoblieBtn"/>
-    
     <Button 
         android:id="@+id/addMoblieBtn"
         android:layout_width="match_parent"
@@ -51,5 +43,14 @@
         android:textSize="16sp"
         android:background="@drawable/connect_btn_blue"
         android:textColor="#047cf3"/>
+    
+    <ListView 
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/edit_btn"
+        android:layout_above="@id/addMoblieBtn"/>
+    
+    
 
 </RelativeLayout>

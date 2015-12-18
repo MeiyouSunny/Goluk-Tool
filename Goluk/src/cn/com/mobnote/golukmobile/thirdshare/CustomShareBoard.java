@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,6 +17,9 @@ import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
 import com.umeng.socialize.controller.UMServiceFactory;
@@ -192,55 +196,71 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 	public void click_sina() {
 		GolukDebugUtils.e("", "sina-------click----11111");
-		this.dismiss();
-		if (null == sharePlatform) {
-			return;
-		}
+		Glide
+	    .with(mActivity)
+	    .load(coverurl)
+	    .asBitmap()
+	    .into(new SimpleTarget<Bitmap>(50,50) {
+	    	@Override
+	    	public void onLoadFailed(Exception e, Drawable errorDrawable) {
+	    		// TODO Auto-generated method stub
+//	    		super.onLoadFailed(e, errorDrawable);
+	    		dismiss();
+	    	}
 
-		if (null != mActivity && mActivity instanceof BaseActivity) {
-			if (!((BaseActivity) mActivity).isAllowedClicked()) {
-				return;
+			@Override
+			public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
+				// TODO Auto-generated method stub
+				dismiss();
+				if (null == sharePlatform) {
+					return;
+				}
+
+				if (null != mActivity && mActivity instanceof BaseActivity) {
+					if (!((BaseActivity) mActivity).isAllowedClicked()) {
+						return;
+					}
+					((BaseActivity) mActivity).setJumpToNext();
+				}
+
+				GolukDebugUtils.e("", "sina-------click----2222");
+				if (!sharePlatform.isSinaWBValid()) {
+					GolukDebugUtils.e("", "sina-------click----3333");
+					// 去授权
+					sharePlatform.mSinaWBUtils.authorize();
+					return;
+				}
+				mCurrentShareType = TYPE_WEIBO_XINLANG;
+				shareUp();// 上报分享统计
+				printStr();
+				final String t_des = describe;
+				final String inputDefaultContent = mSinaTxt;
+				final String title = ttl;
+				final String dataUrl = shareurl;
+				final String actionUrl = shareurl + "&type=" + TYPE_WEIBO_XINLANG;
+				final Bitmap t_bitmap = arg0;
+				GolukDebugUtils.e("", "sina-------click----44444" + actionUrl);
+				if (sharePlatform.mSinaWBUtils.isInstallClient()) {
+					GolukDebugUtils.e("", "sina-------click----55555");
+					final int supportApi = sharePlatform.mSinaWBUtils.getSupportAPI();
+					GolukDebugUtils.e("", "sina-------click----6666:  " + supportApi);
+					if (supportApi >= SUPPORT_MUTI_MSG) {
+						GolukDebugUtils.e("", "sina-------click----77777:  ");
+						sharePlatform.mSinaWBUtils.sendMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl, t_bitmap,
+								true);
+					} else {
+						GolukDebugUtils.e("", "sina-------click----88888:  ");
+						sharePlatform.mSinaWBUtils.sendSingleMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl,
+								t_bitmap);
+					}
+				} else {
+					sharePlatform.mSinaWBUtils.sendMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl, t_bitmap,
+							false);
+					GolukDebugUtils.e("", "sina-------click----999999:  ");
+					// GolukUtils.showToast(mActivity, PROMPT_UNINSTALL);
+				}
 			}
-			((BaseActivity) mActivity).setJumpToNext();
-		}
-
-		GolukDebugUtils.e("", "sina-------click----2222");
-		if (!sharePlatform.isSinaWBValid()) {
-			GolukDebugUtils.e("", "sina-------click----3333");
-			// 去授权
-			sharePlatform.mSinaWBUtils.authorize();
-			return;
-		}
-		mCurrentShareType = TYPE_WEIBO_XINLANG;
-		this.shareUp();// 上报分享统计
-		printStr();
-		final String t_des = describe;
-		final String inputDefaultContent = mSinaTxt;
-		final String title = ttl;
-		final String dataUrl = shareurl;
-		final String actionUrl = shareurl + "&type=" + TYPE_WEIBO_XINLANG;
-		final Bitmap t_bitmap = mThumbBitmap;
-		GolukDebugUtils.e("", "sina-------click----44444" + actionUrl);
-		if (sharePlatform.mSinaWBUtils.isInstallClient()) {
-			GolukDebugUtils.e("", "sina-------click----55555");
-			final int supportApi = sharePlatform.mSinaWBUtils.getSupportAPI();
-			GolukDebugUtils.e("", "sina-------click----6666:  " + supportApi);
-			if (supportApi >= SUPPORT_MUTI_MSG) {
-				GolukDebugUtils.e("", "sina-------click----77777:  ");
-				sharePlatform.mSinaWBUtils.sendMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl, t_bitmap,
-						true);
-			} else {
-				GolukDebugUtils.e("", "sina-------click----88888:  ");
-				sharePlatform.mSinaWBUtils.sendSingleMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl,
-						t_bitmap);
-			}
-		} else {
-			sharePlatform.mSinaWBUtils.sendMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl, t_bitmap,
-					false);
-			GolukDebugUtils.e("", "sina-------click----999999:  ");
-			// GolukUtils.showToast(mActivity, PROMPT_UNINSTALL);
-		}
-
+	    });
 	}
 
 	/**

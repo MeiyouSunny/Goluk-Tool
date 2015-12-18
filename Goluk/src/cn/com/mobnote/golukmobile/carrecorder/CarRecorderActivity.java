@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
+
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -68,6 +69,7 @@ import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.LiveSettingBean;
 import cn.com.mobnote.golukmobile.live.LiveSettingPopWindow;
 import cn.com.mobnote.golukmobile.live.LiveSettingPopWindow.IPopwindowFn;
+import cn.com.mobnote.golukmobile.photoalbum.FileInfoManagerUtils;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.golukmobile.videosuqare.RingView;
@@ -367,7 +369,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				mNotconnected.setVisibility(View.VISIBLE);
 				mConncetLayout.setVisibility(View.GONE);
 			}
-			mSettingBtn.setBackgroundResource(R.drawable.driving_car_setting_1);
+			mSettingBtn.setVisibility(View.GONE);
+			//mSettingBtn.setBackgroundResource(R.drawable.driving_car_setting_1);
 			m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
 			liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
 
@@ -1828,12 +1831,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 		images = new VideoShareInfo[3];
 
-		String[] filePaths = { "wonderful/wonderful.txt", "urgent/urgent.txt" };
+//		String[] filePaths = { "wonderful/wonderful.txt", "urgent/urgent.txt" };
 		Bitmap bitmap = ImageManager.getBitmapFromResource(R.drawable.tacitly_pic);
 
-		List<String> wonderfuls = this.getNewVideoByType(filePaths[0], 1);// 最新的精彩视频
-		List<String> urgents = this.getNewVideoByType(filePaths[1], 2);// 最新的紧急视频
-
+		List<String> wonderfuls = this.getNewVideoByType(1);// 最新的精彩视频
+		List<String> urgents = this.getNewVideoByType(2);// 最新的紧急视频
 		List<String> names = new ArrayList<String>();
 
 		VideoShareInfo defpic = new VideoShareInfo();
@@ -1934,12 +1936,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		images[2] = defpic;
 	}
 
-	public List<String> getNewVideoByType(String uri, int type) {
-		String file = mFilePath + uri;
-		List<String> list = this.getVideoConfigFile(file);
+	public List<String> getNewVideoByType(int type) {
+//		String file = mFilePath + uri;
+//		List<String> list = this.getVideoConfigFile(file);
 
-		String videoname1 = "";
-		String videoname2 = "";
+//		String videoname1 = "";
+//		String videoname2 = "";
 
 		String path = "";
 		if (type == 1) {
@@ -1947,43 +1949,51 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		} else if (type == 2) {
 			path = Environment.getExternalStorageDirectory().getPath() + "/goluk/video/urgent/";
 		}
+		List<String> list = FileInfoManagerUtils.getFileNames(path, "(.+?mp4)");
+//
+//		int flog = 0;
+//		String vn = "";
 
-		int flog = 0;
-		String vn = "";
-
-		if (list != null && list.size() > 0) {
-			File vfile = null;
-			for (int i = list.size() - 1; i >= 0; i--) {
-				vn = list.get(i);
-				vfile = new File(path + vn);
-
-				if (vfile.exists()) {
-					flog++;
-					if (flog <= 1) {
-						videoname1 = vn;
-					} else if (flog == 2) {
-						videoname2 = vn;
-					} else {
-						break;
-					}
-
-				}
-			}
-
-			List<String> result = new ArrayList<String>();
-
-			if (!"".equals(videoname1)) {
-				result.add(videoname1);
-			}
-
-			if (!"".equals(videoname2)) {
-				result.add(videoname2);
-			}
-
-			return result;
-		} else {
-			return null;
+		List<String> result = new ArrayList<String>();
+		if (list.size() > 0) {
+			result.add(list.get(list.size() - 1));
 		}
+		if (list.size() > 1) {
+			result.add(list.get(list.size() - 2));
+		}
+		return result;
+//		if (list != null && list.size() > 0) {
+//			File vfile = null;
+//			for (int i = list.size() - 1; i >= 0; i--) {
+//				vn = list.get(i);
+//				vfile = new File(path + vn);
+//
+//				if (vfile.exists()) {
+//					flog++;
+//					if (flog <= 1) {
+//						videoname1 = vn;
+//					} else if (flog == 2) {
+//						videoname2 = vn;
+//					} else {
+//						break;
+//					}
+//
+//				}
+//			}
+//
+//
+//			if (!"".equals(videoname1)) {
+//				result.add(videoname1);
+//			}
+//
+//			if (!"".equals(videoname2)) {
+//				result.add(videoname2);
+//			}
+//
+//			return result;
+//		} else {
+//			return null;
+//		}
 
 	}
 

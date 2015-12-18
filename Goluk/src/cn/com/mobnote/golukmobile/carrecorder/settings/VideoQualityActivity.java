@@ -10,10 +10,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -25,7 +23,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * @author xuhw
  */
 @SuppressLint("InflateParams")
-public class VideoQualityActivity extends CarRecordBaseActivity implements OnClickListener, IPCManagerFn {
+public class VideoQualityActivity extends CarRecordBaseActivity implements OnClickListener {
 	/** 视频类型文字显示 */
 	private TextView mCloseText = null;
 	private TextView mLowText = null;
@@ -42,8 +40,6 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 		_1080h, _1080l, _720h, _720l
 	};
 
-	/** 保存选中视频类型 */
-	private SensitivityType curType = SensitivityType._1080h;
 	/** 音视频配置信息 */
 	private VideoConfigState mVideoConfigState = null;
 	/** UI显示 **/
@@ -69,9 +65,6 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 		initView();
 		setListener();
 
-		if (null != GolukApplication.getInstance().getIPCControlManager()) {
-			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("videoquality", this);
-		}
 		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();
 		setData2UI();
 	}
@@ -114,41 +107,6 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 		findViewById(R.id.high).setOnClickListener(this);
 	}
 
-	/**
-	 * 切换视频质量
-	 * 
-	 * @param type
-	 *            视频类型
-	 * @author xuhw
-	 * @date 2015年4月6日
-	 */
-	private void updateSensitivity(SensitivityType type) {
-		curType = type;
-		mCloseText.setTextColor(getResources().getColor(R.color.setting_text_color_nor));
-		mLowText.setTextColor(getResources().getColor(R.color.setting_text_color_nor));
-		mMiddleText.setTextColor(getResources().getColor(R.color.setting_text_color_nor));
-		mHighText.setTextColor(getResources().getColor(R.color.setting_text_color_nor));
-		mCloseIcon.setVisibility(View.GONE);
-		mLowIcon.setVisibility(View.GONE);
-		mMiddleIcon.setVisibility(View.GONE);
-		mHighIcon.setVisibility(View.GONE);
-
-		if (SensitivityType._1080h == curType) {
-			mCloseIcon.setVisibility(View.VISIBLE);
-			mCloseText.setTextColor(getResources().getColor(R.color.setting_text_color_sel));
-		} else if (SensitivityType._1080l == curType) {
-			mLowIcon.setVisibility(View.VISIBLE);
-			mLowText.setTextColor(getResources().getColor(R.color.setting_text_color_sel));
-		} else if (SensitivityType._720h == curType) {
-			mMiddleIcon.setVisibility(View.VISIBLE);
-			mMiddleText.setTextColor(getResources().getColor(R.color.setting_text_color_sel));
-		} else {
-			mHighIcon.setVisibility(View.VISIBLE);
-			mHighText.setTextColor(getResources().getColor(R.color.setting_text_color_sel));
-		}
-
-	}
-
 	@Override
 	public void onClick(View v) {
 		super.onClick(v);
@@ -186,44 +144,12 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 		super.onDestroy();
 	}
 
-	@Override
-	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-		if (event == ENetTransEvent_IPC_VDCP_CommandResp) {
-			// 获取IPC系统音视频编码配置
-			if (msg == IPC_VDCP_Msg_GetVedioEncodeCfg) {
-				if (param1 == RESULE_SUCESS) {
-					GolukDebugUtils.e("xuhw", "YYY================1111==================param2=" + param2);
-					mVideoConfigState = IpcDataParser.parseVideoConfigState((String) param2);
-
-					setData2UI();
-
-				} else {
-					GolukDebugUtils.e("", "=========VideoQualityActivity=====mVideoConfigState=" + mVideoConfigState);
-					// 获取失败默认显示1080P
-					updateSensitivity(SensitivityType._1080h);
-				}
-				// 设置IPC系统音视频编码配置
-			} else if (msg == IPC_VDCP_Msg_SetVedioEncodeCfg) {
-				if (param1 == RESULE_SUCESS) {
-					GolukApplication.getInstance().setVideoConfigState(mVideoConfigState);
-				}
-				GolukDebugUtils.e("xuhw", "YYY================IPC_VDCP_Msg_SetVedioEncodeCfg=============param1="
-						+ param1);
-			}
-		}
-	}
-	
 	public void exit() {
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
-
 			setArrayData();
 
 			boolean flag = GolukApplication.getInstance().getIPCControlManager().setVideoEncodeCfg(mVideoConfigState);
 			GolukDebugUtils.e("xuhw", "YYY==========curType=========flag=" + flag);
-		}
-
-		if (null != GolukApplication.getInstance().getIPCControlManager()) {
-			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("videoquality");
 		}
 
 		finish();

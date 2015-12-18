@@ -23,6 +23,7 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukFastJsonUtil;
 import cn.com.mobnote.util.GolukUtils;
@@ -38,7 +39,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  *
  * @author xuhw
  */
-public class SettingsActivity extends BaseActivity implements OnClickListener, IPCManagerFn {
+public class SettingsActivity extends BaseActivity implements OnClickListener, IPCManagerFn, ForbidBack {
 	private final int STATE_CLOSE = 0;
 	private final int STATE_OPEN = 1;
 
@@ -69,7 +70,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	/** HDR模式 **/
 	private Button mISPBtn = null;
 	/** HDR模式line **/
-	private RelativeLayout mISPLayout, mWonderfulLayout;
+	private RelativeLayout mISPLayout;
 	/** HDR模式 0关闭 1打开 **/
 	private int mISPSwitch = 0;
 	/** 精彩视频拍摄提示音 **/
@@ -197,16 +198,19 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		GolukDebugUtils.e("", "photo------requestCode :" + requestCode + "   resultCode:" + resultCode);
+		GolukDebugUtils.e("", "SettingsActivity----onActivityResult----requestCode :" + requestCode + "   resultCode:"
+				+ resultCode);
 		if (10 == requestCode) {
 			if (RESULT_CODE_PHOTO == resultCode) {
 				if (null != data) {
 					String photoselect = data.getStringExtra("photoselect");
-					mPhtoBean.resolution = photoselect;
+					mPhtoBean.quality = photoselect;
 					mCurrentResolution = photoselect;
+					GolukDebugUtils.e("", "SettingsActivity----onActivityResult----photo------mCurrentResolution :"
+							+ mCurrentResolution);
 					refreshPhotoQuality();
 					String requestS = GolukFastJsonUtil.setParseObj(mPhtoBean);
-					GolukDebugUtils.e("", "photo------requestS :" + requestS);
+					GolukDebugUtils.e("", "SettingsActivity----onActivityResult----photo------requestS :" + requestS);
 					GolukApplication.getInstance().getIPCControlManager().setPhotoQualityMode(requestS);
 				}
 			} else if (RESULT_CODE_KIT == resultCode) {
@@ -232,7 +236,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mSwitchBtn = (Button) findViewById(R.id.kgjtsy);
 		mISPLayout = (RelativeLayout) findViewById(R.id.hdr_line);
 		mISPBtn = (Button) findViewById(R.id.hdr);
-		mWonderfulLayout = (RelativeLayout) findViewById(R.id.jcsp_line);
 		mWonderVideoBtn = (Button) findViewById(R.id.jcsp);
 		mPhotoQualityLayout = (RelativeLayout) findViewById(R.id.photographic_quality_line);
 		mFatigueLayout = (RelativeLayout) findViewById(R.id.fatigue_line);
@@ -1108,10 +1111,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				mFatigueBtn.setBackgroundResource(R.drawable.set_close_btn);
 			}
 
-			if (1 == autoRotation) {
-				mImageFlipBtn.setBackgroundResource(R.drawable.set_open_btn);
-			} else {
-				mImageFlipBtn.setBackgroundResource(R.drawable.set_close_btn);
+			if (!IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+				if (1 == autoRotation) {
+					mImageFlipBtn.setBackgroundResource(R.drawable.set_open_btn);
+				} else {
+					mImageFlipBtn.setBackgroundResource(R.drawable.set_close_btn);
+				}
 			}
 		} else {
 			GolukUtils.showToast(this, "设置功能设置失败");
@@ -1173,10 +1178,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				mFatigueBtn.setBackgroundResource(R.drawable.set_close_btn);
 			}
 
-			if (1 == autoRotation) {
-				mImageFlipBtn.setBackgroundResource(R.drawable.set_open_btn);
-			} else {
-				mImageFlipBtn.setBackgroundResource(R.drawable.set_close_btn);
+			if (!IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+				if (1 == autoRotation) {
+					mImageFlipBtn.setBackgroundResource(R.drawable.set_open_btn);
+				} else {
+					mImageFlipBtn.setBackgroundResource(R.drawable.set_close_btn);
+				}
 			}
 		} catch (Exception e) {
 
@@ -1297,6 +1304,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private void showLoading() {
 		if (!mCustomProgressDialog.isShowing()) {
 			mCustomProgressDialog.show();
+			mCustomProgressDialog.setListener(this);
 		}
 	}
 
@@ -1319,6 +1327,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			return true;
 		} else
 			return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public void forbidBackKey(int backKey) {
+		if (1 == backKey) {
+			exit();
+		}
 	}
 
 }

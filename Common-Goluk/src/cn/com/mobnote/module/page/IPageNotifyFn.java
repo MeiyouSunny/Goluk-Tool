@@ -89,6 +89,17 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	/**最新视频点击次数上报**/
 	public static final int PageType_VideoClick = 44;
 
+	public static final int PageType_VideoDetail =45;
+	
+	public static final int PageType_CommentList =46;
+	
+	public static final int PageType_DelComment = 47;
+	
+	public static final int PageType_AddComment = 48;
+	
+	public static final int PageType_GetShareURL= 49;
+	
+	public static final int PageType_Praise = 50;
 	/**
 	 * 
 	 * 以下为同步获取信息标识

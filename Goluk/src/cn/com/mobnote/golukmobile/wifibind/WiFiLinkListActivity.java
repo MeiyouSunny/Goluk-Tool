@@ -435,7 +435,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		WiFiInfo.IPC_PWD = IPC_PWD_DEFAULT;
 		String wifiName = WiFiInfo.IPC_SSID;
 		String name = wifiName.replace("Goluk", "GOLUK");
-		WiFiInfo.MOBILE_SSID = name;
+		WiFiInfo.MOBILE_SSID = name + "_s";
 		WiFiInfo.MOBILE_PWD = MOBILE_HOT_PWD_DEFAULT;
 	}
 

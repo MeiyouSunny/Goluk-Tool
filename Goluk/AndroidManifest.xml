@@ -97,11 +97,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustResize" />
         <activity
-            android:name=".videodetail.WonderfulActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustResize" />
-        <activity
-            android:name=".ImageClipActivity"
+            android:name="cn.com.mobnote.golukmobile.ImageClipActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
@@ -212,6 +208,7 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
+
         <activity
             android:name=".carrecorder.settings.ImpactSensitivityActivity"
             android:screenOrientation="portrait"
