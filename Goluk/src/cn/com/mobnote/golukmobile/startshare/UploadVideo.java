@@ -372,7 +372,7 @@ public class UploadVideo implements IUploadRequestListener {
 		}
 		this.dimissErrorDialog();
 		this.dimissExitDialog();
-		mBaseHandler.removeMessages(MSG_H_RETRY_UPLOAD);
+		mBaseHandler.removeCallbacksAndMessages(null);
 	}
 
 	/** 文件上传成功 */
