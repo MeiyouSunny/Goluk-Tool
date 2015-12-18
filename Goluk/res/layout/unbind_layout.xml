@@ -10,52 +10,54 @@
     <include layout="@layout/user_title" />
 
     <!-- body -->
-
+    
     <RelativeLayout
-        android:id="@+id/unbind_layout_haveipc"
+        android:id="@+id/rl_unbind_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-        
+        android:layout_height="wrap_content" >
+
         <ImageView
             android:id="@+id/goluk_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="44dp"
-            android:src="@drawable/connect_t1_icon_1"/>
-        
-        <TextView 
+            android:src="@drawable/connect_t1_icon_1"
+            android:contentDescription="@string/imgdes" />
+
+        <TextView
             android:id="@+id/goluk_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#4d4d4d"
-            android:textSize="16sp"
-            android:layout_centerHorizontal="true"
             android:layout_below="@id/goluk_icon"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="14dp"
             android:text="极路客T1"
-            android:layout_marginTop="14dp"/>
-        
-        <TextView 
+            android:textColor="#4d4d4d"
+            android:textSize="16sp" />
+
+        <TextView
             android:id="@+id/goluk_mobile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#4d4d4d"
-            android:layout_centerHorizontal="true"
             android:layout_below="@id/goluk_name"
-            android:textSize="12sp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:text="设备号:ZTRC0200021456"/>
-        
-        <TextView 
+            android:text="设备号:ZTRC0200021456"
+            android:textColor="#4d4d4d"
+            android:textSize="12sp" />
+
+        <TextView
             android:id="@+id/goluk_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#4d4d4d"
-            android:layout_centerHorizontal="true"
             android:layout_below="@id/goluk_mobile"
-            android:textSize="12sp"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="4dp"
-            android:text="所有版本:T1_V1.2112315"/>
+            android:text="所有版本:T1_V1.2112315"
+            android:textColor="#4d4d4d"
+            android:textSize="12sp" />
+    </RelativeLayout>
 
         <TextView
             android:id="@+id/unbind_layout_wifi_hint_text"
@@ -63,7 +65,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="14dp"
             android:layout_marginTop="40dp"
-            android:layout_below="@id/goluk_version"
             android:text="@string/unbind_camera_wifi_hint_text"
             android:textColor="@color/unbind_camera_wifi_hint_text_color"
             android:textSize="13sp" />
@@ -73,7 +74,6 @@
             android:id="@+id/solid_1"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:layout_below="@id/unbind_layout_wifi_hint_text"
             android:layout_marginTop="8dp"
             android:background="@drawable/solid" />
 
@@ -81,7 +81,6 @@
             android:id="@+id/unbind_layout_camera"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_below="@id/solid_1"
             android:background="#f4f4f4" >
 
             <TextView
@@ -110,7 +109,6 @@
             android:id="@+id/solid_2"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:layout_below="@id/unbind_layout_camera"
             android:background="@drawable/solid" />
 
         <!-- 极路客WiFi密码 -->
@@ -119,7 +117,6 @@
             android:id="@+id/solid_3"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:layout_below="@id/unbind_layout_camera"
             android:layout_marginTop="10dp"
             android:background="@drawable/solid" />
 
@@ -127,7 +124,6 @@
             android:id="@+id/unbind_layout_password"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_below="@id/solid_3"
             android:background="#f4f4f4" >
 
             <TextView
@@ -161,7 +157,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="14dp"
-                    android:src="@drawable/editor_arrow" />
+                    android:src="@drawable/editor_arrow"
+                    android:contentDescription="@string/imgdes" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -169,14 +166,12 @@
             android:id="@+id/solid_4"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:layout_below="@id/unbind_layout_password"
             android:background="@drawable/solid" />
 
         <TextView
             android:id="@+id/unbind_layout_change_pwd"
             android:layout_width="match_parent"
             android:layout_height="38dp"
-            android:layout_below="@id/solid_4"
             android:layout_marginLeft="14dp"
             android:paddingTop="8dp"
             android:text="@string/unbind_camera_change_wifi_pwd_hint"
@@ -187,7 +182,6 @@
             android:id="@+id/solid_5"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:layout_below="@id/unbind_layout_change_pwd"
             android:background="@drawable/solid" />
 
         <!-- 固件升级 -->
@@ -196,7 +190,6 @@
             android:id="@+id/unbind_layout_update"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_below="@id/solid_5"
             android:background="#f4f4f4" >
 
             <TextView
@@ -220,7 +213,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="@string/imgdes"
                     android:textColor="#999999"
                     android:textSize="16sp" />
 
@@ -230,7 +222,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="14dp"
-                    android:src="@drawable/editor_arrow" />
+                    android:src="@drawable/editor_arrow"
+                    android:contentDescription="@string/imgdes" />
             </LinearLayout>
             
         </RelativeLayout>
@@ -239,14 +232,12 @@
             android:id="@+id/solid_6"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:layout_below="@id/unbind_layout_update"
             android:background="@drawable/solid" />
 
         <View
             android:id="@+id/solid_7"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:layout_below="@id/solid_6"
             android:layout_marginTop="10dp"
             android:background="@drawable/solid" />
         <!-- 解除绑定 -->
@@ -255,7 +246,6 @@
             android:id="@+id/unbind_linearlayout"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_below="@id/solid_7"
             android:background="#f4f4f4"  >
 
             <Button
@@ -270,35 +260,6 @@
             android:id="@+id/solid_8"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:layout_below="@id/unbind_linearlayout"
             android:background="@drawable/solid" />
-
-        <!-- 解绑按钮 -->
-
-        <!-- <Button
-            android:id="@+id/unbind_layout_btn"
-            android:layout_width="312dp"
-            android:layout_height="54dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="40dp"
-            android:background="@drawable/btn_share_cancel_bg"
-            android:gravity="center"
-            android:textColor="#f0fefc"
-            android:textSize="18sp" /> -->
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/unbind_layout_noipc"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/icon_noipc" />
-    </RelativeLayout>
 
 </LinearLayout>

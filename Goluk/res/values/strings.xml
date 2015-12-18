@@ -501,4 +501,6 @@
 	<string name="unbind_select_connect_yes">已连接</string>
 	<string name="unbind_select_history_txt">历史记录</string>
 	<string name="unbind_add_mobile_btn">添加新设备</string>
+	<string name="str_ipc_number_text">设备编号：</string>
+	<string name="str_ipc_version_text">所有版本：</string>
 </resources>
