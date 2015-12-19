@@ -791,7 +791,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				fqzb.setTextColor(getResources().getColor(R.color.text_select_color));
 			}
 		} else {
-			mRedRoom.setImageResource(R.drawable.driving_car_red_point);
+			mRedRoom.setImageResource(R.drawable.carrecorder_icon_record_1);
 			if (videoType == 1) {// 精彩抢拍
 				jcqp.setTextColor(getResources().getColor(R.color.text_diff_color));
 			} else {

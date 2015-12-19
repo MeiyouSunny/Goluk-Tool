@@ -420,6 +420,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/jcqp"
             android:text="发起直播"
+            android:textColor="#808181"
             android:textSize="13sp" />
     </RelativeLayout>
 
