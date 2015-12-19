@@ -9,18 +9,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
-
-    <RelativeLayout
-        android:id="@+id/mImageLayout"
+    <ImageView
+        android:id="@+id/play_img"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <ImageView
-            android:id="@+id/play_img"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/imgdes" />
-    </RelativeLayout>
+        android:layout_height="match_parent"
+        android:src="@drawable/tacitly_pic" />
 
     <LinearLayout
         android:id="@+id/mLoadingLayout"
