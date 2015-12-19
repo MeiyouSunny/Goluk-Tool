@@ -59,6 +59,7 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 				String hpStr = "";
 				String periodStr = "";
 				String dateStr = "";
+
 				if (names.length == 3) {
 					hpStr = names[0].substring(3, 4);
 					periodStr = names[2].substring(0, names[2].lastIndexOf("."));
@@ -69,6 +70,11 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 					periodStr = names[6];
 					periodStr = periodStr.substring(0, periodStr.lastIndexOf("."));
 					dateStr = names[2];
+				} else if (names.length == 8 && type == 1) {
+					hpStr = names[6];
+					periodStr = names[7];
+					periodStr = periodStr.substring(0, periodStr.lastIndexOf("."));
+					dateStr = names[1];
 				}
 
 				if (TextUtils.isDigitsOnly(hpStr)) {
