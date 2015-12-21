@@ -111,6 +111,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private TextView mParkingSleepHintText = null;
 	/** 停车安防模式提示文字 **/
 	private TextView mParkingSecurityHintText = null;
+	private TextView mCarrecorderWonderfulLine, mCarrecorderSensitivityLine;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -266,6 +267,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mParkingSecurityHintText = (TextView) findViewById(R.id.tv_settings_security_hint_text);
 		mPhotoQualityText = (TextView) findViewById(R.id.tv_settings_photographic_quality);
 		mHandsetText = (TextView) findViewById(R.id.tv_settings_handset);
+		mCarrecorderWonderfulLine = (TextView) findViewById(R.id.tv_carrecorder_line);
+		mCarrecorderSensitivityLine = (TextView) findViewById(R.id.tv_carrecorder_sensitivity_line);
 		// ipc设备型号
 		if (mIPCName.equals(IPCControlManager.G1_SIGN)) {
 			mISPLayout.setVisibility(View.GONE);
@@ -277,6 +280,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mParkingSleepHintText.setText(this.getResources().getString(R.string.str_settings_sleep_hint_text_g1));
 			mParkingSecurityHintText
 					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g1));
+			mCarrecorderWonderfulLine.setVisibility(View.GONE);
+			mCarrecorderSensitivityLine.setVisibility(View.GONE);
 		} else if (mIPCName.equals("G2")) {
 			mISPLayout.setVisibility(View.VISIBLE);
 			mPhotoQualityLayout.setVisibility(View.GONE);
@@ -287,6 +292,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mParkingSleepHintText.setVisibility(View.GONE);
 			mParkingSecurityHintText
 					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g2));
+			mCarrecorderWonderfulLine.setVisibility(View.VISIBLE);
+			mCarrecorderSensitivityLine.setVisibility(View.VISIBLE);
 		} else {
 			mISPLayout.setVisibility(View.VISIBLE);
 			mPhotoQualityLayout.setVisibility(View.VISIBLE);
@@ -297,6 +304,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mParkingSleepHintText.setText(this.getResources().getString(R.string.str_settings_sleep_hint_text_t1));
 			mParkingSecurityHintText
 					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g2));
+			mCarrecorderWonderfulLine.setVisibility(View.GONE);
+			mCarrecorderSensitivityLine.setVisibility(View.GONE);
 		}
 
 		mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
