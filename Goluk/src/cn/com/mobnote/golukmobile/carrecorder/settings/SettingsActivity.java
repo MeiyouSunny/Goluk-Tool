@@ -5,6 +5,8 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -333,7 +335,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		d.setLeftButton(this.getResources().getString(R.string.str_button_ok), new OnLeftClickListener() {
 			@Override
 			public void onClickListener() {
-				exit();
+				finish();
 			}
 		});
 		d.show();
@@ -342,7 +344,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	@Override
 	public void onClick(View arg0) {
 		if (R.id.back_btn == arg0.getId()) {
-			exit();
+			finish();
 			return;
 		}
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
@@ -701,6 +703,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	@Override
 	protected void onDestroy() {
+		if (null != GolukApplication.getInstance().getIPCControlManager()) {
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("settings");
+		}
+		closeLoading();
 		super.onDestroy();
 	}
 
@@ -839,7 +845,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
 					@Override
 					public void onClickListener() {
-						exit();
+						finish();
 					}
 				});
 				mCustomDialog.show();
@@ -1122,8 +1128,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	}
 
 	private void getKitConfigCallback(int event, int msg, int param1, Object param2) {
-		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
+		Log.e("dengting", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
 				+ (String) param2 + "---param1:" + param1);
+		if (param2 == null) {
+			finish();
+			return;
+		}
 		parseKitJson((String) param2);
 		refreshKitUi();
 	}
@@ -1312,16 +1322,17 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		}
 	}
 
-	public void exit() {
-		if (null != GolukApplication.getInstance().getIPCControlManager()) {
-			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("settings");
-		}
-		finish();
-	}
+//	public void exit() {
+//		if (null != GolukApplication.getInstance().getIPCControlManager()) {
+//			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("settings");
+//		}
+//		closeLoading();
+//		finish();
+//	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			exit();
+			finish();
 			return true;
 		} else
 			return super.onKeyDown(keyCode, event);
@@ -1330,7 +1341,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	@Override
 	public void forbidBackKey(int backKey) {
 		if (1 == backKey) {
-			exit();
+			finish();
 		}
 	}
 

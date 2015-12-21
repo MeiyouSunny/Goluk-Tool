@@ -106,7 +106,6 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	private boolean isBuffering = false;
 	private int duration = 0;
 
-	private RelativeLayout mImageLayout = null;
 	private ImageView mPlayImg = null;
 	private boolean isStop = false;
 	private boolean mIsExit = false;
@@ -149,14 +148,9 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		TextView title = (TextView) findViewById(R.id.title);
 		title.setText(filename);
 
-		mImageLayout = (RelativeLayout) findViewById(R.id.mImageLayout);
 		mPlayImg = (ImageView) findViewById(R.id.play_img);
 
-		if (from.equals("suqare")) {
-			GlideUtils.loadImage(this, mPlayImg, image, R.drawable.tacitly_pic);
-		} else {
-			GlideUtils.loadImage(this, mPlayImg, image, R.drawable.tacitly_pic);
-		}
+		GlideUtils.loadImage(this, mPlayImg, image, R.drawable.tacitly_pic);
 
 		showLoading();
 		setListener();
@@ -225,7 +219,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		if (isShow) {
 			isShow = false;
 
-			mImageLayout.setVisibility(View.GONE);
+			mPlayImg.setVisibility(View.GONE);
 			if (mAnimationDrawable != null) {
 				if (mAnimationDrawable.isRunning()) {
 					mAnimationDrawable.stop();
@@ -718,7 +712,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		case MediaPlayer.MEDIA_INFO_BUFFERING_START:
 			isBuffering = true;
 			if (0 == mVideo.getCurrentPosition()) {
-				mImageLayout.setVisibility(View.VISIBLE);
+				mPlayImg.setVisibility(View.VISIBLE);
 			}
 			showLoading();
 			break;
@@ -767,7 +761,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		GolukDebugUtils.e("xuhw", "BBBBBB=====onError==arg1=" + arg1 + "==arg2=" + arg2);
 		hideLoading();
 		mPlayTime.setText("00:00");
-		mImageLayout.setVisibility(View.VISIBLE);
+		mPlayImg.setVisibility(View.VISIBLE);
 		dialog(msg);
 
 		return true;
@@ -886,7 +880,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 			if (networkConnectTimeOut > 15) {
 				if (!reset) {
 					hideLoading();
-					mImageLayout.setVisibility(View.VISIBLE);
+					mPlayImg.setVisibility(View.VISIBLE);
 					dialog("网络访问异常，请重试！");
 					if (null != mVideo) {
 						if(error) {
@@ -934,7 +928,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		if (isStop) {
 			isStop = false;
 			showLoading();
-			mImageLayout.setVisibility(View.VISIBLE);
+			mPlayImg.setVisibility(View.VISIBLE);
 		}
 
 		if (isPause) {
