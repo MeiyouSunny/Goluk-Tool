@@ -3,9 +3,9 @@ package cn.com.mobnote.golukmobile.carrecorder.settings;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -45,8 +45,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private final int STATE_CLOSE = 0;
 	private final int STATE_OPEN = 1;
 
-	public static final int RESULT_CODE_PHOTO = 20;
-	public static final int RESULT_CODE_KIT = 30;
+	public static final int REQUEST_CODE_PHOTO = 20;
+	public static final int REQUEST_CODE_KIT = 30;
 
 	/** 录制状态 */
 	private boolean recordState = false;
@@ -195,32 +195,49 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		}
 	}
 
+	private void activityResult_Photo(int resultCode, Intent data) {
+		if (Activity.RESULT_OK != resultCode) {
+			return;
+		}
+		if (null != data) {
+			String photoselect = data.getStringExtra("photoselect");
+			mPhtoBean.quality = photoselect;
+			mCurrentResolution = photoselect;
+			GolukDebugUtils.e("", "SettingsActivity----onActivityResult----photo------mCurrentResolution :"
+					+ mCurrentResolution);
+			refreshPhotoQuality();
+			String requestS = GolukFastJsonUtil.setParseObj(mPhtoBean);
+			GolukDebugUtils.e("", "SettingsActivity----onActivityResult----photo------requestS :" + requestS);
+			GolukApplication.getInstance().getIPCControlManager().setPhotoQualityMode(requestS);
+		}
+	}
+
+	private void activityResult_kit(int resultCode, Intent data) {
+		if (Activity.RESULT_OK != resultCode) {
+			return;
+		}
+		if (null != data) {
+			record = data.getIntExtra("record", 1);
+			snapshot = data.getIntExtra("snapshot", 0);
+			refreshKitUi();
+			GolukApplication.getInstance().getIPCControlManager().setKitMode(setKitJson());
+		}
+	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		GolukDebugUtils.e("", "SettingsActivity----onActivityResult----requestCode :" + requestCode + "   resultCode:"
 				+ resultCode);
-		if (10 == requestCode) {
-			if (RESULT_CODE_PHOTO == resultCode) {
-				if (null != data) {
-					String photoselect = data.getStringExtra("photoselect");
-					mPhtoBean.quality = photoselect;
-					mCurrentResolution = photoselect;
-					GolukDebugUtils.e("", "SettingsActivity----onActivityResult----photo------mCurrentResolution :"
-							+ mCurrentResolution);
-					refreshPhotoQuality();
-					String requestS = GolukFastJsonUtil.setParseObj(mPhtoBean);
-					GolukDebugUtils.e("", "SettingsActivity----onActivityResult----photo------requestS :" + requestS);
-					GolukApplication.getInstance().getIPCControlManager().setPhotoQualityMode(requestS);
-				}
-			} else if (RESULT_CODE_KIT == resultCode) {
-				if (null != data) {
-					record = data.getIntExtra("record", 1);
-					snapshot = data.getIntExtra("snapshot", 0);
-					refreshKitUi();
-					GolukApplication.getInstance().getIPCControlManager().setKitMode(setKitJson());
-				}
-			}
+		switch (requestCode) {
+		case REQUEST_CODE_PHOTO:
+			activityResult_Photo(resultCode, data);
+			break;
+		case REQUEST_CODE_KIT:
+			activityResult_kit(resultCode, data);
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -630,14 +647,14 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		Intent intent = new Intent(this, CarrecoderKitSettingActivity.class);
 		intent.putExtra("record", record);
 		intent.putExtra("snapshot", snapshot);
-		this.startActivityForResult(intent, 10);
+		this.startActivityForResult(intent, REQUEST_CODE_KIT);
 	}
 
 	// 点击照片质量
 	private void click_photoQuality() {
 		Intent intent = new Intent(this, PhotoQualityActivity.class);
 		intent.putExtra("photoselect", mCurrentResolution);
-		this.startActivityForResult(intent, 10);
+		this.startActivityForResult(intent, REQUEST_CODE_PHOTO);
 	}
 
 	/** T1设备的 声音录制 开关 */
@@ -1322,13 +1339,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		}
 	}
 
-//	public void exit() {
-//		if (null != GolukApplication.getInstance().getIPCControlManager()) {
-//			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("settings");
-//		}
-//		closeLoading();
-//		finish();
-//	}
+	// public void exit() {
+	// if (null != GolukApplication.getInstance().getIPCControlManager()) {
+	// GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("settings");
+	// }
+	// closeLoading();
+	// finish();
+	// }
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {

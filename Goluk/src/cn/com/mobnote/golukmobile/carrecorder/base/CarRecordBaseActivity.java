@@ -32,10 +32,15 @@ public class CarRecordBaseActivity extends BaseActivity implements OnClickListen
 		this.main.addView(view);
 	}
 
+	protected void subExit() {
+
+	}
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.back_btn:
+			subExit();
 			finish();
 			break;
 

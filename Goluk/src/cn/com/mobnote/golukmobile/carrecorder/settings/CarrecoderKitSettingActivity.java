@@ -1,6 +1,7 @@
 package cn.com.mobnote.golukmobile.carrecorder.settings;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -92,12 +93,14 @@ public class CarrecoderKitSettingActivity extends CarRecordBaseActivity implemen
 	}
 
 	@Override
+	protected void subExit() {
+		exit();
+	}
+
+	@Override
 	public void onClick(View v) {
 		super.onClick(v);
 		switch (v.getId()) {
-		case R.id.back_btn:
-			exit();
-			break;
 		case R.id.carrecoder_kti_close:
 			mSnapShot = 1;
 			setData2UI();
@@ -127,7 +130,7 @@ public class CarrecoderKitSettingActivity extends CarRecordBaseActivity implemen
 			Intent intent = new Intent();
 			intent.putExtra("record", mRecord);
 			intent.putExtra("snapshot", mSnapShot);
-			setResult(SettingsActivity.RESULT_CODE_KIT, intent);
+			setResult(Activity.RESULT_OK, intent);
 		}
 		finish();
 	}
