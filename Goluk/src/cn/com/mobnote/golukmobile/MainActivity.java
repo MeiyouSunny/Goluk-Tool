@@ -420,17 +420,17 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				// 只有视频下载才提示音频
 				playDownLoadedSound();
 
-				try {
-					if (filename.length() >= 22) {
-						String t = filename.substring(18, 22);
-						int tt = Integer.parseInt(t) + 1;
-						time += tt;
-					}
-				} catch (NumberFormatException e) {
-					e.printStackTrace();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+//				try {
+//					if (filename.length() >= 22) {
+//						String t = filename.substring(18, 22);
+//						int tt = Integer.parseInt(t) + 1;
+//						time += tt;
+//					}
+//				} catch (NumberFormatException e) {
+//					e.printStackTrace();
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
 
 				// 更新最新下载文件的时间
 				long oldtime = SettingUtils.getInstance().getLong("downloadfiletime");
