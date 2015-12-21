@@ -419,6 +419,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			if (tag.equals("videodownload")) {
 				// 只有视频下载才提示音频
 				playDownLoadedSound();
+				time += 1;
 
 //				try {
 //					if (filename.length() >= 22) {
