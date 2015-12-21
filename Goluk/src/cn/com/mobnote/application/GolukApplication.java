@@ -1240,9 +1240,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					((WiFiLinkCompleteActivity) mContext).setIpcLinkWiFiCallBack(param1);
 				} else if (mPageSource.equals("changePassword")) {
 					((UserSetupChangeWifiActivity) mContext).setIpcLinkWiFiCallBack(param1);
-				} else if ("Main".equals(mPageSource)) {
-					((MainActivity) mContext).setIpcLinkWiFiCallBack(param1);
-				}
+				} 
 				break;
 			case IPC_VDCP_Msg_GetVedioEncodeCfg:
 				if (param1 == RESULE_SUCESS) {

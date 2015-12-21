@@ -50,7 +50,6 @@ import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.newest.WonderfulSelectedListView;
-import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareAdapter;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
@@ -74,8 +73,6 @@ import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.api.Tapi;
 import cn.com.tiros.debug.GolukDebugUtils;
-
-import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -91,8 +88,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private final int MSG_H_WIFICONN_TIME = 100;
 	/** application */
 	public GolukApplication mApp = null;
-	/** 上下文 */
-	private Context mContext = null;
 
 	/** 更多按钮 */
 	private Button mMoreBtn = null;
@@ -177,7 +172,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		EventBus.getDefault().register(this);
 		initThirdSDK();
 
-		mContext = this;
 		mBannerLoaded = false;
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
@@ -371,38 +365,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		boolean hotPointState = SettingUtils.getInstance().getBoolean("HotPointState", false);
 		updateHotPointState(hotPointState);
-
-		// // 更新UI handler
-		// mMainHandler = new Handler() {
-		// @Override
-		// public void handleMessage(Message msg) {
-		// int what = msg.what;
-		// switch (what) {
-		// case 1:
-		// // 视频第一针截取成功,刷新页面UI
-		// break;
-		// case 3:
-		// // 检测是否已连接小车本热点
-		// // 网络状态改变
-		// notifyLogicNetWorkState((Boolean) msg.obj);
-		//
-		// break;
-		// case 99:
-		// // 请求在线视频轮播数据
-		// mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-		// IPageNotifyFn.PageType_GetPinData, "");
-		// break;
-		// case 400:
-		// // 已经绑定
-		// mApp.mIPCControlManager.setIPCWifiState(false, "");
-		// startWifi();
-		// if (null != mWac) {
-		// mWac.autoWifiManageReset();
-		// }
-		// break;
-		// }
-		// }
-		// };
 	}
 
 	@Override
@@ -478,12 +440,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==8888===stopDownloadList" + time);
 				updateHotPointState(true);
 
-				// if (null != PhotoAlbumActivity.mHandler) {
-				// Message msg =
-				// PhotoAlbumActivity.mHandler.obtainMessage(PhotoAlbumActivity.UPDATEDATE);
-				// msg.obj = filename;
-				// PhotoAlbumActivity.mHandler.sendMessage(msg);
-				// }
 				EventBus.getDefault().post(new EventPhotoUpdateDate(EventConfig.PHOTO_ALBUM_UPDATE_DATE, filename));
 
 				GFileUtils.writeIPCLog("YYYYYY===@@@@@@==2222==downloadfiletime=" + time);
@@ -505,10 +461,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			// 连接中
 			this.updateRecoderBtn(1);
 			mApp.mWiFiStatus = WIFI_STATE_CONNING;
-
-			// if (CarRecorderActivity.mHandler != null) {
-			// CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_CONNING);
-			// }
 			EventBus.getDefault().post(new EventWifiConnect(EventConfig.WIFI_STATE_CONNING));
 			break;
 		case 2:
@@ -563,10 +515,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mBaseHandler.removeMessages(MSG_H_WIFICONN_TIME);
 		mApp.mWiFiStatus = WIFI_STATE_SUCCESS;
 		GolukDebugUtils.e("zh：wifi连接成功 ", mApp.mWiFiStatus + "");
-		// if (CarRecorderActivity.mHandler != null) {
-		// GolukDebugUtils.e("zh：mhandler不为空 ", "");
-		// CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_SUCCESS);
-		// }
+
 		EventBus.getDefault().post(new EventWifiConnect(EventConfig.WIFI_STATE_SUCCESS));
 	}
 
@@ -576,10 +525,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mBaseHandler.removeMessages(MSG_H_WIFICONN_TIME);
 		mApp.mWiFiStatus = WIFI_STATE_FAILED;
 		updateRecoderBtn(mApp.mWiFiStatus);
-		// if (CarRecorderActivity.mHandler != null) {
-		// GolukDebugUtils.e("zh：mhandler不为空 ", "");
-		// CarRecorderActivity.mHandler.sendEmptyMessage(WIFI_STATE_FAILED);
-		// }
+
 		EventBus.getDefault().post(new EventWifiConnect(EventConfig.WIFI_STATE_FAILED));
 	}
 
@@ -719,7 +665,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukDebugUtils.e("", "wifiCallBack-------------checkWiFiStatus   type:" + mApp.mWiFiStatus);
 		Intent i = new Intent(MainActivity.this, CarRecorderActivity.class);
 		startActivity(i);
-
 	}
 
 	@Override
@@ -940,11 +885,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 */
 	private void updateHotPointState(boolean isShow) {
 		SettingUtils.getInstance().putBoolean("HotPointState", isShow);
-		if (isShow) {
-
-		} else {
-
-		}
 	}
 
 	@Override
@@ -985,12 +925,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		final String address = ((ReverseGeoCodeResult) obj).getAddress();
 		GolukApplication.getInstance().mCurAddr = address;
 		// 更新行车记录仪地址
-		// if (null != CarRecorderActivity.mHandler) {
-		// Message msg =
-		// CarRecorderActivity.mHandler.obtainMessage(CarRecorderActivity.ADDR);
-		// msg.obj = address;
-		// CarRecorderActivity.mHandler.sendMessage(msg);
-		// }
 		EventBus.getDefault().post(new EventUpdateAddr(EventConfig.CAR_RECORDER_UPDATE_ADDR, address));
 	}
 
@@ -1019,13 +953,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
 			}
 		}
-	}
-
-	/**
-	 * 设置IPC信息成功回调
-	 */
-	public void setIpcLinkWiFiCallBack(int state) {
-
 	}
 
 	private void wifiCallBack_5(int state, int process, String message, Object arrays) {
@@ -1060,15 +987,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukDebugUtils.e("", "jyf-----MainActivity----wifiConn----wifiCallBack-------------type:" + type + "	state :"
 				+ state + "	process:" + process);
 		switch (type) {
-		case 3:
-			// wifiCallBack_3( state, process, message, arrays);
-			break;
 		case 5:
 			wifiCallBack_5(state, process, message, arrays);
 			break;
 		default:
 			break;
-
 		}
 	}
 
