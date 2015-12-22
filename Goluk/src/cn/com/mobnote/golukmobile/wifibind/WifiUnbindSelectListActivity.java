@@ -1,39 +1,41 @@
 package cn.com.mobnote.golukmobile.wifibind;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-public class WifiUnbindSelectTypeActivity extends BaseActivity implements OnClickListener {
+public class WifiUnbindSelectListActivity extends BaseActivity implements OnClickListener {
 	
 	/**关闭按钮**/
 	private ImageView mCloseBtn;
 	
-	private RelativeLayout mT1Layout;
-	private RelativeLayout mG2Layout;
-	private RelativeLayout mG1Layout;
+	/**数据列表**/
+	private ListView mListView;
+	
+	/**没有数据时的默认布局**/
+	private RelativeLayout mEmptyLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.unbind_type_layout);
+		setContentView(R.layout.unbind_connection_list);
 		
 		initView();
 		initLisenner();
+		initData();
 	}
 	
 	/**
 	 * 初始化view
 	 */
 	private void initView(){
+		mListView = (ListView) findViewById(R.id.listView);
+		mEmptyLayout = (RelativeLayout) findViewById(R.id.emptyLayout);
 		mCloseBtn = (ImageView) findViewById(R.id.close_btn);
-		mT1Layout = (RelativeLayout) findViewById(R.id.goluk_t1_layout);
-		mG2Layout = (RelativeLayout) findViewById(R.id.goluk_g2_layout);
-		mG1Layout = (RelativeLayout) findViewById(R.id.goluk_g1_layout);
 	}
 	
 	/**
@@ -41,9 +43,11 @@ public class WifiUnbindSelectTypeActivity extends BaseActivity implements OnClic
 	 */
 	private void initLisenner(){
 		mCloseBtn.setOnClickListener(this);
-		mT1Layout.setOnClickListener(this);
-		mG2Layout.setOnClickListener(this);
-		mG1Layout.setOnClickListener(this);
+	}
+	
+	/**初始化数据**/
+	private void initData(){
+		mListView.setEmptyView(mEmptyLayout);
 	}
 
 
@@ -52,12 +56,6 @@ public class WifiUnbindSelectTypeActivity extends BaseActivity implements OnClic
 		switch (view.getId()) {
 		case R.id.close_btn:
 			this.finish();
-			break;
-		case R.id.goluk_t1_layout:
-		case R.id.goluk_g2_layout:
-		case R.id.goluk_g1_layout:
-			Intent intent = new Intent(this, WifiUnbindSelectListActivity.class);
-			startActivity(intent);
 			break;
 		default:
 			break;

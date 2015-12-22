@@ -503,4 +503,6 @@
 	<string name="unbind_add_mobile_btn">添加新设备</string>
 	<string name="str_ipc_number_text">设备编号：</string>
 	<string name="str_ipc_version_text">所有版本：</string>
+	<string name="unbind_nodata_txt">您还没有连接任何设备</string>
+	<string name="unbind_nodata_add_txt">请添加</string>
 </resources>

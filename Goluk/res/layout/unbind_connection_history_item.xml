@@ -34,7 +34,7 @@
             android:contentDescription="@string/def"/>
         
         <ImageView 
-            android:id="@+id/goluk_t1_icon"
+            android:id="@+id/goluk_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/goluk_del_icon"
@@ -44,11 +44,12 @@
             android:contentDescription="@string/def"/>
         
         <TextView 
+            android:id="@+id/goluk_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#565656"
             android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@id/goluk_t1_icon"
+            android:layout_toRightOf="@id/goluk_icon"
             android:textSize="14sp"
             android:layout_centerVertical="true"
             android:text="@string/unbind_select_type_t1"/>
