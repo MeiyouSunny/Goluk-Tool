@@ -49,9 +49,13 @@ public class GetShareAddressRequest extends GolukFastjsonRequest<ShareDataFullBe
 		} else {
 			params.put("uid", uid);
 		}
+
 		if (!TextUtils.isEmpty(location)) {
 			params.put("location", location);
+		} else {
+			params.put("location", "");
 		}
+
 		if (!TextUtils.isEmpty(channelid)) {
 			params.put("channelid", channelid);
 		}

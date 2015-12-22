@@ -277,10 +277,12 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			GolukDebugUtils.e("", "----------------------------VideoEditActivity-----videoName：" + videoName);
 			if (videoName.contains("_")) {
 				String[] videoTimeArray = videoName.split("_");
-				if ((null != videoTimeArray) && (videoTimeArray.length == 3)) {
+				if (videoTimeArray.length == 3) {
 					videoCreateTime = "20" + videoTimeArray[1] + "000";
-				} else {
-					videoCreateTime = "";
+				} else if (videoTimeArray.length == 7){
+					videoCreateTime = videoTimeArray[2] + "000";
+				} else if (videoTimeArray.length == 8) {
+					videoCreateTime = videoTimeArray[1] + "000";
 				}
 			} else {
 				videoCreateTime = "";
@@ -500,12 +502,12 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			mVVPlayVideo.cleanUp();
 			mVVPlayVideo = null;
 		}
-		// 正在获取连接
-		if (mShareLoading.getCurrentState() == ShareLoading.STATE_GET_SHARE) {
-			// 如果正在获取分享连接状态，則要取消
-			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
-					JsonUtil.getCancelJson());
-		}
+//		// 正在获取连接
+//		if (mShareLoading.getCurrentState() == ShareLoading.STATE_GET_SHARE) {
+//			// 如果正在获取分享连接状态，則要取消
+//			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
+//					JsonUtil.getCancelJson());
+//		}
 		mShareLoading = null;
 		mYouMengLayout = null;
 		finish();
