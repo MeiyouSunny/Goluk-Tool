@@ -502,7 +502,11 @@
 	<string name="unbind_select_history_txt">历史记录</string>
 	<string name="unbind_add_mobile_btn">添加新设备</string>
 	<string name="str_ipc_number_text">设备编号：</string>
-	<string name="str_ipc_version_text">所有版本：</string>
 	<string name="unbind_nodata_txt">您还没有连接任何设备</string>
 	<string name="unbind_nodata_add_txt">请添加</string>
+	<string name="str_ipc_version_text">固件版本：</string>
+	<string name="str_ipc_change_others">切换其他设备</string>
+	<string name="str_ipc_to_bind">去绑定</string>
+	<string name="str_new_updatefile_loading">新极路客固件升级文件正在下载…</string>
+	<string name="str_getwificfg_fail">获取失败</string>
 </resources>

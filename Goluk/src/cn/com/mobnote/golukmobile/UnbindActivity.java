@@ -14,9 +14,11 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.wifibind.WiFiLinkIndexActivity;
 import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectTypeActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
@@ -50,6 +52,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 	private String vIpc = "";
 	private RelativeLayout mIPCViewLayout;
 	private TextView mIPCModelText, mIPCNumberText, mIPCVersionText;
+	private ImageView mIPCimage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,17 +80,23 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 		boolean b = this.isBindSucess();
 		if (b) {
 			mIPCViewLayout.setVisibility(View.VISIBLE);
-			mUnbindBtn.setText("切换其他设备");
+			mUnbindBtn.setText(this.getResources().getString(R.string.str_ipc_change_others));
 			mPwdLayout.setEnabled(true);
 			String ipcName = this.ipcName();
 			mTextCameraName.setText(ipcName);
 			mTextVersion.setText(vIpc);
+			GolukApplication.getInstance().getIPCControlManager();
+			if (IPCControlManager.T1_SIGN.equals(ipcModel)) {
+				mIPCimage.setImageResource(R.drawable.connect_t1_icon_1);
+			} else {
+				mIPCimage.setImageResource(R.drawable.ipc);
+			}
 			mIPCModelText.setText(this.getResources().getString(R.string.app_name) + ipcModel);
 			mIPCNumberText.setText(this.getResources().getString(R.string.str_ipc_number_text) + ipcNumber);
 			mIPCVersionText.setText(this.getResources().getString(R.string.str_ipc_version_text) + vIpc);
 		} else {
 			mIPCViewLayout.setVisibility(View.GONE);
-			mUnbindBtn.setText("去绑定");
+			mUnbindBtn.setText(this.getResources().getString(R.string.str_ipc_to_bind));
 			mPwdLayout.setEnabled(false);
 			mTextVersion.setText("");
 		}
@@ -121,8 +130,9 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 		mIPCModelText = (TextView) findViewById(R.id.goluk_name);
 		mIPCNumberText = (TextView) findViewById(R.id.goluk_mobile);
 		mIPCVersionText = (TextView) findViewById(R.id.goluk_version);
+		mIPCimage = (ImageView) findViewById(R.id.goluk_icon);
 
-		mTextTitle.setText("摄像头管理");
+		mTextTitle.setText(this.getResources().getString(R.string.my_camera_title_text));
 
 		/**
 		 * 监听
@@ -175,8 +185,9 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 				return;
 			}
 			if (mApplication.mLoadStatus) {// 下载中
-				new AlertDialog.Builder(mApplication.getContext()).setTitle("提示").setMessage("新极路客固件升级文件正在下载……")
-						.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+				new AlertDialog.Builder(mApplication.getContext()).setTitle(this.getResources().getString(R.string.user_dialog_hint_title))
+				.setMessage(this.getResources().getString(R.string.str_new_updatefile_loading))
+						.setPositiveButton(getResources().getString(R.string.user_repwd_ok), new DialogInterface.OnClickListener() {
 
 							@Override
 							public void onClick(DialogInterface arg0, int arg1) {
@@ -274,11 +285,11 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 						}
 						isGetIPCSucess = true;
 					} catch (Exception e) {
-						GolukUtils.showToast(this, "获取失败");
+						GolukUtils.showToast(this, this.getResources().getString(R.string.str_getwificfg_fail));
 					}
 				} else {
 					// 获取失败
-					GolukUtils.showToast(this, "获取失败");
+					GolukUtils.showToast(this, this.getResources().getString(R.string.str_getwificfg_fail));
 				}
 
 				break;
