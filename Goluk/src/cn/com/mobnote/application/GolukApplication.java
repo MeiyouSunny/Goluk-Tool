@@ -54,6 +54,8 @@ import cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.wifibind.WiFiLinkCompleteActivity;
 import cn.com.mobnote.golukmobile.wifibind.WiFiLinkListActivity;
+import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
+import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.mobnote.logic.GolukLogic;
@@ -71,7 +73,6 @@ import cn.com.mobnote.user.User;
 import cn.com.mobnote.user.UserIdentifyManage;
 import cn.com.mobnote.user.UserLoginManage;
 import cn.com.mobnote.user.UserRegistAndRepwdManage;
-import cn.com.mobnote.util.AssetsFileUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.SharedPrefUtil;
@@ -1113,8 +1114,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	}
 
 	private void IPC_VDCP_Command_Init_CallBack(int msg, int param1, Object param2) {
-		// msg = 0 初始化消息
-		// param1 = 0 成功 | 失败
+		// msg = 0 初始化消息 param1 = 0 成功 | 失败
 		if (0 == param1) {
 			isIpcConnSuccess = true;
 			// 如果在wifi连接页面,通知连接成功
@@ -1126,10 +1126,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				((WiFiLinkCompleteActivity) mContext).ipcLinkWiFiCallBack();
 			}
 
-			SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-			boolean isbind = preferences.getBoolean("isbind", false);
-			if (isbind) {
+			if (isBindSucess()) {
 				GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + param2);
+				// 修改连接状态
+				if (null != mGolukName && !"".equals(mGolukName) && mGolukName.length() > 0) {
+					WifiBindDataCenter.getInstance().editBindStatus(mGolukName, WifiBindHistoryBean.CONN_USE);
+				}
 				// 保存ipc设备型号
 				try {
 					JSONObject json = new JSONObject((String) param2);
@@ -1149,24 +1151,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				getVideoEncodeCfg();
 				//获取设备编号
 				getIPCNumber();
-				// 发起获取自动循环录制状态
-				// updateAutoRecordState();
-				// 获取停车安防配置信息
-				// updateMotionCfg();
 				isconnection = true;// 连接成功
-				// if (null != PhotoAlbumActivity.mHandler) {
-				// PhotoAlbumActivity.mHandler.sendEmptyMessage(PhotoAlbumActivity.UPDATELOGINSTATE);
-				// }
 				EventBus.getDefault().post(new EventPhotoUpdateLoginState(EventConfig.PHOTO_ALBUM_UPDATE_LOGIN_STATE));
 				EventBus.getDefault().post(new EventIpcConnState(EventConfig.IPC_CONNECT));
-				// closeConnectionDialog();// 关闭连接的dialog
-				boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
-				GolukDebugUtils.e("xuhw", "YYYYYYY========getIPCSystemTime=======a=" + a);
-
+				GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
 				// 获取ipc版本号
-				boolean v = GolukApplication.getInstance().getIPCControlManager().getVersion();
-				GolukDebugUtils.i("lily", v + "========getIPCControlManager=====getIPCVersion");
-
+				GolukApplication.getInstance().getIPCControlManager().getVersion();
 				queryNewFileList();
 				if (null != mMainActivity) {
 					mMainActivity.wiFiLinkStatus(2);
@@ -1265,9 +1255,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 				break;
 			case IPC_VDCP_Msg_IPCKit:
-				SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-				boolean isbind = preferences.getBoolean("isbind", false);
-				if (!isbind) {
+				if (!isBindSucess()) {
 					return;
 				}
 				if (param1 == RESULE_SUCESS) {
@@ -1453,9 +1441,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if (!SettingUtils.getInstance().getBoolean(UserSetupActivity.AUTO_SWITCH, true)) {
 			return false;
 		}
-		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-		boolean isbind = preferences.getBoolean("isbind", false);
-		if (!isbind) {
+		
+		if (!isBindSucess()) {
 			return false;
 		}
 
@@ -1473,6 +1460,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			}
 		}
 		return true;
+	}
+	
+	public boolean isBindSucess() {
+		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
+		return preferences.getBoolean("isbind", false);
 	}
 
 	/**

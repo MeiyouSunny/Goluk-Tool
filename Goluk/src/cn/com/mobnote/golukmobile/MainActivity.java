@@ -198,7 +198,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		// 初始化个人中心
 		initUserInfo();
 		// 初始化连接与綁定状态
-		if (isBindSucess()) {
+		if (mApp.isBindSucess()) {
 			startWifi();
 			// 启动创建热点
 			createWiFiHot();
@@ -485,7 +485,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public void updateRecoderBtn(int state) {
 		if (this.isFinishing() == false) {
 			AnimationDrawable ad = null;
-			if (state == WIFI_STATE_CONNING && isBindSucess()) {
+			if (state == WIFI_STATE_CONNING && mApp.isBindSucess()) {
 				indexCarrecoderBtn.setBackgroundResource(R.anim.carrecoder_btn);
 				ad = (AnimationDrawable) indexCarrecoderBtn.getBackground();
 				if (ad.isRunning() == false) {
@@ -528,13 +528,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		updateRecoderBtn(mApp.mWiFiStatus);
 
 		EventBus.getDefault().post(new EventWifiConnect(EventConfig.WIFI_STATE_FAILED));
-	}
-
-	// 是否綁定过 Goluk
-	private boolean isBindSucess() {
-		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-		// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
-		return preferences.getBoolean("isbind", false);
 	}
 
 	public void onEventMainThread(EventBindFinish event) {

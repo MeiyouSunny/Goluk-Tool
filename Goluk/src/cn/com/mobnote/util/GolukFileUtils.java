@@ -14,9 +14,13 @@ public class GolukFileUtils {
 
 	/** 是否显示活动提示 */
 	public static final String SHOW_PROMOTION_POPUP_FLAG = "show_promotion_popup";
-	
+
 	/** 活动列表 */
 	public static final String PROMOTION_LIST_STRING = "promotion_list_string";
+
+	/** 绑定历史历史记录 */
+	public static final String KEY_BIND_HISTORY_LIST = "bind_history_list";
+
 	public static void remove(String name) {
 		Context context = GolukApplication.getInstance();
 		SharedPreferences sp = context.getSharedPreferences(APP_PREF_KEY, Context.MODE_PRIVATE);
@@ -65,7 +69,6 @@ public class GolukFileUtils {
 		return sp.getInt(name, defaultValue);
 	}
 
-
 	public static void saveLong(String name, long value) {
 		Context context = GolukApplication.getInstance();
 		SharedPreferences sp = context.getSharedPreferences(APP_PREF_KEY, Context.MODE_PRIVATE);
@@ -82,8 +85,7 @@ public class GolukFileUtils {
 
 	public static void saveBoolean(String name, boolean value) {
 		Context context = GolukApplication.getInstance();
-		SharedPreferences sp =context.getSharedPreferences(APP_PREF_KEY,
-				Context.MODE_PRIVATE);
+		SharedPreferences sp = context.getSharedPreferences(APP_PREF_KEY, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = sp.edit();
 		editor.putBoolean(name, value);
 		editor.commit();
@@ -91,8 +93,7 @@ public class GolukFileUtils {
 
 	public static boolean loadBoolean(String name, boolean defaultvalue) {
 		Context context = GolukApplication.getInstance();
-		SharedPreferences sp = context.getSharedPreferences(APP_PREF_KEY,
-				Context.MODE_PRIVATE);
+		SharedPreferences sp = context.getSharedPreferences(APP_PREF_KEY, Context.MODE_PRIVATE);
 		return sp.getBoolean(name, defaultvalue);
 	}
 

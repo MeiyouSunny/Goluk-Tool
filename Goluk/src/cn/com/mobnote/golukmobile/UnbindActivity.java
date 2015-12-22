@@ -77,8 +77,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 		vIpc = SharedPrefUtil.getIPCVersion();
 		String ipcModel = GolukApplication.getInstance().mIPCControlManager.mProduceName;
 		String ipcNumber = SharedPrefUtil.getIPCNumber();
-		boolean b = this.isBindSucess();
-		if (b) {
+		if (mApplication.isBindSucess()) {
 			mIPCViewLayout.setVisibility(View.VISIBLE);
 			mUnbindBtn.setText(this.getResources().getString(R.string.str_ipc_change_others));
 			mPwdLayout.setEnabled(true);
@@ -102,12 +101,12 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 		}
 		// 密码
 		if (null != mApplication) {
-			if (isBindSucess()) {
+			if (mApplication.isBindSucess()) {
 				boolean isSucess = mApplication.getIPCControlManager().getIpcWifiConfig();
 				if (isSucess) {
 				}
 			}
-			if (isBindSucess()) {
+			if (mApplication.isBindSucess()) {
 				String ipcPwd = SharedPrefUtil.getIpcPwd();
 				mTextPasswordName.setText(ipcPwd);
 			}
@@ -158,7 +157,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 			this.finish();
 			break;
 		case R.id.unbind_layout_btn:
-			if (isBindSucess()) {
+			if (mApplication.isBindSucess()) {
 				Intent intent = new Intent(this, WifiUnbindSelectTypeActivity.class);
 				startActivity(intent);
 			} else {
@@ -249,12 +248,6 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 
 	}
 
-	// 是否綁定过 Goluk true为绑定
-	public boolean isBindSucess() {
-		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-		return preferences.getBoolean("isbind", false);
-	}
-
 	// 解绑
 	public void toUnbind() {
 		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
@@ -280,7 +273,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 						mApSSID = obj.getString("AP_SSID");
 						mApPWD = obj.getString("AP_PWD");
 						SharedPrefUtil.saveIpcPwd(mApPWD);
-						if (isBindSucess()) {
+						if (mApplication.isBindSucess()) {
 							mTextPasswordName.setText(mApPWD);
 						}
 						isGetIPCSucess = true;

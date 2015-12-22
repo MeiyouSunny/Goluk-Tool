@@ -28,6 +28,8 @@ import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.reportlog.ReportLog;
 import cn.com.mobnote.golukmobile.reportlog.ReportLogManager;
+import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
+import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
@@ -330,6 +332,18 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
 		beans.setPh_ssid(WiFiInfo.MOBILE_SSID);
 		beans.setPh_pass(WiFiInfo.MOBILE_PWD);
+
+		// 保存绑定历史记录
+		WifiBindHistoryBean historyBean = new WifiBindHistoryBean();
+		historyBean.ipc_ssid = WiFiInfo.IPC_SSID;
+		historyBean.ipc_pwd = WiFiInfo.IPC_PWD;
+		historyBean.ipc_mac = mIpcMac;
+		historyBean.mobile_ssid = WiFiInfo.MOBILE_SSID;
+		historyBean.mobile_pwd = WiFiInfo.MOBILE_PWD;
+		historyBean.state = WifiBindHistoryBean.CONN_USE;
+		historyBean.ipcSign = mApp.mIPCControlManager.mProduceName;
+		
+		WifiBindDataCenter.getInstance().saveBindData(historyBean);
 
 		mWac.saveConfiguration(beans);
 		saveBind(WiFiInfo.IPC_SSID);

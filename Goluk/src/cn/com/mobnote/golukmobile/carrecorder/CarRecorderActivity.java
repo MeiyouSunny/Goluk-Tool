@@ -345,13 +345,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 	}
 
-	// 是否綁定过 Goluk
-	private boolean isBindSucess() {
-		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-		// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
-		return preferences.getBoolean("isbind", false);
-	}
-
 	/**
 	 * 验证ipc连接情况
 	 * 
@@ -366,7 +359,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		case WIFI_STATE_CONNING:
 			mConnectTip.setText(wifiname);
 			mPalyerLayout.setVisibility(View.GONE);
-			if (isBindSucess()) {
+			if (mApp.isBindSucess()) {
 				mNotconnected.setVisibility(View.GONE);
 				mConncetLayout.setVisibility(View.VISIBLE);
 			} else {
@@ -405,7 +398,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 	private void click_ConnFailed() {
 
-		if (!isBindSucess()) {
+		if (!mApp.isBindSucess()) {
 			Intent wifiIndex = new Intent(CarRecorderActivity.this, WiFiLinkIndexActivity.class);
 			startActivity(wifiIndex);
 		} else {
@@ -1079,7 +1072,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		mSettingBtn.setVisibility(View.GONE);
 		mChangeBtn.setVisibility(View.GONE);
 		setVideoBtnState(false);
-		if (isBindSucess()) {
+		if (mApp.isBindSucess()) {
 			mPalyerLayout.setVisibility(View.GONE);
 			mNotconnected.setVisibility(View.GONE);
 			mConncetLayout.setVisibility(View.VISIBLE);
@@ -1444,7 +1437,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					if (isBindSucess()) {
+					if (mApp.isBindSucess()) {
 						m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 					}
 				}

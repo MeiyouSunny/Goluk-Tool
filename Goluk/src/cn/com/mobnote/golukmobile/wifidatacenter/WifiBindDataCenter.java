@@ -48,4 +48,21 @@ public class WifiBindDataCenter implements IWifiBindDataFn {
 		mDataDeal.editBindStatus(ipc_ssid, state);
 	}
 
+	@Override
+	public void destroy() {
+		if (null == mDataDeal) {
+			return;
+		}
+		mDataDeal.destroy();
+		mDataDeal = null;
+	}
+
+	@Override
+	public WifiBindHistoryBean getCurrentUseIpc() {
+		if (null == mDataDeal) {
+			return null;
+		}
+		return mDataDeal.getCurrentUseIpc();
+	}
+
 }
