@@ -336,7 +336,7 @@
                     android:background="@color/setting_line_color" />
             </RelativeLayout>
             
-            <!-- 精彩视频拍摄提示音 -->
+            <!-- 精彩视频拍照提示音 -->
 
             <RelativeLayout
                 android:id="@+id/jcsp_line"
@@ -369,6 +369,14 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginLeft="15dp"
                     android:background="@color/setting_line_color" />
+                
+                <TextView
+                    android:id="@+id/tv_carrecorder_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color"
+                    android:visibility="gone" />
             </RelativeLayout>
             
             <!-- 疲劳驾驶语音提示 -->
@@ -456,6 +464,14 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginLeft="15dp"
                     android:background="@color/setting_line_color" />
+                
+                <TextView
+                    android:id="@+id/tv_carrecorder_sensitivity_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color"
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <!-- 图像自动翻转 -->

@@ -17,6 +17,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -63,18 +64,35 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener,On
 		setContentView(R.layout.my_profit);
 		
 		initView();
-		Intent itUser = getIntent();
-		if(null != itUser.getStringExtra("uid")) {
-			uid = itUser.getStringExtra("uid").toString();
-		}
-		if(null != itUser.getStringExtra("phone")) {
-			phone = itUser.getStringExtra("phone").toString();
+		if (savedInstanceState == null) {
+			Intent itUser = getIntent();
+			if (null != itUser.getStringExtra("uid")) {
+				uid = itUser.getStringExtra("uid");
+			}
+			if (null != itUser.getStringExtra("phone")) {
+				phone = itUser.getStringExtra("phone");
+			}
+		} else {
+			uid = savedInstanceState.getString("uid");
+			phone = savedInstanceState.getString("phone");
 		}
 		showLoadingDialog();
 		profitJsonRequest = new ProfitJsonRequest(IPageNotifyFn.PageType_MyProfit, this);
 		profitJsonRequest.get(uid, "100");
 	}
 	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		if (!TextUtils.isEmpty(uid)) {
+			outState.putString("uid", uid);
+		}
+		if (!TextUtils.isEmpty(phone)) {
+			outState.putString("phone", phone);
+		}
+		super.onSaveInstanceState(outState);
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.webkit.DownloadListener;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -90,7 +92,6 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);  //设置 缓存模式
 		mWebView.setDownloadListener(this);
 		mWebView.setWebViewClient(new WebViewClient() {
-
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				GolukDebugUtils.e("", "Error--------------------url:" + url);
@@ -107,8 +108,11 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					return true;
 				}
 
-				view.loadUrl(url);
-				return false;
+				if (null != url && url.startsWith("http")) {
+					view.loadUrl(url);
+					return true;
+				}
+				return super.shouldOverrideUrlLoading(view, url);
 			}
 
 			@Override
@@ -123,7 +127,13 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 				mWebView.setVisibility(View.GONE);
 				mErrorLayout.setVisibility(View.VISIBLE);
 			}
-
+			
+			@Override
+			public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+				// TODO Auto-generated method stub
+				handler.proceed();
+				super.onReceivedSslError(view, handler, error);
+			}
 		});
 
 		if (!itIndexMore.getExtras().toString().equals("")) {

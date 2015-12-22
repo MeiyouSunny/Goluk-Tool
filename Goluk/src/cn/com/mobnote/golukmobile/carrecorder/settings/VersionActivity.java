@@ -9,17 +9,16 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.entity.IPCIdentityState;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.map.LngLat;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -54,6 +53,7 @@ public class VersionActivity extends CarRecordBaseActivity implements IPCManager
 	private TextView mTextIpcModel = null;
 	/****/
 	private String mIpcModelName = "";
+	private ImageView mIPCImage = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +68,16 @@ public class VersionActivity extends CarRecordBaseActivity implements IPCManager
 		mDeviceId = (TextView)findViewById(R.id.mDeviceId);
 		mVersion = (TextView)findViewById(R.id.mVersion);
 		mTextIpcModel = (TextView) findViewById(R.id.text_model);
+		mIPCImage = (ImageView) findViewById(R.id.im_carrecorder_version_icon);
 		
 		mDeviceId.setText("");
 		mVersion.setText("");
 		mTextIpcModel.setText("极路客"+mIpcModelName);
+		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+			mIPCImage.setImageResource(R.drawable.connect_t1_icon_1);
+		} else {
+			mIPCImage.setImageResource(R.drawable.ipc);
+		}
 		if(GolukApplication.getInstance().getIpcIsLogin()){
 			boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCIdentity();
 			GolukDebugUtils.e("xuhw","YYYYYY=======getIPCIdentity============a="+a);

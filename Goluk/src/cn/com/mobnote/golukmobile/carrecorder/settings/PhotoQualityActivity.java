@@ -1,6 +1,7 @@
 package cn.com.mobnote.golukmobile.carrecorder.settings;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -101,12 +102,14 @@ public class PhotoQualityActivity extends CarRecordBaseActivity implements OnCli
 	}
 
 	@Override
+	protected void subExit() {
+		exit();
+	}
+
+	@Override
 	public void onClick(View v) {
 		super.onClick(v);
 		switch (v.getId()) {
-		case R.id.back_btn:
-			exit();
-			break;
 		case R.id.photo_quality_close:
 			this.mCurrentResolution = mArrayResolution[0];
 			setData2UI();
@@ -139,7 +142,7 @@ public class PhotoQualityActivity extends CarRecordBaseActivity implements OnCli
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			Intent intent = new Intent();
 			intent.putExtra("photoselect", mCurrentResolution);
-			setResult(SettingsActivity.RESULT_CODE_PHOTO, intent);
+			setResult(Activity.RESULT_OK, intent);
 		}
 		finish();
 	}

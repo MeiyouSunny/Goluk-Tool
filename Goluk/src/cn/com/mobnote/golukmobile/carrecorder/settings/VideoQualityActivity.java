@@ -148,6 +148,7 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			setArrayData();
 
+			GolukApplication.getInstance().setVideoConfigState(mVideoConfigState);
 			boolean flag = GolukApplication.getInstance().getIPCControlManager().setVideoEncodeCfg(mVideoConfigState);
 			GolukDebugUtils.e("xuhw", "YYY==========curType=========flag=" + flag);
 		}

@@ -3,8 +3,10 @@ package cn.com.mobnote.golukmobile.carrecorder.settings;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -43,8 +45,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private final int STATE_CLOSE = 0;
 	private final int STATE_OPEN = 1;
 
-	public static final int RESULT_CODE_PHOTO = 20;
-	public static final int RESULT_CODE_KIT = 30;
+	public static final int REQUEST_CODE_PHOTO = 20;
+	public static final int REQUEST_CODE_KIT = 30;
 
 	/** 录制状态 */
 	private boolean recordState = false;
@@ -109,6 +111,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private TextView mParkingSleepHintText = null;
 	/** 停车安防模式提示文字 **/
 	private TextView mParkingSecurityHintText = null;
+	private TextView mCarrecorderWonderfulLine, mCarrecorderSensitivityLine;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -179,9 +182,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			boolean getPhotoQualityMode = GolukApplication.getInstance().getIPCControlManager().getPhotoQualityMode();
 			GolukDebugUtils.e("", "--------------SettingsActivity-----getPhotoQualityMode：" + getPhotoQualityMode);
 			GolukDebugUtils.e("", "--------------SettingsActivity-----t1VoiceState：" + t1VoiceState);
-		}
-		// 获取T1图像自动翻转
-		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+			// 获取T1图像自动翻转
 			boolean t1GetAutoRotaing = GolukApplication.getInstance().getIPCControlManager().getT1AutoRotaing();
 			GolukDebugUtils.e("", "--------------SettingsActivity-----t1GetAutoRotaing：" + t1GetAutoRotaing);
 		}
@@ -195,32 +196,49 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		}
 	}
 
+	private void activityResult_Photo(int resultCode, Intent data) {
+		if (Activity.RESULT_OK != resultCode) {
+			return;
+		}
+		if (null != data) {
+			String photoselect = data.getStringExtra("photoselect");
+			mPhtoBean.quality = photoselect;
+			mCurrentResolution = photoselect;
+			GolukDebugUtils.e("", "SettingsActivity----onActivityResult----photo------mCurrentResolution :"
+					+ mCurrentResolution);
+			refreshPhotoQuality();
+			String requestS = GolukFastJsonUtil.setParseObj(mPhtoBean);
+			GolukDebugUtils.e("", "SettingsActivity----onActivityResult----photo------requestS :" + requestS);
+			GolukApplication.getInstance().getIPCControlManager().setPhotoQualityMode(requestS);
+		}
+	}
+
+	private void activityResult_kit(int resultCode, Intent data) {
+		if (Activity.RESULT_OK != resultCode) {
+			return;
+		}
+		if (null != data) {
+			record = data.getIntExtra("record", 1);
+			snapshot = data.getIntExtra("snapshot", 0);
+			refreshKitUi();
+			GolukApplication.getInstance().getIPCControlManager().setKitMode(setKitJson());
+		}
+	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		GolukDebugUtils.e("", "SettingsActivity----onActivityResult----requestCode :" + requestCode + "   resultCode:"
 				+ resultCode);
-		if (10 == requestCode) {
-			if (RESULT_CODE_PHOTO == resultCode) {
-				if (null != data) {
-					String photoselect = data.getStringExtra("photoselect");
-					mPhtoBean.quality = photoselect;
-					mCurrentResolution = photoselect;
-					GolukDebugUtils.e("", "SettingsActivity----onActivityResult----photo------mCurrentResolution :"
-							+ mCurrentResolution);
-					refreshPhotoQuality();
-					String requestS = GolukFastJsonUtil.setParseObj(mPhtoBean);
-					GolukDebugUtils.e("", "SettingsActivity----onActivityResult----photo------requestS :" + requestS);
-					GolukApplication.getInstance().getIPCControlManager().setPhotoQualityMode(requestS);
-				}
-			} else if (RESULT_CODE_KIT == resultCode) {
-				if (null != data) {
-					record = data.getIntExtra("record", 1);
-					snapshot = data.getIntExtra("snapshot", 0);
-					refreshKitUi();
-					GolukApplication.getInstance().getIPCControlManager().setKitMode(setKitJson());
-				}
-			}
+		switch (requestCode) {
+		case REQUEST_CODE_PHOTO:
+			activityResult_Photo(resultCode, data);
+			break;
+		case REQUEST_CODE_KIT:
+			activityResult_kit(resultCode, data);
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -249,6 +267,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mParkingSecurityHintText = (TextView) findViewById(R.id.tv_settings_security_hint_text);
 		mPhotoQualityText = (TextView) findViewById(R.id.tv_settings_photographic_quality);
 		mHandsetText = (TextView) findViewById(R.id.tv_settings_handset);
+		mCarrecorderWonderfulLine = (TextView) findViewById(R.id.tv_carrecorder_line);
+		mCarrecorderSensitivityLine = (TextView) findViewById(R.id.tv_carrecorder_sensitivity_line);
 		// ipc设备型号
 		if (mIPCName.equals(IPCControlManager.G1_SIGN)) {
 			mISPLayout.setVisibility(View.GONE);
@@ -260,6 +280,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mParkingSleepHintText.setText(this.getResources().getString(R.string.str_settings_sleep_hint_text_g1));
 			mParkingSecurityHintText
 					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g1));
+			mCarrecorderWonderfulLine.setVisibility(View.GONE);
+			mCarrecorderSensitivityLine.setVisibility(View.GONE);
 		} else if (mIPCName.equals("G2")) {
 			mISPLayout.setVisibility(View.VISIBLE);
 			mPhotoQualityLayout.setVisibility(View.GONE);
@@ -270,6 +292,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mParkingSleepHintText.setVisibility(View.GONE);
 			mParkingSecurityHintText
 					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g2));
+			mCarrecorderWonderfulLine.setVisibility(View.VISIBLE);
+			mCarrecorderSensitivityLine.setVisibility(View.VISIBLE);
 		} else {
 			mISPLayout.setVisibility(View.VISIBLE);
 			mPhotoQualityLayout.setVisibility(View.VISIBLE);
@@ -280,6 +304,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mParkingSleepHintText.setText(this.getResources().getString(R.string.str_settings_sleep_hint_text_t1));
 			mParkingSecurityHintText
 					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g2));
+			mCarrecorderWonderfulLine.setVisibility(View.GONE);
+			mCarrecorderSensitivityLine.setVisibility(View.GONE);
 		}
 
 		mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
@@ -335,7 +361,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		d.setLeftButton(this.getResources().getString(R.string.str_button_ok), new OnLeftClickListener() {
 			@Override
 			public void onClickListener() {
-				exit();
+				finish();
 			}
 		});
 		d.show();
@@ -344,7 +370,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	@Override
 	public void onClick(View arg0) {
 		if (R.id.back_btn == arg0.getId()) {
-			exit();
+			finish();
 			return;
 		}
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
@@ -630,14 +656,14 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		Intent intent = new Intent(this, CarrecoderKitSettingActivity.class);
 		intent.putExtra("record", record);
 		intent.putExtra("snapshot", snapshot);
-		this.startActivityForResult(intent, 10);
+		this.startActivityForResult(intent, REQUEST_CODE_KIT);
 	}
 
 	// 点击照片质量
 	private void click_photoQuality() {
 		Intent intent = new Intent(this, PhotoQualityActivity.class);
 		intent.putExtra("photoselect", mCurrentResolution);
-		this.startActivityForResult(intent, 10);
+		this.startActivityForResult(intent, REQUEST_CODE_PHOTO);
 	}
 
 	/** T1设备的 声音录制 开关 */
@@ -703,6 +729,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	@Override
 	protected void onDestroy() {
+		if (null != GolukApplication.getInstance().getIPCControlManager()) {
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("settings");
+		}
+		closeLoading();
 		super.onDestroy();
 	}
 
@@ -841,7 +871,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
 					@Override
 					public void onClickListener() {
-						exit();
+						finish();
 					}
 				});
 				mCustomDialog.show();
@@ -1124,8 +1154,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	}
 
 	private void getKitConfigCallback(int event, int msg, int param1, Object param2) {
-		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
+		Log.e("dengting", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
 				+ (String) param2 + "---param1:" + param1);
+		if (param2 == null) {
+			finish();
+			return;
+		}
 		parseKitJson((String) param2);
 		refreshKitUi();
 	}
@@ -1314,16 +1348,17 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		}
 	}
 
-	public void exit() {
-		if (null != GolukApplication.getInstance().getIPCControlManager()) {
-			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("settings");
-		}
-		finish();
-	}
+	// public void exit() {
+	// if (null != GolukApplication.getInstance().getIPCControlManager()) {
+	// GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("settings");
+	// }
+	// closeLoading();
+	// finish();
+	// }
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			exit();
+			finish();
 			return true;
 		} else
 			return super.onKeyDown(keyCode, event);
@@ -1332,7 +1367,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	@Override
 	public void forbidBackKey(int backKey) {
 		if (1 == backKey) {
-			exit();
+			finish();
 		}
 	}
 
