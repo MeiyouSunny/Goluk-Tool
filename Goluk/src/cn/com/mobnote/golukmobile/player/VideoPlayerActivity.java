@@ -108,7 +108,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	private int duration = 0;
 
 	private ImageView mPlayImg = null;
-//	private boolean isStop = false;
+	private boolean isStop = false;
 	private boolean mIsExit = false;
 	private boolean mDragging;
 	@Override
@@ -306,17 +306,17 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==playUrl=" + videoUrl);
 	}
 
-//	@Override
-//	public void onConfigurationChanged(Configuration newConfig) {
-//		if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-//			height = DensityUtil.getWidthInPx(this);
-//			width = DensityUtil.getHeightInPx(this);
-//		} else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-//			width = DensityUtil.getWidthInPx(this);
-//			height = DensityUtil.getHeightInPx(this);
-//		}
-//		super.onConfigurationChanged(newConfig);
-//	}
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			height = DensityUtil.getWidthInPx(this);
+			width = DensityUtil.getHeightInPx(this);
+		} else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+			width = DensityUtil.getWidthInPx(this);
+			height = DensityUtil.getHeightInPx(this);
+		}
+		super.onConfigurationChanged(newConfig);
+	}
 
 	private OnSeekBarChangeListener mSeekBarChangeListener = new OnSeekBarChangeListener() {
 
@@ -892,20 +892,19 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		if (null == mVideo) {
 			return;
 		}
-//		if (isStop) {
-//			isStop = false;
-//			showLoading();
-//			mPlayImg.setVisibility(View.VISIBLE);
-//		}
-		mPlayImg.setVisibility(View.VISIBLE);
+		if (isStop) {
+			isStop = false;
+			showLoading();
+			mPlayImg.setVisibility(View.VISIBLE);
+		}
+//		mPlayImg.setVisibility(View.VISIBLE);
 		if (playTime != 0) {
 			mVideo.seekTo(playTime);
 		}
 		if (isPause) {
 			isPause = false;
 //			mPlayImg.setVisibility(View.VISIBLE);
-			showLoading();
-			mPlayImg.setVisibility(View.VISIBLE);
+//			showLoading();
 			mVideo.start();
 		}
 
@@ -938,22 +937,22 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	protected void onStop() {
 		GolukDebugUtils.e("", "jyf----VideoPlayerActivity--------onStop----");
 		super.onStop();
-//		if (isBackground(this)) {
-//			isStop = true;
-//		}
+		if (isBackground(this)) {
+			isStop = true;
+		}
 	}
 
-//	public boolean isBackground(final Context context) {
-//		ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-//		List<RunningTaskInfo> tasks = am.getRunningTasks(1);
-//		if (!tasks.isEmpty()) {
-//			ComponentName topActivity = tasks.get(0).topActivity;
-//			if (!topActivity.getPackageName().equals(context.getPackageName())) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
+	public boolean isBackground(final Context context) {
+		ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		List<RunningTaskInfo> tasks = am.getRunningTasks(1);
+		if (!tasks.isEmpty()) {
+			ComponentName topActivity = tasks.get(0).topActivity;
+			if (!topActivity.getPackageName().equals(context.getPackageName())) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
