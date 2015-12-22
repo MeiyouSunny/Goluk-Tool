@@ -77,8 +77,8 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 	/** 加载中动画对象 */
 	private AnimationDrawable mAnimationDrawable = null;
 	public boolean isShow = false;
-	/** 缓冲标识 */
-	public boolean isBuffering = false;
+//	/** 缓冲标识 */
+//	public boolean isBuffering = false;
 	/** 播放器报错标识 */
 	public boolean error = false;
 	/** 判断是精选(0)还是最新(1) **/
@@ -149,6 +149,9 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 		mVideoView.setOnPreparedListener(this);
 		mVideoView.setOnCompletionListener(this);
 		mVideoView.setOnErrorListener(this);
+		if (GolukUtils.getSystemSDK() >= 17) {
+			mVideoView.setOnInfoListener(this);
+		}
 		mShareLayout.setOnClickListener(this);
 		mTextLink.setOnClickListener(this);
 		mPraiseLayout.setOnClickListener(this);
@@ -458,9 +461,9 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 				return;
 			}
 
-			if (isBuffering) {
-				return;
-			}
+//			if (isBuffering) {
+//				return;
+//			}
 
 			if (mVideoView.isPlaying()) {
 				mVideoView.pause();
@@ -627,7 +630,6 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 			mp.start();
 			mp.setLooping(true);
 		}
-		mp.setOnInfoListener(this);
 		mp.setOnBufferingUpdateListener(new OnBufferingUpdateListener() {
 			
 			@Override
@@ -642,6 +644,11 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 				mSeekBar.setProgress(progress);
 			}
 		});
+		if (GolukUtils.getSystemSDK() < 17) {
+			mPlayBtn.setVisibility(View.GONE);
+			mImageLayout.setVisibility(View.GONE);
+			hideLoading();
+		}
 	}
 
 	@Override
@@ -711,19 +718,19 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 			mImageLayout.setVisibility(View.GONE);
 			hideLoading();
 			break;
-		case MediaPlayer.MEDIA_INFO_BUFFERING_START:
-			isBuffering = true;
-			if (0 == mVideoView.getCurrentPosition()) {
-				mImageLayout.setVisibility(View.VISIBLE);
-			}
-			showLoading();
-			GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------onInfo  showLoading");
-			break;
-		case MediaPlayer.MEDIA_INFO_BUFFERING_END:
-			isBuffering = false;
-			hideLoading();
-			GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------onInfo : hideLoading ");
-			break;
+//		case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+//			isBuffering = true;
+//			if (0 == mVideoView.getCurrentPosition()) {
+//				mImageLayout.setVisibility(View.VISIBLE);
+//			}
+//			showLoading();
+//			GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------onInfo  showLoading");
+//			break;
+//		case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+//			isBuffering = false;
+//			hideLoading();
+//			GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------onInfo : hideLoading ");
+//			break;
 		default:
 			break;
 		}
