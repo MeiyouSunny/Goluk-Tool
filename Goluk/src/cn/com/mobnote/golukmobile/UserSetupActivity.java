@@ -12,8 +12,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,6 +31,7 @@ import cn.com.mobnote.user.DataCleanManage;
 import cn.com.mobnote.user.IpcUpdateManage;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.GolukFileUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.SharedPrefUtil;
@@ -71,13 +70,15 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	private AlertDialog dialog = null;
 	/** 清除缓存 **/
 	private RelativeLayout mClearCache = null;
-//	public static Handler mHandler = null;
 
 	private String vIpc = "";
 
 	/** 连接ipc后自动同步开关 **/
 	private ImageButton mBtnSwitch = null;
 	public static final String AUTO_SWITCH = "autoswitch";
+	
+	private ImageButton mAutoPhotoBtn = null;
+	boolean mAutoState = true;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -89,10 +90,18 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mContext = this;
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
-
+		
 		vIpc = SharedPrefUtil.getIPCVersion();
+		mAutoState = GolukFileUtils.loadBoolean(GolukFileUtils.PROMOTION_AUTO_PHOTO, true);
 		// 页面初始化
 		init();
+		
+		if (mAutoState) {
+			mAutoPhotoBtn.setBackgroundResource(R.drawable.set_open_btn);
+		} else {
+			mAutoPhotoBtn.setBackgroundResource(R.drawable.set_close_btn);
+		}
+		
 		boolean b = SettingUtils.getInstance().getBoolean(AUTO_SWITCH, true);
 		if (b) {
 //			mBtnSwitch.setBackgroundResource(R.drawable.set_open_btn);
@@ -121,16 +130,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			e.printStackTrace();
 		}
 
-//		mHandler = new Handler() {
-//			@Override
-//			public void handleMessage(Message msg) {
-//				super.handleMessage(msg);
-//				if (msg.what == 0) {
-//					GolukDebugUtils.i("lily", "已清除过缓存");
-//				}
-//			}
-//		};
-
 	}
 
 	/**
@@ -149,6 +148,8 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mTextCacheSize = (TextView) findViewById(R.id.user_personal_setup_cache_size);
 		// 自动同步开关
 		mBtnSwitch = (ImageButton) findViewById(R.id.set_ipc_btn);
+		//自动同步照片到手机相册
+		mAutoPhotoBtn = (ImageButton) findViewById(R.id.ib_setup_autophoto_btn);
 		// 消息通知添加监听
 		findViewById(R.id.notify_comm_item).setOnClickListener(this);
 
@@ -159,6 +160,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mClearCache.setOnClickListener(this);
 		/** 自动同步开关 **/
 		mBtnSwitch.setOnClickListener(this);
+		mAutoPhotoBtn.setOnClickListener(this);
 	}
 
 	/**
@@ -168,9 +170,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		// 没有登录过的状态
 		mPreferences = getSharedPreferences("firstLogin", MODE_PRIVATE);
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
-		GolukDebugUtils.i("lily", "----------UserSetupActivity11111-------" + mApp.registStatus);
 		if (!isFirstLogin) {// 登录过
-			GolukDebugUtils.i("lily", "----------UserSetupActivity-------" + mApp.registStatus);
 			if (mApp.loginStatus == 1 || mApp.registStatus == 2 || mApp.autoLoginStatus == 2
 					|| mApp.isUserLoginSucess == true) {// 上次登录成功
 				btnLoginout.setText("注销");
@@ -257,6 +257,18 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			break;
 		case R.id.notify_comm_item:
 			startMsgSettingActivity();
+			break;
+		case R.id.ib_setup_autophoto_btn:
+			if(mAutoState) {
+				mAutoPhotoBtn.setBackgroundResource(R.drawable.set_close_btn);
+				mAutoState = false;
+			} else {
+				mAutoPhotoBtn.setBackgroundResource(R.drawable.set_open_btn);
+				mAutoState = true;
+			}
+			GolukFileUtils.saveBoolean(GolukFileUtils.PROMOTION_AUTO_PHOTO, mAutoState);
+			break;
+		default:
 			break;
 		}
 	}

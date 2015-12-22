@@ -141,7 +141,8 @@
     <string name="synchronous_desc_text">与小车本连接后自动</string>
     <string name="update_text">检查更新</string>
     <string name="remove_cache_text">清除缓存</string>
-    <string name="set_ipc_item_text">连接极路客后自动同步开关</string>
+    <string name="set_ipc_item_text">连接极路客后自动同步</string>
+    <string name="str_setup_autophoto_title">自动同步照片到手机相册</string>
     <string name="set_ipc_item_hint_text">手机与极路客连接成功后自动同步最近录制的5条精彩和紧急视频</string>
     <string name="unbind_text">摄像头管理</string>
     <string name="unbind_camera">名称</string>
@@ -413,7 +414,7 @@
     <string name="user_opinion_type_qita">其他</string>
     <string name="user_opinion_type_cancle">取消</string>
     <string name="user_opinion_type_select">选择意见类型</string>
-    <string name="setting_msg_notify">消息通知</string>
+    <string name="setting_msg_notify">消息通知设置</string>
     <string name="logout">注销</string>
     <string name="setting_notify_comment">有人给我评论</string>
     <string name="setting_notify_parise">有人给我点赞</string>

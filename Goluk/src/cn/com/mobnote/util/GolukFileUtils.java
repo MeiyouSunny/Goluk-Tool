@@ -17,6 +17,9 @@ public class GolukFileUtils {
 	
 	/** 活动列表 */
 	public static final String PROMOTION_LIST_STRING = "promotion_list_string";
+	/**自动同步照片到手机相册**/
+	public static final String PROMOTION_AUTO_PHOTO = "promotion_auto_photo";
+	
 	public static void remove(String name) {
 		Context context = GolukApplication.getInstance();
 		SharedPreferences sp = context.getSharedPreferences(APP_PREF_KEY, Context.MODE_PRIVATE);

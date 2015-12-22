@@ -72,6 +72,7 @@ import cn.com.mobnote.user.UserIdentifyManage;
 import cn.com.mobnote.user.UserLoginManage;
 import cn.com.mobnote.user.UserRegistAndRepwdManage;
 import cn.com.mobnote.util.AssetsFileUtils;
+import cn.com.mobnote.util.GolukFileUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.SharedPrefUtil;
@@ -1277,7 +1278,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 //							if (!mDownLoadFileList.contains(info.location)) {
 //								mDownLoadFileList.add(info.location);
 							if (info.type == 9) {
-
+								if (!GolukFileUtils.loadBoolean(GolukFileUtils.PROMOTION_AUTO_PHOTO, true)) {
+									return;
+								}
 								File file = new File(FileUtils.libToJavaPath(SNAPSHOT_DIR));
 								if (!file.exists()) {
 									file.mkdirs();
