@@ -40,6 +40,7 @@ import cn.com.mobnote.eventbus.EventUpdateAddr;
 import cn.com.mobnote.eventbus.EventWifiConnect;
 import cn.com.mobnote.eventbus.EventWifiState;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
@@ -73,6 +74,7 @@ import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.api.Tapi;
 import cn.com.tiros.debug.GolukDebugUtils;
+
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -419,19 +421,21 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			if (tag.equals("videodownload")) {
 				// 只有视频下载才提示音频
 				playDownLoadedSound();
-				time += 1;
-
-//				try {
-//					if (filename.length() >= 22) {
-//						String t = filename.substring(18, 22);
-//						int tt = Integer.parseInt(t) + 1;
-//						time += tt;
-//					}
-//				} catch (NumberFormatException e) {
-//					e.printStackTrace();
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
+				if (!IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+					try {
+						if (filename.length() >= 22) {
+							String t = filename.substring(18, 22);
+							int tt = Integer.parseInt(t) + 1;
+							time += tt;
+						}
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else {
+					time += 1;
+				}
 
 				// 更新最新下载文件的时间
 				long oldtime = SettingUtils.getInstance().getLong("downloadfiletime");
