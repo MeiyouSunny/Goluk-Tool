@@ -306,17 +306,17 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==playUrl=" + videoUrl);
 	}
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			height = DensityUtil.getWidthInPx(this);
-			width = DensityUtil.getHeightInPx(this);
-		} else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-			width = DensityUtil.getWidthInPx(this);
-			height = DensityUtil.getHeightInPx(this);
-		}
-		super.onConfigurationChanged(newConfig);
-	}
+//	@Override
+//	public void onConfigurationChanged(Configuration newConfig) {
+//		if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//			height = DensityUtil.getWidthInPx(this);
+//			width = DensityUtil.getHeightInPx(this);
+//		} else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+//			width = DensityUtil.getWidthInPx(this);
+//			height = DensityUtil.getHeightInPx(this);
+//		}
+//		super.onConfigurationChanged(newConfig);
+//	}
 
 	private OnSeekBarChangeListener mSeekBarChangeListener = new OnSeekBarChangeListener() {
 
@@ -481,7 +481,6 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		}
 		mVideo.setVideoPath(videoUrl);
 		mVideo.requestFocus();
-		mVideo.start();
 	}
 
 	private Runnable hideRunnable = new Runnable() {
@@ -817,6 +816,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 
 		mVideo.setVideoWidth(mp.getVideoWidth());
 		mVideo.setVideoHeight(mp.getVideoHeight());
+		mVideo.start();
 		if (GolukUtils.getSystemSDK() < 17) {
 			hideLoading();
 		}
@@ -882,7 +882,6 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 			isPause = true;
 			mVideo.pause();
 		}
-
 	}
 
 	@Override
