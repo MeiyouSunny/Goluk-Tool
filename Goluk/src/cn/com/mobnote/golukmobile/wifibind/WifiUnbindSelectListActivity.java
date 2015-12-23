@@ -106,15 +106,16 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 						mHeadData.golukDelIcon =(ImageView) mHeadView.findViewById(R.id.goluk_del_icon);
 						mHeadData.golukIcon  = (ImageView) mHeadView.findViewById(R.id.goluk_icon);
 						mHeadData.golukName = (TextView) mHeadView.findViewById(R.id.goluk_name);
+						mHeadData.golukPointgreyIcon =  (ImageView) mHeadView.findViewById(R.id.goluk_pointgrey_icon);
 					}
 					
-					if (mWifiBindConnectData.ipcSign.equals(IPCControlManager.G1_SIGN)) {
+					if (IPCControlManager.G1_SIGN.equals(mWifiBindConnectData.ipcSign)) {
 						mHeadData.golukIcon.setImageResource(R.drawable.connect_g1_img);
-					} else if (mWifiBindConnectData.ipcSign.equals(IPCControlManager.G2_SIGN)) {
+					} else if (IPCControlManager.G2_SIGN.equals(mWifiBindConnectData.ipcSign)) {
 						mHeadData.golukIcon.setImageResource(R.drawable.connect_g2_img);
-					} else if (mWifiBindConnectData.ipcSign.equals(IPCControlManager.G1s_SIGN)) {
+					} else if (IPCControlManager.G1s_SIGN.equals(mWifiBindConnectData.ipcSign)) {
 						mHeadData.golukIcon.setImageResource(R.drawable.connect_t1_img);
-					} else if (mWifiBindConnectData.ipcSign.equals(IPCControlManager.T1_SIGN)) {
+					} else if (IPCControlManager.T1_SIGN.equals(mWifiBindConnectData.ipcSign)) {
 						mHeadData.golukIcon.setImageResource(R.drawable.connect_t1_img);
 					}
 					
@@ -164,12 +165,14 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 				mEditBtn.setText(this.getResources().getString(R.string.edit_text));// 编辑
 				if(mHeadData != null){
 					mHeadData.golukDelIcon.setVisibility(View.GONE);
+					mHeadData.golukPointgreyIcon.setVisibility(View.VISIBLE);
 				}
 			} else {
 				mListAdapter.mEditState = true;
 				mEditBtn.setText(this.getResources().getString(R.string.short_input_ok));//完成
 				if(mHeadData != null){
 					mHeadData.golukDelIcon.setVisibility(View.VISIBLE);
+					mHeadData.golukPointgreyIcon.setVisibility(View.GONE);
 				}
 			}
 			mListAdapter.notifyDataSetChanged();

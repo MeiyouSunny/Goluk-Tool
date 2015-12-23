@@ -66,6 +66,7 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 				connectViewHodler.golukIcon = (ImageView) convertView.findViewById(R.id.goluk_icon);
 				connectViewHodler.golukName = (TextView) convertView.findViewById(R.id.goluk_name);
 				connectViewHodler.golukConnLayout = (RelativeLayout) convertView.findViewById(R.id.goluk_conn_layout);
+				connectViewHodler.golukPointgreyIcon =  (ImageView) convertView.findViewById(R.id.goluk_pointgrey_icon);
 				convertView.setTag(connectViewHodler);
 			} else {
 				connectViewHodler = (ConnectViewHodler) convertView.getTag();
@@ -84,8 +85,10 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 
 			if (mEditState == false) {
 				connectViewHodler.golukDelIcon.setVisibility(View.GONE);
+				connectViewHodler.golukPointgreyIcon.setVisibility(View.VISIBLE);
 			} else {
 				connectViewHodler.golukDelIcon.setVisibility(View.VISIBLE);
+				connectViewHodler.golukPointgreyIcon.setVisibility(View.GONE);
 			}
 			if (position == 0) {
 				connectViewHodler.historyTxt.setVisibility(View.VISIBLE);
@@ -131,6 +134,7 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 		ImageView golukIcon;
 		TextView golukName;
 		RelativeLayout golukConnLayout;
+		ImageView golukPointgreyIcon;
 	}
 
 	public static class HeadViewHodler {
@@ -139,6 +143,8 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 		ImageView golukIcon;
 		TextView golukName;
 		ImageView golukDelIcon;
+		ImageView golukPointgreyIcon;
+		
 	}
 
 }

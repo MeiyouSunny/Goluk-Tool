@@ -55,6 +55,17 @@
             android:layout_centerVertical="true"
             android:text="@string/unbind_select_type_t1"/>
         
+        <ImageView
+            android:id="@+id/goluk_pointgrey_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_toRightOf="@id/goluk_del_icon"
+            android:contentDescription="@string/def"
+            android:src="@drawable/connect_pointgrey_icon" />
+        
     </RelativeLayout>
 
 </RelativeLayout>
