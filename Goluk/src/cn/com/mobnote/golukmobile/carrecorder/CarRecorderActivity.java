@@ -969,9 +969,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		}
 			break;
 		case R.id.changeBtn:
-
+			Intent intent = new Intent(this, WifiUnbindSelectListActivity.class);
+			startActivity(intent);
 			break;
-
 		default:
 			break;
 		}

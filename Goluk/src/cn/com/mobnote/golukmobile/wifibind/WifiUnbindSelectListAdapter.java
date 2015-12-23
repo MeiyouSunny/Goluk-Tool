@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile.wifibind;
 import java.util.List;
 
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
 import android.content.Context;
@@ -69,13 +70,13 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 			} else {
 				connectViewHodler = (ConnectViewHodler) convertView.getTag();
 			}
-			if (bindHistoryBean.ipcSign.equals("G1")) {
+			if (bindHistoryBean.ipcSign.equals(IPCControlManager.G1_SIGN)) {
 				connectViewHodler.golukIcon.setImageResource(R.drawable.connect_g1_img);
-			} else if (bindHistoryBean.ipcSign.equals("G2")) {
+			} else if (bindHistoryBean.ipcSign.equals(IPCControlManager.G2_SIGN)) {
 				connectViewHodler.golukIcon.setImageResource(R.drawable.connect_g2_img);
-			} else if (bindHistoryBean.ipcSign.equals("G1S")) {
-				connectViewHodler.golukIcon.setImageResource(R.drawable.connect_g1_img);
-			} else if (bindHistoryBean.ipcSign.equals("T1")) {
+			} else if (bindHistoryBean.ipcSign.equals(IPCControlManager.G1s_SIGN)) {
+				connectViewHodler.golukIcon.setImageResource(R.drawable.connect_t1_img);
+			} else if (bindHistoryBean.ipcSign.equals(IPCControlManager.T1_SIGN)) {
 				connectViewHodler.golukIcon.setImageResource(R.drawable.connect_t1_img);
 			}
 
@@ -91,11 +92,18 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 			} else {
 				connectViewHodler.historyTxt.setVisibility(View.GONE);
 			}
+			
+			if(bindHistoryBean.state == WifiBindHistoryBean.CONN_USE){
+				convertView.setVisibility(View.GONE);
+			}else{
+				convertView.setVisibility(View.VISIBLE);
+			}
 
 			connectViewHodler.golukDelIcon.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View view) {
+					WifiBindDataCenter.getInstance().deleteBindData(bindHistoryBean.ipc_ssid);
 					mBindHistoryData.remove(bindHistoryBean);
 					notifyDataSetChanged();
 				}

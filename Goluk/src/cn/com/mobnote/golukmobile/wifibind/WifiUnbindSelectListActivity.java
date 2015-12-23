@@ -2,9 +2,12 @@ package cn.com.mobnote.golukmobile.wifibind;
 import java.util.List;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectListAdapter.HeadViewHodler;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
+import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -33,6 +36,8 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	public View mHeadView = null;
 	
 	public HeadViewHodler  mHeadData = null;
+	
+	private WifiBindHistoryBean mWifiBindConnectData = null;
 	
 
 	private WifiUnbindSelectListAdapter mListAdapter;
@@ -83,9 +88,12 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	public void getBindHistoryData(){
 		List<WifiBindHistoryBean> binds = WifiBindDataCenter.getInstance().getAllBindData();
 		if(binds != null){
+			GolukDebugUtils.d("","zhBind : " + binds.size());
 			for (int i = 0; i < binds.size(); i++) {
 				WifiBindHistoryBean bind = binds.get(i);
 				if(bind.state == WifiBindHistoryBean.CONN_USE){
+					mWifiBindConnectData = bind;
+					
 					if(mHeadView == null){
 						mHeadView = LayoutInflater.from(this).inflate(R.layout.unbind_connection_head,null);
 						addListViewHead(mHeadView);
@@ -100,12 +108,38 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 						mHeadData.golukName = (TextView) mHeadView.findViewById(R.id.goluk_name);
 					}
 					
-					mHeadData.golukName.setText(bind.ipc_ssid);
+					if (mWifiBindConnectData.ipcSign.equals(IPCControlManager.G1_SIGN)) {
+						mHeadData.golukIcon.setImageResource(R.drawable.connect_g1_img);
+					} else if (mWifiBindConnectData.ipcSign.equals(IPCControlManager.G2_SIGN)) {
+						mHeadData.golukIcon.setImageResource(R.drawable.connect_g2_img);
+					} else if (mWifiBindConnectData.ipcSign.equals(IPCControlManager.G1s_SIGN)) {
+						mHeadData.golukIcon.setImageResource(R.drawable.connect_t1_img);
+					} else if (mWifiBindConnectData.ipcSign.equals(IPCControlManager.T1_SIGN)) {
+						mHeadData.golukIcon.setImageResource(R.drawable.connect_t1_img);
+					}
+					
+					mHeadData.golukName.setText(mWifiBindConnectData.ipc_ssid);
+					mHeadData.golukDelIcon.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View arg0) {
+							mListView.removeHeaderView(mHeadView);
+							WifiBindDataCenter.getInstance().deleteBindData(mWifiBindConnectData.ipc_ssid);
+							getBindHistoryData();
+						}
+					});
+					if(binds.size()>1){
+						binds.remove(i);
+						binds.add(bind);
+					}
+					
+					break;
 				}
 			}
-			mListAdapter.setData(binds);
-			mListAdapter.notifyDataSetChanged();
+			
 		}
+		mListAdapter.setData(binds);
+		mListAdapter.notifyDataSetChanged();
 	}
 
 
@@ -128,9 +162,15 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 			if (mListAdapter.mEditState) {
 				mListAdapter.mEditState = false;
 				mEditBtn.setText(this.getResources().getString(R.string.edit_text));// 编辑
+				if(mHeadData != null){
+					mHeadData.golukDelIcon.setVisibility(View.GONE);
+				}
 			} else {
 				mListAdapter.mEditState = true;
-				mEditBtn.setText(this.getResources().getString(R.string.user_personal_title_right));// 保存
+				mEditBtn.setText(this.getResources().getString(R.string.short_input_ok));//完成
+				if(mHeadData != null){
+					mHeadData.golukDelIcon.setVisibility(View.VISIBLE);
+				}
 			}
 			mListAdapter.notifyDataSetChanged();
 			break;
