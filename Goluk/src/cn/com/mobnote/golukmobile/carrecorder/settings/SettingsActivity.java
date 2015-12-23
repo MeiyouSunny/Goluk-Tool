@@ -800,6 +800,11 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 							snapInterval = json.getInt("snapInterval");
 							if (1 == enableSecurity) {
 								findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_open_btn);// 打开
+								if (1 == dormant) {
+									dormant = 0;
+									// 设置停车休眠
+									boolean fatigue = GolukApplication.getInstance().getIPCControlManager().setFunctionMode(getSetJson());
+								}
 							} else {
 								findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_close_btn);// 关闭
 							}
@@ -813,6 +818,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				if (RESULE_SUCESS == param1) {
 					if (1 == enableSecurity) {
 						findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_open_btn);// 打开
+						//TODO 判断休眠是否打开
+						if (1 == dormant) {
+							dormant = 0;
+							// 设置停车休眠
+							boolean fatigue = GolukApplication.getInstance().getIPCControlManager().setFunctionMode(getSetJson());
+						}
 					} else {
 						findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_close_btn);// 关闭
 					}
@@ -1131,10 +1142,15 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if (RESULE_SUCESS == param1) {
 			if (1 == dormant) {
 				mParkingSleepBtn.setBackgroundResource(R.drawable.set_open_btn);
+				if(1 == enableSecurity) {
+					enableSecurity = 0;
+					//TODO 设置停车安防
+					boolean c = GolukApplication.getInstance().getIPCControlManager().setMotionCfg(enableSecurity, snapInterval);
+					GolukDebugUtils.e("", "===========setMotionCfg===========c:" + c);
+				}
 			} else {
 				mParkingSleepBtn.setBackgroundResource(R.drawable.set_close_btn);
 			}
-
 			if (1 == driveFatigue) {
 				mFatigueBtn.setBackgroundResource(R.drawable.set_open_btn);
 			} else {
@@ -1202,6 +1218,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 			if (1 == dormant) {
 				mParkingSleepBtn.setBackgroundResource(R.drawable.set_open_btn);
+				if(1 == enableSecurity) {
+					enableSecurity = 0;
+					//TODO 设置停车安防
+					boolean c = GolukApplication.getInstance().getIPCControlManager().setMotionCfg(enableSecurity, snapInterval);
+					GolukDebugUtils.e("", "===========setMotionCfg===========c:" + c);
+				}
 			} else {
 				mParkingSleepBtn.setBackgroundResource(R.drawable.set_close_btn);
 			}
