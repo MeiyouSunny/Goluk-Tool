@@ -57,8 +57,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	/** 连接成功 */
 	private static final int STATE_SUCCESS = 2;
 
-	public static String sWillConnName2 = null;
-	public static String sWillConnMac2 = null;
+	private String mWillConnName = null;
+	private String mWillConnMac = null;
 	/** application */
 	private GolukApplication mApp = null;
 	/** 返回按钮 */
@@ -165,7 +165,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			break;
 		case STATE_SUCCESS:
 			mNextBtn.setText(getResources().getString(R.string.wifi_link_next));
-			setSucessWifiName(sWillConnName2);
+			setSucessWifiName(mWillConnName);
 			break;
 		default:
 			break;
@@ -199,27 +199,26 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			return false;
 		}
 		collectLog("dealAutoConn", "-----5 NOT  NULL");
-		sWillConnName2 = bean.getIpc_ssid();
-		sWillConnMac2 = bean.getIpc_bssid();
-		if (sWillConnName2 == null || null == sWillConnMac2 || sWillConnName2.length() <= 0
-				|| sWillConnMac2.length() <= 0) {
+		mWillConnName = bean.getIpc_ssid();
+		mWillConnMac = bean.getIpc_bssid();
+		if (mWillConnName == null || null == mWillConnMac || mWillConnName.length() <= 0 || mWillConnMac.length() <= 0) {
 			GolukDebugUtils.e("", "bindbind-------------isGetWifiBean---failed3  :");
 			collectLog("isGetWifiBean", "-----3");
 			// 连接失败
 			connFailed();
 			return false;
 		}
-		
-		GolukDebugUtils.e("","WifiBindList----sWillConnName2: " + sWillConnName2);
+
+		GolukDebugUtils.e("", "WifiBindList----sWillConnName2: " + mWillConnName);
 
 		if (!getIpcType().equals(mIPcType)) {
 			connFailed();
 			return false;
 		}
 
-		collectLog("isGetWifiBean", "willConnName2:" + sWillConnName2 + "  willConnMac2:" + sWillConnMac2);
-		saveConnectWifiMsg(sWillConnName2, "", sWillConnMac2);
-		setIpcMode(sWillConnName2);
+		collectLog("isGetWifiBean", "willConnName2:" + mWillConnName + "  willConnMac2:" + mWillConnMac);
+		saveConnectWifiMsg(mWillConnName, IPC_PWD_DEFAULT, mWillConnMac);
+		setIpcMode(mWillConnName);
 		return true;
 	}
 
@@ -242,14 +241,14 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
 	private String getIpcType() {
 		String ipcType = "";
-		if (sWillConnName2.startsWith(T1_WIFINAME_SIGN)) {
+		if (mWillConnName.startsWith(T1_WIFINAME_SIGN)) {
 			ipcType = IPCControlManager.T1_SIGN;
-		} else if (sWillConnName2.startsWith(G1G2_WIFINAME_SIGN)) {
+		} else if (mWillConnName.startsWith(G1G2_WIFINAME_SIGN)) {
 			ipcType = IPCControlManager.G1_SIGN;
 		} else {
 
 		}
-		GolukDebugUtils.e("","WifiBindList----getIpcType: " + ipcType);
+		GolukDebugUtils.e("", "WifiBindList----getIpcType: " + ipcType);
 		return ipcType;
 	}
 

@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Message;
@@ -23,7 +22,6 @@ import cn.com.mobnote.eventbus.EventFinishWifiActivity;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
-import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.reportlog.ReportLog;
@@ -76,7 +74,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	private int connectCount = 0;
 
 	/** ipc连接mac地址 */
-	private String mIpcMac = "";
 	private String mWiFiIp = "";
 
 	private final int STATE_SET_IPC_INFO = 0;
@@ -278,7 +275,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1---ip---" + ip);
 		collectLog("sendLogicLinkIpc", "11--ip: " + ip + "   ipcmac:" + ipcmac);
 		GolukApplication.mIpcIp = ip;
-		mIpcMac = ipcmac;
 		mWiFiIp = ip;
 		boolean b = mApp.mIPCControlManager.setIPCWifiState(true, ip);
 		GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
@@ -313,27 +309,26 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		this.toSucessView();
 		// 保存连接数据
 		WifiRsBean beans = new WifiRsBean();
-		beans.setIpc_mac(mIpcMac);
+		beans.setIpc_mac(WiFiInfo.IPC_MAC);
 		beans.setIpc_ssid(WiFiInfo.IPC_SSID);
 		beans.setIpc_ip(mWiFiIp);
 		beans.setIpc_pass(WiFiInfo.IPC_PWD);
 
 		beans.setPh_ssid(WiFiInfo.MOBILE_SSID);
 		beans.setPh_pass(WiFiInfo.MOBILE_PWD);
+		mWac.saveConfiguration(beans);
 
 		// 保存绑定历史记录
 		WifiBindHistoryBean historyBean = new WifiBindHistoryBean();
 		historyBean.ipc_ssid = WiFiInfo.IPC_SSID;
 		historyBean.ipc_pwd = WiFiInfo.IPC_PWD;
-		historyBean.ipc_mac = mIpcMac;
+		historyBean.ipc_mac = WiFiInfo.IPC_MAC;
 		historyBean.mobile_ssid = WiFiInfo.MOBILE_SSID;
 		historyBean.mobile_pwd = WiFiInfo.MOBILE_PWD;
 		historyBean.state = WifiBindHistoryBean.CONN_USE;
 		historyBean.ipcSign = mApp.mIPCControlManager.mProduceName;
-
 		WifiBindDataCenter.getInstance().saveBindData(historyBean);
 
-		mWac.saveConfiguration(beans);
 		saveBind(WiFiInfo.IPC_SSID);
 		// 保存绑定标识
 		mApp.setBindState(true);

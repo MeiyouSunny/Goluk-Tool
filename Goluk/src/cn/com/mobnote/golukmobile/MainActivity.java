@@ -1,5 +1,7 @@
 package cn.com.mobnote.golukmobile;
 
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,6 +54,8 @@ import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.newest.WonderfulSelectedListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareAdapter;
+import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
+import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.mobnote.golukmobile.xdpush.XingGeMsgBean;
 import cn.com.mobnote.logic.GolukModule;
@@ -73,6 +77,7 @@ import cn.com.mobnote.wifibind.WifiConnectManager;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.api.Tapi;
 import cn.com.tiros.debug.GolukDebugUtils;
+
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -421,17 +426,17 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				playDownLoadedSound();
 				time += 1;
 
-//				try {
-//					if (filename.length() >= 22) {
-//						String t = filename.substring(18, 22);
-//						int tt = Integer.parseInt(t) + 1;
-//						time += tt;
-//					}
-//				} catch (NumberFormatException e) {
-//					e.printStackTrace();
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
+				// try {
+				// if (filename.length() >= 22) {
+				// String t = filename.substring(18, 22);
+				// int tt = Integer.parseInt(t) + 1;
+				// time += tt;
+				// }
+				// } catch (NumberFormatException e) {
+				// e.printStackTrace();
+				// } catch (Exception e) {
+				// e.printStackTrace();
+				// }
 
 				// 更新最新下载文件的时间
 				long oldtime = SettingUtils.getInstance().getLong("downloadfiletime");
@@ -516,6 +521,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mBaseHandler.removeMessages(MSG_H_WIFICONN_TIME);
 		mApp.mWiFiStatus = WIFI_STATE_SUCCESS;
 		GolukDebugUtils.e("zh：wifi连接成功 ", mApp.mWiFiStatus + "");
+		
+		refreshIpcDataToFile();
 
 		EventBus.getDefault().post(new EventWifiConnect(EventConfig.WIFI_STATE_SUCCESS));
 	}
@@ -937,12 +944,43 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
+	private void refreshIpcDataToFile() {
+		if (null == mCurrentConnBean) {
+			return;
+		}
+		// 如果本地文件中已经有记录了，则不再保存
+		if (WifiBindDataCenter.getInstance().isHasIpc(mCurrentConnBean.getIpc_ssid())) {
+			mCurrentConnBean = null;
+			return;
+		}
+		
+		WifiRsBean bean = mWac.readConfig();
+		mCurrentConnBean = bean;
+		
+		
+		WifiBindHistoryBean historyBean = new WifiBindHistoryBean();
+		historyBean.ipc_ssid = mCurrentConnBean.getIpc_ssid();
+		historyBean.ipc_mac = mCurrentConnBean.getIpc_bssid();
+		historyBean.ipc_pwd = mCurrentConnBean.getIpc_pass();
+
+		historyBean.mobile_ssid = mCurrentConnBean.getPh_ssid();
+		historyBean.mobile_pwd = mCurrentConnBean.getPh_pass();
+		
+		WifiBindDataCenter.getInstance().saveBindData(historyBean);
+
+		mCurrentConnBean = null;
+	}
+
+	/** 把当前连接的设备保存起来，主要是为了兼容以前的连接状态 */
+	private WifiRsBean mCurrentConnBean = null;
+
 	private void wifiCallBack_ipcConnHotSucess(String message, Object arrays) {
 		WifiRsBean[] bean = (WifiRsBean[]) arrays;
 		if (null != bean) {
 			GolukDebugUtils.e("", "自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
 			if (bean.length > 0) {
 				GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1---ip---");
+				mCurrentConnBean = bean[0];
 				mApp.mGolukName = bean[0].getIpc_ssid();
 				sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
 			}

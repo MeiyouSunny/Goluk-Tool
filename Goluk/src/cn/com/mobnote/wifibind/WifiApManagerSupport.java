@@ -43,8 +43,7 @@ public class WifiApManagerSupport {
 		boolean result = Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO;
 		if (result) {
 			try {
-				Field field = WifiConfiguration.class
-						.getDeclaredField("mWifiApProfile");
+				Field field = WifiConfiguration.class.getDeclaredField("mWifiApProfile");
 				mIsHtc = field != null;
 			} catch (Exception e) {
 			}
@@ -66,8 +65,7 @@ public class WifiApManagerSupport {
 		if (result) {
 			try {
 				String name = METHOD_SET_WIFI_AP_ENABLED;
-				Method method = WifiManager.class.getMethod(name,
-						WifiConfiguration.class, boolean.class);
+				Method method = WifiManager.class.getMethod(name, WifiConfiguration.class, boolean.class);
 				methodMap.put(name, method);
 				result = method != null;
 			} catch (SecurityException e) {
@@ -93,8 +91,7 @@ public class WifiApManagerSupport {
 		if (result) {
 			try {
 				String name = getSetWifiApConfigName();
-				Method method = WifiManager.class.getMethod(name,
-						WifiConfiguration.class);
+				Method method = WifiManager.class.getMethod(name, WifiConfiguration.class);
 				methodMap.put(name, method);
 				result = method != null;
 			} catch (SecurityException e) {
@@ -178,13 +175,11 @@ public class WifiApManagerSupport {
 		return result;
 	}
 
-	public boolean setWifiApEnabled(WifiConfiguration configuration,
-			boolean enabled) {
+	public boolean setWifiApEnabled(WifiConfiguration configuration, boolean enabled) {
 		boolean result = false;
 		try {
 			Method method = methodMap.get(METHOD_SET_WIFI_AP_ENABLED);
-			result = (Boolean) method.invoke(mWifiManager, configuration,
-					enabled);
+			result = (Boolean) method.invoke(mWifiManager, configuration, enabled);
 		} catch (Exception e) {
 			Log.e(tag, e.getMessage(), e);
 		}
@@ -208,20 +203,14 @@ public class WifiApManagerSupport {
 
 	public String getNetworkIpAddress(String name) {
 		try {
-			Enumeration<NetworkInterface> interfaces = NetworkInterface
-					.getNetworkInterfaces();
+			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
 			while (interfaces.hasMoreElements()) {
-				NetworkInterface networkInterface = (NetworkInterface) interfaces
-						.nextElement();
-				Enumeration<InetAddress> enumeration = networkInterface
-						.getInetAddresses();
+				NetworkInterface networkInterface = (NetworkInterface) interfaces.nextElement();
+				Enumeration<InetAddress> enumeration = networkInterface.getInetAddresses();
 				while (enumeration.hasMoreElements()) {
-					InetAddress inetAddress = (InetAddress) enumeration
-							.nextElement();
-					if (!inetAddress.isLoopbackAddress()
-							&& inetAddress instanceof Inet4Address
-							&& TextUtils.equals(name,
-									networkInterface.getDisplayName())) {
+					InetAddress inetAddress = (InetAddress) enumeration.nextElement();
+					if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address
+							&& TextUtils.equals(name, networkInterface.getDisplayName())) {
 						return inetAddress.getHostAddress().toString();
 					}
 				}
@@ -236,8 +225,7 @@ public class WifiApManagerSupport {
 		try {
 			ConnectivityManager connectivityManager = (ConnectivityManager) context
 					.getSystemService(Context.CONNECTIVITY_SERVICE);
-			Method method = connectivityManager.getClass().getMethod(
-					"getTetheredIfaces");
+			Method method = connectivityManager.getClass().getMethod("getTetheredIfaces");
 			String[] names = (String[]) method.invoke(connectivityManager);
 			return names[0];
 		} catch (Exception e) {
@@ -246,48 +234,48 @@ public class WifiApManagerSupport {
 		return "";
 	}
 
-//	/**
-//	 * Endable/disable wifi
-//	 * 
-//	 * @param enabled
-//	 * @return WifiAP state
-//	 */
-//	public boolean closeWifiAP() {
-//		try {
-//
-//			if (mWifiManager != null
-//					&& mWifiManager.getConnectionInfo() != null) {
-//				mWifiManager.setWifiEnabled(false);
-//
-//				Method method1 = mWifiManager.getClass().getMethod(
-//						"setWifiApEnabled", WifiConfiguration.class,
-//						boolean.class);
-//				method1.invoke(mWifiManager, null, false); // true
-//				int tag = getWifiApState();
-//				GolukDebugUtils.i(TAG, "热点关闭成功....stateaaaa====="+tag);
-//				int count = 0;
-//				//循环等待关闭信息  11成功 其他失败
-//				while (tag != 11) {
-//					if (count == 5) {
-//						return false;
-//					}
-//					try {
-//						Thread.sleep(1000);
-//					} catch (Exception e) {
-//					}
-//					tag = getWifiApState();
-//					count++;
-//					GolukDebugUtils.i(TAG, "热点关闭成功....statebbbbbb====="+tag);
-//				}
-//			}
-//			GolukDebugUtils.i(TAG, "热点关闭成功....");
-//		} catch (Exception e) {
-//
-//			GolukDebugUtils.i(TAG, "热点关闭失败....");
-//			return false;
-//		}
-//		return true;
-//	}
+	// /**
+	// * Endable/disable wifi
+	// *
+	// * @param enabled
+	// * @return WifiAP state
+	// */
+	// public boolean closeWifiAP() {
+	// try {
+	//
+	// if (mWifiManager != null
+	// && mWifiManager.getConnectionInfo() != null) {
+	// mWifiManager.setWifiEnabled(false);
+	//
+	// Method method1 = mWifiManager.getClass().getMethod(
+	// "setWifiApEnabled", WifiConfiguration.class,
+	// boolean.class);
+	// method1.invoke(mWifiManager, null, false); // true
+	// int tag = getWifiApState();
+	// GolukDebugUtils.i(TAG, "热点关闭成功....stateaaaa====="+tag);
+	// int count = 0;
+	// //循环等待关闭信息 11成功 其他失败
+	// while (tag != 11) {
+	// if (count == 5) {
+	// return false;
+	// }
+	// try {
+	// Thread.sleep(1000);
+	// } catch (Exception e) {
+	// }
+	// tag = getWifiApState();
+	// count++;
+	// GolukDebugUtils.i(TAG, "热点关闭成功....statebbbbbb====="+tag);
+	// }
+	// }
+	// GolukDebugUtils.i(TAG, "热点关闭成功....");
+	// } catch (Exception e) {
+	//
+	// GolukDebugUtils.i(TAG, "热点关闭失败....");
+	// return false;
+	// }
+	// return true;
+	// }
 
 	/**
 	 * 创建wifi ap
@@ -299,9 +287,8 @@ public class WifiApManagerSupport {
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 */
-	public WifiConfiguration putWifiConfiguration(String ssid, String password)
-			throws NoSuchMethodException, IllegalArgumentException,
-			IllegalAccessException, InvocationTargetException {
+	public WifiConfiguration putWifiConfiguration(String ssid, String password) throws NoSuchMethodException,
+			IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		Method method1 = null;
 
 		WifiConfiguration netConfig = new WifiConfiguration();
@@ -309,15 +296,12 @@ public class WifiApManagerSupport {
 		netConfig.SSID = ssid;
 		netConfig.preSharedKey = password;
 
-		netConfig.allowedAuthAlgorithms
-				.set(WifiConfiguration.AuthAlgorithm.OPEN);
+		netConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
 		netConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
 		netConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
 		netConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-		netConfig.allowedPairwiseCiphers
-				.set(WifiConfiguration.PairwiseCipher.CCMP);
-		netConfig.allowedPairwiseCiphers
-				.set(WifiConfiguration.PairwiseCipher.TKIP);
+		netConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+		netConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
 		netConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
 		netConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
 
@@ -346,7 +330,7 @@ public class WifiApManagerSupport {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 获取加入wifiAP列表
 	 *
@@ -354,16 +338,15 @@ public class WifiApManagerSupport {
 	 * @param reachableTimeout
 	 * @return
 	 */
-	public WifiRsBean[] getJoinApList(boolean onlyReachables,
-			int reachableTimeout) {
+	public WifiRsBean[] getJoinApList(boolean onlyReachables, int reachableTimeout) {
 		BufferedReader br = null;
 		final ArrayList<WifiRsBean> result = new ArrayList<WifiRsBean>();
 
 		try {
 			br = new BufferedReader(new FileReader("/proc/net/arp"));
 
-			String line="";
-			while ((line =  br.readLine()) != null) {
+			String line = "";
+			while ((line = br.readLine()) != null) {
 				String[] splitted = line.split(" +");
 
 				if ((splitted != null) && (splitted.length >= 4)) {
@@ -371,14 +354,11 @@ public class WifiApManagerSupport {
 					String mac = splitted[3];
 
 					if (mac.matches("..:..:..:..:..:..")) {
-						boolean isReachable = InetAddress
-								.getByName(splitted[0]).isReachable(
-										reachableTimeout);
+						boolean isReachable = InetAddress.getByName(splitted[0]).isReachable(reachableTimeout);
 
 						if (!onlyReachables || isReachable) {
 							// splitted[5] 连接方式 wlan0
-							result.add(new WifiRsBean(splitted[0], splitted[3],
-									isReachable));
+							result.add(new WifiRsBean(splitted[0], splitted[3], isReachable));
 						}
 					}
 				}
