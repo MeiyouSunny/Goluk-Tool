@@ -286,18 +286,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		collectLog("sendLogicLinkIpc", "2---b:  " + b);
 	}
 
-	/**
-	 * 保存wifi绑定标识
-	 */
-	private void saveBindMark() {
-		// 绑定完成,保存标识
-		SharedPreferences preferences = mContext.getSharedPreferences("ipc_wifi_bind", Context.MODE_PRIVATE);
-		Editor editor = preferences.edit();
-		editor.putBoolean("isbind", true);
-		// 提交修改
-		editor.commit();
-	}
-
 	// 保存绑定的wifi名称
 	private void saveBind(String name) {
 		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
@@ -342,13 +330,13 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		historyBean.mobile_pwd = WiFiInfo.MOBILE_PWD;
 		historyBean.state = WifiBindHistoryBean.CONN_USE;
 		historyBean.ipcSign = mApp.mIPCControlManager.mProduceName;
-		
+
 		WifiBindDataCenter.getInstance().saveBindData(historyBean);
 
 		mWac.saveConfiguration(beans);
 		saveBind(WiFiInfo.IPC_SSID);
 		// 保存绑定标识
-		saveBindMark();
+		mApp.setBindState(true);
 	}
 
 	private void reportLog() {

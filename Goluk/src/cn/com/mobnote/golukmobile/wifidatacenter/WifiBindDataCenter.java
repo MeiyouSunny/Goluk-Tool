@@ -65,4 +65,12 @@ public class WifiBindDataCenter implements IWifiBindDataFn {
 		return mDataDeal.getCurrentUseIpc();
 	}
 
+	@Override
+	public boolean isHasDataHistory() {
+		if (null == mDataDeal) {
+			return false;
+		}
+		return mDataDeal.isHasDataHistory();
+	}
+
 }

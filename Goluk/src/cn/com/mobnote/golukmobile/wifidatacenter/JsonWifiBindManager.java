@@ -51,14 +51,21 @@ public class JsonWifiBindManager implements IWifiBindDataFn {
 	public void deleteBindData(String ipc_ssid) {
 		final String jsonStr = getHistoryJson();
 		List<WifiBindHistoryBean> dataList = JSON.parseArray(jsonStr, WifiBindHistoryBean.class);
-		for (int i = 0; i < dataList.size(); i++) {
-			if (dataList.get(i).ipc_ssid.equals(ipc_ssid)) {
-				dataList.remove(i);
+		if (null != dataList) {
+			for (int i = 0; i < dataList.size(); i++) {
+				if (dataList.get(i).ipc_ssid.equals(ipc_ssid)) {
+					dataList.remove(i);
+				}
 			}
 		}
 
-		String ss = JSON.toJSONString(dataList);
-		saveHistoryJson(ss);
+		if (null == dataList || dataList.size() <= 0) {
+			// 目前没数据
+			saveHistoryJson("");
+		} else {
+			String ss = JSON.toJSONString(dataList);
+			saveHistoryJson(ss);
+		}
 	}
 
 	@Override
@@ -90,6 +97,16 @@ public class JsonWifiBindManager implements IWifiBindDataFn {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	@Override
+	public boolean isHasDataHistory() {
+		final String jsonStr = getHistoryJson();
+		List<WifiBindHistoryBean> dataList = JSON.parseArray(jsonStr, WifiBindHistoryBean.class);
+		if (null != dataList && dataList.size() > 0) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override

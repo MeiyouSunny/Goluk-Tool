@@ -18,6 +18,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Environment;
@@ -1465,6 +1466,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public boolean isBindSucess() {
 		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
 		return preferences.getBoolean("isbind", false);
+	}
+	
+	public void setBindState(boolean isSuccess) {
+		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
+		Editor mEditor = preferences.edit();
+		mEditor.putBoolean("isbind", isSuccess);
+		mEditor.commit();
 	}
 
 	/**

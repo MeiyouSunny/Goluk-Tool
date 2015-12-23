@@ -150,6 +150,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 		}
 		super.onDestroy();
 	}
+
 	@Override
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
@@ -184,40 +185,42 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 				return;
 			}
 			if (mApplication.mLoadStatus) {// 下载中
-				new AlertDialog.Builder(mApplication.getContext()).setTitle(this.getResources().getString(R.string.user_dialog_hint_title))
-				.setMessage(this.getResources().getString(R.string.str_new_updatefile_loading))
-						.setPositiveButton(getResources().getString(R.string.user_repwd_ok), new DialogInterface.OnClickListener() {
+				new AlertDialog.Builder(mApplication.getContext())
+						.setTitle(this.getResources().getString(R.string.user_dialog_hint_title))
+						.setMessage(this.getResources().getString(R.string.str_new_updatefile_loading))
+						.setPositiveButton(getResources().getString(R.string.user_repwd_ok),
+								new DialogInterface.OnClickListener() {
 
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
-								if ((Integer) (mApplication.mIpcUpdateManage.mParam1) == 100) {
-									//查询ipc升级文件是否存在
-									String ipcFile = mApplication.mIpcUpdateManage.isHasIPCFile(vIpc);
-									if(!"".equals(ipcFile) && null != ipcFile){
-										Intent itent = new Intent(UnbindActivity.this, UpdateActivity.class);
-										itent.putExtra(UpdateActivity.UPDATE_SIGN, 1);
-										startActivity(itent);
-									}else{
-										boolean b = mApplication.mIpcUpdateManage.requestInfo(
-												IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
+									@Override
+									public void onClick(DialogInterface arg0, int arg1) {
+										if ((Integer) (mApplication.mIpcUpdateManage.mParam1) == 100) {
+											// 查询ipc升级文件是否存在
+											String ipcFile = mApplication.mIpcUpdateManage.isHasIPCFile(vIpc);
+											if (!"".equals(ipcFile) && null != ipcFile) {
+												Intent itent = new Intent(UnbindActivity.this, UpdateActivity.class);
+												itent.putExtra(UpdateActivity.UPDATE_SIGN, 1);
+												startActivity(itent);
+											} else {
+												boolean b = mApplication.mIpcUpdateManage.requestInfo(
+														IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
+											}
+										} else {
+											Intent it = new Intent(UnbindActivity.this, UpdateActivity.class);
+											it.putExtra(UpdateActivity.UPDATE_PROGRESS,
+													(Integer) (mApplication.mIpcUpdateManage.mParam1));
+											startActivity(it);
+										}
 									}
-								} else {
-									Intent it = new Intent(UnbindActivity.this, UpdateActivity.class);
-									it.putExtra(UpdateActivity.UPDATE_PROGRESS,
-											(Integer) (mApplication.mIpcUpdateManage.mParam1));
-									startActivity(it);
-								}
-							}
-						}).show();
+								}).show();
 			} else {
 				if ((Integer) (mApplication.mIpcUpdateManage.mParam1) == -1) {// 下载失败/程序刚进来
 					boolean b = mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
 				} else {// 下载成功
 					String ipcFile = mApplication.mIpcUpdateManage.isHasIPCFile(vIpc);
-					if("".equals(ipcFile) || null == ipcFile){
+					if ("".equals(ipcFile) || null == ipcFile) {
 						boolean b = mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC,
 								vIpc);
-					}else{
+					} else {
 						Intent itUpdate = new Intent(UnbindActivity.this, UpdateActivity.class);
 						itUpdate.putExtra(UpdateActivity.UPDATE_SIGN, 1);
 						startActivity(itUpdate);
@@ -245,15 +248,6 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 	public String ipcName() {
 		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
 		return preferences.getString("ipc_bind_name", "");
-
-	}
-
-	// 解绑
-	public void toUnbind() {
-		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-		Editor mEditor = preferences.edit();
-		mEditor.putBoolean("isbind", false);
-		mEditor.commit();
 	}
 
 	@Override

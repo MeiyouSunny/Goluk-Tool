@@ -49,6 +49,14 @@ public interface IWifiBindDataFn {
 	public WifiBindHistoryBean getCurrentUseIpc();
 
 	/**
+	 * 是否有绑定记录
+	 * 
+	 * @return
+	 * @author jyf
+	 */
+	public boolean isHasDataHistory();
+
+	/**
 	 * 销毁模块
 	 * 
 	 * @author jyf
