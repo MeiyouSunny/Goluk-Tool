@@ -8,7 +8,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.Message;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.View;
@@ -87,6 +86,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	private int mCurrentState = STATE_FAILED;
 	/** 连接中对话框 */
 	private CustomLoadingDialog mConnectingDialog = null;
+	/** 用户要绑定的设备类型 */
+	private String mIPcType = "";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -102,11 +103,20 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setType("2");
 		collectLog("onCreate", "---1");
 
+		getIntentData();
+
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		mWac = new WifiConnectManager(mWifiManager, this);
 		// 页面初始化
 		initView();
 		EventBus.getDefault().register(this);
+	}
+
+	private void getIntentData() {
+		Intent intent = this.getIntent();
+		if (null != intent) {
+			mIPcType = intent.getStringExtra(WifiUnbindSelectTypeActivity.KEY_IPC_TYPE);
+		}
 	}
 
 	/**
@@ -199,6 +209,14 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			connFailed();
 			return false;
 		}
+		
+		GolukDebugUtils.e("","WifiBindList----sWillConnName2: " + sWillConnName2);
+
+		if (!getIpcType().equals(mIPcType)) {
+			connFailed();
+			return false;
+		}
+
 		collectLog("isGetWifiBean", "willConnName2:" + sWillConnName2 + "  willConnMac2:" + sWillConnMac2);
 		saveConnectWifiMsg(sWillConnName2, "", sWillConnMac2);
 		setIpcMode(sWillConnName2);
@@ -220,6 +238,19 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
 		}
 		mApp.mIPCControlManager.setIpcMode();
+	}
+
+	private String getIpcType() {
+		String ipcType = "";
+		if (sWillConnName2.startsWith(T1_WIFINAME_SIGN)) {
+			ipcType = IPCControlManager.T1_SIGN;
+		} else if (sWillConnName2.startsWith(G1G2_WIFINAME_SIGN)) {
+			ipcType = IPCControlManager.G1_SIGN;
+		} else {
+
+		}
+		GolukDebugUtils.e("","WifiBindList----getIpcType: " + ipcType);
+		return ipcType;
 	}
 
 	private void dealAutoConn() {
