@@ -19,7 +19,6 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -29,7 +28,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
-
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -74,6 +72,7 @@ import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.golukmobile.videosuqare.RingView;
 import cn.com.mobnote.golukmobile.wifibind.WiFiLinkIndexActivity;
+import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectListActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.SortByDate;
@@ -397,19 +396,24 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	}
 
 	private void click_ConnFailed() {
-
-		if (!mApp.isBindSucess()) {
-			Intent wifiIndex = new Intent(CarRecorderActivity.this, WiFiLinkIndexActivity.class);
-			startActivity(wifiIndex);
-		} else {
-			mNotconnected.setVisibility(View.GONE);
-			mConncetLayout.setVisibility(View.VISIBLE);
-			mPalyerLayout.setVisibility(View.GONE);
-			// if (null != MainActivity.mMainHandler) {
-			// MainActivity.mMainHandler.sendEmptyMessage(400);
-			// }
-			EventBus.getDefault().post(new EventBindFinish(EventConfig.CAR_RECORDER_BIND_SUCESS));
-		}
+		toSelectIpcActivity();
+//		if (!mApp.isBindSucess()) {
+//			Intent wifiIndex = new Intent(CarRecorderActivity.this, WiFiLinkIndexActivity.class);
+//			startActivity(wifiIndex);
+//		} else {
+//			mNotconnected.setVisibility(View.GONE);
+//			mConncetLayout.setVisibility(View.VISIBLE);
+//			mPalyerLayout.setVisibility(View.GONE);
+//			// if (null != MainActivity.mMainHandler) {
+//			// MainActivity.mMainHandler.sendEmptyMessage(400);
+//			// }
+//			EventBus.getDefault().post(new EventBindFinish(EventConfig.CAR_RECORDER_BIND_SUCESS));
+//		}
+	}
+	
+	private void toSelectIpcActivity() {
+		Intent intent = new Intent(this,WifiUnbindSelectListActivity.class);
+		startActivity(intent);
 	}
 
 	private void open_shareVideo(String vname) {
