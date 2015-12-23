@@ -29,13 +29,7 @@ public class JsonWifiBindManager implements IWifiBindDataFn {
 		if (!isValid(bean)) {
 			return;
 		}
-		final String jsonStr = getHistoryJson();
-		List<WifiBindHistoryBean> dataList = null;
-		try {
-			dataList = JSON.parseArray(jsonStr, WifiBindHistoryBean.class);
-		} catch (Exception e) {
-
-		}
+		List<WifiBindHistoryBean> dataList = getAllBindData();
 
 		if (null != dataList) {
 			for (int i = 0; i < dataList.size(); i++) {
@@ -56,8 +50,7 @@ public class JsonWifiBindManager implements IWifiBindDataFn {
 
 	@Override
 	public void deleteBindData(String ipc_ssid) {
-		final String jsonStr = getHistoryJson();
-		List<WifiBindHistoryBean> dataList = JSON.parseArray(jsonStr, WifiBindHistoryBean.class);
+		List<WifiBindHistoryBean> dataList = getAllBindData();
 		if (null != dataList) {
 			for (int i = 0; i < dataList.size(); i++) {
 				if (dataList.get(i).ipc_ssid.equals(ipc_ssid)) {
@@ -77,8 +70,7 @@ public class JsonWifiBindManager implements IWifiBindDataFn {
 
 	@Override
 	public void editBindStatus(String ipc_ssid, int state) {
-		final String jsonStr = getHistoryJson();
-		List<WifiBindHistoryBean> dataList = JSON.parseArray(jsonStr, WifiBindHistoryBean.class);
+		List<WifiBindHistoryBean> dataList = getAllBindData();
 		if (null == dataList) {
 			return;
 		}
@@ -96,8 +88,10 @@ public class JsonWifiBindManager implements IWifiBindDataFn {
 	@Override
 	public WifiBindHistoryBean getCurrentUseIpc() {
 		try {
-			final String jsonStr = getHistoryJson();
-			List<WifiBindHistoryBean> dataList = JSON.parseArray(jsonStr, WifiBindHistoryBean.class);
+			List<WifiBindHistoryBean> dataList = getAllBindData();
+			if (null == dataList) {
+				return null;
+			}
 			for (int i = 0; i < dataList.size(); i++) {
 				if (WifiBindHistoryBean.CONN_USE == dataList.get(i).state) {
 					return dataList.get(i);
@@ -111,8 +105,7 @@ public class JsonWifiBindManager implements IWifiBindDataFn {
 
 	@Override
 	public boolean isHasDataHistory() {
-		final String jsonStr = getHistoryJson();
-		List<WifiBindHistoryBean> dataList = JSON.parseArray(jsonStr, WifiBindHistoryBean.class);
+		List<WifiBindHistoryBean> dataList = getAllBindData();
 		if (null != dataList && dataList.size() > 0) {
 			return true;
 		}
@@ -124,8 +117,7 @@ public class JsonWifiBindManager implements IWifiBindDataFn {
 		if (null == ipcssid || "".equals(ipcssid) || ipcssid.length() <= 0) {
 			return false;
 		}
-		final String jsonStr = getHistoryJson();
-		List<WifiBindHistoryBean> dataList = JSON.parseArray(jsonStr, WifiBindHistoryBean.class);
+		List<WifiBindHistoryBean> dataList = getAllBindData();
 		if (null == dataList || dataList.size() <= 0) {
 			return false;
 		}
