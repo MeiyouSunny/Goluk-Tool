@@ -1952,13 +1952,13 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 //
 //		int flog = 0;
 //		String vn = "";
-
+		Collections.sort(list, new SortByDate());
 		List<String> result = new ArrayList<String>();
 		if (list.size() > 0) {
-			result.add(list.get(list.size() - 1));
+			result.add(list.get(0));
 		}
 		if (list.size() > 1) {
-			result.add(list.get(list.size() - 2));
+			result.add(list.get(1));
 		}
 		return result;
 //		if (list != null && list.size() > 0) {

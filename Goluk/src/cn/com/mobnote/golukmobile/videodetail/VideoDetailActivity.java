@@ -1151,6 +1151,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 						mCommentLayout.setVisibility(View.GONE);
 						addForbitCommentFooterView();
 						mRTPullListView.setEnabled(false);
+						mRTPullListView.onRefreshComplete(getLastRefreshTime());
 						return;
 					} else {
 						removeForbitCommentFooterView();
