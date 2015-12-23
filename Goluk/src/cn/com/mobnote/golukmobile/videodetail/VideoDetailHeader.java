@@ -359,6 +359,7 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 		}
 		mVideoView.setVideoURI(uri);
 		mVideoView.requestFocus();
+		mVideoView.start();
 	}
 
 	/**
@@ -560,10 +561,10 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 
 	private boolean mResume = false;
 	public void pausePlayer() {
+		mImageLayout.setVisibility(View.VISIBLE);
 		if (mVideoView.isPlaying()) {
 			mResume = true;
 			mVideoView.pause();
-			mImageLayout.setVisibility(View.VISIBLE);
 			mVideoView.setVisibility(View.GONE);
 		}
 	}
@@ -627,7 +628,6 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 		mVideoView.setVideoWidth(mp.getVideoWidth());
 		mVideoView.setVideoHeight(mp.getVideoHeight());
 		if ((null != mNetInfo) && (mNetInfo.getType() == ConnectivityManager.TYPE_WIFI)) {
-			mp.start();
 			mp.setLooping(true);
 		}
 		mp.setOnBufferingUpdateListener(new OnBufferingUpdateListener() {
