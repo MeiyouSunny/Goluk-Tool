@@ -1,16 +1,23 @@
 package cn.com.mobnote.golukmobile.wifibind;
+import java.util.List;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectListAdapter.HeadViewHodler;
+import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
+import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class WifiUnbindSelectListActivity extends BaseActivity implements OnClickListener {
 	
@@ -25,6 +32,11 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	
 	/**编辑按钮**/
 	private Button mEditBtn;
+	
+	/**连接中headView**/
+	public View mHeadView = null;
+	
+	public HeadViewHodler  mHeadData = null;
 	
 	private WifiUnbindSelectListAdapter mListAdapter;
 	
@@ -56,37 +68,45 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		mEditBtn.setOnClickListener(this);
 	}
 	
-	JSONArray jsons = new JSONArray();
-	
 	/**初始化数据**/
 	private void initData(){
 		mListView.setEmptyView(mEmptyLayout);
 		mListAdapter = new WifiUnbindSelectListAdapter(this);
 		mListView.setAdapter(mListAdapter);
+		getBindHistoryData();
 		
-		
-		
-		
-		JSONObject json = new JSONObject();
-		json.put("type", "T1");
-		json.put("edit", 0);
-		json.put("name", "goluk12345678");
-		jsons.add(json);
-		
-		json = new JSONObject(); 
-		json.put("type", "G2");
-		json.put("edit", 0);
-		json.put("name", "goluk87654321");
-		jsons.add(json);
-		
-		json = new JSONObject(); 
-		json.put("type", "G1");
-		json.put("edit", 0);
-		json.put("name", "goluk00000000");
-		jsons.add(json);
-		
-		mListAdapter.setData(jsons);
-		mListAdapter.notifyDataSetChanged();
+	}
+	
+	/**
+	 * 获取最新的bind数据
+	 * @return
+	 */
+	public void getBindHistoryData(){
+		List<WifiBindHistoryBean> binds = WifiBindDataCenter.getInstance().getAllBindData();
+		if(binds != null){
+			for (int i = 0; i < binds.size(); i++) {
+				WifiBindHistoryBean bind = binds.get(i);
+				if(bind.state == WifiBindHistoryBean.CONN_USE){
+					if(mHeadView == null){
+						mHeadView = LayoutInflater.from(this).inflate(R.layout.unbind_connection_head,null);
+						addListViewHead(mHeadView);
+					}
+					
+					if(mHeadData == null){
+						mHeadData = new HeadViewHodler();
+						mHeadData.connHeadIcon = (ImageView) mHeadView.findViewById(R.id.conn_head_icon);
+						mHeadData.connTxt = (TextView) mHeadView.findViewById(R.id.conn_txt);
+						mHeadData.golukDelIcon =(ImageView) mHeadView.findViewById(R.id.goluk_del_icon);
+						mHeadData.golukIcon  = (ImageView) mHeadView.findViewById(R.id.goluk_icon);
+						mHeadData.golukName = (TextView) mHeadView.findViewById(R.id.goluk_name);
+					}
+					
+					mHeadData.golukName.setText(bind.ipc_ssid);
+				}
+			}
+			mListAdapter.setData(binds);
+			mListAdapter.notifyDataSetChanged();
+		}
 	}
 	
 	/**
