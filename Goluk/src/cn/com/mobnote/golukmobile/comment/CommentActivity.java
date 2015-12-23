@@ -655,6 +655,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 				if (!"".equals(bean.result)) {
 					if ("0".equals(bean.result)) {// 成功
 						this.mAdapter.addFirstData(bean);
+						noData(false);
 						mEditText.setText("");
 						switchSendState(false);
 						mIsReply = false;
