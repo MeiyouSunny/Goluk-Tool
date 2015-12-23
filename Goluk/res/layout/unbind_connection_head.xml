@@ -11,17 +11,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="48dp"
         android:text="@string/unbind_select_connect_ing"
-        android:textColor="#343434"
-        android:textSize="16sp" />
+        android:textColor="#565656"
+        android:textSize="14sp" />
 
     <ImageView
         android:id="@+id/conn_head_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="3dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="4dp"
         android:layout_toRightOf="@id/conn_txt"
         android:contentDescription="@string/def"
         android:src="@drawable/connect_wifi_icon_1" />
@@ -41,10 +40,11 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:contentDescription="@string/def"
+            android:visibility="gone"
             android:src="@drawable/connect_del_icon" />
 
         <ImageView
-            android:id="@+id/goluk_t1_icon"
+            android:id="@+id/goluk_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -54,11 +54,12 @@
             android:src="@drawable/connect_g1_img" />
 
         <TextView
+            android:id="@+id/goluk_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@id/goluk_t1_icon"
+            android:layout_toRightOf="@id/goluk_icon"
             android:text="@string/unbind_select_type_t1"
             android:textColor="#565656"
             android:textSize="14sp" />

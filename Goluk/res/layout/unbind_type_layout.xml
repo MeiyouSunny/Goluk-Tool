@@ -70,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/connect_g1_img" 
+            android:src="@drawable/connect_g2_img" 
             android:contentDescription="@string/def"/>
         
         <TextView 
@@ -106,7 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/connect_g1_img" 
+            android:src="@drawable/connect_t1_img" 
             android:contentDescription="@string/def"/>
         
         <TextView 
