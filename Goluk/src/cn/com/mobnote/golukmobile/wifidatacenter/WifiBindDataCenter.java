@@ -73,4 +73,12 @@ public class WifiBindDataCenter implements IWifiBindDataFn {
 		return mDataDeal.isHasDataHistory();
 	}
 
+	@Override
+	public boolean isHasIpc(String ipcssid) {
+		if (null == mDataDeal) {
+			return false;
+		}
+		return mDataDeal.isHasIpc(ipcssid);
+	}
+
 }

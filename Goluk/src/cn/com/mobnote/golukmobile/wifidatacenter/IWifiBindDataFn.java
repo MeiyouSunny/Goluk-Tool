@@ -57,6 +57,15 @@ public interface IWifiBindDataFn {
 	public boolean isHasDataHistory();
 
 	/**
+	 * 查询ipc 是否在记录中
+	 * 
+	 * @param ipcssid
+	 * @return
+	 * @author jyf
+	 */
+	public boolean isHasIpc(String ipcssid);
+
+	/**
 	 * 销毁模块
 	 * 
 	 * @author jyf

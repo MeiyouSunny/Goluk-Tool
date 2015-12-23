@@ -1129,10 +1129,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 			if (isBindSucess()) {
 				GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + param2);
-				// 修改连接状态
-				if (null != mGolukName && !"".equals(mGolukName) && mGolukName.length() > 0) {
-					WifiBindDataCenter.getInstance().editBindStatus(mGolukName, WifiBindHistoryBean.CONN_USE);
-				}
+				
 				// 保存ipc设备型号
 				try {
 					JSONObject json = new JSONObject((String) param2);
@@ -1161,6 +1158,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				queryNewFileList();
 				if (null != mMainActivity) {
 					mMainActivity.wiFiLinkStatus(2);
+				}
+				// 修改连接状态
+				if (null != mGolukName && !"".equals(mGolukName) && mGolukName.length() > 0) {
+					WifiBindDataCenter.getInstance().editBindStatus(mGolukName, WifiBindHistoryBean.CONN_USE);
 				}
 			}
 			GolukDebugUtils.e("", "IPC_TTTTTT=================Login Success===============");
