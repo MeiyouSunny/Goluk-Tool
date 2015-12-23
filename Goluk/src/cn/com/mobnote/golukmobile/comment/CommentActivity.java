@@ -396,6 +396,10 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	// 开始下拉刷新
 	private void startPull() {
+		if (mCurrentOperator == OPERATOR_UP) {
+			mRTPullListView.onRefreshComplete(getLastRefreshTime());
+			return;
+		}
 		mCurrentOperator = OPERATOR_DOWN;
 		httpPost_requestList(OPERATOR_FIRST, "");
 	}
@@ -403,6 +407,9 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	// 开始上拉刷新
 	private void startPush() {
 		GolukDebugUtils.e("", "jyf----CommentActivity-----startPush-----1111" + this.mIsHaveData);
+		if (mCurrentOperator != OPERATOR_NONE) {
+			return;
+		}
 		mCurrentOperator = OPERATOR_UP;
 		httpPost_requestList(OPERATOR_DOWN, mAdapter.getLastDataTime());
 	}
@@ -575,6 +582,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 				if (null == dataBean.comments || dataBean.comments.size() <= 0) {
 					// 无数据
 					noDataDeal();
+					mCurrentOperator = OPERATOR_NONE;
 					return;
 				}
 
@@ -621,6 +629,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			} else {
 				callBackFailed();
 			}
+			mCurrentOperator = OPERATOR_NONE;
 			break;
 		case IPageNotifyFn.PageType_AddComment:
 			LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();

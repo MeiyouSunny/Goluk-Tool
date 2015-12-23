@@ -20,6 +20,9 @@ public interface ICommentFn {
 	public static final int OPERATOR_UP = 1;
 	/** 下拉 */
 	public static final int OPERATOR_DOWN = 2;
+	
+	/** 空闲*/
+	public static final int OPERATOR_NONE = 4;
 
 	/** 评论超时为10 秒 */
 	public static final int COMMENT_CIMMIT_TIMEOUT = 10;

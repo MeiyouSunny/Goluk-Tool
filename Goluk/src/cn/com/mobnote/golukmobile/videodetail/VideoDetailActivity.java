@@ -493,12 +493,19 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 	// 开始下拉刷新
 	private void startPull() {
+		if (mCurrentOperator == OPERATOR_UP) {
+			mRTPullListView.onRefreshComplete(getLastRefreshTime());
+			return;
+		}
 		mCurrentOperator = OPERATOR_DOWN;
 		getDetailData();
 	}
 
 	// 开始上拉刷新
 	private void startPush() {
+		if (mCurrentOperator != OPERATOR_NONE) {
+			return;
+		}
 		mCurrentOperator = OPERATOR_UP;
 		getCommentList(OPERATOR_DOWN, mAdapter.getLastDataTime());
 	}
@@ -1117,17 +1124,20 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				mHeader.setData(mVideoJson);
 				VideoAllData videoAllData = mVideoJson.data;
 				if (mVideoJson.data == null) {
+					mCurrentOperator = OPERATOR_NONE;
 					return;
 				}
 				ZTHead ztHead = videoAllData.head;
 				VideoSquareDetailInfo avideo = videoAllData.avideo;
 
 				if (avideo == null) {
+					mCurrentOperator = OPERATOR_NONE;
 					return;
 				}
 
 				VideoInfo videoInfo = avideo.video;
 				if (videoInfo == null) {
+					mCurrentOperator = OPERATOR_NONE;
 					return;
 				}
 
@@ -1152,6 +1162,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 						addForbitCommentFooterView();
 						mRTPullListView.setEnabled(false);
 						mRTPullListView.onRefreshComplete(getLastRefreshTime());
+						mCurrentOperator = OPERATOR_NONE;
 						return;
 					} else {
 						removeForbitCommentFooterView();
@@ -1166,6 +1177,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 						mIsHaveData = false;
 						mRTPullListView.onRefreshComplete(getLastRefreshTime());
 						addFooterView();
+						mCurrentOperator = OPERATOR_NONE;
 					} else {
 						removeFooterView();
 						getCommentList(OPERATOR_FIRST, "");
@@ -1182,6 +1194,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				clickVideoNumber();
 			} else {
 				dealCondition();
+				mCurrentOperator = OPERATOR_NONE;
 			}
 			break;
 		case IPageNotifyFn.PageType_CommentList:
@@ -1197,6 +1210,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				if (null == dataBean.comments || dataBean.comments.size() <= 0) {
 					// 无数据
 					noDataDeal();
+					mCurrentOperator = OPERATOR_NONE;
 					return;
 				}
 
@@ -1245,6 +1259,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			} else {
 				callBackFailed();
 			}
+			mCurrentOperator = OPERATOR_NONE;
 			break;
 		case IPageNotifyFn.PageType_DelComment:
 			LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
