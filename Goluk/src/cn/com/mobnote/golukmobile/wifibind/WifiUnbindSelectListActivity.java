@@ -8,6 +8,7 @@ import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -124,9 +125,28 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 						
 						@Override
 						public void onClick(View arg0) {
-							mListView.removeHeaderView(mHeadView);
-							WifiBindDataCenter.getInstance().deleteBindData(mWifiBindConnectData.ipc_ssid);
-							getBindHistoryData();
+							
+							final AlertDialog confirmation = new AlertDialog.Builder(WifiUnbindSelectListActivity.this, R.style.CustomDialog).create();
+							confirmation.show();
+							confirmation.getWindow().setContentView(R.layout.unbind_dialog_confirmation);
+							confirmation.getWindow().findViewById(R.id.sure).setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									mListView.removeHeaderView(mHeadView);
+									WifiBindDataCenter.getInstance().deleteBindData(mWifiBindConnectData.ipc_ssid);
+									getBindHistoryData();
+									confirmation.dismiss();
+								}
+							});
+							confirmation.getWindow().findViewById(R.id.exit).setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									confirmation.dismiss();
+								}
+							});
+							
+							
+							
 						}
 					});
 					if(binds.size()>1){

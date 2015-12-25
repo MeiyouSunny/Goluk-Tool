@@ -2,10 +2,13 @@ package cn.com.mobnote.golukmobile.wifibind;
 
 import java.util.List;
 
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
+import cn.com.mobnote.util.GolukUtils;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,15 +74,21 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 			} else {
 				connectViewHodler = (ConnectViewHodler) convertView.getTag();
 			}
-			if (bindHistoryBean.ipcSign.equals(IPCControlManager.G1_SIGN)) {
+			
+			if(bindHistoryBean.ipcSign != null){
+				if (bindHistoryBean.ipcSign.equals(IPCControlManager.G1_SIGN)) {
+					connectViewHodler.golukIcon.setImageResource(R.drawable.connect_g1_img);
+				} else if (bindHistoryBean.ipcSign.equals(IPCControlManager.G2_SIGN)) {
+					connectViewHodler.golukIcon.setImageResource(R.drawable.connect_g2_img);
+				} else if (bindHistoryBean.ipcSign.equals(IPCControlManager.G1s_SIGN)) {
+					connectViewHodler.golukIcon.setImageResource(R.drawable.connect_t1_img);
+				} else if (bindHistoryBean.ipcSign.equals(IPCControlManager.T1_SIGN)) {
+					connectViewHodler.golukIcon.setImageResource(R.drawable.connect_t1_img);
+				}
+			}else{
 				connectViewHodler.golukIcon.setImageResource(R.drawable.connect_g1_img);
-			} else if (bindHistoryBean.ipcSign.equals(IPCControlManager.G2_SIGN)) {
-				connectViewHodler.golukIcon.setImageResource(R.drawable.connect_g2_img);
-			} else if (bindHistoryBean.ipcSign.equals(IPCControlManager.G1s_SIGN)) {
-				connectViewHodler.golukIcon.setImageResource(R.drawable.connect_t1_img);
-			} else if (bindHistoryBean.ipcSign.equals(IPCControlManager.T1_SIGN)) {
-				connectViewHodler.golukIcon.setImageResource(R.drawable.connect_t1_img);
 			}
+			
 
 			connectViewHodler.golukName.setText(bindHistoryBean.ipc_ssid);
 
@@ -106,9 +115,26 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 
 				@Override
 				public void onClick(View view) {
-					WifiBindDataCenter.getInstance().deleteBindData(bindHistoryBean.ipc_ssid);
-					mBindHistoryData.remove(bindHistoryBean);
-					notifyDataSetChanged();
+					
+					final AlertDialog confirmation = new AlertDialog.Builder(mContext, R.style.CustomDialog).create();
+					confirmation.show();
+					confirmation.getWindow().setContentView(R.layout.unbind_dialog_confirmation);
+					confirmation.getWindow().findViewById(R.id.sure).setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							WifiBindDataCenter.getInstance().deleteBindData(bindHistoryBean.ipc_ssid);
+							mBindHistoryData.remove(bindHistoryBean);
+							notifyDataSetChanged();
+							confirmation.dismiss();
+						}
+					});
+					confirmation.getWindow().findViewById(R.id.exit).setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							confirmation.dismiss();
+						}
+					});
+					
 				}
 			});
 
