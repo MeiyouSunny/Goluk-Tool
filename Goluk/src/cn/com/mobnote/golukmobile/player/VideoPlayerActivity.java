@@ -360,7 +360,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 			return;
 		}
 		int duration = mVideo.getDuration();
-		if(0 >= duration || 0f >= width) {
+		if(0 >= duration || 0f >= width || !mVideo.canSeekBackward()) {
 			return;
 		}
 		int current = mVideo.getCurrentPosition();
@@ -379,7 +379,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 			return;
 		}
 		int duration = mVideo.getDuration();
-		if(0 >= duration || 0f >= width) {
+		if(0 >= duration || 0f >= width || !mVideo.canSeekForward()) {
 			return;
 		}
 		int current = mVideo.getCurrentPosition();
@@ -600,7 +600,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 				return;
 			}
 
-			if (mVideo.isPlaying()) {
+			if (mVideo.isPlaying() && mVideo.canPause()) {
 				mVideo.pause();
 				mPlay.setImageResource(R.drawable.player_play_btn);
 			} else {
@@ -878,7 +878,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		}
 		playTime = mVideo.getCurrentPosition();
 
-		if (mVideo.isPlaying()) {
+		if (mVideo.isPlaying() && mVideo.canPause()) {
 			isPause = true;
 			mVideo.pause();
 		}
