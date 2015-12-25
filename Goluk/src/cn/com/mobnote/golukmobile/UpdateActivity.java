@@ -44,12 +44,12 @@ import android.widget.TextView;
  * @author mobnote
  *
  */
-public class UpdateActivity extends BaseActivity implements OnClickListener, IPCManagerFn, OnTouchListener {
+public class UpdateActivity extends BaseActivity implements OnClickListener, IPCManagerFn {
 
 	/** 返回按钮 **/
 	private ImageButton mBtnBack = null;
 	/** 下载 / 安装按钮 **/
-	private Button mBtnDownload = null;
+	private TextView mBtnDownload = null;
 	/** 极路客固件版本号 **/
 	private TextView mTextIpcVersion = null;
 	/** 极路客固件大小 **/
@@ -201,13 +201,13 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					mTextDowload.setText("未下载");
 					mBtnDownload.setText("下载新极路客固件程序");
 					downloadStatus = IpcUpdateManage.DOWNLOAD_STATUS_FAIL;
-					mBtnDownload.setBackgroundResource(R.drawable.icon_login);
+//					mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 					mBtnDownload.setEnabled(true);
 				} else {
 					mTextDowload.setText("下载中");
 					mBtnDownload.setText("下载中…" + progressSetup + "%");
 					downloadStatus = IpcUpdateManage.DOWNLOAD_STATUS;
-					mBtnDownload.setBackgroundResource(R.drawable.icon_more);
+//					mBtnDownload.setBackgroundResource(R.drawable.icon_more);
 					mBtnDownload.setEnabled(false);
 				}
 			} else {
@@ -218,20 +218,20 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					mTextDowload.setText("下载中");
 					mBtnDownload.setText("下载中…0%");
 					downloadStatus = IpcUpdateManage.DOWNLOAD_STATUS;
-					mBtnDownload.setBackgroundResource(R.drawable.icon_more);
+//					mBtnDownload.setBackgroundResource(R.drawable.icon_more);
 					mBtnDownload.setEnabled(false);
 				} else {
 					mTextDowload.setText("未下载");
 					mBtnDownload.setText("下载新极路客固件程序");
 					downloadStatus = IpcUpdateManage.DOWNLOAD_STATUS_FAIL;
-					mBtnDownload.setBackgroundResource(R.drawable.icon_login);
+//					mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 					mBtnDownload.setEnabled(true);
 				}
 			}
 		} else if (mSign == 1) {
 			mTextDowload.setText("已下载");
 			mBtnDownload.setText("安装此极路客固件程序");
-			mBtnDownload.setBackgroundResource(R.drawable.icon_login);
+//			mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 			mBtnDownload.setEnabled(true);
 		}
 		EventBus.getDefault().register(this);
@@ -416,7 +416,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	// 初始化view
 	public void initView() {
 		mBtnBack = (ImageButton) findViewById(R.id.back_btn);
-		mBtnDownload = (Button) findViewById(R.id.update_btn);
+		mBtnDownload = (TextView) findViewById(R.id.update_btn);
 		mTextIpcVersion = (TextView) findViewById(R.id.upgrade_ipc_name);
 		mTextIpcSize = (TextView) findViewById(R.id.upgrade_ipc_size_text);
 		mTextUpdateContent = (TextView) findViewById(R.id.update_info_content);
@@ -430,7 +430,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		// 监听
 		mBtnBack.setOnClickListener(this);
 		mBtnDownload.setOnClickListener(this);
-		mBtnDownload.setOnTouchListener(this);
+//		mBtnDownload.setOnTouchListener(this);
 	}
 
 	@Override
@@ -499,7 +499,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			mApp.mLoadStatus = true;
 			int progress = (Integer) param1;
 			GolukDebugUtils.i("lily", "======下载文件progress=====" + progress);
-			mBtnDownload.setBackgroundResource(R.drawable.icon_more);
+//			mBtnDownload.setBackgroundResource(R.drawable.icon_more);
 			mBtnDownload.setEnabled(false);
 			mBtnDownload.setText("正在下载…" + progress + "%");
 			// 保存进度
@@ -509,7 +509,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			mApp.mLoadStatus = false;
 			mTextDowload.setText("已下载");
 			mBtnDownload.setText("安装此极路客固件程序");
-			mBtnDownload.setBackgroundResource(R.drawable.icon_login);
+//			mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 			mBtnDownload.setEnabled(true);
 			mSign = 1;
 			try {
@@ -527,7 +527,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			GolukUtils.showToast(mApp.getContext(), "很抱歉，新极路客固件下载失败，请检查网络后重试");
 			mTextDowload.setText("未下载");
 			mBtnDownload.setText("下载新极路客固件程序");
-			mBtnDownload.setBackgroundResource(R.drawable.icon_login);
+//			mBtnDownload.setBackgroundResource(R.drawable.icon_login);
 			mBtnDownload.setEnabled(true);
 			mSign = 0;
 		}
@@ -728,7 +728,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		EventBus.getDefault().unregister(this);
 	}
 
-	@SuppressLint("ClickableViewAccessibility")
+	/*@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
 		int action = event.getAction();
@@ -750,7 +750,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			break;
 		}
 		return false;
-	}
+	}*/
 
 	/**
 	 * 升级1阶段
