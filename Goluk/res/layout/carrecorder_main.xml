@@ -156,6 +156,17 @@
                 android:background="@drawable/video_linking_pic"
                 android:visibility="gone" />
         </RelativeLayout>
+        
+        <ImageButton
+            android:id="@+id/video_off"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/mFullScreen"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="6dp"
+            android:layout_alignRight="@+id/mRtmpPlayerLayout"
+            android:background="@drawable/recorder_btn_sound"
+            android:contentDescription="@string/def" />
 
         <ImageButton
             android:id="@+id/mFullScreen"
@@ -163,8 +174,9 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/mRtmpPlayerLayout"
             android:layout_alignRight="@+id/mRtmpPlayerLayout"
-            android:layout_marginTop="76dp"
-            android:background="@drawable/carrecorder_full_btn"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/carrecorder_btn_full_press"
             android:contentDescription="@string/def" />
     </RelativeLayout>
 
