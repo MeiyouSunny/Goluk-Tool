@@ -210,6 +210,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private boolean m_bIsFullScreen = false;
 	private ViewGroup m_vgNormalParent;
 	private ImageButton mFullScreen = null;
+	private ImageButton mVideoOff = null;
 	private RelativeLayout mPlayerLayout = null;
 	private Button mNormalScreen = null;
 	private final int BTN_NORMALSCREEN = 231;
@@ -282,6 +283,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private ImageView mChangeBtn;
 
 	private ImageView mRedRoom;
+	
+	private boolean isRecVideo = false;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -474,6 +477,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private void initView() {
 		mPalyerLayout = (RelativeLayout) findViewById(R.id.mPalyerLayout);
 		mFullScreen = (ImageButton) findViewById(R.id.mFullScreen);
+		mVideoOff = (ImageButton) findViewById(R.id.video_off);
+		mVideoOff.setVisibility(View.GONE);
 		mFullScreen.setVisibility(View.GONE);
 		mVideoResolutions = (ImageView) findViewById(R.id.mVideoResolutions);
 		mRtmpPlayerLayout = (RelativeLayout) findViewById(R.id.mRtmpPlayerLayout);
@@ -550,6 +555,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		findViewById(R.id.mPlayBtn).setOnClickListener(this);
 		mPalyerLayout.setOnClickListener(this);
 		mFullScreen.setOnClickListener(this);
+		mVideoOff.setOnClickListener(this);
 		m8sBtn.setOnClickListener(this);
 		jcqp.setOnClickListener(this);
 		fqzb.setOnClickListener(this);
@@ -630,6 +636,27 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				// 隐藏
 				mPalyerLayout.setVisibility(View.GONE);
 				mFullScreen.setVisibility(View.VISIBLE);
+				
+				
+				mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();
+				if(IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)){//T1
+					
+				}else{//G1  G2  G1S
+					if(1 == mVideoConfigState.AudioEnabled){
+						isRecVideo = true;
+					}else{
+						isRecVideo = false;
+					}
+				}
+				
+				
+				
+				if(isRecVideo == false){
+					mVideoOff.setBackgroundResource(R.drawable.recorder_btn_nosound);
+				}else{
+					mVideoOff.setBackgroundResource(R.drawable.recorder_btn_sound);
+				}
+				mVideoOff.setVisibility(View.VISIBLE);
 
 			}
 		});
@@ -847,6 +874,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		case R.id.mFullScreen:
 			setFullScreen(true);
 			break;
+		case R.id.video_off:
+			
+			break;
 		case BTN_NORMALSCREEN:
 			setFullScreen(false);
 			break;
@@ -965,6 +995,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				mNotconnected.setVisibility(View.GONE);
 				mConncetLayout.setVisibility(View.GONE);
 				mFullScreen.setVisibility(View.GONE);
+				mVideoOff.setVisibility(View.GONE);
 			}
 		}
 			break;
@@ -1073,6 +1104,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private void ipcConnecting() {
 		mConnectTip.setText(wifiname);
 		mFullScreen.setVisibility(View.GONE);
+		mVideoOff.setVisibility(View.GONE);
 		mSettingBtn.setVisibility(View.GONE);
 		mChangeBtn.setVisibility(View.GONE);
 		setVideoBtnState(false);
@@ -1095,6 +1127,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 	private void ipcConnFailed() {
 		mFullScreen.setVisibility(View.GONE);
+		mVideoOff.setVisibility(View.GONE);
 		mConnectTip.setText(wifiname);
 		mPalyerLayout.setVisibility(View.GONE);
 		mNotconnected.setVisibility(View.VISIBLE);
@@ -1180,11 +1213,13 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();
 		if (null != mVideoConfigState) {
+			
 			if ("1080P".equals(mVideoConfigState.resolution)) {
 				mVideoResolutions.setBackgroundResource(R.drawable.icon_hd1080);
 			} else {
 				mVideoResolutions.setBackgroundResource(R.drawable.icon_hd720);
 			}
+				
 		}
 		// 添加定位通知及反编码通知
 		// mApp.addLocationListener(SelfContextTag, this);
@@ -1200,6 +1235,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			if (null != mRtspPlayerView) {
 				rtmpIsOk = false;
 				mFullScreen.setVisibility(View.GONE);
+				mVideoOff.setVisibility(View.GONE);
 				mRtspPlayerView.removeCallbacks(retryRunnable);
 				if (mRtspPlayerView.isPlaying()) {
 					isConnecting = false;
