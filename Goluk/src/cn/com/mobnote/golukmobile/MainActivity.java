@@ -1,7 +1,5 @@
 package cn.com.mobnote.golukmobile;
 
-import java.util.List;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,6 +37,7 @@ import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.mobnote.eventbus.EventMapQuery;
 import cn.com.mobnote.eventbus.EventPhotoUpdateDate;
 import cn.com.mobnote.eventbus.EventUpdateAddr;
+import cn.com.mobnote.eventbus.EventWifiAuto;
 import cn.com.mobnote.eventbus.EventWifiConnect;
 import cn.com.mobnote.eventbus.EventWifiState;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
@@ -206,7 +205,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (mApp.isBindSucess()) {
 			startWifi();
 			// 启动创建热点
-			createWiFiHot();
+			autoConnWifi();
 			// 等待IPC连接时间
 			mBaseHandler.sendEmptyMessageDelayed(MSG_H_WIFICONN_TIME, 40 * 1000);
 		} else {
@@ -332,15 +331,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		mVideoSquareActivity.onActivityResult(requestCode, resultCode, data);
-	}
-
-	/**
-	 * 启动软件创建wifi热点
-	 */
-	private void createWiFiHot() {
-		GolukDebugUtils.e("", "自动连接小车本wifi---linkMobnoteWiFi---1");
-		mWac = new WifiConnectManager(mWifiManager, this);
-		mWac.autoWifiManage();
 	}
 
 	/**
@@ -521,7 +511,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mBaseHandler.removeMessages(MSG_H_WIFICONN_TIME);
 		mApp.mWiFiStatus = WIFI_STATE_SUCCESS;
 		GolukDebugUtils.e("zh：wifi连接成功 ", mApp.mWiFiStatus + "");
-		
+
 		refreshIpcDataToFile();
 
 		EventBus.getDefault().post(new EventWifiConnect(EventConfig.WIFI_STATE_SUCCESS));
@@ -552,9 +542,38 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				mWac.autoWifiManageReset();
 			}
 			break;
+		case EventConfig.CAR_RECORDER_BIND_CREATEAP:
+			createPhoneHot(event.bean);
+			break;
 		default:
 			break;
 		}
+	}
+
+	/**
+	 * 启动软件创建wifi热点
+	 */
+	private void autoConnWifi() {
+		GolukDebugUtils.e("", "自动连接小车本wifi---linkMobnoteWiFi---1");
+		mWac = new WifiConnectManager(mWifiManager, this);
+		mWac.autoWifiManage();
+	}
+
+	private void createPhoneHot(WifiBindHistoryBean bean) {
+		if (null == bean) {
+			return;
+		}
+		String wifiName = bean.mobile_ssid;
+		String pwd = bean.mobile_pwd;
+		String ipcssid = bean.ipc_ssid;
+		String ipcmac = bean.ipc_mac;
+		// 创建热点之前先断开ipc连接
+		mApp.mIPCControlManager.setIPCWifiState(false, "");
+		// 改变Application-IPC退出登录
+		mApp.setIpcLoginOut();
+		// 调用韩峥接口创建手机热点
+		mWac = new WifiConnectManager(mWifiManager, this);
+		mWac.createWifiAP(wifiName, pwd, ipcssid, ipcmac);
 	}
 
 	public void onEventMainThread(EventLocationFinish event) {
@@ -953,11 +972,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			mCurrentConnBean = null;
 			return;
 		}
-		
+
 		WifiRsBean bean = mWac.readConfig();
 		mCurrentConnBean = bean;
-		
-		
+
 		WifiBindHistoryBean historyBean = new WifiBindHistoryBean();
 		historyBean.ipc_ssid = mCurrentConnBean.getIpc_ssid();
 		historyBean.ipc_mac = mCurrentConnBean.getIpc_bssid();
@@ -965,7 +983,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		historyBean.mobile_ssid = mCurrentConnBean.getPh_ssid();
 		historyBean.mobile_pwd = mCurrentConnBean.getPh_pass();
-		
+
 		WifiBindDataCenter.getInstance().saveBindData(historyBean);
 
 		mCurrentConnBean = null;
@@ -1014,11 +1032,51 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
+	private void wifiCallBack_3(int state, int process, String message, Object arrays) {
+
+		EventWifiAuto autoBean = new EventWifiAuto();
+		autoBean.eCode = EventConfig.CAR_RECORDER_RESULT;
+		autoBean.state = state;
+		autoBean.process = process;
+		autoBean.message = message;
+		autoBean.arrays = arrays;
+		// 通知列表界面
+		EventBus.getDefault().post(autoBean);
+
+		if (state == 0) {
+			switch (process) {
+			case 0:
+				// 创建热点成功
+				break;
+			case 1:
+				// ipc成功连接上热点
+				try {
+					WifiRsBean[] bean = (WifiRsBean[]) arrays;
+					if (null != bean) {
+						if (bean.length > 0) {
+							sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
+						}
+					}
+				} catch (Exception e) {
+
+				}
+				break;
+			default:
+				break;
+			}
+		} else {
+			// connFailed();
+		}
+	}
+
 	@Override
 	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
 		GolukDebugUtils.e("", "jyf-----MainActivity----wifiConn----wifiCallBack-------------type:" + type + "	state :"
 				+ state + "	process:" + process);
 		switch (type) {
+		case 3:
+			wifiCallBack_3(state, process, message, arrays);
+			break;
 		case 5:
 			wifiCallBack_5(state, process, message, arrays);
 			break;

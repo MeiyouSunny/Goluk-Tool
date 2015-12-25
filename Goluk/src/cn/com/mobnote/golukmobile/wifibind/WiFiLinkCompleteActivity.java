@@ -476,22 +476,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		mProgressImg.setBackgroundResource(R.drawable.setp_4);
 	}
 
-	private void wifiCallBack_ipcConnHotSucess(String message, Object arrays) {
-		WifiRsBean[] bean = (WifiRsBean[]) arrays;
-		if (null == bean) {
-			return;
-		}
-		GolukDebugUtils.e("", "自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
-		collectLog("wifiCallBack_ipcConnHotSucess", "自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
-		if (bean.length > 0) {
-			GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1---ip---");
-			collectLog("wifiCallBack_ipcConnHotSucess", "1");
-			sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
-		} else {
-			collectLog("wifiCallBack_ipcConnHotSucess", "2 ");
-		}
-	}
-
 	private void wifiCallBack_3(int state, int process, String message, Object arrays) {
 		if (state == 0) {
 			switch (process) {
@@ -520,32 +504,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 			}
 		} else {
 			GolukUtils.showToast(mContext, message);
-			connFailed();
-		}
-	}
-
-	private void wifiCallBack_5(int state, int process, String message, Object arrays) {
-		if (state == 0) {
-			switch (process) {
-			case 0:
-				// 创建热点成功
-				break;
-			case 1:
-				// ipc成功连接上热点
-				wifiCallBack_ipcConnHotSucess(message, arrays);
-				break;
-			case 2:
-				// 用户已经创建与配置文件相同的热点，
-				break;
-			case 3:
-				// 用户已经连接到其它wifi，按连接失败处理
-				connFailed();
-				break;
-			default:
-				break;
-			}
-		} else {
-			// 未连接
 			connFailed();
 		}
 	}
@@ -581,9 +539,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		switch (type) {
 		case 3:
 			wifiCallBack_3(state, process, message, arrays);
-			break;
-		case 5:
-			wifiCallBack_5(state, process, message, arrays);
 			break;
 		default:
 			break;
