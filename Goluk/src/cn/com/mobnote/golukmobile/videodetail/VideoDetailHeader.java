@@ -466,7 +466,7 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 //				return;
 //			}
 
-			if (mVideoView.isPlaying()) {
+			if (mVideoView.isPlaying() && mVideoView.canPause()) {
 				mVideoView.pause();
 				mPlayBtn.setVisibility(View.VISIBLE);
 			} else {
@@ -562,7 +562,7 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 	private boolean mResume = false;
 	public void pausePlayer() {
 		mImageLayout.setVisibility(View.VISIBLE);
-		if (mVideoView.isPlaying()) {
+		if (mVideoView.isPlaying() && mVideoView.canPause()) {
 			mResume = true;
 			mVideoView.pause();
 			mVideoView.setVisibility(View.GONE);
@@ -602,7 +602,7 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 		if (locations[1] < duration) {
 			GolukDebugUtils.e("", "onScreen--------------pause");
 			// 滑出屏幕外了
-			if (mVideoView.isPlaying()) {
+			if (mVideoView.isPlaying() && mVideoView.canPause()) {
 				isOuterPause = true;
 				mVideoView.pause();
 				mPlayBtn.setVisibility(View.VISIBLE);
