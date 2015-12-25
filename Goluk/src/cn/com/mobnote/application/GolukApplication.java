@@ -194,6 +194,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private ArrayList<VideoFileInfo> fileList;
 
 	private boolean mIsExit = true;
+	/**T1声音录制开关　０关闭１打开**/
+	public int mT1RecAudioCfg = 1;
 
 	private static final String SNAPSHOT_DIR = "fs1:/pic/";
 	static {
@@ -385,6 +387,22 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 */
 	public VideoConfigState getVideoConfigState() {
 		return this.mVideoConfigState;
+	}
+	
+	/**
+	 * 设置T1声音录制开关
+	 * @param state
+	 */
+	public void setT1VideoCfgState(int state) {
+		this.mT1RecAudioCfg = state;
+	}
+	
+	/**
+	 * 获取T1声音录制开关
+	 * @return
+	 */
+	public int getT1VideoCfgState() {
+		return mT1RecAudioCfg;
 	}
 
 	/**
@@ -1147,6 +1165,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				setIpcLoginState(true);
 				// 获取音视频配置信息
 				getVideoEncodeCfg();
+				//获取Ｔ1声音录制开关状态
+				getVideoEncoderCtg_T1();
 				//获取设备编号
 				getIPCNumber();
 				isconnection = true;// 连接成功
@@ -1248,6 +1268,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			case IPC_VDCP_Msg_SetVedioEncodeCfg:
 				if (param1 == RESULE_SUCESS) {
 					getVideoEncodeCfg();
+				}
+				break;
+				
+			case  IPC_VDCP_Msg_GetRecAudioCfg:
+				if(param1 == RESULE_SUCESS) {
+					try {
+						JSONObject obj = new JSONObject((String) param2);
+						mT1RecAudioCfg = Integer.parseInt(obj.optString("AudioEnable"));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 				break;
 			case IPC_VDCPCmd_SetRecAudioCfg:
