@@ -96,37 +96,37 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	public void getBindHistoryData() {
 		GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--1");
 		List<WifiBindHistoryBean> binds = WifiBindDataCenter.getInstance().getAllBindData();
-		if (binds == null) {
-			return;
-		}
-		if (isCanShowListViewHead()) {
-			GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--size: "
-					+ binds.size());
-			for (int i = 0; i < binds.size(); i++) {
-				WifiBindHistoryBean bind = binds.get(i);
-				if (bind.state == WifiBindHistoryBean.CONN_USE) {
-					mWifiBindConnectData = bind;
-					GolukDebugUtils.e("",
-							"select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--select ssid: "
-									+ mWifiBindConnectData.ipc_ssid);
-					refreshHeadData();
-					if (binds.size() > 1) {
-						binds.remove(i);
-						binds.add(bind);
-					}
-					break;
-				}
+		if (binds != null) {
 
+			if (isCanShowListViewHead()) {
+				GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--size: "
+						+ binds.size());
+				for (int i = 0; i < binds.size(); i++) {
+					WifiBindHistoryBean bind = binds.get(i);
+					if (bind.state == WifiBindHistoryBean.CONN_USE) {
+						mWifiBindConnectData = bind;
+						GolukDebugUtils.e("",
+								"select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--select ssid: "
+										+ mWifiBindConnectData.ipc_ssid);
+						refreshHeadData();
+						if (binds.size() > 1) {
+							binds.remove(i);
+							binds.add(bind);
+						}
+						break;
+					}
+
+				}
+			} else {
+				GolukDebugUtils.e("",
+						"select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--not show: ");
+				if (null != mHeadView && isHasHeaderView) {
+					this.removeListViewHead(mHeadView);
+				}
 			}
-		} else {
-			GolukDebugUtils
-					.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--not show: ");
-			if (null != mHeadView && isHasHeaderView) {
-				this.removeListViewHead(mHeadView);
-			}
+			GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--setData: "
+					+ binds.size());
 		}
-		GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--setData: "
-				+ binds.size());
 		mListAdapter.setData(binds);
 		mListAdapter.notifyDataSetChanged();
 
@@ -204,6 +204,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 				confirmation.getWindow().findViewById(R.id.sure).setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						mApp.setIpcDisconnect();
 						mListView.removeHeaderView(mHeadView);
 						WifiBindDataCenter.getInstance().deleteBindData(mWifiBindConnectData.ipc_ssid);
 						getBindHistoryData();
