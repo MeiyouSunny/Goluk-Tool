@@ -73,7 +73,7 @@
             android:layout_marginRight="20dp"
             android:layout_toRightOf="@id/goluk_del_icon"
             android:contentDescription="@string/def"
-            android:src="@drawable/connect_pointyellow_icon" />
+            android:background="@drawable/connect_pointyellow_icon" />
         
     </RelativeLayout>
 

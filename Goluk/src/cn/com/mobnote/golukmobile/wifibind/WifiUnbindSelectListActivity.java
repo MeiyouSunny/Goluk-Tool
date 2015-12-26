@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -164,15 +165,20 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		}
 		// 设备连接成功
 		if (mApp.isIpcLoginSuccess) {
-			mHeadData.golukPointgreyIcon.setImageResource(R.drawable.connect_pointgreen_icon);
+			mHeadData.golukPointgreyIcon.setBackgroundResource(R.drawable.connect_pointgreen_icon);
 			mHeadData.connTxt.setText(this.getResources().getString(R.string.unbind_select_connect_yes));
 		} else {
 			if (mApp.mWiFiStatus == MainActivity.WIFI_STATE_SUCCESS) {
-				mHeadData.golukPointgreyIcon.setImageResource(R.drawable.connect_pointgreen_icon);
+				mHeadData.golukPointgreyIcon.setBackgroundResource(R.drawable.connect_pointgreen_icon);
 				mHeadData.connTxt.setText(this.getResources().getString(R.string.unbind_select_connect_yes));
 			} else {
+				mHeadData.golukPointgreyIcon.setBackgroundResource(R.anim.wifi_connect_animation);
+				  // 获取AnimationDrawable对象   
+				AnimationDrawable animationDrawable = (AnimationDrawable)mHeadData.golukPointgreyIcon.getBackground();  
+				animationDrawable.start();  
+
 				// 显示加载中
-				mHeadData.golukPointgreyIcon.setImageResource(R.drawable.connect_pointgrey_icon);
+				//mHeadData.golukPointgreyIcon.setBackgroundResource(R.drawable.connect_pointgrey_icon);
 				mHeadData.connTxt.setText(this.getResources().getString(R.string.unbind_select_connect_ing));
 			}
 		}
