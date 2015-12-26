@@ -24,9 +24,7 @@ import de.greenrobot.event.EventBus;
 public class WifiUnbindSelectListAdapter extends BaseAdapter {
 
 	public Context mContext = null;
-
 	public List<WifiBindHistoryBean> mBindHistoryData = null;
-
 	/** 编辑按钮的状态 默认是不编辑的 **/
 	public boolean mEditState = false;
 
@@ -71,13 +69,13 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 				connectViewHodler.golukIcon = (ImageView) convertView.findViewById(R.id.goluk_icon);
 				connectViewHodler.golukName = (TextView) convertView.findViewById(R.id.goluk_name);
 				connectViewHodler.golukConnLayout = (RelativeLayout) convertView.findViewById(R.id.goluk_conn_layout);
-				connectViewHodler.golukPointgreyIcon =  (ImageView) convertView.findViewById(R.id.goluk_pointgrey_icon);
+				connectViewHodler.golukPointgreyIcon = (ImageView) convertView.findViewById(R.id.goluk_pointgrey_icon);
 				convertView.setTag(connectViewHodler);
 			} else {
 				connectViewHodler = (ConnectViewHodler) convertView.getTag();
 			}
-			
-			if(bindHistoryBean.ipcSign != null){
+
+			if (bindHistoryBean.ipcSign != null) {
 				if (bindHistoryBean.ipcSign.equals(IPCControlManager.G1_SIGN)) {
 					connectViewHodler.golukIcon.setImageResource(R.drawable.connect_g1_img);
 				} else if (bindHistoryBean.ipcSign.equals(IPCControlManager.G2_SIGN)) {
@@ -87,10 +85,9 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 				} else if (bindHistoryBean.ipcSign.equals(IPCControlManager.T1_SIGN)) {
 					connectViewHodler.golukIcon.setImageResource(R.drawable.connect_t1_img);
 				}
-			}else{
+			} else {
 				connectViewHodler.golukIcon.setImageResource(R.drawable.connect_g1_img);
 			}
-			
 
 			connectViewHodler.golukName.setText(bindHistoryBean.ipc_ssid);
 
@@ -106,10 +103,19 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 			} else {
 				connectViewHodler.historyTxt.setVisibility(View.GONE);
 			}
-			
-			if(bindHistoryBean.state == WifiBindHistoryBean.CONN_USE){
-				convertView.setVisibility(View.GONE);
-			}else{
+
+			WifiUnbindSelectListActivity wsla = (WifiUnbindSelectListActivity) mContext;
+			GolukDebugUtils.e(
+					"",
+					"select wifibind---WifiUnbindSelectListAdapter ------getView  isShow : "
+							+ wsla.isCanShowListViewHead());
+			if (wsla.isCanShowListViewHead()) {
+				if (bindHistoryBean.state == WifiBindHistoryBean.CONN_USE) {
+					convertView.setVisibility(View.GONE);
+				} else {
+					convertView.setVisibility(View.VISIBLE);
+				}
+			} else {
 				convertView.setVisibility(View.VISIBLE);
 			}
 
@@ -117,7 +123,7 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 
 				@Override
 				public void onClick(View view) {
-					
+
 					final AlertDialog confirmation = new AlertDialog.Builder(mContext, R.style.CustomDialog).create();
 					confirmation.show();
 					confirmation.getWindow().setContentView(R.layout.unbind_dialog_confirmation);
@@ -136,7 +142,7 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 							confirmation.dismiss();
 						}
 					});
-					
+
 				}
 			});
 
@@ -147,15 +153,17 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 					if (mEditState == false) {
 						WifiUnbindSelectListActivity wsla = (WifiUnbindSelectListActivity) mContext;
 						wsla.showLoading();
-						WifiBindDataCenter.getInstance().editBindStatus(bindHistoryBean.ipc_ssid,WifiBindHistoryBean.CONN_USE);
-						
-						GolukDebugUtils.e("","wifibind----WifiUnbindSelect  OnClick--------ssid:" + bindHistoryBean.ipc_ssid);
-						
+						WifiBindDataCenter.getInstance().editBindStatus(bindHistoryBean.ipc_ssid,
+								WifiBindHistoryBean.CONN_USE);
+
+						GolukDebugUtils.e("", "wifibind----WifiUnbindSelect  OnClick--------ssid:"
+								+ bindHistoryBean.ipc_ssid);
+
 						EventBindFinish eventFnish = new EventBindFinish(EventConfig.CAR_RECORDER_BIND_CREATEAP);
 						eventFnish.bean = bindHistoryBean;
-						EventBus.getDefault().post(eventFnish);	
+						EventBus.getDefault().post(eventFnish);
 						wsla.getBindHistoryData();
-						
+
 					}
 				}
 			});
@@ -179,7 +187,7 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 		TextView golukName;
 		ImageView golukDelIcon;
 		ImageView golukPointgreyIcon;
-		
+
 	}
 
 }

@@ -1180,6 +1180,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					mMainActivity.wiFiLinkStatus(2);
 				}
 				// 修改连接状态
+				GolukDebugUtils.e("",
+						"select wifibind---Application------mGolukName: "
+								+ mGolukName);
 				if (null != mGolukName && !"".equals(mGolukName) && mGolukName.length() > 0) {
 					WifiBindDataCenter.getInstance().editBindStatus(mGolukName, WifiBindHistoryBean.CONN_USE);
 				}

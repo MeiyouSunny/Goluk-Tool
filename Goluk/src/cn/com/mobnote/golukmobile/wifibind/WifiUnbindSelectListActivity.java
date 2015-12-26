@@ -33,25 +33,17 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 
 	/** 关闭按钮 **/
 	private ImageView mCloseBtn;
-
 	/** 数据列表 **/
 	private ListView mListView;
-
 	/** 没有数据时的默认布局 **/
 	private RelativeLayout mEmptyLayout;
-
 	/** 编辑按钮 **/
 	private Button mEditBtn;
-
 	/** 连接中headView **/
 	public View mHeadView = null;
-
 	public HeadViewHodler mHeadData = null;
-
 	private WifiBindHistoryBean mWifiBindConnectData = null;
-
 	private WifiUnbindSelectListAdapter mListAdapter;
-
 	private CustomLoadingDialog mLoadingDialog = null;
 	private GolukApplication mApp = null;
 	private boolean isCanReceiveFailed = true;
@@ -77,7 +69,6 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		mEmptyLayout = (RelativeLayout) findViewById(R.id.emptyLayout);
 		mCloseBtn = (ImageView) findViewById(R.id.close_btn);
 		mEditBtn = (Button) findViewById(R.id.edit_btn);
-
 		findViewById(R.id.addMoblieBtn).setOnClickListener(this);
 	}
 
@@ -100,17 +91,21 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	/**
 	 * 获取最新的bind数据
 	 * 
-	 * @return
 	 */
 	public void getBindHistoryData() {
+		GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--1");
 		List<WifiBindHistoryBean> binds = WifiBindDataCenter.getInstance().getAllBindData();
-		if (this.isCanShowListViewHead()) {
+		if (isCanShowListViewHead()) {
 			if (binds != null) {
-				GolukDebugUtils.d("", "zhBind : " + binds.size());
+				GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--size: "
+						+ binds.size());
 				for (int i = 0; i < binds.size(); i++) {
 					WifiBindHistoryBean bind = binds.get(i);
 					if (bind.state == WifiBindHistoryBean.CONN_USE) {
 						mWifiBindConnectData = bind;
+						GolukDebugUtils.e("",
+								"select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--select ssid: "
+										+ mWifiBindConnectData.ipc_ssid);
 						refreshHeadData();
 						if (binds.size() > 1) {
 							binds.remove(i);
@@ -121,20 +116,26 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 				}
 			}
 		} else {
+			GolukDebugUtils
+					.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--not show: ");
 			if (null != mHeadView && isHasHeaderView) {
-				this.mListView.removeHeaderView(mHeadView);
+				this.removeListViewHead(mHeadView);
+				// this.mListView.removeHeaderView(mHeadView);
 			}
-
 		}
+		GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--setData: "
+				+ binds.size());
 		mListAdapter.setData(binds);
 		mListAdapter.notifyDataSetChanged();
 	}
 
-	private boolean isCanShowListViewHead() {
+	public boolean isCanShowListViewHead() {
 		WifiBindHistoryBean temp = WifiBindDataCenter.getInstance().getCurrentUseIpc();
 		if (mApp.isIpcLoginSuccess || (mApp.mWiFiStatus != MainActivity.WIFI_STATE_FAILED && null != temp)) {
+			GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------isCanShowListViewHead--true");
 			return true;
 		}
+		GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------isCanShowListViewHead--false");
 		return false;
 	}
 
@@ -237,13 +238,15 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	 * @param view
 	 */
 	public void addListViewHead(View view) {
+		GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------addListViewHead: ");
 		isHasHeaderView = true;
 		mListView.addHeaderView(view);
 	}
 
 	public void removeListViewHead(View view) {
+		GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------removeListViewHead: ");
 		isHasHeaderView = false;
-//		mListView.removeHeaderView(view);
+		// mListView.removeHeaderView(view);
 		view.setVisibility(View.GONE);
 	}
 
@@ -317,7 +320,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 				return;
 			}
 			if (0 == event.process) {
-				// TODO 创建热点成功
+				// 创建热点成功
 				dimissLoading();
 			}
 		}
