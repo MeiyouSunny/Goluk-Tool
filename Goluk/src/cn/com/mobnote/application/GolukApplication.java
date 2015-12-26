@@ -1464,6 +1464,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		return true;
 	}
 	
+	public void setIpcDisconnect() {
+		mIPCControlManager.setIPCWifiState(false, "");
+		setIpcLoginOut();
+	}
+	
 	public boolean isBindSucess() {
 		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
 		return preferences.getBoolean("isbind", false);

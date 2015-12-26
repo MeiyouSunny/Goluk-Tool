@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile.wifibind;
 
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,13 +13,17 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventWifiAuto;
+import cn.com.mobnote.eventbus.EventWifiConnect;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectListAdapter.HeadViewHodler;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
@@ -44,6 +49,8 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	private WifiBindHistoryBean mWifiBindConnectData = null;
 
 	private WifiUnbindSelectListAdapter mListAdapter;
+
+	private CustomLoadingDialog mLoadingDialog = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -128,9 +135,30 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 
 						@Override
 						public void onClick(View arg0) {
-							mListView.removeHeaderView(mHeadView);
-							WifiBindDataCenter.getInstance().deleteBindData(mWifiBindConnectData.ipc_ssid);
-							getBindHistoryData();
+
+							final AlertDialog confirmation = new AlertDialog.Builder(WifiUnbindSelectListActivity.this,
+									R.style.CustomDialog).create();
+							confirmation.show();
+							confirmation.getWindow().setContentView(R.layout.unbind_dialog_confirmation);
+							confirmation.getWindow().findViewById(R.id.sure)
+									.setOnClickListener(new View.OnClickListener() {
+										@Override
+										public void onClick(View v) {
+											mListView.removeHeaderView(mHeadView);
+											WifiBindDataCenter.getInstance().deleteBindData(
+													mWifiBindConnectData.ipc_ssid);
+											getBindHistoryData();
+											confirmation.dismiss();
+										}
+									});
+							confirmation.getWindow().findViewById(R.id.exit)
+									.setOnClickListener(new View.OnClickListener() {
+										@Override
+										public void onClick(View v) {
+											confirmation.dismiss();
+										}
+									});
+
 						}
 					});
 					if (binds.size() > 1) {
@@ -145,6 +173,22 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		}
 		mListAdapter.setData(binds);
 		mListAdapter.notifyDataSetChanged();
+	}
+
+	private boolean isCanReceiveFailed = true;
+
+	public void showLoading() {
+		isCanReceiveFailed = false;
+		dimissLoading();
+		mLoadingDialog = new CustomLoadingDialog(this, "正在创建热点");
+		mLoadingDialog.show();
+	}
+
+	private void dimissLoading() {
+		if (null != mLoadingDialog) {
+			mLoadingDialog.close();
+			mLoadingDialog = null;
+		}
 	}
 
 	/**
@@ -188,10 +232,70 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		}
 	}
 
-	public void onEventMainThread(EventWifiAuto event) {
+	public void onEventMainThread(EventWifiConnect event) {
+		if (null == event) {
+			return;
+		}
+
+		switch (event.getOpCode()) {
+		case EventConfig.WIFI_STATE_FAILED:
+			ipcConnFailed();
+			break;
+		case EventConfig.WIFI_STATE_CONNING:
+			ipcConnecting();
+			break;
+		case EventConfig.WIFI_STATE_SUCCESS:
+			ipcConnSucess();
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void ipcConnFailed() {
+		if (!isCanReceiveFailed) {
+			isCanReceiveFailed = true;
+			return;
+		}
+		GolukUtils.showToast(this, "conn failed");
+	}
+
+	private void ipcConnecting() {
 
 	}
 
+	private void ipcConnSucess() {
+		GolukUtils.showToast(this, "conn success");
+
+	}
+
+	/**
+	 * 接受创建热点的消息
+	 * 
+	 * @param event
+	 * @author jyf
+	 */
+	public void onEventMainThread(EventWifiAuto event) {
+		if (null == event) {
+			return;
+		}
+		if (event.eCode == EventConfig.CAR_RECORDER_RESULT) {
+			if (0 != event.state) {
+				// 连接失败
+				return;
+			}
+			if (0 == event.process) {
+				// TODO 创建热点成功
+				dimissLoading();
+			}
+		}
+	}
+
+	/**
+	 * 进入选择设备类型界面
+	 * 
+	 * @author jyf
+	 */
 	private void click_AddIpc() {
 		Intent intent = new Intent(this, WifiUnbindSelectTypeActivity.class);
 		startActivity(intent);
@@ -200,6 +304,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		dimissLoading();
 		EventBus.getDefault().unregister(this);
 	}
 }

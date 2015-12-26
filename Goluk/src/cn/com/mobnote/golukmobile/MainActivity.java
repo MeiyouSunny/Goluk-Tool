@@ -41,6 +41,7 @@ import cn.com.mobnote.eventbus.EventWifiAuto;
 import cn.com.mobnote.eventbus.EventWifiConnect;
 import cn.com.mobnote.eventbus.EventWifiState;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
+import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
@@ -99,11 +100,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private Button msquareBtn = null;
 	/** wifi列表manage */
 	private WifiConnectManager mWac = null;
-
-	/** 首页handler用来接收消息,更新UI */
-	// public static Handler mMainHandler = null;
-	/** 下载完成播放声音文件 */
-	// public String mVideoDownloadSoundFile = "ec_alert5.wav";
 
 	/** 记录登录状态 **/
 	public SharedPreferences mPreferencesAuto;
@@ -563,15 +559,16 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (null == bean) {
 			return;
 		}
-		String wifiName = bean.mobile_ssid;
-		String pwd = bean.mobile_pwd;
+		// 创建热点之前先断开ipc连接
+		mApp.setIpcDisconnect();
+		final String wifiName = bean.mobile_ssid;
+		final String pwd = bean.mobile_pwd;
 		String ipcssid = bean.ipc_ssid;
 		String ipcmac = bean.ipc_mac;
-		// 创建热点之前先断开ipc连接
-		mApp.mIPCControlManager.setIPCWifiState(false, "");
-		// 改变Application-IPC退出登录
-		mApp.setIpcLoginOut();
 		// 调用韩峥接口创建手机热点
+		if (null != mWac) {
+			mWac.closeAp();
+		}
 		mWac = new WifiConnectManager(mWifiManager, this);
 		mWac.createWifiAP(wifiName, pwd, ipcssid, ipcmac);
 	}
@@ -1031,6 +1028,34 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			wifiConnectFailed();
 		}
 	}
+	
+	private final String T1_WIFINAME_SIGN = "Goluk_T1";
+	private final String G1G2_WIFINAME_SIGN = "Goluk";
+	
+	private String getIpcType(String mWillConnName) {
+		String ipcType = "";
+		if (mWillConnName.startsWith(T1_WIFINAME_SIGN)) {
+			ipcType = IPCControlManager.T1_SIGN;
+		} else if (mWillConnName.startsWith(G1G2_WIFINAME_SIGN)) {
+			ipcType = IPCControlManager.G1_SIGN;
+		} else {
+
+		}
+		GolukDebugUtils.e("", "WifiBindList----getIpcType: " + ipcType);
+		return ipcType;
+	}
+	
+	private void createHotSuccess() {
+		WifiBindHistoryBean currentBean =  WifiBindDataCenter.getInstance().getCurrentUseIpc();
+		if (currentBean != null) {
+			
+			String type = getIpcType(currentBean.ipc_ssid);
+			mApp.mIPCControlManager.setProduceName(type);
+			mApp.mIPCControlManager.setIpcMode();
+			
+			
+		}
+	}
 
 	private void wifiCallBack_3(int state, int process, String message, Object arrays) {
 
@@ -1047,6 +1072,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			switch (process) {
 			case 0:
 				// 创建热点成功
+				createHotSuccess();
 				break;
 			case 1:
 				// ipc成功连接上热点

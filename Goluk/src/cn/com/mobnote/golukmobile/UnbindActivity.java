@@ -20,6 +20,7 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.wifibind.WiFiLinkIndexActivity;
+import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectListActivity;
 import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectTypeActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.user.IpcUpdateManage;
@@ -162,7 +163,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 				Intent intent = new Intent(this, WifiUnbindSelectTypeActivity.class);
 				startActivity(intent);
 			} else {
-				Intent itWifiLink = new Intent(UnbindActivity.this, WiFiLinkIndexActivity.class);
+				Intent itWifiLink = new Intent(UnbindActivity.this, WifiUnbindSelectListActivity.class);
 				startActivity(itWifiLink);
 			}
 			break;
