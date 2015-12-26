@@ -112,11 +112,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private View userInfoLayout = null;
 
 	/** 未连接 */
-	private final int WIFI_STATE_FAILED = 0;
+	public static  final int WIFI_STATE_FAILED = 0;
 	/** 连接中 */
-	private final int WIFI_STATE_CONNING = 1;
+	public static final int WIFI_STATE_CONNING = 1;
 	/** 连接 */
-	private final int WIFI_STATE_SUCCESS = 2;
+	public static final int WIFI_STATE_SUCCESS = 2;
 
 	public CustomLoadingDialog mCustomProgressDialog;
 	public String shareVideoId;
@@ -559,6 +559,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (null == bean) {
 			return;
 		}
+		
+		GolukDebugUtils.e("","wifibind----MainActivity  createPhoneHot--------ssid:" + bean.ipc_ssid);
 		// 创建热点之前先断开ipc连接
 		mApp.setIpcDisconnect();
 		final String wifiName = bean.mobile_ssid;
@@ -569,6 +571,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (null != mWac) {
 			mWac.closeAp();
 		}
+		startWifi();
 		mWac = new WifiConnectManager(mWifiManager, this);
 		mWac.createWifiAP(wifiName, pwd, ipcssid, ipcmac);
 	}
@@ -964,14 +967,16 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (null == mCurrentConnBean) {
 			return;
 		}
+		WifiRsBean bean = mWac.readConfig();
+		mCurrentConnBean = bean;
 		// 如果本地文件中已经有记录了，则不再保存
 		if (WifiBindDataCenter.getInstance().isHasIpc(mCurrentConnBean.getIpc_ssid())) {
+			WifiBindDataCenter.getInstance().editBindStatus(mCurrentConnBean.getIpc_ssid(), WifiBindHistoryBean.CONN_USE);
 			mCurrentConnBean = null;
 			return;
 		}
 
-		WifiRsBean bean = mWac.readConfig();
-		mCurrentConnBean = bean;
+		
 
 		WifiBindHistoryBean historyBean = new WifiBindHistoryBean();
 		historyBean.ipc_ssid = mCurrentConnBean.getIpc_ssid();
@@ -995,8 +1000,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			GolukDebugUtils.e("", "自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
 			if (bean.length > 0) {
 				GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1---ip---");
-				mCurrentConnBean = bean[0];
-				mApp.mGolukName = bean[0].getIpc_ssid();
+//				mCurrentConnBean = bean[0];
+				WifiRsBean currBean = mWac.readConfig();
+				mCurrentConnBean = currBean;
+				mApp.mGolukName = mCurrentConnBean.getIpc_ssid();
 				sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
 			}
 		}
@@ -1053,7 +1060,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			mApp.mIPCControlManager.setProduceName(type);
 			mApp.mIPCControlManager.setIpcMode();
 			
-			
+			GolukDebugUtils.e("","wifibind----MainActivity--------createHotSuccess:  type:" + type);
 		}
 	}
 
@@ -1097,8 +1104,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	@Override
 	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
-		GolukDebugUtils.e("", "jyf-----MainActivity----wifiConn----wifiCallBack-------------type:" + type + "	state :"
-				+ state + "	process:" + process);
+		
+		GolukDebugUtils.e("","wifibind----MainActivity--------wifiConn----wifiCallBack:  type:" + type + "  state:" + state + "  process:" + process);
+		
 		switch (type) {
 		case 3:
 			wifiCallBack_3(state, process, message, arrays);
@@ -1116,10 +1124,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 */
 	private void sendLogicLinkIpc(String ip, String ipcmac) {
 		// 连接ipc热点wifi---调用ipc接口
-		GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1---ip---" + ip);
+		GolukDebugUtils.e("","wifibind----MainActivity--------sendLogicLinkIpc:  ip:" + ip);
 		GolukApplication.mIpcIp = ip;
 		boolean b = mApp.mIPCControlManager.setIPCWifiState(true, ip);
-		GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
 	}
 
 	// 分享成功后需要调用的接口

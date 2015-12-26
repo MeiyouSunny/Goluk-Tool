@@ -18,6 +18,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
+import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 public class WifiUnbindSelectListAdapter extends BaseAdapter {
@@ -147,6 +148,8 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 						WifiUnbindSelectListActivity wsla = (WifiUnbindSelectListActivity) mContext;
 						wsla.showLoading();
 						WifiBindDataCenter.getInstance().editBindStatus(bindHistoryBean.ipc_ssid,WifiBindHistoryBean.CONN_USE);
+						
+						GolukDebugUtils.e("","wifibind----WifiUnbindSelect  OnClick--------ssid:" + bindHistoryBean.ipc_ssid);
 						
 						EventBindFinish eventFnish = new EventBindFinish(EventConfig.CAR_RECORDER_BIND_CREATEAP);
 						eventFnish.bean = bindHistoryBean;

@@ -123,7 +123,7 @@ public class JsonWifiBindManager implements IWifiBindDataFn {
 		}
 		final int size = dataList.size();
 		for (int i = 0; i < size; i++) {
-			if (ipcssid.equals(dataList.get(i))) {
+			if (ipcssid.equals(dataList.get(i).ipc_ssid)) {
 				return true;
 			}
 		}
@@ -163,7 +163,9 @@ public class JsonWifiBindManager implements IWifiBindDataFn {
 	 * @author jyf
 	 */
 	private String getHistoryJson() {
-		return GolukFileUtils.loadString(GolukFileUtils.KEY_BIND_HISTORY_LIST, null);
+		final String jsonData = GolukFileUtils.loadString(GolukFileUtils.KEY_BIND_HISTORY_LIST, null);
+		GolukDebugUtils.e("", "BindSaveData-------------getJson:" + jsonData);
+		return jsonData;
 	}
 
 	/**
