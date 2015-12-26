@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventBinding;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventFinishWifiActivity;
 import cn.com.mobnote.eventbus.EventWifiState;
@@ -110,6 +111,9 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		// 页面初始化
 		initView();
 		EventBus.getDefault().register(this);
+
+		EventBus.getDefault().post(new EventBinding(EventConfig.BINDING, false));
+		mApp.isBinding = true;
 	}
 
 	private void getIntentData() {
@@ -488,6 +492,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	}
 
 	private void exit() {
+		mApp.isBinding = false;
 		reportLog();
 		finish();
 		LiveDialogManager.getManagerInstance().dismissTwoButtonDialog();

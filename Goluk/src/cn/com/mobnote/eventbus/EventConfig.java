@@ -41,5 +41,7 @@ public class EventConfig {
 	public static final int IPC_DISCONNECT = 0;
 	/** IPC连接成功 */
 	public static final int IPC_CONNECT = 1;
+	
+	public static final int BINDING = 0;
 
 }

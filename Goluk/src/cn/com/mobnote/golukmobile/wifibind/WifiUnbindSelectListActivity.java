@@ -15,7 +15,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventBinding;
 import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventFinishWifiActivity;
 import cn.com.mobnote.eventbus.EventWifiAuto;
 import cn.com.mobnote.eventbus.EventWifiConnect;
 import cn.com.mobnote.golukmobile.BaseActivity;
@@ -50,6 +52,8 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	private boolean isCanReceiveFailed = true;
 	/** 控制ListView Header的显示与删除 */
 	private boolean isHasHeaderView = false;
+	/** 控制是否可以接受连接信息 */
+	private boolean isCanAcceptMsg = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +61,17 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		setContentView(R.layout.unbind_connection_list);
 		EventBus.getDefault().register(this);
 		mApp = (GolukApplication) getApplication();
+		isCanAcceptMsg = true;
 		initView();
 		initLisenner();
 		initData();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		isCanAcceptMsg = true;
+		mApp.isBinding = false;
 	}
 
 	/**
@@ -283,7 +295,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	}
 
 	public void onEventMainThread(EventWifiConnect event) {
-		if (null == event) {
+		if (null == event || !isCanAcceptMsg) {
 			return;
 		}
 		switch (event.getOpCode()) {
@@ -306,6 +318,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 			isCanReceiveFailed = true;
 			return;
 		}
+		dimissLoading();
 		getBindHistoryData();
 		GolukUtils.showToast(this, "conn failed");
 	}
@@ -326,7 +339,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	 * @author jyf
 	 */
 	public void onEventMainThread(EventWifiAuto event) {
-		if (null == event) {
+		if (null == event || !isCanAcceptMsg) {
 			return;
 		}
 		if (event.eCode == EventConfig.CAR_RECORDER_RESULT) {
@@ -338,6 +351,19 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 				// 创建热点成功
 				dimissLoading();
 			}
+		}
+	}
+
+	public void onEventMainThread(EventFinishWifiActivity event) {
+		finish();
+	}
+
+	public void onEventMainThread(EventBinding event) {
+		if (null == event) {
+			return;
+		}
+		if (EventConfig.BINDING == event.getCode()) {
+			isCanAcceptMsg = event.getBinding();
 		}
 	}
 

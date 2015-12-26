@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile.wifibind;
 
+import cn.com.mobnote.eventbus.EventFinishWifiActivity;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
@@ -80,6 +81,10 @@ public class WifiUnbindSelectTypeActivity extends BaseActivity implements OnClic
 		Intent intent = new Intent(this, WiFiLinkListActivity.class);
 		intent.putExtra(KEY_IPC_TYPE, ipcType);
 		startActivity(intent);
+	}
+
+	public void onEventMainThread(EventFinishWifiActivity event) {
+		finish();
 	}
 
 }
