@@ -54,6 +54,7 @@ import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.newest.WonderfulSelectedListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareAdapter;
+import cn.com.mobnote.golukmobile.wifibind.WiFiInfo;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
@@ -576,6 +577,16 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mBaseHandler.removeMessages(MSG_H_WIFICONN_TIME);
 		mBaseHandler.sendEmptyMessageDelayed(MSG_H_WIFICONN_TIME, 40 * 1000);
 		mWac = new WifiConnectManager(mWifiManager, this);
+
+		WifiRsBean beans = new WifiRsBean();
+		beans.setIpc_mac(bean.ipc_mac);
+		beans.setIpc_ssid(bean.ipc_ssid);
+		beans.setIpc_pass(bean.ipc_pwd);
+		beans.setIpc_ip(bean.ipc_ip);
+		beans.setPh_ssid(bean.mobile_ssid);
+		beans.setPh_pass(bean.mobile_pwd);
+		mWac.saveConfiguration(beans);
+
 		mWac.createWifiAP(wifiName, pwd, ipcssid, ipcmac);
 	}
 
@@ -984,7 +995,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		GolukDebugUtils.e("",
 				"select wifibind---MainActivity------refreshIpcDataToFile: " + mCurrentConnBean.getIpc_ssid());
-
+		// 添加新记录
 		WifiBindHistoryBean historyBean = new WifiBindHistoryBean();
 		historyBean.ipc_ssid = mCurrentConnBean.getIpc_ssid();
 		historyBean.ipc_mac = mCurrentConnBean.getIpc_bssid();
@@ -1016,33 +1027,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
-	private void wifiCallBack_5(int state, int process, String message, Object arrays) {
-		if (state == 0) {
-			switch (process) {
-			case 0:
-				// 创建热点成功
-				break;
-			case 1:
-				// ipc成功连接上热点
-				wifiCallBack_ipcConnHotSucess(message, arrays);
-				break;
-			case 2:
-				// 用户已经创建与配置文件相同的热点，
-				wifiCallBack_sameHot();
-				break;
-			case 3:
-				// 用户已经连接到其它wifi，按连接失败处理
-				wifiConnectFailed();
-				break;
-			default:
-				break;
-			}
-		} else {
-			// 未连接
-			wifiConnectFailed();
-		}
-	}
-
 	private final String T1_WIFINAME_SIGN = "Goluk_T1";
 	private final String G1G2_WIFINAME_SIGN = "Goluk";
 
@@ -1065,13 +1049,39 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			String type = getIpcType(currentBean.ipc_ssid);
 			mApp.mIPCControlManager.setProduceName(type);
 			mApp.mIPCControlManager.setIpcMode();
-
 			GolukDebugUtils.e("", "wifibind----MainActivity--------createHotSuccess:  type:" + type);
 		}
 	}
 
-	private void wifiCallBack_3(int state, int process, String message, Object arrays) {
+	private void wifiCallBack_5(int state, int process, String message, Object arrays) {
+		if (state == 0) {
+			switch (process) {
+			case 0:
+				// 创建热点成功
+				createHotSuccess();
+				break;
+			case 1:
+				// ipc成功连接上热点
+				wifiCallBack_ipcConnHotSucess(message, arrays);
+				break;
+			case 2:
+				// 用户已经创建与配置文件相同的热点，
+				wifiCallBack_sameHot();
+				break;
+			case 3:
+				// 用户已经连接到其它wifi，按连接失败处理
+				wifiConnectFailed();
+				break;
+			default:
+				break;
+			}
+		} else {
+			// 未连接
+			wifiConnectFailed();
+		}
+	}
 
+	private void wifiCallBack_3(int state, int process, String message, Object arrays) {
 		EventWifiAuto autoBean = new EventWifiAuto();
 		autoBean.eCode = EventConfig.CAR_RECORDER_RESULT;
 		autoBean.state = state;

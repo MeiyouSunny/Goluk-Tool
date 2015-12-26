@@ -323,6 +323,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		historyBean.ipc_ssid = WiFiInfo.IPC_SSID;
 		historyBean.ipc_pwd = WiFiInfo.IPC_PWD;
 		historyBean.ipc_mac = WiFiInfo.IPC_MAC;
+		historyBean.ipc_ip = mWiFiIp;
 		historyBean.mobile_ssid = WiFiInfo.MOBILE_SSID;
 		historyBean.mobile_pwd = WiFiInfo.MOBILE_PWD;
 		historyBean.state = WifiBindHistoryBean.CONN_USE;

@@ -96,38 +96,40 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	public void getBindHistoryData() {
 		GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--1");
 		List<WifiBindHistoryBean> binds = WifiBindDataCenter.getInstance().getAllBindData();
+		if (binds == null) {
+			return;
+		}
 		if (isCanShowListViewHead()) {
-			if (binds != null) {
-				GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--size: "
-						+ binds.size());
-				for (int i = 0; i < binds.size(); i++) {
-					WifiBindHistoryBean bind = binds.get(i);
-					if (bind.state == WifiBindHistoryBean.CONN_USE) {
-						mWifiBindConnectData = bind;
-						GolukDebugUtils.e("",
-								"select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--select ssid: "
-										+ mWifiBindConnectData.ipc_ssid);
-						refreshHeadData();
-						if (binds.size() > 1) {
-							binds.remove(i);
-							binds.add(bind);
-						}
-						break;
+			GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--size: "
+					+ binds.size());
+			for (int i = 0; i < binds.size(); i++) {
+				WifiBindHistoryBean bind = binds.get(i);
+				if (bind.state == WifiBindHistoryBean.CONN_USE) {
+					mWifiBindConnectData = bind;
+					GolukDebugUtils.e("",
+							"select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--select ssid: "
+									+ mWifiBindConnectData.ipc_ssid);
+					refreshHeadData();
+					if (binds.size() > 1) {
+						binds.remove(i);
+						binds.add(bind);
 					}
+					break;
 				}
+
 			}
 		} else {
 			GolukDebugUtils
 					.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--not show: ");
 			if (null != mHeadView && isHasHeaderView) {
 				this.removeListViewHead(mHeadView);
-				// this.mListView.removeHeaderView(mHeadView);
 			}
 		}
 		GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--setData: "
 				+ binds.size());
 		mListAdapter.setData(binds);
 		mListAdapter.notifyDataSetChanged();
+
 	}
 
 	public boolean isCanShowListViewHead() {
@@ -143,8 +145,13 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	private void refreshHeadData() {
 		if (mHeadView == null) {
 			mHeadView = LayoutInflater.from(this).inflate(R.layout.unbind_connection_head, null);
+		}
+		if (!isHasHeaderView) {
 			addListViewHead(mHeadView);
 		}
+
+		mListView.setAdapter(mListAdapter);
+
 		mHeadView.setVisibility(View.VISIBLE);
 		if (mHeadData == null) {
 			mHeadData = new HeadViewHodler();
@@ -174,12 +181,12 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 				mHeadData.connTxt.setText(this.getResources().getString(R.string.unbind_select_connect_yes));
 			} else {
 				mHeadData.golukPointgreyIcon.setBackgroundResource(R.anim.wifi_connect_animation);
-				  // 获取AnimationDrawable对象   
-				AnimationDrawable animationDrawable = (AnimationDrawable)mHeadData.golukPointgreyIcon.getBackground();  
-				animationDrawable.start();  
+				// 获取AnimationDrawable对象
+				AnimationDrawable animationDrawable = (AnimationDrawable) mHeadData.golukPointgreyIcon.getBackground();
+				animationDrawable.start();
 
 				// 显示加载中
-				//mHeadData.golukPointgreyIcon.setBackgroundResource(R.drawable.connect_pointgrey_icon);
+				// mHeadData.golukPointgreyIcon.setBackgroundResource(R.drawable.connect_pointgrey_icon);
 				mHeadData.connTxt.setText(this.getResources().getString(R.string.unbind_select_connect_ing));
 			}
 		}
@@ -252,8 +259,10 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	public void removeListViewHead(View view) {
 		GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------removeListViewHead: ");
 		isHasHeaderView = false;
-		// mListView.removeHeaderView(view);
-		view.setVisibility(View.GONE);
+		mListView.removeHeaderView(view);
+		mListView.setAdapter(mListAdapter);
+
+		// view.setVisibility(View.GONE);
 	}
 
 	@Override

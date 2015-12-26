@@ -16,6 +16,7 @@ public class WifiBindHistoryBean {
 	public String ipc_ssid;
 	public String ipc_pwd;
 	public String ipc_mac;
+	public String ipc_ip;
 
 	/**
 	 * 手机热点名称相关
