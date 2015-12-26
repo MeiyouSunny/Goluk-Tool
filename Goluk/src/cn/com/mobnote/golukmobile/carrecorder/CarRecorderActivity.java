@@ -640,7 +640,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				
 				mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();
 				if(IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)){//T1
-					
+					if(GolukApplication.getInstance().getT1VideoCfgState() == 1){
+						isRecVideo = true;
+					}else{
+						isRecVideo = false;
+					}
 				}else{//G1  G2  G1S
 					if(1 == mVideoConfigState.AudioEnabled){
 						isRecVideo = true;
@@ -875,7 +879,43 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			setFullScreen(true);
 			break;
 		case R.id.video_off:
+			int videoState = 0;
+			if(isRecVideo == true){
+				videoState = 0;
+			}else{
+				videoState = 1;
+			}
 			
+			if(IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)){
+				boolean isSuccess = GolukApplication.getInstance().getIPCControlManager().setAudioCfg_T1(videoState);
+				if(isSuccess){
+					if(videoState == 1){
+						isRecVideo = true;
+						mVideoOff.setBackgroundResource(R.drawable.recorder_btn_sound);
+					}else{
+						isRecVideo = false;
+						mVideoOff.setBackgroundResource(R.drawable.recorder_btn_nosound);
+					}
+					
+				}else{
+					GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
+				}
+			}else{
+				mVideoConfigState.AudioEnabled = videoState;
+				boolean flog = GolukApplication.getInstance().getIPCControlManager().setAudioCfg(mVideoConfigState);
+				if(flog){
+					if(videoState == 1){
+						isRecVideo = true;
+						mVideoOff.setBackgroundResource(R.drawable.recorder_btn_sound);
+					}else{
+						isRecVideo = false;
+						mVideoOff.setBackgroundResource(R.drawable.recorder_btn_nosound);
+					}
+					
+				}else{
+					GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
+				}
+			}
 			break;
 		case BTN_NORMALSCREEN:
 			setFullScreen(false);
