@@ -114,6 +114,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
 		EventBus.getDefault().post(new EventBinding(EventConfig.BINDING, false));
 		mApp.setBinding(true);
+		mApp.setIpcDisconnect();
 	}
 
 	private void getIntentData() {

@@ -1109,8 +1109,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			if (isconnection) {
 				connectionDialog();
 			}
-			if (null != mMainActivity) {
-				mMainActivity.wiFiLinkStatus(1);
+			if (this.isBindSucess()) {
+				if (null != mMainActivity) {
+					mMainActivity.wiFiLinkStatus(1);
+				}
 			}
 			break;
 		case ConnectionStateMsg_Connected:
@@ -1149,7 +1151,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 			if (isBindSucess()) {
 				GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + param2);
-
 				// 保存ipc设备型号
 				try {
 					JSONObject json = new JSONObject((String) param2);
