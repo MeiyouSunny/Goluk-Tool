@@ -298,6 +298,9 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		if (null == event) {
 			return;
 		}
+		GolukDebugUtils.e("",
+				"wifilist----WifiUnbindSelectListActivity----onEventMainThread----EventWifiConnect----state :  "
+						+ event.getOpCode());
 		switch (event.getOpCode()) {
 		case EventConfig.WIFI_STATE_FAILED:
 			ipcConnFailed();
@@ -363,6 +366,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	}
 
 	public void onEventMainThread(EventBinding event) {
+		GolukDebugUtils.e("", "wifilist----WifiUnbindSelectListActivity----onEventMainThread----EventBinding----1");
 		if (null == event) {
 			return;
 		}

@@ -1087,6 +1087,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	// VDCP 连接状态 回调
 	private void IPC_VDCP_Connect_CallBack(int msg, int param1, Object param2) {
+		GolukDebugUtils
+				.e("", "wifilist----GolukApplication----wifiConn----IPC_VDCP_Connect_CallBack-------msg :" + msg);
 		// 如果不是连接成功,都标识为失败
 		switch (msg) {
 		case ConnectionStateMsg_Idle:
