@@ -48,9 +48,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	private static final String TAG = "WiFiLinkListActivity";
 	private static final String CONNECT_IPC_IP = "192.168.62.1";
 
-	public static final String T1_WIFINAME_SIGN = "Goluk_T1";
-	public static final String G1G2_WIFINAME_SIGN = "Goluk";
-
 	/** 未连接或连接失败 */
 	private static final int STATE_FAILED = 0;
 	/** 连接中 */
@@ -114,6 +111,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
 		EventBus.getDefault().post(new EventBinding(EventConfig.BINDING, false));
 		mApp.setBinding(true);
+		mApp.setIpcDisconnect();
 	}
 
 	private void getIntentData() {
@@ -215,7 +213,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
 		GolukDebugUtils.e("", "WifiBindList----sWillConnName2: " + mWillConnName);
 
-		if (!getIpcType().equals(mIPcType)) {
+		if (!GolukUtils.getIpcTypeFromName(mWillConnName).equals(mIPcType)) {
 			connFailed();
 			return false;
 		}
@@ -233,27 +231,14 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
 		GolukDebugUtils.e("", "wifiBind-------------setIpcMode:" + wifiSsid);
 
-		if (wifiSsid.startsWith(T1_WIFINAME_SIGN)) {
+		if (wifiSsid.startsWith(GolukUtils.T1_WIFINAME_SIGN)) {
 			mApp.mIPCControlManager.setProduceName(IPCControlManager.T1_SIGN);
-		} else if (wifiSsid.startsWith(G1G2_WIFINAME_SIGN)) {
+		} else if (wifiSsid.startsWith(GolukUtils.G1G2_WIFINAME_SIGN)) {
 			mApp.mIPCControlManager.setProduceName(IPCControlManager.G1_SIGN);
 		} else {
 
 		}
 		mApp.mIPCControlManager.setIpcMode();
-	}
-
-	private String getIpcType() {
-		String ipcType = "";
-		if (mWillConnName.startsWith(T1_WIFINAME_SIGN)) {
-			ipcType = IPCControlManager.T1_SIGN;
-		} else if (mWillConnName.startsWith(G1G2_WIFINAME_SIGN)) {
-			ipcType = IPCControlManager.G1_SIGN;
-		} else {
-
-		}
-		GolukDebugUtils.e("", "WifiBindList----getIpcType: " + ipcType);
-		return ipcType;
 	}
 
 	private void dealAutoConn() {

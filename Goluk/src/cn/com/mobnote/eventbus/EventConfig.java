@@ -4,7 +4,6 @@ package cn.com.mobnote.eventbus;
 public class EventConfig {
 
 	/* EventBus opcode for MainActivity and CarRecorderActivity */
-	public final static int CAR_RECORDER_BIND_SUCESS = 400;
 	public static final int CAR_RECORDER_BIND_CREATEAP = 500;
 	public static final int CAR_RECORDER_RESULT = 600;
 

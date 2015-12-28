@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventBindFinish;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.golukmobile.R;
@@ -130,9 +131,7 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 					confirmation.getWindow().findViewById(R.id.sure).setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							WifiBindDataCenter.getInstance().deleteBindData(bindHistoryBean.ipc_ssid);
-							mBindHistoryData.remove(bindHistoryBean);
-							notifyDataSetChanged();
+							deleteIpc(bindHistoryBean);
 							confirmation.dismiss();
 						}
 					});
@@ -171,6 +170,23 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 		return convertView;
 	}
 
+	/**
+	 * 删除设备
+	 * 
+	 * @param bindHistoryBean
+	 * @author jyf
+	 */
+	private void deleteIpc(WifiBindHistoryBean bindHistoryBean) {
+		WifiBindDataCenter.getInstance().deleteBindData(bindHistoryBean.ipc_ssid);
+		mBindHistoryData.remove(bindHistoryBean);
+		notifyDataSetChanged();
+		// 如果本地没有历史数据，则设置连接失败
+		List<WifiBindHistoryBean> list = WifiBindDataCenter.getInstance().getAllBindData();
+		if (null == list || list.size() <= 0) {
+			GolukApplication.getInstance().setIpcDisconnect();
+		}
+	}
+
 	public static class ConnectViewHodler {
 		TextView historyTxt;
 		ImageView golukDelIcon;
@@ -187,7 +203,6 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 		TextView golukName;
 		ImageView golukDelIcon;
 		ImageView golukPointgreyIcon;
-
 	}
 
 }

@@ -531,15 +531,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 
 		switch (event.getOpCode()) {
-		case EventConfig.CAR_RECORDER_BIND_SUCESS:
-			// 已经绑定
-			Log.d(TAG, "Wifi bind success" + mApp.mWiFiStatus);
-			mApp.mIPCControlManager.setIPCWifiState(false, "");
-			startWifi();
-			if (null != mWac) {
-				mWac.autoWifiManageReset();
-			}
-			break;
 		case EventConfig.CAR_RECORDER_BIND_CREATEAP:
 			createPhoneHot(event.bean);
 			break;
@@ -1044,24 +1035,13 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
-	private String getIpcType(String mWillConnName) {
-		String ipcType = "";
-		if (mWillConnName.startsWith(WiFiLinkListActivity.T1_WIFINAME_SIGN)) {
-			ipcType = IPCControlManager.T1_SIGN;
-		} else if (mWillConnName.startsWith(WiFiLinkListActivity.G1G2_WIFINAME_SIGN)) {
-			ipcType = IPCControlManager.G1_SIGN;
-		} else {
-
-		}
-		GolukDebugUtils.e("", "WifiBindList----getIpcType: " + ipcType);
-		return ipcType;
-	}
+	
 
 	private void createHotSuccess() {
 		// 创建热点成功后，需要设置连接方式
 		WifiBindHistoryBean currentBean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
 		if (currentBean != null) {
-			String type = getIpcType(currentBean.ipc_ssid);
+			String type = GolukUtils.getIpcTypeFromName(currentBean.ipc_ssid);
 			mApp.mIPCControlManager.setProduceName(type);
 			mApp.mIPCControlManager.setIpcMode();
 			GolukDebugUtils.e("", "wifibind----MainActivity--------createHotSuccess:  type:" + type);

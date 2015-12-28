@@ -1087,6 +1087,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	// VDCP 连接状态 回调
 	private void IPC_VDCP_Connect_CallBack(int msg, int param1, Object param2) {
+		GolukDebugUtils
+				.e("", "wifilist----GolukApplication----wifiConn----IPC_VDCP_Connect_CallBack-------msg :" + msg);
 		// 如果不是连接成功,都标识为失败
 		switch (msg) {
 		case ConnectionStateMsg_Idle:
@@ -1107,8 +1109,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			if (isconnection) {
 				connectionDialog();
 			}
-			if (null != mMainActivity) {
-				mMainActivity.wiFiLinkStatus(1);
+			if (this.isBindSucess()) {
+				if (null != mMainActivity) {
+					mMainActivity.wiFiLinkStatus(1);
+				}
 			}
 			break;
 		case ConnectionStateMsg_Connected:
@@ -1147,7 +1151,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 			if (isBindSucess()) {
 				GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + param2);
-
 				// 保存ipc设备型号
 				try {
 					JSONObject json = new JSONObject((String) param2);
