@@ -332,9 +332,9 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
 		saveBind(WiFiInfo.IPC_SSID);
 		// 保存绑定标识
-		mApp.setBindState(true);
-		
-		mApp.isBinding = false;
+		// mApp.setBindState(true);
+
+		mApp.setBinding(false);
 	}
 
 	private void reportLog() {

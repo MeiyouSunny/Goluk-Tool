@@ -54,7 +54,7 @@ import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.newest.WonderfulSelectedListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareAdapter;
-import cn.com.mobnote.golukmobile.wifibind.WiFiInfo;
+import cn.com.mobnote.golukmobile.wifibind.WiFiLinkListActivity;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
@@ -557,6 +557,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	private void createPhoneHot(WifiBindHistoryBean bean) {
+		mApp.setBinding(false);
 		if (null == bean) {
 			return;
 		}
@@ -729,8 +730,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukApplication.getInstance().queryNewFileList();
 		mApp.setContext(this, "Main");
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
-		
-		mApp.isBinding = false;
+
+		mApp.setBinding(false);
 
 		if (null != mVideoSquareActivity) {
 			mVideoSquareActivity.onResume();
@@ -979,6 +980,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
+	/** 把当前连接的设备保存起来，主要是为了兼容以前的连接状态 */
+	private WifiRsBean mCurrentConnBean = null;
+
 	private void refreshIpcDataToFile() {
 		if (null == mCurrentConnBean) {
 			return;
@@ -994,10 +998,16 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			mCurrentConnBean = null;
 			return;
 		}
-
 		GolukDebugUtils.e("",
 				"select wifibind---MainActivity------refreshIpcDataToFile: " + mCurrentConnBean.getIpc_ssid());
 		// 添加新记录
+		addHistoryIpcToDb();
+	}
+
+	private void addHistoryIpcToDb() {
+		if (null == mCurrentConnBean) {
+			return;
+		}
 		WifiBindHistoryBean historyBean = new WifiBindHistoryBean();
 		historyBean.ipc_ssid = mCurrentConnBean.getIpc_ssid();
 		historyBean.ipc_mac = mCurrentConnBean.getIpc_bssid();
@@ -1007,36 +1017,25 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		historyBean.mobile_pwd = mCurrentConnBean.getPh_pass();
 
 		WifiBindDataCenter.getInstance().saveBindData(historyBean);
-
 		mCurrentConnBean = null;
 	}
 
-	/** 把当前连接的设备保存起来，主要是为了兼容以前的连接状态 */
-	private WifiRsBean mCurrentConnBean = null;
-
 	private void wifiCallBack_ipcConnHotSucess(String message, Object arrays) {
 		WifiRsBean[] bean = (WifiRsBean[]) arrays;
-		if (null != bean) {
-			GolukDebugUtils.e("", "自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
-			if (bean.length > 0) {
-				GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1---ip---");
-				// mCurrentConnBean = bean[0];
-				WifiRsBean currBean = mWac.readConfig();
-				mCurrentConnBean = currBean;
-				mApp.mGolukName = mCurrentConnBean.getIpc_ssid();
-				sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
-			}
+		if (null != bean && bean.length > 0) {
+			// mCurrentConnBean = bean[0];
+			WifiRsBean currBean = mWac.readConfig();
+			mCurrentConnBean = currBean;
+			mApp.mGolukName = mCurrentConnBean.getIpc_ssid();
+			sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
 		}
 	}
 
-	private final String T1_WIFINAME_SIGN = "Goluk_T1";
-	private final String G1G2_WIFINAME_SIGN = "Goluk";
-
 	private String getIpcType(String mWillConnName) {
 		String ipcType = "";
-		if (mWillConnName.startsWith(T1_WIFINAME_SIGN)) {
+		if (mWillConnName.startsWith(WiFiLinkListActivity.T1_WIFINAME_SIGN)) {
 			ipcType = IPCControlManager.T1_SIGN;
-		} else if (mWillConnName.startsWith(G1G2_WIFINAME_SIGN)) {
+		} else if (mWillConnName.startsWith(WiFiLinkListActivity.G1G2_WIFINAME_SIGN)) {
 			ipcType = IPCControlManager.G1_SIGN;
 		} else {
 
@@ -1046,6 +1045,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	private void createHotSuccess() {
+		// 创建热点成功后，需要设置连接方式
 		WifiBindHistoryBean currentBean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
 		if (currentBean != null) {
 			String type = getIpcType(currentBean.ipc_ssid);
@@ -1090,7 +1090,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		autoBean.process = process;
 		autoBean.message = message;
 		autoBean.arrays = arrays;
-		// 通知列表界面
+		// 通知选择设备界面，做更新
 		EventBus.getDefault().post(autoBean);
 
 		if (state == 0) {
@@ -1103,13 +1103,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				// ipc成功连接上热点
 				try {
 					WifiRsBean[] bean = (WifiRsBean[]) arrays;
-					if (null != bean) {
-						if (bean.length > 0) {
-							sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
-						}
+					if (null != bean && bean.length > 0) {
+						sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
 					}
 				} catch (Exception e) {
-
 				}
 				break;
 			default:
@@ -1124,6 +1121,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
 		GolukDebugUtils.e("", "wifibind----MainActivity--------wifiConn----wifiCallBack:  type:" + type + "  state:"
 				+ state + "  process:" + process);
+		if (!mApp.isBindSucess()) {
+			return;
+		}
 		switch (type) {
 		case 3:
 			wifiCallBack_3(state, process, message, arrays);
@@ -1141,19 +1141,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 */
 	private void sendLogicLinkIpc(String ip, String ipcmac) {
 		// 连接ipc热点wifi---调用ipc接口
-		GolukDebugUtils.e("", "wifibind----MainActivity--------sendLogicLinkIpc:  ip:" + ip);
 		GolukApplication.mIpcIp = ip;
-		boolean b = mApp.mIPCControlManager.setIPCWifiState(true, ip);
-	}
-
-	// 分享成功后需要调用的接口
-	public void shareSucessDeal(boolean isSucess, String channel) {
-		if (!isSucess) {
-			GolukUtils.showToast(this, "分享失败");
-			return;
-		}
-		GolukDebugUtils.e("", "shareid-----" + shareVideoId + "   channel-----" + channel);
-		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, shareVideoId);
+		mApp.mIPCControlManager.setIPCWifiState(true, ip);
 	}
 
 }

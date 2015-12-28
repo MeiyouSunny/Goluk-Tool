@@ -107,7 +107,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private VideoSquareManager mVideoSquareManager = null;
 
 	/** 是否正在绑定过程, 如果在绑定过程中，则不接受任何信息 */
-	public boolean isBinding = false;
+	private boolean isBinding = false;
 	/** 登录IPC是否登录成功 */
 	public boolean isIpcLoginSuccess = false;
 	/** 实时反应IPC连接状态 */
@@ -1150,7 +1150,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				((WiFiLinkCompleteActivity) mContext).ipcLinkWiFiCallBack();
 			}
 
-			if (isBindSucess() && !isBinding) {
+			if (isBindSucess()) {
 				GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + param2);
 
 				// 保存ipc设备型号
@@ -1507,19 +1507,31 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		setIpcLoginOut();
 	}
 
+	/**
+	 * 设置是否在绑定过程中
+	 * 
+	 * @param isbind
+	 *            true/false 绑定中/未绑定中
+	 * @author jyf
+	 */
+	public void setBinding(boolean isbind) {
+		isBinding = isbind;
+	}
+
 	public boolean isBindSucess() {
-		return WifiBindDataCenter.getInstance().isHasDataHistory();
+		return WifiBindDataCenter.getInstance().isHasDataHistory() && !isBinding;
 		// SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",
 		// MODE_PRIVATE);
 		// return preferences.getBoolean("isbind", false);
 	}
 
-	public void setBindState(boolean isSuccess) {
-		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-		Editor mEditor = preferences.edit();
-		mEditor.putBoolean("isbind", isSuccess);
-		mEditor.commit();
-	}
+	// public void setBindState(boolean isSuccess) {
+	// SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",
+	// MODE_PRIVATE);
+	// Editor mEditor = preferences.edit();
+	// mEditor.putBoolean("isbind", isSuccess);
+	// mEditor.commit();
+	// }
 
 	/**
 	 * 查询新文件列表（最多10条）

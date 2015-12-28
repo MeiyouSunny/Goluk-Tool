@@ -71,7 +71,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	protected void onResume() {
 		super.onResume();
 		isCanAcceptMsg = true;
-		mApp.isBinding = false;
+		mApp.setBinding(false);
 	}
 
 	/**

@@ -48,8 +48,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	private static final String TAG = "WiFiLinkListActivity";
 	private static final String CONNECT_IPC_IP = "192.168.62.1";
 
-	private final String T1_WIFINAME_SIGN = "Goluk_T1";
-	private final String G1G2_WIFINAME_SIGN = "Goluk";
+	public static final String T1_WIFINAME_SIGN = "Goluk_T1";
+	public static final String G1G2_WIFINAME_SIGN = "Goluk";
 
 	/** 未连接或连接失败 */
 	private static final int STATE_FAILED = 0;
@@ -113,7 +113,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		EventBus.getDefault().register(this);
 
 		EventBus.getDefault().post(new EventBinding(EventConfig.BINDING, false));
-		mApp.isBinding = true;
+		mApp.setBinding(true);
 	}
 
 	private void getIntentData() {
@@ -492,7 +492,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	}
 
 	private void exit() {
-		mApp.isBinding = false;
+		mApp.setBinding(false);
 		reportLog();
 		finish();
 		LiveDialogManager.getManagerInstance().dismissTwoButtonDialog();
@@ -502,7 +502,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			GolukDebugUtils.e("", "按下系统返回键---WiFiLinkListActivity---1");
 			collectLog("onKeyDown", "--WiFiLinkListActivity-------onKeyDown---------Back---111");
 			exit();
 			return true;
