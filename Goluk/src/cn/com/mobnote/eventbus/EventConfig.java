@@ -7,7 +7,7 @@ public class EventConfig {
 	public final static int CAR_RECORDER_BIND_SUCESS = 400;
 	public static final int CAR_RECORDER_BIND_CREATEAP = 500;
 	public static final int CAR_RECORDER_RESULT = 600;
-	
+
 	public final static int LIVE_MAP_QUERY = 99;
 	public final static int WIFI_STATE = 3;
 	public final static int LOCATION_FINISH = 1000;
@@ -41,7 +41,9 @@ public class EventConfig {
 	public static final int IPC_DISCONNECT = 0;
 	/** IPC连接成功 */
 	public static final int IPC_CONNECT = 1;
-	
+
 	public static final int BINDING = 0;
+	/** 绑定成功的消息 */
+	public static final int BIND_COMPLETE = 0;
 
 }
