@@ -122,7 +122,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 						refreshHeadData();
 						if (binds.size() > 1) {
 							binds.remove(i);
-							binds.add(bind);
+							//binds.add(bind);
 						}
 						break;
 					}
