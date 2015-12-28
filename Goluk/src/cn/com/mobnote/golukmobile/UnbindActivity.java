@@ -78,9 +78,9 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 		vIpc = SharedPrefUtil.getIPCVersion();
 		String ipcModel = GolukApplication.getInstance().mIPCControlManager.mProduceName;
 		String ipcNumber = SharedPrefUtil.getIPCNumber();
+		mUnbindBtn.setText(this.getResources().getString(R.string.str_ipc_change_others));
 		if (mApplication.isBindSucess()) {
 			mIPCViewLayout.setVisibility(View.VISIBLE);
-			mUnbindBtn.setText(this.getResources().getString(R.string.str_ipc_change_others));
 			mPwdLayout.setEnabled(true);
 			String ipcName = this.ipcName();
 			mTextCameraName.setText(ipcName);
@@ -96,7 +96,6 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 			mIPCVersionText.setText(this.getResources().getString(R.string.str_ipc_version_text) + vIpc);
 		} else {
 			mIPCViewLayout.setVisibility(View.GONE);
-			mUnbindBtn.setText(this.getResources().getString(R.string.str_ipc_to_bind));
 			mPwdLayout.setEnabled(false);
 			mTextVersion.setText("");
 		}
@@ -159,13 +158,8 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 			this.finish();
 			break;
 		case R.id.unbind_layout_btn:
-			if (mApplication.isBindSucess()) {
-				Intent intent = new Intent(this, WifiUnbindSelectTypeActivity.class);
-				startActivity(intent);
-			} else {
-				Intent itWifiLink = new Intent(UnbindActivity.this, WifiUnbindSelectListActivity.class);
-				startActivity(itWifiLink);
-			}
+			Intent itWifiLink = new Intent(UnbindActivity.this, WifiUnbindSelectListActivity.class);
+			startActivity(itWifiLink);
 			break;
 		case R.id.unbind_layout_password:
 			if (!isGetIPCSucess) {

@@ -970,8 +970,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		case R.id.mNotconnected:
 			click_ConnFailed();
 			break;
-		case R.id.mConncetLayout:
-			break;
 		case R.id.liveBtn:
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
 				if (mApp.isUserLoginSucess == false) {
@@ -1039,6 +1037,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			}
 		}
 			break;
+		case R.id.mConncetLayout:
 		case R.id.changeBtn:
 			Intent intent = new Intent(this, WifiUnbindSelectListActivity.class);
 			startActivity(intent);
