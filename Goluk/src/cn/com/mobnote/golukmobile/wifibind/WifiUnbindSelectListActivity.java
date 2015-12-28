@@ -28,7 +28,6 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectListAdapter.HeadViewHodler;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
-import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
@@ -327,7 +326,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		}
 		dimissLoading();
 		getBindHistoryData();
-		GolukUtils.showToast(this, "conn failed");
+		// GolukUtils.showToast(this, "conn failed");
 	}
 
 	private void ipcConnecting() {
@@ -336,7 +335,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 
 	private void ipcConnSucess() {
 		getBindHistoryData();
-		GolukUtils.showToast(this, "conn success");
+		// GolukUtils.showToast(this, "conn success");
 	}
 
 	/**
