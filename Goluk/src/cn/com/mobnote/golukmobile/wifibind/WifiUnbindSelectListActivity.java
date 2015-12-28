@@ -119,10 +119,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 								"select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--select ssid: "
 										+ mWifiBindConnectData.ipc_ssid);
 						refreshHeadData();
-						if (binds.size() > 1) {
-							binds.remove(i);
-							//binds.add(bind);
-						}
+						binds.remove(i);
 						break;
 					}
 
