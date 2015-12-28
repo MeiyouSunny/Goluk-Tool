@@ -18,6 +18,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventBindResult;
+import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventFinishWifiActivity;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -122,7 +124,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	private void collectLog(String method, String msg) {
 		ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND)
 				.addLogData(JsonUtil.getReportData(TAG_LOG, method, msg));
-
 	}
 
 	@Override
@@ -227,16 +228,9 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 			toWaitConnView();
 			// 开始创建手机热点
 			mBaseHandler.sendEmptyMessageDelayed(MSG_H_CREATE_HOT, 3 * 1000);
-			GolukDebugUtils.e("",
-					"WJUN_____IPC_VDCP_TransManager_OnParserData设置热点信息成功回调-----Java-----setIpcLinkWiFiCallBack");
-
 			collectLog("setIpcLinkWiFiCallBack", "--------: 2");
-
 		} else {
-			GolukDebugUtils.e("", "WJUN_____IPC_VDCP_TransManager_OnParserData-----失败----------");
-
 			collectLog("setIpcLinkWiFiCallBack", "---: 3 failed:  " + connectCount);
-
 			if (connectCount > 3) {
 				GolukUtils.showToast(this, this.getResources().getString(R.string.wifi_link_bind_failed));
 			} else {
@@ -282,12 +276,13 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		collectLog("sendLogicLinkIpc", "2---b:  " + b);
 	}
 
-	// 保存绑定的wifi名称
-	private void saveBind(String name) {
-		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-		// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
-		preferences.edit().putString("ipc_bind_name", name).commit();
-	}
+	// // 保存绑定的wifi名称
+	// private void saveBind(String name) {
+	// SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",
+	// MODE_PRIVATE);
+	// // 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
+	// preferences.edit().putString("ipc_bind_name", name).commit();
+	// }
 
 	/**
 	 * ipc连接成功回调
@@ -329,8 +324,10 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		historyBean.state = WifiBindHistoryBean.CONN_USE;
 		historyBean.ipcSign = mApp.mIPCControlManager.mProduceName;
 		WifiBindDataCenter.getInstance().saveBindData(historyBean);
+		// 发送绑定成功的消息
+		EventBus.getDefault().post(new EventBindResult(EventConfig.BIND_COMPLETE));
 
-		saveBind(WiFiInfo.IPC_SSID);
+		// saveBind(WiFiInfo.IPC_SSID);
 		// 保存绑定标识
 		// mApp.setBindState(true);
 

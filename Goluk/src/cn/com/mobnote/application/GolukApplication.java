@@ -17,8 +17,6 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Environment;
@@ -190,8 +188,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public boolean updateSuccess = false;
 	/** wifi连接状态 */
 	public int mWiFiStatus = 0;
-	/** 当前连接的Goluk设备 */
-	public String mGolukName = "";
 
 	private ArrayList<VideoFileInfo> fileList;
 
@@ -325,7 +321,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mLoadProgress = 0;
 		updateSuccess = false;
 		mWiFiStatus = 0;
-		mGolukName = "";
 		if (null != fileList) {
 			fileList.clear();
 		}
@@ -1184,11 +1179,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				if (null != mMainActivity) {
 					mMainActivity.wiFiLinkStatus(2);
 				}
-				// 修改连接状态
-				GolukDebugUtils.e("", "select wifibind---Application------mGolukName: " + mGolukName);
-				if (null != mGolukName && !"".equals(mGolukName) && mGolukName.length() > 0) {
-					WifiBindDataCenter.getInstance().editBindStatus(mGolukName, WifiBindHistoryBean.CONN_USE);
-				}
 			}
 			GolukDebugUtils.e("", "IPC_TTTTTT=================Login Success===============");
 		} else {
@@ -1504,6 +1494,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	public void setIpcDisconnect() {
 		mIPCControlManager.setIPCWifiState(false, "");
+		if (null != mMainActivity) {
+			mMainActivity.closeAp();
+		}
+		stopDownloadList();
 		setIpcLoginOut();
 	}
 

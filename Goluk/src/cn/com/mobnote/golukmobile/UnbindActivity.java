@@ -6,8 +6,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,9 +17,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
-import cn.com.mobnote.golukmobile.wifibind.WiFiLinkIndexActivity;
 import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectListActivity;
 import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectTypeActivity;
+import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
+import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.user.IpcUpdateManage;
 import cn.com.mobnote.util.GolukUtils;
@@ -79,11 +78,13 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 		String ipcModel = GolukApplication.getInstance().mIPCControlManager.mProduceName;
 		String ipcNumber = SharedPrefUtil.getIPCNumber();
 		mUnbindBtn.setText(this.getResources().getString(R.string.str_ipc_change_others));
-		if (mApplication.isBindSucess()) {
+		// 获取当前使用的信息
+		WifiBindHistoryBean bean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
+		if (mApplication.isBindSucess() && null != bean) {
 			mIPCViewLayout.setVisibility(View.VISIBLE);
 			mPwdLayout.setEnabled(true);
-			String ipcName = this.ipcName();
-			mTextCameraName.setText(ipcName);
+			// String ipcName = this.ipcName();
+			mTextCameraName.setText(bean.ipc_ssid);
 			mTextVersion.setText(vIpc);
 			GolukApplication.getInstance().getIPCControlManager();
 			if (IPCControlManager.T1_SIGN.equals(ipcModel)) {
@@ -100,16 +101,10 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 			mTextVersion.setText("");
 		}
 		// 密码
-		if (null != mApplication) {
-			if (mApplication.isBindSucess()) {
-				boolean isSucess = mApplication.getIPCControlManager().getIpcWifiConfig();
-				if (isSucess) {
-				}
-			}
-			if (mApplication.isBindSucess()) {
-				String ipcPwd = SharedPrefUtil.getIpcPwd();
-				mTextPasswordName.setText(ipcPwd);
-			}
+		if (null != mApplication && mApplication.isBindSucess() && mApplication.isIpcLoginSuccess) {
+			mApplication.getIPCControlManager().getIpcWifiConfig();
+			// String ipcPwd = SharedPrefUtil.getIpcPwd();
+			// mTextPasswordName.setText(ipcPwd);
 		}
 	}
 
@@ -240,42 +235,53 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 		}
 	}
 
-	public String ipcName() {
-		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-		return preferences.getString("ipc_bind_name", "");
-	}
+	// public String ipcName() {
+	// SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",
+	// MODE_PRIVATE);
+	// return preferences.getString("ipc_bind_name", "");
+	// }
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+		if (ENetTransEvent_IPC_VDCP_CommandResp != event) {
+			return;
+		}
 		GolukDebugUtils.e("", "jyf-----UnbindActivity-----IPCManage_CallBack event:" + event + " msg:" + msg
 				+ " param1:" + param1 + " param2:" + param2);
-		if (ENetTransEvent_IPC_VDCP_CommandResp == event) {
-			switch (msg) {
-			case IPC_VDCP_Msg_GetWifiCfg:
-				if (0 == param1) {
-					// 获取成功
-					try {
-						JSONObject obj = new JSONObject((String) param2);
-						mGolukSSID = obj.getString("GolukSSID");
-						mGolukPWD = obj.getString("GolukPWD");
-						// 摄像头信息
-						mApSSID = obj.getString("AP_SSID");
-						mApPWD = obj.getString("AP_PWD");
-						SharedPrefUtil.saveIpcPwd(mApPWD);
-						if (mApplication.isBindSucess()) {
-							mTextPasswordName.setText(mApPWD);
-						}
-						isGetIPCSucess = true;
-					} catch (Exception e) {
-						GolukUtils.showToast(this, this.getResources().getString(R.string.str_getwificfg_fail));
-					}
-				} else {
-					// 获取失败
-					GolukUtils.showToast(this, this.getResources().getString(R.string.str_getwificfg_fail));
-				}
-
-				break;
+		switch (msg) {
+		case IPC_VDCP_Msg_GetWifiCfg:
+			if (0 == param1) {
+				// 获取成功
+				callBack_getPwdSuccess((String) param2);
+			} else {
+				// 获取失败
+				GolukUtils.showToast(this, this.getResources().getString(R.string.str_getwificfg_fail));
 			}
+			break;
+		}
+	}
+
+	/**
+	 * 获取IPC密码成功
+	 * 
+	 * @param jsonPwd
+	 * @author jyf
+	 */
+	private void callBack_getPwdSuccess(String jsonPwd) {
+		try {
+			JSONObject obj = new JSONObject(jsonPwd);
+			mGolukSSID = obj.getString("GolukSSID");
+			mGolukPWD = obj.getString("GolukPWD");
+			// 摄像头信息
+			mApSSID = obj.getString("AP_SSID");
+			mApPWD = obj.getString("AP_PWD");
+			// SharedPrefUtil.saveIpcPwd(mApPWD);
+			if (mApplication.isBindSucess()) {
+				mTextPasswordName.setText(mApPWD);
+			}
+			isGetIPCSucess = true;
+		} catch (Exception e) {
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_getwificfg_fail));
 		}
 	}
 

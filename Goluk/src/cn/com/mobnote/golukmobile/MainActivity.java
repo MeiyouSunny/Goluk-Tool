@@ -32,6 +32,7 @@ import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventBindFinish;
+import cn.com.mobnote.eventbus.EventBindResult;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.mobnote.eventbus.EventMapQuery;
@@ -547,6 +548,17 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
+	public void onEventMainThread(EventBindResult event) {
+		GolukDebugUtils.e("", "wifilist----MainActivity----onEventMainThread----EventBindResult----1");
+		if (null == event) {
+			return;
+		}
+		if (EventConfig.BIND_COMPLETE == event.getOpCode()) {
+			GolukDebugUtils.e("", "wifilist----MainActivity----onEventMainThread----EventBindResult----set NULL");
+			mCurrentConnBean = null;
+		}
+	}
+
 	/**
 	 * 启动软件创建wifi热点
 	 */
@@ -554,6 +566,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukDebugUtils.e("", "自动连接小车本wifi---linkMobnoteWiFi---1");
 		mWac = new WifiConnectManager(mWifiManager, this);
 		mWac.autoWifiManage();
+	}
+
+	public void closeAp() {
+		if (null != mWac) {
+			mWac.closeAp();
+		}
 	}
 
 	private void createPhoneHot(WifiBindHistoryBean bean) {
@@ -570,9 +588,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		String ipcssid = bean.ipc_ssid;
 		String ipcmac = bean.ipc_mac;
 		// 调用韩峥接口创建手机热点
-		if (null != mWac) {
-			mWac.closeAp();
-		}
 		startWifi();
 		// 等待IPC连接时间
 		mBaseHandler.removeMessages(MSG_H_WIFICONN_TIME);
@@ -987,8 +1002,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		if (null == mCurrentConnBean) {
 			return;
 		}
-		WifiRsBean bean = mWac.readConfig();
-		mCurrentConnBean = bean;
+		mCurrentConnBean = mWac.readConfig();
 		GolukDebugUtils.e("",
 				"select wifibind---MainActivity------refreshIpcDataToFile1: " + mCurrentConnBean.getIpc_ssid());
 		// 如果本地文件中已经有记录了，则不再保存
@@ -1026,7 +1040,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			// mCurrentConnBean = bean[0];
 			WifiRsBean currBean = mWac.readConfig();
 			mCurrentConnBean = currBean;
-			mApp.mGolukName = mCurrentConnBean.getIpc_ssid();
 			sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
 		}
 	}

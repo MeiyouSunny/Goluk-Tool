@@ -52,8 +52,9 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	private boolean isCanReceiveFailed = true;
 	/** 控制ListView Header的显示与删除 */
 	private boolean isHasHeaderView = false;
+
 	/** 控制是否可以接受连接信息 */
-	private boolean isCanAcceptMsg = true;
+	// private boolean isCanAcceptMsg = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,6 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		setContentView(R.layout.unbind_connection_list);
 		EventBus.getDefault().register(this);
 		mApp = (GolukApplication) getApplication();
-		isCanAcceptMsg = true;
 		initView();
 		initLisenner();
 		initData();
@@ -70,7 +70,6 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	@Override
 	protected void onResume() {
 		super.onResume();
-		isCanAcceptMsg = true;
 		mApp.setBinding(false);
 	}
 
@@ -296,7 +295,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	}
 
 	public void onEventMainThread(EventWifiConnect event) {
-		if (null == event || !isCanAcceptMsg) {
+		if (null == event) {
 			return;
 		}
 		switch (event.getOpCode()) {
@@ -304,10 +303,14 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 			ipcConnFailed();
 			break;
 		case EventConfig.WIFI_STATE_CONNING:
-			ipcConnecting();
+			if (mApp.isBindSucess()) {
+				ipcConnecting();
+			}
 			break;
 		case EventConfig.WIFI_STATE_SUCCESS:
-			ipcConnSucess();
+			if (mApp.isBindSucess()) {
+				ipcConnSucess();
+			}
 			break;
 		default:
 			break;
@@ -340,7 +343,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	 * @author jyf
 	 */
 	public void onEventMainThread(EventWifiAuto event) {
-		if (null == event || !isCanAcceptMsg) {
+		if (null == event || !mApp.isBindSucess()) {
 			return;
 		}
 		if (event.eCode == EventConfig.CAR_RECORDER_RESULT) {
@@ -364,7 +367,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 			return;
 		}
 		if (EventConfig.BINDING == event.getCode()) {
-			isCanAcceptMsg = event.getBinding();
+			// isCanAcceptMsg = event.getBinding();
 		}
 	}
 
