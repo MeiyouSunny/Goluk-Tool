@@ -237,7 +237,8 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	public void showLoading() {
 		isCanReceiveFailed = false;
 		dimissLoading();
-		mLoadingDialog = new CustomLoadingDialog(this, "正在创建热点");
+		mLoadingDialog = new CustomLoadingDialog(this, this.getResources()
+				.getString(R.string.unbind_loading_dialog_txt));
 		mLoadingDialog.setCancel(false);
 		mLoadingDialog.show();
 	}
@@ -372,21 +373,29 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		}
 	}
 
+	private void setNotEditState() {
+		mListAdapter.mEditState = false;
+		mEditBtn.setText(this.getResources().getString(R.string.edit_text));// 编辑
+		if (mHeadData != null) {
+			mHeadData.golukDelIcon.setVisibility(View.GONE);
+			mHeadData.golukPointgreyIcon.setVisibility(View.VISIBLE);
+		}
+	}
+
+	private void setEditState() {
+		mListAdapter.mEditState = true;
+		mEditBtn.setText(this.getResources().getString(R.string.short_input_ok));// 完成
+		if (mHeadData != null) {
+			mHeadData.golukDelIcon.setVisibility(View.VISIBLE);
+			mHeadData.golukPointgreyIcon.setVisibility(View.GONE);
+		}
+	}
+
 	private void click_Edit() {
 		if (mListAdapter.mEditState) {
-			mListAdapter.mEditState = false;
-			mEditBtn.setText(this.getResources().getString(R.string.edit_text));// 编辑
-			if (mHeadData != null) {
-				mHeadData.golukDelIcon.setVisibility(View.GONE);
-				mHeadData.golukPointgreyIcon.setVisibility(View.VISIBLE);
-			}
+			setNotEditState();
 		} else {
-			mListAdapter.mEditState = true;
-			mEditBtn.setText(this.getResources().getString(R.string.short_input_ok));// 完成
-			if (mHeadData != null) {
-				mHeadData.golukDelIcon.setVisibility(View.VISIBLE);
-				mHeadData.golukPointgreyIcon.setVisibility(View.GONE);
-			}
+			setEditState();
 		}
 		mListAdapter.notifyDataSetChanged();
 	}
@@ -397,6 +406,11 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	 * @author jyf
 	 */
 	private void click_AddIpc() {
+		// 还原状态
+		if (mListAdapter.mEditState) {
+			setNotEditState();
+			mListAdapter.notifyDataSetChanged();
+		}
 		Intent intent = new Intent(this, WifiUnbindSelectTypeActivity.class);
 		startActivity(intent);
 	}

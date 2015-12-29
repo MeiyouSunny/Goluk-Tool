@@ -18,7 +18,6 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectListActivity;
-import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectTypeActivity;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
