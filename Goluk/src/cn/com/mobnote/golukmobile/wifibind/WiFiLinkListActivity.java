@@ -109,8 +109,11 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		initView();
 		EventBus.getDefault().register(this);
 
+		// 发送绑定中的消息
 		EventBus.getDefault().post(new EventBinding(EventConfig.BINDING, false));
+		// 设置当前正在绑定中
 		mApp.setBinding(true);
+		// 断开前面的所有连接
 		mApp.setIpcDisconnect();
 	}
 
@@ -228,17 +231,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		if (null == wifiSsid) {
 			return;
 		}
-
-		GolukDebugUtils.e("", "wifiBind-------------setIpcMode:" + wifiSsid);
-
-		if (wifiSsid.startsWith(GolukUtils.T1_WIFINAME_SIGN)) {
-			mApp.mIPCControlManager.setProduceName(IPCControlManager.T1_SIGN);
-		} else if (wifiSsid.startsWith(GolukUtils.G1G2_WIFINAME_SIGN)) {
-			mApp.mIPCControlManager.setProduceName(IPCControlManager.G1_SIGN);
-		} else {
-
-		}
-		mApp.mIPCControlManager.setIpcMode();
+		String type = GolukUtils.getIpcTypeFromName(wifiSsid);
+		mApp.mIPCControlManager.setIpcMode(type);
 	}
 
 	private void dealAutoConn() {

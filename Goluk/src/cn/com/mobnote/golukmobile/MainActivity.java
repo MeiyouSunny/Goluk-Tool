@@ -1035,15 +1035,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
-	
-
 	private void createHotSuccess() {
 		// 创建热点成功后，需要设置连接方式
 		WifiBindHistoryBean currentBean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
 		if (currentBean != null) {
 			String type = GolukUtils.getIpcTypeFromName(currentBean.ipc_ssid);
-			mApp.mIPCControlManager.setProduceName(type);
-			mApp.mIPCControlManager.setIpcMode();
+			mApp.mIPCControlManager.setIpcMode(type);
 			GolukDebugUtils.e("", "wifibind----MainActivity--------createHotSuccess:  type:" + type);
 		}
 	}

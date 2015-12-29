@@ -35,6 +35,9 @@ public class IPCControlManager implements IPCManagerFn {
 	public static final String T1_SIGN = "T1";
 	public static final String G1s_SIGN = "G1s";
 
+	public static final String MODEL_T = "T";
+	public static final String MODEL_G = "G";
+
 	/** IPC回调监听列表 */
 	private HashMap<String, IPCManagerFn> mIpcManagerListener = null;
 	/** Application实例,用于调用JNI的对象 */
@@ -66,12 +69,27 @@ public class IPCControlManager implements IPCManagerFn {
 	}
 
 	public void setIpcMode() {
-		if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName)) {
+		if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName) || G1s_SIGN.equals(mProduceName)) {
 			setIpcMode(IPCMgrMode_IPCDirect);
 		} else if (T1_SIGN.equals(mProduceName)) {
 			setIpcMode(IPCMgrMode_T1);
 		} else {
 			// 不处理
+		}
+	}
+
+	/**
+	 * 直接设置模式
+	 * 
+	 * @param mode
+	 *            MODEL_T / MODEL_G
+	 * @author jyf
+	 */
+	public void setIpcMode(String mode) {
+		if (MODEL_T.equals(mode)) {
+			setIpcMode(IPCMgrMode_T1);
+		} else {
+			setIpcMode(IPCMgrMode_IPCDirect);
 		}
 	}
 

@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 
 public class WifiUnbindSelectTypeActivity extends BaseActivity implements OnClickListener {
 
+	// 设备类型
 	public static final String KEY_IPC_TYPE = "key_ipc_type";
 	/** 关闭按钮 **/
 	private ImageView mCloseBtn;
@@ -60,16 +61,16 @@ public class WifiUnbindSelectTypeActivity extends BaseActivity implements OnClic
 			this.finish();
 			break;
 		case R.id.goluk_t1_layout:
-			click_BindIpc(IPCControlManager.T1_SIGN);
+			click_BindIpc(IPCControlManager.MODEL_T);
 			break;
 		case R.id.goluk_g2_layout:
-			click_BindIpc(IPCControlManager.G1_SIGN);
+			click_BindIpc(IPCControlManager.MODEL_G);
 			break;
 		case R.id.goluk_g1_layout:
-			click_BindIpc(IPCControlManager.G1_SIGN);
+			click_BindIpc(IPCControlManager.MODEL_G);
 			break;
 		case R.id.goluk_g1s_layout:
-			click_BindIpc(IPCControlManager.G1_SIGN);
+			click_BindIpc(IPCControlManager.MODEL_G);
 			break;
 		default:
 			break;
