@@ -74,13 +74,19 @@ public class JsonWifiBindManager implements IWifiBindDataFn {
 		if (null == dataList) {
 			return;
 		}
+		int index = 0;
 		for (int i = 0; i < dataList.size(); i++) {
 			if (dataList.get(i).ipc_ssid.equals(ipc_ssid)) {
 				dataList.get(i).state = 1;
+				index = i;
 			} else {
 				dataList.get(i).state = 0;
 			}
 		}
+		WifiBindHistoryBean bean = dataList.get(index);
+		dataList.remove(index);
+		dataList.add(0, bean);
+
 		String ss = JSON.toJSONString(dataList);
 		saveHistoryJson(ss);
 	}
