@@ -499,6 +499,36 @@
 	<string name="str_day">日</string>
 	<string name="str_hour">时</string>
 	<string name="str_minute">分</string>
-
-
+	<string name="str_adas_config">ADAS配置</string>
+	<string name="str_video_loading">视频加载中，请稍候...</string>
+	<!-- adas -->
+	<string name="str_adas_verification_des">请参考下图，将上方的十字移动至道路尽头的中央</string>
+	<string name="str_config_complete">配置完成</string>
+	<string name="str_adas_guide">ADAS配置向导</string>
+	<string name="str_adas_guide_des">极路客ADAS先进辅助驾驶系统，可以给您提供前车防碰撞预警与车道偏离预警信息，为了更好的预警判断。</string>
+	<string name="str_adas_guide_des1">请您将爱车行驶到车辆较少的车道中央</string>
+	<string name="str_adas_guide_des2">停车后，根据配置引导提示，完成初次使用配置</string>
+	<string name="str_adas_driving_safety_assistance">ADAS驾驶安全辅助</string>
+	<string name="str_adas_forward_warning_sensibility">向前距离报警灵敏度</string>
+	<string name="str_adas_road_offset_sensibility">道路偏移报警灵敏度</string>
+	<string name="str_adas_assistance_info">辅助信息显示（OSD叠加）</string>
+	<string name="str_adas_high_sensibility">高灵敏度</string>
+	<string name="str_adas_middle_sensibility">中灵敏度</string>
+	<string name="str_adas_low_sensibility">低灵敏度</string>
+	<string name="str_adas_custom_car">自定义车型</string>
+	<string name="str_adas_car_name">爱车名称</string>
+	<string name="str_adas_length_unit">mm</string>
+	<string name="str_adas_front_wheelbase">前轴距（A）</string>
+	<string name="str_adas_headway_distance">车头距（B）</string>
+	<string name="str_adas_height_distance">高度（C）</string>
+	<string name="str_adas_left_wheelbase">左轮（D）</string>
+	<string name="str_adas_right_wheelbase">右轮（E）</string>
+	<string name="str_adas_select_car">请选择您的车型</string>
+	<string name="str_adas_select_car_type">车型选择</string>
+	<string name="str_adas_adjust_camera_angle">摄像头角度标定</string>
+	<string name="str_low">低</string>
+	<string name="str_middle">中</string>
+	<string name="str_high">高</string>
+	<string name="str_adas_hint">您还没有配置ADAS，是否现在去配置？</string>
+	<string name="str_adas_dialog_confirm">配置ADAS</string>
 </resources>

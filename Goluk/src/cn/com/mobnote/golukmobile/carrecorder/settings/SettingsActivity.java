@@ -3,9 +3,12 @@ package cn.com.mobnote.golukmobile.carrecorder.settings;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.alibaba.fastjson.JSON;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -15,23 +18,31 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventAdasConfigStatus;
+import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
+import cn.com.mobnote.golukmobile.adas.AdasConfigParamterBean;
+import cn.com.mobnote.golukmobile.adas.AdasGuideActivity;
+import cn.com.mobnote.golukmobile.adas.AdasVerificationActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.entity.RecordStorgeState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukFastJsonUtil;
+import cn.com.mobnote.util.GolukFileUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 /**
  * 
@@ -113,6 +124,24 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private TextView mParkingSecurityHintText = null;
 	private TextView mCarrecorderWonderfulLine, mCarrecorderSensitivityLine;
 
+	/**ADAS驾驶安全辅助**/
+	private RelativeLayout mADASAssistanceLayout = null;
+	private Button mADASAssistanceBtn = null;
+	/**向前距离报警灵敏度**/
+	private RelativeLayout mADASForwardWarningLayout = null;
+	private TextView mADASForwardWarningTextView = null;
+	/**道路偏移报警灵敏度**/
+	private RelativeLayout mADASOffsetWarningLayout = null;
+	private TextView mADASOffsetWarningTextView = null;
+	/**辅助信息显示**/
+	private RelativeLayout mADASOsdLayout = null;
+	private Button mADASOsdBtn = null;
+	/**ADAS配置**/
+	private RelativeLayout mADASConfigLayout = null;
+
+	private AdasConfigParamterBean mAdasConfigParamter;
+
+	private CustomDialog mCustomDialog;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -127,6 +156,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		GolukDebugUtils.e("", "=========mIPCName：" + mIPCName);
 		initView();
 		setListener();
+		EventBus.getDefault().register(this);
 		mKitShowUI = getResources().getStringArray(R.array.kit_setting_ui);
 		mArrayText = getResources().getStringArray(R.array.list_quality_ui);
 		mResolutionArray = SettingsUtil.returnResolution(this, mIPCName);
@@ -186,10 +216,62 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			boolean t1GetAutoRotaing = GolukApplication.getInstance().getIPCControlManager().getT1AutoRotaing();
 			GolukDebugUtils.e("", "--------------SettingsActivity-----t1GetAutoRotaing：" + t1GetAutoRotaing);
 		}
-
+		String AdasConfigStr = GolukFileUtils.loadString("test", "");
+		if (!TextUtils.isEmpty(AdasConfigStr)) {
+			mAdasConfigParamter = JSON.parseObject(AdasConfigStr, AdasConfigParamterBean.class);
+		} else {
+			mAdasConfigParamter = new AdasConfigParamterBean();
+		}
+		switchAdasEnableUI(mAdasConfigParamter.enable == 1);
 		showLoading();
 	}
 
+	private void switchAdasEnableUI(boolean isEnable) {
+		if (isEnable) {
+			mADASForwardWarningLayout.setVisibility(View.VISIBLE);
+			mADASOffsetWarningLayout.setVisibility(View.VISIBLE);
+			mADASOsdLayout.setVisibility(View.VISIBLE);
+			mADASConfigLayout.setVisibility(View.VISIBLE);
+		} else {
+			mADASForwardWarningLayout.setVisibility(View.GONE);
+			mADASOffsetWarningLayout.setVisibility(View.GONE);
+			mADASOsdLayout.setVisibility(View.GONE);
+			mADASConfigLayout.setVisibility(View.GONE);
+		}
+		if (mAdasConfigParamter != null) {
+			if (mAdasConfigParamter.fcw_warn_level == 0) {
+				mADASForwardWarningTextView.setText(R.string.str_low);
+			} else if (mAdasConfigParamter.fcw_warn_level == 1) {
+				mADASForwardWarningTextView.setText(R.string.str_middle);
+			} else if (mAdasConfigParamter.fcw_warn_level == 2) {
+				mADASForwardWarningTextView.setText(R.string.str_high);
+			} else {
+				mADASForwardWarningTextView.setText(R.string.carrecorder_tcaf_close);
+			}
+
+			if (mAdasConfigParamter.ldw_warn_level == 0) {
+				mADASOffsetWarningTextView.setText(R.string.str_low);
+			} else if (mAdasConfigParamter.fcw_warn_level == 1) {
+				mADASOffsetWarningTextView.setText(R.string.str_middle);
+			} else if (mAdasConfigParamter.fcw_warn_level == 2) {
+				mADASOffsetWarningTextView.setText(R.string.str_high);
+			} else {
+				mADASOffsetWarningTextView.setText(R.string.carrecorder_tcaf_close);
+			}
+			
+			if (mAdasConfigParamter.enable == 0) {
+				mADASAssistanceBtn.setBackgroundResource(R.drawable.set_close_btn);
+			} else {
+				mADASAssistanceBtn.setBackgroundResource(R.drawable.set_open_btn);
+			}
+			
+			if (mAdasConfigParamter.osd == 0) {
+				mADASOsdBtn.setBackgroundResource(R.drawable.set_close_btn);
+			} else {
+				mADASOsdBtn.setBackgroundResource(R.drawable.set_open_btn);
+			}
+		}
+	}
 	private void checkGetState() {
 		if (getRecordState && getMotionCfg) {
 			closeLoading();
@@ -269,6 +351,17 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mHandsetText = (TextView) findViewById(R.id.tv_settings_handset);
 		mCarrecorderWonderfulLine = (TextView) findViewById(R.id.tv_carrecorder_line);
 		mCarrecorderSensitivityLine = (TextView) findViewById(R.id.tv_carrecorder_sensitivity_line);
+
+		mADASAssistanceLayout = (RelativeLayout) findViewById(R.id.layout_adas_assistance);
+		mADASAssistanceBtn = (Button) findViewById(R.id.btn_adas_assistance);
+		mADASForwardWarningLayout = (RelativeLayout) findViewById(R.id.layout_settings_adas_forward_sensibility);
+		mADASForwardWarningTextView = (TextView) findViewById(R.id.tv_settings_adas_forward_sensibility);
+		mADASOffsetWarningLayout = (RelativeLayout) findViewById(R.id.layout_settings_adas_offset_sensibility);
+		mADASOffsetWarningTextView = (TextView) findViewById(R.id.tv_settings_adas_offset_sensibility);
+		mADASOsdLayout = (RelativeLayout) findViewById(R.id.layout_settings_assistance_info);
+		mADASOsdBtn = (Button) findViewById(R.id.btn_settings_assistance_info);
+        mADASConfigLayout = (RelativeLayout) findViewById(R.id.layout_settings_adas_config);
+
 		// ipc设备型号
 		if (mIPCName.equals(IPCControlManager.G1_SIGN)) {
 			mISPLayout.setVisibility(View.GONE);
@@ -301,6 +394,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mImageFlipLayout.setVisibility(View.VISIBLE);
 			mParkingSleepLayout.setVisibility(View.VISIBLE);
 			mHandsetLayout.setVisibility(View.VISIBLE);
+			mADASAssistanceLayout.setVisibility(View.VISIBLE);
 			mParkingSleepHintText.setText(this.getResources().getString(R.string.str_settings_sleep_hint_text_t1));
 			mParkingSecurityHintText
 					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g2));
@@ -346,6 +440,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mImageFlipBtn.setOnClickListener(this);// 图像自动翻转
 		mParkingSleepBtn.setOnClickListener(this);// 停车休眠模式
 		mHandsetLayout.setOnClickListener(this);// 遥控器按键功能
+		
+		mADASAssistanceBtn.setOnClickListener(this);//ADAS驾驶安全辅助
+		mADASForwardWarningLayout.setOnClickListener(this);//向前距离报警灵敏度
+		mADASOffsetWarningLayout.setOnClickListener(this);//道路偏移报警灵敏度
+		mADASOsdBtn.setOnClickListener(this);//辅助信息显示
+		mADASConfigLayout.setOnClickListener(this);//ADAS配置
 	}
 
 	/**
@@ -355,16 +455,19 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	 * @date 2015年4月8日
 	 */
 	private void dialog() {
-		CustomDialog d = new CustomDialog(this);
-		d.setCancelable(false);
-		d.setMessage(this.getResources().getString(R.string.str_ipc_dialog_normal));
-		d.setLeftButton(this.getResources().getString(R.string.str_button_ok), new OnLeftClickListener() {
+		if (mCustomDialog == null) {
+			mCustomDialog = new CustomDialog(this);
+		}
+
+		mCustomDialog.setCancelable(false);
+		mCustomDialog.setMessage(this.getResources().getString(R.string.str_ipc_dialog_normal));
+		mCustomDialog.setLeftButton(this.getResources().getString(R.string.str_button_ok), new OnLeftClickListener() {
 			@Override
 			public void onClickListener() {
 				finish();
 			}
 		});
-		d.show();
+		mCustomDialog.show();
 	}
 
 	@Override
@@ -457,6 +560,51 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				// 点击图片质量
 				click_photoQuality();
 				break;
+			case R.id.btn_adas_assistance:
+				if (mAdasConfigParamter == null) {
+					return;
+				}
+				if (mAdasConfigParamter.fcw_warn_level == 0) {
+					if (mCustomDialog == null) {
+						mCustomDialog = new CustomDialog(this);
+					}
+					mCustomDialog.setMessage(getString(R.string.str_adas_hint), Gravity.CENTER);
+					mCustomDialog.setLeftButton(getString(R.string.dialog_str_cancel), null);
+					mCustomDialog.setRightButton(getString(R.string.str_adas_dialog_confirm), new OnRightClickListener() {
+
+						@Override
+						public void onClickListener() {
+							// TODO Auto-generated method stub
+							Intent intent = new Intent(SettingsActivity.this, AdasGuideActivity.class);
+							intent.putExtra(AdasVerificationActivity.ADASCONFIGDATA, mAdasConfigParamter);
+							startActivity(intent);
+						}
+						
+					});
+					mCustomDialog.show();
+				} else {
+					if (mAdasConfigParamter.enable == 0) {
+						mAdasConfigParamter.enable = 1;
+					} else {
+						mAdasConfigParamter.enable = 0;
+					}
+					switchAdasEnableUI(mAdasConfigParamter.enable == 1);
+				}
+				break;
+			case R.id.layout_settings_adas_forward_sensibility:
+				Intent forwardIntent = new Intent(SettingsActivity.this, AdasSensibilityActivity.class);
+				forwardIntent.putExtra(AdasSensibilityActivity.FROM_TYPE, 0);
+				startActivity(forwardIntent);
+				break;
+			case R.id.layout_settings_adas_offset_sensibility:
+				Intent offsetIntent = new Intent(SettingsActivity.this, AdasSensibilityActivity.class);
+				offsetIntent.putExtra(AdasSensibilityActivity.FROM_TYPE, 1);
+				startActivity(offsetIntent);
+				break;
+			case R.id.btn_settings_assistance_info:
+				break;
+			case R.id.layout_settings_adas_config:
+				break;
 			default:
 				break;
 			}
@@ -540,7 +688,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	 * @author jyf
 	 */
 	private void click_reset() {
-		CustomDialog mCustomDialog = new CustomDialog(this);
+		if (mCustomDialog == null) {
+			mCustomDialog = new CustomDialog(this);
+		}
 		mCustomDialog.setMessage("是否确认恢复Goluk出厂设置", Gravity.CENTER);
 		mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
 			@Override
@@ -732,7 +882,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("settings");
 		}
+		EventBus.getDefault().unregister(this);;
 		closeLoading();
+		if (mCustomDialog != null && mCustomDialog.isShowing()) {
+			mCustomDialog.dismiss();
+		}
+		mCustomDialog = null;
 		super.onDestroy();
 	}
 
@@ -875,8 +1030,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				if (isFinishing()) {
 					return;
 				}
-
-				CustomDialog mCustomDialog = new CustomDialog(this);
+				if (mCustomDialog == null) {
+					mCustomDialog = new CustomDialog(this);
+				}
 				mCustomDialog.setCancelable(false);
 				mCustomDialog.setMessage(message, Gravity.CENTER);
 				mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
@@ -1170,7 +1326,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	}
 
 	private void getKitConfigCallback(int event, int msg, int param1, Object param2) {
-		Log.e("dengting", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
+		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
 				+ (String) param2 + "---param1:" + param1);
 		if (param2 == null) {
 			finish();
@@ -1393,4 +1549,14 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		}
 	}
 
+	public void onEventMainThread(EventAdasConfigStatus event) {
+		if (event == null) {
+			return;
+		}
+		if (event.getOpCode() == EventConfig.IPC_ADAS_CONFIG_FAILED) {
+			return;
+		}
+		mAdasConfigParamter = event.getData();
+		switchAdasEnableUI(true);
+	}
 }

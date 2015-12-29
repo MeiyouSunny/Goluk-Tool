@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:id="@+id/relativelayout_title"
+        android:background="#404246" >
+
+        <ImageButton
+            android:id="@+id/imagebutton_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/connect_back_btn_btn"
+            android:contentDescription="@string/imgdes" />
+
+        <TextView
+            android:id="@+id/textview_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/str_adas_config"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+	<TextView
+	    android:id = "@+id/textview_car_type_title"
+	    android:layout_width="match_parent"
+	    android:layout_height="35dp"
+	    android:layout_below="@+id/relativelayout_title"
+	    android:background="#f7f9fa"
+	    android:textColor="@color/black"
+	    android:textSize="13sp"
+	    android:gravity="center_vertical"
+	    android:paddingLeft="16dp"
+	    android:text="@string/str_adas_select_car"/>
+	<ListView
+	    android:id="@+id/listview_car_type"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/textview_car_type_title"
+	    android:layout_above="@+id/button_selected_complete"
+	    android:layout_marginBottom="22dp"
+	    android:paddingLeft="16dp"
+        android:divider="@color/setting_line_color"
+        android:listSelector="#00000000"
+        android:dividerHeight="1px"
+        android:scrollbars="none">
+	</ListView>
+
+	<Button
+        android:id="@+id/button_selected_complete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp"
+        android:layout_marginBottom="22dp"
+        android:background="@drawable/adas_button_background"
+        android:gravity="center"
+        android:text="@string/next_text"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+</RelativeLayout>
