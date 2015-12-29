@@ -534,6 +534,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		case EventConfig.CAR_RECORDER_BIND_CREATEAP:
 			createPhoneHot(event.bean);
 			break;
+		case EventConfig.BIND_LIST_DELETE_CONFIG:
+			this.clearWifiConfig();
+			break;
 		default:
 			break;
 		}
@@ -969,6 +972,18 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukApplication.getInstance().mCurAddr = address;
 		// 更新行车记录仪地址
 		EventBus.getDefault().post(new EventUpdateAddr(EventConfig.CAR_RECORDER_UPDATE_ADDR, address));
+	}
+
+	/**
+	 * 清空本地的配置文件
+	 * 
+	 * @author jyf
+	 */
+	private void clearWifiConfig() {
+		GolukDebugUtils.e("", "wifibind----WifiUnbindSelect----clearWifiConfig");
+		if (null != mWac) {
+			mWac.saveConfiguration(null);
+		}
 	}
 
 	private void wifiCallBack_sameHot() {

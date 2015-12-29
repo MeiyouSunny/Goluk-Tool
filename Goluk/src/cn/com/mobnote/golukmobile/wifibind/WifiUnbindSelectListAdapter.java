@@ -124,24 +124,7 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 
 				@Override
 				public void onClick(View view) {
-
-					final AlertDialog confirmation = new AlertDialog.Builder(mContext, R.style.CustomDialog).create();
-					confirmation.show();
-					confirmation.getWindow().setContentView(R.layout.unbind_dialog_confirmation);
-					confirmation.getWindow().findViewById(R.id.sure).setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							deleteIpc(bindHistoryBean);
-							confirmation.dismiss();
-						}
-					});
-					confirmation.getWindow().findViewById(R.id.exit).setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							confirmation.dismiss();
-						}
-					});
-
+					showDelDialog(bindHistoryBean);
 				}
 			});
 
@@ -149,25 +132,55 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 
 				@Override
 				public void onClick(View arg0) {
-					if (mEditState == false) {
-						WifiUnbindSelectListActivity wsla = (WifiUnbindSelectListActivity) mContext;
-						wsla.showLoading();
-						WifiBindDataCenter.getInstance().editBindStatus(bindHistoryBean.ipc_ssid,
-								WifiBindHistoryBean.CONN_USE);
-
-						GolukDebugUtils.e("", "wifibind----WifiUnbindSelect  OnClick--------ssid:"
-								+ bindHistoryBean.ipc_ssid);
-
-						EventBindFinish eventFnish = new EventBindFinish(EventConfig.CAR_RECORDER_BIND_CREATEAP);
-						eventFnish.bean = bindHistoryBean;
-						EventBus.getDefault().post(eventFnish);
-						wsla.getBindHistoryData();
-
-					}
+					click_useIpc(bindHistoryBean);
 				}
 			});
 		}
 		return convertView;
+	}
+
+	private void showDelDialog(final WifiBindHistoryBean bindHistoryBean) {
+		final AlertDialog confirmation = new AlertDialog.Builder(mContext, R.style.CustomDialog).create();
+		confirmation.show();
+		confirmation.getWindow().setContentView(R.layout.unbind_dialog_confirmation);
+		confirmation.getWindow().findViewById(R.id.sure).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				deleteIpc(bindHistoryBean);
+				confirmation.dismiss();
+			}
+		});
+		confirmation.getWindow().findViewById(R.id.exit).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				confirmation.dismiss();
+			}
+		});
+	}
+
+	/**
+	 * 点击连接某个设备
+	 * 
+	 * @param bindHistoryBean
+	 * @author jyf
+	 */
+	private void click_useIpc(WifiBindHistoryBean bindHistoryBean) {
+		if (null == bindHistoryBean) {
+			return;
+		}
+		if (mEditState == false) {
+			WifiUnbindSelectListActivity wsla = (WifiUnbindSelectListActivity) mContext;
+			wsla.showLoading();
+			WifiBindDataCenter.getInstance().editBindStatus(bindHistoryBean.ipc_ssid, WifiBindHistoryBean.CONN_USE);
+
+			GolukDebugUtils.e("", "wifibind----WifiUnbindSelect  OnClick--------ssid:" + bindHistoryBean.ipc_ssid);
+
+			EventBindFinish eventFnish = new EventBindFinish(EventConfig.CAR_RECORDER_BIND_CREATEAP);
+			eventFnish.bean = bindHistoryBean;
+			EventBus.getDefault().post(eventFnish);
+			wsla.getBindHistoryData();
+
+		}
 	}
 
 	/**
@@ -177,6 +190,12 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 	 * @author jyf
 	 */
 	private void deleteIpc(WifiBindHistoryBean bindHistoryBean) {
+		if (bindHistoryBean.state == WifiBindHistoryBean.CONN_USE) {
+			EventBindFinish eventFnish = new EventBindFinish(EventConfig.BIND_LIST_DELETE_CONFIG);
+			EventBus.getDefault().post(eventFnish);
+			WifiUnbindSelectListActivity wsla = (WifiUnbindSelectListActivity) mContext;
+			wsla.mApp.setIpcDisconnect();
+		}
 		WifiBindDataCenter.getInstance().deleteBindData(bindHistoryBean.ipc_ssid);
 		mBindHistoryData.remove(bindHistoryBean);
 		notifyDataSetChanged();

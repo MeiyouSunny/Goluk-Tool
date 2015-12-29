@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventBindFinish;
 import cn.com.mobnote.eventbus.EventBinding;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventFinishWifiActivity;
@@ -47,7 +48,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	private WifiBindHistoryBean mWifiBindConnectData = null;
 	private WifiUnbindSelectListAdapter mListAdapter;
 	private CustomLoadingDialog mLoadingDialog = null;
-	private GolukApplication mApp = null;
+	public GolukApplication mApp = null;
 	private boolean isCanReceiveFailed = true;
 	/** 控制ListView Header的显示与删除 */
 	private boolean isHasHeaderView = false;
@@ -212,6 +213,8 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 				confirmation.getWindow().findViewById(R.id.sure).setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						EventBindFinish eventFnish = new EventBindFinish(EventConfig.BIND_LIST_DELETE_CONFIG);
+						EventBus.getDefault().post(eventFnish);
 						mApp.setIpcDisconnect();
 						mListView.removeHeaderView(mHeadView);
 						WifiBindDataCenter.getInstance().deleteBindData(mWifiBindConnectData.ipc_ssid);

@@ -1,6 +1,5 @@
 package cn.com.mobnote.wifibind;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -439,6 +438,12 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				JSONObject config = new JSONObject();
 				try {
 
+					if (null == beans) {
+						// 清空本地配置文件
+						wifiSupport.writePassFile(WIFICONFIG, "");
+						return;
+					}
+
 					config.put("ipc_ssid", beans.getIpc_ssid());
 					config.put("ipc_mac", beans.getIpc_mac());
 					config.put("ph_ssid", beans.getPh_ssid());
@@ -457,7 +462,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 						handler.sendMessage(msg);
 						e.printStackTrace();
 					}
-				} catch (JSONException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			};
@@ -589,7 +594,10 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 						createWifiAP("5", ph_ssid, ph_pass, ipc_ssid, ipc_ip, openTime);
 					}
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
+					Message msg = new Message();
+					msg.what = -51;
+					msg.obj = null;
+					handler.sendMessage(msg);
 					e.printStackTrace();
 				}
 			};
