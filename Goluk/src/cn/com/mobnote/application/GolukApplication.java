@@ -54,7 +54,6 @@ import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.wifibind.WiFiLinkCompleteActivity;
 import cn.com.mobnote.golukmobile.wifibind.WiFiLinkListActivity;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
-import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.mobnote.logic.GolukLogic;
@@ -1151,7 +1150,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 		// 如果在wifi连接页面,通知连接成功
 		if (mPageSource.equals("WiFiLinkBindAll")) {
-			((WiFiLinkCompleteActivity) mContext).ipcLinkWiFiCallBack();
+			((WiFiLinkCompleteActivity) mContext).ipcLinkWiFiCallBack(param2);
 		}
 
 		if (isBindSucess()) {
@@ -1176,18 +1175,15 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			if (null != mMainActivity) {
 				mMainActivity.wiFiLinkStatus(2);
 			}
+			WifiBindDataCenter.getInstance().updateConnIpcType(mIPCControlManager.mProduceName);
 		}
 	}
 
 	// 保存ipc设备型号
 	private void saveIpcProductName(Object jsonStr) {
+		String productName = JsonUtil.getProductName(jsonStr);
 		try {
-			JSONObject json = new JSONObject((String) jsonStr);
-			if (json.isNull("productname")) {
-				mIPCControlManager.setProduceName(IPCControlManager.G1_SIGN);
-			} else {
-				mIPCControlManager.setProduceName(json.optString("productname"));
-			}
+			mIPCControlManager.setProduceName(productName);
 			// 保存设备型号
 			SharedPrefUtil.saveIpcModel(mIPCControlManager.mProduceName);
 		} catch (Exception e) {

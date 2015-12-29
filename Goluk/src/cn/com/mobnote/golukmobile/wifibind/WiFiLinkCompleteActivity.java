@@ -286,7 +286,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	/**
 	 * ipc连接成功回调
 	 */
-	public void ipcLinkWiFiCallBack() {
+	public void ipcLinkWiFiCallBack(Object param2) {
 		collectLog("ipcLinkWiFiCallBack", "*****   Bind Sucess ! *****");
 
 		// 设置绑定成功
@@ -321,7 +321,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		historyBean.mobile_ssid = WiFiInfo.MOBILE_SSID;
 		historyBean.mobile_pwd = WiFiInfo.MOBILE_PWD;
 		historyBean.state = WifiBindHistoryBean.CONN_USE;
-		historyBean.ipcSign = mApp.mIPCControlManager.mProduceName;
+		historyBean.ipcSign = JsonUtil.getProductName(param2);
 		WifiBindDataCenter.getInstance().saveBindData(historyBean);
 		// 发送绑定成功的消息
 		EventBus.getDefault().post(new EventBindResult(EventConfig.BIND_COMPLETE));

@@ -185,4 +185,25 @@ public class JsonWifiBindManager implements IWifiBindDataFn {
 		GolukFileUtils.saveString(GolukFileUtils.KEY_BIND_HISTORY_LIST, json);
 	}
 
+	@Override
+	public void updateConnIpcType(String ipcType) {
+		if (null == ipcType || "".equals(ipcType)) {
+			return;
+		}
+		List<WifiBindHistoryBean> dataList = getAllBindData();
+		if (null == dataList || dataList.size() <= 0) {
+			return;
+		}
+		final int size = dataList.size();
+		for (int i = 0; i < size; i++) {
+			WifiBindHistoryBean bean = dataList.get(i);
+			if (bean.state == WifiBindHistoryBean.CONN_USE) {
+				bean.ipcSign = ipcType;
+				break;
+			}
+		}
+		String ss = JSON.toJSONString(dataList);
+		saveHistoryJson(ss);
+	}
+
 }
