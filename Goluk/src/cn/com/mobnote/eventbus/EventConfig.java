@@ -4,7 +4,9 @@ package cn.com.mobnote.eventbus;
 public class EventConfig {
 
 	/* EventBus opcode for MainActivity and CarRecorderActivity */
-	public final static int CAR_RECORDER_BIND_SUCESS = 400;
+	public static final int CAR_RECORDER_BIND_CREATEAP = 500;
+	public static final int CAR_RECORDER_RESULT = 600;
+
 	public final static int LIVE_MAP_QUERY = 99;
 	public final static int WIFI_STATE = 3;
 	public final static int LOCATION_FINISH = 1000;
@@ -42,4 +44,8 @@ public class EventConfig {
 	public static final int IPC_ADAS_CONFIG_FROM_GUIDE = 1;
 	
 	public static final int IPC_ADAS_CONFIG_FROM_MODIFY = 0;
+	public static final int BINDING = 0;
+	/** 绑定成功的消息 */
+	public static final int BIND_COMPLETE = 0;
+
 }

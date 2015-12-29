@@ -836,6 +836,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private void click_SoundRecord() {
 		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
 			state_soundRecord_T1 = state_soundRecord_T1 == 0 ? 1 : 0;
+			GolukApplication.getInstance().setT1VideoCfgState(state_soundRecord_T1);
 			boolean isSuccess = GolukApplication.getInstance().getIPCControlManager()
 					.setAudioCfg_T1(state_soundRecord_T1);
 			if (isSuccess) {

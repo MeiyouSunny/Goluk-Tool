@@ -5,8 +5,6 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Message;
@@ -19,15 +17,18 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventBindResult;
+import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventFinishWifiActivity;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
-import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.reportlog.ReportLog;
 import cn.com.mobnote.golukmobile.reportlog.ReportLogManager;
+import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
+import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
@@ -74,7 +75,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	private int connectCount = 0;
 
 	/** ipc连接mac地址 */
-	private String mIpcMac = "";
 	private String mWiFiIp = "";
 
 	private final int STATE_SET_IPC_INFO = 0;
@@ -123,7 +123,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	private void collectLog(String method, String msg) {
 		ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND)
 				.addLogData(JsonUtil.getReportData(TAG_LOG, method, msg));
-
 	}
 
 	@Override
@@ -228,16 +227,9 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 			toWaitConnView();
 			// 开始创建手机热点
 			mBaseHandler.sendEmptyMessageDelayed(MSG_H_CREATE_HOT, 3 * 1000);
-			GolukDebugUtils.e("",
-					"WJUN_____IPC_VDCP_TransManager_OnParserData设置热点信息成功回调-----Java-----setIpcLinkWiFiCallBack");
-
 			collectLog("setIpcLinkWiFiCallBack", "--------: 2");
-
 		} else {
-			GolukDebugUtils.e("", "WJUN_____IPC_VDCP_TransManager_OnParserData-----失败----------");
-
 			collectLog("setIpcLinkWiFiCallBack", "---: 3 failed:  " + connectCount);
-
 			if (connectCount > 3) {
 				GolukUtils.showToast(this, this.getResources().getString(R.string.wifi_link_bind_failed));
 			} else {
@@ -276,7 +268,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1---ip---" + ip);
 		collectLog("sendLogicLinkIpc", "11--ip: " + ip + "   ipcmac:" + ipcmac);
 		GolukApplication.mIpcIp = ip;
-		mIpcMac = ipcmac;
 		mWiFiIp = ip;
 		boolean b = mApp.mIPCControlManager.setIPCWifiState(true, ip);
 		GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
@@ -284,24 +275,13 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		collectLog("sendLogicLinkIpc", "2---b:  " + b);
 	}
 
-	/**
-	 * 保存wifi绑定标识
-	 */
-	private void saveBindMark() {
-		// 绑定完成,保存标识
-		SharedPreferences preferences = mContext.getSharedPreferences("ipc_wifi_bind", Context.MODE_PRIVATE);
-		Editor editor = preferences.edit();
-		editor.putBoolean("isbind", true);
-		// 提交修改
-		editor.commit();
-	}
-
-	// 保存绑定的wifi名称
-	private void saveBind(String name) {
-		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-		// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
-		preferences.edit().putString("ipc_bind_name", name).commit();
-	}
+	// // 保存绑定的wifi名称
+	// private void saveBind(String name) {
+	// SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",
+	// MODE_PRIVATE);
+	// // 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
+	// preferences.edit().putString("ipc_bind_name", name).commit();
+	// }
 
 	/**
 	 * ipc连接成功回调
@@ -323,18 +303,34 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		this.toSucessView();
 		// 保存连接数据
 		WifiRsBean beans = new WifiRsBean();
-		beans.setIpc_mac(mIpcMac);
+		beans.setIpc_mac(WiFiInfo.IPC_MAC);
 		beans.setIpc_ssid(WiFiInfo.IPC_SSID);
 		beans.setIpc_ip(mWiFiIp);
 		beans.setIpc_pass(WiFiInfo.IPC_PWD);
 
 		beans.setPh_ssid(WiFiInfo.MOBILE_SSID);
 		beans.setPh_pass(WiFiInfo.MOBILE_PWD);
-
 		mWac.saveConfiguration(beans);
-		saveBind(WiFiInfo.IPC_SSID);
+
+		// 保存绑定历史记录
+		WifiBindHistoryBean historyBean = new WifiBindHistoryBean();
+		historyBean.ipc_ssid = WiFiInfo.IPC_SSID;
+		historyBean.ipc_pwd = WiFiInfo.IPC_PWD;
+		historyBean.ipc_mac = WiFiInfo.IPC_MAC;
+		historyBean.ipc_ip = mWiFiIp;
+		historyBean.mobile_ssid = WiFiInfo.MOBILE_SSID;
+		historyBean.mobile_pwd = WiFiInfo.MOBILE_PWD;
+		historyBean.state = WifiBindHistoryBean.CONN_USE;
+		historyBean.ipcSign = mApp.mIPCControlManager.mProduceName;
+		WifiBindDataCenter.getInstance().saveBindData(historyBean);
+		// 发送绑定成功的消息
+		EventBus.getDefault().post(new EventBindResult(EventConfig.BIND_COMPLETE));
+
+		// saveBind(WiFiInfo.IPC_SSID);
 		// 保存绑定标识
-		saveBindMark();
+		// mApp.setBindState(true);
+
+		mApp.setBinding(false);
 	}
 
 	private void reportLog() {
@@ -479,22 +475,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		mProgressImg.setBackgroundResource(R.drawable.setp_4);
 	}
 
-	private void wifiCallBack_ipcConnHotSucess(String message, Object arrays) {
-		WifiRsBean[] bean = (WifiRsBean[]) arrays;
-		if (null == bean) {
-			return;
-		}
-		GolukDebugUtils.e("", "自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
-		collectLog("wifiCallBack_ipcConnHotSucess", "自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
-		if (bean.length > 0) {
-			GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1---ip---");
-			collectLog("wifiCallBack_ipcConnHotSucess", "1");
-			sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
-		} else {
-			collectLog("wifiCallBack_ipcConnHotSucess", "2 ");
-		}
-	}
-
 	private void wifiCallBack_3(int state, int process, String message, Object arrays) {
 		if (state == 0) {
 			switch (process) {
@@ -523,32 +503,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 			}
 		} else {
 			GolukUtils.showToast(mContext, message);
-			connFailed();
-		}
-	}
-
-	private void wifiCallBack_5(int state, int process, String message, Object arrays) {
-		if (state == 0) {
-			switch (process) {
-			case 0:
-				// 创建热点成功
-				break;
-			case 1:
-				// ipc成功连接上热点
-				wifiCallBack_ipcConnHotSucess(message, arrays);
-				break;
-			case 2:
-				// 用户已经创建与配置文件相同的热点，
-				break;
-			case 3:
-				// 用户已经连接到其它wifi，按连接失败处理
-				connFailed();
-				break;
-			default:
-				break;
-			}
-		} else {
-			// 未连接
 			connFailed();
 		}
 	}
@@ -584,9 +538,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		switch (type) {
 		case 3:
 			wifiCallBack_3(state, process, message, arrays);
-			break;
-		case 5:
-			wifiCallBack_5(state, process, message, arrays);
 			break;
 		default:
 			break;

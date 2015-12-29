@@ -26,6 +26,12 @@ public class CustomLoadingDialog {
 		}
 
 	}
+	
+	public void setCancel(boolean isCan) {
+		if (null != customDialog) {
+			customDialog.setCancelable(isCan);
+		}
+	}
 
 	public void setListener(ForbidBack forbidInterface) {
 		if (null != forbidInterface) {

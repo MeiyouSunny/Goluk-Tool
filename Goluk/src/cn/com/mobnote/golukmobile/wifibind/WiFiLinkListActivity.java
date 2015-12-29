@@ -8,7 +8,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.Message;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.View;
@@ -19,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventBinding;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventFinishWifiActivity;
 import cn.com.mobnote.eventbus.EventWifiState;
@@ -48,9 +48,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	private static final String TAG = "WiFiLinkListActivity";
 	private static final String CONNECT_IPC_IP = "192.168.62.1";
 
-	private final String T1_WIFINAME_SIGN = "Goluk_T1";
-	private final String G1G2_WIFINAME_SIGN = "Goluk";
-
 	/** 未连接或连接失败 */
 	private static final int STATE_FAILED = 0;
 	/** 连接中 */
@@ -58,8 +55,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	/** 连接成功 */
 	private static final int STATE_SUCCESS = 2;
 
-	public static String sWillConnName2 = null;
-	public static String sWillConnMac2 = null;
+	private String mWillConnName = null;
+	private String mWillConnMac = null;
 	/** application */
 	private GolukApplication mApp = null;
 	/** 返回按钮 */
@@ -87,6 +84,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	private int mCurrentState = STATE_FAILED;
 	/** 连接中对话框 */
 	private CustomLoadingDialog mConnectingDialog = null;
+	/** 用户要绑定的设备类型 */
+	private String mIPcType = "";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -102,11 +101,24 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setType("2");
 		collectLog("onCreate", "---1");
 
+		getIntentData();
+
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		mWac = new WifiConnectManager(mWifiManager, this);
 		// 页面初始化
 		initView();
 		EventBus.getDefault().register(this);
+
+		EventBus.getDefault().post(new EventBinding(EventConfig.BINDING, false));
+		mApp.setBinding(true);
+		mApp.setIpcDisconnect();
+	}
+
+	private void getIntentData() {
+		Intent intent = this.getIntent();
+		if (null != intent) {
+			mIPcType = intent.getStringExtra(WifiUnbindSelectTypeActivity.KEY_IPC_TYPE);
+		}
 	}
 
 	/**
@@ -155,7 +167,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			break;
 		case STATE_SUCCESS:
 			mNextBtn.setText(getResources().getString(R.string.wifi_link_next));
-			setSucessWifiName(sWillConnName2);
+			setSucessWifiName(mWillConnName);
 			break;
 		default:
 			break;
@@ -189,19 +201,26 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			return false;
 		}
 		collectLog("dealAutoConn", "-----5 NOT  NULL");
-		sWillConnName2 = bean.getIpc_ssid();
-		sWillConnMac2 = bean.getIpc_bssid();
-		if (sWillConnName2 == null || null == sWillConnMac2 || sWillConnName2.length() <= 0
-				|| sWillConnMac2.length() <= 0) {
+		mWillConnName = bean.getIpc_ssid();
+		mWillConnMac = bean.getIpc_bssid();
+		if (mWillConnName == null || null == mWillConnMac || mWillConnName.length() <= 0 || mWillConnMac.length() <= 0) {
 			GolukDebugUtils.e("", "bindbind-------------isGetWifiBean---failed3  :");
 			collectLog("isGetWifiBean", "-----3");
 			// 连接失败
 			connFailed();
 			return false;
 		}
-		collectLog("isGetWifiBean", "willConnName2:" + sWillConnName2 + "  willConnMac2:" + sWillConnMac2);
-		saveConnectWifiMsg(sWillConnName2, "", sWillConnMac2);
-		setIpcMode(sWillConnName2);
+
+		GolukDebugUtils.e("", "WifiBindList----sWillConnName2: " + mWillConnName);
+
+		if (!GolukUtils.getIpcTypeFromName(mWillConnName).equals(mIPcType)) {
+			connFailed();
+			return false;
+		}
+
+		collectLog("isGetWifiBean", "willConnName2:" + mWillConnName + "  willConnMac2:" + mWillConnMac);
+		saveConnectWifiMsg(mWillConnName, IPC_PWD_DEFAULT, mWillConnMac);
+		setIpcMode(mWillConnName);
 		return true;
 	}
 
@@ -212,9 +231,9 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
 		GolukDebugUtils.e("", "wifiBind-------------setIpcMode:" + wifiSsid);
 
-		if (wifiSsid.startsWith(T1_WIFINAME_SIGN)) {
+		if (wifiSsid.startsWith(GolukUtils.T1_WIFINAME_SIGN)) {
 			mApp.mIPCControlManager.setProduceName(IPCControlManager.T1_SIGN);
-		} else if (wifiSsid.startsWith(G1G2_WIFINAME_SIGN)) {
+		} else if (wifiSsid.startsWith(GolukUtils.G1G2_WIFINAME_SIGN)) {
 			mApp.mIPCControlManager.setProduceName(IPCControlManager.G1_SIGN);
 		} else {
 
@@ -458,6 +477,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	}
 
 	private void exit() {
+		mApp.setBinding(false);
 		reportLog();
 		finish();
 		LiveDialogManager.getManagerInstance().dismissTwoButtonDialog();
@@ -467,7 +487,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			GolukDebugUtils.e("", "按下系统返回键---WiFiLinkListActivity---1");
 			collectLog("onKeyDown", "--WiFiLinkListActivity-------onKeyDown---------Back---111");
 			exit();
 			return true;

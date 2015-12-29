@@ -6,18 +6,21 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.wifibind.WiFiLinkIndexActivity;
+import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
+import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectListActivity;
+import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectTypeActivity;
+import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
+import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.user.IpcUpdateManage;
 import cn.com.mobnote.util.GolukUtils;
@@ -47,6 +50,9 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 	private TextView mTextVersion = null;
 	/** 获取版本号 **/
 	private String vIpc = "";
+	private RelativeLayout mIPCViewLayout;
+	private TextView mIPCModelText, mIPCNumberText, mIPCVersionText;
+	private ImageView mIPCimage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,36 +75,36 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 		mApplication.setContext(mContext, "Unbind");
 		// 固件版本号
 		vIpc = SharedPrefUtil.getIPCVersion();
-		/**
-		 * 判断是否是否绑定 true 绑定 显示解绑UI false 未绑定 显示未绑定UI
-		 */
-		boolean b = this.isBindSucess();
-		GolukDebugUtils.e("bind", "====isBindSuccess====" + b);
-		if (b) {
-			mUnbindBtn.setText("解除设备绑定连接");
+		String ipcModel = GolukApplication.getInstance().mIPCControlManager.mProduceName;
+		String ipcNumber = SharedPrefUtil.getIPCNumber();
+		mUnbindBtn.setText(this.getResources().getString(R.string.str_ipc_change_others));
+		// 获取当前使用的信息
+		WifiBindHistoryBean bean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
+		if (mApplication.isBindSucess() && null != bean) {
+			mIPCViewLayout.setVisibility(View.VISIBLE);
 			mPwdLayout.setEnabled(true);
-			String ipcName = this.ipcName();
-			GolukDebugUtils.i("lily", "-------ipcName-----" + ipcName);
-			mTextCameraName.setText(ipcName);
+			// String ipcName = this.ipcName();
+			mTextCameraName.setText(bean.ipc_ssid);
 			mTextVersion.setText(vIpc);
+			GolukApplication.getInstance().getIPCControlManager();
+			if (IPCControlManager.T1_SIGN.equals(ipcModel)) {
+				mIPCimage.setImageResource(R.drawable.connect_t1_icon_1);
+			} else {
+				mIPCimage.setImageResource(R.drawable.ipc);
+			}
+			mIPCModelText.setText(this.getResources().getString(R.string.app_name) + ipcModel);
+			mIPCNumberText.setText(this.getResources().getString(R.string.str_ipc_number_text) + ipcNumber);
+			mIPCVersionText.setText(this.getResources().getString(R.string.str_ipc_version_text) + vIpc);
 		} else {
-			mUnbindBtn.setText("绑定");
+			mIPCViewLayout.setVisibility(View.GONE);
 			mPwdLayout.setEnabled(false);
 			mTextVersion.setText("");
 		}
 		// 密码
-		if (null != mApplication) {
-			if (isBindSucess()) {
-				boolean isSucess = mApplication.getIPCControlManager().getIpcWifiConfig();
-				if (isSucess) {
-					// LiveDialogManager.getManagerInstance().showCustomDialog(this,
-					// "正在获取信息");
-				}
-			}
-			if (isBindSucess()) {
-				String ipcPwd = SharedPrefUtil.getIpcPwd();
-				mTextPasswordName.setText(ipcPwd);
-			}
+		if (null != mApplication && mApplication.isBindSucess() && mApplication.isIpcLoginSuccess) {
+			mApplication.getIPCControlManager().getIpcWifiConfig();
+			// String ipcPwd = SharedPrefUtil.getIpcPwd();
+			// mTextPasswordName.setText(ipcPwd);
 		}
 	}
 
@@ -114,8 +120,13 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 		mTextPasswordName = (TextView) findViewById(R.id.unbind_password_name);
 		mTextVersion = (TextView) findViewById(R.id.unbind_update_name);
 		mUpdateLayout = (RelativeLayout) findViewById(R.id.unbind_layout_update);
+		mIPCViewLayout = (RelativeLayout) findViewById(R.id.rl_unbind_view);
+		mIPCModelText = (TextView) findViewById(R.id.goluk_name);
+		mIPCNumberText = (TextView) findViewById(R.id.goluk_mobile);
+		mIPCVersionText = (TextView) findViewById(R.id.goluk_version);
+		mIPCimage = (ImageView) findViewById(R.id.goluk_icon);
 
-		mTextTitle.setText("摄像头管理");
+		mTextTitle.setText(this.getResources().getString(R.string.my_camera_title_text));
 
 		/**
 		 * 监听
@@ -129,12 +140,12 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		if (mApplication.getIPCControlManager() != null) {
 			mApplication.getIPCControlManager().removeIPCManagerListener("Unbind");
 		}
 		super.onDestroy();
 	}
+
 	@Override
 	public void onClick(View arg0) {
 		switch (arg0.getId()) {
@@ -142,38 +153,8 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 			this.finish();
 			break;
 		case R.id.unbind_layout_btn:
-			if (mUnbindBtn.getText().toString().equals("解除设备绑定连接")) {
-				new AlertDialog.Builder(this).setTitle("提示")
-						.setMessage(this.getResources().getString(R.string.unbind_hint_message))
-						.setNegativeButton("取消", null).setPositiveButton("确定", new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
-								toUnbind();
-								mPwdLayout.setEnabled(false);
-								mApplication.mIPCControlManager.setIPCWifiState(false, "");
-								mApplication.setIpcLoginOut();
-								GolukUtils.showToast(mContext, "解除绑定成功");
-								//解除绑定后，所有信息置空
-								SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-								preferences.edit().putString("ipc_bind_name", "").commit();
-								SharedPrefUtil.saveIpcPwd("");
-								SharedPrefUtil.saveIPCVersion("");
-								vIpc = "";
-								mTextCameraName.setText("");
-								mTextPasswordName.setText("");
-								mTextVersion.setText("");
-								SharedPrefUtil.saveIpcModel("");
-								mApplication.mIPCControlManager.mProduceName = "";
-								isGetIPCSucess = false;
-								mUnbindBtn.setText("绑定");
-							}
-						}).create().show();
-			} else if (mUnbindBtn.getText().toString().equals("绑定")) {
-				GolukDebugUtils.i("lily", "-------绑定设备------");
-				Intent itWifiLink = new Intent(UnbindActivity.this, WiFiLinkIndexActivity.class);
-				startActivity(itWifiLink);
-			}
+			Intent itWifiLink = new Intent(UnbindActivity.this, WifiUnbindSelectListActivity.class);
+			startActivity(itWifiLink);
 			break;
 		case R.id.unbind_layout_password:
 			if (!isGetIPCSucess) {
@@ -190,40 +171,46 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 			startActivityForResult(it, 10);
 			break;
 		case R.id.unbind_layout_update:
+			if ("T1".equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)) {
+				return;
+			}
 			if (mApplication.mLoadStatus) {// 下载中
-				new AlertDialog.Builder(mApplication.getContext()).setTitle("提示").setMessage("新极路客固件升级文件正在下载……")
-						.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+				new AlertDialog.Builder(mApplication.getContext())
+						.setTitle(this.getResources().getString(R.string.user_dialog_hint_title))
+						.setMessage(this.getResources().getString(R.string.str_new_updatefile_loading))
+						.setPositiveButton(getResources().getString(R.string.user_repwd_ok),
+								new DialogInterface.OnClickListener() {
 
-							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
-								if ((Integer) (mApplication.mIpcUpdateManage.mParam1) == 100) {
-									//查询ipc升级文件是否存在
-									String ipcFile = mApplication.mIpcUpdateManage.isHasIPCFile(vIpc);
-									if(!"".equals(ipcFile) && null != ipcFile){
-										Intent itent = new Intent(UnbindActivity.this, UpdateActivity.class);
-										itent.putExtra(UpdateActivity.UPDATE_SIGN, 1);
-										startActivity(itent);
-									}else{
-										boolean b = mApplication.mIpcUpdateManage.requestInfo(
-												IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
+									@Override
+									public void onClick(DialogInterface arg0, int arg1) {
+										if ((Integer) (mApplication.mIpcUpdateManage.mParam1) == 100) {
+											// 查询ipc升级文件是否存在
+											String ipcFile = mApplication.mIpcUpdateManage.isHasIPCFile(vIpc);
+											if (!"".equals(ipcFile) && null != ipcFile) {
+												Intent itent = new Intent(UnbindActivity.this, UpdateActivity.class);
+												itent.putExtra(UpdateActivity.UPDATE_SIGN, 1);
+												startActivity(itent);
+											} else {
+												boolean b = mApplication.mIpcUpdateManage.requestInfo(
+														IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
+											}
+										} else {
+											Intent it = new Intent(UnbindActivity.this, UpdateActivity.class);
+											it.putExtra(UpdateActivity.UPDATE_PROGRESS,
+													(Integer) (mApplication.mIpcUpdateManage.mParam1));
+											startActivity(it);
+										}
 									}
-								} else {
-									Intent it = new Intent(UnbindActivity.this, UpdateActivity.class);
-									it.putExtra(UpdateActivity.UPDATE_PROGRESS,
-											(Integer) (mApplication.mIpcUpdateManage.mParam1));
-									startActivity(it);
-								}
-							}
-						}).show();
+								}).show();
 			} else {
 				if ((Integer) (mApplication.mIpcUpdateManage.mParam1) == -1) {// 下载失败/程序刚进来
 					boolean b = mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
 				} else {// 下载成功
 					String ipcFile = mApplication.mIpcUpdateManage.isHasIPCFile(vIpc);
-					if("".equals(ipcFile) || null == ipcFile){
+					if ("".equals(ipcFile) || null == ipcFile) {
 						boolean b = mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC,
 								vIpc);
-					}else{
+					} else {
 						Intent itUpdate = new Intent(UnbindActivity.this, UpdateActivity.class);
 						itUpdate.putExtra(UpdateActivity.UPDATE_SIGN, 1);
 						startActivity(itUpdate);
@@ -239,7 +226,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		GolukDebugUtils.e("", "jyf-----UnbindActivity------onActivityResult request:" + requestCode + "  resultCode:"
+		GolukDebugUtils.e("", "-----UnbindActivity------onActivityResult request:" + requestCode + "  resultCode:"
 				+ resultCode);
 		if (10 == requestCode) {
 			if (10 == resultCode) {
@@ -248,64 +235,53 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 		}
 	}
 
-	public String ipcName() {
-		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-		return preferences.getString("ipc_bind_name", "");
-
-	}
-
-	// 是否綁定过 Goluk true为绑定
-	public boolean isBindSucess() {
-		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-		// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
-		return preferences.getBoolean("isbind", false);
-	}
-
-	// 解绑
-	public void toUnbind() {
-		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-		// 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
-		Editor mEditor = preferences.edit();
-		mEditor.putBoolean("isbind", false);
-		mEditor.commit();
-	}
+	// public String ipcName() {
+	// SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",
+	// MODE_PRIVATE);
+	// return preferences.getString("ipc_bind_name", "");
+	// }
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+		if (ENetTransEvent_IPC_VDCP_CommandResp != event) {
+			return;
+		}
 		GolukDebugUtils.e("", "jyf-----UnbindActivity-----IPCManage_CallBack event:" + event + " msg:" + msg
 				+ " param1:" + param1 + " param2:" + param2);
-		if (ENetTransEvent_IPC_VDCP_CommandResp == event) {
-			switch (msg) {
-			case IPC_VDCP_Msg_GetWifiCfg:
-				// event:1 msg:1033 param1:0 param2:{"GolukPWD": "123456789",
-				// "AP_SSID": "Golukd6e16e", "AP_PWD": "123456789", "GolukSSID":
-				// "GOLUKd6e16e"}
-				// LiveDialogManager.getManagerInstance().dissmissCustomDialog();
-				if (0 == param1) {
-					// 获取成功
-					try {
-						JSONObject obj = new JSONObject((String) param2);
-						mGolukSSID = obj.getString("GolukSSID");
-						mGolukPWD = obj.getString("GolukPWD");
-						// 摄像头信息
-						mApSSID = obj.getString("AP_SSID");
-						mApPWD = obj.getString("AP_PWD");
-						SharedPrefUtil.saveIpcPwd(mApPWD);
-						GolukDebugUtils.i("lily", "--------mApPWD------" + mApPWD);
-						if (isBindSucess()) {
-							mTextPasswordName.setText(mApPWD);
-						}
-						isGetIPCSucess = true;
-					} catch (Exception e) {
-						GolukUtils.showToast(this, "获取失败");
-					}
-				} else {
-					// 获取失败
-					GolukUtils.showToast(this, "获取失败");
-				}
-
-				break;
+		switch (msg) {
+		case IPC_VDCP_Msg_GetWifiCfg:
+			if (0 == param1) {
+				// 获取成功
+				callBack_getPwdSuccess((String) param2);
+			} else {
+				// 获取失败
+				GolukUtils.showToast(this, this.getResources().getString(R.string.str_getwificfg_fail));
 			}
+			break;
+		}
+	}
+
+	/**
+	 * 获取IPC密码成功
+	 * 
+	 * @param jsonPwd
+	 * @author jyf
+	 */
+	private void callBack_getPwdSuccess(String jsonPwd) {
+		try {
+			JSONObject obj = new JSONObject(jsonPwd);
+			mGolukSSID = obj.getString("GolukSSID");
+			mGolukPWD = obj.getString("GolukPWD");
+			// 摄像头信息
+			mApSSID = obj.getString("AP_SSID");
+			mApPWD = obj.getString("AP_PWD");
+			// SharedPrefUtil.saveIpcPwd(mApPWD);
+			if (mApplication.isBindSucess()) {
+				mTextPasswordName.setText(mApPWD);
+			}
+			isGetIPCSucess = true;
+		} catch (Exception e) {
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_getwificfg_fail));
 		}
 	}
 

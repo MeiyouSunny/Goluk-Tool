@@ -347,7 +347,7 @@ public class WifiConnectManagerSupport {
 	 * @param ipInt
 	 * @return
 	 */
-	private String int2ip(int ipInt) {
+	private static String int2ip(int ipInt) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(ipInt & 0xFF).append(".");
 		sb.append((ipInt >> 8) & 0xFF).append(".");
@@ -356,7 +356,7 @@ public class WifiConnectManagerSupport {
 		return sb.toString();
 	}
 
-	public int getWifiLevel(int level) {
+	public static int getWifiLevel(int level) {
 
 		if (level >= -50) {
 			return 4;
