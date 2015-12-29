@@ -15,6 +15,7 @@ public class AdasSensibilityActivity extends BaseActivity implements OnClickList
 
 	private GolukApplication mApp = null;
 	public static final String FROM_TYPE = "from";
+	public static final String SENSIBILITY_DATA = "sensibility_data";
 
 	private TextView mTitle = null;
 	private TextView mCloseText = null;
@@ -30,14 +31,17 @@ public class AdasSensibilityActivity extends BaseActivity implements OnClickList
 	private TextView mSelectedTextView;
 	private ImageButton mSelectedIcon;
 	private int mType = 0; /**0:向前距离  1:跑偏**/
+	private int mSensibilityData = 0;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState == null) {
 			mType = getIntent().getIntExtra(FROM_TYPE, 0);
+			mSensibilityData = getIntent().getIntExtra(SENSIBILITY_DATA, 0);
 		} else {
 			mType = savedInstanceState.getInt(FROM_TYPE);
+			mSensibilityData = savedInstanceState.getInt(SENSIBILITY_DATA);
 		}
 		setContentView(R.layout.activity_adassensibility);
 		mApp = (GolukApplication) getApplication();
@@ -49,6 +53,7 @@ public class AdasSensibilityActivity extends BaseActivity implements OnClickList
 	protected void onSaveInstanceState(Bundle outState) {
 		// TODO Auto-generated method stub
 		outState.putInt(FROM_TYPE, mType);
+		outState.putInt(SENSIBILITY_DATA, mSensibilityData);
 		super.onSaveInstanceState(outState);
 	}
 

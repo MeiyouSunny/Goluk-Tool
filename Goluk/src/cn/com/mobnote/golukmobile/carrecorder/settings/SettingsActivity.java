@@ -23,6 +23,7 @@ import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
+import cn.com.mobnote.golukmobile.adas.AdasConfigActivity;
 import cn.com.mobnote.golukmobile.adas.AdasConfigParamterBean;
 import cn.com.mobnote.golukmobile.adas.AdasGuideActivity;
 import cn.com.mobnote.golukmobile.adas.AdasVerificationActivity;
@@ -602,8 +603,21 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				startActivity(offsetIntent);
 				break;
 			case R.id.btn_settings_assistance_info:
+				if (mAdasConfigParamter == null) {
+					return;
+				}
+				if (mAdasConfigParamter.osd == 0) {
+					mAdasConfigParamter.osd = 1;
+					mADASOsdBtn.setBackgroundResource(R.drawable.set_open_btn);
+				} else {
+					mAdasConfigParamter.osd = 0;
+					mADASOsdBtn.setBackgroundResource(R.drawable.set_close_btn);
+				}
 				break;
 			case R.id.layout_settings_adas_config:
+				Intent intent = new Intent(SettingsActivity.this, AdasConfigActivity.class);
+				intent.putExtra(AdasVerificationActivity.ADASCONFIGDATA, mAdasConfigParamter);
+				startActivity(intent);
 				break;
 			default:
 				break;
@@ -1553,9 +1567,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if (event == null) {
 			return;
 		}
-		if (event.getOpCode() == EventConfig.IPC_ADAS_CONFIG_FAILED) {
-			return;
-		}
+
 		mAdasConfigParamter = event.getData();
 		switchAdasEnableUI(true);
 	}

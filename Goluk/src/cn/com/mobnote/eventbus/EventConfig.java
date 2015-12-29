@@ -39,7 +39,7 @@ public class EventConfig {
 	/** IPC连接成功 */
 	public static final int IPC_CONNECT = 1;
 
-	public static final int IPC_ADAS_CONFIG_COMPLETE = 1;
+	public static final int IPC_ADAS_CONFIG_FROM_GUIDE = 1;
 	
-	public static final int IPC_ADAS_CONFIG_FAILED = 0;
+	public static final int IPC_ADAS_CONFIG_FROM_MODIFY = 0;
 }

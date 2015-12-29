@@ -113,7 +113,7 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 				intent.putExtra(AdasVerificationActivity.ADASCONFIGDATA, mAdasConfigParamter);
 				startActivity(intent);
 			} else {
-				
+				finish();
 			}
 			break;
 		default:

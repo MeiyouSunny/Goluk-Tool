@@ -116,7 +116,6 @@ public class AdasVerificationActivity extends BaseActivity implements OnClickLis
 		mRtspPlayerView.setBufferTime(1000);
 		mRtspPlayerView.setConnectionTimeout(30000);
 		mRtspPlayerView.setVisibility(View.VISIBLE);
-		
 	}
 
 	@Override
@@ -135,17 +134,19 @@ public class AdasVerificationActivity extends BaseActivity implements OnClickLis
 			if (GolukUtils.isFastDoubleClick()) {
 				return;
 			}
+			Point point = mFrameLayoutOverlay.getLocation();
+			mAdasConfigParamter.point_x = point.x;
+			mAdasConfigParamter.point_y = point.y;
+			EventAdasConfigStatus eventAdasConfigStatus = null;
 			if (mFromType == 0) {
-				EventAdasConfigStatus eventAdasConfigStatus = new EventAdasConfigStatus(EventConfig.IPC_ADAS_CONFIG_COMPLETE);
-				AdasConfigParamterBean adasConfigParamter = new AdasConfigParamterBean();
-				adasConfigParamter.enable = 1;
-				Point point = mFrameLayoutOverlay.getLocation();
-				mAdasConfigParamter.point_x = point.x;
-				mAdasConfigParamter.point_y = point.y;
-				eventAdasConfigStatus.setData(adasConfigParamter);
-				EventBus.getDefault().post(eventAdasConfigStatus);
-				finish();
+				eventAdasConfigStatus = new EventAdasConfigStatus(EventConfig.IPC_ADAS_CONFIG_FROM_GUIDE);
+				mAdasConfigParamter.enable = 1;
+			} else {
+				eventAdasConfigStatus = new EventAdasConfigStatus(EventConfig.IPC_ADAS_CONFIG_FROM_MODIFY);
 			}
+			eventAdasConfigStatus.setData(mAdasConfigParamter);
+			EventBus.getDefault().post(eventAdasConfigStatus);
+			finish();
 			break;
 		case R.id.imageview_leftmove:
 			mFrameLayoutOverlay.setMoving(AdasVerificationFrameLayout.LEFT);
