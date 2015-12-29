@@ -363,6 +363,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	}
 
 	public void onEventMainThread(EventFinishWifiActivity event) {
+		GolukDebugUtils.e("", "completeSuccess-------------SelectList");
 		finish();
 	}
 

@@ -4,6 +4,8 @@ import cn.com.mobnote.eventbus.EventFinishWifiActivity;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
+import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -27,7 +29,7 @@ public class WifiUnbindSelectTypeActivity extends BaseActivity implements OnClic
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.unbind_type_layout);
-
+		EventBus.getDefault().register(this);
 		initView();
 		initLisenner();
 	}
@@ -91,7 +93,14 @@ public class WifiUnbindSelectTypeActivity extends BaseActivity implements OnClic
 	}
 
 	public void onEventMainThread(EventFinishWifiActivity event) {
+		GolukDebugUtils.e("", "completeSuccess-------------SelectType");
 		finish();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		EventBus.getDefault().unregister(this);
 	}
 
 }

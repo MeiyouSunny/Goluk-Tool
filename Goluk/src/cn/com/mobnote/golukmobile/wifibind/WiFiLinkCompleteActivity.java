@@ -419,21 +419,25 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 			backSetup();
 			break;
 		case R.id.complete_btn:
-			if (this.STATE_SUCESS == mState) {
-				// 綁定成功后，可以进入行车记录仪
-				// 关闭wifi绑定全部页面
-				EventBus.getDefault().post(new EventFinishWifiActivity());
-				if (null != mWac) {
-					mWac.unbind();
-				}
-				mWac = null;
-				// GolukApplication.getInstance().stopDownloadList();// 停止视频同步
-				Intent it = new Intent(WiFiLinkCompleteActivity.this, CarRecorderActivity.class);
-				it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-				startActivity(it);
-			}
+			click_complete();
 			break;
+		}
+	}
+
+	private void click_complete() {
+		if (this.STATE_SUCESS == mState) {
+			// 綁定成功后，可以进入行车记录仪
+			// 关闭wifi绑定全部页面
+			EventBus.getDefault().post(new EventFinishWifiActivity());
+			if (null != mWac) {
+				mWac.unbind();
+			}
+			mWac = null;
+			// GolukApplication.getInstance().stopDownloadList();// 停止视频同步
+			Intent it = new Intent(WiFiLinkCompleteActivity.this, CarRecorderActivity.class);
+			it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			startActivity(it);
 		}
 	}
 
