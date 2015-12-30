@@ -33,7 +33,7 @@ public class IPCControlManager implements IPCManagerFn {
 	public static final String G1_SIGN = "G1";
 	public static final String G2_SIGN = "G2";
 	public static final String T1_SIGN = "T1";
-	public static final String G1s_SIGN = "G1s";
+	public static final String T1s_SIGN = "T1s";
 
 	public static final String MODEL_T = "T";
 	public static final String MODEL_G = "G";
@@ -69,7 +69,7 @@ public class IPCControlManager implements IPCManagerFn {
 	}
 
 	public void setIpcMode() {
-		if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName) || G1s_SIGN.equals(mProduceName)) {
+		if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName) || T1s_SIGN.equals(mProduceName)) {
 			setIpcMode(IPCMgrMode_IPCDirect);
 		} else if (T1_SIGN.equals(mProduceName)) {
 			setIpcMode(IPCMgrMode_T1);
