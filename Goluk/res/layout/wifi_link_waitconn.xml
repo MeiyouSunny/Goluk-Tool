@@ -2,17 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F1F1F1" >
+    android:background="@color/color_ipcbind_bg"  >
 
     <TextView
         android:id="@+id/wifi_link_waitconn_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="22dp"
         android:text="@string/wifi_link_32_text"
-        android:textColor="#595959"
-        android:textSize="18sp" />
+        android:textColor="#565656"
+        android:textSize="14sp" />
 
     <ImageView
         android:id="@+id/wifi_link_waitconn_img"
