@@ -222,6 +222,7 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 		TextView golukName;
 		ImageView golukDelIcon;
 		ImageView golukPointgreyIcon;
+		RelativeLayout golukConnLayout;
 	}
 
 }

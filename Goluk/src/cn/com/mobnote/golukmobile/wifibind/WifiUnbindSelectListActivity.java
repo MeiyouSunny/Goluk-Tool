@@ -24,6 +24,7 @@ import cn.com.mobnote.eventbus.EventWifiConnect;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectListAdapter.HeadViewHodler;
@@ -52,7 +53,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	private boolean isCanReceiveFailed = true;
 	/** 控制ListView Header的显示与删除 */
 	private boolean isHasHeaderView = false;
-
+	
 	/** 控制是否可以接受连接信息 */
 	// private boolean isCanAcceptMsg = true;
 
@@ -170,6 +171,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 			mHeadData.golukIcon = (ImageView) mHeadView.findViewById(R.id.goluk_icon);
 			mHeadData.golukName = (TextView) mHeadView.findViewById(R.id.goluk_name);
 			mHeadData.golukPointgreyIcon = (ImageView) mHeadView.findViewById(R.id.goluk_pointgrey_icon);
+			mHeadData.golukConnLayout = (RelativeLayout) mHeadView.findViewById(R.id.goluk_conn_layout);
 		}
 		if (IPCControlManager.G1_SIGN.equals(mWifiBindConnectData.ipcSign)) {
 			mHeadData.golukIcon.setImageResource(R.drawable.connect_g1_img);
@@ -200,6 +202,18 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 			}
 		}
 
+		mHeadData.golukConnLayout.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if(mApp.isIpcLoginSuccess){
+					Intent intent = new Intent(WifiUnbindSelectListActivity.this, CarRecorderActivity.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+					startActivity(intent);
+					finish();
+				}
+			}
+		});
 		mHeadData.golukName.setText(mWifiBindConnectData.ipc_ssid);
 		mHeadData.golukDelIcon.setOnClickListener(new OnClickListener() {
 
