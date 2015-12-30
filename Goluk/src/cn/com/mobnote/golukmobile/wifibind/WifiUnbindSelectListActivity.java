@@ -109,6 +109,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--1");
 		List<WifiBindHistoryBean> binds = WifiBindDataCenter.getInstance().getAllBindData();
 		if (binds != null) {
+			mEditBtn.setVisibility(View.VISIBLE);
 			if (isCanShowListViewHead()) {
 				GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--size: "
 						+ binds.size());
@@ -137,6 +138,9 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 			}
 			GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--setData: "
 					+ binds.size());
+		}else{
+			mEditBtn.setText(this.getResources().getString(R.string.edit_text));// 编辑
+			mEditBtn.setVisibility(View.GONE);
 		}
 		mListAdapter.setData(binds);
 		mListAdapter.notifyDataSetChanged();
