@@ -1,5 +1,9 @@
 package cn.com.mobnote.golukmobile.carrecorder.settings;
 
+import java.util.ArrayList;
+
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,6 +36,7 @@ public class AdasSensibilityActivity extends BaseActivity implements OnClickList
 	private ImageButton mSelectedIcon;
 	private int mType = 0; /**0:向前距离  1:跑偏**/
 	private int mSensibilityData = 0;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -78,6 +83,35 @@ public class AdasSensibilityActivity extends BaseActivity implements OnClickList
 		findViewById(R.id.layout_low).setOnClickListener(this);
 		findViewById(R.id.layout_middle).setOnClickListener(this);
 		findViewById(R.id.layout_high).setOnClickListener(this);
+		/**初始化当前状态**/
+		switch (mSensibilityData) {
+		case 0:
+			mSelectedTextView = mLowText;
+			mSelectedIcon = mLowIcon;
+			break;
+		case 1:
+			mSelectedTextView = mMiddleText;
+			mSelectedIcon = mMiddleIcon;
+			break;
+		case 2:
+			mSelectedTextView = mHighText;
+			mSelectedIcon = mHighIcon;
+			break;
+		case 3:
+			mSelectedTextView = mCloseText;
+			mSelectedIcon = mCloseIcon;
+			break;
+		default:
+			Log.e(TAG, "mSensibilityData = " + mSensibilityData);
+			break;
+		}
+		if (mSelectedTextView != null) {
+			mSelectedTextView.setTextColor(getResources().getColor(R.color.setting_text_color_sel));
+		}
+		
+		if (mSelectedIcon != null) {
+			mSelectedIcon.setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override
@@ -86,18 +120,27 @@ public class AdasSensibilityActivity extends BaseActivity implements OnClickList
 		int id = v.getId();
 		switch (id) {
 		case R.id.back_btn:
+			if (GolukApplication.getInstance().getIpcIsLogin()) {
+				Intent intent = new Intent();
+				intent.putExtra(SENSIBILITY_DATA, mSensibilityData);
+				setResult(Activity.RESULT_OK, intent);
+			}
 			finish();
 			break;
 		case R.id.layout_close:
+			mSensibilityData = 3;
 			switchSelected(mCloseText, mCloseIcon);
 			break;
 		case R.id.layout_low:
+			mSensibilityData = 0;
 			switchSelected(mLowText, mLowIcon);
 			break;
 		case R.id.layout_middle:
+			mSensibilityData = 1;
 			switchSelected(mMiddleText, mMiddleIcon);
 			break;
 		case R.id.layout_high:
+			mSensibilityData = 2;
 			switchSelected(mHighText, mHighIcon);
 			break;
 		default:
@@ -119,4 +162,5 @@ public class AdasSensibilityActivity extends BaseActivity implements OnClickList
 		mSelectedTextView.setTextColor(getResources().getColor(R.color.setting_text_color_sel));
 		mSelectedIcon.setVisibility(View.VISIBLE);
 	}
+
 }

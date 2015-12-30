@@ -43,6 +43,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_below="@+id/textview_car_type_title"
 	    android:layout_above="@+id/button_selected_complete"
+	    android:cacheColorHint="#00000000"
 	    android:layout_marginBottom="22dp"
 	    android:paddingLeft="16dp"
         android:divider="@color/setting_line_color"

@@ -75,6 +75,10 @@ public class CarTypeAdapter extends BaseAdapter {
 		notifyDataSetChanged();
 	}
 
+	public int getSelectedId() {
+		return mSelectedId;
+	}
+
 	private static class ViewHolder {
 		TextView mTitle;
 		ImageView mSelectedIcon;

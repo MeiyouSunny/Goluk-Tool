@@ -26,6 +26,9 @@ public class GolukFileUtils {
 	/** 绑定历史历史记录 */
 	public static final String KEY_BIND_HISTORY_LIST = "bind_history_list";
 
+	/**ADAS自定义车辆**/
+	public static final String ADAS_CUSTOM_VEHICLE = "adas_custom_vehicle";
+
 	public static void remove(String name) {
 		Context context = GolukApplication.getInstance();
 		SharedPreferences sp = context.getSharedPreferences(APP_PREF_KEY, Context.MODE_PRIVATE);
