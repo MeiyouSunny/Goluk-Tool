@@ -72,6 +72,7 @@ import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.golukmobile.videosuqare.RingView;
 import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectListActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.util.GolukFileUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.SortByDate;
 import cn.com.mobnote.wifibind.WifiRsBean;
@@ -283,6 +284,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private ImageView mRedRoom;
 	
 	private boolean isRecVideo = false;
+	
+	private ImageView mAdasImg = null;
+	
+	private RelativeLayout mAdasStatusLayout = null;
+	
+	private ImageView mAdasIcon = null;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -512,6 +519,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 		new1 = (ImageView) findViewById(R.id.new1);
 		new2 = (ImageView) findViewById(R.id.new2);
+		mAdasImg = (ImageView) findViewById(R.id.adas_status_img);
+		mAdasStatusLayout = (RelativeLayout) findViewById(R.id.adas_status);
+		mAdasIcon = (ImageView) findViewById(R.id.adas_icon);
 
 		liveVideo.setBackgroundResource(R.drawable.driving_voice_off_icon);
 
@@ -1219,6 +1229,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		if (mApp.mIPCControlManager.mProduceName.equals("G1")) {
 			GolukApplication.getInstance().stopDownloadList();// 停止视频同步
 		}
+		
+		if(mApp.mIPCControlManager.mProduceName.equals(IPCControlManager.T1_SIGN)){
+			setAdasIconState(true);
+		}else{
+			setAdasIconState(false);
+		}
 
 		if (isShowPlayer) {
 			GolukDebugUtils.e("xuhw", "YYYYYY======isConnecting==" + isConnecting);
@@ -1256,7 +1272,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			} else {
 				mVideoResolutions.setBackgroundResource(R.drawable.icon_hd720);
 			}
-				
 		}
 		// 添加定位通知及反编码通知
 		// mApp.addLocationListener(SelfContextTag, this);
@@ -2207,5 +2222,47 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			}
 		}
 
+	}
+	
+	/**
+	 * 设置adas的显示和隐藏  以及 adas的显示图片
+	 * @param flog
+	 * @param status
+	 */
+	public void setAdasStatusImage(boolean flog,int status){
+		if(flog){
+			mAdasStatusLayout.setVisibility(View.VISIBLE);
+		}else{
+			mAdasStatusLayout.setVisibility(View.GONE);
+		}
+		
+		if(status == 1){
+			mAdasImg.setImageResource(R.drawable.recorder_carleft_img);//车向左便宜
+		}else if(status == 2){
+			mAdasImg.setImageResource(R.drawable.recorder_carright_img);//车向右便宜
+		}else if(status == 3){
+			mAdasImg.setImageResource(R.drawable.recorder_near_img);//距前车进
+		}else if(status == 4){
+			mAdasImg.setImageResource(R.drawable.recorder_verynear_img);//距前车过进
+		}
+		
+	}
+	
+	/**
+	 * 设置adas的icon
+	 */
+	public void setAdasIconState(boolean isT1){
+		if(isT1){
+			mAdasIcon.setVisibility(View.VISIBLE);
+			int  flag = GolukFileUtils.loadInt(GolukFileUtils.ADAS_FLAG, 0);//0 关   1：开
+			if(flag == 1){
+				mAdasIcon.setImageResource(R.drawable.recorder_adas_on);
+			}else{
+				mAdasIcon.setImageResource(R.drawable.recorder_adas_off);
+			}
+		}else{
+			mAdasIcon.setVisibility(View.GONE);
+		}
+		
 	}
 }
