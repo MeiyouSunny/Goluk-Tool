@@ -59,7 +59,7 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addContentView(LayoutInflater.from(this).inflate(R.layout.carrecorder_video_quality, null));
-		setTitle("视频质量");
+		setTitle(this.getResources().getString(R.string.spzl_title));
 
 		mIPCName = GolukApplication.getInstance().mIPCControlManager.mProduceName;
 		initView();

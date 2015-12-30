@@ -292,12 +292,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 						appUpgradeUtils(goluk);
 					}
 				} else if (FUNCTION_SETTING_IPC == mFunction) {
-					mApp.getContext();
-					SharedPreferences preferences = mApp.getContext().getSharedPreferences("ipc_wifi_bind",
-							Context.MODE_PRIVATE);
-					boolean isbind = preferences.getBoolean("isbind", false);
-					
-					if (!mApp.isIpcLoginSuccess && !isbind) {
+					if (!mApp.isIpcLoginSuccess && !mApp.isBindSucess()) {
 						GolukUtils.showToast(mApp.getContext(), "您好像没有连接摄像头哦");
 						return ;
 					}
@@ -305,7 +300,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 					IPCInfo ipcInfo = ipcUpdateUtils(ipc);
 					if (ipcInfo == null) {
 						// ipc不需要升级
-						if (!mApp.isIpcLoginSuccess && !isbind) {
+						if (!mApp.isIpcLoginSuccess && !mApp.isBindSucess()) {
 							GolukUtils.showToast(mApp.getContext(), "您好像没有连接摄像头哦");
 						} else {
 							String version_new = SharedPrefUtil.getIPCVersion();

@@ -41,6 +41,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class GolukUtils {
@@ -48,6 +49,9 @@ public class GolukUtils {
 	public static final String URL_BIND_CONN_PROBLEM = "http://surl.goluk.cn/faq/link.html";
 
 	public static float mDensity = 1.0f;
+
+	public static final String T1_WIFINAME_SIGN = "Goluk_T1";
+	public static final String G1G2_WIFINAME_SIGN = "Goluk";
 
 	public static void getMobileInfo(Activity activity) {
 		DisplayMetrics metric = new DisplayMetrics();
@@ -737,14 +741,35 @@ public class GolukUtils {
 		}
 	}
 
-    private static long lastClickTime = 0;
-    public static final int MIN_CLICK_DELAY_TIME = 1000;
-    public static boolean isFastDoubleClick() {  
-        long time = System.currentTimeMillis();     
-        if ( time - lastClickTime < MIN_CLICK_DELAY_TIME) {     
-            return true;     
-        }     
-        lastClickTime = time;     
-        return false;     
-    }  
+	private static long lastClickTime = 0;
+	public static final int MIN_CLICK_DELAY_TIME = 1000;
+
+	public static boolean isFastDoubleClick() {
+		long time = System.currentTimeMillis();
+		if (time - lastClickTime < MIN_CLICK_DELAY_TIME) {
+			return true;
+		}
+		lastClickTime = time;
+		return false;
+	}
+
+	/**
+	 * 通过wifi的原始 ssid ，获取设备类型 (G系列，T系列)
+	 * 
+	 * @param mWillConnName
+	 * @return
+	 * @author jyf
+	 */
+	public static String getIpcTypeFromName(String mWillConnName) {
+		String ipcType = "";
+		if (mWillConnName.startsWith(T1_WIFINAME_SIGN)) {
+			ipcType = IPCControlManager.MODEL_T;
+		} else if (mWillConnName.startsWith(G1G2_WIFINAME_SIGN)) {
+			ipcType = IPCControlManager.MODEL_G;
+		} else {
+
+		}
+		GolukDebugUtils.e("", "WifiBindList----getIpcType: " + ipcType);
+		return ipcType;
+	}
 }

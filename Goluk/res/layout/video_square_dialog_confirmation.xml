@@ -7,6 +7,7 @@
     android:orientation="vertical" >
 
     <TextView
+        android:id="@+id/confirmLog_title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@drawable/video_square_title_btn"

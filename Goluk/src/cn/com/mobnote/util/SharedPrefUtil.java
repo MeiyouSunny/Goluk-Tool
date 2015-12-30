@@ -82,6 +82,8 @@ public class SharedPrefUtil {
 
 	public static final String BANNER_LIST_STRING = "banner_list_string";
 	public static final String LOCATION_CITY_ID = "location_city_id";
+	/**保存设备编号**/
+	public static final String PROPERTY_SAVE_IPC_NUMBER = "ipc_number";
 
 
 	public static void setTokenId(String tokenid) {
@@ -552,5 +554,15 @@ public class SharedPrefUtil {
 	public static void setCityIDString(String cityCode) {
 		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
 		preference.edit().putString(LOCATION_CITY_ID, cityCode).commit();
+	}
+	
+	public static void saveIPCNumber(String ipcNumber) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("UnbindActivity", Activity.MODE_PRIVATE);
+		preference.edit().putString(PROPERTY_SAVE_IPC_NUMBER, ipcNumber).commit();
+	}
+	
+	public static String getIPCNumber() {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("UnbindActivity", Activity.MODE_PRIVATE);
+		return preference.getString(PROPERTY_SAVE_IPC_NUMBER, "");
 	}
 }

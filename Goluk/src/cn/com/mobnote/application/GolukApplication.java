@@ -17,7 +17,6 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Environment;
@@ -54,6 +53,7 @@ import cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.wifibind.WiFiLinkCompleteActivity;
 import cn.com.mobnote.golukmobile.wifibind.WiFiLinkListActivity;
+import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
 import cn.com.mobnote.golukmobile.wifimanage.WifiApAdmin;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.mobnote.logic.GolukLogic;
@@ -105,6 +105,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public IPCControlManager mIPCControlManager = null;
 	private VideoSquareManager mVideoSquareManager = null;
 
+	/** 是否正在绑定过程, 如果在绑定过程中，则不接受任何信息 */
+	private boolean isBinding = false;
 	/** 登录IPC是否登录成功 */
 	public boolean isIpcLoginSuccess = false;
 	/** 实时反应IPC连接状态 */
@@ -187,12 +189,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public boolean updateSuccess = false;
 	/** wifi连接状态 */
 	public int mWiFiStatus = 0;
-	/** 当前连接的Goluk设备 */
-	public String mGolukName = "";
 
 	private ArrayList<VideoFileInfo> fileList;
 
 	private boolean mIsExit = true;
+	/** T1声音录制开关　０关闭１打开 **/
+	public int mT1RecAudioCfg = 1;
 
 	private static final String SNAPSHOT_DIR = "fs1:/pic/";
 	static {
@@ -290,6 +292,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mIpcIp = null;
 		mContext = null;
 		mPageSource = "";
+		isBinding = false;
 		mMainActivity = null;
 		isIpcLoginSuccess = false;
 		isIpcConnSuccess = false;
@@ -319,7 +322,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mLoadProgress = 0;
 		updateSuccess = false;
 		mWiFiStatus = 0;
-		mGolukName = "";
 		if (null != fileList) {
 			fileList.clear();
 		}
@@ -384,6 +386,24 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 */
 	public VideoConfigState getVideoConfigState() {
 		return this.mVideoConfigState;
+	}
+
+	/**
+	 * 设置T1声音录制开关
+	 * 
+	 * @param state
+	 */
+	public void setT1VideoCfgState(int state) {
+		this.mT1RecAudioCfg = state;
+	}
+
+	/**
+	 * 获取T1声音录制开关
+	 * 
+	 * @return
+	 */
+	public int getT1VideoCfgState() {
+		return mT1RecAudioCfg;
 	}
 
 	/**
@@ -552,7 +572,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				} else if (IPCManagerFn.TYPE_URGENT == type) {
 					savePath = mVideoSavePath + "urgent/";
 					configPath = savePath + "urgent.txt";
-				} else{
+				} else {
 					savePath = mVideoSavePath + "loop/";
 					configPath = savePath + "loop.txt";
 				}
@@ -588,7 +608,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 				isDownloading = true;
 
-//				AssetsFileUtils.appendFileData(FileUtils.libToJavaPath(configPath), fileName + ",");
+				// AssetsFileUtils.appendFileData(FileUtils.libToJavaPath(configPath),
+				// fileName + ",");
 
 				// 调用下载视频接口
 				downloadCount++;
@@ -596,7 +617,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				GolukDebugUtils.e("xuhw", "YYYYYY====start==VideoDownLoad===flag=" + a + "===data=" + data);
 				// 下载视频第一帧截图
 				String imgFileName = fileName.replace("mp4", "jpg");
-				
+
 				String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 				File file = new File(filePath + File.separator + fileName);
 				if (!file.exists()) {
@@ -794,18 +815,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					}
 				}
 			} else if (tag.equals("snapshotdownload") && 0 == success) {
-					 // 其次把文件插入到系统图库
+				// 其次把文件插入到系统图库
 				String path = FileUtils.libToJavaPath(SNAPSHOT_DIR);
-				    try {
-						JSONObject json = new JSONObject(data);
-						String filename = json.optString("filename");
-				        MediaStore.Images.Media.insertImage(getContentResolver(),
-				        		path + filename, filename, "Goluk");
-				    } catch (FileNotFoundException e) {
-				        e.printStackTrace();
-				    }
-				    // 最后通知图库更新
-				    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
+				try {
+					JSONObject json = new JSONObject(data);
+					String filename = json.optString("filename");
+					MediaStore.Images.Media.insertImage(getContentResolver(), path + filename, filename, "Goluk");
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				// 最后通知图库更新
+				sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
 
 			}
 
@@ -1034,7 +1054,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if (1 != success || null == param2) {
 			return;
 		}
-
 		try {
 			JSONObject rootObj = new JSONObject((String) param2);
 			int code = Integer.valueOf(rootObj.getString("code"));
@@ -1068,6 +1087,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	// VDCP 连接状态 回调
 	private void IPC_VDCP_Connect_CallBack(int msg, int param1, Object param2) {
+		GolukDebugUtils
+				.e("", "wifilist----GolukApplication----wifiConn----IPC_VDCP_Connect_CallBack-------msg :" + msg);
 		// 如果不是连接成功,都标识为失败
 		switch (msg) {
 		case ConnectionStateMsg_Idle:
@@ -1088,8 +1109,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			if (isconnection) {
 				connectionDialog();
 			}
-			if (null != mMainActivity) {
-				mMainActivity.wiFiLinkStatus(1);
+			if (this.isBindSucess()) {
+				if (null != mMainActivity) {
+					mMainActivity.wiFiLinkStatus(1);
+				}
 			}
 			break;
 		case ConnectionStateMsg_Connected:
@@ -1114,261 +1137,271 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	}
 
 	private void IPC_VDCP_Command_Init_CallBack(int msg, int param1, Object param2) {
-		// msg = 0 初始化消息
-		// param1 = 0 成功 | 失败
-		if (0 == param1) {
-			isIpcConnSuccess = true;
-			// 如果在wifi连接页面,通知连接成功
-			if (mPageSource == "WiFiLinkList") {
-				((WiFiLinkListActivity) mContext).ipcSucessCallBack();
+		GolukDebugUtils.e("", "wifilist----GolukApplication----wifiConn----IPC_VDCP_Init_CallBack-------msg :" + msg);
+		// msg = 0 初始化消息 param1 = 0 成功 | 失败
+		if (0 != param1) {
+			// 连接失败
+			setIpcLoginState(false);
+			ipcDisconnect();
+			return;
+		}
+		isIpcConnSuccess = true;
+		// 如果在wifi连接页面,通知连接成功
+		if (mPageSource == "WiFiLinkList") {
+			((WiFiLinkListActivity) mContext).ipcSucessCallBack();
+		}
+		// 如果在wifi连接页面,通知连接成功
+		if (mPageSource.equals("WiFiLinkBindAll")) {
+			((WiFiLinkCompleteActivity) mContext).ipcLinkWiFiCallBack(param2);
+		}
+
+		if (isBindSucess()) {
+			GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + param2);
+			// 保存ipc设备型号,是G1, G2 还是T1
+			saveIpcProductName(param2);
+			// ipc控制初始化成功,可以看画面和拍摄8s视频
+			setIpcLoginState(true);
+			// 获取音视频配置信息
+			getVideoEncodeCfg();
+			// 获取Ｔ1声音录制开关状态
+			getVideoEncoderCtg_T1();
+			// 获取设备编号
+			getIPCNumber();
+			isconnection = true;// 连接成功
+			EventBus.getDefault().post(new EventPhotoUpdateLoginState(EventConfig.PHOTO_ALBUM_UPDATE_LOGIN_STATE));
+			EventBus.getDefault().post(new EventIpcConnState(EventConfig.IPC_CONNECT));
+			GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
+			// 获取ipc版本号
+			GolukApplication.getInstance().getIPCControlManager().getVersion();
+			queryNewFileList();
+			if (null != mMainActivity) {
+				mMainActivity.wiFiLinkStatus(2);
 			}
-			// 如果在wifi连接页面,通知连接成功
+			WifiBindDataCenter.getInstance().updateConnIpcType(mIPCControlManager.mProduceName);
+		}
+	}
+
+	// 保存ipc设备型号
+	private void saveIpcProductName(Object jsonStr) {
+		String productName = JsonUtil.getProductName(jsonStr);
+		try {
+			mIPCControlManager.setProduceName(productName);
+			// 保存设备型号
+			SharedPrefUtil.saveIpcModel(mIPCControlManager.mProduceName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void IPC_VDC_CommandResp_CallBack(int event, int msg, int param1, Object param2) {
+		switch (msg) {
+		case IPC_VDCP_Msg_Init:
+			IPC_VDCP_Command_Init_CallBack(msg, param1, param2);
+			break;
+		case IPC_VDCP_Msg_Query:
+			// msg = 1000 多文件目录查询
+			if (RESULE_SUCESS == param1) {
+				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==5555===stopDownloadList" + param2);
+				if ("ipcfilemanager".equals(mPageSource)) {
+					return;
+				}
+				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==6666===stopDownloadList");
+				if (TextUtils.isEmpty((String) param2)) {
+					return;
+				}
+				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==7777===stopDownloadList");
+				fileList = IpcDataParser.parseMoreFile((String) param2);
+				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==8888===stopDownloadList===fileList.size()="
+						+ fileList.size());
+				mHandler.removeMessages(1001);
+				mHandler.sendEmptyMessageDelayed(1001, 1000);
+			}
+			break;
+		case IPC_VDCP_Msg_SingleQuery:
+			// msg = 1001 单文件查询
+			// 拍摄8秒视频成功之后,接口会自动调用查询这个文件,收到这个回调之后可以根据文件名去下载视频
+			ipcVideoSingleQueryCallBack(param1, (String) param2);
+			break;
+		case IPC_VDCP_Msg_Erase:
+			// msg = 1002 删除文件
+			break;
+		case IPC_VDCP_Msg_TriggerRecord:
+			// msg = 1003 请求紧急、精彩视频录制
+			// 发送拍摄指令后,会立即收到视频文件名称的回调,暂时无用
+			break;
+		case IPC_VDCP_Msg_SnapPic:
+			// msg = 1004 实时抓图
+			break;
+		case IPC_VDCP_Msg_RecPicUsage:
+			// msg = 1005 查询录制存储状态
+			break;
+		case IPC_VDCP_Msg_DeviceStatus:
+			// msg = 1006 查询设备状态
+			break;
+		case IPC_VDCPCmd_SetWifiCfg:
+			// msg = 1012 设置IPC系统WIFI配置
+			// param1 = 0 成功 | 失败
+			// 如果在wifi连接页面,通知设置成功
 			if (mPageSource.equals("WiFiLinkBindAll")) {
-				((WiFiLinkCompleteActivity) mContext).ipcLinkWiFiCallBack();
+				((WiFiLinkCompleteActivity) mContext).setIpcLinkWiFiCallBack(param1);
+			} else if (mPageSource.equals("changePassword")) {
+				((UserSetupChangeWifiActivity) mContext).setIpcLinkWiFiCallBack(param1);
+			}
+			break;
+		case IPC_VDCP_Msg_GetVedioEncodeCfg:
+			if (param1 == RESULE_SUCESS) {
+				VideoConfigState videocfg = IpcDataParser.parseVideoConfigState((String) param2);
+				if (null != videocfg) {
+					mVideoConfigState = videocfg;
+				}
 			}
 
-			SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-			boolean isbind = preferences.getBoolean("isbind", false);
-			if (isbind) {
-				GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + param2);
-				// 保存ipc设备型号
+			break;
+		case IPC_VDCP_Msg_SetVedioEncodeCfg:
+			if (param1 == RESULE_SUCESS) {
+				getVideoEncodeCfg();
+			}
+			break;
+
+		case IPC_VDCP_Msg_GetRecAudioCfg:
+			if (param1 == RESULE_SUCESS) {
 				try {
-					JSONObject json = new JSONObject((String) param2);
-					if (json.isNull("productname")) {
-						mIPCControlManager.setProduceName(IPCControlManager.G1_SIGN);
-					} else {
-						mIPCControlManager.setProduceName(json.optString("productname"));
-					}
-					// 保存设备型号
-					SharedPrefUtil.saveIpcModel(mIPCControlManager.mProduceName);
+					JSONObject obj = new JSONObject((String) param2);
+					mT1RecAudioCfg = Integer.parseInt(obj.optString("AudioEnable"));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				// ipc控制初始化成功,可以看画面和拍摄8s视频
-				setIpcLoginState(true);
-				// 获取音视频配置信息
-				getVideoEncodeCfg();
-				// 发起获取自动循环录制状态
-				// updateAutoRecordState();
-				// 获取停车安防配置信息
-				// updateMotionCfg();
-				isconnection = true;// 连接成功
-				// if (null != PhotoAlbumActivity.mHandler) {
-				// PhotoAlbumActivity.mHandler.sendEmptyMessage(PhotoAlbumActivity.UPDATELOGINSTATE);
-				// }
-				EventBus.getDefault().post(new EventPhotoUpdateLoginState(EventConfig.PHOTO_ALBUM_UPDATE_LOGIN_STATE));
-				EventBus.getDefault().post(new EventIpcConnState(EventConfig.IPC_CONNECT));
-				// closeConnectionDialog();// 关闭连接的dialog
-				boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
-				GolukDebugUtils.e("xuhw", "YYYYYYY========getIPCSystemTime=======a=" + a);
+			}
+			break;
+		case IPC_VDCPCmd_SetRecAudioCfg:
+			// T1的设置声音录制开关回调
+			if (param1 == RESULE_SUCESS) {
+				getVideoEncoderCtg_T1();
+			}
+			break;
+		case IPC_VDCP_Msg_IPCKit:
+			if (!isBindSucess()) {
+				return;
+			}
+			if (param1 == RESULE_SUCESS) {
+				List<ExternalEventsDataInfo> kit = IpcDataParser.parseKitData((String) param2);
+				if (kit.size() > 0) {
+					for (int i = 0; i < kit.size(); i++) {
+						ExternalEventsDataInfo info = kit.get(i);
 
-				// 获取ipc版本号
-				boolean v = GolukApplication.getInstance().getIPCControlManager().getVersion();
-				GolukDebugUtils.i("lily", v + "========getIPCControlManager=====getIPCVersion");
-
-				queryNewFileList();
-				if (null != mMainActivity) {
-					mMainActivity.wiFiLinkStatus(2);
+						// if (!mDownLoadFileList.contains(info.location)) {
+						// mDownLoadFileList.add(info.location);
+						if (info.type == 9) {
+							if (!GolukFileUtils.loadBoolean(GolukFileUtils.PROMOTION_AUTO_PHOTO, true)) {
+								return;
+							}
+							File file = new File(FileUtils.libToJavaPath(SNAPSHOT_DIR));
+							if (!file.exists()) {
+								file.mkdirs();
+							}
+							boolean a = mIPCControlManager.downloadFile(info.location, "snapshotdownload",
+									SNAPSHOT_DIR, IPC_VDCP_Msg_IPCKit);
+						} else {
+							boolean flag = GolukApplication.getInstance().getIPCControlManager()
+									.querySingleFile(info.location);
+						}
+						// }
+					}
 				}
 			}
-			GolukDebugUtils.e("", "IPC_TTTTTT=================Login Success===============");
-		} else {
-			setIpcLoginState(false);
-			ipcDisconnect();
+			break;
+		case IPC_VDCP_Msg_GetVersion:
+			// {"product": 67698688, "model": "", "macid": "", "serial": "",
+			// "version": "V1.4.21_tzz_vb_rootfs"}
+			if (event == ENetTransEvent_IPC_VDCP_CommandResp) {
+				if (IPC_VDCP_Msg_GetVersion == msg) {
+					if (param1 == RESULE_SUCESS) {
+						// ipcConnect(param2);
+						String str = (String) param2;
+						if (TextUtils.isEmpty(str)) {
+							return;
+						}
+						try {
+							JSONObject json = new JSONObject(str);
+							String ipcVersion = json.optString("version");
+							GolukDebugUtils.i("lily", "=====保存当前的ipcVersion=====" + ipcVersion);
+							// 保存ipc版本号
+							SharedPrefUtil.saveIPCVersion(ipcVersion);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+			break;
+		case IPC_VDCP_Msg_GetTime:
+			if (param1 == RESULE_SUCESS) {
+				if (TextUtils.isEmpty((String) param2)) {
+					return;
+				}
+				long curtime = IpcDataParser.parseIPCTime((String) param2);
+				// 自动同步系统时间
+				if (SettingUtils.getInstance().getBoolean("systemtime", true)) {
+					long time = SettingUtils.getInstance().getLong("cursystemtime");
+					GolukDebugUtils.e("xuhw", "YYYYYY===getIPCSystemTime==time=" + time + "=curtime=" + curtime);
+					if (Math.abs(curtime - time) > 60) {// 60秒内不自动同步
+						SettingUtils.getInstance().putLong("cursystemtime", curtime);
+						boolean a = GolukApplication.getInstance().getIPCControlManager()
+								.setIPCSystemTime(System.currentTimeMillis() / 1000);
+						GolukDebugUtils.e("xuhw", "YYYYYY===========setIPCSystemTime===============a=" + a);
+					}
+				}
+			}
+			break;
+		case IPC_VDCP_Msg_GetIdentity:
+			IPC_CallBack_GetIdentity(msg, param1, param2);
+			break;
+		}
+	}
+
+	private void IPC_VDTP_ConnectState_CallBack(int msg, int param1, Object param2) {
+		// msg = 1 | 连接中 or msg = 2 | 连接成功
+		// 当前不需要处理这些状态
+		if (ConnectionStateMsg_DisConnected == msg) {
+			if (mDownLoadFileList.size() > 0) {
+				mDownLoadFileList.clear();
+				mNoDownLoadFileList.clear();
+				if (GlobalWindow.getInstance().isShow()) {
+					GlobalWindow.getInstance().dimissGlobalWindow();
+				}
+			}
+		}
+	}
+
+	private void IPC_VDTP_Resp_CallBack(int msg, int param1, Object param2) {
+		switch (msg) {
+		case IPC_VDTP_Msg_File:
+			// 文件传输中消息 msg = 0
+			// param1 = 0,下载完成
+			// param1 = 1,下载中
+			ipcVideoDownLoadCallBack(param1, (String) param2);
+			break;
 		}
 	}
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-		// System.out.println("IPC_TTTTTT========event="+event+"===msg="+msg+"===param1="+param1+"=========param2="+param2);
 		if (this.isExit()) {
 			return;
 		}
 		if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
 			IPC_VDCP_Connect_CallBack(msg, param1, param2);
 		}
-
 		if (ENetTransEvent_IPC_VDCP_CommandResp == event) {
-			switch (msg) {
-			case IPC_VDCP_Msg_Init:
-				IPC_VDCP_Command_Init_CallBack(msg, param1, param2);
-				break;
-			case IPC_VDCP_Msg_Query:
-				// msg = 1000 多文件目录查询
-				if (RESULE_SUCESS == param1) {
-					GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==5555===stopDownloadList" + param2);
-					if ("ipcfilemanager".equals(mPageSource)) {
-						return;
-					}
-					GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==6666===stopDownloadList");
-					if (TextUtils.isEmpty((String) param2)) {
-						return;
-					}
-					GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==7777===stopDownloadList");
-					fileList = IpcDataParser.parseMoreFile((String) param2);
-					GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==8888===stopDownloadList===fileList.size()="
-							+ fileList.size());
-					mHandler.removeMessages(1001);
-					mHandler.sendEmptyMessageDelayed(1001, 1000);
-				}
-				break;
-			case IPC_VDCP_Msg_SingleQuery:
-				// msg = 1001 单文件查询
-				// 拍摄8秒视频成功之后,接口会自动调用查询这个文件,收到这个回调之后可以根据文件名去下载视频
-				ipcVideoSingleQueryCallBack(param1, (String) param2);
-				break;
-			case IPC_VDCP_Msg_Erase:
-				// msg = 1002 删除文件
-				break;
-			case IPC_VDCP_Msg_TriggerRecord:
-				// msg = 1003 请求紧急、精彩视频录制
-				// 发送拍摄指令后,会立即收到视频文件名称的回调,暂时无用
-				break;
-			case IPC_VDCP_Msg_SnapPic:
-				// msg = 1004 实时抓图
-				break;
-			case IPC_VDCP_Msg_RecPicUsage:
-				// msg = 1005 查询录制存储状态
-				break;
-			case IPC_VDCP_Msg_DeviceStatus:
-				// msg = 1006 查询设备状态
-				break;
-			case IPC_VDCPCmd_SetWifiCfg:
-				// msg = 1012 设置IPC系统WIFI配置
-				// param1 = 0 成功 | 失败
-				// 如果在wifi连接页面,通知设置成功
-				if (mPageSource.equals("WiFiLinkBindAll")) {
-					((WiFiLinkCompleteActivity) mContext).setIpcLinkWiFiCallBack(param1);
-				} else if (mPageSource.equals("changePassword")) {
-					((UserSetupChangeWifiActivity) mContext).setIpcLinkWiFiCallBack(param1);
-				} 
-				break;
-			case IPC_VDCP_Msg_GetVedioEncodeCfg:
-				if (param1 == RESULE_SUCESS) {
-					VideoConfigState videocfg = IpcDataParser.parseVideoConfigState((String) param2);
-					if (null != videocfg) {
-						mVideoConfigState = videocfg;
-					}
-				}
-
-				break;
-			case IPC_VDCP_Msg_SetVedioEncodeCfg:
-				if (param1 == RESULE_SUCESS) {
-					getVideoEncodeCfg();
-				}
-				break;
-			case IPC_VDCPCmd_SetRecAudioCfg:
-				// T1的设置声音录制开关回调
-				if (param1 == RESULE_SUCESS) {
-					getVideoEncoderCtg_T1();
-				}
-				break;
-			case IPC_VDCP_Msg_IPCKit:
-				SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-				boolean isbind = preferences.getBoolean("isbind", false);
-				if (!isbind) {
-					return;
-				}
-				if (param1 == RESULE_SUCESS) {
-					List<ExternalEventsDataInfo> kit = IpcDataParser.parseKitData((String) param2);
-					if (kit.size() > 0) {
-						for (int i = 0; i < kit.size(); i++) {
-							ExternalEventsDataInfo info = kit.get(i);
-
-//							if (!mDownLoadFileList.contains(info.location)) {
-//								mDownLoadFileList.add(info.location);
-							if (info.type == 9) {
-								if (!GolukFileUtils.loadBoolean(GolukFileUtils.PROMOTION_AUTO_PHOTO, true)) {
-									return;
-								}
-								File file = new File(FileUtils.libToJavaPath(SNAPSHOT_DIR));
-								if (!file.exists()) {
-									file.mkdirs();
-								}
-								boolean a = mIPCControlManager.downloadFile(info.location, "snapshotdownload", SNAPSHOT_DIR, IPC_VDCP_Msg_IPCKit);
-							} else {
-								boolean flag = GolukApplication.getInstance().getIPCControlManager()
-										.querySingleFile(info.location);
-							}
-//							}
-						}
-					}
-				}
-				break;
-			case IPC_VDCP_Msg_GetVersion:
-				// {"product": 67698688, "model": "", "macid": "", "serial": "",
-				// "version": "V1.4.21_tzz_vb_rootfs"}
-				if (event == ENetTransEvent_IPC_VDCP_CommandResp) {
-					if (IPC_VDCP_Msg_GetVersion == msg) {
-						if (param1 == RESULE_SUCESS) {
-							// ipcConnect(param2);
-							String str = (String) param2;
-							if (TextUtils.isEmpty(str)) {
-								return;
-							}
-							try {
-								JSONObject json = new JSONObject(str);
-								String ipcVersion = json.optString("version");
-								GolukDebugUtils.i("lily", "=====保存当前的ipcVersion=====" + ipcVersion);
-								// 保存ipc版本号
-								SharedPrefUtil.saveIPCVersion(ipcVersion);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					}
-				}
-				break;
-			case IPC_VDCP_Msg_GetTime:
-				if (param1 == RESULE_SUCESS) {
-					if (TextUtils.isEmpty((String) param2)) {
-						return;
-					}
-					long curtime = IpcDataParser.parseIPCTime((String) param2);
-					// 自动同步系统时间
-					if (SettingUtils.getInstance().getBoolean("systemtime", true)) {
-						long time = SettingUtils.getInstance().getLong("cursystemtime");
-						GolukDebugUtils.e("xuhw", "YYYYYY===getIPCSystemTime==time=" + time + "=curtime=" + curtime);
-						if (Math.abs(curtime - time) > 60) {// 60秒内不自动同步
-							SettingUtils.getInstance().putLong("cursystemtime", curtime);
-							boolean a = GolukApplication.getInstance().getIPCControlManager()
-									.setIPCSystemTime(System.currentTimeMillis() / 1000);
-							GolukDebugUtils.e("xuhw", "YYYYYY===========setIPCSystemTime===============a=" + a);
-						}
-					}
-				}
-				break;
-			case IPC_VDCP_Msg_GetIdentity:
-				IPC_CallBack_GetIdentity(msg, param1, param2);
-				break;
-			}
+			IPC_VDC_CommandResp_CallBack(event, msg, param1, param2);
 		}
-
 		// IPC下载连接状态 event = 2
 		if (ENetTransEvent_IPC_VDTP_ConnectState == event) {
-			// msg = 1 | 连接中 or msg = 2 | 连接成功
-			// 当前不需要处理这些状态
-			if (ConnectionStateMsg_DisConnected == msg) {
-				if (mDownLoadFileList.size() > 0) {
-					mDownLoadFileList.clear();
-					mNoDownLoadFileList.clear();
-					if (GlobalWindow.getInstance().isShow()) {
-						GlobalWindow.getInstance().dimissGlobalWindow();
-					}
-				}
-			}
+			IPC_VDTP_ConnectState_CallBack(msg, param1, param2);
 		}
-
 		// IPC下载结果应答,开始下载视频文件 event = 3
 		if (ENetTransEvent_IPC_VDTP_Resp == event) {
-			switch (msg) {
-			case IPC_VDTP_Msg_File:
-				// 文件传输中消息 msg = 0
-				// param1 = 0,下载完成
-				// param1 = 1,下载中
-				ipcVideoDownLoadCallBack(param1, (String) param2);
-				break;
-			}
+			IPC_VDTP_Resp_CallBack(msg, param1, param2);
 		}
 	}
 
@@ -1377,6 +1410,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			final IPCIdentityState mVersionState = IpcDataParser.parseVersionState((String) param2);
 			if (null != mVersionState && null != mIPCControlManager) {
 				mIPCControlManager.mDeviceSn = mVersionState.name;
+				SharedPrefUtil.saveIPCNumber(mIPCControlManager.mDeviceSn);
 				mIPCControlManager.reportBindMsg();
 			}
 		}
@@ -1402,6 +1436,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private void getVideoEncodeCfg() {
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			getIPCControlManager().getVideoEncodeCfg(0);
+		}
+	}
+
+	private void getIPCNumber() {
+		if (GolukApplication.getInstance().getIpcIsLogin()) {
+			getIPCControlManager().getIPCIdentity();
 		}
 	}
 
@@ -1447,9 +1487,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if (!SettingUtils.getInstance().getBoolean(UserSetupActivity.AUTO_SWITCH, true)) {
 			return false;
 		}
-		SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind", MODE_PRIVATE);
-		boolean isbind = preferences.getBoolean("isbind", false);
-		if (!isbind) {
+
+		if (!isBindSucess()) {
 			return false;
 		}
 
@@ -1468,6 +1507,41 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 		return true;
 	}
+
+	public void setIpcDisconnect() {
+		mIPCControlManager.setIPCWifiState(false, "");
+		if (null != mMainActivity) {
+			mMainActivity.closeAp();
+		}
+		stopDownloadList();
+		setIpcLoginOut();
+	}
+
+	/**
+	 * 设置是否在绑定过程中
+	 * 
+	 * @param isbind
+	 *            true/false 绑定中/未绑定中
+	 * @author jyf
+	 */
+	public void setBinding(boolean isbind) {
+		isBinding = isbind;
+	}
+
+	public boolean isBindSucess() {
+		return WifiBindDataCenter.getInstance().isHasDataHistory() && !isBinding;
+		// SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",
+		// MODE_PRIVATE);
+		// return preferences.getBoolean("isbind", false);
+	}
+
+	// public void setBindState(boolean isSuccess) {
+	// SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",
+	// MODE_PRIVATE);
+	// Editor mEditor = preferences.edit();
+	// mEditor.putBoolean("isbind", isSuccess);
+	// mEditor.commit();
+	// }
 
 	/**
 	 * 查询新文件列表（最多10条）
@@ -1516,17 +1590,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @date 2015年4月24日
 	 */
 	private void ipcDisconnect() {
-		// if (null != PhotoAlbumActivity.mHandler) {
-		// PhotoAlbumActivity.mHandler.sendEmptyMessage(PhotoAlbumActivity.UPDATELOGINSTATE);
-		// }
 		EventBus.getDefault().post(new EventPhotoUpdateLoginState(EventConfig.PHOTO_ALBUM_UPDATE_LOGIN_STATE));
-
 		if (mDownLoadFileList.size() > 0) {
 			mDownLoadFileList.clear();
 			mNoDownLoadFileList.clear();
 			if (GlobalWindow.getInstance().isShow()) {
 				GlobalWindow.getInstance().dimissGlobalWindow();
-				GolukDebugUtils.e("xuhw", "BBBBBB===1111==m=====ipcDisconnect=" + mNoDownLoadFileList.size());
 			}
 		}
 	}
@@ -1591,7 +1660,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				GolukDebugUtils.e("xuhw",
 						"BBBB=====stopDownloadList==11111===stopDownloadList" + mDownLoadFileList.size()
 								+ mDownLoadFileList);
-				
+
 				Collections.sort(mDownLoadFileList, new SortByDate());
 				GolukDebugUtils.e("xuhw",
 						"BBBB=====stopDownloadList==22222===stopDownloadList" + mDownLoadFileList.size()

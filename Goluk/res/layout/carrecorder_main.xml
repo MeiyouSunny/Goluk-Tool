@@ -32,7 +32,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="8dp"
-            android:background="@drawable/carrecorder_setting" />
+            android:background="@drawable/driving_car_setting" />
     </RelativeLayout>
 
     <LinearLayout
@@ -40,6 +40,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_layout"
         android:layout_marginTop="10dp" >
+        
+        <ImageView 
+            android:id="@+id/changeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/recorder_changeipc_icon"/>
 
         <TextView
             android:id="@+id/mConnectTip"
@@ -149,6 +156,17 @@
                 android:background="@drawable/video_linking_pic"
                 android:visibility="gone" />
         </RelativeLayout>
+        
+        <ImageButton
+            android:id="@+id/video_off"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/mFullScreen"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="6dp"
+            android:layout_alignRight="@+id/mRtmpPlayerLayout"
+            android:background="@drawable/recorder_btn_sound"
+            android:contentDescription="@string/def" />
 
         <ImageButton
             android:id="@+id/mFullScreen"
@@ -156,8 +174,9 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/mRtmpPlayerLayout"
             android:layout_alignRight="@+id/mRtmpPlayerLayout"
-            android:layout_marginTop="76dp"
-            android:background="@drawable/carrecorder_full_btn"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="6dp"
+            android:background="@drawable/carrecorder_btn_full_press"
             android:contentDescription="@string/def" />
     </RelativeLayout>
 
@@ -413,6 +432,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/jcqp"
             android:text="发起直播"
+            android:textColor="#808181"
             android:textSize="13sp" />
     </RelativeLayout>
 
