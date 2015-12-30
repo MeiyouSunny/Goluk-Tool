@@ -190,6 +190,10 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 			startActivityForResult(it, 10);
 			break;
 		case R.id.unbind_layout_update:
+			// 防止重复点击
+			if (!mApplication.mIpcUpdateManage.isCanClick()) {
+				return;
+			}
 			if (mApplication.mLoadStatus) {// 下载中
 				new AlertDialog.Builder(mApplication.getContext()).setTitle("提示").setMessage("新极路客固件升级文件正在下载……")
 						.setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -220,7 +224,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 					boolean b = mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
 				} else {// 下载成功
 					String ipcFile = mApplication.mIpcUpdateManage.isHasIPCFile(vIpc);
-					if("".equals(ipcFile) || null == ipcFile){
+					if ("".equals(ipcFile) || null == ipcFile) {
 						boolean b = mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC,
 								vIpc);
 					}else{

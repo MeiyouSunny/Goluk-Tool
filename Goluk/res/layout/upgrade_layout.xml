@@ -49,8 +49,8 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/solid" />
 
+            <!-- 版本信息 -->
             <RelativeLayout
-                android:id="@+id/remove_cache_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#f4f4f4" >
@@ -85,7 +85,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:text="356MB"
-                    android:textColor="#3f3f3f"
+                    android:textColor="#3b97f5"
                     android:textSize="14sp" />
 
                 <TextView
@@ -107,6 +107,7 @@
                 android:layout_height="1dp"
                 android:background="@drawable/solid" />
 
+            <!-- 更新说明 -->
             <View
                 android:id="@+id/solid_3"
                 android:layout_width="wrap_content"
@@ -147,6 +148,7 @@
                 android:layout_height="1dp"
                 android:background="@drawable/solid" />
             
+            <!-- 安装按钮 -->
             <View
                 android:id="@+id/solid_5"
                 android:layout_width="wrap_content"
@@ -169,6 +171,7 @@
                 android:layout_height="1dp"
                 android:background="@drawable/solid" />
 
+            <!-- 断电提示 -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -178,6 +181,7 @@
                 android:text="@string/ipc_hint_text"
                 android:textColor="@color/user_hint_text_color" />
             
+            <!-- 断电图片 -->
             <ImageView
                 android:id="@+id/iv_upgrade_nobreak_image" 
                 android:layout_width="wrap_content"
@@ -200,6 +204,7 @@
                 android:textColor="#a1a1a1"
                 android:visibility="gone"/>
             
+            <!-- SD卡提示图片和文字 -->
             <ImageView
                 android:id="@+id/iv_upgrade_tfcard_image" 
                 android:layout_width="wrap_content"
@@ -208,7 +213,7 @@
                 android:layout_marginTop="40dp"
                 android:src="@drawable/upgrade_tfcard_img"
                 android:contentDescription="@string/imgdes"
-                 />
+                 android:visibility="gone" />
             
             <TextView 
                 android:id="@+id/tv_upgrade_tfcard_text"
@@ -220,10 +225,11 @@
                 android:layout_marginBottom="30dp"
                 android:textSize="14sp"
                 android:textColor="#a1a1a1"
-                />
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
     
+    <!-- 最新版本 -->
     <ImageView
         android:id="@+id/iv_upgrade_new"
         android:layout_width="wrap_content"
@@ -245,16 +251,30 @@
         android:textColor="#a1a1a1"
         android:visibility="gone"/>
     
+    <!-- 等待升级成功后的语音提示 -->
     <RelativeLayout 
         android:id="@+id/rl_update_voice"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#f2242629"
+        android:visibility="gone" >
         
         <ImageView 
+            android:id="@+id/iv_update_voice_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/upgrade_vocie_img"/>
+            android:src="@drawable/upgrade_vocie_img"
+            android:contentDescription="@string/imgdes"/>
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/ipc_upgrade_voice_text"
+            android:layout_below="@id/iv_update_voice_image"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/white"/>
     </RelativeLayout>
 
 </RelativeLayout>

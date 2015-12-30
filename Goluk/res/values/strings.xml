@@ -174,6 +174,7 @@
     <string name="ipc_hint_below_image">固件升级过程中　请不要断开电源</string>
     <string name="str_tfcard_text">安装新固件前，请确认设备已插好存储卡</string>
     <string name="ipc_upgrade_new_text">当前极路客固件版本已是最新</string>
+    <string name="ipc_upgrade_voice_text">请耐心等待升级成功后的语音提示</string>
     <string name="shopping_text">去商店</string>
     <string name="cache_size_text">3.15M</string>
     <string name="user_immediately_ok">立即登录</string>
@@ -500,5 +501,39 @@
 	<string name="str_hour">时</string>
 	<string name="str_minute">分</string>
 
+	<!-- 升级 -->
+	<string name="str_ipc_update_download_file_fail">很抱歉，新极路客固件下载失败，请检查网络后重试。</string>
+	<string name="str_ipc_update_undownload">未下载</string>
+	<string name="str_ipc_update_download_file">下载新极路客固件程序</string>
+	<string name="str_ipc_update_downloading">下载中</string>
+	<string name="str_ipc_update_downloading_ellipsis">下载中…</string>
+	<string name="str_ipc_update_downloading_omit">正在下载…</string>
+	<string name="str_ipc_update_percent_unit">%</string>
+	<string name="str_ipc_update_downloading_zero">下载中…0%</string>
+	<string name="str_ipc_update_install">安装此极路客固件程序</string>
+	<string name="str_ipc_update_first_period">开始升级，过程可能需要几分钟，\n请不要关闭摄像头电源…\n升级1阶段：</string>
+	<string name="str_ipc_update_second_period">开始升级，过程可能需要几分钟，\n请不要关闭摄像头电源…\n升级2阶段：</string>
+	<string name="str_ipc_update_transfer_file_success">文件传输成功，正在为您准备升级</string>
+	<string name="str_ipc_update_success">恭喜您，极路客固件升级成功，正在重新启动，请稍候…</string>
+	<string name="str_ipc_update_fail">很抱歉，升级失败。请您重试。</string>
+	<string name="str_ipc_update_check_fail">校验不通过</string>
+	<string name="str_ipc_update_disconnect">摄像头断开连接，请检查后重试</string>
+	<string name="str_ipc_update_first_period_disconnect">很抱歉，升级失败，请先不要关闭摄像头电源，等待摄像头重新启动后再试。</string>
+	<string name="str_ipc_update_second_period_disconnect">很抱歉，摄像头连接异常中断，但它可能仍在升级中。请先不要关闭摄像头电源，等待摄像头升级成功。</string>
+	<string name="str_ipc_update_install_ok">已安装</string>
+	<string name="str_ipc_update_transfer_file_t1">正在传输安装包到极路客…</string>
+	<string name="str_ipc_update_checking">检测中，请稍候…</string>
+	<string name="str_update_app_newest">当前已是最新版本</string>
+	<string name="str_update_prompt">升级提示</string>
+	<string name="str_ipc_update_prompt">固件升级提示</string>
+	<string name="str_app_update_prompt">APP升级提示</string>
+	<string name="str_update_find_new_first">发现新极路客固件版本</string>
+	<string name="str_update_find_new_second">，为了正常升级新固件，请先下载最新的APP后再试。</string>
+	<string name="str_timeout">网络连接超时，请检查后重试</string>
+	<string name="str_download">立即下载</string>
+	<string name="str_update">马上升级</string>
+	<string name="str_update_later">稍后再说</string>
+	<string name="str_app_download">马上下载</string>
+	<string name="str_update_not_match">当前手机客户端版本与极路客固件版本不匹配，请您升级后再试。正在为您检查更新。</string>
 
 </resources>
