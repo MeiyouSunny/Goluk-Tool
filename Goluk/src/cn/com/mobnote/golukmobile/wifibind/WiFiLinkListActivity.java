@@ -482,7 +482,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
 	private void nextCan() {
 		// mIsConnSucess = true;
-		mNextBtn.setBackgroundResource(R.drawable.ipcbind_btn_finish);
+		mNextBtn.setBackgroundResource(R.drawable.ipcbind_btn_able);
 	}
 
 	private void nextNotCan() {

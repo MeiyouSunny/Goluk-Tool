@@ -490,7 +490,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		mMiddleLayout.addView(layout3.getRootLayout());
 		mCurrentLayout = layout3;
 		layout3.start();
-		mCompleteBtn.setBackgroundResource(R.drawable.ipcbind_btn_able);
+		mCompleteBtn.setBackgroundResource(R.drawable.ipcbind_btn_finish);
 		mProgressImg.setBackgroundResource(R.drawable.setp_4);
 	}
 
