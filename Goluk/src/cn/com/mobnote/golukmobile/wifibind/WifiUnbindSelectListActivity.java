@@ -109,6 +109,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--1");
 		List<WifiBindHistoryBean> binds = WifiBindDataCenter.getInstance().getAllBindData();
 		if (binds != null) {
+			mEditBtn.setVisibility(View.VISIBLE);
 			if (isCanShowListViewHead()) {
 				GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--size: "
 						+ binds.size());
@@ -137,6 +138,9 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 			}
 			GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--setData: "
 					+ binds.size());
+		}else{
+			mEditBtn.setText(this.getResources().getString(R.string.edit_text));// 编辑
+			mEditBtn.setVisibility(View.GONE);
 		}
 		mListAdapter.setData(binds);
 		mListAdapter.notifyDataSetChanged();
@@ -177,7 +181,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 			mHeadData.golukIcon.setImageResource(R.drawable.connect_g1_img);
 		} else if (IPCControlManager.G2_SIGN.equals(mWifiBindConnectData.ipcSign)) {
 			mHeadData.golukIcon.setImageResource(R.drawable.connect_g2_img);
-		} else if (IPCControlManager.G1s_SIGN.equals(mWifiBindConnectData.ipcSign)) {
+		} else if (IPCControlManager.T1s_SIGN.equals(mWifiBindConnectData.ipcSign)) {
 			mHeadData.golukIcon.setImageResource(R.drawable.connect_t1_img);
 		} else if (IPCControlManager.T1_SIGN.equals(mWifiBindConnectData.ipcSign)) {
 			mHeadData.golukIcon.setImageResource(R.drawable.connect_t1_img);
