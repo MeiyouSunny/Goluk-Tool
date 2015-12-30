@@ -195,11 +195,11 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 				break;
 			}
 			case -32: {
-				callback.wifiCallBack(5, -1, msg.what, "附近没有可连接的ipc", msg.obj);
+				callback.wifiCallBack(3, -1, msg.what, "附近没有可连接的ipc", msg.obj);
 				break;
 			}
 			case -34: {
-				callback.wifiCallBack(5, -1, msg.what, "创建热点失败", msg.obj);
+				callback.wifiCallBack(3, -1, msg.what, "创建热点失败", msg.obj);
 				break;
 			}
 			case -41: {
