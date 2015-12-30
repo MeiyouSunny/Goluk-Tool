@@ -129,12 +129,14 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	/**ADAS驾驶安全辅助**/
 	private RelativeLayout mADASAssistanceLayout = null;
 	private Button mADASAssistanceBtn = null;
-	/**向前距离报警灵敏度**/
-	private RelativeLayout mADASForwardWarningLayout = null;
-	private TextView mADASForwardWarningTextView = null;
-	/**道路偏移报警灵敏度**/
-	private RelativeLayout mADASOffsetWarningLayout = null;
-	private TextView mADASOffsetWarningTextView = null;
+	
+	/**adas需求变更 暂时拿掉**/
+//	/**向前距离报警灵敏度**/
+//	private RelativeLayout mADASForwardWarningLayout = null;
+//	private TextView mADASForwardWarningTextView = null;
+//	/**道路偏移报警灵敏度**/
+//	private RelativeLayout mADASOffsetWarningLayout = null;
+//	private TextView mADASOffsetWarningTextView = null;
 	/**辅助信息显示**/
 	private RelativeLayout mADASOsdLayout = null;
 	private Button mADASOsdBtn = null;
@@ -217,33 +219,36 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			// 获取T1图像自动翻转
 			boolean t1GetAutoRotaing = GolukApplication.getInstance().getIPCControlManager().getT1AutoRotaing();
 			GolukDebugUtils.e("", "--------------SettingsActivity-----t1GetAutoRotaing：" + t1GetAutoRotaing);
+
+			boolean t1GetAdasCofig = GolukApplication.getInstance().getIPCControlManager().getT1AdasConfig();
+			GolukDebugUtils.e("", "--------------SettingsActivity-----t1GetAutoRotaing：" + t1GetAdasCofig);
 		}
-		String AdasConfigStr = GolukFileUtils.loadString("test", "");
-		if (!TextUtils.isEmpty(AdasConfigStr)) {
-			mAdasConfigParamter = JSON.parseObject(AdasConfigStr, AdasConfigParamterBean.class);
-		} else {
-			mAdasConfigParamter = new AdasConfigParamterBean();
-		}
-		switchAdasEnableUI(mAdasConfigParamter.enable == 1);
+
 		showLoading();
 	}
 
 	private void switchAdasEnableUI(boolean isEnable) {
 		if (isEnable) {
-			mADASForwardWarningLayout.setVisibility(View.VISIBLE);
-			mADASOffsetWarningLayout.setVisibility(View.VISIBLE);
+			/**adas需求变更 暂时拿掉**/
+//			mADASForwardWarningLayout.setVisibility(View.VISIBLE);
+//			mADASOffsetWarningLayout.setVisibility(View.VISIBLE);
 			mADASOsdLayout.setVisibility(View.VISIBLE);
 			mADASConfigLayout.setVisibility(View.VISIBLE);
 			mADASAssistanceBtn.setBackgroundResource(R.drawable.set_open_btn);
+			mADASAssistanceBtn.setTag(1);
 		} else {
 			mADASAssistanceBtn.setBackgroundResource(R.drawable.set_close_btn);
-			mADASForwardWarningLayout.setVisibility(View.GONE);
-			mADASOffsetWarningLayout.setVisibility(View.GONE);
+			mADASAssistanceBtn.setTag(0);
+			/**adas需求变更 暂时拿掉**/
+//			mADASForwardWarningLayout.setVisibility(View.GONE);
+//			mADASOffsetWarningLayout.setVisibility(View.GONE);
 			mADASOsdLayout.setVisibility(View.GONE);
 			mADASConfigLayout.setVisibility(View.GONE);
 		}
-		refreshFCWUI();
-		refreshLDWUI();
+
+		/**adas需求变更 暂时拿掉**/
+//		refreshFCWUI();
+//		refreshLDWUI();
 		refreshOSDUI();
 	}
 
@@ -284,33 +289,37 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private void refreshOSDUI() {
 		if (mAdasConfigParamter.osd == 0) {
 			mADASOsdBtn.setBackgroundResource(R.drawable.set_close_btn);
+			mADASOsdBtn.setTag(0);
 		} else {
 			mADASOsdBtn.setBackgroundResource(R.drawable.set_open_btn);
-		}
-	}
-	private void refreshFCWUI() {
-		if (mAdasConfigParamter.fcw_warn_level == 0) {
-			mADASForwardWarningTextView.setText(R.string.str_low);
-		} else if (mAdasConfigParamter.fcw_warn_level == 1) {
-			mADASForwardWarningTextView.setText(R.string.str_middle);
-		} else if (mAdasConfigParamter.fcw_warn_level == 2) {
-			mADASForwardWarningTextView.setText(R.string.str_high);
-		} else {
-			mADASForwardWarningTextView.setText(R.string.carrecorder_tcaf_close);
+			mADASOsdBtn.setTag(1);
 		}
 	}
 
-	private void refreshLDWUI() {
-		if (mAdasConfigParamter.ldw_warn_level == 0) {
-			mADASOffsetWarningTextView.setText(R.string.str_low);
-		} else if (mAdasConfigParamter.ldw_warn_level == 1) {
-			mADASOffsetWarningTextView.setText(R.string.str_middle);
-		} else if (mAdasConfigParamter.ldw_warn_level == 2) {
-			mADASOffsetWarningTextView.setText(R.string.str_high);
-		} else {
-			mADASOffsetWarningTextView.setText(R.string.carrecorder_tcaf_close);
-		}
-	}
+	/**adas需求变更 暂时拿掉**/
+//	private void refreshFCWUI() {
+//		if (mAdasConfigParamter.fcw_warn_level == 0) {
+//			mADASForwardWarningTextView.setText(R.string.str_low);
+//		} else if (mAdasConfigParamter.fcw_warn_level == 1) {
+//			mADASForwardWarningTextView.setText(R.string.str_middle);
+//		} else if (mAdasConfigParamter.fcw_warn_level == 2) {
+//			mADASForwardWarningTextView.setText(R.string.str_high);
+//		} else {
+//			mADASForwardWarningTextView.setText(R.string.carrecorder_tcaf_close);
+//		}
+//	}
+//
+//	private void refreshLDWUI() {
+//		if (mAdasConfigParamter.ldw_warn_level == 0) {
+//			mADASOffsetWarningTextView.setText(R.string.str_low);
+//		} else if (mAdasConfigParamter.ldw_warn_level == 1) {
+//			mADASOffsetWarningTextView.setText(R.string.str_middle);
+//		} else if (mAdasConfigParamter.ldw_warn_level == 2) {
+//			mADASOffsetWarningTextView.setText(R.string.str_high);
+//		} else {
+//			mADASOffsetWarningTextView.setText(R.string.carrecorder_tcaf_close);
+//		}
+//	}
 	@Override 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -323,18 +332,19 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		case REQUEST_CODE_KIT:
 			activityResult_kit(resultCode, data);
 			break;
-		case REQUEST_CODE_ADAS_FCW_WARNING:
-			if (resultCode == Activity.RESULT_OK) {
-				mAdasConfigParamter.fcw_warn_level = data.getIntExtra(AdasSensibilityActivity.SENSIBILITY_DATA, 0);
-				refreshFCWUI();
-			}
-			break;
-		case REQUEST_CODE_ADAS_LDW_WARNING:
-			if (resultCode == Activity.RESULT_OK) {
-				mAdasConfigParamter.ldw_warn_level = data.getIntExtra(AdasSensibilityActivity.SENSIBILITY_DATA, 0);
-				refreshLDWUI();
-			}
-			break;
+			/**adas需求变更 暂时拿掉**/
+//		case REQUEST_CODE_ADAS_FCW_WARNING:
+//			if (resultCode == Activity.RESULT_OK) {
+//				mAdasConfigParamter.fcw_warn_level = data.getIntExtra(AdasSensibilityActivity.SENSIBILITY_DATA, 0);
+//				refreshFCWUI();
+//			}
+//			break;
+//		case REQUEST_CODE_ADAS_LDW_WARNING:
+//			if (resultCode == Activity.RESULT_OK) {
+//				mAdasConfigParamter.ldw_warn_level = data.getIntExtra(AdasSensibilityActivity.SENSIBILITY_DATA, 0);
+//				refreshLDWUI();
+//			}
+//			break;
 		default:
 			break;
 		}
@@ -370,10 +380,11 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 		mADASAssistanceLayout = (RelativeLayout) findViewById(R.id.layout_adas_assistance);
 		mADASAssistanceBtn = (Button) findViewById(R.id.btn_adas_assistance);
-		mADASForwardWarningLayout = (RelativeLayout) findViewById(R.id.layout_settings_adas_forward_sensibility);
-		mADASForwardWarningTextView = (TextView) findViewById(R.id.tv_settings_adas_forward_sensibility);
-		mADASOffsetWarningLayout = (RelativeLayout) findViewById(R.id.layout_settings_adas_offset_sensibility);
-		mADASOffsetWarningTextView = (TextView) findViewById(R.id.tv_settings_adas_offset_sensibility);
+		/**adas需求变更 暂时拿掉**/
+//		mADASForwardWarningLayout = (RelativeLayout) findViewById(R.id.layout_settings_adas_forward_sensibility);
+//		mADASForwardWarningTextView = (TextView) findViewById(R.id.tv_settings_adas_forward_sensibility);
+//		mADASOffsetWarningLayout = (RelativeLayout) findViewById(R.id.layout_settings_adas_offset_sensibility);
+//		mADASOffsetWarningTextView = (TextView) findViewById(R.id.tv_settings_adas_offset_sensibility);
 		mADASOsdLayout = (RelativeLayout) findViewById(R.id.layout_settings_assistance_info);
 		mADASOsdBtn = (Button) findViewById(R.id.btn_settings_assistance_info);
         mADASConfigLayout = (RelativeLayout) findViewById(R.id.layout_settings_adas_config);
@@ -458,8 +469,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mHandsetLayout.setOnClickListener(this);// 遥控器按键功能
 		
 		mADASAssistanceBtn.setOnClickListener(this);//ADAS驾驶安全辅助
-		mADASForwardWarningLayout.setOnClickListener(this);//向前距离报警灵敏度
-		mADASOffsetWarningLayout.setOnClickListener(this);//道路偏移报警灵敏度
+		/**adas需求变更 暂时拿掉**/
+//		mADASForwardWarningLayout.setOnClickListener(this);//向前距离报警灵敏度
+//		mADASOffsetWarningLayout.setOnClickListener(this);//道路偏移报警灵敏度
 		mADASOsdBtn.setOnClickListener(this);//辅助信息显示
 		mADASConfigLayout.setOnClickListener(this);//ADAS配置
 	}
@@ -600,44 +612,54 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					});
 					mCustomDialog.show();
 				} else {
+					showLoading();
+
 					if (mAdasConfigParamter.enable == 0) {
 						mAdasConfigParamter.enable = 1;
 					} else {
 						mAdasConfigParamter.enable = 0;
 					}
-					switchAdasEnableUI(mAdasConfigParamter.enable == 1);
+					GolukApplication.getInstance().getIPCControlManager()
+							.setT1AdasConfigEnable(mAdasConfigParamter.enable);	
 				}
 				break;
-			case R.id.layout_settings_adas_forward_sensibility:
-				if (mAdasConfigParamter == null) {
-					return;
-				}
-				Intent forwardIntent = new Intent(SettingsActivity.this, AdasSensibilityActivity.class);
-				forwardIntent.putExtra(AdasSensibilityActivity.FROM_TYPE, 0);
-				forwardIntent.putExtra(AdasSensibilityActivity.SENSIBILITY_DATA, mAdasConfigParamter.fcw_warn_level);
-				startActivityForResult(forwardIntent, REQUEST_CODE_ADAS_FCW_WARNING);
-				break;
-			case R.id.layout_settings_adas_offset_sensibility:
-				if (mAdasConfigParamter == null) {
-					return;
-				}
-				Intent offsetIntent = new Intent(SettingsActivity.this, AdasSensibilityActivity.class);
-				offsetIntent.putExtra(AdasSensibilityActivity.FROM_TYPE, 1);
-				offsetIntent.putExtra(AdasSensibilityActivity.SENSIBILITY_DATA, mAdasConfigParamter.ldw_warn_level);
-				startActivityForResult(offsetIntent, REQUEST_CODE_ADAS_LDW_WARNING);
-				break;
+				/**adas需求变更 暂时拿掉**/
+//			case R.id.layout_settings_adas_forward_sensibility:
+//				if (mAdasConfigParamter == null) {
+//					return;
+//				}
+//				Intent forwardIntent = new Intent(SettingsActivity.this, AdasSensibilityActivity.class);
+//				forwardIntent.putExtra(AdasSensibilityActivity.FROM_TYPE, 0);
+//				forwardIntent.putExtra(AdasSensibilityActivity.SENSIBILITY_DATA, mAdasConfigParamter.fcw_warn_level);
+//				startActivityForResult(forwardIntent, REQUEST_CODE_ADAS_FCW_WARNING);
+//				break;
+//			case R.id.layout_settings_adas_offset_sensibility:
+//				if (mAdasConfigParamter == null) {
+//					return;
+//				}
+//				Intent offsetIntent = new Intent(SettingsActivity.this, AdasSensibilityActivity.class);
+//				offsetIntent.putExtra(AdasSensibilityActivity.FROM_TYPE, 1);
+//				offsetIntent.putExtra(AdasSensibilityActivity.SENSIBILITY_DATA, mAdasConfigParamter.ldw_warn_level);
+//				startActivityForResult(offsetIntent, REQUEST_CODE_ADAS_LDW_WARNING);
+//				break;
 			case R.id.btn_settings_assistance_info:
 				if (mAdasConfigParamter == null) {
 					return;
 				}
+				showLoading();
 				if (mAdasConfigParamter.osd == 0) {
 					mAdasConfigParamter.osd = 1;
 				} else {
 					mAdasConfigParamter.osd = 0;
 				}
+				GolukApplication.getInstance().getIPCControlManager()
+						.setT1AdasConfigOSD(mAdasConfigParamter.osd);
 				refreshOSDUI();
 				break;
 			case R.id.layout_settings_adas_config:
+				if (mAdasConfigParamter == null) {
+					return;
+				}
 				Intent intent = new Intent(SettingsActivity.this, AdasConfigActivity.class);
 				intent.putExtra(AdasVerificationActivity.ADASCONFIGDATA, mAdasConfigParamter);
 				startActivity(intent);
@@ -1163,6 +1185,24 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				getT1AutoRotaingCallback(msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_SetAutoRotationCfg) {// 设置T1图像自动翻转
 				setT1AutoRotaingCallback(msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_GetADASConfig) {
+				if (RESULE_SUCESS == param1) {
+					if (!TextUtils.isEmpty((String) param2)) {
+						mAdasConfigParamter = JSON.parseObject((String)param2, AdasConfigParamterBean.class);
+						switchAdasEnableUI(mAdasConfigParamter.enable == 1);
+						return;
+					}
+				}
+				switchAdasEnableUI(false);
+			} else if (msg == IPC_VDCP_Msg_SetADASConfig){
+				
+				closeLoading();
+				if (RESULE_SUCESS == param1) {
+					switchAdasEnableUI(mAdasConfigParamter.enable == 1);
+				} else {
+					mAdasConfigParamter.enable = (Integer) mADASAssistanceBtn.getTag();
+					mAdasConfigParamter.osd = (Integer) mADASOsdBtn.getTag();
+				}
 			}
 		}
 	}

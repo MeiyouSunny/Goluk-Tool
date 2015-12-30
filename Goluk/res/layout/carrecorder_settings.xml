@@ -669,7 +669,7 @@
                     android:background="@color/setting_line_color" />
             </RelativeLayout>
             <!-- 向前距离报警灵敏度 -->
-            <RelativeLayout
+            <!--RelativeLayout
                 android:id="@+id/layout_settings_adas_forward_sensibility"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
@@ -712,9 +712,9 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginLeft="15dp"
                     android:background="@color/setting_line_color" />
-            </RelativeLayout>
+            </RelativeLayout!-->
             <!-- 道路偏移报警灵敏度 -->
-            <RelativeLayout
+            <!--  RelativeLayout
                 android:id="@+id/layout_settings_adas_offset_sensibility"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
@@ -757,7 +757,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginLeft="15dp"
                     android:background="@color/setting_line_color" />
-            </RelativeLayout>
+            </RelativeLayout!-->
             <!-- 辅助信息显示 -->
             <RelativeLayout
                 android:id="@+id/layout_settings_assistance_info"

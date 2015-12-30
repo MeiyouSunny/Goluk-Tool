@@ -61,6 +61,13 @@ public class AdasVehicleConfigActivity extends BaseActivity implements OnClickLi
 	}
 
 	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		mApp.setContext(this, TAG);
+	}
+
+	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		// TODO Auto-generated method stub
 		outState.putSerializable(CUSTOMDATA, mCustomVehicleList);

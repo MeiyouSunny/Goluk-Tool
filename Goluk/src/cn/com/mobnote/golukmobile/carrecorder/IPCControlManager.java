@@ -6,7 +6,10 @@ import java.util.Iterator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.adas.AdasConfigParamterBean;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
@@ -827,7 +830,40 @@ public class IPCControlManager implements IPCManagerFn {
 	 */
 	public boolean getT1AdasConfig() {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
-				IPCManagerFn.IPC_VDCPCmd_GetAutoRotationCfg, "");
+				IPCManagerFn.IPC_VDCPCmd_GetADASConfig, "");
+	}
+
+	/**
+	 * 设置T1 ADAS配置开关
+	 * 
+	 * @return
+	 */
+	public boolean setT1AdasConfigEnable(int enabled) {
+		String s = "{\"enable\":" + enabled + "}";
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetADASConfig , s);
+	}
+
+	/**
+	 * 设置T1 ADAS OSD配置开关
+	 * 
+	 * @return
+	 */
+	public boolean setT1AdasConfigOSD(int osd) {
+		String s = "{\"osd\":" + osd + "}";
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetADASConfig , s);
+	}
+
+	/**
+	 * 设置T1 ADAS配置所有参数
+	 * 
+	 * @return
+	 */
+	public boolean setT1AdasConfigAll(AdasConfigParamterBean data) {
+		String s = JSON.toJSONString(data);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetADASConfig , s);
 	}
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {

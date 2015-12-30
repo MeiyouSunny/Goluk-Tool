@@ -17,6 +17,8 @@
 				android:layout_alignParentBottom="true"
 				android:layout_marginBottom="18dp"
 				android:text="加载中，请稍后..."
+				android:paddingLeft ="15dp"
+				android:paddingRight ="15dp"
 				android:textSize="14sp"
 				android:textColor="#ffffff"/>
 			
