@@ -192,10 +192,11 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 		// TODO Auto-generated method stub
 		mPosition = position;
 		int len = mCarTypeAdapter.getCount();
-		if (position > len - 4) {
+		int customLen =  mCustomVehicleList.size();
+		if (position > len - 1 - customLen) {
 			Intent intent = new Intent(AdasSeletedVehicleTypeActivity.this, AdasVehicleConfigActivity.class);
 			intent.putExtra(AdasVehicleConfigActivity.CUSTOMDATA, mCustomVehicleList);
-			intent.putExtra(AdasVehicleConfigActivity.CUSTOMINDEX, mCustomVehicleList.size() - len + position);
+			intent.putExtra(AdasVehicleConfigActivity.CUSTOMINDEX, customLen - len + position);
 			startActivityForResult(intent, REQUEST_CODE_VEHICLE_CONFIG);
 		} else {
 			mCarTypeAdapter.setSelectedId(position);
