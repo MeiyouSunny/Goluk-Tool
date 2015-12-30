@@ -54,17 +54,7 @@
         android:layout_below="@id/wifilist_textView1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:contentDescription="@string/imgdes"
-        android:src="@drawable/connect_gif_ipc_bluelight" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="158dp"
-        android:layout_height="46dp"
-        android:layout_alignTop="@id/imageView1"
-        android:layout_below="@id/wifilist_textView1"
-        android:layout_centerHorizontal="true"
-        android:background="@anim/ipc_signal"
+        android:background="@anim/anim_ipcbind_g_direct_connect"
         android:contentDescription="@string/imgdes" />
 
     <!-- 提示 "切出程序，在手机设置中连接" -->
@@ -124,9 +114,9 @@
         android:layout_marginBottom="18dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="@drawable/connect_mianbtn_ash"
+        android:background="@drawable/ipcbind_btn_disable"
         android:text="@string/next_text"
-        android:textColor="@color/white"
+        android:textColor="@color/color_bind_btn_txt"
         android:textSize="20sp" />
 
     <TextView

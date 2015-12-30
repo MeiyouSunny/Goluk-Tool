@@ -115,5 +115,7 @@
 	<color name="color_input_count">#5f5f5f</color>
 	
 	<color name="color_shareselecttype">#99ffffff</color>
+	
+	<color name="color_bind_btn_txt">#047cf3</color>
 
 </resources>

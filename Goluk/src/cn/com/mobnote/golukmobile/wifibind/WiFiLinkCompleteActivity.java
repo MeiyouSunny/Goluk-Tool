@@ -86,6 +86,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	private WifiManager mWifiManager = null;
 
 	private int mStep = 0;
+	/** 用户要绑定的设备类型 */
+	private String mIPcType = "";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(mContext, TAG);
+
+		getIntentData();
 
 		collectLog("onCreate", "-----1");
 		mContext = this;
@@ -112,6 +116,17 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		// 6秒后，没有配置成功，直接跳转“等待连接”界面
 		mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_WAITING_VIEW, TIMEOUT_SETIPC);
 		EventBus.getDefault().register(this);
+	}
+
+	public String getCurrentIpcType() {
+		return mIPcType;
+	}
+
+	private void getIntentData() {
+		Intent intent = this.getIntent();
+		if (null != intent) {
+			mIPcType = intent.getStringExtra(WifiUnbindSelectTypeActivity.KEY_IPC_TYPE);
+		}
 	}
 
 	private void initChildView() {
@@ -475,7 +490,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		mMiddleLayout.addView(layout3.getRootLayout());
 		mCurrentLayout = layout3;
 		layout3.start();
-		mCompleteBtn.setBackgroundResource(R.drawable.connect_mianbtn);
+		mCompleteBtn.setBackgroundResource(R.drawable.ipcbind_btn_able);
 		mProgressImg.setBackgroundResource(R.drawable.setp_4);
 	}
 

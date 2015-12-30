@@ -130,8 +130,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	private void initView() {
 		// 获取页面元素
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
-		mIpcSignalImage = (ImageView) findViewById(R.id.imageView2);
-		mIpcSignalAnim = (AnimationDrawable) mIpcSignalImage.getBackground();
+		mIpcSignalImage = (ImageView) findViewById(R.id.imageView1);
 		mDescTitleText = (TextView) findViewById(R.id.wifilist_textView1);
 		mDescTitleText2 = (TextView) findViewById(R.id.wifilist_textView3);
 		mDescTitleText4 = (TextView) findViewById(R.id.wifilist_textView4);
@@ -139,13 +138,13 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		mHelpTv = (TextView) findViewById(R.id.wifi_link_list_help);
 		mHelpTv.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); // 下划线
 
+		switchView();
+
 		// 注册事件
 		mBackBtn.setOnClickListener(this);
 		mNextBtn.setOnClickListener(this);
 		mHelpTv.setOnClickListener(this);
 
-		// 启动动画
-		mIpcSignalAnim.start();
 		// 修改title说明文字颜色
 		final String connStr1 = getResources().getString(R.string.wifi_link_ok) + "<font color=\"#0587ff\"> "
 				+ getResources().getString(R.string.wifi_link_wifi_light) + " </font>"
@@ -158,6 +157,18 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
 		this.nextCan();
 		setStateSwitch();
+	}
+
+	/**
+	 * 根据不同的硬件系列，切换不同的背景图片
+	 * 
+	 * @author jyf
+	 */
+	private void switchView() {
+		mIpcSignalImage.setBackgroundResource(getAnimal());
+		mIpcSignalAnim = (AnimationDrawable) mIpcSignalImage.getBackground();
+		// 启动动画
+		mIpcSignalAnim.start();
 	}
 
 	private void setStateSwitch() {
@@ -174,6 +185,14 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			break;
 		default:
 			break;
+		}
+	}
+
+	private int getAnimal() {
+		if (IPCControlManager.MODEL_T.equals(mIPcType)) {
+			return R.anim.anim_ipcbind_t_direct_connect;
+		} else {
+			return R.anim.anim_ipcbind_g_direct_connect;
 		}
 	}
 
@@ -457,16 +476,17 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		// 跳转到修改热点密码页面
 		Intent modifyPwd = new Intent(WiFiLinkListActivity.this, WiFiLinkCompleteActivity.class);
 		modifyPwd.putExtra("cn.com.mobnote.golukmobile.wifiname", WiFiInfo.IPC_SSID);
+		modifyPwd.putExtra(WifiUnbindSelectTypeActivity.KEY_IPC_TYPE, mIPcType);
 		startActivity(modifyPwd);
 	}
 
 	private void nextCan() {
 		// mIsConnSucess = true;
-		mNextBtn.setBackgroundResource(R.drawable.connect_mianbtn);
+		mNextBtn.setBackgroundResource(R.drawable.ipcbind_btn_finish);
 	}
 
 	private void nextNotCan() {
-		// mNextBtn.setBackgroundResource(R.drawable.connect_mianbtn_ash);
+		// mNextBtn.setBackgroundResource(R.drawable.connect_btn_finish_grey);
 		// mIsConnSucess = false;
 	}
 
@@ -501,6 +521,9 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		if (null != mWac) {
 			mWac.unbind();
 			mWac = null;
+		}
+		if (null != mIpcSignalAnim) {
+			mIpcSignalAnim.stop();
 		}
 		LiveDialogManager.getManagerInstance().dismissTwoButtonDialog();
 		this.dimissLoadingDialog();
