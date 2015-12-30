@@ -117,5 +117,6 @@
 	<color name="color_shareselecttype">#99ffffff</color>
 	
 	<color name="color_bind_btn_txt">#047cf3</color>
+	<color name="color_ipcbind_bg">#f7f9fa</color>
 
 </resources>

@@ -80,7 +80,7 @@
     <string name="wifi_link_27_text">你的Goluk已成功连接到手机</string>
     <string name="wifi_link_28_text">开始使用</string>
     <string name="wifi_link_29_text">Goluk WiFi</string>
-    <string name="wifi_link_30_text">正常使用中，手机客户端启动后将自动建立WiFi热点，极路客自行连接其热点。在手机客户内可以享受极路客提供的视频预览、精彩分享、网络直播等体验。</string>
+    <string name="wifi_link_30_text">正常使用中,手机客户端启动后将自动建立WiFi热点,极路客自行连接其热点。在手机客户内可以享受极路客提供的视频预览、精彩分享、网络直播等体验。</string>
     <string name="wifi_link_31_text">正在为你配置极路客Wifi</string>
     <string name="wifi_link_32_text">等待极路客连接到手机</string>
     <string name="wifi_link_33_text">连接出现问题怎么办</string>

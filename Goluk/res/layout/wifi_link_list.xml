@@ -3,13 +3,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F1F1F1" >
+    android:background="@color/color_ipcbind_bg" >
 
     <RelativeLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
         android:layout_height="62dp"
-        android:background="#f1f1f1" >
+        android:background="@color/color_ipcbind_bg" >
 
         <ImageButton
             android:id="@+id/back_btn"
@@ -109,7 +109,7 @@
     <Button
         android:id="@+id/next_btn"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="42dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="18dp"
         android:layout_marginLeft="20dp"
@@ -117,7 +117,7 @@
         android:background="@drawable/ipcbind_btn_disable"
         android:text="@string/next_text"
         android:textColor="@color/color_bind_btn_txt"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/wifi_link_list_help"
