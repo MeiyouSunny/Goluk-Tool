@@ -303,7 +303,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 				holder.v = (ImageView) convertView.findViewById(R.id.v);
 				holder.praiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
 				holder.zanIcon = (ImageView) convertView.findViewById(R.id.zanIcon);
-				holder.zanText = (TextView) convertView.findViewById(R.id.zanText);
+//				holder.zanText = (TextView) convertView.findViewById(R.id.zanText);
 
 				holder.commentLayout = (LinearLayout) convertView.findViewById(R.id.commentLayout);
 				holder.commentIcon = (ImageView) convertView.findViewById(R.id.commentIcon);
@@ -330,6 +330,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(mWidth, height);
 				mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
 				holder.imageLayout.setLayoutParams(mPlayerLayoutParams);
+				holder.tvPraiseCount = (TextView) convertView.findViewById(R.id.tv_share_video_list_item_praise_count);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
@@ -371,7 +372,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 			} else {
 				showHead(holder.headimg, clusterInfo.mUserEntity.headportrait);
 			}
-			
+
 			holder.userInfoLayout.setOnClickListener(new OnClickListener() {
 				
 				@Override
@@ -387,7 +388,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 			});
 			holder.nikename.setText(clusterInfo.mUserEntity.nickname);
 			holder.time.setText(GolukUtils.getCommentShowFormatTime(clusterInfo.mVideoEntity.sharingtime));
-			
+
 			setVideoExtra(holder, clusterInfo);
 			// 设置显示 视频位置信息
 			final String location = clusterInfo.mVideoEntity.location;
@@ -397,7 +398,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 				holder.location.setText(location);
 			}
 
-			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber);
+//			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber);
 			holder.weiguan.setText(clusterInfo.mVideoEntity.clicknumber + " 围观");
 			int count = Integer.parseInt(clusterInfo.mVideoEntity.comcount);
 			holder.totalcomments.setText("查看所有" + clusterInfo.mVideoEntity.comcount + "条评论");
@@ -407,17 +408,25 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 				holder.totalcomments.setVisibility(View.GONE);
 			}
 
-			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber + " 赞");
+//			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber + " 赞");
 			initListener(holder, index_v);
 			// 没点过
 			if ("0".equals(clusterInfo.mVideoEntity.ispraise)) {
 				holder.zText.setTextColor(Color.rgb(136, 136, 136));
 				holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like);
 			} else {// 点赞过
-				holder.zText.setTextColor(Color.rgb(59, 151, 245));
+				holder.zText.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
 				holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like_press);
 			}
-			
+
+			if ("-1".equals(clusterInfo.mVideoEntity.praisenumber)) {
+				holder.tvPraiseCount.setText(mContext.getString(R.string.str_usercenter_praise));
+			} else {
+				holder.tvPraiseCount.setText(
+						GolukUtils.getFormatNumber(clusterInfo.mVideoEntity.praisenumber) +
+						mContext.getString(R.string.str_usercenter_praise));
+			}
+
 			if (clusterInfo.mVideoEntity.commentList.size() >= 1) {
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(0);
 				if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
@@ -708,7 +717,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 
 		LinearLayout praiseLayout;
 		ImageView zanIcon;
-		TextView zanText;
+//		TextView zanText;
 
 		LinearLayout commentLayout;
 		ImageView commentIcon;
@@ -722,6 +731,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 		TextView weiguan;
 		TextView detail;
 		TextView totalcomments;
+		TextView tvPraiseCount;
 
 		LinearLayout totlaCommentLayout;
 		TextView comment1;
