@@ -92,6 +92,9 @@ public class AdasVerificationActivity extends BaseActivity implements OnClickLis
 		mCompleteButton = (Button) findViewById(R.id.button_verify_complete);
 		mCompleteButton.setOnClickListener(this);
 		mFrameLayoutOverlay = (AdasVerificationFrameLayout) findViewById(R.id.framelayout_Overlay);
+		if (mAdasConfigParamter.point_x != 0) {
+			mFrameLayoutOverlay.setLocation(mAdasConfigParamter.point_x, mAdasConfigParamter.point_y);
+		}
 		RelativeLayout playerLayout = (RelativeLayout) findViewById(R.id.relativelayout_playerview);
 		ViewGroup.LayoutParams lp = playerLayout.getLayoutParams();
 		lp.width = screenWidth;

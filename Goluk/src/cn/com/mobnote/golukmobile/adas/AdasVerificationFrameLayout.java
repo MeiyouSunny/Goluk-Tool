@@ -31,6 +31,9 @@ public class AdasVerificationFrameLayout extends FrameLayout {
 	
 	private int mWidth = 0;
 	private int mHeight = 0;
+	
+	private int mRawX = 0;
+	private int mRawY = 0;		
 	public AdasVerificationFrameLayout(Context context) {
 		super(context);
 		init();
@@ -51,8 +54,12 @@ public class AdasVerificationFrameLayout extends FrameLayout {
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		// TODO Auto-generated method stub
 		super.onSizeChanged(w, h, oldw, oldh);
-		mValidRect = new Rect(23*w/64, h/4, 41*w/64, 3*h/4);
-		mPoint.set(w/2, h/2);
+		mValidRect = new Rect(23*w/64, h/4, 41*w/64, 5*h/8);
+		if (mRawX == 0) {
+			mPoint.set(w / 2, h / 2);
+		} else {
+			mPoint.set(mRawX*w/1920, mRawY*h/1080);
+		}
 		mWidth = w;
 		mHeight = h;
 	}
@@ -134,5 +141,10 @@ public class AdasVerificationFrameLayout extends FrameLayout {
 		int y = mPoint.y * 1080 / mHeight;
 		Point point = new Point(x, y);
 		return point;
+	}
+	
+	public void setLocation(int x, int y) {
+		mRawX = x;
+		mRawY = y;
 	}
 }
