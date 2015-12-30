@@ -301,7 +301,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mImageFlipLayout.setVisibility(View.VISIBLE);
 			mParkingSleepLayout.setVisibility(View.VISIBLE);
 			mHandsetLayout.setVisibility(View.VISIBLE);
-			mParkingSleepHintText.setText(this.getResources().getString(R.string.str_settings_sleep_hint_text_t1));
+			mParkingSleepHintText.setText(this.getResources().getString(R.string.str_settings_sleep_hint_text_g1));
 			mParkingSecurityHintText
 					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g2));
 			mCarrecorderWonderfulLine.setVisibility(View.GONE);
@@ -703,11 +703,18 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		super.onResume();
 		GolukApplication.getInstance().setContext(this, "carrecordsettings");
 		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();
-		if (null != mVideoConfigState) {
-			refreshUI_soundRecod(mVideoConfigState.AudioEnabled);
-			setData2UI();
+		int t1VideoCfg = GolukApplication.getInstance().getT1VideoCfgState();
+		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+			refreshUI_soundRecod(t1VideoCfg);
 		} else {
-			mAudioBtn.setBackgroundResource(R.drawable.set_close_btn);
+			if (null != mVideoConfigState) {
+				refreshUI_soundRecod(mVideoConfigState.AudioEnabled);
+			} else {
+				mAudioBtn.setBackgroundResource(R.drawable.set_close_btn);
+			}
+		}
+		if (null != mVideoConfigState) {
+			setData2UI();
 		}
 
 	}
@@ -773,6 +780,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					mVideoConfigState = IpcDataParser.parseVideoConfigState((String) param2);
 					// updateVideoQualityText();
 					setData2UI();
+					if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+						return ;
+					}
 					if (null != mVideoConfigState) {
 						if (1 == mVideoConfigState.AudioEnabled) {
 							mAudioBtn.setBackgroundResource(R.drawable.set_open_btn);
