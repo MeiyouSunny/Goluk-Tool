@@ -49,7 +49,7 @@ public class AdasVerificationFrameLayout extends FrameLayout {
 		super(context, attrs, defStyle);
 		init();
 	}
-	
+
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		// TODO Auto-generated method stub
@@ -142,7 +142,7 @@ public class AdasVerificationFrameLayout extends FrameLayout {
 		Point point = new Point(x, y);
 		return point;
 	}
-	
+
 	public void setLocation(int x, int y) {
 		mRawX = x;
 		mRawY = y;

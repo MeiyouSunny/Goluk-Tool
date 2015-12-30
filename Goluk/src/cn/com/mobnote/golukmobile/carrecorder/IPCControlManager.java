@@ -820,6 +820,15 @@ public class IPCControlManager implements IPCManagerFn {
 				IPCManagerFn.IPC_VDCPCmd_SetAutoRotationCfg, status);
 	}
 
+	/**
+	 * 获取T1 ADAS配置
+	 * 
+	 * @return
+	 */
+	public boolean getT1AdasConfig() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetAutoRotationCfg, "");
+	}
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		// LogUtil.e("jyf",
