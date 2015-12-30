@@ -65,9 +65,9 @@
         android:layout_marginBottom="34dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="@drawable/connect_mianbtn"
+        android:background="@drawable/ipcbind_btn_finish"
         android:text="@string/keep_on_text"
-        android:textColor="@color/white"
+        android:textColor="@color/color_bind_btn_txt"
         android:textSize="20sp" />
 
     <TextView

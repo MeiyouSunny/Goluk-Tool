@@ -780,6 +780,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					mVideoConfigState = IpcDataParser.parseVideoConfigState((String) param2);
 					// updateVideoQualityText();
 					setData2UI();
+					if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+						return ;
+					}
 					if (null != mVideoConfigState) {
 						if (1 == mVideoConfigState.AudioEnabled) {
 							mAudioBtn.setBackgroundResource(R.drawable.set_open_btn);
