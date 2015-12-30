@@ -511,7 +511,7 @@
 	<string name="str_adas_low_sensibility">低灵敏度</string>
 	<string name="str_adas_custom_car">自定义车型</string>
 	<string name="str_adas_car_name">爱车名称</string>
-	<string name="str_adas_length_unit">mm</string>
+	<string name="str_adas_length_unit">cm</string>
 	<string name="str_adas_front_wheelbase">前轴距（A）</string>
 	<string name="str_adas_headway_distance">车头距（B）</string>
 	<string name="str_adas_height_distance">高度（C）</string>
@@ -525,8 +525,9 @@
 	<string name="str_high">高</string>
 	<string name="str_adas_hint">您还没有配置ADAS，是否现在去配置？</string>
 	<string name="str_adas_dialog_confirm">配置ADAS</string>
-	
-	 <string name="unbind_select_type_title">选择您的极路客进行配对</string>
+	<string name="str_custom">自定义</string>
+	<string name="str_adas_paramter_error">为了准确地向您提供驾驶安全辅助信息，请输入正确的位置参数哦</string>
+	<string name="unbind_select_type_title">选择您的极路客进行配对</string>
     <string name="unbind_select_type_t1">Goluk T1</string>
     <string name="unbind_select_type_g2">Goluk G2</string>
     <string name="unbind_select_type_g1">Goluk G1</string>
@@ -546,4 +547,5 @@
 	<string name="str_new_updatefile_loading">新极路客固件升级文件正在下载…</string>
 	<string name="str_getwificfg_fail">获取失败</string>
 	<string name="unbind_del_confirm_dialog_txt">确认删除此设备信息？</string>
+
 </resources>
