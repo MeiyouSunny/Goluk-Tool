@@ -98,12 +98,12 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 			mIPCViewLayout.setVisibility(View.GONE);
 			mPwdLayout.setEnabled(false);
 			mTextVersion.setText("");
+			mTextCameraName.setText("");
+			mTextPasswordName.setText("");
 		}
 		// 密码
 		if (null != mApplication && mApplication.isBindSucess() && mApplication.isIpcLoginSuccess) {
 			mApplication.getIPCControlManager().getIpcWifiConfig();
-			// String ipcPwd = SharedPrefUtil.getIpcPwd();
-			// mTextPasswordName.setText(ipcPwd);
 		}
 	}
 
