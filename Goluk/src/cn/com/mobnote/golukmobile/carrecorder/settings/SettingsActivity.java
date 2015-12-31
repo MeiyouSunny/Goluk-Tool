@@ -1195,6 +1195,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				}
 				switchAdasEnableUI(false);
 			} else if (msg == IPC_VDCP_Msg_SetADASConfig){
+				if (GolukApplication.getInstance().getContext() != this) {
+					return;
+				}
 				closeLoading();
 				if (RESULE_SUCESS == param1) {
 					GolukFileUtils.saveInt(GolukFileUtils.ADAS_FLAG, mAdasConfigParamter.enable);
