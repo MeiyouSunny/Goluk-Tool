@@ -576,7 +576,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 			holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
 		}
 	}
-	
+
 	/**
 	 * 设置，视频的，是否推荐，是否获奖，是否有参加活动
 	 * 
@@ -590,10 +590,22 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 		if (null == clusterInfo || null == holder) {
 			return;
 		}
+
+		if(null == clusterInfo.mVideoEntity) {
+			return;
+		}
+
 		String got = "";
 		if (null != clusterInfo.mVideoEntity.videoExtra) {
 			// 显示是否获奖
-			if (clusterInfo.mVideoEntity.videoExtra.isreward.equals("1")) {
+//			if (clusterInfo.mVideoEntity.videoExtra.isreward.equals("1")) {
+//				holder.videoGoldImg.setVisibility(View.VISIBLE);
+//			} else {
+//				holder.videoGoldImg.setVisibility(View.GONE);
+//			}
+			String reward = clusterInfo.mVideoEntity.videoExtra.isreward;
+			String sysflag = clusterInfo.mVideoEntity.videoExtra.sysflag;
+			if(null != reward && "1".equals(reward) && null != sysflag && "1".equals(sysflag)) {
 				holder.videoGoldImg.setVisibility(View.VISIBLE);
 			} else {
 				holder.videoGoldImg.setVisibility(View.GONE);

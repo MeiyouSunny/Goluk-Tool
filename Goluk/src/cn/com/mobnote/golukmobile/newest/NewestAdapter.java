@@ -290,7 +290,8 @@ public class NewestAdapter extends BaseAdapter {
 			}
 
 			String reward = mVideoSquareInfo.mVideoEntity.videoExtra.isreward;
-			if(null != reward && "1".equals(reward)) {
+			String sysflag = mVideoSquareInfo.mVideoEntity.videoExtra.sysflag;
+			if(null != reward && "1".equals(reward) && null != sysflag && "1".equals(sysflag)) {
 				holder.ivReward.setVisibility(View.VISIBLE);
 			} else {
 				holder.ivReward.setVisibility(View.GONE);

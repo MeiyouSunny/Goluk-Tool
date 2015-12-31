@@ -82,6 +82,8 @@ public class VolleyDataFormat {
 							ve.isrecommend = gb.isrecommend;
 							ve.isreward = gb.isreward;
 							ve.topicname = gb.topicname;
+							ve.atflag = gb.atflag;
+							ve.sysflag = gb.sysflag;
 							mVideoEntity.videoExtra = ve;
 						}
 						
