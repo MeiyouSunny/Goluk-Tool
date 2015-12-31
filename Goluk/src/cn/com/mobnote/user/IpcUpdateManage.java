@@ -106,8 +106,10 @@ public class IpcUpdateManage implements IPCManagerFn {
 	 */
 	public boolean requestInfo(int function, String vipc) {
 		if (!UserUtils.isNetDeviceAvailable(mApp.getContext())) {
-			GolukUtils.showToast(mApp.getContext(),
-					mApp.getContext().getResources().getString(R.string.user_net_unavailable));
+			if (function == FUNCTION_SETTING_APP || function == FUNCTION_SETTING_IPC) {
+				GolukUtils.showToast(mApp.getContext(),
+						mApp.getContext().getResources().getString(R.string.user_net_unavailable));
+			}
 			return false;
 		} else {
 			if (isHasUpdateDialogShow()) {

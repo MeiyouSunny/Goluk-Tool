@@ -48,6 +48,7 @@ public class GuideActivity extends BaseActivity {
 
 		setContentView(R.layout.guide);
 		mContext = this;
+		GolukApplication.getInstance().setContext(this, "GuideActivity");
 		getIntentData();
 
 		((GolukApplication) this.getApplication()).initLogic();

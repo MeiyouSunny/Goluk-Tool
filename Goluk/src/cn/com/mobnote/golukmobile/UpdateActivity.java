@@ -304,6 +304,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					if (mIsExit) {
 						return;
 					}
+					if (mVoiceLayout.getVisibility() == View.VISIBLE) {
+						mVoiceLayout.setVisibility(View.GONE);
+					}
 					mIsDisConnect = true;
 					UserUtils.showUpdateSuccess(mUpdateDialogFail, UpdateActivity.this, mApp.getContext()
 							.getResources().getString(R.string.str_ipc_update_fail));
@@ -674,9 +677,17 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				} else {
 					if (!(null != mFirstDialog && mFirstDialog.isShowing())
 							|| !(null != mSecondDialog && mSecondDialog.isShowing())) {
-						mApp.updateSuccess = false;
-						// 升级失败
-						mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_FAIL);
+						if (mStage.equals("1")) {
+							if (null == mUpdateDialogFail || !mUpdateDialogFail.isShowing()) {
+								mUpdateHandler.sendEmptyMessage(UPDATE_IPC_FIRST_DISCONNECT);
+							}
+						} else {
+							mApp.updateSuccess = false;
+							// 升级失败
+							if (null == mUpdateDialogFail || !mUpdateDialogFail.isShowing()) {
+								mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_FAIL);
+							}
+						}
 					}
 				}
 			}
@@ -697,13 +708,15 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				UserUtils.dismissUpdateDialog(mFirstDialog);
 				UserUtils.dismissUpdateDialog(mSendDialog);
 				mPrepareDialog = null;
-				mUpdateDialogSuccess = null;
 				mSendDialog = null;
 				mSendOk = null;
 				mUpdateDialog = null;
 				mUpdateDialogFail = null;
 				mFirstDialog = null;
 				mSendDialog = null;
+				if (null != mUpdateDialogSuccess && mUpdateDialogSuccess.isShowing()) {
+					return;
+				}
 				UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this,
 						this.getResources().getString(R.string.update_no_connect_ipc_hint));
 				mIsDisConnect = true;
@@ -852,6 +865,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		mScrollView.setVisibility(View.GONE);
 		mUpdateNewImage.setVisibility(View.VISIBLE);
 		mUpdateNewText.setVisibility(View.VISIBLE);
+		if (null != mIpcInfo) {
+			SharedPrefUtil.saveIPCVersion(mIpcInfo.version);
+		}
 	}
 
 	public void exit() {
