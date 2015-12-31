@@ -59,7 +59,7 @@
     </RelativeLayout>
     
     <RelativeLayout 
-         android:id="@+id/goluk_g1s_layout"
+         android:id="@+id/goluk_t1s_layout"
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:background="#ffffff"

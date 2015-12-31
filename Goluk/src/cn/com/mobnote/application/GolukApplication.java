@@ -1501,7 +1501,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 
 		if ("carrecorder".equals(mPageSource)) {
-			if (mIPCControlManager.mProduceName.equals(IPCControlManager.G1_SIGN)) {
+			if (mIPCControlManager.isG1Relative()) {
 				return false;
 			}
 		}
@@ -1509,7 +1509,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	}
 
 	public void setIpcDisconnect() {
-		mIPCControlManager.setIPCWifiState(false, "");
+		mIPCControlManager.setVdcpDisconnect();
 		if (null != mMainActivity) {
 			mMainActivity.closeAp();
 		}

@@ -308,7 +308,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	private void connFailed() {
 		collectLog("connFailed", "--------1------: ");
 		this.dimissLoadingDialog();
-		mApp.mIPCControlManager.setIPCWifiState(false, "");
+		mApp.mIPCControlManager.setVdcpDisconnect();
 		mApp.isIpcConnSuccess = false;
 		mCurrentState = STATE_FAILED;
 		setStateSwitch();
@@ -333,7 +333,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	public void ipcFailedCallBack() {
 		collectLog("ipcLinkFailedCallBack", "--------1");
 		GolukDebugUtils.e("", "WiFiLinkListActivity  通知logic连接ipc---dealAutoConn--------ipcLinkFailedCallBack：");
-		mApp.mIPCControlManager.setIPCWifiState(false, "");
+		mApp.mIPCControlManager.setVdcpDisconnect();
 		// if (!mIsCanAcceptIPC) {
 		// return;
 		// }
@@ -400,7 +400,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			collectLog("autoConnWifi", "----auto Conn--3: " + mCurrentState);
 			if (STATE_FAILED == mCurrentState || mCurrentState == STATE_SUCCESS) {
 				if (mCurrentState == STATE_SUCCESS) {
-					mApp.mIPCControlManager.setIPCWifiState(false, "");
+					mApp.mIPCControlManager.setVdcpDisconnect();
 				}
 				dealAutoConn();
 			}
@@ -492,6 +492,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
 	private void exit() {
 		mApp.setBinding(false);
+		mApp.mIPCControlManager.setVdcpDisconnect();
 		reportLog();
 		finish();
 		LiveDialogManager.getManagerInstance().dismissTwoButtonDialog();

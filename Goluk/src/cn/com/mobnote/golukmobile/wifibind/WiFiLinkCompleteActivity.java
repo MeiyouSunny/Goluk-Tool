@@ -263,7 +263,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		String ipcssid = WiFiInfo.IPC_SSID;
 		String ipcmac = WiFiInfo.IPC_MAC;
 		// 创建热点之前先断开ipc连接
-		mApp.mIPCControlManager.setIPCWifiState(false, "");
+		mApp.mIPCControlManager.setVdcpDisconnect();
 		// 改变Application-IPC退出登录
 		mApp.setIpcLoginOut();
 		// 调用韩峥接口创建手机热点

@@ -1216,7 +1216,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (mApp.mIPCControlManager.mProduceName.equals("G1")) {
+		if (mApp.mIPCControlManager.isG1Relative()) {
 			GolukApplication.getInstance().stopDownloadList();// 停止视频同步
 		}
 
@@ -1729,12 +1729,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					}
 					if (null != json) {
 						String imagename = "";
-						// if
-						// ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
-						// imagename = videoname.replace("mp4", "jpg");
-						// } else {
+
 						imagename = mNowDownloadName.replace("mp4", "jpg");
-						// }
+
 
 						if (filename.equals(imagename)) {
 							VideoShareInfo vsi = new VideoShareInfo();

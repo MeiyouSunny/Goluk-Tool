@@ -79,6 +79,19 @@ public class IPCControlManager implements IPCManagerFn {
 	}
 
 	/**
+	 * 判断是否是G1与T1S，两个处理流程是一样的
+	 * 
+	 * @return
+	 * @author jyf
+	 */
+	public boolean isG1Relative() {
+		boolean isG1 = IPCControlManager.G1_SIGN.equals(mProduceName);
+		boolean isT1S = IPCControlManager.T1s_SIGN.equals(mProduceName);
+
+		return isG1 || isT1S;
+	}
+
+	/**
 	 * 直接设置模式
 	 * 
 	 * @param mode
@@ -149,6 +162,15 @@ public class IPCControlManager implements IPCManagerFn {
 		boolean isSucess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPC_CommCmd_WifiChanged, json);
 		return isSucess;
+	}
+
+	/**
+	 * 设置VDCP断开连接
+	 * 
+	 * @author jyf
+	 */
+	public void setVdcpDisconnect() {
+		setIPCWifiState(false, "");
 	}
 
 	/**
