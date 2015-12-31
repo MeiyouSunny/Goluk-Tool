@@ -50,6 +50,7 @@ public class GolukUtils {
 
 	public static float mDensity = 1.0f;
 
+	public static final String T1S_WIFINAME_SIGN = "Goluk_T1S";
 	public static final String T1_WIFINAME_SIGN = "Goluk_T1";
 	public static final String G1G2_WIFINAME_SIGN = "Goluk";
 
@@ -761,8 +762,13 @@ public class GolukUtils {
 	 * @author jyf
 	 */
 	public static String getIpcTypeFromName(String mWillConnName) {
+		if (null == mWillConnName) {
+			return "";
+		}
 		String ipcType = "";
-		if (mWillConnName.startsWith(T1_WIFINAME_SIGN)) {
+		if (mWillConnName.startsWith(T1S_WIFINAME_SIGN)) {
+			ipcType = IPCControlManager.MODEL_G;
+		} else if (mWillConnName.startsWith(T1_WIFINAME_SIGN)) {
 			ipcType = IPCControlManager.MODEL_T;
 		} else if (mWillConnName.startsWith(G1G2_WIFINAME_SIGN)) {
 			ipcType = IPCControlManager.MODEL_G;

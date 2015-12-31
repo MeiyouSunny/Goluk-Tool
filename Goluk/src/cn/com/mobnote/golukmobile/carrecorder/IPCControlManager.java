@@ -33,7 +33,7 @@ public class IPCControlManager implements IPCManagerFn {
 	public static final String G1_SIGN = "G1";
 	public static final String G2_SIGN = "G2";
 	public static final String T1_SIGN = "T1";
-	public static final String T1s_SIGN = "T1s";
+	public static final String T1s_SIGN = "T1S";
 
 	public static final String MODEL_T = "T";
 	public static final String MODEL_G = "G";

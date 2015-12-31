@@ -86,7 +86,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 			mTextCameraName.setText(bean.ipc_ssid);
 			mTextVersion.setText(vIpc);
 			GolukApplication.getInstance().getIPCControlManager();
-			if (IPCControlManager.T1_SIGN.equals(ipcModel)) {
+			if (IPCControlManager.T1_SIGN.equals(ipcModel) || IPCControlManager.T1s_SIGN.equals(ipcModel)) {
 				mIPCimage.setImageResource(R.drawable.connect_t1_icon_1);
 			} else {
 				mIPCimage.setImageResource(R.drawable.ipc);
