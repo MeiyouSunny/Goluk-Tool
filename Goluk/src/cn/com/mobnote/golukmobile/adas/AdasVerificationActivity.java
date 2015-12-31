@@ -373,7 +373,6 @@ public class AdasVerificationActivity extends BaseActivity implements OnClickLis
 				EventAdasConfigStatus eventAdasConfigStatus = null;
 				if (mFromType == 0) {
 					eventAdasConfigStatus = new EventAdasConfigStatus(EventConfig.IPC_ADAS_CONFIG_FROM_GUIDE);
-					mAdasConfigParamter.enable = 1;
 					GolukFileUtils.saveInt(GolukFileUtils.ADAS_FLAG, mAdasConfigParamter.enable);
 				} else {
 					eventAdasConfigStatus = new EventAdasConfigStatus(EventConfig.IPC_ADAS_CONFIG_FROM_MODIFY);
@@ -397,6 +396,7 @@ public class AdasVerificationActivity extends BaseActivity implements OnClickLis
 	public void onClickListener() {
 		// TODO Auto-generated method stub
 		showCustomLoading();
+		mAdasConfigParamter.enable = 1;
 		GolukApplication.getInstance().getIPCControlManager().setT1AdasConfigAll(mAdasConfigParamter);
 	}
 }

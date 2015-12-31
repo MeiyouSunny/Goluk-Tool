@@ -6,6 +6,8 @@ import java.util.Iterator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import com.alibaba.fastjson.JSON;
 
 import cn.com.mobnote.application.GolukApplication;
@@ -862,6 +864,7 @@ public class IPCControlManager implements IPCManagerFn {
 	 */
 	public boolean setT1AdasConfigAll(AdasConfigParamterBean data) {
 		String s = JSON.toJSONString(data);
+		Log.v("dengting", "data = " + s);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_SetADASConfig , s);
 	}
