@@ -152,6 +152,15 @@ public class IPCControlManager implements IPCManagerFn {
 	}
 
 	/**
+	 * 设置VDCP断开连接
+	 * 
+	 * @author jyf
+	 */
+	public void setVdcpDisconnect() {
+		setIPCWifiState(false, "");
+	}
+
+	/**
 	 * 通知ipc连接手机热点
 	 * 
 	 * @param json

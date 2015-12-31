@@ -807,7 +807,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			mApp.mHandler.removeMessages(1003);
 			GetBaiduAddress.getInstance().exit();
 			unregisterListener();
-			mApp.mIPCControlManager.setIPCWifiState(false, "");
+			mApp.mIPCControlManager.setVdcpDisconnect();
 			mApp.setIpcLoginOut();
 			mApp.mUser.exitApp();
 			mApp.mTimerManage.timerCancel();
@@ -999,7 +999,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				// 连接失败
 				// wifiConnectFailed();
 			} else {
-				mApp.mIPCControlManager.setIPCWifiState(false, "");
+				mApp.mIPCControlManager.setVdcpDisconnect();
 				mApp.mIPCControlManager.setIPCWifiState(true, GolukApplication.mIpcIp);
 			}
 		}

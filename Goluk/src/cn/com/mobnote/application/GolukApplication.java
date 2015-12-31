@@ -1509,7 +1509,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	}
 
 	public void setIpcDisconnect() {
-		mIPCControlManager.setIPCWifiState(false, "");
+		mIPCControlManager.setVdcpDisconnect();
 		if (null != mMainActivity) {
 			mMainActivity.closeAp();
 		}
