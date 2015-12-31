@@ -95,6 +95,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 			mIPCNumberText.setText(this.getResources().getString(R.string.str_ipc_number_text) + ipcNumber);
 			mIPCVersionText.setText(this.getResources().getString(R.string.str_ipc_version_text) + vIpc);
 		} else {
+			mUnbindBtn.setText(this.getResources().getString(R.string.str_ipc_change_bind_news));
 			mIPCViewLayout.setVisibility(View.GONE);
 			mPwdLayout.setEnabled(false);
 			mTextVersion.setText("");

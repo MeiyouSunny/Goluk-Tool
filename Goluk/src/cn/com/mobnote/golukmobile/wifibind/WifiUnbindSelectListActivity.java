@@ -419,7 +419,8 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		} else {
 			setEditState();
 		}
-		mListAdapter.notifyDataSetChanged();
+		getBindHistoryData();
+		//mListAdapter.notifyDataSetChanged();
 	}
 
 	/**
