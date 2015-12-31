@@ -18,22 +18,23 @@ public class AdasVerificationFrameLayout extends FrameLayout {
 	private Rect mValidRect;
 	private Point mPoint = new Point();
 	private boolean mInTouchMode = false;
-	/**左移十字中心*/
+	/** 左移十字中心 */
 	public static final int LEFT = 0;
-	/**右移十字中心*/
+	/** 右移十字中心 */
 	public static final int RIGHT = 1;
-	/**上移十字中心*/
+	/** 上移十字中心 */
 	public static final int UP = 2;
-	/**下移十字中心*/
+	/** 下移十字中心 */
 	public static final int DOWN = 3;
-	/**移动步进*/
+	/** 移动步进 */
 	private static final int UNIT_STEP = 6;
-	
+
 	private int mWidth = 0;
 	private int mHeight = 0;
-	
+
 	private int mRawX = 0;
-	private int mRawY = 0;		
+	private int mRawY = 0;
+
 	public AdasVerificationFrameLayout(Context context) {
 		super(context);
 		init();
@@ -54,11 +55,11 @@ public class AdasVerificationFrameLayout extends FrameLayout {
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		// TODO Auto-generated method stub
 		super.onSizeChanged(w, h, oldw, oldh);
-		mValidRect = new Rect(23*w/64, h/4, 41*w/64, 5*h/8);
+		mValidRect = new Rect(23 * w / 64, h / 4, 41 * w / 64, 5 * h / 8);
 		if (mRawX == 0) {
 			mPoint.set(w / 2, h / 2);
 		} else {
-			mPoint.set(mRawX*w/1920, mRawY*h/1080);
+			mPoint.set(mRawX * w / 1920, mRawY * h / 1080);
 		}
 		mWidth = w;
 		mHeight = h;
@@ -71,11 +72,11 @@ public class AdasVerificationFrameLayout extends FrameLayout {
 		mInnerPaint.setStyle(Paint.Style.STROKE);
 		mInnerPaint.setStrokeWidth(4);
 		mInnerPaint.setStrokeJoin(Paint.Join.ROUND);
-		PathEffect effects = new DashPathEffect(new float[]{5,5,5,5},1);
+		PathEffect effects = new DashPathEffect(new float[] { 5, 5, 5, 5 }, 1);
 		mInnerPaint.setPathEffect(effects);
 		setWillNotDraw(false);
 	}
-	
+
 	@Override
 	protected void onDraw(Canvas canvas) {
 		// TODO Auto-generated method stub
@@ -95,10 +96,10 @@ public class AdasVerificationFrameLayout extends FrameLayout {
 		// TODO Auto-generated method stub
 		float x = event.getX();
 		float y = event.getY();
-		switch(event.getAction()) {
+		switch (event.getAction()) {
 		case MotionEvent.ACTION_MOVE:
-			if (mInTouchMode && mValidRect.contains((int)x, (int)y)) {
-				mPoint.set((int)x, (int)y);
+			if (mInTouchMode && mValidRect.contains((int) x, (int) y)) {
+				mPoint.set((int) x, (int) y);
 				invalidate();
 			}
 			break;
@@ -127,7 +128,7 @@ public class AdasVerificationFrameLayout extends FrameLayout {
 			y = mPoint.y + UNIT_STEP;
 			break;
 		}
-		if (mValidRect.contains((int)x, (int)y)) {
+		if (mValidRect.contains((int) x, (int) y)) {
 			mPoint.set(x, y);
 			invalidate();
 		}

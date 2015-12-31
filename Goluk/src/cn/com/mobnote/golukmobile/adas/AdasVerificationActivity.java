@@ -36,7 +36,8 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
-public class AdasVerificationActivity extends BaseActivity implements OnClickListener, RtspPlayerLisener, IPCManagerFn, ForbidBack, OnLeftClickListener {
+public class AdasVerificationActivity extends BaseActivity implements OnClickListener, RtspPlayerLisener, IPCManagerFn,
+		ForbidBack, OnLeftClickListener {
 
 	private static final String TAG = "AdasVerificationActivity";
 	public static final String FROM = "from";
@@ -52,7 +53,7 @@ public class AdasVerificationActivity extends BaseActivity implements OnClickLis
 	private ImageView mLoading = null;
 	/** 加载中动画对象 */
 	private AnimationDrawable mAnimationDrawable = null;
-	
+
 	private AdasVerificationFrameLayout mFrameLayoutOverlay;
 
 	private ImageView mLeftImageView;
@@ -60,11 +61,13 @@ public class AdasVerificationActivity extends BaseActivity implements OnClickLis
 	private ImageView mUpImageView;
 	private ImageView mDownImageView;
 	private Button mCompleteButton;
-	
-	private int mFromType = 0; /**车辆选择跳转：0，  配置页跳转：1**/
+
+	private int mFromType = 0;
+	/** 车辆选择跳转：0， 配置页跳转：1 **/
 	private AdasConfigParamterBean mAdasConfigParamter = null;
 	private CustomLoadingDialog mCustomLoadingDialog = null;
 	private CustomDialog mCustomDialog = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -174,7 +177,7 @@ public class AdasVerificationActivity extends BaseActivity implements OnClickLis
 			break;
 		}
 	}
-	
+
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
@@ -182,7 +185,7 @@ public class AdasVerificationActivity extends BaseActivity implements OnClickLis
 		mApp.setContext(this, TAG);
 		start();
 	}
-	
+
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
@@ -248,8 +251,7 @@ public class AdasVerificationActivity extends BaseActivity implements OnClickLis
 	public boolean onPlayerError(RtspPlayerView rpv, int arg1, int arg2, String strErrorInfo) {
 		// TODO Auto-generated method stub
 		if (!TextUtils.isEmpty(strErrorInfo)) {
-		    Toast.makeText(this, "播放器出现错误：" + strErrorInfo, Toast.LENGTH_SHORT)
-			    .show();
+			Toast.makeText(this, "播放器出现错误：" + strErrorInfo, Toast.LENGTH_SHORT).show();
 		}
 		rpv.removeCallbacks(retryRunnable);
 		rpv.postDelayed(retryRunnable, 5000); // FIXME:5秒后重连
@@ -294,20 +296,21 @@ public class AdasVerificationActivity extends BaseActivity implements OnClickLis
 			mRtspPlayerView.stopPlayback();
 		}
 	}
-	
+
 	private void showMoveController() {
 		mLeftImageView.setVisibility(View.VISIBLE);
 		mRightImageView.setVisibility(View.VISIBLE);
 		mUpImageView.setVisibility(View.VISIBLE);
 		mDownImageView.setVisibility(View.VISIBLE);
 	}
-	
+
 	private void hideMoveControl() {
 		mLeftImageView.setVisibility(View.GONE);
 		mRightImageView.setVisibility(View.GONE);
 		mUpImageView.setVisibility(View.GONE);
 		mDownImageView.setVisibility(View.GONE);
 	}
+
 	/**
 	 * 显示加载中布局
 	 * 

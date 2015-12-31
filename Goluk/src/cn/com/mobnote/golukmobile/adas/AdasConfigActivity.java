@@ -106,6 +106,7 @@ public class AdasConfigActivity extends BaseActivity implements OnClickListener 
 
 	public void onEventMainThread(EventAdasConfigStatus event) {
 		if (event.getOpCode() == EventConfig.IPC_ADAS_CONFIG_FROM_MODIFY) {
+			mAdasConfigParamter = event.getData();
 			return;
 		}
 		finish();

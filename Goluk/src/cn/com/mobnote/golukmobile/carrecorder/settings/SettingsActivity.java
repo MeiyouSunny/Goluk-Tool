@@ -592,7 +592,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				if (mAdasConfigParamter == null) {
 					return;
 				}
-				if (mAdasConfigParamter.fcw_warn_level == 0) {
+				if (mAdasConfigParamter.head_offset == 0) {
 					if (mCustomDialog == null) {
 						mCustomDialog = new CustomDialog(this);
 					}
