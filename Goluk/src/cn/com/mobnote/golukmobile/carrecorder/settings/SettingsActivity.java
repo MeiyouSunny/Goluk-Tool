@@ -275,7 +275,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mCarrecorderWonderfulLine = (TextView) findViewById(R.id.tv_carrecorder_line);
 		mCarrecorderSensitivityLine = (TextView) findViewById(R.id.tv_carrecorder_sensitivity_line);
 		// ipc设备型号
-		if (mIPCName.equals(IPCControlManager.G1_SIGN)) {
+		if (GolukApplication.getInstance().mIPCControlManager.isG1Relative()) {
 			mISPLayout.setVisibility(View.GONE);
 			mPhotoQualityLayout.setVisibility(View.GONE);
 			mHandsetLayout.setVisibility(View.GONE);
