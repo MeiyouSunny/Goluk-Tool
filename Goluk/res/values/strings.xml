@@ -499,7 +499,7 @@
     <string name="unbind_select_type_t1">Goluk T1</string>
     <string name="unbind_select_type_g2">Goluk G2</string>
     <string name="unbind_select_type_g1">Goluk G1</string>
-    <string name="unbind_select_type_g1s">Goluk T1s</string>
+    <string name="unbind_select_type_g1s">Goluk T1S</string>
 	<string name="unbind_select_title_txt">选择设备</string>    
 	<string name="unbind_select_connect_ing">连接中</string>
 	<string name="unbind_select_connect_no">未连接</string>
