@@ -74,13 +74,19 @@ public class JsonWifiBindManager implements IWifiBindDataFn {
 		if (null == dataList) {
 			return;
 		}
+		int index = 0;
 		for (int i = 0; i < dataList.size(); i++) {
 			if (dataList.get(i).ipc_ssid.equals(ipc_ssid)) {
 				dataList.get(i).state = 1;
+				index = i;
 			} else {
 				dataList.get(i).state = 0;
 			}
 		}
+		WifiBindHistoryBean bean = dataList.get(index);
+		dataList.remove(index);
+		dataList.add(0, bean);
+
 		String ss = JSON.toJSONString(dataList);
 		saveHistoryJson(ss);
 	}
@@ -177,6 +183,27 @@ public class JsonWifiBindManager implements IWifiBindDataFn {
 	private void saveHistoryJson(String json) {
 		GolukDebugUtils.e("", "BindSaveData-------------saveHistoryJson: " + json);
 		GolukFileUtils.saveString(GolukFileUtils.KEY_BIND_HISTORY_LIST, json);
+	}
+
+	@Override
+	public void updateConnIpcType(String ipcType) {
+		if (null == ipcType || "".equals(ipcType)) {
+			return;
+		}
+		List<WifiBindHistoryBean> dataList = getAllBindData();
+		if (null == dataList || dataList.size() <= 0) {
+			return;
+		}
+		final int size = dataList.size();
+		for (int i = 0; i < size; i++) {
+			WifiBindHistoryBean bean = dataList.get(i);
+			if (bean.state == WifiBindHistoryBean.CONN_USE) {
+				bean.ipcSign = ipcType;
+				break;
+			}
+		}
+		String ss = JSON.toJSONString(dataList);
+		saveHistoryJson(ss);
 	}
 
 }

@@ -412,6 +412,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			if (tag.equals("videodownload")) {
 				// 只有视频下载才提示音频
 				playDownLoadedSound();
+
 				if (!IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
 					try {
 						if (filename.length() >= 22) {
@@ -427,18 +428,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				} else {
 					time += 1;
 				}
-
-				// try {
-				// if (filename.length() >= 22) {
-				// String t = filename.substring(18, 22);
-				// int tt = Integer.parseInt(t) + 1;
-				// time += tt;
-				// }
-				// } catch (NumberFormatException e) {
-				// e.printStackTrace();
-				// } catch (Exception e) {
-				// e.printStackTrace();
-				// }
 
 				// 更新最新下载文件的时间
 				long oldtime = SettingUtils.getInstance().getLong("downloadfiletime");
@@ -547,6 +536,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		switch (event.getOpCode()) {
 		case EventConfig.CAR_RECORDER_BIND_CREATEAP:
 			createPhoneHot(event.bean);
+			break;
+		case EventConfig.BIND_LIST_DELETE_CONFIG:
+			this.clearWifiConfig();
 			break;
 		default:
 			break;
@@ -814,7 +806,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			mApp.mHandler.removeMessages(1003);
 			GetBaiduAddress.getInstance().exit();
 			unregisterListener();
-			mApp.mIPCControlManager.setIPCWifiState(false, "");
+			mApp.mIPCControlManager.setVdcpDisconnect();
 			mApp.setIpcLoginOut();
 			mApp.mUser.exitApp();
 			mApp.mTimerManage.timerCancel();
@@ -985,6 +977,18 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		EventBus.getDefault().post(new EventUpdateAddr(EventConfig.CAR_RECORDER_UPDATE_ADDR, address));
 	}
 
+	/**
+	 * 清空本地的配置文件
+	 * 
+	 * @author jyf
+	 */
+	private void clearWifiConfig() {
+		GolukDebugUtils.e("", "wifibind----WifiUnbindSelect----clearWifiConfig");
+		if (null != mWac) {
+			mWac.saveConfiguration(null);
+		}
+	}
+
 	private void wifiCallBack_sameHot() {
 		if (mApp.getIpcIsLogin()) {
 			wifiConnectedSucess();
@@ -994,7 +998,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				// 连接失败
 				// wifiConnectFailed();
 			} else {
-				mApp.mIPCControlManager.setIPCWifiState(false, "");
+				mApp.mIPCControlManager.setVdcpDisconnect();
 				mApp.mIPCControlManager.setIPCWifiState(true, GolukApplication.mIpcIp);
 			}
 		}
@@ -1049,15 +1053,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
-	
-
 	private void createHotSuccess() {
 		// 创建热点成功后，需要设置连接方式
 		WifiBindHistoryBean currentBean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
 		if (currentBean != null) {
 			String type = GolukUtils.getIpcTypeFromName(currentBean.ipc_ssid);
-			mApp.mIPCControlManager.setProduceName(type);
-			mApp.mIPCControlManager.setIpcMode();
+			mApp.mIPCControlManager.setIpcMode(type);
 			GolukDebugUtils.e("", "wifibind----MainActivity--------createHotSuccess:  type:" + type);
 		}
 	}

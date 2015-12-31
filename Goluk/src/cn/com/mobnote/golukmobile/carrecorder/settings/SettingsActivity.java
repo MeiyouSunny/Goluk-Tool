@@ -19,6 +19,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventAdasConfigStatus;
+import cn.com.mobnote.eventbus.EventBindFinish;
+
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -36,6 +38,8 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListe
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
+import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
+import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukFastJsonUtil;
 import cn.com.mobnote.util.GolukFileUtils;
@@ -421,6 +425,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mImageFlipLayout.setVisibility(View.VISIBLE);
 			mParkingSleepLayout.setVisibility(View.VISIBLE);
 			mHandsetLayout.setVisibility(View.VISIBLE);
+
 			mADASAssistanceLayout.setVisibility(View.VISIBLE);
 			mParkingSleepHintText.setText(this.getResources().getString(R.string.str_settings_sleep_hint_text_t1));
 			mParkingSecurityHintText
@@ -912,11 +917,18 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		super.onResume();
 		GolukApplication.getInstance().setContext(this, "carrecordsettings");
 		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();
-		if (null != mVideoConfigState) {
-			refreshUI_soundRecod(mVideoConfigState.AudioEnabled);
-			setData2UI();
+		int t1VideoCfg = GolukApplication.getInstance().getT1VideoCfgState();
+		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+			refreshUI_soundRecod(t1VideoCfg);
 		} else {
-			mAudioBtn.setBackgroundResource(R.drawable.set_close_btn);
+			if (null != mVideoConfigState) {
+				refreshUI_soundRecod(mVideoConfigState.AudioEnabled);
+			} else {
+				mAudioBtn.setBackgroundResource(R.drawable.set_close_btn);
+			}
+		}
+		if (null != mVideoConfigState) {
+			setData2UI();
 		}
 
 	}
@@ -987,6 +999,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					mVideoConfigState = IpcDataParser.parseVideoConfigState((String) param2);
 					// updateVideoQualityText();
 					setData2UI();
+					if (IPCControlManager.T1_SIGN
+							.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+						return;
+					}
 					if (null != mVideoConfigState) {
 						if (1 == mVideoConfigState.AudioEnabled) {
 							mAudioBtn.setBackgroundResource(R.drawable.set_open_btn);
@@ -1018,7 +1034,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 								if (1 == dormant) {
 									dormant = 0;
 									// 设置停车休眠
-									boolean fatigue = GolukApplication.getInstance().getIPCControlManager().setFunctionMode(getSetJson());
+									boolean fatigue = GolukApplication.getInstance().getIPCControlManager()
+											.setFunctionMode(getSetJson());
 								}
 							} else {
 								findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_close_btn);// 关闭
@@ -1033,11 +1050,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				if (RESULE_SUCESS == param1) {
 					if (1 == enableSecurity) {
 						findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_open_btn);// 打开
-						//TODO 判断休眠是否打开
+						// TODO 判断休眠是否打开
 						if (1 == dormant) {
 							dormant = 0;
 							// 设置停车休眠
-							boolean fatigue = GolukApplication.getInstance().getIPCControlManager().setFunctionMode(getSetJson());
+							boolean fatigue = GolukApplication.getInstance().getIPCControlManager()
+									.setFunctionMode(getSetJson());
 						}
 					} else {
 						findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_close_btn);// 关闭
@@ -1080,28 +1098,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					GolukApplication.getInstance().getIPCControlManager().getGSensorControlCfg();
 				}
 			} else if (msg == IPC_VDCP_Msg_Restore) {
-				String message = "";
-				if (param1 == RESULE_SUCESS) {
-					message = "恢复出厂设置成功";
-				} else {
-					message = "恢复出厂设置失败";
-				}
-
-				if (isFinishing()) {
-					return;
-				}
-				if (mCustomDialog == null) {
-					mCustomDialog = new CustomDialog(this);
-				}
-				mCustomDialog.setCancelable(false);
-				mCustomDialog.setMessage(message, Gravity.CENTER);
-				mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
-					@Override
-					public void onClickListener() {
-						finish();
-					}
-				});
-				mCustomDialog.show();
+				IPCCallBack_Restore(msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_GetSpeakerSwitch) {// 获取ipc开关机声音状态
 				closeLoading();
 				GolukDebugUtils.e("lily", "------IPC_VDCPCmd_GetSpeakerSwitch----------------param1:" + param1
@@ -1208,6 +1205,43 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				}
 			}
 		}
+	}
+
+	/**
+	 * 恢复出厂回调
+	 * 
+	 * @author jyf
+	 */
+	private void IPCCallBack_Restore(int msg, int param1, Object param2) {
+		String message = "";
+		if (param1 == RESULE_SUCESS) {
+			// 断开连接
+			EventBindFinish eventFnish = new EventBindFinish(EventConfig.BIND_LIST_DELETE_CONFIG);
+			EventBus.getDefault().post(eventFnish);
+			GolukApplication.getInstance().setIpcDisconnect();
+			WifiBindHistoryBean bean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
+			if (null != bean) {
+				WifiBindDataCenter.getInstance().deleteBindData(bean.ipc_ssid);
+			}
+			message = "恢复出厂设置成功";
+		} else {
+			message = "恢复出厂设置失败";
+		}
+
+		if (isFinishing()) {
+			return;
+		}
+
+		CustomDialog mCustomDialog = new CustomDialog(this);
+		mCustomDialog.setCancelable(false);
+		mCustomDialog.setMessage(message, Gravity.CENTER);
+		mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
+			@Override
+			public void onClickListener() {
+				finish();
+			}
+		});
+		mCustomDialog.show();
 	}
 
 	private void IPCCallBack_setRecAudioCfg(int msg, int param1, Object param2) {
@@ -1379,10 +1413,11 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if (RESULE_SUCESS == param1) {
 			if (1 == dormant) {
 				mParkingSleepBtn.setBackgroundResource(R.drawable.set_open_btn);
-				if(1 == enableSecurity) {
+				if (1 == enableSecurity) {
 					enableSecurity = 0;
-					//TODO 设置停车安防
-					boolean c = GolukApplication.getInstance().getIPCControlManager().setMotionCfg(enableSecurity, snapInterval);
+					// TODO 设置停车安防
+					boolean c = GolukApplication.getInstance().getIPCControlManager()
+							.setMotionCfg(enableSecurity, snapInterval);
 					GolukDebugUtils.e("", "===========setMotionCfg===========c:" + c);
 				}
 			} else {
@@ -1455,10 +1490,11 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 			if (1 == dormant) {
 				mParkingSleepBtn.setBackgroundResource(R.drawable.set_open_btn);
-				if(1 == enableSecurity) {
+				if (1 == enableSecurity) {
 					enableSecurity = 0;
-					//TODO 设置停车安防
-					boolean c = GolukApplication.getInstance().getIPCControlManager().setMotionCfg(enableSecurity, snapInterval);
+					// TODO 设置停车安防
+					boolean c = GolukApplication.getInstance().getIPCControlManager()
+							.setMotionCfg(enableSecurity, snapInterval);
 					GolukDebugUtils.e("", "===========setMotionCfg===========c:" + c);
 				}
 			} else {

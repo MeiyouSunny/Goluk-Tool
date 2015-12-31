@@ -49,7 +49,6 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="各种签名签名签名签"
                 android:textColor="#333333"
                 android:textSize="14sp" />
         </LinearLayout>

@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -371,7 +372,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 
 				holder.praiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
 				holder.zanIcon = (ImageView) convertView.findViewById(R.id.zanIcon);
-				holder.zanText = (TextView) convertView.findViewById(R.id.zanText);
+//				holder.zanText = (TextView) convertView.findViewById(R.id.zanText);
 
 				holder.commentLayout = (LinearLayout) convertView.findViewById(R.id.commentLayout);
 				holder.commentIcon = (ImageView) convertView.findViewById(R.id.commentIcon);
@@ -394,6 +395,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				holder.comment2 = (TextView) convertView.findViewById(R.id.comment2);
 				holder.comment3 = (TextView) convertView.findViewById(R.id.comment3);
 				holder.isopen = (ImageView) convertView.findViewById(R.id.isopen);
+				holder.tvPraiseCount = (TextView) convertView.findViewById(R.id.tv_share_video_list_item_praise_count);
 				int height = (int) ((float) width / 1.77f);
 				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
 				mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
@@ -437,7 +439,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				holder.location.setText(location);
 			}
 
-			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber);
+//			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber);
 			holder.weiguan.setText(clusterInfo.mVideoEntity.clicknumber);
 
 			int count = Integer.parseInt(clusterInfo.mVideoEntity.comcount);
@@ -469,16 +471,25 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				holder.v.setVisibility(View.GONE);
 			}
 
-			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber + " 赞");
+//			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber + " 赞");
 			initListener(holder, index_v);
 			// 没点过
 			if ("0".equals(clusterInfo.mVideoEntity.ispraise)) {
 				holder.zText.setTextColor(Color.rgb(136, 136, 136));
 				holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like);
 			} else {// 点赞过
-				holder.zText.setTextColor(Color.rgb(59, 151, 245));
+				holder.zText.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
 				holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like_press);
 			}
+
+			if ("-1".equals(clusterInfo.mVideoEntity.praisenumber)) {
+				holder.tvPraiseCount.setText(mContext.getString(R.string.str_usercenter_praise));
+			} else {
+				holder.tvPraiseCount.setText(
+						GolukUtils.getFormatNumber(clusterInfo.mVideoEntity.praisenumber) +
+						mContext.getString(R.string.str_usercenter_praise));
+			}
+
 			if (clusterInfo.mVideoEntity.commentList.size() >= 1) {
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(0);
 				if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
@@ -921,7 +932,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 
 		LinearLayout praiseLayout;
 		ImageView zanIcon;
-		TextView zanText;
+//		TextView zanText;
 
 		LinearLayout commentLayout;
 		ImageView commentIcon;
@@ -941,6 +952,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 		TextView comment2;
 		TextView comment3;
 		ImageView v;
+		TextView tvPraiseCount;
 
 		ImageView isopen;
 	}

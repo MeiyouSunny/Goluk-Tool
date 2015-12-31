@@ -36,7 +36,10 @@ public class IPCControlManager implements IPCManagerFn {
 	public static final String G1_SIGN = "G1";
 	public static final String G2_SIGN = "G2";
 	public static final String T1_SIGN = "T1";
-	public static final String G1s_SIGN = "G1s";
+	public static final String T1s_SIGN = "T1s";
+
+	public static final String MODEL_T = "T";
+	public static final String MODEL_G = "G";
 
 	/** IPC回调监听列表 */
 	private HashMap<String, IPCManagerFn> mIpcManagerListener = null;
@@ -69,12 +72,27 @@ public class IPCControlManager implements IPCManagerFn {
 	}
 
 	public void setIpcMode() {
-		if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName)) {
+		if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName) || T1s_SIGN.equals(mProduceName)) {
 			setIpcMode(IPCMgrMode_IPCDirect);
 		} else if (T1_SIGN.equals(mProduceName)) {
 			setIpcMode(IPCMgrMode_T1);
 		} else {
 			// 不处理
+		}
+	}
+
+	/**
+	 * 直接设置模式
+	 * 
+	 * @param mode
+	 *            MODEL_T / MODEL_G
+	 * @author jyf
+	 */
+	public void setIpcMode(String mode) {
+		if (MODEL_T.equals(mode)) {
+			setIpcMode(IPCMgrMode_T1);
+		} else {
+			setIpcMode(IPCMgrMode_IPCDirect);
 		}
 	}
 
@@ -134,6 +152,15 @@ public class IPCControlManager implements IPCManagerFn {
 		boolean isSucess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPC_CommCmd_WifiChanged, json);
 		return isSucess;
+	}
+
+	/**
+	 * 设置VDCP断开连接
+	 * 
+	 * @author jyf
+	 */
+	public void setVdcpDisconnect() {
+		setIPCWifiState(false, "");
 	}
 
 	/**

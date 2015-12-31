@@ -43,7 +43,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="32dp"
-        android:background="@drawable/connect_btn_blue"
+        android:background="@drawable/ipcbind_btn_able"
         android:text="@string/unbind_add_mobile_btn"
         android:textColor="#047cf3"
         android:textSize="16sp" />

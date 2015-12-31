@@ -145,6 +145,7 @@ public class NewestAdapter extends BaseAdapter {
 	private View initLayout() {
 		holder = new ViewHolder();
 		View convertView = LayoutInflater.from(mContext).inflate(R.layout.newest_list_item, null);
+		holder.vDivider = convertView.findViewById(R.id.v_item_divider_line);
 		holder.videoImg = (ImageView) convertView.findViewById(R.id.imageLayout);
 		holder.liveImg = (ImageView) convertView.findViewById(R.id.newlist_item_liveicon);
 		holder.headimg = (ImageView) convertView.findViewById(R.id.headimg);
@@ -167,6 +168,7 @@ public class NewestAdapter extends BaseAdapter {
 		holder.comment3 = (TextView) convertView.findViewById(R.id.comment3);
 		holder.ivLogoVIP = (ImageView) convertView.findViewById(R.id.iv_vip_logo);
 		holder.rlUserInfo = (RelativeLayout) convertView.findViewById(R.id.rl_user_info);
+		holder.tvPraiseCount = (TextView)convertView.findViewById(R.id.tv_newest_list_item_praise_count);
 
 		int height = (int) ((float) width / widthHeight);
 		RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
@@ -232,6 +234,11 @@ public class NewestAdapter extends BaseAdapter {
 			return;
 		}
 		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
+		if(0 == index) {
+			holder.vDivider.setVisibility(View.GONE);
+		} else {
+			holder.vDivider.setVisibility(View.VISIBLE);
+		}
 
 		GlideUtils.loadImage(mContext, holder.videoImg, mVideoSquareInfo.mVideoEntity.picture, R.drawable.tacitly_pic);
 		if(null != mVideoSquareInfo.mUserEntity && null != mVideoSquareInfo.mUserEntity.label) {
@@ -306,9 +313,9 @@ public class NewestAdapter extends BaseAdapter {
 		}
 
 		if ("-1".equals(mVideoSquareInfo.mVideoEntity.praisenumber)) {
-			holder.praiseText.setText(mContext.getString(R.string.str_usercenter_praise));
+			holder.tvPraiseCount.setText(mContext.getString(R.string.str_usercenter_praise));
 		} else {
-			holder.praiseText.setText(
+			holder.tvPraiseCount.setText(
 					GolukUtils.getFormatNumber(mVideoSquareInfo.mVideoEntity.praisenumber) +
 					mContext.getString(R.string.str_usercenter_praise));
 		}
@@ -574,6 +581,8 @@ public class NewestAdapter extends BaseAdapter {
 		TextView comment2;
 		TextView comment3;
 		ImageView ivReward;
+		View vDivider;
+		TextView tvPraiseCount;
 
 		RelativeLayout rlUserInfo;
 //		View rlHead;

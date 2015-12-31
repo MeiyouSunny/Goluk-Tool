@@ -18,7 +18,6 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectListActivity;
-import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectTypeActivity;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
@@ -99,12 +98,12 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 			mIPCViewLayout.setVisibility(View.GONE);
 			mPwdLayout.setEnabled(false);
 			mTextVersion.setText("");
+			mTextCameraName.setText("");
+			mTextPasswordName.setText("");
 		}
 		// 密码
 		if (null != mApplication && mApplication.isBindSucess() && mApplication.isIpcLoginSuccess) {
 			mApplication.getIPCControlManager().getIpcWifiConfig();
-			// String ipcPwd = SharedPrefUtil.getIpcPwd();
-			// mTextPasswordName.setText(ipcPwd);
 		}
 	}
 
