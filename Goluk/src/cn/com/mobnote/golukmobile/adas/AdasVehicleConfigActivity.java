@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -242,6 +243,16 @@ public class AdasVehicleConfigActivity extends BaseActivity implements OnClickLi
 			Log.e(TAG, "id = " + id);
 			break;
 		}
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			finish();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override

@@ -311,7 +311,7 @@
             android:name="cn.com.mobnote.golukmobile.adas.AdasVehicleConfigActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" 
-            android:windowSoftInputMode="stateVisible|adjustPan"
+            android:windowSoftInputMode="stateAlwaysVisible|adjustPan"
             android:theme="@android:style/Theme.NoTitleBar"/>
         <activity
             android:name="cn.com.mobnote.golukmobile.adas.AdasSeletedVehicleTypeActivity"

@@ -496,7 +496,7 @@
 	<string name="str_day">日</string>
 	<string name="str_hour">时</string>
 	<string name="str_minute">分</string>
-	<string name="str_adas_config">ADAS配置</string>
+	<string name="str_adas_config">前向距离安全辅助配置</string>
 	<string name="str_video_loading">视频加载中，请稍候...</string>
 	<!-- adas -->
 	<string name="str_adas_verification_des">请参考下图，将上方的十字移动至道路尽头的中央</string>
@@ -505,7 +505,7 @@
 	<string name="str_adas_guide_des">极路客ADAS先进辅助驾驶系统，可以给您提供前车防碰撞预警与车道偏离预警信息，为了更好的预警判断。</string>
 	<string name="str_adas_guide_des1">请您将爱车行驶到车辆较少的车道中央</string>
 	<string name="str_adas_guide_des2">停车后，根据配置引导提示，完成初次使用配置</string>
-	<string name="str_adas_driving_safety_assistance">ADAS驾驶安全辅助</string>
+	<string name="str_adas_driving_safety_assistance">向前距离安全提示</string>
 	<string name="str_adas_forward_warning_sensibility">向前距离报警灵敏度</string>
 	<string name="str_adas_road_offset_sensibility">道路偏移报警灵敏度</string>
 	<string name="str_adas_assistance_info">辅助信息显示（OSD叠加）</string>
@@ -526,8 +526,8 @@
 	<string name="str_low">低</string>
 	<string name="str_middle">中</string>
 	<string name="str_high">高</string>
-	<string name="str_adas_hint">您还没有配置ADAS，是否现在去配置？</string>
-	<string name="str_adas_dialog_confirm">配置ADAS</string>
+	<string name="str_adas_hint">您还没有配置前向距离安全提示，是否现在去配置？</string>
+	<string name="str_adas_dialog_confirm">配置</string>
 	<string name="str_custom">自定义</string>
 	<string name="str_adas_paramter_error">为了准确地向您提供驾驶安全辅助信息，请输入正确的位置参数哦</string>
 	<string name="unbind_select_type_title">选择您的极路客进行配对</string>
@@ -555,4 +555,5 @@
 	<string name="str_adas_verify_ok">是的</string>
 	<string name="str_adas_verify_not">还没有</string>
 	<string name="unbind_loading_dialog_txt">正在为您切换设备</string>
+	<string name="str_smart_driving">Smart Go 智能驾驶安全辅助系统</string>
 </resources>

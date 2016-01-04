@@ -17,7 +17,7 @@ public class CarTypeAdapter extends BaseAdapter {
 	private Context mContext;
 	private ArrayList<VehicleParamterBean> mData;
 	private LayoutInflater mInflater;
-	private int mSelectedId;
+	private int mSelectedId = -1;
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
@@ -72,7 +72,9 @@ public class CarTypeAdapter extends BaseAdapter {
 	
 	public void setSelectedId(int position) {
 		mSelectedId = position;
-		notifyDataSetChanged();
+		if (mSelectedId > 0) {
+			notifyDataSetChanged();
+		}
 	}
 
 	public int getSelectedId() {

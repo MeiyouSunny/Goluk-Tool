@@ -378,7 +378,47 @@
                     android:background="@color/setting_line_color"
                     android:visibility="gone" />
             </RelativeLayout>
-            
+			<!-- 图像自动翻转 -->
+
+            <RelativeLayout
+                android:id="@+id/image_flip_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_image_flip_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btn_settings_image_flip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            <TextView 
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+				android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:textColor="#999999"
+                android:textSize="12sp"
+                android:text="@string/str_smart_driving"/>
             <!-- 疲劳驾驶语音提示 -->
 
             <RelativeLayout
@@ -409,6 +449,11 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="15dp"
                     android:layout_alignParentBottom="true"
                     android:background="@color/setting_line_color" />
             </RelativeLayout>
@@ -419,7 +464,6 @@
                 android:id="@+id/pzgylmd_line"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:layout_marginTop="15dp"
                 android:background="@color/setting_white_color" >
 
                 <TextView
@@ -452,54 +496,6 @@
                     android:layout_marginRight="15dp"
                     android:background="@drawable/icon_next_press"
                     android:contentDescription="@string/def" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/setting_line_color" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="15dp"
-                    android:background="@color/setting_line_color" />
-                
-                <TextView
-                    android:id="@+id/tv_carrecorder_sensitivity_line"
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/setting_line_color"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <!-- 图像自动翻转 -->
-
-            <RelativeLayout
-                android:id="@+id/image_flip_line"
-                android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:background="@color/setting_white_color" >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/str_settings_image_flip_title"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
-
-                <Button
-                    android:id="@+id/btn_settings_image_flip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:background="@drawable/set_open_btn" />
 
                 <TextView
                     android:layout_width="match_parent"
