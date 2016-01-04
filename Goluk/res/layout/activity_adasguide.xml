@@ -52,18 +52,30 @@
         android:text="@string/str_adas_guide_des"/>
 	<ImageView
 	    android:id="@+id/ImageView_guide"
-	    android:layout_width="wrap_content"
+	    android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@+id/textview_guide_des"
-		android:layout_marginTop="25dp"
+		android:layout_marginTop="24dp"
 		android:src="@drawable/adas_verification_example"
+		android:scaleType="centerCrop"
 	    />
+	<TextView 
+	    android:id="@+id/textview_guide_des3"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/ImageView_guide"
+	    android:layout_marginTop="24dp"
+	    android:layout_marginLeft="19dp"
+        android:layout_marginRight="19dp"
+	    android:textSize="13sp"
+        android:textColor="#595959"
+        android:text="@string/str_adas_guide_des3"/>"
 	<LinearLayout 
         android:id="@+id/linearLayout_des1"
         android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-        android:layout_below="@+id/ImageView_guide"
-        android:layout_marginTop="30dp"
+        android:layout_below="@+id/textview_guide_des3"
+        android:layout_marginTop="14dp"
         android:layout_marginLeft="19dp"
         android:layout_marginRight="19dp"
         android:orientation="horizontal">
