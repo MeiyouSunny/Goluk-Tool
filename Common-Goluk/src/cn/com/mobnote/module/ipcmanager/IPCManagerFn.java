@@ -169,6 +169,8 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCP_Msg_GetAutoRotationCfg = 1051;
 	/**设置ipc时间同步配置**/
 	public static final int IPC_VDCP_Msg_SetAutoRotationCfg = 1052;
+	/**adas 推送的应答消息**/
+	public static final int IPC_VDCP_Msg_PushEvent_ADAS = 3000;
 
 	/**
 	 * 
