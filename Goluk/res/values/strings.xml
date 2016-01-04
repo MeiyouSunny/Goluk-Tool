@@ -515,13 +515,14 @@
 	<string name="str_ipc_update_second_period">开始升级，过程可能需要几分钟，\n请不要关闭摄像头电源…\n升级2阶段：</string>
 	<string name="str_ipc_update_transfer_file_success">文件传输成功，正在为您准备升级</string>
 	<string name="str_ipc_update_success">恭喜您，极路客固件升级成功，正在重新启动，请稍候…</string>
+	<string name="str_ipc_update_success_t1">设备升级成功</string>
 	<string name="str_ipc_update_fail">很抱歉，升级失败。请您重试。</string>
 	<string name="str_ipc_update_check_fail">校验不通过</string>
 	<string name="str_ipc_update_disconnect">摄像头断开连接，请检查后重试</string>
 	<string name="str_ipc_update_first_period_disconnect">很抱歉，升级失败，请先不要关闭摄像头电源，等待摄像头重新启动后再试。</string>
 	<string name="str_ipc_update_second_period_disconnect">很抱歉，摄像头连接异常中断，但它可能仍在升级中。请先不要关闭摄像头电源，等待摄像头升级成功。</string>
 	<string name="str_ipc_update_install_ok">已安装</string>
-	<string name="str_ipc_update_transfer_file_t1">正在传输安装包到极路客…</string>
+	<string name="str_ipc_update_transfer_file_t1">正在传输固件安装包到极路客…</string>
 	<string name="str_ipc_update_checking">检测中，请稍候…</string>
 	<string name="str_update_app_newest">当前已是最新版本</string>
 	<string name="str_update_prompt">升级提示</string>
