@@ -139,7 +139,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	private boolean mIsDisConnect = false;
 	private boolean mIsSendFileOk = false;
 	
-	private RelativeLayout mVoiceLayout = null;
+	private RelativeLayout mVoiceLayout, mLaterLayout;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -444,9 +444,12 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		}
 		switch (event.getOpCode()) {
 		case EventConfig.WIFI_STATE_SUCCESS:
-			if(mVoiceLayout.getVisibility() == View.VISIBLE) {
+			if (mLaterLayout.getVisibility() == View.VISIBLE || mVoiceLayout.getVisibility() == View.VISIBLE) {
+				mLaterLayout.setVisibility(View.GONE);
 				mVoiceLayout.setVisibility(View.GONE);
-				isNewVersion();
+				if (null != mUpdateHandler) {
+					mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_OK);
+				}
 			}
 			break;
 		default:
@@ -481,6 +484,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		mVoiceLayout = (RelativeLayout) findViewById(R.id.rl_update_voice);
 		mtfCardImage = (ImageView) findViewById(R.id.iv_upgrade_tfcard_image);
 		mtfCardText = (TextView) findViewById(R.id.tv_upgrade_tfcard_text);
+		mLaterLayout = (RelativeLayout) findViewById(R.id.rl_update_later);
 
 		// 监听
 		mBtnBack.setOnClickListener(this);
@@ -521,6 +525,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					}
 					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, this.getResources()
 							.getString(R.string.update_no_connect_ipc_hint));
+					mIsDisConnect = true;
 				} else {
 					String version = SharedPrefUtil.getIPCVersion();
 					GolukDebugUtils.i("lily", "-------version-----" + version + "------ipc_version-----" + mIpcVersion);
@@ -543,6 +548,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			break;
 		case R.id.rl_update_voice:
 			mVoiceLayout.setVisibility(View.GONE);
+			mLaterLayout.setVisibility(View.VISIBLE);
 			break;
 		default:
 			break;

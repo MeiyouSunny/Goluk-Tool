@@ -276,5 +276,58 @@
             android:layout_marginTop="20dp"
             android:textColor="@color/white"/>
     </RelativeLayout>
+    
+    <!-- T1等待升级成功后的语音提示后显示后页面 -->
+
+    <RelativeLayout
+        android:id="@+id/rl_update_later"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title_layout"
+        android:background="@color/white"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/iv_update_later_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:contentDescription="@string/imgdes"
+            android:src="@drawable/upgrade_t1" />
+
+        <TextView
+            android:id="@+id/tv_update_later"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_update_later_image"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="26dp"
+            android:text="@string/ipc_upgrade_voice_text"
+            android:textColor="#a1a1a1" />
+
+        <!-- 断电图片 -->
+
+        <ImageView
+            android:id="@+id/iv_upgrade_nobreak_image_later"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_update_later"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:contentDescription="@string/imgdes"
+            android:src="@drawable/firmware_img_power" />
+
+        <TextView
+            android:id="@+id/tv_upgrade_nobreak_text_later"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_upgrade_nobreak_image_later"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="26dp"
+            android:text="@string/ipc_hint_below_image"
+            android:textColor="#a1a1a1"
+            android:textSize="14sp" />
+    </RelativeLayout>
 
 </RelativeLayout>
