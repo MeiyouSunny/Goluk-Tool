@@ -170,7 +170,13 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 		}
 		if (mEditState == false) {
 			WifiUnbindSelectListActivity wsla = (WifiUnbindSelectListActivity) mContext;
-			wsla.showLoading();
+			List<WifiBindHistoryBean> list = WifiBindDataCenter.getInstance().getAllBindData();
+			if (null == list || list.size() <= 1) {
+				wsla.showLoading(true);
+			} else {
+				wsla.showLoading(false);
+			}
+			
 			WifiBindDataCenter.getInstance().editBindStatus(bindHistoryBean.ipc_ssid, WifiBindHistoryBean.CONN_USE);
 
 			GolukDebugUtils.e("", "wifibind----WifiUnbindSelect  OnClick--------ssid:" + bindHistoryBean.ipc_ssid);
