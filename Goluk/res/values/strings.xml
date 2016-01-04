@@ -517,6 +517,6 @@
 	<string name="str_getwificfg_fail">获取失败</string>
 	<string name="unbind_del_confirm_dialog_txt">确认删除此设备信息？</string>
 	<string name="unbind_loading_dialog_txt">正在为您切换设备</string>
-
 	<string name="str_thank_to_author">感谢作者</string>
+	<string name="unbind_loading_dialog_txt2">正在为您连接设备</string>
 </resources>
