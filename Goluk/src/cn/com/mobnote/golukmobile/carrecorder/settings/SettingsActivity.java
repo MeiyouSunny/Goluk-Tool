@@ -287,7 +287,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g1));
 			mCarrecorderWonderfulLine.setVisibility(View.GONE);
 			mCarrecorderSensitivityLine.setVisibility(View.GONE);
-		} else if (mIPCName.equals("G2")) {
+		} else if (mIPCName.equals(IPCControlManager.G2_SIGN)) {
 			mISPLayout.setVisibility(View.VISIBLE);
 			mPhotoQualityLayout.setVisibility(View.GONE);
 			mFatigueLayout.setVisibility(View.GONE);
