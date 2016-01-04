@@ -1392,7 +1392,7 @@ public class JsonUtil {
 		try {
 			JSONObject json = new JSONObject((String) jsonStr);
 			if (json.isNull("productname")) {
-				return IPCControlManager.G1_SIGN;
+				return "";
 			} else {
 				return json.optString("productname");
 			}
@@ -1401,7 +1401,7 @@ public class JsonUtil {
 			e.printStackTrace();
 		}
 
-		return IPCControlManager.G1_SIGN;
+		return "";
 	}
 
 }
