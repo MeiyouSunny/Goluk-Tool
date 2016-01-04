@@ -150,10 +150,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".wifibind.WiFiLinkIndexActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".wifibind.WiFiLinkListActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
@@ -208,7 +204,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
-
         <activity
             android:name=".carrecorder.settings.ImpactSensitivityActivity"
             android:screenOrientation="portrait"
@@ -316,6 +311,7 @@
             android:name="cn.com.mobnote.golukmobile.adas.AdasVehicleConfigActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" 
+            android:windowSoftInputMode="stateVisible|adjustPan"
             android:theme="@android:style/Theme.NoTitleBar"/>
         <activity
             android:name="cn.com.mobnote.golukmobile.adas.AdasSeletedVehicleTypeActivity"
@@ -357,7 +353,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
-        
         <activity
             android:name="cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectTypeActivity"
             android:screenOrientation="portrait"
@@ -368,7 +363,7 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
-        
+
         <!-- 信鸽 -->
 
 

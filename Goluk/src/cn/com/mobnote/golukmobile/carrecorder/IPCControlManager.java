@@ -6,7 +6,10 @@ import java.util.Iterator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.adas.AdasConfigParamterBean;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
@@ -33,7 +36,10 @@ public class IPCControlManager implements IPCManagerFn {
 	public static final String G1_SIGN = "G1";
 	public static final String G2_SIGN = "G2";
 	public static final String T1_SIGN = "T1";
-	public static final String G1s_SIGN = "G1s";
+	public static final String T1s_SIGN = "T1s";
+
+	public static final String MODEL_T = "T";
+	public static final String MODEL_G = "G";
 
 	/** IPC回调监听列表 */
 	private HashMap<String, IPCManagerFn> mIpcManagerListener = null;
@@ -66,12 +72,27 @@ public class IPCControlManager implements IPCManagerFn {
 	}
 
 	public void setIpcMode() {
-		if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName)) {
+		if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName) || T1s_SIGN.equals(mProduceName)) {
 			setIpcMode(IPCMgrMode_IPCDirect);
 		} else if (T1_SIGN.equals(mProduceName)) {
 			setIpcMode(IPCMgrMode_T1);
 		} else {
 			// 不处理
+		}
+	}
+
+	/**
+	 * 直接设置模式
+	 * 
+	 * @param mode
+	 *            MODEL_T / MODEL_G
+	 * @author jyf
+	 */
+	public void setIpcMode(String mode) {
+		if (MODEL_T.equals(mode)) {
+			setIpcMode(IPCMgrMode_T1);
+		} else {
+			setIpcMode(IPCMgrMode_IPCDirect);
 		}
 	}
 
@@ -131,6 +152,15 @@ public class IPCControlManager implements IPCManagerFn {
 		boolean isSucess = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPC_CommCmd_WifiChanged, json);
 		return isSucess;
+	}
+
+	/**
+	 * 设置VDCP断开连接
+	 * 
+	 * @author jyf
+	 */
+	public void setVdcpDisconnect() {
+		setIPCWifiState(false, "");
 	}
 
 	/**
@@ -820,6 +850,48 @@ public class IPCControlManager implements IPCManagerFn {
 				IPCManagerFn.IPC_VDCPCmd_SetAutoRotationCfg, status);
 	}
 
+	/**
+	 * 获取T1 ADAS配置
+	 * 
+	 * @return
+	 */
+	public boolean getT1AdasConfig() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetADASConfig, "");
+	}
+
+	/**
+	 * 设置T1 ADAS配置开关
+	 * 
+	 * @return
+	 */
+	public boolean setT1AdasConfigEnable(int enabled) {
+		String s = "{\"enable\":" + enabled + "}";
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetADASConfig , s);
+	}
+
+	/**
+	 * 设置T1 ADAS OSD配置开关
+	 * 
+	 * @return
+	 */
+	public boolean setT1AdasConfigOSD(int osd) {
+		String s = "{\"osd\":" + osd + "}";
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetADASConfig , s);
+	}
+
+	/**
+	 * 设置T1 ADAS配置所有参数
+	 * 
+	 * @return
+	 */
+	public boolean setT1AdasConfigAll(AdasConfigParamterBean data) {
+		String s = JSON.toJSONString(data);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetADASConfig , s);
+	}
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		// LogUtil.e("jyf",

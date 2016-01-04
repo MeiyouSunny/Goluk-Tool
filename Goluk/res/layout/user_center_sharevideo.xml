@@ -4,12 +4,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#e5e5e5" />
+
     <RelativeLayout
         android:id="@+id/headlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp" >
-        
+
          <RelativeLayout
                 android:id="@+id/rl_head_img"
                 android:layout_width="37.33dp"
@@ -24,14 +30,15 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:contentDescription="@string/imgdes" />
-        
-        <ImageView 
+
+        <ImageView
             android:id="@+id/v"
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_alignRight="@id/headimg"
             android:layout_alignBottom="@id/headimg"
-            android:background="@drawable/authentication_bluev_icon"/>
+            android:contentDescription="@string/imgdes"
+            android:src="@drawable/authentication_bluev_icon"/>
         </RelativeLayout>
 
        
@@ -44,7 +51,7 @@
             android:layout_height="20dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/new_more_icon"
+            android:src="@drawable/new_more_icon"
             android:contentDescription="@string/imgdes" />
 
         <!-- 精选标识 -->
@@ -56,7 +63,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@id/function"
-            android:background="@drawable/together_coin_icon"
+            android:src="@drawable/together_coin_icon"
             android:contentDescription="@string/imgdes"
             android:visibility="gone" />
 
@@ -120,7 +127,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignRight="@id/uc_video_userInfolayout"
                 android:layout_marginRight="-30dp"
-                android:background="@drawable/together_recommend_icon"
+                android:src="@drawable/together_recommend_icon"
                 android:contentDescription="@string/imgdes"
                 android:visibility="gone" />
         </RelativeLayout>
@@ -149,7 +156,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginRight="4dp"
             android:layout_marginTop="4dp"
-            android:background="@drawable/new_live_icon"
+            android:src="@drawable/new_live_icon"
             android:contentDescription="@string/imgdes"
             android:visibility="gone" />
 
@@ -158,7 +165,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@drawable/btn_player_play"
+            android:src="@drawable/btn_player_play"
             android:contentDescription="@string/imgdes" />
 
         <ImageView
@@ -169,7 +176,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginBottom="5dp"
             android:layout_marginRight="5dp"
-            android:background="@drawable/mine_icon_lock"
+            android:src="@drawable/mine_icon_lock"
             android:contentDescription="@string/imgdes"
             android:visibility="gone" />
 
@@ -177,12 +184,10 @@
             android:id="@+id/weiguan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/imageView1"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="8dp"
             android:layout_marginTop="11dp"
-            android:text="222"
             android:textColor="#ffffff"
             android:textSize="14sp" />
 
@@ -192,17 +197,18 @@
             android:layout_marginRight="4dp"
             android:layout_marginTop="15dp"
             android:layout_toLeftOf="@+id/weiguan"
-            android:background="@drawable/icon_eye" />
+            android:contentDescription="@string/imgdes"
+            android:src="@drawable/icon_eye" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/functionLayouyt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="16dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="16dp" >
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="16dp" >
 
         <!-- 点赞 -->
 
@@ -218,7 +224,7 @@
                 android:id="@+id/zanIcon"
                 android:layout_width="20dp"
                 android:layout_height="18dp"
-                android:background="@drawable/videodetail_like"
+                android:src="@drawable/videodetail_like"
                 android:contentDescription="@string/def" />
 
             <TextView
@@ -227,6 +233,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="4dp"
+                android:text="@string/str_usercenter_praise"
                 android:textColor="#1163a2"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -242,7 +249,7 @@
                 android:id="@+id/commentIcon"
                 android:layout_width="20dp"
                 android:layout_height="18dp"
-                android:background="@drawable/videodetail_comment"
+                android:src="@drawable/videodetail_comment"
                 android:contentDescription="@string/def" />
 
             <TextView
@@ -268,7 +275,7 @@
                 android:id="@+id/shareIcon"
                 android:layout_width="20dp"
                 android:layout_height="18dp"
-                android:background="@drawable/videodetail_share"
+                android:src="@drawable/videodetail_share"
                 android:contentDescription="@string/def" />
 
             <TextView
@@ -283,15 +290,17 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="6dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="#e5e5e5"
-        android:contentDescription="@string/imgdes" />
+    <TextView
+        android:id="@+id/tv_share_video_list_item_praise_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:drawableLeft="@drawable/videodetail_likeicon"
+        android:drawablePadding="4dp"
+        android:text="@string/str_usercenter_praise"
+        android:textColor="#1163a2"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/detail"
@@ -346,5 +355,8 @@
             android:textColor="#333333"
             android:textSize="14sp" />
     </LinearLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@android:color/transparent"/>
 </LinearLayout>

@@ -731,7 +731,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 						}
 
 						mApp.setExit(true);
-						mApp.mIPCControlManager.setIPCWifiState(false, "");
+						mApp.mIPCControlManager.setVdcpDisconnect();
 						mApp.destroyLogic();
 						mApp.appFree();
 

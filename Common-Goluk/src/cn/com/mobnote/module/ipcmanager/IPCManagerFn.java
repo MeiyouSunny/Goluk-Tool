@@ -172,6 +172,11 @@ public interface IPCManagerFn extends IGolukCommFn {
 	/**adas 推送的应答消息**/
 	public static final int IPC_VDCP_Msg_PushEvent_ADAS = 3000;
 
+	/**获取ipc ADAS功能**/
+	public static final int IPC_VDCP_Msg_GetADASConfig = 2000;
+	/**设置ipc ADAS功能**/
+	public static final int IPC_VDCP_Msg_SetADASConfig = 2001;
+	
 	/**
 	 * 
 	 * 文件数据传输事件下消息ID (用于手机与平板之间发送消息回调)
@@ -314,6 +319,10 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCPCmd_GetAutoRotationCfg = 1051;
 	/**设置ipc时间同步配置**/
 	public static final int IPC_VDCPCmd_SetAutoRotationCfg = 1052;
+	/**获取ipc ADAS功能**/
+	public static final int IPC_VDCPCmd_GetADASConfig = 2000;
+	/**设置ipc ADAS功能**/
+	public static final int IPC_VDCPCmd_SetADASConfig = 2001;
 
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2);
 }

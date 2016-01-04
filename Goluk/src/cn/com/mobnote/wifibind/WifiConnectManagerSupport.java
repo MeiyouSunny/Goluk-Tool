@@ -167,9 +167,9 @@ public class WifiConnectManagerSupport {
 
 	// 关闭wifi功能
 	boolean closeWifi() {
-		 setWifiApEnabled(null,false);
-		 
-		boolean	bRet = wifiManager.isWifiEnabled();
+		setWifiApEnabled(null, false);
+
+		boolean bRet = wifiManager.isWifiEnabled();
 		int count = 0;
 		while (bRet) {
 			try {
@@ -439,7 +439,6 @@ public class WifiConnectManagerSupport {
 				try {
 					out.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -537,9 +536,12 @@ public class WifiConnectManagerSupport {
 
 	public boolean setWifiApEnabled(WifiConfiguration wifiConfig, boolean enabled) {
 		try {
-			
-			if (wifiManager != null
-				&& wifiManager.getConnectionInfo() != null) { // disable WiFi in any case
+
+			if (wifiManager != null && wifiManager.getConnectionInfo() != null) { // disable
+																					// WiFi
+																					// in
+																					// any
+																					// case
 				wifiManager.setWifiEnabled(false);
 			}
 

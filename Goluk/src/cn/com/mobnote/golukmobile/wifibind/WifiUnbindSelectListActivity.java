@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventBindFinish;
 import cn.com.mobnote.eventbus.EventBinding;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventFinishWifiActivity;
@@ -23,6 +24,7 @@ import cn.com.mobnote.eventbus.EventWifiConnect;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectListAdapter.HeadViewHodler;
@@ -47,11 +49,11 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	private WifiBindHistoryBean mWifiBindConnectData = null;
 	private WifiUnbindSelectListAdapter mListAdapter;
 	private CustomLoadingDialog mLoadingDialog = null;
-	private GolukApplication mApp = null;
+	public GolukApplication mApp = null;
 	private boolean isCanReceiveFailed = true;
 	/** 控制ListView Header的显示与删除 */
 	private boolean isHasHeaderView = false;
-
+	
 	/** 控制是否可以接受连接信息 */
 	// private boolean isCanAcceptMsg = true;
 
@@ -107,7 +109,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--1");
 		List<WifiBindHistoryBean> binds = WifiBindDataCenter.getInstance().getAllBindData();
 		if (binds != null) {
-
+			mEditBtn.setVisibility(View.VISIBLE);
 			if (isCanShowListViewHead()) {
 				GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--size: "
 						+ binds.size());
@@ -119,10 +121,13 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 								"select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--select ssid: "
 										+ mWifiBindConnectData.ipc_ssid);
 						refreshHeadData();
-						binds.remove(i);
+						if (binds.size() > 1) {
+							binds.remove(i);
+							binds.add(mWifiBindConnectData);
+						}
+
 						break;
 					}
-
 				}
 			} else {
 				GolukDebugUtils.e("",
@@ -133,10 +138,12 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 			}
 			GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--setData: "
 					+ binds.size());
+		}else{
+			mEditBtn.setText(this.getResources().getString(R.string.edit_text));// 编辑
+			mEditBtn.setVisibility(View.GONE);
 		}
 		mListAdapter.setData(binds);
 		mListAdapter.notifyDataSetChanged();
-
 	}
 
 	public boolean isCanShowListViewHead() {
@@ -168,12 +175,13 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 			mHeadData.golukIcon = (ImageView) mHeadView.findViewById(R.id.goluk_icon);
 			mHeadData.golukName = (TextView) mHeadView.findViewById(R.id.goluk_name);
 			mHeadData.golukPointgreyIcon = (ImageView) mHeadView.findViewById(R.id.goluk_pointgrey_icon);
+			mHeadData.golukConnLayout = (RelativeLayout) mHeadView.findViewById(R.id.goluk_conn_layout);
 		}
 		if (IPCControlManager.G1_SIGN.equals(mWifiBindConnectData.ipcSign)) {
 			mHeadData.golukIcon.setImageResource(R.drawable.connect_g1_img);
 		} else if (IPCControlManager.G2_SIGN.equals(mWifiBindConnectData.ipcSign)) {
 			mHeadData.golukIcon.setImageResource(R.drawable.connect_g2_img);
-		} else if (IPCControlManager.G1s_SIGN.equals(mWifiBindConnectData.ipcSign)) {
+		} else if (IPCControlManager.T1s_SIGN.equals(mWifiBindConnectData.ipcSign)) {
 			mHeadData.golukIcon.setImageResource(R.drawable.connect_t1_img);
 		} else if (IPCControlManager.T1_SIGN.equals(mWifiBindConnectData.ipcSign)) {
 			mHeadData.golukIcon.setImageResource(R.drawable.connect_t1_img);
@@ -198,6 +206,18 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 			}
 		}
 
+		mHeadData.golukConnLayout.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if(mApp.isIpcLoginSuccess){
+					Intent intent = new Intent(WifiUnbindSelectListActivity.this, CarRecorderActivity.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+					startActivity(intent);
+					finish();
+				}
+			}
+		});
 		mHeadData.golukName.setText(mWifiBindConnectData.ipc_ssid);
 		mHeadData.golukDelIcon.setOnClickListener(new OnClickListener() {
 
@@ -211,6 +231,8 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 				confirmation.getWindow().findViewById(R.id.sure).setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						EventBindFinish eventFnish = new EventBindFinish(EventConfig.BIND_LIST_DELETE_CONFIG);
+						EventBus.getDefault().post(eventFnish);
 						mApp.setIpcDisconnect();
 						mListView.removeHeaderView(mHeadView);
 						WifiBindDataCenter.getInstance().deleteBindData(mWifiBindConnectData.ipc_ssid);
@@ -236,7 +258,8 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	public void showLoading() {
 		isCanReceiveFailed = false;
 		dimissLoading();
-		mLoadingDialog = new CustomLoadingDialog(this, "正在创建热点");
+		mLoadingDialog = new CustomLoadingDialog(this, this.getResources()
+				.getString(R.string.unbind_loading_dialog_txt));
 		mLoadingDialog.setCancel(false);
 		mLoadingDialog.show();
 	}
@@ -358,6 +381,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	}
 
 	public void onEventMainThread(EventFinishWifiActivity event) {
+		GolukDebugUtils.e("", "completeSuccess-------------SelectList");
 		finish();
 	}
 
@@ -371,21 +395,29 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		}
 	}
 
+	private void setNotEditState() {
+		mListAdapter.mEditState = false;
+		mEditBtn.setText(this.getResources().getString(R.string.edit_text));// 编辑
+		if (mHeadData != null) {
+			mHeadData.golukDelIcon.setVisibility(View.GONE);
+			mHeadData.golukPointgreyIcon.setVisibility(View.VISIBLE);
+		}
+	}
+
+	private void setEditState() {
+		mListAdapter.mEditState = true;
+		mEditBtn.setText(this.getResources().getString(R.string.short_input_ok));// 完成
+		if (mHeadData != null) {
+			mHeadData.golukDelIcon.setVisibility(View.VISIBLE);
+			mHeadData.golukPointgreyIcon.setVisibility(View.GONE);
+		}
+	}
+
 	private void click_Edit() {
 		if (mListAdapter.mEditState) {
-			mListAdapter.mEditState = false;
-			mEditBtn.setText(this.getResources().getString(R.string.edit_text));// 编辑
-			if (mHeadData != null) {
-				mHeadData.golukDelIcon.setVisibility(View.GONE);
-				mHeadData.golukPointgreyIcon.setVisibility(View.VISIBLE);
-			}
+			setNotEditState();
 		} else {
-			mListAdapter.mEditState = true;
-			mEditBtn.setText(this.getResources().getString(R.string.short_input_ok));// 完成
-			if (mHeadData != null) {
-				mHeadData.golukDelIcon.setVisibility(View.VISIBLE);
-				mHeadData.golukPointgreyIcon.setVisibility(View.GONE);
-			}
+			setEditState();
 		}
 		mListAdapter.notifyDataSetChanged();
 	}
@@ -396,6 +428,11 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	 * @author jyf
 	 */
 	private void click_AddIpc() {
+		// 还原状态
+		if (mListAdapter.mEditState) {
+			setNotEditState();
+			mListAdapter.notifyDataSetChanged();
+		}
 		Intent intent = new Intent(this, WifiUnbindSelectTypeActivity.class);
 		startActivity(intent);
 	}

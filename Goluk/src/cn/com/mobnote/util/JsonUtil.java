@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
 import cn.com.mobnote.golukmobile.cluster.bean.UserLabelBean;
@@ -1384,6 +1385,23 @@ public class JsonUtil {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	// 保存ipc设备型号
+	public static String getProductName(Object jsonStr) {
+		try {
+			JSONObject json = new JSONObject((String) jsonStr);
+			if (json.isNull("productname")) {
+				return IPCControlManager.G1_SIGN;
+			} else {
+				return json.optString("productname");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return IPCControlManager.G1_SIGN;
 	}
 
 }

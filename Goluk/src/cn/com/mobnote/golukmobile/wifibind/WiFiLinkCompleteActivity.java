@@ -86,6 +86,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	private WifiManager mWifiManager = null;
 
 	private int mStep = 0;
+	/** 用户要绑定的设备类型 */
+	private String mIPcType = "";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(mContext, TAG);
+
+		getIntentData();
 
 		collectLog("onCreate", "-----1");
 		mContext = this;
@@ -112,6 +116,17 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		// 6秒后，没有配置成功，直接跳转“等待连接”界面
 		mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_WAITING_VIEW, TIMEOUT_SETIPC);
 		EventBus.getDefault().register(this);
+	}
+
+	public String getCurrentIpcType() {
+		return mIPcType;
+	}
+
+	private void getIntentData() {
+		Intent intent = this.getIntent();
+		if (null != intent) {
+			mIPcType = intent.getStringExtra(WifiUnbindSelectTypeActivity.KEY_IPC_TYPE);
+		}
 	}
 
 	private void initChildView() {
@@ -248,7 +263,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		String ipcssid = WiFiInfo.IPC_SSID;
 		String ipcmac = WiFiInfo.IPC_MAC;
 		// 创建热点之前先断开ipc连接
-		mApp.mIPCControlManager.setIPCWifiState(false, "");
+		mApp.mIPCControlManager.setVdcpDisconnect();
 		// 改变Application-IPC退出登录
 		mApp.setIpcLoginOut();
 		// 调用韩峥接口创建手机热点
@@ -286,7 +301,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	/**
 	 * ipc连接成功回调
 	 */
-	public void ipcLinkWiFiCallBack() {
+	public void ipcLinkWiFiCallBack(Object param2) {
 		collectLog("ipcLinkWiFiCallBack", "*****   Bind Sucess ! *****");
 
 		// 设置绑定成功
@@ -321,7 +336,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		historyBean.mobile_ssid = WiFiInfo.MOBILE_SSID;
 		historyBean.mobile_pwd = WiFiInfo.MOBILE_PWD;
 		historyBean.state = WifiBindHistoryBean.CONN_USE;
-		historyBean.ipcSign = mApp.mIPCControlManager.mProduceName;
+		historyBean.ipcSign = JsonUtil.getProductName(param2);
 		WifiBindDataCenter.getInstance().saveBindData(historyBean);
 		// 发送绑定成功的消息
 		EventBus.getDefault().post(new EventBindResult(EventConfig.BIND_COMPLETE));
@@ -419,21 +434,25 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 			backSetup();
 			break;
 		case R.id.complete_btn:
-			if (this.STATE_SUCESS == mState) {
-				// 綁定成功后，可以进入行车记录仪
-				// 关闭wifi绑定全部页面
-				EventBus.getDefault().post(new EventFinishWifiActivity());
-				if (null != mWac) {
-					mWac.unbind();
-				}
-				mWac = null;
-				// GolukApplication.getInstance().stopDownloadList();// 停止视频同步
-				Intent it = new Intent(WiFiLinkCompleteActivity.this, CarRecorderActivity.class);
-				it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-				startActivity(it);
-			}
+			click_complete();
 			break;
+		}
+	}
+
+	private void click_complete() {
+		if (this.STATE_SUCESS == mState) {
+			// 綁定成功后，可以进入行车记录仪
+			// 关闭wifi绑定全部页面
+			EventBus.getDefault().post(new EventFinishWifiActivity());
+			if (null != mWac) {
+				mWac.unbind();
+			}
+			mWac = null;
+			// GolukApplication.getInstance().stopDownloadList();// 停止视频同步
+			Intent it = new Intent(WiFiLinkCompleteActivity.this, CarRecorderActivity.class);
+			it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			startActivity(it);
 		}
 	}
 
@@ -471,7 +490,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		mMiddleLayout.addView(layout3.getRootLayout());
 		mCurrentLayout = layout3;
 		layout3.start();
-		mCompleteBtn.setBackgroundResource(R.drawable.connect_mianbtn);
+		mCompleteBtn.setBackgroundResource(R.drawable.ipcbind_btn_finish);
 		mProgressImg.setBackgroundResource(R.drawable.setp_4);
 	}
 
@@ -528,6 +547,48 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		}
 	}
 
+	private void wifiCallBack_5(int state, int process, String message, Object arrays) {
+		if (state == 0) {
+			switch (process) {
+			case 0:
+				// 创建热点成功
+				break;
+			case 1:
+				// ipc成功连接上热点
+				wifiCallBack_ipcConnHotSucess(message, arrays);
+				break;
+			case 2:
+				// 用户已经创建与配置文件相同的热点，
+				break;
+			case 3:
+				// 用户已经连接到其它wifi，按连接失败处理
+				connFailed();
+				break;
+			default:
+				break;
+			}
+		} else {
+			// 未连接
+			connFailed();
+		}
+	}
+
+	private void wifiCallBack_ipcConnHotSucess(String message, Object arrays) {
+		WifiRsBean[] bean = (WifiRsBean[]) arrays;
+		if (null == bean) {
+			return;
+		}
+		GolukDebugUtils.e("", "自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
+		collectLog("wifiCallBack_ipcConnHotSucess", "自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
+		if (bean.length > 0) {
+			GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---1---ip---");
+			collectLog("wifiCallBack_ipcConnHotSucess", "1");
+			sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
+		} else {
+			collectLog("wifiCallBack_ipcConnHotSucess", "2 ");
+		}
+	}
+
 	@Override
 	public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
 		final String log = " type---" + type + "---state---" + state + "---process---" + process + "---message---"
@@ -538,6 +599,9 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		switch (type) {
 		case 3:
 			wifiCallBack_3(state, process, message, arrays);
+			break;
+		case 5:
+			wifiCallBack_5(state, process, message, arrays);
 			break;
 		default:
 			break;

@@ -753,12 +753,19 @@ public class GolukUtils {
 		return false;
 	}
 
-	public static  String getIpcTypeFromName(String mWillConnName) {
+	/**
+	 * 通过wifi的原始 ssid ，获取设备类型 (G系列，T系列)
+	 * 
+	 * @param mWillConnName
+	 * @return
+	 * @author jyf
+	 */
+	public static String getIpcTypeFromName(String mWillConnName) {
 		String ipcType = "";
 		if (mWillConnName.startsWith(T1_WIFINAME_SIGN)) {
-			ipcType = IPCControlManager.T1_SIGN;
+			ipcType = IPCControlManager.MODEL_T;
 		} else if (mWillConnName.startsWith(G1G2_WIFINAME_SIGN)) {
-			ipcType = IPCControlManager.G1_SIGN;
+			ipcType = IPCControlManager.MODEL_G;
 		} else {
 
 		}

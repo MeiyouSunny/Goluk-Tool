@@ -23,11 +23,16 @@ import cn.com.mobnote.eventbus.EventAdasConfigStatus;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukFileUtils;
 import cn.com.mobnote.util.GolukUtils;
 import de.greenrobot.event.EventBus;
 
-public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnClickListener, OnItemClickListener {
+public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnClickListener, OnItemClickListener,
+		ForbidBack, IPCManagerFn {
 	private static final String TAG = "AdasSeletedVehicleTypeActivity";
 	private static final String CONFIG_FILE_NAME = "vehicleConfig";
 	public static final String FROM = "from";
@@ -42,6 +47,8 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 	private AdasConfigParamterBean mAdasConfigParamter = null;
 	private ArrayList<VehicleParamterBean> mCustomVehicleList = new ArrayList<VehicleParamterBean>(3);
 	private int mPosition = 0;
+
+	private CustomLoadingDialog mCustomLoadingDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +68,9 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 					.getSerializable(AdasVerificationActivity.ADASCONFIGDATA);
 		}
 		EventBus.getDefault().register(this);
+		if (mFromType != 0 && null != GolukApplication.getInstance().getIPCControlManager()) {
+			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener(TAG, this);
+		}
 		initView();
 		loadData();
 	}
@@ -73,6 +83,13 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 			outState.putSerializable(AdasVerificationActivity.ADASCONFIGDATA, mAdasConfigParamter);
 		}
 		super.onSaveInstanceState(outState);
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		mApp.setContext(this, TAG);
 	}
 
 	private void initView() {
@@ -160,10 +177,8 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 				intent.putExtra(AdasVerificationActivity.ADASCONFIGDATA, mAdasConfigParamter);
 				startActivity(intent);
 			} else {
-				EventAdasConfigStatus eventAdasConfigStatus = new EventAdasConfigStatus(EventConfig.IPC_ADAS_CONFIG_FROM_MODIFY);
-				eventAdasConfigStatus.setData(mAdasConfigParamter);
-				EventBus.getDefault().post(eventAdasConfigStatus);
-				finish();
+				showLoading();
+				GolukApplication.getInstance().getIPCControlManager().setT1AdasConfigAll(mAdasConfigParamter);
 			}
 			break;
 		default:
@@ -177,10 +192,11 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 		// TODO Auto-generated method stub
 		mPosition = position;
 		int len = mCarTypeAdapter.getCount();
-		if (position > len - 4) {
+		int customLen =  mCustomVehicleList.size();
+		if (position > len - 1 - customLen) {
 			Intent intent = new Intent(AdasSeletedVehicleTypeActivity.this, AdasVehicleConfigActivity.class);
 			intent.putExtra(AdasVehicleConfigActivity.CUSTOMDATA, mCustomVehicleList);
-			intent.putExtra(AdasVehicleConfigActivity.CUSTOMINDEX, mCustomVehicleList.size() - len + position);
+			intent.putExtra(AdasVehicleConfigActivity.CUSTOMINDEX, customLen - len + position);
 			startActivityForResult(intent, REQUEST_CODE_VEHICLE_CONFIG);
 		} else {
 			mCarTypeAdapter.setSelectedId(position);
@@ -219,7 +235,8 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_VEHICLE_CONFIG) {
-			VehicleParamterBean result = (VehicleParamterBean) data.getSerializableExtra(AdasVehicleConfigActivity.CUSTOMDATA);
+			VehicleParamterBean result = (VehicleParamterBean) data
+					.getSerializableExtra(AdasVehicleConfigActivity.CUSTOMDATA);
 			if (result == null) {
 				return;
 			}
@@ -242,9 +259,55 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		EventBus.getDefault().unregister(this);
+		if (mFromType != 0 && null != GolukApplication.getInstance().getIPCControlManager()) {
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener(TAG);
+		}
+		closeLoading();
 	}
 
 	public void onEventMainThread(EventAdasConfigStatus event) {
 		finish();
+	}
+
+	@Override
+	public void forbidBackKey(int backKey) {
+		// TODO Auto-generated method stub
+		if (1 == backKey) {
+			finish();
+		}
+	}
+
+	private void showLoading() {
+		if (mCustomLoadingDialog == null) {
+			mCustomLoadingDialog = new CustomLoadingDialog(this, getString(R.string.str_adas_loding));
+			mCustomLoadingDialog.setCancel(false);
+			mCustomLoadingDialog.setListener(this);
+		}
+		if (!mCustomLoadingDialog.isShowing()) {
+			mCustomLoadingDialog.show();
+		}
+	}
+
+	private void closeLoading() {
+		if (mCustomLoadingDialog != null) {
+			mCustomLoadingDialog.close();
+			mCustomLoadingDialog = null;
+		}
+	}
+
+	@Override
+	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+		// TODO Auto-generated method stub
+		if (event == ENetTransEvent_IPC_VDCP_CommandResp && msg == IPC_VDCP_Msg_SetADASConfig) {
+			closeLoading();
+			if (param1 == RESULE_SUCESS) {
+				EventAdasConfigStatus eventAdasConfigStatus = new EventAdasConfigStatus(
+						EventConfig.IPC_ADAS_CONFIG_FROM_MODIFY);
+				eventAdasConfigStatus.setData(mAdasConfigParamter);
+				EventBus.getDefault().post(eventAdasConfigStatus);
+				finish();
+			}
+		}
+
 	}
 }

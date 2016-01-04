@@ -6,6 +6,8 @@ public class EventConfig {
 	/* EventBus opcode for MainActivity and CarRecorderActivity */
 	public static final int CAR_RECORDER_BIND_CREATEAP = 500;
 	public static final int CAR_RECORDER_RESULT = 600;
+	// 删除wifi本地配置文件
+	public static final int BIND_LIST_DELETE_CONFIG = 700;
 
 	public final static int LIVE_MAP_QUERY = 99;
 	public final static int WIFI_STATE = 3;

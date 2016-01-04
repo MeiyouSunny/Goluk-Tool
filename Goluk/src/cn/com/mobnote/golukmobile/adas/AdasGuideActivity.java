@@ -37,7 +37,6 @@ public class AdasGuideActivity extends BaseActivity implements OnClickListener {
 		}
 		EventBus.getDefault().register(this);
 		mApp = (GolukApplication) getApplication();
-		mApp.setContext(this, TAG);
 		initView();
 	}
 
@@ -55,6 +54,13 @@ public class AdasGuideActivity extends BaseActivity implements OnClickListener {
 		mBackBtn.setOnClickListener(this);
 		mNextTextview = (TextView) findViewById(R.id.button_next);
 		mNextTextview.setOnClickListener(this);
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		mApp.setContext(this, TAG);
 	}
 
 	@Override

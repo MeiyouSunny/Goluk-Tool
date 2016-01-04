@@ -49,6 +49,14 @@ public interface IWifiBindDataFn {
 	public WifiBindHistoryBean getCurrentUseIpc();
 
 	/**
+	 * 更新当前连接上设备的类型
+	 * 
+	 * @param ipcType
+	 * @author jyf
+	 */
+	public void updateConnIpcType(String ipcType);
+
+	/**
 	 * 是否有绑定记录
 	 * 
 	 * @return

@@ -2153,7 +2153,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			path = Environment.getExternalStorageDirectory().getPath() + "/goluk/video/urgent/";
 		}
 		List<String> list = FileInfoManagerUtils.getFileNames(path, "(.+?mp4)");
+
 		Collections.sort(list, new SortByDate());
+
 		List<String> result = new ArrayList<String>();
 		if (list.size() > 0) {
 			result.add(list.get(0));
@@ -2162,38 +2164,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			result.add(list.get(1));
 		}
 		return result;
-		// if (list != null && list.size() > 0) {
-		// File vfile = null;
-		// for (int i = list.size() - 1; i >= 0; i--) {
-		// vn = list.get(i);
-		// vfile = new File(path + vn);
-		//
-		// if (vfile.exists()) {
-		// flog++;
-		// if (flog <= 1) {
-		// videoname1 = vn;
-		// } else if (flog == 2) {
-		// videoname2 = vn;
-		// } else {
-		// break;
-		// }
-		//
-		// }
-		// }
-		//
-		//
-		// if (!"".equals(videoname1)) {
-		// result.add(videoname1);
-		// }
-		//
-		// if (!"".equals(videoname2)) {
-		// result.add(videoname2);
-		// }
-		//
-		// return result;
-		// } else {
-		// return null;
-		// }
 
 	}
 

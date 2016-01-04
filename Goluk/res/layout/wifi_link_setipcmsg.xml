@@ -2,46 +2,36 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F1F1F1" >
+    android:background="@color/color_ipcbind_bg" >
 
     <TextView
         android:id="@+id/wifi_link_setipc_txt1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="22dp"
         android:text="@string/wifi_link_31_text"
-        android:textColor="#595959"
-        android:textSize="18sp" />
+        android:textColor="#565656"
+        android:textSize="14sp" />
 
     <ImageView
         android:id="@+id/wifi_link_setipc_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/wifilist_textView2"
+        android:layout_width="186dp"
+        android:layout_height="60dp"
+        android:layout_below="@id/wifi_link_setipc_txt1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="96dp"
-        android:contentDescription="@string/imgdes"
-        android:src="@drawable/connect_gif_ipc_bluelight" />
-
-    <ImageView
-        android:id="@+id/wifi_link_setipc_img2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/wifilist_textView2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="60dp"
         android:contentDescription="@string/imgdes" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/wifi_link_setipc_img"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="72dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_marginTop="60dp"
         android:text="@string/wifi_link_30_text"
-        android:textColor="#828282"
-        android:textSize="14sp" />
+        android:textColor="#565656"
+        android:textSize="12sp" />
 
 </RelativeLayout>

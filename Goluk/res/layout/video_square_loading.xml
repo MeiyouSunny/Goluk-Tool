@@ -8,7 +8,7 @@
 			android:layout_centerInParent="true"
 			android:layout_gravity="center"
 			android:background="@drawable/edit_loading_bg">
-			
+
 			<TextView
 				android:id="@+id/loading_text"
 				android:layout_width="wrap_content"
@@ -17,6 +17,9 @@
 				android:layout_alignParentBottom="true"
 				android:layout_marginBottom="18dp"
 				android:text="加载中，请稍后..."
+				android:gravity="center"
+				android:paddingLeft ="15dp"
+				android:paddingRight ="15dp"
 				android:textSize="14sp"
 				android:textColor="#ffffff"/>
 			
