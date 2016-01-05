@@ -53,12 +53,14 @@ import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.golukmobile.newest.WonderfulSelectedListView;
+import cn.com.mobnote.golukmobile.special.SpecialListActivity;
+import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareAdapter;
-import cn.com.mobnote.golukmobile.wifibind.WiFiLinkListActivity;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
+import cn.com.mobnote.golukmobile.xdpush.StartAppBean;
 import cn.com.mobnote.golukmobile.xdpush.XingGeMsgBean;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerAdapter;
@@ -146,6 +148,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private final static String TAG = "MainActivity";
 	private String mCityCode;
 	private boolean mBannerLoaded;
+	private StartAppBean mStartAppBean = null;
 
 	private void playDownLoadedSound() {
 		if (null != mSoundPool) {
@@ -163,6 +166,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		GolukDebugUtils.e("", "start App ------ MainActivity-----onCreate------------:");
 		super.onCreate(savedInstanceState);
 		// 在使用SDK各组件之前初始化context信息，传入ApplicationContext
 		// 注意该方法要再setContentView方法之前实现
@@ -300,6 +304,36 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			}
 			// GolukUtils.showToast(this, "处理推送数据 :" + pushJson);
 		}
+		// 处理网页启动App
+		mStartAppBean = (StartAppBean) intent.getSerializableExtra(GuideActivity.KEY_WEB_START);
+		dealWebStart();
+	}
+
+	private void dealWebStart() {
+		GolukDebugUtils.e("", "start App: MainActivity:------------: 11111");
+		if (null == mStartAppBean) {
+			return;
+		}
+		String type = mStartAppBean.type;
+		String title = mStartAppBean.title;
+		String id = mStartAppBean.id;
+
+		if ("1".equals(type)) {
+			// 单视频
+			Intent intent = new Intent(this, VideoDetailActivity.class);
+			intent.putExtra(VideoDetailActivity.VIDEO_ID, id);
+			intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
+			startActivity(intent);
+		} else if ("2".equals(type)) {
+			// 专题
+			Intent intent = new Intent(this, SpecialListActivity.class);
+			intent.putExtra("ztid", id);
+			intent.putExtra("title", title);
+			startActivity(intent);
+		}
+
+		GolukDebugUtils.e("", "start App: MainActivity:------------: " + mStartAppBean.dataStr);
+
 	}
 
 	/**
