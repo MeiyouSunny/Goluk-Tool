@@ -179,6 +179,8 @@ public class JsonParserUtils {
 						mVideoEntity.videoExtra.topicname = extraObj.optString("topicname");
 						mVideoEntity.videoExtra.isrecommend = extraObj.optString("isrecommend");
 						mVideoEntity.videoExtra.isreward = extraObj.optString("isreward");
+						mVideoEntity.videoExtra.atflag = extraObj.optString("atflag");
+						mVideoEntity.videoExtra.sysflag = extraObj.optString("sysflag");
 					}
 
 					if (video.isNull("isopen")) {

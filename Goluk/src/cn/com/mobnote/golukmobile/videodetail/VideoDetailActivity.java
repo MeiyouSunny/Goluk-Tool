@@ -990,6 +990,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			}
 		} else if (LiveDialogManager.DIALOG_TYPE_COMMENT_PROGRESS_DELETE == dialogType) {
 			// 取消删除
+		} else if(dialogType == DIALOG_TYPE_VIDEO_DELETED) {
+			finish();
 		}
 	}
 
@@ -1104,6 +1106,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		}
 	}
 
+	private final static int DIALOG_TYPE_VIDEO_DELETED = 24;
+
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		// TODO Auto-generated method stub
@@ -1112,7 +1116,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		case IPageNotifyFn.PageType_VideoDetail:
 			mVideoJson = (VideoJson) result;
 			if (mVideoJson != null && mVideoJson.success) {
-
 				mRTPullListView.setVisibility(View.VISIBLE);
 				mCommentLayout.setVisibility(View.VISIBLE);
 				mImageRefresh.setVisibility(View.GONE);
@@ -1127,6 +1130,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 					mCurrentOperator = OPERATOR_NONE;
 					return;
 				}
+
 				ZTHead ztHead = videoAllData.head;
 				VideoSquareDetailInfo avideo = videoAllData.avideo;
 
@@ -1183,7 +1187,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 						getCommentList(OPERATOR_FIRST, "");
 					}
 					mCommentLayout.setOnClickListener(new OnClickListener() {
-
 						@Override
 						public void onClick(View arg0) {
 
@@ -1192,6 +1195,21 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 					});
 				}
 				clickVideoNumber();
+			} else if(mVideoJson != null && !mVideoJson.success) {
+				if(null != mVideoJson.data) {
+					if("4".equals(mVideoJson.data.result)) {
+						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
+								DIALOG_TYPE_VIDEO_DELETED, "",
+								this.getResources().getString(R.string.str_video_removed));
+					} else if("3".equals(mVideoJson.data.result)) {
+						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
+								DIALOG_TYPE_VIDEO_DELETED, "",
+								this.getResources().getString(R.string.str_video_not_exist));
+					} else {
+						dealCondition();
+						mCurrentOperator = OPERATOR_NONE;
+					}
+				}
 			} else {
 				dealCondition();
 				mCurrentOperator = OPERATOR_NONE;

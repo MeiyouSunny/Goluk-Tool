@@ -11,10 +11,10 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import cn.com.mobnote.eventbus.EventFinishWifiActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UnbindActivity;
+import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -25,7 +25,6 @@ public class WifiLinkSucessLayout extends ViewFrame implements OnClickListener {
 	private LayoutInflater mLayoutFlater = null;
 	private TextView mInfoTv = null;
 	private TextView mModifyPwdTv = null;
-	private TextView mWifi_link_sucess_txt1 = null;
 
 	private ImageView mMiddleImg = null;
 	private Bitmap mMiddleBitmap = null;
@@ -38,7 +37,19 @@ public class WifiLinkSucessLayout extends ViewFrame implements OnClickListener {
 	}
 
 	private void initBitmap() {
-		mMiddleBitmap = ImageManager.getBitmapFromResource(R.drawable.connect_banner_4);
+		mMiddleBitmap = ImageManager.getBitmapFromResource(getAnimal());
+	}
+
+	private int getAnimal() {
+		if (null != mContext && mContext instanceof WiFiLinkCompleteActivity) {
+			String type = ((WiFiLinkCompleteActivity) mContext).getCurrentIpcType();
+			if (IPCControlManager.MODEL_T.equals(type)) {
+				return R.drawable.ipcbind_finish_t_success;
+			} else {
+				return R.drawable.ipcbind_finish_g_success;
+			}
+		}
+		return R.drawable.ipcbind_finish_g_success;
 	}
 
 	private void init() {
@@ -49,11 +60,6 @@ public class WifiLinkSucessLayout extends ViewFrame implements OnClickListener {
 		String mobile = mContext.getResources().getString(R.string.wifi_link_complete_mobile);
 		final String text = yourgoluk + "<font color=\"#0587ff\"> " + success + " </font>" + mobile;
 		mInfoTv.setText(Html.fromHtml(text));
-		// mInfoTv.getPaint().setFakeBoldText(true);
-
-		mWifi_link_sucess_txt1 = (TextView) mRootLayout.findViewById(R.id.wifi_link_sucess_txt1);
-		// mWifi_link_sucess_txt1.getPaint().setFakeBoldText(true);
-
 		mModifyPwdTv = (TextView) mRootLayout.findViewById(R.id.wifi_link_sucess_modify);
 		// 设置下画线
 		mModifyPwdTv.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);

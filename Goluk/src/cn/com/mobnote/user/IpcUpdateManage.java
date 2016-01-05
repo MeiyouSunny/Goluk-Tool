@@ -301,7 +301,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 							Context.MODE_PRIVATE);
 					boolean isbind = preferences.getBoolean("isbind", false);
 					
-					if (!mApp.isIpcLoginSuccess && !isbind) {
+					if (!mApp.isIpcLoginSuccess && !mApp.isBindSucess()) {
 						GolukUtils.showToast(mApp.getContext(),
 								mApp.getContext().getResources().getString(R.string.str_ipc_no_connect));
 						return;
@@ -310,7 +310,7 @@ public class IpcUpdateManage implements IPCManagerFn {
 					IPCInfo ipcInfo = ipcUpdateUtils(ipc);
 					if (ipcInfo == null) {
 						// ipc不需要升级
-						if (!mApp.isIpcLoginSuccess && !isbind) {
+						if (!mApp.isIpcLoginSuccess && !mApp.isBindSucess()) {
 							GolukUtils.showToast(mApp.getContext(),
 									mApp.getContext().getResources().getString(R.string.str_ipc_no_connect));
 						} else {

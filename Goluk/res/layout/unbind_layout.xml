@@ -12,251 +12,250 @@
     <!-- body -->
 
     <RelativeLayout
-        android:id="@+id/unbind_layout_haveipc"
+        android:id="@+id/rl_unbind_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="wrap_content" >
 
-        <TextView
-            android:id="@+id/unbind_layout_wifi_hint_text"
+        <ImageView
+            android:id="@+id/goluk_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginTop="32dp"
-            android:text="@string/unbind_camera_wifi_hint_text"
-            android:textColor="@color/unbind_camera_wifi_hint_text_color"
-            android:textSize="13sp" />
-        <!-- 名称 -->
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="44dp"
+            android:contentDescription="@string/imgdes"
+            android:src="@drawable/connect_t1_icon_1" />
 
-        <View
-            android:id="@+id/solid_1"
+        <TextView
+            android:id="@+id/goluk_name"
             android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:layout_below="@id/unbind_layout_wifi_hint_text"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/solid" />
+            android:layout_height="wrap_content"
+            android:layout_below="@id/goluk_icon"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="14dp"
+            android:textColor="#4d4d4d"
+            android:textSize="16sp" />
 
-        <RelativeLayout
-            android:id="@+id/unbind_layout_camera"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@id/solid_1"
-            android:background="#f4f4f4" >
+        <TextView
+            android:id="@+id/goluk_mobile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/goluk_name"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:textColor="#4d4d4d"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/goluk_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/goluk_mobile"
+            android:layout_below="@id/goluk_mobile"
+            android:layout_marginTop="4dp"
+            android:textColor="#4d4d4d"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/unbind_layout_wifi_hint_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/unbind_camera_wifi_hint_text"
+        android:textColor="@color/unbind_camera_wifi_hint_text_color"
+        android:textSize="13sp" />
+    <!-- 名称 -->
+
+    <View
+        android:id="@+id/solid_1"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/solid" />
+
+    <RelativeLayout
+        android:id="@+id/unbind_layout_camera"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#f4f4f4" >
+
+        <TextView
+            android:id="@+id/unbind_camera_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="14dp"
+            android:text="@string/unbind_camera"
+            android:textColor="#3f3f3f"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/unbind_camera_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="14dp"
+            android:contentDescription="@string/imgdes"
+            android:textColor="#999999"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/solid_2"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@drawable/solid" />
+
+    <!-- 极路客WiFi密码 -->
+
+    <View
+        android:id="@+id/solid_3"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/solid" />
+
+    <RelativeLayout
+        android:id="@+id/unbind_layout_password"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#f4f4f4" >
+
+        <TextView
+            android:id="@+id/unbind_password_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="14dp"
+            android:text="@string/change_wifi_name"
+            android:textColor="#3f3f3f"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" >
 
             <TextView
-                android:id="@+id/unbind_camera_text"
+                android:id="@+id/unbind_password_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="14dp"
-                android:text="@string/unbind_camera"
-                android:textColor="#3f3f3f"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/unbind_camera_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="14dp"
+                android:layout_gravity="center_vertical"
                 android:contentDescription="@string/imgdes"
                 android:textColor="#999999"
                 android:textSize="16sp" />
-        </RelativeLayout>
 
-        <View
-            android:id="@+id/solid_2"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:layout_below="@id/unbind_layout_camera"
-            android:background="@drawable/solid" />
-
-        <!-- 极路客WiFi密码 -->
-
-        <View
-            android:id="@+id/solid_3"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:layout_below="@id/unbind_layout_camera"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/solid" />
-
-        <RelativeLayout
-            android:id="@+id/unbind_layout_password"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@id/solid_3"
-            android:background="#f4f4f4" >
-
-            <TextView
-                android:id="@+id/unbind_password_text"
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="14dp"
-                android:text="@string/change_wifi_name"
-                android:textColor="#3f3f3f"
-                android:textSize="16sp" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true" >
-
-                <TextView
-                    android:id="@+id/unbind_password_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:contentDescription="@string/imgdes"
-                    android:textColor="#999999"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="14dp"
-                    android:src="@drawable/editor_arrow" />
-            </LinearLayout>
-        </RelativeLayout>
-
-        <View
-            android:id="@+id/solid_4"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:layout_below="@id/unbind_layout_password"
-            android:background="@drawable/solid" />
-
-        <TextView
-            android:id="@+id/unbind_layout_change_pwd"
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:layout_below="@id/solid_4"
-            android:layout_marginLeft="14dp"
-            android:paddingTop="8dp"
-            android:text="@string/unbind_camera_change_wifi_pwd_hint"
-            android:textColor="@color/unbind_camera_wifi_hint_text_color"
-            android:textSize="13sp" />
-
-        <View
-            android:id="@+id/solid_5"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:layout_below="@id/unbind_layout_change_pwd"
-            android:background="@drawable/solid" />
-
-        <!-- 固件升级 -->
-
-        <RelativeLayout
-            android:id="@+id/unbind_layout_update"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@id/solid_5"
-            android:background="#f4f4f4" >
-
-            <TextView
-                android:id="@+id/unbind_update_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="14dp"
-                android:text="@string/unbind_camera_update_text"
-                android:textColor="#3f3f3f"
-                android:textSize="16sp" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true" >
-
-                <TextView
-                    android:id="@+id/unbind_update_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:contentDescription="@string/imgdes"
-                    android:textColor="#999999"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="14dp"
-                    android:src="@drawable/editor_arrow" />
-            </LinearLayout>
-            
-        </RelativeLayout>
-
-        <View
-            android:id="@+id/solid_6"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:layout_below="@id/unbind_layout_update"
-            android:background="@drawable/solid" />
-
-        <View
-            android:id="@+id/solid_7"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:layout_below="@id/solid_6"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/solid" />
-        <!-- 解除绑定 -->
-
-        <LinearLayout
-            android:id="@+id/unbind_linearlayout"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@id/solid_7"
-            android:background="#f4f4f4"  >
-
-            <Button
-                android:id="@+id/unbind_layout_btn"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@null"
-                android:textColor="#1163a2" />
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="14dp"
+                android:contentDescription="@string/imgdes"
+                android:src="@drawable/editor_arrow" />
         </LinearLayout>
-
-        <View
-            android:id="@+id/solid_8"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:layout_below="@id/unbind_linearlayout"
-            android:background="@drawable/solid" />
-
-        <!-- 解绑按钮 -->
-
-        <!-- <Button
-            android:id="@+id/unbind_layout_btn"
-            android:layout_width="312dp"
-            android:layout_height="54dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="40dp"
-            android:background="@drawable/btn_share_cancel_bg"
-            android:gravity="center"
-            android:textColor="#f0fefc"
-            android:textSize="18sp" /> -->
     </RelativeLayout>
+
+    <View
+        android:id="@+id/solid_4"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@drawable/solid" />
+
+    <TextView
+        android:id="@+id/unbind_layout_change_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_marginLeft="14dp"
+        android:paddingTop="8dp"
+        android:text="@string/unbind_camera_change_wifi_pwd_hint"
+        android:textColor="@color/unbind_camera_wifi_hint_text_color"
+        android:textSize="13sp" />
+
+    <View
+        android:id="@+id/solid_5"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@drawable/solid" />
+
+    <!-- 固件升级 -->
 
     <RelativeLayout
-        android:id="@+id/unbind_layout_noipc"
+        android:id="@+id/unbind_layout_update"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" >
+        android:layout_height="40dp"
+        android:background="#f4f4f4" >
 
-        <ImageView
+        <TextView
+            android:id="@+id/unbind_update_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/icon_noipc" />
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="14dp"
+            android:text="@string/unbind_camera_update_text"
+            android:textColor="#3f3f3f"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" >
+
+            <TextView
+                android:id="@+id/unbind_update_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="#999999"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="14dp"
+                android:contentDescription="@string/imgdes"
+                android:src="@drawable/editor_arrow" />
+        </LinearLayout>
     </RelativeLayout>
+
+    <View
+        android:id="@+id/solid_6"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@drawable/solid" />
+
+    <View
+        android:id="@+id/solid_7"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/solid" />
+    <!-- 解除绑定 -->
+
+    <LinearLayout
+        android:id="@+id/unbind_linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#f4f4f4" >
+
+        <Button
+            android:id="@+id/unbind_layout_btn"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@null"
+            android:textColor="#1163a2" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/solid_8"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@drawable/solid" />
 
 </LinearLayout>

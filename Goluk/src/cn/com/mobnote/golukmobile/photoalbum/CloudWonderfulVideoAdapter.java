@@ -283,7 +283,8 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	private void displayVideoQuality(String videoHP, ImageView image) {
 		image.setVisibility(View.GONE);
 		GolukDebugUtils.e("", "TTTTTTTTTTTT===@@@@@===videoHP=" + videoHP);
-		if ("1080P".equals(videoHP)) {
+
+		if ("1080P".equalsIgnoreCase(videoHP)) {
 			image.setVisibility(View.VISIBLE);
 			image.setBackgroundResource(R.drawable.carrecorder_liveindex_icon_1080);
 		}

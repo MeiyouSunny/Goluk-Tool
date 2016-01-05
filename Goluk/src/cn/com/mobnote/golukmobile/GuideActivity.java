@@ -1,24 +1,19 @@
 package cn.com.mobnote.golukmobile;
 
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
-import cn.com.mobnote.guide.GolukGuideManage;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.wifidatacenter.JsonWifiBindManager;
+import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
+import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
+import cn.com.mobnote.guide.GolukGuideManage;
 import cn.com.tiros.debug.GolukDebugUtils;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 //// OneAPM, Micle
 //import com.blueware.agent.android.BlueWare;
@@ -59,6 +54,8 @@ public class GuideActivity extends BaseActivity {
 		
 		// 初始化
 		init();
+		
+		WifiBindDataCenter.getInstance().setAdatper(new JsonWifiBindManager());
 		
 //		// OneAPM
 //		BlueWare.withApplicationToken("E18AA269D23C98A1521C6454D1836CE006").start(this.getApplication());

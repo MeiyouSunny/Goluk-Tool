@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.util.GolukAnimal;
 
 public class WifiLinkSetIpcLayout extends ViewFrame {
@@ -17,13 +18,16 @@ public class WifiLinkSetIpcLayout extends ViewFrame {
 	/** 加载中动画对象 */
 	private GolukAnimal mLoadingAnimal = null;
 
-	int[] animalRes = { R.drawable.connect_gif_ipc_wifi1, R.drawable.connect_gif_ipc_wifi2,
-			R.drawable.connect_gif_ipc_wifi3, R.drawable.connect_gif_ipc_wifi4 };
+	int[] animalRes_g = { R.drawable.ipcbind_g_direct_bg, R.drawable.ipcbind_g_direct_gif_1,
+			R.drawable.ipcbind_g_direct_gif_2, R.drawable.ipcbind_g_direct_gif_3 };
+
+	int[] animalRes_t = { R.drawable.ipcbind_t_direct_gif_0, R.drawable.ipcbind_t_direct_gif_1,
+			R.drawable.ipcbind_t_direct_gif_2, R.drawable.ipcbind_t_direct_gif_3 };
 
 	public WifiLinkSetIpcLayout(Context context) {
 		mContext = context;
 		mLayoutFlater = LayoutInflater.from(mContext);
-		mLoadingAnimal = new GolukAnimal(animalRes);
+		mLoadingAnimal = new GolukAnimal(getAnimal());
 		init();
 	}
 
@@ -35,10 +39,20 @@ public class WifiLinkSetIpcLayout extends ViewFrame {
 		String wifi = mContext.getResources().getString(R.string.wifi_link_complete_golukwifi);
 		final String text = foryou + "<font color=\"#0587ff\"> " + config + " </font>" + wifi;
 		mInfoTv.setText(Html.fromHtml(text));
-//		mInfoTv.getPaint().setFakeBoldText(true);
-
-		mLoadingImg = (ImageView) mRootLayout.findViewById(R.id.wifi_link_setipc_img2);
+		mLoadingImg = (ImageView) mRootLayout.findViewById(R.id.wifi_link_setipc_img);
 		mLoadingImg.setImageDrawable(mLoadingAnimal.getAnimationDrawable());
+	}
+
+	private int[] getAnimal() {
+		if (null != mContext && mContext instanceof WiFiLinkCompleteActivity) {
+			String type = ((WiFiLinkCompleteActivity) mContext).getCurrentIpcType();
+			if (IPCControlManager.MODEL_T.equals(type)) {
+				return animalRes_t;
+			} else {
+				return animalRes_g;
+			}
+		}
+		return animalRes_t;
 	}
 
 	@Override
