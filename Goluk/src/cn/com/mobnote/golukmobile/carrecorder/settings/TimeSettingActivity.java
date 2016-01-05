@@ -225,7 +225,7 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 		mGpsTimeLayout = (RelativeLayout) findViewById(R.id.time_setting_gpslayout);
 		mGpsAutoBtn = (Button) findViewById(R.id.time_gps_mAutoBtn);
 		if (isT1()) {
-			mGpsTimeLayout.setVisibility(View.VISIBLE);
+			mGpsTimeLayout.setVisibility(View.GONE);
 			mGpsAutoBtn.setOnClickListener(this);
 		} else {
 			mGpsTimeLayout.setVisibility(View.GONE);
