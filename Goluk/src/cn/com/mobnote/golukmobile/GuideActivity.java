@@ -63,8 +63,6 @@ public class GuideActivity extends BaseActivity {
 		((GolukApplication) this.getApplication()).startUpgrade();
 		// 初始化
 		init();
-		// 初始化绑定信息的数据保存
-		WifiBindDataCenter.getInstance().setAdatper(new JsonWifiBindManager());
 	}
 
 	@Override
