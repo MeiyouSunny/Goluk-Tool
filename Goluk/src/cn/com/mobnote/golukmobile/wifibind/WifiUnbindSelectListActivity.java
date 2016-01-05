@@ -53,7 +53,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	private boolean isCanReceiveFailed = true;
 	/** 控制ListView Header的显示与删除 */
 	private boolean isHasHeaderView = false;
-	
+
 	/** 控制是否可以接受连接信息 */
 	// private boolean isCanAcceptMsg = true;
 
@@ -138,7 +138,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 			}
 			GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--setData: "
 					+ binds.size());
-		}else{
+		} else {
 			mEditBtn.setText(this.getResources().getString(R.string.edit_text));// 编辑
 			mEditBtn.setVisibility(View.GONE);
 		}
@@ -209,7 +209,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		mHeadData.golukConnLayout.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if(mApp.isIpcLoginSuccess){
+				if (mApp.isIpcLoginSuccess) {
 					Intent intent = new Intent(WifiUnbindSelectListActivity.this, CarRecorderActivity.class);
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -255,11 +255,16 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	 * 
 	 * @author jyf
 	 */
-	public void showLoading() {
+	public void showLoading(boolean isSingle) {
 		isCanReceiveFailed = false;
 		dimissLoading();
-		mLoadingDialog = new CustomLoadingDialog(this, this.getResources()
-				.getString(R.string.unbind_loading_dialog_txt));
+		String msg = "";
+		if (isSingle) {
+			msg = getResources().getString(R.string.unbind_loading_dialog_txt2);
+		} else {
+			msg = getResources().getString(R.string.unbind_loading_dialog_txt);
+		}
+		mLoadingDialog = new CustomLoadingDialog(this, msg);
 		mLoadingDialog.setCancel(false);
 		mLoadingDialog.show();
 	}
@@ -419,7 +424,8 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		} else {
 			setEditState();
 		}
-		mListAdapter.notifyDataSetChanged();
+		getBindHistoryData();
+		// mListAdapter.notifyDataSetChanged();
 	}
 
 	/**

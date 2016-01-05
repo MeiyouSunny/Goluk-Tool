@@ -162,7 +162,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading,
 				null);
 		mSharePlatform = new SharePlatformUtil(this);
-		mClusterAdapter = new ClusterAdapter(this, mSharePlatform, 1, this);
+		mClusterAdapter = new ClusterAdapter(this, mSharePlatform, 1, this, mActivityid);
 		mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 		mRTPullListView.setAdapter(mClusterAdapter);
 	}

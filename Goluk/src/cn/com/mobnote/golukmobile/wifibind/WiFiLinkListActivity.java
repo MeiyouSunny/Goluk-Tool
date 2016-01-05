@@ -234,8 +234,13 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		}
 
 		GolukDebugUtils.e("", "WifiBindList----sWillConnName2: " + mWillConnName);
-
-		if (!GolukUtils.getIpcTypeFromName(mWillConnName).equals(mIPcType)) {
+		String t_type = IPCControlManager.MODEL_G;
+		if (mWillConnName.startsWith(GolukUtils.T1S_WIFINAME_SIGN)) {
+			t_type = IPCControlManager.MODEL_T;
+		} else {
+			t_type = GolukUtils.getIpcTypeFromName(mWillConnName);
+		}
+		if (!t_type.equals(mIPcType)) {
 			connFailed();
 			return false;
 		}

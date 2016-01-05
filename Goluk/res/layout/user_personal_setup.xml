@@ -125,51 +125,10 @@
         android:textColor="@color/unbind_camera_wifi_hint_text_color"
         android:textSize="13sp" />
     
-    <!-- 自动同步照片到手机相册 -->
-    <View
-        android:id="@+id/soild_11"
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:background="@drawable/solid" />
-
-  <RelativeLayout
-        android:id="@+id/ry_setup_autophoto"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="#f4f4f4" >
-
-        <TextView
-            android:id="@+id/tv_setup_autophoto_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="14dp"
-            android:text="@string/str_setup_autophoto_title"
-            android:textColor="#3f3f3f"
-            android:textSize="16sp" />
-
-        <ImageButton
-            android:id="@+id/ib_setup_autophoto_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="14dp"
-            android:background="@drawable/set_open_btn"
-            android:contentDescription="@string/imgdes" />
-    </RelativeLayout>
-
-    <View
-        android:id="@+id/soild_12"
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:background="@drawable/solid" />
-
     <View
         android:id="@+id/solid_10"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:layout_marginTop="10dp"
         android:background="@drawable/solid" />
 
     <!-- 清除缓存 -->

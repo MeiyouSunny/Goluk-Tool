@@ -17,7 +17,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:background="@drawable/cross_screen_arrow_icon1" />
+            android:background="@drawable/cross_screen_arrow_icon1"
+            android:contentDescription="@string/imgdes" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -29,24 +30,11 @@
     </RelativeLayout>
     <!-- body -->
 
-    <Button
-        android:id="@+id/update_btn"
-        android:layout_width="312dp"
-        android:layout_height="54dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/icon_more"
-        android:gravity="center"
-        android:textColor="#f0fefc"
-        android:textSize="18sp" />
-
     <ScrollView
         android:id="@+id/sv_upgrade_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/title_layout"
-        android:layout_above="@id/update_btn"
         android:scrollbars="none" >
 
         <LinearLayout
@@ -61,70 +49,56 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/solid" />
 
+            <!-- 版本信息 -->
             <RelativeLayout
-                android:id="@+id/remove_cache_item"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:background="#f4f4f4" >
+                
+                <TextView
+                    android:id="@+id/upgrade_ipc_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/ipc_update_layout_text"
+                    android:textColor="#3f3f3f"
+                    android:textSize="16sp" />
 
-                <LinearLayout
-                    android:id="@+id/upgrade_layout_name"
+                <TextView
+                    android:id="@+id/upgrade_ipc_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="21dp"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:orientation="vertical" >
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@id/upgrade_ipc_text"
+                    android:text="V1.1.1"
+                    android:textColor="#3f3f3f"
+                    android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/upgrade_ipc_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ipc_update_layout_text"
-                        android:textColor="#3f3f3f"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/upgrade_ipc_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="V1.1.1"
-                        android:textColor="#3f3f3f"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:id="@+id/upgrade_ipc_size"
+                <TextView
+                    android:id="@+id/upgrade_ipc_size_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginRight="19dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical" >
+                    android:layout_marginRight="10dp"
+                    android:text="356MB"
+                    android:textColor="#3b97f5"
+                    android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/upgrade_ipc_size_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="356MB"
-                        android:textColor="#3f3f3f"
-                        android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/upgrade_ipc_size_download"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/upgrade_ipc_size_text"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/ipc_download_text"
+                    android:textColor="#3b97f5"
+                    android:textSize="12sp" />
 
-                    <TextView
-                        android:id="@+id/upgrade_ipc_size_download"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/upgrade_ipc_size_text"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/ipc_download_text"
-                        android:textColor="#3b97f5"
-                        android:textSize="12sp" />
-                </RelativeLayout>
             </RelativeLayout>
 
             <View
@@ -133,6 +107,7 @@
                 android:layout_height="1dp"
                 android:background="@drawable/solid" />
 
+            <!-- 更新说明 -->
             <View
                 android:id="@+id/solid_3"
                 android:layout_width="wrap_content"
@@ -172,7 +147,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
                 android:background="@drawable/solid" />
+            
+            <!-- 安装按钮 -->
+            <View
+                android:id="@+id/solid_5"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/solid" />
+            
+            <TextView 
+                android:id="@+id/update_btn"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="#f4f4f4"
+                android:gravity="center"
+                android:textColor="#3b97f5"
+                android:textSize="18sp"/>
+            
+            <View
+                android:id="@+id/solid_6"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="@drawable/solid" />
 
+            <!-- 断电提示 -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -182,6 +181,7 @@
                 android:text="@string/ipc_hint_text"
                 android:textColor="@color/user_hint_text_color" />
             
+            <!-- 断电图片 -->
             <ImageView
                 android:id="@+id/iv_upgrade_nobreak_image" 
                 android:layout_width="wrap_content"
@@ -203,9 +203,33 @@
                 android:textSize="14sp"
                 android:textColor="#a1a1a1"
                 android:visibility="gone"/>
+            
+            <!-- SD卡提示图片和文字 -->
+            <ImageView
+                android:id="@+id/iv_upgrade_tfcard_image" 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="40dp"
+                android:src="@drawable/upgrade_tfcard_img"
+                android:contentDescription="@string/imgdes"
+                 android:visibility="gone" />
+            
+            <TextView 
+                android:id="@+id/tv_upgrade_tfcard_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/str_tfcard_text"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="26dp"
+                android:layout_marginBottom="30dp"
+                android:textSize="14sp"
+                android:textColor="#a1a1a1"
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
     
+    <!-- 最新版本 -->
     <ImageView
         android:id="@+id/iv_upgrade_new"
         android:layout_width="wrap_content"
@@ -226,5 +250,84 @@
         android:textSize="14sp"
         android:textColor="#a1a1a1"
         android:visibility="gone"/>
+    
+    <!-- 等待升级成功后的语音提示 -->
+    <RelativeLayout 
+        android:id="@+id/rl_update_voice"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#f2242629"
+        android:visibility="gone" >
+        
+        <ImageView 
+            android:id="@+id/iv_update_voice_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/upgrade_t1"
+            android:contentDescription="@string/imgdes"/>
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/ipc_upgrade_voice_text"
+            android:layout_below="@id/iv_update_voice_image"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/white"/>
+    </RelativeLayout>
+    
+    <!-- T1等待升级成功后的语音提示后显示后页面 -->
+
+    <RelativeLayout
+        android:id="@+id/rl_update_later"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title_layout"
+        android:background="@color/white"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/iv_update_later_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:contentDescription="@string/imgdes"
+            android:src="@drawable/upgrade_t1" />
+
+        <TextView
+            android:id="@+id/tv_update_later"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_update_later_image"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="26dp"
+            android:text="@string/ipc_upgrade_voice_text"
+            android:textColor="#a1a1a1" />
+
+        <!-- 断电图片 -->
+
+        <ImageView
+            android:id="@+id/iv_upgrade_nobreak_image_later"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_update_later"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:contentDescription="@string/imgdes"
+            android:src="@drawable/firmware_img_power" />
+
+        <TextView
+            android:id="@+id/tv_upgrade_nobreak_text_later"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_upgrade_nobreak_image_later"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="26dp"
+            android:text="@string/ipc_hint_below_image"
+            android:textColor="#a1a1a1"
+            android:textSize="14sp" />
+    </RelativeLayout>
 
 </RelativeLayout>

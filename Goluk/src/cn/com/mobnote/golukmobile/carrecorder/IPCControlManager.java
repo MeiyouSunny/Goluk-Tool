@@ -36,7 +36,7 @@ public class IPCControlManager implements IPCManagerFn {
 	public static final String G1_SIGN = "G1";
 	public static final String G2_SIGN = "G2";
 	public static final String T1_SIGN = "T1";
-	public static final String T1s_SIGN = "T1s";
+	public static final String T1s_SIGN = "T1S";
 
 	public static final String MODEL_T = "T";
 	public static final String MODEL_G = "G";
@@ -79,6 +79,19 @@ public class IPCControlManager implements IPCManagerFn {
 		} else {
 			// 不处理
 		}
+	}
+
+	/**
+	 * 判断是否是G1与T1S，两个处理流程是一样的
+	 * 
+	 * @return
+	 * @author jyf
+	 */
+	public boolean isG1Relative() {
+		boolean isG1 = IPCControlManager.G1_SIGN.equals(mProduceName);
+		boolean isT1S = IPCControlManager.T1s_SIGN.equals(mProduceName);
+
+		return isG1 || isT1S;
 	}
 
 	/**

@@ -86,7 +86,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 			mTextCameraName.setText(bean.ipc_ssid);
 			mTextVersion.setText(vIpc);
 			GolukApplication.getInstance().getIPCControlManager();
-			if (IPCControlManager.T1_SIGN.equals(ipcModel)) {
+			if (IPCControlManager.T1_SIGN.equals(ipcModel) || IPCControlManager.T1s_SIGN.equals(ipcModel)) {
 				mIPCimage.setImageResource(R.drawable.connect_t1_icon_1);
 			} else {
 				mIPCimage.setImageResource(R.drawable.ipc);
@@ -95,6 +95,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 			mIPCNumberText.setText(this.getResources().getString(R.string.str_ipc_number_text) + ipcNumber);
 			mIPCVersionText.setText(this.getResources().getString(R.string.str_ipc_version_text) + vIpc);
 		} else {
+			mUnbindBtn.setText(this.getResources().getString(R.string.str_ipc_change_bind_news));
 			mIPCViewLayout.setVisibility(View.GONE);
 			mPwdLayout.setEnabled(false);
 			mTextVersion.setText("");
@@ -170,7 +171,8 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 			startActivityForResult(it, 10);
 			break;
 		case R.id.unbind_layout_update:
-			if ("T1".equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)) {
+			// 防止重复点击
+			if (!mApplication.mIpcUpdateManage.isCanClick()) {
 				return;
 			}
 			if (mApplication.mLoadStatus) {// 下载中

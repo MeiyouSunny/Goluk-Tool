@@ -18,4 +18,8 @@ public class VideoExtra {
 	/** 聚合活动字符串 */
 	public String topicname;
 
+	/** 系统获奖*/
+	public String atflag;
+	/** 人工获奖*/
+	public String sysflag;
 }

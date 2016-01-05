@@ -722,10 +722,14 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 		if (null == clusterInfo || null == holder) {
 			return;
 		}
+		if(null == clusterInfo.mVideoEntity) {
+			return;
+		}
 		String got = "";
 		if (null != clusterInfo.mVideoEntity.videoExtra) {
 			// 显示是否获奖
-			if (clusterInfo.mVideoEntity.videoExtra.isreward.equals("1")) {
+			if ("1".equals(clusterInfo.mVideoEntity.videoExtra.isreward) &&
+					"1".equals(clusterInfo.mVideoEntity.videoExtra.sysflag)) {
 				holder.videoGoldImg.setVisibility(View.VISIBLE);
 			} else {
 				holder.videoGoldImg.setVisibility(View.GONE);

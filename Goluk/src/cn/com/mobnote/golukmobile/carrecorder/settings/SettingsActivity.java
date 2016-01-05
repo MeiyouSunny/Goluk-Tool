@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
@@ -109,8 +110,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private String[] mArrayText = null;
 	/** 照片质量line **/
 	private RelativeLayout mPhotoQualityLayout;
-
 	private TextView mPhotoQualityText = null;
+	/** 自动同步开关 **/
+	private RelativeLayout mAutoPhotoItem;
+	private ImageButton mAutoPhotoBtn = null;
 	/** 疲劳驾驶 **/
 	private RelativeLayout mFatigueLayout;
 	private Button mFatigueBtn = null;
@@ -128,6 +131,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private TextView mParkingSleepHintText = null;
 	/** 停车安防模式提示文字 **/
 	private TextView mParkingSecurityHintText = null;
+
 	private TextView mCarrecorderWonderfulLine; 
 //	mCarrecorderSensitivityLine;
 
@@ -151,6 +155,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private AdasConfigParamterBean mAdasConfigParamter;
 
 	private CustomDialog mCustomDialog;
+	/**自动同步照片到手机相册开关状态**/
+	boolean mAutoState = true;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -163,6 +170,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 		mIPCName = GolukApplication.getInstance().mIPCControlManager.mProduceName;
 		GolukDebugUtils.e("", "=========mIPCName：" + mIPCName);
+		mAutoState = GolukFileUtils.loadBoolean(GolukFileUtils.PROMOTION_AUTO_PHOTO, true);
 		initView();
 		setListener();
 		EventBus.getDefault().register(this);
@@ -381,6 +389,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mPhotoQualityText = (TextView) findViewById(R.id.tv_settings_photographic_quality);
 		mHandsetText = (TextView) findViewById(R.id.tv_settings_handset);
 		mCarrecorderWonderfulLine = (TextView) findViewById(R.id.tv_carrecorder_line);
+
 //		mCarrecorderSensitivityLine = (TextView) findViewById(R.id.tv_carrecorder_sensitivity_line);
 
 		mADASAssistanceLayout = (RelativeLayout) findViewById(R.id.layout_adas_assistance);
@@ -394,10 +403,14 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mADASOsdBtn = (Button) findViewById(R.id.btn_settings_assistance_info);
         mADASConfigLayout = (RelativeLayout) findViewById(R.id.layout_settings_adas_config);
 
+		mAutoPhotoItem = (RelativeLayout) findViewById(R.id.ry_setup_autophoto);
+		mAutoPhotoBtn = (ImageButton) findViewById(R.id.ib_setup_autophoto_btn);
+
 		// ipc设备型号
-		if (mIPCName.equals(IPCControlManager.G1_SIGN)) {
+		if (GolukApplication.getInstance().mIPCControlManager.isG1Relative()) {
 			mISPLayout.setVisibility(View.GONE);
 			mPhotoQualityLayout.setVisibility(View.GONE);
+			mAutoPhotoItem.setVisibility(View.GONE);
 			mHandsetLayout.setVisibility(View.GONE);
 			mFatigueLayout.setVisibility(View.VISIBLE);
 			mImageFlipLayout.setVisibility(View.VISIBLE);
@@ -406,10 +419,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mParkingSecurityHintText
 					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g1));
 			mCarrecorderWonderfulLine.setVisibility(View.GONE);
+
 //			mCarrecorderSensitivityLine.setVisibility(View.GONE);
-		} else if (mIPCName.equals("G2")) {
+		} else if (mIPCName.equals(IPCControlManager.G2_SIGN)) {
 			mISPLayout.setVisibility(View.VISIBLE);
 			mPhotoQualityLayout.setVisibility(View.GONE);
+			mAutoPhotoItem.setVisibility(View.GONE);
 			mFatigueLayout.setVisibility(View.GONE);
 			mImageFlipLayout.setVisibility(View.GONE);
 			mParkingSleepLayout.setVisibility(View.GONE);
@@ -422,6 +437,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		} else {
 			mISPLayout.setVisibility(View.VISIBLE);
 			mPhotoQualityLayout.setVisibility(View.VISIBLE);
+			mAutoPhotoItem.setVisibility(View.VISIBLE);
 			mFatigueLayout.setVisibility(View.VISIBLE);
 			mImageFlipLayout.setVisibility(View.VISIBLE);
 			mParkingSleepLayout.setVisibility(View.VISIBLE);
@@ -442,6 +458,11 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mSensitivityText = (TextView) findViewById(R.id.mSensitivityText);
 
 		mStorayeText.setText("0MB/0MB");
+		if (mAutoState) {
+			mAutoPhotoBtn.setBackgroundResource(R.drawable.set_open_btn);
+		} else {
+			mAutoPhotoBtn.setBackgroundResource(R.drawable.set_close_btn);
+		}
 	}
 
 	/**
@@ -468,6 +489,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		findViewById(R.id.mBugLayout).setOnClickListener(this);// 购买降压线
 
 		mPhotoQualityLayout.setOnClickListener(this);
+		mAutoPhotoBtn.setOnClickListener(this);
 
 		mFatigueBtn.setOnClickListener(this);// 疲劳驾驶
 		mImageFlipBtn.setOnClickListener(this);// 图像自动翻转
@@ -669,6 +691,16 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				Intent intent = new Intent(SettingsActivity.this, AdasConfigActivity.class);
 				intent.putExtra(AdasVerificationActivity.ADASCONFIGDATA, mAdasConfigParamter);
 				startActivity(intent);
+			// 自动同步照片到手机相册
+			case R.id.ib_setup_autophoto_btn:
+				if(mAutoState) {
+					mAutoPhotoBtn.setBackgroundResource(R.drawable.set_close_btn);
+					mAutoState = false;
+				} else {
+					mAutoPhotoBtn.setBackgroundResource(R.drawable.set_open_btn);
+					mAutoState = true;
+				}
+				GolukFileUtils.saveBoolean(GolukFileUtils.PROMOTION_AUTO_PHOTO, mAutoState);
 				break;
 			default:
 				break;

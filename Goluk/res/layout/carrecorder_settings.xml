@@ -292,6 +292,42 @@
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            
+            <!-- 自动同步照片到手机相册 -->
+
+            <RelativeLayout
+                android:id="@+id/ry_setup_autophoto"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:id="@+id/tv_setup_autophoto_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="14dp"
+                    android:text="@string/str_setup_autophoto_title"
+                    android:textColor="#3f3f3f"
+                    android:textSize="16sp" />
+
+                <ImageButton
+                    android:id="@+id/ib_setup_autophoto_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="14dp"
+                    android:background="@drawable/set_open_btn"
+                    android:contentDescription="@string/imgdes" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
                     android:background="@color/setting_line_color" />
             </RelativeLayout>
 

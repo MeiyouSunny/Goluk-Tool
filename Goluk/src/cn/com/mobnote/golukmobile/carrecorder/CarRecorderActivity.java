@@ -1255,7 +1255,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (mApp.mIPCControlManager.mProduceName.equals("G1")) {
+		if (mApp.mIPCControlManager.isG1Relative()) {
 			GolukApplication.getInstance().stopDownloadList();// 停止视频同步
 		}
 		
@@ -1642,7 +1642,13 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord====1111111========param1=" + param1
 					+ "=====param2=" + param2);
 			if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
-				mHandler.sendEmptyMessage(MOUNTS);
+				if (RESULE_SUCESS == param1) {
+					mHandler.sendEmptyMessage(MOUNTS);
+				}  else {
+					GFileUtils
+					.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===66666======= not success ==========");
+					videoTriggerFail();
+				}
 			} else {
 				TriggerRecord record = IpcDataParser.parseTriggerRecordResult((String) param2);
 				if (null != record) {
@@ -1811,12 +1817,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					}
 					if (null != json) {
 						String imagename = "";
-						// if
-						// ("G1".equals(mApp.mIPCControlManager.mProduceName)) {
-						// imagename = videoname.replace("mp4", "jpg");
-						// } else {
+
 						imagename = mNowDownloadName.replace("mp4", "jpg");
-						// }
+
 
 						if (filename.equals(imagename)) {
 							VideoShareInfo vsi = new VideoShareInfo();

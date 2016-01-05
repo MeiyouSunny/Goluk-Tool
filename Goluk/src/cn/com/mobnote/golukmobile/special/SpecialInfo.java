@@ -1,5 +1,7 @@
 package cn.com.mobnote.golukmobile.special;
 
+import cn.com.mobnote.golukmobile.cluster.bean.GenBean;
+
 public class SpecialInfo {
 	
 	/**
@@ -16,7 +18,11 @@ public class SpecialInfo {
 	 * 作者
 	 */
 	public String author;
-	
+	public String sex;
+	public String uid;
+	public String customavatar;
+	public String headportrait;
+
 	/**
 	 * 描述
 	 */
@@ -41,5 +47,9 @@ public class SpecialInfo {
 	 * 视频id
 	 */
 	public String videoid;
-	
+
+	/** 视频分享地址 */
+	public String location;
+
+	public GenBean gen;
 }

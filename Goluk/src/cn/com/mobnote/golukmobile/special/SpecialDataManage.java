@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cn.com.mobnote.golukmobile.cluster.bean.GenBean;
 import cn.com.mobnote.golukmobile.videodetail.ZTHead;
 
 public class SpecialDataManage {
@@ -67,13 +68,23 @@ public class SpecialDataManage {
 							JSONObject user = videolist.getJSONObject(i).getJSONObject("user");
 							item = new SpecialInfo();
 							item.author = user.optString("nickname");
+							item.customavatar = user.optString("customavatar");
+							item.uid = user.optString("uid");
+							item.headportrait = user.optString("headportrait");
+							item.sex = user.optString("sex");
 							item.describe = video.optString("describe");
 							item.imagepath = video.optString("picture");
 							item.videotype = "2";
 							item.videopath = video.optString("ondemandwebaddress");
 							item.videoid = video.optString("videoid");
+							item.location = video.optString("location");
+							JSONObject jsonGB = video.optJSONObject("gen");
+							if(null != jsonGB) {
+								GenBean gb = new GenBean();
+								gb.sysflag = jsonGB.getString("sysflag");
+								item.gen = gb;
+							}
 							specials.add(item);
-
 						}
 					}
 

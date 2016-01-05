@@ -23,6 +23,10 @@ public class EventConfig {
 	public static final int UPDATE_FILE_NOT_EXISTS = 10;
 	/* Event opcode for IPC update prepare file */
 	public static final int UPDATE_PREPARE_FILE = 11;
+	/* Event opcode for IPC update transfer t1 file */
+	public static final int UPDATE_TRANSFER_FILE_T1 = 12;
+	/* Event opcode for IPC update transfer t1 file ok */
+	public static final int UPDATE_TRANSFER_FILE_OK_T1 = 13;
 
 	/** Wifi connect failed */
 	public final static int WIFI_STATE_FAILED = 0;

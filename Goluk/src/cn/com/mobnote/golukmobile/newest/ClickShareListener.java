@@ -90,7 +90,7 @@ public class ClickShareListener implements OnClickListener {
 	 */
 	public boolean isCanClick() {
 		if (GolukUtils.isCanClick) {
-			GolukUtils.startTimer();
+			GolukUtils.startTimer(2000);
 			return true;
 		}
 

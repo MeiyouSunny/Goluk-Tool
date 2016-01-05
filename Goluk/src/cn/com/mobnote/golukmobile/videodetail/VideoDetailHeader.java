@@ -256,7 +256,7 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 		// 头部获奖视频icon显示
 		// 获奖／推荐
 		if (null != videoAllData.avideo.video.recom) {
-			if ("1".equals(videoAllData.avideo.video.recom.isreward)) {
+			if ("1".equals(videoAllData.avideo.video.recom.isreward) && "1".equals(videoAllData.avideo.video.recom.sysflag)) {
 				mImageHeadAward.setVisibility(View.VISIBLE);
 			} else {
 				mImageHeadAward.setVisibility(View.GONE);

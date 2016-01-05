@@ -27,5 +27,11 @@ public class GenBean {
 	/**是否获奖**/
 	@JSONField(name="isreward")
 	public String isreward;
-	
+
+	/** 系统获奖*/
+	@JSONField(name="atflag")
+	public String atflag;
+	/**人工获奖**/
+	@JSONField(name="sysflag")
+	public String sysflag;
 }

@@ -14,19 +14,19 @@ public class SortByDate implements Comparator<String> {
 		if (videos1.length == 3) {
 			date1 = videos1[1];
 			date1 = "20" + date1;
-		} else if (videos1.length > 3) {
-			if (videos1.length > 3) {
-				date1 = videos1[2];
-			}
+		} else if (videos1.length == 7) {
+			date1 = videos1[2];
+		} else if (videos1.length == 8) {
+			date1 = videos1[1];
 		}
 		
 		if (videos2.length == 3) {
 			date2 = videos2[1];
 			date2 = "20" + date2;
-		} else if (videos2.length > 3) {
-			if (videos2.length > 3) {
-				date2 = videos2[2];
-			}
+		} else if (videos2.length == 7) {
+			date2 = videos2[2];
+		} else if (videos2.length == 8) {
+			date2 = videos2[1];
 		}
 		return (date2.compareTo(date1));
 	}

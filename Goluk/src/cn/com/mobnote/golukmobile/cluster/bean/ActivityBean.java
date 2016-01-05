@@ -51,6 +51,12 @@ public class ActivityBean {
 	/** 活动是否过期 **/
 	@JSONField(name = "expiration")
 	public String expiration;
-	
 
+	/** 投票url地址 **/
+	@JSONField(name = "voteaddress")
+	public String voteaddress;
+
+	/** 投票id */
+	@JSONField(name = "voteid")
+	public String voteid;
 }
