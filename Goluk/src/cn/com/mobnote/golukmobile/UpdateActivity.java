@@ -222,8 +222,10 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			mBtnDownload.setEnabled(true);
 			mNoBreakImage.setVisibility(View.GONE);
 			mNoBreakText.setVisibility(View.GONE);
-			mtfCardImage.setVisibility(View.VISIBLE);
-			mtfCardText.setVisibility(View.VISIBLE);
+			if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+				mtfCardImage.setVisibility(View.VISIBLE);
+				mtfCardText.setVisibility(View.VISIBLE);
+			}
 		}
 		EventBus.getDefault().register(this);
 
@@ -356,8 +358,10 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 							.getString(R.string.str_ipc_update_first_period_disconnect));
 					mNoBreakImage.setVisibility(View.GONE);
 					mNoBreakText.setVisibility(View.GONE);
-					mtfCardImage.setVisibility(View.VISIBLE);
-					mtfCardText.setVisibility(View.VISIBLE);
+					if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+						mtfCardImage.setVisibility(View.VISIBLE);
+						mtfCardText.setVisibility(View.VISIBLE);
+					}
 					break;
 				case UPDATE_IPC_SECOND_DISCONNECT:
 					timerCancel();
@@ -591,8 +595,10 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			mBtnDownload.setEnabled(true);
 			mNoBreakImage.setVisibility(View.GONE);
 			mNoBreakText.setVisibility(View.GONE);
-			mtfCardImage.setVisibility(View.VISIBLE);
-			mtfCardText.setVisibility(View.VISIBLE);
+			if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+				mtfCardImage.setVisibility(View.VISIBLE);
+				mtfCardText.setVisibility(View.VISIBLE);
+			}
 			mSign = 1;
 			// 下载成功删除文件
 			// mApp.mIpcUpdateManage.downIpcSucess();
@@ -733,8 +739,10 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 				mIsDisConnect = true;
 				mNoBreakImage.setVisibility(View.GONE);
 				mNoBreakText.setVisibility(View.GONE);
-				mtfCardImage.setVisibility(View.VISIBLE);
-				mtfCardText.setVisibility(View.VISIBLE);
+				if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+					mtfCardImage.setVisibility(View.VISIBLE);
+					mtfCardText.setVisibility(View.VISIBLE);
+				}
 			}
 		}
 	}
