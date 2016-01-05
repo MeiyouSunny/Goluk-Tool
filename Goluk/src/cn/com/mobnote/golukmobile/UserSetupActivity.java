@@ -21,7 +21,6 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
@@ -32,7 +31,6 @@ import cn.com.mobnote.user.DataCleanManage;
 import cn.com.mobnote.user.IpcUpdateManage;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.user.UserUtils;
-import cn.com.mobnote.util.GolukFileUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.SharedPrefUtil;
@@ -78,11 +76,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	private ImageButton mBtnSwitch = null;
 	public static final String AUTO_SWITCH = "autoswitch";
 	
-	private View mSoild1,mSoild2;
-	private RelativeLayout mAutoPhotoItem;
-	private ImageButton mAutoPhotoBtn = null;
-	boolean mAutoState = true;
-
 	@SuppressLint("HandlerLeak")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -95,15 +88,8 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mApp = (GolukApplication) getApplication();
 		
 		vIpc = SharedPrefUtil.getIPCVersion();
-		mAutoState = GolukFileUtils.loadBoolean(GolukFileUtils.PROMOTION_AUTO_PHOTO, true);
 		// 页面初始化
 		init();
-		
-		if (mAutoState) {
-			mAutoPhotoBtn.setBackgroundResource(R.drawable.set_open_btn);
-		} else {
-			mAutoPhotoBtn.setBackgroundResource(R.drawable.set_close_btn);
-		}
 		
 		boolean b = SettingUtils.getInstance().getBoolean(AUTO_SWITCH, true);
 		if (b) {
@@ -151,24 +137,9 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mTextCacheSize = (TextView) findViewById(R.id.user_personal_setup_cache_size);
 		// 自动同步开关
 		mBtnSwitch = (ImageButton) findViewById(R.id.set_ipc_btn);
-		//自动同步照片到手机相册
-		mSoild1 = findViewById(R.id.soild_11);
-		mSoild2 = findViewById(R.id.soild_12);
-		mAutoPhotoItem = (RelativeLayout) findViewById(R.id.ry_setup_autophoto);
-		mAutoPhotoBtn = (ImageButton) findViewById(R.id.ib_setup_autophoto_btn);
 		// 消息通知添加监听
 		findViewById(R.id.notify_comm_item).setOnClickListener(this);
 		
-		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
-			mAutoPhotoItem.setVisibility(View.VISIBLE);
-			mSoild1.setVisibility(View.VISIBLE);
-			mSoild2.setVisibility(View.VISIBLE);
-		} else {
-			mAutoPhotoItem.setVisibility(View.GONE);
-			mSoild1.setVisibility(View.GONE);
-			mSoild2.setVisibility(View.GONE);
-		}
-
 		// 注册监听
 		btnLoginout.setOnClickListener(this);
 		mBackBtn.setOnClickListener(this);
@@ -176,7 +147,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mClearCache.setOnClickListener(this);
 		/** 自动同步开关 **/
 		mBtnSwitch.setOnClickListener(this);
-		mAutoPhotoBtn.setOnClickListener(this);
 	}
 
 	/**
@@ -273,16 +243,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			break;
 		case R.id.notify_comm_item:
 			startMsgSettingActivity();
-			break;
-		case R.id.ib_setup_autophoto_btn:
-			if(mAutoState) {
-				mAutoPhotoBtn.setBackgroundResource(R.drawable.set_close_btn);
-				mAutoState = false;
-			} else {
-				mAutoPhotoBtn.setBackgroundResource(R.drawable.set_open_btn);
-				mAutoState = true;
-			}
-			GolukFileUtils.saveBoolean(GolukFileUtils.PROMOTION_AUTO_PHOTO, mAutoState);
 			break;
 		default:
 			break;
