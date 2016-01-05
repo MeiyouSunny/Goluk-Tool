@@ -11,8 +11,6 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnErrorListener;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.KeyEvent;
@@ -22,10 +20,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventStartApp;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomVideoView;
+import cn.com.mobnote.golukmobile.xdpush.StartAppBean;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 /**
  * 
@@ -56,8 +57,9 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 	private LinearLayout mClickLayout = null;
 	/** 欢迎页右上角关闭按钮 **/
 	private ImageView mImageClose = null;
-	/**true欢迎页   false开屏页**/
+	/** true欢迎页 false开屏页 **/
 	private boolean judge = false;
+	private StartAppBean mStartAppBean = null;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -70,14 +72,17 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 		RelativeLayout main = (RelativeLayout) findViewById(R.id.main);
 		main.setBackgroundDrawable(new BitmapDrawable(mBGBitmap));
 
+		EventBus.getDefault().register(this);
+
 		mContext = this;
 		mApp = (GolukApplication) getApplication();
 
-//		SysApplication.getInstance().addActivity(this);
+		// SysApplication.getInstance().addActivity(this);
 
 		initView();
 		// true ----欢迎页 false开屏页
 		Intent it = getIntent();
+		mStartAppBean = (StartAppBean) it.getSerializableExtra(GuideActivity.KEY_WEB_START);
 		judge = it.getBooleanExtra("judgeVideo", false);
 		GolukDebugUtils.e("lily", judge + "--------judgeVideo-----");
 		if (judge) {
@@ -112,9 +117,14 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 		});
 	}
 
+	private void addWebStartData(Intent intent) {
+		if (null != this.mStartAppBean) {
+			intent.putExtra(GuideActivity.KEY_WEB_START, mStartAppBean);
+		}
+	}
+
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		mApp.setContext(mContext, "UserStart");
 	}
@@ -139,6 +149,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 		case R.id.user_start_have:
 			// 我有Goluk
 			Intent itHave = new Intent(UserStartActivity.this, MainActivity.class);
+
 			itHave.putExtra("userstart", "start_have");
 			startActivity(itHave);
 			this.stopVideo();
@@ -149,6 +160,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 			// 随便看看
 			Intent itLook = new Intent(UserStartActivity.this, MainActivity.class);
 			GolukDebugUtils.i("lily", "======MainActivity==UserStartActivity====");
+			addWebStartData(itLook);
 			startActivity(itLook);
 			this.stopVideo();
 			this.finish();
@@ -160,13 +172,13 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 			break;
 		}
 	}
-	
+
 	/**
 	 * 停止video的播放
 	 */
-	private void stopVideo(){
-		if(videoStart != null ){
-			if(videoStart.isPlaying()){
+	private void stopVideo() {
+		if (videoStart != null) {
+			if (videoStart.isPlaying()) {
 				videoStart.stopPlayback();
 				videoStart = null;
 			}
@@ -176,6 +188,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		EventBus.getDefault().unregister(this);
 		if (null != mBGBitmap) {
 			if (!mBGBitmap.isRecycled()) {
 				mBGBitmap.recycle();
@@ -184,10 +197,21 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 		}
 	}
 
+	public void onEventMainThread(EventStartApp app) {
+		if (100 == app.mCode) {
+			exit();
+		}
+	}
+
+	private void exit() {
+		this.stopVideo();
+		finish();
+	}
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if(!judge){
+			if (!judge) {
 				if (null != mBaseApp) {
 					mBaseApp.setExit(true);
 					mBaseApp.destroyLogic();
