@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +24,8 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
+import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
+import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.user.MyProgressWebView;
@@ -64,13 +67,33 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		GolukDebugUtils.e("", "--------UserOpenUrlActivity-------onCreate：");
 	}
 
+	private String mVoteId;
+	private String mTitle;
+	private String mPicture;
+	private String mIntroduction;
+	private String mVoteAddress;
+	private boolean mIsVoteShare;
+
 	@SuppressLint("SetJavaScriptEnabled")
 	public void initView() {
+		itIndexMore = getIntent();
+		String webType = itIndexMore.getStringExtra("web_type");
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
 		mWebView = (MyProgressWebView) findViewById(R.id.my_webview);
 		mTextRight = (TextView) findViewById(R.id.user_title_right);
-		mTextRight.setBackgroundResource(R.drawable.btn_close_image);
+		if("vote_share".equals(webType)) {
+			mIsVoteShare = true;
+			mTextRight.setText(this.getString(R.string.share_text));
+			mVoteId = itIndexMore.getStringExtra("vote_share_id");
+			mTitle = itIndexMore.getStringExtra("slide_h5_title");
+			mPicture = itIndexMore.getStringExtra("vote_share_picture");
+			mIntroduction = itIndexMore.getStringExtra("vote_share_intro");
+			mVoteAddress = itIndexMore.getStringExtra("url");
+		} else {
+			mIsVoteShare = false;
+			mTextRight.setBackgroundResource(R.drawable.btn_close_image);
+		}
 		mErrorLayout = (RelativeLayout) findViewById(R.id.error_layout);
 
 		if (null == mLoadingDialog) {
@@ -78,7 +101,6 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			mLoadingDialog.setListener(this);
 		}
 
-		itIndexMore = getIntent();
 		mProfitChangeUI = itIndexMore.getBooleanExtra("isChangeUI", false);
 		if (mProfitChangeUI) {
 			mTextRight.setVisibility(View.GONE);
@@ -269,7 +291,14 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			}
 			break;
 		case R.id.user_title_right:
-			this.finish();
+			if(mIsVoteShare) {
+				CustomShareBoard shareBoard = new CustomShareBoard(this, new SharePlatformUtil(this),
+						mVoteAddress, mPicture, mIntroduction, "", null, "", "");
+				shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM,
+						0, 0);
+			} else {
+				this.finish();
+			}
 			break;
 		default:
 			break;
