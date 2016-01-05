@@ -1,6 +1,5 @@
 package cn.com.mobnote.golukmobile.special;
 
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,9 +9,7 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.os.Environment;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -25,13 +22,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
-import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
+import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.util.GlideUtils;
 
 @SuppressLint("InflateParams")
@@ -71,7 +66,7 @@ public class SpecialListViewAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int arg0, View convertView, ViewGroup parent) {
-		SpecialInfo specialInfo = specialListData.get(arg0);
+		final SpecialInfo specialInfo = specialListData.get(arg0);
 		ViewHolder holder = null;
 
 		if (convertView == null) {
@@ -115,14 +110,14 @@ public class SpecialListViewAdapter extends BaseAdapter {
 			holder.author.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					
+					startUserCenter(specialInfo);
 				}
 			});
 
 			holder.videoTitle.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					
+					startVideoDetailActivity(specialInfo);
 				}
 			});
 
@@ -137,23 +132,28 @@ public class SpecialListViewAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-//	public void startUserCenter(SpecialInfo specialInfo) {
-//		// 跳转当前点赞人的个人中心
-//		UCUserInfo user = new UCUserInfo();
-//		user.uid = specialInfo.mUserEntity.uid;
-//		user.uid = specialInfo.
-//		user.nickname = clusterInfo.mUserEntity.nickname;
-//		user.headportrait = clusterInfo.mUserEntity.headportrait;
-//		user.introduce = "";
-//		user.sex = clusterInfo.mUserEntity.sex;
-//		user.customavatar = clusterInfo.mUserEntity.mCustomAvatar;
-//		user.praisemenumber = "0";
-//		user.sharevideonumber = "0";
-//		Intent i = new Intent(mContext, UserCenterActivity.class);
-//		i.putExtra("userinfo", user);
-//		i.putExtra("type", 0);
-//		mContext.startActivity(i);
-//	}
+	private void startUserCenter(SpecialInfo specialInfo) {
+		// 跳转当前点赞人的个人中心
+		UCUserInfo user = new UCUserInfo();
+		user.uid = specialInfo.uid;
+		user.nickname = specialInfo.author;
+		user.headportrait = specialInfo.headportrait;
+		user.introduce = "";
+		user.sex = specialInfo.sex;
+		user.customavatar = specialInfo.customavatar;
+		user.praisemenumber = "0";
+		user.sharevideonumber = "0";
+		Intent i = new Intent(mContext, UserCenterActivity.class);
+		i.putExtra("userinfo", user);
+		i.putExtra("type", 0);
+		mContext.startActivity(i);
+	}
+
+	private void startVideoDetailActivity(SpecialInfo specialInfo) {
+		Intent intent = new Intent(mContext, VideoDetailActivity.class);
+		intent.putExtra("videoid", specialInfo.videoid);
+		mContext.startActivity(intent);
+	}
 
 	public int getUserHead(String head) {
 		return 0;

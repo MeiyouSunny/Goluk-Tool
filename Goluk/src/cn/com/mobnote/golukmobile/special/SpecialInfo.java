@@ -18,7 +18,11 @@ public class SpecialInfo {
 	 * 作者
 	 */
 	public String author;
-	
+	public String sex;
+	public String uid;
+	public String customavatar;
+	public String headportrait;
+
 	/**
 	 * 描述
 	 */
