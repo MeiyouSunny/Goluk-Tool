@@ -1598,7 +1598,13 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord====1111111========param1=" + param1
 					+ "=====param2=" + param2);
 			if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
-				mHandler.sendEmptyMessage(MOUNTS);
+				if (RESULE_SUCESS == param1) {
+					mHandler.sendEmptyMessage(MOUNTS);
+				}  else {
+					GFileUtils
+					.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===66666======= not success ==========");
+					videoTriggerFail();
+				}
 			} else {
 				TriggerRecord record = IpcDataParser.parseTriggerRecordResult((String) param2);
 				if (null != record) {
