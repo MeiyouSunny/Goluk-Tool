@@ -571,7 +571,7 @@ public class GolukUtils {
 	public static boolean isCanClick = true;
 	private static Timer mTimer = null;
 
-	public static void startTimer() {
+	public static void startTimer(int time) {
 		isCanClick = false;
 		cancelTimer();
 		mTimer = new Timer();
@@ -581,7 +581,7 @@ public class GolukUtils {
 			public void run() {
 				isCanClick = true;
 			}
-		}, 2 * 1000);
+		}, time);
 	}
 
 	public static void cancelTimer() {

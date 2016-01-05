@@ -905,15 +905,17 @@ public class IpcUpdateManage implements IPCManagerFn {
 	
 	/**
 	 * 防止重复点击
+	 * 
 	 * @return
+	 * @author jyf
 	 */
 	public boolean isCanClick() {
 		if (GolukUtils.isCanClick) {
-			GolukUtils.startTimer();
+			GolukUtils.startTimer(500);
 			return true;
 		}
 
 		return false;
 	}
-
+	
 }
