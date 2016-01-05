@@ -83,6 +83,19 @@
             android:layout_marginRight="8dp"
             android:background="@drawable/together_join_icon"
             android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btn_cluster_head_vote"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_toLeftOf="@id/partake_btn"
+            android:layout_alignBottom="@id/partake_btn"
+            android:text="立即投票"
+            android:textColor="#ffffff"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/together_join_icon"
+            android:visibility="gone"
+            android:textSize="12sp" />
     </RelativeLayout>
 
     <View

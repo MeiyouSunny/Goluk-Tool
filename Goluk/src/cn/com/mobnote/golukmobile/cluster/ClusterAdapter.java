@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.text.TextUtils.TruncateAt;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -30,11 +31,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.cluster.ClusterActivity.NoVideoDataViewHolder;
 import cn.com.mobnote.golukmobile.cluster.bean.ActivityBean;
+import cn.com.mobnote.golukmobile.http.UrlHostManager;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.newest.ClickCommentListener;
@@ -49,9 +52,12 @@ import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 @SuppressLint("InflateParams")
 public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
@@ -85,8 +91,9 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 	private int mFirstItemHeight = 0;
 
 	private int mWidth = 0;
+	private String mActivityId;
 
-	public ClusterAdapter(Context context, SharePlatformUtil spf, int tabtype, IClusterInterface ici) {
+	public ClusterAdapter(Context context, SharePlatformUtil spf, int tabtype, IClusterInterface ici, String activityId) {
 		mContext = context;
 
 		mIClusterInterface = ici;
@@ -94,6 +101,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 		mCurrentViewType = tabtype;
 
 		mWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
+		mActivityId = activityId;
 	}
 
 	/**
@@ -168,6 +176,11 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 
 	}
 
+	private String getRtmpAddress() {
+		String rtmpUrl = GolukApplication.getInstance().mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_GetServerAddress,
+				IGetServerAddressType.GetServerAddress_HttpServer, "UrlRedirect");
+		return rtmpUrl;
+	}
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -187,6 +200,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 					holder.recommendBtn = (Button) convertView.findViewById(R.id.recommend_btn);
 					holder.newsBtn = (Button) convertView.findViewById(R.id.news_btn);
 					holder.partakeBtn = (Button) convertView.findViewById(R.id.partake_btn);
+					holder.voteBtn = (Button)convertView.findViewById(R.id.btn_cluster_head_vote);
 					convertView.setTag(holder);
 				} else {
 					holder = (HeadViewHolder) convertView.getTag();
@@ -195,7 +209,38 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 				RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(mWidth, height);
 				mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
 				holder.headImg.setLayoutParams(mPlayerLayoutParams);
-				
+
+				holder.headImg.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						String url = getRtmpAddress() + "?type=9&activityid=" + mActivityId;
+						Intent intent = new Intent(mContext,
+								UserOpenUrlActivity.class);
+						intent.putExtra("url", url);
+						mContext.startActivity(intent);
+					}
+				});
+
+				if(!TextUtils.isEmpty(mHeadData.voteaddress)) {
+					holder.voteBtn.setVisibility(View.VISIBLE);
+					holder.voteBtn.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							String address = mHeadData.voteaddress;
+							if (null == address || address.trim().equals("")) {
+								return;
+							} else {
+								Intent intent = new Intent(mContext,
+										UserOpenUrlActivity.class);
+								intent.putExtra("url", address);
+								mContext.startActivity(intent);
+							}
+						}
+					});
+				} else {
+					holder.voteBtn.setVisibility(View.GONE);
+				}
+
 				GlideUtils.loadImage(mContext, holder.headImg, mHeadData.picture,
 						R.drawable.tacitly_pic);
 				holder.describe.setText(mHeadData.activitycontent);
@@ -711,6 +756,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 		Button recommendBtn;
 		Button newsBtn;
 		Button partakeBtn;
+		Button voteBtn;
 
 	}
 
