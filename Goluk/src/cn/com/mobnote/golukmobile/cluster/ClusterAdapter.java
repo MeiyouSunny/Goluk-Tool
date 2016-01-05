@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
@@ -880,10 +881,24 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 		if(requestType != IPageNotifyFn.PageType_VoteShare) {
 			return;
 		}
+
 		if (null == result) {
+			Toast.makeText(mContext, mContext.getString(R.string.network_error),
+					Toast.LENGTH_SHORT).show();
 			return;
 		}
+
 		ClusterVoteShareBean bean = (ClusterVoteShareBean) result;
+		if(!bean.success) {
+			if(!TextUtils.isEmpty(bean.msg)) {
+				Toast.makeText(mContext, bean.msg,
+					Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(mContext, mContext.getString(R.string.network_error),
+						Toast.LENGTH_SHORT).show();
+			}
+		}
+
 		if (null != bean.data) {
 			ClusterVoteShareDataBean data = bean.data;
 			String address = mHeadData.voteaddress;

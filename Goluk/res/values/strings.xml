@@ -558,4 +558,5 @@
 	<string name="str_thank_to_author">感谢作者</string>
 	<string name="unbind_loading_dialog_txt2">正在为您连接设备</string>
 	<string name="str_activity_rule">活动规则</string>
+	<string name="str_vote_now">立即投票</string>
 </resources>
