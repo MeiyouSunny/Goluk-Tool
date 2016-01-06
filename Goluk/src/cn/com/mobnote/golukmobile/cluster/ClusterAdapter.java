@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
@@ -37,6 +38,9 @@ import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.cluster.ClusterActivity.NoVideoDataViewHolder;
 import cn.com.mobnote.golukmobile.cluster.bean.ActivityBean;
+import cn.com.mobnote.golukmobile.cluster.bean.ClusterVoteShareBean;
+import cn.com.mobnote.golukmobile.cluster.bean.ClusterVoteShareDataBean;
+import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.http.UrlHostManager;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.live.UserInfo;
@@ -53,6 +57,7 @@ import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GlideUtils;
@@ -60,7 +65,7 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 @SuppressLint("InflateParams")
-public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
+public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IRequestResultListener {
 
 	public interface IClusterInterface {
 		// 刷新页面数据
@@ -181,6 +186,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 				IGetServerAddressType.GetServerAddress_HttpServer, "UrlRedirect");
 		return rtmpUrl;
 	}
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -217,6 +223,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 						Intent intent = new Intent(mContext,
 								UserOpenUrlActivity.class);
 						intent.putExtra("url", url);
+						intent.putExtra("slide_h5_title", mContext.getString(R.string.str_activity_rule));
 						mContext.startActivity(intent);
 					}
 				});
@@ -226,14 +233,11 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 					holder.voteBtn.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							String address = mHeadData.voteaddress;
-							if (null == address || address.trim().equals("")) {
-								return;
-							} else {
-								Intent intent = new Intent(mContext,
-										UserOpenUrlActivity.class);
-								intent.putExtra("url", address);
-								mContext.startActivity(intent);
+							if(!TextUtils.isEmpty(mHeadData.voteid)) {
+								ClusterVoteShareRequest request =
+									new ClusterVoteShareRequest(
+									IPageNotifyFn.PageType_VoteShare, ClusterAdapter.this);
+								request.get(mHeadData.voteid);
 							}
 						}
 					});
@@ -870,5 +874,46 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener {
 	@Override
 	public long getItemId(int arg0) {
 		return 0;
+	}
+
+	@Override
+	public void onLoadComplete(int requestType, Object result) {
+		if(requestType != IPageNotifyFn.PageType_VoteShare) {
+			return;
+		}
+
+		if (null == result) {
+			Toast.makeText(mContext, mContext.getString(R.string.network_error),
+					Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		ClusterVoteShareBean bean = (ClusterVoteShareBean) result;
+		if(!bean.success) {
+			if(!TextUtils.isEmpty(bean.msg)) {
+				Toast.makeText(mContext, bean.msg,
+					Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(mContext, mContext.getString(R.string.network_error),
+						Toast.LENGTH_SHORT).show();
+			}
+		}
+
+		if (null != bean.data) {
+			ClusterVoteShareDataBean data = bean.data;
+			String address = mHeadData.voteaddress;
+			if (null == address || address.trim().equals("")) {
+				return;
+			} else {
+				Intent intent = new Intent(mContext, UserOpenUrlActivity.class);
+				intent.putExtra("url", address);
+				intent.putExtra("web_type", "vote_share");
+				intent.putExtra("slide_h5_title", data.title);
+				intent.putExtra("vote_share_id", data.voteid);
+				intent.putExtra("vote_share_picture", data.picture);
+				intent.putExtra("vote_share_intro", data.introduction);
+				mContext.startActivity(intent);
+			}
+		}
 	}
 }

@@ -100,6 +100,8 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_GetShareURL= 49;
 	
 	public static final int PageType_Praise = 50;
+
+	public static final int PageType_VoteShare = 51;
 	/**
 	 * 
 	 * 以下为同步获取信息标识
