@@ -73,6 +73,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 	private String mIntroduction;
 	private String mVoteAddress;
 	private boolean mIsVoteShare;
+	private SharePlatformUtil mSharePlatform;
 
 	@SuppressLint("SetJavaScriptEnabled")
 	public void initView() {
@@ -90,6 +91,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			mPicture = itIndexMore.getStringExtra("vote_share_picture");
 			mIntroduction = itIndexMore.getStringExtra("vote_share_intro");
 			mVoteAddress = itIndexMore.getStringExtra("url");
+			mSharePlatform = new SharePlatformUtil(this);
 		} else {
 			mIsVoteShare = false;
 			mTextRight.setBackgroundResource(R.drawable.btn_close_image);
@@ -291,9 +293,22 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			}
 			break;
 		case R.id.user_title_right:
-			if(mIsVoteShare) {
-				CustomShareBoard shareBoard = new CustomShareBoard(this, new SharePlatformUtil(this),
-						mVoteAddress, mPicture, mIntroduction, "", null, "", "");
+			if(mIsVoteShare && null != mSharePlatform) {
+				String shareurl = mVoteAddress;
+				String coverurl = mPicture;
+				String describe = mIntroduction;
+				String realDesc = getString(R.string.str_vote_share_real_description);
+
+				if (TextUtils.isEmpty(describe)) {
+					describe = "";
+				}
+				String ttl = mTitle;
+				if (TextUtils.isEmpty(mTitle)) {
+					ttl = getString(R.string.str_vote_share_title);
+				}
+
+				CustomShareBoard shareBoard = new CustomShareBoard(this, mSharePlatform,
+						shareurl, coverurl, describe, ttl, null, realDesc, "");
 				shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM,
 						0, 0);
 			} else {
@@ -302,6 +317,16 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			break;
 		default:
 			break;
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(mIsVoteShare) {
+			if (null != mSharePlatform) {
+				mSharePlatform.onActivityResult(requestCode, resultCode, data);
+			}
 		}
 	}
 
