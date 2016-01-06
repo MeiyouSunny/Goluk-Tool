@@ -17,7 +17,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
-import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
@@ -38,7 +37,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
@@ -204,7 +202,7 @@ public class VitamioPlayerActivity extends BaseActivity implements OnCompletionL
 					playUrl = "http://" + ip + ":5080/rec/normal/" + filename;
 				}
 			}
-			
+
 		}
 
 		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==playUrl=" + playUrl);
@@ -298,9 +296,10 @@ public class VitamioPlayerActivity extends BaseActivity implements OnCompletionL
 
 		if (from.equals("suqare")) {
 			GlideUtils.loadImage(this, mPlayImg, image, R.drawable.tacitly_pic);
-		} else {		
-//			GlideUtils.loadLocalImage(this, mPlayImg, R.drawable.tacitly_pic);
-			
+		} else {
+			// GlideUtils.loadLocalImage(this, mPlayImg,
+			// R.drawable.tacitly_pic);
+
 			GlideUtils.loadImage(this, mPlayImg, image, R.drawable.tacitly_pic);
 		}
 
@@ -495,7 +494,7 @@ public class VitamioPlayerActivity extends BaseActivity implements OnCompletionL
 		super.onDestroy();
 		releaseMediaPlayer();
 		doCleanUp();
-		if (mHandler != null){
+		if (mHandler != null) {
 			mHandler.removeCallbacksAndMessages(null);
 			mHandler = null;
 		}
@@ -737,7 +736,7 @@ public class VitamioPlayerActivity extends BaseActivity implements OnCompletionL
 	private void startVideoPlayback() {
 		reset = false;
 		// mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-		mSurfaceHolder.setFixedSize(mVideoWidth, mVideoHeight);
+		// mSurfaceHolder.setFixedSize(mVideoWidth, mVideoHeight);
 		mMediaPlayer.start();
 	}
 
