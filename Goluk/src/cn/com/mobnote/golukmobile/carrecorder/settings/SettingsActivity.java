@@ -1237,7 +1237,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	}
 
 	private void getKitConfigCallback(int event, int msg, int param1, Object param2) {
-		Log.e("dengting", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
+		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
 				+ (String) param2 + "---param1:" + param1);
 		if (param2 == null) {
 			finish();
