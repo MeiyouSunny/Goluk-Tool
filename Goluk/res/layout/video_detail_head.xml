@@ -188,7 +188,6 @@
             android:id="@+id/video_detail_describe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="跟朋友一起探寻古格王朝遗址"
             android:textColor="@color/live_time_desc"
             android:textSize="12sp" />
 
@@ -259,7 +258,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
-                android:text="+5000Ｇ币"
                 android:textColor="#e71f19"
                 android:textSize="14sp" />
 
@@ -276,7 +274,7 @@
                     android:id="@+id/active_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/video_detail_head_active_title"
+                    android:text="@string/video_detail_head_sys_title"
                     android:textColor="@color/color_comment_not_send"
                     android:textSize="14sp" />
 
@@ -285,7 +283,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="理由：理由啊理由啊理由啊理由"
                     android:textColor="#808080"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -316,7 +313,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
-                android:text="+5000Ｇ币"
                 android:textColor="#e71f19"
                 android:textSize="14sp" />
 
@@ -333,7 +329,7 @@
                     android:id="@+id/sys_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/video_detail_head_sys_title"
+                    android:text="@string/video_detail_head_active_title"
                     android:textColor="@color/color_comment_not_send"
                     android:textSize="14sp" />
 
@@ -342,7 +338,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="理由：理由啊理由啊理由啊理由"
                     android:textColor="#808080"
                     android:textSize="14sp" />
             </LinearLayout>
