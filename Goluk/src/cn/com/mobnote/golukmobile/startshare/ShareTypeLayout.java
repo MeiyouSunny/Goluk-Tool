@@ -514,15 +514,19 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			if (mRecommendActivities.size() > 0) {
 				PromotionSelectItem item = mRecommendActivities.get(0);
 				String title = null;
-				if (!mPromotionSelectItem.activityid.equalsIgnoreCase(item.activityid)) {
-					title = "#" + item.activitytitle + "#";
-				} else if (mRecommendActivities.size() > 1) {
-					item = mRecommendActivities.get(1);
+				if (mPromotionSelectItem.activityid.equals(item.activityid)) {
+					if (mRecommendActivities.size() > 1) {
+						item = mRecommendActivities.get(1);
+					} else {
+						item = null;
+					}
 				}
-				title = "#" + item.activitytitle + "#";
-				mPromotionTextView2.setText(title);
-				mPromotionTextView2.setTag(item);
-				mPromotionTextView2.setVisibility(View.VISIBLE);
+				if (item != null) {
+					title = "#" + item.activitytitle + "#";
+					mPromotionTextView2.setText(title);
+					mPromotionTextView2.setTag(item);
+					mPromotionTextView2.setVisibility(View.VISIBLE);
+				}
 			}
 		} else {
 			mPromotionTextView1.setText("");
