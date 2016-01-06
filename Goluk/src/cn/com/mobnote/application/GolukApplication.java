@@ -51,6 +51,7 @@ import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
+import cn.com.mobnote.golukmobile.wifibind.IpcConnSuccessInfo;
 import cn.com.mobnote.golukmobile.wifibind.WiFiLinkCompleteActivity;
 import cn.com.mobnote.golukmobile.wifibind.WiFiLinkListActivity;
 import cn.com.mobnote.golukmobile.wifidatacenter.JsonWifiBindManager;
@@ -72,7 +73,7 @@ import cn.com.mobnote.user.User;
 import cn.com.mobnote.user.UserIdentifyManage;
 import cn.com.mobnote.user.UserLoginManage;
 import cn.com.mobnote.user.UserRegistAndRepwdManage;
-import cn.com.mobnote.util.AssetsFileUtils;
+import cn.com.mobnote.util.GolukFastJsonUtil;
 import cn.com.mobnote.util.GolukFileUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
@@ -1160,8 +1161,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 		if (isBindSucess()) {
 			GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + param2);
+			IpcConnSuccessInfo ipcInfo = null;
+			if (null != param2) {
+				ipcInfo = GolukFastJsonUtil.getParseObj((String) param2, IpcConnSuccessInfo.class);
+				ipcInfo.lasttime = String.valueOf(System.currentTimeMillis());
+			}
+
 			// 保存ipc设备型号,是G1, G2 还是T1
-			saveIpcProductName(param2);
+			saveIpcProductName(ipcInfo);
 			// ipc控制初始化成功,可以看画面和拍摄8s视频
 			setIpcLoginState(true);
 			// 获取音视频配置信息
@@ -1181,21 +1188,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				mMainActivity.wiFiLinkStatus(2);
 			}
 			WifiBindDataCenter.getInstance().updateConnIpcType(mIPCControlManager.mProduceName);
+			WifiBindDataCenter.getInstance().updateConnIpcType(ipcInfo);
 		}
 	}
 
 	// 保存ipc设备型号
-	private void saveIpcProductName(Object jsonStr) {
-		String productName = JsonUtil.getProductName(jsonStr);
-		try {
-			if (null != productName && !"".equals(productName)) {
-				mIPCControlManager.setProduceName(productName);
-				// 保存设备型号
-				SharedPrefUtil.saveIpcModel(mIPCControlManager.mProduceName);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
+	private void saveIpcProductName(IpcConnSuccessInfo ipcInfo) {
+		if (null != ipcInfo && !TextUtils.isEmpty(ipcInfo.productname)) {
+			mIPCControlManager.setProduceName(ipcInfo.productname);
+			// 保存设备型号
+			SharedPrefUtil.saveIpcModel(mIPCControlManager.mProduceName);
 		}
 	}
 

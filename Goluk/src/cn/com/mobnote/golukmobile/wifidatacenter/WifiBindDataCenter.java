@@ -2,6 +2,8 @@ package cn.com.mobnote.golukmobile.wifidatacenter;
 
 import java.util.List;
 
+import cn.com.mobnote.golukmobile.wifibind.IpcConnSuccessInfo;
+
 public class WifiBindDataCenter implements IWifiBindDataFn {
 
 	private IWifiBindDataFn mDataDeal;
@@ -88,6 +90,16 @@ public class WifiBindDataCenter implements IWifiBindDataFn {
 		}
 		mDataDeal.updateConnIpcType(ipcType);
 
+	}
+
+	@Override
+	public void updateConnIpcType(IpcConnSuccessInfo ipcInfo) {
+		if (null == mDataDeal) {
+			return;
+		}
+		
+		mDataDeal.updateConnIpcType(ipcInfo);
+		
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.text.TextUtils;
+import cn.com.mobnote.golukmobile.wifibind.IpcConnSuccessInfo;
 import cn.com.mobnote.util.GolukFileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -199,6 +200,29 @@ public class JsonWifiBindManager implements IWifiBindDataFn {
 			WifiBindHistoryBean bean = dataList.get(i);
 			if (bean.state == WifiBindHistoryBean.CONN_USE) {
 				bean.ipcSign = ipcType;
+				break;
+			}
+		}
+		String ss = JSON.toJSONString(dataList);
+		saveHistoryJson(ss);
+	}
+
+	@Override
+	public void updateConnIpcType(IpcConnSuccessInfo ipcInfo) {
+		if (null == ipcInfo) {
+			return;
+		}
+		List<WifiBindHistoryBean> dataList = getAllBindData();
+		if (null == dataList || dataList.size() <= 0) {
+			return;
+		}
+		final int size = dataList.size();
+		for (int i = 0; i < size; i++) {
+			WifiBindHistoryBean bean = dataList.get(i);
+			if (bean.state == WifiBindHistoryBean.CONN_USE) {
+				bean.lasttime = ipcInfo.lasttime;
+				bean.serial = ipcInfo.serial;
+				bean.version = ipcInfo.version;
 				break;
 			}
 		}
