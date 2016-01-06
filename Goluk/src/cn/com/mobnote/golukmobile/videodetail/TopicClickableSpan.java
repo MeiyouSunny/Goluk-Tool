@@ -23,6 +23,9 @@ public class TopicClickableSpan extends ClickableSpan {
 
 	@Override
 	public void onClick(View view) {
+		if(null == mVideoJson || null == mVideoJson.data || null == mVideoJson.data.avideo) {
+			return;
+		}
 		// 启动活动聚合页
 		if (mVideoJson.data.avideo.video == null || mVideoJson.data.avideo.video.recom == null) {
 			return;
