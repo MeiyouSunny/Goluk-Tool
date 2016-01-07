@@ -331,6 +331,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			intent.putExtra("title", title);
 			startActivity(intent);
 		}
+		
+		mStartAppBean = null;
 
 		GolukDebugUtils.e("", "start App: MainActivity:------------: " + mStartAppBean.dataStr);
 

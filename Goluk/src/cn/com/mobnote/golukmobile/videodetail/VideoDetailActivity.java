@@ -1196,6 +1196,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				}
 				clickVideoNumber();
 			} else if(mVideoJson != null && !mVideoJson.success) {
+				mRTPullListView.setVisibility(View.GONE);
+				mCommentLayout.setVisibility(View.GONE);
 				if(null != mVideoJson.data) {
 					if("4".equals(mVideoJson.data.result)) {
 						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,

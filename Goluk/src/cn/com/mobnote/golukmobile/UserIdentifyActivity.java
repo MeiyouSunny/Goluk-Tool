@@ -217,7 +217,9 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 			break;
 		case R.id.user_identify_layout_getidentify_btn:
 			GolukDebugUtils.i(TAG, "-----saveDifferent----" + justDifferent);
-			getUserIdentify(justDifferent, title_phone.replace("-", ""));
+			if (null != title_phone) {
+				getUserIdentify(justDifferent, title_phone.replace("-", ""));
+			}
 			break;
 		case R.id.user_identify_btn:
 			String vCode = mEditTextOne.getText().toString() + mEditTextTwo.getText().toString()
@@ -836,12 +838,18 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 				for (Object obj : objs) {
 					byte[] pdu = (byte[]) obj;
 					SmsMessage sms = SmsMessage.createFromPdu(pdu);
-					// 短信的内容
-					String message = sms.getMessageBody();
-					String regEx = "[^0-9]";
-					Pattern p = Pattern.compile(regEx);
-					Matcher m = p.matcher(message);
-					strBody = m.replaceAll("").trim();
+					if (null != sms) {
+						// 短信的内容
+						String message = sms.getMessageBody();
+						String regEx = "[^0-9]";
+						Pattern p = Pattern.compile(regEx);
+						if (null != p) {
+							Matcher m = p.matcher(message);
+							if (null != m) {
+								strBody = m.replaceAll(" ").trim();
+							}
+						}
+					}
 				}
 				if (strBody == null || strBody.length() < 6)
 					return;
