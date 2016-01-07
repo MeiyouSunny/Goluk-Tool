@@ -239,7 +239,7 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 		// 视频
 		if ((mNetInfo != null) && (mNetInfo.getType() == ConnectivityManager.TYPE_WIFI)) {
 			if (!mVideoView.isPlaying() && isStartPlay) {
-				GolukDebugUtils.e("dengting", "VideoDetailActivity===getHeadData=  stat Play:");
+				GolukDebugUtils.e("videoview", "VideoDetailActivity===getHeadData=  stat Play:");
 				playVideo();
 				showLoading();
 				GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------getHeadData:  showLoading");
@@ -470,7 +470,7 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 				mVideoView.pause();
 				mPlayBtn.setVisibility(View.VISIBLE);
 			} else {
-				if ((mNetInfo != null) && (mNetInfo.getType() == ConnectivityManager.TYPE_WIFI)) {
+				if (isCallVideo) {
 					mVideoView.start();
 				} else {
 					playVideo();
@@ -663,7 +663,7 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 		if ((null != mNetInfo) && (mNetInfo.getType() == ConnectivityManager.TYPE_MOBILE)) {
 			mp.setLooping(false);
 			mPlayBtn.setVisibility(View.VISIBLE);
-			mImageLayout.setVisibility(View.VISIBLE);
+//			mImageLayout.setVisibility(View.VISIBLE);
 			mVideoView.seekTo(0);
 			mSeekBar.setProgress(0);
 		} else {

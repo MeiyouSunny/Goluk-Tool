@@ -559,4 +559,6 @@
 	<string name="unbind_loading_dialog_txt2">正在为您连接设备</string>
 	<string name="str_activity_rule">活动规则</string>
 	<string name="str_vote_now">立即投票</string>
+	<string name="str_vote_share_real_description">极路客投票分享(使用#极路客Goluk#拍摄)</string>
+	<string name="str_vote_share_title">极路客投票分享</string>
 </resources>
