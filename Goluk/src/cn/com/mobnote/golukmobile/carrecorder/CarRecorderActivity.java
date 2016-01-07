@@ -1397,6 +1397,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT, CarRecorderActivity.QUERYFILETIME);
 		}
 		mShootTime = 0;
+		isRecording = false;
 		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 		if (null != m8sTimer) {
 			m8sTimer.cancel();
