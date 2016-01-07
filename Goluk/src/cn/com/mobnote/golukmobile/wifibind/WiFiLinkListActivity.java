@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -86,6 +87,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	private CustomLoadingDialog mConnectingDialog = null;
 	/** 用户要绑定的设备类型 */
 	private String mIPcType = "";
+	private String mIpcRealtype = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -121,6 +123,24 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		Intent intent = this.getIntent();
 		if (null != intent) {
 			mIPcType = intent.getStringExtra(WifiUnbindSelectTypeActivity.KEY_IPC_TYPE);
+			mIpcRealtype = intent.getStringExtra(WifiUnbindSelectTypeActivity.KEY_IPC_REAL_TYPE);
+		}
+	}
+
+	private final String G1G2_ShowName = " Goluk xxxxxx ";
+	private final String T1_ShowName = " Goluk_T1_xxxxxx ";
+	private final String T1S_ShowName = " Goluk_T1S_xxxxxx ";
+
+	private String getWifiShowName() {
+		if (TextUtils.isEmpty(mIpcRealtype)) {
+			return G1G2_ShowName;
+		}
+		if (IPCControlManager.T1_SIGN.equals(mIpcRealtype)) {
+			return T1_ShowName;
+		} else if (IPCControlManager.T1s_SIGN.equals(mIpcRealtype)) {
+			return T1S_ShowName;
+		} else {
+			return G1G2_ShowName;
 		}
 	}
 
@@ -150,9 +170,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 				+ getResources().getString(R.string.wifi_link_wifi_light) + " </font>"
 				+ getResources().getString(R.string.wifi_link_twinkle);
 		mDescTitleText.setText(Html.fromHtml(connStr1));
-		final String connStr2 = getResources().getString(R.string.wifi_link_wifi_name)
-				+ "<font color=\"#0587ff\"> Goluk xxxxxx </font>"
-				+ getResources().getString(R.string.wifi_link_wifi_name2);
+		final String connStr2 = getResources().getString(R.string.wifi_link_wifi_name) + "<font color=\"#0587ff\">"
+				+ getWifiShowName() + "</font>" + getResources().getString(R.string.wifi_link_wifi_name2);
 		mDescTitleText2.setText(Html.fromHtml(connStr2));
 
 		this.nextCan();
