@@ -470,7 +470,7 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 				mVideoView.pause();
 				mPlayBtn.setVisibility(View.VISIBLE);
 			} else {
-				if ((mNetInfo != null) && (mNetInfo.getType() == ConnectivityManager.TYPE_WIFI)) {
+				if (isCallVideo) {
 					mVideoView.start();
 				} else {
 					playVideo();
