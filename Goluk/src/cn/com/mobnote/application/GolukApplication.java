@@ -36,6 +36,7 @@ import cn.com.mobnote.golukmobile.UserPersonalNameActivity;
 import cn.com.mobnote.golukmobile.UserPersonalSignActivity;
 import cn.com.mobnote.golukmobile.UserSetupActivity;
 import cn.com.mobnote.golukmobile.UserSetupChangeWifiActivity;
+import cn.com.mobnote.golukmobile.adas.AdasConfigParamterBean;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.PreferencesReader;
@@ -83,6 +84,7 @@ import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
+import com.alibaba.fastjson.JSON;
 import com.baidu.mapapi.SDKInitializer;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
@@ -1143,6 +1145,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private void IPC_VDCP_Command_Init_CallBack(int msg, int param1, Object param2) {
 		GolukDebugUtils.e("", "wifilist----GolukApplication----wifiConn----IPC_VDCP_Init_CallBack-------msg :" + msg);
 		// msg = 0 初始化消息 param1 = 0 成功 | 失败
+
 		if (0 != param1) {
 			// 连接失败
 			setIpcLoginState(false);
@@ -1175,6 +1178,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			getVideoEncodeCfg();
 			// 获取Ｔ1声音录制开关状态
 			getVideoEncoderCtg_T1();
+			/**获取adas配置**/
+			getAdasCfg();
 			// 获取设备编号
 			getIPCNumber();
 			isconnection = true;// 连接成功
@@ -1364,6 +1369,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		case IPC_VDCP_Msg_GetIdentity:
 			IPC_CallBack_GetIdentity(msg, param1, param2);
 			break;
+		case IPC_VDCP_Msg_GetADASConfig:
+			if (param1 == RESULE_SUCESS) {
+				AdasConfigParamterBean item = JSON.parseObject((String)param2, AdasConfigParamterBean.class);
+				if (item != null) {
+					GolukFileUtils.saveInt(GolukFileUtils.ADAS_FLAG, item.enable);
+				}
+			}
+			break;
 		}
 	}
 
@@ -1444,6 +1457,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private void getVideoEncodeCfg() {
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			getIPCControlManager().getVideoEncodeCfg(0);
+		}
+	}
+
+	/**
+	 * 获取adas配置信息
+	 * 
+	 * 
+	 */
+	private void getAdasCfg() {
+		if (GolukApplication.getInstance().getIpcIsLogin()) {
+			getIPCControlManager().getT1AdasConfig();
 		}
 	}
 

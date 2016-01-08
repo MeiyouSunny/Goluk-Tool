@@ -47,6 +47,9 @@ public class EventConfig {
 	/** IPC连接成功 */
 	public static final int IPC_CONNECT = 1;
 
+	public static final int IPC_ADAS_CONFIG_FROM_GUIDE = 1;
+	
+	public static final int IPC_ADAS_CONFIG_FROM_MODIFY = 0;
 	public static final int BINDING = 0;
 	/** 绑定成功的消息 */
 	public static final int BIND_COMPLETE = 0;
