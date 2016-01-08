@@ -116,6 +116,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	public static final int PROMOTION_ACTIVITY_BACK = 110;
 	private boolean mIsResume = false;
 	private boolean mIsFirstLoad = true;
+	private boolean mIsT1Video = false;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -281,8 +282,10 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 					videoCreateTime = "20" + videoTimeArray[1] + "000";
 				} else if (videoTimeArray.length == 7){
 					videoCreateTime = videoTimeArray[2] + "000";
+					mIsT1Video = true;
 				} else if (videoTimeArray.length == 8) {
 					videoCreateTime = videoTimeArray[1] + "000";
+					mIsT1Video = true;
 				}
 			} else {
 				videoCreateTime = "";
@@ -652,7 +655,11 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			break;
 		case R.id.share_filter_layout:
 			if (!isExit) {
-				switchMiddleLayout(false, false);
+				if (mIsT1Video) {
+					GolukUtils.showToast(this, "视频滤镜功能即将上线，敬请期待");
+				} else {
+					switchMiddleLayout(false, false);
+				}
 			}
 			break;
 		}

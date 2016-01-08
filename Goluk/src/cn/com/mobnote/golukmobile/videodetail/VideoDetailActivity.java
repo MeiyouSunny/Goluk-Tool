@@ -1196,6 +1196,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				}
 				clickVideoNumber();
 			} else if(mVideoJson != null && !mVideoJson.success) {
+				mRTPullListView.setVisibility(View.GONE);
+				mCommentLayout.setVisibility(View.GONE);
 				if(null != mVideoJson.data) {
 					if("4".equals(mVideoJson.data.result)) {
 						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
@@ -1283,14 +1285,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
 			CommentDelResultBean DelResultBean = (CommentDelResultBean) result;
 			if (null != DelResultBean && DelResultBean.success) {
-				int size = commentDataList.size();
-				for (int i = 0; i < size; i++) {
-					if (commentDataList.get(i).mCommentId.equals(DelResultBean.data.comment_id)) {
-						commentDataList.remove(i);
-						break;
-					}
-				}
-				mAdapter.setData(commentDataList);
+
+				mAdapter.deleteData(mWillDelBean);
 				mVideoJson.data.avideo.video.comment.comcount = String.valueOf(Integer
 						.parseInt(mVideoJson.data.avideo.video.comment.comcount) - 1);
 				mHeader.setCommentCount(mVideoJson.data.avideo.video.comment.comcount);
@@ -1339,7 +1335,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				if (!"".equals(bean.result)) {
 					if ("0".equals(bean.result)) {// 成功
 						removeFooterView();
-						commentDataList.add(0, bean);
 						this.mAdapter.addFirstData(bean);
 						mVideoJson.data.avideo.video.comment.comcount = String.valueOf(Integer
 								.parseInt(mVideoJson.data.avideo.video.comment.comcount) + 1);

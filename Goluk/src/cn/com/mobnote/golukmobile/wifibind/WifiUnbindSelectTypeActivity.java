@@ -17,6 +17,8 @@ public class WifiUnbindSelectTypeActivity extends BaseActivity implements OnClic
 
 	// 设备类型
 	public static final String KEY_IPC_TYPE = "key_ipc_type";
+	/** 设备真正的类型 */
+	public static final String KEY_IPC_REAL_TYPE = "key_ipc_real_type";
 	/** 关闭按钮 **/
 	private ImageView mCloseBtn;
 
@@ -63,16 +65,16 @@ public class WifiUnbindSelectTypeActivity extends BaseActivity implements OnClic
 			this.finish();
 			break;
 		case R.id.goluk_t1_layout:
-			click_BindIpc(IPCControlManager.MODEL_T);
+			click_BindIpc(IPCControlManager.MODEL_T, IPCControlManager.T1_SIGN);
 			break;
 		case R.id.goluk_t1s_layout:
-			click_BindIpc(IPCControlManager.MODEL_T);
+			click_BindIpc(IPCControlManager.MODEL_T, IPCControlManager.T1s_SIGN);
 			break;
 		case R.id.goluk_g2_layout:
-			click_BindIpc(IPCControlManager.MODEL_G);
+			click_BindIpc(IPCControlManager.MODEL_G, IPCControlManager.G2_SIGN);
 			break;
 		case R.id.goluk_g1_layout:
-			click_BindIpc(IPCControlManager.MODEL_G);
+			click_BindIpc(IPCControlManager.MODEL_G, IPCControlManager.G1_SIGN);
 			break;
 		default:
 			break;
@@ -86,9 +88,10 @@ public class WifiUnbindSelectTypeActivity extends BaseActivity implements OnClic
 	 *            用户选择的类型, G1,G2,T1
 	 * @author jyf
 	 */
-	private void click_BindIpc(String ipcType) {
+	private void click_BindIpc(String ipcType, String realType) {
 		Intent intent = new Intent(this, WiFiLinkListActivity.class);
 		intent.putExtra(KEY_IPC_TYPE, ipcType);
+		intent.putExtra(KEY_IPC_REAL_TYPE, realType);
 		startActivity(intent);
 	}
 

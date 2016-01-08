@@ -331,9 +331,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			intent.putExtra("title", title);
 			startActivity(intent);
 		}
-
-		GolukDebugUtils.e("", "start App: MainActivity:------------: " + mStartAppBean.dataStr);
-
+		
+		mStartAppBean = null;
 	}
 
 	/**
@@ -545,10 +544,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukDebugUtils.e("", "wifiCallBack-------------wifiConnectedSucess:");
 		mBaseHandler.removeMessages(MSG_H_WIFICONN_TIME);
 		mApp.mWiFiStatus = WIFI_STATE_SUCCESS;
-		GolukDebugUtils.e("zh：wifi连接成功 ", mApp.mWiFiStatus + "");
-
 		refreshIpcDataToFile();
-
 		EventBus.getDefault().post(new EventWifiConnect(EventConfig.WIFI_STATE_SUCCESS));
 	}
 

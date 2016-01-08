@@ -440,6 +440,10 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			mIsSendFileOk = true;
 			mBtnDownload.setEnabled(false);
 			mBtnDownload.setText(this.getResources().getString(R.string.str_ipc_update_install_ok));
+			if (null != mFirstDialog && mFirstDialog.isShowing()) {
+				mFirstDialog.dismiss();
+				mFirstDialog = null;
+			}
 			mVoiceLayout.setVisibility(View.VISIBLE);
 			break;
 		default:

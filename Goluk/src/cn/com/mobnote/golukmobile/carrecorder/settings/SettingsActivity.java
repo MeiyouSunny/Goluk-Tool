@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+
+import android.os.Message;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -156,6 +158,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	private CustomDialog mCustomDialog;
 	/**自动同步照片到手机相册开关状态**/
+
 	boolean mAutoState = true;
 
 	@Override
@@ -275,7 +278,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if (Activity.RESULT_OK != resultCode) {
 			return;
 		}
-		if (null != data) {
+		if (null != data && null != mPhtoBean) {
+
 			String photoselect = data.getStringExtra("photoselect");
 			mPhtoBean.quality = photoselect;
 			mCurrentResolution = photoselect;
@@ -693,7 +697,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				startActivity(intent);
 			// 自动同步照片到手机相册
 			case R.id.ib_setup_autophoto_btn:
-				if(mAutoState) {
+				if (mAutoState) {
 					mAutoPhotoBtn.setBackgroundResource(R.drawable.set_close_btn);
 					mAutoState = false;
 				} else {
@@ -1249,13 +1253,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		String message = "";
 		if (param1 == RESULE_SUCESS) {
 			// 断开连接
-			EventBindFinish eventFnish = new EventBindFinish(EventConfig.BIND_LIST_DELETE_CONFIG);
-			EventBus.getDefault().post(eventFnish);
-			GolukApplication.getInstance().setIpcDisconnect();
-			WifiBindHistoryBean bean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
-			if (null != bean) {
-				WifiBindDataCenter.getInstance().deleteBindData(bean.ipc_ssid);
-			}
+			mBaseHandler.sendEmptyMessageDelayed(100, 2 * 100);
 			message = "恢复出厂设置成功";
 		} else {
 			message = "恢复出厂设置失败";
@@ -1275,6 +1273,16 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			}
 		});
 		mCustomDialog.show();
+	}
+
+	private void restoreSuccess() {
+		EventBindFinish eventFnish = new EventBindFinish(EventConfig.BIND_LIST_DELETE_CONFIG);
+		EventBus.getDefault().post(eventFnish);
+		GolukApplication.getInstance().setIpcDisconnect();
+		WifiBindHistoryBean bean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
+		if (null != bean) {
+			WifiBindDataCenter.getInstance().deleteBindData(bean.ipc_ssid);
+		}
 	}
 
 	private void IPCCallBack_setRecAudioCfg(int msg, int param1, Object param2) {
@@ -1416,7 +1424,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	}
 
 	private void IPCCallBackGetPhotoQuality(int event, int msg, int param1, Object param2) {
-		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
+		GolukDebugUtils.e("", "----IPCManage_CallBack------PhotoQuality----------event:" + event + " msg:" + msg + "==data:"
 				+ (String) param2 + "---param1:" + param1);
 		this.closeLoading();
 		if (RESULE_SUCESS == param1) {
@@ -1673,6 +1681,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private void closeLoading() {
 		if (mCustomProgressDialog.isShowing()) {
 			mCustomProgressDialog.close();
+		}
+	}
+
+	@Override
+	protected void hMessage(Message msg) {
+		if (100 == msg.what) {
+			restoreSuccess();
 		}
 	}
 

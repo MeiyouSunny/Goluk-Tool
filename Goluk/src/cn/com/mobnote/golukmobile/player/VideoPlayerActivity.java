@@ -817,6 +817,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		mVideo.setVideoWidth(mp.getVideoWidth());
 		mVideo.setVideoHeight(mp.getVideoHeight());
 		mVideo.start();
+		mPlay.setImageResource(R.drawable.player_pause_btn);
 		if (GolukUtils.getSystemSDK() < 17) {
 			hideLoading();
 		}
@@ -881,6 +882,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		if (mVideo.isPlaying() && mVideo.canPause()) {
 			isPause = true;
 			mVideo.pause();
+			mPlay.setImageResource(R.drawable.player_play_btn);
 		}
 	}
 
@@ -905,6 +907,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 //			mPlayImg.setVisibility(View.VISIBLE);
 //			showLoading();
 			mVideo.start();
+			mPlay.setImageResource(R.drawable.player_pause_btn);
 		}
 
 	}

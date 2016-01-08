@@ -30,6 +30,7 @@ import cn.com.mobnote.golukmobile.reportlog.ReportLogManager;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
+import cn.com.mobnote.util.GolukFastJsonUtil;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.wifibind.WifiConnCallBack;
@@ -304,6 +305,12 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	public void ipcLinkWiFiCallBack(Object param2) {
 		collectLog("ipcLinkWiFiCallBack", "*****   Bind Sucess ! *****");
 
+		IpcConnSuccessInfo ipcInfo = null;
+		if (null != param2) {
+			ipcInfo = GolukFastJsonUtil.getParseObj((String) param2, IpcConnSuccessInfo.class);
+			ipcInfo.lasttime = String.valueOf(System.currentTimeMillis());
+		}
+
 		// 设置绑定成功
 		ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setType(ReportLog.TYPE_SUCESS);
 		reportLog();
@@ -336,15 +343,16 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		historyBean.mobile_ssid = WiFiInfo.MOBILE_SSID;
 		historyBean.mobile_pwd = WiFiInfo.MOBILE_PWD;
 		historyBean.state = WifiBindHistoryBean.CONN_USE;
-		historyBean.ipcSign = JsonUtil.getProductName(param2);
+
+		if (null != ipcInfo) {
+			historyBean.ipcSign = ipcInfo.productname;
+			historyBean.serial = ipcInfo.serial;
+			historyBean.version = ipcInfo.version;
+			historyBean.lasttime = ipcInfo.lasttime;
+		}
 		WifiBindDataCenter.getInstance().saveBindData(historyBean);
 		// 发送绑定成功的消息
 		EventBus.getDefault().post(new EventBindResult(EventConfig.BIND_COMPLETE));
-
-		// saveBind(WiFiInfo.IPC_SSID);
-		// 保存绑定标识
-		// mApp.setBindState(true);
-
 		mApp.setBinding(false);
 	}
 

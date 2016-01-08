@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile.startshare;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
@@ -218,17 +219,12 @@ public class ShareDeal implements OnClickListener {
 	 * @author jyf
 	 */
 	private void click_Sina() {
+
 		if (!isValid()) {
 			return;
 		}
-		if (mSharePlatform.isSinaWBValid()) {
-			mCurrentShareType = CustomShareBoard.TYPE_WEIBO_XINLANG;
-			click_deal(mCurrentShareType);
-		} else {
-			// 先去授权
-			mShareBoard = new CustomShareBoard(mActivity, mSharePlatform, null, null, null, null, null, null, null);
-			mShareBoard.click_sina();
-		}
+		mCurrentShareType = CustomShareBoard.TYPE_WEIBO_XINLANG;
+		click_deal(mCurrentShareType);
 	}
 
 	/**
