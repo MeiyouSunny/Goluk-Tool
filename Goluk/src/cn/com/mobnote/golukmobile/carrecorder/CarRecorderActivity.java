@@ -303,16 +303,16 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	public static final String ADAS_FONT_STARTUP = "adas_font_startup";
 	
 	/**距离左右线的警报状态**/
-	public static final int ADASCONTENTSTATE = 2;
+	public static final String ADASCONTENTSTATE = "2";
 	
 	/**距离左右线的 厘米**/
-	public static final int ADASCONTENTDISTANCE = 300;
+	public static final String ADASCONTENTDISTANCE = "300";
 	
 	/**距离前车的近 **/
-	public static final int ADASCONTENTTARGETSTATE2 =2;
+	public static final String ADASCONTENTTARGETSTATE2 = "2";
 	
 	/**距离前车的太近 **/
-	public static final int ADASCONTENTTARGETSTATE3 = 3;
+	public static final String ADASCONTENTTARGETSTATE3 = "3";
 	/**adas的显示时长**/
 	public static final long ADASTIMER = 2000;
 	
@@ -1754,39 +1754,28 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				try {
 					JSONObject data = new JSONObject(param2.toString());
 					String topic = data.optString("topic");
-					int content = data.optInt("content");
 					if(ADAS_LINE_ST_LEFT.equals(topic)){//车靠左太近
-						if(content == ADASCONTENTSTATE){
-							setAdasStatusImage(true, 1);
-							mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
-						}
+						setAdasStatusImage(true, 1);
+						mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
 					}else if(ADAS_LINE_ST_RIGHT.equals(topic)){//靠右太近
-						if(content == ADASCONTENTSTATE){
-							setAdasStatusImage(true, 2);
-							mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
-						}
+						setAdasStatusImage(true, 2);
+						mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
 					}else if(ADAS_DISTANCE_ST_LEFT.equals(topic)){
 						//预留扩展
 					}else if(ADAS_DISTANCE_ST_RIGHT.equals(topic)){
 						//预留扩展
 					}else if(ADAS_TARGET_STATE.equals(topic)){//距离前车近
-						if(content == ADASCONTENTTARGETSTATE2){
-							setAdasStatusImage(true, 3);
-							mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
-						}
+						setAdasStatusImage(true, 3);
+						mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
 					}else if(ADAS_TARGET_DISTANCE.equals(topic)){//距离前车太近
-						if(content == ADASCONTENTTARGETSTATE3){
-							setAdasStatusImage(true, 4);
-							mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
-						}
+						setAdasStatusImage(true, 4);
+						mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
 					}else if(ADAS_TARGET_SPEED.equals(topic)){
 						//预留扩展
 					}else if(ADAS_FONT_STARTUP.equals(topic)){
-						if(content == 200){//ADAS前车起步提醒
-							
-						}
+						setAdasStatusImage(true, 5);
+						mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
 					}
-						
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -2288,9 +2277,17 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		}else if(status == 2){
 			mAdasImg.setImageResource(R.drawable.recorder_carright_img);//车向右偏移
 		}else if(status == 3){
-			mAdasImg.setImageResource(R.drawable.recorder_near_img);//距前车进
+			AnimationDrawable photoAnimation;
+			mAdasImg.setBackgroundResource(R.anim.adas_warning_animation_front_nearby);//距前车进
+			photoAnimation = (AnimationDrawable)mAdasImg.getBackground();
+			photoAnimation.start();
 		}else if(status == 4){
 			mAdasImg.setImageResource(R.drawable.recorder_verynear_img);//距前车过进
+		} else if(status == 5){
+			AnimationDrawable photoAnimation;
+			mAdasImg.setBackgroundResource(R.anim.adas_warning_animation_front_startup);//前车起步
+			photoAnimation = (AnimationDrawable)mAdasImg.getBackground();
+			photoAnimation.start();
 		}
 		
 	}
