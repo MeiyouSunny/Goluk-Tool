@@ -97,7 +97,6 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	private void initData() {
 		mListView.setEmptyView(mEmptyLayout);
 		mListAdapter = new WifiUnbindSelectListAdapter(this);
-		mListView.setAdapter(mListAdapter);
 		getBindHistoryData();
 	}
 
