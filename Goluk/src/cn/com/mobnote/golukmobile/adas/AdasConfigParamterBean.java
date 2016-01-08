@@ -24,4 +24,6 @@ public class AdasConfigParamterBean implements Serializable{
     public int ldw_warn_level; /* LDW warn level, 0-low, 1-middle, 2-high. 3-close*/
     public int fcw_warn_level; /* FCW warn level, 0-low, 1-middle, 2-high. 3-close*/
     public int osd;           /*adas 报警叠加到视频中  （0关闭，1开启）*/
+    public int fcs_enable; /*前车起步推送开关*/
+    public int fcw_enable; /*前车过近预警开关*/
 }

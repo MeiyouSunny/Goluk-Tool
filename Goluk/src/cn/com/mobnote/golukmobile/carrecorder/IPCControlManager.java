@@ -896,6 +896,27 @@ public class IPCControlManager implements IPCManagerFn {
 	}
 
 	/**
+	 * 设置T1 ADAS OSD配置开关
+	 * 
+	 * @return
+	 */
+	public boolean setT1AdasConfigFcs(int fcs_enable) {
+		String s = "{\"fcs_enable\":" + fcs_enable + "}";
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetADASConfig , s);
+	}
+
+	/**
+	 * 设置T1 ADAS OSD配置开关
+	 * 
+	 * @return
+	 */
+	public boolean setT1AdasConfigFcw(int fcw_enable) {
+		String s = "{\"fcw_enable\":" + fcw_enable + "}";
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetADASConfig , s);
+	}
+	/**
 	 * 设置T1 ADAS配置所有参数
 	 * 
 	 * @return

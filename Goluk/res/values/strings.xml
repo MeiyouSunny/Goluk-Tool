@@ -527,7 +527,7 @@
 	<string name="str_low">低</string>
 	<string name="str_middle">中</string>
 	<string name="str_high">高</string>
-	<string name="str_adas_hint">您还没有配置前向距离安全提示，是否现在去配置？</string>
+	<string name="str_adas_hint">您还没有配置前向距离安全预警，是否现在去配置？</string>
 	<string name="str_adas_dialog_confirm">去配置</string>
 	<string name="str_adas_forward_car_close_warning">前向车距过近提示</string>
 	<string name="str_adas_forward_car_setup_hint">前向车辆启动提示</string>
