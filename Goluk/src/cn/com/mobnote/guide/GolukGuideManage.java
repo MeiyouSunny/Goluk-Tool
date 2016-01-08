@@ -23,26 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.com.mobnote.golukmobile.GuideActivity;
-import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserStartActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 
 /**
- * <pre>
- * 1.类命名首字母大写
- * 2.公共函数驼峰式命名
- * 3.属性函数驼峰式命名
- * 4.变量/参数驼峰式命名
- * 5.操作符之间必须加空格
- * 6.注释都在行首写.(枚举除外)
- * 7.编辑器必须显示空白处
- * 8.所有代码必须使用TAB键缩进
- * 9.函数使用块注释,代码逻辑使用行注释
- * 10.文件头部必须写功能说明
- * 11.后续人员开发保证代码格式一致
- * </pre>
- * 
  * @ 功能描述:引导页管理
  * 
  * @author 陈宣宇
@@ -267,14 +252,17 @@ public class GolukGuideManage {
 	protected class StartGolukBtnClickListener implements OnClickListener {
 		@Override
 		public void onClick(View v) {
-			SharedPreferences preferences = mContext.getSharedPreferences("golukmark",Context.MODE_PRIVATE);
+			SharedPreferences preferences = mContext.getSharedPreferences("golukmark", Context.MODE_PRIVATE);
 			Editor editor = preferences.edit();
 			editor.putBoolean("isfirst", false);
-			// 提交修改 
+			// 提交修改
 			editor.commit();
 			// 启动个人中心的起始页
 			Intent userStart = new Intent(mContext, UserStartActivity.class);
 			userStart.putExtra("judgeVideo", false);
+			if (null != mContext && mContext instanceof GuideActivity) {
+				((GuideActivity) mContext).addWebStartData(userStart);
+			}
 			mContext.startActivity(userStart);
 			((GuideActivity) mContext).finish();
 		}

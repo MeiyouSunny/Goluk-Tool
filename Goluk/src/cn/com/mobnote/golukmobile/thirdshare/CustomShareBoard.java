@@ -320,7 +320,9 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 				GolukDebugUtils.e("", "jyf----thirdshare--------onComplete eCode: " + eCode + "   mCurrentShareType:"
 						+ mCurrentShareType);
-				dismiss();
+				if (GolukUtils.isActivityAlive(mActivity)) {
+					dismiss();
+				}
 			}
 		});
 	}

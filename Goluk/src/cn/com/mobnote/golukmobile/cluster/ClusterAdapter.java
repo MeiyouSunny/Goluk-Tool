@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -878,6 +879,12 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
+		if(mContext instanceof Activity) {
+			Activity activity = (Activity)mContext;
+			if(!GolukUtils.isActivityAlive(activity)) {
+				return;
+			}
+		}
 		if(requestType != IPageNotifyFn.PageType_VoteShare) {
 			return;
 		}

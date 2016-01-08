@@ -43,12 +43,12 @@ public class GuideActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		GolukDebugUtils.e("", "start App: GuideActivity:------------: taskid: " + this.getTaskId());
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		mApp = (GolukApplication) getApplication();
 		mPreExist = mApp.isExit();
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.guide);
 		mContext = this;
 		GolukApplication.getInstance().setContext(this, "GuideActivity");
@@ -82,29 +82,8 @@ public class GuideActivity extends BaseActivity {
 
 	private boolean getWebStartData() {
 		Intent intent = getIntent();
-		final String scheme = intent.getScheme(); // golukapp
-		GolukDebugUtils.e("", "start App: scheme:" + scheme);
-		final Uri uri = intent.getData();
-		final String dataStr = intent.getDataString(); // 获取整个字符串
-		if (null != scheme && "golukapp".equals(scheme) && null != uri) {
-			String host = uri.getHost(); // goluk.app
-			String path = uri.getPath();
-
-			String vid = uri.getQueryParameter("id");
-			String title = uri.getQueryParameter("title");
-			String type = uri.getQueryParameter("type");
-			mStartAppBean = new StartAppBean();
-			mStartAppBean.uri = uri.toString();
-			mStartAppBean.dataStr = dataStr;
-			mStartAppBean.host = host;
-			mStartAppBean.path = path;
-
-			mStartAppBean.type = type;
-			mStartAppBean.id = vid;
-			mStartAppBean.title = title;
-
-			GolukDebugUtils.e("", "start App: host:" + host + "  path:" + path + "   dataStr:" + dataStr + "   vid:"
-					+ vid + "  mPreExist:" + mPreExist);
+		mStartAppBean = (StartAppBean) intent.getSerializableExtra(GuideActivity.KEY_WEB_START);
+		if (null != mStartAppBean) {
 			if (!mPreExist) {
 				EventBus.getDefault().post(new EventStartApp(100, mStartAppBean));
 				startMain();
@@ -147,7 +126,7 @@ public class GuideActivity extends BaseActivity {
 		intent.putExtra(GolukNotification.NOTIFICATION_KEY_JSON, mPushJson);
 	}
 
-	private void addWebStartData(Intent intent) {
+	public void addWebStartData(Intent intent) {
 		if (null != this.mStartAppBean) {
 			intent.putExtra(KEY_WEB_START, mStartAppBean);
 		}
