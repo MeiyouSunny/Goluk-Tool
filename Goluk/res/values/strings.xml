@@ -221,7 +221,7 @@
     <string name="version_welcome_text">欢迎页</string>
     <string name="version_opinion_text">意见反馈</string>
     <string name="version_bottom_company">北京智趣车联科技有限公司  版权所有</string>
-    <string name="version_bottom_copyright">Copyright@2015 Goluk.All Rights Reserved</string>
+    <string name="version_bottom_copyright">Copyright@2016 Goluk.All Rights Reserved</string>
     <string name="opinion_suggest">您的意见或建议</string>
     <string name="opinion_connection">您的联系方式</string>
     <string name="option_suggest_hint">必选内容（500字以内）</string>
@@ -561,4 +561,7 @@
 	<string name="str_vote_now">立即投票</string>
 	<string name="str_vote_share_real_description">极路客投票分享(使用#极路客Goluk#拍摄)</string>
 	<string name="str_vote_share_title">极路客投票分享</string>
+	
+	<string name="str_version_text">极路客版本</string>
+	
 </resources>
