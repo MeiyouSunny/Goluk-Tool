@@ -60,10 +60,10 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="22dp"
         android:layout_marginBottom="22dp"
-        android:background="@drawable/adas_button_background"
+        android:background="@drawable/adas_button_unclickable_background"
         android:gravity="center"
         android:text="@string/next_text"
-        android:textColor="@color/white"
+        android:textColor="#808080"
         android:textSize="20sp" />
 
 </RelativeLayout>

@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSON;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -46,7 +47,7 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 	private Button mNextButton;
 	private AdasConfigParamterBean mAdasConfigParamter = null;
 	private ArrayList<VehicleParamterBean> mCustomVehicleList = new ArrayList<VehicleParamterBean>(3);
-	private int mPosition = 0;
+	private int mPosition = -1;
 
 	private CustomLoadingDialog mCustomLoadingDialog;
 
@@ -96,6 +97,7 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 		mBackBtn = (ImageButton) findViewById(R.id.imagebutton_back);
 		mBackBtn.setOnClickListener(this);
 		mNextButton = (Button) findViewById(R.id.button_selected_complete);
+		mNextButton.setEnabled(false);
 		mNextButton.setOnClickListener(this);
 		if (mFromType != 0) {
 			mNextButton.setText(R.string.short_input_ok);
@@ -132,6 +134,7 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 		}
 		int len = data.size();
 
+		/**匹配已设置的车辆信息**/
 		for (int i = 0; i < len; i++) {
 			VehicleParamterBean item = data.get(i);
 
@@ -145,7 +148,23 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 			}
 		}
 		mCarTypeAdapter.setData(data);
-		mCarTypeAdapter.setSelectedId(mPosition);
+		if (mPosition >= 0) {
+			mCarTypeAdapter.setSelectedId(mPosition);
+			setButtonStatus(true);
+		} else if (mAdasConfigParamter.head_offset > 0) {
+			/**设备上自定义车辆的参数，不在手机上，覆盖手机的第一个值**/
+			mPosition = mCarTypeAdapter.getCount() - mCustomVehicleList.size();
+			VehicleParamterBean mParamter = (VehicleParamterBean) mCarTypeAdapter.getItem(mPosition);
+			mParamter.head_offset = mAdasConfigParamter.head_offset;
+			mParamter.height_offset = mAdasConfigParamter.height_offset;
+			mParamter.left_offset = mAdasConfigParamter.left_offset;
+			mParamter.right_offset = mAdasConfigParamter.right_offset;
+			mParamter.wheel_offset = mAdasConfigParamter.wheel_offset;
+			mParamter.name = getString(R.string.str_custom) + 1;
+			mCustomVehicleList.set(0, mParamter);
+			mCarTypeAdapter.setSelectedId(mPosition);
+			setButtonStatus(true);
+		}
 	}
 
 	@Override
@@ -199,6 +218,7 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 			intent.putExtra(AdasVehicleConfigActivity.CUSTOMINDEX, customLen - len + position);
 			startActivityForResult(intent, REQUEST_CODE_VEHICLE_CONFIG);
 		} else {
+			setButtonStatus(true);
 			mCarTypeAdapter.setSelectedId(position);
 		}
 	}
@@ -251,6 +271,7 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 			selectedItem.wheel_offset = result.wheel_offset;
 			selectedItem.right_offset = result.right_offset;
 			mCarTypeAdapter.setSelectedId(mPosition);
+			setButtonStatus(true);
 		}
 	}
 
@@ -292,6 +313,18 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 		if (mCustomLoadingDialog != null) {
 			mCustomLoadingDialog.close();
 			mCustomLoadingDialog = null;
+		}
+	}
+
+	private void setButtonStatus(boolean clickable) {
+		if (clickable) {
+			mNextButton.setEnabled(true);
+			mNextButton.setBackgroundResource(R.drawable.adas_button_next_background);
+			mNextButton.setTextColor(Color.parseColor("#047cf3"));
+		} else {
+			mNextButton.setEnabled(false);
+			mNextButton.setBackgroundResource(R.drawable.adas_button_unclickable_background);
+			mNextButton.setTextColor(Color.parseColor("#808080"));
 		}
 	}
 

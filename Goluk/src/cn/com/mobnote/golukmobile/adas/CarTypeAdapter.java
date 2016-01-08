@@ -72,9 +72,7 @@ public class CarTypeAdapter extends BaseAdapter {
 	
 	public void setSelectedId(int position) {
 		mSelectedId = position;
-		if (mSelectedId > 0) {
-			notifyDataSetChanged();
-		}
+		notifyDataSetChanged();
 	}
 
 	public int getSelectedId() {
