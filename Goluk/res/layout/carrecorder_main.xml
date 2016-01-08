@@ -35,17 +35,23 @@
             android:background="@drawable/driving_car_setting" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_carrecorder_connection_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/title_layout">
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title_layout"
-        android:layout_marginTop="10dp" >
+        android:layout_alignParentLeft="true" >
 
         <ImageView
             android:id="@+id/changeBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
+            android:contentDescription="@string/imgdes"
             android:src="@drawable/recorder_changeipc_icon" />
 
         <TextView
@@ -70,13 +76,10 @@
 
     <ImageView
         android:id="@+id/mVideoResolutions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/title_layout"
         android:layout_centerVertical="true"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="12dp"
         android:background="@drawable/carrecorder_liveindex_icon_1080"
         android:contentDescription="@string/def" />
 
@@ -84,18 +87,18 @@
         android:id="@+id/adas_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title_layout"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="10dp"
+        android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/mVideoResolutions"
         android:background="@drawable/recorder_adas_on"
         android:contentDescription="@string/def" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/ipclive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/mVideoResolutions"
+        android:layout_below="@id/rl_carrecorder_connection_state"
         android:layout_marginTop="10dp" >
 
         <RelativeLayout
