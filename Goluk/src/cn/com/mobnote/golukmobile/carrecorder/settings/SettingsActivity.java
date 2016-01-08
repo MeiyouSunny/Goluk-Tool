@@ -212,7 +212,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if (Activity.RESULT_OK != resultCode) {
 			return;
 		}
-		if (null != data) {
+		if (null != data && null != mPhtoBean) {
+
 			String photoselect = data.getStringExtra("photoselect");
 			mPhtoBean.quality = photoselect;
 			mCurrentResolution = photoselect;
@@ -1032,7 +1033,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		});
 		mCustomDialog.show();
 	}
-	
+
 	private void restoreSuccess() {
 		EventBindFinish eventFnish = new EventBindFinish(EventConfig.BIND_LIST_DELETE_CONFIG);
 		EventBus.getDefault().post(eventFnish);
@@ -1182,7 +1183,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	}
 
 	private void IPCCallBackGetPhotoQuality(int event, int msg, int param1, Object param2) {
-		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
+		GolukDebugUtils.e("", "----IPCManage_CallBack------PhotoQuality----------event:" + event + " msg:" + msg + "==data:"
 				+ (String) param2 + "---param1:" + param1);
 		this.closeLoading();
 		if (RESULE_SUCESS == param1) {
