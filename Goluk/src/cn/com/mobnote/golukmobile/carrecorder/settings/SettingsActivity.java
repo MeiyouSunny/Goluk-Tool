@@ -455,25 +455,20 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mFatigueLayout.setVisibility(View.VISIBLE);
 			mImageFlipLayout.setVisibility(View.VISIBLE);
 			mParkingSleepLayout.setVisibility(View.VISIBLE);
-			mParkingSleepHintText.setText(this.getResources().getString(R.string.str_settings_sleep_hint_text_g1));
 			mParkingSecurityHintText
 					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g1));
 			mCarrecorderWonderfulLine.setVisibility(View.GONE);
-
-//			mCarrecorderSensitivityLine.setVisibility(View.GONE);
 		} else if (mIPCName.equals(IPCControlManager.G2_SIGN)) {
 			mISPLayout.setVisibility(View.VISIBLE);
 			mPhotoQualityLayout.setVisibility(View.GONE);
 			mAutoPhotoItem.setVisibility(View.GONE);
-			mFatigueLayout.setVisibility(View.GONE);
-			mImageFlipLayout.setVisibility(View.GONE);
-			mParkingSleepLayout.setVisibility(View.GONE);
 			mHandsetLayout.setVisibility(View.GONE);
-			mParkingSleepHintText.setVisibility(View.GONE);
+			mFatigueLayout.setVisibility(View.VISIBLE);
+			mImageFlipLayout.setVisibility(View.VISIBLE);
+			mParkingSleepLayout.setVisibility(View.VISIBLE);
 			mParkingSecurityHintText
 					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g2));
 			mCarrecorderWonderfulLine.setVisibility(View.VISIBLE);
-//			mCarrecorderSensitivityLine.setVisibility(View.VISIBLE);
 		} else {
 			mISPLayout.setVisibility(View.VISIBLE);
 			mPhotoQualityLayout.setVisibility(View.VISIBLE);
@@ -484,11 +479,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mHandsetLayout.setVisibility(View.VISIBLE);
 
 			mADASAssistanceLayout.setVisibility(View.VISIBLE);
-			mParkingSleepHintText.setText(this.getResources().getString(R.string.str_settings_sleep_hint_text_t1));
 			mParkingSecurityHintText
 					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g2));
 			mCarrecorderWonderfulLine.setVisibility(View.GONE);
-//			mCarrecorderSensitivityLine.setVisibility(View.GONE);
 		}
 
 		mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
