@@ -48,7 +48,7 @@ public class StorageCpacityQueryActivity extends CarRecordBaseActivity implement
 		super.onCreate(savedInstanceState);
 		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("storage", this);
 		addContentView(LayoutInflater.from(this).inflate(R.layout.carrecorder_storage_cpacity_query, null));
-		setTitle("容量查询");
+		setTitle(this.getResources().getString(R.string.rlcx_title));
 
 		initView();
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
@@ -128,14 +128,14 @@ public class StorageCpacityQueryActivity extends CarRecordBaseActivity implement
 						+ "==param2=" + param2);
 				String message = "";
 				if (param1 == RESULE_SUCESS) {
-					message = "SD卡格式化成功";
+					message = this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_success);
 					GolukApplication.getInstance().getIPCControlManager().queryRecordStorageStatus();
 				} else {
-					message = "SD卡格式化失败";
+					message = this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_fail);
 				}
 				CustomDialog dialog = new CustomDialog(this);
 				dialog.setMessage(message, Gravity.CENTER);
-				dialog.setLeftButton("确定", null);
+				dialog.setLeftButton(this.getResources().getString(R.string.user_repwd_ok), null);
 				dialog.show();
 			}
 
@@ -188,23 +188,29 @@ public class StorageCpacityQueryActivity extends CarRecordBaseActivity implement
 			break;
 		case R.id.mFormatSDCard:
 			CustomDialog dialog = new CustomDialog(this);
-			dialog.setMessage("是否格式化SD卡？", Gravity.CENTER);
-			dialog.setLeftButton("是", new OnLeftClickListener() {
-				@Override
-				public void onClickListener() {
-					if (GolukApplication.getInstance().getIpcIsLogin()) {
-						boolean flag = GolukApplication.getInstance().getIPCControlManager().formatDisk();
-						GolukDebugUtils.e("xuhw", "YYYYYY=====formatDisk===flag=" + flag);
-						if (flag) {
-							mCustomFormatDialog = new CustomFormatDialog(StorageCpacityQueryActivity.this);
-							mCustomFormatDialog.setCancelable(false);
-							mCustomFormatDialog.setMessage("正在格式化SD卡，可能需要1~2分钟，请稍候...");
-							mCustomFormatDialog.show();
+			dialog.setMessage(
+					this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_dialog_message),
+					Gravity.CENTER);
+			dialog.setLeftButton(
+					this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_dialog_yes),
+					new OnLeftClickListener() {
+						@Override
+						public void onClickListener() {
+							if (GolukApplication.getInstance().getIpcIsLogin()) {
+								boolean flag = GolukApplication.getInstance().getIPCControlManager().formatDisk();
+								GolukDebugUtils.e("xuhw", "YYYYYY=====formatDisk===flag=" + flag);
+								if (flag) {
+									mCustomFormatDialog = new CustomFormatDialog(StorageCpacityQueryActivity.this);
+									mCustomFormatDialog.setCancelable(false);
+									mCustomFormatDialog.setMessage(StorageCpacityQueryActivity.this.getResources()
+											.getString(R.string.str_carrecorder_storage_format_sdcard_formating));
+									mCustomFormatDialog.show();
+								}
+							}
 						}
-					}
-				}
-			});
-			dialog.setRightButton("否", null);
+					});
+			dialog.setRightButton(
+					this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_dialog_no), null);
 			dialog.show();
 			break;
 

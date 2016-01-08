@@ -603,4 +603,23 @@
 	<string name="str_vote_share_title">极路客投票分享</string>
 	
 	<string name="str_version_text">极路客版本</string>
+	<string name="str_carrecorder_storage_hint_text">温馨提示：\n请使用正规品牌Class 10及以上规格的存储卡，
+	    存储卡质量问题会导致无法正常录像。</string>
+	<string name="str_carrecorder_storage_all">SD卡总容量</string>
+	<string name="str_carrecorder_storage_use">已用空间</string>
+	<string name="str_carrecorder_storage_cycle">循环视频可用</string>
+	<string name="str_carrecorder_storage_wonderful">精彩视频可用</string>
+	<string name="str_carrecorder_storage_emergency">紧急视频可用</string>
+	<string name="str_carrecorder_storage_size_hint_text">每种类型的视频都有独立的空间大小分配。当剩余空间不足时会自动	循环覆盖掉早期的视频影像。</string>
+	<string name="str_carrecorder_storage_size_other">其它可用</string>
+	<string name="str_carrecorder_storage_size_other_hint_text">极路客正常运行中所产生的临时文件。</string>
+	<string name="str_carrecorder_storage_format_sdcard">格式化SD卡</string>
+	<string name="str_carrecorder_storage_format_sdcard_hint_text">清除SD卡中所有内容。</string>
+	<string name="str_carrecorder_storage_format_sdcard_success">SD卡格式化成功</string>
+	<string name="str_carrecorder_storage_format_sdcard_fail">SD卡格式化失败</string>
+	<string name="str_carrecorder_storage_format_sdcard_dialog_message">是否格式化SD卡？</string>
+	<string name="str_carrecorder_storage_format_sdcard_dialog_yes">是</string>
+	<string name="str_carrecorder_storage_format_sdcard_dialog_no">否</string>
+	<string name="str_carrecorder_storage_format_sdcard_formating">正在格式化SD卡，可能需要1~2分钟，请稍候...</string>
+	
 </resources>

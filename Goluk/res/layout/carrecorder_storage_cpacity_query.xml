@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|left"
-            android:text="SD卡总容量"
+            android:text="@string/str_carrecorder_storage_all"
             android:textColor="@color/setting_black_color"
             android:textSize="16sp" />
 
@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|left"
-            android:text="已用空间"
+            android:text="@string/str_carrecorder_storage_use"
             android:textColor="@color/setting_black_color"
             android:textSize="16sp" />
 
@@ -91,7 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|left"
-            android:text="循环视频可用"
+            android:text="@string/str_carrecorder_storage_cycle"
             android:textColor="@color/setting_black_color"
             android:textSize="16sp" />
 
@@ -130,7 +130,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|left"
-            android:text="精彩视频可用"
+            android:text="@string/str_carrecorder_storage_wonderful"
             android:textColor="@color/setting_black_color"
             android:textSize="16sp" />
 
@@ -164,7 +164,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|left"
-            android:text="紧急视频可用"
+            android:text="@string/str_carrecorder_storage_emergency"
             android:textColor="@color/setting_black_color"
             android:textSize="16sp" />
 
@@ -192,7 +192,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="每种类型的视频都有独立的空间大小分配。当剩余空间不足时会自动	循环覆盖掉早期的视频影像。"
+            android:text="@string/str_carrecorder_storage_size_hint_text"
             android:textColor="@color/setting_right_text_color"
             android:textSize="10sp" />
     
@@ -209,7 +209,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|left"
-            android:text="其它可用"
+            android:text="@string/str_carrecorder_storage_size_other"
             android:textColor="@color/setting_black_color"
             android:textSize="16sp" />
 
@@ -241,7 +241,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="极路客正常运行中所产生的临时文件。"
+            android:text="@string/str_carrecorder_storage_size_other_hint_text"
             android:textColor="@color/setting_right_text_color"
             android:textSize="10sp" />
     
@@ -259,7 +259,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|left"
-            android:text="格式化SD卡"
+            android:text="@string/str_carrecorder_storage_format_sdcard"
             android:textColor="@color/setting_black_color"
             android:textSize="16sp" />
 
@@ -287,13 +287,23 @@
     
     <TextView
         	android:paddingLeft="15dp"
-        	android:paddingBottom="20dp"
+        	android:paddingBottom="10dp"
         	android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="清除SD卡中所有内容。"
+            android:text="@string/str_carrecorder_storage_format_sdcard_hint_text"
             android:textColor="@color/setting_right_text_color"
             android:textSize="10sp" />
+    
+    <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:textSize="10sp"
+        android:textColor="@color/setting_black_color"
+        android:text="@string/str_carrecorder_storage_hint_text"/>
 
 </LinearLayout>
