@@ -771,11 +771,11 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 			break;
 		}
 
-//		if (!from.equals("local")) {
-//			if (!isNetworkConnected()) {
-//				msg = "网络访问异常，请重试！";
-//			}
-//		}
+		if (!from.equals("local")) {
+			if (!isNetworkConnected()) {
+				msg = "网络访问异常，请重试！";
+			}
+		}
 
 		error = true;
 		GolukDebugUtils.e("xuhw", "BBBBBB=====onError==arg1=" + arg1 + "==arg2=" + arg2);
@@ -785,6 +785,22 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		dialog(msg);
 
 		return true;
+	}
+
+	/**
+	 * 检查是否有可用网络
+	 * 
+	 * @return
+	 * @author xuhw
+	 * @date 2015年6月5日
+	 */
+	public boolean isNetworkConnected() {
+		ConnectivityManager mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+		if (mNetworkInfo != null) {
+			return mNetworkInfo.isAvailable();
+		}
+		return false;
 	}
 
 	@Override

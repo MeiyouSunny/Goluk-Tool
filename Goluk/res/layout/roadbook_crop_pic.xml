@@ -33,7 +33,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="54dp"
             android:textSize="16sp"
-            android:background="#161819"
+            android:textColor="@color/white"
+            android:background="@null"
             android:layout_centerVertical="true"
             android:text="取消"/>
         
@@ -43,7 +44,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="54dp"
             android:textSize="16sp"
-            android:background="#161819"
+            android:textColor="@color/white"
+            android:background="@null"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:text="保存头像"/>
