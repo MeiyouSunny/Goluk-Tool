@@ -308,6 +308,37 @@
             android:theme="@android:style/Theme.Translucent"
             android:windowSoftInputMode="adjustResize" >
         </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.adas.AdasVerificationActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" 
+            android:theme="@android:style/Theme.NoTitleBar"/>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.adas.AdasGuideActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" 
+            android:theme="@android:style/Theme.NoTitleBar"/>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.carrecorder.settings.AdasSensibilityActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" 
+            android:theme="@android:style/Theme.NoTitleBar"/>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.adas.AdasVehicleConfigActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" 
+            android:windowSoftInputMode="stateAlwaysVisible|adjustPan"
+            android:theme="@android:style/Theme.NoTitleBar"/>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.adas.AdasSeletedVehicleTypeActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" 
+            android:theme="@android:style/Theme.NoTitleBar"/>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.adas.AdasConfigActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" 
+            android:theme="@android:style/Theme.NoTitleBar"/>
         <!-- ###################Glide使用volley传输###################### -->
         <meta-data
             android:name="cn.com.mobnote.util.GlideConfiguration"

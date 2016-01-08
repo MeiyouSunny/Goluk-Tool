@@ -17,11 +17,18 @@ public class GolukFileUtils {
 
 	/** 活动列表 */
 	public static final String PROMOTION_LIST_STRING = "promotion_list_string";
-	/** 自动同步照片到手机相册 **/
+
+	/**自动同步照片到手机相册**/
 	public static final String PROMOTION_AUTO_PHOTO = "promotion_auto_photo";
+
+	/**ADAS开关**/
+	public static final String ADAS_FLAG = "adas_flag";
 
 	/** 绑定历史历史记录 */
 	public static final String KEY_BIND_HISTORY_LIST = "bind_history_list";
+
+	/**ADAS自定义车辆**/
+	public static final String ADAS_CUSTOM_VEHICLE = "adas_custom_vehicle";
 
 	public static void remove(String name) {
 		Context context = GolukApplication.getInstance();

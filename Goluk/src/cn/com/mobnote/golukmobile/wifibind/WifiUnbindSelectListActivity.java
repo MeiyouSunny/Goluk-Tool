@@ -30,6 +30,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectListAdapter.HeadViewHodler;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
@@ -51,8 +52,8 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	private CustomLoadingDialog mLoadingDialog = null;
 	public GolukApplication mApp = null;
 	private boolean isCanReceiveFailed = true;
-	/** 控制ListView Header的显示与删除 */
-	private boolean isHasHeaderView = false;
+
+	private int mHeadContentHeight = (int) (88 * GolukUtils.mDensity);
 
 	/** 控制是否可以接受连接信息 */
 	// private boolean isCanAcceptMsg = true;
@@ -82,7 +83,9 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		mEmptyLayout = (RelativeLayout) findViewById(R.id.emptyLayout);
 		mCloseBtn = (ImageView) findViewById(R.id.close_btn);
 		mEditBtn = (Button) findViewById(R.id.edit_btn);
+		mHeadView = LayoutInflater.from(this).inflate(R.layout.unbind_connection_head, null);
 		findViewById(R.id.addMoblieBtn).setOnClickListener(this);
+
 	}
 
 	/**
@@ -96,6 +99,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	/** 初始化数据 **/
 	private void initData() {
 		mListView.setEmptyView(mEmptyLayout);
+		mListView.addHeaderView(mHeadView);
 		mListAdapter = new WifiUnbindSelectListAdapter(this);
 		getBindHistoryData();
 	}
@@ -110,37 +114,28 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		if (binds != null) {
 			mEditBtn.setVisibility(View.VISIBLE);
 			if (isCanShowListViewHead()) {
-				GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--size: "
-						+ binds.size());
 				for (int i = 0; i < binds.size(); i++) {
 					WifiBindHistoryBean bind = binds.get(i);
 					if (bind.state == WifiBindHistoryBean.CONN_USE) {
 						mWifiBindConnectData = bind;
-						GolukDebugUtils.e("",
-								"select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--select ssid: "
-										+ mWifiBindConnectData.ipc_ssid);
 						refreshHeadData();
 						if (binds.size() > 1) {
 							binds.remove(i);
 							binds.add(mWifiBindConnectData);
 						}
-
 						break;
 					}
 				}
 			} else {
-				GolukDebugUtils.e("",
-						"select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--not show: ");
-				if (null != mHeadView && isHasHeaderView) {
-					this.removeListViewHead(mHeadView);
-				}
+				mHeadView.setPadding(0, -1 * mHeadContentHeight, 0, 0);
+				mHeadView.setVisibility(View.GONE);
+
 			}
-			GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--setData: "
-					+ binds.size());
 		} else {
 			mEditBtn.setText(this.getResources().getString(R.string.edit_text));// 编辑
 			mEditBtn.setVisibility(View.GONE);
 		}
+		mListView.setAdapter(mListAdapter);
 		mListAdapter.setData(binds);
 		mListAdapter.notifyDataSetChanged();
 	}
@@ -148,23 +143,13 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 	public boolean isCanShowListViewHead() {
 		WifiBindHistoryBean temp = WifiBindDataCenter.getInstance().getCurrentUseIpc();
 		if (mApp.isIpcLoginSuccess || (mApp.mWiFiStatus != MainActivity.WIFI_STATE_FAILED && null != temp)) {
-			GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------isCanShowListViewHead--true");
 			return true;
 		}
-		GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------isCanShowListViewHead--false");
 		return false;
 	}
 
 	private void refreshHeadData() {
-		if (mHeadView == null) {
-			mHeadView = LayoutInflater.from(this).inflate(R.layout.unbind_connection_head, null);
-		}
-		if (!isHasHeaderView) {
-			addListViewHead(mHeadView);
-		}
-
-		mListView.setAdapter(mListAdapter);
-
+		mHeadView.setPadding(0, 0, 0, 0);
 		mHeadView.setVisibility(View.VISIBLE);
 		if (mHeadData == null) {
 			mHeadData = new HeadViewHodler();
@@ -280,25 +265,6 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 		}
 	}
 
-	/**
-	 * 添加头部
-	 * 
-	 * @param view
-	 */
-	public void addListViewHead(View view) {
-		GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------addListViewHead: ");
-		isHasHeaderView = true;
-		mListView.addHeaderView(view);
-	}
-
-	public void removeListViewHead(View view) {
-		GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------removeListViewHead: ");
-		isHasHeaderView = false;
-		mListView.removeHeaderView(view);
-		mListView.setAdapter(mListAdapter);
-
-		// view.setVisibility(View.GONE);
-	}
 
 	@Override
 	public void onClick(View view) {

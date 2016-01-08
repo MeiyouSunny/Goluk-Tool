@@ -27,6 +27,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -72,6 +73,7 @@ import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.golukmobile.videosuqare.RingView;
 import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectListActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.util.GolukFileUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.SortByDate;
 import cn.com.mobnote.wifibind.WifiRsBean;
@@ -113,6 +115,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	public static final int MOUNTS = 114;
 	/** 精彩视频下载检查计时 */
 	public static final int DOWNLOADWONDERFULVIDEO = 119;
+	/** 隐藏adasView **/
+	private static final int CLOSE_ADAS_VIEW = 120;
 
 	public enum VideoType {
 		mounts, emergency, idle
@@ -283,7 +287,34 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private ImageView mRedRoom;
 	
 	private boolean isRecVideo = false;
-
+	
+	private ImageView mAdasImg = null;
+	
+	private RelativeLayout mAdasStatusLayout = null;
+	
+	private ImageView mAdasIcon = null;
+	public static final String ADAS_LINE_ST_LEFT = "adas_line_st_left";
+	public static final String ADAS_LINE_ST_RIGHT = "adas_line_st_right";
+	public static final String ADAS_DISTANCE_ST_LEFT = "adas_distance_left";
+	public static final String ADAS_DISTANCE_ST_RIGHT = "adas_distance_right";
+	public static final String ADAS_TARGET_STATE = "adas_target_state";
+	public static final String ADAS_TARGET_DISTANCE = "adas_target_distance";
+	public static final String ADAS_TARGET_SPEED = "adas_target_speed";
+	
+	/**距离左右线的警报状态**/
+	public static int mAdasContentState = 2;
+	
+	/**距离左右线的 厘米**/
+	public static int mAdasContentDistance = 300;
+	
+	/**距离前车的近 **/
+	public static int mAdasContentTargetState2 = 2;
+	
+	/**距离前车的太近 **/
+	public static int mAdasContentTargetState3 = 3;
+	/**adas的显示时长**/
+	public static long mAdasTimer = 2000;
+	
 	@SuppressLint("HandlerLeak")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -323,6 +354,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					break;
 				case DOWNLOADWONDERFULVIDEO:
 					wonderfulVideoDownloadShow();
+					break;
+				case CLOSE_ADAS_VIEW:
+					if(mAdasStatusLayout!= null){
+						mAdasStatusLayout.setVisibility(View.GONE);
+					}
 					break;
 				default:
 					break;
@@ -512,6 +548,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 		new1 = (ImageView) findViewById(R.id.new1);
 		new2 = (ImageView) findViewById(R.id.new2);
+		mAdasImg = (ImageView) findViewById(R.id.adas_status_img);
+		mAdasStatusLayout = (RelativeLayout) findViewById(R.id.adas_status);
+		mAdasIcon = (ImageView) findViewById(R.id.adas_icon);
 
 		liveVideo.setBackgroundResource(R.drawable.driving_voice_off_icon);
 
@@ -1219,6 +1258,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		if (mApp.mIPCControlManager.isG1Relative()) {
 			GolukApplication.getInstance().stopDownloadList();// 停止视频同步
 		}
+		
+		if(mApp.mIPCControlManager.mProduceName.equals(IPCControlManager.T1_SIGN)){
+			setAdasIconState(true);
+		}else{
+			setAdasIconState(false);
+		}
 
 		if (isShowPlayer) {
 			GolukDebugUtils.e("xuhw", "YYYYYY======isConnecting==" + isConnecting);
@@ -1256,7 +1301,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			} else {
 				mVideoResolutions.setBackgroundResource(R.drawable.icon_hd720);
 			}
-				
 		}
 		// 添加定位通知及反编码通知
 		// mApp.addLocationListener(SelfContextTag, this);
@@ -1702,7 +1746,45 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				}
 			}
 			break;
-
+		case IPC_VDCP_Msg_PushEvent_ADAS://adas的警报
+			if (param1 == RESULE_SUCESS) {
+				try {
+					JSONObject data = new JSONObject(param2.toString());
+					String topic = data.optString("topic");
+					int content = data.optInt("content");
+					if(ADAS_LINE_ST_LEFT.equals(topic)){//车靠左太近
+						if(content == mAdasContentState){
+							setAdasStatusImage(true, 1);
+							mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, mAdasTimer);
+						}
+					}else if(ADAS_LINE_ST_RIGHT.equals(topic)){//靠右太近
+						if(content == mAdasContentState){
+							setAdasStatusImage(true, 2);
+							mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, mAdasTimer);
+						}
+					}else if(ADAS_DISTANCE_ST_LEFT.equals(topic)){
+						//预留扩展
+					}else if(ADAS_DISTANCE_ST_RIGHT.equals(topic)){
+						//预留扩展
+					}else if(ADAS_TARGET_STATE.equals(topic)){//距离前车近
+						if(content == mAdasContentTargetState2){
+							setAdasStatusImage(true, 3);
+							mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, mAdasTimer);
+						}
+					}else if(ADAS_TARGET_DISTANCE.equals(topic)){//距离前车太近
+						if(content == mAdasContentTargetState3){
+							setAdasStatusImage(true, 4);
+							mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, mAdasTimer);
+						}
+					}else if(ADAS_TARGET_SPEED.equals(topic)){
+						//预留扩展
+					}
+						
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+			break;
 		default:
 			break;
 		}
@@ -2075,9 +2157,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		}
 		List<String> list = FileInfoManagerUtils.getFileNames(path, "(.+?mp4)");
 
-//
-//		int flog = 0;
-//		String vn = "";
 		Collections.sort(list, new SortByDate());
 
 		List<String> result = new ArrayList<String>();
@@ -2088,38 +2167,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			result.add(list.get(1));
 		}
 		return result;
-		// if (list != null && list.size() > 0) {
-		// File vfile = null;
-		// for (int i = list.size() - 1; i >= 0; i--) {
-		// vn = list.get(i);
-		// vfile = new File(path + vn);
-		//
-		// if (vfile.exists()) {
-		// flog++;
-		// if (flog <= 1) {
-		// videoname1 = vn;
-		// } else if (flog == 2) {
-		// videoname2 = vn;
-		// } else {
-		// break;
-		// }
-		//
-		// }
-		// }
-		//
-		//
-		// if (!"".equals(videoname1)) {
-		// result.add(videoname1);
-		// }
-		//
-		// if (!"".equals(videoname2)) {
-		// result.add(videoname2);
-		// }
-		//
-		// return result;
-		// } else {
-		// return null;
-		// }
 
 	}
 
@@ -2215,5 +2262,48 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			}
 		}
 
+	}
+	
+	/**
+	 * 设置adas的显示和隐藏  以及 adas的显示图片
+	 * @param flog
+	 * @param status
+	 */
+	public void setAdasStatusImage(boolean flog,int status){
+		if(flog){
+			mAdasStatusLayout.setVisibility(View.VISIBLE);
+		}else{
+			mAdasStatusLayout.setVisibility(View.GONE);
+		}
+		
+		if(status == 1){
+			mAdasImg.setImageResource(R.drawable.recorder_carleft_img);//车向左偏移
+		}else if(status == 2){
+			mAdasImg.setImageResource(R.drawable.recorder_carright_img);//车向右偏移
+		}else if(status == 3){
+			mAdasImg.setImageResource(R.drawable.recorder_near_img);//距前车进
+		}else if(status == 4){
+			mAdasImg.setImageResource(R.drawable.recorder_verynear_img);//距前车过进
+		}
+		
+	}
+	
+	
+	/**
+	 * 设置adas的icon
+	 */
+	public void setAdasIconState(boolean isT1){
+		if(isT1){
+			mAdasIcon.setVisibility(View.VISIBLE);
+			int  flag = GolukFileUtils.loadInt(GolukFileUtils.ADAS_FLAG, 0);//0 关   1：开
+			if(flag == 1){
+				mAdasIcon.setImageResource(R.drawable.recorder_adas_on);
+			}else{
+				mAdasIcon.setImageResource(R.drawable.recorder_adas_off);
+			}
+		}else{
+			mAdasIcon.setVisibility(View.GONE);
+		}
+		
 	}
 }
