@@ -300,6 +300,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	public static final String ADAS_TARGET_STATE = "adas_target_state";
 	public static final String ADAS_TARGET_DISTANCE = "adas_target_distance";
 	public static final String ADAS_TARGET_SPEED = "adas_target_speed";
+	public static final String ADAS_FONT_STARTUP = "adas_font_startup";
 	
 	/**距离左右线的警报状态**/
 	public static int mAdasContentState = 2;
@@ -1747,6 +1748,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			}
 			break;
 		case IPC_VDCP_Msg_PushEvent_ADAS://adas的警报
+			GFileUtils.writeIPCLog("============行车记录仪=======adas推送成功========222222=====param1=" + param1
+					+ "=====param2=" + param2);
 			if (param1 == RESULE_SUCESS) {
 				try {
 					JSONObject data = new JSONObject(param2.toString());
@@ -1778,6 +1781,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 						}
 					}else if(ADAS_TARGET_SPEED.equals(topic)){
 						//预留扩展
+					}else if(ADAS_FONT_STARTUP.equals(topic)){
+						if(content == 200){//ADAS前车起步提醒
+							
+						}
 					}
 						
 				} catch (JSONException e) {
