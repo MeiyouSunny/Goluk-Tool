@@ -497,7 +497,7 @@
 	<string name="str_day">日</string>
 	<string name="str_hour">时</string>
 	<string name="str_minute">分</string>
-	<string name="str_adas_config">前向距离安全辅助配置</string>
+	<string name="str_adas_config">前向距离安全预警配置</string>
 	<string name="str_video_loading">视频加载中，请稍候...</string>
 	<!-- adas -->
 	<string name="str_adas_verification_des">请参考下图，将上方的十字移动至道路尽头的中央</string>
@@ -506,8 +506,8 @@
 	<string name="str_adas_guide_des">极路客Smart GO辅助驾驶系统，可以为您提供先进的前向距离安全预警提示。</string>
 	<string name="str_adas_guide_des1">请您将爱车行驶到车辆较少的车道中央</string>
 	<string name="str_adas_guide_des2">停车后，根据配置引导提示，完成初次使用配置</string>
-	<string name="str_adas_driving_safety_assistance">向前距离安全提示</string>
-	<string name="str_adas_forward_warning_sensibility">向前距离报警灵敏度</string>
+	<string name="str_adas_driving_safety_assistance">前向距离安全预警</string>
+	<string name="str_adas_forward_warning_sensibility">前向距离报警灵敏度</string>
 	<string name="str_adas_road_offset_sensibility">道路偏移报警灵敏度</string>
 	<string name="str_adas_assistance_info">辅助信息显示（OSD叠加）</string>
 	<string name="str_adas_high_sensibility">高灵敏度</string>
@@ -529,6 +529,8 @@
 	<string name="str_high">高</string>
 	<string name="str_adas_hint">您还没有配置前向距离安全提示，是否现在去配置？</string>
 	<string name="str_adas_dialog_confirm">去配置</string>
+	<string name="str_adas_forward_car_close_warning">前向车距过近提示</string>
+	<string name="str_adas_forward_car_setup_hint">前向车辆启动提示</string>
 	<string name="str_custom">自定义</string>
 	<string name="str_adas_paramter_error">为了准确地向您提供驾驶安全辅助信息，请输入正确的位置参数哦</string>
 	<string name="unbind_select_type_title">选择您的极路客进行配对</string>
@@ -601,7 +603,6 @@
 	<string name="str_vote_now">立即投票</string>
 	<string name="str_vote_share_real_description">极路客投票分享(使用#极路客Goluk#拍摄)</string>
 	<string name="str_vote_share_title">极路客投票分享</string>
-	
 	<string name="str_version_text">极路客版本</string>
 	<string name="str_carrecorder_storage_hint_text">温馨提示：\n请使用正规品牌Class 10及以上规格的存储卡，
 	    存储卡质量问题会导致无法正常录像。</string>

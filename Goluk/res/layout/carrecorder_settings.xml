@@ -790,6 +790,74 @@
                     android:layout_marginLeft="15dp"
                     android:background="@color/setting_line_color" />
             </RelativeLayout!-->
+            <!-- 前向车距过近提示 -->
+            <RelativeLayout
+                android:id="@+id/layout_settings_forward_car_close_warning"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" 
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_adas_forward_car_close_warning"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btn_settings_forward_car_close_warning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            <!-- 前向车辆启动提示 -->
+            <RelativeLayout
+                android:id="@+id/layout_settings_forward_car_setup_hint"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" 
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_adas_forward_car_setup_hint"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btn_settings_forward_car_setup_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
             <!-- 辅助信息显示 -->
             <RelativeLayout
                 android:id="@+id/layout_settings_assistance_info"
