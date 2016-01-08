@@ -36,17 +36,17 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_layout"
         android:layout_marginTop="10dp" >
-        
-        <ImageView 
+
+        <ImageView
             android:id="@+id/changeBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:src="@drawable/recorder_changeipc_icon"/>
+            android:src="@drawable/recorder_changeipc_icon" />
 
         <TextView
             android:id="@+id/mConnectTip"
@@ -74,9 +74,21 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/title_layout"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/carrecorder_liveindex_icon_1080"
+        android:contentDescription="@string/def" />
+
+    <ImageView
+        android:id="@+id/adas_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_layout"
         android:layout_marginRight="8dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/carrecorder_liveindex_icon_1080"
+        android:layout_toLeftOf="@id/mVideoResolutions"
+        android:background="@drawable/recorder_adas_on"
         android:contentDescription="@string/def" />
 
     <RelativeLayout
@@ -91,7 +103,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-           <RelativeLayout
+            <RelativeLayout
                 android:id="@+id/vLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
@@ -156,15 +168,15 @@
                 android:background="@drawable/video_linking_pic"
                 android:visibility="gone" />
         </RelativeLayout>
-        
+
         <ImageButton
             android:id="@+id/video_off"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/mFullScreen"
-            android:layout_marginRight="6dp"
-            android:layout_marginBottom="6dp"
             android:layout_alignRight="@+id/mRtmpPlayerLayout"
+            android:layout_marginBottom="6dp"
+            android:layout_marginRight="6dp"
             android:background="@drawable/recorder_btn_sound"
             android:contentDescription="@string/def" />
 
@@ -174,8 +186,8 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/mRtmpPlayerLayout"
             android:layout_alignRight="@+id/mRtmpPlayerLayout"
-            android:layout_marginRight="6dp"
             android:layout_marginBottom="6dp"
+            android:layout_marginRight="6dp"
             android:background="@drawable/carrecorder_btn_full_press"
             android:contentDescription="@string/def" />
     </RelativeLayout>
@@ -335,8 +347,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_centerVertical="true" >
+            android:layout_centerVertical="true"
+            android:gravity="center_horizontal" >
 
             <RelativeLayout
                 android:id="@+id/new_image_layout"
@@ -486,15 +498,21 @@
             android:visibility="invisible" />
     </RelativeLayout>
 
-    <!--
-         <Button
-        android:id="@+id/mShareBtn"
-        android:layout_width="113.33dp"
-        android:layout_height="48dp"
-        android:layout_above="@+id/m8sBtn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:visibility="gone" />
-    -->
+
+    <RelativeLayout
+        android:id="@+id/adas_status"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#cc000000"
+        android:visibility="gone">
+        
+        <ImageView 
+            android:id="@+id/adas_status_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/recorder_verynear_img"/>
+        
+    </RelativeLayout>
 
 </RelativeLayout>
