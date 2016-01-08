@@ -24,6 +24,7 @@ import cn.com.mobnote.eventbus.EventAdasConfigStatus;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.PlayUrlManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
@@ -147,6 +148,25 @@ public class AdasVerificationActivity extends BaseActivity implements OnClickLis
 			break;
 		case R.id.button_verify_complete:
 			if (GolukUtils.isFastDoubleClick()) {
+				return;
+			}
+			if (!GolukApplication.getInstance().getIpcIsLogin()) {
+				if (mCustomDialog == null) {
+					mCustomDialog = new CustomDialog(this);
+				}
+
+				mCustomDialog.setCancelable(false);
+				mCustomDialog.setMessage(this.getResources().getString(R.string.str_ipc_dialog_normal));
+				mCustomDialog.setLeftButton(this.getResources().getString(R.string.str_button_ok), new OnLeftClickListener() {
+					@Override
+					public void onClickListener() {
+						Intent it = new Intent(AdasVerificationActivity.this, CarRecorderActivity.class);
+						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						startActivity(it);
+					}
+				});
+				mCustomDialog.show();
 				return;
 			}
 			Point point = mFrameLayoutOverlay.getLocation();

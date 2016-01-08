@@ -24,9 +24,12 @@ import cn.com.mobnote.eventbus.EventAdasConfigStatus;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
+import cn.com.mobnote.golukmobile.wifibind.WiFiLinkCompleteActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukFileUtils;
 import cn.com.mobnote.util.GolukUtils;
@@ -50,6 +53,7 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 	private int mPosition = -1;
 
 	private CustomLoadingDialog mCustomLoadingDialog;
+	private CustomDialog mCustomDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -183,6 +187,25 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 			if (GolukUtils.isFastDoubleClick()) {
 				return;
 			}
+			if (!GolukApplication.getInstance().getIpcIsLogin()) {
+				if (mCustomDialog == null) {
+					mCustomDialog = new CustomDialog(this);
+				}
+
+				mCustomDialog.setCancelable(false);
+				mCustomDialog.setMessage(this.getResources().getString(R.string.str_ipc_dialog_normal));
+				mCustomDialog.setLeftButton(this.getResources().getString(R.string.str_button_ok), new OnLeftClickListener() {
+					@Override
+					public void onClickListener() {
+						Intent it = new Intent(AdasSeletedVehicleTypeActivity.this, CarRecorderActivity.class);
+						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+						startActivity(it);
+					}
+				});
+				mCustomDialog.show();
+				return;
+			}
 			int position = mCarTypeAdapter.getSelectedId();
 			VehicleParamterBean selectedItem = (VehicleParamterBean) mCarTypeAdapter.getItem(position);
 			mAdasConfigParamter.head_offset = selectedItem.head_offset;
@@ -284,6 +307,10 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener(TAG);
 		}
 		closeLoading();
+		if (mCustomDialog != null && mCustomDialog.isShowing()) {
+			mCustomDialog.dismiss();
+		}
+		mCustomDialog = null;
 	}
 
 	public void onEventMainThread(EventAdasConfigStatus event) {

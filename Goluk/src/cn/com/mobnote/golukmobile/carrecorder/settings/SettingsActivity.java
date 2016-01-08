@@ -148,6 +148,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 //	/**道路偏移报警灵敏度**/
 //	private RelativeLayout mADASOffsetWarningLayout = null;
 //	private TextView mADASOffsetWarningTextView = null;
+	/**前向车距过近提示**/
+	private RelativeLayout mADASFcarCloseLayout = null;
+	private Button mADASFcarCloseBtn = null;
+	/**前向车辆启动提示**/
+	private RelativeLayout mADASFcarSetupLayout = null;
+	private Button mADASFcarSetupBtn = null;
 	/**辅助信息显示**/
 	private RelativeLayout mADASOsdLayout = null;
 	private Button mADASOsdBtn = null;
@@ -250,6 +256,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 //			mADASOffsetWarningLayout.setVisibility(View.VISIBLE);
 			mADASOsdLayout.setVisibility(View.VISIBLE);
 			mADASConfigLayout.setVisibility(View.VISIBLE);
+			mADASFcarCloseLayout.setVisibility(View.VISIBLE);
+			mADASFcarSetupLayout.setVisibility(View.VISIBLE);
 			mADASAssistanceBtn.setBackgroundResource(R.drawable.set_open_btn);
 			mADASAssistanceBtn.setTag(1);
 		} else {
@@ -260,12 +268,16 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 //			mADASOffsetWarningLayout.setVisibility(View.GONE);
 			mADASOsdLayout.setVisibility(View.GONE);
 			mADASConfigLayout.setVisibility(View.GONE);
+			mADASFcarCloseLayout.setVisibility(View.GONE);
+			mADASFcarSetupLayout.setVisibility(View.GONE);
 		}
 
 		/**adas需求变更 暂时拿掉**/
 //		refreshFCWUI();
 //		refreshLDWUI();
 		refreshOSDUI();
+		refreshFcarCloseUI();
+		refreshFcarSetupUI();
 	}
 
 	private void checkGetState() {
@@ -303,6 +315,27 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			GolukApplication.getInstance().getIPCControlManager().setKitMode(setKitJson());
 		}
 	}
+
+	private void refreshFcarCloseUI() {
+		if (mAdasConfigParamter.osd == 0) {
+			mADASFcarCloseBtn.setBackgroundResource(R.drawable.set_close_btn);
+			mADASFcarCloseBtn.setTag(0);
+		} else {
+			mADASFcarCloseBtn.setBackgroundResource(R.drawable.set_open_btn);
+			mADASFcarCloseBtn.setTag(1);
+		}
+	}
+
+	private void refreshFcarSetupUI() {
+		if (mAdasConfigParamter.osd == 0) {
+			mADASFcarSetupBtn.setBackgroundResource(R.drawable.set_close_btn);
+			mADASFcarSetupBtn.setTag(0);
+		} else {
+			mADASFcarSetupBtn.setBackgroundResource(R.drawable.set_open_btn);
+			mADASFcarSetupBtn.setTag(1);
+		}
+	}
+
 	private void refreshOSDUI() {
 		if (mAdasConfigParamter.osd == 0) {
 			mADASOsdBtn.setBackgroundResource(R.drawable.set_close_btn);
@@ -312,7 +345,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mADASOsdBtn.setTag(1);
 		}
 	}
-
 	/**adas需求变更 暂时拿掉**/
 //	private void refreshFCWUI() {
 //		if (mAdasConfigParamter.fcw_warn_level == 0) {
@@ -403,6 +435,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 //		mADASForwardWarningTextView = (TextView) findViewById(R.id.tv_settings_adas_forward_sensibility);
 //		mADASOffsetWarningLayout = (RelativeLayout) findViewById(R.id.layout_settings_adas_offset_sensibility);
 //		mADASOffsetWarningTextView = (TextView) findViewById(R.id.tv_settings_adas_offset_sensibility);
+		mADASFcarCloseLayout = (RelativeLayout) findViewById(R.id.layout_settings_forward_car_close_warning);
+		mADASFcarCloseBtn = (Button) findViewById(R.id.btn_settings_forward_car_close_warning);
+		mADASFcarSetupLayout = (RelativeLayout) findViewById(R.id.layout_settings_forward_car_setup_hint);
+		mADASFcarSetupBtn = (Button) findViewById(R.id.btn_settings_forward_car_setup_hint);
 		mADASOsdLayout = (RelativeLayout) findViewById(R.id.layout_settings_assistance_info);
 		mADASOsdBtn = (Button) findViewById(R.id.btn_settings_assistance_info);
         mADASConfigLayout = (RelativeLayout) findViewById(R.id.layout_settings_adas_config);
@@ -504,6 +540,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		/**adas需求变更 暂时拿掉**/
 //		mADASForwardWarningLayout.setOnClickListener(this);//向前距离报警灵敏度
 //		mADASOffsetWarningLayout.setOnClickListener(this);//道路偏移报警灵敏度
+		mADASFcarCloseBtn.setOnClickListener(this);
+		mADASFcarSetupBtn.setOnClickListener(this);
 		mADASOsdBtn.setOnClickListener(this);//辅助信息显示
 		mADASConfigLayout.setOnClickListener(this);//ADAS配置
 	}
@@ -686,7 +724,32 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				}
 				GolukApplication.getInstance().getIPCControlManager()
 						.setT1AdasConfigOSD(mAdasConfigParamter.osd);
-				refreshOSDUI();
+				break;
+			case R.id.btn_settings_forward_car_close_warning:
+				if (mAdasConfigParamter == null) {
+					return;
+				}
+				showLoading();
+				if (mAdasConfigParamter.osd == 0) {
+					mAdasConfigParamter.osd = 1;
+				} else {
+					mAdasConfigParamter.osd = 0;
+				}
+				GolukApplication.getInstance().getIPCControlManager()
+						.setT1AdasConfigOSD(mAdasConfigParamter.osd);
+				break;
+			case R.id.btn_settings_forward_car_setup_hint:
+				if (mAdasConfigParamter == null) {
+					return;
+				}
+				showLoading();
+				if (mAdasConfigParamter.osd == 0) {
+					mAdasConfigParamter.osd = 1;
+				} else {
+					mAdasConfigParamter.osd = 0;
+				}
+				GolukApplication.getInstance().getIPCControlManager()
+						.setT1AdasConfigOSD(mAdasConfigParamter.osd);
 				break;
 			case R.id.layout_settings_adas_config:
 				if (mAdasConfigParamter == null) {
