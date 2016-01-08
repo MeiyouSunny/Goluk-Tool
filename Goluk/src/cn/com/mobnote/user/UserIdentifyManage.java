@@ -47,8 +47,13 @@ public class UserIdentifyManage {
 		} else {
 			isIdentify = "{\"PNumber\":\"" + phoneNumber + "\",\"type\":\"2\"}";
 		}
-		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetVCode,
+
+		if(null == mApp || null == mApp.mGoluk) {
+			return false;
+		} else {
+			return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetVCode,
 				isIdentify);
+		}
 	}
 
 	/**

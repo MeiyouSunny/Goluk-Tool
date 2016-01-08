@@ -843,7 +843,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 						String message = sms.getMessageBody();
 						String regEx = "[^0-9]";
 						Pattern p = Pattern.compile(regEx);
-						if (null != p) {
+						if (null != p && null != message) {
 							Matcher m = p.matcher(message);
 							if (null != m) {
 								strBody = m.replaceAll(" ").trim();
