@@ -84,7 +84,7 @@
         
     </RelativeLayout>
     <RelativeLayout
-        android:id="@+id/middle"
+        android:id="@+id/rl_video_quality_high720"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:background="@color/setting_white_color"
@@ -120,7 +120,7 @@
         
     </RelativeLayout>
     <RelativeLayout
-        android:id="@+id/high"
+        android:id="@+id/rl_video_quality_middle720"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:background="@color/setting_white_color"

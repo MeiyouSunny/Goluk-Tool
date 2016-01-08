@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -54,6 +56,8 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 	/** ipc设备型号 **/
 	private String mIPCName = "";
 	private int mSelect = 0;
+	
+	private RelativeLayout mLayoutHigh720, mLayoutMiddle720;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +88,8 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 		mLowIcon = (ImageButton) findViewById(R.id.dRight);
 		mMiddleIcon = (ImageButton) findViewById(R.id.zRight);
 		mHighIcon = (ImageButton) findViewById(R.id.gRight);
+		mLayoutHigh720 = (RelativeLayout) findViewById(R.id.rl_video_quality_high720);
+		mLayoutMiddle720 = (RelativeLayout) findViewById(R.id.rl_video_quality_middle720);
 
 		mArrayText = getResources().getStringArray(R.array.list_quality_ui);
 		mText = new TextView[] { mCloseText, mLowText, mMiddleText, mHighText };
@@ -92,6 +98,14 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 		bitrateArray = SettingsUtil.returnBitrate(this, mIPCName);
 
 		getArrays();
+		
+		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)) {
+			mLayoutHigh720.setVisibility(View.GONE);
+			mLayoutMiddle720.setVisibility(View.GONE);
+		} else {
+			mLayoutHigh720.setVisibility(View.VISIBLE);
+			mLayoutMiddle720.setVisibility(View.VISIBLE);
+		}
 	}
 
 	/**
@@ -103,8 +117,8 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 	private void setListener() {
 		findViewById(R.id.close).setOnClickListener(this);
 		findViewById(R.id.low).setOnClickListener(this);
-		findViewById(R.id.middle).setOnClickListener(this);
-		findViewById(R.id.high).setOnClickListener(this);
+		findViewById(R.id.rl_video_quality_high720).setOnClickListener(this);
+		findViewById(R.id.rl_video_quality_middle720).setOnClickListener(this);
 	}
 
 	@Override
@@ -120,10 +134,10 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 		case R.id.low:
 			setArrayUI(mArrayText[1]);
 			break;
-		case R.id.middle:
+		case R.id.rl_video_quality_high720:
 			setArrayUI(mArrayText[2]);
 			break;
-		case R.id.high:
+		case R.id.rl_video_quality_middle720:
 			setArrayUI(mArrayText[3]);
 			break;
 
