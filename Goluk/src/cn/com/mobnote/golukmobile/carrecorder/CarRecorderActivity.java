@@ -303,18 +303,18 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	public static final String ADAS_FONT_STARTUP = "adas_font_startup";
 	
 	/**距离左右线的警报状态**/
-	public static int mAdasContentState = 2;
+	public static final int ADASCONTENTSTATE = 2;
 	
 	/**距离左右线的 厘米**/
-	public static int mAdasContentDistance = 300;
+	public static final int ADASCONTENTDISTANCE = 300;
 	
 	/**距离前车的近 **/
-	public static int mAdasContentTargetState2 = 2;
+	public static final int ADASCONTENTTARGETSTATE2 =2;
 	
 	/**距离前车的太近 **/
-	public static int mAdasContentTargetState3 = 3;
+	public static final int ADASCONTENTTARGETSTATE3 = 3;
 	/**adas的显示时长**/
-	public static long mAdasTimer = 2000;
+	public static final long ADASTIMER = 2000;
 	
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -1756,28 +1756,28 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					String topic = data.optString("topic");
 					int content = data.optInt("content");
 					if(ADAS_LINE_ST_LEFT.equals(topic)){//车靠左太近
-						if(content == mAdasContentState){
+						if(content == ADASCONTENTSTATE){
 							setAdasStatusImage(true, 1);
-							mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, mAdasTimer);
+							mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
 						}
 					}else if(ADAS_LINE_ST_RIGHT.equals(topic)){//靠右太近
-						if(content == mAdasContentState){
+						if(content == ADASCONTENTSTATE){
 							setAdasStatusImage(true, 2);
-							mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, mAdasTimer);
+							mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
 						}
 					}else if(ADAS_DISTANCE_ST_LEFT.equals(topic)){
 						//预留扩展
 					}else if(ADAS_DISTANCE_ST_RIGHT.equals(topic)){
 						//预留扩展
 					}else if(ADAS_TARGET_STATE.equals(topic)){//距离前车近
-						if(content == mAdasContentTargetState2){
+						if(content == ADASCONTENTTARGETSTATE2){
 							setAdasStatusImage(true, 3);
-							mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, mAdasTimer);
+							mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
 						}
 					}else if(ADAS_TARGET_DISTANCE.equals(topic)){//距离前车太近
-						if(content == mAdasContentTargetState3){
+						if(content == ADASCONTENTTARGETSTATE3){
 							setAdasStatusImage(true, 4);
-							mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, mAdasTimer);
+							mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
 						}
 					}else if(ADAS_TARGET_SPEED.equals(topic)){
 						//预留扩展
