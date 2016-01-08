@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
@@ -163,8 +162,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	private CustomDialog mCustomDialog;
 	/**自动同步照片到手机相册开关状态**/
-
-	private LinearLayout mBugLayout = null;
 
 	boolean mAutoState = true;
 
@@ -446,7 +443,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 		mAutoPhotoItem = (RelativeLayout) findViewById(R.id.ry_setup_autophoto);
 		mAutoPhotoBtn = (ImageButton) findViewById(R.id.ib_setup_autophoto_btn);
-		mBugLayout = (LinearLayout) findViewById(R.id.mBugLayout);
+
 		// ipc设备型号
 		if (GolukApplication.getInstance().mIPCControlManager.isG1Relative()) {
 			mISPLayout.setVisibility(View.GONE);
@@ -471,7 +468,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g2));
 			mCarrecorderWonderfulLine.setVisibility(View.VISIBLE);
 		} else {
-			mBugLayout.setVisibility(View.GONE);
 			mISPLayout.setVisibility(View.VISIBLE);
 			mPhotoQualityLayout.setVisibility(View.VISIBLE);
 			mAutoPhotoItem.setVisibility(View.VISIBLE);
@@ -521,7 +517,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		findViewById(R.id.sjsz_line).setOnClickListener(this);// 时间设置
 		findViewById(R.id.hfccsz_line).setOnClickListener(this);// 恢复出厂设置
 		findViewById(R.id.bbxx_line).setOnClickListener(this);// 版本信息
-		mBugLayout.setOnClickListener(this);// 购买降压线
+		findViewById(R.id.mBugLayout).setOnClickListener(this);// 购买降压线
 
 		mPhotoQualityLayout.setOnClickListener(this);
 		mAutoPhotoBtn.setOnClickListener(this);
