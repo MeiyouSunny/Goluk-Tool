@@ -2302,7 +2302,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		if(isT1){
 			mAdasIcon.setVisibility(View.VISIBLE);
 			int  flag = GolukFileUtils.loadInt(GolukFileUtils.ADAS_FLAG, 0);//0 关   1：开
-			if(flag == 1){
+			if(GolukApplication.getInstance().getIpcIsLogin() && flag == 1){
 				mAdasIcon.setImageResource(R.drawable.recorder_adas_on);
 			}else{
 				mAdasIcon.setImageResource(R.drawable.recorder_adas_off);
