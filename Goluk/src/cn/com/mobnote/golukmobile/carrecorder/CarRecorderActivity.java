@@ -1261,8 +1261,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		}
 		
 		if(mApp.mIPCControlManager.mProduceName.equals(IPCControlManager.T1_SIGN)){
+			mVideoResolutions.setVisibility(View.GONE);
 			setAdasIconState(true);
 		}else{
+			mVideoResolutions.setVisibility(View.VISIBLE);
 			setAdasIconState(false);
 		}
 
