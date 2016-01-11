@@ -115,6 +115,7 @@ public class AdasVehicleConfigActivity extends BaseActivity implements OnClickLi
 			return;
 		}
 		mCarName.setText(mParamter.name);
+		mCarName.setSelection(mParamter.name.length());
 		if (mParamter.wheel_offset != 0) {
 			mWheelOffset.setText("" + mParamter.wheel_offset);
 			mHeadOffset.setText("" + mParamter.head_offset);
@@ -165,15 +166,16 @@ public class AdasVehicleConfigActivity extends BaseActivity implements OnClickLi
 		if (rightOffset < 50 || rightOffset > 350) {
 			return false;
 		}
+		String name = mCarName.getText().toString().trim();
+		if (TextUtils.isEmpty(name)) {
+			return false;
+		}
+		mParamter.name = name;
 		mParamter.head_offset = headOffset;
 		mParamter.height_offset = heightOffset;
 		mParamter.left_offset = leftOffset;
 		mParamter.right_offset = rightOffset;
 		mParamter.wheel_offset = wheelOffset;
-		String name = mCarName.getText().toString().trim();
-		if (!TextUtils.isEmpty(name)) {
-			mParamter.name = name;
-		}
 		String jsonString = JSON.toJSONString(mCustomVehicleList);
 		GolukFileUtils.saveString(GolukFileUtils.ADAS_CUSTOM_VEHICLE, jsonString);
 		return true;
@@ -271,6 +273,7 @@ public class AdasVehicleConfigActivity extends BaseActivity implements OnClickLi
 				hint = textView.getHint().toString();
 				textView.setTag(hint);
 				textView.setHint("");
+				textView.setSelection(textView.getText().length());
 			} else {
 				hint = textView.getTag().toString();
 				textView.setHint(hint);
