@@ -487,7 +487,7 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 			if (!UserUtils.isNetDeviceAvailable(mContext)) {
 				GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.user_net_unavailable));
 			} else {
-				if ("1".equals(mVideoJson.data.link.showurl)) {
+				if ((mVideoJson.data != null) && (mVideoJson.data.link != null) && "1".equals(mVideoJson.data.link.showurl)) {
 					Intent mLinkIntent = new Intent(mContext, UserOpenUrlActivity.class);
 					mLinkIntent.putExtra("url", mVideoJson.data.link.outurl);
 					mContext.startActivity(mLinkIntent);
