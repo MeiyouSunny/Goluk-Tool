@@ -203,6 +203,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		initVideoSquare();
 		// 初始化个人中心
 		initUserInfo();
+
+		// 为了兼容以前的版本， 把旧的绑定信息读取出来
+		mWac = new WifiConnectManager(mWifiManager, this);
+		mCurrentConnBean = mWac.readConfig();
+		refreshIpcDataToFile();
+
 		// 初始化连接与綁定状态
 		if (mApp.isBindSucess()) {
 			startWifi();
@@ -331,7 +337,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			intent.putExtra("title", title);
 			startActivity(intent);
 		}
-		
+
 		mStartAppBean = null;
 	}
 
@@ -591,7 +597,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 */
 	private void autoConnWifi() {
 		GolukDebugUtils.e("", "自动连接小车本wifi---linkMobnoteWiFi---1");
-		mWac = new WifiConnectManager(mWifiManager, this);
+		if (null == mWac) {
+			mWac = new WifiConnectManager(mWifiManager, this);
+		}
 		mWac.autoWifiManage();
 	}
 
