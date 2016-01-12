@@ -248,6 +248,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	}
 
 	private void switchAdasEnableUI(boolean isEnable) {
+		if (mAdasConfigParamter == null) {
+			return;
+		}
 		if (isEnable) {
 			/**adas需求变更 暂时拿掉**/
 //			mADASForwardWarningLayout.setVisibility(View.VISIBLE);
@@ -315,6 +318,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	}
 
 	private void refreshFcarCloseUI() {
+		if (mAdasConfigParamter == null) {
+			return;
+		}
 		if (mAdasConfigParamter.fcw_enable == 0) {
 			mADASFcarCloseBtn.setBackgroundResource(R.drawable.set_close_btn);
 			mADASFcarCloseBtn.setTag(0);
@@ -325,6 +331,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	}
 
 	private void refreshFcarSetupUI() {
+		if (mAdasConfigParamter == null) {
+			return;
+		}
 		if (mAdasConfigParamter.fcs_enable == 0) {
 			mADASFcarSetupBtn.setBackgroundResource(R.drawable.set_close_btn);
 			mADASFcarSetupBtn.setTag(0);
@@ -335,6 +344,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	}
 
 //	private void refreshOSDUI() {
+//	if (mAdasConfigParamter == null) {
+//		return;
+//	}
 //		if (mAdasConfigParamter.osd == 0) {
 //			mADASOsdBtn.setBackgroundResource(R.drawable.set_close_btn);
 //			mADASOsdBtn.setTag(0);
@@ -1276,10 +1288,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					if (!TextUtils.isEmpty((String) param2)) {
 						mAdasConfigParamter = JSON.parseObject((String)param2, AdasConfigParamterBean.class);
 						switchAdasEnableUI(mAdasConfigParamter.enable == 1);
-						return;
 					}
+				} else {
+					mADASAssistanceLayout.setVisibility(View.GONE);
 				}
-				switchAdasEnableUI(false);
 			} else if (msg == IPC_VDCP_Msg_SetADASConfig){
 				if (GolukApplication.getInstance().getContext() != this) {
 					return;
