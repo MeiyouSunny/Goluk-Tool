@@ -149,6 +149,7 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 		mVideoView.setOnPreparedListener(this);
 		mVideoView.setOnCompletionListener(this);
 		mVideoView.setOnErrorListener(this);
+
 		if (GolukUtils.getSystemSDK() >= 17) {
 			mVideoView.setOnInfoListener(this);
 		}
@@ -472,6 +473,7 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 			} else {
 				if (isCallVideo) {
 					mVideoView.start();
+					mImageLayout.setVisibility(View.GONE);
 				} else {
 					playVideo();
 					showLoading();
