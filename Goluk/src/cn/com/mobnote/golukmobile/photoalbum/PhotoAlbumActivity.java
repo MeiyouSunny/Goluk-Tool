@@ -262,10 +262,11 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 		backHomeDialog.setLeftButton(this.getResources().getString(R.string.str_button_ok), new OnLeftClickListener() {
 			@Override
 			public void onClickListener() {
-				Intent it = new Intent(PhotoAlbumActivity.this, MainActivity.class);
-				it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-				PhotoAlbumActivity.this.startActivity(it);
+//				Intent it = new Intent(PhotoAlbumActivity.this, MainActivity.class);
+//				it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//				it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//				PhotoAlbumActivity.this.startActivity(it);
+				exit();
 				closeBackHomeDialog();
 			}
 		});
