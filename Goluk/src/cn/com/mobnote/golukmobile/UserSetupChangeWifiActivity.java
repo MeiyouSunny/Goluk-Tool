@@ -97,7 +97,8 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 			mEditText.setText("");
 		}
 		
-		if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+		if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
+				|| IPCControlManager.T1s_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
 			mImageView1.setImageResource(R.drawable.ipcbind_t_direct_gif_3);
 			mImageView2.setVisibility(View.INVISIBLE);
 		} else {
