@@ -203,7 +203,13 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
 			wsla.mApp.setIpcDisconnect();
 		}
 		WifiBindDataCenter.getInstance().deleteBindData(bindHistoryBean.ipc_ssid);
-		mBindHistoryData.remove(bindHistoryBean);
+		for (int i = 0; i < mBindHistoryData.size(); i++) {
+			WifiBindHistoryBean wbhb = mBindHistoryData.get(i);
+			if(bindHistoryBean.ipc_ssid.equals(wbhb.ipc_ssid)){
+				mBindHistoryData.remove(i);
+			}
+		}
+		
 		notifyDataSetChanged();
 		// 如果本地没有历史数据，则设置连接失败
 		List<WifiBindHistoryBean> list = WifiBindDataCenter.getInstance().getAllBindData();

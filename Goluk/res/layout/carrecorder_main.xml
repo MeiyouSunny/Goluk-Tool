@@ -60,7 +60,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="6dp"
-            android:text="Goluk000001"
             android:textColor="@color/carrecorder_text_nor_color"
             android:textSize="12sp" />
 
@@ -76,10 +75,11 @@
 
     <ImageView
         android:id="@+id/mVideoResolutions"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:visibility="gone"
         android:background="@drawable/carrecorder_liveindex_icon_1080"
         android:contentDescription="@string/def" />
 
@@ -89,7 +89,8 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="8dp"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/mVideoResolutions"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"
         android:background="@drawable/recorder_adas_on"
         android:contentDescription="@string/def" />
     </RelativeLayout>
@@ -138,7 +139,6 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:paddingTop="20dp"
-                    android:text="无码的视频也是高潮迭起"
                     android:textColor="#ffffff"
                     android:textSize="18sp" />
             </LinearLayout>

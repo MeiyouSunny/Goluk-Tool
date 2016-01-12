@@ -623,4 +623,6 @@
 	<string name="str_carrecorder_storage_format_sdcard_dialog_no">否</string>
 	<string name="str_carrecorder_storage_format_sdcard_formating">正在格式化SD卡，可能需要1~2分钟，请稍候...</string>
 	
+	<string name="str_edittext_format">1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+	
 </resources>
