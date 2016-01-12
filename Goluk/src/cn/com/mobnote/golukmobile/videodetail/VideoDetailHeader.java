@@ -246,7 +246,7 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 			}
 
 		} else {
-			if (!mVideoView.isPlaying() && !isShow) {
+			if (!mVideoView.isPlaying() && !isShow && isStartPlay) {
 				mImageLayout.setVisibility(View.VISIBLE);
 				mPlayBtn.setVisibility(View.VISIBLE);
 			}
