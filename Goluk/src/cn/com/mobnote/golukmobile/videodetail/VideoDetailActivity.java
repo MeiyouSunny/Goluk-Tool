@@ -1013,7 +1013,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	 * 点击评论弹出键盘
 	 */
 	public void showSoft() {
-		if ("1".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
+		if ((mVideoJson.data.avideo.video != null) && (mVideoJson.data.avideo.video.comment != null)
+				&& "1".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
 			mEditInput.requestFocus();
 			InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 			inputManager.showSoftInput(mEditInput, 0);
