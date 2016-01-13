@@ -488,7 +488,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 					mCustomProgressDialog.close();
 				}
 				isGetFileListDataing = false;
-				Log.e("dengting", "YYYYYY=======获取文件列表===@@@======param1=" + param1 + "=====param2=" + param2);
+				GolukDebugUtils.e("xuhw", "YYYYYY=======获取文件列表===@@@======param1=" + param1 + "=====param2=" + param2);
 				if (RESULE_SUCESS == param1) {
 					if (TextUtils.isEmpty((String) param2)) {
 						return;
