@@ -11,8 +11,10 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
@@ -43,6 +45,8 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 	// 写死ip,网关
 	private final String ip = "192.168.1.103";
 	private final String way = "192.168.1.103";
+	
+	private ImageView mImageView1, mImageView2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +79,8 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 		mBtnSave = (Button) findViewById(R.id.user_title_right);
 		mEditText = (EditText) findViewById(R.id.changewifi_password_editText);
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
+		mImageView1 = (ImageView) findViewById(R.id.imageView1);
+		mImageView2 = (ImageView) findViewById(R.id.imageView2);
 		
 		mTextTitle.setText("极路客WiFi密码");
 
@@ -89,6 +95,15 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 			mEditText.setSelection(password.length());
 		} else {
 			mEditText.setText("");
+		}
+		
+		if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
+				|| IPCControlManager.T1s_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+			mImageView1.setImageResource(R.drawable.ipcbind_t_direct_gif_3);
+			mImageView2.setVisibility(View.INVISIBLE);
+		} else {
+			mImageView1.setImageResource(R.drawable.ipcbind_g_direct_bg);
+			mImageView2.setVisibility(View.VISIBLE);
 		}
 
 		// 监听

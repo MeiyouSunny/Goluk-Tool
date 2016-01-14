@@ -10,6 +10,7 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -508,6 +509,9 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 						}
 
 						updateData(fileList);
+					} else {
+						isHasData = false;
+						removeFooterView();
 					}
 				} else {
 					GolukDebugUtils.e("xuhw", "YYYYYY=======获取文件列表====fail==@@@======param1=" + param1);
