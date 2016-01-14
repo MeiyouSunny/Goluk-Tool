@@ -7,6 +7,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.player.MovieActivity;
 import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoEntity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
@@ -43,7 +44,7 @@ public class SpecialCommentListener implements OnClickListener{
 		case R.id.mPreLoading:
 		case R.id.imageLayout:
 			if("2".equals(type)){
-				Intent intent = new Intent(mContext, VideoPlayerActivity.class);
+				Intent intent = new Intent(mContext, MovieActivity.class);
 				intent.putExtra("from", from);
 				intent.putExtra("image", imagepath);
 				intent.putExtra("playUrl", videopath);

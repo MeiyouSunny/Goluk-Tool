@@ -26,6 +26,7 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.player.MovieActivity;
 import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.player.VitamioPlayerActivity;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
@@ -212,11 +213,12 @@ public class LocalWonderfulVideoListView {
 			}
 
 			Intent intent = null;
-			if (1 == type) {
-				intent = new Intent(mContext, VitamioPlayerActivity.class);
-			} else {
-				intent = new Intent(mContext, VideoPlayerActivity.class);
-			}
+//			if (1 == type) {
+//				intent = new Intent(mContext, VitamioPlayerActivity.class);
+//			} else {
+//				intent = new Intent(mContext, VideoPlayerActivity.class);
+//			}
+			intent = new Intent(mContext, MovieActivity.class);
 			intent.putExtra("from", "local");
 			intent.putExtra("path", path);
 			mActivity.startActivity(intent);

@@ -24,6 +24,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.player.MovieActivity;
 import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.player.VitamioPlayerActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
@@ -258,11 +259,12 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 			isShowPlayer = true;
 //			if (null == VitamioPlayerActivity.mHandler) {
 				Intent intent = null;
-				if (1 == from) {
-					intent = new Intent(mContext, VitamioPlayerActivity.class);
-				} else {
-					intent = new Intent(mContext, VideoPlayerActivity.class);
-				}
+//				if (1 == from) {
+//					intent = new Intent(mContext, VitamioPlayerActivity.class);
+//				} else {
+//					intent = new Intent(mContext, MovieActivity.class);
+//				}
+				intent = new Intent(mContext, MovieActivity.class);
 				intent.putExtra("from", "ipc");
 				intent.putExtra("type", mCurrentType);
 				intent.putExtra("filename", path);
