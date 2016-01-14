@@ -46,8 +46,6 @@ public class MessageBadger {
 		try {
 			NotificationCompat.Builder builder = new NotificationCompat.Builder(
 					context);
-//			builder.setContentTitle("您有" + number + "未读消息");
-//			builder.setTicker("您有" + number + "未读消息");
 			builder.setAutoCancel(true);
 			builder.setSmallIcon(R.drawable.home_red_point_little);
 			builder.setDefaults(Notification.DEFAULT_LIGHTS);

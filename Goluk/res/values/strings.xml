@@ -671,5 +671,11 @@
     <string name="str_server_request_arg_error">服务器请求参数错误</string>
     <string name="str_server_request_unknown_error">服务器请求未知异常</string>
     <string name="str_server_request_no_data">当前无记录</string>
-
+    <!-- 用户设置 -->
+    <string name="str_confirm_loginout">是否确定退出？</string>
+    <string name="str_no_cache">没有缓存数据</string>
+    <string name="str_confirm_clear_cache">确定清除缓存？</string>
+    <string name="str_loginout_fail">注销失败</string>
+    <string name="str_loginouting">正在注销…</string>
+    <string name="str_loginout_success">注销成功</string>
 </resources>

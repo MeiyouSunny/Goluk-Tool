@@ -13,6 +13,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventPushMsg;
 import cn.com.mobnote.golukmobile.GuideActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -27,6 +29,7 @@ import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
+import de.greenrobot.event.EventBus;
 
 public class GolukNotification {
 	/** 推送标识，主要是主界面接受，用于区分是否是推送数据 */
@@ -241,10 +244,11 @@ public class GolukNotification {
 	 * @author jyf
 	 */
 	public void showAppInnerPush(final Context cnt, final XingGeMsgBean msgBean) {
-		if (null == msgBean || !isCanShowPushDialog()) {
+		if (null == msgBean/* || !isCanShowPushDialog()*/) {
 			return;
 		}
-		isCanShowDialog = false;
+		EventBus.getDefault().post(new EventPushMsg(EventConfig.PUSH_MSG_GET, msgBean));
+//		isCanShowDialog = false;
 		startTimer();
 		dimissPushDialog();
 		Context context = GolukApplication.getInstance().getContext();
