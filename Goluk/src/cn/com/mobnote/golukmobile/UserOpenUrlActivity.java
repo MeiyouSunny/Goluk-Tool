@@ -166,37 +166,37 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			mBackBtn.setEnabled(false);
 			if (!TextUtils.isEmpty(from_tag)) {
 				if (from_tag.equals("skill")) {
-					mTextTitle.setText("极路客小技巧");
+					mTextTitle.setText(this.getResources().getString(R.string.my_skill_title_text));
 					if (mErrorState) {
 						return;
 					}
 					mWebView.loadUrl(getRtmpAddress() + "?type=2");
 				} else if (from_tag.equals("install")) {
-					mTextTitle.setText("安装指导");
+					mTextTitle.setText(this.getResources().getString(R.string.my_install_title_text));
 					if (mErrorState) {
 						return;
 					}
 					mWebView.loadUrl(getRtmpAddress() + "?type=3");
 				} else if (from_tag.equals("shopping")) {
-					mTextTitle.setText("购买极路客");
+					mTextTitle.setText(this.getResources().getString(R.string.my_shopping_title_text));
 					if (mErrorState) {
 						return;
 					}
 					mWebView.loadUrl(getRtmpAddress() + "?type=4");
 				} else if (from_tag.equals("buyline")) {
-					mTextTitle.setText("购买极路客专用降压线");
+					mTextTitle.setText(this.getResources().getString(R.string.my_shopping_buck_line));
 					if (mErrorState) {
 						return;
 					}
 					mWebView.loadUrl(getRtmpAddress() + "?type=1");
 				} else if (from_tag.equals("wifihelp")) {
-					mTextTitle.setText("极路客视频安装帮助");
+					mTextTitle.setText(this.getResources().getString(R.string.wifi_link_34_text));
 					if (mErrorState) {
 						return;
 					}
 					mWebView.loadUrl(getRtmpAddress() + "?type=3");
 				} else if(from_tag.equals("profitProblem")) {
-					mTextTitle.setText("常见问题");
+					mTextTitle.setText(this.getResources().getString(R.string.my_profit_problem));
 					if (mErrorState) {
 						return;
 					}
@@ -204,7 +204,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 				} else if (from_tag.equals("cash")) {
 					String uid = itIndexMore.getStringExtra("uid");
 					String phone = itIndexMore.getStringExtra("phone");
-					mTextTitle.setText("申请提现");
+					mTextTitle.setText(this.getResources().getString(R.string.str_apply_withdraw));
 					if (mErrorState) {
 						return;
 					}

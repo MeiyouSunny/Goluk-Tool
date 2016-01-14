@@ -25,6 +25,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventIpcConnState;
+import cn.com.mobnote.eventbus.EventMessageUpdate;
 import cn.com.mobnote.eventbus.EventPhotoUpdateLoginState;
 import cn.com.mobnote.golukmobile.ImageClipActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
@@ -1074,6 +1075,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			mCurrentAid = dataObj.getString("aid");
 			isUserLoginSucess = true;
 
+			EventBus.getDefault().post(new EventMessageUpdate(EventConfig.MESSAGE_REQUEST));
 			this.showContinuteLive();
 			GolukDebugUtils.e(null, "jyf---------GolukApplication---------mCCurl:" + mCCUrl + " uid:" + mCurrentUId
 					+ " aid:" + mCurrentAid);

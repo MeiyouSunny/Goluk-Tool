@@ -53,5 +53,10 @@ public class EventConfig {
 	public static final int BINDING = 0;
 	/** 绑定成功的消息 */
 	public static final int BIND_COMPLETE = 0;
-
+	/** Update message */
+	public final static int MESSAGE_UPDATE = 10001;
+	/** Update request */
+	public final static int MESSAGE_REQUEST = 10002;
+	/** 接受到推送消息 */
+	public static final int PUSH_MSG_GET = 0;
 }

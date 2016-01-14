@@ -215,6 +215,7 @@
     <string name="my_set_title_text">通用设置</string>
     <string name="my_skill_title_text">极路客小技巧</string>
     <string name="my_install_title_text">安装指导</string>
+    <string name="my_version_title_text">版本信息</string>
     <string name="my_question_title_text">版本信息</string>
     <string name="my_shopping_title_text">购买极路客</string>
     <string name="version_app_update_text">版本检测</string>
@@ -624,5 +625,51 @@
 	<string name="str_carrecorder_storage_format_sdcard_formating">正在格式化SD卡，可能需要1~2分钟，请稍候...</string>
 	
 	<string name="str_edittext_format">1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
-	
+
+    <string name="str_msgcenter_comment_title">评论/回复</string>
+    <string name="str_msgcenter_comment_replytext">回复</string>
+    <string name="str_msgcenter_comment_replyme">我</string>
+
+    <!-- 系统消息 -->
+    <string name="msg_system_title_txt">消息中心</string>
+    <string name="str_msg_push_login">请登录后查看消息</string>
+    <string name="msg_system_certificate_fail">很抱歉，你的认证失败了。</string>
+    <string name="msg_system_certificate_success">您的实名认证通过了，赶紧去看看吧。</string>
+    <string name="msg_system_withdraw_fail">很抱歉，你提现失败了。</string>
+    <string name="msg_system_withdraw_success">您的提现申请已付款，24小时将到账，请注意查收</string>
+    <string name="msg_system_reward_txt_began" >获</string>
+    <string name="msg_system_reward_txt_end" >个G币奖励</string>
+    <string name="msg_system_recommend_title">视频被推荐啦</string>
+    <string name="msg_system_reason_began">理由：</string>
+    <string name="msg_system_poll_txt">您的正在投票，快去看看吧。</string>
+    <string name="msg_system_select_txt">恭喜您，视频入选精选啦，快去看看吧。</string>
+
+    <string name="str_title_message_center">消息中心</string>
+    <string name="str_title_message_setting">消息设置</string>
+    <string name="str_message_center_comment_reply">评论/回复</string>
+    <string name="str_message_center_system">系统消息</string>
+    <string name="str_message_center_official">官方通知</string>
+	<string name ="str_link_my_profit">查看我的收益</string>
+    <string name="str_pull_to_refresh_pull_label">下拉刷新</string>
+    <string name="str_pull_to_refresh_release_label">松开刷新</string>
+    <string name="str_pull_to_refresh_refreshing_label">正在刷新…</string>
+    <string name="pull_to_refresh_from_bottom_pull_label">@string/str_pull_to_refresh_pull_label</string>
+    <string name="pull_to_refresh_from_bottom_release_label">@string/str_pull_to_refresh_release_label</string>
+    <string name="pull_to_refresh_from_bottom_refreshing_label">@string/str_pull_to_refresh_refreshing_label</string>
+    <string name="my_shopping_buck_line">购买极路客专用降压线</string>
+    <string name="str_loginning">登录中，请稍候…</string>
+    <string name="str_apply_withdraw">申请提现</string>
+    <string name="str_click_to_login">点击登录</string>
+    <string name="str_login_tosee_usercenter">登录查看个人主页</string>
+    <string name="str_let_sharevideo">大家一起来分享视频吧</string>
+
+    <string name="str_msg_center_no_praise">还没有收到过赞</string>
+    <string name="str_msg_center_no_comment">暂无评论/回复</string>
+    <string name="str_please_login">请先登录</string>
+    <string name="str_network_unusual">网络异常，请稍后重试</string>
+
+    <string name="str_server_request_arg_error">服务器请求参数错误</string>
+    <string name="str_server_request_unknown_error">服务器请求未知异常</string>
+    <string name="str_server_request_no_data">当前无记录</string>
+
 </resources>

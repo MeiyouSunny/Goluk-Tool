@@ -10,6 +10,7 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:background="#344450"
+        android:baselineAligned="false"
         android:orientation="horizontal" >
 
         <!-- 更多 -->
@@ -54,8 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:layout_weight="1"
-            android:gravity="center" >
+            android:layout_weight="1" >
 
             <Button
                 android:id="@+id/more_btn"
@@ -65,7 +65,18 @@
                 android:drawableTop="@drawable/index_user_btn"
                 android:text="@string/str_main_page_mine"
                 android:textColor="#cccccc"
+                android:layout_centerInParent="true"
                 android:textSize="12sp" />
+            <ImageView
+                android:id="@+id/iv_main_message_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/home_red_point_little"
+                android:layout_toRightOf="@id/more_btn"
+                android:layout_marginLeft="-20dp"
+                android:contentDescription="@string/imgdes"
+                android:visibility="gone"
+                android:layout_alignTop="@id/more_btn"/>
         </RelativeLayout>
     </LinearLayout>
 

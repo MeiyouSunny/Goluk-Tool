@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class RTPullListView extends ListView implements OnScrollListener {
@@ -64,6 +65,9 @@ public class RTPullListView extends ListView implements OnScrollListener {
 
 	private int visibleLastIndex;
 	private int visibleItemCount;
+	
+	private RelativeLayout mBottomLoadingView = null;
+	private RelativeLayout mVideoTheEndView = null;
 
 	@SuppressLint("SimpleDateFormat")
 	private SimpleDateFormat formatter = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
@@ -85,7 +89,9 @@ public class RTPullListView extends ListView implements OnScrollListener {
 		progressBar = (ProgressBar) headView.findViewById(R.id.head_progressBar);
 		tipsTextview = (TextView) headView.findViewById(R.id.head_tipsTextView);
 		lastUpdatedTextView = (TextView) headView.findViewById(R.id.head_lastUpdatedTextView);
-
+		mBottomLoadingView = (RelativeLayout)inflater.inflate(R.layout.video_square_below_loading,null);
+		mVideoTheEndView = (RelativeLayout) inflater.inflate(R.layout.usercenter_videos_below_loading,null);
+		
 		measureView(headView);
 		headContentHeight = headView.getMeasuredHeight();
 
@@ -116,6 +122,31 @@ public class RTPullListView extends ListView implements OnScrollListener {
 		isRefreshable = false;
 		isPush = true;
 	}
+
+	/**
+	 * 添加底部的view 
+	 * @param type 1:加载中  2:到底部了
+	 */
+	public void addFooterView(int type){
+		if(type == 1){
+			this.addFooterView(mBottomLoadingView);
+		}else if(type == 2){
+			this.addFooterView(mVideoTheEndView);
+		}
+	}
+	
+	/**
+	 * 删除底部的view 
+	 * @param type 1:加载中  2:到底部了
+	 */
+	public void removeFooterView(int type){
+		if(type == 1){
+			this.removeFooterView(mBottomLoadingView);
+		}else if(type == 2){
+			this.removeFooterView(mVideoTheEndView);
+		}
+	}
+
 
 	public void onScroll(AbsListView arg0, int firstVisiableItem, int arg2, int arg3) {
 		firstItemIndex = firstVisiableItem;

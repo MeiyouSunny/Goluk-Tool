@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.app.AlertDialog;
@@ -28,12 +29,15 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventMessageUpdate;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.user.UserLoginInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 /**
  * 
@@ -85,7 +89,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 
 		initView();
 		if (null == mCustomProgressDialog) {
-			mCustomProgressDialog = new CustomLoadingDialog(mContext, "登录中，请稍候……");
+			mCustomProgressDialog = new CustomLoadingDialog(mContext, this.getResources().getString(R.string.str_loginning));
 		}
 
 		// 设置title
@@ -261,6 +265,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		case R.id.back_btn:
 			mApplication.mLoginManage.setUserLoginInterface(null);
 			UserUtils.hideSoftMethod(this);
+			setResult(Activity.RESULT_CANCELED);
 			this.finish();
 			break;
 		// 登陆按钮
@@ -380,6 +385,8 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 				itProfit.putExtra("phone", phone);
 				startActivity(itProfit);
 			}
+			EventBus.getDefault().post(new EventMessageUpdate(EventConfig.MESSAGE_REQUEST));
+			setResult(Activity.RESULT_OK);
 			this.finish();
 			break;
 		case 2:

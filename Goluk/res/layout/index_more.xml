@@ -113,6 +113,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
                     android:src="@drawable/editor_arrow" />
             </RelativeLayout>
 
@@ -122,6 +123,7 @@
                 android:layout_height="42dp"
                 android:background="#f4f4f4"
                 android:gravity="center_vertical"
+                android:baselineAligned="false"
                 android:orientation="horizontal" >
 
                 <LinearLayout
@@ -188,52 +190,66 @@
                 android:background="@drawable/solid" />
 
             <RelativeLayout
-                android:id="@+id/profit_item"
+                android:id="@+id/rl_my_message"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:background="#f4f4f4"
+                android:paddingRight="14dp"
                 android:paddingLeft="14dp"
-                android:paddingRight="14dp" 
-                android:background="#f4f4f4">
-
-                <ImageView
-                    android:id="@+id/profit_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/profit_icon_profit"
-                    android:contentDescription="@string/imgdes" />
-
+                android:layout_height="40dp">
                 <TextView
-                    android:id="@+id/profit_text"
+                    android:id="@+id/tv_my_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:drawableLeft="@drawable/my_message_icon"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/profit_img"
-                    android:text="@string/my_profit_title_text"
-                    android:textColor="#333333"
-                    android:textSize="14sp" />
-
+                    android:gravity="center_vertical"
+                    android:drawablePadding="10dp"
+                    android:text="@string/str_title_message_center"
+                    android:textColor="#333333"/>
+                <TextView
+                    android:id="@+id/tv_my_message_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:layout_toRightOf="@id/tv_my_message"
+                    android:layout_marginLeft="8dp"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:visibility="gone"
+                    android:background="@drawable/my_message_bg"
+                    android:textColor="#ffffff"/>
                 <ImageView
-                    android:id="@+id/profit_arrow"
+                    android:id="@+id/iv_my_message_go"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/editor_arrow"
-                    android:contentDescription="@string/imgdes" />
-                
-                <!-- <TextView 
-                    android:id="@+id/profit_hint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@id/profit_arrow"
-                    android:layout_marginRight="5dp"
-                    android:layout_centerVertical="true"
-                    android:text="上一次收入０G币"
-                    android:textColor="#cccccc"/> -->
+                    android:contentDescription="@string/app_name"
+                    android:layout_marginLeft="8dp"
+                    android:src="@drawable/editor_arrow"/>
             </RelativeLayout>
-
+            <View
+                android:id="@+id/user_personal_solid_19"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="@drawable/solid" />
+            <TextView
+                android:id="@+id/profit_item"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="#f4f4f4"
+                android:text="@string/my_profit_title_text"
+                android:gravity="center_vertical"
+                android:paddingRight="14dp"
+                android:paddingLeft="14dp"
+                android:textColor="#333333"
+                android:drawableLeft="@drawable/profit_icon_profit"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/editor_arrow"
+                android:textSize="14sp" />
             <View
                 android:id="@+id/user_personal_solid_18"
                 android:layout_width="wrap_content"
@@ -249,41 +265,20 @@
                 android:layout_marginTop="20dp"
                 android:background="@drawable/solid" />
 
-            <RelativeLayout
+            <TextView
                 android:id="@+id/video_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#f4f4f4"
+                android:text="@string/my_video_title_text"
+                android:gravity="center_vertical"
+                android:paddingRight="14dp"
                 android:paddingLeft="14dp"
-                android:paddingRight="14dp" >
-
-                <ImageView
-                    android:id="@+id/video_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/my_video_icon"
-                    android:contentDescription="@string/imgdes" />
-
-                <TextView
-                    android:id="@+id/video_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/video_img"
-                    android:text="@string/my_video_title_text"
-                    android:textColor="#333333"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/editor_arrow"
-                    android:contentDescription="@string/imgdes" />
-            </RelativeLayout>
+                android:textColor="#333333"
+                android:drawableLeft="@drawable/my_video_icon"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/editor_arrow"
+                android:textSize="14sp" />
 
             <View
                 android:id="@+id/user_personal_solid_4"
@@ -299,42 +294,20 @@
                 android:layout_marginTop="20dp"
                 android:background="@drawable/solid" />
 
-            <RelativeLayout
+            <TextView
                 android:id="@+id/camera_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#f4f4f4"
+                android:text="@string/my_camera_title_text"
+                android:gravity="center_vertical"
+                android:paddingRight="14dp"
                 android:paddingLeft="14dp"
-                android:paddingRight="14dp" >
-
-                <ImageView
-                    android:id="@+id/carmera_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/my_camera_icon"
-                    android:contentDescription="@string/imgdes" />
-
-                <TextView
-                    android:id="@+id/camera_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/carmera_img"
-                    android:text="@string/my_camera_title_text"
-                    android:textColor="#333333"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/editor_arrow"
-                    android:contentDescription="@string/imgdes" />
-            </RelativeLayout>
-
+                android:textColor="#333333"
+                android:drawableLeft="@drawable/my_camera_icon"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/editor_arrow"
+                android:textSize="14sp" />
             <!-- 通用设置 -->
 
             <View
@@ -343,42 +316,20 @@
                 android:layout_height="1dp"
                 android:background="@drawable/solid" />
 
-            <RelativeLayout
+            <TextView
                 android:id="@+id/set_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#f4f4f4"
+                android:text="@string/my_set_title_text"
+                android:gravity="center_vertical"
+                android:paddingRight="14dp"
                 android:paddingLeft="14dp"
-                android:paddingRight="14dp" >
-
-                <ImageView
-                    android:id="@+id/set_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/my_set_icon"
-                    android:contentDescription="@string/imgdes" />
-
-                <TextView
-                    android:id="@+id/set_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/set_img"
-                    android:text="@string/my_set_title_text"
-                    android:textColor="#333333"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/editor_arrow"
-                    android:contentDescription="@string/imgdes" />
-            </RelativeLayout>
-
+                android:textColor="#333333"
+                android:drawableLeft="@drawable/my_set_icon"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/editor_arrow"
+                android:textSize="14sp" />
             <View
                 android:id="@+id/user_personal_solid_8"
                 android:layout_width="wrap_content"
@@ -393,42 +344,20 @@
                 android:layout_marginTop="20dp"
                 android:background="@drawable/solid" />
 
-            <RelativeLayout
+            <TextView
                 android:id="@+id/skill_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#f4f4f4"
+                android:text="@string/my_skill_title_text"
+                android:gravity="center_vertical"
+                android:paddingRight="14dp"
                 android:paddingLeft="14dp"
-                android:paddingRight="14dp" >
-
-                <ImageView
-                    android:id="@+id/skill_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/my_skill_icon"
-                    android:contentDescription="@string/imgdes" />
-
-                <TextView
-                    android:id="@+id/skill_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/skill_img"
-                    android:text="@string/my_skill_title_text"
-                    android:textColor="#333333"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/editor_arrow"
-                    android:contentDescription="@string/imgdes" />
-            </RelativeLayout>
-
+                android:textColor="#333333"
+                android:drawableLeft="@drawable/my_skill_icon"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/editor_arrow"
+                android:textSize="14sp" />
             <!-- 安装指导 -->
 
             <View
@@ -436,43 +365,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
                 android:background="@drawable/solid" />
-
-            <RelativeLayout
+            <TextView
                 android:id="@+id/install_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#f4f4f4"
+                android:text="@string/my_install_title_text"
+                android:gravity="center_vertical"
+                android:paddingRight="14dp"
                 android:paddingLeft="14dp"
-                android:paddingRight="14dp" >
-
-                <ImageView
-                    android:id="@+id/install_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/my_futou_icon"
-                    android:contentDescription="@string/imgdes" />
-
-                <TextView
-                    android:id="@+id/install_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/install_img"
-                    android:text="@string/my_install_title_text"
-                    android:textColor="#333333"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/editor_arrow"
-                    android:contentDescription="@string/imgdes" />
-            </RelativeLayout>
-
+                android:textColor="#333333"
+                android:drawableLeft="@drawable/my_futou_icon"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/editor_arrow"
+                android:textSize="14sp" />
             <!-- 版本信息 -->
 
             <View
@@ -481,49 +387,28 @@
                 android:layout_height="1dp"
                 android:background="@drawable/solid" />
 
-            <RelativeLayout
+            <TextView
                 android:id="@+id/question_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#f4f4f4"
+                android:text="@string/my_version_title_text"
+                android:gravity="center_vertical"
+                android:paddingRight="14dp"
                 android:paddingLeft="14dp"
-                android:paddingRight="14dp" >
-
-                <ImageView
-                    android:id="@+id/question_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/my_question_icon"
-                    android:contentDescription="@string/imgdes" />
-
-                <TextView
-                    android:id="@+id/question_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/question_img"
-                    android:text="@string/my_question_title_text"
-                    android:textColor="#333333"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/editor_arrow"
-                    android:contentDescription="@string/imgdes" />
-            </RelativeLayout>
+                android:textColor="#333333"
+                android:drawableLeft="@drawable/my_question_icon"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/editor_arrow"
+                android:textSize="14sp" />
 
             <View
                 android:id="@+id/user_personal_solid_14"
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
                 android:background="@drawable/solid" />
-            <!-- 购买极路客 -->
 
+            <!-- 购买极路客 -->
             <View
                 android:id="@+id/user_personal_solid_15"
                 android:layout_width="wrap_content"
@@ -531,42 +416,20 @@
                 android:layout_marginTop="20dp"
                 android:background="@drawable/solid" />
 
-            <RelativeLayout
+            <TextView
                 android:id="@+id/shopping_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#f4f4f4"
+                android:text="@string/my_shopping_title_text"
+                android:gravity="center_vertical"
+                android:paddingRight="14dp"
                 android:paddingLeft="14dp"
-                android:paddingRight="14dp" >
-
-                <ImageView
-                    android:id="@+id/shopping_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/my_shopping_car_icon"
-                    android:contentDescription="@string/imgdes" />
-
-                <TextView
-                    android:id="@+id/shopping_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/shopping_img"
-                    android:text="@string/my_shopping_title_text"
-                    android:textColor="#333333"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/editor_arrow"
-                    android:contentDescription="@string/imgdes" />
-            </RelativeLayout>
-
+                android:textColor="#333333"
+                android:drawableLeft="@drawable/my_shopping_car_icon"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/editor_arrow"
+                android:textSize="14sp" />
             <View
                 android:id="@+id/user_personal_solid_16"
                 android:layout_width="wrap_content"

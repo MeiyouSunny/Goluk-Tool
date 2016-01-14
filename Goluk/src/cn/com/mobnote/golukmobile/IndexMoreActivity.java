@@ -6,6 +6,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.msg.MessageCenterActivity;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
@@ -48,23 +49,24 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	/** 个人中心 **/
 	private RelativeLayout mUserCenterItem = null;
 	/** 未登录不显示用户id **/
-	private RelativeLayout mUserCenterId = null;
+//	private RelativeLayout mUserCenterId = null;
 	/** 我的相册 **/
-	private RelativeLayout mVideoItem = null;
+	private TextView mVideoItem = null;
 	/** 摄像头管理 **/
-	private RelativeLayout mCameraItem = null;
+	private TextView mCameraItem = null;
 	/** 通用设置 **/
-	private RelativeLayout mSetItem = null;
+	private TextView mSetItem = null;
 	/** 极路客小技巧 **/
-	private RelativeLayout mSkillItem = null;
+	private TextView mSkillItem = null;
 	/** 安装指导 **/
-	private RelativeLayout mInstallItem = null;
+	private TextView mInstallItem = null;
 	/** 版本信息 **/
-	private RelativeLayout mQuestionItem = null;
+	private TextView mQuestionItem = null;
 	/** 购买极路客 **/
-	private RelativeLayout mShoppingItem = null;
+	private TextView mShoppingItem = null;
 	/**我的收益**/
-	private RelativeLayout mProfitItem = null;
+	private TextView mProfitItem = null;
+	private RelativeLayout mMsgCenterItem = null;
 
 	/** 个人中心的头像、性别、昵称 */
 	private ImageView mImageHead, mImageAuthentication;
@@ -92,6 +94,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	private static final int TYPE_SHARE_PRAISE = 2;
 	/**我的收益**/
 	private static final int TYPE_PROFIT = 3;
+	private static final String TAG = "IndexMoreActivity";
 
 	public IndexMoreActivity(RelativeLayout rootlayout, Context context) {
 		mRootLayout = rootlayout;
@@ -122,15 +125,16 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 
 		// 个人中心 我的相册 摄像头管理 通用设置 极路客小技巧 安装指导 版本信息 购买极路客
 		mUserCenterItem = (RelativeLayout) mRootLayout.findViewById(R.id.user_center_item);
-		mUserCenterId = (RelativeLayout) mRootLayout.findViewById(R.id.user_center_id_layout);
-		mVideoItem = (RelativeLayout) mRootLayout.findViewById(R.id.video_item);
-		mCameraItem = (RelativeLayout) mRootLayout.findViewById(R.id.camera_item);
-		mSetItem = (RelativeLayout) mRootLayout.findViewById(R.id.set_item);
-		mSkillItem = (RelativeLayout) mRootLayout.findViewById(R.id.skill_item);
-		mInstallItem = (RelativeLayout) mRootLayout.findViewById(R.id.install_item);
-		mQuestionItem = (RelativeLayout) mRootLayout.findViewById(R.id.question_item);
-		mShoppingItem = (RelativeLayout) mRootLayout.findViewById(R.id.shopping_item);
-		mProfitItem = (RelativeLayout) mRootLayout.findViewById(R.id.profit_item);
+//		mUserCenterId = (RelativeLayout) mRootLayout.findViewById(R.id.user_center_id_layout);
+		mVideoItem = (TextView) mRootLayout.findViewById(R.id.video_item);
+		mCameraItem = (TextView) mRootLayout.findViewById(R.id.camera_item);
+		mSetItem = (TextView) mRootLayout.findViewById(R.id.set_item);
+		mSkillItem = (TextView) mRootLayout.findViewById(R.id.skill_item);
+		mInstallItem = (TextView) mRootLayout.findViewById(R.id.install_item);
+		mQuestionItem = (TextView) mRootLayout.findViewById(R.id.question_item);
+		mShoppingItem = (TextView) mRootLayout.findViewById(R.id.shopping_item);
+		mProfitItem = (TextView) mRootLayout.findViewById(R.id.profit_item);
+		mMsgCenterItem = (RelativeLayout) mRootLayout.findViewById(R.id.rl_my_message);
 
 		// 头像、昵称、id
 		mImageHead = (ImageView) mRootLayout.findViewById(R.id.user_center_head);
@@ -156,7 +160,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		mShareLayout.setOnClickListener(this);
 		mPraiseLayout.setOnClickListener(this);
 		mProfitItem.setOnClickListener(this);
-
+		mMsgCenterItem.setOnClickListener(this);
 	}
 
 	// 获取登录状态及用户信息
@@ -173,9 +177,9 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			mVideoLayout.setVisibility(View.GONE);
 			mImageAuthentication.setVisibility(View.GONE);
 			this.showHead(mImageHead, "7");
-			mTextName.setText("点击登录");
+			mTextName.setText(mContext.getResources().getString(R.string.str_click_to_login));
 			mTextId.setTextColor(Color.rgb(128, 138, 135));
-			mTextId.setText("登录查看个人主页");
+			mTextId.setText(mContext.getResources().getString(R.string.str_login_tosee_usercenter));
 		}
 	}
 
@@ -256,6 +260,13 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		case R.id.profit_item:
 			clickAuto(TYPE_PROFIT, 0);
 			break;
+		case R.id.rl_my_message:
+			Intent msgIntent = new Intent(mContext, MessageCenterActivity.class);
+			mContext.startActivity(msgIntent);
+			break;
+		default:
+			GolukDebugUtils.d(TAG, "unknown view clicked");
+			break;
 		}
 	}
 	
@@ -269,7 +280,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 				|| ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 2)) {// 登录过
 			if (ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 4) {
 				mBuilder = new AlertDialog.Builder(mContext);
-				dialog = mBuilder.setMessage("正在为您登录，请稍候…").create();
+				dialog = mBuilder.setMessage(mContext.getResources().getString(R.string.user_personal_autoloading_progress)).create();
 				dialog.show();
 			} else if (ma.mApp.autoLoginStatus == 2 || ma.mApp.isUserLoginSucess) {
 				if(type == TYPE_USER) {
@@ -395,7 +406,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			GolukDebugUtils.i("lily", userHead);
 
 			if ("".equals(userDesc) || null == userDesc) {
-				mTextId.setText("大家一起来分享视频吧");
+				mTextId.setText(mContext.getResources().getString(R.string.str_let_sharevideo));
 			} else {
 				mTextId.setText(userDesc);
 			}
@@ -458,9 +469,9 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			personalChanged();
 			mVideoLayout.setVisibility(View.GONE);
 			mImageAuthentication.setVisibility(View.GONE);
-			mTextName.setText("点击登录");
+			mTextName.setText(mContext.getResources().getString(R.string.str_click_to_login));
 			mTextId.setTextColor(Color.rgb(128, 138, 135));
-			mTextId.setText("登录查看个人主页");
+			mTextId.setText(mContext.getResources().getString(R.string.str_login_tosee_usercenter));
 		} else if (ma.mApp.autoLoginStatus == 5) {
 			mVideoLayout.setVisibility(View.VISIBLE);
 			mImageAuthentication.setVisibility(View.VISIBLE);
@@ -475,9 +486,9 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		if(ma.mApp.autoLoginStatus == 3 || ma.mApp.autoLoginStatus == 4) {
 			mVideoLayout.setVisibility(View.GONE);
 			mImageAuthentication.setVisibility(View.GONE);
-			mTextName.setText("点击登录");
+			mTextName.setText(mContext.getResources().getString(R.string.str_click_to_login));
 			mTextId.setTextColor(Color.rgb(128, 138, 135));
-			mTextId.setText("登录查看个人主页");
+			mTextId.setText(mContext.getResources().getString(R.string.str_login_tosee_usercenter));
 			showHead(mImageHead, "7");
 			return ;
 		}
@@ -489,9 +500,9 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		} else {// 没有用户信息
 			mVideoLayout.setVisibility(View.GONE);
 			mImageAuthentication.setVisibility(View.GONE);
-			mTextName.setText("点击登录");
+			mTextName.setText(mContext.getResources().getString(R.string.str_click_to_login));
 			mTextId.setTextColor(Color.rgb(128, 138, 135));
-			mTextId.setText("登录查看个人主页");
+			mTextId.setText(mContext.getResources().getString(R.string.str_login_tosee_usercenter));
 			showHead(mImageHead, "7");
 		}
 	}

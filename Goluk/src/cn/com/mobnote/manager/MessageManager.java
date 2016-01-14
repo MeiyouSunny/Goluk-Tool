@@ -1,12 +1,16 @@
 package cn.com.mobnote.manager;
 
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventMessageUpdate;
+import de.greenrobot.event.EventBus;
+
 public class MessageManager {
-	int mPraiseCount;
-	int mCommentCount;
-	int mSystemMessageCount;
+	private int mPraiseCount;
+	private int mCommentCount;
+	private int mSystemMessageCount;
 
 	/** This field remained for future */
-	int mOfficialMessageCount;
+	private int mOfficialMessageCount;
 
 	private volatile static MessageManager mInstance;
 
@@ -28,23 +32,38 @@ public class MessageManager {
 		return mPraiseCount;
 	}
 
-	public void setPraiseCount(int praiseCount) {
+	public synchronized void setPraiseCount(int praiseCount) {
 		this.mPraiseCount = praiseCount;
+		EventBus.getDefault().post(new EventMessageUpdate(EventConfig.MESSAGE_UPDATE));
 	}
 
 	public int getCommentCount() {
 		return mCommentCount;
 	}
 
-	public void setCommentCount(int commentCount) {
+	public synchronized void setCommentCount(int commentCount) {
 		this.mCommentCount = commentCount;
+		EventBus.getDefault().post(new EventMessageUpdate(EventConfig.MESSAGE_UPDATE));
 	}
 
 	public int getSystemMessageCount() {
 		return mSystemMessageCount;
 	}
 
-	public void setSystemMessageCount(int systemMessageCount) {
+	public synchronized void setSystemMessageCount(int systemMessageCount) {
 		this.mSystemMessageCount = systemMessageCount;
+		EventBus.getDefault().post(new EventMessageUpdate(EventConfig.MESSAGE_UPDATE));
+	}
+
+	public int getMessageTotalCount() {
+		return mPraiseCount + mCommentCount + mSystemMessageCount;
+	}
+
+	public synchronized void setMessageEveryCount(int praiseCount,
+			int commentCount, int systemMessageCount) {
+		this.mSystemMessageCount = systemMessageCount;
+		this.mCommentCount = commentCount;
+		this.mPraiseCount = praiseCount;
+		EventBus.getDefault().post(new EventMessageUpdate(EventConfig.MESSAGE_UPDATE));
 	}
 }

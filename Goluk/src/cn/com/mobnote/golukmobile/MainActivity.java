@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventBindFinish;
@@ -36,6 +37,7 @@ import cn.com.mobnote.eventbus.EventBindResult;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.mobnote.eventbus.EventMapQuery;
+import cn.com.mobnote.eventbus.EventMessageUpdate;
 import cn.com.mobnote.eventbus.EventPhotoUpdateDate;
 import cn.com.mobnote.eventbus.EventUpdateAddr;
 import cn.com.mobnote.eventbus.EventWifiAuto;
@@ -47,11 +49,15 @@ import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentTimerManager;
+import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
+import cn.com.mobnote.golukmobile.msg.MessageBadger;
+import cn.com.mobnote.golukmobile.msg.MsgCenterCounterRequest;
+import cn.com.mobnote.golukmobile.msg.bean.MessageCounterBean;
 import cn.com.mobnote.golukmobile.newest.WonderfulSelectedListView;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
@@ -63,6 +69,7 @@ import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.mobnote.golukmobile.xdpush.StartAppBean;
 import cn.com.mobnote.golukmobile.xdpush.XingGeMsgBean;
 import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.manager.MessageManager;
 import cn.com.mobnote.module.ipcmanager.IPCManagerAdapter;
 import cn.com.mobnote.module.location.LocationNotifyAdapter;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
@@ -91,7 +98,7 @@ import de.greenrobot.event.EventBus;
 
 @SuppressLint({ "HandlerLeak", "NewApi" })
 public class MainActivity extends BaseActivity implements OnClickListener, WifiConnCallBack, OnTouchListener,
-		ILiveDialogManagerFn, IBaiduGeoCoderFn {
+		ILiveDialogManagerFn, IBaiduGeoCoderFn, IRequestResultListener {
 
 	/** 程序启动需要20秒的时间用来等待IPC连接 */
 	private final int MSG_H_WIFICONN_TIME = 100;
@@ -261,8 +268,17 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			notifyLogicNetWorkState(true);
 		}
 		GolukUtils.getMobileInfo(this);
+
+//		msgRequest();
 	}
 
+	private void msgRequest() {
+		if(GolukApplication.getInstance().isUserLoginSucess) {
+			MsgCenterCounterRequest msgCounterReq = new MsgCenterCounterRequest(
+					IPageNotifyFn.PageType_MsgCounter, this);
+			msgCounterReq.get("100", GolukApplication.getInstance().mCurrentUId, "", "", "");
+		}
+	}
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
@@ -581,6 +597,25 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
+	public void onEventMainThread(EventMessageUpdate event) {
+		if (null == event) {
+			return;
+		}
+
+		switch (event.getOpCode()) {
+		case EventConfig.MESSAGE_UPDATE:
+			int msgCount = MessageManager.getMessageManager().getMessageTotalCount();
+			setMessageTipCount(msgCount);
+			MessageBadger.sendBadgeNumber(msgCount, this);
+			break;
+		case EventConfig.MESSAGE_REQUEST:
+			msgRequest();
+			break;
+		default:
+			break;
+		}
+	}
+
 	public void onEventMainThread(EventBindResult event) {
 		GolukDebugUtils.e("", "wifilist----MainActivity----onEventMainThread----EventBindResult----1");
 		if (null == event) {
@@ -671,7 +706,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 					}
 				} else {
 					mCityCode = event.getCityCode();
-					;
 					SharedPrefUtil.setCityIDString(mCityCode);
 					listView.loadBannerData(mCityCode);
 				}
@@ -1191,4 +1225,67 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mApp.mIPCControlManager.setIPCWifiState(true, ip);
 	}
 
+	private void setMessageTipCount(int total) {
+		ImageView mainMsgTip = (ImageView)findViewById(R.id.iv_main_message_tip);
+		if(total > 0) {
+			mainMsgTip.setVisibility(View.VISIBLE);
+		} else {
+			mainMsgTip.setVisibility(View.GONE);
+		}
+
+		// Also set user page message count tip
+		if(null == indexMoreActivity || indexMoreActivity.mRootLayout == null) {
+			GolukDebugUtils.d(TAG, "index more has been finished");
+			return;
+		}
+
+		TextView userMsgCounterTV = (TextView)indexMoreActivity.mRootLayout.findViewById(R.id.tv_my_message_tip);
+		String strTotal = null;
+		if(total > 99) {
+			strTotal = "99+";
+			userMsgCounterTV.setVisibility(View.VISIBLE);
+		} else if(total <= 0) {
+			strTotal = "0";
+			userMsgCounterTV.setVisibility(View.GONE);
+		} else {
+			userMsgCounterTV.setVisibility(View.VISIBLE);
+			strTotal = String.valueOf(total);
+		}
+
+		userMsgCounterTV.setText(strTotal);
+	}
+
+	@Override
+	public void onLoadComplete(int requestType, Object result) {
+		// TODO Auto-generated method stub
+		if(null == result) {
+			return;
+		}
+
+		if(requestType == IPageNotifyFn.PageType_MsgCounter) {
+			MessageCounterBean bean = (MessageCounterBean)result;
+			if(null == bean.data) {
+				return;
+			}
+
+			if(null != bean.data.messagecount){
+				int praiseCount = 0;
+				int commentCount = 0;
+				int systemCount = 0;
+
+				if(null != bean.data.messagecount.user) {
+					praiseCount = bean.data.messagecount.user.like;
+					commentCount = bean.data.messagecount.user.comment;
+				}
+				if(null != bean.data.messagecount.system) {
+					systemCount = bean.data.messagecount.system.total;
+				}
+
+				MessageManager.getMessageManager().setMessageEveryCount(
+						praiseCount,
+						commentCount,
+						systemCount);
+			}
+		}
+	}
 }

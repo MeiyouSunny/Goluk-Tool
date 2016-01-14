@@ -102,6 +102,17 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_Praise = 50;
 
 	public static final int PageType_VoteShare = 51;
+
+	/** 系统消息 **/
+	public static final int PageType_SystemMsgMain = 52;
+	/**消息盒子——评论**/
+	public static final int PageType_MsgComment = 53;
+	/**消息盒子——点赞**/
+	public static final int PageType_MsgPraise = 54;
+	/**消息盒子——消息中心计数**/
+	public static final int PageType_MsgCounter = 55;
+	/**消息盒子——官方通知**/
+	public static final int PageType_MsgOfficial = 56;
 	/**
 	 * 
 	 * 以下为同步获取信息标识
