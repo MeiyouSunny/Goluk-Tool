@@ -1079,6 +1079,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	private void refreshIpcDataToFile() {
+
+		mCurrentConnBean = mWac.readConfig();
 		if (null == mCurrentConnBean) {
 			return;
 		}

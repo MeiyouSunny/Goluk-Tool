@@ -63,7 +63,8 @@
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:background="#ffffff"
-        android:layout_marginTop="1dp">
+        android:layout_marginTop="1dp"
+        android:visibility="gone">
         
         <ImageView 
             android:id="@+id/goluk_g1s_icon"

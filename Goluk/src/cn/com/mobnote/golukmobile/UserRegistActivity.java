@@ -441,4 +441,15 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		}
 	}
 
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		closeProgressDialogIdentify();
+		if (mCustomProgressDialog != null) {
+			mCustomProgressDialog.close();
+		}
+		mCustomProgressDialogIdentify = null;
+		mCustomProgressDialog = null;
+	}
 }
