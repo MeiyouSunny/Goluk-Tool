@@ -100,7 +100,7 @@ public class JsonUtil {
 		return defaultValue;
 	}
 
-	private static int getJsonIntValue(JSONObject json_Channel, String key, int defaultValue) {
+	public static int getJsonIntValue(JSONObject json_Channel, String key, int defaultValue) {
 		try {
 			if (!json_Channel.has(key)) {
 				return defaultValue;

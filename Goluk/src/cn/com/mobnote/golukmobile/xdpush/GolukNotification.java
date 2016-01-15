@@ -4,6 +4,9 @@ import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -13,8 +16,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.eventbus.EventConfig;
-import cn.com.mobnote.eventbus.EventPushMsg;
 import cn.com.mobnote.golukmobile.GuideActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -24,12 +25,15 @@ import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
 import cn.com.mobnote.golukmobile.comment.ICommentFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.msg.MsgCenterCommentActivity;
+import cn.com.mobnote.golukmobile.msg.MsgCenterPraiseActivity;
+import cn.com.mobnote.golukmobile.msg.OfficialMessageActivity;
+import cn.com.mobnote.golukmobile.msg.SystemMsgActivity;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
-import de.greenrobot.event.EventBus;
 
 public class GolukNotification {
 	/** 推送标识，主要是主界面接受，用于区分是否是推送数据 */
@@ -244,11 +248,11 @@ public class GolukNotification {
 	 * @author jyf
 	 */
 	public void showAppInnerPush(final Context cnt, final XingGeMsgBean msgBean) {
-		if (null == msgBean/* || !isCanShowPushDialog()*/) {
+		if (null == msgBean || !isCanShowPushDialog()) {
 			return;
 		}
-		EventBus.getDefault().post(new EventPushMsg(EventConfig.PUSH_MSG_GET, msgBean));
-//		isCanShowDialog = false;
+
+		isCanShowDialog = false;
 		startTimer();
 		dimissPushDialog();
 		Context context = GolukApplication.getInstance().getContext();
@@ -311,43 +315,79 @@ public class GolukNotification {
 
 	private void pushStartFuntion(XingGeMsgBean msgBean) {
 		try {
-			if (ICommentFn.COMMENT_TYPE_VIDEO.equals(msgBean.tarkey)) {
-				// 启动视频详情界面
-				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
-				if (null != vidArray && vidArray.length > 0) {
-					startDetail(vidArray[0]);
-				}
-			} else if (ICommentFn.COMMENT_TYPE_WONDERFUL_SPECIAL.equals(msgBean.tarkey)) {
-				// 精选专题
-				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
-				if (null != vidArray && vidArray.length > 0) {
-					startSpecial(vidArray[0], msgBean.msg);
-				}
-			} else if (ICommentFn.COMMENT_TYPE_CLUSTER.equals(msgBean.tarkey)) {
-				// 活动聚合
-				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
-				if (null != vidArray && vidArray.length > 0) {
-					startCluster(vidArray[0], msgBean.msg);
-				}
+//			if (ICommentFn.COMMENT_TYPE_VIDEO.equals(msgBean.tarkey)) {
+//				// 启动视频详情界面
+//				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
+//				if (null != vidArray && vidArray.length > 0) {
+//					startDetail(vidArray[0]);
+//				}
+//			} else if (ICommentFn.COMMENT_TYPE_WONDERFUL_SPECIAL.equals(msgBean.tarkey)) {
+//				// 精选专题
+//				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
+//				if (null != vidArray && vidArray.length > 0) {
+//					startSpecial(vidArray[0], msgBean.msg);
+//				}
+//			} else if (ICommentFn.COMMENT_TYPE_CLUSTER.equals(msgBean.tarkey)) {
+//				// 活动聚合
+//				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
+//				if (null != vidArray && vidArray.length > 0) {
+//					startCluster(vidArray[0], msgBean.msg);
+//				}
+//
+//			} else if (ICommentFn.COMMENT_TYPE_WINNING.equals(msgBean.tarkey)) {
+//				// 发奖跳转页
+//				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
+//				// if (null != vidArray && vidArray.length > 0) {
+//				// startCluster(vidArray[0], msgBean.msg);
+//				// }
+//
+//				startWinning(vidArray[0]);
+//
+//			} else if (ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO.equals(msgBean.tarkey)) {
+//				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
+//				if (null != vidArray && vidArray.length > 0) {
+//					startDetail(vidArray[0]);
+//				}
+//
+//			}
 
-			} else if (ICommentFn.COMMENT_TYPE_WINNING.equals(msgBean.tarkey)) {
-				// 发奖跳转页
-				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
-				// if (null != vidArray && vidArray.length > 0) {
-				// startCluster(vidArray[0], msgBean.msg);
-				// }
+			int type = 0;
+			JSONArray array = new JSONArray(msgBean.params);
 
-				startWinning(vidArray[0]);
+			int size = array.length();
+			if(size > 0) {
+				JSONObject obj = array.getJSONObject(0);
+				type = JsonUtil.getJsonIntValue(obj, "t", 0);
 
-			} else if (ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO.equals(msgBean.tarkey)) {
-				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
-				if (null != vidArray && vidArray.length > 0) {
-					startDetail(vidArray[0]);
+				// 101 = comment
+				// 102 = like/praise
+				// 200~300 = system
+				// 300~400 = official notification
+				if(0 == type) {
+					//do nothing
+				} else if(101 == type) {
+					// start comment activity
+					Context context = GolukApplication.getInstance().getContext();
+					Intent intent = new Intent(context, MsgCenterCommentActivity.class);
+					context.startActivity(intent);
+				} else if(102 == type) {
+					Context context = GolukApplication.getInstance().getContext();
+					Intent intent = new Intent(context, MsgCenterPraiseActivity.class);
+					context.startActivity(intent);
+				} else if(type >= 200 && type < 300) {
+					Context context = GolukApplication.getInstance().getContext();
+					Intent intent = new Intent(context, SystemMsgActivity.class);
+					context.startActivity(intent);
+				} else if(type >= 300 && type < 400) {
+					Context context = GolukApplication.getInstance().getContext();
+					Intent intent = new Intent(context, OfficialMessageActivity.class);
+					context.startActivity(intent);
+				} else {
+					// do nothing
 				}
-
 			}
 		} catch (Exception e) {
-
+			e.printStackTrace();
 		}
 	}
 
