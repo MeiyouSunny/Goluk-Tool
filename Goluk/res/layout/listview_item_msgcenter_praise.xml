@@ -34,8 +34,8 @@
 
     <ImageView
         android:id="@+id/iv_listview_item_praise_thumbnail"
-        android:layout_width="100dp"
-        android:layout_height="37dp"
+        android:layout_width="92dp"
+        android:layout_height="52dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
@@ -48,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="17dp"
         android:layout_toLeftOf="@id/iv_listview_item_praise_thumbnail"
         android:layout_toRightOf="@id/rl_head_img"
         android:textColor="#216da8"
@@ -77,7 +77,7 @@
         android:layout_alignRight="@id/iv_listview_item_praise_thumbnail"
         android:layout_below="@id/tv_listview_item_praise_time"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="17dp"
         android:background="#e5e5e5" />
 
 </RelativeLayout>

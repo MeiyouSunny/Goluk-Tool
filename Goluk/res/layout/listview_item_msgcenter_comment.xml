@@ -11,7 +11,7 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="17dp"
         android:contentDescription="@string/imgdes" />
 
     <!-- 加v -->
@@ -27,10 +27,10 @@
 
     <ImageView
         android:id="@+id/iv_listview_item_comment_thumbnail"
-        android:layout_width="100dp"
-        android:layout_height="37dp"
+        android:layout_width="92dp"
+        android:layout_height="52dp"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
+        android:layout_marginTop="17dp"
         android:layout_marginRight="10dp"
         android:contentDescription="@string/imgdes" />
 
@@ -40,8 +40,8 @@
         android:id="@+id/tv_listview_item_comment_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginTop="20dp"
         android:layout_toLeftOf="@id/iv_listview_item_comment_thumbnail"
         android:layout_toRightOf="@id/iv_listview_item_comment_head"
         android:textColor="#216da8"
@@ -55,7 +55,8 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tv_listview_item_comment_name"
         android:layout_below="@id/tv_listview_item_comment_name"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginRight="6dp"
         android:layout_toLeftOf="@id/iv_listview_item_comment_thumbnail"
         android:textColor="@color/user_login_text"
         android:ellipsize="end"
@@ -69,7 +70,8 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tv_listview_item_comment_name"
         android:layout_below="@id/tv_listview_item_comment_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="6dp"
         android:layout_toLeftOf="@id/iv_listview_item_comment_thumbnail"
         android:ellipsize="end"
         android:maxLines="5"
