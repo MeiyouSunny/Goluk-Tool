@@ -7,10 +7,11 @@
     
     <ImageView 
         android:id="@+id/msg_image"
-        android:layout_width="100dp"
-        android:layout_height="37dp"
+        android:layout_width="92dp"
+        android:layout_height="52dp"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginRight="14dp"
         android:src="@drawable/screenshot"/>
     
     <TextView 
@@ -18,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="14dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="13dp"
         android:layout_toLeftOf="@id/msg_image"
         android:textSize="14sp"
         android:textColor="#216da8"/>
@@ -43,7 +44,7 @@
         android:layout_below="@id/msg_reason_txt"
         android:layout_toLeftOf="@id/msg_image"
         android:layout_marginLeft="14dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="13dp"
         android:textColor="#888888"
         android:textSize="12sp"
         android:text="@string/str_link_my_profit"/>
