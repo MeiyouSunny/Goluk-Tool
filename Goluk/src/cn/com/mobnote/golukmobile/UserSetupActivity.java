@@ -26,6 +26,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
 import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.manager.MessageManager;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.DataCleanManage;
 import cn.com.mobnote.user.IpcUpdateManage;
@@ -159,15 +160,15 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		if (!isFirstLogin) {// 登录过
 			if (mApp.loginStatus == 1 || mApp.registStatus == 2 || mApp.autoLoginStatus == 2
 					|| mApp.isUserLoginSucess == true) {// 上次登录成功
-				btnLoginout.setText("注销");
+				btnLoginout.setText(this.getResources().getString(R.string.logout));
 			} else {
-				btnLoginout.setText("登录");
+				btnLoginout.setText(this.getResources().getString(R.string.login_text));
 			}
 		} else {
 			if (mApp.registStatus == 2) {
-				btnLoginout.setText("注销");
+				btnLoginout.setText(this.getResources().getString(R.string.logout));
 			} else {
-				btnLoginout.setText("登录");
+				btnLoginout.setText(this.getResources().getString(R.string.login_text));
 			}
 		}
 	}
@@ -183,11 +184,13 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			break;
 		// 退出按钮
 		case R.id.loginout_btn:
-			if (btnLoginout.getText().toString().equals("登录")) {
+			if (btnLoginout.getText().toString().equals(this.getResources().getString(R.string.login_text))) {
 				if (mApp.autoLoginStatus == 1) {
 					mBuilder = new AlertDialog.Builder(mContext);
-					dialog = mBuilder.setMessage("正在为您登录，请稍候…").setCancelable(true)
-							.setOnKeyListener(new OnKeyListener() {
+					dialog = mBuilder.
+							setMessage(this.getResources().getString(R.string.user_personal_autoloading_progress)).
+							setCancelable(true).
+							setOnKeyListener(new OnKeyListener() {
 								@Override
 								public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 									if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -200,15 +203,16 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 					return;
 				}
 				initIntent(UserLoginActivity.class);
-			} else if (btnLoginout.getText().toString().equals("注销")) {
-				new AlertDialog.Builder(mContext).setTitle("提示").setMessage("是否确认退出？")
-						.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-
+			} else if (btnLoginout.getText().toString().equals(this.getResources().getString(R.string.logout))) {
+				new AlertDialog.Builder(mContext).
+					setTitle(this.getResources().getString(R.string.wifi_link_prompt)).
+					setMessage(this.getResources().getString(R.string.str_confirm_loginout)).
+					setPositiveButton(this.getResources().getString(R.string.str_button_ok), new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface arg0, int arg1) {
 								getLoginout();
 							}
-						}).setNegativeButton("取消", null).create().show();
+						}).setNegativeButton(this.getResources().getString(R.string.user_cancle), null).create().show();
 			}
 			break;
 		// 清除缓存
@@ -216,11 +220,14 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			mApp.mUser.setUserInterface(null);
 			GolukDebugUtils.i("lily", "----清除缓存-----" + Const.getAppContext().getCacheDir().getPath());
 			if (mTextCacheSize.getText().toString().equals("0M")) {
-				UserUtils.showDialog(mContext, "没有缓存数据");
+				UserUtils.showDialog(mContext, this.getResources().getString(R.string.str_no_cache));
 			} else {
-				new AlertDialog.Builder(mContext).setTitle("提示").setMessage("确定清除缓存？").setNegativeButton("取消", null)
-						.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-
+				new AlertDialog.Builder(mContext).
+					setTitle(this.getResources().getString(R.string.wifi_link_prompt)).
+					setMessage(this.getResources().getString(R.string.str_confirm_clear_cache)).
+					setNegativeButton(this.getResources().getString(R.string.user_cancle), null).
+					setPositiveButton(this.getResources().getString(R.string.str_button_ok),
+						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface arg0, int arg1) {
 								DataCleanManage.deleteFile(Const.getAppContext().getCacheDir());
@@ -256,7 +263,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	 */
 	private void startMsgSettingActivity() {
 		if (!mApp.isUserLoginSucess) {
-			GolukUtils.showToast(this, "请先登录");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
 			return;
 		}
 		Intent intent = new Intent(this, PushSettingActivity.class);
@@ -268,16 +275,16 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	 */
 	public void getLoginout() {
 		if (!UserUtils.isNetDeviceAvailable(mContext)) {
-			GolukUtils.showToast(mContext, "当前网络不可用，请检查网络后重试");
+			GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
 		} else {
 			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 					IPageNotifyFn.PageType_SignOut, "");
 			if (!b) {
-				GolukUtils.showToast(this, "注销失败");
+				GolukUtils.showToast(this, this.getResources().getString(R.string.str_loginout_fail));
 				return;
 			}
 			LiveDialogManager.getManagerInstance().showCommProgressDialog(this, LiveDialogManager.DIALOG_TYPE_LOGOUT,
-					"", "正在注销...", true);
+					"", this.getResources().getString(R.string.str_loginouting), true);
 		}
 	}
 
@@ -293,18 +300,19 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		// 提交修改
 		mEditor.commit();
 
-		GolukUtils.showToast(mContext, "注销成功");
-		btnLoginout.setText("登录");
+		GolukUtils.showToast(mContext, this.getResources().getString(R.string.str_loginout_success));
+		btnLoginout.setText(this.getResources().getString(R.string.login_text));
+		MessageManager.getMessageManager().setMessageEveryCount(0, 0, 0);
 	}
 
 	/**
 	 * 注销的回调
 	 */
 	public void getLogintoutCallback(int success, Object obj) {
-		GolukDebugUtils.e("", "-----------------注销回调--------------------");
+		GolukDebugUtils.e("", "-----------------getLogintoutCallback--------------------");
 		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
 		if (1 != success) {
-			GolukUtils.showToast(this, "注销失败");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_loginout_fail));
 			return;
 		}
 		logoutSucess();
@@ -373,7 +381,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		if (mApp.autoLoginStatus != 1) {
 			dismissAutoDialog();
 			if (mApp.autoLoginStatus == 2) {
-				btnLoginout.setText("注销");
+				btnLoginout.setText(this.getResources().getString(R.string.logout));
 			}
 		}
 	}

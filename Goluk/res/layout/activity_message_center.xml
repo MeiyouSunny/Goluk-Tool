@@ -162,7 +162,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
-                android:drawableLeft="@drawable/my_message_icon"
+                android:drawableLeft="@drawable/my_message_notice_icon"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
                 android:drawablePadding="10dp"
@@ -206,7 +206,7 @@
             android:paddingRight="14dp"
             android:paddingLeft="14dp"
             android:textColor="#333333"
-            android:drawableLeft="@drawable/my_message_notice_icon"
+            android:drawableLeft="@drawable/my_message_icon"
             android:drawablePadding="10dp"
             android:drawableRight="@drawable/editor_arrow"
             android:textSize="14sp" />

@@ -251,6 +251,12 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
+       <activity
+            android:name=".player.MovieActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
         <activity
             android:name=".special.SpecialListActivity"
             android:screenOrientation="portrait"

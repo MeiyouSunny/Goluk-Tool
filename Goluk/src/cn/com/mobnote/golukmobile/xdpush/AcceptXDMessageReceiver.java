@@ -73,13 +73,13 @@ public class AcceptXDMessageReceiver extends XGPushBaseReceiver {
 		if (null == bean) {
 			return;
 		}
-		if (GolukApplication.getInstance() != null && !GolukApplication.getInstance().isExit()) {
+//		if (GolukApplication.getInstance() != null && !GolukApplication.getInstance().isExit()) {
 			// 程序内显示框
-			GolukNotification.getInstance().showAppInnerPush(context, bean);
-		} else {
+//			GolukNotification.getInstance().showAppInnerPush(context, bean);
+//		} else {
 			// 程序外通知
 			GolukNotification.getInstance().showNotify(context, bean, json);
-		}
+//		}
 	}
 
 }

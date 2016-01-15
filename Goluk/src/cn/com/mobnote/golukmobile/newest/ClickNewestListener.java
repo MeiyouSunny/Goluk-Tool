@@ -19,6 +19,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.player.MovieActivity;
 import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoEntity;
@@ -60,7 +61,7 @@ public class ClickNewestListener implements OnClickListener {
 			}
 
 		} else {
-			Intent intent = new Intent(mContext, VideoPlayerActivity.class);
+			Intent intent = new Intent(mContext, MovieActivity.class);
 			intent.putExtra("from", "suqare");
 			intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
 			intent.putExtra("playUrl", mVideoSquareInfo.mVideoEntity.ondemandwebaddress);

@@ -88,6 +88,8 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 					MsgCenterCounterRequest newReq = new MsgCenterCounterRequest(
 						IPageNotifyFn.PageType_MsgCounter, MessageCenterActivity.this);
 					newReq.get(PROTOCOL, GolukApplication.getInstance().mCurrentUId, "", "", "");
+				} else {
+					mScrollView.onRefreshComplete();
 				}
 			}
 
