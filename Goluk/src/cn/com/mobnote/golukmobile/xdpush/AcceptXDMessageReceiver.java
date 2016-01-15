@@ -1,7 +1,18 @@
 package cn.com.mobnote.golukmobile.xdpush;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
+import android.content.Intent;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.golukmobile.msg.MsgCenterCommentActivity;
+import cn.com.mobnote.golukmobile.msg.MsgCenterPraiseActivity;
+import cn.com.mobnote.golukmobile.msg.OfficialMessageActivity;
+import cn.com.mobnote.golukmobile.msg.SystemMsgActivity;
+import cn.com.mobnote.manager.MessageManager;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -10,6 +21,8 @@ import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushRegisterResult;
 import com.tencent.android.tpush.XGPushShowedResult;
 import com.tencent.android.tpush.XGPushTextMessage;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * XGPushBaseReceiver类提供透传消息的接收和操作结果的反馈
@@ -78,7 +91,47 @@ public class AcceptXDMessageReceiver extends XGPushBaseReceiver {
 //			GolukNotification.getInstance().showAppInnerPush(context, bean);
 //		} else {
 			// 程序外通知
-			GolukNotification.getInstance().showNotify(context, bean, json);
+//		EventBus.getDefault().post(new EventPushMsg(EventConfig.PUSH_MSG_GET, bean));
+	//	MessageManager.getMessageManager().setCommentCount(commentCount);
+		int type = 0;
+		if(null != bean.params) {
+			JSONArray array = null;
+			try {
+				array = new JSONArray(bean.params);
+				int size = array.length();
+				if(size > 0) {
+					JSONObject obj = array.getJSONObject(0);
+					type = JsonUtil.getJsonIntValue(obj, "t", 0);
+
+					// 101 = comment
+					// 102 = like/praise
+					// 200~300 = system
+					// 300~400 = official notification
+					if(0 == type) {
+						//do nothing
+					} else if(101 == type) {
+						int num = MessageManager.getMessageManager().getCommentCount();
+						MessageManager.getMessageManager().setCommentCount(num + 1);
+					} else if(102 == type) {
+						int num = MessageManager.getMessageManager().getPraiseCount();
+						MessageManager.getMessageManager().setPraiseCount(num + 1);
+					} else if(type >= 200 && type < 300) {
+						int num = MessageManager.getMessageManager().getSystemMessageCount();
+						MessageManager.getMessageManager().setSystemMessageCount(num + 1);
+					} else if(type >= 300 && type < 400) {
+						// for miui to sync number on launcher
+						int num = MessageManager.getMessageManager().getSystemMessageCount();
+						MessageManager.getMessageManager().setSystemMessageCount(num);
+					} else {
+						// do nothing
+					}
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		GolukNotification.getInstance().showNotify(context, bean, json);
 //		}
 	}
 

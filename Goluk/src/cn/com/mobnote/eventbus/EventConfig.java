@@ -57,6 +57,4 @@ public class EventConfig {
 	public final static int MESSAGE_UPDATE = 10001;
 	/** Update request */
 	public final static int MESSAGE_REQUEST = 10002;
-	/** 接受到推送消息 */
-	public static final int PUSH_MSG_GET = 0;
 }
