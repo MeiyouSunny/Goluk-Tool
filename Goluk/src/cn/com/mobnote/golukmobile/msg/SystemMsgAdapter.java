@@ -2,16 +2,17 @@ package cn.com.mobnote.golukmobile.msg;
 
 import java.util.List;
 
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.msg.bean.MessageMsgsBean;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
-import cn.com.mobnote.golukmobile.usercenter.UserCenterAdapter.NoVideoDataViewHolder;
+import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
-
-import com.alibaba.fastjson.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +22,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -57,10 +57,10 @@ public class SystemMsgAdapter extends BaseAdapter {
 	private final static String resultFial = "0";
 	/** 成功 **/
 	private final static String resultSuccess = "1";
-	/**mUid当前用户的uid**/
+	/** mUid当前用户的uid **/
 	private String mUid = "";
-	
-	public SystemMsgAdapter(Context context,String uid) {
+
+	public SystemMsgAdapter(Context context, String uid) {
 		mContext = context;
 		mUid = uid;
 	}
@@ -111,7 +111,7 @@ public class SystemMsgAdapter extends BaseAdapter {
 		int type = getItemViewType(position);
 		switch (type) {
 		case sMessageTypeTxt:
-			MessageMsgsBean mmbTxt = mMsgList.get(position);
+			final MessageMsgsBean mmbTxt = mMsgList.get(position);
 
 			TxtHolder txtHolder = null;
 			if (convertView == null) {
@@ -119,6 +119,7 @@ public class SystemMsgAdapter extends BaseAdapter {
 				txtHolder = new TxtHolder();
 				txtHolder.msgTime = (TextView) convertView.findViewById(R.id.msg_time);
 				txtHolder.msgTxt = (TextView) convertView.findViewById(R.id.msg_txt);
+				txtHolder.msgLayout = (RelativeLayout) convertView.findViewById(R.id.all_layout);
 				convertView.setTag(txtHolder);
 			} else {
 				txtHolder = (TxtHolder) convertView.getTag();
@@ -149,6 +150,20 @@ public class SystemMsgAdapter extends BaseAdapter {
 
 			txtHolder.msgTime.setText(GolukUtils.getCommentShowFormatTime(time));
 			txtHolder.msgTxt.setText(txt);
+			txtHolder.msgLayout.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View arg0) {
+					if (mmbTxt.type == msgTypeCertificate) {//认证消息跳转到个人中心
+						UCUserInfo user = new UCUserInfo();
+						user.uid = mmbTxt.receiver.uid;
+						Intent i = new Intent(mContext, UserCenterActivity.class);
+						i.putExtra("userinfo", user);
+						i.putExtra("type", 0);
+						mContext.startActivity(i);
+					}
+
+				}
+			});
 			break;
 		case sMessageTypeImg:
 			final MessageMsgsBean mmbImg = mMsgList.get(position);
@@ -180,11 +195,11 @@ public class SystemMsgAdapter extends BaseAdapter {
 				imgPath = mmbImg.content.picture;
 				imageHolder.msgMyincome.setVisibility(View.VISIBLE);
 				imageHolder.msgMyincome.setOnClickListener(new OnClickListener() {
-					
+
 					@Override
 					public void onClick(View view) {
-						Intent intent = new Intent(mContext,MyProfitActivity.class);
-//						intent.putExtra("uid", mUid);
+						Intent intent = new Intent(mContext, MyProfitActivity.class);
+						// intent.putExtra("uid", mUid);
 						mContext.startActivity(intent);
 					}
 				});
@@ -195,16 +210,16 @@ public class SystemMsgAdapter extends BaseAdapter {
 				imageHolder.msgMyincome.setVisibility(View.GONE);
 			}
 			imageHolder.msgImage.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View arg0) {
 					System.out.println("woqunimeide" + mmbImg.content.access);
-					Intent intent = new Intent(mContext,VideoDetailActivity.class);
-					intent.putExtra("videoid",mmbImg.content.access);
+					Intent intent = new Intent(mContext, VideoDetailActivity.class);
+					intent.putExtra("videoid", mmbImg.content.access);
 					mContext.startActivity(intent);
 				}
 			});
-			
+
 			GlideUtils.loadImage(mContext, imageHolder.msgImage, imgPath, 0);
 			imageHolder.msgTime.setText(GolukUtils.getCommentShowFormatTime(imgTime));
 			imageHolder.msgTxt.setText(imgTxt);
@@ -220,6 +235,7 @@ public class SystemMsgAdapter extends BaseAdapter {
 	public static class TxtHolder {
 		TextView msgTxt;
 		TextView msgTime;
+		RelativeLayout msgLayout;
 	}
 
 	public static class ImageHolder {

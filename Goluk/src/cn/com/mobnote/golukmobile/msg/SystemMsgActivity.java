@@ -16,7 +16,6 @@ import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.manager.MessageManager;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -107,7 +106,6 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
 						mLoadType = 1;
 						if(mIsHaveData){
 							mRTPullListView.addFooterView(1);
-							//httpPost(mUid, "0", "");//首次进入请求数据
 							httpPost(mUid, "2", mTimestamp);//上拉请求更多数据
 						}
 					}
@@ -209,9 +207,12 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
 							
 							if(list.size() < 20){
 								mRTPullListView.addFooterView(2);
+							}else{
+								mRTPullListView.addFooterView(1);
 							}
 						}else{//数据为空
-							updateViewData(false, 0);
+							mEmptyImg.setImageResource(R.drawable.mine_zanwuxitongxiaoxi);
+							this.fristLoadDataError();
 						}
 					}else{//上拉加载更多
 						if(list != null && list.size() >0){
@@ -221,16 +222,21 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
 							updateViewData(true, count);
 							if(list.size() <20){
 								mRTPullListView.addFooterView(2);
+							}else{
+								mRTPullListView.addFooterView(1);
 							}
 						}else{//数据为空
-							updateViewData(false, 0);
+							updateViewData(true, mData.size());
+							mRTPullListView.addFooterView(2);
 						}
 					}
 					
 				}else{//数据返回异常
+					mEmptyImg.setImageResource(R.drawable.mine_qitadifang);
 					this.fristLoadDataError();
 				}
 			}else{//数据返回异常
+				mEmptyImg.setImageResource(R.drawable.mine_qitadifang);
 				this.fristLoadDataError();
 			}
 		}
@@ -239,7 +245,6 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
 	public void  fristLoadDataError(){
 		mIsHaveData = false;
 		if(mIsFrist){//首次加载失败
-			//mSystemMsgAdpter.setData(mData);
 			updateViewData(false, 0);
 			mRTPullListView.setVisibility(View.GONE);
 			mEmpty.setVisibility(View.VISIBLE);
