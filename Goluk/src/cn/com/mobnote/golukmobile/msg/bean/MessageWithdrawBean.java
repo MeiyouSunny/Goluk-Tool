@@ -8,4 +8,8 @@ public class MessageWithdrawBean {
 	@JSONField(name="result")
 	public String result;
 	
+	/**体现类型 0：审核；1：打款  **/
+	@JSONField(name="type")
+	public String type;
+	
 }

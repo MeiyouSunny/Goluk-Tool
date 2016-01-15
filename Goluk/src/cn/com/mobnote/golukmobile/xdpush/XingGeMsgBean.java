@@ -23,4 +23,6 @@ public class XingGeMsgBean {
 	/** 1开启打扰 0关闭免打扰 */
 	public String disturb;
 
+	/** Notification跳转类型 */
+	public int type;
 }
