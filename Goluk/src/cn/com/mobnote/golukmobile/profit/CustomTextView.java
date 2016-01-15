@@ -10,9 +10,9 @@ import android.widget.TextView;
 
 public class CustomTextView extends TextView {
 
-	private Paint textPaint;
-	private float preferredTextSize;
-	private float minTextSize;
+	private Paint mTextPaint;
+	private float mPreferredTextSize;
+	private float mMinTextSize;
 
 	public CustomTextView(Context context) {
 		this(context, null);
@@ -25,13 +25,13 @@ public class CustomTextView extends TextView {
 	public CustomTextView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		
-		this.textPaint = new Paint();
+		this.mTextPaint = new Paint();
 
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AutoScaleTextView, defStyle, 0);
-		this.minTextSize = a.getDimension(R.styleable.AutoScaleTextView_minTextSize, 10f);
+		this.mMinTextSize = a.getDimension(R.styleable.AutoScaleTextView_minTextSize, 10f);
 		a.recycle();
 
-		this.preferredTextSize = this.getTextSize();
+		this.mPreferredTextSize = this.getTextSize();
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class CustomTextView extends TextView {
 	 * 
 	 */
 	public void setMinTextSize(float minTextSize) {
-		this.minTextSize = minTextSize;
+		this.mMinTextSize = minTextSize;
 	}
 
 	/**
@@ -59,17 +59,17 @@ public class CustomTextView extends TextView {
 
 		final float threshold = 0.5f;
 
-		this.textPaint.set(this.getPaint());
+		this.mTextPaint.set(this.getPaint());
 
-		while ((this.preferredTextSize - this.minTextSize) > threshold) {
-			float size = (this.preferredTextSize + this.minTextSize) / 2;
-			this.textPaint.setTextSize(size);
-			if (this.textPaint.measureText(text) >= targetWidth) {
+		while ((this.mPreferredTextSize - this.mMinTextSize) > threshold) {
+			float size = (this.mPreferredTextSize + this.mMinTextSize) / 2;
+			this.mTextPaint.setTextSize(size);
+			if (this.mTextPaint.measureText(text) >= targetWidth) {
 				//最大字号
-				this.preferredTextSize = size;
+				this.mPreferredTextSize = size;
 			} else {
 				//最小字号
-				this.minTextSize = size;
+				this.mMinTextSize = size;
 			}
 		}
 		/**
@@ -77,7 +77,7 @@ public class CustomTextView extends TextView {
 		 * 因此setTextSize(TypedValue.COMPLEX_UNIT_PX, size); 
 		 */
 		//使用最小的字号，使得文字在TextView里面（如果设置最大字号，文字可能在TextView以外）
-		this.setTextSize(TypedValue.COMPLEX_UNIT_PX, this.minTextSize);
+		this.setTextSize(TypedValue.COMPLEX_UNIT_PX, this.mMinTextSize);
 	}
 
 	@Override
