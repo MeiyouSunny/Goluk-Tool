@@ -55,6 +55,12 @@ public class SystemMsgAdapter extends BaseAdapter {
 
 	/** 失败 **/
 	private final static String resultFial = "0";
+	
+	/**审核**/
+	private final static String WITHDRAWTYPESH = "0";
+	/**汇款**/
+	private final static String WITHDRAWTYPEHK = "1";
+	
 	/** 成功 **/
 	private final static String resultSuccess = "1";
 	/** mUid当前用户的uid **/
@@ -137,11 +143,20 @@ public class SystemMsgAdapter extends BaseAdapter {
 				}
 
 			} else if (mmbTxt.type == msgTypeWithdraw) {// 提现
-				if (resultFial.equals(mmbTxt.content.withdraw.result)) {
-					txt = mContext.getResources().getString(R.string.msg_system_withdraw_fail);
-				} else {
-					txt = mContext.getResources().getString(R.string.msg_system_withdraw_success);
+				if(WITHDRAWTYPESH.equals(mmbTxt.content.withdraw.type)){
+					if (resultFial.equals(mmbTxt.content.withdraw.result)) {
+						txt = mContext.getResources().getString(R.string.msg_system_withdraw_check_fail);
+					} else {
+						txt = mContext.getResources().getString(R.string.msg_system_withdraw_check_success);
+					}
+				}else{
+					if (resultFial.equals(mmbTxt.content.withdraw.result)) {
+						txt = mContext.getResources().getString(R.string.msg_system_withdraw_fail);
+					} else {
+						txt = mContext.getResources().getString(R.string.msg_system_withdraw_success);
+					}
 				}
+				
 			} else if (mmbTxt.type == msgTypePoll) {// 投票
 				txt = mContext.getResources().getString(R.string.msg_system_poll_txt);
 			} else if (mmbTxt.type == msgTypeSelect) {// 精选
@@ -159,6 +174,10 @@ public class SystemMsgAdapter extends BaseAdapter {
 						Intent i = new Intent(mContext, UserCenterActivity.class);
 						i.putExtra("userinfo", user);
 						i.putExtra("type", 0);
+						mContext.startActivity(i);
+					}else if(mmbTxt.type == msgTypeWithdraw){
+						Intent i = new Intent(mContext, MyProfitActivity.class);
+						i.putExtra("uid", mmbTxt.receiver.uid);
 						mContext.startActivity(i);
 					}
 

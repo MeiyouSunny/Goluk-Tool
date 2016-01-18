@@ -635,8 +635,10 @@
     <string name="str_msg_push_login">请登录后查看消息</string>
     <string name="msg_system_certificate_fail">很抱歉，你的认证失败了。</string>
     <string name="msg_system_certificate_success">您的实名认证通过了，赶紧去看看吧。</string>
-    <string name="msg_system_withdraw_fail">很抱歉，你提现失败了。</string>
+    <string name="msg_system_withdraw_fail">您的提现申请失败了，点击查看原因。</string>
     <string name="msg_system_withdraw_success">您的提现申请已付款，24小时将到账，请注意查收</string>
+    <string name="msg_system_withdraw_check_fail">您的提现未通过审核，点击查看原因。</string>
+    <string name="msg_system_withdraw_check_success">您的提现已通过审核，工作人员将在7个工作日内完成打款。</string>
     <string name="msg_system_reward_txt_began" >获</string>
     <string name="msg_system_reward_txt_end" >个G币奖励</string>
     <string name="msg_system_recommend_title">视频被推荐啦</string>
