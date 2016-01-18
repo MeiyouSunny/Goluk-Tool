@@ -64,9 +64,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:text="@string/str_server_request_no_data"
-            android:textColor="@color/black" />
+            android:textColor="#bfbfbf" />
     </RelativeLayout>
 
 </LinearLayout>

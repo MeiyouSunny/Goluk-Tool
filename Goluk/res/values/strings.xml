@@ -452,6 +452,12 @@
 
     <!-- 聚合 -->
     <string name="cluster_comment_txt">写评论，有机会赢大奖</string>
+    <string name="cluster_jx_zt_share">极路客精选专题分享</string>
+    <string name="cluster_jxzt_share_txt">极路客精选专题(使用#极路客Goluk#拍摄)</string>
+    <string name="cluster_weiguan">围观</string>
+    <string name="cluster_number_pl">条评论</string>
+    <string name="cluster_check_all">查看所有</string>
+    <string name="cluster_time_format">MM月dd日 HH时mm分</string>
     <string name="str_update_file_not_exist">没有找到升级文件。</string>
     <string name="str_update_prepare_file">正在为您准备升级，请稍候……</string>
     <string name="str_update_ipc_ununited">您好像没有连接摄像头哦。</string>
@@ -636,15 +642,18 @@
     <string name="str_msg_push_login">请登录后查看消息</string>
     <string name="msg_system_certificate_fail">很抱歉，你的认证失败了。</string>
     <string name="msg_system_certificate_success">您的实名认证通过了，赶紧去看看吧。</string>
-    <string name="msg_system_withdraw_fail">很抱歉，你提现失败了。</string>
+    <string name="msg_system_withdraw_fail">您的提现申请失败了，点击查看原因。</string>
     <string name="msg_system_withdraw_success">您的提现申请已付款，24小时将到账，请注意查收</string>
+    <string name="msg_system_withdraw_check_fail">您的提现未通过审核，点击查看原因。</string>
+    <string name="msg_system_withdraw_check_success">您的提现已通过审核，工作人员将在7个工作日内完成打款。</string>
     <string name="msg_system_reward_txt_began" >获</string>
     <string name="msg_system_reward_txt_end" >个G币奖励</string>
     <string name="msg_system_recommend_title">视频被推荐啦</string>
     <string name="msg_system_reason_began">理由：</string>
     <string name="msg_system_poll_txt">您的正在投票，快去看看吧。</string>
     <string name="msg_system_select_txt">恭喜您，视频入选精选啦，快去看看吧。</string>
-
+	<string name="msg_system_no_message">暂无系统消息</string>
+	<string name="msg_system_connect_error">网络不给力，轻触屏幕重试</string>
     <string name="str_title_message_center">消息中心</string>
     <string name="str_title_message_setting">消息设置</string>
     <string name="str_message_center_comment_reply">评论/回复</string>
@@ -708,4 +717,20 @@
     <string name="str_wait">请稍候…</string>
     <string name="str_wifi_pwd_hint_text">WiFi密码</string>
     
+	<!-- 主页 -->
+	<string name="str_live_continue">是否继续直播</string>
+	<string name="str_double_click_to_exit_app">再按一次退出程序</string>
+	<string name="str_date_formatter">MM月dd日 HH时mm分ss秒</string>
+
+	<!-- 分享底部框 -->
+	<string name="str_share_board_real_desc">极路客精彩视频(使用#极路客Goluk#拍摄)</string>
+	<string name="str_share_describe">#极路客精彩视频#</string>
+	<string name="str_share_ttl">#极路客精彩视频#</string>
+	<string name="str_goluk_wonderful_video">goluk精彩视频</string>
+
+	<!-- 最新页面 -->
+	<string name="str_newest_check_all_comments_prefix">查看所有</string>
+	<string name="str_newest_check_all_comments_postfix">条评论</string>
+	<string name="str_reply">回复</string>
+	<string name="str_colon">：</string>
 </resources>
