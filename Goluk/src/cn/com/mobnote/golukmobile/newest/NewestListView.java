@@ -59,7 +59,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 	private String curOperation = "0";
 	private String historyDate;
 	@SuppressLint("SimpleDateFormat")
-	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
+	private SimpleDateFormat sdf = null;
 	private int pageCount = 0;
 	/** 保存列表一个显示项索引 */
 	private int firstVisible;
@@ -76,6 +76,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 
 	public NewestListView(Context context) {
 		mContext = context;
+		sdf = new SimpleDateFormat(mContext.getString(R.string.str_date_formatter));
 		mHeadDataInfo = new NewestListHeadDataInfo();
 		mDataList = new ArrayList<VideoSquareInfo>();
 		mRTPullListView = new RTPullListView(mContext);
@@ -306,7 +307,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 			mRTPullListView.onRefreshComplete(historyDate);
 		}
 
-		GolukUtils.showToast(mContext, "网络异常，请检查网络");
+		GolukUtils.showToast(mContext, mContext.getString(R.string.network_error));
 	}
 
 	private void checkData() {
@@ -391,7 +392,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 						String coverurl = data.getString("coverurl");
 						String describe = data.optString("describe");
 
-						String realDesc = "极路客精彩视频(使用#极路客Goluk#拍摄)";
+						String realDesc = mContext.getString(R.string.str_share_board_real_desc);
 
 						if (TextUtils.isEmpty(describe)) {
 							// if
@@ -399,10 +400,10 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 							// {
 							// describe = "#极路客直播#";
 							// } else {
-							describe = "#极路客精彩视频#";
+							describe = mContext.getString(R.string.str_share_describe);
 							// }
 						}
-						String ttl = "极路客精彩视频";
+						String ttl = mContext.getString(R.string.str_share_ttl);
 
 						// if
 						// ("1".equals(mVideoSquareOnClickListener.mVideoSquareInfo.mVideoEntity.type))
@@ -429,13 +430,13 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 						}
 
 					} else {
-						GolukUtils.showToast(mContext, "网络异常，请检查网络");
+						GolukUtils.showToast(mContext, mContext.getString(R.string.network_error));
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 			} else {
-				GolukUtils.showToast(mContext, "网络异常，请检查网络");
+				GolukUtils.showToast(mContext, mContext.getString(R.string.network_error));
 			}
 		} else if (event == VSquare_Req_VOP_Praise) {
 			GolukDebugUtils.e("", "GGGG===@@@===1111======");
@@ -449,7 +450,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 				}
 
 			} else {
-				GolukUtils.showToast(mContext, "网络异常，请检查网络");
+				GolukUtils.showToast(mContext, mContext.getString(R.string.network_error));
 			}
 		}
 

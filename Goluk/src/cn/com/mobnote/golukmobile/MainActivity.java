@@ -844,8 +844,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		// 标识正常退出
 		SharedPrefUtil.setIsLiveNormalExit(true);
 		if (mApp.getIpcIsLogin()) {
-			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this, LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE,
-					"提示", "是否继续直播");
+			LiveDialogManager.getManagerInstance().showTwoBtnDialog(
+					this, LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE,
+					getString(R.string.user_dialog_hint_title),
+					getString(R.string.str_live_continue));
 		}
 	}
 
@@ -869,7 +871,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	public void exit() {
 		if ((System.currentTimeMillis() - exitTime) > 2000) {
-			GolukUtils.showToast(getApplicationContext(), "再按一次退出程序");
+			GolukUtils.showToast(getApplicationContext(),
+					getString(R.string.str_double_click_to_exit_app));
 			exitTime = System.currentTimeMillis();
 		} else {
 			mApp.setExit(true);

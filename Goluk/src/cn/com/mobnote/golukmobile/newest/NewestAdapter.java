@@ -374,8 +374,10 @@ public class NewestAdapter extends BaseAdapter {
 						holder.totalcomments.setVisibility(View.GONE);
 					} else {
 						holder.totalcomments.setVisibility(View.VISIBLE);
-						holder.totalcomments.setText("查看所有"
-								+ GolukUtils.getFormatNumber(mVideoSquareInfo.mVideoEntity.comcount) + "条评论");
+						holder.totalcomments.setText(
+								mContext.getString(R.string.str_newest_check_all_comments_prefix) +
+								GolukUtils.getFormatNumber(mVideoSquareInfo.mVideoEntity.comcount) +
+								mContext.getString(R.string.str_newest_check_all_comments_postfix));
 					}
 
 					holder.totlaCommentLayout.setVisibility(View.VISIBLE);
@@ -460,8 +462,8 @@ public class NewestAdapter extends BaseAdapter {
 	}
 
 	private void showReplyText(TextView view, String nikename, String replyName, String text) {
-		String replyText = "@" + replyName + "：";
-		String str = nikename + " 回复" + replyText + text;
+		String replyText = "@" + replyName + mContext.getString(R.string.str_colon);
+		String str = nikename + " " + mContext.getString(R.string.str_reply) + replyText + text;
 		SpannableStringBuilder style = new SpannableStringBuilder(str);
 		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
 				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);

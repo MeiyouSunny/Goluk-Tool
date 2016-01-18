@@ -680,4 +680,21 @@
     <string name="str_loginout_fail">注销失败</string>
     <string name="str_loginouting">正在注销…</string>
     <string name="str_loginout_success">注销成功</string>
+
+	<!-- 主页 -->
+	<string name="str_live_continue">是否继续直播</string>
+	<string name="str_double_click_to_exit_app">再按一次退出程序</string>
+	<string name="str_date_formatter">MM月dd日 HH时mm分ss秒</string>
+
+	<!-- 分享底部框 -->
+	<string name="str_share_board_real_desc">极路客精彩视频(使用#极路客Goluk#拍摄)</string>
+	<string name="str_share_describe">#极路客精彩视频#</string>
+	<string name="str_share_ttl">#极路客精彩视频#</string>
+	<string name="str_goluk_wonderful_video">goluk精彩视频</string>
+
+	<!-- 最新页面 -->
+	<string name="str_newest_check_all_comments_prefix">查看所有</string>
+	<string name="str_newest_check_all_comments_postfix">条评论</string>
+	<string name="str_reply">回复</string>
+	<string name="str_colon">：</string>
 </resources>
