@@ -46,7 +46,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	private WonderfulSelectedAdapter mWonderfulSelectedAdapter = null;
 	private String historyDate;
 	@SuppressLint("SimpleDateFormat")
-	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
+	private SimpleDateFormat sdf = null;
 	/** 列表添加页脚标识 */
 	private boolean addFooter = false;
 	/** 添加列表底部加载中布局 */
@@ -65,6 +65,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 
 	public WonderfulSelectedListView(Context context) {
 		mContext = context;
+		sdf = new SimpleDateFormat(mContext.getString(R.string.str_date_formatter));
 		mDataList = new ArrayList<JXListItemDataInfo>();
 		mRTPullListView = new RTPullListView(mContext);
 		mRTPullListView.setDividerHeight(0);
@@ -309,7 +310,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 					}
 				}
 
-				GolukUtils.showToast(mContext, "网络异常，请检查网络");
+				GolukUtils.showToast(mContext, mContext.getString(R.string.network_error));
 			}
 
 			if (mDataList.size() > 0) {

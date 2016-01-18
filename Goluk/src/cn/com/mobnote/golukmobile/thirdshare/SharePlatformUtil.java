@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile.thirdshare;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -116,7 +117,7 @@ public class SharePlatformUtil {
 
 		// ttl = "极路客分享";
 		if (text == null || "".equals(text)) {
-			text = "goluk精彩视频";
+			text = mContext.getString(R.string.str_goluk_wonderful_video);
 		}
 		UMVideo video = new UMVideo(videourl);
 		video.setThumb(imageurl);
