@@ -36,7 +36,6 @@
         android:cacheColorHint="#00000000" 
         android:listSelector="@android:color/transparent" >
     </cn.com.mobnote.golukmobile.videosuqare.RTPullListView>
-    
 
     <RelativeLayout
         android:id="@+id/empty"
@@ -44,7 +43,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/title_layout"
         android:background="@color/user_login_bg"
-        android:visibility="gone">
+        android:visibility="gone" >
 
         <ImageView
             android:id="@+id/empty_img"
@@ -54,6 +53,16 @@
             android:layout_centerVertical="true"
             android:contentDescription="@string/imgdes"
             android:src="@drawable/mine_qitadifang" />
+        
+        <TextView 
+            android:id="@+id/empty_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#bfbfbf"
+            android:textSize="16sp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_below="@id/empty_img"/>
     </RelativeLayout>
 
 </RelativeLayout>

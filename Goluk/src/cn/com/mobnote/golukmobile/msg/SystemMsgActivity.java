@@ -27,6 +27,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 public class SystemMsgActivity  extends BaseActivity implements OnClickListener,IRequestResultListener {
 	
 	private ImageButton mBackBtn;
@@ -54,6 +55,7 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
 	/**没有数据时listView显示的图片**/
 	private RelativeLayout mEmpty = null;
 	private ImageView mEmptyImg = null;
+	private TextView  mEmptyTxt = null;
 	/**时间戳**/
 	private String mTimestamp = "";
 	private final static String TYPES_SYSTEM = "[200]";
@@ -72,6 +74,7 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 		mEmpty = (RelativeLayout) findViewById(R.id.empty);
 		mEmptyImg = (ImageView) findViewById(R.id.empty_img);
+		mEmptyTxt = (TextView) findViewById(R.id.empty_txt);
 		mRTPullListView = (RTPullListView) findViewById(R.id.msg_system_list);
 	}
 	
@@ -211,7 +214,8 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
 								mRTPullListView.addFooterView(1);
 							}
 						}else{//数据为空
-							mEmptyImg.setImageResource(R.drawable.mine_zanwuxitongxiaoxi);
+							mEmptyImg.setVisibility(View.GONE);
+							mEmptyTxt.setText(this.getResources().getString(R.string.msg_system_no_message));
 							this.fristLoadDataError();
 						}
 					}else{//上拉加载更多
@@ -232,11 +236,15 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
 					}
 					
 				}else{//数据返回异常
+					mEmptyImg.setVisibility(View.VISIBLE);
 					mEmptyImg.setImageResource(R.drawable.mine_qitadifang);
+					mEmptyTxt.setText(this.getResources().getString(R.string.msg_system_connect_error));
 					this.fristLoadDataError();
 				}
 			}else{//数据返回异常
+				mEmptyImg.setVisibility(View.VISIBLE);
 				mEmptyImg.setImageResource(R.drawable.mine_qitadifang);
+				mEmptyTxt.setText(this.getResources().getString(R.string.msg_system_connect_error));
 				this.fristLoadDataError();
 			}
 		}
