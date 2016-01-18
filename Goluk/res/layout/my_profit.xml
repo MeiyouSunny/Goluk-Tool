@@ -144,7 +144,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:text="0个Ｇ币"
                     android:textColor="@color/user_login_text"
                     android:textSize="18sp" />
 
@@ -153,7 +152,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:background="@drawable/profit_btn_detail" />
+                    android:background="@drawable/profit_btn_detail"
+                    android:contentDescription="@string/imgdes" />
             </LinearLayout>
             <!-- 中间分割线 -->
 
@@ -183,7 +183,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:text="0个Ｇ币"
                     android:textColor="@color/user_login_text"
                     android:textSize="18sp" />
 
@@ -192,7 +191,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:background="@drawable/profit_btn_cash" />
+                    android:background="@drawable/profit_btn_cash"
+                    android:contentDescription="@string/imgdes" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -203,6 +203,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:src="@drawable/qitadifang"
+        android:contentDescription="@string/imgdes"
         android:visibility="gone" />
 
 </RelativeLayout>

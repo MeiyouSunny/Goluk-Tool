@@ -15,7 +15,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <!-- 意见类型 -->
@@ -62,7 +62,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="(0/500)"
                     android:textColor="@color/unbind_camera_wifi_hint_text_color"
                     android:textSize="14sp" />
             </RelativeLayout>
@@ -115,7 +114,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="(0/70)"
                     android:textColor="@color/unbind_camera_wifi_hint_text_color"
                     android:textSize="14sp" />
             </RelativeLayout>

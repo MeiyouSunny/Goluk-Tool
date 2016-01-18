@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="请检查网络连接"
+            android:text="@string/str_check_network"
             android:textColor="#000000"
             android:textSize="20sp"/>
     </RelativeLayout>

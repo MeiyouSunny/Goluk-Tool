@@ -65,7 +65,7 @@
                         android:layout_height="40dp"
                         android:background="@null"
                         android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                        android:hint="设置密码（6-16位数字或英文）"
+                        android:hint="@string/str_pwd_limit"
                         android:maxLength="16"
                         android:password="true"
                         android:singleLine="true"

@@ -76,10 +76,12 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		mTextViewTitle.setText("注册");
 
 		if (null == mCustomProgressDialog) {
-			mCustomProgressDialog = new CustomLoadingDialog(mContext, "注册中，请稍候……");
+			mCustomProgressDialog = new CustomLoadingDialog(mContext, this.getResources().getString(
+					R.string.str_regist_loading));
 		}
 		if (null == mCustomProgressDialogIdentify) {
-			mCustomProgressDialogIdentify = new CustomLoadingDialog(mContext, "验证码获取中……");
+			mCustomProgressDialogIdentify = new CustomLoadingDialog(mContext, this.getResources().getString(
+					R.string.str_identify_loading));
 		}
 		
 		UserUtils.addActivity(UserRegistActivity.this);

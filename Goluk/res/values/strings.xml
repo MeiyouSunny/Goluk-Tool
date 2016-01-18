@@ -357,6 +357,7 @@
     <string name="user_identify_count">重新发送</string>
     <string name="user_dialog_hint_title">提示</string>
     <string name="opinion_content_null">反馈内容不能为空</string>
+    <string name="str_opinion_thanks">感谢</string>
     <string name="opinion_fail">反馈失败，请稍候再试</string>
     <string name="opinion_success">感谢您的反馈，我们正在积极处理中！</string>
     <string name="user_personal_name_edit">编辑昵称</string>
@@ -678,4 +679,33 @@
     <string name="str_loginout_fail">注销失败</string>
     <string name="str_loginouting">正在注销…</string>
     <string name="str_loginout_success">注销成功</string>
+    
+    <string name="str_network_unavailable">网络不给力</string>
+    <string name="str_profit_unit">个Ｇ币</string>
+    <string name="str_profit_nodata">暂时无数据</string>
+    <string name="str_profit_detail_unit">Ｇ币</string>
+    <string name="str_sharevideo_text">分享视频</string>
+    <string name="str_praise_text">赞我的人</string>
+    <string name="str_identify_loading">验证码获取中…</string>
+    <string name="str_regist_loading">注册中，请稍候…</string>
+    <string name="str_repwd_loading">重置中，请稍候…</string>
+    <string name="str_send_message">正在发送短信到+86</string>
+    <string name="str_bracket_left">（</string>
+    <string name="str_bracket_rigth">）</string>
+    <string name="str_seconds">秒</string>
+    <string name="str_check_network">请检查网络连接</string>
+    <string name="str_url_loading">页面加载中</string>
+    <string name="str_tell">确定拨打该电话号码？</string>
+    <string name="str_slash">/</string>
+    <string name="str_sending">发送中</string>
+    <string name="str_sign_limit">请输入50个字符以内的有效个性签名</string>
+    <string name="str_pwd_limit">设置密码（6-16位数字或英文）</string>
+    <string name="str_wifi_pwd_title">极路客WiFi密码</string>
+    <string name="str_wifi_change_success">修改密码成功</string>
+    <string name="str_wifi_change_fail">修改密码失败</string>
+    <string name="str_wifi_pwd_limit">极路客密码必须为8-15个字符</string>
+    <string name="str_wifi_hotspot_fail">调用设置IPC连接热点失败</string>
+    <string name="str_wait">请稍候…</string>
+    <string name="str_wifi_pwd_hint_text">WiFi密码</string>
+    
 </resources>

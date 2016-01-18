@@ -218,7 +218,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		// 清除缓存
 		case R.id.remove_cache_item:
 			mApp.mUser.setUserInterface(null);
-			GolukDebugUtils.i("lily", "----清除缓存-----" + Const.getAppContext().getCacheDir().getPath());
+			GolukDebugUtils.i("lily", "----clearcach-----" + Const.getAppContext().getCacheDir().getPath());
 			if (mTextCacheSize.getText().toString().equals("0M")) {
 				UserUtils.showDialog(mContext, this.getResources().getString(R.string.str_no_cache));
 			} else {

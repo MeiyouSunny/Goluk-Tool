@@ -146,15 +146,18 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		}
 		// 获取验证码
 		if (null == mCustomDialogIdentify) {
-			mCustomDialogIdentify = new CustomLoadingDialog(mContext, "验证码获取中……");
+			mCustomDialogIdentify = new CustomLoadingDialog(mContext, this.getResources().getString(
+					R.string.str_identify_loading));
 		}
 		// 注册
 		if (null == mCustomDialogRegist) {
-			mCustomDialogRegist = new CustomLoadingDialog(mContext, "注册中，请稍后……");
+			mCustomDialogRegist = new CustomLoadingDialog(mContext, this.getResources().getString(
+					R.string.str_regist_loading));
 		}
 		// 重置密码
 		if (null == mCustomDialogRepwd) {
-			mCustomDialogRepwd = new CustomLoadingDialog(mContext, "重置中，请稍候……");
+			mCustomDialogRepwd = new CustomLoadingDialog(mContext, this.getResources().getString(
+					R.string.str_repwd_loading));
 		}
 		// 6个框都为空
 		int one = mEditTextOne.getText().toString().replace(" ", "").length();
@@ -192,7 +195,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		Intent it = getIntent();
 		if (null != it.getStringExtra(IDENTIFY_PHONE)) {
 			title_phone = it.getStringExtra(IDENTIFY_PHONE).toString();
-			mTextTitle.setText("正在发送短信到+86" + title_phone);
+			mTextTitle.setText(this.getResources().getString(R.string.str_send_message) + title_phone);
 		}
 
 		justDifferent = it.getBooleanExtra(IDENTIFY_DIFFERENT, false);
@@ -561,7 +564,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 	 * 倒计时
 	 */
 	public void countTime() {
-		mCountDownhelper = new CountDownButtonHelper(mBtnCount, this.getResources().getString(
+		mCountDownhelper = new CountDownButtonHelper(this, mBtnCount, this.getResources().getString(
 				R.string.user_identify_btn_afresh), 60, 1);
 		mCountDownhelper.setOnFinishListener(new OnFinishListener() {
 
@@ -787,8 +790,8 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 						startActivity(it);
 					} else if("fromProfit".equals(intentRegistInter)) {
 						it = new Intent(UserIdentifyActivity.this,MyProfitActivity.class);
-						it.putExtra("uid", uid);
-						it.putExtra("phone", title_phone.replaceAll("-", ""));
+//						it.putExtra("uid", uid);
+//						it.putExtra("phone", title_phone.replaceAll("-", ""));
 						it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						startActivity(it);
 						UserUtils.exit();

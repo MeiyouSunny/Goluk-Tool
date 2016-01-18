@@ -89,10 +89,13 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 		initView();
 		// 初始化字数限制
 		int count_suggest = mEditSuggest.getText().toString().length();
-		mTextSuggestCount.setText("（" + (MAX_SUGGEST_COUNT - count_suggest) + "/" + MAX_SUGGEST_COUNT + "）");
+		mTextSuggestCount.setText(this.getResources().getString(R.string.str_bracket_left)
+				+ (MAX_SUGGEST_COUNT - count_suggest) + this.getResources().getString(R.string.str_slash)
+				+ MAX_SUGGEST_COUNT + this.getResources().getString(R.string.str_bracket_rigth));
 		int count_connection = mEditConnection.getText().toString().length();
-		mTextConnectionCount
-				.setText("（" + (MAX_CONNECTION_COUNT - count_connection) + "/" + MAX_CONNECTION_COUNT + "）");
+		mTextConnectionCount.setText(this.getResources().getString(R.string.str_bracket_left)
+				+ (MAX_CONNECTION_COUNT - count_connection) + this.getResources().getString(R.string.str_slash)
+				+ MAX_CONNECTION_COUNT + this.getResources().getString(R.string.str_bracket_rigth));
 
 		// 获取请求参数
 		sys_version = GolukUtils.getSystem_version();
@@ -122,11 +125,11 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 		mBtnSelect = (Button) findViewById(R.id.user_opinion_select_btn);
 		mSelectLayout = (LinearLayout) findViewById(R.id.user_opinion_select_layout);
 
-		mTextTitle.setText("意见反馈");
-		mTextRight.setText("发送");
+		mTextTitle.setText(this.getResources().getString(R.string.version_opinion_text));
+		mTextRight.setText(this.getResources().getString(R.string.str_comment_send));
 		// 初始化对话框
 		if (null == mLoadingDialog) {
-			mLoadingDialog = new CustomLoadingDialog(mContext, "发送中");
+			mLoadingDialog = new CustomLoadingDialog(mContext, this.getResources().getString(R.string.str_sending));
 		}
 		// 监听
 		mBtnSelect.setOnClickListener(this);
@@ -175,7 +178,6 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 				mEditConnection.setEnabled(false);
 			} else {
 				UserUtils.showDialog(mContext, this.getResources().getString(R.string.opinion_fail));
-//				GolukUtils.showToast(mContext, "反馈失败，请稍候重试");
 			}
 		}
 	}
@@ -230,10 +232,10 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 				String result = jsonData.getString("result");
 				if ("0".equals(result)) {
 					new AlertDialog.Builder(mContext)
-							.setTitle("感谢")
+							.setTitle(this.getResources().getString(R.string.str_opinion_thanks))
 							.setMessage(this.getResources().getString(R.string.opinion_success))
 							.setOnKeyListener(new DialogInterface.OnKeyListener() {
-								
+
 								@Override
 								public boolean onKey(DialogInterface arg0, int arg1, KeyEvent arg2) {
 									return true;
@@ -297,7 +299,9 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 			if (number < 0) {
 				number = 0;
 			}
-			mTextSuggestCount.setText("（" + number + "/" + MAX_SUGGEST_COUNT + "）");
+			mTextSuggestCount.setText(mContext.getResources().getString(R.string.str_bracket_left) + number
+					+ mContext.getResources().getString(R.string.str_slash) + MAX_SUGGEST_COUNT
+					+ mContext.getResources().getString(R.string.str_bracket_rigth));
 		}
 	};
 
@@ -318,7 +322,9 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 			if (number < 0) {
 				number = 0;
 			}
-			mTextConnectionCount.setText("（" + number + "/" + MAX_CONNECTION_COUNT + "）");
+			mTextConnectionCount.setText(mContext.getResources().getString(R.string.str_bracket_left) + number
+					+ mContext.getResources().getString(R.string.str_slash) + MAX_CONNECTION_COUNT
+					+ mContext.getResources().getString(R.string.str_bracket_rigth));
 		}
 	};
 

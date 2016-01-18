@@ -166,7 +166,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
 		if (!"".equals(mSharedPreferences.getString("setupPhone", ""))) {
 			String phone = mSharedPreferences.getString("setupPhone", "");
-			GolukDebugUtils.i(TAG, "----UserLoginActivity---获取手机号-----" + phone);
+			GolukDebugUtils.i(TAG, "----UserLoginActivity--------phone:" + phone);
 			mEditTextPhoneNumber.setText(phone);
 			mEditTextPhoneNumber.setSelection(mEditTextPhoneNumber.getText().toString().length());
 		}
@@ -294,7 +294,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 			mApplication.mLoginManage.setUserLoginInterface(null);
 			UserUtils.hideSoftMethod(this);
 			Intent itForget = new Intent(UserLoginActivity.this, UserRepwdActivity.class);
-			GolukDebugUtils.i("final", "-----------UserLoginActivity忘记密码-----------" + justLogin);
 			if (justLogin.equals("main") || justLogin.equals("back")) {// 从起始页注册
 				itForget.putExtra("fromRegist", "fromStart");
 			} else if (justLogin.equals("indexmore")) {// 从更多页个人中心注册
@@ -381,8 +380,8 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 			String uid = mSharedPreferences.getString("uid", "");
 			if("profit".equals(justLogin)) {
 				Intent itProfit = new Intent(UserLoginActivity.this,MyProfitActivity.class);
-				itProfit.putExtra("uid", uid);
-				itProfit.putExtra("phone", phone);
+//				itProfit.putExtra("uid", uid);
+//				itProfit.putExtra("phone", phone);
 				startActivity(itProfit);
 			}
 			EventBus.getDefault().post(new EventMessageUpdate(EventConfig.MESSAGE_REQUEST));

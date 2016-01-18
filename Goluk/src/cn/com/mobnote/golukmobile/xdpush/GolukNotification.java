@@ -414,7 +414,7 @@ public class GolukNotification {
 
 		Context context = GolukApplication.getInstance().getContext();
 		Intent intent = new Intent(context, MyProfitActivity.class);
-		intent.putExtra("uid", uid);
+//		intent.putExtra("uid", uid);
 		context.startActivity(intent);
 	}
 

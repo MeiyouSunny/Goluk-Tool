@@ -52,6 +52,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 	private RelativeLayout mIPCViewLayout;
 	private TextView mIPCModelText, mIPCNumberText, mIPCVersionText;
 	private ImageView mIPCimage;
+	public static final String TAG = "Unbind";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,14 +65,14 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 		setContentView(R.layout.unbind_layout);
 		initView();
 		if (mApplication.getIPCControlManager() != null) {
-			mApplication.getIPCControlManager().addIPCManagerListener("Unbind", this);
+			mApplication.getIPCControlManager().addIPCManagerListener(TAG, this);
 		}
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mApplication.setContext(mContext, "Unbind");
+		mApplication.setContext(mContext, TAG);
 		// 固件版本号
 		vIpc = SharedPrefUtil.getIPCVersion();
 		String ipcModel = GolukApplication.getInstance().mIPCControlManager.mProduceName;
@@ -141,7 +142,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 	@Override
 	protected void onDestroy() {
 		if (mApplication.getIPCControlManager() != null) {
-			mApplication.getIPCControlManager().removeIPCManagerListener("Unbind");
+			mApplication.getIPCControlManager().removeIPCManagerListener(TAG);
 		}
 		super.onDestroy();
 	}

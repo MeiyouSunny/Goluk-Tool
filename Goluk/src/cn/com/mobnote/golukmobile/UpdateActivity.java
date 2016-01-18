@@ -140,6 +140,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	private boolean mIsSendFileOk = false;
 	
 	private RelativeLayout mVoiceLayout, mLaterLayout;
+	public static final String TAG = "carupgrade";
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -477,7 +478,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		mApp.setContext(this, "Update");
 
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
-			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("carupgrade", this);
+			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener(TAG, this);
 		}
 	}
 
@@ -830,7 +831,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			mUpdateDialog = null;
 		}
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
-			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("carupgrade");
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener(TAG);
 		}
 		EventBus.getDefault().unregister(this);
 	}

@@ -5,7 +5,6 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -13,7 +12,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
@@ -59,8 +57,6 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	private String historyDate = "";
 	/**用户id**/
 	private String uid;
-	/**加载更多**/
-	private RelativeLayout mBottomLoadingView = null;
 	/**进入页面的loading**/
 	private CustomLoadingDialog mLoadingDialog = null;
 	/** 操作 (0:首次进入；1:下拉；2:上拉) */
@@ -101,10 +97,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		mBtnBack = (ImageButton) findViewById(R.id.profit_detail_back);
 		mRTPullListView = (RTPullListView) findViewById(R.id.profit_detail_RTPullListView);
 		mImageRefresh = (ImageView) findViewById(R.id.video_detail_click_refresh);
-		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading,null);
 		mTextNoData = (TextView) findViewById(R.id.my_profit_detail_nodata);
-		
-		
 		
 		mBtnBack.setOnClickListener(this);
 		mImageRefresh.setOnClickListener(this);
@@ -140,9 +133,6 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 			if (count == visibleCount && mIsHaveData) {
 				startPush();
 			}
-			if ((count == visibleCount) && (count > 20) && !mIsHaveData) {
-				GolukUtils.showToast(this, this.getResources().getString(R.string.str_pull_refresh_listview_bottom_reach));
-			}
 		}
 	}
 
@@ -162,10 +152,11 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		mRTPullListView.onRefreshComplete(historyDate);
 		if (count >= 20) {
 			mIsHaveData = true;
-			addFoot();
+			removeFoot(2);
+			addFoot(1);
 		} else {
 			mIsHaveData = false;
-			this.removeFoot();
+			this.removeFoot(1);
 		}
 
 	}
@@ -180,7 +171,8 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 			mIsHaveData = true;
 		} else {
 			mIsHaveData = false;
-			this.removeFoot();
+			this.removeFoot(1);
+			this.addFoot(2);
 		}
 		this.mAdapter.appendData(incomeList);
 	}
@@ -291,21 +283,26 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		mTextNoData.setVisibility(View.GONE);
 		mRTPullListView.setVisibility(View.GONE);
 		mImageRefresh.setVisibility(View.VISIBLE);
-		GolukUtils.showToast(this, "网络数据异常");
+		GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
 	}
 	
-	private void addFoot() {
+	private void addFoot(int type) {
 		if (mRTPullListView.getFooterViewsCount() > 0) {
 			return;
 		}
-		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading, null);
-		mRTPullListView.addFooterView(mBottomLoadingView);
+		if (1 == type) {
+			mRTPullListView.addFooterView(1);
+		} else {
+			mRTPullListView.addFooterView(2);
+		}
 	}
-
-	private void removeFoot() {
-		if (mBottomLoadingView != null) {
-			if (mRTPullListView != null) {
-				mRTPullListView.removeFooterView(mBottomLoadingView);
+	
+	private void removeFoot(int type) {
+		if (mRTPullListView != null) {
+			if (1 == type) {
+				mRTPullListView.removeFooterView(1);
+			} else {
+				mRTPullListView.removeFooterView(2);
 			}
 		}
 	}
