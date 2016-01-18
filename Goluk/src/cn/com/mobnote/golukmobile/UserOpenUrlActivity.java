@@ -99,7 +99,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		mErrorLayout = (RelativeLayout) findViewById(R.id.error_layout);
 
 		if (null == mLoadingDialog) {
-			mLoadingDialog = new CustomLoadingDialog(this, "页面加载中");
+			mLoadingDialog = new CustomLoadingDialog(this, this.getResources().getString(R.string.str_url_loading));
 			mLoadingDialog.setListener(this);
 		}
 
@@ -354,14 +354,18 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 	 * @param phoneNumber
 	 */
 	public void webviewCall(final String phoneNumber) {
-		new AlertDialog.Builder(this).setTitle("提示").setMessage("确定拨打该电话号码？")
-				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface arg0, int arg1) {
-						Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(phoneNumber));
-						startActivity(intent);
-					}
-				}).setNegativeButton("取消", null).create().show();
+		new AlertDialog.Builder(this)
+				.setTitle(this.getResources().getString(R.string.user_dialog_hint_title))
+				.setMessage(this.getResources().getString(R.string.str_tell))
+				.setPositiveButton(this.getResources().getString(R.string.str_button_ok),
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(phoneNumber));
+								startActivity(intent);
+							}
+						}).setNegativeButton(this.getResources().getString(R.string.dialog_str_cancel), null).create()
+				.show();
 	}
 
 	@Override

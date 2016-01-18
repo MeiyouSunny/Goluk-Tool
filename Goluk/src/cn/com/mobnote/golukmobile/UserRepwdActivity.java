@@ -71,14 +71,16 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 		mApplication = (GolukApplication) getApplication();
 
 		if (null == mCustomProgressDialog) {
-			mCustomProgressDialog = new CustomLoadingDialog(mContext, "重置中，请稍候……");
+			mCustomProgressDialog = new CustomLoadingDialog(mContext, this.getResources().getString(
+					R.string.str_repwd_loading));
 		}
 		if (null == mCustomProgressDialogIdentify) {
-			mCustomProgressDialogIdentify = new CustomLoadingDialog(mContext, "验证码获取中……");
+			mCustomProgressDialogIdentify = new CustomLoadingDialog(mContext, this.getResources().getString(
+					R.string.str_identify_loading));
 		}
 		initView();
 		// title
-		mTextViewTitle.setText("找回密码");
+		mTextViewTitle.setText(this.getResources().getString(R.string.user_login_forgetpwd));
 		
 		UserUtils.addActivity(UserRepwdActivity.this);
 

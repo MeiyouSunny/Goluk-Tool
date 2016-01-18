@@ -79,7 +79,8 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		//
 		int count = mEditBody.getText().toString().length();
 		mTextCount.setText("" + (MAX_COUNT - count));
-		mTextCountAll.setText("/" + MAX_COUNT + "）");
+		mTextCountAll.setText(this.getResources().getString(R.string.str_slash) + MAX_COUNT
+				+ this.getResources().getString(R.string.str_bracket_rigth));
 	}
 
 	// 初始化控件
@@ -128,7 +129,7 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		// que认
 		case R.id.user_title_right:
 			if (number < 0) {
-				UserUtils.showDialog(this, "请输入50个字符以内的有效个性签名");
+				UserUtils.showDialog(this, this.getResources().getString(R.string.str_sign_limit));
 			} else {
 				String body = mEditBody.getText().toString();
 				if (body.equalsIgnoreCase(mSignText)) {
@@ -203,7 +204,7 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 	 */
 
 	public void saveSignCallBack(int success, Object obj) {
-		GolukDebugUtils.e("", "修改用户个性签名回调---saveSignCallBack---" + success + "---" + obj);
+		GolukDebugUtils.e("", "---saveSignCallBack---" + success + "---" + obj);
 		if (mCustomProgressDialog.isShowing()) {
 			mCustomProgressDialog.close();
 		}

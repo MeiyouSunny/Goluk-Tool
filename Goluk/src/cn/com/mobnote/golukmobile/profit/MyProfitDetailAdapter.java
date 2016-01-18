@@ -99,7 +99,8 @@ public class MyProfitDetailAdapter extends BaseAdapter {
 		ProfitDetailResult result = mIncomeList.get(arg0);
 		GolukDebugUtils.e("", "==========imageUrl========="+result.url);
 		GlideUtils.loadImage(mContext, holder.mImagePic, result.url, R.drawable.tacitly_pic);
-		holder.mTextCount.setText("+"+UserUtils.formatNumber(result.gold)+"Ｇ币");
+		holder.mTextCount.setText("+" + UserUtils.formatNumber(result.gold)
+				+ mContext.getResources().getString(R.string.str_profit_detail_unit));
 		holder.mTextTime.setText(GolukUtils.getCommentShowFormatTime(this.formatDate(result.time)));
 		
 		return convertView;

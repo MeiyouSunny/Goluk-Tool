@@ -91,7 +91,6 @@
                             android:id="@+id/user_center_id_title_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="极路客："
                             android:textColor="#585858"
                             android:textSize="14sp"
                             android:visibility="gone" />
@@ -145,7 +144,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="分享视频"
+                        android:text="@string/str_sharevideo_text"
                         android:textColor="@color/live_time_desc"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -169,7 +168,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="赞我的人"
+                        android:text="@string/str_praise_text"
                         android:textColor="@color/live_time_desc"
                         android:textSize="12sp" />
                 </LinearLayout>

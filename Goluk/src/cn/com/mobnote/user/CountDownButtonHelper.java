@@ -1,5 +1,7 @@
 package cn.com.mobnote.user;
 
+import cn.com.mobnote.golukmobile.R;
+import android.content.Context;
 import android.os.CountDownTimer;
 import android.widget.Button;
 
@@ -15,7 +17,7 @@ public class CountDownButtonHelper {
 	/**点击按钮倒计时**/
 	private Button btn;
 
-	public CountDownButtonHelper(final Button btn, final String defaultString, int maxTime, int interval) {
+	public CountDownButtonHelper(final Context context, final Button btn, final String defaultString, int maxTime, int interval) {
 		this.btn = btn;
 
 		/**
@@ -31,7 +33,9 @@ public class CountDownButtonHelper {
 			public void onTick(long time) {
 				// TODO Auto-generated method stub
 				// 第一次调用会有1-10ms的误差，因此需要+15ms，防止第一个数不显示，第二个数显示2s
-				btn.setText(defaultString+"（" + ((time + 15) / 1000) + "秒）");
+				btn.setText(defaultString + context.getResources().getString(R.string.str_bracket_left)
+						+ ((time + 15) / 1000) + context.getResources().getString(R.string.str_seconds)
+						+ context.getResources().getString(R.string.str_bracket_rigth));
 				btn.setEnabled(false);
 			}
 			/**

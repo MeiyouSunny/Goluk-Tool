@@ -82,7 +82,7 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 		mImageView1 = (ImageView) findViewById(R.id.imageView1);
 		mImageView2 = (ImageView) findViewById(R.id.imageView2);
 		
-		mTextTitle.setText("极路客WiFi密码");
+		mTextTitle.setText(this.getResources().getString(R.string.str_wifi_pwd_title));
 
 		/**
 		 * 获取摄像头管理页面传来的WIFI密码
@@ -136,27 +136,28 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 	public void setIpcLinkWiFiCallBack(int state) {
 		LiveDialogManager.getManagerInstance().dissmissCustomDialog();
 		if (0 == state) {
-			GolukUtils.showToast(this, "修改密码成功");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_wifi_change_success));
 			this.setResult(10);
 			this.finish();
 		} else {
-			GolukUtils.showToast(this, "修改密码失败");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_wifi_change_fail));
 		}
 	}
 
 	private void savePassword() {
 		final String newPwd = mEditText.getText().toString();
 		if (newPwd.length() < 8 || newPwd.length() > 15) {
-			GolukUtils.showToast(this, "极路客密码必须为8-15个字符");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_wifi_pwd_limit));
 			return;
 		}
 
 		String json = getSetIPCJson();
 		boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
 		if (!b) {
-			GolukUtils.showToast(this, "调用设置IPC连接热点失败");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_wifi_hotspot_fail));
 		} else {
-			LiveDialogManager.getManagerInstance().showCustomDialog(this, "请稍候...");
+			LiveDialogManager.getManagerInstance().showCustomDialog(this,
+					this.getResources().getString(R.string.str_wait));
 		}
 	}
 

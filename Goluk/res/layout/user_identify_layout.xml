@@ -20,7 +20,8 @@
             android:id="@+id/user_identify_anim_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-           android:background="@anim/user_identify_animation"/>
+           android:background="@anim/user_identify_animation"
+           android:contentDescription="@string/imgdes" />
     </RelativeLayout>
     
     <TextView 
@@ -72,7 +73,7 @@
         android:layout_height="wrap_content"
          android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:text="重新获取"
+        android:text="@string/user_identify_btn_afresh"
         android:drawableRight="@drawable/log_in_arrow"
         android:drawablePadding="10dp"
         android:textSize="14sp"

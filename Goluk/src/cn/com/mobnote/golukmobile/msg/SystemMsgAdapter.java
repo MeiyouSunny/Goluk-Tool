@@ -177,7 +177,7 @@ public class SystemMsgAdapter extends BaseAdapter {
 						mContext.startActivity(i);
 					}else if(mmbTxt.type == msgTypeWithdraw){
 						Intent i = new Intent(mContext, MyProfitActivity.class);
-						i.putExtra("uid", mmbTxt.receiver.uid);
+//						i.putExtra("uid", mmbTxt.receiver.uid);
 						mContext.startActivity(i);
 					}
 

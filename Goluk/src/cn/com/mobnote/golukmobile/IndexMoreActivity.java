@@ -289,8 +289,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 					intentToUserCenter(shareOrPraise);
 				} else if(type == TYPE_PROFIT) {
 					Intent itProfit = new Intent(mContext,MyProfitActivity.class);
-					itProfit.putExtra("uid", userUId);
-					itProfit.putExtra("phone", userPhone);
+//					itProfit.putExtra("uid", userUId);
+//					itProfit.putExtra("phone", userPhone);
 					mContext.startActivity(itProfit);
 				}
 			} else {
