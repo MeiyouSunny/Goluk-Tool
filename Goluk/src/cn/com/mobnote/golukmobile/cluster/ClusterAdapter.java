@@ -42,7 +42,6 @@ import cn.com.mobnote.golukmobile.cluster.bean.ActivityBean;
 import cn.com.mobnote.golukmobile.cluster.bean.ClusterVoteShareBean;
 import cn.com.mobnote.golukmobile.cluster.bean.ClusterVoteShareDataBean;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
-import cn.com.mobnote.golukmobile.http.UrlHostManager;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.newest.ClickCommentListener;
@@ -63,7 +62,6 @@ import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 @SuppressLint("InflateParams")
 public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IRequestResultListener {
@@ -449,9 +447,9 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 			}
 
 //			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber);
-			holder.weiguan.setText(clusterInfo.mVideoEntity.clicknumber + " 围观");
+			holder.weiguan.setText(clusterInfo.mVideoEntity.clicknumber + " " + mContext.getResources().getString(R.string.cluster_weiguan));
 			int count = Integer.parseInt(clusterInfo.mVideoEntity.comcount);
-			holder.totalcomments.setText("查看所有" + clusterInfo.mVideoEntity.comcount + "条评论");
+			holder.totalcomments.setText(mContext.getResources().getString(R.string.cluster_check_all) + clusterInfo.mVideoEntity.comcount + mContext.getResources().getString(R.string.cluster_number_pl));
 			if (count > 3) {
 				holder.totalcomments.setVisibility(View.VISIBLE);
 			} else {
@@ -721,7 +719,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 			try {
 				Date strtodate = formatter.parse(date);
 				if (null != strtodate) {
-					formatter = new SimpleDateFormat("MM月dd日 HH时mm分");
+					formatter = new SimpleDateFormat(mContext.getResources().getString(R.string.cluster_time_format));
 					if (null != formatter) {
 						time = formatter.format(strtodate);
 					}

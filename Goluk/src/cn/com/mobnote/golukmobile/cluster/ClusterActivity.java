@@ -459,14 +459,14 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 						String shareurl = sdb.shorturl;
 						String coverurl = sdb.coverurl;
 						String describe = sdb.description;
-						String realDesc = "极路客精选专题(使用#极路客Goluk#拍摄)";
+						String realDesc = this.getResources().getString(R.string.cluster_jxzt_share_txt);
 
 						if (TextUtils.isEmpty(describe)) {
 							describe = "";
 						}
 						String ttl = mClusterTitle;
 						if (TextUtils.isEmpty(mClusterTitle)) {
-							ttl = "极路客精选专题分享";
+							ttl = this.getResources().getString(R.string.cluster_jx_zt_share);
 						}
 						// 缩略图
 						Bitmap bitmap = null;
@@ -617,12 +617,12 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 						String coverurl = data.getString("coverurl");
 						String describe = data.optString("describe");
 
-						String realDesc = "极路客精彩视频(使用#极路客Goluk#拍摄)";
+						String realDesc = this.getResources().getString(R.string.str_share_board_real_desc);
 
 						if (TextUtils.isEmpty(describe)) {
-							describe = "#极路客精彩视频#";
+							describe = this.getResources().getString(R.string.str_share_describe);
 						}
-						String ttl = "极路客精彩视频";
+						String ttl = this.getResources().getString(R.string.str_goluk_wonderful_video);
 
 						if (!this.isFinishing()) {
 							String videoId = null != mWillShareVideoSquareInfo ? mWillShareVideoSquareInfo.mVideoEntity.videoid
