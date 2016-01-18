@@ -191,6 +191,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		closeProgressDialog();
+		GlideUtils.clearMemory(this);
 		super.onDestroy();
 	}
 

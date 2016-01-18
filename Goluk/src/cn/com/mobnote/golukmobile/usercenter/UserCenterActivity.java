@@ -49,6 +49,7 @@ import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -708,6 +709,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 					.removeVideoSquareManagerListener("videosharehotlist");
 		}
 		EventBus.getDefault().unregister(this);
+		GlideUtils.clearMemory(this);
 	}
 
 	@Override

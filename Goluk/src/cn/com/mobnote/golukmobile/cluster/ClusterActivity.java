@@ -55,6 +55,7 @@ import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 
 public class ClusterActivity extends BaseActivity implements OnClickListener, IRequestResultListener, IClickShareView,
@@ -668,7 +669,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 			}
 		}
 		mBaseHandler.removeMessages(ClOSE_ACTIVITY);
-		
+		GlideUtils.clearMemory(this);
 		GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener(TAG);
 		super.onDestroy();
 	}
