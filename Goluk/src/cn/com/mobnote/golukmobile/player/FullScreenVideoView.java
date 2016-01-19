@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile.player;
 
+import cn.com.mobnote.golukmobile.player.factory.TextureVideoView;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.VideoView;
@@ -7,7 +8,7 @@ import android.widget.VideoView;
 /**
  * 自动全屏的VideoView
  */
-public class FullScreenVideoView extends VideoView {
+public class FullScreenVideoView extends TextureVideoView {
 
 	private int videoWidth;
 	private int videoHeight;

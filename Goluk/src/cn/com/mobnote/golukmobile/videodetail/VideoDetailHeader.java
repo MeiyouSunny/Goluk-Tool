@@ -15,6 +15,7 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Handler;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -42,8 +43,9 @@ import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+import cn.com.mobnote.golukmobile.player.factory.GolukPlayer;
 
-public class VideoDetailHeader implements OnClickListener, OnPreparedListener, OnCompletionListener, OnErrorListener, OnInfoListener {
+public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPreparedListener, GolukPlayer.OnCompletionListener, GolukPlayer.OnErrorListener, GolukPlayer.OnInfoListener {
 	private Context mContext;
 	private RelativeLayout mUserCenterLayout = null;
 	private ImageView mImageHead = null;
@@ -87,6 +89,32 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 	private VideoJson mVideoJson = null;
 
 	private CustomDialog mCustomDialog;
+	private int mVideoPosition = 0;
+
+    private final Handler mHandler = new Handler();
+ 
+    private final Runnable mPlayingChecker = new Runnable() {
+        @Override
+        public void run() {
+            if (mVideoView.isPlaying()) {
+    			mPlayBtn.setVisibility(View.GONE);
+    			mImageLayout.setVisibility(View.GONE);
+    			hideLoading();
+            } else {
+                mHandler.postDelayed(mPlayingChecker, 250);
+            }
+        }
+    };
+
+    private final Runnable mProgressChecker = new Runnable() {
+        @Override
+        public void run() {
+			int duration = mVideoView.getDuration();
+			int progress = mVideoView.getCurrentPosition() * 100 / duration;
+			mSeekBar.setProgress(progress);
+            mHandler.postDelayed(mProgressChecker, 500);
+        }
+    };
 
 	public VideoDetailHeader(Context context, int type) {
 		mContext = context;
@@ -242,7 +270,6 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 			if (!mVideoView.isPlaying() && isStartPlay) {
 				GolukDebugUtils.e("videoview", "VideoDetailActivity===getHeadData=  stat Play:");
 				playVideo();
-				showLoading();
 				GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------getHeadData:  showLoading");
 			}
 
@@ -361,6 +388,9 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 		mVideoView.setVideoURI(uri);
 		mVideoView.requestFocus();
 		mVideoView.start();
+		showLoading();
+        mHandler.removeCallbacks(mPlayingChecker);
+        mHandler.postDelayed(mPlayingChecker, 250);
 	}
 
 	/**
@@ -476,7 +506,6 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 					mImageLayout.setVisibility(View.GONE);
 				} else {
 					playVideo();
-					showLoading();
 				}
 				GolukDebugUtils.e("", "VideoDetailActivity-------------------------onClick  showLoading");
 				mPlayBtn.setVisibility(View.GONE);
@@ -562,24 +591,23 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 	}
 
 	private boolean mResume = false;
+
 	public void pausePlayer() {
+		mResume = true;
+		mHandler.removeCallbacksAndMessages(null);
+		mVideoPosition = mVideoView.getCurrentPosition();
 		mImageLayout.setVisibility(View.VISIBLE);
-		if (mVideoView.isPlaying() && mVideoView.canPause()) {
-			mResume = true;
-			mVideoView.pause();
-			mVideoView.setVisibility(View.GONE);
-		}
+		mVideoView.suspend();
 	}
 
 	public void startPlayer() {
-		if (!mVideoView.isPlaying() && mResume) {
-			GolukDebugUtils.e("", "onScreen--------------start");
-			mVideoView.start();
-			mVideoView.setVisibility(View.VISIBLE);
-			showLoading();
-			GolukDebugUtils.e("videoview", "VideoDetailActivity-------------------------startPlayer:  showLoading");
+		if (mResume) {
+			mVideoView.seekTo(mVideoPosition);
+			mVideoView.resume();;
+//			showLoading();
 		}
-		mResume = false;
+        mHandler.post(mProgressChecker);
+        mHandler.post(mPlayingChecker);
 	}
 
 	/** DP */
@@ -625,49 +653,29 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 	}
 
 	@Override
-	public void onPrepared(MediaPlayer mp) {
+	public void onPrepared(GolukPlayer mp) {
 		// TODO Auto-generated method stub
 		mVideoView.setVideoWidth(mp.getVideoWidth());
 		mVideoView.setVideoHeight(mp.getVideoHeight());
-		if ((null != mNetInfo) && (mNetInfo.getType() == ConnectivityManager.TYPE_WIFI)) {
-			mp.setLooping(true);
-		}
-		mp.setOnBufferingUpdateListener(new OnBufferingUpdateListener() {
-			
-			@Override
-			public void onBufferingUpdate(MediaPlayer mp, int percent) {
-				// TODO Auto-generated method stub
-
-				if (!mVideoView.isPlaying()) {
-					return;
-				}
-				int duration = mVideoView.getDuration();
-				int progress = mVideoView.getCurrentPosition() * 100 / duration;
-				mSeekBar.setProgress(progress);
-			}
-		});
-		if (GolukUtils.getSystemSDK() < 17) {
-			mPlayBtn.setVisibility(View.GONE);
-			mImageLayout.setVisibility(View.GONE);
-			hideLoading();
-		}
+//		if ((null != mNetInfo) && (mNetInfo.getType() == ConnectivityManager.TYPE_WIFI)) {
+//			mp.setLooping(true);
+//		}
 	}
 
 	@Override
-	public void onCompletion(MediaPlayer mp) {
+	public void onCompletion(GolukPlayer mp) {
 		// TODO Auto-generated method stub
 		// TODO OnCompletionListener视频播放完后进度条回到初始位置
 		GolukDebugUtils.e("videostate", "VideoDetailActivity-------------------------onCompletion :  ");
 		if (error || null == mVideoView) {
 			return;
 		}
-
+		mVideoView.seekTo(0);
+		mSeekBar.setProgress(0);
 		if ((null != mNetInfo) && (mNetInfo.getType() == ConnectivityManager.TYPE_MOBILE)) {
-			mp.setLooping(false);
+//			mp.setLooping(false);
 			mPlayBtn.setVisibility(View.VISIBLE);
 //			mImageLayout.setVisibility(View.VISIBLE);
-			mVideoView.seekTo(0);
-			mSeekBar.setProgress(0);
 		} else {
 			try {
 				mVideoView.start();
@@ -678,7 +686,7 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 	}
 
 	@Override
-	public boolean onError(MediaPlayer mp, int what, int extra) {
+	public boolean onError(GolukPlayer mp, int what, int extra) {
 		// TODO Auto-generated method stub
 		// TODO onErrorListener
 		GolukDebugUtils.e("videostate", "VideoDetailActivity-------------------------onError :  ");
@@ -710,15 +718,15 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 	}
 
 	@Override
-	public boolean onInfo(MediaPlayer arg0, int arg1, int arg2) {
+	public boolean onInfo(GolukPlayer arg0, int arg1, int arg2) {
 		// TODO Auto-generated method stub
 		GolukDebugUtils.e("videostate", "VideoDetailActivity-----------FullVideoView--------------onInfo : arg1 " + arg1);
 		switch (arg1) {
 		case 3:
-			error = false;
-			mPlayBtn.setVisibility(View.GONE);
-			mImageLayout.setVisibility(View.GONE);
-			hideLoading();
+//			error = false;
+//			mPlayBtn.setVisibility(View.GONE);
+//			mImageLayout.setVisibility(View.GONE);
+//			hideLoading();
 			break;
 //		case MediaPlayer.MEDIA_INFO_BUFFERING_START:
 //			isBuffering = true;
@@ -744,5 +752,7 @@ public class VideoDetailHeader implements OnClickListener, OnPreparedListener, O
 			mCustomDialog.dismiss();
 		}
 		mCustomDialog = null;
+		mVideoView.stopPlayback();
+		mHandler.removeCallbacksAndMessages(null);
 	}
 }

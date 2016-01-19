@@ -216,9 +216,8 @@ public class LocalWonderfulVideoListView {
 //			if (1 == type) {
 //				intent = new Intent(mContext, VitamioPlayerActivity.class);
 //			} else {
-//				intent = new Intent(mContext, VideoPlayerActivity.class);
+				intent = new Intent(mContext, MovieActivity.class);
 //			}
-			intent = new Intent(mContext, MovieActivity.class);
 			intent.putExtra("from", "local");
 			intent.putExtra("path", path);
 			mActivity.startActivity(intent);

@@ -49,9 +49,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.VideoView;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.player.factory.GolukPlayer;
 
 public class MoviePlayer implements
-        MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener,
+		GolukPlayer.OnErrorListener, GolukPlayer.OnCompletionListener,
         ControllerOverlay.Listener {
     @SuppressWarnings("unused")
     private static final String TAG = "MoviePlayer";
@@ -76,7 +77,7 @@ public class MoviePlayer implements
     private static final long RESUMEABLE_TIMEOUT = 3 * 60 * 1000; // 3 mins
 
     private Context mContext;
-    private final VideoView mVideoView;
+    private final FullScreenVideoView mVideoView;
     private final View mRootView;
 //    private final Bookmarker mBookmarker;
     private final Uri mUri;
@@ -122,7 +123,7 @@ public class MoviePlayer implements
             Uri videoUri, Bundle savedInstance, boolean loop) {
         mContext = movieActivity.getApplicationContext();
         mRootView = rootView;
-        mVideoView = (VideoView) rootView.findViewById(R.id.surface_view);
+        mVideoView = (FullScreenVideoView) rootView.findViewById(R.id.surface_view);
         mCoverImg = (ImageView) rootView.findViewById(R.id.ImageView_cover);
 //        mBookmarker = new Bookmarker(movieActivity);
         mUri = videoUri;
@@ -154,9 +155,9 @@ public class MoviePlayer implements
                 return true;
             }
         });
-        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        mVideoView.setOnPreparedListener(new GolukPlayer.OnPreparedListener() {
             @Override
-            public void onPrepared(MediaPlayer player) {
+            public void onPrepared(GolukPlayer player) {
                 if (!mVideoView.canSeekForward() || !mVideoView.canSeekBackward()) {
                     mController.setSeekable(false);
                 } else {
@@ -198,7 +199,8 @@ public class MoviePlayer implements
         } else {
 //            final Integer bookmark = mBookmarker.getBookmark(mUri);
 //            if (bookmark != null) {
-//                showResumeDialog(movieActivity, bookmark);
+//            	mVideoView.seekTo(bookmark);
+//            	startVideo();
 //            } else {
                 startVideo();
 //            }
@@ -351,7 +353,7 @@ public class MoviePlayer implements
 
     // Below are notifications from VideoView
     @Override
-    public boolean onError(MediaPlayer player, int arg1, int arg2) {
+    public boolean onError(GolukPlayer player, int arg1, int arg2) {
         mHandler.removeCallbacksAndMessages(null);
         // VideoView will show an error dialog if we return false, so no need
         // to show more message.
@@ -364,21 +366,24 @@ public class MoviePlayer implements
     }
 
     @Override
-    public void onCompletion(MediaPlayer mp) {
-        mController.showEnded();
+    public void onCompletion(GolukPlayer mp) {
+    	if (!mIsLoop) {
+    		mController.showEnded();
+    	}
         onCompletion();
     }
 
     public void onCompletion() {
     	if (mIsLoop) {
-    		startVideo();
+    		mVideoView.seekTo(0);
+    		playVideo();
     	}
     }
 
     // Below are notifications from ControllerOverlay
     @Override
     public void onPlayPause() {
-        if (mVideoView.isPlaying()) {
+        if (mVideoView.isPlaying() && mVideoView.canPause()) {
             pauseVideo();
         } else {
             playVideo();

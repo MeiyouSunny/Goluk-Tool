@@ -35,26 +35,25 @@ public class MovieControllerOverlay extends CommonControllerOverlay implements
 
     private boolean hidden;
 
-//    private final Handler handler;
-//    private final Runnable startHidingRunnable;
-//    private final Animation hideAnimation;
+    private final Handler handler;
+    private final Runnable startHidingRunnable;
+    private final Animation hideAnimation;
 
     public MovieControllerOverlay(Context context) {
         super(context);
 
-//        handler = new Handler();
-//        startHidingRunnable = new Runnable() {
-//                @Override
-//            public void run() {
-//                startHiding();
-//            }
-//        };
-//
-//        hideAnimation = AnimationUtils.loadAnimation(context, R.anim.player_out);
-//        hideAnimation.setAnimationListener(this);
-//
-//        hide();
-        show();
+        handler = new Handler();
+        startHidingRunnable = new Runnable() {
+                @Override
+            public void run() {
+                startHiding();
+            }
+        };
+
+        hideAnimation = AnimationUtils.loadAnimation(context, R.anim.player_out);
+        hideAnimation.setAnimationListener(this);
+
+        hide();
     }
 
     @Override
@@ -75,41 +74,42 @@ public class MovieControllerOverlay extends CommonControllerOverlay implements
 
     @Override
     public void show() {
-//        boolean wasHidden = hidden;
-//        hidden = false;
+        boolean wasHidden = hidden;
+        hidden = false;
         super.show();
-//        if (mListener != null && wasHidden != hidden) {
-        if (mListener != null) {
+        if (mListener != null && wasHidden != hidden) {
             mListener.onShown();
         }
-//        maybeStartHiding();
+        maybeStartHiding();
     }
 
-//    private void maybeStartHiding() {
-//        cancelHiding();
-//        if (mState == State.PLAYING) {
-//            handler.postDelayed(startHidingRunnable, 2500);
-//        }
-//    }
-//
-//    private void startHiding() {
-//        startHideAnimation(mBackground);
-//        startHideAnimation(mTimeBar);
-//        startHideAnimation(mPlayPauseReplayView);
-//    }
-//
-//    private void startHideAnimation(View view) {
-//        if (view.getVisibility() == View.VISIBLE) {
-//            view.startAnimation(hideAnimation);
-//        }
-//    }
+    private void maybeStartHiding() {
+        cancelHiding();
+        if (mState == State.PLAYING) {
+            handler.postDelayed(startHidingRunnable, 2500);
+        }
+    }
 
-//    private void cancelHiding() {
-//        handler.removeCallbacks(startHidingRunnable);
-//        mBackground.setAnimation(null);
-//        mTimeBar.setAnimation(null);
-//        mPlayPauseReplayView.setAnimation(null);
-//    }
+    private void startHiding() {
+        startHideAnimation(mBackground);
+        startHideAnimation(mBackView);
+        startHideAnimation(mTimeBar);
+        startHideAnimation(mPlayPauseReplayView);
+    }
+
+    private void startHideAnimation(View view) {
+        if (view.getVisibility() == View.VISIBLE) {
+            view.startAnimation(hideAnimation);
+        }
+    }
+
+    private void cancelHiding() {
+        handler.removeCallbacks(startHidingRunnable);
+        mBackground.setAnimation(null);
+        mTimeBar.setAnimation(null);
+        mBackView.setAnimation(null);
+        mPlayPauseReplayView.setAnimation(null);
+    }
 
     @Override
     public void onAnimationStart(Animation animation) {
@@ -123,7 +123,7 @@ public class MovieControllerOverlay extends CommonControllerOverlay implements
 
     @Override
     public void onAnimationEnd(Animation animation) {
-//        hide();
+        hide();
     }
 
     @Override
@@ -140,19 +140,19 @@ public class MovieControllerOverlay extends CommonControllerOverlay implements
             return true;
         }
 
-//        if (hidden) {
-//            show();
-//            return true;
-//        }
+        if (hidden) {
+            show();
+            return true;
+        }
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-//                cancelHiding();
+                cancelHiding();
                 if (mState == State.PLAYING || mState == State.PAUSED) {
                     mListener.onPlayPause();
                 }
                 break;
             case MotionEvent.ACTION_UP:
-//                maybeStartHiding();
+                maybeStartHiding();
                 break;
         }
         return true;
@@ -170,19 +170,19 @@ public class MovieControllerOverlay extends CommonControllerOverlay implements
 
     @Override
     public void onScrubbingStart() {
-//        cancelHiding();
+        cancelHiding();
         super.onScrubbingStart();
     }
 
     @Override
     public void onScrubbingMove(int time) {
-//        cancelHiding();
+        cancelHiding();
         super.onScrubbingMove(time);
     }
 
     @Override
     public void onScrubbingEnd(int time, int trimStartTime, int trimEndTime) {
-//        maybeStartHiding();
+        maybeStartHiding();
         super.onScrubbingEnd(time, trimStartTime, trimEndTime);
     }
 

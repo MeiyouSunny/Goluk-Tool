@@ -111,6 +111,7 @@
         <activity
             android:name=".videodetail.VideoDetailActivity"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustResize" />
         <activity
             android:name="cn.com.mobnote.golukmobile.ImageClipActivity"
@@ -255,6 +256,7 @@
             android:name=".player.MovieActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="landscape"
+            android:hardwareAccelerated="true"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
         <activity
