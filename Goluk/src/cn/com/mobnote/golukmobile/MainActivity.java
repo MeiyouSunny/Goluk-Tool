@@ -156,6 +156,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private String mCityCode;
 	private boolean mBannerLoaded;
 	private StartAppBean mStartAppBean = null;
+	/** 把当前连接的设备保存起来，主要是为了兼容以前的连接状态 */
+	private WifiRsBean mCurrentConnBean = null;
 
 	private void playDownLoadedSound() {
 		if (null != mSoundPool) {
@@ -269,16 +271,16 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 		GolukUtils.getMobileInfo(this);
 
-//		msgRequest();
+		// msgRequest();
 	}
 
 	private void msgRequest() {
-		if(GolukApplication.getInstance().isUserLoginSucess) {
-			MsgCenterCounterRequest msgCounterReq = new MsgCenterCounterRequest(
-					IPageNotifyFn.PageType_MsgCounter, this);
+		if (GolukApplication.getInstance().isUserLoginSucess) {
+			MsgCenterCounterRequest msgCounterReq = new MsgCenterCounterRequest(IPageNotifyFn.PageType_MsgCounter, this);
 			msgCounterReq.get("100", GolukApplication.getInstance().mCurrentUId, "", "", "");
 		}
 	}
+
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
@@ -844,10 +846,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		// 标识正常退出
 		SharedPrefUtil.setIsLiveNormalExit(true);
 		if (mApp.getIpcIsLogin()) {
-			LiveDialogManager.getManagerInstance().showTwoBtnDialog(
-					this, LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE,
-					getString(R.string.user_dialog_hint_title),
-					getString(R.string.str_live_continue));
+			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this, LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE,
+					getString(R.string.user_dialog_hint_title), getString(R.string.str_live_continue));
 		}
 	}
 
@@ -871,8 +871,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	public void exit() {
 		if ((System.currentTimeMillis() - exitTime) > 2000) {
-			GolukUtils.showToast(getApplicationContext(),
-					getString(R.string.str_double_click_to_exit_app));
+			GolukUtils.showToast(getApplicationContext(), getString(R.string.str_double_click_to_exit_app));
 			exitTime = System.currentTimeMillis();
 		} else {
 			mApp.setExit(true);
@@ -1079,14 +1078,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 	}
 
-	/** 把当前连接的设备保存起来，主要是为了兼容以前的连接状态 */
-	private WifiRsBean mCurrentConnBean = null;
-
 	private void refreshIpcDataToFile() {
 		if (null == mCurrentConnBean) {
 			return;
 		}
-		mCurrentConnBean = mWac.readConfig();
 		GolukDebugUtils.e("",
 				"select wifibind---MainActivity------refreshIpcDataToFile1: " + mCurrentConnBean.getIpc_ssid());
 		// 如果本地文件中已经有记录了，则不再保存
@@ -1121,9 +1116,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private void wifiCallBack_ipcConnHotSucess(String message, Object arrays) {
 		WifiRsBean[] bean = (WifiRsBean[]) arrays;
 		if (null != bean && bean.length > 0) {
-			// mCurrentConnBean = bean[0];
-			WifiRsBean currBean = mWac.readConfig();
-			mCurrentConnBean = currBean;
+			mCurrentConnBean = mWac.readConfig();
 			sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
 		}
 	}
@@ -1229,25 +1222,25 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	private void setMessageTipCount(int total) {
-		ImageView mainMsgTip = (ImageView)findViewById(R.id.iv_main_message_tip);
-		if(total > 0) {
+		ImageView mainMsgTip = (ImageView) findViewById(R.id.iv_main_message_tip);
+		if (total > 0) {
 			mainMsgTip.setVisibility(View.VISIBLE);
 		} else {
 			mainMsgTip.setVisibility(View.GONE);
 		}
 
 		// Also set user page message count tip
-		if(null == indexMoreActivity || indexMoreActivity.mRootLayout == null) {
+		if (null == indexMoreActivity || indexMoreActivity.mRootLayout == null) {
 			GolukDebugUtils.d(TAG, "index more has been finished");
 			return;
 		}
 
-		TextView userMsgCounterTV = (TextView)indexMoreActivity.mRootLayout.findViewById(R.id.tv_my_message_tip);
+		TextView userMsgCounterTV = (TextView) indexMoreActivity.mRootLayout.findViewById(R.id.tv_my_message_tip);
 		String strTotal = null;
-		if(total > 99) {
+		if (total > 99) {
 			strTotal = "99+";
 			userMsgCounterTV.setVisibility(View.VISIBLE);
-		} else if(total <= 0) {
+		} else if (total <= 0) {
 			strTotal = "0";
 			userMsgCounterTV.setVisibility(View.GONE);
 		} else {
@@ -1261,33 +1254,30 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		// TODO Auto-generated method stub
-		if(null == result) {
+		if (null == result) {
 			return;
 		}
 
-		if(requestType == IPageNotifyFn.PageType_MsgCounter) {
-			MessageCounterBean bean = (MessageCounterBean)result;
-			if(null == bean.data) {
+		if (requestType == IPageNotifyFn.PageType_MsgCounter) {
+			MessageCounterBean bean = (MessageCounterBean) result;
+			if (null == bean.data) {
 				return;
 			}
 
-			if(null != bean.data.messagecount){
+			if (null != bean.data.messagecount) {
 				int praiseCount = 0;
 				int commentCount = 0;
 				int systemCount = 0;
 
-				if(null != bean.data.messagecount.user) {
+				if (null != bean.data.messagecount.user) {
 					praiseCount = bean.data.messagecount.user.like;
 					commentCount = bean.data.messagecount.user.comment;
 				}
-				if(null != bean.data.messagecount.system) {
+				if (null != bean.data.messagecount.system) {
 					systemCount = bean.data.messagecount.system.total;
 				}
 
-				MessageManager.getMessageManager().setMessageEveryCount(
-						praiseCount,
-						commentCount,
-						systemCount);
+				MessageManager.getMessageManager().setMessageEveryCount(praiseCount, commentCount, systemCount);
 			}
 		}
 	}
