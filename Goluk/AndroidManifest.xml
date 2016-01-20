@@ -262,6 +262,7 @@
         <activity
             android:name=".special.SpecialListActivity"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
@@ -271,6 +272,7 @@
         </activity>
         <activity
             android:name=".usercenter.UserCenterActivity"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -376,6 +378,7 @@
         <activity
             android:name=".cluster.ClusterActivity"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
