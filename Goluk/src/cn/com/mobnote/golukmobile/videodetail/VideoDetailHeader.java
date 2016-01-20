@@ -497,6 +497,15 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 //				return;
 //			}
 
+			if (mIsRePlay) {
+				mVideoView.seekTo(0);
+				mVideoView.start();
+		        mHandler.post(mProgressChecker);
+		        mHandler.post(mPlayingChecker);
+				mIsRePlay = false;
+				return;
+			}
+
 			if (mVideoView.isPlaying() && mVideoView.canPause()) {
 				mVideoView.pause();
 				mPlayBtn.setVisibility(View.VISIBLE);
@@ -662,6 +671,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 //		}
 	}
 
+	private boolean mIsRePlay = false;
 	@Override
 	public void onCompletion(GolukPlayer mp) {
 		// TODO Auto-generated method stub
@@ -670,14 +680,17 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 		if (error || null == mVideoView) {
 			return;
 		}
-		mVideoView.seekTo(0);
+
 		mSeekBar.setProgress(0);
 		if ((null != mNetInfo) && (mNetInfo.getType() == ConnectivityManager.TYPE_MOBILE)) {
 //			mp.setLooping(false);
+			mHandler.removeCallbacksAndMessages(null);
+			mIsRePlay = true;
 			mPlayBtn.setVisibility(View.VISIBLE);
 //			mImageLayout.setVisibility(View.VISIBLE);
 		} else {
 			try {
+				mVideoView.seekTo(0);
 				mVideoView.start();
 			} catch (IllegalStateException ise) {
 				ise.printStackTrace();
