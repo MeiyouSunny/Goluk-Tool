@@ -157,7 +157,7 @@ public class MsgCenterPraiseAdapter extends BaseAdapter {
 	 * @param bean
 	 */
 	private void intentToOthers(int id, MessageMsgsBean bean) {
-		if (id == R.id.iv_listview_item_praise_head || id == R.id.iv_listview_item_praise_head) {
+		if (id == R.id.iv_listview_item_praise_head || id == R.id.tv_listview_item_praise_name) {
 			if (null != bean && null != bean.sender) {
 				Intent it = new Intent(mContext, UserCenterActivity.class);
 

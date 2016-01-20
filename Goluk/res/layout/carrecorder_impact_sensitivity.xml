@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="关闭"
+            android:text="@string/carrecorder_tcaf_close"
             android:textColor="@color/setting_black_color"
             android:textSize="16sp" />
 
@@ -62,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="低"
+            android:text="@string/str_low"
             android:textColor="@color/setting_black_color"
             android:textSize="16sp" />
 
@@ -99,7 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="中"
+            android:text="@string/str_middle"
             android:textColor="@color/setting_black_color"
             android:textSize="16sp" />
 
@@ -136,7 +136,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="高"
+            android:text="@string/str_high"
             android:textColor="@color/setting_black_color"
             android:textSize="16sp" />
 

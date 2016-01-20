@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|left"
-            android:text="设备编号: "
+            android:text="@string/str_ipc_number_text"
             android:textColor="#6d6d72"
             android:textSize="13sp" />
 
@@ -61,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|left"
-            android:text="固件版本号: "
+            android:text="@string/str_ipc_version_text"
             android:textColor="#6d6d72"
             android:textSize="13sp" />
 
