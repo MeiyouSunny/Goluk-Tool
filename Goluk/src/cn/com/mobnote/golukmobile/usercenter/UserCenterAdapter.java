@@ -15,7 +15,6 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -84,7 +83,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 	final int ItemType_noDataInfo = 3;
 	private int firstItemHeight = 0;
 	UserCenterActivity uca = null;
-	
+
 	private boolean mBneedRefrush = false;
 
 	public UserCenterAdapter(Context context, SharePlatformUtil spf, IUserCenterInterface iUser, int tabtype) {
@@ -93,6 +92,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 		praisgroupData = null;
 		mUserCenterInterface = iUser;
 		uca = (UserCenterActivity) mContext;
+		loadRes();
 		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener("videosharehotlist", this);
 
@@ -250,7 +250,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 					if ("1".equals(userinfo.label.approvelabel)) {// 企业认证
 						if (userinfo.label.approve != null && !"".equals(userinfo.label.approve)) {
 							holder.vText.setVisibility(View.VISIBLE);
-							holder.vText.setText(mContext.getResources().getString(R.string.str_add_v_txt) + "  "+ userinfo.label.approve);
+							holder.vText.setText(mContext.getResources().getString(R.string.str_add_v_txt) + "  "
+									+ userinfo.label.approve);
 						} else {
 							holder.vText.setVisibility(View.GONE);
 						}
@@ -260,7 +261,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 						if ("1".equals(userinfo.label.headplusv)) {// 个人加V
 							if (userinfo.label.headplusvdes != null && !"".equals(userinfo.label.headplusvdes)) {
 								holder.vText.setVisibility(View.VISIBLE);
-								holder.vText.setText(mContext.getResources().getString(R.string.str_add_v_txt)+"  " + userinfo.label.headplusvdes);
+								holder.vText.setText(mContext.getResources().getString(R.string.str_add_v_txt) + "  "
+										+ userinfo.label.headplusvdes);
 							} else {
 								holder.vText.setVisibility(View.GONE);
 							}
@@ -363,16 +365,18 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				holder.imageLayout = (ImageView) convertView.findViewById(R.id.imageLayout);
 				holder.headimg = (ImageView) convertView.findViewById(R.id.headimg);
 				holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
-				holder.location = (TextView) convertView.findViewById(R.id.uc_location);
+				holder.time_location = (TextView) convertView.findViewById(R.id.time_location);
 
-				holder.time = (TextView) convertView.findViewById(R.id.time);
+				// holder.time = (TextView) convertView.findViewById(R.id.time);
 				holder.function = (ImageView) convertView.findViewById(R.id.function);
 				holder.videoGoldImg = (ImageView) convertView.findViewById(R.id.user_center_gold);
-				holder.recommentImg = (ImageView) convertView.findViewById(R.id.uc_recommend);
+				// holder.recommentImg = (ImageView)
+				// convertView.findViewById(R.id.uc_recommend);
 
 				holder.praiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
 				holder.zanIcon = (ImageView) convertView.findViewById(R.id.zanIcon);
-//				holder.zanText = (TextView) convertView.findViewById(R.id.zanText);
+				// holder.zanText = (TextView)
+				// convertView.findViewById(R.id.zanText);
 
 				holder.commentLayout = (LinearLayout) convertView.findViewById(R.id.commentLayout);
 				holder.commentIcon = (ImageView) convertView.findViewById(R.id.commentIcon);
@@ -426,20 +430,26 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				showHead(holder.headimg, clusterInfo.mUserEntity.headportrait);
 			}
 			holder.nikename.setText(clusterInfo.mUserEntity.nickname);
-			holder.time.setText(GolukUtils.getCommentShowFormatTime(clusterInfo.mVideoEntity.sharingtime));
+			final String sharingTime = GolukUtils.getCommentShowFormatTime(clusterInfo.mVideoEntity.sharingtime);
+			final String location = clusterInfo.mVideoEntity.location;
+			String showTimeLocation = sharingTime;
+			if (null != location) {
+				showTimeLocation = showTimeLocation + " " + location;
+			}
+			holder.time_location.setText(showTimeLocation);
 
 			setVideoExtra(holder, clusterInfo);
 
 			// 设置显示 视频位置信息
-			final String location = clusterInfo.mVideoEntity.location;
-			if (null == location || "".equals(location)) {
-				holder.location.setVisibility(View.GONE);
-			} else {
-				holder.location.setVisibility(View.VISIBLE);
-				holder.location.setText(location);
-			}
+			// final String location = clusterInfo.mVideoEntity.location;
+			// if (null == location || "".equals(location)) {
+			// holder.location.setVisibility(View.GONE);
+			// } else {
+			// holder.location.setVisibility(View.VISIBLE);
+			// holder.location.setText(location);
+			// }
 
-//			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber);
+			// holder.zText.setText(clusterInfo.mVideoEntity.praisenumber);
 			holder.weiguan.setText(clusterInfo.mVideoEntity.clicknumber);
 
 			int count = Integer.parseInt(clusterInfo.mVideoEntity.comcount);
@@ -471,7 +481,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				holder.v.setVisibility(View.GONE);
 			}
 
-//			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber + " 赞");
+			// holder.zText.setText(clusterInfo.mVideoEntity.praisenumber +
+			// " 赞");
 			initListener(holder, index_v);
 			// 没点过
 			if ("0".equals(clusterInfo.mVideoEntity.ispraise)) {
@@ -485,9 +496,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			if ("-1".equals(clusterInfo.mVideoEntity.praisenumber)) {
 				holder.tvPraiseCount.setText(mContext.getString(R.string.str_usercenter_praise));
 			} else {
-				holder.tvPraiseCount.setText(
-						GolukUtils.getFormatNumber(clusterInfo.mVideoEntity.praisenumber) +
-						mContext.getString(R.string.str_usercenter_praise));
+				holder.tvPraiseCount.setText(GolukUtils.getFormatNumber(clusterInfo.mVideoEntity.praisenumber)
+						+ mContext.getString(R.string.str_usercenter_praise));
 			}
 
 			if (clusterInfo.mVideoEntity.commentList.size() >= 1) {
@@ -654,7 +664,6 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				}
 			}
 
-			
 			if (this.currentViewType == ViewType_ShareVideoList) {
 				// 分享视频列表
 				if (this.videogroupdata.loadfailed == true) {
@@ -722,24 +731,26 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 		if (null == clusterInfo || null == holder) {
 			return;
 		}
-		if(null == clusterInfo.mVideoEntity) {
+		if (null == clusterInfo.mVideoEntity) {
 			return;
 		}
 		String got = "";
 		if (null != clusterInfo.mVideoEntity.videoExtra) {
 			// 显示是否获奖
-			if ("1".equals(clusterInfo.mVideoEntity.videoExtra.isreward) &&
-					"1".equals(clusterInfo.mVideoEntity.videoExtra.sysflag)) {
+			if ("1".equals(clusterInfo.mVideoEntity.videoExtra.isreward)
+					&& "1".equals(clusterInfo.mVideoEntity.videoExtra.sysflag)) {
 				holder.videoGoldImg.setVisibility(View.VISIBLE);
 			} else {
 				holder.videoGoldImg.setVisibility(View.GONE);
 			}
 			// 显示是否推荐
 			if (clusterInfo.mVideoEntity.videoExtra.isrecommend.equals("1")) {
-				holder.recommentImg.setVisibility(View.VISIBLE);
+				// holder.recommentImg.setVisibility(View.VISIBLE);
+				holder.time_location.setCompoundDrawables(null, null, this.mRecommentDrawable, null);
 			} else {
-				holder.recommentImg.setVisibility(View.GONE);
+				holder.time_location.setCompoundDrawables(null, null, null, null);
 			}
+
 			// 获得聚合字符串
 			if (clusterInfo.mVideoEntity.videoExtra.topicname == null
 					|| "".equals(clusterInfo.mVideoEntity.videoExtra.topicname)) {
@@ -750,11 +761,19 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 
 		} else {
 			holder.videoGoldImg.setVisibility(View.GONE);
-			holder.recommentImg.setVisibility(View.GONE);
+			// holder.recommentImg.setVisibility(View.GONE);
+			holder.time_location.setCompoundDrawables(null, null, null, null);
 		}
 
 		UserUtils.showCommentText(mContext, true, clusterInfo, holder.detail, clusterInfo.mUserEntity.nickname,
 				clusterInfo.mVideoEntity.describe, got);
+	}
+
+	Drawable mRecommentDrawable = null;
+
+	private void loadRes() {
+		mRecommentDrawable = mContext.getResources().getDrawable(R.drawable.together_recommend_icon);
+		mRecommentDrawable.setBounds(0, 0, mRecommentDrawable.getMinimumWidth(), mRecommentDrawable.getMinimumHeight());
 	}
 
 	private void showHead(ImageView view, String headportrait) {
@@ -928,15 +947,14 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 		ImageView imageLayout;
 		ImageView headimg;
 		TextView nikename;
-		TextView location;
-		TextView time;
+		TextView time_location;
 		ImageView function;
 		ImageView videoGoldImg;
-		ImageView recommentImg;
+		// ImageView recommentImg;
 
 		LinearLayout praiseLayout;
 		ImageView zanIcon;
-//		TextView zanText;
+		// TextView zanText;
 
 		LinearLayout commentLayout;
 		ImageView commentIcon;

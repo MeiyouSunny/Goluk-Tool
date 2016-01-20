@@ -16,33 +16,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp" >
 
-         <RelativeLayout
-                android:id="@+id/rl_head_img"
-                android:layout_width="37.33dp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_height="37.33dp">
-             <!-- 头像 -->
-
-        <ImageView
-            android:id="@+id/headimg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/imgdes" />
-
-        <ImageView
-            android:id="@+id/v"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_alignRight="@id/headimg"
-            android:layout_alignBottom="@id/headimg"
-            android:contentDescription="@string/imgdes"
-            android:src="@drawable/authentication_bluev_icon"/>
-        </RelativeLayout>
-
-       
-
         <!-- 举报按钮 -->
 
         <ImageView
@@ -51,8 +24,8 @@
             android:layout_height="20dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/new_more_icon"
-            android:contentDescription="@string/imgdes" />
+            android:contentDescription="@string/imgdes"
+            android:src="@drawable/new_more_icon" />
 
         <!-- 精选标识 -->
 
@@ -63,9 +36,35 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@id/function"
-            android:src="@drawable/together_coin_icon"
             android:contentDescription="@string/imgdes"
+            android:src="@drawable/together_coin_icon"
             android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/rl_head_img"
+            android:layout_width="37.33dp"
+            android:layout_height="37.33dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" >
+
+            <!-- 头像 -->
+
+            <ImageView
+                android:id="@+id/headimg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/imgdes" />
+
+            <ImageView
+                android:id="@+id/v"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_alignBottom="@id/headimg"
+                android:layout_alignRight="@id/headimg"
+                android:contentDescription="@string/imgdes"
+                android:src="@drawable/authentication_bluev_icon" />
+        </RelativeLayout>
 
         <!-- 中间的布局，包括用户 名称，时间 ，地理位置 ，推荐标识 -->
 
@@ -93,43 +92,18 @@
                     android:textColor="#1163a2"
                     android:textSize="14sp" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/time_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:orientation="horizontal" >
-
-                    <TextView
-                        android:id="@+id/time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textColor="#888888"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/uc_location"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:singleLine="true"
-                        android:textColor="#888888"
-                        android:textSize="12sp" />
-                </LinearLayout>
+                    android:drawablePadding="4dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:textColor="#888888"
+                    android:textSize="12sp" />
             </LinearLayout>
-
-            <!-- 推荐标签 -->
-
-            <ImageView
-                android:id="@+id/uc_recommend"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignRight="@id/uc_video_userInfolayout"
-                android:layout_marginRight="-30dp"
-                android:src="@drawable/together_recommend_icon"
-                android:contentDescription="@string/imgdes"
-                android:visibility="gone" />
         </RelativeLayout>
     </RelativeLayout>
 
@@ -156,8 +130,8 @@
             android:layout_alignParentTop="true"
             android:layout_marginRight="4dp"
             android:layout_marginTop="4dp"
-            android:src="@drawable/new_live_icon"
             android:contentDescription="@string/imgdes"
+            android:src="@drawable/new_live_icon"
             android:visibility="gone" />
 
         <ImageView
@@ -165,8 +139,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/btn_player_play"
-            android:contentDescription="@string/imgdes" />
+            android:contentDescription="@string/imgdes"
+            android:src="@drawable/btn_player_play" />
 
         <ImageView
             android:id="@+id/isopen"
@@ -176,8 +150,8 @@
             android:layout_alignParentRight="true"
             android:layout_marginBottom="5dp"
             android:layout_marginRight="5dp"
-            android:src="@drawable/mine_icon_lock"
             android:contentDescription="@string/imgdes"
+            android:src="@drawable/mine_icon_lock"
             android:visibility="gone" />
 
         <TextView
@@ -224,8 +198,8 @@
                 android:id="@+id/zanIcon"
                 android:layout_width="20dp"
                 android:layout_height="18dp"
-                android:src="@drawable/videodetail_like"
-                android:contentDescription="@string/def" />
+                android:contentDescription="@string/def"
+                android:src="@drawable/videodetail_like" />
 
             <TextView
                 android:id="@+id/zText"
@@ -249,8 +223,8 @@
                 android:id="@+id/commentIcon"
                 android:layout_width="20dp"
                 android:layout_height="18dp"
-                android:src="@drawable/videodetail_comment"
-                android:contentDescription="@string/def" />
+                android:contentDescription="@string/def"
+                android:src="@drawable/videodetail_comment" />
 
             <TextView
                 android:id="@+id/commentText"
@@ -275,8 +249,8 @@
                 android:id="@+id/shareIcon"
                 android:layout_width="20dp"
                 android:layout_height="18dp"
-                android:src="@drawable/videodetail_share"
-                android:contentDescription="@string/def" />
+                android:contentDescription="@string/def"
+                android:src="@drawable/videodetail_share" />
 
             <TextView
                 android:id="@+id/shareText"
@@ -294,10 +268,10 @@
         android:id="@+id/tv_share_video_list_item_praise_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingLeft="10dp"
         android:drawableLeft="@drawable/videodetail_likeicon"
         android:drawablePadding="4dp"
+        android:gravity="center"
+        android:paddingLeft="10dp"
         android:text="@string/str_usercenter_praise"
         android:textColor="#1163a2"
         android:textSize="12sp" />
@@ -355,8 +329,10 @@
             android:textColor="#333333"
             android:textSize="14sp" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/transparent" />
+
 </LinearLayout>
