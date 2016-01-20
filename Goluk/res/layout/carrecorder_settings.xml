@@ -63,7 +63,6 @@
                     android:layout_toLeftOf="@+id/sc_right"
                     android:gravity="center_vertical"
                     android:paddingRight="10dp"
-                    android:text="0KB/0KB"
                     android:textColor="@color/setting_right_text_color"
                     android:textSize="15sp" />
 
@@ -115,7 +114,6 @@
                     android:layout_toLeftOf="@+id/vd_r"
                     android:gravity="center_vertical"
                     android:paddingRight="10dp"
-                    android:text="1080P高质量"
                     android:textColor="@color/setting_right_text_color"
                     android:textSize="15sp" />
 
@@ -346,7 +344,7 @@
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
-                    android:text="开关机提示音"
+                    android:text="@string/str_settings_kgjtsy_title"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
 
@@ -519,7 +517,6 @@
                     android:layout_toLeftOf="@+id/pzgy"
                     android:gravity="center_vertical"
                     android:paddingRight="10dp"
-                    android:text="关闭"
                     android:textColor="@color/setting_right_text_color"
                     android:textSize="15sp" />
 
@@ -657,7 +654,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
                     android:contentDescription="@string/def"
-                    android:text="立即购买极路客专用降压线"
+                    android:text="@string/str_buy_dropline"
                     android:textColor="#047cf3"
                     android:textSize="10sp" />
             </LinearLayout>

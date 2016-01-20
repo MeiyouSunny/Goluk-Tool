@@ -32,7 +32,7 @@ public class FormatSDCardActivity extends CarRecordBaseActivity implements OnCli
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addContentView(LayoutInflater.from(this).inflate(R.layout.carrecorder_format_sd_card, null));
-		setTitle("格式化SD卡");
+		setTitle(this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard));
 
 		findViewById(R.id.mFormat).setOnClickListener(this);
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
@@ -49,25 +49,31 @@ public class FormatSDCardActivity extends CarRecordBaseActivity implements OnCli
 			break;
 		case R.id.mFormat:
 			CustomDialog dialog = new CustomDialog(this);
-			dialog.setMessage("是否格式化SD卡？", Gravity.CENTER);
-			dialog.setLeftButton("是", new OnLeftClickListener() {
-				@Override
-				public void onClickListener() {
-					if (GolukApplication.getInstance().getIpcIsLogin()) {
-						boolean flag = GolukApplication.getInstance().getIPCControlManager().formatDisk();
-						GolukDebugUtils.e("xuhw", "YYYYYY=====formatDisk===flag=" + flag);
-						if (flag) {
-							// if(null == mCustomFormatDialog){
-							mCustomFormatDialog = new CustomFormatDialog(FormatSDCardActivity.this);
-							mCustomFormatDialog.setCancelable(false);
-							mCustomFormatDialog.setMessage("正在格式化SD卡，可能需要1~2分钟，请稍候...");
-							mCustomFormatDialog.show();
-							// }
+			dialog.setMessage(
+					this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_dialog_message),
+					Gravity.CENTER);
+			dialog.setLeftButton(
+					this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_dialog_yes),
+					new OnLeftClickListener() {
+						@Override
+						public void onClickListener() {
+							if (GolukApplication.getInstance().getIpcIsLogin()) {
+								boolean flag = GolukApplication.getInstance().getIPCControlManager().formatDisk();
+								GolukDebugUtils.e("xuhw", "YYYYYY=====formatDisk===flag=" + flag);
+								if (flag) {
+									// if(null == mCustomFormatDialog){
+									mCustomFormatDialog = new CustomFormatDialog(FormatSDCardActivity.this);
+									mCustomFormatDialog.setCancelable(false);
+									mCustomFormatDialog.setMessage(getResources().getString(
+											R.string.str_carrecorder_storage_format_sdcard_formating));
+									mCustomFormatDialog.show();
+									// }
+								}
+							}
 						}
-					}
-				}
-			});
-			dialog.setRightButton("否", null);
+					});
+			dialog.setRightButton(
+					this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_dialog_no), null);
 			dialog.show();
 			break;
 
@@ -99,13 +105,13 @@ public class FormatSDCardActivity extends CarRecordBaseActivity implements OnCli
 						+ "==param2=" + param2);
 				String message = "";
 				if (param1 == RESULE_SUCESS) {
-					message = "SD卡格式化成功";
+					message = this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_success);
 				} else {
-					message = "SD卡格式化失败";
+					message = this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_fail);
 				}
 				CustomDialog dialog = new CustomDialog(this);
 				dialog.setMessage(message, Gravity.CENTER);
-				dialog.setLeftButton("确定", null);
+				dialog.setLeftButton(this.getResources().getString(R.string.str_button_ok), null);
 				dialog.show();
 			}
 		}

@@ -856,17 +856,18 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if (mCustomDialog == null) {
 			mCustomDialog = new CustomDialog(this);
 		}
-		mCustomDialog.setMessage("是否确认恢复Goluk出厂设置", Gravity.CENTER);
-		mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
-			@Override
-			public void onClickListener() {
-				if (GolukApplication.getInstance().getIpcIsLogin()) {
-					boolean a = GolukApplication.getInstance().getIPCControlManager().restoreIPC();
-					GolukDebugUtils.e("xuhw", "YYYYYY=================restoreIPC============a=" + a);
-				}
-			}
-		});
-		mCustomDialog.setRightButton("取消", null);
+		mCustomDialog.setMessage(this.getResources().getString(R.string.str_reset_message), Gravity.CENTER);
+		mCustomDialog.setLeftButton(this.getResources().getString(R.string.user_personal_sign_title),
+				new OnLeftClickListener() {
+					@Override
+					public void onClickListener() {
+						if (GolukApplication.getInstance().getIpcIsLogin()) {
+							boolean a = GolukApplication.getInstance().getIPCControlManager().restoreIPC();
+							GolukDebugUtils.e("xuhw", "YYYYYY=================restoreIPC============a=" + a);
+						}
+					}
+				});
+		mCustomDialog.setRightButton(this.getResources().getString(R.string.dialog_str_cancel), null);
 		mCustomDialog.show();
 	}
 
@@ -1182,13 +1183,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 						JSONObject json = new JSONObject((String) param2);
 						int policy = json.optInt("policy");
 						if (0 == policy) {
-							mSensitivityText.setText("关闭");
+							mSensitivityText.setText(this.getResources().getString(R.string.carrecorder_tcaf_close));
 						} else if (1 == policy) {
-							mSensitivityText.setText("低");
+							mSensitivityText.setText(this.getResources().getString(R.string.str_low));
 						} else if (2 == policy) {
-							mSensitivityText.setText("中");
+							mSensitivityText.setText(this.getResources().getString(R.string.str_middle));
 						} else {
-							mSensitivityText.setText("高");
+							mSensitivityText.setText(this.getResources().getString(R.string.str_high));
 						}
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -1255,9 +1256,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 							mWonderVideoBtn.setBackgroundResource(R.drawable.set_close_btn);
 						}
 					}
-					GolukUtils.showToast(this, "设置成功");
+					GolukUtils.showToast(this, this.getResources().getString(R.string.str_set_ok));
 				} else {
-					GolukUtils.showToast(this, "当前固件不支持此项设置，请升级固件后再试");
+					GolukUtils.showToast(this, this.getResources().getString(R.string.str_ipc_unmatch));
 				}
 			} else if (msg == IPC_VDCP_Msg_GetISPMode) {
 				getISPModeCallback(event, msg, param1, param2);
@@ -1320,9 +1321,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if (param1 == RESULE_SUCESS) {
 			// 断开连接
 			mBaseHandler.sendEmptyMessageDelayed(100, 2 * 100);
-			message = "恢复出厂设置成功";
+			message = this.getResources().getString(R.string.str_restore_success);
 		} else {
-			message = "恢复出厂设置失败";
+			message = this.getResources().getString(R.string.str_restore_fail);
 		}
 
 		if (isFinishing()) {
@@ -1332,12 +1333,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		CustomDialog mCustomDialog = new CustomDialog(this);
 		mCustomDialog.setCancelable(false);
 		mCustomDialog.setMessage(message, Gravity.CENTER);
-		mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
-			@Override
-			public void onClickListener() {
-				finish();
-			}
-		});
+		mCustomDialog.setLeftButton(this.getResources().getString(R.string.user_personal_sign_title),
+				new OnLeftClickListener() {
+					@Override
+					public void onClickListener() {
+						finish();
+					}
+				});
 		mCustomDialog.show();
 	}
 
@@ -1355,7 +1357,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		closeLoading();
 		// 设置完成后，不更新，等待查询成功后更新
 		if (RESULE_SUCESS != param1) {
-			GolukUtils.showToast(this, "设置失败");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_carrecoder_setting_failed));
 		}
 	}
 
@@ -1544,7 +1546,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				}
 			}
 		} else {
-			GolukUtils.showToast(this, "设置功能设置失败");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_carrecoder_setting_failed));
 		}
 	}
 
@@ -1566,7 +1568,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if (RESULE_SUCESS == param1) {
 			GolukApplication.getInstance().getIPCControlManager().getKitMode();
 		} else {
-			GolukUtils.showToast(this, "设置功能设置失败");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_carrecoder_setting_failed));
 		}
 	}
 
