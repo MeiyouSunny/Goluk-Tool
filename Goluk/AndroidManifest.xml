@@ -371,7 +371,8 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
-             android:theme="@android:style/Theme.NoTitleBar" />
+            android:hardwareAccelerated="true"
+            android:theme="@android:style/Theme.NoTitleBar" />
         <activity
             android:name=".cluster.ClusterActivity"
             android:screenOrientation="portrait"

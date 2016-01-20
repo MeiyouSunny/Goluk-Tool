@@ -203,15 +203,17 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 			}
 			mLocalVideoListView.show();
 			mLocalVideoListView.updateEdit();
-//			if(null != mCloudVideoListView) {
-//				mCloudVideoListView.hide();
-//			}
-			GlideUtils.clearMemory(this);
-			if (null != mCloudVideoListView) {
-				mMainLayout.removeView(mCloudVideoListView.getRootView());
-				mCloudVideoListView = null;
-				System.gc();
+
+			if(null != mCloudVideoListView) {
+				mCloudVideoListView.hide();
 			}
+			GlideUtils.clearMemory(this);
+			System.gc();
+//			if (null != mCloudVideoListView) {
+//				mMainLayout.removeView(mCloudVideoListView.getRootView());
+//				mCloudVideoListView = null;
+//				System.gc();
+//			}
 			break;
 		case R.id.mCloudVideoBtn:
 			mCloudIcon.setBackgroundResource(R.drawable.my_cloud_press);
@@ -222,18 +224,21 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 			if (null == mCloudVideoListView) {
 				mCloudVideoListView = new CloudVideoManager(this);
 				mMainLayout.addView(mCloudVideoListView.getRootView());
+//				mCloudVideoListView.show();
+//				mCloudVideoListView.updateEdit();
 			}
 			mCloudVideoListView.show();
 			mCloudVideoListView.updateEdit();
-//			if(null != mLocalVideoListView) {
-//				mLocalVideoListView.hide();
-//			}
-			if (null != mLocalVideoListView) {
-				mMainLayout.removeView(mLocalVideoListView.getRootView());
-				mLocalVideoListView = null;
-				System.gc();
+			if(null != mLocalVideoListView) {
+				mLocalVideoListView.hide();
 			}
+//			if (null != mLocalVideoListView) {
+//				mMainLayout.removeView(mLocalVideoListView.getRootView());
+//				mLocalVideoListView = null;
+//				System.gc();
+//			}
 			GlideUtils.clearMemory(this);
+			System.gc();
 			break;
 		default:
 			break;

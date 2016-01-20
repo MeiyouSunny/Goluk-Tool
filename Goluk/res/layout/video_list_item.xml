@@ -5,28 +5,27 @@
     android:layout_height="match_parent"
     android:paddingLeft="22dp"
     android:background="#ffffff">
-    
-    <ImageView 
-            android:id="@+id/line"
-            android:layout_width="2dp"
-           	android:layout_marginLeft="7dp"
-           	android:layout_marginRight="12dp"
-    		android:layout_height="match_parent"
-    		android:visibility="visible"
-    		android:background="#eeeeee" />
-    
-    
-<RelativeLayout 
-    android:id="@+id/mVideoLayout1"
-    android:layout_width="176dp"
-    android:layout_height="86dp">
 
-    <ImageView
-        android:id="@+id/video_first_needle1"
-        android:scaleType="centerCrop"
-        android:layout_width="match_parent"
+    <View
+        android:id="@+id/line"
+        android:layout_width="2dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="12dp"
         android:layout_height="match_parent"
-        android:contentDescription="@string/def" />
+        android:visibility="visible"
+        android:background="#eeeeee" />
+
+    <RelativeLayout
+        android:id="@+id/mVideoLayout1"
+        android:layout_width="176dp"
+        android:layout_height="86dp">
+
+        <ImageView
+            android:id="@+id/video_first_needle1"
+            android:scaleType="fitCenter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/def" />
 
     <TextView
         android:id="@+id/video_countTime1"
@@ -74,14 +73,14 @@
         android:layout_height="10dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:background="@drawable/video_new_icon" />
+        android:src="@drawable/video_new_icon" />
     
     <ImageView 
         android:id="@+id/mPreView1"
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:layout_centerInParent="true"
-        android:background="@drawable/photo_preview_icon" />
+        android:src="@drawable/photo_preview_icon" />
 
     	<RelativeLayout 
     	    android:id="@+id/mTMLayout1"
@@ -97,7 +96,7 @@
 	        android:layout_marginBottom="22dp"
 	        android:layout_alignParentRight="true"
 	        android:layout_alignParentBottom="true"
-	        android:background="@drawable/flle_edit_hook"/>
+	        android:src="@drawable/flle_edit_hook"/>
     	</RelativeLayout>
 </RelativeLayout>
 
@@ -109,7 +108,7 @@
 
     <ImageView
         android:id="@+id/video_first_needle2"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/def"/>
@@ -160,14 +159,14 @@
         android:layout_height="10dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:background="@drawable/video_new_icon" />
+        android:src="@drawable/video_new_icon" />
     
     <ImageView 
         android:id="@+id/mPreView2"
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:layout_centerInParent="true"
-        android:background="@drawable/photo_preview_icon" />
+        android:src="@drawable/photo_preview_icon" />
 
     <RelativeLayout 
     	    android:id="@+id/mTMLayout2"
@@ -183,7 +182,7 @@
 	        android:layout_marginBottom="22dp"
 	        android:layout_alignParentRight="true"
 	        android:layout_alignParentBottom="true"
-	        android:background="@drawable/flle_edit_hook"/>
+	        android:src="@drawable/flle_edit_hook"/>
     	</RelativeLayout>
 </RelativeLayout>
 

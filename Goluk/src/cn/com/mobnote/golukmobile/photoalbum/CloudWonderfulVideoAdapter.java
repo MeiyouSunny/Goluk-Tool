@@ -101,7 +101,7 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 			holder.mVideoCreateTime2 = (TextView) convertView.findViewById(R.id.video_createtime2);
 			holder.mVideoSize1 = (TextView) convertView.findViewById(R.id.video_size1);
 			holder.mVideoSize2 = (TextView) convertView.findViewById(R.id.video_size2);
-			holder.line = (ImageView) convertView.findViewById(R.id.line);
+			holder.line = convertView.findViewById(R.id.line);
 			holder.mNewIcon1 = (ImageView) convertView.findViewById(R.id.mNewIcon1);
 			holder.mNewIcon2 = (ImageView) convertView.findViewById(R.id.mNewIcon2);
 
@@ -393,7 +393,7 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		TextView mVideoCreateTime2;
 		TextView mVideoSize1;
 		TextView mVideoSize2;
-		ImageView line;
+		View line;
 		ImageView mNewIcon1;
 		ImageView mNewIcon2;
 	}
