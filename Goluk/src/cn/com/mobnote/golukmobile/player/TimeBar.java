@@ -90,10 +90,8 @@ public class TimeBar extends View {
 
         mProgressPaint = new Paint();
         mProgressPaint.setColor(0xFF808080);
-        mProgressPaint.setStrokeWidth(10);
         mPlayedPaint = new Paint();
         mPlayedPaint.setColor(0xFF047cf3);
-        mPlayedPaint.setStrokeWidth(10);
 
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         float textSizeInPx = metrics.density * TEXT_SIZE_IN_DP;
@@ -109,6 +107,7 @@ public class TimeBar extends View {
         mScrubberPadding = (int) (metrics.density * SCRUBBER_PADDING_IN_DP);
 
         mVPaddingInPx = (int) (metrics.density * V_PADDING_IN_DP);
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
     private void update() {

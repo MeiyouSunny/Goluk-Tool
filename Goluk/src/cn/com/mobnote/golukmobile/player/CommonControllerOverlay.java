@@ -127,7 +127,8 @@ public abstract class CommonControllerOverlay extends FrameLayout implements
                 new RelativeLayout.LayoutParams(
                         LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         setLayoutParams(params);
-//        hide();
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        hide();
     }
 
     abstract protected void createTimeBar(Context context);
