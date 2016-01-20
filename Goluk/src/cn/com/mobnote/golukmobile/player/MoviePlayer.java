@@ -370,10 +370,12 @@ public class MoviePlayer implements
     	if (!mIsLoop) {
     		mController.showEnded();
     	}
+
         onCompletion();
     }
 
     public void onCompletion() {
+
     	if (mIsLoop) {
     		mVideoView.seekTo(0);
     		playVideo();
@@ -422,6 +424,9 @@ public class MoviePlayer implements
 
     @Override
     public void onReplay() {
+    	if (ApiHelper.AT_LEAST_16) {
+    		mVideoView.seekTo(0);
+    	}
         startVideo();
     }
 

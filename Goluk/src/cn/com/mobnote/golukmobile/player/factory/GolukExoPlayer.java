@@ -369,7 +369,9 @@ public class GolukExoPlayer implements GolukPlayer, MediaCodecVideoTrackRenderer
 	@Override
 	public void onPlayWhenReadyCommitted() {
 		// TODO Auto-generated method stub
-
+		if (mOnInfoListener != null) {
+			mOnInfoListener.onInfo(this, 3, 0);
+		}
 	}
 
 	@Override
@@ -414,6 +416,7 @@ public class GolukExoPlayer implements GolukPlayer, MediaCodecVideoTrackRenderer
 	private boolean mIsBuffering = false;
 
 	private void onStateChanged(boolean playWhenReady, int playbackState) {
+		Log.v("dengting", "playWhenReady = " + playWhenReady + " playbackState = " + playbackState);
 		switch (playbackState) {
 		case ExoPlayer.STATE_IDLE:
 			// if (mOnCompletionListener != null) {
