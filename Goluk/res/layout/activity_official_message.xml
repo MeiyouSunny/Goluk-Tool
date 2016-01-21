@@ -44,13 +44,16 @@
         android:background="@color/white"
         android:visibility="gone" >
 
-        <ImageView
+        <TextView
             android:id="@+id/iv_official_message_exception_refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:contentDescription="@string/imgdes"
-            android:src="@drawable/mine_qitadifang" />
+            android:drawableTop="@drawable/mine_qitadifang"
+            android:textSize="16sp"
+            android:text="@string/msg_system_connect_error"
+            android:drawablePadding="6dp"
+            android:textColor="#bfbfbf" />
     </RelativeLayout>
 
     <RelativeLayout
