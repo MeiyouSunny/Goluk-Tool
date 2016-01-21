@@ -63,11 +63,12 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 		boolean isSucess = mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 				IPageNotifyFn.PageType_GetPushCfg, "");
 		if (!isSucess) {
-			GolukUtils.showToast(this, "获取失败");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_getwificfg_fail));
 			return;
 		}
 		LiveDialogManager.getManagerInstance().showCommProgressDialog(this,
-				LiveDialogManager.DIALOG_TYPE_GET_PUSH_CONFIGE, "", "正在请求配置...", true);
+				LiveDialogManager.DIALOG_TYPE_GET_PUSH_CONFIGE, "",
+				this.getResources().getString(R.string.str_request_config_ongoing), true);
 	}
 
 	private void saveConfigToServer() {
@@ -124,7 +125,7 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 		return super.onKeyDown(keyCode, event);
 	}
 
-	private final String NET_ERROR_STR = "网络异常，请检查网络";
+	private final String NET_ERROR_STR = this.getResources().getString(R.string.network_error);
 
 	private void deal_getPush_CallBack(int success, Object param1, Object param2) {
 		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
