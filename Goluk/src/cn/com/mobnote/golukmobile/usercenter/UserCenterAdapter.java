@@ -638,6 +638,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				convertView = LayoutInflater.from(mContext).inflate(R.layout.user_center_novideodata, null);
 				noVideoDataViewHolder = new NoVideoDataViewHolder();
 				noVideoDataViewHolder.tipsimage = (ImageView) convertView.findViewById(R.id.tipsimage);
+				noVideoDataViewHolder.emptyImage = (TextView) convertView.findViewById(R.id.empty_txt);
 				noVideoDataViewHolder.bMeasureHeight = false;
 				convertView.setTag(noVideoDataViewHolder);
 			} else {
@@ -659,13 +660,16 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				// 分享视频列表
 				if (this.videogroupdata.loadfailed == true) {
 					noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_qitadifang);
+					noVideoDataViewHolder.emptyImage.setVisibility(View.VISIBLE);
 					mBneedRefrush = true;
 				} else {
 					if (uca.testUser()) {
 						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_novideo);
+						noVideoDataViewHolder.emptyImage.setVisibility(View.GONE);
 						mBneedRefrush = false;
 					} else {
 						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_tavideo);
+						noVideoDataViewHolder.emptyImage.setVisibility(View.GONE);
 						mBneedRefrush = false;
 					}
 
@@ -674,14 +678,17 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				// 被点赞人信息列表
 				if (this.praisgroupData.loadfailed == true) {
 					noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_qitadifang);
+					noVideoDataViewHolder.emptyImage.setVisibility(View.VISIBLE);
 					mBneedRefrush = true;
 				} else {
 
 					if (uca.testUser()) {
 						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_nolike);
+						noVideoDataViewHolder.emptyImage.setVisibility(View.GONE);
 						mBneedRefrush = false;
 					} else {
 						noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.mine_talike);
+						noVideoDataViewHolder.emptyImage.setVisibility(View.GONE);
 						mBneedRefrush = false;
 					}
 
@@ -920,6 +927,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 	public static class NoVideoDataViewHolder {
 		TextView tips;
 		ImageView tipsimage;
+		TextView emptyImage;
 		boolean bMeasureHeight;
 	}
 

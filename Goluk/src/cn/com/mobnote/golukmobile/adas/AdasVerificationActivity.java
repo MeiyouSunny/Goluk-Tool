@@ -271,7 +271,8 @@ public class AdasVerificationActivity extends BaseActivity implements OnClickLis
 	public boolean onPlayerError(RtspPlayerView rpv, int arg1, int arg2, String strErrorInfo) {
 		// TODO Auto-generated method stub
 		if (!TextUtils.isEmpty(strErrorInfo)) {
-			Toast.makeText(this, "播放器出现错误：" + strErrorInfo, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, this.getResources().getString(R.string.str_video_error) + strErrorInfo,
+					Toast.LENGTH_SHORT).show();
 		}
 		rpv.removeCallbacks(retryRunnable);
 		rpv.postDelayed(retryRunnable, 5000); // FIXME:5秒后重连

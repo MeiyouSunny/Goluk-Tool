@@ -174,7 +174,8 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 				ad.dismiss();
 				boolean isSucess = siv.getCamera();
 				if (!isSucess) {
-					GolukUtils.showToast(UserPersonalInfoActivity.this, "启动相机失败");
+					GolukUtils.showToast(UserPersonalInfoActivity.this,
+							mContext.getResources().getString(R.string.str_start_camera_fail));
 				}
 			}
 		});
@@ -185,7 +186,8 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 				ad.dismiss();
 				boolean isS = siv.getPhoto();
 				if (!isS) {
-					GolukUtils.showToast(UserPersonalInfoActivity.this, "打开相册失败");
+					GolukUtils.showToast(UserPersonalInfoActivity.this,
+							mContext.getResources().getString(R.string.str_start_album_fail));
 				}
 			}
 		});

@@ -24,7 +24,7 @@
 			android:textSize="18sp"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="加载中，请稍候..."/>
+			android:text="@string/str_loading_text"/>
         
     </LinearLayout>
     

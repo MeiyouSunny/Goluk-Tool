@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="格式化当前SD卡"
+            android:text="@string/str_format_present_sdcard"
             android:textColor="#333333"
             android:textSize="18sp" />
 
@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="清除SD卡中所有内容"
+            android:text="@string/str_carrecorder_storage_format_sdcard_hint_text"
             android:textColor="#999999"
             android:textSize="12sp" />
 

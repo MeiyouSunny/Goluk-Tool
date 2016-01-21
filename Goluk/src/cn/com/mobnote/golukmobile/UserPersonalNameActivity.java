@@ -3,8 +3,6 @@ package cn.com.mobnote.golukmobile;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-import org.json.JSONObject;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -84,7 +82,8 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		//
 		int count = mEditName.getText().toString().length();
 		mTextCount.setText("" + (MAX_COUNT - count));
-		mTextCountAll.setText("/" + MAX_COUNT + "）");
+		mTextCountAll.setText(this.getResources().getString(R.string.str_slash) + MAX_COUNT
+				+ this.getResources().getString(R.string.str_bracket_rigth));
 
 	}
 
@@ -121,7 +120,7 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 			@Override
 			public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
 				if (keyCode == KeyEvent.KEYCODE_ENTER) {
-					GolukDebugUtils.e("lily", "----------回车------KEYCODE_ENTER-------");
+					GolukDebugUtils.e("lily", "----------------KEYCODE_ENTER-------");
 					mImageNameRight.setVisibility(View.GONE);
 				} else {
 					mImageNameRight.setVisibility(View.VISIBLE);
@@ -149,12 +148,12 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		// que认
 		case R.id.user_title_right:
 			if (number < 0) {
-				UserUtils.showDialog(this, "请输入10个字符以内的有效昵称");
+				UserUtils.showDialog(this, this.getResources().getString(R.string.str_user_name_limit));
 			} else {
 				String name = mEditName.getText().toString().trim();
 				GolukDebugUtils.i("lily", "------UserPersonalNameActivity--修改昵称------" + name);
 				if (name.isEmpty()) {
-					UserUtils.showDialog(this, "数据修改失败，昵称不能为空");
+					UserUtils.showDialog(this, this.getResources().getString(R.string.str_user_name_warn));
 				} else {
 					UserUtils.hideSoftMethod(this);
 					if (!name.equalsIgnoreCase(mNameText)) {

@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile.carrecorder.view;
 
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.R;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
@@ -17,19 +18,19 @@ public class CustomWifiDialog extends Dialog{
 	public CustomWifiDialog(Context context) {
 		super(context);
 		
-		setTitle("修改wifi热点信息");
+		setTitle(this.getContext().getResources().getString(R.string.str_change_wifi_information));
 		LinearLayout layout = new LinearLayout(context);
 		layout.setOrientation(LinearLayout.VERTICAL);
 		setContentView(layout);
 		TextView wifiname = new TextView(context);
-		wifiname.setText("设置wifi名称：");
+		wifiname.setText(this.getContext().getResources().getString(R.string.str_set_wifi_name));
 		editname = new EditText(context);
 		wifiname.setTextSize(20);
 		editname.setTextSize(20);
 		
 		
 		TextView wifipsw = new TextView(context);
-		wifipsw.setText("设置wifi密码：");
+		wifipsw.setText(this.getContext().getResources().getString(R.string.str_set_wifi_pwd));
 		psw = new EditText(context);
 		wifipsw.setTextSize(20);
 		psw.setTextSize(20);
@@ -44,11 +45,11 @@ public class CustomWifiDialog extends Dialog{
 		
 		Button ok = new Button(context);
 		ok.setTextSize(20);
-		ok.setText("设置");
+		ok.setText(this.getContext().getResources().getString(R.string.setting_title_text));
 		
 		Button cancle = new Button(context);
 		cancle.setTextSize(20);
-		cancle.setText("取消");
+		cancle.setText(this.getContext().getResources().getString(R.string.dialog_str_cancel));
 		
 		layout.addView(ok);
 		layout.addView(cancle);
