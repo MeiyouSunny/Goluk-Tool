@@ -200,7 +200,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 					holder = new HeadViewHolder();
 
 					holder.headImg = (ImageView) convertView.findViewById(R.id.mPreLoading);
-					holder.describe = (TextView) convertView.findViewById(R.id.video_title);
+					//holder.describe = (TextView) convertView.findViewById(R.id.video_title);
 					holder.partakes = (TextView) convertView.findViewById(R.id.partake_num);
 					holder.recommendBtn = (Button) convertView.findViewById(R.id.recommend_btn);
 					holder.newsBtn = (Button) convertView.findViewById(R.id.news_btn);
@@ -246,27 +246,27 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
 				GlideUtils.loadImage(mContext, holder.headImg, mHeadData.picture,
 						R.drawable.tacitly_pic);
-				holder.describe.setText(mHeadData.activitycontent);
-				if(mIsMoreLine){
-					holder.describe.setMaxLines(100);
-					holder.describe.setEllipsize(null);
-				}else{
-					holder.describe.setMaxLines(2);
-					holder.describe.setEllipsize(TruncateAt.END);
-				}
+				//holder.describe.setText(mHeadData.activitycontent);
+//				if(mIsMoreLine){
+//					holder.describe.setMaxLines(100);
+//					holder.describe.setEllipsize(null);
+//				}else{
+//					holder.describe.setMaxLines(2);
+//					holder.describe.setEllipsize(TruncateAt.END);
+//				}
 				
-				holder.describe.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View view) {
-						if(mIsMoreLine){
-							mIsMoreLine = false;
-						}else{
-							mIsMoreLine = true;
-						}
-						notifyDataSetChanged();
-					}
-				});
+//				holder.describe.setOnClickListener(new OnClickListener() {
+//					
+//					@Override
+//					public void onClick(View view) {
+//						if(mIsMoreLine){
+//							mIsMoreLine = false;
+//						}else{
+//							mIsMoreLine = true;
+//						}
+//						notifyDataSetChanged();
+//					}
+//				});
 				holder.partakes.setText(mHeadData.participantcount);
 				//活动过期
 				if("1".equals(mHeadData.expiration)){
@@ -754,7 +754,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 	public static class HeadViewHolder {
 		TextView title;
 		ImageView headImg;
-		TextView describe;
+		//TextView describe;
 		TextView partakes;
 		Button recommendBtn;
 		Button newsBtn;

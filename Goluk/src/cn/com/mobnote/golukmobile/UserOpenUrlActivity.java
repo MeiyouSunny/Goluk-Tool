@@ -210,6 +210,9 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					}
 					mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 					mWebView.loadUrl(getRtmpAddress() + "?type=7&phone=" + phone + "&uid=" + uid);
+				}else if(from_tag.equals("withdrawals")){
+					String url = itIndexMore.getStringExtra("withdraw_url");
+					mWebView.loadUrl(url);
 				}
 			} else {
 				String title = itIndexMore.getStringExtra("slide_h5_title");

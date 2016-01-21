@@ -94,7 +94,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 		ztid = intent.getStringExtra("ztid");
 		title = intent.getStringExtra("title");
 
-		if (title.length() > 12) {
+		if (title != null && !"".equals(title) && title.length() > 12) {
 			title = title.substring(0, 12) + "...";
 		}
 

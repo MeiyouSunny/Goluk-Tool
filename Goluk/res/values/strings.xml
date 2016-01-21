@@ -650,7 +650,7 @@
     <string name="msg_system_reward_txt_end" >个G币奖励</string>
     <string name="msg_system_recommend_title">视频被推荐啦</string>
     <string name="msg_system_reason_began">理由：</string>
-    <string name="msg_system_poll_txt">您的正在投票，快去看看吧。</string>
+    <string name="msg_system_poll_txt">您的视频正在投票，快去看看吧。</string>
     <string name="msg_system_select_txt">恭喜您，视频入选精选啦，快去看看吧。</string>
 	<string name="msg_system_no_message">暂无系统消息</string>
 	<string name="msg_system_connect_error">网络不给力，轻触屏幕重试</string>

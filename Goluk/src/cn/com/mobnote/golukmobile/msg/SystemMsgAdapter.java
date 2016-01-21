@@ -4,13 +4,17 @@ import java.util.List;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.msg.bean.MessageMsgsBean;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
+import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import android.annotation.SuppressLint;
@@ -65,6 +69,8 @@ public class SystemMsgAdapter extends BaseAdapter {
 	private final static String resultSuccess = "1";
 	/** mUid当前用户的uid **/
 	private String mUid = "";
+	/** 精选数据类型 **/
+	private static String sSpecialType = "2";
 
 	public SystemMsgAdapter(Context context, String uid) {
 		mContext = context;
@@ -175,10 +181,24 @@ public class SystemMsgAdapter extends BaseAdapter {
 						i.putExtra("userinfo", user);
 						i.putExtra("type", 0);
 						mContext.startActivity(i);
-					}else if(mmbTxt.type == msgTypeWithdraw){
-						Intent i = new Intent(mContext, MyProfitActivity.class);
-//						i.putExtra("uid", mmbTxt.receiver.uid);
-						mContext.startActivity(i);
+					}else if(mmbTxt.type == msgTypeSelect){//跳转到专题页
+						if(sSpecialType.equals(mmbTxt.content.type)){
+							String specialid = mmbTxt.content.access;
+							Intent i = new Intent(mContext,SpecialListActivity.class);
+							i.putExtra("ztid", specialid);
+							i.putExtra("title", "");
+							mContext.startActivity(i);
+						}
+					}else if(mmbTxt.type == msgTypeWithdraw){//收益详情页
+						if("7".equals(mmbTxt.content.type)){
+							String rtmpUrl = GolukApplication.getInstance().mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_GetServerAddress,
+									IGetServerAddressType.GetServerAddress_HttpServer, "UrlRedirect");
+							String withdraw_url =rtmpUrl + "?type =10&serialno="+ mmbTxt.content.access;
+							Intent i = new Intent(mContext,UserOpenUrlActivity.class);
+							i.putExtra("withdraw_url", withdraw_url);
+							i.putExtra(UserOpenUrlActivity.FROM_TAG, "withdrawals");
+							mContext.startActivity(i);
+						}
 					}
 
 				}

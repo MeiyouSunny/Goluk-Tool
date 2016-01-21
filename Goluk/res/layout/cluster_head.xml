@@ -17,7 +17,7 @@
             android:scaleType="fitXY" />
     </RelativeLayout>
 
-    <RelativeLayout
+    <!-- <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
@@ -36,11 +36,12 @@
             android:text=""
             android:textColor="#333333"
             android:textSize="14sp" />
-    </RelativeLayout>
+    </RelativeLayout> -->
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp">
 
         <TextView
