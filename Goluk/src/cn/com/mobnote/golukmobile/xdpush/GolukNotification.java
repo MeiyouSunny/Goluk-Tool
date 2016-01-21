@@ -15,6 +15,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.text.TextUtils;
+import android.util.Log;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.GuideActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
@@ -31,6 +33,8 @@ import cn.com.mobnote.golukmobile.msg.OfficialMessageActivity;
 import cn.com.mobnote.golukmobile.msg.SystemMsgActivity;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
+import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
@@ -57,6 +61,16 @@ public class GolukNotification {
 	private Timer mTimer = null;
 	/** Timer计时时长 */
 	private final int TIMER_OUT = 60 * 1000;
+	private final static String TAG = "GolukNotification";
+
+	private final static String UNDEFINED = "0";
+	private final static String VIDEO_DETAIL = "1";
+	private final static String SPECIAL_LIST = "2";
+	private final static String LIVE_VIDEO = "3";
+	private final static String ACTIVITY_TOGETHER = "4";
+	private final static String H5_PAGE = "5";
+	private final static String SPECIAL_SOLO = "6";
+	private final static String HOME_PAGE = "9";
 
 	public void createXG() {
 		xgInit = new XGInit();
@@ -379,9 +393,105 @@ public class GolukNotification {
 					Intent intent = new Intent(context, SystemMsgActivity.class);
 					context.startActivity(intent);
 				} else if(type >= 300 && type < 400) {
-					Context context = GolukApplication.getInstance().getContext();
-					Intent intent = new Intent(context, OfficialMessageActivity.class);
-					context.startActivity(intent);
+//					Context context = GolukApplication.getInstance().getContext();
+//					Intent intent = new Intent(context, OfficialMessageActivity.class);
+//					context.startActivity(intent);
+
+					if(TextUtils.isEmpty(msgBean.tarkey)) {
+						return;
+					}
+
+					if(!"2".equals(msgBean.target)) {
+						return;
+					}
+
+					if(null == msgBean.params) {
+						return;
+					}
+
+					String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
+					if (null == vidArray || vidArray.length <= 0) {
+						return;
+					}
+
+					Intent intent = null;
+
+					if (UNDEFINED.equals(msgBean.tarkey)) {
+						// target key undefined
+						Log.d(TAG, "target key undefined");
+					} else if (VIDEO_DETAIL.equals(msgBean.tarkey)) {
+						// launch video detail
+						Context context = GolukApplication.getInstance().getContext();
+						intent = new Intent(context, VideoDetailActivity.class);
+						intent.putExtra(VideoDetailActivity.VIDEO_ID, vidArray[0]);
+						intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
+						context.startActivity(intent);
+					} else if (SPECIAL_LIST.equals(msgBean.tarkey)) {
+						// launch special list
+						Context context = GolukApplication.getInstance().getContext();
+						intent = new Intent(context, SpecialListActivity.class);
+						intent.putExtra("ztid", vidArray[0]);
+						if (!TextUtils.isEmpty(msgBean.title)) {
+							intent.putExtra("title", msgBean.title);
+						}
+						context.startActivity(intent);
+					} else if (LIVE_VIDEO.equals(msgBean.tarkey)) {
+						// TODO: This should proceed in future
+						// intent = new Intent(mContext, LiveActivity.class);
+						// intent.putExtra(LiveActivity.KEY_IS_LIVE, false);
+						// intent.putExtra(LiveActivity.KEY_GROUPID, "");
+						// intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+						// intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+						// intent.putExtra(LiveActivity.KEY_USERINFO, user);
+						// mContext.startActivity(intent);
+					} else if (ACTIVITY_TOGETHER.equals(msgBean.tarkey)) {
+						// launch topic
+						Context context = GolukApplication.getInstance().getContext();
+						intent = new Intent(context, ClusterActivity.class);
+						intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, vidArray[0]);
+						// intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
+						String topName = "#" + msgBean.title + "#";
+						intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE,
+									topName);
+						context.startActivity(intent);
+					} else if (H5_PAGE.equals(msgBean.tarkey)) {
+						// launch h5 page
+						Context context = GolukApplication.getInstance().getContext();
+						intent = new Intent(context, UserOpenUrlActivity.class);
+						if(null != vidArray[0] && !TextUtils.isEmpty(vidArray[0])) {
+							intent.putExtra("url", vidArray[0]);
+							if (!TextUtils.isEmpty(msgBean.title)) {
+								intent.putExtra("slide_h5_title",
+										msgBean.title);
+							}
+							context.startActivity(intent);
+						}
+					} else if (SPECIAL_SOLO.equals(msgBean.tarkey)) {
+						Context context = GolukApplication.getInstance().getContext();
+						intent = new Intent(context, VideoDetailActivity.class);
+						intent.putExtra(VideoDetailActivity.VIDEO_ID, vidArray[0]);
+						intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
+						context.startActivity(intent);
+					} else if(HOME_PAGE.equals(msgBean.tarkey)) {
+						Context context = GolukApplication.getInstance().getContext();
+//						intent = new Intent(context, VideoDetailActivity.class);
+//						intent.putExtra(VideoDetailActivity.VIDEO_ID, vidArray[0]);
+//						intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
+//						context.startActivity(intent);
+						UCUserInfo user = new UCUserInfo();
+						user.uid = vidArray[0];
+						user.nickname = msgBean.title;
+						user.headportrait = "";//clusterInfo.mUserEntity.headportrait;
+						user.introduce = "";
+						user.sex = "";//clusterInfo.mUserEntity.sex;
+						user.customavatar = "";//clusterInfo.mUserEntity.mCustomAvatar;
+						user.praisemenumber = "0";
+						user.sharevideonumber = "0";
+						Intent i = new Intent(context, UserCenterActivity.class);
+						i.putExtra("userinfo", user);
+						i.putExtra("type", 0);
+						context.startActivity(i);
+					}
 				} else {
 					// do nothing
 				}

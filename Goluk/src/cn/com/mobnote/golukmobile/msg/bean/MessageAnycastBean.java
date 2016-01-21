@@ -11,5 +11,8 @@ public class MessageAnycastBean {
 	/**通知内容 **/
 	@JSONField(name="text")
 	public String text;
-	
+
+	/**通知标题 **/
+	@JSONField(name="title")
+	public String title;
 }
