@@ -74,12 +74,12 @@ public class StorageCpacityQueryActivity extends CarRecordBaseActivity implement
 		mEmergencySize = (TextView) findViewById(R.id.mEmergencySize);
 		mOtherSize = (TextView) findViewById(R.id.mOtherSize);
 
-		mTotalSize.setText("0GB");
-		mUsedSize.setText("0MB");
-		mCycleSize.setText("0GB");
-		mWonderfulSize.setText("0MB");
-		mEmergencySize.setText("0MB");
-		mOtherSize.setText("0MB");
+		mTotalSize.setText(this.getResources().getString(R.string.str_zero_gb_text));
+		mUsedSize.setText(this.getResources().getString(R.string.str_zero_mb_text));
+		mCycleSize.setText(this.getResources().getString(R.string.str_zero_gb_text));
+		mWonderfulSize.setText(this.getResources().getString(R.string.str_zero_mb_text));
+		mEmergencySize.setText(this.getResources().getString(R.string.str_zero_mb_text));
+		mOtherSize.setText(this.getResources().getString(R.string.str_zero_mb_text));
 
 		findViewById(R.id.mFormatSDCard).setOnClickListener(this);
 	}

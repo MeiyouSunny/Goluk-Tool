@@ -46,7 +46,7 @@ public class VersionActivity extends CarRecordBaseActivity implements IPCManager
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addContentView(LayoutInflater.from(this).inflate(R.layout.carrecorder_version, null));
-		setTitle("版本信息");
+		setTitle(this.getResources().getString(R.string.my_version_title_text));
 
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("carversion", this);
@@ -59,7 +59,7 @@ public class VersionActivity extends CarRecordBaseActivity implements IPCManager
 
 		mDeviceId.setText("");
 		mVersion.setText("");
-		mTextIpcModel.setText("极路客" + mIpcModelName);
+		mTextIpcModel.setText(this.getResources().getString(R.string.str_goluk) + mIpcModelName);
 		if (IPCControlManager.T1_SIGN.equals(mIpcModelName) || IPCControlManager.T1s_SIGN.equals(mIpcModelName)) {
 			mIPCImage.setImageResource(R.drawable.connect_t1_icon_1);
 		} else {

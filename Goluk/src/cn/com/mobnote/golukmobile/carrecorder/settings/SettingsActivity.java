@@ -152,9 +152,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	/**前向车辆启动提示**/
 	private RelativeLayout mADASFcarSetupLayout = null;
 	private Button mADASFcarSetupBtn = null;
-//	/**辅助信息显示**/
-//	private RelativeLayout mADASOsdLayout = null;
-//	private Button mADASOsdBtn = null;
+	/**辅助信息显示**/
+	private RelativeLayout mADASOsdLayout = null;
+	private Button mADASOsdBtn = null;
 	/**ADAS配置**/
 	private RelativeLayout mADASConfigLayout = null;
 
@@ -255,7 +255,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			/**adas需求变更 暂时拿掉**/
 //			mADASForwardWarningLayout.setVisibility(View.VISIBLE);
 //			mADASOffsetWarningLayout.setVisibility(View.VISIBLE);
-//			mADASOsdLayout.setVisibility(View.VISIBLE);
+			mADASOsdLayout.setVisibility(View.VISIBLE);
 			mADASConfigLayout.setVisibility(View.VISIBLE);
 			mADASFcarCloseLayout.setVisibility(View.VISIBLE);
 			mADASFcarSetupLayout.setVisibility(View.VISIBLE);
@@ -267,7 +267,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			/**adas需求变更 暂时拿掉**/
 //			mADASForwardWarningLayout.setVisibility(View.GONE);
 //			mADASOffsetWarningLayout.setVisibility(View.GONE);
-//			mADASOsdLayout.setVisibility(View.GONE);
+			mADASOsdLayout.setVisibility(View.GONE);
 			mADASConfigLayout.setVisibility(View.GONE);
 			mADASFcarCloseLayout.setVisibility(View.GONE);
 			mADASFcarSetupLayout.setVisibility(View.GONE);
@@ -276,7 +276,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		/**adas需求变更 暂时拿掉**/
 //		refreshFCWUI();
 //		refreshLDWUI();
-//		refreshOSDUI();
+		refreshOSDUI();
 		refreshFcarCloseUI();
 		refreshFcarSetupUI();
 	}
@@ -343,18 +343,18 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		}
 	}
 
-//	private void refreshOSDUI() {
-//	if (mAdasConfigParamter == null) {
-//		return;
-//	}
-//		if (mAdasConfigParamter.osd == 0) {
-//			mADASOsdBtn.setBackgroundResource(R.drawable.set_close_btn);
-//			mADASOsdBtn.setTag(0);
-//		} else {
-//			mADASOsdBtn.setBackgroundResource(R.drawable.set_open_btn);
-//			mADASOsdBtn.setTag(1);
-//		}
-//	}
+	private void refreshOSDUI() {
+		if (mAdasConfigParamter == null) {
+			return;
+		}
+		if (mAdasConfigParamter.osd == 0) {
+			mADASOsdBtn.setBackgroundResource(R.drawable.set_close_btn);
+			mADASOsdBtn.setTag(0);
+		} else {
+			mADASOsdBtn.setBackgroundResource(R.drawable.set_open_btn);
+			mADASOsdBtn.setTag(1);
+		}
+	}
 	/**adas需求变更 暂时拿掉**/
 //	private void refreshFCWUI() {
 //		if (mAdasConfigParamter.fcw_warn_level == 0) {
@@ -449,8 +449,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mADASFcarCloseBtn = (Button) findViewById(R.id.btn_settings_forward_car_close_warning);
 		mADASFcarSetupLayout = (RelativeLayout) findViewById(R.id.layout_settings_forward_car_setup_hint);
 		mADASFcarSetupBtn = (Button) findViewById(R.id.btn_settings_forward_car_setup_hint);
-//		mADASOsdLayout = (RelativeLayout) findViewById(R.id.layout_settings_assistance_info);
-//		mADASOsdBtn = (Button) findViewById(R.id.btn_settings_assistance_info);
+		mADASOsdLayout = (RelativeLayout) findViewById(R.id.layout_settings_assistance_info);
+		mADASOsdBtn = (Button) findViewById(R.id.btn_settings_assistance_info);
         mADASConfigLayout = (RelativeLayout) findViewById(R.id.layout_settings_adas_config);
 
 		mAutoPhotoItem = (RelativeLayout) findViewById(R.id.ry_setup_autophoto);
@@ -545,7 +545,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 //		mADASOffsetWarningLayout.setOnClickListener(this);//道路偏移报警灵敏度
 		mADASFcarCloseBtn.setOnClickListener(this);
 		mADASFcarSetupBtn.setOnClickListener(this);
-//		mADASOsdBtn.setOnClickListener(this);//辅助信息显示
+		mADASOsdBtn.setOnClickListener(this);//辅助信息显示
 		mADASConfigLayout.setOnClickListener(this);//ADAS配置
 	}
 
@@ -715,19 +715,19 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 //				offsetIntent.putExtra(AdasSensibilityActivity.SENSIBILITY_DATA, mAdasConfigParamter.ldw_warn_level);
 //				startActivityForResult(offsetIntent, REQUEST_CODE_ADAS_LDW_WARNING);
 //				break;
-//			case R.id.btn_settings_assistance_info:
-//				if (mAdasConfigParamter == null) {
-//					return;
-//				}
-//				showLoading();
-//				if (mAdasConfigParamter.osd == 0) {
-//					mAdasConfigParamter.osd = 1;
-//				} else {
-//					mAdasConfigParamter.osd = 0;
-//				}
-//				GolukApplication.getInstance().getIPCControlManager()
-//						.setT1AdasConfigOSD(mAdasConfigParamter.osd);
-//				break;
+			case R.id.btn_settings_assistance_info:
+				if (mAdasConfigParamter == null) {
+					return;
+				}
+				showLoading();
+				if (mAdasConfigParamter.osd == 0) {
+					mAdasConfigParamter.osd = 1;
+				} else {
+					mAdasConfigParamter.osd = 0;
+				}
+				GolukApplication.getInstance().getIPCControlManager()
+						.setT1AdasConfigOSD(mAdasConfigParamter.osd);
+				break;
 			case R.id.btn_settings_forward_car_close_warning:
 				if (mAdasConfigParamter == null) {
 					return;
@@ -856,17 +856,18 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if (mCustomDialog == null) {
 			mCustomDialog = new CustomDialog(this);
 		}
-		mCustomDialog.setMessage("是否确认恢复Goluk出厂设置", Gravity.CENTER);
-		mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
-			@Override
-			public void onClickListener() {
-				if (GolukApplication.getInstance().getIpcIsLogin()) {
-					boolean a = GolukApplication.getInstance().getIPCControlManager().restoreIPC();
-					GolukDebugUtils.e("xuhw", "YYYYYY=================restoreIPC============a=" + a);
-				}
-			}
-		});
-		mCustomDialog.setRightButton("取消", null);
+		mCustomDialog.setMessage(this.getResources().getString(R.string.str_reset_message), Gravity.CENTER);
+		mCustomDialog.setLeftButton(this.getResources().getString(R.string.user_personal_sign_title),
+				new OnLeftClickListener() {
+					@Override
+					public void onClickListener() {
+						if (GolukApplication.getInstance().getIpcIsLogin()) {
+							boolean a = GolukApplication.getInstance().getIPCControlManager().restoreIPC();
+							GolukDebugUtils.e("xuhw", "YYYYYY=================restoreIPC============a=" + a);
+						}
+					}
+				});
+		mCustomDialog.setRightButton(this.getResources().getString(R.string.dialog_str_cancel), null);
 		mCustomDialog.show();
 	}
 
@@ -1182,13 +1183,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 						JSONObject json = new JSONObject((String) param2);
 						int policy = json.optInt("policy");
 						if (0 == policy) {
-							mSensitivityText.setText("关闭");
+							mSensitivityText.setText(this.getResources().getString(R.string.carrecorder_tcaf_close));
 						} else if (1 == policy) {
-							mSensitivityText.setText("低");
+							mSensitivityText.setText(this.getResources().getString(R.string.str_low));
 						} else if (2 == policy) {
-							mSensitivityText.setText("中");
+							mSensitivityText.setText(this.getResources().getString(R.string.str_middle));
 						} else {
-							mSensitivityText.setText("高");
+							mSensitivityText.setText(this.getResources().getString(R.string.str_high));
 						}
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -1255,9 +1256,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 							mWonderVideoBtn.setBackgroundResource(R.drawable.set_close_btn);
 						}
 					}
-					GolukUtils.showToast(this, "设置成功");
+					GolukUtils.showToast(this, this.getResources().getString(R.string.str_set_ok));
 				} else {
-					GolukUtils.showToast(this, "当前固件不支持此项设置，请升级固件后再试");
+					GolukUtils.showToast(this, this.getResources().getString(R.string.str_ipc_unmatch));
 				}
 			} else if (msg == IPC_VDCP_Msg_GetISPMode) {
 				getISPModeCallback(event, msg, param1, param2);
@@ -1304,7 +1305,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					mAdasConfigParamter.enable = (Integer) mADASAssistanceBtn.getTag();
 					mAdasConfigParamter.fcs_enable = (Integer) mADASFcarSetupBtn.getTag();
 					mAdasConfigParamter.fcw_enable = (Integer) mADASFcarCloseBtn.getTag();
-//					mAdasConfigParamter.osd = (Integer) mADASOsdBtn.getTag();
+					mAdasConfigParamter.osd = (Integer) mADASOsdBtn.getTag();
 				}
 			}
 		}
@@ -1320,9 +1321,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if (param1 == RESULE_SUCESS) {
 			// 断开连接
 			mBaseHandler.sendEmptyMessageDelayed(100, 2 * 100);
-			message = "恢复出厂设置成功";
+			message = this.getResources().getString(R.string.str_restore_success);
 		} else {
-			message = "恢复出厂设置失败";
+			message = this.getResources().getString(R.string.str_restore_fail);
 		}
 
 		if (isFinishing()) {
@@ -1332,12 +1333,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		CustomDialog mCustomDialog = new CustomDialog(this);
 		mCustomDialog.setCancelable(false);
 		mCustomDialog.setMessage(message, Gravity.CENTER);
-		mCustomDialog.setLeftButton("确认", new OnLeftClickListener() {
-			@Override
-			public void onClickListener() {
-				finish();
-			}
-		});
+		mCustomDialog.setLeftButton(this.getResources().getString(R.string.user_personal_sign_title),
+				new OnLeftClickListener() {
+					@Override
+					public void onClickListener() {
+						finish();
+					}
+				});
 		mCustomDialog.show();
 	}
 
@@ -1355,7 +1357,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		closeLoading();
 		// 设置完成后，不更新，等待查询成功后更新
 		if (RESULE_SUCESS != param1) {
-			GolukUtils.showToast(this, "设置失败");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_carrecoder_setting_failed));
 		}
 	}
 
@@ -1544,7 +1546,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				}
 			}
 		} else {
-			GolukUtils.showToast(this, "设置功能设置失败");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_carrecoder_setting_failed));
 		}
 	}
 
@@ -1566,7 +1568,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if (RESULE_SUCESS == param1) {
 			GolukApplication.getInstance().getIPCControlManager().getKitMode();
 		} else {
-			GolukUtils.showToast(this, "设置功能设置失败");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_carrecoder_setting_failed));
 		}
 	}
 

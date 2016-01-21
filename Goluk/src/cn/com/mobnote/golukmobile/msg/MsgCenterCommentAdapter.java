@@ -212,13 +212,13 @@ public class MsgCenterCommentAdapter extends BaseAdapter {
 					// 精选专题
 					Intent itSpecial = new Intent(mContext, SpecialListActivity.class);
 					itSpecial.putExtra("ztid", bean.content.access);
+					itSpecial.putExtra("title", "");
 					mContext.startActivity(itSpecial);
 				} else if ("4".equals(bean.content.type)) {
 					// 活动聚合
 					Intent itCluster = new Intent(mContext, ClusterActivity.class);
 					itCluster.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, bean.content.access);
-					// itCluster.putExtra(ClusterActivity.CLUSTER_KEY_TITLE,
-					// "");
+					itCluster.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, "");
 					mContext.startActivity(itCluster);
 				} else if ("6".equals(bean.content.type)) {
 					// 精选单视频

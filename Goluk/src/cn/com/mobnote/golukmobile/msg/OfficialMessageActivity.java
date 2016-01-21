@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -41,7 +42,7 @@ public class OfficialMessageActivity extends BaseActivity implements IRequestRes
 	private final static int PAGESIZE = 20;
 	private String mTimeStamp = "";
 	private String mCurMotion = REFRESH_NORMAL;
-	private ImageView mRetryClickIV;
+	private TextView mRetryClickIV;
 	private CustomLoadingDialog mLoadingDialog;
 
 	@Override
@@ -58,7 +59,7 @@ public class OfficialMessageActivity extends BaseActivity implements IRequestRes
 
 		mEmptyRL = (RelativeLayout)findViewById(R.id.rl_official_message_exception_refresh);
 		mNodataRL = (RelativeLayout)findViewById(R.id.rl_official_message_no_data_refresh);
-		mRetryClickIV = (ImageView)findViewById(R.id.iv_official_message_exception_refresh);
+		mRetryClickIV = (TextView)findViewById(R.id.iv_official_message_exception_refresh);
 		mListView = (PullToRefreshListView)findViewById(R.id.plv_official_message);
 		mRetryClickIV.setOnClickListener(new OnClickListener() {
 			@Override
@@ -148,7 +149,9 @@ public class OfficialMessageActivity extends BaseActivity implements IRequestRes
 		if(requestType == IPageNotifyFn.PageType_MsgOfficial) {
 			MessageBean bean = (MessageBean)result;
 			if(null == bean) {
-				setEmptyView();
+				if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
+					setEmptyView();
+				}
 				return;
 			}
 			if(!bean.success) {
@@ -194,8 +197,6 @@ public class OfficialMessageActivity extends BaseActivity implements IRequestRes
 			if(msgBeanList.size() == 0) {
 				Toast.makeText(this, getString(
 						R.string.str_pull_refresh_listview_bottom_reach), Toast.LENGTH_SHORT).show();
-			} else if(msgBeanList.size() <= PAGESIZE) {
-				mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 			}
 
 			MessageMsgsBean last = bean.data.messages.get(msgBeanList.size() - 1);
@@ -212,7 +213,11 @@ public class OfficialMessageActivity extends BaseActivity implements IRequestRes
 				mOfficialMsgList.addAll(bean.data.messages);
 			} else {
 			}
+
 			mAdapter.setData(mOfficialMsgList);
+//			if(mOfficialMsgList.size() < PAGESIZE) {
+//				mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+//			}
 			mCurMotion = REFRESH_NORMAL;
 		}
 	}

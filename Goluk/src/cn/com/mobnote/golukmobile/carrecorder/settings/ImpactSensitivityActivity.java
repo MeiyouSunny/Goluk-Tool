@@ -42,7 +42,7 @@ public class ImpactSensitivityActivity extends CarRecordBaseActivity implements 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addContentView(LayoutInflater.from(this).inflate(R.layout.carrecorder_impact_sensitivity, null));
-		setTitle("碰撞感应灵敏度");
+		setTitle(this.getResources().getString(R.string.pzgy_title));
 
 		initView();
 		GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("sensitivity", this);

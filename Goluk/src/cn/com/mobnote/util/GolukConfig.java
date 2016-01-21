@@ -8,4 +8,5 @@ public class GolukConfig {
 	public final static int REQUEST_CODE_MSG_LOGIN_PRAISE = 1009;
 	public final static int REQUEST_CODE_MSG_LOGIN_COMMENT = 1010;
 	public final static int REQUEST_CODE_MSG_LOGIN_SYSTEM = 1011;
+	public final static int REQUEST_CODE_MSG_LOGIN_SETTING = 1012;
 }

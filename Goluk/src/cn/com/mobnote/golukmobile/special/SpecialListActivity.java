@@ -94,8 +94,10 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 		ztid = intent.getStringExtra("ztid");
 		title = intent.getStringExtra("title");
 
-		if (title != null && !"".equals(title) && title.length() > 12) {
-			title = title.substring(0, 12) + "...";
+		if(!TextUtils.isEmpty(title)) {
+			if (title.length() > 12) {
+				title = title.substring(0, 12) + "...";
+			}
 		}
 
 		GolukApplication.getInstance().getVideoSquareManager()
@@ -118,7 +120,11 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 		textTitle = (TextView) findViewById(R.id.title);
 		titleShare = (Button) findViewById(R.id.title_share);
 
-		textTitle.setText(title);
+		if(!TextUtils.isEmpty(title)) {
+			textTitle.setText(title);
+		} else {
+			textTitle.setText(getString(R.string.str_special_default_title));
+		}
 		mBackBtn.setOnClickListener(this);
 		titleShare.setOnClickListener(this);
 
