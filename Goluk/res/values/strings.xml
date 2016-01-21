@@ -681,7 +681,7 @@
 
     <string name="str_server_request_arg_error">服务器请求参数错误</string>
     <string name="str_server_request_unknown_error">服务器请求未知异常</string>
-    <string name="str_server_request_no_data">当前无记录</string>
+    <string name="str_server_request_no_data">暂无官方通知</string>
     <!-- 用户设置 -->
     <string name="str_confirm_loginout">是否确定退出？</string>
     <string name="str_no_cache">没有缓存数据</string>
@@ -734,7 +734,9 @@
 	<string name="str_newest_check_all_comments_postfix">条评论</string>
 	<string name="str_reply">回复</string>
 	<string name="str_colon">：</string>
-	
+	<!-- 精选专题 -->
+	<string name="str_special_default_title">精选专题</string>
+
 	<string name="str_reset_message">是否确认恢复Goluk出厂设置</string>
 	<string name="str_set_ok">设置成功</string>
 	<string name="str_ipc_unmatch">当前固件不支持此项设置，请升级固件后再试</string>

@@ -12,10 +12,6 @@ public class MessageContentBean {
 	@JSONField(name="access")
 	public String access;
 
-	/**跳转标题 **/
-	@JSONField(name="title")
-	public String title;
-
 	/**封面**/
 	@JSONField(name="picture")
 	public String picture;

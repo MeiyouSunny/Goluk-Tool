@@ -194,8 +194,6 @@ public class OfficialMessageActivity extends BaseActivity implements IRequestRes
 			if(msgBeanList.size() == 0) {
 				Toast.makeText(this, getString(
 						R.string.str_pull_refresh_listview_bottom_reach), Toast.LENGTH_SHORT).show();
-			} else if(msgBeanList.size() <= PAGESIZE) {
-				mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 			}
 
 			MessageMsgsBean last = bean.data.messages.get(msgBeanList.size() - 1);
@@ -212,7 +210,11 @@ public class OfficialMessageActivity extends BaseActivity implements IRequestRes
 				mOfficialMsgList.addAll(bean.data.messages);
 			} else {
 			}
+
 			mAdapter.setData(mOfficialMsgList);
+//			if(mOfficialMsgList.size() < PAGESIZE) {
+//				mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+//			}
 			mCurMotion = REFRESH_NORMAL;
 		}
 	}
