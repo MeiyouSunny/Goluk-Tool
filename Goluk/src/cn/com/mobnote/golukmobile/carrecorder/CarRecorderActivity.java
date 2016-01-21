@@ -1627,61 +1627,40 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 						}
 
 					} else {
-						GFileUtils
-								.writeIPCLog("===========IPC_VDCPCmd_SnapPic=============image path  null=====333333====44444=====");
 					}
 				} else {
-					GFileUtils
-							.writeIPCLog("===========IPC_VDCPCmd_SnapPic=============fs1  null===333333======333333=====");
 				}
 			} else {
-				GFileUtils.writeIPCLog("===========IPC_VDCPCmd_SnapPic=============fail=======333333===2222====");
 			}
 			break;
 		// 请求紧急、精彩视频录制
 		case IPC_VDCPCmd_TriggerRecord:
 			GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===4444=====param1=" + param1 + "==param2="
 					+ param2);
-			GFileUtils.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord====1111111========param1=" + param1
-					+ "=====param2=" + param2);
 			if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
 				if (RESULE_SUCESS == param1) {
 					mHandler.sendEmptyMessage(MOUNTS);
 				}  else {
-					GFileUtils
-					.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===66666======= not success ==========");
 					videoTriggerFail();
 				}
 			} else {
 				TriggerRecord record = IpcDataParser.parseTriggerRecordResult((String) param2);
 				if (null != record) {
 					if (RESULE_SUCESS == param1) {
-						mRecordVideFileName = record.fileName;
-						videoname = mRecordVideFileName;
+						mRecordVideFileName = videoname = record.fileName;
 						GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===555555========type="
 								+ record.type);
-						GFileUtils
-								.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord====222222========mRecordVideFileName="
-										+ mRecordVideFileName);
 						// 精彩视频
 						if (TYPE_SHORTCUT == record.type) {
-							GFileUtils
-									.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord==333333==========MOUNTS========");
 							mHandler.sendEmptyMessage(MOUNTS);
 						} else {
-							GFileUtils
-									.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===444444=========EMERGENCY========");
 							mHandler.sendEmptyMessage(EMERGENCY);
 						}
 					} else {
-						GFileUtils
-								.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===66666======= not success ==========");
 						videoTriggerFail();
 					}
 				} else {
 					GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===6666====not success====");
-					GFileUtils
-							.writeIPCLog("===========IPC_VDCPCmd_TriggerRecord===77777======= not success ==========");
 					videoTriggerFail();
 				}
 			}
