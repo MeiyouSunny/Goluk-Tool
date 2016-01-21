@@ -181,6 +181,10 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 				Intent system = new Intent(this, SystemMsgActivity.class);
 				startActivity(system);
 				break;
+			case GolukConfig.REQUEST_CODE_MSG_LOGIN_SETTING:
+				Intent setting = new Intent(this, PushSettingActivity.class);
+				startActivity(setting);
+				break;
 			default:
 				GolukDebugUtils.d(TAG, "unknown activity returned");
 				break;
@@ -234,8 +238,14 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 
 	private void startMsgSettingActivity() {
 		GolukApplication app = (GolukApplication)getApplication();
+//		if (!app.isUserLoginSucess) {
+//			GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
+//			return;
+//		}
 		if (!app.isUserLoginSucess) {
-			GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
+//			GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
+			Intent intent = new Intent(this, UserLoginActivity.class);
+			startActivityForResult(intent, GolukConfig.REQUEST_CODE_MSG_LOGIN_SETTING);
 			return;
 		}
 		Intent intent = new Intent(this, PushSettingActivity.class);
