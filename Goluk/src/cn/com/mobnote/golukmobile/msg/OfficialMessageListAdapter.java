@@ -132,8 +132,10 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 					// launch special list
 					intent = new Intent(mContext, SpecialListActivity.class);
 					intent.putExtra("ztid", accessId);
-					if (!TextUtils.isEmpty(finalBean.content.title)) {
-						intent.putExtra("title", finalBean.content.title);
+					if(null != finalBean.content.anycast) {
+						if (!TextUtils.isEmpty(finalBean.content.anycast.title)) {
+							intent.putExtra("title", finalBean.content.anycast.title);
+						}
 					}
 					mContext.startActivity(intent);
 				} else if (LIVE_VIDEO.equals(type)) {
@@ -151,17 +153,21 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 					intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID,
 							accessId);
 					// intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
-					String topName = "#" + finalBean.content.title + "#";
-					intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE,
-							topName);
+					if(null != finalBean.content.anycast) {
+						String topName = "#" + finalBean.content.anycast.title + "#";
+						intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE,
+								topName);
+					}
 					mContext.startActivity(intent);
 				} else if (H5_PAGE.equals(type)) {
 					// launch h5 page
 					intent = new Intent(mContext, UserOpenUrlActivity.class);
 					intent.putExtra("url", accessId);
-					if (!TextUtils.isEmpty(finalBean.content.title)) {
-						intent.putExtra("slide_h5_title",
-								finalBean.content.title);
+					if(null != finalBean.content.anycast) {
+						if (!TextUtils.isEmpty(finalBean.content.anycast.title)) {
+							intent.putExtra("slide_h5_title",
+								finalBean.content.anycast.title);
+						}
 					}
 					mContext.startActivity(intent);
 				} else if (SPECIAL_SOLO.equals(type)) {

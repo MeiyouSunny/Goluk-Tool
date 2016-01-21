@@ -129,8 +129,8 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 	}
 
 	private void setListener() {
-		//屏蔽某些机型的下拉悬停操作
-//		mStickyListHeadersListView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+		// 屏蔽某些机型的下拉悬停操作
+		// mStickyListHeadersListView.setOverScrollMode(View.OVER_SCROLL_NEVER);
 		mStickyListHeadersListView.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View arg0, MotionEvent arg1) {
@@ -144,10 +144,10 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				switch (scrollState) {
 				case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-//					mCloudWonderfulVideoAdapter.lock();
+					// mCloudWonderfulVideoAdapter.lock();
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-//					mCloudWonderfulVideoAdapter.unlock();
+					// mCloudWonderfulVideoAdapter.unlock();
 					GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====11111111111=");
 					if (mStickyListHeadersListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
 						GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====22222222=");
@@ -173,7 +173,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 					}
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-//					mCloudWonderfulVideoAdapter.lock();
+					// mCloudWonderfulVideoAdapter.lock();
 					break;
 
 				default:
@@ -257,18 +257,18 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 	private void gotoVideoPlayPage(int from, String path) {
 		if (!isShowPlayer) {
 			isShowPlayer = true;
-//			if (null == VitamioPlayerActivity.mHandler) {
-				Intent intent = null;
-//				if (1 == from) {
-//					intent = new Intent(mContext, VitamioPlayerActivity.class);
-//				} else {
-					intent = new Intent(mContext, MovieActivity.class);
-//				}
-				intent.putExtra("from", "ipc");
-				intent.putExtra("type", mCurrentType);
-				intent.putExtra("filename", path);
-				mContext.startActivity(intent);
-//			}
+			// if (null == VitamioPlayerActivity.mHandler) {
+			Intent intent = null;
+			// if (1 == from) {
+			// intent = new Intent(mContext, VitamioPlayerActivity.class);
+			// } else {
+			intent = new Intent(mContext, MovieActivity.class);
+			// }
+			intent.putExtra("from", "ipc");
+			intent.putExtra("type", mCurrentType);
+			intent.putExtra("filename", path);
+			mContext.startActivity(intent);
+			// }
 		}
 	}
 
@@ -329,27 +329,33 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 
 	List<Boolean> exist = new ArrayList<Boolean>();
 
+	private String getDownLoadSavePath() {
+		String videoSavePath = "fs1:/video/";
+		if (IPCManagerFn.TYPE_SHORTCUT == mCurrentType) {
+			videoSavePath = "fs1:/video/wonderful/";
+		} else if (IPCManagerFn.TYPE_URGENT == mCurrentType) {
+			videoSavePath = "fs1:/video/urgent/";
+		} else {
+			videoSavePath = "fs1:/video/loop/";
+		}
+
+		return videoSavePath;
+	}
+
 	public void downloadVideoFlush(List<String> selectedListData) {
 		exist.clear();
 		for (String filename : selectedListData) {
-			String videoSavePath = "fs1:/video/";
-			if (IPCManagerFn.TYPE_SHORTCUT == mCurrentType) {
-				videoSavePath = "fs1:/video/wonderful/";
-			} else if (IPCManagerFn.TYPE_URGENT == mCurrentType) {
-				videoSavePath = "fs1:/video/urgent/";
-			} else {
-				videoSavePath = "fs1:/video/loop/";
-			}
-
-			String fileName = filename.replace(".mp4", ".jpg");
+			// 下载视频对应的图片
+			String imgFileName = filename.replace(".mp4", ".jpg");
 			String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
-			File imgfile = new File(filePath + File.separator + fileName);
+			File imgfile = new File(filePath + File.separator + imgFileName);
 			if (!imgfile.exists()) {
 				GolukApplication.getInstance().getIPCControlManager()
-						.downloadFile(fileName, "download", FileUtils.javaToLibPath(filePath), findtime(filename));
+						.downloadFile(imgFileName, "download", FileUtils.javaToLibPath(filePath), findtime(filename));
 			}
-
-			String mp4 = FileUtils.libToJavaPath(videoSavePath + filename);
+			
+			// 下载视频文件
+			String mp4 = FileUtils.libToJavaPath(getDownLoadSavePath() + filename);
 			File file = new File(mp4);
 			if (!file.exists()) {
 				List<String> downloadlist = GolukApplication.getInstance().getDownLoadList();
@@ -463,7 +469,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 			updateEditState(true);
 		}
 	}
-	
+
 	public boolean isHasData() {
 		if (mDataList.size() <= 0) {
 			return false;
@@ -471,7 +477,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 			return true;
 		}
 	}
-	
+
 	private void updateEditState(boolean isHasData) {
 		GolukDebugUtils.e("", "Album------WondowvideoListView------updateEditState" + isHasData);
 		if (null == mCloudVideoListView) {

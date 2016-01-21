@@ -99,7 +99,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
 	public ClusterAdapter(Context context, SharePlatformUtil spf, int tabtype, IClusterInterface ici, String activityId) {
 		mContext = context;
-
+		loadRes();
 		mIClusterInterface = ici;
 		// 默认进入分享视频列表类别
 		mCurrentViewType = tabtype;
@@ -200,7 +200,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 					holder = new HeadViewHolder();
 
 					holder.headImg = (ImageView) convertView.findViewById(R.id.mPreLoading);
-					holder.describe = (TextView) convertView.findViewById(R.id.video_title);
+					//holder.describe = (TextView) convertView.findViewById(R.id.video_title);
 					holder.partakes = (TextView) convertView.findViewById(R.id.partake_num);
 					holder.recommendBtn = (Button) convertView.findViewById(R.id.recommend_btn);
 					holder.newsBtn = (Button) convertView.findViewById(R.id.news_btn);
@@ -246,27 +246,27 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
 				GlideUtils.loadImage(mContext, holder.headImg, mHeadData.picture,
 						R.drawable.tacitly_pic);
-				holder.describe.setText(mHeadData.activitycontent);
-				if(mIsMoreLine){
-					holder.describe.setMaxLines(100);
-					holder.describe.setEllipsize(null);
-				}else{
-					holder.describe.setMaxLines(2);
-					holder.describe.setEllipsize(TruncateAt.END);
-				}
+				//holder.describe.setText(mHeadData.activitycontent);
+//				if(mIsMoreLine){
+//					holder.describe.setMaxLines(100);
+//					holder.describe.setEllipsize(null);
+//				}else{
+//					holder.describe.setMaxLines(2);
+//					holder.describe.setEllipsize(TruncateAt.END);
+//				}
 				
-				holder.describe.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View view) {
-						if(mIsMoreLine){
-							mIsMoreLine = false;
-						}else{
-							mIsMoreLine = true;
-						}
-						notifyDataSetChanged();
-					}
-				});
+//				holder.describe.setOnClickListener(new OnClickListener() {
+//					
+//					@Override
+//					public void onClick(View view) {
+//						if(mIsMoreLine){
+//							mIsMoreLine = false;
+//						}else{
+//							mIsMoreLine = true;
+//						}
+//						notifyDataSetChanged();
+//					}
+//				});
 				holder.partakes.setText(mHeadData.participantcount);
 				//活动过期
 				if("1".equals(mHeadData.expiration)){
@@ -342,11 +342,11 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 				holder.imageLayout = (ImageView) convertView.findViewById(R.id.imageLayout);
 				holder.headimg = (ImageView) convertView.findViewById(R.id.headimg);
 				holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
-				holder.location = (TextView) convertView.findViewById(R.id.uc_location);
+				holder.time_location = (TextView) convertView.findViewById(R.id.time_location);
 				holder.videoGoldImg = (ImageView) convertView.findViewById(R.id.user_center_gold);
-				holder.recommentImg = (ImageView) convertView.findViewById(R.id.uc_recommend);
+//				holder.recommentImg = (ImageView) convertView.findViewById(R.id.uc_recommend);
 				holder.userInfoLayout = (RelativeLayout) convertView.findViewById(R.id.user_info_layout);
-				holder.time = (TextView) convertView.findViewById(R.id.time);
+//				holder.time = (TextView) convertView.findViewById(R.id.time);
 				holder.function = (ImageView) convertView.findViewById(R.id.function);
 				holder.v = (ImageView) convertView.findViewById(R.id.v);
 				holder.praiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
@@ -435,16 +435,22 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 				}
 			});
 			holder.nikename.setText(clusterInfo.mUserEntity.nickname);
-			holder.time.setText(GolukUtils.getCommentShowFormatTime(clusterInfo.mVideoEntity.sharingtime));
+			final String sharingTime = GolukUtils.getCommentShowFormatTime(clusterInfo.mVideoEntity.sharingtime);
+			final String location = clusterInfo.mVideoEntity.location;
+			String showTimeLocation = sharingTime;
+			if (null != location) {
+				showTimeLocation = showTimeLocation + " " + location;
+			}
+			holder.time_location.setText(showTimeLocation);
 
 			setVideoExtra(holder, clusterInfo);
 			// 设置显示 视频位置信息
-			final String location = clusterInfo.mVideoEntity.location;
-			if (null == location || "".equals(location)) {
-				holder.location.setVisibility(View.GONE);
-			} else {
-				holder.location.setText(location);
-			}
+//			final String location = clusterInfo.mVideoEntity.location;
+//			if (null == location || "".equals(location)) {
+//				holder.location.setVisibility(View.GONE);
+//			} else {
+//				holder.location.setText(location);
+//			}
 
 //			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber);
 			holder.weiguan.setText(clusterInfo.mVideoEntity.clicknumber + " " + mContext.getResources().getString(R.string.cluster_weiguan));
@@ -564,6 +570,13 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 		}
 		return convertView;
 	}
+	
+	Drawable mRecommentDrawable = null;
+
+	private void loadRes() {
+		mRecommentDrawable = mContext.getResources().getDrawable(R.drawable.together_recommend_icon);
+		mRecommentDrawable.setBounds(0, 0, mRecommentDrawable.getMinimumWidth(), mRecommentDrawable.getMinimumHeight());
+	}
 
 	private void showHead(ImageView view, String headportrait) {
 		try {
@@ -660,9 +673,13 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 			}
 			// 显示是否推荐
 			if (clusterInfo.mVideoEntity.videoExtra.isrecommend.equals("1")) {
-				holder.recommentImg.setVisibility(View.VISIBLE);
+//				holder.recommentImg.setVisibility(View.VISIBLE);
+				
+				holder.time_location.setCompoundDrawables(null, null, this.mRecommentDrawable, null);
 			} else {
-				holder.recommentImg.setVisibility(View.GONE);
+//				holder.recommentImg.setVisibility(View.GONE);
+				
+				holder.time_location.setCompoundDrawables(null, null, null, null);
 			}
 			
 			if(clusterInfo.mVideoEntity.videoExtra.topicname == null || "".equals(clusterInfo.mVideoEntity.videoExtra.topicname)){
@@ -674,7 +691,8 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 			
 		} else {
 			holder.videoGoldImg.setVisibility(View.GONE);
-			holder.recommentImg.setVisibility(View.GONE);
+//			holder.recommentImg.setVisibility(View.GONE);
+			holder.time_location.setCompoundDrawables(null, null, null, null);
 		}
 
 		UserUtils.showCommentText(mContext, false, clusterInfo, holder.detail, clusterInfo.mUserEntity.nickname,
@@ -754,7 +772,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 	public static class HeadViewHolder {
 		TextView title;
 		ImageView headImg;
-		TextView describe;
+		//TextView describe;
 		TextView partakes;
 		Button recommendBtn;
 		Button newsBtn;
@@ -769,11 +787,11 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 		ImageView headimg;
 		ImageView v;
 		TextView nikename;
-		TextView location;
-		TextView time;
+		TextView time_location;
+//		TextView time;
 		ImageView function;
 		ImageView videoGoldImg;
-		ImageView recommentImg;
+//		ImageView recommentImg;
 		RelativeLayout userInfoLayout;
 
 		LinearLayout praiseLayout;

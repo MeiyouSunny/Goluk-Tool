@@ -44,7 +44,7 @@
         android:background="@color/white"
         android:visibility="gone" >
 
-        <ImageView
+        <TextView
             android:id="@+id/iv_official_message_exception_refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
