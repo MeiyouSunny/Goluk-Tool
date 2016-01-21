@@ -270,20 +270,21 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 	public void onLoadComplete(int requestType, Object result) {
 		mScrollView.onRefreshComplete();
 		if(null == result) {
+			Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 			return;
 		}
 
 		if(requestType == IPageNotifyFn.PageType_MsgCounter) {
 			MessageCounterBean bean = (MessageCounterBean)result;
 			if(null == bean.data) {
+				Toast.makeText(this, getString(
+						R.string.str_server_request_unknown_error), Toast.LENGTH_SHORT).show();
 				return;
 			}
 
 			if(!bean.success) {
-				return;
-			}
-
-			if(null == bean.data) {
+				Toast.makeText(this, getString(
+						R.string.str_server_request_arg_error), Toast.LENGTH_SHORT).show();
 				return;
 			}
 
