@@ -1210,6 +1210,95 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 	}
 
+	// msg = 1000 多文件目录查询
+	private void IPC_VDCP_Resp_Query_CallBack(int msg, int param1, Object param2) {
+		if (RESULE_SUCESS == param1) {
+			GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==5555===stopDownloadList" + param2);
+			if ("ipcfilemanager".equals(mPageSource)) {
+				return;
+			}
+			GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==6666===stopDownloadList");
+			if (TextUtils.isEmpty((String) param2)) {
+				return;
+			}
+			GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==7777===stopDownloadList");
+			fileList = IpcDataParser.parseMoreFile((String) param2);
+			GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==8888===stopDownloadList===fileList.size()="
+					+ fileList.size());
+			mHandler.removeMessages(1001);
+			mHandler.sendEmptyMessageDelayed(1001, 1000);
+		}
+	}
+
+	private void IPC_VDCP_Msg_IPC_GetVersion_CallBack(int msg, int param1, Object param2) {
+		if (IPC_VDCP_Msg_GetVersion == msg) {
+			if (param1 == RESULE_SUCESS) {
+				// ipcConnect(param2);
+				String str = (String) param2;
+				if (TextUtils.isEmpty(str)) {
+					return;
+				}
+				try {
+					JSONObject json = new JSONObject(str);
+					String ipcVersion = json.optString("version");
+					GolukDebugUtils.i("lily", "=====保存当前的ipcVersion=====" + ipcVersion);
+					// 保存ipc版本号
+					SharedPrefUtil.saveIPCVersion(ipcVersion);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	private void IPC_VDCP_Msg_IPC_GetTime_CallBack(int msg, int param1, Object param2) {
+		if (param1 == RESULE_SUCESS) {
+			if (TextUtils.isEmpty((String) param2)) {
+				return;
+			}
+			long curtime = IpcDataParser.parseIPCTime((String) param2);
+			// 自动同步系统时间
+			if (SettingUtils.getInstance().getBoolean("systemtime", true)) {
+				long time = SettingUtils.getInstance().getLong("cursystemtime");
+				GolukDebugUtils.e("xuhw", "YYYYYY===getIPCSystemTime==time=" + time + "=curtime=" + curtime);
+				if (Math.abs(curtime - time) > 60) {// 60秒内不自动同步
+					SettingUtils.getInstance().putLong("cursystemtime", curtime);
+					boolean a = GolukApplication.getInstance().getIPCControlManager()
+							.setIPCSystemTime(System.currentTimeMillis() / 1000);
+					GolukDebugUtils.e("xuhw", "YYYYYY===========setIPCSystemTime===============a=" + a);
+				}
+			}
+		}
+	}
+
+	private void IPC_VDCP_Command_IPCKit_CallBack(int msg, int param1, Object param2) {
+		if (!isBindSucess()) {
+			return;
+		}
+		if (param1 != RESULE_SUCESS) {
+			return;
+		}
+		List<ExternalEventsDataInfo> kit = IpcDataParser.parseKitData((String) param2);
+		if (null == kit || kit.size() <= 0) {
+			return;
+		}
+		for (int i = 0; i < kit.size(); i++) {
+			ExternalEventsDataInfo info = kit.get(i);
+			if (info.type == 9) {
+				if (!GolukFileUtils.loadBoolean(GolukFileUtils.PROMOTION_AUTO_PHOTO, true)) {
+					return;
+				}
+				File file = new File(FileUtils.libToJavaPath(SNAPSHOT_DIR));
+				if (!file.exists()) {
+					file.mkdirs();
+				}
+				mIPCControlManager.downloadFile(info.location, "snapshotdownload", SNAPSHOT_DIR, IPC_VDCP_Msg_IPCKit);
+			} else {
+				GolukApplication.getInstance().getIPCControlManager().querySingleFile(info.location);
+			}
+		}
+	}
+
 	private void IPC_VDC_CommandResp_CallBack(int event, int msg, int param1, Object param2) {
 		switch (msg) {
 		case IPC_VDCP_Msg_Init:
@@ -1217,43 +1306,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			break;
 		case IPC_VDCP_Msg_Query:
 			// msg = 1000 多文件目录查询
-			if (RESULE_SUCESS == param1) {
-				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==5555===stopDownloadList" + param2);
-				if ("ipcfilemanager".equals(mPageSource)) {
-					return;
-				}
-				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==6666===stopDownloadList");
-				if (TextUtils.isEmpty((String) param2)) {
-					return;
-				}
-				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==7777===stopDownloadList");
-				fileList = IpcDataParser.parseMoreFile((String) param2);
-				GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==8888===stopDownloadList===fileList.size()="
-						+ fileList.size());
-				mHandler.removeMessages(1001);
-				mHandler.sendEmptyMessageDelayed(1001, 1000);
-			}
+			IPC_VDCP_Resp_Query_CallBack(msg, param1, param2);
 			break;
 		case IPC_VDCP_Msg_SingleQuery:
 			// msg = 1001 单文件查询
 			// 拍摄8秒视频成功之后,接口会自动调用查询这个文件,收到这个回调之后可以根据文件名去下载视频
 			ipcVideoSingleQueryCallBack(param1, (String) param2);
-			break;
-		case IPC_VDCP_Msg_Erase:
-			// msg = 1002 删除文件
-			break;
-		case IPC_VDCP_Msg_TriggerRecord:
-			// msg = 1003 请求紧急、精彩视频录制
-			// 发送拍摄指令后,会立即收到视频文件名称的回调,暂时无用
-			break;
-		case IPC_VDCP_Msg_SnapPic:
-			// msg = 1004 实时抓图
-			break;
-		case IPC_VDCP_Msg_RecPicUsage:
-			// msg = 1005 查询录制存储状态
-			break;
-		case IPC_VDCP_Msg_DeviceStatus:
-			// msg = 1006 查询设备状态
 			break;
 		case IPC_VDCPCmd_SetWifiCfg:
 			// msg = 1012 设置IPC系统WIFI配置
@@ -1278,8 +1336,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			if (param1 == RESULE_SUCESS) {
 				getVideoEncodeCfg();
 			}
-			break;
 
+			break;
 		case IPC_VDCP_Msg_GetRecAudioCfg:
 			if (param1 == RESULE_SUCESS) {
 				try {
@@ -1297,78 +1355,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			}
 			break;
 		case IPC_VDCP_Msg_IPCKit:
-			if (!isBindSucess()) {
-				return;
-			}
-			if (param1 == RESULE_SUCESS) {
-				List<ExternalEventsDataInfo> kit = IpcDataParser.parseKitData((String) param2);
-				if (kit.size() > 0) {
-					for (int i = 0; i < kit.size(); i++) {
-						ExternalEventsDataInfo info = kit.get(i);
-
-						// if (!mDownLoadFileList.contains(info.location)) {
-						// mDownLoadFileList.add(info.location);
-						if (info.type == 9) {
-							if (!GolukFileUtils.loadBoolean(GolukFileUtils.PROMOTION_AUTO_PHOTO, true)) {
-								return;
-							}
-							File file = new File(FileUtils.libToJavaPath(SNAPSHOT_DIR));
-							if (!file.exists()) {
-								file.mkdirs();
-							}
-							boolean a = mIPCControlManager.downloadFile(info.location, "snapshotdownload",
-									SNAPSHOT_DIR, IPC_VDCP_Msg_IPCKit);
-						} else {
-							boolean flag = GolukApplication.getInstance().getIPCControlManager()
-									.querySingleFile(info.location);
-						}
-						// }
-					}
-				}
-			}
+			IPC_VDCP_Command_IPCKit_CallBack(msg, param1, param2);
 			break;
 		case IPC_VDCP_Msg_GetVersion:
 			// {"product": 67698688, "model": "", "macid": "", "serial": "",
 			// "version": "V1.4.21_tzz_vb_rootfs"}
 			if (event == ENetTransEvent_IPC_VDCP_CommandResp) {
-				if (IPC_VDCP_Msg_GetVersion == msg) {
-					if (param1 == RESULE_SUCESS) {
-						// ipcConnect(param2);
-						String str = (String) param2;
-						if (TextUtils.isEmpty(str)) {
-							return;
-						}
-						try {
-							JSONObject json = new JSONObject(str);
-							String ipcVersion = json.optString("version");
-							GolukDebugUtils.i("lily", "=====保存当前的ipcVersion=====" + ipcVersion);
-							// 保存ipc版本号
-							SharedPrefUtil.saveIPCVersion(ipcVersion);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				}
+				IPC_VDCP_Msg_IPC_GetVersion_CallBack(msg, param1, param2);
 			}
 			break;
 		case IPC_VDCP_Msg_GetTime:
-			if (param1 == RESULE_SUCESS) {
-				if (TextUtils.isEmpty((String) param2)) {
-					return;
-				}
-				long curtime = IpcDataParser.parseIPCTime((String) param2);
-				// 自动同步系统时间
-				if (SettingUtils.getInstance().getBoolean("systemtime", true)) {
-					long time = SettingUtils.getInstance().getLong("cursystemtime");
-					GolukDebugUtils.e("xuhw", "YYYYYY===getIPCSystemTime==time=" + time + "=curtime=" + curtime);
-					if (Math.abs(curtime - time) > 60) {// 60秒内不自动同步
-						SettingUtils.getInstance().putLong("cursystemtime", curtime);
-						boolean a = GolukApplication.getInstance().getIPCControlManager()
-								.setIPCSystemTime(System.currentTimeMillis() / 1000);
-						GolukDebugUtils.e("xuhw", "YYYYYY===========setIPCSystemTime===============a=" + a);
-					}
-				}
-			}
+			IPC_VDCP_Msg_IPC_GetTime_CallBack(msg, param1, param2);
 			break;
 		case IPC_VDCP_Msg_GetIdentity:
 			IPC_CallBack_GetIdentity(msg, param1, param2);

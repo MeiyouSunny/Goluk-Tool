@@ -60,36 +60,19 @@ public class GolukVideoInfoDbManager implements IVideoInfoDataFn {
 		}.start();
 	}
 
-	private void executeSQL(String sql) {
-		try {
-			db.execSQL(sql);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	@Override
 	public long addVideoInfoData(VideoFileInfoBean bean) {
 		if (!isOpen) {
 			openDBPre();
 			return -1;
 		}
-		ContentValues cv = new ContentValues();
-		cv.put(CreateTableUtil.KEY_VIDEOINFO_FILENAME, bean.filename);
-		cv.put(CreateTableUtil.KEY_VIDEOINFO_TYPE, bean.type);
-		cv.put(CreateTableUtil.KEY_VIDEOINFO_FILESIZE, bean.filesize);
-		cv.put(CreateTableUtil.KEY_VIDEOINFO_RESOLUTION, bean.resolution);
-		cv.put(CreateTableUtil.KEY_VIDEOINFO_PERIOD, bean.period);
-		cv.put(CreateTableUtil.KEY_VIDEOINFO_TIMESTAMP, bean.timestamp);
-		cv.put(CreateTableUtil.KEY_VIDEOINFO_PICNAME, bean.picname);
-		cv.put(CreateTableUtil.KEY_VIDEOINFO_DEVICENAME, bean.devicename);
-		cv.put(CreateTableUtil.KEY_VIDEOINFO_GPSNAME, bean.gpsname);
-		cv.put(CreateTableUtil.KEY_VIDEOINFO_SAVETIME, bean.savetime);
-		cv.put(CreateTableUtil.KEY_VIDEOINFO_RESERVE1, bean.reserve1);
-		cv.put(CreateTableUtil.KEY_VIDEOINFO_RESERVE2, bean.reserve2);
-		cv.put(CreateTableUtil.KEY_VIDEOINFO_RESERVE3, bean.reserve3);
-		cv.put(CreateTableUtil.KEY_VIDEOINFO_RESERVE4, bean.reserve4);
-
+		if (null == bean) {
+			return -1;
+		}
+		ContentValues cv = beanToContentValues(bean);
+		if (null == cv) {
+			return -1;
+		}
 		long insertid = db.insert(CreateTableUtil.T_VIDEOINFO, null, cv);
 		return insertid;
 	}
@@ -126,7 +109,6 @@ public class GolukVideoInfoDbManager implements IVideoInfoDataFn {
 			openDBPre();
 			return null;
 		}
-		List<VideoFileInfoBean> list = null;
 		final String selectSql = "select * from " + CreateTableUtil.T_VIDEOINFO + " where "
 				+ CreateTableUtil.KEY_VIDEOINFO_TYPE + "= ?";
 		final String[] selectArg = { type };
@@ -134,41 +116,14 @@ public class GolukVideoInfoDbManager implements IVideoInfoDataFn {
 		if (null == cursor) {
 			return null;
 		}
-		list = new ArrayList<VideoFileInfoBean>();
+		List<VideoFileInfoBean> list = new ArrayList<VideoFileInfoBean>();
 		while (cursor.moveToNext()) {
 			try {
 				// 根据列名获取列索引
-				String fileName = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_FILENAME));
-				String fileType = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_TYPE));
-				String fileSize = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_FILESIZE));
-				String resolution = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_RESOLUTION));
-				String period = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_PERIOD));
-				String timestamp = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_TIMESTAMP));
-				String picname = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_PICNAME));
-				String devicename = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_DEVICENAME));
-				String gpsname = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_GPSNAME));
-				String savetime = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_SAVETIME));
-				String reserve1 = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_RESERVE1));
-				String reserve2 = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_RESERVE2));
-				String reserve3 = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_RESERVE3));
-				String reserve4 = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_RESERVE4));
-				VideoFileInfoBean bean = new VideoFileInfoBean();
-				bean.filename = fileName;
-				bean.type = fileType;
-				bean.filesize = fileSize;
-				bean.resolution = resolution;
-				bean.period = period;
-				bean.timestamp = timestamp;
-				bean.picname = picname;
-				bean.devicename = devicename;
-				bean.gpsname = gpsname;
-				bean.savetime = savetime;
-				bean.reserve1 = reserve1;
-				bean.reserve2 = reserve2;
-				bean.reserve3 = reserve3;
-				bean.reserve4 = reserve4;
-
-				list.add(bean);
+				VideoFileInfoBean bean = cursorToBean(cursor);
+				if (null != bean) {
+					list.add(bean);
+				}
 			} catch (Exception e) {
 			}
 		}
@@ -192,39 +147,9 @@ public class GolukVideoInfoDbManager implements IVideoInfoDataFn {
 		}
 		bean = new VideoFileInfoBean();
 		while (cursor.moveToNext()) {
-			try {
-				// 根据列名获取列索引
-				String fileName1 = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_FILENAME));
-				String fileType = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_TYPE));
-				String fileSize = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_FILESIZE));
-				String resolution = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_RESOLUTION));
-				String period = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_PERIOD));
-				String timestamp = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_TIMESTAMP));
-				String picname = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_PICNAME));
-				String devicename = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_DEVICENAME));
-				String gpsname = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_GPSNAME));
-				String savetime = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_SAVETIME));
-				String reserve1 = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_RESERVE1));
-				String reserve2 = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_RESERVE2));
-				String reserve3 = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_RESERVE3));
-				String reserve4 = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_RESERVE4));
-
-				bean.filename = fileName1;
-				bean.type = fileType;
-				bean.filesize = fileSize;
-				bean.resolution = resolution;
-				bean.period = period;
-				bean.timestamp = timestamp;
-				bean.picname = picname;
-				bean.devicename = devicename;
-				bean.gpsname = gpsname;
-				bean.savetime = savetime;
-				bean.reserve1 = reserve1;
-				bean.reserve2 = reserve2;
-				bean.reserve3 = reserve3;
-				bean.reserve4 = reserve4;
+			bean = cursorToBean(cursor);
+			if (null != bean) {
 				break;
-			} catch (Exception e) {
 			}
 		}
 		cursor.close();
@@ -237,6 +162,81 @@ public class GolukVideoInfoDbManager implements IVideoInfoDataFn {
 			isOpen = false;
 			db.close();
 		}
+	}
+
+	private void executeSQL(String sql) {
+		try {
+			db.execSQL(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private ContentValues beanToContentValues(VideoFileInfoBean bean) {
+		if (null == bean) {
+			return null;
+		}
+		ContentValues cv = new ContentValues();
+		cv.put(CreateTableUtil.KEY_VIDEOINFO_FILENAME, bean.filename);
+		cv.put(CreateTableUtil.KEY_VIDEOINFO_TYPE, bean.type);
+		cv.put(CreateTableUtil.KEY_VIDEOINFO_FILESIZE, bean.filesize);
+		cv.put(CreateTableUtil.KEY_VIDEOINFO_RESOLUTION, bean.resolution);
+		cv.put(CreateTableUtil.KEY_VIDEOINFO_PERIOD, bean.period);
+		cv.put(CreateTableUtil.KEY_VIDEOINFO_TIMESTAMP, bean.timestamp);
+		cv.put(CreateTableUtil.KEY_VIDEOINFO_PICNAME, bean.picname);
+		cv.put(CreateTableUtil.KEY_VIDEOINFO_DEVICENAME, bean.devicename);
+		cv.put(CreateTableUtil.KEY_VIDEOINFO_GPSNAME, bean.gpsname);
+		cv.put(CreateTableUtil.KEY_VIDEOINFO_SAVETIME, bean.savetime);
+		cv.put(CreateTableUtil.KEY_VIDEOINFO_RESERVE1, bean.reserve1);
+		cv.put(CreateTableUtil.KEY_VIDEOINFO_RESERVE2, bean.reserve2);
+		cv.put(CreateTableUtil.KEY_VIDEOINFO_RESERVE3, bean.reserve3);
+		cv.put(CreateTableUtil.KEY_VIDEOINFO_RESERVE4, bean.reserve4);
+
+		return cv;
+	}
+
+	private VideoFileInfoBean cursorToBean(Cursor cursor) {
+		if (null == cursor) {
+			return null;
+		}
+		try {
+			VideoFileInfoBean bean = new VideoFileInfoBean();
+			String fileName1 = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_FILENAME));
+			String fileType = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_TYPE));
+			String fileSize = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_FILESIZE));
+			String resolution = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_RESOLUTION));
+			String period = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_PERIOD));
+			String timestamp = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_TIMESTAMP));
+			String picname = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_PICNAME));
+			String devicename = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_DEVICENAME));
+			String gpsname = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_GPSNAME));
+			String savetime = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_SAVETIME));
+			String reserve1 = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_RESERVE1));
+			String reserve2 = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_RESERVE2));
+			String reserve3 = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_RESERVE3));
+			String reserve4 = cursor.getString(cursor.getColumnIndex(CreateTableUtil.KEY_VIDEOINFO_RESERVE4));
+
+			bean.filename = fileName1;
+			bean.type = fileType;
+			bean.filesize = fileSize;
+			bean.resolution = resolution;
+			bean.period = period;
+			bean.timestamp = timestamp;
+			bean.picname = picname;
+			bean.devicename = devicename;
+			bean.gpsname = gpsname;
+			bean.savetime = savetime;
+			bean.reserve1 = reserve1;
+			bean.reserve2 = reserve2;
+			bean.reserve3 = reserve3;
+			bean.reserve4 = reserve4;
+
+			return bean;
+		} catch (Exception e) {
+
+		}
+
+		return null;
 	}
 
 }
