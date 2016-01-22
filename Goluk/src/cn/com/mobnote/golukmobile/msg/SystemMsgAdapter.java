@@ -5,6 +5,7 @@ import java.util.List;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
+import cn.com.mobnote.golukmobile.http.HttpManager;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.msg.bean.MessageMsgsBean;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
@@ -198,7 +199,7 @@ public class SystemMsgAdapter extends BaseAdapter {
 							mContext.startActivity(i);
 						}
 					}else if(mmbTxt.type == msgTypePoll){//投票页
-						String url = getRtmpAddress() + "?type=9&activityid=" + mmbTxt.content.access;
+						String url = HttpManager.getInstance().getWebH5Host() + "/videoshare/tag/castvote.html?voteid=" + mmbTxt.content.access;
 						Intent intent = new Intent(mContext,
 								UserOpenUrlActivity.class);
 						intent.putExtra("url", url);
