@@ -30,7 +30,7 @@ public class GetShareAddressRequest extends GolukFastjsonRequest<ShareDataFullBe
 	}
 
 	public void get(String videoid, String type, String describe, String attribute, String issquare, String creattime,
-			String signtime, String channelid, String activityid, String activityname, String location) {
+			String signtime, String channelid, String activityid, String activityname, String location, String devicetag) {
 		HashMap<String, String> params = (HashMap<String, String>) getParam();
 		params.put("xieyi", "" + 100);
 		params.put("videoid", videoid);
@@ -64,6 +64,11 @@ public class GetShareAddressRequest extends GolukFastjsonRequest<ShareDataFullBe
 		}
 		if (!TextUtils.isEmpty(activityname)) {
 			params.put("activityname", activityname);
+		}
+		if (devicetag != null) {
+			params.put("devicetag", devicetag);
+		} else {
+			params.put("devicetag", "");
 		}
 		super.post();
 	}

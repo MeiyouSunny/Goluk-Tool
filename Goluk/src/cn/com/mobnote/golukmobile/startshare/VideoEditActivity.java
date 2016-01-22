@@ -24,6 +24,9 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
+import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
+import cn.com.mobnote.golukmobile.fileinfo.VideoFileInfoBean;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
@@ -76,6 +79,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private int mCurrentVideoType = 0;
 	/** 分享的视频名称 */
 	private String videoName = "";
+	
+	private String videoFrom = "";
 	/** 分享的视频创建时间 **/
 	private String videoCreateTime = "";
 	private boolean isExit = false;
@@ -260,6 +265,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		}
 	}
 
+	GolukVideoInfoDbManager mGolukVideoInfoDbManager = GolukVideoInfoDbManager.getInstance();
 	/**
 	 * 
 	 * @Title: interceptVideoName
@@ -273,22 +279,34 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		if (videopath != null && !"".equals(videopath)) {
 			String[] strs = videopath.split("/");
 			videoName = strs[strs.length - 1];
+			if (mGolukVideoInfoDbManager != null) {
+				VideoFileInfoBean videoFileInfoBean = mGolukVideoInfoDbManager.selectSingleData(videoName);
+				if (videoFileInfoBean != null) {
+					videoCreateTime = videoFileInfoBean.timestamp + "000";
+					videoFrom = videoFileInfoBean.devicename;
+					if (IPCControlManager.T1_SIGN.equalsIgnoreCase(videoFrom)) {
+						mIsT1Video = true;
+					}
+				}
+			}
 			videoName = videoName.replace("mp4", "jpg");
 			// 分享时间
 			GolukDebugUtils.e("", "----------------------------VideoEditActivity-----videoName：" + videoName);
-			if (videoName.contains("_")) {
-				String[] videoTimeArray = videoName.split("_");
-				if (videoTimeArray.length == 3) {
-					videoCreateTime = "20" + videoTimeArray[1] + "000";
-				} else if (videoTimeArray.length == 7){
-					videoCreateTime = videoTimeArray[2] + "000";
-					mIsT1Video = true;
-				} else if (videoTimeArray.length == 8) {
-					videoCreateTime = videoTimeArray[1] + "000";
-					mIsT1Video = true;
+			if (TextUtils.isEmpty(videoCreateTime)) {
+				if (videoName.contains("_")) {
+					String[] videoTimeArray = videoName.split("_");
+					if (videoTimeArray.length == 3) {
+						videoCreateTime = "20" + videoTimeArray[1] + "000";
+					} else if (videoTimeArray.length == 7) {
+						videoCreateTime = videoTimeArray[2] + "000";
+						mIsT1Video = true;
+					} else if (videoTimeArray.length == 8) {
+						videoCreateTime = videoTimeArray[1] + "000";
+						mIsT1Video = true;
+					}
+				} else {
+					videoCreateTime = "";
 				}
-			} else {
-				videoCreateTime = "";
 			}
 		}
 	}
@@ -795,7 +813,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		}
 		GetShareAddressRequest request = new GetShareAddressRequest(IPageNotifyFn.PageType_Share, this);
 		request.get(t_vid, t_type, desc, selectTypeJson, isSeque, videoCreateTime, t_signTime, channelid, activityid,
-				activityname, t_location);
+				activityname, t_location, videoFrom);
 	}
 
 	private void getShareFailed() {
