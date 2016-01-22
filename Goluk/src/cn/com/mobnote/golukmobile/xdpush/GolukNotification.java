@@ -480,7 +480,7 @@ public class GolukNotification {
 //						context.startActivity(intent);
 						UCUserInfo user = new UCUserInfo();
 						user.uid = vidArray[0];
-						user.nickname = msgBean.title;
+						user.nickname = "";
 						user.headportrait = "";//clusterInfo.mUserEntity.headportrait;
 						user.introduce = "";
 						user.sex = "";//clusterInfo.mUserEntity.sex;

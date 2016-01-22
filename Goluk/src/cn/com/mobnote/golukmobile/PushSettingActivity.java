@@ -125,17 +125,15 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 		return super.onKeyDown(keyCode, event);
 	}
 
-	private final String NET_ERROR_STR = this.getResources().getString(R.string.network_error);
-
 	private void deal_getPush_CallBack(int success, Object param1, Object param2) {
 		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
 		if (1 != success) {
-			GolukUtils.showToast(this, NET_ERROR_STR);
+			GolukUtils.showToast(this, getResources().getString(R.string.network_error));
 			return;
 		}
 		SettingBean bean = JsonUtil.parsePushSettingJson((String) param2);
 		if (null == bean || !bean.isSucess || !"0".equals(bean.result)) {
-			GolukUtils.showToast(this, NET_ERROR_STR);
+			GolukUtils.showToast(this, getResources().getString(R.string.network_error));
 			return;
 		}
 		setCommentState(bean.isComment.equals("1") ? true : false);

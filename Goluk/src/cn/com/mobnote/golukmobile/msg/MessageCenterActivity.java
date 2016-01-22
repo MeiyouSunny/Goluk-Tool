@@ -238,6 +238,10 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 
 	private void startMsgSettingActivity() {
 		GolukApplication app = (GolukApplication)getApplication();
+		if(!GolukUtils.isNetworkConnected(this)) {
+			Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+			return;
+		}
 //		if (!app.isUserLoginSucess) {
 //			GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
 //			return;
