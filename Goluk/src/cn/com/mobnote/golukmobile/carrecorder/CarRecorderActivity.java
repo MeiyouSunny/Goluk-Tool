@@ -1858,7 +1858,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 							this.canvasProcess();
 							mNowDownloadName = filename;
 							image1.setVisibility(View.VISIBLE);
-							image1.setImageBitmap(images[2].getBitmap());
+							image1.setImageResource(R.drawable.album_default_img);//(images[2].getBitmap());
 						} else {
 							if (image1.getVisibility() != View.VISIBLE) {
 								image1.setVisibility(View.VISIBLE);
