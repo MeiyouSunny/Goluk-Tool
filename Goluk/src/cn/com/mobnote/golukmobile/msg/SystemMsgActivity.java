@@ -92,6 +92,11 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
 			
 			@Override
 			public void onRefresh() {
+				if(GolukUtils.isNetworkConnected(SystemMsgActivity.this) == false){
+					mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime());
+					GolukUtils.showToast(SystemMsgActivity.this, SystemMsgActivity.this.getResources().getString(R.string.user_net_unavailable));
+					return;
+				}
 				mLoadType = 0;
 				mIsFrist = false;
 				httpPost(mUid, "0", "");//首次进入请求数据
@@ -106,10 +111,15 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
 				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){//滚动结束
 					if((mFristItemPosition + mPageItemCount) == mRTPullListView.getAdapter().getCount()){
 						mIsFrist = false;
-						mLoadType = 1;
 						if(mIsHaveData){
+							if(GolukUtils.isNetworkConnected(SystemMsgActivity.this) == false){
+								mRTPullListView.removeFooterView(1);
+								GolukUtils.showToast(SystemMsgActivity.this, SystemMsgActivity.this.getResources().getString(R.string.user_net_unavailable));
+								return;
+							}
 							mRTPullListView.addFooterView(1);
 							httpPost(mUid, "2", mTimestamp);//上拉请求更多数据
+							mLoadType = 1;
 						}
 					}
 				}

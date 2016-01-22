@@ -38,6 +38,14 @@ public class HttpManager {
         mUrlHostManager = new UrlHostManager();
     }
 
+    public String getWebDirectHost() {
+    	return mUrlHostManager.getHost();
+    }
+    
+    public String getWebH5Host(){
+    	return mUrlHostManager.getWebPageHost();
+    }
+
 	public static synchronized HttpManager getInstance() {
 		if (mInstance == null) {
 			mInstance = new HttpManager();

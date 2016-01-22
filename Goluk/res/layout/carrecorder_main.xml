@@ -369,7 +369,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/album_default_img"
+                    android:src="@drawable/video_new_icon"
                     android:visibility="gone" />
 
                 <cn.com.mobnote.golukmobile.videosuqare.RingView
@@ -400,7 +400,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/album_default_img"
+                    android:src="@drawable/video_new_icon"
                     android:visibility="gone" />
             </RelativeLayout>
 
