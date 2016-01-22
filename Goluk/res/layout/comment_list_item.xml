@@ -48,7 +48,6 @@
             android:layout_toLeftOf="@id/tv_listview_item_floor"
             android:layout_toRightOf="@id/comment_item_head"
             android:singleLine="true"
-            android:text="chrisconnolly"
             android:textColor="#1163a2"
             android:textSize="14sp" />
         
@@ -60,7 +59,6 @@
             android:layout_below="@id/comment_item_name"
             android:layout_marginRight="10dp"
             android:layout_marginTop="-2dp"
-            android:text="今天 15:52"
             android:textColor="#888888"
             android:textSize="12sp" />
 
@@ -72,7 +70,6 @@
             android:layout_below="@id/comment_item_time"
             android:layout_marginTop="5dp"
             android:layout_marginRight="10dp"
-            android:text="前往古格王朝的路上～"
             android:textColor="#333333"
             android:textSize="14sp" />
 

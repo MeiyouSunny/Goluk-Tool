@@ -421,7 +421,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 										: "";
 								String username = null != mWillShareVideoSquareInfo ? mWillShareVideoSquareInfo.mUserEntity.nickname
 										: "";
-								describe = username + "：" + describe;
+								describe = username + mContext.getString(R.string.str_colon) + describe;
 								CustomShareBoard shareBoard = new CustomShareBoard(vspa, sharePlatform, shareurl,
 										coverurl, describe, ttl, null, realDesc, videoId);
 								shareBoard.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);

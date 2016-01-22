@@ -29,7 +29,7 @@
         	    
             <TextView
 	        android:id="@+id/mTitleName"
-	        android:text="曝光台"
+	        android:text="@string/share_str_type_bg"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_centerInParent="true"
@@ -40,7 +40,7 @@
             
             <TextView
 	        android:id="@+id/mUpdateTime"
-	        android:text="一分钟前更新"
+	        android:text="@string/str_refresh_one_minute"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_marginRight="8dp"

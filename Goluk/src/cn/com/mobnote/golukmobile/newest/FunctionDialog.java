@@ -158,16 +158,16 @@ public class FunctionDialog extends Dialog implements android.view.View.OnClickL
 			@Override
 			public void onClick(View v) {
 				if(!GolukUtils.isNetworkConnected(mContext)) {
-					GolukUtils.showToast(mContext, "网络异常，请检查网络");
+					GolukUtils.showToast(mContext, mContext.getString(R.string.network_error));
 					confirmation.dismiss();
 					return;
 				}
 
 				boolean flog = GolukApplication.getInstance().getVideoSquareManager().report("1", videoid, reporttype);
 				if (flog) {
-					GolukUtils.showToast(mContext, "举报成功，我们稍后会进行处理");
+					GolukUtils.showToast(mContext, mContext.getString(R.string.str_report_success));
 				} else {
-					GolukUtils.showToast(mContext, "网络异常，请检查网络");
+					GolukUtils.showToast(mContext, mContext.getString(R.string.network_error));
 				}
 				confirmation.dismiss();
 			}

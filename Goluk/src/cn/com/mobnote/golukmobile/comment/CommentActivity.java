@@ -254,7 +254,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 		final String content = mEditText.getText().toString().trim();
 		if (null == content || "".equals(content)) {
-			GolukUtils.showToast(this, "请输入评论内容");
+			GolukUtils.showToast(this, this.getString(R.string.str_input_comment_content));
 			return;
 		}
 		httpPost_requestAdd(content);
@@ -438,11 +438,11 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		}
 		if (!isSucess) {
 			// 失败
-			GolukUtils.showToast(this, "评论失败!");
+			GolukUtils.showToast(this, this.getString(R.string.str_comment_fail));
 			return;
 		}
 		LiveDialogManager.getManagerInstance().showCommProgressDialog(this,
-				LiveDialogManager.DIALOG_TYPE_COMMENT_COMMIT, "", "正在提交评论", true);
+				LiveDialogManager.DIALOG_TYPE_COMMENT_COMMIT, "", this.getString(R.string.str_comment_ongoing), true);
 	}
 
 	// 删除评论
@@ -452,11 +452,12 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		boolean isSucess = request.get(id);
 		if (!isSucess) {
 			// 失败
-			GolukUtils.showToast(this, "删除失败");
+			GolukUtils.showToast(this, this.getString(R.string.str_delete_fail));
 			return;
 		}
 		LiveDialogManager.getManagerInstance().showCommProgressDialog(this,
-				LiveDialogManager.DIALOG_TYPE_COMMENT_PROGRESS_DELETE, "", "正在删除", true);
+				LiveDialogManager.DIALOG_TYPE_COMMENT_PROGRESS_DELETE, "", this.getString(R.string.str_delete_ongoing),
+				true);
 	}
 
 	@Override
@@ -519,7 +520,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			if (UserUtils.isShouldHideInput(v, ev)) {
 				UserUtils.hideSoftMethod(this);
 				if ("".equals(mEditText.getText().toString().trim()) && mIsReply) {
-					mEditText.setHint("写评论");
+					mEditText.setHint(this.getString(R.string.str_comment_input_hit));
 					mIsReply = false;
 				}
 			}
@@ -637,7 +638,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			if (null != addResultBean && addResultBean.success) {
 				CommentAddBean addBean = addResultBean.data;
 				if (addBean == null) {
-					GolukUtils.showToast(this, "评论失败");
+					GolukUtils.showToast(this, this.getString(R.string.str_comment_fail));
 					return;
 				}
 				CommentBean bean = new CommentBean();
@@ -668,10 +669,10 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 						mEditText.setText("");
 						switchSendState(false);
 						mIsReply = false;
-						mEditText.setHint("写评论");
+						mEditText.setHint(this.getString(R.string.str_comment_input_hit));
 						mCommentTime = System.currentTimeMillis();
 					} else if ("1".equals(bean.result)) {
-						GolukDebugUtils.e("", "参数错误");
+						GolukDebugUtils.e("", this.getString(R.string.str_parameter_error));
 					} else if ("2".equals(bean.result)) {// 重复评论
 						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
 								LiveDialogManager.FUNCTION_DIALOG_OK, "",
@@ -682,12 +683,13 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 								this.getResources().getString(R.string.comment_sofast_text));
 					} else {
 						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-								LiveDialogManager.FUNCTION_DIALOG_OK, "", "评论保存失败。");
+								LiveDialogManager.FUNCTION_DIALOG_OK, "",
+								this.getString(R.string.str_save_comment_fail));
 					}
 				}
 
 			} else {
-				GolukUtils.showToast(this, "评论失败");
+				GolukUtils.showToast(this, this.getString(R.string.str_comment_fail));
 			}
 			break;
 		case IPageNotifyFn.PageType_DelComment:
@@ -696,10 +698,10 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			if (null != DelResultBean && DelResultBean.success) {
 
 				mAdapter.deleteData(mWillDelBean);
-				GolukUtils.showToast(this, "删除成功");
+				GolukUtils.showToast(this, this.getString(R.string.str_delete_success));
 				noData(mAdapter.getCount() <= 0);
 			} else {
-				GolukUtils.showToast(this, "删除失败");
+				GolukUtils.showToast(this, this.getString(R.string.str_delete_fail));
 			}
 			mWillDelBean = null;
 			break;

@@ -1,6 +1,7 @@
 package cn.com.mobnote.golukmobile.newest;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.util.GolukUtils;
 import android.content.Context;
@@ -76,7 +77,7 @@ public class ClickShareListener implements OnClickListener {
 			GolukUtils.cancelTimer();
 			GolukUtils.isCanClick = true;
 			closeDialog();
-			GolukUtils.showToast(mContext, "网络异常，请检查网络");
+			GolukUtils.showToast(mContext, mContext.getString(R.string.network_error));
 		} else {
 			saveCategoryData();
 		}

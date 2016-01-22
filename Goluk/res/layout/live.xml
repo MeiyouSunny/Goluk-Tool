@@ -109,7 +109,6 @@
             android:layout_toLeftOf="@id/live_lookcount"
             android:layout_toRightOf="@id/live_name_layout"
             android:singleLine="true"
-            android:text="My"
             android:textColor="@color/name_color"
             android:textSize="@dimen/live_nickname_size" />
 
@@ -122,7 +121,6 @@
             android:layout_marginBottom="6dp"
             android:layout_toLeftOf="@id/live_lookcount"
             android:singleLine="true"
-            android:text="今天13:44"
             android:textColor="@color/live_time_desc"
             android:textSize="@dimen/live_time_size" />
     </RelativeLayout>

@@ -13,7 +13,7 @@ android:layout_height="match_parent">
         
         <TextView   
 		android:id="@+id/cancle"
-		android:text="取消"
+		android:text="@string/user_cancle"
 		android:textSize ="16sp"
 		android:textColor="#1163a2"
 		android:gravity="center" 
@@ -23,7 +23,7 @@ android:layout_height="match_parent">
 	    
         
         <TextView   
-		android:text="推荐这个视频"
+		android:text="@string/dialog_str_tuijian"
 		android:textSize ="18sp"
 		android:textColor="#ffffff"
 		android:gravity="center" 
@@ -33,7 +33,7 @@ android:layout_height="match_parent">
 	    
         <TextView   
 		android:id="@+id/tuijian"
-		android:text="提交"
+		android:text="@string/str_submit"
 		android:textSize ="16sp"
 		android:textColor="#1163a2"
 		android:gravity="center" 
@@ -47,7 +47,7 @@ android:layout_height="match_parent">
     <EditText   
 		android:id="@+id/text"
 		android:layout_below="@+id/titlelayout"
-		android:hint="请填写推荐理由"
+		android:hint="@string/str_input_recommend_reason"
 		android:textColorHint="#5f5f5f"
 		android:textSize ="16sp"
 		android:textColor="#ffffff"
@@ -60,7 +60,6 @@ android:layout_height="match_parent">
 	    
      <TextView   
        	android:id="@+id/number"
-		android:text="50"
 		android:textSize ="16sp"
 		android:textColor="#5f5f5f"
 		android:gravity="right"

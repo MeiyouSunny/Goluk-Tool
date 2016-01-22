@@ -148,14 +148,19 @@ public class MsgCenterPraiseActivity extends BaseActivity implements OnClickList
 	}
 
 	private void unusual() {
+		if (mCurrentOperator == OPERATOR_UP) {
+			this.removeFoot(1);
+		} else {
+			mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime());
+		}
 		if (!mIsFirst) {
 			closeLoadingDialog();
-			GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
+		} else {
+			mRTPullListView.setVisibility(View.GONE);
+			nNoPraiseText.setVisibility(View.GONE);
+			mRefreshLayout.setVisibility(View.VISIBLE);
 		}
-		mRTPullListView.onRefreshComplete(mHistoryDate);
-		mRTPullListView.setVisibility(View.GONE);
-		nNoPraiseText.setVisibility(View.GONE);
-		mRefreshLayout.setVisibility(View.VISIBLE);
+		GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
 	}
 
 	/**

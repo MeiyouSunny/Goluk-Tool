@@ -12,7 +12,7 @@
         android:textColor="#1163a2"
         android:textSize="15sp"
         android:background="#00000000"
-        android:text="色情低俗"/>
+        android:text="@string/str_sqds_text"/>
     <View 
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -24,7 +24,7 @@
         android:textColor="#1163a2"
         android:textSize="15sp"
         android:background="#00000000"
-        android:text="谣言惑众"/>
+        android:text="@string/str_yyhz_text"/>
     <View 
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -36,7 +36,7 @@
         android:textColor="#1163a2"
         android:textSize="15sp"
         android:background="#00000000"
-        android:text="政治敏感"/>
+        android:text="@string/str_zzmg_text"/>
     <View 
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -48,7 +48,7 @@
         android:textColor="#1163a2"
         android:textSize="15sp"
         android:background="#00000000"
-        android:text="其它原因"/>
+        android:text="@string/str_other_reason_text"/>
     <View 
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -60,5 +60,5 @@
         android:textColor="#1163a2"
         android:textSize="15sp"
         android:background="#00000000"
-        android:text="取消"/>
+        android:text="@string/user_cancle"/>
 </LinearLayout>

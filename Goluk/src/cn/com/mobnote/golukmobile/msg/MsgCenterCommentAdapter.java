@@ -235,8 +235,8 @@ public class MsgCenterCommentAdapter extends BaseAdapter {
 	}
 	
 	private void showCommentText(TextView view, String nikename, String text) {
-		String t_str = mContext.getResources().getString(R.string.str_msgcenter_comment_replytext) + nikename + ":"
-				+ text;
+		String t_str = mContext.getResources().getString(R.string.str_msgcenter_comment_replytext) + nikename
+				+ mContext.getString(R.string.str_colon_english) + text;
 		SpannableStringBuilder style = new SpannableStringBuilder(t_str);
 		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 2, nikename.length() + 2,
 				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);

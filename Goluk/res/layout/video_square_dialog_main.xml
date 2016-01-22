@@ -12,7 +12,7 @@
         android:background="@drawable/video_square_title_btn"
         android:textColor="#333333"
         android:textSize="18sp"
-        android:text="举报"/>
+        android:text="@string/str_report_text"/>
     <View 
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -24,6 +24,6 @@
         android:background="@drawable/video_square_exit_btn"
         android:textColor="#ffffff"
         android:textSize="18sp"
-        android:text="取消"/>
+        android:text="@string/user_cancle"/>
     
 </LinearLayout>

@@ -793,5 +793,62 @@
 	<string name="str_change_wifi_information">修改wifi热点信息</string>
 	<string name="str_set_wifi_name">设置wifi名称：</string>
 	<string name="str_set_wifi_pwd">设置wifi密码：</string>
+	<string name="str_omit">...</string>
+	<string name="str_comment_unit">条</string>
+	<string name="str_participation">参与</string>
+	<string name="str_population">人次</string>
+	<string name="str_recommend">推荐</string>
+	<string name="str_newest_text">最新</string>
+	<string name="str_input_comment_content">请输入评论内容</string>
+	<string name="str_comment_fail">评论失败!</string>
+	<string name="str_comment_ongoing">正在提交评论</string>
+	<string name="str_delete_fail">删除失败</string>
+	<string name="str_delete_success">删除成功</string>
+	<string name="str_delete_ongoing">正在删除</string>
+	<string name="str_parameter_error">参数错误</string>
+	<string name="str_save_comment_fail">评论保存失败。</string>
+	<string name="str_floor_text">楼</string>
+	
+    <!-- 直播 -->
+    <string name="str_live_start_progress_msg">正在创建直播，请稍候...</string>
+    <string name="str_live_retry_upload_msg">直播断开，正在为您重新连接...</string>
+    <string name="str_live_net_error">网络异常，直播结束</string>
+    <string name="str_live_retry_live">正在恢复直播，请稍候...</string>
+    <string name="str_live_time_end">时光匆匆，直播结束，再见</string>
+    <string name="str_live_create">正在创建直播，请稍候...</string>
+    <string name="str_live_exit_prompt">您当前正在直播中，是否退出直播？</string>
+    <string name="str_live_exit_prompt2">是否退出观看直播？</string>
+    <string name="str_live_upload_first_error">很抱歉，直播创建不成功，再试一次吧。</string>
+    <string name="str_mylive_text">我的直播</string>
+    <string name="str_live_someone"> 的直播</string>
+    <string name="str_live_cannot_get_coordinates">无法获取看直播人的经纬度</string>
+    <string name="str_live_cannot_get_location">无法获取我的位置信息</string>
+    <string name="str_live_over">直播已经结束</string>
+    <string name="str_live_over2">该用户直播己结束，谢谢观看</string>
+    <string name="str_share_fail">分享失败</string>
+    <string name="str_request_share_address">正在请求分享地址</string>
+    <string name="str_report_success">举报成功，我们稍后会进行处理</string>
+    <string name="str_report_fail">举报失败!</string>
+    <string name="str_user_goluk">(使用#极路客Goluk#拍摄)</string>
+    <string name="str_live_default_describe">#极路客直播#</string>
+    <string name="str_report_text">举报</string>
+    <string name="str_sqds_text">色情低俗</string>
+    <string name="str_yyhz_text">谣言惑众</string>
+    <string name="str_zzmg_text">政治敏感</string>
+    <string name="str_other_reason_text">其他原因</string>
+    <string name="str_confirm_report">确定举报这个视频吗？</string>
+    <string name="str_live_settings">直播设置</string>
+    <string name="str_live_switch">直播开关</string>
+    
+    <string name="str_refresh_one_minute">一分钟前更新</string>
+    <string name="str_submit">提交</string>
+    <string name="str_input_recommend_reason">请填写推荐理由</string>
+    <string name="str_recommend_fail">推荐失败</string>
+    <string name="str_recomment_success">推荐成功</string>
+    
+    <string name="str_emergency_video_text">紧急视频</string>
+    <string name="str_cycle_video_text">循环视频</string>
+    <string name="str_synchronous_video_to_local">视频已同步到本地</string>
+    <string name="str_inquiry_fail">查询失败!</string>
 	
 </resources>

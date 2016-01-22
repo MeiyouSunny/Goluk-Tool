@@ -51,7 +51,7 @@
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
             android:textColor="#333333"
-            android:text="参与"
+            android:text="@string/str_participation"
             android:textSize="14sp" />
 
         <TextView
@@ -62,7 +62,6 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/partake_txt"
             android:textColor="#216da8"
-            android:text="232222"
             android:textSize="14sp" />
         
         <TextView
@@ -71,7 +70,7 @@
             android:layout_centerVertical="true"
             android:textColor="#216da8"
             android:layout_toRightOf="@+id/partake_num"
-            android:text="人次"
+            android:text="@string/str_population"
             android:textSize="14sp" />
 
         <Button
@@ -79,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="24dp"
             android:layout_alignParentRight="true"
-            android:text="我要参加"
+            android:text="@string/attend_activity"
             android:textColor="#ffffff"
             android:layout_marginRight="8dp"
             android:padding="4dp"
@@ -121,7 +120,7 @@
                 android:id="@+id/recommend_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="推荐"
+                android:text="@string/str_recommend"
                 android:layout_marginRight="21dp"
                 android:background="#00000000"
                 android:textColor="#0080ff"
@@ -139,7 +138,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="21dp"
-                android:text="最新"
+                android:text="@string/str_newest_text"
                  android:background="#00000000"
                 android:textColor="#333333"
                 android:textSize="16sp" />

@@ -290,11 +290,12 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 			}
 
 			if (selectedListData.size() == 0) {
-				mActivity.updateTitleName("选择视频");
+				mActivity.updateTitleName(mContext.getString(R.string.local_video_title_text));
 				mActivity.updateEditBtnState(false);
 			} else {
 				mActivity.updateEditBtnState(true);
-				mActivity.updateTitleName("已选择" + selectedListData.size() + "个视频");
+				mActivity.updateTitleName(mContext.getString(R.string.str_photo_select1) + selectedListData.size()
+						+ mContext.getString(R.string.str_photo_select2));
 			}
 		}
 	}
@@ -381,7 +382,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 		}
 
 		if (isshow) {
-			GolukUtils.showToast(mContext, "视频已同步到本地");
+			GolukUtils.showToast(mContext, mContext.getString(R.string.str_synchronous_video_to_local));
 		}
 
 	}
@@ -524,7 +525,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 					GolukDebugUtils.e("xuhw", "YYYYYY=======获取文件列表====fail==@@@======param1=" + param1);
 					// 命令发送失败
 					this.removeFooterView();
-					GolukUtils.showToast(mContext, "查询失败!");
+					GolukUtils.showToast(mContext, mContext.getString(R.string.str_inquiry_fail));
 				}
 				checkListState();
 			}

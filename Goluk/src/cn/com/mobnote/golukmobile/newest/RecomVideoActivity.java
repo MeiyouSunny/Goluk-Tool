@@ -107,14 +107,14 @@ public class RecomVideoActivity extends Activity implements OnClickListener, Vid
 			break;
 		case R.id.tuijian:
 			UserUtils.hideSoftMethod(this);
-			if (!isNetworkConnected() ) {
-				GolukUtils.showToast(this, "网络异常，请检查网络");
+			if (!isNetworkConnected()) {
+				GolukUtils.showToast(this, this.getString(R.string.network_error));
 				return;
 			}
 			
 			String textStr = text.getText().toString().trim();
-			if(TextUtils.isEmpty(textStr)) {
-				GolukUtils.showToast(this, "请填写推荐理由！");
+			if (TextUtils.isEmpty(textStr)) {
+				GolukUtils.showToast(this, this.getString(R.string.str_input_recommend_reason));
 			}else {
 				showProgressDialog();
 				try {
@@ -137,7 +137,7 @@ public class RecomVideoActivity extends Activity implements OnClickListener, Vid
 		if(event == VSquare_Req_VOP_RecomVideo){
 			if (RESULE_SUCESS == msg) {
 				closeProgressDialog();
-				String msgStr = "推荐失败";
+				String msgStr = this.getString(R.string.str_recommend_fail);
 				try {
 					JSONObject json = new JSONObject((String)param2);
 					if(null != json) {
@@ -148,7 +148,7 @@ public class RecomVideoActivity extends Activity implements OnClickListener, Vid
 							if(null != data) {
 								String result = data.optString("result");
 								if("0".equals(result)) {
-									msgStr = "推荐成功";
+									msgStr = this.getString(R.string.str_recomment_success);
 								}
 							}
 						}
@@ -160,7 +160,7 @@ public class RecomVideoActivity extends Activity implements OnClickListener, Vid
 				GolukUtils.showToast(RecomVideoActivity.this, msgStr);
 				finish();
 			}else {
-				GolukUtils.showToast(this, "网络异常，请检查网络");
+				GolukUtils.showToast(this, this.getString(R.string.network_error));
 			}
 		}
 	}
