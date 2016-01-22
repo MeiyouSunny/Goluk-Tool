@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
@@ -109,6 +110,10 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 		viewHolder.nOfficialMsgLL.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				if(!GolukUtils.isNetworkConnected(mContext)) {
+					Toast.makeText(mContext, mContext.getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+					return;
+				}
 				if (null == finalBean || null == finalBean.content) {
 					return;
 				}
