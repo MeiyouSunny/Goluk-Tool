@@ -17,4 +17,6 @@ public class SignDataBean {
 	public String signtime;
 	@JSONField(name="envsync")
 	public String envsync;
+//	@JSONField(name="wonderfulpath")
+//	public String wonderfulpath;
 }

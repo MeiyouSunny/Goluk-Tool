@@ -136,7 +136,7 @@ public class GolukVideoInfoDbManager implements IVideoInfoDataFn {
 				+ CreateTableUtil.KEY_VIDEOINFO_FILENAME + "= ?";
 		final String[] selectArg = { fileName };
 		Cursor cursor = db.rawQuery(selectSql, selectArg);
-		if (null == cursor) {
+		if (null == cursor || cursor.getCount() == 0) {
 			return null;
 		}
 		bean = new VideoFileInfoBean();

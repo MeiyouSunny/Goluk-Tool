@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile.helper;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +29,8 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 	private SignDataBean mSignDataBean;
 	 /**上传视频生成的封面地址和视频地址，QCloudHelper.VIDEO_BUCKET ，QCloudHelper.PHOTO_BUCKET分别作为key*/
 	private HashMap<String, String> mUrl;
+	private long mTotalSize = 0;
+	private long mCoverFileSize = 0;
 	public UpLoadVideoRequest(IUploadRequestListener listener) {
 		super(listener);
 		mUrl = new HashMap<String, String>();
@@ -43,6 +46,11 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 		}
 		mVideoPath = pathMap.get(QCloudHelper.VIDEO_BUCKET);
 		mPhotoPath = pathMap.get(QCloudHelper.PHOTO_BUCKET);
+		File coverFile = new File(mPhotoPath);
+		mCoverFileSize = coverFile.length();
+		mTotalSize += mCoverFileSize;
+		File videoFile = new File(mVideoPath);
+		mTotalSize += videoFile.length();
 		UpLoadVideoSignRequest request = new UpLoadVideoSignRequest(IPageNotifyFn.PageType_UploadVideo, this);
 		request.setTag(this);
 		request.get();
@@ -81,6 +89,8 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 
 			@Override
 	  		public void onUploadProgress(long totalSize, long sendSize) {
+	  			int percent = (int) ((sendSize * 100) / (mTotalSize * 1.0f));
+	  			mListener.onUploadProgress(percent);
 	  		}
 
 			@Override
@@ -124,7 +134,7 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 			
 			@Override
 	  		public void onUploadProgress(long totalSize, long sendSize) {
-	  			int percent = (int) ((sendSize * 100) / (totalSize * 1.0f));
+	  			int percent = (int) (((sendSize + mCoverFileSize)* 100) / (mTotalSize * 1.0f));
 	  			mListener.onUploadProgress(percent);
 	  		}
 
