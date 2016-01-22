@@ -181,6 +181,10 @@ public class MsgCenterCommentAdapter extends BaseAdapter {
 	 * @param bean
 	 */
 	private void intentToOthers(int id, MessageMsgsBean bean) {
+		if (!UserUtils.isNetDeviceAvailable(mContext)) {
+			GolukUtils.showToast(mContext, mContext.getString(R.string.str_network_unavailable));
+			return;
+		}
 		if(id == R.id.iv_listview_item_comment_head || id == R.id.tv_listview_item_comment_name) {
 			if (null != bean && null != bean.sender) {
 				//我的主页
