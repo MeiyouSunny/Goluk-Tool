@@ -2,33 +2,48 @@ package cn.com.mobnote.util;
 
 import java.util.Comparator;
 
-public class SortByDate implements Comparator<String> {
+import android.text.TextUtils;
+import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
+import cn.com.mobnote.golukmobile.fileinfo.VideoFileInfoBean;
 
+public class SortByDate implements Comparator<String> {
+	GolukVideoInfoDbManager mGolukVideoInfoDbManager = GolukVideoInfoDbManager.getInstance();
 	@Override
 	public int compare(String s1, String s2) {
 		// TODO Auto-generated method stub
-		String[] videos1 = s1.split("_");
-		String[] videos2 = s2.split("_");
 		String date1 = "";
 		String date2 = "";
-		if (videos1.length == 3) {
-			date1 = videos1[1];
-			date1 = "20" + date1;
-		} else if (videos1.length == 7) {
-			date1 = videos1[2];
-		} else if (videos1.length == 8) {
-			date1 = videos1[1];
+		if (mGolukVideoInfoDbManager != null) {
+			VideoFileInfoBean videoFileInfoBean = mGolukVideoInfoDbManager.selectSingleData(s1);
+			if (videoFileInfoBean != null) {
+				date1 = videoFileInfoBean.timestamp;
+			}
+			videoFileInfoBean = mGolukVideoInfoDbManager.selectSingleData(s2);
+			if (videoFileInfoBean != null) {
+				date2 = videoFileInfoBean.timestamp;
+			}
 		}
 		
-		if (videos2.length == 3) {
-			date2 = videos2[1];
-			date2 = "20" + date2;
-		} else if (videos2.length == 7) {
-			date2 = videos2[2];
-		} else if (videos2.length == 8) {
-			date2 = videos2[1];
+		if (TextUtils.isEmpty(date1)) {
+			date1 = getDateFromName(s1);
+		}
+		if (TextUtils.isEmpty(date2)) {
+			date2 = getDateFromName(s2);
 		}
 		return (date2.compareTo(date1));
 	}
 
+	private String getDateFromName(String s) {
+		String[] videos = s.split("_");
+		String date = "";
+		if (videos.length == 3) {
+			date = videos[1];
+			date = "20" + date;
+		} else if (videos.length == 7) {
+			date = videos[2];
+		} else if (videos.length == 8) {
+			date = videos[1];
+		}
+		return  date;
+	}
 }

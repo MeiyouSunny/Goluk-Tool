@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile.helper;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,9 +24,13 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 
 	private String mVideoPath;
 	private String mPhotoPath;
+	private PhotoUploadTask mCoverUploadtask;
 	private PhotoUploadTask mPhotoUploadtask;
 	private VideoUploadTask mVideoUploadTask;
 	private SignDataBean mSignDataBean;
+	private long mTotalSize = 0;
+	private long mCoverFileSize = 0;
+	private long mPhotoFileSize = 0;
 	 /**上传视频生成的封面地址和视频地址，QCloudHelper.VIDEO_BUCKET ，QCloudHelper.PHOTO_BUCKET分别作为key*/
 	private HashMap<String, String> mUrl;
 	public UpLoadVideoRequest(IUploadRequestListener listener) {
@@ -43,6 +48,14 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 		}
 		mVideoPath = pathMap.get(QCloudHelper.VIDEO_BUCKET);
 		mPhotoPath = pathMap.get(QCloudHelper.PHOTO_BUCKET);
+		File coverFile = new File(mPhotoPath);
+		mCoverFileSize = coverFile.length();
+		mTotalSize += mCoverFileSize;
+		File photoFile = new File(mPhotoPath);
+		mPhotoFileSize = photoFile.length();
+		mTotalSize += mPhotoFileSize;
+		File videoFile = new File(mVideoPath);
+		mTotalSize += videoFile.length();
 		UpLoadVideoSignRequest request = new UpLoadVideoSignRequest(IPageNotifyFn.PageType_UploadVideo, this);
 		request.setTag(this);
 		request.get();
@@ -56,13 +69,61 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 			SignBean signBean = (SignBean) result;
 			if (signBean != null && signBean.success && signBean.data != null) {
 				mSignDataBean = signBean.data;
-				if (!uploadPhotoToCloud()) {
+
+				if (!uploadCoverToCloud()) {
 					mListener.onUploadFailed(-1, "upload photo failed");
 				}
 			} else {
 				mListener.onUploadFailed(-1, "get sign failed");
 			}
 		}
+	}
+
+	private boolean uploadCoverToCloud() {
+		String space = mSignDataBean.envsync + QCloudHelper.PHOTO_BUCKET;
+		mCoverUploadtask = new PhotoUploadTask(mPhotoPath,
+				new IUploadTaskListener() {
+			@Override
+			public void onUploadSucceed(FileInfo fileInfo) {
+				GolukDebugUtils.e("goluk", "上传成功! ret:" + fileInfo);
+				mUrl.put(QCloudHelper.PHOTO_BUCKET, fileInfo.url);
+				mCoverUploadtask = null;
+				if (mPhotoFileSize != 0) {
+					if (!uploadPhotoToCloud()) {
+						mListener.onUploadFailed(-1, "upload photo failed");
+					}
+				} else {
+					if (!uploadVideoToCloud()) {
+						mListener.onUploadFailed(-1, "upload video failed");
+					}
+				}
+			}
+
+			@Override
+	  		public void onUploadProgress(long totalSize, long sendSize) {
+	  			int percent = (int) ((sendSize * 100) / (mTotalSize * 1.0f));
+	  			mListener.onUploadProgress(percent);
+	  		}
+
+			@Override
+			public void onUploadFailed(int errorCode, String errorMsg) {
+				mListener.onUploadFailed(-1, "upload cover failed");
+				mCoverUploadtask = null;
+			}
+
+			@Override
+			public void onUploadStateChange(TaskState taskState) {
+				GolukDebugUtils.d("goluk", "上传状态变化! ret:" + taskState);				
+			}
+		});
+		mCoverUploadtask.setBucket(space);
+		mCoverUploadtask.setAppid(QCloudHelper.APPID);
+		mCoverUploadtask.setFileId(String.format("%s/%s.png", mSignDataBean.coverpath, mSignDataBean.videoid));
+		mCoverUploadtask.setAuth(mSignDataBean.coversign);
+		
+		// 上传
+		QCloudHelper helper = QCloudHelper.getInstance();
+		return helper.upload(mCoverUploadtask);
 	}
 
 	private boolean uploadPhotoToCloud() {
@@ -81,6 +142,8 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 
 			@Override
 	  		public void onUploadProgress(long totalSize, long sendSize) {
+	  			int percent = (int) (((sendSize + mCoverFileSize) * 100) / (mTotalSize * 1.0f));
+	  			mListener.onUploadProgress(percent);
 	  		}
 
 			@Override
@@ -96,7 +159,7 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 		});
 		mPhotoUploadtask.setBucket(space);
 		mPhotoUploadtask.setAppid(QCloudHelper.APPID);
-		mPhotoUploadtask.setFileId(String.format("%s/%s.png", mSignDataBean.coverpath, mSignDataBean.videoid));
+		mPhotoUploadtask.setFileId(String.format("%s/%s.png", mSignDataBean.wonderfulpath, mSignDataBean.videoid));
 		mPhotoUploadtask.setAuth(mSignDataBean.coversign);
 		
 		// 上传
@@ -124,7 +187,7 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 			
 			@Override
 	  		public void onUploadProgress(long totalSize, long sendSize) {
-	  			int percent = (int) ((sendSize * 100) / (totalSize * 1.0f));
+	  			int percent = (int) (((sendSize + mCoverFileSize + mPhotoFileSize) * 100) / (mTotalSize * 1.0f));
 	  			mListener.onUploadProgress(percent);
 	  		}
 
@@ -159,6 +222,7 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 	}
 	
 	public void Cancel() {
+		mQCloudHelper.cancel(mCoverUploadtask);
 		mQCloudHelper.cancel(mPhotoUploadtask);
 		mQCloudHelper.cancel(mVideoUploadTask);
 		HttpManager.getInstance().cancelAll(this);

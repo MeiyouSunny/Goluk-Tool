@@ -304,7 +304,7 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	 */
 	private void displayVideoQuality(String videoHP, ImageView image) {
 		image.setVisibility(View.GONE);
-		if ("1080".equals(videoHP)) {
+		if ("1080p".equals(videoHP)) {
 			image.setVisibility(View.VISIBLE);
 			image.setBackgroundResource(R.drawable.carrecorder_liveindex_icon_1080);
 		}
