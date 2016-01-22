@@ -191,14 +191,19 @@ public class SystemMsgAdapter extends BaseAdapter {
 						}
 					}else if(mmbTxt.type == msgTypeWithdraw){//收益详情页
 						if("7".equals(mmbTxt.content.type)){
-							String rtmpUrl = GolukApplication.getInstance().mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_GetServerAddress,
-									IGetServerAddressType.GetServerAddress_HttpServer, "UrlRedirect");
-							String withdraw_url =rtmpUrl + "?type =10&serialno="+ mmbTxt.content.access;
+							String withdraw_url =getRtmpAddress() + "?type=10&serialno="+ mmbTxt.content.access;
 							Intent i = new Intent(mContext,UserOpenUrlActivity.class);
 							i.putExtra("withdraw_url", withdraw_url);
 							i.putExtra(UserOpenUrlActivity.FROM_TAG, "withdrawals");
 							mContext.startActivity(i);
 						}
+					}else if(mmbTxt.type == msgTypePoll){//投票页
+						String url = getRtmpAddress() + "?type=9&activityid=" + mmbTxt.content.access;
+						Intent intent = new Intent(mContext,
+								UserOpenUrlActivity.class);
+						intent.putExtra("url", url);
+						intent.putExtra("slide_h5_title", mContext.getString(R.string.str_activity_rule));
+						mContext.startActivity(intent);
 					}
 
 				}
@@ -289,6 +294,12 @@ public class SystemMsgAdapter extends BaseAdapter {
 		TextView tips;
 		ImageView tipsimage;
 		boolean bMeasureHeight;
+	}
+	
+	private String getRtmpAddress() {
+		String rtmpUrl = GolukApplication.getInstance().mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_GetServerAddress,
+				IGetServerAddressType.GetServerAddress_HttpServer, "UrlRedirect");
+		return rtmpUrl;
 	}
 
 }
