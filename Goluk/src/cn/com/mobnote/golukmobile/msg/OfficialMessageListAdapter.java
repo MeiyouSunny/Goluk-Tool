@@ -16,6 +16,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
+import cn.com.mobnote.golukmobile.http.HttpManager;
 import cn.com.mobnote.golukmobile.msg.bean.MessageMsgsBean;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
@@ -34,6 +35,7 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 	private final static String H5_PAGE = "5";
 	private final static String SPECIAL_SOLO = "6";
 	private final static String HOME_PAGE = "9";
+	private final static String WEB_DIRECT = "/navidog4MeetTrans/redirect.htm";
 
 	private final static String TAG = "OfficialMessageListAdapter";
 
@@ -165,15 +167,19 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 					mContext.startActivity(intent);
 				} else if (H5_PAGE.equals(type)) {
 					// launch h5 page
-					intent = new Intent(mContext, UserOpenUrlActivity.class);
-					intent.putExtra("url", accessId);
 					if(null != finalBean.content.anycast) {
-						if (!TextUtils.isEmpty(finalBean.content.anycast.title)) {
-							intent.putExtra("slide_h5_title",
-								finalBean.content.anycast.title);
+						intent = new Intent(mContext, UserOpenUrlActivity.class);
+						if(null != accessId && !TextUtils.isEmpty(accessId)) {
+							String url = HttpManager.getInstance().getWebDirectHost() +
+									WEB_DIRECT + "?type=5&access=" + accessId;
+							intent.putExtra("url", url);
+							if (!TextUtils.isEmpty(finalBean.content.anycast.title)) {
+								intent.putExtra("slide_h5_title",
+										finalBean.content.anycast.title);
+							}
 						}
+						mContext.startActivity(intent);
 					}
-					mContext.startActivity(intent);
 				} else if (SPECIAL_SOLO.equals(type)) {
 					intent = new Intent(mContext, VideoDetailActivity.class);
 					intent.putExtra(VideoDetailActivity.VIDEO_ID, accessId);
