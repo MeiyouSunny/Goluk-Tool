@@ -79,17 +79,10 @@ public class GolukVideoInfoDbManager implements IVideoInfoDataFn {
 
 	@Override
 	public void editVideoInfoData(VideoFileInfoBean bean) {
-		// String sql_allFalse = "UPDATE  " + GolukDatabaseHelper.T_BINDWIFI +
-		// " SET " + GolukDatabaseHelper.KEY_STATE
-		// + " = " + 0;
-		// executeSQL(sql_allFalse);
-		//
-		// String sql_swithState = " UPDATE  " + GolukDatabaseHelper.T_BINDWIFI
-		// + " SET " + GolukDatabaseHelper.KEY_STATE
-		// + " = " + state + "  WHERE  " +
-		// GolukDatabaseHelper.KEY_IPC_SSID_VALUE + " = " + state;
-		// executeSQL(sql_swithState);
-
+		String sql_allFalse = "UPDATE  " + CreateTableUtil.T_VIDEOINFO + " SET "
+				+ CreateTableUtil.KEY_VIDEOINFO_PICNAME + " = " + bean.picname + " WHERE "
+				+ CreateTableUtil.KEY_VIDEOINFO_FILENAME + " = " + bean.filename;
+		executeSQL(sql_allFalse);
 	}
 
 	@Override
@@ -103,6 +96,7 @@ public class GolukVideoInfoDbManager implements IVideoInfoDataFn {
 		executeSQL(sql_delete);
 	}
 
+	// 4 表示精彩, 1表示循环, 2是紧急
 	@Override
 	public List<VideoFileInfoBean> selectAllData(String type) {
 		if (!isOpen) {

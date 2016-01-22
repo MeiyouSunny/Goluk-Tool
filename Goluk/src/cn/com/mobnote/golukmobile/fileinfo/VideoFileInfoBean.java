@@ -34,4 +34,13 @@ public class VideoFileInfoBean {
 	public String reserve3;
 	/** 预留字段 */
 	public String reserve4;
+
+	@Override
+	public String toString() {
+		String msg = "filename:" + filename + "  type:" + type + " filesize:" + filesize + " resolution:" + resolution
+				+ "  period:" + period + "  timestamp:" + timestamp + " devicename:" + devicename + " savetime:"
+				+ savetime;
+		return msg;
+	}
+
 }

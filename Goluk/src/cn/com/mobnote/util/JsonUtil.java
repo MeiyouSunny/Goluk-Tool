@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.settings.VideoQualityActivity;
 import cn.com.mobnote.golukmobile.cluster.bean.UserLabelBean;
 import cn.com.mobnote.golukmobile.comment.CommentBean;
+import cn.com.mobnote.golukmobile.fileinfo.VideoFileInfoBean;
 import cn.com.mobnote.golukmobile.live.LiveDataInfo;
 import cn.com.mobnote.golukmobile.live.LiveSettingBean;
 import cn.com.mobnote.golukmobile.live.UserInfo;
@@ -1401,6 +1401,50 @@ public class JsonUtil {
 			e.printStackTrace();
 		}
 
+		return "";
+	}
+
+	public static VideoFileInfoBean jsonToVideoFileInfoBean(String data, String deviceType) {
+		try {
+			VideoFileInfoBean bean = new VideoFileInfoBean();
+			JSONObject root = new JSONObject(data);
+			bean.filename = root.optString("location");
+			bean.type = String.valueOf(root.optInt("type"));
+			bean.filesize = String.valueOf(root.optDouble("size"));
+			bean.resolution = root.optString("resolution");
+			bean.period = String.valueOf(root.optInt("period"));
+			if (!root.isNull("timestamp")) {
+				bean.timestamp = root.optString("timestamp");
+			} else {
+				bean.timestamp = getTimeStamp(bean.filename);
+			}
+			bean.devicename = deviceType;
+			bean.savetime = System.currentTimeMillis() + "";
+			bean.picname = null;
+			bean.gpsname = null;
+			bean.reserve1 = null;
+			bean.reserve2 = null;
+			bean.reserve3 = null;
+			bean.reserve4 = null;
+
+			return bean;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	private static String getTimeStamp(String fileName) {
+		try {
+			int index = fileName.indexOf("_");
+			int index2 = fileName.indexOf("_", index + 1);
+			String timestamp = fileName.substring(index + 1, index2);
+			if (timestamp.length() < 14) {
+				timestamp = "20" + timestamp;
+			}
+			return timestamp;
+		} catch (Exception e) {
+
+		}
 		return "";
 	}
 

@@ -48,6 +48,7 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
+import cn.com.mobnote.golukmobile.fileinfo.VideoFileInfoBean;
 import cn.com.mobnote.golukmobile.http.HttpManager;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
@@ -552,6 +553,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		return this.mContext;
 	}
 
+	private String getSavePath(int type) {
+		if (IPCManagerFn.TYPE_SHORTCUT == type) {
+			return mVideoSavePath + "wonderful/";
+		} else if (IPCManagerFn.TYPE_URGENT == type) {
+			return mVideoSavePath + "urgent/";
+		} else {
+			return mVideoSavePath + "loop/";
+		}
+	}
+
 	/**
 	 * ipc视频截取查询成功回调函数
 	 * 
@@ -560,105 +571,74 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @author chenxy
 	 */
 	public void ipcVideoSingleQueryCallBack(int success, String data) {
-		if (0 == success) {
-			// 查询成功,解析文件名去下载
-			// {"time": 1262275832, "id": 845., "period": 8, "resolution": 14,
-			// "type": 4, "size": 5865250., "location":
-			// "WND1_100101001032_0008.mp4", "withSnapshot": 1, "withGps": 0}
-			try {
-				JSONObject json = new JSONObject(data);
-				String fileName = json.getString("location");
-				long time = json.optLong("time");
-				double filesize = json.optDouble("size");
-				GolukDebugUtils.e("", "调用ipc视频下载接口---ipcVideoSingleQueryCallBack---downloadFile---" + fileName);
-				int type = json.getInt("type");
-				String savePath = "";
-				String configPath = "";
+		if (0 != success) {
+			return;
+		}
+		GolukDebugUtils.e("", "ipcVideoSingleQueryCallBack------:  " + data);
+		try {
+			JSONObject json = new JSONObject(data);
+			final String fileName = json.getString("location");
+			final long time = json.optLong("time");
+			final double filesize = json.optDouble("size");
+			final int type = json.getInt("type");
+			final String savePath = getSavePath(type);
 
-				if (IPCManagerFn.TYPE_SHORTCUT == type) {
-					savePath = mVideoSavePath + "wonderful/";
-					configPath = savePath + "wonderful.txt";
-				} else if (IPCManagerFn.TYPE_URGENT == type) {
-					savePath = mVideoSavePath + "urgent/";
-					configPath = savePath + "urgent.txt";
-				} else {
-					savePath = mVideoSavePath + "loop/";
-					configPath = savePath + "loop.txt";
-				}
+			GolukDebugUtils.e("xuhw", "ipcVideoSingleQueryCallBack=isSDCardFull=" + isSDCardFull + "  isDownloading="
+					+ isDownloading);
 
-				GolukDebugUtils.e("xuhw", "YYYYYY====start==VideoDownLoad===isSDCardFull=" + isSDCardFull
-						+ "==isDownloading=" + isDownloading);
-				if (isSDCardFull && !isDownloading) {
-					return;
-				}
+			if (isSDCardFull && !isDownloading) {
+				return;
+			}
 
-				if (!GolukUtils.checkSDStorageCapacity(filesize)) {
-					isSDCardFull = true;
-
-					if (!mDownLoadFileList.contains(fileName)) {
-						mDownLoadFileList.add(fileName);
-					}
-
-					if (GlobalWindow.getInstance().isShow()) {
-						GlobalWindow.getInstance().updateText(
-								"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size());
-						GolukDebugUtils.e("xuhw", "BBBBBB===2222=updateText=33333=");
-					}
-
-					if (!isDownloading) {
-						sdCardFull();
-						mHandler.sendEmptyMessageDelayed(1003, 1000);
-					}
-
-					GolukDebugUtils.e("xuhw", "YYYYYY====start==VideoDownLoad=@@@@==isSDCardFull=" + isSDCardFull);
-
-					return;
-				}
-
-				isDownloading = true;
-
-				// AssetsFileUtils.appendFileData(FileUtils.libToJavaPath(configPath),
-				// fileName + ",");
-
-				// 调用下载视频接口
-				downloadCount++;
-				boolean a = mIPCControlManager.downloadFile(fileName, "videodownload", savePath, time);
-				GolukDebugUtils.e("xuhw", "YYYYYY====start==VideoDownLoad===flag=" + a + "===data=" + data);
-				// 下载视频第一帧截图
-				String imgFileName = fileName.replace("mp4", "jpg");
-
-				String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
-				File file = new File(filePath + File.separator + fileName);
-				if (!file.exists()) {
-					boolean img = mIPCControlManager.downloadFile(imgFileName, "imgdownload",
-							FileUtils.javaToLibPath(filePath), time);
-					GolukDebugUtils.e("xuhw", "YYYYYY====start==imgdownload===flag=" + img + "===imgFileName="
-							+ imgFileName);
-				}
-
+			if (!GolukUtils.checkSDStorageCapacity(filesize)) {
+				isSDCardFull = true;
 				if (!mDownLoadFileList.contains(fileName)) {
 					mDownLoadFileList.add(fileName);
 				}
-
-				if (!isBackground) {
-					if (!GlobalWindow.getInstance().isShow()) {
-						GolukDebugUtils.e("xuhw", "YYYYYY======1111111111=========");
-						GlobalWindow.getInstance().createVideoUploadWindow(
-								"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size());
-						GolukDebugUtils.e("xuhw",
-								"BBBBBB===2222=updateText=4444==nosize==" + mNoDownLoadFileList.size());
-					} else {
-						GolukDebugUtils.e("xuhw", "YYYYYY======22222=========");
-						GlobalWindow.getInstance().updateText(
-								"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size());
-						GolukDebugUtils.e("xuhw",
-								"BBBBBB===2222=updateText=55555=====nosize==" + mNoDownLoadFileList.size());
-					}
+				if (GlobalWindow.getInstance().isShow()) {
+					GlobalWindow.getInstance().updateText(
+							"正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size());
 				}
-			} catch (Exception e) {
-				GolukDebugUtils.e("", "解析视频下载JSON数据错误");
-				e.printStackTrace();
+				if (!isDownloading) {
+					sdCardFull();
+					mHandler.sendEmptyMessageDelayed(1003, 1000);
+				}
+				GolukDebugUtils.e("xuhw", "ipcVideoSingleQueryCallBack=@@@@==isSDCardFull=" + isSDCardFull);
+				return;
 			}
+			isDownloading = true;
+			downloadCount++;
+			// 保存文件信息到数据库
+			VideoFileInfoBean bean = JsonUtil.jsonToVideoFileInfoBean(data, mIPCControlManager.mProduceName);
+			GolukVideoInfoDbManager.getInstance().addVideoInfoData(bean);
+			// 调用下载视频接口
+			mIPCControlManager.downloadFile(fileName, "videodownload", savePath, time);
+			// 下载视频第一帧截图
+			downLoadVideoThumbnail(fileName, time);
+			if (!mDownLoadFileList.contains(fileName)) {
+				mDownLoadFileList.add(fileName);
+			}
+			if (!isBackground) {
+				final String showTxt = "正在从Goluk中传输视频到手机" + mNoDownLoadFileList.size() + "/" + mDownLoadFileList.size();
+				if (!GlobalWindow.getInstance().isShow()) {
+					GlobalWindow.getInstance().createVideoUploadWindow(showTxt);
+				} else {
+					GlobalWindow.getInstance().updateText(showTxt);
+				}
+			}
+		} catch (Exception e) {
+			GolukDebugUtils.e("", "解析视频下载JSON数据错误");
+			e.printStackTrace();
+		}
+	}
+
+	// 下载视频第一帧图片
+	private void downLoadVideoThumbnail(String videoFileName, long filetime) {
+		final String imgFileName = videoFileName.replace("mp4", "jpg");
+		final String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+		File file = new File(filePath + File.separator + imgFileName);
+		if (!file.exists()) {
+			mIPCControlManager.downloadFile(imgFileName, "imgdownload", FileUtils.javaToLibPath(filePath), filetime);
 		}
 	}
 
@@ -1563,18 +1543,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	public boolean isBindSucess() {
 		return WifiBindDataCenter.getInstance().isHasDataHistory() && !isBinding;
-		// SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",
-		// MODE_PRIVATE);
-		// return preferences.getBoolean("isbind", false);
 	}
-
-	// public void setBindState(boolean isSuccess) {
-	// SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",
-	// MODE_PRIVATE);
-	// Editor mEditor = preferences.edit();
-	// mEditor.putBoolean("isbind", isSuccess);
-	// mEditor.commit();
-	// }
 
 	/**
 	 * 查询新文件列表（最多10条）
