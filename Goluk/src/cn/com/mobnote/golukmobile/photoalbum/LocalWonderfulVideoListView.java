@@ -26,9 +26,8 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
 import cn.com.mobnote.golukmobile.player.MovieActivity;
-import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
-import cn.com.mobnote.golukmobile.player.VitamioPlayerActivity;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
@@ -55,7 +54,7 @@ public class LocalWonderfulVideoListView {
 	private String from = null;
 	private TextView empty = null;
 	private float density = 1;
-//	private boolean clickLock = false;
+	// private boolean clickLock = false;
 	private PromotionSelectItem mPromotionSelectItem;
 
 	public LocalWonderfulVideoListView(Context context, LocalVideoManager localVideoListView, int type, String from,
@@ -100,13 +99,13 @@ public class LocalWonderfulVideoListView {
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 				switch (scrollState) {
 				case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-//					mWonderfulVideoAdapter.lock();
+					// mWonderfulVideoAdapter.lock();
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-//					mWonderfulVideoAdapter.unlock();
+					// mWonderfulVideoAdapter.unlock();
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-//					mWonderfulVideoAdapter.lock();
+					// mWonderfulVideoAdapter.lock();
 					break;
 
 				default:
@@ -187,11 +186,11 @@ public class LocalWonderfulVideoListView {
 	 * @param path
 	 */
 	private void gotoVideoPlayPage(int type, String path) {
-//		if (getClickLock()) {
-//			return;
-//		}
+		// if (getClickLock()) {
+		// return;
+		// }
 
-//		setClickLock(true);
+		// setClickLock(true);
 		if (!TextUtils.isEmpty(path)) {
 			if ("cloud".equals(from)) {
 				if (1 != type) {
@@ -213,11 +212,11 @@ public class LocalWonderfulVideoListView {
 			}
 
 			Intent intent = null;
-//			if (1 == type) {
-//				intent = new Intent(mContext, VitamioPlayerActivity.class);
-//			} else {
-				intent = new Intent(mContext, MovieActivity.class);
-//			}
+			// if (1 == type) {
+			// intent = new Intent(mContext, VitamioPlayerActivity.class);
+			// } else {
+			intent = new Intent(mContext, MovieActivity.class);
+			// }
 			intent.putExtra("from", "local");
 			intent.putExtra("path", path);
 			mActivity.startActivity(intent);
@@ -304,24 +303,25 @@ public class LocalWonderfulVideoListView {
 	}
 
 	public void deleteListData(List<String> deleteData) {
+		final String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 		for (String path : deleteData) {
 			for (VideoInfo info : mDataList) {
 				if (info.videoPath.equals(path)) {
+					// 删除视频文件
 					mDataList.remove(info);
 					File mp4file = new File(path);
 					if (mp4file.exists()) {
 						mp4file.delete();
 					}
-
 					String filename = path.substring(path.lastIndexOf("/") + 1);
+					// 删除数据库中的数据
+					GolukVideoInfoDbManager.getInstance().delVideoInfo(filename);
+					// 删除视频对应的图片
 					filename = filename.replace(".mp4", ".jpg");
-					String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator
-							+ "image";
 					File imgfile = new File(filePath + File.separator + filename);
 					if (imgfile.exists()) {
 						imgfile.delete();
 					}
-
 					SettingUtils.getInstance().putBoolean(filename, true);
 					break;
 				}
@@ -364,16 +364,16 @@ public class LocalWonderfulVideoListView {
 		mLocalVideoListView.updateEdit(mVideoType, isHasData);
 	}
 
-//	public synchronized boolean getClickLock() {
-//		return clickLock;
-//	}
-//
-//	public synchronized void setClickLock(boolean lock) {
-//		clickLock = lock;
-//	}
+	// public synchronized boolean getClickLock() {
+	// return clickLock;
+	// }
+	//
+	// public synchronized void setClickLock(boolean lock) {
+	// clickLock = lock;
+	// }
 
 	public void onResume() {
-//		setClickLock(false);
+		// setClickLock(false);
 	}
 
 }

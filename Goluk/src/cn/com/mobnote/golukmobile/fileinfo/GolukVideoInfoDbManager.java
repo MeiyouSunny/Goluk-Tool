@@ -93,6 +93,8 @@ public class GolukVideoInfoDbManager implements IVideoInfoDataFn {
 		}
 		String sql_delete = " DELETE FROM " + CreateTableUtil.T_VIDEOINFO + " WHERE "
 				+ CreateTableUtil.KEY_VIDEOINFO_FILENAME + " = " + fileName;
+
+		GolukDebugUtils.e("", "dbtest----GolukDbManager------delVideoInfo----:  " + sql_delete);
 		executeSQL(sql_delete);
 	}
 
