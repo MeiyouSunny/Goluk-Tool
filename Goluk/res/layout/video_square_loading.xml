@@ -16,7 +16,7 @@
 				android:layout_centerHorizontal="true"
 				android:layout_alignParentBottom="true"
 				android:layout_marginBottom="18dp"
-				android:text="加载中，请稍后..."
+				android:text="@string/str_loading_text"
 				android:gravity="center"
 				android:paddingLeft ="15dp"
 				android:paddingRight ="15dp"

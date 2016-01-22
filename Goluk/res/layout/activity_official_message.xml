@@ -54,6 +54,7 @@
             android:text="@string/msg_system_connect_error"
             android:drawablePadding="6dp"
             android:textColor="#bfbfbf" />
+
     </RelativeLayout>
 
     <RelativeLayout

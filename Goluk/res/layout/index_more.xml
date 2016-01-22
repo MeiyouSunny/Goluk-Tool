@@ -137,7 +137,6 @@
                         android:id="@+id/user_share_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
                         android:textColor="@color/user_login_text"
                         android:textSize="14sp" />
 
@@ -161,7 +160,6 @@
                         android:id="@+id/user_praise_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
                         android:textColor="@color/user_login_text"
                         android:textSize="14sp" />
 

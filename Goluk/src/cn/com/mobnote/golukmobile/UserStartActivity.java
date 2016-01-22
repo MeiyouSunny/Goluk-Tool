@@ -60,6 +60,8 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 	/** true欢迎页 false开屏页 **/
 	private boolean judge = false;
 	private StartAppBean mStartAppBean = null;
+	
+	public static final String VIDEO_URL = "android.resource://cn.com.mobnote.golukmobile/";
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -93,7 +95,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 			mImageClose.setVisibility(View.GONE);
 		}
 		videoStart = (CustomVideoView) findViewById(R.id.videoStart);
-		videoStart.setVideoURI(Uri.parse("android.resource://cn.com.mobnote.golukmobile/" + R.raw.start_video));
+		videoStart.setVideoURI(Uri.parse(VIDEO_URL + R.raw.start_video));
 		videoStart.start();
 		videoStart.setOnErrorListener(this);
 		videoStart.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -110,7 +112,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 
 			@Override
 			public void onCompletion(MediaPlayer mp) {
-				videoStart.setVideoPath("android.resource://cn.com.mobnote.golukmobile/" + R.raw.start_video);
+				videoStart.setVideoPath(VIDEO_URL + R.raw.start_video);
 				videoStart.start();
 
 			}

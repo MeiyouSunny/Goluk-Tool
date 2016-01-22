@@ -121,7 +121,7 @@
         	android:textCursorDrawable="@drawable/color_cursor"
             android:maxLength="6"
             android:textSize="16sp"
-            android:hint="50~350 "
+            android:hint="@string/str_adas_edittext_front_limit"
             android:inputType="number"/>
          <TextView
             android:id="@+id/textview_front_wheelbase_unit"
@@ -181,7 +181,7 @@
             android:paddingRight="1dp"
             android:focusable="true"
         	android:focusableInTouchMode="true"
-            android:hint="50~400 "
+            android:hint="@string/str_adas_edittext_headway_limit"
             android:textColor="#999999"
             android:textSize="16sp" />
     </RelativeLayout>
@@ -223,7 +223,7 @@
             android:focusable="true"
         	android:focusableInTouchMode="true"
             android:textColorHint="#b9b9b9"
-            android:hint="70~400 "
+            android:hint="@string/str_adas_edittext_height_limit"
             android:textColor="#999999"
             android:textSize="16sp" />
 
@@ -275,7 +275,7 @@
         	android:focusableInTouchMode="true"
             android:textColorHint="#b9b9b9"
             android:maxLength="6"
-            android:hint="50~300 "
+            android:hint="@string/str_adas_edittext_left_limit"
             android:textColor="#999999"
             android:textSize="16sp" />
 
@@ -328,7 +328,7 @@
             android:paddingRight="1dp"
             android:inputType="number"
             android:maxLength="6"
-            android:hint="50~300 "
+            android:hint="@string/str_adas_edittext_left_limit"
             android:textColor="#999999"
             android:textSize="16sp" />
 

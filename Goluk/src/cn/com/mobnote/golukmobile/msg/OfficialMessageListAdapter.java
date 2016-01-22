@@ -12,11 +12,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
 import cn.com.mobnote.golukmobile.msg.bean.MessageMsgsBean;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
+import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.util.GolukUtils;
 
@@ -30,6 +33,7 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 	private final static String ACTIVITY_TOGETHER = "4";
 	private final static String H5_PAGE = "5";
 	private final static String SPECIAL_SOLO = "6";
+	private final static String HOME_PAGE = "9";
 
 	private final static String TAG = "OfficialMessageListAdapter";
 
@@ -174,6 +178,20 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 					intent = new Intent(mContext, VideoDetailActivity.class);
 					intent.putExtra(VideoDetailActivity.VIDEO_ID, accessId);
 					intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
+					mContext.startActivity(intent);
+				}else if(HOME_PAGE.equals(type)) {
+					UCUserInfo user = new UCUserInfo();
+					user.uid = accessId;
+					user.nickname = "";
+					user.headportrait = "";//clusterInfo.mUserEntity.headportrait;
+					user.introduce = "";
+					user.sex = "";//clusterInfo.mUserEntity.sex;
+					user.customavatar = "";//clusterInfo.mUserEntity.mCustomAvatar;
+					user.praisemenumber = "0";
+					user.sharevideonumber = "0";
+					intent = new Intent(mContext, UserCenterActivity.class);
+					intent.putExtra("userinfo", user);
+					intent.putExtra("type", 0);
 					mContext.startActivity(intent);
 				}
 			}
