@@ -47,6 +47,7 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
+import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
 import cn.com.mobnote.golukmobile.http.HttpManager;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
@@ -225,6 +226,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			SDKInitializer.initialize(this);
 			// 初始化绑定信息的数据保存
 			WifiBindDataCenter.getInstance().setAdatper(new JsonWifiBindManager());
+			GolukVideoInfoDbManager.getInstance().initDb(this.getApplicationContext());
 		}
 		// TODO 此处不要做初始化相关的工作
 	}
@@ -1180,7 +1182,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			getVideoEncodeCfg();
 			// 获取Ｔ1声音录制开关状态
 			getVideoEncoderCtg_T1();
-			/**获取adas配置**/
+			/** 获取adas配置 **/
 			getAdasCfg();
 			// 获取设备编号
 			getIPCNumber();
@@ -1373,7 +1375,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			break;
 		case IPC_VDCP_Msg_GetADASConfig:
 			if (param1 == RESULE_SUCESS) {
-				AdasConfigParamterBean item = JSON.parseObject((String)param2, AdasConfigParamterBean.class);
+				AdasConfigParamterBean item = JSON.parseObject((String) param2, AdasConfigParamterBean.class);
 				if (item != null) {
 					GolukFileUtils.saveInt(GolukFileUtils.ADAS_FLAG, item.enable);
 				}
