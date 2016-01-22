@@ -60,12 +60,12 @@ public class SystemMsgAdapter extends BaseAdapter {
 
 	/** 失败 **/
 	private final static String resultFial = "0";
-	
-	/**审核**/
+
+	/** 审核 **/
 	private final static String WITHDRAWTYPESH = "0";
-	/**汇款**/
+	/** 汇款 **/
 	private final static String WITHDRAWTYPEHK = "1";
-	
+
 	/** 成功 **/
 	private final static String resultSuccess = "1";
 	/** mUid当前用户的uid **/
@@ -150,20 +150,20 @@ public class SystemMsgAdapter extends BaseAdapter {
 				}
 
 			} else if (mmbTxt.type == msgTypeWithdraw) {// 提现
-				if(WITHDRAWTYPESH.equals(mmbTxt.content.withdraw.type)){
+				if (WITHDRAWTYPESH.equals(mmbTxt.content.withdraw.type)) {
 					if (resultFial.equals(mmbTxt.content.withdraw.result)) {
 						txt = mContext.getResources().getString(R.string.msg_system_withdraw_check_fail);
 					} else {
 						txt = mContext.getResources().getString(R.string.msg_system_withdraw_check_success);
 					}
-				}else{
+				} else {
 					if (resultFial.equals(mmbTxt.content.withdraw.result)) {
 						txt = mContext.getResources().getString(R.string.msg_system_withdraw_fail);
 					} else {
 						txt = mContext.getResources().getString(R.string.msg_system_withdraw_success);
 					}
 				}
-				
+
 			} else if (mmbTxt.type == msgTypePoll) {// 投票
 				txt = mContext.getResources().getString(R.string.msg_system_poll_txt);
 			} else if (mmbTxt.type == msgTypeSelect) {// 精选
@@ -175,38 +175,42 @@ public class SystemMsgAdapter extends BaseAdapter {
 			txtHolder.msgLayout.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View arg0) {
-					if (mmbTxt.type == msgTypeCertificate) {//认证消息跳转到个人中心
-						UCUserInfo user = new UCUserInfo();
-						user.uid = mmbTxt.receiver.uid;
-						Intent i = new Intent(mContext, UserCenterActivity.class);
-						i.putExtra("userinfo", user);
-						i.putExtra("type", 0);
-						mContext.startActivity(i);
-					}else if(mmbTxt.type == msgTypeSelect){//跳转到专题页
-						if(sSpecialType.equals(mmbTxt.content.type)){
-							String specialid = mmbTxt.content.access;
-							Intent i = new Intent(mContext,SpecialListActivity.class);
-							i.putExtra("ztid", specialid);
-							i.putExtra("title", "");
+					if (GolukUtils.isNetworkConnected(mContext)) {
+						if (mmbTxt.type == msgTypeCertificate) {// 认证消息跳转到个人中心
+							UCUserInfo user = new UCUserInfo();
+							user.uid = mmbTxt.receiver.uid;
+							Intent i = new Intent(mContext, UserCenterActivity.class);
+							i.putExtra("userinfo", user);
+							i.putExtra("type", 0);
 							mContext.startActivity(i);
+						} else if (mmbTxt.type == msgTypeSelect) {// 跳转到专题页
+							if (sSpecialType.equals(mmbTxt.content.type)) {
+								String specialid = mmbTxt.content.access;
+								Intent i = new Intent(mContext, SpecialListActivity.class);
+								i.putExtra("ztid", specialid);
+								i.putExtra("title", "");
+								mContext.startActivity(i);
+							}
+						} else if (mmbTxt.type == msgTypeWithdraw) {// 收益详情页
+							if ("7".equals(mmbTxt.content.type)) {
+								String withdraw_url = getRtmpAddress() + "?type=10&serialno=" + mmbTxt.content.access;
+								Intent i = new Intent(mContext, UserOpenUrlActivity.class);
+								i.putExtra("withdraw_url", withdraw_url);
+								i.putExtra(UserOpenUrlActivity.FROM_TAG, "withdrawals");
+								mContext.startActivity(i);
+							}
+						} else if (mmbTxt.type == msgTypePoll) {// 投票页
+							String url = HttpManager.getInstance().getWebH5Host()
+									+ "/videoshare/tag/castvote.html?voteid=" + mmbTxt.content.access;
+							Intent intent = new Intent(mContext, UserOpenUrlActivity.class);
+							intent.putExtra("url", url);
+							intent.putExtra("slide_h5_title", mContext.getString(R.string.str_activity_rule));
+							mContext.startActivity(intent);
 						}
-					}else if(mmbTxt.type == msgTypeWithdraw){//收益详情页
-						if("7".equals(mmbTxt.content.type)){
-							String withdraw_url =getRtmpAddress() + "?type=10&serialno="+ mmbTxt.content.access;
-							Intent i = new Intent(mContext,UserOpenUrlActivity.class);
-							i.putExtra("withdraw_url", withdraw_url);
-							i.putExtra(UserOpenUrlActivity.FROM_TAG, "withdrawals");
-							mContext.startActivity(i);
-						}
-					}else if(mmbTxt.type == msgTypePoll){//投票页
-						String url = HttpManager.getInstance().getWebH5Host() + "/videoshare/tag/castvote.html?voteid=" + mmbTxt.content.access;
-						Intent intent = new Intent(mContext,
-								UserOpenUrlActivity.class);
-						intent.putExtra("url", url);
-						intent.putExtra("slide_h5_title", mContext.getString(R.string.str_activity_rule));
-						mContext.startActivity(intent);
-					}
 
+					}else{
+						GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.user_net_unavailable));
+					}
 				}
 			});
 			break;
@@ -243,9 +247,14 @@ public class SystemMsgAdapter extends BaseAdapter {
 
 					@Override
 					public void onClick(View view) {
-						Intent intent = new Intent(mContext, MyProfitActivity.class);
-						// intent.putExtra("uid", mUid);
-						mContext.startActivity(intent);
+						if (GolukUtils.isNetworkConnected(mContext)) {
+							Intent intent = new Intent(mContext, MyProfitActivity.class);
+							// intent.putExtra("uid", mUid);
+							mContext.startActivity(intent);
+						}else{
+							GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.user_net_unavailable));
+						}
+						
 					}
 				});
 			} else if (mmbImg.type == msgTypeRecommend) {// 推荐
@@ -258,10 +267,16 @@ public class SystemMsgAdapter extends BaseAdapter {
 
 				@Override
 				public void onClick(View arg0) {
-					System.out.println("woqunimeide" + mmbImg.content.access);
-					Intent intent = new Intent(mContext, VideoDetailActivity.class);
-					intent.putExtra("videoid", mmbImg.content.access);
-					mContext.startActivity(intent);
+					
+					if (GolukUtils.isNetworkConnected(mContext)) {
+						System.out.println("woqunimeide" + mmbImg.content.access);
+						Intent intent = new Intent(mContext, VideoDetailActivity.class);
+						intent.putExtra("videoid", mmbImg.content.access);
+						mContext.startActivity(intent);
+					}else{
+						GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.user_net_unavailable));
+					}
+					
 				}
 			});
 
@@ -296,10 +311,11 @@ public class SystemMsgAdapter extends BaseAdapter {
 		ImageView tipsimage;
 		boolean bMeasureHeight;
 	}
-	
+
 	private String getRtmpAddress() {
-		String rtmpUrl = GolukApplication.getInstance().mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_GetServerAddress,
-				IGetServerAddressType.GetServerAddress_HttpServer, "UrlRedirect");
+		String rtmpUrl = GolukApplication.getInstance().mGoluk.GolukLogicCommGet(
+				GolukModule.Goluk_Module_GetServerAddress, IGetServerAddressType.GetServerAddress_HttpServer,
+				"UrlRedirect");
 		return rtmpUrl;
 	}
 

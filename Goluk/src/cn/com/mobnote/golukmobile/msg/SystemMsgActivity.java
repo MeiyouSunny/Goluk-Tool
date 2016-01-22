@@ -112,6 +112,11 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
 					if((mFristItemPosition + mPageItemCount) == mRTPullListView.getAdapter().getCount()){
 						mIsFrist = false;
 						if(mIsHaveData){
+							if(GolukUtils.isNetworkConnected(SystemMsgActivity.this) == false){
+								mRTPullListView.removeFooterView(1);
+								GolukUtils.showToast(SystemMsgActivity.this, SystemMsgActivity.this.getResources().getString(R.string.user_net_unavailable));
+								return;
+							}
 							mRTPullListView.addFooterView(1);
 							httpPost(mUid, "2", mTimestamp);//上拉请求更多数据
 							mLoadType = 1;
