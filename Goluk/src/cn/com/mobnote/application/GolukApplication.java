@@ -803,14 +803,18 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 						GlobalWindow.getInstance().toFailed("视频传输失败");
 					}
 				}
-			} else if (tag.equals("snapshotdownload") && 0 == success) {
+			} else if (tag.equals("imgdownload") && 0 == success) {
 				// 其次把文件插入到系统图库
-				String path = FileUtils.libToJavaPath(SNAPSHOT_DIR);
+				if (!GolukFileUtils.loadBoolean(GolukFileUtils.PROMOTION_AUTO_PHOTO, true)) {
+					return;
+				}
+
+				String path = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 				try {
 					JSONObject json = new JSONObject(data);
 					String filename = json.optString("filename");
-					MediaStore.Images.Media.insertImage(getContentResolver(), path + filename, filename, "Goluk");
-				} catch (FileNotFoundException e) {
+					MediaStore.Images.Media.insertImage(getContentResolver(), path + File.separator + filename, filename, "Goluk");
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				// 最后通知图库更新
@@ -1265,14 +1269,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		for (int i = 0; i < kit.size(); i++) {
 			ExternalEventsDataInfo info = kit.get(i);
 			if (info.type == 9) {
-				if (!GolukFileUtils.loadBoolean(GolukFileUtils.PROMOTION_AUTO_PHOTO, true)) {
-					return;
-				}
-				File file = new File(FileUtils.libToJavaPath(SNAPSHOT_DIR));
-				if (!file.exists()) {
-					file.mkdirs();
-				}
-				mIPCControlManager.downloadFile(info.location, "snapshotdownload", SNAPSHOT_DIR, IPC_VDCP_Msg_IPCKit);
+//				if (!GolukFileUtils.loadBoolean(GolukFileUtils.PROMOTION_AUTO_PHOTO, true)) {
+//					return;
+//				}
+//				File file = new File(FileUtils.libToJavaPath(SNAPSHOT_DIR));
+//				if (!file.exists()) {
+//					file.mkdirs();
+//				}
+//				mIPCControlManager.downloadFile(info.location, "snapshotdownload", SNAPSHOT_DIR, IPC_VDCP_Msg_IPCKit);
 			} else {
 				GolukApplication.getInstance().getIPCControlManager().querySingleFile(info.location);
 			}
