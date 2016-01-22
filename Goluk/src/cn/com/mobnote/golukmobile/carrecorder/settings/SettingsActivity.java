@@ -226,15 +226,16 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		// 获取疲劳驾驶、G1图像自动翻转、停车休眠模式
 		boolean getFunctionMode = GolukApplication.getInstance().getIPCControlManager().getFunctionMode();
 		GolukDebugUtils.e("", "--------------SettingsActivity-----getFunctionMode：" + getFunctionMode);
-		// 获取遥控器按键功能false
-		boolean getKitMode = GolukApplication.getInstance().getIPCControlManager().getKitMode();
-		GolukDebugUtils.e("", "--------------SettingsActivity-----getKitMode：" + getKitMode);
+
 
 		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+//			// 获取遥控器按键功能false
+//			boolean getKitMode = GolukApplication.getInstance().getIPCControlManager().getKitMode();
+//			GolukDebugUtils.e("", "--------------SettingsActivity-----getKitMode：" + getKitMode);
 			boolean t1VoiceState = GolukApplication.getInstance().getIPCControlManager().getAudioCfg_T1();
 			// 照片质量false
-			boolean getPhotoQualityMode = GolukApplication.getInstance().getIPCControlManager().getPhotoQualityMode();
-			GolukDebugUtils.e("", "--------------SettingsActivity-----getPhotoQualityMode：" + getPhotoQualityMode);
+//			boolean getPhotoQualityMode = GolukApplication.getInstance().getIPCControlManager().getPhotoQualityMode();
+//			GolukDebugUtils.e("", "--------------SettingsActivity-----getPhotoQualityMode：" + getPhotoQualityMode);
 			GolukDebugUtils.e("", "--------------SettingsActivity-----t1VoiceState：" + t1VoiceState);
 			// 获取T1图像自动翻转
 			boolean t1GetAutoRotaing = GolukApplication.getInstance().getIPCControlManager().getT1AutoRotaing();
@@ -481,12 +482,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mCarrecorderWonderfulLine.setVisibility(View.VISIBLE);
 		} else {
 			mISPLayout.setVisibility(View.VISIBLE);
-			mPhotoQualityLayout.setVisibility(View.VISIBLE);
+//			mPhotoQualityLayout.setVisibility(View.VISIBLE);
 			mAutoPhotoItem.setVisibility(View.VISIBLE);
 			mFatigueLayout.setVisibility(View.VISIBLE);
 			mImageFlipLayout.setVisibility(View.VISIBLE);
 			mParkingSleepLayout.setVisibility(View.VISIBLE);
-			mHandsetLayout.setVisibility(View.VISIBLE);
+//			mHandsetLayout.setVisibility(View.VISIBLE);
 
 			mADASAssistanceLayout.setVisibility(View.VISIBLE);
 			mParkingSecurityHintText

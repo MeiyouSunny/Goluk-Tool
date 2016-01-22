@@ -249,7 +249,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginTop="15dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color" 
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -300,6 +301,7 @@
                 android:id="@+id/ry_setup_autophoto"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
+                android:layout_marginTop="15dp"
                 android:background="@color/setting_white_color" >
 
                 <TextView
@@ -321,7 +323,10 @@
                     android:layout_marginRight="14dp"
                     android:background="@drawable/set_open_btn"
                     android:contentDescription="@string/imgdes" />
-
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
@@ -941,7 +946,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginTop="15dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="match_parent"
