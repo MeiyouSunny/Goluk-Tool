@@ -21,6 +21,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
@@ -78,6 +79,7 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.SortByDate;
 import cn.com.mobnote.wifibind.WifiRsBean;
 import cn.com.tiros.api.FileUtils;
+import cn.com.tiros.api.Image;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.rd.car.CarRecorderManager;
@@ -2056,7 +2058,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			if (video1.exists()) {
 				vsi1.setBitmap(ImageManager.getBitmapFromCache(name1, 114, 64));
 			} else {
-				vsi1.setBitmap(bitmap);
+				vsi1.setBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.album_default_img));
 			}
 
 			vsi1.setName(videoname1);
@@ -2098,7 +2100,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			if (video2.exists()) {
 				vsi2.setBitmap(ImageManager.getBitmapFromCache(name2, 114, 64));
 			} else {
-				vsi2.setBitmap(bitmap);
+				vsi2.setBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.album_default_img));
 			}
 
 			images[1] = vsi2;

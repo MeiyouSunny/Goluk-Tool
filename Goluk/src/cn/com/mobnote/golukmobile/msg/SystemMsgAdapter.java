@@ -5,6 +5,7 @@ import java.util.List;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
+import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
 import cn.com.mobnote.golukmobile.http.HttpManager;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.msg.bean.MessageMsgsBean;
@@ -68,6 +69,13 @@ public class SystemMsgAdapter extends BaseAdapter {
 
 	/** 成功 **/
 	private final static String resultSuccess = "1";
+	/**专题**/
+	private  static String selectZt = "1";
+	/**tag聚合**/
+	private  static String selectJh = "2";
+	/**单视频**/
+	private  static String selectDsp = "3";
+	
 	/** mUid当前用户的uid **/
 	private String mUid = "";
 	/** 精选数据类型 **/
@@ -186,9 +194,20 @@ public class SystemMsgAdapter extends BaseAdapter {
 						} else if (mmbTxt.type == msgTypeSelect) {// 跳转到专题页
 							if (sSpecialType.equals(mmbTxt.content.type)) {
 								String specialid = mmbTxt.content.access;
-								Intent i = new Intent(mContext, SpecialListActivity.class);
-								i.putExtra("ztid", specialid);
-								i.putExtra("title", "");
+								Intent i = null;
+								
+								if(selectZt.equals(mmbTxt.content.select.type)){//专题
+									i = new Intent(mContext, SpecialListActivity.class);
+									i.putExtra("ztid", specialid);
+									i.putExtra("title", "");
+								}else if(selectJh.equals(mmbTxt.content.select.type)){//聚合
+									i = new Intent(mContext, ClusterActivity.class);
+									i.putExtra("activityid", specialid);
+									i.putExtra("cluster_key_title", "");
+								}else{//单视频
+									i = new Intent(mContext, VideoDetailActivity.class);
+									i.putExtra("videoid", specialid);
+								}
 								mContext.startActivity(i);
 							}
 						} else if (mmbTxt.type == msgTypeWithdraw) {// 收益详情页
