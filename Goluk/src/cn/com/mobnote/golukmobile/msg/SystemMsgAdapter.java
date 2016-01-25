@@ -5,16 +5,13 @@ import java.util.List;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
-import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
 import cn.com.mobnote.golukmobile.http.HttpManager;
-import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.msg.bean.MessageMsgsBean;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.util.GlideUtils;
@@ -40,10 +37,6 @@ public class SystemMsgAdapter extends BaseAdapter {
 
 	private final static int sMessageTypeTxt = 0;// 普通文字类型
 	private final static int sMessageTypeImg = 1;// 带图片的消息类型
-	private final static int sMessageTypeError = 2;// 数据异常
-
-	/** 所有的系统消息 **/
-	private final static int msgTypeSystem = 200;
 	/** 系统获奖 **/
 	private final static int msgTypeRewardsystem = 201;
 	/** 人工获奖 **/
@@ -64,18 +57,9 @@ public class SystemMsgAdapter extends BaseAdapter {
 
 	/** 审核 **/
 	private final static String WITHDRAWTYPESH = "0";
-	/** 汇款 **/
-	private final static String WITHDRAWTYPEHK = "1";
+	/** 单视频 **/
+	private static String selectDsp = "6";
 
-	/** 成功 **/
-	private final static String resultSuccess = "1";
-	/**专题**/
-	private  static String selectZt = "1";
-	/**tag聚合**/
-	private  static String selectJh = "2";
-	/**单视频**/
-	private  static String selectDsp = "3";
-	
 	/** mUid当前用户的uid **/
 	private String mUid = "";
 	/** 精选数据类型 **/
@@ -192,22 +176,16 @@ public class SystemMsgAdapter extends BaseAdapter {
 							i.putExtra("type", 0);
 							mContext.startActivity(i);
 						} else if (mmbTxt.type == msgTypeSelect) {// 跳转到专题页
-							if (sSpecialType.equals(mmbTxt.content.type)) {
+							if (sSpecialType.equals(mmbTxt.content.type)) {//专题
 								String specialid = mmbTxt.content.access;
-								Intent i = null;
-								
-								if(selectZt.equals(mmbTxt.content.select.type)){//专题
-									i = new Intent(mContext, SpecialListActivity.class);
-									i.putExtra("ztid", specialid);
-									i.putExtra("title", "");
-								}else if(selectJh.equals(mmbTxt.content.select.type)){//聚合
-									i = new Intent(mContext, ClusterActivity.class);
-									i.putExtra("activityid", specialid);
-									i.putExtra("cluster_key_title", "");
-								}else{//单视频
-									i = new Intent(mContext, VideoDetailActivity.class);
-									i.putExtra("videoid", specialid);
-								}
+								Intent i = new Intent(mContext, SpecialListActivity.class);
+								i.putExtra("ztid", specialid);
+								i.putExtra("title", "");
+								mContext.startActivity(i);
+							}else if (selectDsp.equals(mmbTxt.content.type)) {//单视频
+								String specialid = mmbTxt.content.access;
+								Intent i = new Intent(mContext, VideoDetailActivity.class);
+								i.putExtra("videoid", specialid);
 								mContext.startActivity(i);
 							}
 						} else if (mmbTxt.type == msgTypeWithdraw) {// 收益详情页
@@ -227,8 +205,9 @@ public class SystemMsgAdapter extends BaseAdapter {
 							mContext.startActivity(intent);
 						}
 
-					}else{
-						GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.user_net_unavailable));
+					} else {
+						GolukUtils
+								.showToast(mContext, mContext.getResources().getString(R.string.user_net_unavailable));
 					}
 				}
 			});
@@ -268,12 +247,12 @@ public class SystemMsgAdapter extends BaseAdapter {
 					public void onClick(View view) {
 						if (GolukUtils.isNetworkConnected(mContext)) {
 							Intent intent = new Intent(mContext, MyProfitActivity.class);
-							// intent.putExtra("uid", mUid);
 							mContext.startActivity(intent);
-						}else{
-							GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.user_net_unavailable));
+						} else {
+							GolukUtils.showToast(mContext,
+									mContext.getResources().getString(R.string.user_net_unavailable));
 						}
-						
+
 					}
 				});
 			} else if (mmbImg.type == msgTypeRecommend) {// 推荐
@@ -286,16 +265,17 @@ public class SystemMsgAdapter extends BaseAdapter {
 
 				@Override
 				public void onClick(View arg0) {
-					
+
 					if (GolukUtils.isNetworkConnected(mContext)) {
 						System.out.println("woqunimeide" + mmbImg.content.access);
 						Intent intent = new Intent(mContext, VideoDetailActivity.class);
 						intent.putExtra("videoid", mmbImg.content.access);
 						mContext.startActivity(intent);
-					}else{
-						GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.user_net_unavailable));
+					} else {
+						GolukUtils
+								.showToast(mContext, mContext.getResources().getString(R.string.user_net_unavailable));
 					}
-					
+
 				}
 			});
 
