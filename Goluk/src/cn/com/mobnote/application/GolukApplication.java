@@ -575,6 +575,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		if (0 != success) {
 			return;
 		}
+		GolukDebugUtils.e("xuhw", "YYYYYY====start==VideoDownLoad===isSDCardFull=" + isSDCardFull + "==isDownloading="
+				+ isDownloading);
+		if (isSDCardFull && !isDownloading) {
+			return;
+		}
 		GolukDebugUtils.e("", "ipcVideoSingleQueryCallBack------:  " + data);
 		try {
 			JSONObject json = new JSONObject(data);
@@ -583,11 +588,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			final double filesize = json.optDouble("size");
 			final int type = json.getInt("type");
 			final String savePath = getSavePath(type);
-			GolukDebugUtils.e("xuhw", "YYYYYY====start==VideoDownLoad===isSDCardFull=" + isSDCardFull
-					+ "==isDownloading=" + isDownloading);
-			if (isSDCardFull && !isDownloading) {
-				return;
-			}
 
 			if (!GolukUtils.checkSDStorageCapacity(filesize)) {
 				isSDCardFull = true;
@@ -599,17 +599,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 							this.getResources().getString(R.string.str_video_transfer_ongoing)
 									+ mNoDownLoadFileList.size() + this.getResources().getString(R.string.str_slash)
 									+ mDownLoadFileList.size());
-					GolukDebugUtils.e("xuhw", "BBBBBB===2222=updateText=33333=");
 				}
-
 				if (!isDownloading) {
 					sdCardFull();
 					mHandler.sendEmptyMessageDelayed(1003, 1000);
 				}
-
-				GolukDebugUtils.e("xuhw", "ipcVideoSingleQueryCallBack=isSDCardFull=" + isSDCardFull
-						+ "  isDownloading=" + isDownloading);
-
 				return;
 			}
 			isDownloading = true;
@@ -626,21 +620,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			}
 
 			if (!isBackground) {
+				final String showTxt = this.getResources().getString(R.string.str_video_transfer_ongoing)
+						+ mNoDownLoadFileList.size() + this.getResources().getString(R.string.str_slash)
+						+ mDownLoadFileList.size();
 				if (!GlobalWindow.getInstance().isShow()) {
-					GolukDebugUtils.e("xuhw", "YYYYYY======1111111111=========");
-					GlobalWindow.getInstance().createVideoUploadWindow(
-							this.getResources().getString(R.string.str_video_transfer_ongoing)
-									+ mNoDownLoadFileList.size() + this.getResources().getString(R.string.str_slash)
-									+ mDownLoadFileList.size());
-					GolukDebugUtils.e("xuhw", "BBBBBB===2222=updateText=4444==nosize==" + mNoDownLoadFileList.size());
+					GlobalWindow.getInstance().createVideoUploadWindow(showTxt);
 				} else {
-					GolukDebugUtils.e("xuhw", "YYYYYY======22222=========");
-					GlobalWindow.getInstance().updateText(
-							this.getResources().getString(R.string.str_video_transfer_ongoing)
-									+ mNoDownLoadFileList.size() + this.getResources().getString(R.string.str_slash)
-									+ mDownLoadFileList.size());
-					GolukDebugUtils.e("xuhw",
-							"BBBBBB===2222=updateText=55555=====nosize==" + mNoDownLoadFileList.size());
+					GlobalWindow.getInstance().updateText(showTxt);
 				}
 			}
 		} catch (Exception e) {
