@@ -51,4 +51,5 @@ public class MessageContentBean {
 	/**通知**/
 	@JSONField(name="anycast")
 	public MessageAnycastBean anycast;
+	
 }
