@@ -452,6 +452,8 @@
     <string name="str_video_not_exist">视频不存在</string>
 
     <!-- 聚合 -->
+    <string name="str_cluster_newest">活动刚刚上线\n就等您来上传呦~</string>
+    <string name="str_cluster_wonderful">还没有优质视频推荐\n就等您来上传呦~</string>
     <string name="cluster_comment_txt">写评论，有机会赢大奖</string>
     <string name="cluster_jx_zt_share">极路客精选专题分享</string>
     <string name="cluster_jxzt_share_txt">极路客精选专题(使用#极路客Goluk#拍摄)</string>
@@ -850,5 +852,10 @@
     <string name="str_cycle_video_text">循环视频</string>
     <string name="str_synchronous_video_to_local">视频已同步到本地</string>
     <string name="str_inquiry_fail">查询失败!</string>
+    
+    <string name="str_cannot_get_light">无法获取亮度</string>
+    <string name="str_play_error">播放错误</string>
+    <string name="str_play_video_error">视频出错，请重试！</string>
+    <string name="str_play_video_network_error">网络访问异常，请重试！</string>
 	
 </resources>

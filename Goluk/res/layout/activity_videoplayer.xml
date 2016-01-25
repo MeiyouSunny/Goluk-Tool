@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingTop="37.33dp"
-            android:text="视频加载中，请稍候..."
+            android:text="@string/str_video_loading"
             android:textColor="#ffffff"
             android:textSize="24sp" />
     </LinearLayout>
@@ -107,7 +107,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/play_btn"
                 android:gravity="center_vertical"
-                android:text="00:00"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
@@ -118,7 +117,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
-                android:text="00:00"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
 

@@ -526,7 +526,8 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 			if (convertView == null) {
 				convertView = LayoutInflater.from(mContext).inflate(R.layout.user_center_novideodata, null);
 				noVideoDataViewHolder = new NoVideoDataViewHolder();
-				noVideoDataViewHolder.tipsimage = (ImageView) convertView.findViewById(R.id.tipsimage);
+				noVideoDataViewHolder.tipsText = (TextView) convertView.findViewById(R.id.tv_tipstext);
+				noVideoDataViewHolder.emptyImage = (ImageView) convertView.findViewById(R.id.tipsimage);
 				noVideoDataViewHolder.bMeasureHeight = false;
 				convertView.setTag(noVideoDataViewHolder);
 			} else {
@@ -545,15 +546,18 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
 			boolean bNeedRefrush = false;
 			
+			noVideoDataViewHolder.emptyImage.setVisibility(View.GONE);
 			if(mCurrentViewType == sViewType_NewsVideoList){
-				noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.together_noactivity_text);
+//				noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.together_noactivity_text);
+				noVideoDataViewHolder.tipsText.setText(mContext.getString(R.string.str_cluster_newest));
 			}else{
-				noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.together_norecommend_text);
+//				noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.together_norecommend_text);
+				noVideoDataViewHolder.tipsText.setText(mContext.getString(R.string.str_cluster_wonderful));
 			}
 			
 			bNeedRefrush = true;
 			if (bNeedRefrush == true) {
-				noVideoDataViewHolder.tipsimage.setOnClickListener(new OnClickListener() {
+				noVideoDataViewHolder.tipsText.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {

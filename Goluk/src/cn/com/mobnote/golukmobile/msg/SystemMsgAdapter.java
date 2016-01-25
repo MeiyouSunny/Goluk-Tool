@@ -206,8 +206,8 @@ public class SystemMsgAdapter extends BaseAdapter {
 						}
 
 					} else {
-						GolukUtils
-								.showToast(mContext, mContext.getResources().getString(R.string.user_net_unavailable));
+						GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.user_net_unavailable));
+						return;
 					}
 				}
 			});
