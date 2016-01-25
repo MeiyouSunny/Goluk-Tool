@@ -149,6 +149,7 @@ public class OfficialMessageActivity extends BaseActivity implements IRequestRes
 		if(requestType == IPageNotifyFn.PageType_MsgOfficial) {
 			MessageBean bean = (MessageBean)result;
 			if(null == bean) {
+				Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 				if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
 					setEmptyView();
 				}
