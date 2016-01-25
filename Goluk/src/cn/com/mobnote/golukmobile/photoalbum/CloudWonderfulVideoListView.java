@@ -262,7 +262,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 			// if (1 == from) {
 			// intent = new Intent(mContext, VitamioPlayerActivity.class);
 			// } else {
-			intent = new Intent(mContext, MovieActivity.class);
+			intent = new Intent(mContext, VitamioPlayerActivity.class);
 			// }
 			intent.putExtra("from", "ipc");
 			intent.putExtra("type", mCurrentType);
