@@ -123,14 +123,14 @@ public class MovieActivity extends Activity {
 			@Override
 			public boolean onError(int arg1) {
 				// TODO Auto-generated method stub
-				String msg = "播放错误";
+				String msg = getString(R.string.str_play_error);
 				switch (arg1) {
 				case 1:
 				case -1010:
-					msg = "视频出错，请重试！";
+					msg = getString(R.string.str_play_video_error);
 					break;
 				case -110:
-					msg = "网络访问异常，请重试！";
+					msg = getString(R.string.str_play_video_network_error);
 					break;
 
 				default:
@@ -139,7 +139,7 @@ public class MovieActivity extends Activity {
 
 				if (!from.equals("local")) {
 					if (!isNetworkConnected()) {
-						msg = "网络访问异常，请重试！";
+						msg = getString(R.string.str_play_video_network_error);
 					}
 				}
 
@@ -291,7 +291,7 @@ public class MovieActivity extends Activity {
 			mCustomDialog = new CustomDialog(this);
 			mCustomDialog.setCancelable(true);
 			mCustomDialog.setMessage(msg, Gravity.CENTER);
-			mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
+			mCustomDialog.setLeftButton(this.getString(R.string.str_button_ok), new OnLeftClickListener() {
 				@Override
 				public void onClickListener() {
 					finish();

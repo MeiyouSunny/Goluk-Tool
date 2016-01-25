@@ -19,6 +19,6 @@
     <dimen name="header_footer_top_bottom_padding">12dp</dimen>
 
     <!-- banner text size default for 1920 * 1080 -->
-    <dimen name="banner_text_size">18sp</dimen>
+    <dimen name="banner_text_size">16sp</dimen>
 
 </resources>
