@@ -32,7 +32,7 @@ public class MessageBadger {
 		} else if(Build.MANUFACTURER.toLowerCase().equals("meizu")) {
 			sendToSamsumg(number, context);
 		} else if(Build.MANUFACTURER.toLowerCase().equals("huawei")) {
-//			setHuaweiBadge(number, context);
+			setHuaweiBadge(number, context);
 		} else {
 			Log.d(TAG, "unsupported manufacturer");
 		}
