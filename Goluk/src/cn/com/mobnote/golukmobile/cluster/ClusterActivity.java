@@ -154,7 +154,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		mTitle = (TextView) findViewById(R.id.title);
 		
 		if (mClusterTitle.length() > 12) {
-			mClusterTitle = mClusterTitle.substring(0, 12) + "...";
+			mClusterTitle = mClusterTitle.substring(0, 12) + this.getString(R.string.str_omit);
 		}
 		mTitle.setText(mClusterTitle);
 		mShareBtn = (Button) findViewById(R.id.title_share);
@@ -278,7 +278,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		if (null == count) {
 			return;
 		}
-		String show = GolukUtils.getFormatNumber(count) + "条";
+		String show = GolukUtils.getFormatNumber(count) + this.getString(R.string.str_comment_unit);
 		mCommenCountTv.setText(show);
 	}
 
@@ -630,7 +630,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 									: "";
 							String username = null != mWillShareVideoSquareInfo ? mWillShareVideoSquareInfo.mUserEntity.nickname
 									: "";
-							describe = username + "：" + describe;
+							describe = username + this.getString(R.string.str_colon) + describe;
 							CustomShareBoard shareBoard = new CustomShareBoard(this, mSharePlatform, shareurl, coverurl,
 									describe, ttl, null, realDesc, videoId);
 							shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);

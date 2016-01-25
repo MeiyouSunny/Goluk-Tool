@@ -181,6 +181,10 @@ public class MsgCenterCommentAdapter extends BaseAdapter {
 	 * @param bean
 	 */
 	private void intentToOthers(int id, MessageMsgsBean bean) {
+		if (!UserUtils.isNetDeviceAvailable(mContext)) {
+			GolukUtils.showToast(mContext, mContext.getString(R.string.str_network_unavailable));
+			return;
+		}
 		if(id == R.id.iv_listview_item_comment_head || id == R.id.tv_listview_item_comment_name) {
 			if (null != bean && null != bean.sender) {
 				//我的主页
@@ -231,8 +235,8 @@ public class MsgCenterCommentAdapter extends BaseAdapter {
 	}
 	
 	private void showCommentText(TextView view, String nikename, String text) {
-		String t_str = mContext.getResources().getString(R.string.str_msgcenter_comment_replytext) + nikename + ":"
-				+ text;
+		String t_str = mContext.getResources().getString(R.string.str_msgcenter_comment_replytext) + nikename
+				+ mContext.getString(R.string.str_colon_english) + text;
 		SpannableStringBuilder style = new SpannableStringBuilder(t_str);
 		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 2, nikename.length() + 2,
 				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);

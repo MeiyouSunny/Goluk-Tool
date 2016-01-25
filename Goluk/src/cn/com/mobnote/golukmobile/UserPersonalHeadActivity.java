@@ -45,7 +45,7 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 		setContentView(R.layout.user_personal_edit_head);
 
 		initView();
-		mTextTitle.setText("选择头像");
+		mTextTitle.setText(this.getResources().getString(R.string.str_choose_head));
 	}
 
 	public void initView() {
@@ -213,7 +213,7 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 	private void click_save() {
 		if (null == imageIndex || "".equals(imageIndex)) {
 			// 用户没有选择头像
-			GolukUtils.showToast(this, "请选择一个头像");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_choose_one_head));
 			return;
 		}
 		JSONObject requestStr = new JSONObject();
@@ -230,7 +230,7 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 		if (!flog) {
 			// 失败
 			closeLoadDialog();
-			GolukUtils.showToast(this, "保存失败");
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_save_fail));
 			return;
 		}
 		showLoadingDialog();
@@ -238,7 +238,8 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 
 	private void showLoadingDialog() {
 		if (mCustomProgressDialog == null) {
-			mCustomProgressDialog = new CustomLoadingDialog(this, "正在保存头像,请稍候!");
+			mCustomProgressDialog = new CustomLoadingDialog(this, this.getResources().getString(
+					R.string.str_save_head_ongoing));
 			mCustomProgressDialog.show();
 		} else {
 			mCustomProgressDialog.show();
@@ -298,7 +299,7 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 						if ("0".equals(rst)) {
 
 							String head = data.getString("head");
-							GolukUtils.showToast(UserPersonalHeadActivity.this, "保存成功");
+							GolukUtils.showToast(UserPersonalHeadActivity.this, this.getResources().getString(R.string.str_save_success));
 
 							Intent itHead = new Intent(UserPersonalHeadActivity.this, UserPersonalInfoActivity.class);
 							Bundle bundle = new Bundle();
@@ -307,18 +308,22 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 							this.setResult(RESULT_OK, itHead);
 							this.finish();
 						} else {
-							GolukUtils.showToast(UserPersonalHeadActivity.this, "网络异常,保存失败");
+							GolukUtils.showToast(UserPersonalHeadActivity.this,
+									this.getResources().getString(R.string.str_save_network_error));
 						}
 
 					} else {
-						GolukUtils.showToast(UserPersonalHeadActivity.this, "网络异常,保存失败");
+						GolukUtils.showToast(UserPersonalHeadActivity.this,
+								this.getResources().getString(R.string.str_save_network_error));
 					}
 				} catch (JSONException e) {
-					GolukUtils.showToast(UserPersonalHeadActivity.this, "网络异常,保存失败");
+					GolukUtils.showToast(UserPersonalHeadActivity.this,
+							this.getResources().getString(R.string.str_save_network_error));
 					e.printStackTrace();
 				}
 			} else {
-				GolukUtils.showToast(UserPersonalHeadActivity.this, "网络异常,保存失败");
+				GolukUtils.showToast(UserPersonalHeadActivity.this,
+						this.getResources().getString(R.string.str_save_network_error));
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 package cn.com.mobnote.golukmobile.newest;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.videosuqare.CategoryListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.util.GolukUtils;
@@ -33,7 +34,7 @@ public class ClickPraiseListener implements OnClickListener{
 	@Override
 	public void onClick(View arg0) {
 		if (!isNetworkConnected()) {
-			GolukUtils.showToast(mContext, "网络异常，请检查网络");
+			GolukUtils.showToast(mContext, mContext.getString(R.string.network_error));
 			return;
 		}
 		

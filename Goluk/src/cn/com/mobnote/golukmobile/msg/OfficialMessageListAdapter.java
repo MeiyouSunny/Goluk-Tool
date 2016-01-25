@@ -12,11 +12,16 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
+import cn.com.mobnote.golukmobile.http.HttpManager;
 import cn.com.mobnote.golukmobile.msg.bean.MessageMsgsBean;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
+import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
+import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.util.GolukUtils;
 
@@ -30,6 +35,8 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 	private final static String ACTIVITY_TOGETHER = "4";
 	private final static String H5_PAGE = "5";
 	private final static String SPECIAL_SOLO = "6";
+	private final static String HOME_PAGE = "9";
+	private final static String WEB_DIRECT = "/navidog4MeetTrans/redirect.htm";
 
 	private final static String TAG = "OfficialMessageListAdapter";
 
@@ -103,6 +110,10 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 		viewHolder.nOfficialMsgLL.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				if(!GolukUtils.isNetworkConnected(mContext)) {
+					Toast.makeText(mContext, mContext.getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+					return;
+				}
 				if (null == finalBean || null == finalBean.content) {
 					return;
 				}
@@ -161,19 +172,37 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 					mContext.startActivity(intent);
 				} else if (H5_PAGE.equals(type)) {
 					// launch h5 page
-					intent = new Intent(mContext, UserOpenUrlActivity.class);
-					intent.putExtra("url", accessId);
 					if(null != finalBean.content.anycast) {
-						if (!TextUtils.isEmpty(finalBean.content.anycast.title)) {
-							intent.putExtra("slide_h5_title",
-								finalBean.content.anycast.title);
+						intent = new Intent(mContext, UserOpenUrlActivity.class);
+						if(null != accessId && !TextUtils.isEmpty(accessId)) {
+							String url = HttpManager.getInstance().getWebDirectHost() +
+									WEB_DIRECT + "?type=5&access=" + accessId;
+							intent.putExtra("url", url);
+							if (!TextUtils.isEmpty(finalBean.content.anycast.title)) {
+								intent.putExtra("slide_h5_title",
+										finalBean.content.anycast.title);
+							}
 						}
+						mContext.startActivity(intent);
 					}
-					mContext.startActivity(intent);
 				} else if (SPECIAL_SOLO.equals(type)) {
 					intent = new Intent(mContext, VideoDetailActivity.class);
 					intent.putExtra(VideoDetailActivity.VIDEO_ID, accessId);
 					intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
+					mContext.startActivity(intent);
+				}else if(HOME_PAGE.equals(type)) {
+					UCUserInfo user = new UCUserInfo();
+					user.uid = accessId;
+					user.nickname = "";
+					user.headportrait = "";//clusterInfo.mUserEntity.headportrait;
+					user.introduce = "";
+					user.sex = "";//clusterInfo.mUserEntity.sex;
+					user.customavatar = "";//clusterInfo.mUserEntity.mCustomAvatar;
+					user.praisemenumber = "0";
+					user.sharevideonumber = "0";
+					intent = new Intent(mContext, UserCenterActivity.class);
+					intent.putExtra("userinfo", user);
+					intent.putExtra("type", 0);
 					mContext.startActivity(intent);
 				}
 			}

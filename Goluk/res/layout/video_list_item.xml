@@ -33,7 +33,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
         android:layout_marginTop="4dp"
-        android:text="05:00"
         android:textColor="#bfffffff"
         android:textSize="10sp" />
 	
@@ -53,8 +52,7 @@
         android:layout_alignParentBottom="true"
         android:textSize="10sp"
         android:textColor="#bfffffff"
-        android:paddingLeft="4dp"
-        android:text="星期五    17:20" />
+        android:paddingLeft="4dp" />
     
     <TextView
         android:id="@+id/video_size1"
@@ -64,8 +62,7 @@
         android:layout_alignParentRight="true"
         android:textSize="10sp"
         android:textColor="#bfffffff"
-        android:paddingRight="4dp"
-        android:text="1.5MB" />
+        android:paddingRight="4dp" />
     
     <ImageView 
         android:id="@+id/mNewIcon1"
@@ -119,7 +116,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
         android:layout_marginTop="4dp"
-        android:text="05:00"
         android:textColor="#bfffffff"
         android:textSize="10sp" />
 
@@ -139,8 +135,7 @@
         android:layout_alignParentBottom="true"
         android:textSize="10sp"
         android:textColor="#bfffffff"
-        android:paddingLeft="4dp"
-        android:text="星期五    17:20" />
+        android:paddingLeft="4dp" />
     
     <TextView
         android:id="@+id/video_size2"
@@ -150,8 +145,7 @@
         android:layout_alignParentRight="true"
         android:textSize="10sp"
         android:textColor="#bfffffff"
-        android:paddingRight="4dp"
-        android:text="1.5MB" />
+        android:paddingRight="4dp" />
     
     <ImageView 
         android:id="@+id/mNewIcon2"

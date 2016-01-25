@@ -34,9 +34,6 @@ public class BaseActivity extends Activity {
 	public static final String DEFAULT_IP = "192.168.1.103";
 	public static final String DEFAULT_WAY = "192.168.1.103";
 
-	public static final String WIFI_CONNING_FAILED_STR = "未连接Goluk";
-	public static final String WIFI_CONNING_STR = "正在连接Goluk...";
-	public static final String WIFI_CONNED_STR = "已连接Goluk";
 	private boolean m_bJumpActivity = false;
 
 	protected GolukApplication mBaseApp = null;

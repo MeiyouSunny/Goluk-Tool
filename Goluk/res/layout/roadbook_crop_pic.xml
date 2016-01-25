@@ -36,7 +36,7 @@
             android:textColor="@color/white"
             android:background="@null"
             android:layout_centerVertical="true"
-            android:text="取消"/>
+            android:text="@string/user_cancle"/>
         
         <Button 
             android:id="@+id/saveBtn"
@@ -48,7 +48,7 @@
             android:background="@null"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:text="保存头像"/>
+            android:text="@string/str_save_photo"/>
     </RelativeLayout>
 
 </RelativeLayout>

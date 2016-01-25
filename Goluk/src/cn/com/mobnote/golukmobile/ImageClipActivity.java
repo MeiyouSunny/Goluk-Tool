@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,7 +56,8 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 
 		setContentView(R.layout.roadbook_crop_pic);
 		
-		mCustomProgressDialog = new CustomLoadingDialog(ImageClipActivity.this, "正在保存头像,请稍候!");
+		mCustomProgressDialog = new CustomLoadingDialog(ImageClipActivity.this, this.getResources().getString(
+				R.string.str_save_head_ongoing));
 		saveHead = (Button) findViewById(R.id.saveBtn);
 		cancelBtn = (Button) findViewById(R.id.cancelBtn);
 		imageView = (ClipImageView) findViewById(R.id.src_pic);
@@ -76,8 +75,9 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 			}else{
 				bitmap =  getIntent().getParcelableExtra("imagebitmap");
 			}
-			if(bitmap == null){
-				GolukUtils.showToast(ImageClipActivity.this, "文件格式不正确");
+			if (bitmap == null) {
+				GolukUtils.showToast(ImageClipActivity.this,
+						this.getResources().getString(R.string.str_file_format_error));
 				this.finish();
 			}else{
 				if (bitmap.getHeight() < bitmap.getWidth()) {
@@ -131,7 +131,8 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 
 				if (bitmap == null) {
 					isSave = true;
-					GolukUtils.showToast(ImageClipActivity.this, "数据异常，请稍候重试");
+					GolukUtils.showToast(ImageClipActivity.this,
+							this.getResources().getString(R.string.request_data_error));
 					return;
 				}
 				try {
@@ -145,8 +146,9 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 								mCustomProgressDialog.show();
 							}
 							
-						}else{
-							GolukUtils.showToast(ImageClipActivity.this, "网络异常，请稍候重试");
+						} else {
+							GolukUtils.showToast(ImageClipActivity.this,
+									this.getResources().getString(R.string.str_network_error));
 							return;
 						}
 						
@@ -338,26 +340,31 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 							}
 
 							String path = data.getString("customavatar");
-							GolukUtils.showToast(ImageClipActivity.this, "图片保存成功");
+							GolukUtils.showToast(ImageClipActivity.this,
+									this.getResources().getString(R.string.str_save_photo_success));
 
 							Intent it = new Intent(ImageClipActivity.this, UserPersonalInfoActivity.class);
 							it.putExtra("imagepath", path);
 							this.setResult(RESULT_OK, it);
 							this.finish();
 						} else {
-							GolukUtils.showToast(ImageClipActivity.this, "头像保存失败，请重试");
+							GolukUtils.showToast(ImageClipActivity.this,
+									this.getResources().getString(R.string.str_save_photo_fail));
 						}
 
 					} else {
-						GolukUtils.showToast(ImageClipActivity.this, "头像保存失败，请重试");
+						GolukUtils.showToast(ImageClipActivity.this,
+								this.getResources().getString(R.string.str_save_photo_fail));
 					}
 				} catch (JSONException e) {
-					GolukUtils.showToast(ImageClipActivity.this, "头像保存失败，请重试");
+					GolukUtils.showToast(ImageClipActivity.this,
+							this.getResources().getString(R.string.str_save_photo_fail));
 					e.printStackTrace();
 				}
 			} else {
 
-				GolukUtils.showToast(ImageClipActivity.this, "网络不给力");
+				GolukUtils.showToast(ImageClipActivity.this,
+						this.getResources().getString(R.string.str_network_unavailable));
 			}
 		}
 	}

@@ -229,7 +229,7 @@ public class LiveDialogManager {
 		mCommProgressDialog = ProgressDialog.show(context, title, message, true, isCancel);
 
 		if (isCancel) {
-			mCommProgressDialog.setButton("取消", new OnClickListener() {
+			mCommProgressDialog.setButton(context.getString(R.string.dialog_str_cancel), new OnClickListener() {
 
 				@Override
 				public void onClick(DialogInterface arg0, int arg1) {
@@ -330,12 +330,13 @@ public class LiveDialogManager {
 		mSingleButtonDialog.setMessage(message);
 		mSingleButtonDialog.setCancelable(false);
 
-		mSingleButtonDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialoginterface, int i) {
-				sendMessageCallBack(mCurrentDialogType, FUNCTION_DIALOG_OK, null);
-				dismissSingleBtnDialog();
-			}
-		});
+		mSingleButtonDialog.setButton(DialogInterface.BUTTON_POSITIVE,
+				context.getString(R.string.user_personal_sign_title), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialoginterface, int i) {
+						sendMessageCallBack(mCurrentDialogType, FUNCTION_DIALOG_OK, null);
+						dismissSingleBtnDialog();
+					}
+				});
 		mSingleButtonDialog.show();
 	}
 
@@ -358,22 +359,24 @@ public class LiveDialogManager {
 		mTwoButtonDialog.setMessage(message);
 		mTwoButtonDialog.setCancelable(false);
 
-		mTwoButtonDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+		mTwoButtonDialog.setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(R.string.dialog_str_cancel),
+				new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface arg0, int arg1) {
-				sendMessageCallBack(mCurrentDialogType, FUNCTION_DIALOG_CANCEL, null);
-				dismissTwoButtonDialog();
-			}
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						sendMessageCallBack(mCurrentDialogType, FUNCTION_DIALOG_CANCEL, null);
+						dismissTwoButtonDialog();
+					}
 		});
 
-		mTwoButtonDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialoginterface, int i) {
-				sendMessageCallBack(mCurrentDialogType, FUNCTION_DIALOG_OK, null);
+		mTwoButtonDialog.setButton(DialogInterface.BUTTON_POSITIVE,
+				context.getString(R.string.user_personal_sign_title), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialoginterface, int i) {
+						sendMessageCallBack(mCurrentDialogType, FUNCTION_DIALOG_OK, null);
 
-				dismissTwoButtonDialog();
-			}
-		});
+						dismissTwoButtonDialog();
+					}
+				});
 		mTwoButtonDialog.show();
 
 	}
@@ -399,16 +402,17 @@ public class LiveDialogManager {
 		}
 		mLoginDialog = new AlertDialog.Builder(context).create();
 
-		mLoginDialog.setTitle("提示");
+		mLoginDialog.setTitle(context.getString(R.string.user_dialog_hint_title));
 		mLoginDialog.setMessage(message);
 		mLoginDialog.setCancelable(false);
 
-		mLoginDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialoginterface, int i) {
-				sendMessageCallBack(DIALOG_TYPE_LOGIN, FUNCTION_DIALOG_OK, null);
-				dimissLoginExitDialog();
-			}
-		});
+		mLoginDialog.setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.user_personal_sign_title),
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialoginterface, int i) {
+						sendMessageCallBack(DIALOG_TYPE_LOGIN, FUNCTION_DIALOG_OK, null);
+						dimissLoginExitDialog();
+					}
+				});
 		mLoginDialog.show();
 
 	}
@@ -427,15 +431,16 @@ public class LiveDialogManager {
 		}
 		mLiveExitDialog = new AlertDialog.Builder(context).create();
 
-		mLiveExitDialog.setTitle("提示");
+		mLiveExitDialog.setTitle(context.getString(R.string.user_dialog_hint_title));
 		mLiveExitDialog.setMessage(message);
 		mLiveExitDialog.setCancelable(false);
 
-		mLiveExitDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialoginterface, int i) {
-				sendMessageCallBack(DIALOG_TYPE_EXIT_LIVE, FUNCTION_DIALOG_OK, null);
-				dimissLiveExitDialog();
-			}
+		mLiveExitDialog.setButton(DialogInterface.BUTTON_POSITIVE,
+				context.getString(R.string.user_personal_sign_title), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialoginterface, int i) {
+						sendMessageCallBack(DIALOG_TYPE_EXIT_LIVE, FUNCTION_DIALOG_OK, null);
+						dimissLiveExitDialog();
+					}
 		});
 		mLiveExitDialog.show();
 
@@ -457,21 +462,23 @@ public class LiveDialogManager {
 		mLiveBackDialog.setMessage(message);
 		mLiveBackDialog.setCancelable(false);
 
-		mLiveBackDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+		mLiveBackDialog.setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(R.string.dialog_str_cancel),
+				new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface arg0, int arg1) {
-				sendMessageCallBack(mCurrentDialogType, FUNCTION_DIALOG_CANCEL, null);
-				dismissLiveBackDialog();
-			}
-		});
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						sendMessageCallBack(mCurrentDialogType, FUNCTION_DIALOG_CANCEL, null);
+						dismissLiveBackDialog();
+					}
+				});
 
-		mLiveBackDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialoginterface, int i) {
-				sendMessageCallBack(mCurrentDialogType, FUNCTION_DIALOG_OK, null);
+		mLiveBackDialog.setButton(DialogInterface.BUTTON_POSITIVE,
+				context.getString(R.string.user_personal_sign_title), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialoginterface, int i) {
+						sendMessageCallBack(mCurrentDialogType, FUNCTION_DIALOG_OK, null);
 
-				dismissLiveBackDialog();
-			}
+						dismissLiveBackDialog();
+					}
 		});
 		mLiveBackDialog.show();
 

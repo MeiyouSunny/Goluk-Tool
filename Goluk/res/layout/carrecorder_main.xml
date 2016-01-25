@@ -215,7 +215,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="4dp"
         android:layout_toRightOf="@+id/position"
-        android:text="正在定位中"
+        android:text="@string/str_localization_ongoing_default"
         android:textColor="@color/carrecorder_text_nor_color"
         android:textSize="12sp" />
 
@@ -231,7 +231,7 @@
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:background="#17191a"
-            android:hint="描述下这个视频吧..."
+            android:hint="@string/str_describe_video"
             android:maxLength="50"
             android:paddingLeft="10dp"
             android:textColor="#808181"
@@ -264,7 +264,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_toRightOf="@+id/driving_car_time_icon"
-                    android:text="00:12:00"
                     android:textSize="12sp" />
             </RelativeLayout>
 
@@ -334,7 +333,7 @@
                 android:layout_height="match_parent"
                 android:background="#00000000"
                 android:drawableRight="@drawable/driving_car_next_btn"
-                android:text="更多"
+                android:text="@string/more_text"
                 android:textColor="#808181"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -370,7 +369,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/album_default_img"
+                    android:src="@drawable/video_new_icon"
                     android:visibility="gone" />
 
                 <cn.com.mobnote.golukmobile.videosuqare.RingView
@@ -401,7 +400,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/album_default_img"
+                    android:src="@drawable/video_new_icon"
                     android:visibility="gone" />
             </RelativeLayout>
 
@@ -437,7 +436,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginRight="40dp"
-            android:text="精彩抢拍"
+            android:text="@string/str_wonderful_qiangpai"
             android:textColor="#e13737"
             android:textSize="13sp" />
 
@@ -446,7 +445,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/jcqp"
-            android:text="发起直播"
+            android:text="@string/str_make_live"
             android:textColor="#808181"
             android:textSize="13sp" />
     </RelativeLayout>
@@ -473,7 +472,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="6dp"
-            android:text="00:00"
             android:textColor="@color/carrecorder_text_nor_color"
             android:textSize="12sp" />
     </LinearLayout>

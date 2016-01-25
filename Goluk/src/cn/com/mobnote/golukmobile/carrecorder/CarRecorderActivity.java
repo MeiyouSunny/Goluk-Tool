@@ -262,7 +262,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private ImageView live_talk;
 	private ImageView live_release;
 
-	private String wifiname = "未连接到极路客";
+	private String wifiname;
 
 	/** 视频存放外卡文件路径 */
 	private static final String APP_FOLDER = android.os.Environment.getExternalStorageDirectory().getPath();
@@ -325,6 +325,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 		setContentView(R.layout.carrecorder_main);
 		mApp = (GolukApplication) getApplication();
+		
+		wifiname = this.getResources().getString(R.string.str_disconnect_ipc);
 
 		mPlayerLayout = new RelativeLayout(this);
 		mNormalScreen = new Button(this);
@@ -576,7 +578,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		}
 
 		if ("".equals(mLocationAddress)) {
-			mAddr.setText("定位中");
+			mAddr.setText(this.getResources().getString(R.string.str_localization_ongoing));
 		} else {
 			mAddr.setText(mLocationAddress);
 		}
@@ -754,9 +756,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			String minStr = "";
 			String secStr = "";
 			if (min >= 10) {
-				minStr = min + ":";
+				minStr = min + this.getResources().getString(R.string.str_colon_english);
 			} else {
-				minStr = "0" + min + ":";
+				minStr = "0" + min + this.getResources().getString(R.string.str_colon_english);
 			}
 			if (sec >= 10) {
 				secStr = sec + "";
@@ -767,9 +769,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			timeStr = minStr + secStr;
 		} else {
 			if (showRecordTime >= 10) {
-				timeStr = "00:" + showRecordTime;
+				timeStr = this.getResources().getString(R.string.str_recorder_time1) + showRecordTime;
 			} else {
-				timeStr = "00:0" + showRecordTime;
+				timeStr = this.getResources().getString(R.string.str_recorder_time2) + showRecordTime;
 			}
 		}
 		mTime.setText(timeStr);
@@ -1115,7 +1117,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		Intent intent = new Intent(this, LiveActivity.class);
 		String desc = et.getText().toString();
 		if (null == desc || "".equals(desc)) {
-			desc = "极路客精彩直播";
+			desc = this.getResources().getString(R.string.str_wonderful_live);
 		}
 		mSettingData.desc = desc;
 		intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
@@ -1133,7 +1135,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * @date 2015年3月8日
 	 */
 	private void showLoading() {
-		mLoadingText.setText("视频加载中，请稍候...");
+		mLoadingText.setText(this.getResources().getString(R.string.str_video_loading));
 		mLoadingLayout.setVisibility(View.VISIBLE);
 		mLoading.setVisibility(View.VISIBLE);
 		mLoading.postDelayed(new Runnable() {
@@ -1856,7 +1858,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 							this.canvasProcess();
 							mNowDownloadName = filename;
 							image1.setVisibility(View.VISIBLE);
-							image1.setImageBitmap(images[2].getBitmap());
+							image1.setImageResource(R.drawable.album_default_img);//(images[2].getBitmap());
 						} else {
 							if (image1.getVisibility() != View.VISIBLE) {
 								image1.setVisibility(View.VISIBLE);
@@ -1988,7 +1990,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				lsp.close();
 			}
 			if (null == data) {
-				GolukUtils.showToast(this, "用户设置出错");
+				GolukUtils.showToast(this, this.getResources().getString(R.string.str_set_error));
 				return;
 			}
 			mSettingData = (LiveSettingBean) data;
@@ -2165,7 +2167,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					return data;
 				}
 
-				String[] files = str.split(",");
+				String[] files = str.split(this.getResources().getString(R.string.str_comma));
 
 				// 去重
 				for (String f : files) {
@@ -2227,7 +2229,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 		if (event.getCityCode().equals("-1")) {// 定位失败
 			if (mLocationAddress.equals("")) {
-				mAddr.setText("未知街道");
+				mAddr.setText(this.getResources().getString(R.string.str_unknow_street));
 			} else {
 				mAddr.setText(mLocationAddress);
 			}

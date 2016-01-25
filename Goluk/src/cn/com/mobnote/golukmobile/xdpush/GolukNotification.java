@@ -25,6 +25,8 @@ import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
 import cn.com.mobnote.golukmobile.comment.ICommentFn;
+import cn.com.mobnote.golukmobile.http.HttpManager;
+import cn.com.mobnote.golukmobile.http.UrlHostManager;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.msg.MsgCenterCommentActivity;
@@ -71,6 +73,7 @@ public class GolukNotification {
 	private final static String H5_PAGE = "5";
 	private final static String SPECIAL_SOLO = "6";
 	private final static String HOME_PAGE = "9";
+	private final static String WEB_DIRECT = "/navidog4MeetTrans/redirect.htm";
 
 	public void createXG() {
 		xgInit = new XGInit();
@@ -459,7 +462,9 @@ public class GolukNotification {
 						Context context = GolukApplication.getInstance().getContext();
 						intent = new Intent(context, UserOpenUrlActivity.class);
 						if(null != vidArray[0] && !TextUtils.isEmpty(vidArray[0])) {
-							intent.putExtra("url", vidArray[0]);
+							String url = HttpManager.getInstance().getWebDirectHost() +
+									WEB_DIRECT + "?type=5&access=" + vidArray[0];
+							intent.putExtra("url", url);
 							if (!TextUtils.isEmpty(msgBean.title)) {
 								intent.putExtra("slide_h5_title",
 										msgBean.title);
@@ -480,7 +485,7 @@ public class GolukNotification {
 //						context.startActivity(intent);
 						UCUserInfo user = new UCUserInfo();
 						user.uid = vidArray[0];
-						user.nickname = msgBean.title;
+						user.nickname = "";
 						user.headportrait = "";//clusterInfo.mUserEntity.headportrait;
 						user.introduce = "";
 						user.sex = "";//clusterInfo.mUserEntity.sex;

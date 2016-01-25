@@ -23,7 +23,7 @@
                     android:id="@+id/mWonderfulText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="精彩视频"
+                    android:text="@string/videolist_jcsp"
                     android:textColor="@color/photoalbum_text_color"
                     android:textSize="15sp" />
 
@@ -51,7 +51,7 @@
                     android:id="@+id/mEmergencyText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="紧急视频"
+                    android:text="@string/str_emergency_video_text"
                     android:textColor="@color/photoalbum_title_bg_color"
                     android:textSize="15sp" />
 
@@ -79,7 +79,7 @@
                     android:id="@+id/mLoopText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="循环视频"
+                    android:text="@string/str_cycle_video_text"
                     android:textColor="@color/photoalbum_title_bg_color"
                     android:textSize="15sp" />
 

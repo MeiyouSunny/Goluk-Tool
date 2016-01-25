@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white" >
@@ -42,10 +43,15 @@
             android:textColor="#0080ff" />
     </RelativeLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/profit_title_layout"
+        tools:ignore="UselessLeaf" >
+        
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="570dp"
         android:orientation="vertical" >
 
         <!-- 上一次收入 -->
@@ -53,8 +59,7 @@
         <RelativeLayout
             android:id="@+id/my_profit_bg_layout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_height="360dp"
             android:background="@drawable/profit_bg_blue" >
 
             <TextView
@@ -62,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="24dp"
                 android:layout_marginTop="40dp"
                 android:text="@string/my_profit_last_profit"
                 android:textColor="#ffffff"
@@ -105,7 +110,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/profit_center_circle"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="24dp"
                 android:text="@string/my_profit_last_no_text"
                 android:textColor="#ffffff"
                 android:textSize="16sp"
@@ -118,8 +123,7 @@
         <LinearLayout
             android:id="@+id/my_profit_bottom_layout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="210dp"
             android:orientation="horizontal" >
 
             <!-- 累计获得 -->
@@ -127,7 +131,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="37dp"
+                android:layout_marginTop="56dp"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:orientation="vertical" >
@@ -166,7 +170,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="37dp"
+                android:layout_marginTop="56dp"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:orientation="vertical" >
@@ -196,14 +200,15 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+    </ScrollView>
 
     <ImageView
         android:id="@+id/video_detail_click_refresh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:src="@drawable/qitadifang"
         android:contentDescription="@string/imgdes"
+        android:src="@drawable/qitadifang"
         android:visibility="gone" />
 
 </RelativeLayout>

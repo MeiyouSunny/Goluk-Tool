@@ -113,6 +113,10 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 		case R.id.rl_msg_center_praise:
 			// Goto praise activity
 			{
+				if(!GolukUtils.isNetworkConnected(this)) {
+					Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+					return;
+				}
 				GolukApplication app = (GolukApplication)getApplication();
 				if (!app.isUserLoginSucess) {
 //					GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
@@ -127,6 +131,10 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 		case R.id.rl_msg_center_comment:
 			// Goto comment activity
 			{
+				if(!GolukUtils.isNetworkConnected(this)) {
+					Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+					return;
+				}
 				GolukApplication app = (GolukApplication)getApplication();
 				if (!app.isUserLoginSucess) {
 //					GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
@@ -142,6 +150,10 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 		case R.id.rl_msg_center_system:
 			// Goto system message activity
 			{
+				if(!GolukUtils.isNetworkConnected(this)) {
+					Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+					return;
+				}
 				GolukApplication app = (GolukApplication)getApplication();
 				if (!app.isUserLoginSucess) {
 //					GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
@@ -155,6 +167,10 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 			break;
 		case R.id.tv_msg_center_official:
 			// Goto system message activity
+			if(!GolukUtils.isNetworkConnected(this)) {
+				Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+				return;
+			}
 			Intent official = new Intent(this, OfficialMessageActivity.class);
 			startActivity(official);
 			break;
@@ -238,6 +254,10 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 
 	private void startMsgSettingActivity() {
 		GolukApplication app = (GolukApplication)getApplication();
+		if(!GolukUtils.isNetworkConnected(this)) {
+			Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+			return;
+		}
 //		if (!app.isUserLoginSucess) {
 //			GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
 //			return;
@@ -270,20 +290,21 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 	public void onLoadComplete(int requestType, Object result) {
 		mScrollView.onRefreshComplete();
 		if(null == result) {
+			Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 			return;
 		}
 
 		if(requestType == IPageNotifyFn.PageType_MsgCounter) {
 			MessageCounterBean bean = (MessageCounterBean)result;
 			if(null == bean.data) {
+				Toast.makeText(this, getString(
+						R.string.str_server_request_unknown_error), Toast.LENGTH_SHORT).show();
 				return;
 			}
 
 			if(!bean.success) {
-				return;
-			}
-
-			if(null == bean.data) {
+				Toast.makeText(this, getString(
+						R.string.str_server_request_arg_error), Toast.LENGTH_SHORT).show();
 				return;
 			}
 

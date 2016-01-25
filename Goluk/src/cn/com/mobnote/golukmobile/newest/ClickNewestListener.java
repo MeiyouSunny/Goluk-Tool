@@ -109,7 +109,7 @@ public class ClickNewestListener implements OnClickListener {
 		intent.putExtra(VideoCategoryActivity.KEY_VIDEO_CATEGORY_TYPE, VideoCategoryActivity.CATEGORY_TYPE_LIVE);
 		// 此处attribute一定要写 0 ,　否则直播查不出来
 		intent.putExtra(VideoCategoryActivity.KEY_VIDEO_CATEGORY_ATTRIBUTE, VideoCategoryActivity.LIVE_ATTRIBUTE_VALUE);
-		intent.putExtra(VideoCategoryActivity.KEY_VIDEO_CATEGORY_TITLE, "直播列表");
+		intent.putExtra(VideoCategoryActivity.KEY_VIDEO_CATEGORY_TITLE, mContext.getString(R.string.video_square_text));
 		mContext.startActivity(intent);
 	}
 
