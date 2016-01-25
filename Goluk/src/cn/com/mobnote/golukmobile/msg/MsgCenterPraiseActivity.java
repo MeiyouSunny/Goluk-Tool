@@ -153,13 +153,10 @@ public class MsgCenterPraiseActivity extends BaseActivity implements OnClickList
 		} else {
 			mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime());
 		}
-		if (!mIsFirst) {
-			closeLoadingDialog();
-		} else {
-			mRTPullListView.setVisibility(View.GONE);
-			nNoPraiseText.setVisibility(View.GONE);
-			mRefreshLayout.setVisibility(View.VISIBLE);
-		}
+		closeLoadingDialog();
+		mRTPullListView.setVisibility(View.GONE);
+		nNoPraiseText.setVisibility(View.GONE);
+		mRefreshLayout.setVisibility(View.VISIBLE);
 		GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
 	}
 

@@ -262,13 +262,10 @@ public class MsgCenterCommentActivity extends BaseActivity implements OnClickLis
 		} else {
 			mRTPullListView.onRefreshComplete(GolukUtils.getCurrentCommentTime());
 		}
-		if (!mIsFirst) {
-			closeLoadingDialog();
-		} else {
-			mRTPullListView.setVisibility(View.GONE);
-			mNoCommentText.setVisibility(View.GONE);
-			mRefreshLayout.setVisibility(View.VISIBLE);
-		}
+		closeLoadingDialog();
+		mRTPullListView.setVisibility(View.GONE);
+		mNoCommentText.setVisibility(View.GONE);
+		mRefreshLayout.setVisibility(View.VISIBLE);
 		GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
 	}
 
