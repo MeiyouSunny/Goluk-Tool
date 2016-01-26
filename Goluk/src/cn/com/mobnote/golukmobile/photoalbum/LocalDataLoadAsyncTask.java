@@ -13,6 +13,7 @@ import cn.com.mobnote.golukmobile.fileinfo.VideoFileInfoBean;
 import cn.com.mobnote.util.SortByDate;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 
 public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 	private DataCallBack mDataCallBack = null;
@@ -48,6 +49,7 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 		for (int i = 0 ; i < fLen; i++) {
 			try {
 				String fileName = files.get(i);
+				Log.v("dengting", "fileName = " + fileName);
 				VideoFileInfoBean videoFileInfoBean = mGolukVideoInfoDbManager.selectSingleData(fileName);
 				String videoPath = mFilePath + videoPaths[type] + fileName;
 				String resolution = "";
@@ -124,6 +126,7 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 //				}
 
 			} catch (Exception e) {
+				e.printStackTrace();
 				continue;
 			}
 		}
