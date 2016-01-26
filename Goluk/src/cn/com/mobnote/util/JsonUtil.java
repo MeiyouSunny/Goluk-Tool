@@ -1137,11 +1137,12 @@ public class JsonUtil {
 		return null;
 	}
 
-	public static String getReportJson(String key, JSONObject dataObj) {
+	public static String getReportJson(String key, JSONObject dataObj, String hdtype) {
 		try {
 			JSONObject obj = new JSONObject();
 			obj.put("key", key);
 			obj.put("data", dataObj);
+			obj.put("hdtype", hdtype);
 			return obj.toString();
 		} catch (Exception e) {
 

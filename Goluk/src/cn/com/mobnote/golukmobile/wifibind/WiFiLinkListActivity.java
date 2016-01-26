@@ -104,6 +104,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		collectLog("onCreate", "---1");
 
 		getIntentData();
+		
+		ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setHdType(mIpcRealtype);
 
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		mWac = new WifiConnectManager(mWifiManager, this);
