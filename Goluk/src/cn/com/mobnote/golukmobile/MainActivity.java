@@ -56,6 +56,7 @@ import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
+import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.msg.MessageBadger;
 import cn.com.mobnote.golukmobile.msg.MsgCenterCounterRequest;
 import cn.com.mobnote.golukmobile.msg.bean.MessageCounterBean;
@@ -197,6 +198,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mApp.startTime = System.currentTimeMillis();
 		// 页面初始化,获取页面控件
 		init();
+		
+		UserInfo userInfo = mApp.getMyInfo();
+		if (null != userInfo) {
+			mApp.mCurrentUId = userInfo.uid;
+			mApp.mCurrentAid = userInfo.aid;
+		}
 
 		// 读取SharedPreFerences中需要的数据,使用SharedPreFerences来记录程序启动的使用次数
 		SharedPreferences preferences = getSharedPreferences("golukmark", MODE_PRIVATE);

@@ -1734,12 +1734,15 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 */
 	public UserInfo getMyInfo() {
 		try {
-			if (!isUserLoginSucess) {
-				return null;
-			}
+//			if (!isUserLoginSucess) {
+//				return null;
+//			}
 			UserInfo myInfo = null;
 			String userInfo = mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
 					IPageNotifyFn.PageType_GetUserInfo_Get, "");
+			
+			GolukDebugUtils.e("","getUserInfo------------------logic-userInfo:" + userInfo);
+			
 			if (null != userInfo) {
 				myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(userInfo));
 			}
