@@ -861,7 +861,7 @@
                     android:background="@color/setting_line_color" />
             </RelativeLayout>
             <!-- 辅助信息显示 -->
-            <RelativeLayout
+            <!--  RelativeLayout
                 android:id="@+id/layout_settings_assistance_info"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
@@ -893,7 +893,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginLeft="15dp"
                     android:background="@color/setting_line_color" />
-            </RelativeLayout>
+            </RelativeLayout-->
             <!-- ADAS配置 -->
             
             <RelativeLayout
