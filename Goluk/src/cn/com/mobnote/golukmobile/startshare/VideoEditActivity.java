@@ -369,7 +369,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			@Override
 			public boolean onError(MediaPlayerControl mpc, int nErrorNo, String strErrInfo) {
 				// 视频播放出错
-				GolukUtils.showToast(VideoEditActivity.this, "视频播放出错,errorNo: " + nErrorNo + ",info: " + strErrInfo);
+				GolukUtils.showToast(VideoEditActivity.this, getString(R.string.str_video_play_error) + nErrorNo
+						+ getString(R.string.str_video_error_info) + strErrInfo);
 				return false;
 			}
 
@@ -674,7 +675,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		case R.id.share_filter_layout:
 			if (!isExit) {
 				if (mIsT1Video) {
-					GolukUtils.showToast(this, "视频滤镜功能即将上线，敬请期待");
+					GolukUtils.showToast(this, this.getString(R.string.str_video_filter_online_soon));
 				} else {
 					switchMiddleLayout(false, false);
 				}
@@ -728,7 +729,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 				try {
 					mVVPlayVideo.reload();
 				} catch (FilterVideoEditorException e) {
-					GolukUtils.showToast(VideoEditActivity.this, "重加载视频失败，" + e.getMessage());
+					GolukUtils.showToast(VideoEditActivity.this,
+							this.getString(R.string.str_reload_video_failure) + e.getMessage());
 				}
 			}
 			break;
@@ -738,7 +740,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 				errorInfo = (String) obj3;
 			}
 			toInitState();
-			GolukUtils.showToast(VideoEditActivity.this, "保存视频失败，" + errorInfo);
+			GolukUtils.showToast(VideoEditActivity.this, this.getString(R.string.str_save_video_fail) + errorInfo);
 			break;
 		default:
 			break;
@@ -817,7 +819,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	}
 
 	private void getShareFailed() {
-		GolukUtils.showToast(this, "获取视频分享地址失败");
+		GolukUtils.showToast(this, this.getString(R.string.str_get_share_address_fail));
 		toInitState();
 	}
 
@@ -837,9 +839,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			return;
 		}
 
-		final String title = "极路客精彩视频";
+		final String title = this.getString(R.string.str_video_edit_share_title);
 		final String describe = getShareDesc();
-		final String sinaTxt = "极路客精彩视频(使用#极路客Goluk#拍摄)";
+		final String sinaTxt = this.getString(R.string.str_share_board_real_desc);
 
 		this.mShareDealTool.toShare(shareData.shorturl, shareData.coverurl, describe, title,
 				mUploadVideo.getThumbBitmap(), sinaTxt, this.mUploadVideo.getVideoId());
@@ -854,12 +856,12 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private String getShareDesc() {
 		String describe = mTypeLayout.getCurrentDesc();
 		if (describe == null || "".equals(describe)) {
-			describe = "#极路客精彩视频#";
+			describe = this.getString(R.string.str_share_describe);
 		}
 
 		UserInfo info = mApp.getMyInfo();
 		if (null != info) {
-			describe = info.nickName + "：" + describe;
+			describe = info.nickName + this.getString(R.string.str_colon) + describe;
 		}
 
 		return describe;

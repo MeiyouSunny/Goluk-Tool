@@ -12,7 +12,7 @@
         android:layout_marginBottom="6dp"
         android:layout_marginTop="6dp"
         android:textColor="#999999"
-        android:text="分享到..."
+        android:text="@string/str_share_to_sw"
         android:textSize="18sp" />
 
 
@@ -47,7 +47,7 @@
                     android:textSize="10sp"
                     android:layout_marginTop="4dp"
                     android:textColor="#666666"
-                    android:text="朋友圈"/>
+                    android:text="@string/str_circle_of_friends"/>
             </RelativeLayout>
             
             <RelativeLayout
@@ -70,7 +70,7 @@
                     android:textSize="10sp"
                     android:layout_marginTop="4dp"
                     android:textColor="#666666"
-                    android:text="微信好友"/>
+                    android:text="@string/str_weixin_friends"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -92,7 +92,7 @@
                     android:layout_marginTop="4dp"
                     android:textSize="10sp"
                     android:textColor="#666666"
-                    android:text="微博"/>
+                    android:text="@string/str_weibo"/>
             </RelativeLayout> 
 			
              <RelativeLayout
@@ -114,7 +114,7 @@
                     android:textSize="10sp"
                     android:textColor="#666666"
                     android:layout_marginTop="4dp"
-                    android:text="QQ空间"/>
+                    android:text="@string/str_qzone"/>
             </RelativeLayout>
             
             <RelativeLayout
@@ -136,7 +136,7 @@
                     android:textSize="10sp"
                     android:textColor="#666666"
                     android:layout_marginTop="4dp"
-                    android:text="QQ好友"/>
+                    android:text="@string/str_qq_friends"/>
             </RelativeLayout>
 
         </LinearLayout>

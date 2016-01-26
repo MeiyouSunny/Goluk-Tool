@@ -70,7 +70,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.my_profit_detail);
 		
-		historyDate = GolukUtils.getCurrentFormatTime();
+		historyDate = GolukUtils.getCurrentFormatTime(this);
 		initView();
 		if (savedInstanceState == null) {
 			Intent it = getIntent();

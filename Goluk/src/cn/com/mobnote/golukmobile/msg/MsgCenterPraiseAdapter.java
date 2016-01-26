@@ -90,7 +90,7 @@ public class MsgCenterPraiseAdapter extends BaseAdapter {
 		if (null != praiseBean && 102 == praiseBean.type && null != praiseBean.content && null != praiseBean.sender) {
 			convertView.setVisibility(View.VISIBLE);
 			viewHolder.nTextName.setText(praiseBean.sender.name);
-			viewHolder.nTextTime.setText(GolukUtils.getCommentShowFormatTime(praiseBean.content.time));
+			viewHolder.nTextTime.setText(GolukUtils.getCommentShowFormatTime(mContext, praiseBean.content.time));
 			String netUrlHead = praiseBean.sender.customavatar;
 			if (null != netUrlHead && !"".equals(netUrlHead)) {
 				GlideUtils.loadNetHead(mContext, viewHolder.nImageHead, netUrlHead, R.drawable.my_head_moren7);

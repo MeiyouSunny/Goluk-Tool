@@ -70,7 +70,7 @@ public class MsgCenterCommentActivity extends BaseActivity implements OnClickLis
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_msgcenter_comment);
 
-		mHistoryDate = GolukUtils.getCurrentFormatTime();
+		mHistoryDate = GolukUtils.getCurrentFormatTime(this);
 		initView();
 
 		mIsFirst = true;

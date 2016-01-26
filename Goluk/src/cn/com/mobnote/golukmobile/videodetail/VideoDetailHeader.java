@@ -220,9 +220,10 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 		}
 
 		mTextName.setText(videoAllData.avideo.user.nickname);
-		mTextTime.setText(GolukUtils.getCommentShowFormatTime(videoAllData.avideo.video.sharingtime));
+		mTextTime.setText(GolukUtils.getCommentShowFormatTime(mContext, videoAllData.avideo.video.sharingtime));
 		// 点赞数、评论数、观看数
-		mTextLook.setText(GolukUtils.getFormatNumber(videoAllData.avideo.video.clicknumber) + "围观");
+		mTextLook.setText(GolukUtils.getFormatNumber(videoAllData.avideo.video.clicknumber)
+				+ mContext.getString(R.string.cluster_weiguan));
 		if (!"0".equals(videoAllData.avideo.video.praisenumber)) {
 			mTextZan.setText(GolukUtils.getFormatNumber(videoAllData.avideo.video.praisenumber));
 			mTextZan.setTextColor(Color.rgb(136, 136, 136));
@@ -249,7 +250,8 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 
 		if (0 == mType) {
 			mTextAuthor.setVisibility(View.VISIBLE);
-			mTextAuthor.setText("感谢作者  " + videoAllData.avideo.user.nickname);
+			mTextAuthor.setText(mContext.getString(R.string.str_thank_to_author) + "  "
+					+ videoAllData.avideo.user.nickname);
 		} else {
 			mTextAuthor.setVisibility(View.GONE);
 		}
@@ -303,11 +305,13 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 			if ("1".equals(videoAllData.avideo.video.recom.atflag)) {
 				mActiveLayout.setVisibility(View.VISIBLE);
 				if ("".equals(videoAllData.avideo.video.recom.atreason)) {
-					mActiveReason.setText("理由：活动参与积极奖～");
+					mActiveReason.setText(mContext.getString(R.string.str_atreason_default));
 				} else {
-					mActiveReason.setText("理由：" + videoAllData.avideo.video.recom.atreason);
+					mActiveReason.setText(mContext.getString(R.string.msg_system_reason_began)
+							+ videoAllData.avideo.video.recom.atreason);
 				}
-				mActiveCount.setText("+" + UserUtils.formatNumber(videoAllData.avideo.video.recom.atgold) + "Ｇ币");
+				mActiveCount.setText("+" + UserUtils.formatNumber(videoAllData.avideo.video.recom.atgold)
+						+ mContext.getString(R.string.str_profit_detail_unit));
 			} else {
 				mActiveLayout.setVisibility(View.GONE);
 			}
@@ -315,11 +319,13 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 			if ("1".equals(videoAllData.avideo.video.recom.sysflag)) {
 				mSysLayout.setVisibility(View.VISIBLE);
 				if ("".equals(videoAllData.avideo.video.recom.sysreason)) {
-					mSysReason.setText("理由：活动参与积极奖～");
+					mSysReason.setText(mContext.getString(R.string.str_atreason_default));
 				} else {
-					mSysReason.setText("理由：" + videoAllData.avideo.video.recom.sysreason);
+					mSysReason.setText(mContext.getString(R.string.msg_system_reason_began)
+							+ videoAllData.avideo.video.recom.sysreason);
 				}
-				mSysCount.setText("+" + UserUtils.formatNumber(videoAllData.avideo.video.recom.sysgold) + "Ｇ币");
+				mSysCount.setText("+" + UserUtils.formatNumber(videoAllData.avideo.video.recom.sysgold)
+						+ mContext.getString(R.string.str_profit_detail_unit));
 			} else {
 				mSysLayout.setVisibility(View.GONE);
 			}
@@ -327,9 +333,10 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 			if ("1".equals(videoAllData.avideo.video.recom.isrecommend)) {
 				mRecomLayout.setVisibility(View.VISIBLE);
 				if ("".equals(videoAllData.avideo.video.recom.reason)) {
-					mRecomReason.setText("理由：活动参与积极奖～");
+					mRecomReason.setText(mContext.getString(R.string.str_atreason_default));
 				} else {
-					mRecomReason.setText("理由：" + videoAllData.avideo.video.recom.reason);
+					mRecomReason.setText(mContext.getString(R.string.msg_system_reason_began)
+							+ videoAllData.avideo.video.recom.reason);
 				}
 			} else {
 				mRecomLayout.setVisibility(View.GONE);
@@ -466,7 +473,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 			mCustomDialog = new CustomDialog(mContext);
 			mCustomDialog.setCancelable(false);
 			mCustomDialog.setMessage(msg, Gravity.CENTER);
-			mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
+			mCustomDialog.setLeftButton(mContext.getString(R.string.user_repwd_ok), new OnLeftClickListener() {
 				@Override
 				public void onClickListener() {
 					mImageLayout.setVisibility(View.VISIBLE);
@@ -706,21 +713,21 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 		if (error) {
 			return true;
 		}
-		String msg = "播放错误";
+		String msg = mContext.getString(R.string.str_play_error);
 		switch (what) {
 		case 1:
 		case -1010:
-			msg = "视频出错，请重试！";
+			msg = mContext.getString(R.string.str_play_video_error);
 			break;
 		case -110:
-			msg = "网络访问异常，请重试！";
+			msg = mContext.getString(R.string.str_play_video_network_error);
 			break;
 
 		default:
 			break;
 		}
 		if (!UserUtils.isNetDeviceAvailable(mContext)) {
-			msg = "网络访问异常，请重试！";
+			msg = mContext.getString(R.string.str_play_video_network_error);
 		}
 		error = true;
 

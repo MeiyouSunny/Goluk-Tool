@@ -290,7 +290,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	}
 
 	public void updateViewData(boolean succ, int count) {
-		mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime());
+		mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime(this));
 		if (succ) {
 			mClusterAdapter.notifyDataSetChanged();
 			if (count > 0) {

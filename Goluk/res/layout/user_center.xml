@@ -26,7 +26,7 @@
             android:textColor="@color/white"
             android:ellipsize="end" 
             android:singleLine="true"
-            android:text="Ta的主页"
+            android:text="@string/str_his_homepage"
             android:textSize="18sp" />
 
         <Button

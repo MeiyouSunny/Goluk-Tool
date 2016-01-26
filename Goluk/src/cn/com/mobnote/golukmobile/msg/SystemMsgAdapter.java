@@ -162,7 +162,7 @@ public class SystemMsgAdapter extends BaseAdapter {
 				txt = mContext.getResources().getString(R.string.msg_system_select_txt);
 			}
 
-			txtHolder.msgTime.setText(GolukUtils.getCommentShowFormatTime(time));
+			txtHolder.msgTime.setText(GolukUtils.getCommentShowFormatTime(mContext, time));
 			txtHolder.msgTxt.setText(txt);
 			txtHolder.msgLayout.setOnClickListener(new OnClickListener() {
 				@Override
@@ -280,7 +280,7 @@ public class SystemMsgAdapter extends BaseAdapter {
 			});
 
 			GlideUtils.loadImage(mContext, imageHolder.msgImage, imgPath, 0);
-			imageHolder.msgTime.setText(GolukUtils.getCommentShowFormatTime(imgTime));
+			imageHolder.msgTime.setText(GolukUtils.getCommentShowFormatTime(mContext, imgTime));
 			imageHolder.msgTxt.setText(imgTxt);
 			imageHolder.msgReasonTxt.setText(mContext.getResources().getString(R.string.msg_system_reason_began)
 					+ imgReason);

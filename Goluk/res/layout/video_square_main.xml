@@ -21,7 +21,7 @@
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="精选"
+                android:text="@string/str_wonderful_text"
                 android:textColor="#0b59be"
                 android:textSize="16sp" />
 
@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:gravity="center_horizontal"
-                android:text="最新"
+                android:text="@string/str_newest_text"
                 android:textColor="#ffffff"
                 android:textSize="16sp" />
 

@@ -27,7 +27,6 @@
             android:textColor="@color/white"
             android:ellipsize="end" 
             android:singleLine="true"
-            android:text="xx专题"
             android:textSize="18sp" />
 
         <Button
@@ -40,7 +39,7 @@
             android:textColor="#0080ff"
             android:textSize="16sp"
             android:background="#242629"
-            android:text="分享" />
+            android:text="@string/str_usercenter_share" />
     </RelativeLayout>
 
     <ListView
@@ -57,7 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@drawable/qitadifang"
-        android:contentDescription="TODO"
+        android:contentDescription="@string/imgdes"
         android:visibility="gone" />
 
 </RelativeLayout>

@@ -172,7 +172,7 @@ public class SpecialListViewAdapter extends BaseAdapter {
 			try {
 				Date strtodate = formatter.parse(date);
 				if (null != strtodate) {
-					formatter = new SimpleDateFormat("MM月dd日 HH时mm分");
+					formatter = new SimpleDateFormat(mContext.getString(R.string.cluster_time_format));
 					if (null != formatter) {
 						time = formatter.format(strtodate);
 					}

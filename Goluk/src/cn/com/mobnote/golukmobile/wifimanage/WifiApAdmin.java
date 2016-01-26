@@ -9,6 +9,8 @@ import java.net.NetworkInterface;
 import java.util.Enumeration;
  
 
+
+import cn.com.mobnote.golukmobile.R;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiConfiguration;
@@ -90,7 +92,7 @@ public class WifiApAdmin {
 				
 					Message msg = new Message();
 	                 msg.what = 11;        
-	                 msg.obj ="wifi热点创建成功";
+	                 msg.obj = mContext.getString(R.string.str_wifi_create_success);
 	                 //发送消息
 	                 handler.sendMessage(msg);
 	       

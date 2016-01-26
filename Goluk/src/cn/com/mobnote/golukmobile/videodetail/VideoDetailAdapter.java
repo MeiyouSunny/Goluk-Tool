@@ -181,16 +181,16 @@ public class VideoDetailAdapter extends BaseAdapter {
 		if (!"".equals(temp.mReplyId) && null != temp.mReplyId && !"".equals(temp.mReplyName)
 				&& null != temp.mReplyName) {
 			// 评论回复
-			UserUtils.showText(commentHolder.mCommentConennt, temp.mReplyName, temp.mCommentTxt);
+			UserUtils.showText(mContext, commentHolder.mCommentConennt, temp.mReplyName, temp.mCommentTxt);
 		} else {
 			// 普通评论
 			commentHolder.mCommentConennt.setText(temp.mCommentTxt);
 		}
 
-		commentHolder.mCommentTime.setText(GolukUtils.getCommentShowFormatTime(temp.mCommentTime));
+		commentHolder.mCommentTime.setText(GolukUtils.getCommentShowFormatTime(mContext, temp.mCommentTime));
 		if (null != temp.mSeq && !"".equals(temp.mSeq)) {
 			commentHolder.nTextCommentFloor.setVisibility(View.VISIBLE);
-			commentHolder.nTextCommentFloor.setText(temp.mSeq + "楼");
+			commentHolder.nTextCommentFloor.setText(temp.mSeq + mContext.getString(R.string.str_floor_text));
 		} else {
 			commentHolder.nTextCommentFloor.setVisibility(View.GONE);
 		}

@@ -276,8 +276,8 @@ public class NewestAdapter extends BaseAdapter {
 
 		holder.nikename.setText(mVideoSquareInfo.mUserEntity.nickname);
 
-		holder.timeLocation.setText(GolukUtils.getCommentShowFormatTime(mVideoSquareInfo.mVideoEntity.sharingtime) + " " +
-									mVideoSquareInfo.mVideoEntity.location);
+		holder.timeLocation.setText(GolukUtils.getCommentShowFormatTime(mContext,
+				mVideoSquareInfo.mVideoEntity.sharingtime) + " " + mVideoSquareInfo.mVideoEntity.location);
 
 		if(null != mVideoSquareInfo.mVideoEntity.videoExtra) {
 			String recommend = mVideoSquareInfo.mVideoEntity.videoExtra.isrecommend;
@@ -497,7 +497,7 @@ public class NewestAdapter extends BaseAdapter {
 				TextView mUpdateTime = (TextView) item.findViewById(R.id.mUpdateTime);
 				ImageView mImageView = (ImageView) item.findViewById(R.id.mImageView);
 				mTitleName.setText(mCategoryDataInfo.name);
-				mUpdateTime.setText(GolukUtils.getNewCategoryShowTime(mCategoryDataInfo.time));
+				mUpdateTime.setText(GolukUtils.getNewCategoryShowTime(mContext, mCategoryDataInfo.time));
 				RelativeLayout.LayoutParams dvParams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
 				mImageView.setLayoutParams(dvParams);
 				loadHeadImage(mImageView, mCategoryDataInfo.coverurl, imagewidth, imageheight);

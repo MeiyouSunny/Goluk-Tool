@@ -162,7 +162,7 @@ public class ShareDeal implements OnClickListener {
 			mCurrentShareType = CustomShareBoard.TYPE_WEIXIN;
 			click_deal(mCurrentShareType);
 		} else {
-			GolukUtils.showToast(mActivity, "你未安装微信");
+			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_no_weixin));
 		}
 	}
 
@@ -179,7 +179,7 @@ public class ShareDeal implements OnClickListener {
 			mCurrentShareType = CustomShareBoard.TYPE_WEIXIN_CIRCLE;
 			click_deal(mCurrentShareType);
 		} else {
-			GolukUtils.showToast(mActivity, "你未安装微信");
+			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_no_weixin));
 		}
 	}
 
@@ -196,7 +196,7 @@ public class ShareDeal implements OnClickListener {
 			mCurrentShareType = CustomShareBoard.TYPE_QQ;
 			click_deal(mCurrentShareType);
 		} else {
-			GolukUtils.showToast(mActivity, "你未安装QQ或版本太低");
+			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_qq_low_version));
 		}
 	}
 

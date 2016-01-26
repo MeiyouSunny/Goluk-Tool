@@ -205,10 +205,11 @@ public class ClusterViewAdapter extends BaseAdapter implements OnTouchListener {
 			holder.nikename.setText(clusterInfo.author);
 			holder.time.setText(clusterInfo.sharingtime);
 			holder.zText.setText(clusterInfo.praisenumber);
-			holder.weiguan.setText(clusterInfo.clicknumber + " 围观");
+			holder.weiguan.setText(clusterInfo.clicknumber + " " + mContext.getString(R.string.cluster_weiguan));
 			holder.detail.setText(clusterInfo.author + "  " + clusterInfo.describe);
-			holder.totalcomments.setText("查看所有" + clusterInfo.comments + "条评论");
-			holder.zText.setText(clusterInfo.praisenumber + " 赞");
+			holder.totalcomments.setText(mContext.getString(R.string.cluster_check_all) + clusterInfo.comments
+					+ mContext.getString(R.string.cluster_number_pl));
+			holder.zText.setText(clusterInfo.praisenumber + " " + mContext.getString(R.string.str_usercenter_praise));
 			loadImage(holder.imageLayout, clusterInfo.imagepath);
 			initListener(index);
 			// 没点过
@@ -305,7 +306,7 @@ public class ClusterViewAdapter extends BaseAdapter implements OnTouchListener {
 			try {
 				Date strtodate = formatter.parse(date);
 				if (null != strtodate) {
-					formatter = new SimpleDateFormat("MM月dd日 HH时mm分");
+					formatter = new SimpleDateFormat(mContext.getString(R.string.cluster_time_format));
 					if (null != formatter) {
 						time = formatter.format(strtodate);
 					}

@@ -435,7 +435,8 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 				}
 			});
 			holder.nikename.setText(clusterInfo.mUserEntity.nickname);
-			final String sharingTime = GolukUtils.getCommentShowFormatTime(clusterInfo.mVideoEntity.sharingtime);
+			final String sharingTime = GolukUtils.getCommentShowFormatTime(mContext,
+					clusterInfo.mVideoEntity.sharingtime);
 			final String location = clusterInfo.mVideoEntity.location;
 			String showTimeLocation = sharingTime;
 			if (null != location) {
@@ -485,7 +486,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(0);
 				if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
 						&& !"".equals(comment.replyname)) {
-					UserUtils.showReplyText(holder.comment1, comment.name, comment.replyname, comment.text);
+					UserUtils.showReplyText(mContext, holder.comment1, comment.name, comment.replyname, comment.text);
 				} else {
 					UserUtils.showCommentText(holder.comment1, comment.name, comment.text);
 				}
@@ -498,7 +499,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(1);
 				if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
 						&& !"".equals(comment.replyname)) {
-					UserUtils.showReplyText(holder.comment2, comment.name, comment.replyname, comment.text);
+					UserUtils.showReplyText(mContext, holder.comment2, comment.name, comment.replyname, comment.text);
 				} else {
 					UserUtils.showCommentText(holder.comment2, comment.name, comment.text);
 				}
@@ -511,7 +512,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(2);
 				if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
 						&& !"".equals(comment.replyname)) {
-					UserUtils.showReplyText(holder.comment3, comment.name, comment.replyname, comment.text);
+					UserUtils.showReplyText(mContext, holder.comment3, comment.name, comment.replyname, comment.text);
 				} else {
 					UserUtils.showCommentText(holder.comment3, comment.name, comment.text);
 				}

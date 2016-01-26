@@ -77,7 +77,7 @@ public class OfficialMessageActivity extends BaseActivity implements IRequestRes
 				// show latest refresh time
 				pullToRefreshBase.getLoadingLayoutProxy(true, false).setLastUpdatedLabel(
 						OfficialMessageActivity.this.getResources().getString(R.string.updating) +
-						GolukUtils.getCurrentFormatTime());
+						GolukUtils.getCurrentFormatTime(OfficialMessageActivity.this));
 				sendOfficialRequest(REFRESH_PULL_DOWN, null);
 				mCurMotion = REFRESH_PULL_DOWN;
 			}

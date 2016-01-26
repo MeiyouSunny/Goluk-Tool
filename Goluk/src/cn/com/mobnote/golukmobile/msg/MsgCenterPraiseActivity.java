@@ -64,7 +64,7 @@ public class MsgCenterPraiseActivity extends BaseActivity implements OnClickList
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_msgcenter_comment);
 
-		mHistoryDate = GolukUtils.getCurrentFormatTime();
+		mHistoryDate = GolukUtils.getCurrentFormatTime(this);
 		initView();
 
 		mIsFirst = true;
@@ -151,7 +151,7 @@ public class MsgCenterPraiseActivity extends BaseActivity implements OnClickList
 		if (mCurrentOperator == OPERATOR_UP) {
 			this.removeFoot(1);
 		} else {
-			mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime());
+			mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime(this));
 		}
 		closeLoadingDialog();
 		mRTPullListView.setVisibility(View.GONE);

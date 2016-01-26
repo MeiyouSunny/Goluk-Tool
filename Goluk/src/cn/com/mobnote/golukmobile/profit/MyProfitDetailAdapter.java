@@ -101,7 +101,7 @@ public class MyProfitDetailAdapter extends BaseAdapter {
 		GlideUtils.loadImage(mContext, holder.mImagePic, result.url, R.drawable.tacitly_pic);
 		holder.mTextCount.setText("+" + UserUtils.formatNumber(result.gold)
 				+ mContext.getResources().getString(R.string.str_profit_detail_unit));
-		holder.mTextTime.setText(GolukUtils.getCommentShowFormatTime(this.formatDate(result.time)));
+		holder.mTextTime.setText(GolukUtils.getCommentShowFormatTime(mContext, this.formatDate(result.time)));
 		
 		return convertView;
 	}

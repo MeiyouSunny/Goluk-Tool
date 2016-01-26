@@ -138,9 +138,9 @@ public class DetailDialog extends Dialog implements android.view.View.OnClickLis
 			public void onClick(View v) {
 				boolean flog = GolukApplication.getInstance().getVideoSquareManager().report("1", mVideoJson.data.avideo.video.videoid, reporttype);
 				if (flog) {
-					GolukUtils.showToast(mContext, "举报成功，我们稍后会进行处理");
+					GolukUtils.showToast(mContext, mContext.getString(R.string.str_report_success));
 				} else {
-					GolukUtils.showToast(mContext, "网络异常，请检查网络");
+					GolukUtils.showToast(mContext, mContext.getString(R.string.network_error));
 				}
 				confirmation.dismiss();
 			}

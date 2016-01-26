@@ -277,25 +277,27 @@ public class GolukNotification {
 		mPushShowDialog.setTitle(msgBean.title);
 		mPushShowDialog.setMessage(msgBean.msg);
 		mPushShowDialog.setCancelable(true);
-		mPushShowDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+		mPushShowDialog.setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(R.string.user_cancle),
+				new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface arg0, int arg1) {
-				if (null != mPushShowDialog) {
-					mPushShowDialog.dismiss();
-				}
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						if (null != mPushShowDialog) {
+							mPushShowDialog.dismiss();
+						}
 
-			}
-		});
+					}
+				});
 
-		mPushShowDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialoginterface, int i) {
-				dealAppinnerClick(cnt, msgBean);
-				if (null != mPushShowDialog) {
-					mPushShowDialog.dismiss();
-				}
-			}
-		});
+		mPushShowDialog.setButton(DialogInterface.BUTTON_POSITIVE,
+				context.getString(R.string.user_personal_sign_title), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialoginterface, int i) {
+						dealAppinnerClick(cnt, msgBean);
+						if (null != mPushShowDialog) {
+							mPushShowDialog.dismiss();
+						}
+					}
+				});
 		mPushShowDialog.show();
 	}
 
@@ -514,7 +516,8 @@ public class GolukNotification {
 			}
 			return true;
 		}
-		GolukUtils.showToast(GolukApplication.getInstance().getContext(), "请登录后查看消息");
+		GolukUtils.showToast(GolukApplication.getInstance().getContext(), GolukApplication.getInstance().getContext()
+				.getString(R.string.str_msg_push_login));
 		return false;
 	}
 

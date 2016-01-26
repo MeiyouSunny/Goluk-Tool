@@ -170,7 +170,7 @@ public class InputLayout implements OnClickListener, OnTouchListener, TextWatche
 			break;
 		case R.id.share_input_ok:
 			if (!isInputValid) {
-				GolukUtils.showToast(mContext, "内容长度超出限制");
+				GolukUtils.showToast(mContext, mContext.getString(R.string.str_content_out));
 				return;
 			}
 			final String content = mShareInputEdit.getText().toString().trim();

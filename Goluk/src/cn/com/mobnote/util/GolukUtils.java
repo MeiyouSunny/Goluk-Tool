@@ -378,8 +378,9 @@ public class GolukUtils {
 		}, 500);
 	}
 
-	public static String getCurrentFormatTime() {
-		String time = DateFormat.format("MM月dd日 HH时mm分ss秒", Calendar.getInstance().getTime()).toString();
+	public static String getCurrentFormatTime(Context context) {
+		String time = DateFormat.format(context.getString(R.string.str_date_formatter),
+				Calendar.getInstance().getTime()).toString();
 		return time;
 	}
 
@@ -463,7 +464,7 @@ public class GolukUtils {
 	 * @author jyf
 	 * @date 2015年8月7日
 	 */
-	public static String getCommentShowFormatTime(String time) {
+	public static String getCommentShowFormatTime(Context context, String time) {
 		try {
 			String result = formatTimeYMDHMS(time);
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINESE);
@@ -491,12 +492,12 @@ public class GolukUtils {
 				// 今天
 				SimpleDateFormat hhmmFormat = new SimpleDateFormat("HH:mm", Locale.CHINESE);
 				String todayFormatStr = hhmmFormat.format(oldDate);
-				result = "今天 " + todayFormatStr;
+				result = context.getString(R.string.str_today) + " " + todayFormatStr;
 			} else if (currentYear == oldYear && oldMonth == currentMonth && oldDay + 1 == currentDay) {
 				// 昨天
 				SimpleDateFormat hhmmFormat = new SimpleDateFormat("HH:mm", Locale.CHINESE);
 				String todayFormatStr = hhmmFormat.format(oldDate);
-				result = "昨天 " + todayFormatStr;
+				result = context.getString(R.string.str_yestoday)+" " + todayFormatStr;
 			} else if (currentYear == oldYear) {
 				// 本年
 				SimpleDateFormat hhmmFormat = new SimpleDateFormat("MM-dd HH:mm", Locale.CHINESE);
@@ -529,7 +530,7 @@ public class GolukUtils {
 	}
 
 	@SuppressLint("SimpleDateFormat")
-	public static String getNewCategoryShowTime(String date) {
+	public static String getNewCategoryShowTime(Context context, String date) {
 		final long MINTUE = 60 * 1000;
 		final long HOUR = 60 * MINTUE;
 		final long DAY = 24 * HOUR;
@@ -549,21 +550,21 @@ public class GolukUtils {
 			long diff = Math.abs(historytime - curTime);// 时间差
 			if (curYear == history) {
 				if (diff <= WEEK && diff > DAY) {
-					return time = diff / DAY + "天前更新";// 天前更新
+					return time = diff / DAY + context.getString(R.string.str_day_refresh);// 天前更新
 				} else if (diff <= DAY && diff > HOUR) {
-					return time = diff / HOUR + "小时前更新";// 小时前更新
+					return time = diff / HOUR + context.getString(R.string.str_hours_refresh);// 小时前更新
 				} else if (diff <= HOUR) {
 					int min = (int) (diff / MINTUE);
 					if (min < 1) {
 						min = 1;
 					}
-					return time = min + "分钟前更新";// 分钟前更新
+					return time = min + context.getString(R.string.str_minute_refresh);// 分钟前更新
 				} else {
-					SimpleDateFormat jn = new SimpleDateFormat("MM.dd更新");
+					SimpleDateFormat jn = new SimpleDateFormat(context.getString(R.string.str_month_day_refresh));
 					return jn.format(strtodate);// 今年内：月日更新
 				}
 			} else {
-				SimpleDateFormat jn = new SimpleDateFormat("yyyy.MM.dd更新");
+				SimpleDateFormat jn = new SimpleDateFormat(context.getString(R.string.str_year_month_day_refresh));
 				return jn.format(strtodate);// 非今年：年月日更新
 			}
 		} catch (ParseException e) {

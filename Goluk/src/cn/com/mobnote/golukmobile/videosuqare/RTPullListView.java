@@ -70,10 +70,11 @@ public class RTPullListView extends ListView implements OnScrollListener {
 	private RelativeLayout mVideoTheEndView = null;
 
 	@SuppressLint("SimpleDateFormat")
-	private SimpleDateFormat formatter = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
+	private SimpleDateFormat formatter;
 
 	public RTPullListView(Context context) {
 		super(context);
+		formatter = new SimpleDateFormat(context.getString(R.string.str_date_formatter));
 		init(context);
 	}
 
