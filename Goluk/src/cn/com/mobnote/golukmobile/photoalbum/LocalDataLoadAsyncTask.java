@@ -43,9 +43,7 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 		}
 
 		Collections.sort(files, new SortByDate());
-		if (null == files || files.size() <= 0) {
-			return null;
-		}
+
 		int fLen = files.size();
 		for (int i = 0 ; i < fLen; i++) {
 			try {
