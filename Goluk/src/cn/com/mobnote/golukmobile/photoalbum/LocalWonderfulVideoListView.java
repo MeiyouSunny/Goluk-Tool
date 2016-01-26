@@ -280,7 +280,7 @@ public class LocalWonderfulVideoListView {
 				checkListState();
 			}
 		});
-		task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+		task.execute("");
 	}
 
 	public boolean isHasData() {
