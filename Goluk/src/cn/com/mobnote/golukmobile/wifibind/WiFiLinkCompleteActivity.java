@@ -313,6 +313,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
 		// 设置绑定成功
 		ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setType(ReportLog.TYPE_SUCESS);
+		final String hdtype = null != ipcInfo ? ipcInfo.productname : "";
+		ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setHdType(hdtype);
 		reportLog();
 		mApp.mIPCControlManager.isNeedReportSn = true;
 		if (mApp.mIPCControlManager.mDeviceSn != null) {

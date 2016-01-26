@@ -13,6 +13,8 @@ public class ReportLog {
 
 	private String mKey = null;
 	private String mType = "1";
+	/** 绑定设备类型, G1, G2, T1 */
+	private String mHdType = "";
 	private JSONArray valueArray = new JSONArray();
 
 	public ReportLog(String key) {
@@ -21,6 +23,17 @@ public class ReportLog {
 
 	public void setType(String type) {
 		mType = type;
+	}
+
+	/**
+	 * 设置设备类型
+	 * 
+	 * @param hdtype
+	 *            G1/ G2 /T1
+	 * @author jyf
+	 */
+	public void setHdType(String hdtype) {
+		mHdType = hdtype;
 	}
 
 	// 添加日志体
@@ -42,7 +55,7 @@ public class ReportLog {
 			dataObj.put("type", mType);
 			dataObj.put("value", valueArray);
 
-			return JsonUtil.getReportJson(mKey, dataObj);
+			return JsonUtil.getReportJson(mKey, dataObj, mHdType);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -55,6 +68,7 @@ public class ReportLog {
 	public void clear() {
 		mType = "1";
 		valueArray = null;
+		mHdType = "";
 	}
 
 }

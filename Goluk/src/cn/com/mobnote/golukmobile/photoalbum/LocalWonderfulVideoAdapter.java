@@ -136,15 +136,15 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		}
 
 		if ("local".equals(from)) {
-			holder.mPreView1.setBackgroundResource(R.drawable.photo_preview_icon);
-			holder.mPreView2.setBackgroundResource(R.drawable.photo_preview_icon);
+			holder.mPreView1.setImageResource(R.drawable.photo_preview_icon);
+			holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
 		} else {
 			if (type == IPCManagerFn.TYPE_CIRCULATE) {
-				holder.mPreView1.setBackgroundResource(R.drawable.photo_preview_icon);
-				holder.mPreView2.setBackgroundResource(R.drawable.photo_preview_icon);
+				holder.mPreView1.setImageResource(R.drawable.photo_preview_icon);
+				holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
 			} else {
-				holder.mPreView1.setBackgroundResource(R.drawable.photo_share_icon);
-				holder.mPreView2.setBackgroundResource(R.drawable.photo_share_icon);
+				holder.mPreView1.setImageResource(R.drawable.photo_share_icon);
+				holder.mPreView2.setImageResource(R.drawable.photo_share_icon);
 			}
 		}
 

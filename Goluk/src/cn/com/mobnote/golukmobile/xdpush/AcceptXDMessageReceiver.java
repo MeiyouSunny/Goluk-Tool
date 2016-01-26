@@ -93,6 +93,11 @@ public class AcceptXDMessageReceiver extends XGPushBaseReceiver {
 			// 程序外通知
 //		EventBus.getDefault().post(new EventPushMsg(EventConfig.PUSH_MSG_GET, bean));
 	//	MessageManager.getMessageManager().setCommentCount(commentCount);
+		GolukApplication mApp = GolukApplication.getInstance();
+		if(null == mApp) {
+			return;
+		}
+
 		int type = 0;
 		if(null != bean.params) {
 			JSONArray array = null;
@@ -110,18 +115,24 @@ public class AcceptXDMessageReceiver extends XGPushBaseReceiver {
 					if(0 == type) {
 						//do nothing
 					} else if(101 == type) {
-						int num = MessageManager.getMessageManager().getCommentCount();
-						MessageManager.getMessageManager().setCommentCount(num + 1);
+						if(mApp.isUserLoginSucess) {
+							int num = MessageManager.getMessageManager().getCommentCount();
+							MessageManager.getMessageManager().setCommentCount(num + 1);
+						}
 					} else if(102 == type) {
-						int num = MessageManager.getMessageManager().getPraiseCount();
-						MessageManager.getMessageManager().setPraiseCount(num + 1);
+						if(mApp.isUserLoginSucess) {
+							int num = MessageManager.getMessageManager().getPraiseCount();
+							MessageManager.getMessageManager().setPraiseCount(num + 1);
+						}
 					} else if(type >= 200 && type < 300) {
-						int num = MessageManager.getMessageManager().getSystemMessageCount();
-						MessageManager.getMessageManager().setSystemMessageCount(num + 1);
+						if(mApp.isUserLoginSucess) {
+							int num = MessageManager.getMessageManager().getSystemMessageCount();
+							MessageManager.getMessageManager().setSystemMessageCount(num + 1);
+						}
 					} else if(type >= 300 && type < 400) {
 						// for miui to sync number on launcher
-						int num = MessageManager.getMessageManager().getSystemMessageCount();
-						MessageManager.getMessageManager().setSystemMessageCount(num);
+//						int num = MessageManager.getMessageManager().getSystemMessageCount();
+//						MessageManager.getMessageManager().setSystemMessageCount(num);
 					} else {
 						// do nothing
 					}

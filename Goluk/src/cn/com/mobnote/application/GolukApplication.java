@@ -709,6 +709,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 
 		try {
+			GolukDebugUtils.e("","GolukApplication-----ipcVideoDownLoadCallback:  success:" + success + "  data:" + data);
 			JSONObject jsonobj = new JSONObject(data);
 			String tag = jsonobj.optString("tag");
 			if (tag.equals("videodownload")) {
@@ -799,13 +800,15 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					resetSDCheckState();
 					GolukDebugUtils.e("xuhw", "YYYYYY=＠＠＠＠===download==fail===success=" + success + "==data=" + data);
 					JSONObject json = new JSONObject(data);
-					String filename = json.optString("filename");
+					final String filename = json.optString("filename");
 
 					if (mDownLoadFileList.contains(filename)) {
 						if (!mNoDownLoadFileList.contains(filename)) {
 							mNoDownLoadFileList.add(filename);
 						}
 					}
+					// 下载文件失败，删除数据库中的信息
+					GolukVideoInfoDbManager.getInstance().delVideoInfo(filename);
 
 					GolukDebugUtils.e("xuhw", "BBBBBBB=======down==fail====" + mNoDownLoadFileList.size());
 					if (checkDownloadCompleteState()) {
@@ -1731,12 +1734,15 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 */
 	public UserInfo getMyInfo() {
 		try {
-			if (!isUserLoginSucess) {
-				return null;
-			}
+//			if (!isUserLoginSucess) {
+//				return null;
+//			}
 			UserInfo myInfo = null;
 			String userInfo = mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
 					IPageNotifyFn.PageType_GetUserInfo_Get, "");
+			
+			GolukDebugUtils.e("","getUserInfo------------------logic-userInfo:" + userInfo);
+			
 			if (null != userInfo) {
 				myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(userInfo));
 			}
