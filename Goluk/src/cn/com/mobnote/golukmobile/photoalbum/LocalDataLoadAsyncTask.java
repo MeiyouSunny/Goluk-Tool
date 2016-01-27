@@ -126,7 +126,6 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 //				}
 
 			} catch (Exception e) {
-				e.printStackTrace();
 				continue;
 			}
 		}
