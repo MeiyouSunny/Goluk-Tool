@@ -57,6 +57,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:ellipsize="end"
+                android:singleLine="true"
                 android:layout_toLeftOf="@+id/mVideoNum"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
