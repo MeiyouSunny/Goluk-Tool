@@ -93,7 +93,7 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
 			@Override
 			public void onRefresh() {
 				if(GolukUtils.isNetworkConnected(SystemMsgActivity.this) == false){
-					mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime());
+					mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime(SystemMsgActivity.this));
 					GolukUtils.showToast(SystemMsgActivity.this, SystemMsgActivity.this.getResources().getString(R.string.user_net_unavailable));
 					return;
 				}
@@ -181,7 +181,7 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
 	
 
 	public void updateViewData(boolean succ, int count) {
-		mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime());
+		mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime(this));
 		if (succ) {
 			mEmpty.setVisibility(View.GONE);
 			mRTPullListView.setVisibility(View.VISIBLE);

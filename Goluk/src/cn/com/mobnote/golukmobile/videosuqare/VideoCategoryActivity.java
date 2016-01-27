@@ -194,7 +194,7 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 	// 分享成功后需要调用的接口
 	public void shareSucessDeal(boolean isSucess, String channel) {
 		if (!isSucess) {
-			GolukUtils.showToast(VideoCategoryActivity.this, "第三方分享失败");
+			GolukUtils.showToast(VideoCategoryActivity.this, this.getString(R.string.str_third_share_fail));
 			return;
 		}
 		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, shareVideoId);

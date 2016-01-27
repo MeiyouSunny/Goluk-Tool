@@ -33,9 +33,12 @@ public class VolumnView extends View {
 	Bitmap bitmap;
 	
 	RectF oval;
+	
+	Context mContext ;
 
 	public VolumnView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+		mContext = context;
 		init(context);
 	}
 
@@ -86,10 +89,10 @@ public class VolumnView extends View {
 		paint.setColor(Color.WHITE);
 		paint.setStrokeWidth(0);
 		paint.setTextSize(40);
-		float textWidth = paint.measureText("铃声"); // 测量字体宽度，我们需要根据字体的宽度设置在圆环中间
+		float textWidth = paint.measureText(mContext.getString(R.string.str_ring)); // 测量字体宽度，我们需要根据字体的宽度设置在圆环中间
 
-		canvas.drawText("铃声", cx - textWidth / 2, cx + bitmap.getHeight() / 2
-				+ 40, paint);
+		canvas.drawText(mContext.getString(R.string.str_ring), cx - textWidth / 2, cx + bitmap.getHeight() / 2 + 40,
+				paint);
 
 		// 绘制进度
 		paint.setStyle(Style.STROKE);

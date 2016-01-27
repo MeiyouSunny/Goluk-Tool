@@ -70,7 +70,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.my_profit_detail);
 		
-		historyDate = GolukUtils.getCurrentFormatTime();
+		historyDate = GolukUtils.getCurrentFormatTime(this);
 		initView();
 		if (savedInstanceState == null) {
 			Intent it = getIntent();
@@ -224,19 +224,19 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 			detailInfo = (ProfitDetailInfo) result;
 			if (null != detailInfo && detailInfo.success && null != detailInfo.data && null != detailInfo.data.incomelist) {
 				int size = detailInfo.data.incomelist.size();
-				if (size > 0) {
-					mImageRefresh.setVisibility(View.GONE);
-					mTextNoData.setVisibility(View.GONE);
-					mRTPullListView.setVisibility(View.VISIBLE);
-					if(mCurrentOperator.equals(OPERATOR_FIRST) || mCurrentOperator.equals(OPERATOR_DOWN)) {
-						pullCallBack(detailInfo.data.incomelist.size(), detailInfo.data.incomelist);
-					} else {
-						pushCallBack(detailInfo.data.incomelist.size(), detailInfo.data.incomelist);
-					}
-				} else {
+				if (size <= 0 && !mCurrentOperator.equals(OPERATOR_UP)) {
 					mImageRefresh.setVisibility(View.GONE);
 					mRTPullListView.setVisibility(View.GONE);
 					mTextNoData.setVisibility(View.VISIBLE);
+					return;
+				}
+				mImageRefresh.setVisibility(View.GONE);
+				mTextNoData.setVisibility(View.GONE);
+				mRTPullListView.setVisibility(View.VISIBLE);
+				if (mCurrentOperator.equals(OPERATOR_FIRST) || mCurrentOperator.equals(OPERATOR_DOWN)) {
+					pullCallBack(detailInfo.data.incomelist.size(), detailInfo.data.incomelist);
+				} else {
+					pushCallBack(detailInfo.data.incomelist.size(), detailInfo.data.incomelist);
 				}
 			} else {
 				unusual();

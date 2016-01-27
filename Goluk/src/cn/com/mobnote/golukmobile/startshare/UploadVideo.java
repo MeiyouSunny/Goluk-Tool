@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore.Video.Thumbnails;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -249,15 +250,17 @@ public class UploadVideo implements IUploadRequestListener {
 	public void showExitDialog() {
 		dimissErrorDialog();
 
-		mExitPromptDialog = new AlertDialog.Builder(mContext).setTitle("提示").setMessage("正在上传视频，是否中断？")
-				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+		mExitPromptDialog = new AlertDialog.Builder(mContext)
+				.setTitle(mContext.getString(R.string.user_dialog_hint_title))
+				.setMessage(mContext.getString(R.string.str_uploading_videos_is_interrupted))
+				.setPositiveButton(mContext.getString(R.string.str_button_ok), new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						click_Exit();
 					}
 
-				}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+				}).setNegativeButton(mContext.getString(R.string.user_cancle), new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -284,17 +287,18 @@ public class UploadVideo implements IUploadRequestListener {
 		}
 		// GlobalWindow.getInstance().toFailed("视频上传失败");
 
-		mErrorDialog = new AlertDialog.Builder(mContext).setTitle("提示").setMessage("上传失败")
-				.setPositiveButton("重试", new DialogInterface.OnClickListener() {
+		mErrorDialog = new AlertDialog.Builder(mContext).setTitle(mContext.getString(R.string.user_dialog_hint_title))
+				.setMessage(mContext.getString(R.string.str_upload_fail))
+				.setPositiveButton(mContext.getString(R.string.str_try_again), new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						uploadVideoFile(mVideoPath);
 						dimissErrorDialog();
-						GolukUtils.showToast(mContext, "重新开始上传");
+						GolukUtils.showToast(mContext, mContext.getString(R.string.str_re_upload));
 					}
 
-				}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+				}).setNegativeButton(mContext.getString(R.string.user_cancle), new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {

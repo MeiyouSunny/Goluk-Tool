@@ -140,7 +140,7 @@ public class PromotionDataAdapter extends BaseAdapter {
 				groupHolder = (GroupViewHolder) convertView.getTag();
 			}
 
-			itemValue = item.channelname + ":";
+			itemValue = item.channelname + mContext.getString(R.string.str_colon_english);
 			groupHolder.title.setText(itemValue);
 			break;
 

@@ -74,7 +74,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 	SpecialInfo headdata = null;
 
 	@SuppressLint("SimpleDateFormat")
-	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
+	private SimpleDateFormat sdf;
 
 	private SpecialDataManage sdm = new SpecialDataManage();
 	private TextView textTitle;
@@ -89,6 +89,8 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.special_list);
 
+		sdf = new SimpleDateFormat(this.getString(R.string.str_date_formatter));
+		
 		Intent intent = getIntent();
 
 		ztid = intent.getStringExtra("ztid");
@@ -96,7 +98,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 
 		if(!TextUtils.isEmpty(title)) {
 			if (title.length() > 12) {
-				title = title.substring(0, 12) + "...";
+				title = title.substring(0, 12) + this.getString(R.string.str_omit);
 			}
 		}
 
@@ -230,7 +232,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 			boolean result = GolukApplication.getInstance().getVideoSquareManager().getTagShareUrl("1", ztid);
 			if (result == false) {
 				closeProgressDialog();
-				GolukUtils.showToast(this, "网络异常，请检查网络");
+				GolukUtils.showToast(this, this.getString(R.string.network_error));
 			}
 			break;
 		}
@@ -256,7 +258,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 	// 分享成功后需要调用的接口
 	public void shareSucessDeal(boolean isSucess, String channel) {
 		if (!isSucess) {
-			GolukUtils.showToast(SpecialListActivity.this, "第三方分享失败");
+			GolukUtils.showToast(SpecialListActivity.this, this.getString(R.string.str_third_share_fail));
 			return;
 		}
 		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, shareVideoId);
@@ -301,7 +303,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 					ZTHead headData = sdm.getSpecialHeadData(param2.toString());
 					if (null != headData && null != headData.ztitle && !"".equals(headData.ztitle)) {
 						if (headData.ztitle.length() > 12) {
-							textTitle.setText(headData.ztitle.substring(0, 12) + "...");
+							textTitle.setText(headData.ztitle.substring(0, 12) + this.getString(R.string.str_omit));
 						} else {
 							textTitle.setText(headData.ztitle);
 						}
@@ -375,7 +377,8 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 							
 						}
 
-						commentLink.setText("查看所有  " + map.get("comcount") + " 条评论");
+						commentLink.setText(this.getString(R.string.cluster_check_all) + "  " + map.get("comcount")
+								+ " " + this.getString(R.string.cluster_number_pl));
 
 						commentLink.setOnClickListener(this);
 						outurl.setOnClickListener(this);
@@ -395,7 +398,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 									comment1.setVisibility(View.VISIBLE);
 									if (null != ci.replyid && !"".equals(ci.replyid) && null != ci.replyname
 											&& !"".equals(ci.replyname)) {
-										UserUtils.showReplyText(comment1, ci.name, ci.replyname, ci.text);
+										UserUtils.showReplyText(this, comment1, ci.name, ci.replyname, ci.text);
 									} else {
 										UserUtils.showCommentText(comment1, ci.name, ci.text);
 									}
@@ -404,7 +407,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 									comment2.setVisibility(View.VISIBLE);
 									if (null != ci.replyid && !"".equals(ci.replyid) && null != ci.replyname
 											&& !"".equals(ci.replyname)) {
-										UserUtils.showReplyText(comment2, ci.name, ci.replyname, ci.text);
+										UserUtils.showReplyText(this, comment2, ci.name, ci.replyname, ci.text);
 									} else {
 										UserUtils.showCommentText(comment2, ci.name, ci.text);
 									}
@@ -413,7 +416,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 									comment3.setVisibility(View.VISIBLE);
 									if (null != ci.replyid && !"".equals(ci.replyid) && null != ci.replyname
 											&& !"".equals(ci.replyname)) {
-										UserUtils.showReplyText(comment3, ci.name, ci.replyname, ci.text);
+										UserUtils.showReplyText(this, comment3, ci.name, ci.replyname, ci.text);
 									} else {
 										UserUtils.showCommentText(comment3, ci.name, ci.text);
 									}
@@ -436,7 +439,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 
 			} else {
 
-				GolukUtils.showToast(SpecialListActivity.this, "网络异常，请检查网络");
+				GolukUtils.showToast(SpecialListActivity.this, this.getString(R.string.network_error));
 			}
 
 			if (mDataList.size() > 0) {
@@ -456,14 +459,14 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 						String shareurl = data.getString("shorturl");
 						String coverurl = data.getString("coverurl");
 						String describe = data.optString("describe");
-						String realDesc = "极路客精选专题(使用#极路客Goluk#拍摄)";
+						String realDesc = this.getString(R.string.cluster_jxzt_share_txt);
 
 						if (TextUtils.isEmpty(describe)) {
 							describe = "";
 						}
 						String ttl = title;
 						if (TextUtils.isEmpty(title)) {
-							ttl = "极路客精选专题分享";
+							ttl = this.getString(R.string.cluster_jx_zt_share);
 						}
 						// 缩略图
 						Bitmap bitmap = null;
@@ -480,7 +483,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 									Gravity.BOTTOM, 0, 0);
 						}
 					} else {
-						GolukUtils.showToast(this, "网络异常，请检查网络");
+						GolukUtils.showToast(this, this.getString(R.string.network_error));
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -488,7 +491,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 			} else {
 				// mCustomProgressDialog.close();
 				closeProgressDialog();
-				GolukUtils.showToast(this, "网络异常，请检查网络");
+				GolukUtils.showToast(this, this.getString(R.string.network_error));
 			}
 		}
 
@@ -515,106 +518,101 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 	 */
 	public void loadHistorydata() {
 		String param;
-		try {
-			param = this.test();// GolukApplication.getInstance().getVideoSquareManager().getSquareList("");
-			if (param != null && !"".equals(param)) {
-				List<SpecialInfo> list;
-				try {
-					list = sdm.getListData(param);
+		param = "";//this.test();// GolukApplication.getInstance().getVideoSquareManager().getSquareList("");
+		if (param != null && !"".equals(param)) {
+			List<SpecialInfo> list;
+			try {
+				list = sdm.getListData(param);
 
-					if (list != null && list.size() > 0) {
-						mDataList = list;
-						init(true);
-					}
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if (list != null && list.size() > 0) {
+					mDataList = list;
+					init(true);
 				}
-
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+
 		}
 
 	}
 
-	public String test() throws JSONException {
-		JSONObject jx = new JSONObject();
-		jx.put("success", true);
-		jx.put("msg", "成功");
-
-		JSONObject data = new JSONObject();
-		data.put("result", "0");
-		data.put("count", "1");
-
-		JSONObject video = new JSONObject();
-		video.put("videoid", "12121");
-		video.put("type", "2");
-		video.put("sharingtime", "2015/08/01");
-		video.put("describe", "记录卡记录卡据了解乐扣乐扣交流交流框架梁极乐空间垃圾筐拉进来");
-		video.put("picture", "http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
-		video.put("livesdkaddress", "http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
-
-		JSONObject user = new JSONObject();
-		user.put("uid", "32323");
-		user.put("nickname", "为什么不");
-		user.put("headportrait", "2");
-		user.put("sex", "1");
-
-		JSONObject videodata = new JSONObject();
-		videodata.put("video", video);
-		videodata.put("user", user);
-
-		JSONArray videos = new JSONArray();
-		videos.put(videodata);
-
-		data.put("videolist", videos);
-
-		JSONObject commentdata = new JSONObject();
-		commentdata.put("commentid", "2312");
-		commentdata.put("authorid", "34233");
-		commentdata.put("name", "大狗");
-		commentdata.put("avatar", "2");
-		commentdata.put("time", "2015/02/22");
-		commentdata.put("text", "来健身卡来对付框架思路东风路斯蒂芬简历上");
-
-		JSONObject commentdata2 = new JSONObject();
-		commentdata2.put("commentid", "2312");
-		commentdata2.put("authorid", "34233");
-		commentdata2.put("name", "二狗");
-		commentdata2.put("avatar", "2");
-		commentdata2.put("time", "2015/02/22");
-		commentdata2.put("text", "离开家你弄死的放上来的咖啡机三闾大夫接口六角恐龙接口链接冷静冷静记录框架梁");
-
-		JSONArray comments = new JSONArray();
-		comments.put(commentdata);
-		comments.put(commentdata2);
-
-		JSONObject comment = new JSONObject();
-		comment.put("iscomment", "1");
-		comment.put("comcount", "2");
-		comment.put("iscomment", "1");
-		comment.put("comlist", comments);
-
-		data.put("comment", comment);
-
-		JSONObject head = new JSONObject();
-		head.put("showhead", "1");
-		head.put("headimg", "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
-		head.put("headvideoimg", "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
-		head.put("headvideo", "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
-		head.put("ztIntroduction", "六角恐龙极乐空间六角恐龙极乐空间");
-		head.put("outurl", "www.baidu.com");
-		head.put("outurlname", "百度");
-		head.put("ztitle", "测试title");
-
-		data.put("head", head);
-
-		jx.put("data", data);
-		// {“result”:”0”,“head”:{},“videolist”:[],”commentlist”:{}}
-		return jx.toString();
-
-	}
+//	public String test() throws JSONException {
+//		JSONObject jx = new JSONObject();
+//		jx.put("success", true);
+//		jx.put("msg", "成功");
+//
+//		JSONObject data = new JSONObject();
+//		data.put("result", "0");
+//		data.put("count", "1");
+//
+//		JSONObject video = new JSONObject();
+//		video.put("videoid", "12121");
+//		video.put("type", "2");
+//		video.put("sharingtime", "2015/08/01");
+//		video.put("describe", "记录卡记录卡据了解乐扣乐扣交流交流框架梁极乐空间垃圾筐拉进来");
+//		video.put("picture", "http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
+//		video.put("livesdkaddress", "http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
+//
+//		JSONObject user = new JSONObject();
+//		user.put("uid", "32323");
+//		user.put("nickname", "为什么不");
+//		user.put("headportrait", "2");
+//		user.put("sex", "1");
+//
+//		JSONObject videodata = new JSONObject();
+//		videodata.put("video", video);
+//		videodata.put("user", user);
+//
+//		JSONArray videos = new JSONArray();
+//		videos.put(videodata);
+//
+//		data.put("videolist", videos);
+//
+//		JSONObject commentdata = new JSONObject();
+//		commentdata.put("commentid", "2312");
+//		commentdata.put("authorid", "34233");
+//		commentdata.put("name", "大狗");
+//		commentdata.put("avatar", "2");
+//		commentdata.put("time", "2015/02/22");
+//		commentdata.put("text", "来健身卡来对付框架思路东风路斯蒂芬简历上");
+//
+//		JSONObject commentdata2 = new JSONObject();
+//		commentdata2.put("commentid", "2312");
+//		commentdata2.put("authorid", "34233");
+//		commentdata2.put("name", "二狗");
+//		commentdata2.put("avatar", "2");
+//		commentdata2.put("time", "2015/02/22");
+//		commentdata2.put("text", "离开家你弄死的放上来的咖啡机三闾大夫接口六角恐龙接口链接冷静冷静记录框架梁");
+//
+//		JSONArray comments = new JSONArray();
+//		comments.put(commentdata);
+//		comments.put(commentdata2);
+//
+//		JSONObject comment = new JSONObject();
+//		comment.put("iscomment", "1");
+//		comment.put("comcount", "2");
+//		comment.put("iscomment", "1");
+//		comment.put("comlist", comments);
+//
+//		data.put("comment", comment);
+//
+//		JSONObject head = new JSONObject();
+//		head.put("showhead", "1");
+//		head.put("headimg", "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
+//		head.put("headvideoimg", "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
+//		head.put("headvideo", "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
+//		head.put("ztIntroduction", "六角恐龙极乐空间六角恐龙极乐空间");
+//		head.put("outurl", "www.baidu.com");
+//		head.put("outurlname", "百度");
+//		head.put("ztitle", "测试title");
+//
+//		data.put("head", head);
+//
+//		jx.put("data", data);
+//		// {“result”:”0”,“head”:{},“videolist”:[],”commentlist”:{}}
+//		return jx.toString();
+//
+//	}
 
 }

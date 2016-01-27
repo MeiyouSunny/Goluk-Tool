@@ -18,7 +18,7 @@
             android:layout_width="fill_parent"
             android:layout_height="43.3dp"
             android:gravity="center"
-            android:text="重新定位"
+            android:text="@string/str_re_locate"
             android:textColor="#1163a2"
             android:textSize="15sp" />
 
@@ -39,7 +39,7 @@
             android:layout_width="fill_parent"
             android:layout_height="43.3dp"
             android:gravity="center"
-            android:text="删除定位"
+            android:text="@string/str_delete_locate"
             android:textColor="#1163a2"
             android:textSize="15sp" />
 

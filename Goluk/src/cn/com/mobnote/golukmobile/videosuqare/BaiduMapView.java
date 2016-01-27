@@ -279,7 +279,7 @@ public class BaiduMapView implements ILocationFn {
 			GolukDebugUtils.e("", "下载气泡图片完成downloadBubbleImageCallBack:" + imgJson);
 			mBaiduMapManage.bubbleImageDownload(imgJson);
 		} else {
-			GolukUtils.showToast(mContext, "气泡图片下载失败");
+			GolukUtils.showToast(mContext, mContext.getString(R.string.str_bubble_image_download_fail));
 		}
 	}
 

@@ -16,10 +16,10 @@ import cn.com.mobnote.util.GolukUtils;
 
 public class ShareLoading implements OnClickListener, OnTouchListener {
 
-	private final String STR_STATE_CREATE_VIDEO = "视频生成中";
-	private final String STR_STATE_UPLOAD = "视频上传中";
-	private final String STR_STATE_GET_SHARE = "获取分享连接...";
-	private final String STR_STATE_SHARING = "正在分享...";
+//	private final String STR_STATE_CREATE_VIDEO = "视频生成中";
+//	private final String STR_STATE_UPLOAD = "视频上传中";
+//	private final String STR_STATE_GET_SHARE = "获取分享连接...";
+//	private final String STR_STATE_SHARING = "正在分享...";
 
 	public static final int STATE_NONE = 0;
 	public static final int STATE_CREATE_VIDEO = 1;
@@ -65,24 +65,24 @@ public class ShareLoading implements OnClickListener, OnTouchListener {
 		mCurrentState = state;
 		switch (mCurrentState) {
 		case STATE_CREATE_VIDEO:
-			mLoadingTv.setText(STR_STATE_CREATE_VIDEO);
+			mLoadingTv.setText(mContext.getString(R.string.str_video_generation));
 			mLoadingProress.setVisibility(View.VISIBLE);
 			mLoadingProress.setText("0%");
 			setProcess(0);
 			break;
 		case STATE_UPLOAD:
-			mLoadingTv.setText(STR_STATE_UPLOAD);
+			mLoadingTv.setText(mContext.getString(R.string.str_video_uploading));
 			mLoadingProress.setVisibility(View.VISIBLE);
 			mLoadingProress.setText("0%");
 			setProcess(0);
 			break;
 		case STATE_GET_SHARE:
-			mLoadingTv.setText(STR_STATE_GET_SHARE);
+			mLoadingTv.setText(mContext.getString(R.string.str_get_share_links));
 			mLoadingProress.setVisibility(View.GONE);
 			setProcess(0);
 			break;
 		case STATE_SHAREING:
-			mLoadingTv.setText(STR_STATE_SHARING);
+			mLoadingTv.setText(mContext.getString(R.string.str_sharing));
 			mLoadingProress.setVisibility(View.GONE);
 			setProcess(0);
 			break;
@@ -104,7 +104,7 @@ public class ShareLoading implements OnClickListener, OnTouchListener {
 			return;
 		}
 		mRingView.setProcess(process);
-		mLoadingProress.setText(process + "%");
+		mLoadingProress.setText(process + mContext.getString(R.string.str_ipc_update_percent_unit));
 	}
 
 	public void showLoadingLayout() {

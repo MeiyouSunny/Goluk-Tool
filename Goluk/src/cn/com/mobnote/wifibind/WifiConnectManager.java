@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
+import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.multicast.IMultiCastFn;
 import cn.com.mobnote.golukmobile.multicast.NetUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -126,108 +127,108 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 			// 扫描列表成功
 			case 11: {
 				GolukDebugUtils.e(TAG, "return --------------ok--------");
-				callback.wifiCallBack(1, 0, 0, "wifi扫描成功", msg.obj);
+				callback.wifiCallBack(1, 0, 0, context.getString(R.string.str_wifi_scanning_success), msg.obj);
 				break;
 			}
 			// 连接wifi成功
 			case 21: {
 				GolukDebugUtils.e(TAG, "return --------------ok--------");
-				callback.wifiCallBack(2, 0, 0, "wifi连接成功", msg.obj);
+				callback.wifiCallBack(2, 0, 0, context.getString(R.string.str_wifi_connect_success), msg.obj);
 				break;
 			}
 			// 创建热点成功
 			case 31: {
-				callback.wifiCallBack(3, 0, 0, "创建wifiap成功", msg.obj);
+				callback.wifiCallBack(3, 0, 0, context.getString(R.string.str_creating_wifi_ap_success), msg.obj);
 				break;
 			}
 			// 获取加入热点信息
 			case 32: {
-				callback.wifiCallBack(3, 0, 1, "创建wifiap有客户端加入", msg.obj);
+				callback.wifiCallBack(3, 0, 1, context.getString(R.string.str_create_wifiap_client_to_join), msg.obj);
 				break;
 			}
 			// 保存wifi配置成功
 			case 41: {
-				callback.wifiCallBack(4, 0, 0, " 保存wifi配置成功", msg.obj);
+				callback.wifiCallBack(4, 0, 0, context.getString(R.string.str_save_wifi_config_success), msg.obj);
 				break;
 			}
 			case 51: {
-				callback.wifiCallBack(5, 0, 0, "自动连接成功", msg.obj);
+				callback.wifiCallBack(5, 0, 0, context.getString(R.string.str_auto_connect_success), msg.obj);
 				break;
 			}
 			case 52: {
-				callback.wifiCallBack(5, 0, 1, "自动连接--客户端已经连接", msg.obj);
+				callback.wifiCallBack(5, 0, 1, context.getString(R.string.str_auto_connect_client_connected), msg.obj);
 				break;
 			}
 			case 53: {
-				callback.wifiCallBack(5, 0, 2, "自动连接--当前已经连接", msg.obj);
+				callback.wifiCallBack(5, 0, 2, context.getString(R.string.str_auto_connect_connected), msg.obj);
 				break;
 			}
 			case 54: {
-				callback.wifiCallBack(5, 0, 3, "自动连接--当前有活动wifi", msg.obj);
+				callback.wifiCallBack(5, 0, 3, context.getString(R.string.str_auto_connect_have_active_wifi), msg.obj);
 				break;
 			}
 			case 61: {
-				callback.wifiCallBack(6, 0, 0, "热点获取网关成功", msg.obj);
+				callback.wifiCallBack(6, 0, 0, context.getString(R.string.str_get_gateway_success), msg.obj);
 				break;
 			}
 
 			// --------------------------------失败-----------------------//
 			// 负数失败
 			case -11: {
-				callback.wifiCallBack(1, -1, msg.what, "扫描wifi列表超时", null);
+				callback.wifiCallBack(1, -1, msg.what, context.getString(R.string.str_wifi_scanning_timeout), null);
 				break;
 			}
 
 			case -21: {
-				callback.wifiCallBack(2, -1, msg.what, "连接wifi超时", null);
+				callback.wifiCallBack(2, -1, msg.what, context.getString(R.string.str_wifi_connect_timeout), null);
 				break;
 			}
 			case -22: {
-				callback.wifiCallBack(2, -1, msg.what, "附近没有可连接的wifi", null);
+				callback.wifiCallBack(2, -1, msg.what, context.getString(R.string.str_no_nearby_wifi_connection), null);
 				break;
 			}
 			case -23: {
-				callback.wifiCallBack(2, -1, msg.what, "连接wifi不匹配", null);
+				callback.wifiCallBack(2, -1, msg.what, context.getString(R.string.str_wifi_connection_does_not_match), null);
 				break;
 			}
 			case -24: {
-				callback.wifiCallBack(2, -1, msg.what, "连接wifi失败,请重试", null);
+				callback.wifiCallBack(2, -1, msg.what, context.getString(R.string.str_connect_wifi_fail), null);
 				break;
 			}
 			case -32: {
-				callback.wifiCallBack(3, -1, msg.what, "附近没有可连接的ipc", msg.obj);
+				callback.wifiCallBack(3, -1, msg.what, context.getString(R.string.str_no_connect_ipc), msg.obj);
 				break;
 			}
 			case -34: {
-				callback.wifiCallBack(3, -1, msg.what, "创建热点失败", msg.obj);
+				callback.wifiCallBack(3, -1, msg.what, context.getString(R.string.str_create_wifi_fail), msg.obj);
 				break;
 			}
 			case -41: {
-				callback.wifiCallBack(4, -1, 0, "保存wifi配置失败", msg.obj);
+				callback.wifiCallBack(4, -1, 0, context.getString(R.string.str_save_wifi_config_fail), msg.obj);
 				break;
 			}
 			case -51: {
-				callback.wifiCallBack(5, -1, msg.what, "自动连接超时", msg.obj);
+				callback.wifiCallBack(5, -1, msg.what, context.getString(R.string.str_auto_connect_timeout), msg.obj);
 				break;
 			}
 			case -52: {
-				callback.wifiCallBack(5, -1, msg.what, "附近没有可连接的ipc", msg.obj);
+				callback.wifiCallBack(5, -1, msg.what, context.getString(R.string.str_no_connect_ipc), msg.obj);
 				break;
 			}
 			case -53: {
-				callback.wifiCallBack(5, -1, msg.what, "自动连接失败", msg.obj);
+				callback.wifiCallBack(5, -1, msg.what, context.getString(R.string.str_auto_connect_fail), msg.obj);
 				break;
 			}
 			case -54: {
-				callback.wifiCallBack(5, -1, msg.what, "自动创建热点失败", msg.obj);
+				callback.wifiCallBack(5, -1, msg.what, context.getString(R.string.str_auto_create_wifi_fail), msg.obj);
 				break;
 			}
 			case -61: {
-				callback.wifiCallBack(6, 0, -1, "热点获取网关失败", msg.obj);
+				callback.wifiCallBack(6, 0, -1, context.getString(R.string.str_get_gateway_fail), msg.obj);
 				break;
 			}
 			case -62: {
-				callback.wifiCallBack(6, 0, -2, "热点获取网关超时", msg.obj);
+				callback.wifiCallBack(6, 0, -2, context.getString(R.string.str_get_gateway_timeout), msg.obj);
 				break;
 			}
 			case 100:

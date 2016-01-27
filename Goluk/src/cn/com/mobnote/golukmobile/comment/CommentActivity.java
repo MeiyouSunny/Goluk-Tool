@@ -117,7 +117,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		mApp = (GolukApplication) getApplication();
 		getWindow().setContentView(R.layout.comment_layout);
 		getIntentData();
-		historyDate = GolukUtils.getCurrentFormatTime();
+		historyDate = GolukUtils.getCurrentFormatTime(this);
 		initView();
 		isExit = false;
 		firstDeal();
@@ -289,7 +289,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	}
 
 	private void updateRefreshTime() {
-		historyDate = GolukUtils.getCurrentFormatTime();
+		historyDate = GolukUtils.getCurrentFormatTime(this);
 	}
 
 	private String getLastRefreshTime() {

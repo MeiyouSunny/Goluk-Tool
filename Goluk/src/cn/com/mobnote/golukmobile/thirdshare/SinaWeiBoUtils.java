@@ -225,7 +225,7 @@ public class SinaWeiBoUtils implements WeiboAuthListener, IWeiboHandler.Response
 		videoObject.dataUrl = dataUrl;
 		videoObject.dataHdUrl = dataUrl;
 		videoObject.duration = 10;
-		videoObject.defaultText = "Vedio 默认文案";
+		videoObject.defaultText = mActivity.getString(R.string.str_video_defaul);
 		return videoObject;
 	}
 
@@ -313,7 +313,7 @@ public class SinaWeiBoUtils implements WeiboAuthListener, IWeiboHandler.Response
 		if (mAccessToken.isSessionValid()) {
 			// 保存 Token 到 SharedPreferences
 			writeAccessToken(mActivity, mAccessToken);
-			GolukUtils.showToast(mActivity, "授权成功");
+			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_authorization_success));
 			mWeiboShareAPI.registerApp();
 		} else {
 			// 以下几种情况，您会收到 Code：
@@ -321,7 +321,7 @@ public class SinaWeiBoUtils implements WeiboAuthListener, IWeiboHandler.Response
 			// 2. 当您注册的应用程序包名与签名不正确时；
 			// 3. 当您在平台上注册的包名和签名与您当前测试的应用的包名和签名不匹配时。
 			String code = values.getString("code");
-			GolukUtils.showToast(mActivity, "授权失败: " + code);
+			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_authorization_fail) + code);
 		}
 	}
 

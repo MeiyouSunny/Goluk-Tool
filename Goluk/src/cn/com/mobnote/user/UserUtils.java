@@ -98,30 +98,30 @@ public class UserUtils {
 	/**
 	 * 个人中心模块头像的变化
 	 */
-	public static void userHeadChange(ImageView headImage, String headString, TextView textSex) {
-		if (headString.equals("1")) {
-			headImage.setImageResource(R.drawable.my_head_boy1);
-			textSex.setText("男");
-		} else if (headString.equals("2")) {
-			headImage.setImageResource(R.drawable.my_head_boy2);
-			textSex.setText("男");
-		} else if (headString.equals("3")) {
-			headImage.setImageResource(R.drawable.my_head_boy3);
-			textSex.setText("男");
-		} else if (headString.equals("4")) {
-			headImage.setImageResource(R.drawable.my_head_girl4);
-			textSex.setText("女");
-		} else if (headString.equals("5")) {
-			headImage.setImageResource(R.drawable.my_head_girl5);
-			textSex.setText("女");
-		} else if (headString.equals("6")) {
-			headImage.setImageResource(R.drawable.my_head_girl6);
-			textSex.setText("女");
-		} else {
-			headImage.setImageResource(R.drawable.my_head_moren7);
-			textSex.setText("未知");
-		}
-	}
+//	public static void userHeadChange(ImageView headImage, String headString, TextView textSex) {
+//		if (headString.equals("1")) {
+//			headImage.setImageResource(R.drawable.my_head_boy1);
+//			textSex.setText("男");
+//		} else if (headString.equals("2")) {
+//			headImage.setImageResource(R.drawable.my_head_boy2);
+//			textSex.setText("男");
+//		} else if (headString.equals("3")) {
+//			headImage.setImageResource(R.drawable.my_head_boy3);
+//			textSex.setText("男");
+//		} else if (headString.equals("4")) {
+//			headImage.setImageResource(R.drawable.my_head_girl4);
+//			textSex.setText("女");
+//		} else if (headString.equals("5")) {
+//			headImage.setImageResource(R.drawable.my_head_girl5);
+//			textSex.setText("女");
+//		} else if (headString.equals("6")) {
+//			headImage.setImageResource(R.drawable.my_head_girl6);
+//			textSex.setText("女");
+//		} else {
+//			headImage.setImageResource(R.drawable.my_head_moren7);
+//			textSex.setText("未知");
+//		}
+//	}
 
 	public static void userHeadChanged(ImageView headImage, String headString, String textSex) {
 		if (headString.equals("1")) {
@@ -365,9 +365,9 @@ public class UserUtils {
 	 * @param nikename
 	 * @param text
 	 */
-	public static void showText(TextView view, String nikename, String text) {
-		String replyName = "@" + nikename + "：";
-		String reply_str = "回复" + replyName + text;
+	public static void showText(Context context, TextView view, String nikename, String text) {
+		String replyName = "@" + nikename + context.getString(R.string.str_colon);
+		String reply_str = context.getString(R.string.str_reply) + replyName + text;
 		SpannableStringBuilder style = new SpannableStringBuilder(reply_str);
 		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 2, replyName.length() + 2,
 				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
@@ -382,9 +382,9 @@ public class UserUtils {
 	 * @param replyName
 	 * @param text
 	 */
-	public static void showReplyText(TextView view, String nikename, String replyName, String text) {
-		String replyText = "@" + replyName + "：";
-		String str = nikename + " 回复" + replyText + text;
+	public static void showReplyText(Context context, TextView view, String nikename, String replyName, String text) {
+		String replyText = "@" + replyName + context.getString(R.string.str_colon);
+		String str = nikename + context.getString(R.string.str_reply) + replyText + text;
 		SpannableStringBuilder style = new SpannableStringBuilder(str);
 		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
 				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);

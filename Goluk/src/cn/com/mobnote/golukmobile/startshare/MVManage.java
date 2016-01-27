@@ -6,7 +6,10 @@ import cn.com.mobnote.golukmobile.R;
 
 public class MVManage {
 
+	Context mContext ;
+	
 	public MVManage(Context context) {
+		this.mContext = context;
 	}
 
 	/**
@@ -19,50 +22,50 @@ public class MVManage {
 		// 保存数据
 		MVEditData data1 = new MVEditData();
 		data1.src = R.drawable.filter_nothing;
-		data1.name = "无";
+		data1.name = mContext.getString(R.string.str_no_text);
 		data1.display = true;
 		data1.filterId = 0;
 		list.add(data1);
 
 		MVEditData data8 = new MVEditData();
 		data8.src = R.drawable.filter_gudian;
-		data8.name = "古典胶片";
+		data8.name = mContext.getString(R.string.str_classical_film);
 		data8.filterId = 7;
 		list.add(data8);
 
 		MVEditData data3 = new MVEditData();
 		data3.src = R.drawable.filter_heibai;
-		data3.name = "黑白经典";
+		data3.name = mContext.getString(R.string.str_black_and_white);
 		data3.filterId = 1;
 		list.add(data3);
 
 		MVEditData data7 = new MVEditData();
 		data7.src = R.drawable.filter_rouhe;
-		data7.name = "柔和静谧";
+		data7.name = mContext.getString(R.string.str_soft_quiet);
 		data7.filterId = 5;
 		list.add(data7);
 
 		MVEditData data5 = new MVEditData();
 		data5.src = R.drawable.filter_fugu;
-		data5.name = "复古怀旧";
+		data5.name = mContext.getString(R.string.str_retro_nostalgia);
 		data5.filterId = 2;
 		list.add(data5);
 
 		MVEditData data4 = new MVEditData();
 		data4.src = R.drawable.filter_duocai;
-		data4.name = "多彩夏日";
+		data4.name = mContext.getString(R.string.str_colorful_summer);
 		data4.filterId = 4;
 		list.add(data4);
 
 		MVEditData data6 = new MVEditData();
 		data6.src = R.drawable.filter_binfen;
-		data6.name = "缤纷梦幻";
+		data6.name = mContext.getString(R.string.str_colorful_dream);
 		data6.filterId = 6;
 		list.add(data6);
 
 		MVEditData data2 = new MVEditData();
 		data2.src = R.drawable.filter_qingxin;
-		data2.name = "清新淡雅";
+		data2.name = mContext.getString(R.string.str_fresh_and_elegant);
 		data2.filterId = 3;
 		list.add(data2);
 

@@ -435,7 +435,8 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 				}
 			});
 			holder.nikename.setText(clusterInfo.mUserEntity.nickname);
-			final String sharingTime = GolukUtils.getCommentShowFormatTime(clusterInfo.mVideoEntity.sharingtime);
+			final String sharingTime = GolukUtils.getCommentShowFormatTime(mContext,
+					clusterInfo.mVideoEntity.sharingtime);
 			final String location = clusterInfo.mVideoEntity.location;
 			String showTimeLocation = sharingTime;
 			if (null != location) {
@@ -485,7 +486,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(0);
 				if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
 						&& !"".equals(comment.replyname)) {
-					UserUtils.showReplyText(holder.comment1, comment.name, comment.replyname, comment.text);
+					UserUtils.showReplyText(mContext, holder.comment1, comment.name, comment.replyname, comment.text);
 				} else {
 					UserUtils.showCommentText(holder.comment1, comment.name, comment.text);
 				}
@@ -498,7 +499,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(1);
 				if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
 						&& !"".equals(comment.replyname)) {
-					UserUtils.showReplyText(holder.comment2, comment.name, comment.replyname, comment.text);
+					UserUtils.showReplyText(mContext, holder.comment2, comment.name, comment.replyname, comment.text);
 				} else {
 					UserUtils.showCommentText(holder.comment2, comment.name, comment.text);
 				}
@@ -511,7 +512,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 				CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(2);
 				if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
 						&& !"".equals(comment.replyname)) {
-					UserUtils.showReplyText(holder.comment3, comment.name, comment.replyname, comment.text);
+					UserUtils.showReplyText(mContext, holder.comment3, comment.name, comment.replyname, comment.text);
 				} else {
 					UserUtils.showCommentText(holder.comment3, comment.name, comment.text);
 				}
@@ -526,7 +527,8 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 			if (convertView == null) {
 				convertView = LayoutInflater.from(mContext).inflate(R.layout.user_center_novideodata, null);
 				noVideoDataViewHolder = new NoVideoDataViewHolder();
-				noVideoDataViewHolder.tipsimage = (ImageView) convertView.findViewById(R.id.tipsimage);
+				noVideoDataViewHolder.tipsText = (TextView) convertView.findViewById(R.id.tv_tipstext);
+				noVideoDataViewHolder.emptyImage = (ImageView) convertView.findViewById(R.id.tipsimage);
 				noVideoDataViewHolder.bMeasureHeight = false;
 				convertView.setTag(noVideoDataViewHolder);
 			} else {
@@ -545,15 +547,18 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
 			boolean bNeedRefrush = false;
 			
+			noVideoDataViewHolder.emptyImage.setVisibility(View.GONE);
 			if(mCurrentViewType == sViewType_NewsVideoList){
-				noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.together_noactivity_text);
+//				noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.together_noactivity_text);
+				noVideoDataViewHolder.tipsText.setText(mContext.getString(R.string.str_cluster_newest));
 			}else{
-				noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.together_norecommend_text);
+//				noVideoDataViewHolder.tipsimage.setBackgroundResource(R.drawable.together_norecommend_text);
+				noVideoDataViewHolder.tipsText.setText(mContext.getString(R.string.str_cluster_wonderful));
 			}
 			
 			bNeedRefrush = true;
 			if (bNeedRefrush == true) {
-				noVideoDataViewHolder.tipsimage.setOnClickListener(new OnClickListener() {
+				noVideoDataViewHolder.tipsText.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {

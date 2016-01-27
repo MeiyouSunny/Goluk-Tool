@@ -117,7 +117,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 	private TextView title = null;
 
 	@SuppressLint("SimpleDateFormat")
-	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
+	private SimpleDateFormat sdf;
 
 	private UserCenterDataFormat ucdf = new UserCenterDataFormat();
 
@@ -138,6 +138,8 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 		praisgroupdata.praiselist = new ArrayList<PraiseInfo>();
 		praisgroupdata.isHaveData = false;
 
+		sdf = new SimpleDateFormat(this.getString(R.string.str_date_formatter));
+		
 		Intent i = this.getIntent();
 		curUser = (UCUserInfo) i.getSerializableExtra("userinfo");
 		tabtype = i.getIntExtra("type", 0);
@@ -165,7 +167,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 		backbtn.setOnClickListener(this);
 		titlehome.setOnClickListener(this);
 		if (testUser()) {
-			title.setText("我的主页");
+			title.setText(this.getString(R.string.user_personal_home_title));
 		}
 
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
@@ -280,7 +282,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 		} else {
 
 		}
-		mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime());
+		mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime(this));
 	}
 
 	/**
@@ -394,7 +396,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 			if (praisgroupdata.firstSucc == false) {
 				this.praisgroupdata.loadfailed = true;
 			}
-			GolukUtils.showToast(UserCenterActivity.this, "网络异常，请检查网络");
+			GolukUtils.showToast(UserCenterActivity.this, this.getString(R.string.network_error));
 
 			updateViewData(false, 0);
 		}
@@ -408,7 +410,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 			if (RESULE_SUCESS == msg) {
 				this.formatAllData(param2.toString());
 			} else {
-				GolukUtils.showToast(UserCenterActivity.this, "网络异常，请检查网络");
+				GolukUtils.showToast(UserCenterActivity.this, this.getString(R.string.network_error));
 				updateViewData(false, 0);
 			}
 
@@ -433,7 +435,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 					videogroupdata.isHaveData = true;
 				}
 			} else {
-				GolukUtils.showToast(UserCenterActivity.this, "网络异常，请检查网络");
+				GolukUtils.showToast(UserCenterActivity.this, this.getString(R.string.network_error));
 			}
 
 		} else if (event == VSquare_Req_VOP_GetShareURL_Video) {
@@ -451,32 +453,32 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 						String coverurl = data.getString("coverurl");
 						String describe = data.optString("describe");
 
-						String realDesc = "极路客精彩视频(使用#极路客Goluk#拍摄)";
+						String realDesc = this.getString(R.string.str_share_board_real_desc);
 
 						if (TextUtils.isEmpty(describe)) {
-							describe = "#极路客精彩视频#";
+							describe = this.getString(R.string.str_share_describe);
 						}
-						String ttl = "极路客精彩视频";
+						String ttl = this.getString(R.string.str_video_edit_share_title);
 
 						if (!this.isFinishing()) {
 							String videoId = null != mWillShareVideoSquareInfo ? mWillShareVideoSquareInfo.mVideoEntity.videoid
 									: "";
 							String username = null != mWillShareVideoSquareInfo ? mWillShareVideoSquareInfo.mUserEntity.nickname
 									: "";
-							describe = username + "：" + describe;
+							describe = username + this.getString(R.string.str_colon) + describe;
 							CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shareurl, coverurl,
 									describe, ttl, null, realDesc, videoId);
 							shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 						}
 
 					} else {
-						GolukUtils.showToast(this, "网络异常，请检查网络");
+						GolukUtils.showToast(this, this.getString(R.string.network_error));
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 			} else {
-				GolukUtils.showToast(this, "网络异常，请检查网络");
+				GolukUtils.showToast(this, this.getString(R.string.network_error));
 			}
 		} else if (event == VSquare_Req_VOP_Praise) {
 			if (RESULE_SUCESS == msg) {
@@ -488,7 +490,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 				}
 
 			} else {
-				GolukUtils.showToast(this, "网络异常，请检查网络");
+				GolukUtils.showToast(this, this.getString(R.string.network_error));
 			}
 
 		} else if (event == VSquare_Req_MainPage_Share) {
@@ -507,7 +509,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 						String customavatar = data.getString("customavatar");
 						String headportrait = data.getString("headportrait");
 
-						String realDesc = "极路客个人主页分享(使用#极路客Goluk#拍摄)";
+						String realDesc = this.getString(R.string.str_usercenter_share_realdesc);
 
 						CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shorturl, customavatar,
 								describe, title, null, realDesc, "");
@@ -517,7 +519,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 					e.printStackTrace();
 				}
 			} else {
-				GolukUtils.showToast(this, "请求异常，请检查网络是否正常");
+				GolukUtils.showToast(this, this.getString(R.string.str_request_error));
 			}
 		} else if (VSquare_Req_MainPage_DeleteVideo == event) {
 			callBack_DelVideo(msg, param1, param2);
@@ -545,15 +547,15 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 	private void callBack_DelVideo(int msg, int param1, Object param2) {
 		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
 		if (RESULE_SUCESS != msg) {
-			GolukUtils.showToast(this, "删除视频失败");
+			GolukUtils.showToast(this, this.getString(R.string.str_delete_video_fail));
 			return;
 		}
 		String result = JsonUtil.parseDelVideo(param2);
 		if (!"0".equals(result)) {
-			GolukUtils.showToast(this, "删除视频失败");
+			GolukUtils.showToast(this, this.getString(R.string.str_delete_video_fail));
 			return;
 		}
-		GolukUtils.showToast(this, "删除成功");
+		GolukUtils.showToast(this, this.getString(R.string.str_delete_success));
 		uca.dealData(this.mDelVid);
 	}
 
@@ -639,14 +641,15 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 	private void showDelDialog(final String vid) {
 		mDelVid = vid;
 
-		new AlertDialog.Builder(this).setTitle("删除视频").setMessage("删除后相关的获赞、评论数据将被清除是否还要删除？")
-				.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+		new AlertDialog.Builder(this).setTitle(this.getString(R.string.str_delete_video_title))
+				.setMessage(this.getString(R.string.str_delete_video_message))
+				.setPositiveButton(this.getString(R.string.delete_text), new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface arg0, int arg1) {
 						delVideo(vid);
 					}
-				}).setNegativeButton("取消", null).create().show();
+				}).setNegativeButton(this.getString(R.string.user_cancle), null).create().show();
 	}
 
 	private void delVideo(String vid) {
@@ -654,9 +657,10 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 				VSquare_Req_MainPage_DeleteVideo, JsonUtil.getDelRequestJson(vid));
 		if (isSucess) {
 			LiveDialogManager.getManagerInstance().showCommProgressDialog(UserCenterActivity.this,
-					LiveDialogManager.DIALOG_TYPE_DEL_VIDEO, "", "正在删除...", true);
+					LiveDialogManager.DIALOG_TYPE_DEL_VIDEO, "", this.getString(R.string.str_delete_ongoing_with_omit),
+					true);
 		} else {
-			GolukUtils.showToast(UserCenterActivity.this, "删除视频失败");
+			GolukUtils.showToast(UserCenterActivity.this, this.getString(R.string.str_delete_video_fail));
 		}
 	}
 

@@ -41,7 +41,6 @@
                 android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="拉我起来，我还能送"
                 android:textColor="#ffffff"
                 android:textSize="16sp" />
 
@@ -52,7 +51,6 @@
                 android:layout_marginTop="7dp"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="在哪里跌倒 就在哪里躺下。"
                 android:textColor="#ffffff"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -96,7 +94,6 @@
                 android:id="@+id/fxsp_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="10"
                 android:textColor="#0984ff"
                 android:textSize="14sp" />
 
@@ -106,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="6dp"
-                android:text="分享视频"
+                android:text="@string/str_sharevideo_text"
                 android:textColor="#0984ff"
                 android:textSize="12sp" />
 
@@ -130,7 +127,6 @@
                 android:id="@+id/dz_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="10"
                 android:textColor="#ffffff"
                 android:textSize="14sp" />
 
@@ -140,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="6dp"
-                android:text="赞我的人"
+                android:text="@string/str_praise_text"
                 android:textColor="#ffffff"
                 android:textSize="12sp" />
 

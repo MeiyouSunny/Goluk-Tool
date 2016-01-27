@@ -127,7 +127,7 @@ public class MsgCenterCommentAdapter extends BaseAdapter {
 			} else {
 				viewHolder.nTextContent.setText(messageBean.content.comment.text);
 			}
-			viewHolder.nTextTime.setText(GolukUtils.getCommentShowFormatTime(messageBean.content.time));
+			viewHolder.nTextTime.setText(GolukUtils.getCommentShowFormatTime(mContext, messageBean.content.time));
 			GlideUtils.loadImage(mContext, viewHolder.nImageThumbnail, messageBean.content.picture,
 					R.drawable.tacitly_pic);
 			

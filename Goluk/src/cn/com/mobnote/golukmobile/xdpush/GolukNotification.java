@@ -15,6 +15,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.util.Log;
 import cn.com.mobnote.application.GolukApplication;
@@ -24,14 +26,11 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
-import cn.com.mobnote.golukmobile.comment.ICommentFn;
 import cn.com.mobnote.golukmobile.http.HttpManager;
-import cn.com.mobnote.golukmobile.http.UrlHostManager;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.msg.MsgCenterCommentActivity;
 import cn.com.mobnote.golukmobile.msg.MsgCenterPraiseActivity;
-import cn.com.mobnote.golukmobile.msg.OfficialMessageActivity;
 import cn.com.mobnote.golukmobile.msg.SystemMsgActivity;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
@@ -99,7 +98,7 @@ public class GolukNotification {
 	 */
 	public void showNotify(Context context, XingGeMsgBean msgBean, String json) {
 		NotificationManager mNotiManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		mNotiManager.notify(msgBean.notifyId, createNotification(context, json, msgBean.title, msgBean.msg));
+		mNotiManager.notify(msgBean.notifyId, createNotification_New(context, json, msgBean.title, msgBean.msg));
 	}
 
 	/**
@@ -107,24 +106,58 @@ public class GolukNotification {
 	 * 
 	 * @author jyf
 	 */
-	private Notification createNotification(Context startActivity, String json, String title, String content) {
-		Notification noti = new Notification();
-		setNoticationParam(noti);
-		PendingIntent contentIntent = null;
+	@SuppressWarnings("deprecation")
+	private Notification createNotification_New(Context startActivity, String json, String title, String content) {
+		Bitmap bitmap = BitmapFactory.decodeResource(startActivity.getResources(), R.drawable.ic_launcher);
+		Notification.Builder builder = new Notification.Builder(startActivity).setContentTitle(title)
+				.setLargeIcon(bitmap).setContentText(content).setContentIntent(getPendingIntent(startActivity, json));
+		Notification notification = builder.getNotification();
+		setNoticationParam(notification);
+		return notification;
+	}
+
+	private PendingIntent getPendingIntent(Context startActivity, String json) {
+		PendingIntent pendingIntent = null;
 		if (isBroadCast) {
 			Intent intent = getBroadCastIntent(json);
 			// 注意最后一个参数必须 写 PendingIntent.FLAG_UPDATE_CURRENT,
 			// 否则下个Activity无法接受到消息
-			contentIntent = PendingIntent.getBroadcast(startActivity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+			pendingIntent = PendingIntent.getBroadcast(startActivity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		} else {
 			// 注意最后一个参数必须 写 PendingIntent.FLAG_UPDATE_CURRENT,
 			// 否则下个Activity无法接受到消息
 			Intent intent = getWillStartIntent(startActivity);
-			contentIntent = PendingIntent.getActivity(startActivity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+			pendingIntent = PendingIntent.getActivity(startActivity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		}
-		noti.setLatestEventInfo(startActivity, title, content, contentIntent);
-		return noti;
+		return pendingIntent;
 	}
+
+	// /**
+	// * 创建一个通知显示体
+	// *
+	// * @author jyf
+	// */
+	// private Notification createNotification(Context startActivity, String
+	// json, String title, String content) {
+	// Notification noti = new Notification();
+	// setNoticationParam(noti);
+	// PendingIntent contentIntent = null;
+	// if (isBroadCast) {
+	// Intent intent = getBroadCastIntent(json);
+	// // 注意最后一个参数必须 写 PendingIntent.FLAG_UPDATE_CURRENT,
+	// // 否则下个Activity无法接受到消息
+	// contentIntent = PendingIntent.getBroadcast(startActivity, 0, intent,
+	// PendingIntent.FLAG_UPDATE_CURRENT);
+	// } else {
+	// // 注意最后一个参数必须 写 PendingIntent.FLAG_UPDATE_CURRENT,
+	// // 否则下个Activity无法接受到消息
+	// Intent intent = getWillStartIntent(startActivity);
+	// contentIntent = PendingIntent.getActivity(startActivity, 0, intent,
+	// PendingIntent.FLAG_UPDATE_CURRENT);
+	// }
+	// noti.setLatestEventInfo(startActivity, title, content, contentIntent);
+	// return noti;
+	// }
 
 	/**
 	 * 设置显示状态栏通知时，配置的基本参数，比如声音等
@@ -277,25 +310,27 @@ public class GolukNotification {
 		mPushShowDialog.setTitle(msgBean.title);
 		mPushShowDialog.setMessage(msgBean.msg);
 		mPushShowDialog.setCancelable(true);
-		mPushShowDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+		mPushShowDialog.setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(R.string.user_cancle),
+				new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface arg0, int arg1) {
-				if (null != mPushShowDialog) {
-					mPushShowDialog.dismiss();
-				}
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						if (null != mPushShowDialog) {
+							mPushShowDialog.dismiss();
+						}
 
-			}
-		});
+					}
+				});
 
-		mPushShowDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialoginterface, int i) {
-				dealAppinnerClick(cnt, msgBean);
-				if (null != mPushShowDialog) {
-					mPushShowDialog.dismiss();
-				}
-			}
-		});
+		mPushShowDialog.setButton(DialogInterface.BUTTON_POSITIVE,
+				context.getString(R.string.user_personal_sign_title), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialoginterface, int i) {
+						dealAppinnerClick(cnt, msgBean);
+						if (null != mPushShowDialog) {
+							mPushShowDialog.dismiss();
+						}
+					}
+				});
 		mPushShowDialog.show();
 	}
 
@@ -332,47 +367,53 @@ public class GolukNotification {
 
 	private void pushStartFuntion(XingGeMsgBean msgBean) {
 		try {
-//			if (ICommentFn.COMMENT_TYPE_VIDEO.equals(msgBean.tarkey)) {
-//				// 启动视频详情界面
-//				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
-//				if (null != vidArray && vidArray.length > 0) {
-//					startDetail(vidArray[0]);
-//				}
-//			} else if (ICommentFn.COMMENT_TYPE_WONDERFUL_SPECIAL.equals(msgBean.tarkey)) {
-//				// 精选专题
-//				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
-//				if (null != vidArray && vidArray.length > 0) {
-//					startSpecial(vidArray[0], msgBean.msg);
-//				}
-//			} else if (ICommentFn.COMMENT_TYPE_CLUSTER.equals(msgBean.tarkey)) {
-//				// 活动聚合
-//				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
-//				if (null != vidArray && vidArray.length > 0) {
-//					startCluster(vidArray[0], msgBean.msg);
-//				}
-//
-//			} else if (ICommentFn.COMMENT_TYPE_WINNING.equals(msgBean.tarkey)) {
-//				// 发奖跳转页
-//				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
-//				// if (null != vidArray && vidArray.length > 0) {
-//				// startCluster(vidArray[0], msgBean.msg);
-//				// }
-//
-//				startWinning(vidArray[0]);
-//
-//			} else if (ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO.equals(msgBean.tarkey)) {
-//				String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
-//				if (null != vidArray && vidArray.length > 0) {
-//					startDetail(vidArray[0]);
-//				}
-//
-//			}
+			// if (ICommentFn.COMMENT_TYPE_VIDEO.equals(msgBean.tarkey)) {
+			// // 启动视频详情界面
+			// String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
+			// if (null != vidArray && vidArray.length > 0) {
+			// startDetail(vidArray[0]);
+			// }
+			// } else if
+			// (ICommentFn.COMMENT_TYPE_WONDERFUL_SPECIAL.equals(msgBean.tarkey))
+			// {
+			// // 精选专题
+			// String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
+			// if (null != vidArray && vidArray.length > 0) {
+			// startSpecial(vidArray[0], msgBean.msg);
+			// }
+			// } else if
+			// (ICommentFn.COMMENT_TYPE_CLUSTER.equals(msgBean.tarkey)) {
+			// // 活动聚合
+			// String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
+			// if (null != vidArray && vidArray.length > 0) {
+			// startCluster(vidArray[0], msgBean.msg);
+			// }
+			//
+			// } else if
+			// (ICommentFn.COMMENT_TYPE_WINNING.equals(msgBean.tarkey)) {
+			// // 发奖跳转页
+			// String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
+			// // if (null != vidArray && vidArray.length > 0) {
+			// // startCluster(vidArray[0], msgBean.msg);
+			// // }
+			//
+			// startWinning(vidArray[0]);
+			//
+			// } else if
+			// (ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO.equals(msgBean.tarkey))
+			// {
+			// String[] vidArray = JsonUtil.parseVideoDetailId(msgBean.params);
+			// if (null != vidArray && vidArray.length > 0) {
+			// startDetail(vidArray[0]);
+			// }
+			//
+			// }
 
 			int type = 0;
 			JSONArray array = new JSONArray(msgBean.params);
 
 			int size = array.length();
-			if(size > 0) {
+			if (size > 0) {
 				JSONObject obj = array.getJSONObject(0);
 				type = JsonUtil.getJsonIntValue(obj, "t", 0);
 
@@ -380,35 +421,37 @@ public class GolukNotification {
 				// 102 = like/praise
 				// 200~300 = system
 				// 300~400 = official notification
-				if(0 == type) {
-					//do nothing
-				} else if(101 == type) {
+				if (0 == type) {
+					// do nothing
+				} else if (101 == type) {
 					// start comment activity
 					Context context = GolukApplication.getInstance().getContext();
 					Intent intent = new Intent(context, MsgCenterCommentActivity.class);
 					context.startActivity(intent);
-				} else if(102 == type) {
+				} else if (102 == type) {
 					Context context = GolukApplication.getInstance().getContext();
 					Intent intent = new Intent(context, MsgCenterPraiseActivity.class);
 					context.startActivity(intent);
-				} else if(type >= 200 && type < 300) {
+				} else if (type >= 200 && type < 300) {
 					Context context = GolukApplication.getInstance().getContext();
 					Intent intent = new Intent(context, SystemMsgActivity.class);
 					context.startActivity(intent);
-				} else if(type >= 300 && type < 400) {
-//					Context context = GolukApplication.getInstance().getContext();
-//					Intent intent = new Intent(context, OfficialMessageActivity.class);
-//					context.startActivity(intent);
+				} else if (type >= 300 && type < 400) {
+					// Context context =
+					// GolukApplication.getInstance().getContext();
+					// Intent intent = new Intent(context,
+					// OfficialMessageActivity.class);
+					// context.startActivity(intent);
 
-					if(TextUtils.isEmpty(msgBean.tarkey)) {
+					if (TextUtils.isEmpty(msgBean.tarkey)) {
 						return;
 					}
 
-					if(!"2".equals(msgBean.target)) {
+					if (!"2".equals(msgBean.target)) {
 						return;
 					}
 
-					if(null == msgBean.params) {
+					if (null == msgBean.params) {
 						return;
 					}
 
@@ -454,20 +497,18 @@ public class GolukNotification {
 						intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, vidArray[0]);
 						// intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
 						String topName = "#" + msgBean.title + "#";
-						intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE,
-									topName);
+						intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
 						context.startActivity(intent);
 					} else if (H5_PAGE.equals(msgBean.tarkey)) {
 						// launch h5 page
 						Context context = GolukApplication.getInstance().getContext();
 						intent = new Intent(context, UserOpenUrlActivity.class);
-						if(null != vidArray[0] && !TextUtils.isEmpty(vidArray[0])) {
-							String url = HttpManager.getInstance().getWebDirectHost() +
-									WEB_DIRECT + "?type=5&access=" + vidArray[0];
+						if (null != vidArray[0] && !TextUtils.isEmpty(vidArray[0])) {
+							String url = HttpManager.getInstance().getWebDirectHost() + WEB_DIRECT + "?type=5&access="
+									+ vidArray[0];
 							intent.putExtra("url", url);
 							if (!TextUtils.isEmpty(msgBean.title)) {
-								intent.putExtra("slide_h5_title",
-										msgBean.title);
+								intent.putExtra("slide_h5_title", msgBean.title);
 							}
 							context.startActivity(intent);
 						}
@@ -477,19 +518,22 @@ public class GolukNotification {
 						intent.putExtra(VideoDetailActivity.VIDEO_ID, vidArray[0]);
 						intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
 						context.startActivity(intent);
-					} else if(HOME_PAGE.equals(msgBean.tarkey)) {
+					} else if (HOME_PAGE.equals(msgBean.tarkey)) {
 						Context context = GolukApplication.getInstance().getContext();
-//						intent = new Intent(context, VideoDetailActivity.class);
-//						intent.putExtra(VideoDetailActivity.VIDEO_ID, vidArray[0]);
-//						intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
-//						context.startActivity(intent);
+						// intent = new Intent(context,
+						// VideoDetailActivity.class);
+						// intent.putExtra(VideoDetailActivity.VIDEO_ID,
+						// vidArray[0]);
+						// intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT,
+						// true);
+						// context.startActivity(intent);
 						UCUserInfo user = new UCUserInfo();
 						user.uid = vidArray[0];
 						user.nickname = "";
-						user.headportrait = "";//clusterInfo.mUserEntity.headportrait;
+						user.headportrait = "";// clusterInfo.mUserEntity.headportrait;
 						user.introduce = "";
-						user.sex = "";//clusterInfo.mUserEntity.sex;
-						user.customavatar = "";//clusterInfo.mUserEntity.mCustomAvatar;
+						user.sex = "";// clusterInfo.mUserEntity.sex;
+						user.customavatar = "";// clusterInfo.mUserEntity.mCustomAvatar;
 						user.praisemenumber = "0";
 						user.sharevideonumber = "0";
 						Intent i = new Intent(context, UserCenterActivity.class);
@@ -514,7 +558,8 @@ public class GolukNotification {
 			}
 			return true;
 		}
-		GolukUtils.showToast(GolukApplication.getInstance().getContext(), "请登录后查看消息");
+		GolukUtils.showToast(GolukApplication.getInstance().getContext(), GolukApplication.getInstance().getContext()
+				.getString(R.string.str_msg_push_login));
 		return false;
 	}
 
@@ -529,7 +574,7 @@ public class GolukNotification {
 
 		Context context = GolukApplication.getInstance().getContext();
 		Intent intent = new Intent(context, MyProfitActivity.class);
-//		intent.putExtra("uid", uid);
+		// intent.putExtra("uid", uid);
 		context.startActivity(intent);
 	}
 

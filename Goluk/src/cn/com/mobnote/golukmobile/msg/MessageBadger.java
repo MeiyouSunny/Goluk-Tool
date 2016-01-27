@@ -24,7 +24,7 @@ public class MessageBadger {
 
 		// Treat samsumg as default
 		if (Build.MANUFACTURER.equalsIgnoreCase("Xiaomi")) {
-			sendToXiaoMi(number, context);
+//			sendToXiaoMi(number, context);
 		} else if(Build.MANUFACTURER.equalsIgnoreCase("samsung")) {
 			sendToSamsumg(number, context);
 		} else if(Build.MANUFACTURER.toLowerCase().contains("sony")) {
@@ -32,7 +32,7 @@ public class MessageBadger {
 		} else if(Build.MANUFACTURER.toLowerCase().equals("meizu")) {
 			sendToSamsumg(number, context);
 		} else if(Build.MANUFACTURER.toLowerCase().equals("huawei")) {
-			setHuaweiBadge(number, context);
+//			setHuaweiBadge(number, context);
 		} else {
 			Log.d(TAG, "unsupported manufacturer");
 		}

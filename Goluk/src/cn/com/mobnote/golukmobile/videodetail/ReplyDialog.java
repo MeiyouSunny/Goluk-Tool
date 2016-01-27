@@ -45,9 +45,9 @@ public class ReplyDialog extends Dialog implements android.view.View.OnClickList
 		mReplayOrDelete = (TextView) findViewById(R.id.reply_or_delete);
 		mCancle = (TextView) findViewById(R.id.cancle);
 		if (mFlagReply) {
-			mReplayOrDelete.setText("回复");
+			mReplayOrDelete.setText(mContext.getString(R.string.str_msgcenter_comment_replytext));
 		} else {
-			mReplayOrDelete.setText("删除");
+			mReplayOrDelete.setText(mContext.getString(R.string.delete_text));
 		}
 
 		mReplayOrDelete.setOnClickListener(this);
@@ -78,7 +78,8 @@ public class ReplyDialog extends Dialog implements android.view.View.OnClickList
 		if (mFlagReply) {
 			mEditText.requestFocus();
 			GolukUtils.showSoft(mEditText);
-			mEditText.setHint("回复＠" + mCommentBean.mUserName + "：");
+			mEditText.setHint(mContext.getString(R.string.str_reply_other_text) + mCommentBean.mUserName
+					+ mContext.getString(R.string.str_colon));
 		} else {
 			if (mContext instanceof VideoDetailActivity) {
 				((VideoDetailActivity) mContext).httpPost_requestDel(mCommentBean.mCommentId);
@@ -86,7 +87,7 @@ public class ReplyDialog extends Dialog implements android.view.View.OnClickList
 				((CommentActivity) mContext).httpPost_requestDel(mCommentBean.mCommentId);
 			}
 		}
-		
+
 	}
 
 }

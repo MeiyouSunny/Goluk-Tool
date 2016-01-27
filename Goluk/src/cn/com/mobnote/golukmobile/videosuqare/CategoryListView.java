@@ -53,8 +53,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	private String historyDate;
 	private ImageView noDataView = null;
 
-	@SuppressLint("SimpleDateFormat")
-	private SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日 HH时mm分ss秒");
+	private SimpleDateFormat sdf;
 
 	/** 视频广场类型 0.全部 1.直播 2.点播 */
 	private String mType;
@@ -87,10 +86,13 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	private VideoSquareInfo mWillShareSquareInfo = null;
 	private CustomLoadingDialog mCustomProgressDialog = null;
 
+	@SuppressLint("SimpleDateFormat")
 	public CategoryListView(Context context, final String type, final String attr) {
 		mContext = context;
 		mType = type;
 		mAttribute = attr;
+		
+		sdf = new SimpleDateFormat(mContext.getString(R.string.str_date_formatter));
 
 		layoutInflater = LayoutInflater.from(mContext);
 
@@ -155,7 +157,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 			}
 
 		} else {
-			GolukUtils.showToast(mContext, "请求失败");
+			GolukUtils.showToast(mContext, mContext.getString(R.string.str_request_fail));
 		}
 	}
 
@@ -193,7 +195,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	}
 
 	private void updateRefreshTime() {
-		historyDate = GolukUtils.getCurrentFormatTime();
+		historyDate = GolukUtils.getCurrentFormatTime(mContext);
 	}
 
 	private String getLastRefreshTime() {
@@ -338,12 +340,12 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	private void callBack_getShareUrl(int msg, int param1, Object param2) {
 		closeProgressDialog();
 		if (RESULE_SUCESS != msg) {
-			GolukUtils.showToast(mContext, "网络异常，请检查网络");
+			GolukUtils.showToast(mContext, mContext.getString(R.string.network_error));
 			return;
 		}
 		ShareDataBean shareBean = JsonUtil.parseShareCallBackData((String) param2);
 		if (!shareBean.isSucess) {
-			GolukUtils.showToast(mContext, "网络异常，请检查网络");
+			GolukUtils.showToast(mContext, mContext.getString(R.string.network_error));
 		}
 		// 获取描述
 		String describe = getShareDescribe(shareBean.describe);
@@ -354,7 +356,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 			if (activity != null && !activity.isFinishing()) {
 				String videoId = null != mWillShareSquareInfo ? mWillShareSquareInfo.mVideoEntity.videoid : "";
 				String nickname = null != mWillShareSquareInfo ? mWillShareSquareInfo.mUserEntity.nickname : "";
-				describe = nickname + "：" + describe;
+				describe = nickname + mContext.getString(R.string.str_colon) + describe;
 				CustomShareBoard shareBoard = new CustomShareBoard(activity, sharePlatform, shareBean.shareurl,
 						shareBean.coverurl, describe, ttl, null, realDesc, videoId);
 				shareBoard.showAtLocation(activity.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
@@ -364,28 +366,28 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 	private String getRealDesc() {
 		if (isShareLive()) {
-			return getTTL() + "(使用#极路客Goluk#拍摄)";
+			return getTTL() + mContext.getString(R.string.str_user_goluk);
 		} else {
-			return "极路客精彩视频(使用#极路客Goluk#拍摄)";
+			return mContext.getString(R.string.str_share_board_real_desc);
 		}
 	}
 
 	private String getTTL() {
 		if (isShareLive()) {
-			return "极路客精彩直播";
+			return mContext.getString(R.string.str_wonderful_live);
 		} else {
-			return "极路客精彩视频";
+			return mContext.getString(R.string.str_video_edit_share_title);
 		}
 	}
 
 	private String getShareDescribe(String describe) {
 		if (isShareLive()) {
 			if (TextUtils.isEmpty(describe)) {
-				return "#极路客直播#";
+				return mContext.getString(R.string.str_live_default_describe);
 			}
 		} else {
 			if (TextUtils.isEmpty(describe)) {
-				return "#极路客精彩视频#";
+				return mContext.getString(R.string.str_share_describe);
 			}
 		}
 		return describe;
@@ -406,7 +408,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 				updateClickPraiseNumber(true, mPraiseVideoSquareInfo);
 			}
 		} else {
-			GolukUtils.showToast(mContext, "网络异常，请稍后重试");
+			GolukUtils.showToast(mContext, mContext.getString(R.string.str_network_unusual));
 		}
 	}
 
@@ -435,7 +437,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		} else if (2 == uptype) {
 			mRTPullListView.onRefreshComplete(getLastRefreshTime());
 		}
-		GolukUtils.showToast(mContext, "网络异常，请检查网络");
+		GolukUtils.showToast(mContext, mContext.getString(R.string.network_error));
 	}
 
 	private void noDataCallBack() {

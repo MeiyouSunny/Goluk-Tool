@@ -134,12 +134,18 @@ public class IPCControlManager implements IPCManagerFn {
 			return;
 		}
 		final ReportLogManager loadManager = ReportLogManager.getInstance();
+
 		loadManager.getReport(IMessageReportFn.KEY_ACTIVATION_TIME).addLogData(
 				JsonUtil.getActivationTimeJson(mDeviceSn));
 		// 设置绑定成功
-		loadManager.getReport(IMessageReportFn.KEY_WIFI_BIND).setType(ReportLog.TYPE_SUCESS);
+		loadManager.getReport(IMessageReportFn.KEY_ACTIVATION_TIME).setType(ReportLog.TYPE_SUCESS);
+		if (null != mProduceName) {
+			loadManager.getReport(IMessageReportFn.KEY_ACTIVATION_TIME).setHdType(mProduceName);
+		}
+		// 开始上报
 		final String jsonData = loadManager.getReport(IMessageReportFn.KEY_ACTIVATION_TIME).getReportData();
 		mApplication.uploadMsg(jsonData, false);
+		// 还原上报状态
 		loadManager.removeKey(IMessageReportFn.KEY_ACTIVATION_TIME);
 		isNeedReportSn = false;
 	}
@@ -881,7 +887,7 @@ public class IPCControlManager implements IPCManagerFn {
 	public boolean setT1AdasConfigEnable(int enabled) {
 		String s = "{\"enable\":" + enabled + "}";
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
-				IPCManagerFn.IPC_VDCPCmd_SetADASConfig , s);
+				IPCManagerFn.IPC_VDCPCmd_SetADASConfig, s);
 	}
 
 	/**
@@ -892,7 +898,7 @@ public class IPCControlManager implements IPCManagerFn {
 	public boolean setT1AdasConfigOSD(int osd) {
 		String s = "{\"osd\":" + osd + "}";
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
-				IPCManagerFn.IPC_VDCPCmd_SetADASConfig , s);
+				IPCManagerFn.IPC_VDCPCmd_SetADASConfig, s);
 	}
 
 	/**
@@ -903,7 +909,7 @@ public class IPCControlManager implements IPCManagerFn {
 	public boolean setT1AdasConfigFcs(int fcs_enable) {
 		String s = "{\"fcs_enable\":" + fcs_enable + "}";
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
-				IPCManagerFn.IPC_VDCPCmd_SetADASConfig , s);
+				IPCManagerFn.IPC_VDCPCmd_SetADASConfig, s);
 	}
 
 	/**
@@ -914,8 +920,9 @@ public class IPCControlManager implements IPCManagerFn {
 	public boolean setT1AdasConfigFcw(int fcw_enable) {
 		String s = "{\"fcw_enable\":" + fcw_enable + "}";
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
-				IPCManagerFn.IPC_VDCPCmd_SetADASConfig , s);
+				IPCManagerFn.IPC_VDCPCmd_SetADASConfig, s);
 	}
+
 	/**
 	 * 设置T1 ADAS配置所有参数
 	 * 
@@ -924,8 +931,9 @@ public class IPCControlManager implements IPCManagerFn {
 	public boolean setT1AdasConfigAll(AdasConfigParamterBean data) {
 		String s = JSON.toJSONString(data);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
-				IPCManagerFn.IPC_VDCPCmd_SetADASConfig , s);
+				IPCManagerFn.IPC_VDCPCmd_SetADASConfig, s);
 	}
+
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		// LogUtil.e("jyf",

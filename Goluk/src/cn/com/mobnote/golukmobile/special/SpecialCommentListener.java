@@ -63,7 +63,7 @@ public class SpecialCommentListener implements OnClickListener{
 					.getVideoSquareManager().getShareUrl(vid, "2");
 			if (!result) {
 				vsa.mCustomProgressDialog.close();
-				GolukUtils.showToast(mContext, "网络异常，请检查网络");
+				GolukUtils.showToast(mContext, mContext.getString(R.string.network_error));
 			} else {
 				// 保存将要分享的视频id
 				if (null != mClusterViewAdapter) {

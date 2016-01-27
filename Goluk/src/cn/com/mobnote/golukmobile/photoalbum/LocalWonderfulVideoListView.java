@@ -28,6 +28,8 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
 import cn.com.mobnote.golukmobile.player.MovieActivity;
+import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
+import cn.com.mobnote.golukmobile.player.VitamioPlayerActivity;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
@@ -212,11 +214,11 @@ public class LocalWonderfulVideoListView {
 			}
 
 			Intent intent = null;
-			// if (1 == type) {
-			// intent = new Intent(mContext, VitamioPlayerActivity.class);
-			// } else {
-			intent = new Intent(mContext, MovieActivity.class);
-			// }
+			if (1 == type) {
+				intent = new Intent(mContext, VitamioPlayerActivity.class);
+			} else {
+				intent = new Intent(mContext, VideoPlayerActivity.class);
+			}
 			intent.putExtra("from", "local");
 			intent.putExtra("path", path);
 			mActivity.startActivity(intent);
@@ -279,7 +281,7 @@ public class LocalWonderfulVideoListView {
 				checkListState();
 			}
 		});
-		task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+		task.execute("");
 	}
 
 	public boolean isHasData() {

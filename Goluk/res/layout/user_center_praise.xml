@@ -39,7 +39,6 @@
                 android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="用户信息"
                 android:textColor="#1163a2"
                 android:textSize="14sp" />
 

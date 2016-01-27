@@ -44,7 +44,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	/** QQ空间 **/
 	public static final String TYPE_QQ_ZONE = "7";
 
-	private UMSocialService mController = UMServiceFactory.getUMSocialService(Constants.DESCRIPTOR);
+	private UMSocialService mController;
 	private Activity mActivity;
 	/** 保存当前的分享方式 */
 	private String mCurrentShareType = "2";
@@ -74,6 +74,8 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		mThumbBitmap = bitmap;
 		mSinaTxt = realDesc;
 		mVideoId = videoId;
+		
+		mController = UMServiceFactory.getUMSocialService("com.umeng.share");
 
 		initView(activity);
 	}
@@ -176,7 +178,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			sharePlatform.setShareContent(shareurl + "&type=4", coverurl, describe, ttl);
 			performShare(SHARE_MEDIA.QQ);
 		} else {
-			GolukUtils.showToast(mActivity, "你还没有安装QQ或版本太低");
+			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_qq_low_version));
 		}
 	}
 
@@ -305,12 +307,12 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 				// 第三个参数entity是保存本次分享相关的信息
 
 				if (eCode == 200) {
-					GolukUtils.showToast(mActivity, "分享成功");
+					GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_share_success));
 					notifyShareState(true);
 				} else {
 					notifyShareState(false);
 					if (eCode != 40000) {
-						GolukUtils.showToast(mActivity, "分享失败");
+						GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_share_fail));
 					}
 					// 分享失败的时候，保证下次还可以点击
 					if (null != mActivity && mActivity instanceof BaseActivity) {

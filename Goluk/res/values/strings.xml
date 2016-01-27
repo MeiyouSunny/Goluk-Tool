@@ -452,6 +452,8 @@
     <string name="str_video_not_exist">视频不存在</string>
 
     <!-- 聚合 -->
+    <string name="str_cluster_newest">活动刚刚上线\n就等您来上传呦~</string>
+    <string name="str_cluster_wonderful">还没有优质视频推荐\n就等您来上传呦~</string>
     <string name="cluster_comment_txt">写评论，有机会赢大奖</string>
     <string name="cluster_jx_zt_share">极路客精选专题分享</string>
     <string name="cluster_jxzt_share_txt">极路客精选专题(使用#极路客Goluk#拍摄)</string>
@@ -729,6 +731,7 @@
 	<string name="str_share_describe">#极路客精彩视频#</string>
 	<string name="str_share_ttl">#极路客精彩视频#</string>
 	<string name="str_goluk_wonderful_video">goluk精彩视频</string>
+	<string name="str_share_title">极路客精彩视频分享</string>
 
 	<!-- 最新页面 -->
 	<string name="str_newest_check_all_comments_prefix">查看所有</string>
@@ -850,5 +853,108 @@
     <string name="str_cycle_video_text">循环视频</string>
     <string name="str_synchronous_video_to_local">视频已同步到本地</string>
     <string name="str_inquiry_fail">查询失败!</string>
-	
+    
+    <!-- player -->
+    <string name="str_cannot_get_light">无法获取亮度</string>
+    <string name="str_play_error">播放错误</string>
+    <string name="str_play_video_error">视频出错，请重试！</string>
+    <string name="str_play_video_network_error">网络访问异常，请重试！</string>
+    <string name="str_ring">铃声</string>
+    
+    <string name="str_third_share_fail">第三方分享失败</string>
+    <string name="str_others">说点其他的</string>
+    <string name="str_content_out">内容长度超出限制</string>
+    <string name="str_no_text">无</string>
+    <string name="str_classical_film">古典胶片</string>
+    <string name="str_black_and_white">黑白经典</string>
+    <string name="str_soft_quiet">柔和静谧</string>
+    <string name="str_retro_nostalgia">复古怀旧</string>
+    <string name="str_colorful_summer">多彩夏日</string>
+    <string name="str_colorful_dream">缤纷梦幻</string>
+    <string name="str_fresh_and_elegant">清新淡雅</string>
+    
+    <string name="str_no_weixin">你未安装微信</string>
+    <string name="str_qq_low_version">你未安装QQ或版本太低</string>
+    <string name="str_share_to_sw">分享到...</string>
+    <string name="str_circle_of_friends">朋友圈</string>
+    <string name="str_weixin_friends">微信好友</string>
+    <string name="str_weibo">微博</string>
+    <string name="str_qzone">QQ空间</string>
+    <string name="str_qq_friends">QQ好友</string>
+    <string name="str_video_generation">视频生成中</string>
+    <string name="str_video_uploading">视频上传中</string>
+    <string name="str_get_share_links">获取分享连接...</string>
+    <string name="str_sharing">正在分享...</string>
+    <!-- startshare -->
+    <string name="str_re_locate">重新定位</string>
+    <string name="str_delete_locate">删除定位</string>
+    <string name="str_uploading_videos_is_interrupted">正在上传视频，是否中断？</string>
+    <string name="str_upload_fail">上传失败</string>
+    <string name="str_try_again">重试</string>
+    <string name="str_re_upload">重新开始上传</string>
+    <string name="str_video_play_error">视频播放出错,errorNo: </string>
+    <string name="str_video_error_info">,info: </string>
+    <string name="str_video_filter_online_soon">视频滤镜功能即将上线，敬请期待</string>
+    <string name="str_reload_video_failure">重加载视频失败，</string>
+    <string name="str_save_video_fail">保存视频失败，</string>
+    <string name="str_get_share_address_fail">获取视频分享地址失败</string>
+    <string name="str_video_edit_share_title">极路客精彩视频</string>
+    <!-- thirdshare -->
+    <string name="str_share_success">分享成功</string>
+    <string name="str_video_defaul">Vedio 默认文案</string>
+    <string name="str_authorization_success">授权成功</string>
+    <string name="str_authorization_fail">授权失败: </string>
+    <!-- usercenter -->
+    <string name="str_usercenter_share_realdesc">极路客个人主页分享(使用#极路客Goluk#拍摄)</string>
+    <string name="str_request_error">请求异常，请检查网络是否正常</string>
+    <string name="str_delete_video_fail">删除视频失败</string>
+    <string name="str_delete_video_title">删除视频</string>
+    <string name="str_delete_video_message">删除后相关的获赞、评论数据将被清除是否还要删除？</string>
+    <string name="str_delete_ongoing_with_omit">正在删除...</string>
+    <string name="str_his_homepage">Ta的主页</string>
+    <string name="str_praise_him">赞Ta的人</string>
+    <!-- videodetail -->
+    <string name="str_reply_other_text">回复＠</string>
+    <string name="str_videodetail_text">视频详情</string>
+    <string name="str_load_data_ongoing">数据加载中，请稍候再试</string>
+    <string name="str_network_connect_outtime">网络连接超时，请检查网络</string>
+    <string name="str_atreason_default">理由：活动参与积极奖～</string>
+    <!-- videosquare -->
+    <string name="str_bubble_image_download_fail">气泡图片下载失败</string>
+    <string name="str_request_fail">请求失败</string>
+    <string name="str_wonderful_text">精选</string>
+    <!-- wifimanage -->
+    <string name="str_wifi_create_success">wifi热点创建成功</string>
+    <!-- util -->
+    <string name="str_day_refresh">天前更新</string>
+    <string name="str_hours_refresh">小时前更新</string>
+    <string name="str_minute_refresh">分钟前更新</string>
+    <string name="str_month_day_refresh">MM.dd更新</string>
+    <string name="str_year_month_day_refresh">yyyy.MM.dd更新</string>
+    <string name="str_md5_test">This is a 3DES test. 测试</string>
+    <!-- wifibind -->
+    <string name="str_wifi_scanning_success">wifi扫描成功</string>
+    <string name="str_wifi_connect_success">wifi连接成功</string>
+    <string name="str_creating_wifi_ap_success">创建wifiap成功</string>
+    <string name="str_create_wifiap_client_to_join">创建wifiap有客户端加入</string>
+    <string name="str_save_wifi_config_success">保存wifi配置成功</string>
+    <string name="str_auto_connect_success">自动连接成功</string>
+    <string name="str_auto_connect_client_connected">自动连接--客户端已经连接</string>
+    <string name="str_auto_connect_connected">自动连接--当前已经连接</string>
+    <string name="str_auto_connect_have_active_wifi">自动连接--当前有活动wifi</string>
+    <string name="str_get_gateway_success">热点获取网关成功</string>
+    <string name="str_wifi_scanning_timeout">扫描wifi列表超时</string>
+    <string name="str_wifi_connect_timeout">连接wifi超时</string>
+    <string name="str_no_nearby_wifi_connection">附近没有可连接的wifi</string>
+    <string name="str_wifi_connection_does_not_match">连接wifi不匹配</string>
+    <string name="str_connect_wifi_fail">连接wifi失败,请重试</string>
+    <string name="str_no_connect_ipc">附近没有可连接的ipc</string>
+    <string name="str_create_wifi_fail">创建热点失败</string>
+    <string name="str_save_wifi_config_fail">保存wifi配置失败</string>
+    <string name="str_auto_connect_timeout">自动连接超时</string>
+    <string name="str_auto_connect_fail">自动连接失败</string>
+    <string name="str_auto_create_wifi_fail">自动创建热点失败</string>
+    <string name="str_get_gateway_fail">热点获取网关失败</string>
+    <string name="str_get_gateway_timeout">热点获取网关超时</string>
+    
 </resources>

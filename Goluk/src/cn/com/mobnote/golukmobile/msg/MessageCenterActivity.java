@@ -82,7 +82,7 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 				// show latest refresh time
 				pullToRefreshBase.getLoadingLayoutProxy().setLastUpdatedLabel(
 						MessageCenterActivity.this.getResources().getString(R.string.updating) +
-						GolukUtils.getCurrentFormatTime());
+						GolukUtils.getCurrentFormatTime(MessageCenterActivity.this));
 
 				if(GolukApplication.getInstance().isUserLoginSucess) {
 					MsgCenterCounterRequest newReq = new MsgCenterCounterRequest(

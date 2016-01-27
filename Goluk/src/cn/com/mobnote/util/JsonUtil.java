@@ -1137,11 +1137,12 @@ public class JsonUtil {
 		return null;
 	}
 
-	public static String getReportJson(String key, JSONObject dataObj) {
+	public static String getReportJson(String key, JSONObject dataObj, String hdtype) {
 		try {
 			JSONObject obj = new JSONObject();
 			obj.put("key", key);
 			obj.put("data", dataObj);
+			obj.put("hdtype", hdtype);
 			return obj.toString();
 		} catch (Exception e) {
 
@@ -1410,7 +1411,10 @@ public class JsonUtil {
 			JSONObject root = new JSONObject(data);
 			bean.filename = root.optString("location");
 			bean.type = String.valueOf(root.optInt("type"));
-			bean.filesize = String.valueOf(root.optDouble("size"));
+			Double size = root.optDouble("size");
+			if (size != null) {
+				bean.filesize = String .format("%.1fMB", size);
+			}
 			bean.resolution = root.optString("resolution");
 			bean.period = String.valueOf(root.optInt("period"));
 			if (!root.isNull("timestamp")) {

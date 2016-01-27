@@ -227,7 +227,7 @@ public class VitamioPlayerActivity extends BaseActivity implements OnCompletionL
 			if (networkConnectTimeOut > 100) {
 				if (!reset) {
 					hideLoading();
-					dialog("网络访问异常，请重试！");
+					dialog(this.getString(R.string.str_play_video_network_error));
 					return;
 				}
 			}
@@ -361,10 +361,10 @@ public class VitamioPlayerActivity extends BaseActivity implements OnCompletionL
 				if (min > 59) {
 					time = "00:";
 				} else {
-					time = min + ":";
+					time = min + this.getString(R.string.str_colon_english);
 				}
 			} else {
-				time = "0" + min + ":";
+				time = "0" + min +  this.getString(R.string.str_colon_english);
 			}
 
 			if (sec > 9) {
@@ -374,9 +374,9 @@ public class VitamioPlayerActivity extends BaseActivity implements OnCompletionL
 			}
 		} else {
 			if (seconds > 9) {
-				time = "00:" + seconds;
+				time = this.getString(R.string.str_recorder_time1) + seconds;
 			} else {
-				time = "00:0" + seconds;
+				time = this.getString(R.string.str_recorder_time2) + seconds;
 			}
 		}
 
@@ -601,14 +601,14 @@ public class VitamioPlayerActivity extends BaseActivity implements OnCompletionL
 			return false;
 		}
 
-		String msg = "播放错误";
+		String msg = this.getString(R.string.str_play_error);
 		switch (arg1) {
 		case MediaPlayer.MEDIA_ERROR_UNKNOWN:
 		case MediaPlayer.MEDIA_ERROR_UNSUPPORTED:
-			msg = "视频出错，请重试！";
+			msg = this.getString(R.string.str_play_video_error);
 			break;
 		case MediaPlayer.MEDIA_ERROR_TIMED_OUT:
-			msg = "网络访问异常，请重试！";
+			msg = this.getString(R.string.str_play_video_network_error);
 			break;
 
 		default:
@@ -617,7 +617,7 @@ public class VitamioPlayerActivity extends BaseActivity implements OnCompletionL
 
 		if (!from.equals("local")) {
 			if (!isNetworkConnected()) {
-				msg = "网络访问异常，请重试！";
+				msg = this.getString(R.string.str_play_video_network_error);
 			}
 		}
 
@@ -643,7 +643,7 @@ public class VitamioPlayerActivity extends BaseActivity implements OnCompletionL
 		CustomDialog mCustomDialog = new CustomDialog(this);
 		mCustomDialog.setCancelable(false);
 		mCustomDialog.setMessage(msg, Gravity.CENTER);
-		mCustomDialog.setLeftButton("确定", new OnLeftClickListener() {
+		mCustomDialog.setLeftButton(this.getString(R.string.str_button_ok), new OnLeftClickListener() {
 			@Override
 			public void onClickListener() {
 				exit();

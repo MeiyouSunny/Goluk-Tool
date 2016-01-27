@@ -249,6 +249,7 @@
         <activity
             android:name=".player.VideoPlayerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:hardwareAccelerated="true"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
@@ -582,4 +583,6 @@
     <uses-permission android:name="com.huawei.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="com.huawei.android.launcher.permission.WRITE_SETTINGS" />
     <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
+    <uses-permission android:name="com.miui.mihome2.permission.READ_SETTINGS"/>
+    <uses-permission android:name="com.miui.mihome2.permission.WRITE_SETTINGS"/>
 </manifest>
