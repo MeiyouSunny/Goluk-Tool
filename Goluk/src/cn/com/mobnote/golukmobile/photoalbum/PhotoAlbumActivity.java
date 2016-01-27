@@ -609,6 +609,9 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 //		if (null != mLruCache) {
 //			mLruCache.evictAll();
 //		}
+		if (null != mCloudVideoListView) {
+			mCloudVideoListView.onDestroy();
+		}
 		GlideUtils.clearMemory(this);
 		EventBus.getDefault().unregister(this);
 		super.onDestroy();
