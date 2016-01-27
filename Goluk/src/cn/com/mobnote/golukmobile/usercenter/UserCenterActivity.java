@@ -189,20 +189,7 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 		case EventConfig.REFRESH_USER_INFO:
 			if (curUser != null) {
 				if (testUser()) {
-//					JSONObject u = UserCenterActivity.this.getUserData();
-//					if (u != null) {
-//						try {
-//							curUser.introduce = u.getString("desc");
-//							curUser.headportrait = u.getString("head");
-//							curUser.nickname = u.getString("nickname");
-//							curUser.customavatar = u.getString("customavatar");
-//							updateViewData(true, 0);
-//						} catch (JSONException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-//					}
-					httpPost("");
+					httpPost(curUser.uid);
 				}
 			}
 			break;
@@ -422,6 +409,9 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 			closeProgressDialog();
 			if (RESULE_SUCESS == msg) {
 				this.formatAllData(param2.toString());
+				if (testUser()) {
+					title.setText(this.getString(R.string.user_personal_home_title));
+				}
 			} else {
 				GolukUtils.showToast(UserCenterActivity.this, this.getString(R.string.network_error));
 				updateViewData(false, 0);
