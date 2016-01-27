@@ -209,6 +209,9 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 
 	// 保存选择的视频质量类型
 	private void setArrayData() {
+		if (null == mVideoConfigState) {
+			return;
+		}
 		if (selectType.equals(mArrayText[mSelect])) {
 			mVideoConfigState.resolution = resolutionArray[mSelect];
 			mVideoConfigState.bitrate = Integer.parseInt(bitrateArray[mSelect]);
