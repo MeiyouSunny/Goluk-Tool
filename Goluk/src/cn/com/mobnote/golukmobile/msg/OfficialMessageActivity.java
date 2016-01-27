@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
@@ -103,7 +104,14 @@ public class OfficialMessageActivity extends BaseActivity implements IRequestRes
 		}
 		MessageCenterOfficialRequest request =
 				new MessageCenterOfficialRequest(IPageNotifyFn.PageType_MsgOfficial, this);
-		request.get(PROTOCOL, ANYCAST, TYPE_ARRAY, tmpOp, timeStamp);
+		GolukApplication app = GolukApplication.getInstance();
+		if(null != app && app.isUserLoginSucess) {
+			if(!TextUtils.isEmpty(app.mCurrentUId)) {
+				request.get(PROTOCOL, app.mCurrentUId, TYPE_ARRAY, tmpOp, timeStamp);
+			}
+		} else {
+			request.get(PROTOCOL, ANYCAST, TYPE_ARRAY, tmpOp, timeStamp);
+		}
 		if(!mLoadingDialog.isShowing() && REFRESH_NORMAL.equals(op)) {
 			mLoadingDialog.show();
 		}

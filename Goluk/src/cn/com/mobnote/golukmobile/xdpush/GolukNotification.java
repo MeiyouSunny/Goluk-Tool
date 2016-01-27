@@ -17,6 +17,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import cn.com.mobnote.application.GolukApplication;
@@ -39,6 +40,7 @@ import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class GolukNotification {
 	/** 推送标识，主要是主界面接受，用于区分是否是推送数据 */
@@ -109,8 +111,17 @@ public class GolukNotification {
 	@SuppressWarnings("deprecation")
 	private Notification createNotification_New(Context startActivity, String json, String title, String content) {
 		Bitmap bitmap = BitmapFactory.decodeResource(startActivity.getResources(), R.drawable.ic_launcher);
-		Notification.Builder builder = new Notification.Builder(startActivity).setContentTitle(title)
-				.setLargeIcon(bitmap).setContentText(content).setContentIntent(getPendingIntent(startActivity, json));
+
+		Notification.Builder builder = null;
+		GolukDebugUtils.e("","init sdk  :" + Build.VERSION.SDK_INT);
+		if (Build.VERSION.SDK_INT >= 23) {
+			builder = new Notification.Builder(startActivity).setContentTitle(title).setContentText(content)
+					.setContentIntent(getPendingIntent(startActivity, json));
+		} else {
+			builder = new Notification.Builder(startActivity).setContentTitle(title).setLargeIcon(bitmap)
+					.setContentText(content).setContentIntent(getPendingIntent(startActivity, json));
+		}
+
 		Notification notification = builder.getNotification();
 		setNoticationParam(notification);
 		return notification;
