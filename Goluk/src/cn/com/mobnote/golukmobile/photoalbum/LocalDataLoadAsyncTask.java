@@ -49,7 +49,7 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 		for (int i = 0 ; i < fLen; i++) {
 			try {
 				String fileName = files.get(i);
-				Log.v("dengting", "fileName = " + fileName);
+
 				VideoFileInfoBean videoFileInfoBean = mGolukVideoInfoDbManager.selectSingleData(fileName);
 				String videoPath = mFilePath + videoPaths[type] + fileName;
 				String resolution = "";
