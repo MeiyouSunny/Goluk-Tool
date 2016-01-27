@@ -100,7 +100,7 @@ public class GolukNotification {
 	 */
 	public void showNotify(Context context, XingGeMsgBean msgBean, String json) {
 		NotificationManager mNotiManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		mNotiManager.notify(msgBean.notifyId, createNotification_New(context, json, msgBean.title, msgBean.msg));
+		mNotiManager.notify(msgBean.notifyId, createNotification(context, json, msgBean.title, msgBean.msg));
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class GolukNotification {
 		Bitmap bitmap = BitmapFactory.decodeResource(startActivity.getResources(), R.drawable.ic_launcher);
 
 		Notification.Builder builder = null;
-		GolukDebugUtils.e("","init sdk  :" + Build.VERSION.SDK_INT);
+		GolukDebugUtils.e("", "init sdk  :" + Build.VERSION.SDK_INT);
 		if (Build.VERSION.SDK_INT >= 23) {
 			builder = new Notification.Builder(startActivity).setContentTitle(title).setContentText(content)
 					.setContentIntent(getPendingIntent(startActivity, json));
@@ -143,32 +143,18 @@ public class GolukNotification {
 		return pendingIntent;
 	}
 
-	// /**
-	// * 创建一个通知显示体
-	// *
-	// * @author jyf
-	// */
-	// private Notification createNotification(Context startActivity, String
-	// json, String title, String content) {
-	// Notification noti = new Notification();
-	// setNoticationParam(noti);
-	// PendingIntent contentIntent = null;
-	// if (isBroadCast) {
-	// Intent intent = getBroadCastIntent(json);
-	// // 注意最后一个参数必须 写 PendingIntent.FLAG_UPDATE_CURRENT,
-	// // 否则下个Activity无法接受到消息
-	// contentIntent = PendingIntent.getBroadcast(startActivity, 0, intent,
-	// PendingIntent.FLAG_UPDATE_CURRENT);
-	// } else {
-	// // 注意最后一个参数必须 写 PendingIntent.FLAG_UPDATE_CURRENT,
-	// // 否则下个Activity无法接受到消息
-	// Intent intent = getWillStartIntent(startActivity);
-	// contentIntent = PendingIntent.getActivity(startActivity, 0, intent,
-	// PendingIntent.FLAG_UPDATE_CURRENT);
-	// }
-	// noti.setLatestEventInfo(startActivity, title, content, contentIntent);
-	// return noti;
-	// }
+	/**
+	 * 创建一个通知显示体
+	 *
+	 * @author jyf
+	 */
+	private Notification createNotification(Context startActivity, String json, String title, String content) {
+		Notification noti = new Notification();
+		setNoticationParam(noti);
+		PendingIntent contentIntent = getPendingIntent(startActivity, json);
+		noti.setLatestEventInfo(startActivity, title, content, contentIntent);
+		return noti;
+	}
 
 	/**
 	 * 设置显示状态栏通知时，配置的基本参数，比如声音等
