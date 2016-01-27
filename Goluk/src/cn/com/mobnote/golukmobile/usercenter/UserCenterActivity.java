@@ -409,6 +409,9 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 			closeProgressDialog();
 			if (RESULE_SUCESS == msg) {
 				this.formatAllData(param2.toString());
+				if (testUser()) {
+					title.setText(this.getString(R.string.user_personal_home_title));
+				}
 			} else {
 				GolukUtils.showToast(UserCenterActivity.this, this.getString(R.string.network_error));
 				updateViewData(false, 0);
