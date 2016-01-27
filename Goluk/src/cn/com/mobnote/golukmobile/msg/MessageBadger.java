@@ -24,7 +24,7 @@ public class MessageBadger {
 
 		// Treat samsumg as default
 		if (Build.MANUFACTURER.equalsIgnoreCase("Xiaomi")) {
-			sendToXiaoMi(number, context);
+//			sendToXiaoMi(number, context);
 		} else if(Build.MANUFACTURER.equalsIgnoreCase("samsung")) {
 			sendToSamsumg(number, context);
 		} else if(Build.MANUFACTURER.toLowerCase().contains("sony")) {

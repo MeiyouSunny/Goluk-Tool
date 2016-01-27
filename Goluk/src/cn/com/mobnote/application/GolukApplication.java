@@ -709,7 +709,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 
 		try {
-			GolukDebugUtils.e("","GolukApplication-----ipcVideoDownLoadCallback:  success:" + success + "  data:" + data);
+			GolukDebugUtils.e("", "GolukApplication-----ipcVideoDownLoadCallback:  success:" + success + "  data:"
+					+ data);
 			JSONObject jsonobj = new JSONObject(data);
 			String tag = jsonobj.optString("tag");
 			if (tag.equals("videodownload")) {
@@ -830,11 +831,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 					String filename = json.optString("filename");
 					MediaStore.Images.Media.insertImage(getContentResolver(), path + File.separator + filename,
 							filename, "Goluk");
+					// 最后通知图库更新
+					sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
 				} catch (Exception e) {
-					e.printStackTrace();
 				}
-				// 最后通知图库更新
-				sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
 
 			}
 
@@ -1734,15 +1734,15 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 */
 	public UserInfo getMyInfo() {
 		try {
-//			if (!isUserLoginSucess) {
-//				return null;
-//			}
+			// if (!isUserLoginSucess) {
+			// return null;
+			// }
 			UserInfo myInfo = null;
 			String userInfo = mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
 					IPageNotifyFn.PageType_GetUserInfo_Get, "");
-			
-			GolukDebugUtils.e("","getUserInfo------------------logic-userInfo:" + userInfo);
-			
+
+			GolukDebugUtils.e("", "getUserInfo------------------logic-userInfo:" + userInfo);
+
 			if (null != userInfo) {
 				myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(userInfo));
 			}
