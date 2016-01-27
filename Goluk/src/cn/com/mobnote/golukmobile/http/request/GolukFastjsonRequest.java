@@ -10,6 +10,7 @@ import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.LngLat;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.api.Tapi;
 
 import com.android.volley.Request.Method;
@@ -51,15 +52,26 @@ public abstract class GolukFastjsonRequest<T> {
 	 * 继承实现，添加不变的Header,Header中要变化的参数在addHeader中添加
 	 */
 	protected void addDefaultHeader() {
-//		String verName = GolukApplication.getInstance().mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
-//				IPageNotifyFn.PageType_GetVersion, "fs6:/version");
-//		mHeaders.put("commappversion", verName);
+		GolukApplication app = GolukApplication.getInstance();
+		if (app.mGoluk != null) {
+		String verName = GolukApplication.getInstance().mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
+				IPageNotifyFn.PageType_GetVersion, "fs6:/version");
+			mHeaders.put("commappversion", verName);
+		} else {
+			mHeaders.put("commappversion", "");
+		}
+		if (app.mIPCControlManager != null) {
+			mHeaders.put("commhdtype", GolukApplication.getInstance().mIPCControlManager.mProduceName);
+		} else {
+			mHeaders.put("commhdtype", "");
+		}
+		mHeaders.put("commipcversion", SharedPrefUtil.getIPCVersion());
 		mHeaders.put("commdevmodel", android.os.Build.MODEL);
 		mHeaders.put("commlat", "" + LngLat.lat);
 		mHeaders.put("commlon", "" + LngLat.lng);
 		mHeaders.put("commmid", "" + Tapi.getMobileId());
 		mHeaders.put("commostag", "android");
-		mHeaders.put("commsysversion", android.os.Build.VERSION.RELEASE);
+		mHeaders.put("commosversion", android.os.Build.VERSION.RELEASE);
 		String uid = GolukApplication.getInstance().mCurrentUId;
 		if (TextUtils.isEmpty(uid)) {
 			mHeaders.put("commuid", "");
