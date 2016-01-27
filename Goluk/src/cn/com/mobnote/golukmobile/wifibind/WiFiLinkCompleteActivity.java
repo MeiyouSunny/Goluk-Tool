@@ -404,13 +404,14 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
 	@Override
 	protected void onDestroy() {
+
+		super.onDestroy();
 		EventBus.getDefault().unregister(this);
 		if (null != mWac) {
 			mWac.unbind();
 			mWac = null;
 		}
 		LiveDialogManager.getManagerInstance().dismissSingleBtnDialog();
-		super.onDestroy();
 		GolukDebugUtils.e("", "通知logic停止连接ipc---WiFiLinkCompleteActivity---onDestroy---1");
 
 		GolukDebugUtils.e("", "jyf-----WifiBind-----WifiCompelete-----onDestroy----");

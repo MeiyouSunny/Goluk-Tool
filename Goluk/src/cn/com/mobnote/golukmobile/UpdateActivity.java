@@ -177,8 +177,10 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		mIpcPath = SharedPrefUtil.getIPCPath();
 
 		mTextIpcVersion.setText(mIpcVersion);
-		String size = DataCleanManage.getFormatSize(Double.parseDouble(mIpcSize));
-		mTextIpcSize.setText(size);
+		if (!TextUtils.isEmpty(mIpcSize)) {
+			String size = DataCleanManage.getFormatSize(Double.parseDouble(mIpcSize));
+			mTextIpcSize.setText(size);
+		}
 		mTextUpdateContent.setText(mIpcContent);
 
 		Intent itClick = getIntent();

@@ -118,35 +118,38 @@ public class FileInfoManagerUtils {
 	// }
 
 	/**
-	   * Get a list of filenames in this folder.
-	   * @param folder  Full path of directory 
-	   * @param fileNameFilterPattern  Regular expression suitable for {@link String#matches(String)}, or null.
-	   *      See {@link java.util.regex.Pattern} for more details.
-	   * @return list of filenames (the names only, not the full path),
-	   *     or <tt>null</tt> if <tt>folder</tt> doesn't exist or isn't a directory,
-	   *     or if nothing matches <tt>fileNameFilterPattern</tt>
-	   * @throws PatternSyntaxException if <tt>fileNameFilterPattern</tt> is non-null and isn't a
-	   *     valid Java regular expression
-	   */
-	    public static ArrayList<String> getFileNames
-	        (final String folder, final String fileNameFilterPattern)
-	    {
-	        ArrayList<String> myData = new ArrayList<String>();
-	        File fileDir = new File(folder);
-	        if(!fileDir.exists() || !fileDir.isDirectory()){
-	            return myData;
-	        }
+	 * Get a list of filenames in this folder.
+	 * 
+	 * @param folder
+	 *            Full path of directory
+	 * @param fileNameFilterPattern
+	 *            Regular expression suitable for {@link String#matches(String)}
+	 *            , or null. See {@link java.util.regex.Pattern} for more
+	 *            details.
+	 * @return list of filenames (the names only, not the full path), or
+	 *         <tt>null</tt> if <tt>folder</tt> doesn't exist or isn't a
+	 *         directory, or if nothing matches <tt>fileNameFilterPattern</tt>
+	 * @throws PatternSyntaxException
+	 *             if <tt>fileNameFilterPattern</tt> is non-null and isn't a
+	 *             valid Java regular expression
+	 */
+	public static ArrayList<String> getFileNames(final String folder, final String fileNameFilterPattern) {
+		ArrayList<String> myData = new ArrayList<String>();
+		File fileDir = new File(folder);
+		if (!fileDir.exists() || !fileDir.isDirectory()) {
+			return myData;
+		}
 
-	        String[] files = fileDir.list();
+		String[] files = fileDir.list();
+		if (files != null) {
+			for (int i = 0; i < files.length; i++) {
+				if (fileNameFilterPattern == null || files[i].matches(fileNameFilterPattern))
+					myData.add(files[i]);
+			}
+		}
 
-	        for (int i = 0; i < files.length; i++) {
-	            if(fileNameFilterPattern == null ||
-	                    files[i].matches(fileNameFilterPattern))
-	            myData.add(files[i]);
-	        }
-
-	        return myData;
-	    }
+		return myData;
+	}
 	/**
 	 * 读取本地视频配置文件
 	 * 

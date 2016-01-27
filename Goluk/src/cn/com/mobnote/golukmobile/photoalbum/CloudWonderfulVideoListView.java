@@ -492,7 +492,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 		switch (event) {
 		case ENetTransEvent_IPC_VDCP_CommandResp:
 			if (IPC_VDCP_Msg_Query == msg) {
-				if (mCustomProgressDialog.isShowing()) {
+				if (mCustomProgressDialog != null && mCustomProgressDialog.isShowing()) {
 					mCustomProgressDialog.close();
 				}
 				isGetFileListDataing = false;
@@ -583,7 +583,8 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 	}
 
 	public void onDestory() {
-
+		mCustomProgressDialog.close();
+		mCustomProgressDialog = null;
 	}
 
 }

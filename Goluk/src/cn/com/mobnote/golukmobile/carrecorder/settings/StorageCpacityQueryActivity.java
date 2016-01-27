@@ -177,6 +177,10 @@ public class StorageCpacityQueryActivity extends CarRecordBaseActivity implement
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("storage");
 		}
+		if (null != mCustomFormatDialog && mCustomFormatDialog.isShowing()) {
+			mCustomFormatDialog.dismiss();
+		}
+		mCustomFormatDialog = null;
 		finish();
 	}
 

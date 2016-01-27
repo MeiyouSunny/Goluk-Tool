@@ -208,6 +208,12 @@ public class CloudVideoManager implements OnClickListener {
 		}
 	}
 
+	public void onDestroy() {
+		if (null != mCloudVideoAdapter) {
+			mCloudVideoAdapter.onDestroy();
+		}
+	}
+
 	public void deleteDataFlush(List<String> deleteData) {
 		mCloudVideoAdapter.deleteDataFlush(getType(), deleteData);
 	}
