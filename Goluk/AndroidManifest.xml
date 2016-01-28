@@ -99,9 +99,6 @@
             android:name=".UserVersionActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".UserWelcomeActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".UserOpinionActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -213,11 +210,6 @@
         </activity>
         <activity
             android:name=".carrecorder.settings.FormatSDCardActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
-        <activity
-            android:name=".carrecorder.settings.RestoreFactorySettingsActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>

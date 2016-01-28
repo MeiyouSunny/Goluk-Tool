@@ -117,7 +117,9 @@ public class CloudPagerAdapter extends PagerAdapter {
 	}
 
 	public void onDestroy() {
-
+		mCloudWonderfulVideoListView.onDestory();
+		mCloudEmergencyVideoListView.onDestory();
+		mCloudLoopVideoListView.onDestory();
 	}
 
 }

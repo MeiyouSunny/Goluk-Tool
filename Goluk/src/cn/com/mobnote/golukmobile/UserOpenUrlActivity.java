@@ -182,7 +182,8 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					if (mErrorState) {
 						return;
 					}
-					mWebView.loadUrl(getRtmpAddress() + "?type=4");
+					final String shoppintUrl  = "https://goluk.tmall.com/";
+					mWebView.loadUrl(shoppintUrl);
 				} else if (from_tag.equals("buyline")) {
 					mTextTitle.setText(this.getResources().getString(R.string.my_shopping_buck_line));
 					if (mErrorState) {

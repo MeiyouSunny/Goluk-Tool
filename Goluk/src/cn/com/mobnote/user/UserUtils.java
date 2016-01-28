@@ -388,8 +388,8 @@ public class UserUtils {
 		SpannableStringBuilder style = new SpannableStringBuilder(str);
 		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
 				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), nikename.length() + 3, nikename.length()
-				+ 3 + replyText.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), nikename.length() + 2, nikename.length()
+				+ 2 + replyText.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 		view.setText(style);
 	}
 
