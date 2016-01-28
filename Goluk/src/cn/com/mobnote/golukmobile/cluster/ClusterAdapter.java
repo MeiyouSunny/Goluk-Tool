@@ -323,6 +323,8 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
 				// 计算第一项的高度
 				this.mFirstItemHeight = convertView.getBottom();
+				ClusterActivity ca = (ClusterActivity) mContext;
+				ca.updateListViewBottom(mCurrentViewType);
 			}
 			break;
 		case sViewType_NewsVideoList:
@@ -520,6 +522,8 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 			} else {
 				holder.comment3.setVisibility(View.GONE);
 			}
+			ClusterActivity ca = (ClusterActivity) mContext;
+			ca.updateListViewBottom(mCurrentViewType);
 			break;
 
 		case sViewType_NoData:
