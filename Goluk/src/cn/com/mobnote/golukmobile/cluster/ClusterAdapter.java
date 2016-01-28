@@ -398,15 +398,15 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 			String headUrl = clusterInfo.mUserEntity.mCustomAvatar;
 			if(clusterInfo.mUserEntity != null && clusterInfo.mUserEntity.label != null){
 				if("1".equals(clusterInfo.mUserEntity.label.approvelabel)){//企业认证
-					holder.v.setBackgroundResource(R.drawable.authentication_bluev_icon);
+					holder.v.setImageResource(R.drawable.authentication_bluev_icon);
 					holder.v.setVisibility(View.VISIBLE);
 				}else{
 					if("1".equals(clusterInfo.mUserEntity.label.headplusv)){//个人加V
-						holder.v.setBackgroundResource(R.drawable.authentication_yellowv_icon);
+						holder.v.setImageResource(R.drawable.authentication_yellowv_icon);
 						holder.v.setVisibility(View.VISIBLE);
 					}else{
 						if("1".equals(clusterInfo.mUserEntity.label.tarento)){//达人
-							holder.v.setBackgroundResource(R.drawable.authentication_star_icon);
+							holder.v.setImageResource(R.drawable.authentication_star_icon);
 							holder.v.setVisibility(View.VISIBLE);
 						}else{
 							holder.v.setVisibility(View.GONE);
