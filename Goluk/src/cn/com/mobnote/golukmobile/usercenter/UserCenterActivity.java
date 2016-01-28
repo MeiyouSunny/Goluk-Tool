@@ -110,10 +110,6 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 	// 当前该用户的点赞人员信息列表
 	private PraiseInfoGroup praisgroupdata = null;
 
-	private RelativeLayout mBottomLoadingView = null;
-
-	private RelativeLayout mVideoTheEndView = null;
-
 	private TextView title = null;
 
 	@SuppressLint("SimpleDateFormat")
@@ -172,11 +168,6 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 
-		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading,
-				null);
-
-		mVideoTheEndView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.usercenter_videos_below_loading,
-				null);
 		EventBus.getDefault().register(this);
 	}
 
@@ -250,10 +241,6 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 							if (uca.getCurrentViewType() == UserCenterAdapter.ViewType_ShareVideoList) {// 视频列表
 								if (videogroupdata.isHaveData) {// 加载更多视频数据
 									if (videogroupdata.videolist.size() > 0) {
-										if (!videogroupdata.addFooter) {
-											videogroupdata.addFooter = true;
-											mRTPullListView.addFooterView(mBottomLoadingView);
-										}
 										httpGetNextVideo(videogroupdata.videolist.get(videogroupdata.videolist.size() - 1).mVideoEntity.sharingtime);
 									}
 								}
@@ -274,15 +261,14 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 	}
 
 	public void updateViewData(boolean succ, int count) {
+		mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime(this));
 		if (succ) {
 			uca.notifyDataSetChanged();
 			if (count > 0) {
 				this.mRTPullListView.setSelection(count);
 			}
-		} else {
-
 		}
-		mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime(this));
+		
 	}
 
 	/**
@@ -360,7 +346,6 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 
 			// 说明有数据
 			if (videos != null) {
-				mRTPullListView.removeFooterView(mVideoTheEndView);
 				if (videos.size() >= 20) {
 					videogroupdata.isHaveData = true;
 				} else {
@@ -402,6 +387,24 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 		}
 
 	}
+	
+	/**
+	 * 更改聚合页面底部显示的布局
+	 * @param type
+	 */
+	public void updateListViewBottom(int type){
+		mRTPullListView.removeFooterView(1);
+		mRTPullListView.removeFooterView(2);
+		if(uca.ViewType_ShareVideoList == type){//分享视频
+			if(videogroupdata.isHaveData){
+				mRTPullListView.addFooterView(1);
+			}else{
+				if(videogroupdata.videolist!=null && videogroupdata.videolist.size()>0){
+					mRTPullListView.addFooterView(2);
+				}
+			}
+		}
+	}
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
@@ -427,14 +430,10 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 				}
 
 				videogroupdata.addFooter = false;
-				// 移除下拉
-				mRTPullListView.removeFooterView(this.mBottomLoadingView);
 
 				if (videos.size() < 20) {
 					videogroupdata.isHaveData = false;
-					mRTPullListView.addFooterView(mVideoTheEndView);
 				} else {
-					mRTPullListView.removeFooterView(mVideoTheEndView);
 					videogroupdata.isHaveData = true;
 				}
 			} else {
@@ -529,18 +528,6 @@ public class UserCenterActivity extends BaseActivity implements VideoSuqareManag
 		}
 	}
 
-	/**
-	 * 控制theEnd 的显示和 去掉
-	 * 
-	 * @param flog
-	 */
-	public void updateTheEnd(boolean flog) {
-		if (flog) {
-			mRTPullListView.addFooterView(mVideoTheEndView);
-		} else {
-			mRTPullListView.removeFooterView(mVideoTheEndView);
-		}
-	}
 
 	/**
 	 * 删除视频回调

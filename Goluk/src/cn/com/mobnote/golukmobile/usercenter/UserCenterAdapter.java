@@ -314,22 +314,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 					}
 				});
 
-				uca.updateTheEnd(false);
-				if (currentViewType == ViewType_ShareVideoList) {
-					if (videogroupdata.videolist != null && videogroupdata.videolist.size() > 0) {
-						if (videogroupdata.isHaveData == false) {
-							uca.updateTheEnd(true);
-						}
-					}
-
-				} else if (currentViewType == ViewType_PraiseUserList) {
-					if (praisgroupData.praiselist != null && praisgroupData.praiselist.size() > 0) {
-						if (praisgroupData.isHaveData == false) {
-							uca.updateTheEnd(true);
-						}
-					}
-				}
-
+				uca.updateListViewBottom(currentViewType);
+				
 				holder.sharelayout.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -539,6 +525,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 			} else {
 				holder.comment3.setVisibility(View.GONE);
 			}
+			
+			uca.updateListViewBottom(currentViewType);
 			break;
 		case ItemType_PraiseInfo:
 			int index_p = position - 1;
@@ -642,6 +630,7 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 				}
 
 			});
+			uca.updateListViewBottom(currentViewType);
 			break;
 		case ItemType_noDataInfo:
 			NoVideoDataViewHolder noVideoDataViewHolder = null;
