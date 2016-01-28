@@ -675,4 +675,11 @@ public class GolukNotification {
 		}
 	}
 
+	/** Clear all notifications */
+	public void clearAllNotification(Activity activity) {
+		NotificationManager mNotiManager = (NotificationManager) activity
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		mNotiManager.cancelAll();
+	}
+
 }
