@@ -309,7 +309,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		isIpcConnSuccess = false;
 		isUserLoginSucess = false;
 		mCCUrl = null;
-		mCurrentUId = null;
+//		mCurrentUId = null;
 		mCurrentAid = null;
 		carrecorderCachePath = "";
 		autoRecordFlag = false;

@@ -87,7 +87,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	public List<VideoSquareInfo> mNewslist = null;
 	public ClusterAdapter mClusterAdapter;
 	private SharePlatformUtil mSharePlatform = null;
-	private RelativeLayout mBottomLoadingView = null;
 	/** 活动id **/
 	private String mActivityid = null;
 	private String mClusterTitle = null;
@@ -161,8 +160,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		mShareBtn = (Button) findViewById(R.id.title_share);
 		mEditText = (EditText) findViewById(R.id.custer_comment_input);
 		mCommenCountTv = (TextView) findViewById(R.id.custer_comment_send);
-		mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.video_square_below_loading,
-				null);
 		mSharePlatform = new SharePlatformUtil(this);
 		mClusterAdapter = new ClusterAdapter(this, mSharePlatform, 1, this, mActivityid);
 		mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
@@ -199,32 +196,22 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 						if (mClusterAdapter.getCurrentViewType() == ClusterAdapter.sViewType_RecommendVideoList) {// 视频列表
 							if (mRecommendlist != null && mRecommendlist.size() > 0) {// 加载更多视频数据
 								if (mIsRecommendLoad) {
-									mRTPullListView.addFooterView(mBottomLoadingView);
 									mRecommendRequest = new RecommendBeanRequest(
 											IPageNotifyFn.PageType_ClusterRecommend, ClusterActivity.this);
 									mRecommendRequest.get(mActivityid, "2",mTjtime, "20");
 									mIsRecommendLoad = false;
 									mIsLoadDataRecommend = true;
-								}else{
-									if(mIsLoadDataRecommend == false){
-										GolukUtils.showToast(ClusterActivity.this,ClusterActivity.this.getResources().getString(R.string.str_pull_refresh_listview_bottom_reach));
-									}
 								}
 							}
 						} else {// 最新列表
 							if (mNewslist != null && mNewslist.size() > 0) {// 加载更多视频数据
 								if (mIsNewsLoad) {
-									mRTPullListView.addFooterView(mBottomLoadingView);
 									mNewsRequest = new NewsBeanRequest(IPageNotifyFn.PageType_ClusterNews,
 											ClusterActivity.this);
 									mNewsRequest.get(mActivityid, "2",
 											mNewslist.get(mNewslist.size() - 1).mVideoEntity.sharingtime, "20");
 									mIsLoadDataNews = true;
 									mIsNewsLoad = false;
-								}else{
-									if(mIsLoadDataNews == false){
-										GolukUtils.showToast(ClusterActivity.this,ClusterActivity.this.getResources().getString(R.string.str_pull_refresh_listview_bottom_reach));
-									}
 								}
 							}
 						}
@@ -339,6 +326,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	public void onLoadComplete(int requestType, Object result) {
 		if (requestType == IPageNotifyFn.PageType_ClusterMain) {
 			JsonData data = (JsonData) result;
+			mRTPullListView.removeFooterView(1);
+			mRTPullListView.removeFooterView(2);
 			if (data != null && data.success) {
 				if (data.data != null) {
 					mIsRequestSucess = true;
@@ -383,8 +372,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		} else if (requestType == IPageNotifyFn.PageType_ClusterRecommend) {
 			mIsLoadDataRecommend = false;
 			ActivityJsonData data = (ActivityJsonData) result;
-			// 移除下拉
-			mRTPullListView.removeFooterView(this.mBottomLoadingView);
 			if (data != null && data.success) {
 				if (data.data != null) {
 					if ("0".equals(data.data.result)) {
@@ -423,8 +410,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 				if (data.data != null) {
 					if ("0".equals(data.data.result)) {
 						List<VideoSquareInfo> list = vdf.getClusterList(data.data.videolist);
-						// 移除下拉
-						mRTPullListView.removeFooterView(this.mBottomLoadingView);
 						int count = mNewslist.size();
 						if (list != null && list.size() > 0) {
 							if(list.size() == 20){
@@ -492,6 +477,32 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 				}
 			} else {
 				GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
+			}
+		}
+	}
+	
+	/**
+	 * 更改聚合页面底部显示的布局
+	 * @param type
+	 */
+	public void updateListViewBottom(int type){
+		mRTPullListView.removeFooterView(1);
+		mRTPullListView.removeFooterView(2);
+		if(mClusterAdapter.sViewType_RecommendVideoList == type){//推荐
+			if(mIsRecommendLoad){
+				mRTPullListView.addFooterView(1);
+			}else{
+				if(mRecommendlist!=null && mRecommendlist.size()>0){
+					mRTPullListView.addFooterView(2);
+				}
+			}
+		}else{//最新
+			if(mIsNewsLoad){
+				mRTPullListView.addFooterView(1);
+			}else{
+				if(mNewslist != null && mNewslist.size()>0){
+					mRTPullListView.addFooterView(2);
+				}
 			}
 		}
 	}
@@ -582,6 +593,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 			return false;
 		}
 	}
+	
 
 	@Override
 	public int OnGetListViewWidth() {

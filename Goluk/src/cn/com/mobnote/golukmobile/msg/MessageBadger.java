@@ -17,9 +17,14 @@ public class MessageBadger {
 	private final static String sLauncherClass = "cn.com.mobnote.golukmobile.GuideActivity";
 	private final static String TAG = "MessageBadger";
 
-	public static void sendBadgeNumber(int number, Context context) {
+	public static void sendBadgeNumber(int num, Context context) {
+		int number = num;
 		if (number <= 0) {
 			number = 0;
+		}
+
+		if(number > 99) {
+			number = 99;
 		}
 
 		// Treat samsumg as default

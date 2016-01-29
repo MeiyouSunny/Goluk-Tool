@@ -5,13 +5,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.Intent;
+import android.text.TextUtils;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.eventbus.EventConfig;
-import cn.com.mobnote.golukmobile.msg.MsgCenterCommentActivity;
-import cn.com.mobnote.golukmobile.msg.MsgCenterPraiseActivity;
-import cn.com.mobnote.golukmobile.msg.OfficialMessageActivity;
-import cn.com.mobnote.golukmobile.msg.SystemMsgActivity;
+import cn.com.mobnote.golukmobile.msg.MessageBadger;
 import cn.com.mobnote.manager.MessageManager;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -21,8 +17,6 @@ import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushRegisterResult;
 import com.tencent.android.tpush.XGPushShowedResult;
 import com.tencent.android.tpush.XGPushTextMessage;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * XGPushBaseReceiver类提供透传消息的接收和操作结果的反馈
@@ -115,19 +109,31 @@ public class AcceptXDMessageReceiver extends XGPushBaseReceiver {
 					if(0 == type) {
 						//do nothing
 					} else if(101 == type) {
-						if(mApp.isUserLoginSucess) {
+						if(!TextUtils.isEmpty(mApp.mCurrentUId)) {
 							int num = MessageManager.getMessageManager().getCommentCount();
 							MessageManager.getMessageManager().setCommentCount(num + 1);
+							if(mApp.isExit()) {
+								MessageBadger.sendBadgeNumber(MessageManager.
+										getMessageManager().getMessageTotalCount(), context);
+							}
 						}
 					} else if(102 == type) {
-						if(mApp.isUserLoginSucess) {
+						if(!TextUtils.isEmpty(mApp.mCurrentUId)) {
 							int num = MessageManager.getMessageManager().getPraiseCount();
 							MessageManager.getMessageManager().setPraiseCount(num + 1);
+							if(mApp.isExit()) {
+								MessageBadger.sendBadgeNumber(MessageManager.
+										getMessageManager().getMessageTotalCount(), context);
+							}
 						}
 					} else if(type >= 200 && type < 300) {
-						if(mApp.isUserLoginSucess) {
+						if(!TextUtils.isEmpty(mApp.mCurrentUId)) {
 							int num = MessageManager.getMessageManager().getSystemMessageCount();
 							MessageManager.getMessageManager().setSystemMessageCount(num + 1);
+							if(mApp.isExit()) {
+								MessageBadger.sendBadgeNumber(MessageManager.
+										getMessageManager().getMessageTotalCount(), context);
+							}
 						}
 					} else if(type >= 300 && type < 400) {
 						// for miui to sync number on launcher
