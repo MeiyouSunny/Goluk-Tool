@@ -185,7 +185,8 @@ public class SystemMsgAdapter extends BaseAdapter {
 							}else if (selectDsp.equals(mmbTxt.content.type)) {//单视频
 								String specialid = mmbTxt.content.access;
 								Intent i = new Intent(mContext, VideoDetailActivity.class);
-								i.putExtra("videoid", specialid);
+								i.putExtra(VideoDetailActivity.TYPE, "Wonderful");
+								i.putExtra("ztid", specialid);
 								mContext.startActivity(i);
 							}
 						} else if (mmbTxt.type == msgTypeWithdraw) {// 收益详情页
