@@ -3,9 +3,11 @@ package cn.com.mobnote.golukmobile.videosuqare;
 import java.util.HashMap;
 
 import android.text.TextUtils;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.http.request.GolukFastjsonRequest;
 import cn.com.mobnote.golukmobile.videosuqare.bean.PraiseResultBean;
+import cn.com.tiros.api.Tapi;
 
 public class PraiseRequest extends GolukFastjsonRequest<PraiseResultBean> {
 
@@ -33,6 +35,8 @@ public class PraiseRequest extends GolukFastjsonRequest<PraiseResultBean> {
 		HashMap<String, String> paramters = (HashMap<String, String>) getParam();
 		paramters.put("xieyi", "100");
 		paramters.put("channel", channel);
+		paramters.put("uid", GolukApplication.getInstance().mCurrentUId);
+		paramters.put("mobileid",  Tapi.getMobileId());
 		paramters.put("videoid", videoId);
 		paramters.put("type", type);
 		super.get();

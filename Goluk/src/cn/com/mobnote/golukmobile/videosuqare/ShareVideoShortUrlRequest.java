@@ -3,9 +3,11 @@ package cn.com.mobnote.golukmobile.videosuqare;
 import java.util.HashMap;
 
 import android.text.TextUtils;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.http.request.GolukFastjsonRequest;
 import cn.com.mobnote.golukmobile.videosuqare.bean.ShareVideoResultBean;
+import cn.com.tiros.api.Tapi;
 
 public class ShareVideoShortUrlRequest extends GolukFastjsonRequest<ShareVideoResultBean> {
 
@@ -34,6 +36,8 @@ public class ShareVideoShortUrlRequest extends GolukFastjsonRequest<ShareVideoRe
 		paramters.put("xieyi", "100");
 		paramters.put("videoid", videoId);
 		paramters.put("type", type);
+		paramters.put("uid", GolukApplication.getInstance().mCurrentUId);
+		paramters.put("mobileid",  Tapi.getMobileId());
 		super.get();
 		return true;
 	}
