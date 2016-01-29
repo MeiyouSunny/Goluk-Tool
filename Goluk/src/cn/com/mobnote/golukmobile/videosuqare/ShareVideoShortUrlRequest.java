@@ -36,7 +36,12 @@ public class ShareVideoShortUrlRequest extends GolukFastjsonRequest<ShareVideoRe
 		paramters.put("xieyi", "100");
 		paramters.put("videoid", videoId);
 		paramters.put("type", type);
-		paramters.put("uid", GolukApplication.getInstance().mCurrentUId);
+		String uid = GolukApplication.getInstance().mCurrentUId;
+		if (TextUtils.isEmpty(uid)) {
+			paramters.put("uid", "");
+		} else {
+			paramters.put("uid", uid);
+		}
 		paramters.put("mobileid",  Tapi.getMobileId());
 		super.get();
 		return true;

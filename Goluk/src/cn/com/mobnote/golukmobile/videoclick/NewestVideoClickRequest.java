@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile.videoclick;
 
 import java.util.HashMap;
 
+import android.text.TextUtils;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.http.request.GolukFastjsonRequest;
@@ -29,7 +30,13 @@ public class NewestVideoClickRequest extends GolukFastjsonRequest<VideoClickInfo
 		HashMap<String, String> headers = (HashMap<String, String>) getHeader();
 		headers.put("xieyi", xieyi);
 		headers.put("channel", channel);
-		headers.put("uid", GolukApplication.getInstance().mCurrentUId);
+		
+		String uid = GolukApplication.getInstance().mCurrentUId;
+		if (TextUtils.isEmpty(uid)) {
+			headers.put("uid", "");
+		} else {
+			headers.put("uid", uid);
+		}
 		headers.put("mobileid",  Tapi.getMobileId());
 		headers.put("videolist", videolist);
 		get();

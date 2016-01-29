@@ -35,10 +35,15 @@ public class PraiseRequest extends GolukFastjsonRequest<PraiseResultBean> {
 		HashMap<String, String> paramters = (HashMap<String, String>) getParam();
 		paramters.put("xieyi", "100");
 		paramters.put("channel", channel);
-		paramters.put("uid", GolukApplication.getInstance().mCurrentUId);
-		paramters.put("mobileid",  Tapi.getMobileId());
 		paramters.put("videoid", videoId);
 		paramters.put("type", type);
+		String uid = GolukApplication.getInstance().mCurrentUId;
+		if (TextUtils.isEmpty(uid)) {
+			paramters.put("uid", "");
+		} else {
+			paramters.put("uid", uid);
+		}
+		paramters.put("mobileid", "" + Tapi.getMobileId());
 		super.get();
 		return true;
 	}
