@@ -481,7 +481,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g2));
 			mCarrecorderWonderfulLine.setVisibility(View.VISIBLE);
 		} else {
-			mISPLayout.setVisibility(View.VISIBLE);
+			mISPLayout.setVisibility(View.GONE);
 //			mPhotoQualityLayout.setVisibility(View.VISIBLE);
 			mAutoPhotoItem.setVisibility(View.VISIBLE);
 			mFatigueLayout.setVisibility(View.VISIBLE);
