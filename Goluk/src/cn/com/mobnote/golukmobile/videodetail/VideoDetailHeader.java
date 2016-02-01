@@ -109,9 +109,11 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
     private final Runnable mProgressChecker = new Runnable() {
         @Override
         public void run() {
-			int duration = mVideoView.getDuration();
-			int progress = mVideoView.getCurrentPosition() * 100 / duration;
-			mSeekBar.setProgress(progress);
+			if (mVideoView.isPlaying()) {
+				int duration = mVideoView.getDuration();
+				int progress = mVideoView.getCurrentPosition() * 100 / duration;
+				mSeekBar.setProgress(progress);
+			}
             mHandler.postDelayed(mProgressChecker, 500);
         }
     };
@@ -396,8 +398,8 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 		mVideoView.requestFocus();
 		mVideoView.start();
 		showLoading();
-        mHandler.removeCallbacks(mPlayingChecker);
-        mHandler.postDelayed(mPlayingChecker, 250);
+        mHandler.post(mProgressChecker);
+        mHandler.post(mPlayingChecker);
 	}
 
 	/**
@@ -609,6 +611,9 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 	private boolean mResume = false;
 
 	public void pausePlayer() {
+		if (!isCallVideo) {
+			return;
+		}
 		mResume = true;
 		mHandler.removeCallbacksAndMessages(null);
 		mVideoPosition = mVideoView.getCurrentPosition();
@@ -617,13 +622,16 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 	}
 
 	public void startPlayer() {
+		if (!isCallVideo) {
+			return;
+		}
 		if (mResume) {
 			mVideoView.seekTo(mVideoPosition);
-			mVideoView.resume();;
+			mVideoView.resume();
+	        mHandler.post(mProgressChecker);
+	        mHandler.post(mPlayingChecker);
 //			showLoading();
 		}
-        mHandler.post(mProgressChecker);
-        mHandler.post(mPlayingChecker);
 	}
 
 	/** DP */
