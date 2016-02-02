@@ -50,10 +50,11 @@ import android.widget.ImageView;
 import android.widget.VideoView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.player.factory.GolukPlayer;
+import cn.com.mobnote.golukmobile.player.factory.GolukPlayer.OnInfoListener;
 
 public class MoviePlayer implements
 		GolukPlayer.OnErrorListener, GolukPlayer.OnCompletionListener,
-        ControllerOverlay.Listener {
+        ControllerOverlay.Listener, OnInfoListener {
     @SuppressWarnings("unused")
     private static final String TAG = "MoviePlayer";
 
@@ -136,7 +137,7 @@ public class MoviePlayer implements
         mVideoView.setOnErrorListener(this);
         mVideoView.setOnCompletionListener(this);
         mVideoView.setVideoURI(mUri);
-
+        mVideoView.setOnInfoListener(this);
         Intent ai = movieActivity.getIntent();
         boolean virtualize = ai.getBooleanExtra(VIRTUALIZE_EXTRA, false);
         if (virtualize) {
@@ -501,6 +502,20 @@ public class MoviePlayer implements
 	public void exit() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public boolean onInfo(GolukPlayer mp, int what, int extra) {
+		// TODO Auto-generated method stub
+		switch (what) {
+		case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+			mController.showLoading();
+			break;
+		case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+			mController.showPlaying();
+			break;
+		}
+		return false;
 	}
 }
 
