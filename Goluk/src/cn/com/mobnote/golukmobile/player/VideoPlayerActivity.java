@@ -253,10 +253,10 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	 * @date 2015年3月8日
 	 */
 	private void hideLoading() {
+		mPlayImg.setVisibility(View.GONE);
 		if (isShow) {
 			isShow = false;
 
-			mPlayImg.setVisibility(View.GONE);
 			if (mAnimationDrawable != null) {
 				if (mAnimationDrawable.isRunning()) {
 					mAnimationDrawable.stop();
@@ -775,7 +775,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		if (error) {
 			return;
 		}
-		showOperator();
+//		showOperator();
 		mVideo.seekTo(0);
 		mPlay.setImageResource(R.drawable.player_play_btn);
 		mPlayTime.setText("00:00");
