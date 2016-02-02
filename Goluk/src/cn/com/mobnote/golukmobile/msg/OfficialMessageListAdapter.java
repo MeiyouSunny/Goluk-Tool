@@ -187,8 +187,8 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 					}
 				} else if (SPECIAL_SOLO.equals(type)) {
 					intent = new Intent(mContext, VideoDetailActivity.class);
-					intent.putExtra(VideoDetailActivity.VIDEO_ID, accessId);
-					intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
+					intent.putExtra(VideoDetailActivity.TYPE, "Wonderful");
+					intent.putExtra("ztid", accessId);
 					mContext.startActivity(intent);
 				}else if(HOME_PAGE.equals(type)) {
 					UCUserInfo user = new UCUserInfo();
