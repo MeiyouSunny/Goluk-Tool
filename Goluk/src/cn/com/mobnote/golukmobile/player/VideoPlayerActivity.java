@@ -128,9 +128,11 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 			if (!mDragging || mVideo.isPlaying()) {
 				int duration = mVideo.getDuration();
 				int position = mVideo.getCurrentPosition();
-				int progress = position * 100 / duration;
-				mPlayTime.setText(formatTime(position));
-				mSeekBar.setProgress(progress);
+				if (duration > 0) {
+					int progress = position * 100 / duration;
+					mPlayTime.setText(formatTime(position));
+					mSeekBar.setProgress(progress);
+				}
 			}
             mHandler.postDelayed(mProgressChecker, 500);
         }
