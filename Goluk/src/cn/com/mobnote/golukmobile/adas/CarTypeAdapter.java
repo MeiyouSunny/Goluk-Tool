@@ -27,7 +27,7 @@ public class CarTypeAdapter extends BaseAdapter {
 	@Override
 	public Object getItem(int position) {
 		// TODO Auto-generated method stub
-		return mData == null ? null: mData.get(position);
+		return (mData == null || position < 0)? null: mData.get(position);
 	}
 
 	@Override

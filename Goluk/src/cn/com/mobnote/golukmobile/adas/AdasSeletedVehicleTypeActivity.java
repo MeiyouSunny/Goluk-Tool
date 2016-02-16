@@ -160,16 +160,18 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 			} else if (mAdasConfigParamter.head_offset > 0) {
 				/** 设备上自定义车辆的参数，不在手机上，覆盖手机的第一个值 **/
 				mPosition = mCarTypeAdapter.getCount() - mCustomVehicleList.size();
-				VehicleParamterBean mParamter = (VehicleParamterBean) mCarTypeAdapter.getItem(mPosition);
-				mParamter.head_offset = mAdasConfigParamter.head_offset;
-				mParamter.height_offset = mAdasConfigParamter.height_offset;
-				mParamter.left_offset = mAdasConfigParamter.left_offset;
-				mParamter.right_offset = mAdasConfigParamter.right_offset;
-				mParamter.wheel_offset = mAdasConfigParamter.wheel_offset;
-				mParamter.name = getString(R.string.str_custom) + 1;
-				mCustomVehicleList.set(0, mParamter);
-				mCarTypeAdapter.setSelectedId(mPosition);
-				setButtonStatus(true);
+				VehicleParamterBean paramter = (VehicleParamterBean) mCarTypeAdapter.getItem(mPosition);
+				if (paramter != null) {
+					paramter.head_offset = mAdasConfigParamter.head_offset;
+					paramter.height_offset = mAdasConfigParamter.height_offset;
+					paramter.left_offset = mAdasConfigParamter.left_offset;
+					paramter.right_offset = mAdasConfigParamter.right_offset;
+					paramter.wheel_offset = mAdasConfigParamter.wheel_offset;
+					paramter.name = getString(R.string.str_custom) + 1;
+					mCustomVehicleList.set(0, paramter);
+					mCarTypeAdapter.setSelectedId(mPosition);
+					setButtonStatus(true);
+				}
 			}
 		}
 	}
