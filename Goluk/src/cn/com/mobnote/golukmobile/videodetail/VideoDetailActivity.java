@@ -251,9 +251,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 	@Override
 	protected void onResume() {
+		mHeader.startPlayer();
 		super.onResume();
 		mApp.setContext(this, "detailcomment");
-		mHeader.startPlayer();
 	}
 
 	private void initView() {
@@ -890,13 +890,10 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 	@Override
 	protected void onPause() {
-		super.onPause();
-		if (null == mVideoJson) {
-			if (!UserUtils.isNetDeviceAvailable(this)) {
-				return;
-			}
+		if (mHeader != null) {
+			mHeader.pausePlayer();
 		}
-		mHeader.pausePlayer();
+		super.onPause();
 	}
 
 	@Override
