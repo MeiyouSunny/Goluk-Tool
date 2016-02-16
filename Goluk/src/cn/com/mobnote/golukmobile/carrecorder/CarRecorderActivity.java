@@ -688,7 +688,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 						isRecVideo = false;
 					}
 				}else{//G1  G2  G1S
-					if(1 == mVideoConfigState.AudioEnabled){
+					if(mVideoConfigState != null && 1 == mVideoConfigState.AudioEnabled){
 						isRecVideo = true;
 					}else{
 						isRecVideo = false;
