@@ -240,4 +240,9 @@ public class CloudVideoManager implements OnClickListener {
 		return type;
 	}
 
+	public void updateCloudVideoAsyncFlag(int type, String filename) {
+		if (mCloudVideoAdapter != null) {
+			mCloudVideoAdapter.updateAsncFlag(type, filename);
+		}
+	}
 }

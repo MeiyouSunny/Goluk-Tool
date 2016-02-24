@@ -95,6 +95,16 @@
 	        android:layout_alignParentBottom="true"
 	        android:src="@drawable/flle_edit_hook"/>
     	</RelativeLayout>
+    	<TextView
+    	    android:id="@+id/textview_listview_item1_asysc_flag"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:background="#00000000"
+    	    android:textSize="10sp"
+        	android:textColor="#bfffffff"
+        	android:layout_centerInParent="true"
+        	android:text="@string/str_asycned"
+        	android:visibility="gone"/>
 </RelativeLayout>
 
 <RelativeLayout 
@@ -178,6 +188,16 @@
 	        android:layout_alignParentBottom="true"
 	        android:src="@drawable/flle_edit_hook"/>
     	</RelativeLayout>
+    <TextView
+    	    android:id="@+id/textview_listview_item2_asysc_flag"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:background="#00000000"
+    	    android:textSize="10sp"
+        	android:textColor="#bfffffff"
+        	android:layout_centerInParent="true"
+        	android:text="@string/str_asycned"
+        	android:visibility="gone"/>
 </RelativeLayout>
 
 

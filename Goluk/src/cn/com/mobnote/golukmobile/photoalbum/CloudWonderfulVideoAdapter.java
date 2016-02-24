@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.photoalbum;
+ package cn.com.mobnote.golukmobile.photoalbum;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -104,7 +104,8 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 			holder.line = convertView.findViewById(R.id.line);
 			holder.mNewIcon1 = (ImageView) convertView.findViewById(R.id.mNewIcon1);
 			holder.mNewIcon2 = (ImageView) convertView.findViewById(R.id.mNewIcon2);
-
+			holder.mAsycnedFlag1 = (TextView) convertView.findViewById(R.id.textview_listview_item1_asysc_flag);
+			holder.mAsycnedFlag2 = (TextView) convertView.findViewById(R.id.textview_listview_item2_asysc_flag);
 			RelativeLayout.LayoutParams lineParams = new RelativeLayout.LayoutParams((int) (2 * density),
 					(int) (height + 4 * density));
 			lineParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -150,7 +151,11 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		// }else {
 		holder.mNewIcon1.setVisibility(View.GONE);
 		// }
-
+		if (mVideoInfo1.isAsync) {
+			holder.mAsycnedFlag1.setVisibility(View.VISIBLE);
+		} else {
+			holder.mAsycnedFlag1.setVisibility(View.GONE);
+		}
 		if (null != mVideoInfo2) {
 			holder.mTMLayout2.setTag(mVideoInfo2.videoPath);
 			holder.mVideoLayout2.setVisibility(View.VISIBLE);
@@ -166,6 +171,12 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 			// }else {
 			holder.mNewIcon2.setVisibility(View.GONE);
 			// }
+
+			if (mVideoInfo2.isAsync) {
+				holder.mAsycnedFlag2.setVisibility(View.VISIBLE);
+			} else {
+				holder.mAsycnedFlag2.setVisibility(View.GONE);
+			}
 		}
 
 		updateEditState(mDataList.get(position), holder.mTMLayout1, holder.mTMLayout2);
@@ -396,6 +407,8 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		View line;
 		ImageView mNewIcon1;
 		ImageView mNewIcon2;
+		TextView mAsycnedFlag1;
+		TextView mAsycnedFlag2;
 	}
 
 	/**
@@ -427,4 +440,23 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		}
 	}
 
+	public void updateAsyncFlag(String filename, boolean flag) {
+		if (mDataList != null) {
+			for (DoubleVideoInfo item: mDataList) {
+				VideoInfo videoInfo1 = item.getVideoInfo1();
+				if (filename.equals(videoInfo1.filename)) {
+					videoInfo1.isAsync = flag;
+					notifyDataSetChanged();
+					break;
+				}
+				VideoInfo videoInfo2 = item.getVideoInfo2();
+
+				if (videoInfo2 != null && filename.equals(videoInfo2.filename)) {
+					videoInfo2.isAsync = flag;
+					notifyDataSetChanged();
+					break;
+				}
+			}
+		}
+	}
 }

@@ -29,4 +29,6 @@ public class VideoInfo {
 	public String filename;
 	/** 是否要显示new图标 */
 	public boolean isNew = false;
+	/** 是否已同步 **/
+	public boolean isAsync;
 }

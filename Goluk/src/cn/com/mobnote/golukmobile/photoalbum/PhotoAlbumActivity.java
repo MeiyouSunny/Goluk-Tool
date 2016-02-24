@@ -242,6 +242,11 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 		}
 	}
 
+	public void updateCloudVideoAsyncFlag(int type, String filename) {
+		if (mCloudVideoListView != null) {
+			mCloudVideoListView.updateCloudVideoAsyncFlag(type, filename);
+		}
+	}
 	@Override
 	protected void hMessage(Message msg) {
 		if (MSG_H_SHOWBACK == msg.what) {

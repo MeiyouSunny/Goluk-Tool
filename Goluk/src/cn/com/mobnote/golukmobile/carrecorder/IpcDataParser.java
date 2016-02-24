@@ -16,6 +16,7 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.IPCIdentityState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoConfigState;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
+import cn.com.mobnote.golukmobile.photoalbum.FileInfoManagerUtils;
 import cn.com.mobnote.golukmobile.photoalbum.VideoDataManagerUtils;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import android.text.TextUtils;
@@ -137,18 +138,30 @@ public class IpcDataParser {
 	 * @date Mar 10, 2015
 	 */
 	public static ArrayList<VideoInfo> parseVideoListData(String json) {
-
+		String filePath = android.os.Environment.getExternalStorageDirectory().getPath() + "/goluk/video/";
+		String[] videoPaths = { "", "loop/", "urgent/", "", "wonderful/" };
 		ArrayList<VideoInfo> list = new ArrayList<VideoInfo>();
+		List<String> files = null;
+
 		try {
 			JSONObject obj = new JSONObject(json);
 			
 			JSONArray array = obj.getJSONArray("items");
 			int length = array.length();
+			
 			for (int i = length-1; i >= 0; i--) {
 				JSONObject itemObj = array.getJSONObject(i);
 				VideoFileInfo info = parseSingleFileResult(itemObj.toString());
 				if(null != info){
 					VideoInfo mVideoInfo = VideoDataManagerUtils.getVideoInfo(info);
+					if (files == null) {
+						int type = IpcDataParser.parseVideoFileType(mVideoInfo.filename);
+						files = FileInfoManagerUtils.getFileNames(filePath + videoPaths[type], "(.+?mp4)");
+					}
+
+					if (files != null && files.contains(mVideoInfo.filename)) {
+						mVideoInfo.isAsync = true;
+					}
 					list.add(mVideoInfo);
 				}
 			}

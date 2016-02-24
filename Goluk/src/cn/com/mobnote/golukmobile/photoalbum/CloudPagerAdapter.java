@@ -110,6 +110,16 @@ public class CloudPagerAdapter extends PagerAdapter {
 		}
 	}
 
+	public void updateAsncFlag(int type, String filename) {
+		if (IPCManagerFn.TYPE_SHORTCUT == type) {
+			mCloudWonderfulVideoListView.updateAsyncFlag(filename, false);
+		} else if (IPCManagerFn.TYPE_URGENT == type) {
+			mCloudEmergencyVideoListView.updateAsyncFlag(filename, false);
+		} else {
+			mCloudLoopVideoListView.updateAsyncFlag(filename, false);
+		}
+	}
+
 	public void onResume() {
 		mCloudWonderfulVideoListView.onResume();
 		mCloudEmergencyVideoListView.onResume();
