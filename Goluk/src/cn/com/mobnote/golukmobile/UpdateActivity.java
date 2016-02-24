@@ -755,7 +755,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	}
 
 	/**
-	 * 升级一阶段 超时时间１分钟 固件升级过程中超时 1000x60=60000
+	 * 升级一阶段 超时时间3分钟 固件升级过程中超时 1000x60x3=180000
 	 */
 	private void timerTaskOne() {
 		timerCancel();
@@ -771,7 +771,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					}
 				}
 			}
-		}, 60000);
+		}, 180000);
 	}
 
 	/**
