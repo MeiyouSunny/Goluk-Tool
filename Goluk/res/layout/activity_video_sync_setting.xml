@@ -1,0 +1,97 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/user_login_bg"
+    tools:context="cn.com.mobnote.golukmobile.VideoSyncSettingActivity" >
+
+    <RelativeLayout
+        android:id="@+id/rl_video_sync_setting_title"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="@color/bg" >
+
+        <ImageView
+            android:id="@+id/iv_video_sync_setting_back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/cross_screen_arrow_icon1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_video_sync_setting_title"
+            android:layout_centerInParent="true"
+            android:text="@string/str_video_sync_setting_title"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:background="@color/white">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#a9a8ac"/>
+    <TextView
+        android:id="@+id/tv_video_sync_setting_sync5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:singleLine="true"
+        android:text="@string/str_video_sync_setting_sync_five"
+        android:textSize="16sp"
+        android:background="@color/white"
+        android:textColor="#131313"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#a9a8ac"
+        android:layout_marginLeft="20dp"/>
+    <TextView
+        android:id="@+id/tv_video_sync_setting_sync20"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:singleLine="true"
+        android:text="@string/str_video_sync_setting_sync_twenty"
+        android:textSize="16sp"
+        android:background="@color/white"
+        android:textColor="#131313"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#a9a8ac"
+        android:layout_marginLeft="20dp"/>
+    <TextView
+        android:id="@+id/tv_video_sync_setting_sync_close"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:singleLine="true"
+        android:text="@string/str_video_sync_setting_sync_close"
+        android:textSize="16sp"
+        android:background="@color/white"
+        android:textColor="#131313"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#a9a8ac"/>
+    </LinearLayout>
+</LinearLayout>

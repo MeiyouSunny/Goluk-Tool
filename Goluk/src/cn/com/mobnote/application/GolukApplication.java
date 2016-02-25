@@ -1520,7 +1520,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @author jyf
 	 */
 	private boolean isCanQueryNewFile() {
-		if (!SettingUtils.getInstance().getBoolean(UserSetupActivity.AUTO_SWITCH, true)) {
+//		if (!SettingUtils.getInstance().getBoolean(UserSetupActivity.AUTO_SWITCH, true)) {
+//			return false;
+//		}
+		// 
+		int syncFlag = SettingUtils.getInstance().getInt(UserSetupActivity.MANUAL_SWITCH, 5);
+		if(syncFlag == 0) {
 			return false;
 		}
 
@@ -1581,7 +1586,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 		long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
 		GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==4444===stopDownloadList" + starttime);
-		mIPCControlManager.queryFileListInfo(6, 5, starttime, 2147483647);
+		mIPCControlManager.queryFileListInfo(6, 10, starttime, 2147483647);
 	}
 
 	/**

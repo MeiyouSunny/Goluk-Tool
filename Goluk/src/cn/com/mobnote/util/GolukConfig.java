@@ -9,4 +9,8 @@ public class GolukConfig {
 	public final static int REQUEST_CODE_MSG_LOGIN_COMMENT = 1010;
 	public final static int REQUEST_CODE_MSG_LOGIN_SYSTEM = 1011;
 	public final static int REQUEST_CODE_MSG_LOGIN_SETTING = 1012;
+
+	public final static int REQUEST_CODE_VIDEO_SYNC_SETTING = 1013;
+
+	public final static String STRING_VIDEO_SYNC_SETTING_VALUE = "video_sync_setting_value";
 }

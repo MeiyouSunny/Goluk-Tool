@@ -62,15 +62,15 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:background="@drawable/editor_arrow"
+            android:src="@drawable/editor_arrow"
             android:contentDescription="@string/imgdes" />
     </RelativeLayout>
-    
+
     <View
         android:layout_width="wrap_content"
         android:layout_height="1dp"
         android:background="@drawable/solid" />
-    
+
     <!-- 同步开关 -->
 
     <View
@@ -80,7 +80,7 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/solid" />
 
-  <RelativeLayout
+    <RelativeLayout
         android:id="@+id/set_ipc_item"
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -96,14 +96,14 @@
             android:textColor="#3f3f3f"
             android:textSize="16sp" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/set_ipc_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="14dp"
-            android:background="@drawable/set_open_btn" 
+            android:src="@drawable/editor_arrow"
             android:contentDescription="@string/imgdes"/>
     </RelativeLayout>
 

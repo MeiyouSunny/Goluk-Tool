@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,6 +35,7 @@ import cn.com.mobnote.user.DataCleanManage;
 import cn.com.mobnote.user.IpcUpdateManage;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.GolukConfig;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.SharedPrefUtil;
@@ -75,8 +78,9 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	private String vIpc = "";
 
 	/** 连接ipc后自动同步开关 **/
-	private ImageButton mBtnSwitch = null;
-	public static final String AUTO_SWITCH = "autoswitch";
+//	private ImageButton mBtnSwitch = null;
+	private View mBtnSwitch = null;
+	public static final String MANUAL_SWITCH = "manualswitch";
 	
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -88,19 +92,19 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mContext = this;
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
-		
+
 		vIpc = SharedPrefUtil.getIPCVersion();
 		// 页面初始化
 		init();
-		
-		boolean b = SettingUtils.getInstance().getBoolean(AUTO_SWITCH, true);
-		if (b) {
-//			mBtnSwitch.setBackgroundResource(R.drawable.set_open_btn);
-			mBtnSwitch.setImageResource(R.drawable.set_open_btn);
-		} else {
-//			mBtnSwitch.setBackgroundResource(R.drawable.set_close_btn);
-			mBtnSwitch.setImageResource(R.drawable.set_close_btn);
-		}
+
+		int b = SettingUtils.getInstance().getInt(MANUAL_SWITCH, 5);
+//		if (b) {
+////			mBtnSwitch.setBackgroundResource(R.drawable.set_open_btn);
+////			mBtnSwitch.setImageResource(R.drawable.set_open_btn);
+//		} else {
+////			mBtnSwitch.setBackgroundResource(R.drawable.set_close_btn);
+////			mBtnSwitch.setImageResource(R.drawable.set_close_btn);
+//		}
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 	}
 
@@ -138,10 +142,11 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		// 清除缓存大小显示
 		mTextCacheSize = (TextView) findViewById(R.id.user_personal_setup_cache_size);
 		// 自动同步开关
-		mBtnSwitch = (ImageButton) findViewById(R.id.set_ipc_btn);
+//		mBtnSwitch = (ImageButton) findViewById(R.id.set_ipc_btn);
+		mBtnSwitch = findViewById(R.id.set_ipc_item);
 		// 消息通知添加监听
 		findViewById(R.id.notify_comm_item).setOnClickListener(this);
-		
+
 		// 注册监听
 		btnLoginout.setOnClickListener(this);
 		mBackBtn.setOnClickListener(this);
@@ -238,22 +243,37 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			}
 			break;
 		// 自动同步开关
-		case R.id.set_ipc_btn:
-			if (SettingUtils.getInstance().getBoolean(AUTO_SWITCH, true)) {
-//				mBtnSwitch.setBackgroundResource(R.drawable.set_close_btn);
-				mBtnSwitch.setImageResource(R.drawable.set_close_btn);
-				SettingUtils.getInstance().putBoolean(AUTO_SWITCH, false);
-			} else {
-//				mBtnSwitch.setBackgroundResource(R.drawable.set_open_btn);
-				mBtnSwitch.setImageResource(R.drawable.set_open_btn);
-				SettingUtils.getInstance().putBoolean(AUTO_SWITCH, true);
-			}
+		case R.id.set_ipc_item:
+//			if (SettingUtils.getInstance().getBoolean(AUTO_SWITCH, true)) {
+////				mBtnSwitch.setBackgroundResource(R.drawable.set_close_btn);
+////				mBtnSwitch.setImageResource(R.drawable.set_close_btn);
+//				SettingUtils.getInstance().putBoolean(AUTO_SWITCH, false);
+//			} else {
+////				mBtnSwitch.setBackgroundResource(R.drawable.set_open_btn);
+////				mBtnSwitch.setImageResource(R.drawable.set_open_btn);
+//				SettingUtils.getInstance().putBoolean(AUTO_SWITCH, true);
+//			}
+			// Start switch choosen activity
+			Intent intent = new Intent(this, VideoSyncSettingActivity.class);
+			startActivityForResult(intent, GolukConfig.REQUEST_CODE_VIDEO_SYNC_SETTING);
 			break;
 		case R.id.notify_comm_item:
 			startMsgSettingActivity();
 			break;
 		default:
 			break;
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(resultCode == Activity.RESULT_OK &&
+				requestCode == GolukConfig.REQUEST_CODE_VIDEO_SYNC_SETTING) {
+			// save new sync value
+			if(null != data) {
+				int syncValue = data.getIntExtra(GolukConfig.STRING_VIDEO_SYNC_SETTING_VALUE, 0);
+				SettingUtils.getInstance().putInt(MANUAL_SWITCH, syncValue);
+			}
 		}
 	}
 
