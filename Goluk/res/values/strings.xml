@@ -944,9 +944,10 @@
     <string name="str_get_gateway_fail">热点获取网关失败</string>
     <string name="str_get_gateway_timeout">热点获取网关超时</string>
     <string name="str_asycned">已同步</string>
-
     <string name="str_video_sync_setting_title">视频自动同步</string>
     <string name="str_video_sync_setting_sync_five">同步最近录制的5条</string>
     <string name="str_video_sync_setting_sync_twenty">同步最近录制的20条</string>
     <string name="str_video_sync_setting_sync_close">关闭</string>
+    <string name="str_or">或</string>
+    <string name="str_weixin_login">微信登陆</string>
 </resources>

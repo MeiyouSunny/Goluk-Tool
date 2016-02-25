@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
+import cn.com.mobnote.util.GolukConfig;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.umeng.socialize.bean.HandlerRequestCode;
@@ -24,15 +25,9 @@ public class SharePlatformUtil {
 
 	// 注意：在微信授权的时候，必须传递appSecret
 	// wx967daebe835fbeac是你在微信开发平台注册应用的AppID, 这里需要替换成你注册的AppID
-	private static final String WX_APPID = "wxd437f1e0f67dfac1";
-	private static final String WX_APPSECRET = "90d4bc4ae1b3dba372dd72d03cc8e82d";
-
-	private static final String QQ_APPID = "1104418156";
-	private static final String QQ_APPKEY = "G7OfQ0qbqe5OJlUP";
 
 	public Context mContext;
-	private static final String DESCRIPTOR = "com.umeng.share";
-	public final UMSocialService mController = UMServiceFactory.getUMSocialService(DESCRIPTOR);
+	public final UMSocialService mController = UMServiceFactory.getUMSocialService(GolukConfig.SHARE_DESCRIPTOR);
 	public SinaWeiBoUtils mSinaWBUtils = null;
 	public VideoSquareInfo mData = null;
 
@@ -59,12 +54,12 @@ public class SharePlatformUtil {
 	 */
 	public void addWXPlatform() {
 		// 添加微信平台
-		UMWXHandler wxHandler = new UMWXHandler(mContext, WX_APPID, WX_APPSECRET);
+		UMWXHandler wxHandler = new UMWXHandler(mContext, GolukConfig.WX_APPID, GolukConfig.WX_APPSECRET);
 		wxHandler.showCompressToast(false);
 		wxHandler.addToSocialSDK();
 
 		// 支持微信朋友圈
-		UMWXHandler wxCircleHandler = new UMWXHandler(mContext, WX_APPID, WX_APPSECRET);
+		UMWXHandler wxCircleHandler = new UMWXHandler(mContext, GolukConfig.WX_APPID, GolukConfig.WX_APPSECRET);
 		wxCircleHandler.setToCircle(true);
 		wxCircleHandler.addToSocialSDK();
 	}
@@ -78,11 +73,11 @@ public class SharePlatformUtil {
 	 */
 	public void addQQQZonePlatform() {
 		// 添加QQ支持, 并且设置QQ分享内容的target url
-		UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler((Activity) mContext, QQ_APPID, QQ_APPKEY);
+		UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler((Activity) mContext, GolukConfig.QQ_APPID, GolukConfig.QQ_APPKEY);
 		qqSsoHandler.addToSocialSDK();
 
 		// 参数1为当前Activity， 参数2为开发者在QQ互联申请的APP ID，参数3为开发者在QQ互联申请的APP kEY.
-		QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler((Activity) mContext, QQ_APPID, QQ_APPKEY);
+		QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler((Activity) mContext, GolukConfig.QQ_APPID, GolukConfig.QQ_APPKEY);
 		qZoneSsoHandler.addToSocialSDK();
 	}
 

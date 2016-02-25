@@ -68,51 +68,57 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_ModifyNickName = 33;
 	
 	public static final int PageType_ModifySignature = 34;
-	
-	public static final int PageType_GetPromotion = 36;
+	/**添加通用头**/
+	public static final int PageType_AddCommHeader = 36;
+	/**第三方登录**/
+	public static final int PageType_OauthLogin = 37;
+	public static final int PageType_GetPromotion = 38;
 
-	public static final int PageType_ClusterMain =  37;
+	public static final int PageType_ClusterMain =  39;
 	
 	/**我的收益**/
-	public static final int PageType_MyProfit = 38;
+	public static final int PageType_MyProfit = 40;
 	/**收益明细**/
-	public static final int PageType_ProfitDetail = 39;
+	public static final int PageType_ProfitDetail = 41;
 
 	/**活动聚合 推荐 **/
-	public static final int PageType_ClusterRecommend = 40;
+	public static final int PageType_ClusterRecommend = 42;
 	/**活动聚合 最新 **/
-	public static final int PageType_ClusterNews = 41;
+	public static final int PageType_ClusterNews = 43;
 	/**聚合分享地址**/
-	public static final int PageType_ClusterShareUrl = 42;
+	public static final int PageType_ClusterShareUrl = 44;
 	/* Banner */
-	public static final int PageType_BannerGet = 43;
+	public static final int PageType_BannerGet = 45;
 	/**最新视频点击次数上报**/
-	public static final int PageType_VideoClick = 44;
+	public static final int PageType_VideoClick = 46;
 
-	public static final int PageType_VideoDetail =45;
+	public static final int PageType_VideoDetail =47;
 	
-	public static final int PageType_CommentList =46;
+	public static final int PageType_CommentList =48;
 	
-	public static final int PageType_DelComment = 47;
+	public static final int PageType_DelComment = 49;
 	
-	public static final int PageType_AddComment = 48;
+	public static final int PageType_AddComment = 50;
 	
-	public static final int PageType_GetShareURL= 49;
+	public static final int PageType_GetShareURL= 51;
 	
-	public static final int PageType_Praise = 50;
+	public static final int PageType_Praise = 52;
 
-	public static final int PageType_VoteShare = 51;
+	public static final int PageType_VoteShare = 53;
 
 	/** 系统消息 **/
-	public static final int PageType_SystemMsgMain = 52;
+	public static final int PageType_SystemMsgMain = 54;
 	/**消息盒子——评论**/
-	public static final int PageType_MsgComment = 53;
+	public static final int PageType_MsgComment = 55;
 	/**消息盒子——点赞**/
-	public static final int PageType_MsgPraise = 54;
+	public static final int PageType_MsgPraise = 56;
 	/**消息盒子——消息中心计数**/
-	public static final int PageType_MsgCounter = 55;
+	public static final int PageType_MsgCounter = 57;
 	/**消息盒子——官方通知**/
-	public static final int PageType_MsgOfficial = 56;
+	public static final int PageType_MsgOfficial = 58;
+	
+
+
 	/**
 	 * 
 	 * 以下为同步获取信息标识

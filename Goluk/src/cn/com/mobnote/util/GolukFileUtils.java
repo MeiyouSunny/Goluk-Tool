@@ -30,6 +30,10 @@ public class GolukFileUtils {
 	/**ADAS自定义车辆**/
 	public static final String ADAS_CUSTOM_VEHICLE = "adas_custom_vehicle";
 
+	/**第三方平台登录用户信息**/
+	public static final String THIRD_USER_INFO = "third_user_info";
+	
+	public static final String LOGIN_PLATFORM = "login_platform";
 	public static void remove(String name) {
 		Context context = GolukApplication.getInstance();
 		SharedPreferences sp = context.getSharedPreferences(APP_PREF_KEY, Context.MODE_PRIVATE);

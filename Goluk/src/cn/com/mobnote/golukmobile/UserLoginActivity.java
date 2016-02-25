@@ -2,6 +2,8 @@ package cn.com.mobnote.golukmobile;
 
 import java.util.List;
 
+import com.umeng.socialize.bean.SHARE_MEDIA;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -15,6 +17,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -33,8 +36,12 @@ import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventMessageUpdate;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
+import cn.com.mobnote.golukmobile.thirdlogin.ThirdPlatformLoginUtil;
+import cn.com.mobnote.golukmobile.thirdlogin.ThirdUserInfoGet;
+import cn.com.mobnote.user.ThirdLoginInfo;
 import cn.com.mobnote.user.UserLoginInterface;
 import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.GolukFileUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
@@ -47,7 +54,7 @@ import de.greenrobot.event.EventBus;
  * 
  * @author mobnote
  */
-public class UserLoginActivity extends BaseActivity implements OnClickListener, UserLoginInterface, OnTouchListener {
+public class UserLoginActivity extends BaseActivity implements OnClickListener, UserLoginInterface, OnTouchListener, ThirdUserInfoGet {
 
 	private static final String TAG = "lily";
 	/** 判断是否能点击提交按钮 **/
@@ -76,10 +83,12 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 
 	private boolean flag = false;
 
+	/**微信登陆**/
+	TextView mTextViewWeiXinLogin;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+//		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_login);
 
@@ -99,7 +108,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 			mApplication.mLoginManage.initData();
 		}
 		
-		UserUtils.addActivity(UserLoginActivity.this);
+//		UserUtils.addActivity(UserLoginActivity.this);
 	}
 
 	@Override
@@ -150,6 +159,9 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		// 快速注册
 		mTextViewRegist.setOnClickListener(this);
 		mTextViewForgetPwd.setOnClickListener(this);
+		//微信登陆
+		mTextViewWeiXinLogin = (TextView) findViewById(R.id.textview_weixin_login);
+		mTextViewWeiXinLogin.setOnClickListener(this);
 
 	}
 
@@ -305,6 +317,28 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 			}
 			startActivity(itForget);
 			break;
+		case R.id.textview_weixin_login:
+    		String infoStr = GolukFileUtils.loadString(GolukFileUtils.THIRD_USER_INFO, "");
+			if (TextUtils.isEmpty(infoStr)) {
+				ThirdPlatformLoginUtil thirdPlatformLogin = new ThirdPlatformLoginUtil(this);
+				thirdPlatformLogin.addWXPlatform();
+				thirdPlatformLogin.setListener(this);
+				thirdPlatformLogin.login(SHARE_MEDIA.WEIXIN);
+			} else {
+				ThirdLoginInfo info = new ThirdLoginInfo();
+				info.platform = "weixin";
+				info.userinfo = infoStr;
+				info.devices = GolukFileUtils.loadString(GolukFileUtils.KEY_BIND_HISTORY_LIST, "");
+				boolean b = mApplication.mLoginManage.login(info);
+				if (b) {
+					mApplication.loginStatus = 0;
+					showProgressDialog();
+				} else {
+					closeProgressDialog();
+					mApplication.loginStatus = 2;
+				}
+			}
+			break;
 		}
 	}
 
@@ -327,14 +361,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 							boolean b = mApplication.mLoginManage.login(phone, pwd);
 							if (b) {
 								mApplication.loginStatus = 0;
-								UserUtils.hideSoftMethod(this);
-								mCustomProgressDialog.show();
-								mEditTextPhoneNumber.setEnabled(false);
-								mEditTextPwd.setEnabled(false);
-								mTextViewRegist.setEnabled(false);
-								mTextViewForgetPwd.setEnabled(false);
-								mBtnLogin.setEnabled(false);
-								mBackButton.setEnabled(false);
+								showProgressDialog();
 							} else {
 								closeProgressDialog();
 								mApplication.loginStatus = 2;
@@ -586,4 +613,35 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		return packageName;
 	}
 
+	@Override
+	public void getUserInfo(boolean success, String usrInfo, String platform) {
+		// TODO Auto-generated method stub
+		if (success) {
+			mApplication.mLoginManage.setUserLoginInterface(this);
+			ThirdLoginInfo info = new ThirdLoginInfo();
+			info.platform = platform;
+			info.userinfo = usrInfo;
+			info.devices = GolukFileUtils.loadString(GolukFileUtils.KEY_BIND_HISTORY_LIST, "");
+			boolean b = mApplication.mLoginManage.login(info);
+			if (b) {
+				mApplication.loginStatus = 0;
+				showProgressDialog();
+			} else {
+				closeProgressDialog();
+				mApplication.loginStatus = 2;
+			}
+		}
+	}
+
+	private void showProgressDialog() {
+		UserUtils.hideSoftMethod(this);
+		mCustomProgressDialog.show();
+		mEditTextPhoneNumber.setEnabled(false);
+		mEditTextPwd.setEnabled(false);
+		mTextViewRegist.setEnabled(false);
+		mTextViewForgetPwd.setEnabled(false);
+		mBtnLogin.setEnabled(false);
+		mBackButton.setEnabled(false);
+		mTextViewWeiXinLogin.setEnabled(false);
+	}
 }

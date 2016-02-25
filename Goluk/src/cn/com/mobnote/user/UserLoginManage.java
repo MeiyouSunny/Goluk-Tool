@@ -2,6 +2,8 @@ package cn.com.mobnote.user;
 
 import org.json.JSONObject;
 
+import com.alibaba.fastjson.JSON;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -56,6 +58,13 @@ public class UserLoginManage {
 		return b;
 	}
 
+	public boolean login(ThirdLoginInfo info) {
+		boolean b = false;
+		String condi = JSON.toJSONString(info);
+		b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_OauthLogin, condi);
+		return b;
+	}
+	
 	/**
 	 * 登录回调
 	 * 
