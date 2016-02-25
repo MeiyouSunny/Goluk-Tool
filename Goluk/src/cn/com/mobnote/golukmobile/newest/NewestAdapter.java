@@ -208,19 +208,7 @@ public class NewestAdapter extends BaseAdapter {
 		}
 
 		final VideoSquareInfo vsInfo = mVideoSquareInfo;
-//		holder.rlHead.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				startUserCenter(vsInfo);
-//			}
-//		});
 
-//		holder.nikename.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				startUserCenter(vsInfo);
-//			}
-//		});
 		holder.rlUserInfo.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

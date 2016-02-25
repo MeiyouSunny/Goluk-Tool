@@ -116,8 +116,8 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_MsgCounter = 57;
 	/**消息盒子——官方通知**/
 	public static final int PageType_MsgOfficial = 58;
-	
 
+	public static final int PageType_PraiseCancel = 59;
 
 	/**
 	 * 

@@ -953,4 +953,7 @@
     <string name="str_binding_phone">绑定手机</string>
     <string name="str_already_bind">已绑定</string>
     <string name="str_not_bind">未绑定</string>
+    <string name="str_no_duplicated_praise">已经赞过了，请不要重复点赞</string>
+    <string name="str_praise_failed">点赞失败</string>
+    <string name="str_cancel_praise_failed">取消点赞失败</string>
 </resources>

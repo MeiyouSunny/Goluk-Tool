@@ -1,26 +1,16 @@
 package cn.com.mobnote.golukmobile.videodetail;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.sina.weibo.sdk.constant.WBConstants.Msg;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Rect;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -40,16 +30,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
-import cn.com.mobnote.golukmobile.carrecorder.util.ImageManager;
-import cn.com.mobnote.golukmobile.carrecorder.util.MD5Utils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentAddRequest;
 import cn.com.mobnote.golukmobile.comment.CommentBean;
@@ -66,29 +52,24 @@ import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
-import cn.com.mobnote.golukmobile.player.FullScreenVideoView;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
-import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
-import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videoclick.NewestVideoClickRequest;
-import cn.com.mobnote.golukmobile.videodetail.VideoDetailAdapter.ViewHolder;
+import cn.com.mobnote.golukmobile.videosuqare.PraiseCancelRequest;
 import cn.com.mobnote.golukmobile.videosuqare.PraiseRequest;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.golukmobile.videosuqare.ShareVideoShortUrlRequest;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
+import cn.com.mobnote.golukmobile.videosuqare.bean.PraiseCancelResultBean;
+import cn.com.mobnote.golukmobile.videosuqare.bean.PraiseCancelResultDataBean;
 import cn.com.mobnote.golukmobile.videosuqare.bean.PraiseResultBean;
+import cn.com.mobnote.golukmobile.videosuqare.bean.PraiseResultDataBean;
 import cn.com.mobnote.golukmobile.videosuqare.bean.ShareVideoBean;
 import cn.com.mobnote.golukmobile.videosuqare.bean.ShareVideoResultBean;
-import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.user.UserUtils;
-import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -119,8 +100,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	/** 详情 **/
 	private VideoJson mVideoJson = null;
 
-//	/** 监听管理类 **/
-//	private VideoSquareManager mVideoSquareManager = null;
 	/** 视频id **/
 	public static final String VIDEO_ID = "videoid";
 	/** 是否允许评论 **/
@@ -216,7 +195,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		sharePlatform.configPlatforms();// 设置分享平台的参数
 		historyDate = GolukUtils.getCurrentFormatTime(this);
 
-//		setListener();
 		initListener();
 
 		getDetailData();
@@ -343,33 +321,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		}
 		CommentListRequest request = new CommentListRequest(IPageNotifyFn.PageType_CommentList, this);
 		request.get(mVideoJson.data.avideo.video.videoid, type, operation, timestamp);
-		// final String requestStr =
-		// JsonUtil.getCommentRequestStr(mVideoJson.data.avideo.video.videoid,
-		// ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO, operation, timestamp,
-		// PAGE_SIZE, ztId);
-		// GolukDebugUtils.e("",
-		// "================VideoDetailActivity：requestStr==" + requestStr);
-		// boolean isSucess =
-		// mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
-		// VideoSuqareManagerFn.VSquare_Req_List_Comment, requestStr);
-		// GolukDebugUtils.e("",
-		// "================VideoDetailActivity：isSucess==" + isSucess);
-		// if (!isSucess) {
-		// // TODO 失败
-		// }
 	}
-
-//	// 注册监听
-//	private void setListener() {
-//		// 注册监听
-//		mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
-//		if (null != mVideoSquareManager) {
-//			if (mVideoSquareManager.checkVideoSquareManagerListener(LISTENER_TAG)) {
-//				mVideoSquareManager.removeVideoSquareManagerListener(LISTENER_TAG);
-//			}
-//			mVideoSquareManager.addVideoSquareManagerListener(LISTENER_TAG, this);
-//		}
-//	}
 
 	@Override
 	public void onClick(View view) {
@@ -586,23 +538,11 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		return request.get("1", mVideoJson.data.avideo.video.videoid, "1");
 	}
 
-//	@Override
-//	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-//		GolukDebugUtils.e("", "=====VideoSuqare_CallBack===========VideoDetailActivity：event==" + event);
-//		if (event == VSquare_Req_Get_VideoDetail) {
-//			// callBack_videoDetail(msg, param1, param2);
-//		} else if (event == VSquare_Req_List_Comment) {
-//			// callBack_commentList(msg, param1, param2);
-//		} else if (event == VSquare_Req_VOP_GetShareURL_Video) {
-////			callBack_share(msg, param1, param2);
-//		} else if (event == VSquare_Req_VOP_Praise) {
-////			callBack_praise(msg, param1, param2);
-//		} else if (VSquare_Req_Add_Comment == event) {
-//			// callBack_commentAdd(msg, param1, param2);
-//		} else if (VSquare_Req_Del_Comment == event) {
-//			// callBack_commentDel(msg, param1, param2);
-//		}
-//	}
+	//取消点赞请求
+	public boolean sendCancelPraiseRequest() {
+		PraiseCancelRequest request = new PraiseCancelRequest(IPageNotifyFn.PageType_PraiseCancel, this);
+		return request.get("1", mVideoJson.data.avideo.video.videoid);
+	}
 
 	// 异常情况处理
 	private void dealCondition() {
@@ -613,47 +553,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		mImageRefresh.setVisibility(View.VISIBLE);
 		GolukUtils.showToast(this, this.getString(R.string.str_network_connect_outtime));
 	}
-
-//	// 分享回调
-//	private void callBack_share(int msg, int param1, Object param2) {
-//		closeLoadingDialog();
-//		if (!isHasData()) {
-//			return;
-//		}
-//		if (RESULE_SUCESS == msg) {
-//			try {
-//				JSONObject result = new JSONObject((String) param2);
-//				if (result.getBoolean("success")) {
-//					JSONObject data = result.getJSONObject("data");
-//					String shareurl = data.getString("shorturl");
-//					String coverurl = data.getString("coverurl");
-//					String describe = data.optString("describe");
-//					String realDesc = "极路客精彩视频(使用#极路客Goluk#拍摄)";
-//					String allDescribe = shareDescribe(describe);
-//					String ttl = "极路客精彩视频";
-//					Bitmap bitmap = null;
-////					if (null != mVideoJson.data.avideo.video.picture) {
-////						// 缩略图
-////						bitmap = getThumbBitmap(mVideoJson.data.avideo.video.picture);
-////					}
-//					if (!this.isFinishing()) {
-//						if (null != mVideoJson.data.avideo.video) {
-//							CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shareurl, coverurl,
-//									allDescribe, ttl, bitmap, realDesc, mVideoJson.data.avideo.video.videoid);
-//							shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-//						}
-//					}
-//
-//				} else {
-//					GolukUtils.showToast(this, "当前网络不可用，请检查网络");
-//				}
-//			} catch (JSONException e) {
-//				e.printStackTrace();
-//			}
-//		} else {
-//			GolukUtils.showToast(this, "网络连接超时，请检查网络");
-//		}
-//	}
 
 	// 数据异常判断
 	private boolean isHasData() {
@@ -679,130 +578,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		return allDescribe;
 	}
 
-
-//	// 点赞回调
-//	private void callBack_praise(int msg, int param1, Object param2) {
-//		GolukDebugUtils.e("lily", "222VideoSuqare_CallBack=@@@@Get_VideoDetail==" + "=msg=" + msg + "=param1=" + param1
-//				+ "=param2=" + param2);
-//		if (msg == RESULE_SUCESS) {
-//			// {"data":{"result":"3"},"msg":"视频不存在","success":false}
-//			try {
-//				String jsonStr = (String) param2;
-//				JSONObject jsonObject = new JSONObject(jsonStr);
-//				JSONObject dataObject = jsonObject.optJSONObject("data");
-//				String result = dataObject.optString("result");
-//				if ("0".equals(result)) {
-//					// 成功
-//				} else {
-//					// 错误
-//					GolukUtils.showToast(this, "当前网络不可用，请检查网络");
-//				}
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		} else {
-//			GolukUtils.showToast(this, "网络连接超时，请检查网络");
-//		}
-//	}
-
-	// 添加评论回调
-	// private void callBack_commentAdd(int msg, int param1, Object param2) {
-	// // LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
-	// // if (1 != msg) {
-	// // GolukUtils.showToast(this, "评论失败");
-	// // return;
-	// // }
-	// // try {
-	// // JSONObject obj = new JSONObject((String) param2);
-	// // Log.e("", "================comment：obj==" + obj.toString());
-	// // boolean isSucess = obj.getBoolean("success");
-	// // if (!isSucess) {
-	// // GolukUtils.showToast(this, "评论失败");
-	// // return;
-	// // }
-	// //
-	// // CommentBean bean =
-	// JsonUtil.parseAddCommentData(obj.getJSONObject("data"));
-	// // if (null != bean) {
-	// // bean.mCommentTime = GolukUtils.getCurrentCommentTime();
-	// // if (!"".equals(bean.result)) {
-	// // if ("0".equals(bean.result)) {// 成功
-	// // removeFooterView();
-	// // commentDataList.add(0, bean);
-	// // this.mAdapter.addFirstData(bean);
-	// // mVideoJson.data.avideo.video.comment.comcount = String.valueOf(Integer
-	// // .parseInt(mVideoJson.data.avideo.video.comment.comcount) + 1);
-	// //
-	// mHeader.setCommentCount(mVideoJson.data.avideo.video.comment.comcount);
-	// // mEditInput.setText("");
-	// // switchSendState(false);
-	// // // 回复完评论之后需要还原状态以判断下次是评论还是回复
-	// // mIsReply = false;
-	// // mEditInput.setHint("写评论");
-	// // mCommentTime = System.currentTimeMillis();
-	// // } else if ("1".equals(bean.result)) {
-	// // GolukDebugUtils.e("", "参数错误");
-	// // } else if ("2".equals(bean.result)) {// 重复评论
-	// // LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-	// // LiveDialogManager.FUNCTION_DIALOG_OK, "",
-	// // this.getResources().getString(R.string.comment_repeat_text));
-	// // } else if ("3".equals(bean.result)) {// 频繁评论
-	// // LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-	// // LiveDialogManager.DIALOG_TYPE_COMMENT_TIMEOUT, "",
-	// // this.getResources().getString(R.string.comment_sofast_text));
-	// // } else {
-	// // LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-	// // LiveDialogManager.FUNCTION_DIALOG_OK, "", "评论保存失败。");
-	// // }
-	// // }
-	// // } else {
-	// // GolukUtils.showToast(this, "评论失败");
-	// // }
-	// // } catch (Exception e) {
-	// // GolukUtils.showToast(this, "评论失败");
-	// // }
-	//
-	// }
-
-	// // 删除评论回调
-	// private void callBack_commentDel(int msg, int param1, Object param2) {
-	// LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
-	// if (1 != msg) {
-	// // 失败
-	// GolukUtils.showToast(this, "网络异常，请稍后重试");
-	// mWillDelBean = null;
-	// return;
-	// }
-	// try {
-	// JSONObject obj = new JSONObject((String) param2);
-	// boolean isSucess = obj.getBoolean("success");
-	// if (isSucess) {
-	// int size = commentDataList.size();
-	// for (int i = 0; i < size; i++) {
-	// if (commentDataList.get(i).mCommentId.equals(mWillDelBean.mCommentId)) {
-	// commentDataList.remove(i);
-	// break;
-	// }
-	// }
-	// mAdapter.deleteData(mWillDelBean);
-	// mVideoJson.data.avideo.video.comment.comcount = String.valueOf(Integer
-	// .parseInt(mVideoJson.data.avideo.video.comment.comcount) - 1);
-	// mHeader.setCommentCount(mVideoJson.data.avideo.video.comment.comcount);
-	// GolukUtils.showToast(this, "删除成功");
-	//
-	// if (mAdapter.getCount() <= 1) {
-	// addFooterView();
-	// } else {
-	// removeFooterView();
-	// }
-	// } else {
-	// GolukUtils.showToast(this, "删除失败");
-	// }
-	// } catch (Exception e) {
-	// }
-	// mWillDelBean = null;
-	// }
-
 	private void switchSendState(boolean isSend) {
 		if (isSend) {
 			mTextSend.setTextColor(this.getResources().getColor(R.color.color_comment_can_send));
@@ -810,17 +585,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			mTextSend.setTextColor(this.getResources().getColor(R.color.color_comment_not_send));
 		}
 	}
-
-//	public Bitmap getThumbBitmap(String netUrl) {
-//		String name = MD5Utils.hashKeyForDisk(netUrl) + ".0";
-//		String path = Environment.getExternalStorageDirectory() + File.separator + "goluk/image_cache";
-//		File file = new File(path + File.separator + name);
-//		Bitmap t_bitmap = null;
-//		if (file.exists()) {
-//			t_bitmap = ImageManager.getBitmapFromCache(file.getAbsolutePath(), 50, 50);
-//		}
-//		return t_bitmap;
-//	}
 
 	private void updateRefreshTime() {
 		historyDate = GolukUtils.getCurrentFormatTime(this);
@@ -853,10 +617,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	}
 
 	private void exit() {
-//		if (null != mVideoSquareManager) {
-//			mVideoSquareManager.removeVideoSquareManagerListener(LISTENER_TAG);
-//		}
-
 		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
 		if (null != mReplyDialog) {
 			mReplyDialog.dismiss();
@@ -1400,17 +1160,41 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			PraiseResultBean praiseResultBean = (PraiseResultBean) result;
 			if (praiseResultBean == null || !praiseResultBean.success) {
 				GolukUtils.showToast(this, this.getString(R.string.user_net_unavailable));
+				return;
+			}
+
+			PraiseResultDataBean ret = praiseResultBean.data;
+			if(null != ret && !TextUtils.isEmpty(ret.result)) {
+				if("0".equals(ret.result)) {
+					// do nothing
+				} else if("7".equals(ret.result)) {
+					GolukUtils.showToast(this, this.getString(R.string.str_no_duplicated_praise));
+				} else {
+					GolukUtils.showToast(this, this.getString(R.string.str_praise_failed));
+				}
+			}
+			break;
+		case IPageNotifyFn.PageType_PraiseCancel:
+			PraiseCancelResultBean praiseCancelResultBean = (PraiseCancelResultBean) result;
+			if (praiseCancelResultBean == null || !praiseCancelResultBean.success) {
+				GolukUtils.showToast(this, this.getString(R.string.user_net_unavailable));
+				return;
+			}
+
+			PraiseCancelResultDataBean cancelRet = praiseCancelResultBean.data;
+			if(null != cancelRet && !TextUtils.isEmpty(cancelRet.result)) {
+				if("0".equals(cancelRet.result)) {
+					// do nothing
+				} else {
+					GolukUtils.showToast(this, this.getString(R.string.str_cancel_praise_failed));
+				}
 			}
 			break;
 		case IPageNotifyFn.PageType_VideoClick:
-			
 			break;
 		default:
-			Log.e("", "======onLoadComplete result==" + result.toString());
+//			Log.e("", "======onLoadComplete result==" + result.toString());
 			break;
 		}
 	}
-
-	/** 头部视频详情holder **/
-
 }
