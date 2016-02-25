@@ -24,6 +24,7 @@ import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.newest.ClickPraiseListener.IClickPraiseView;
 import cn.com.mobnote.golukmobile.newest.JsonParserUtils;
 import cn.com.mobnote.golukmobile.newest.NewestAdapter;
@@ -32,13 +33,18 @@ import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
+import cn.com.mobnote.golukmobile.videosuqare.bean.PraiseCancelResultBean;
+import cn.com.mobnote.golukmobile.videosuqare.bean.PraiseCancelResultDataBean;
+import cn.com.mobnote.golukmobile.videosuqare.bean.PraiseResultBean;
+import cn.com.mobnote.golukmobile.videosuqare.bean.PraiseResultDataBean;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener, OnRTScrollListener, OnClickListener,
-		IClickShareView, IClickPraiseView {
+		IClickShareView, IClickPraiseView, IRequestResultListener {
 
 	public static final String TAG = "CategoryListView";
 
@@ -579,6 +585,70 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	public void onClick(View v) {
 		if (v.getId() == R.id.category_list_nodata) {
 			this.firstRequest(true);
+		}
+	}
+
+	//点赞请求
+	public boolean sendPraiseRequest(String id) {
+		PraiseRequest request = new PraiseRequest(IPageNotifyFn.PageType_Praise, this);
+		return request.get("1", id, "1");
+	}
+
+	//取消点赞请求
+	public boolean sendCancelPraiseRequest(String id) {
+		PraiseCancelRequest request = new PraiseCancelRequest(IPageNotifyFn.PageType_PraiseCancel, this);
+		return request.get("1", id);
+	}
+
+	@Override
+	public void onLoadComplete(int requestType, Object result) {
+		switch(requestType) {
+		case IPageNotifyFn.PageType_Praise:
+			PraiseResultBean prBean = (PraiseResultBean)result;
+			if(null == result && !prBean.success) {
+				GolukUtils.showToast(mContext, mContext.getString(R.string.user_net_unavailable));
+				return;
+			}
+
+			PraiseResultDataBean ret = prBean.data;
+			if(null != ret && !TextUtils.isEmpty(ret.result)) {
+				if("0".equals(ret.result)) {
+					if (null != mPraiseVideoSquareInfo) {
+						if ("0".equals(mPraiseVideoSquareInfo.mVideoEntity.ispraise)) {
+							mPraiseVideoSquareInfo.mVideoEntity.ispraise = "1";
+							updateClickPraiseNumber(true, mPraiseVideoSquareInfo);
+						}
+					}
+				} else if("7".equals(ret.result)) {
+					GolukUtils.showToast(mContext, mContext.getString(R.string.str_no_duplicated_praise));
+				} else {
+					GolukUtils.showToast(mContext, mContext.getString(R.string.str_praise_failed));
+				}
+			}
+			break;
+		case IPageNotifyFn.PageType_PraiseCancel:
+			PraiseCancelResultBean praiseCancelResultBean = (PraiseCancelResultBean) result;
+			if (praiseCancelResultBean == null || !praiseCancelResultBean.success) {
+				GolukUtils.showToast(mContext, mContext.getString(R.string.user_net_unavailable));
+				return;
+			}
+
+			PraiseCancelResultDataBean cancelRet = praiseCancelResultBean.data;
+			if(null != cancelRet && !TextUtils.isEmpty(cancelRet.result)) {
+				if("0".equals(cancelRet.result)) {
+					if (null != mPraiseVideoSquareInfo) {
+						if ("1".equals(mPraiseVideoSquareInfo.mVideoEntity.ispraise)) {
+							mPraiseVideoSquareInfo.mVideoEntity.ispraise = "0";
+							updateClickPraiseNumber(true, mPraiseVideoSquareInfo);
+						}
+					}
+				} else {
+					GolukUtils.showToast(mContext, mContext.getString(R.string.str_cancel_praise_failed));
+				}
+			}
+			break;
+		default:
+			break;
 		}
 	}
 }
