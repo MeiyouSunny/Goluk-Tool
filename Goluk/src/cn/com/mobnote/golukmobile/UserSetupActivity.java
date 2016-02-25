@@ -75,6 +75,9 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	/** 清除缓存 **/
 	private RelativeLayout mClearCache = null;
 
+	/** 绑定手机 **/
+	private RelativeLayout mBindPhone = null;
+
 	private String vIpc = "";
 
 	/** 连接ipc后自动同步开关 **/
@@ -141,6 +144,8 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		btnLoginout = (Button) findViewById(R.id.loginout_btn);
 		// 清除缓存大小显示
 		mTextCacheSize = (TextView) findViewById(R.id.user_personal_setup_cache_size);
+		
+		mBindPhone = (RelativeLayout) findViewById(R.id.RelativeLayout_binding_phone);
 		// 自动同步开关
 //		mBtnSwitch = (ImageButton) findViewById(R.id.set_ipc_btn);
 		mBtnSwitch = findViewById(R.id.set_ipc_item);
@@ -154,6 +159,8 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mClearCache.setOnClickListener(this);
 		/** 自动同步开关 **/
 		mBtnSwitch.setOnClickListener(this);
+		/** 绑定手机号 **/
+		mBindPhone.setOnClickListener(this);
 	}
 
 	/**
@@ -167,14 +174,18 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			if (mApp.loginStatus == 1 || mApp.registStatus == 2 || mApp.autoLoginStatus == 2
 					|| mApp.isUserLoginSucess == true) {// 上次登录成功
 				btnLoginout.setText(this.getResources().getString(R.string.logout));
+				mBindPhone.setVisibility(View.VISIBLE);
 			} else {
 				btnLoginout.setText(this.getResources().getString(R.string.login_text));
+				mBindPhone.setVisibility(View.GONE);
 			}
 		} else {
 			if (mApp.registStatus == 2) {
 				btnLoginout.setText(this.getResources().getString(R.string.logout));
+				mBindPhone.setVisibility(View.VISIBLE);
 			} else {
 				btnLoginout.setText(this.getResources().getString(R.string.login_text));
+				mBindPhone.setVisibility(View.GONE);
 			}
 		}
 	}
@@ -259,6 +270,9 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			break;
 		case R.id.notify_comm_item:
 			startMsgSettingActivity();
+			break;
+		case R.id.RelativeLayout_binding_phone:
+			
 			break;
 		default:
 			break;

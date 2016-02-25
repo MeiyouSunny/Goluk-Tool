@@ -922,6 +922,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			parseLoginData(success, param2);
 
 			break;
+		// 第三方登陆
+		case PageType_OauthLogin:
+			// 取消自动登录
+			mUser.timerCancel();
+			// 登录
+			mLoginManage.loginCallBack(success, param1, param2);
+			parseLoginData(success, param2);
+			break;
 		// 自动登录
 		case PageType_AutoLogin:
 			mUser.initAutoLoginCallback(success, param1, param2);

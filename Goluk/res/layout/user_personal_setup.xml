@@ -71,6 +71,60 @@
         android:layout_height="1dp"
         android:background="@drawable/solid" />
 
+
+
+    <!-- 绑定手机 -->
+    <RelativeLayout
+        android:id="@+id/RelativeLayout_binding_phone"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_marginTop="10dp"
+        android:background="#f4f4f4" >
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/solid" />
+
+        <TextView
+            android:id="@+id/textview_binding_phone_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="14dp"
+            android:text="@string/str_binding_phone"
+            android:textColor="#3f3f3f"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textview_binding_phone_des"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/imageview_right_arrow"
+            android:text="@string/str_not_bind"
+            android:textColor="@color/setting_right_text_color"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/imageview_right_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:contentDescription="@string/imgdes"
+            android:src="@drawable/editor_arrow" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/solid" />
+    </RelativeLayout>
+
     <!-- 同步开关 -->
 
     <View
