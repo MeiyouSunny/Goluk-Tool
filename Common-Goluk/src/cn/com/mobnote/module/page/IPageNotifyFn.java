@@ -119,6 +119,8 @@ public interface IPageNotifyFn extends IGolukCommFn {
 
 	public static final int PageType_PraiseCancel = 59;
 
+	public static final int PageType_PraisedList = 60;
+
 	/**
 	 * 
 	 * 以下为同步获取信息标识
