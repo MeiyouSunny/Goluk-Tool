@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.cluster;
+package cn.com.mobnote.golukmobile.usercenter;
 
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
@@ -9,12 +9,12 @@ import android.net.NetworkInfo;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-public class ClusterPraiseListener implements OnClickListener {
+public class UserCenterPraiseListener implements OnClickListener {
 
 	private VideoSquareInfo mVideoSquareInfo;
 	private Context mContext;
 	
-	public ClusterPraiseListener(Context context, VideoSquareInfo info) {
+	public UserCenterPraiseListener(Context context, VideoSquareInfo info) {
 		this.mVideoSquareInfo = info;
 		this.mContext = context;
 	}
@@ -28,13 +28,13 @@ public class ClusterPraiseListener implements OnClickListener {
 
 		if("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
 			mVideoSquareInfo.mVideoEntity.ispraise = "0";
-			((ClusterActivity)mContext).sendCancelPraiseRequest(mVideoSquareInfo.mVideoEntity.videoid);
-			((ClusterActivity)mContext).updateClickPraiseNumber(true, mVideoSquareInfo);
+			((UserCenterActivity)mContext).sendCancelPraiseRequest(mVideoSquareInfo.mVideoEntity.videoid);
+			((UserCenterActivity)mContext).updateClickPraiseNumber(true, mVideoSquareInfo);
 		}else {
 //			GolukApplication.getInstance().getVideoSquareManager().
 //			clickPraise("1", mVideoSquareInfo.mVideoEntity.videoid, "1");
-			((ClusterActivity)mContext).sendPraiseRequest(mVideoSquareInfo.mVideoEntity.videoid);
-			((ClusterActivity)mContext).updateClickPraiseNumber(false, mVideoSquareInfo);
+			((UserCenterActivity)mContext).sendPraiseRequest(mVideoSquareInfo.mVideoEntity.videoid);
+			((UserCenterActivity)mContext).updateClickPraiseNumber(false, mVideoSquareInfo);
 		}
 	}
 	
@@ -54,4 +54,5 @@ public class ClusterPraiseListener implements OnClickListener {
 	} 
 	
 }
+
 
