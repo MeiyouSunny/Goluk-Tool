@@ -198,11 +198,11 @@ public class MyPraisedActivity extends BaseActivity implements IRequestResultLis
 			}
 
 			MyPraisedVideoBean last = videoList.get(videoList.size() - 1);
-//			if(null != last) {
-//				mTimeStamp = last.addtime;
-//			} else {
-//				return;
-//			}
+			if(null != last) {
+				mTimeStamp = last.time;
+			} else {
+				return;
+			}
 
 			if(REFRESH_PULL_UP.equals(mCurMotion)) {
 				mPraisedList.addAll(videoList);
