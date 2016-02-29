@@ -72,50 +72,51 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_AddCommHeader = 36;
 	/**第三方登录**/
 	public static final int PageType_OauthLogin = 37;
-	public static final int PageType_GetPromotion = 38;
+	public static final int PageType_BindInfo = 38;
+	public static final int PageType_GetPromotion = 39;
 
-	public static final int PageType_ClusterMain =  39;
+	public static final int PageType_ClusterMain =  40;
 	
 	/**我的收益**/
-	public static final int PageType_MyProfit = 40;
+	public static final int PageType_MyProfit = 41;
 	/**收益明细**/
-	public static final int PageType_ProfitDetail = 41;
+	public static final int PageType_ProfitDetail = 42;
 
 	/**活动聚合 推荐 **/
-	public static final int PageType_ClusterRecommend = 42;
+	public static final int PageType_ClusterRecommend = 43;
 	/**活动聚合 最新 **/
-	public static final int PageType_ClusterNews = 43;
+	public static final int PageType_ClusterNews = 44;
 	/**聚合分享地址**/
-	public static final int PageType_ClusterShareUrl = 44;
+	public static final int PageType_ClusterShareUrl = 45;
 	/* Banner */
-	public static final int PageType_BannerGet = 45;
+	public static final int PageType_BannerGet = 46;
 	/**最新视频点击次数上报**/
-	public static final int PageType_VideoClick = 46;
+	public static final int PageType_VideoClick = 47;
 
-	public static final int PageType_VideoDetail =47;
+	public static final int PageType_VideoDetail =48;
 	
-	public static final int PageType_CommentList =48;
+	public static final int PageType_CommentList =49;
 	
-	public static final int PageType_DelComment = 49;
+	public static final int PageType_DelComment = 50;
 	
-	public static final int PageType_AddComment = 50;
+	public static final int PageType_AddComment = 51;
 	
-	public static final int PageType_GetShareURL= 51;
+	public static final int PageType_GetShareURL= 52;
 	
-	public static final int PageType_Praise = 52;
+	public static final int PageType_Praise = 53;
 
-	public static final int PageType_VoteShare = 53;
+	public static final int PageType_VoteShare = 54;
 
 	/** 系统消息 **/
-	public static final int PageType_SystemMsgMain = 54;
+	public static final int PageType_SystemMsgMain = 55;
 	/**消息盒子——评论**/
-	public static final int PageType_MsgComment = 55;
+	public static final int PageType_MsgComment = 56;
 	/**消息盒子——点赞**/
-	public static final int PageType_MsgPraise = 56;
+	public static final int PageType_MsgPraise = 57;
 	/**消息盒子——消息中心计数**/
-	public static final int PageType_MsgCounter = 57;
+	public static final int PageType_MsgCounter = 58;
 	/**消息盒子——官方通知**/
-	public static final int PageType_MsgOfficial = 58;
+	public static final int PageType_MsgOfficial = 59;
 	
 
 

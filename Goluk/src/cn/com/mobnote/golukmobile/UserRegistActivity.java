@@ -24,11 +24,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventBindPhoneNum;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.user.UserIdentifyInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 /**
  * 注册
@@ -70,10 +72,17 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		mContext = this;
 
 		mApplication = (GolukApplication) getApplication();
-
+		EventBus.getDefault().register(this);
 		initView();
+		getInfo();
 		// title
-		mTextViewTitle.setText(this.getResources().getString(R.string.user_regist));
+		if ("fromBindPhone".equals(registOk)) {
+			mTextViewTitle.setText(R.string.str_binding_phone);
+			mEditTextPwd.setVisibility(View.GONE);
+			findViewById(R.id.imageview_split).setVisibility(View.GONE);
+		} else {
+			mTextViewTitle.setText(R.string.user_regist);
+		}
 
 		if (null == mCustomProgressDialog) {
 			mCustomProgressDialog = new CustomLoadingDialog(mContext, this.getResources().getString(
@@ -83,8 +92,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 			mCustomProgressDialogIdentify = new CustomLoadingDialog(mContext, this.getResources().getString(
 					R.string.str_identify_loading));
 		}
-		
-		UserUtils.addActivity(UserRegistActivity.this);
 
 	}
 
@@ -93,7 +100,6 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		super.onResume();
 
 		mApplication.setContext(mContext, "UserRegist");
-		getInfo();
 	}
 
 	public void initView() {
@@ -112,6 +118,16 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		mBtnRegist.setOnClickListener(this);
 		mBtnRegist.setOnTouchListener(this);
 
+	}
+
+	public void onEventMainThread(EventBindPhoneNum event) {
+		if (null == event) {
+			return;
+		}
+
+		if (1 == event.getCode()) {
+			finish();
+		}
 	}
 
 	/**
@@ -171,12 +187,23 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 				String phone = mEditTextPhone.getText().toString().replace("-", "");
 				String pwd = mEditTextPwd.getText().toString();
 				// 注册按钮
-				if (!"".equals(phone) && !"".equals(pwd) && phone.length() == 11 && pwd.length() >= 6 && UserUtils.isMobileNO(phone)) {
-					mBtnRegist.setBackgroundResource(R.drawable.icon_login);
-					mBtnRegist.setEnabled(true);
+				if ("fromBindPhone".equals(registOk)) {
+					if (!"".equals(phone) && phone.length() == 11 && UserUtils.isMobileNO(phone)) {
+						mBtnRegist.setBackgroundResource(R.drawable.icon_login);
+						mBtnRegist.setEnabled(true);
+					} else {
+						mBtnRegist.setBackgroundResource(R.drawable.icon_more);
+						mBtnRegist.setEnabled(false);
+					}
 				} else {
-					mBtnRegist.setBackgroundResource(R.drawable.icon_more);
-					mBtnRegist.setEnabled(false);
+					if (!"".equals(phone) && !"".equals(pwd) && phone.length() == 11 && pwd.length() >= 6
+							&& UserUtils.isMobileNO(phone)) {
+						mBtnRegist.setBackgroundResource(R.drawable.icon_login);
+						mBtnRegist.setEnabled(true);
+					} else {
+						mBtnRegist.setBackgroundResource(R.drawable.icon_more);
+						mBtnRegist.setEnabled(false);
+					}
 				}
 
 				// 格式化显示手机号
@@ -208,12 +235,15 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 				String phone = mEditTextPhone.getText().toString().replace("-", "");
 				String pwd = mEditTextPwd.getText().toString();
 				// 注册按钮
-				if (!"".equals(phone) && !"".equals(pwd) && phone.length() == 11 && pwd.length() >= 6 && UserUtils.isMobileNO(phone)) {
-					mBtnRegist.setBackgroundResource(R.drawable.icon_login);
-					mBtnRegist.setEnabled(true);
-				} else {
-					mBtnRegist.setBackgroundResource(R.drawable.icon_more);
-					mBtnRegist.setEnabled(false);
+				if (!"fromBindPhone".equals(registOk)) {
+					if (!"".equals(phone) && !"".equals(pwd) && phone.length() == 11 && pwd.length() >= 6
+							&& UserUtils.isMobileNO(phone)) {
+						mBtnRegist.setBackgroundResource(R.drawable.icon_login);
+						mBtnRegist.setEnabled(true);
+					} else {
+						mBtnRegist.setBackgroundResource(R.drawable.icon_more);
+						mBtnRegist.setEnabled(false);
+					}
 				}
 			}
 
@@ -252,9 +282,9 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		String password = mEditTextPwd.getText().toString();
 
 		if (!"".equals(phone) && UserUtils.isMobileNO(phone)) {
-			if (!"".equals(password)) {
+			if (("fromBindPhone".equals(registOk)) || (!"".equals(password))) {
 				mBtnRegist.setEnabled(true);
-				if (password.length() >= 6 && password.length() <= 16) {
+				if (("fromBindPhone".equals(registOk)) || (password.length() >= 6 && password.length() <= 16)) {
 					if (!UserUtils.isNetDeviceAvailable(mContext)) {
 						GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
 					} else {
@@ -445,6 +475,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+		EventBus.getDefault().unregister(this);
 		closeProgressDialogIdentify();
 		if (mCustomProgressDialog != null) {
 			mCustomProgressDialog.close();

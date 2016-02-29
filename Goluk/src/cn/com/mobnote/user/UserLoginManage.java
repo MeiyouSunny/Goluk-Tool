@@ -167,7 +167,7 @@ public class UserLoginManage {
 			String id = json.getString("key");
 			String sex = json.getString("sex");
 			String sign = json.getString("desc");
-			phone = json.getString("phone");
+			phone = json.optString("phone");
 			String uid = json.getString("uid");
 			// 退出登录后，将信息存储
 			mSharedPreferences = mApp.getContext().getSharedPreferences("setup", Context.MODE_PRIVATE);

@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -23,10 +24,14 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventBindPhoneNum;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventMessageUpdate;
 import cn.com.mobnote.golukmobile.carrecorder.base.CarRecordBaseActivity;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
+import cn.com.mobnote.golukmobile.msg.MessageBadger;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.manager.MessageManager;
@@ -41,6 +46,7 @@ import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 /**
  * 
@@ -77,6 +83,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 
 	/** 绑定手机 **/
 	private RelativeLayout mBindPhone = null;
+	private TextView mBindTitle = null;
 
 	private String vIpc = "";
 
@@ -99,7 +106,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		vIpc = SharedPrefUtil.getIPCVersion();
 		// 页面初始化
 		init();
-
+		EventBus.getDefault().register(this);
 		int b = SettingUtils.getInstance().getInt(MANUAL_SWITCH, 5);
 //		if (b) {
 ////			mBtnSwitch.setBackgroundResource(R.drawable.set_open_btn);
@@ -116,7 +123,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	protected void onResume() {
 		super.onResume();
 		mApp.setContext(mContext, "UserSetup");
-		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 		mApp.mUser.setUserInterface(this);
 		judgeLogin();
 		// 缓存
@@ -128,6 +134,26 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			e.printStackTrace();
 		}
 
+	}
+
+	public void onEventMainThread(EventBindPhoneNum event) {
+		if (null == event) {
+			return;
+		}
+
+		if (1 == event.getCode()) {
+			mBindTitle.setText(R.string.str_already_bind);
+			mBindPhone.setEnabled(false);
+		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		EventBus.getDefault().unregister(this);
+		LiveDialogManager.getManagerInstance().setDialogManageFn(null);
+		mApp.mUser.setUserInterface(null);
 	}
 
 	/**
@@ -146,6 +172,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mTextCacheSize = (TextView) findViewById(R.id.user_personal_setup_cache_size);
 		
 		mBindPhone = (RelativeLayout) findViewById(R.id.RelativeLayout_binding_phone);
+		mBindTitle = (TextView) findViewById(R.id.textview_binding_phone_des);
 		// 自动同步开关
 //		mBtnSwitch = (ImageButton) findViewById(R.id.set_ipc_btn);
 		mBtnSwitch = findViewById(R.id.set_ipc_item);
@@ -175,6 +202,13 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 					|| mApp.isUserLoginSucess == true) {// 上次登录成功
 				btnLoginout.setText(this.getResources().getString(R.string.logout));
 				mBindPhone.setVisibility(View.VISIBLE);
+				if (TextUtils.isEmpty(mApp.mCurrentPhoneNum)) {
+					mBindTitle.setText(R.string.str_not_bind);
+					mBindPhone.setEnabled(true);
+				} else {
+					mBindTitle.setText(R.string.str_already_bind);
+					mBindPhone.setEnabled(false);
+				}
 			} else {
 				btnLoginout.setText(this.getResources().getString(R.string.login_text));
 				mBindPhone.setVisibility(View.GONE);
@@ -183,6 +217,13 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			if (mApp.registStatus == 2) {
 				btnLoginout.setText(this.getResources().getString(R.string.logout));
 				mBindPhone.setVisibility(View.VISIBLE);
+				if (TextUtils.isEmpty(mApp.mCurrentPhoneNum)) {
+					mBindTitle.setText(R.string.str_not_bind);
+					mBindPhone.setEnabled(true);
+				} else {
+					mBindTitle.setText(R.string.str_already_bind);
+					mBindPhone.setEnabled(false);
+				}
 			} else {
 				btnLoginout.setText(this.getResources().getString(R.string.login_text));
 				mBindPhone.setVisibility(View.GONE);
@@ -272,12 +313,15 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			startMsgSettingActivity();
 			break;
 		case R.id.RelativeLayout_binding_phone:
-			
+			Intent itRegist = new Intent(this, UserRegistActivity.class);
+			itRegist.putExtra("fromRegist", "fromBindPhone");
+			startActivity(itRegist);
 			break;
 		default:
 			break;
 		}
 	}
+
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -334,7 +378,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mEditor.putBoolean("FirstLogin", true);// 注销完成后，设置为没有登录过的一个状态
 		// 提交修改
 		mEditor.commit();
-
+		mBindPhone.setVisibility(View.GONE);
 		GolukUtils.showToast(mContext, this.getResources().getString(R.string.str_loginout_success));
 		btnLoginout.setText(this.getResources().getString(R.string.login_text));
 		MessageManager.getMessageManager().setMessageEveryCount(0, 0, 0);

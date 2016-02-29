@@ -2,6 +2,7 @@ package cn.com.mobnote.user;
 
 import org.json.JSONObject;
 
+import android.text.TextUtils;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -54,6 +55,73 @@ public class UserRegistAndRepwdManage {
 		}
 	}
 
+	/**
+	 * 绑定手机
+	 * 
+	 * @param phone
+	 * @param vCode
+	 * @return
+	 */
+	public boolean bindPhoneNum(String phone, String vCode) {
+		String jsonStr = "{\"phone\":\"" + phone + "\",\"vcode\":\"" + vCode + "\"}";
+		// TODO 判断获取验证码的次数，判断输入的验证码格式
+		if(null == mApp || null == mApp.mGoluk) {
+			return false;
+		}
+
+		return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+					IPageNotifyFn.PageType_BindInfo, jsonStr);
+	}
+
+	public void bindPhoneNumCallback(int success, Object outTime, Object obj) {
+		int codeOut = (Integer) outTime;
+		if (1 == success) {
+			try {
+				String result = (String) obj;
+				JSONObject json = new JSONObject(result);
+				JSONObject data = json.optJSONObject("data");
+				if (data != null) {
+					String status = data.optString("result");
+					if (TextUtils.isDigitsOnly(status)) {
+						int code = Integer.valueOf(status);
+						switch (code) {
+						case 0:
+							registAndRepwdStatusChange(2);
+							break;
+						case 1:
+						case 2:
+							registAndRepwdStatusChange(3);
+							break;
+						case 3:
+							registAndRepwdStatusChange(6);
+							break;
+						case 4:
+							registAndRepwdStatusChange(7);
+							break;
+						default:
+							break;
+
+						}
+					}
+				} else {
+					registAndRepwdStatusChange(3);
+				}
+			} catch (Exception e) {
+				registAndRepwdStatusChange(3);
+				e.printStackTrace();
+			}
+		} else {
+			GolukDebugUtils.i("outtime", "-----网络链接超时超时超时-------xxxx---" + codeOut);
+			switch (codeOut) {
+			case 1:
+			case 2:
+			case 3:
+			default:
+				registAndRepwdStatusChange(9);
+				break;
+			}
+		}
+	}
 	/**
 	 * 注册/重置密码请求回调
 	 * 

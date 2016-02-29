@@ -127,6 +127,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public String mCurrentUId = null;
 	/** 当前登录用户的Aid */
 	public String mCurrentAid = null;
+	
+	/**当前用户绑定手机号**/
+	public String mCurrentPhoneNum = null;
 	/** 行车记录仪缓冲路径 */
 	private String carrecorderCachePath = "";
 	/** 音视频配置信息 */
@@ -311,6 +314,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		mCCUrl = null;
 //		mCurrentUId = null;
 		mCurrentAid = null;
+		mCurrentPhoneNum = null;
 		carrecorderCachePath = "";
 		autoRecordFlag = false;
 		motioncfg = null;
@@ -941,6 +945,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			mIdentifyManage.getIdentifyCallback(success, param1, param2);
 			break;
 		// 注册PageType_Register
+		case PageType_BindInfo:
+			mRegistAndRepwdManage.bindPhoneNumCallback(success, param1, param2);
+			break;
 		case PageType_Register:
 			mRegistAndRepwdManage.registAndRepwdCallback(success, param1, param2);
 			break;
@@ -1083,6 +1090,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			mCCUrl = dataObj.getString("ccbackurl");
 			mCurrentUId = dataObj.getString("uid");
 			mCurrentAid = dataObj.getString("aid");
+			mCurrentPhoneNum = dataObj.optString("phone");
 			isUserLoginSucess = true;
 
 			EventBus.getDefault().post(new EventMessageUpdate(EventConfig.MESSAGE_REQUEST));

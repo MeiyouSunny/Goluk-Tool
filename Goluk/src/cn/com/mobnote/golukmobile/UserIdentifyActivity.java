@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventBindPhoneNum;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.logic.GolukModule;
@@ -17,6 +18,7 @@ import cn.com.mobnote.user.UserRegistAndRepwdInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -607,7 +609,12 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 								this.getResources().getString(R.string.count_identify_count_six_limit));
 					} else {
 						mApp.mRegistAndRepwdManage.setUserRegistAndRepwd(this);
-						boolean b = mApp.mRegistAndRepwdManage.registAndRepwd(flag, phone, password, vCode);
+						boolean b = false;
+						if ("fromBindPhone".equals(intentRegistInter)) {
+							b = mApp.mRegistAndRepwdManage.bindPhoneNum(phone, vCode);
+						} else {
+							b = mApp.mRegistAndRepwdManage.registAndRepwd(flag, phone, password, vCode);
+						}
 						if (b) {
 							if (flag) {
 								mCustomDialogRegist.show();
@@ -652,21 +659,33 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		// 注册/重置密码成功
 		case 2:
 			justCloseDialog(justDifferent);
-			if (justDifferent) {
-				GolukUtils.showToast(this, this.getResources().getString(R.string.user_regist_success));
+			if ("fromBindPhone".equals(intentRegistInter)) {
+				EventBus.getDefault().post(new EventBindPhoneNum(1));
+				if (null != title_phone) {
+					mApp.mCurrentPhoneNum = title_phone.replace("-", "");
+				};
+				finish();
 			} else {
-				GolukUtils.showToast(this, this.getResources().getString(R.string.user_repwd_success));
-			}
+				if (justDifferent) {
+					GolukUtils.showToast(this, this.getResources().getString(R.string.user_regist_success));
+				} else {
+					GolukUtils.showToast(this, this.getResources().getString(R.string.user_repwd_success));
+				}
 
-			registLogin();
+				registLogin();
+			}
 			break;
 		// 注册/重置失败
 		case 3:
 			justCloseDialog(justDifferent);
-			if (justDifferent) {
-				GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_regist_fail));
+			if ("fromBindPhone".equals(intentRegistInter)) {
+				GolukUtils.showToast(mContext, this.getResources().getString(R.string.str_bind_fail));
 			} else {
-				GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_repwd_fail));
+				if (justDifferent) {
+					GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_regist_fail));
+				} else {
+					GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_repwd_fail));
+				}
 			}
 			break;
 		// code = 500

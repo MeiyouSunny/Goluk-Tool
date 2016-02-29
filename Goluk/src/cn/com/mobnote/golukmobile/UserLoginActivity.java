@@ -325,6 +325,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 				thirdPlatformLogin.setListener(this);
 				thirdPlatformLogin.login(SHARE_MEDIA.WEIXIN);
 			} else {
+				mApplication.mLoginManage.setUserLoginInterface(this);
 				ThirdLoginInfo info = new ThirdLoginInfo();
 				info.platform = "weixin";
 				info.userinfo = infoStr;
