@@ -228,8 +228,16 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 			mTextZan.setText(GolukUtils.getFormatNumber(videoAllData.avideo.video.praisenumber));
 			mTextZan.setTextColor(Color.rgb(136, 136, 136));
 		}
-		mZanImage.setImageResource(R.drawable.videodetail_like);
-		mTextZanName.setTextColor(Color.rgb(136, 136, 136));
+
+		if("0".equals(videoAllData.avideo.video.ispraise)) {
+			mZanImage.setImageResource(R.drawable.videodetail_like);
+			mTextZanName.setTextColor(Color.rgb(136, 136, 136));
+			mTextZan.setTextColor(Color.rgb(136, 136, 136));
+		} else {
+			mZanImage.setImageResource(R.drawable.videodetail_like_press);
+			mTextZanName.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
+			mTextZan.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
+		}
 		mTextComment.setText(GolukUtils.getFormatNumber(videoAllData.avideo.video.comment.comcount));
 		// TODO 在视频描述之后添加活动标签
 		if (null == videoAllData.avideo.video.recom || "".equals(videoAllData.avideo.video.recom)
@@ -601,6 +609,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 				e.printStackTrace();
 			}
 			mVideoJson.data.avideo.video.ispraise = "0";
+			boolean b = ((VideoDetailActivity) mContext).sendCancelPraiseRequest();
 		}
 		mVideoJson.data.avideo.video.praisenumber = likeNumber + "";
 		return GolukUtils.getFormatNumber(likeNumber + "");

@@ -18,11 +18,17 @@ import cn.com.mobnote.golukmobile.newest.ClickPraiseListener.IClickPraiseView;
 import cn.com.mobnote.golukmobile.newest.ClickShareListener.IClickShareView;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.videosuqare.PraiseCancelRequest;
+import cn.com.mobnote.golukmobile.videosuqare.PraiseRequest;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
+import cn.com.mobnote.golukmobile.videosuqare.bean.PraiseCancelResultBean;
+import cn.com.mobnote.golukmobile.videosuqare.bean.PraiseCancelResultDataBean;
+import cn.com.mobnote.golukmobile.videosuqare.bean.PraiseResultBean;
+import cn.com.mobnote.golukmobile.videosuqare.bean.PraiseResultDataBean;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.util.GolukUtils;
@@ -46,7 +52,8 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
-public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IClickPraiseView {
+public class NewestListView implements
+			VideoSuqareManagerFn, IClickShareView, IClickPraiseView, IRequestResultListener {
 	private RelativeLayout mRootLayout = null;
 	private Context mContext = null;
 	private RTPullListView mRTPullListView = null;
@@ -512,5 +519,69 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 		}
 
 		mNewestAdapter.updateClickPraiseNumber(info);
+	}
+
+	//点赞请求
+	public boolean sendPraiseRequest(String id) {
+		PraiseRequest request = new PraiseRequest(IPageNotifyFn.PageType_Praise, this);
+		return request.get("1", id, "1");
+	}
+
+	//取消点赞请求
+	public boolean sendCancelPraiseRequest(String id) {
+		PraiseCancelRequest request = new PraiseCancelRequest(IPageNotifyFn.PageType_PraiseCancel, this);
+		return request.get("1", id);
+	}
+
+	@Override
+	public void onLoadComplete(int requestType, Object result) {
+		switch(requestType) {
+		case IPageNotifyFn.PageType_Praise:
+			PraiseResultBean prBean = (PraiseResultBean)result;
+			if(null == result && !prBean.success) {
+				GolukUtils.showToast(mContext, mContext.getString(R.string.user_net_unavailable));
+				return;
+			}
+
+			PraiseResultDataBean ret = prBean.data;
+			if(null != ret && !TextUtils.isEmpty(ret.result)) {
+				if("0".equals(ret.result)) {
+					if (null != mVideoSquareInfo) {
+						if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
+							mVideoSquareInfo.mVideoEntity.ispraise = "1";
+							updateClickPraiseNumber(true, mVideoSquareInfo);
+						}
+					}
+				} else if("7".equals(ret.result)) {
+					GolukUtils.showToast(mContext, mContext.getString(R.string.str_no_duplicated_praise));
+				} else {
+					GolukUtils.showToast(mContext, mContext.getString(R.string.str_praise_failed));
+				}
+			}
+			break;
+		case IPageNotifyFn.PageType_PraiseCancel:
+			PraiseCancelResultBean praiseCancelResultBean = (PraiseCancelResultBean) result;
+			if (praiseCancelResultBean == null || !praiseCancelResultBean.success) {
+				GolukUtils.showToast(mContext, mContext.getString(R.string.user_net_unavailable));
+				return;
+			}
+
+			PraiseCancelResultDataBean cancelRet = praiseCancelResultBean.data;
+			if(null != cancelRet && !TextUtils.isEmpty(cancelRet.result)) {
+				if("0".equals(cancelRet.result)) {
+					if (null != mVideoSquareInfo) {
+						if ("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
+							mVideoSquareInfo.mVideoEntity.ispraise = "0";
+							updateClickPraiseNumber(true, mVideoSquareInfo);
+						}
+					}
+				} else {
+					GolukUtils.showToast(mContext, mContext.getString(R.string.str_cancel_praise_failed));
+				}
+			}
+			break;
+		default:
+			break;
+		}
 	}
 }

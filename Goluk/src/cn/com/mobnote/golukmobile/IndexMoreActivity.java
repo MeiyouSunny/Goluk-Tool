@@ -8,6 +8,7 @@ import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.msg.MessageCenterActivity;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
+import cn.com.mobnote.golukmobile.praised.MyPraisedActivity;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
@@ -67,6 +68,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	/**我的收益**/
 	private TextView mProfitItem = null;
 	private RelativeLayout mMsgCenterItem = null;
+	private TextView mPraisedListItem = null;
 
 	/** 个人中心的头像、性别、昵称 */
 	private ImageView mImageHead, mImageAuthentication;
@@ -135,6 +137,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		mShoppingItem = (TextView) mRootLayout.findViewById(R.id.shopping_item);
 		mProfitItem = (TextView) mRootLayout.findViewById(R.id.profit_item);
 		mMsgCenterItem = (RelativeLayout) mRootLayout.findViewById(R.id.rl_my_message);
+		mPraisedListItem = (TextView)mRootLayout.findViewById(R.id.tv_praise_item);
 
 		// 头像、昵称、id
 		mImageHead = (ImageView) mRootLayout.findViewById(R.id.user_center_head);
@@ -161,6 +164,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		mPraiseLayout.setOnClickListener(this);
 		mProfitItem.setOnClickListener(this);
 		mMsgCenterItem.setOnClickListener(this);
+		mPraisedListItem.setOnClickListener(this);
 	}
 
 	// 获取登录状态及用户信息
@@ -263,6 +267,10 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		case R.id.rl_my_message:
 			Intent msgIntent = new Intent(mContext, MessageCenterActivity.class);
 			mContext.startActivity(msgIntent);
+			break;
+		case R.id.tv_praise_item:
+			Intent praiseIntent = new Intent(mContext, MyPraisedActivity.class);
+			mContext.startActivity(praiseIntent);
 			break;
 		default:
 			GolukDebugUtils.d(TAG, "unknown view clicked");

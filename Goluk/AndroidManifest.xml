@@ -510,6 +510,12 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
+        <activity
+            android:name=".praised.MyPraisedActivity"
+            android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />

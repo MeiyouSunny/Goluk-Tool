@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_praised_list_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tv_praised_list_item_time"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:singleLine="true"
+        android:gravity="center_vertical|left"
+        android:text="2016-2-13"
+        android:textSize="12sp"
+        android:textColor="#888888"
+        android:drawableLeft="@drawable/videodetail_like"
+        android:drawablePadding="7dp"/>
+    <ImageView
+        android:id="@+id/tv_praised_list_item_cover"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:contentDescription="@string/imgdes"/>
+
+    <TextView
+        android:id="@+id/tv_praised_list_item_author"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:textSize="14sp"
+        android:gravity="left"
+        android:textColor="#333333"
+        android:text="神秘的谷歌王朝，什么事谷歌王朝"
+        android:singleLine="false"/>
+</LinearLayout>

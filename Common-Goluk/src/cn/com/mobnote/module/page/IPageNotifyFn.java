@@ -119,6 +119,9 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_MsgOfficial = 59;
 	
 
+	public static final int PageType_PraiseCancel = 60;
+
+	public static final int PageType_PraisedList = 61;
 
 	/**
 	 * 

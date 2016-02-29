@@ -278,6 +278,27 @@
                 android:textSize="14sp" />
 
             <View
+                android:id="@+id/user_personal_solid_praise"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="@drawable/solid" />
+
+            <TextView
+                android:id="@+id/tv_praise_item"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="#f4f4f4"
+                android:text="@string/str_my_praised_list"
+                android:gravity="center_vertical"
+                android:paddingRight="14dp"
+                android:paddingLeft="14dp"
+                android:textColor="#333333"
+                android:drawableLeft="@drawable/my_message_like_icon"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/editor_arrow"
+                android:textSize="14sp" />
+
+            <View
                 android:id="@+id/user_personal_solid_4"
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"

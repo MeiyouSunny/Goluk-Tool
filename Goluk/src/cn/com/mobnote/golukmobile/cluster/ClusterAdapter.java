@@ -637,8 +637,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 		// 播放区域监听
 		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo, null));
 		// 点赞
-		holder.praiseLayout.setOnClickListener(new ClickPraiseListener(mContext, mVideoSquareInfo,
-				(ClusterActivity) mContext));
+		holder.praiseLayout.setOnClickListener(new ClusterPraiseListener(mContext, mVideoSquareInfo));
 		// 评论总数监听
 		List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
 		if (comments.size() > 0) {

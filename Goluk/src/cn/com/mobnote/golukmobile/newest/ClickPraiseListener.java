@@ -37,22 +37,30 @@ public class ClickPraiseListener implements OnClickListener{
 			GolukUtils.showToast(mContext, mContext.getString(R.string.network_error));
 			return;
 		}
-		
+
 		if("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
 			mVideoSquareInfo.mVideoEntity.ispraise = "0";
 			if (null != mNewestListView) {
+				if(mNewestListView instanceof NewestListView) {
+					((NewestListView)mNewestListView).sendCancelPraiseRequest(mVideoSquareInfo.mVideoEntity.videoid);
+				}
 				mNewestListView.updateClickPraiseNumber(true, mVideoSquareInfo);
 			} else {
+				mCategoryListView.sendCancelPraiseRequest(mVideoSquareInfo.mVideoEntity.videoid);
 				mCategoryListView.updateClickPraiseNumber(true, mVideoSquareInfo);
 			}
-			
+
 		}else {
-			GolukApplication.getInstance().getVideoSquareManager().
-			clickPraise("1", mVideoSquareInfo.mVideoEntity.videoid, "1");
-			
+//			GolukApplication.getInstance().getVideoSquareManager().
+//			clickPraise("1", mVideoSquareInfo.mVideoEntity.videoid, "1");
+
 			if (null != mNewestListView) {
+				if(mNewestListView instanceof NewestListView) {
+					((NewestListView)mNewestListView).sendPraiseRequest(mVideoSquareInfo.mVideoEntity.videoid);
+				}
 				mNewestListView.updateClickPraiseNumber(false, mVideoSquareInfo);
 			} else {
+				mCategoryListView.sendPraiseRequest(mVideoSquareInfo.mVideoEntity.videoid);
 				mCategoryListView.updateClickPraiseNumber(false, mVideoSquareInfo);
 			}
 			
