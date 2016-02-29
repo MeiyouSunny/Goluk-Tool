@@ -219,7 +219,6 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 			mNameNewText = name;
 			boolean b;
 			try {
-				Log.v("dengting", "saveName1");
 				b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 						IPageNotifyFn.PageType_ModifyNickName,
 						JsonUtil.getUserNickNameJson(URLEncoder.encode(name, "UTF-8")));
@@ -227,7 +226,6 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 					// 保存中
 					mCustomProgressDialog.show();
 				}
-				Log.v("dengting", "saveName2 b = " + b);
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
