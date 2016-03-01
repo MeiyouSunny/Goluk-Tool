@@ -23,6 +23,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventIpcConnState;
 import cn.com.mobnote.eventbus.EventMessageUpdate;
@@ -1540,7 +1541,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 //			return false;
 //		}
 		// 
-		int syncFlag = SettingUtils.getInstance().getInt(UserSetupActivity.MANUAL_SWITCH, 5);
+		int syncFlag = SettingUtils.getInstance().getInt(UserSetupActivity.MANUAL_SWITCH, -1);
 		if(syncFlag == 0) {
 			return false;
 		}
@@ -1549,6 +1550,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			return false;
 		}
 
+		/**初始没有设置同步数量，根据连接设备类型G1，T1S设置自动同步5条，其他设备自动同步20条**/
+		if (syncFlag == -1) {
+			if (IPCControlManager.G1_SIGN.equals(mIPCControlManager.mProduceName)
+					|| IPCControlManager.T1s_SIGN.equalsIgnoreCase(mIPCControlManager.mProduceName)) {
+				SettingUtils.getInstance().putInt(UserSetupActivity.MANUAL_SWITCH, 5);
+			} else {
+				SettingUtils.getInstance().putInt(UserSetupActivity.MANUAL_SWITCH, 20);
+			}
+		}
+	
 		if (!isIpcLoginSuccess) {
 			return false;
 		}
@@ -1602,7 +1613,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 		long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
 		GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==4444===stopDownloadList" + starttime);
-		mIPCControlManager.queryFileListInfo(6, 10, starttime, 2147483647);
+		int syncFlag = SettingUtils.getInstance().getInt(UserSetupActivity.MANUAL_SWITCH, 5);
+		mIPCControlManager.queryFileListInfo(6, syncFlag, starttime, 2147483647);
 	}
 
 	/**

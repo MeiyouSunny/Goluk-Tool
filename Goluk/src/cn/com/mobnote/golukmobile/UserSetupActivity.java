@@ -107,7 +107,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		// 页面初始化
 		init();
 		EventBus.getDefault().register(this);
-		int b = SettingUtils.getInstance().getInt(MANUAL_SWITCH, 5);
+//		int b = SettingUtils.getInstance().getInt(MANUAL_SWITCH, 5);
 //		if (b) {
 ////			mBtnSwitch.setBackgroundResource(R.drawable.set_open_btn);
 ////			mBtnSwitch.setImageResource(R.drawable.set_open_btn);
@@ -329,7 +329,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 				requestCode == GolukConfig.REQUEST_CODE_VIDEO_SYNC_SETTING) {
 			// save new sync value
 			if(null != data) {
-				int syncValue = data.getIntExtra(GolukConfig.STRING_VIDEO_SYNC_SETTING_VALUE, 0);
+				int syncValue = data.getIntExtra(GolukConfig.STRING_VIDEO_SYNC_SETTING_VALUE, -1);
 				SettingUtils.getInstance().putInt(MANUAL_SWITCH, syncValue);
 			}
 		}

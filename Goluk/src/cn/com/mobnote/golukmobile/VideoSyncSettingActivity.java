@@ -1,5 +1,6 @@
 package cn.com.mobnote.golukmobile;
 
+import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.util.GolukConfig;
 import android.app.Activity;
 import android.content.Intent;
@@ -17,7 +18,7 @@ public class VideoSyncSettingActivity extends BaseActivity implements OnClickLis
 	private static final int SYNC_CLOSE = 0;
 	private static final int SYNC_5 = 5;
 	private static final int SYNC_20 = 20;
-	private int mCurSyncMode = SYNC_5;
+	private int mCurSyncMode = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +34,19 @@ public class VideoSyncSettingActivity extends BaseActivity implements OnClickLis
 		mBackIV = (ImageView)findViewById(R.id.iv_video_sync_setting_back_btn);
 		mBackIV.setOnClickListener(this);
 
-		if(mCurSyncMode == SYNC_5) {
+		mCurSyncMode = SettingUtils.getInstance().getInt(UserSetupActivity.MANUAL_SWITCH, -1);
+		switch (mCurSyncMode) {
+		case SYNC_5:
 			refreshSelection(R.id.tv_video_sync_setting_sync5);
+			break;
+		case SYNC_20:
+			refreshSelection(R.id.tv_video_sync_setting_sync20);
+			break;
+		case SYNC_CLOSE:
+			refreshSelection(R.id.tv_video_sync_setting_sync_close);
+			break;
+		default:
+			break;
 		}
 	}
 
