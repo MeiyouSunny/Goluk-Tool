@@ -324,7 +324,6 @@ public class LocalWonderfulVideoListView {
 					if (imgfile.exists()) {
 						imgfile.delete();
 					}
-					mActivity.updateCloudVideoAsyncFlag(mVideoType, info.filename);
 					SettingUtils.getInstance().putBoolean(filename, true);
 					break;
 				}

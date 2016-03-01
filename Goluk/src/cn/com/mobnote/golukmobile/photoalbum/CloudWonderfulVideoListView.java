@@ -545,13 +545,16 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 							String filename = json.optString("filename");
 							String tag = json.optString("tag");
 
-							int type = IpcDataParser.parseVideoFileType(filename);
-							if (type != mCurrentType) {
-								return;
-							}
+							if (tag.contains("IPC_IMAGE")) {
+								int type = IpcDataParser.parseVideoFileType(filename);
+								if (type != mCurrentType) {
+									return;
+								}
 
-							if (tag.equals("videodownload")) {
-								updateAsyncFlag(filename, true);
+								if (null != mCloudWonderfulVideoAdapter) {
+									mCloudWonderfulVideoAdapter.updateImage(filename);
+								}
+
 							} else {
 								GolukDebugUtils.e("xuhw", "TTT======no filelist  file======filename=" + filename);
 							}
@@ -575,11 +578,11 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 
 	}
 
-	public void updateAsyncFlag(String filename, boolean flag) {
-		if (null != mCloudWonderfulVideoAdapter) {
-			mCloudWonderfulVideoAdapter.updateAsyncFlag(filename, flag);
-		}
-	}
+//	public void updateAsyncFlag(String filename, boolean flag) {
+//		if (null != mCloudWonderfulVideoAdapter) {
+//			mCloudWonderfulVideoAdapter.updateAsyncFlag(filename, flag);
+//		}
+//	}
 	public void onResume() {
 		isShowPlayer = false;
 	}

@@ -138,10 +138,10 @@ public class IpcDataParser {
 	 * @date Mar 10, 2015
 	 */
 	public static ArrayList<VideoInfo> parseVideoListData(String json) {
-		String filePath = android.os.Environment.getExternalStorageDirectory().getPath() + "/goluk/video/";
-		String[] videoPaths = { "", "loop/", "urgent/", "", "wonderful/" };
+//		String filePath = android.os.Environment.getExternalStorageDirectory().getPath() + "/goluk/video/";
+//		String[] videoPaths = { "", "loop/", "urgent/", "", "wonderful/" };
 		ArrayList<VideoInfo> list = new ArrayList<VideoInfo>();
-		List<String> files = null;
+//		List<String> files = null;
 
 		try {
 			JSONObject obj = new JSONObject(json);
@@ -154,14 +154,14 @@ public class IpcDataParser {
 				VideoFileInfo info = parseSingleFileResult(itemObj.toString());
 				if(null != info){
 					VideoInfo mVideoInfo = VideoDataManagerUtils.getVideoInfo(info);
-					if (files == null) {
-						int type = IpcDataParser.parseVideoFileType(mVideoInfo.filename);
-						files = FileInfoManagerUtils.getFileNames(filePath + videoPaths[type], "(.+?mp4)");
-					}
-
-					if (files != null && files.contains(mVideoInfo.filename)) {
-						mVideoInfo.isAsync = true;
-					}
+//					if (files == null) {
+//						int type = IpcDataParser.parseVideoFileType(mVideoInfo.filename);
+//						files = FileInfoManagerUtils.getFileNames(filePath + videoPaths[type], "(.+?mp4)");
+//					}
+//
+//					if (files != null && files.contains(mVideoInfo.filename)) {
+//						mVideoInfo.isAsync = true;
+//					}
 					list.add(mVideoInfo);
 				}
 			}
