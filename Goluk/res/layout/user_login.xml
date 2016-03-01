@@ -120,45 +120,41 @@
     <RelativeLayout 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textview_weixin_login"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="15dp">
+        android:layout_above="@+id/btn_weixin_login"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
+        android:layout_marginBottom="16dp">
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/textview_or"
-            android:background="@color/user_hint_text_color" />
+            android:background="#a5a7aa" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/textview_or"
-            android:background="@color/user_hint_text_color" />
+            android:background="#a5a7aa" />
 
         <TextView 
             android:id="@+id/textview_or"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:padding="5dp"
-            android:textSize="10sp"
-            android:textColor="@color/user_hint_text_color"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:textSize="12sp"
+            android:textColor="#a5a7aa"
             android:text="@string/str_or"/>
         </RelativeLayout>
-        <TextView
-            android:id="@+id/textview_weixin_login"
+        <ImageView
+            android:id="@+id/btn_weixin_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="66dp"
-			android:drawableLeft="@drawable/share_wechat_icon"
-			android:drawablePadding="5dp"
-            android:gravity="center"
-            android:text="@string/str_weixin_login"
-            android:textColor="#99ce26"
-            android:textSize="17sp" />
+            android:layout_marginBottom="83dp"
+            android:src="@drawable/weixin_login" />
 </RelativeLayout>

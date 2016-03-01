@@ -30,6 +30,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventConfig;
@@ -84,7 +85,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 	private boolean flag = false;
 
 	/**微信登陆**/
-	TextView mTextViewWeiXinLogin;
+	ImageView mImageViewWeiXinLogin;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -160,8 +161,8 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		mTextViewRegist.setOnClickListener(this);
 		mTextViewForgetPwd.setOnClickListener(this);
 		//微信登陆
-		mTextViewWeiXinLogin = (TextView) findViewById(R.id.textview_weixin_login);
-		mTextViewWeiXinLogin.setOnClickListener(this);
+		mImageViewWeiXinLogin = (ImageView) findViewById(R.id.btn_weixin_login);
+		mImageViewWeiXinLogin.setOnClickListener(this);
 
 	}
 
@@ -317,7 +318,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 			}
 			startActivity(itForget);
 			break;
-		case R.id.textview_weixin_login:
+		case R.id.btn_weixin_login:
     		String infoStr = GolukFileUtils.loadString(GolukFileUtils.THIRD_USER_INFO, "");
 			if (TextUtils.isEmpty(infoStr)) {
 				ThirdPlatformLoginUtil thirdPlatformLogin = new ThirdPlatformLoginUtil(this);
@@ -643,6 +644,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		mTextViewForgetPwd.setEnabled(false);
 		mBtnLogin.setEnabled(false);
 		mBackButton.setEnabled(false);
-		mTextViewWeiXinLogin.setEnabled(false);
+		mImageViewWeiXinLogin.setEnabled(false);
 	}
 }
