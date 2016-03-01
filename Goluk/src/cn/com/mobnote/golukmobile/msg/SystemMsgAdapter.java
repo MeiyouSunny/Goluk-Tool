@@ -15,6 +15,7 @@ import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.util.GlideUtils;
+import cn.com.mobnote.util.GolukConfig;
 import cn.com.mobnote.util.GolukUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -201,8 +202,8 @@ public class SystemMsgAdapter extends BaseAdapter {
 							String url = HttpManager.getInstance().getWebH5Host()
 									+ "/videoshare/tag/castvote.html?voteid=" + mmbTxt.content.access;
 							Intent intent = new Intent(mContext, UserOpenUrlActivity.class);
-							intent.putExtra("url", url);
-							intent.putExtra("slide_h5_title", mContext.getString(R.string.str_activity_rule));
+							intent.putExtra(GolukConfig.H5_URL, url);
+							intent.putExtra(GolukConfig.NEED_H5_TITLE, mContext.getString(R.string.str_activity_rule));
 							mContext.startActivity(intent);
 						}
 

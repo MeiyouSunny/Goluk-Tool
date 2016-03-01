@@ -22,4 +22,14 @@ public class GolukConfig {
 	public static final String QQ_APPKEY = "G7OfQ0qbqe5OJlUP";
 	public static final String SHARE_DESCRIPTOR = "com.umeng.share";
 	public static final String LOGIN_DESCRIPTOR = "com.umeng.login";
+
+	public static final String WEB_TYPE = "web_type";
+	public static final String NEED_H5_TITLE = "need_h5_title";
+	public static final String URL_OPEN_PATH = "url_open_path";
+	public static final String NEED_SHARE = "need_share";
+	public static final String H5_URL = "url";
+	public static final String NEED_SHARE_PICTURE = "need_share_picture";
+	public static final String NEED_SHARE_INTRO = "need_share_intro";
+	public static final String NEED_SHARE_ID = "need_share_id";
+	
 }

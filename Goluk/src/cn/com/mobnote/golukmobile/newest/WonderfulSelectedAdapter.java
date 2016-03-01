@@ -28,6 +28,7 @@ import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.util.GlideUtils;
+import cn.com.mobnote.util.GolukConfig;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.view.SlideShowView;
 
@@ -398,9 +399,11 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 			} else {
 				String url = body.getAccess();
 				intent = new Intent(mContext, UserOpenUrlActivity.class);
-				intent.putExtra("url", url);
+				intent.putExtra(GolukConfig.WEB_TYPE, GolukConfig.NEED_SHARE);
+				intent.putExtra(GolukConfig.H5_URL, url);
+				intent.putExtra(GolukConfig.URL_OPEN_PATH, "text_banner");
 				if (null != body && !body.getTitle().equals("")) {
-					intent.putExtra("slide_h5_title", body.getTitle());
+					intent.putExtra(GolukConfig.NEED_H5_TITLE, body.getTitle());
 				}
 				mContext.startActivity(intent);
 			}

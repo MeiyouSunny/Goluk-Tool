@@ -6,6 +6,7 @@ import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.special.ClusterListActivity;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
+import cn.com.mobnote.util.GolukConfig;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -75,7 +76,10 @@ public class ClickWonderfulSelectedListener implements OnTouchListener {
 		} else if ("4".equals(mJXListItemDataInfo.ztype)) {// url
 			String url = mJXListItemDataInfo.adverturl;
 			intent = new Intent(mContext, UserOpenUrlActivity.class);
-			intent.putExtra("url", url);
+			intent.putExtra(GolukConfig.NEED_H5_TITLE, mJXListItemDataInfo.ztitle);
+			intent.putExtra(GolukConfig.WEB_TYPE, GolukConfig.NEED_SHARE);
+			intent.putExtra(GolukConfig.H5_URL, url);
+			intent.putExtra(GolukConfig.URL_OPEN_PATH, "wonderful_list");
 		}
 		if (null == intent) {
 			return;

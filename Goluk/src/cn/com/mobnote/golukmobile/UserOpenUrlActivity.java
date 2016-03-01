@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
@@ -29,6 +31,7 @@ import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.user.MyProgressWebView;
+import cn.com.mobnote.util.GolukConfig;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -55,6 +58,15 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 	/**收益页面UI修改**/
 	private boolean mProfitChangeUI = false;
 
+	private String mShareId;
+	private String mTitle;
+	private String mPicture;
+	private String mIntroduction;
+	private String mShareAddress;
+	private boolean mNeedShare;
+	private String mUrlOpenPath;
+	private SharePlatformUtil mSharePlatform;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,33 +79,26 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		GolukDebugUtils.e("", "--------UserOpenUrlActivity-------onCreate：");
 	}
 
-	private String mVoteId;
-	private String mTitle;
-	private String mPicture;
-	private String mIntroduction;
-	private String mVoteAddress;
-	private boolean mIsVoteShare;
-	private SharePlatformUtil mSharePlatform;
-
 	@SuppressLint("SetJavaScriptEnabled")
 	public void initView() {
 		itIndexMore = getIntent();
-		String webType = itIndexMore.getStringExtra("web_type");
+		String webType = itIndexMore.getStringExtra(GolukConfig.WEB_TYPE);
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
 		mWebView = (MyProgressWebView) findViewById(R.id.my_webview);
 		mTextRight = (TextView) findViewById(R.id.user_title_right);
-		if("vote_share".equals(webType)) {
-			mIsVoteShare = true;
+		if(GolukConfig.NEED_SHARE.equals(webType)) {
+			mNeedShare = true;
 			mTextRight.setText(this.getString(R.string.share_text));
-			mVoteId = itIndexMore.getStringExtra("vote_share_id");
-			mTitle = itIndexMore.getStringExtra("slide_h5_title");
-			mPicture = itIndexMore.getStringExtra("vote_share_picture");
-			mIntroduction = itIndexMore.getStringExtra("vote_share_intro");
-			mVoteAddress = itIndexMore.getStringExtra("url");
+			mTitle = itIndexMore.getStringExtra(GolukConfig.NEED_H5_TITLE);
+			mPicture = itIndexMore.getStringExtra(GolukConfig.NEED_SHARE_PICTURE);
+			mIntroduction = itIndexMore.getStringExtra(GolukConfig.NEED_SHARE_INTRO);
+			mShareId = itIndexMore.getStringExtra(GolukConfig.NEED_SHARE_ID);
+			mShareAddress = itIndexMore.getStringExtra(GolukConfig.H5_URL);
+			mUrlOpenPath = itIndexMore.getStringExtra(GolukConfig.URL_OPEN_PATH);
 			mSharePlatform = new SharePlatformUtil(this);
 		} else {
-			mIsVoteShare = false;
+			mNeedShare = false;
 			mTextRight.setBackgroundResource(R.drawable.btn_close_image);
 		}
 		mErrorLayout = (RelativeLayout) findViewById(R.id.error_layout);
@@ -216,20 +221,19 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					mWebView.loadUrl(url);
 				}
 			} else {
-				String title = itIndexMore.getStringExtra("slide_h5_title");
+				String title = itIndexMore.getStringExtra(GolukConfig.NEED_H5_TITLE);
 				if(null != title && !title.equals("")) {
 					mTextTitle.setText(title);
 				} else {
 					mTextTitle.setText("");
 				}
-				String url = itIndexMore.getStringExtra("url");
+				String url = itIndexMore.getStringExtra(GolukConfig.H5_URL);
 
 				if (mErrorState) {
 					return;
 				}
 				mWebView.loadUrl(url);
 			}
-
 		}
 		mBackBtn.setOnClickListener(this);
 		mTextRight.setOnClickListener(this);
@@ -297,24 +301,51 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			}
 			break;
 		case R.id.user_title_right:
-			if(mIsVoteShare && null != mSharePlatform) {
-				String shareurl = mVoteAddress;
+			if(mNeedShare && null != mSharePlatform) {
+				String shareurl = mShareAddress;
 				String coverurl = mPicture;
 				String describe = mIntroduction;
-				String realDesc = getString(R.string.str_vote_share_real_description);
+				String urlOpenPath = mUrlOpenPath;
+				if("cluster_adapter".equals(urlOpenPath)) {
+					String realDesc = getString(R.string.str_vote_share_real_description);
 
-				if (TextUtils.isEmpty(describe)) {
-					describe = "";
-				}
-				String ttl = mTitle;
-				if (TextUtils.isEmpty(mTitle)) {
-					ttl = getString(R.string.str_vote_share_title);
-				}
+					if (TextUtils.isEmpty(describe)) {
+						describe = "";
+					}
+					String ttl = mTitle;
+					if (TextUtils.isEmpty(mTitle)) {
+						ttl = getString(R.string.str_vote_share_title);
+					}
 
-				CustomShareBoard shareBoard = new CustomShareBoard(this, mSharePlatform,
-						shareurl, coverurl, describe, ttl, null, realDesc, "");
-				shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM,
-						0, 0);
+					CustomShareBoard shareBoard = new CustomShareBoard(this, mSharePlatform,
+							shareurl, coverurl, describe, ttl, null, realDesc, "");
+					shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM,
+							0, 0);
+				} else {
+					if(TextUtils.isEmpty(shareurl)) {
+						return;
+					}
+
+					String ttl = mTitle;
+					if (TextUtils.isEmpty(mTitle)) {
+						ttl = getString(R.string.str_wonderful_share);
+					}
+					String realDesc = getString(R.string.str_wonderful_share);
+
+					if(TextUtils.isEmpty(coverurl)) {
+						Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(),
+								R.drawable.ic_launcher);
+						CustomShareBoard shareBoard = new CustomShareBoard(this, mSharePlatform,
+								shareurl, "", describe, ttl, bitmap, realDesc, "");
+						shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM,
+								0, 0);
+					} else {
+						CustomShareBoard shareBoard = new CustomShareBoard(this, mSharePlatform,
+								shareurl, coverurl, describe, ttl, null, realDesc, "");
+						shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM,
+								0, 0);
+					}
+				}
 			} else {
 				this.finish();
 			}
@@ -327,7 +358,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if(mIsVoteShare) {
+		if(mNeedShare) {
 			if (null != mSharePlatform) {
 				mSharePlatform.onActivityResult(requestCode, resultCode, data);
 			}

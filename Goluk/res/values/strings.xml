@@ -959,5 +959,6 @@
     <string name="str_cancel_praise_failed">取消点赞失败</string>
     <string name="str_my_praised_list">我赞过的</string>
     <string name="str_praised_list_connect_error">网络不给力，轻触屏幕重试</string>
-    <string name="str_praised_list_request_no_data">暂无官方通知</string>
+    <string name="str_praised_list_request_no_data">暂无点赞记录</string>
+    <string name="str_wonderful_share">Goluk精彩分享</string>
 </resources>

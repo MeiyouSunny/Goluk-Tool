@@ -23,6 +23,7 @@ import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
+import cn.com.mobnote.util.GolukConfig;
 import cn.com.mobnote.util.GolukUtils;
 
 public class OfficialMessageListAdapter extends BaseAdapter {
@@ -177,11 +178,13 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 						if(null != accessId && !TextUtils.isEmpty(accessId)) {
 							String url = HttpManager.getInstance().getWebDirectHost() +
 									WEB_DIRECT + "?type=5&access=" + accessId;
-							intent.putExtra("url", url);
+							intent.putExtra(GolukConfig.H5_URL, url);
 							if (!TextUtils.isEmpty(finalBean.content.anycast.title)) {
-								intent.putExtra("slide_h5_title",
+								intent.putExtra(GolukConfig.NEED_H5_TITLE,
 										finalBean.content.anycast.title);
 							}
+							intent.putExtra(GolukConfig.WEB_TYPE, GolukConfig.NEED_SHARE);
+							intent.putExtra(GolukConfig.URL_OPEN_PATH, "official_message_list_adapter");
 						}
 						mContext.startActivity(intent);
 					}

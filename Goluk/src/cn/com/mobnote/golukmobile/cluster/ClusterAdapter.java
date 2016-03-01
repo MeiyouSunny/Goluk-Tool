@@ -61,6 +61,7 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GlideUtils;
+import cn.com.mobnote.util.GolukConfig;
 import cn.com.mobnote.util.GolukUtils;
 
 @SuppressLint("InflateParams")
@@ -222,7 +223,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 						Intent intent = new Intent(mContext,
 								UserOpenUrlActivity.class);
 						intent.putExtra("url", url);
-						intent.putExtra("slide_h5_title", mContext.getString(R.string.str_activity_rule));
+						intent.putExtra("need_h5_title", mContext.getString(R.string.str_activity_rule));
 						mContext.startActivity(intent);
 					}
 				});
@@ -937,12 +938,13 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 				return;
 			} else {
 				Intent intent = new Intent(mContext, UserOpenUrlActivity.class);
-				intent.putExtra("url", address);
-				intent.putExtra("web_type", "vote_share");
-				intent.putExtra("slide_h5_title", data.title);
-				intent.putExtra("vote_share_id", data.voteid);
-				intent.putExtra("vote_share_picture", data.picture);
-				intent.putExtra("vote_share_intro", data.introduction);
+				intent.putExtra(GolukConfig.H5_URL, address);
+				intent.putExtra(GolukConfig.WEB_TYPE, GolukConfig.NEED_SHARE);
+				intent.putExtra(GolukConfig.NEED_H5_TITLE, data.title);
+				intent.putExtra(GolukConfig.NEED_SHARE_ID, data.voteid);
+				intent.putExtra(GolukConfig.NEED_SHARE_PICTURE, data.picture);
+				intent.putExtra(GolukConfig.NEED_SHARE_INTRO, data.introduction);
+				intent.putExtra(GolukConfig.URL_OPEN_PATH, "cluster_adapter");
 				mContext.startActivity(intent);
 			}
 		}

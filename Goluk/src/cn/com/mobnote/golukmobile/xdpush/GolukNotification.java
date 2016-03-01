@@ -38,6 +38,7 @@ import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
+import cn.com.mobnote.util.GolukConfig;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -503,10 +504,12 @@ public class GolukNotification {
 						if (null != vidArray[0] && !TextUtils.isEmpty(vidArray[0])) {
 							String url = HttpManager.getInstance().getWebDirectHost() + WEB_DIRECT + "?type=5&access="
 									+ vidArray[0];
-							intent.putExtra("url", url);
+							intent.putExtra(GolukConfig.H5_URL, url);
 							if (!TextUtils.isEmpty(msgBean.title)) {
-								intent.putExtra("slide_h5_title", msgBean.title);
+								intent.putExtra(GolukConfig.NEED_H5_TITLE, msgBean.title);
 							}
+							intent.putExtra(GolukConfig.WEB_TYPE, GolukConfig.NEED_SHARE);
+							intent.putExtra(GolukConfig.URL_OPEN_PATH, "push_start");
 							context.startActivity(intent);
 						}
 					} else if (SPECIAL_SOLO.equals(msgBean.tarkey)) {
