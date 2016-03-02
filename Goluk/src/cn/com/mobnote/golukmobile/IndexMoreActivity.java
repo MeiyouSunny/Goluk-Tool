@@ -16,6 +16,7 @@ import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import android.net.Uri;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -29,8 +30,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.util.GlideUtils;
+import cn.com.mobnote.util.GolukConfig;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -269,6 +272,17 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			mContext.startActivity(msgIntent);
 			break;
 		case R.id.tv_praise_item:
+			if(!GolukUtils.isNetworkConnected(mContext)) {
+				Toast.makeText(mContext, mContext.getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+				return;
+			}
+			GolukApplication app = (GolukApplication)((Activity)mContext).getApplication();
+			if (!app.isUserLoginSucess) {
+//				GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
+				Intent loginIntent = new Intent(mContext, UserLoginActivity.class);
+				mContext.startActivity(loginIntent);
+				return;
+			}
 			Intent praiseIntent = new Intent(mContext, MyPraisedActivity.class);
 			mContext.startActivity(praiseIntent);
 			break;
