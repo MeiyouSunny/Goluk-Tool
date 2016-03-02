@@ -1,11 +1,12 @@
 package cn.com.mobnote.golukmobile.thirdlogin;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.Toast;
 import cn.com.mobnote.util.GolukConfig;
 import cn.com.mobnote.util.GolukFileUtils;
 
@@ -110,7 +111,14 @@ public class ThirdPlatformLoginUtil {
                     @Override
                     public void onComplete(int status, Map<String, Object> info) {
                         if (info != null) {
+
                             String infoStr = JSON.toJSONString(info);
+                            try {
+								infoStr = URLEncoder.encode(infoStr, "UTF-8");
+							} catch (UnsupportedEncodingException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
                         	if (mListener != null) {
                         		mListener.getUserInfo(true, infoStr, "weixin");
                         		GolukFileUtils.saveString(GolukFileUtils.THIRD_USER_INFO, infoStr);

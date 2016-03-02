@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.util.Log;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.logic.GolukModule;
@@ -105,6 +106,7 @@ public class UserLoginManage {
 					mApp.loginoutStatus = false;
 					break;
 				case 500:
+				case 400:
 					UserUtils.showDialog(mApp.getContext(),
 							mApp.getResources().getString(R.string.user_background_error));
 					loginStatusChange(2);
