@@ -66,8 +66,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	private TextView mInstallItem = null;
 	/** 版本信息 **/
 	private TextView mQuestionItem = null;
-	/** 购买极路客 **/
-	private TextView mShoppingItem = null;
+//	/** 购买极路客 **/
+//	private TextView mShoppingItem = null;
 	/**我的收益**/
 	private TextView mProfitItem = null;
 	private RelativeLayout mMsgCenterItem = null;
@@ -137,7 +137,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		mSkillItem = (TextView) mRootLayout.findViewById(R.id.skill_item);
 		mInstallItem = (TextView) mRootLayout.findViewById(R.id.install_item);
 		mQuestionItem = (TextView) mRootLayout.findViewById(R.id.question_item);
-		mShoppingItem = (TextView) mRootLayout.findViewById(R.id.shopping_item);
+//		mShoppingItem = (TextView) mRootLayout.findViewById(R.id.shopping_item);
 		mProfitItem = (TextView) mRootLayout.findViewById(R.id.profit_item);
 		mMsgCenterItem = (RelativeLayout) mRootLayout.findViewById(R.id.rl_my_message);
 		mPraisedListItem = (TextView)mRootLayout.findViewById(R.id.tv_praise_item);
@@ -162,7 +162,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		mSkillItem.setOnClickListener(this);
 		mInstallItem.setOnClickListener(this);
 		mQuestionItem.setOnClickListener(this);
-		mShoppingItem.setOnClickListener(this);
+//		mShoppingItem.setOnClickListener(this);
 		mShareLayout.setOnClickListener(this);
 		mPraiseLayout.setOnClickListener(this);
 		mProfitItem.setOnClickListener(this);
@@ -258,11 +258,11 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			mContext.startActivity(itQuestion);
 			break;
 		// 购买极路客
-		case R.id.shopping_item:
-			Intent itShopping = new Intent(mContext, UserOpenUrlActivity.class);
-			itShopping.putExtra(UserOpenUrlActivity.FROM_TAG, "shopping");
-			mContext.startActivity(itShopping);
-			break;
+//		case R.id.shopping_item:
+//			Intent itShopping = new Intent(mContext, UserOpenUrlActivity.class);
+//			itShopping.putExtra(UserOpenUrlActivity.FROM_TAG, "shopping");
+//			mContext.startActivity(itShopping);
+//			break;
 		//我的收益
 		case R.id.profit_item:
 			clickAuto(TYPE_PROFIT, 0);
