@@ -16,6 +16,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -64,10 +65,10 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener, O
 		setContentView(R.layout.my_profit);
 
 		initView();
-		UserInfo userInfo = GolukApplication.getInstance().getMyInfo();
-		if (null != userInfo) {
-			uid = userInfo.uid;
-			phone = userInfo.phone;
+		GolukApplication app = GolukApplication.getInstance();
+		if (null != app) {
+			uid = GolukApplication.getInstance().mCurrentUId;
+			phone = GolukApplication.getInstance().mCurrentPhoneNum;
 		}
 		showLoadingDialog();
 		initData();
@@ -134,6 +135,10 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener, O
 		case R.id.my_profit_leave_btn:
 			if (!UserUtils.isNetDeviceAvailable(this)) {
 				GolukUtils.showToast(this, this.getResources().getString(R.string.str_network_unavailable));
+				return;
+			}
+			if (TextUtils.isEmpty(phone)) {
+				GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_bind_phone_first));
 				return;
 			}
 			Intent itCash = new Intent(this, UserOpenUrlActivity.class);

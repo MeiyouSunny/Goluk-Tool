@@ -961,4 +961,5 @@
     <string name="str_praised_list_connect_error">网络不给力，轻触屏幕重试</string>
     <string name="str_praised_list_request_no_data">暂无点赞记录</string>
     <string name="str_wonderful_share">Goluk精彩分享</string>
+    <string name="str_please_bind_phone_first">提现需要绑定手机号，请先前往通用设置中绑定手机号</string>
 </resources>
