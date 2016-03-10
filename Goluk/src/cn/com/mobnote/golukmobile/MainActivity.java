@@ -821,7 +821,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 	@Override
 	protected void onResume() {
-		GolukApplication.getInstance().queryNewFileList();
+//		GolukApplication.getInstance().queryNewFileList();
 		mApp.setContext(this, "Main");
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 
