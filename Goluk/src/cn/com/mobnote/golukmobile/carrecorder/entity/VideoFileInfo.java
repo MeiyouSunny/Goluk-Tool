@@ -11,6 +11,8 @@ package cn.com.mobnote.golukmobile.carrecorder.entity;
 public class VideoFileInfo {
 	/** 文件唯一标识 */
 	public int id;
+	/**开始录制时间**/
+	public String timestamp;
 	/** 视频文件录制起始时间（秒） */
 	public long time;
 	/** 时长(秒) */
