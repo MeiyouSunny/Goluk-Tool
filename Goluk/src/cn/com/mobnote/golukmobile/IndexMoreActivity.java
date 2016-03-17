@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -77,9 +78,9 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	private ImageView mImageHead, mImageAuthentication;
 	private TextView mTextName, mTextId;
 	private LinearLayout mVideoLayout;
-	private TextView mTextShare, mTextPraise;
+	private TextView mTextShare, mTextPraise, mTextFollow;
 	/** 分享视频 赞我的人 **/
-	private LinearLayout mShareLayout, mPraiseLayout;
+	private LinearLayout mShareLayout, mPraiseLayout, mFollowLayout;
 
 	/** 自动登录中的loading提示框 **/
 	private Builder mBuilder = null;
@@ -91,7 +92,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 
 	/** 用户信息 **/
 	private String userHead, userName, userDesc, userUId, userSex,customavatar, userPhone;
-	private int shareCount, praiseCount;
+	private int shareCount, praiseCount, followCount, newFansCout, fansCount;
 	
 	/**个人中心**/
 	private static final int TYPE_USER = 1;
@@ -150,9 +151,10 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		mVideoLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_center_video_layout);
 		mTextShare = (TextView) mRootLayout.findViewById(R.id.user_share_count);
 		mTextPraise = (TextView) mRootLayout.findViewById(R.id.user_praise_count);
+		mTextFollow =  (TextView) mRootLayout.findViewById(R.id.user_follow_count);
 		mShareLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_share);
 		mPraiseLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_praise);
-
+		mFollowLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_follow);
 		// 注册事件
 		// 个人中心 我的相册 摄像头管理 通用设置 极路客小技巧 安装指导 版本信息 购买极路客
 		mUserCenterItem.setOnClickListener(this);
@@ -165,6 +167,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 //		mShoppingItem.setOnClickListener(this);
 		mShareLayout.setOnClickListener(this);
 		mPraiseLayout.setOnClickListener(this);
+		mFollowLayout.setOnClickListener(this);
 		mProfitItem.setOnClickListener(this);
 		mMsgCenterItem.setOnClickListener(this);
 		mPraisedListItem.setOnClickListener(this);
@@ -218,6 +221,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			break;
 		case R.id.user_praise:
 			clickAuto(TYPE_SHARE_PRAISE, 1);
+			break;
+		case R.id.user_follow:
 			break;
 		// 点击跳转到我的主页
 		case R.id.user_center_item:
@@ -398,6 +403,9 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			userDesc = userInfo.desc;
 			shareCount = userInfo.sharevideonumber;
 			praiseCount = userInfo.praisemenumber;
+			followCount = userInfo.followingnumber;
+			fansCount = userInfo.fansnumber;
+			newFansCout = userInfo.newfansnumber;
 			userUId = userInfo.uid;
 			userSex = userInfo.sex;
 			customavatar = userInfo.customavatar;
@@ -433,9 +441,16 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 				mTextId.setText(userDesc);
 			}
 			mTextId.setTextColor(Color.rgb(0, 0, 0));
-			mTextShare.setText(GolukUtils.getFormatNumber(shareCount + ""));
-			mTextPraise.setText(GolukUtils.getFormatNumber(praiseCount + ""));
-
+			mTextShare.setText(GolukUtils.getFormatNumber(shareCount));
+			mTextPraise.setText(GolukUtils.getFormatNumber(fansCount));
+			mTextFollow.setText(GolukUtils.getFormatNumber(followCount));
+			if(newFansCout > 0) {
+				Drawable redPoint = mContext.getResources().getDrawable(R.drawable.home_red_point_little);
+				redPoint.setBounds(0, 0, redPoint.getMinimumWidth(), redPoint.getMinimumHeight());
+				mTextPraise.setCompoundDrawables(null, null, redPoint, null);
+			} else {
+				mTextPraise.setCompoundDrawables(null, null, null, null);
+			}
 			// 获取用户信息
 			boolean b = GolukApplication.getInstance().getVideoSquareManager().getUserInfo(userUId);
 			GolukDebugUtils.e("", "=======IndexMoreActivity====b：" + b);

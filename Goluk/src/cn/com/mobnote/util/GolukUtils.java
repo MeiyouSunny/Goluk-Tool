@@ -529,6 +529,18 @@ public class GolukUtils {
 		return number;
 	}
 
+	public static String getFormatNumber(int fmtnumber) {
+		String number;
+
+		if (fmtnumber > 10000) {
+			DecimalFormat df = new DecimalFormat("0.0");
+			number = df.format((float)fmtnumber/1000) + "K";
+		} else {
+			number = "" + fmtnumber;
+		}
+		return number;
+	}
+
 	@SuppressLint("SimpleDateFormat")
 	public static String getNewCategoryShowTime(Context context, String date) {
 		final long MINTUE = 60 * 1000;

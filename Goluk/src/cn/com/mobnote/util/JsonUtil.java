@@ -399,6 +399,9 @@ public class JsonUtil {
 			userInfo.customavatar = getJsonStringValue(rootObj, "customavatar", "");
 			userInfo.sharevideonumber = getJsonIntValue(rootObj, "sharevideonumber", 0);
 			userInfo.praisemenumber = getJsonIntValue(rootObj, "praisemenumber", 0);
+			userInfo.followingnumber = getJsonIntValue(rootObj, "followingnumber", 0);
+			userInfo.fansnumber = getJsonIntValue(rootObj, "fansnumber", 0);
+			userInfo.newfansnumber = getJsonIntValue(rootObj, "newfansnumber", 0);
 			// 解析 用户标签
 			if (rootObj.has("label")) {
 				JSONObject labelObj = rootObj.getJSONObject("label");
