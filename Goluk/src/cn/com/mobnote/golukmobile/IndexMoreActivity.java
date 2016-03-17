@@ -10,6 +10,7 @@ import cn.com.mobnote.golukmobile.msg.MessageCenterActivity;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.praised.MyPraisedActivity;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
+import cn.com.mobnote.golukmobile.usercenter.TestGridViewActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
@@ -265,7 +266,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			clickAuto(TYPE_PROFIT, 0);
 			break;
 		case R.id.rl_my_message:
-			Intent msgIntent = new Intent(mContext, MessageCenterActivity.class);
+			Intent msgIntent = new Intent(mContext, TestGridViewActivity.class);
 			mContext.startActivity(msgIntent);
 			break;
 		case R.id.tv_praise_item:
