@@ -21,12 +21,11 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.GridView;
 import cn.com.mobnote.golukmobile.R;
 
 import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
 
-public class PullToRefreshGridView extends PullToRefreshAdapterViewBase<GridView> {
+public class PullToRefreshGridView extends PullToRefreshAdapterViewBase<HeaderGridView> {
 
 	public PullToRefreshGridView(Context context) {
 		super(context);
@@ -50,8 +49,8 @@ public class PullToRefreshGridView extends PullToRefreshAdapterViewBase<GridView
 	}
 
 	@Override
-	protected final GridView createRefreshableView(Context context, AttributeSet attrs) {
-		final GridView gv;
+	protected final HeaderGridView createRefreshableView(Context context, AttributeSet attrs) {
+		final HeaderGridView gv;
 		if (VERSION.SDK_INT >= VERSION_CODES.GINGERBREAD) {
 			gv = new InternalGridViewSDK9(context, attrs);
 		} else {
@@ -63,7 +62,7 @@ public class PullToRefreshGridView extends PullToRefreshAdapterViewBase<GridView
 		return gv;
 	}
 
-	class InternalGridView extends GridView implements EmptyViewMethodAccessor {
+	class InternalGridView extends HeaderGridView implements EmptyViewMethodAccessor {
 
 		public InternalGridView(Context context, AttributeSet attrs) {
 			super(context, attrs);

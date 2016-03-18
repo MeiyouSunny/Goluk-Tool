@@ -274,6 +274,10 @@
     <string name="carrecorder_filemagager_title">文件浏览</string>
     <string name="spzl_title">循环视频质量</string>
     <string name="spzl_text">极路客提供四种视频质量，1080P高、1080P中、720P高、720P中。</string>
+    <string name="str_wonderful_video_quality_title">精彩视频质量</string>
+    <string name="str_settings_tone_title">提示音音量大小</string>
+    <string name="str_settings_shutdown_title">关机时间</string>
+    <string name="str_settings_language_title">语言设置</string>
     <string name="zdxhlx_title">自动循环录像</string>
     <string name="hdr_title">HDR模式</string>
     <string name="jcsp_title">精彩视频拍照提示音</string>

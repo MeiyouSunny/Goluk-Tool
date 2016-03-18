@@ -66,6 +66,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	public static final int REQUEST_CODE_KIT = 30;
 	public static final int REQUEST_CODE_ADAS_FCW_WARNING = 31;
 	public static final int REQUEST_CODE_ADAS_LDW_WARNING = 32;
+	public static final int REQUEST_CODE_WONDERFUL_VIDEO_QUALITY = 33;
+	public static final int REQUEST_CODE_TONE_VOLUMN = 34;
+	public static final int REQUEST_CODE_SHUTDOWN_TIME = 35;
+	public static final int REQUEST_CODE_LANGUAGE = 36;
 	/** 录制状态 */
 	private boolean recordState = false;
 	/** 自动循环录像开关按钮 */
@@ -164,6 +168,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	/**自动同步照片到手机相册开关状态**/
 
 	boolean mAutoState = true;
+	private TextView mTextWonderfulVideoQualityText, mToneText, mShutdownText, mLanguageText;
+	private RelativeLayout mWonderfulVideoQualityLayout, mToneLayout, mShutdownLayout, mLanguageLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -318,6 +324,46 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		}
 	}
 
+	// 精彩视频质量
+	private void activityResult_wonderful(int resultCode, Intent data) {
+		if (Activity.RESULT_OK != resultCode) {
+			return;
+		}
+		if (null != data) {
+
+		}
+	}
+
+	// 提示音音量大小
+	private void activityResult_tone(int resultCode, Intent data) {
+		if (Activity.RESULT_OK != resultCode) {
+			return;
+		}
+		if (null != data) {
+
+		}
+	}
+
+	// 关机时间
+	private void activityResult_shutdown(int resultCode, Intent data) {
+		if (Activity.RESULT_OK != resultCode) {
+			return;
+		}
+		if (null != data) {
+
+		}
+	}
+
+	// 语言设置
+	private void activityResult_language(int resultCode, Intent data) {
+		if (Activity.RESULT_OK != resultCode) {
+			return;
+		}
+		if (null != data) {
+
+		}
+	}
+
 	private void refreshFcarCloseUI() {
 		if (mAdasConfigParamter == null) {
 			return;
@@ -392,6 +438,18 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		case REQUEST_CODE_KIT:
 			activityResult_kit(resultCode, data);
 			break;
+		case REQUEST_CODE_WONDERFUL_VIDEO_QUALITY:
+			activityResult_wonderful(resultCode, data);
+			break;
+		case REQUEST_CODE_TONE_VOLUMN:
+			activityResult_tone(resultCode, data);
+			break;
+		case REQUEST_CODE_SHUTDOWN_TIME:
+			activityResult_shutdown(resultCode, data);
+			break;
+		case REQUEST_CODE_LANGUAGE:
+			activityResult_language(resultCode, data);
+			break;
 			/**adas需求变更 暂时拿掉**/
 //		case REQUEST_CODE_ADAS_FCW_WARNING:
 //			if (resultCode == Activity.RESULT_OK) {
@@ -456,6 +514,15 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 		mAutoPhotoItem = (RelativeLayout) findViewById(R.id.ry_setup_autophoto);
 		mAutoPhotoBtn = (ImageButton) findViewById(R.id.ib_setup_autophoto_btn);
+		
+		mTextWonderfulVideoQualityText = (TextView) findViewById(R.id.tv_carrecorder_settings_wonderfulvideo_quality_text);
+		mWonderfulVideoQualityLayout = (RelativeLayout) findViewById(R.id.rl_carrecorder_settings_wonderfulvideo_quality);
+		mToneText = (TextView) findViewById(R.id.tv_settings_tone_text);
+		mToneLayout = (RelativeLayout) findViewById(R.id.rl_settings_tone_line);
+		mShutdownText = (TextView) findViewById(R.id.tv_settings_shutdown_text);
+		mShutdownLayout = (RelativeLayout) findViewById(R.id.rl_settings_shutdown_line);
+		mLanguageText = (TextView) findViewById(R.id.tv_settings_language_text);
+		mLanguageLayout = (RelativeLayout) findViewById(R.id.rl_settings_language_line);
 
 		// ipc设备型号
 		if (GolukApplication.getInstance().mIPCControlManager.isG1Relative()) {
@@ -548,6 +615,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mADASFcarSetupBtn.setOnClickListener(this);
 //		mADASOsdBtn.setOnClickListener(this);//辅助信息显示
 		mADASConfigLayout.setOnClickListener(this);//ADAS配置
+		mWonderfulVideoQualityLayout.setOnClickListener(this);//精彩视频质量
+		mToneLayout.setOnClickListener(this);//提示音音量
+		mShutdownLayout.setOnClickListener(this);//关机时间
+		mLanguageLayout.setOnClickListener(this);//语言设置
 	}
 
 	/**
@@ -770,6 +841,26 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					mAutoState = true;
 				}
 				GolukFileUtils.saveBoolean(GolukFileUtils.PROMOTION_AUTO_PHOTO, mAutoState);
+				break;
+			case R.id.rl_carrecorder_settings_wonderfulvideo_quality:// 精彩视频质量
+				Intent itWonderful = new Intent(this, SettingsItemActivity.class);
+				itWonderful.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_WONDERFUL_VIDEO_QUALITY);
+				startActivityForResult(itWonderful, REQUEST_CODE_WONDERFUL_VIDEO_QUALITY);
+				break;
+			case R.id.rl_settings_tone_line:// 提示音音量大小
+				Intent itTone = new Intent(this, SettingsItemActivity.class);
+				itTone.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_TONE_VOLUME);
+				startActivityForResult(itTone, REQUEST_CODE_WONDERFUL_VIDEO_QUALITY);
+				break;
+			case R.id.rl_settings_shutdown_line:// 关机时间
+				Intent itShutdown = new Intent(this, SettingsItemActivity.class);
+				itShutdown.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_SHUTDOWN_TIME);
+				startActivityForResult(itShutdown, REQUEST_CODE_WONDERFUL_VIDEO_QUALITY);
+				break;
+			case R.id.rl_settings_language_line:// 语言设置
+				Intent itLanguage = new Intent(this, SettingsItemActivity.class);
+				itLanguage.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_LANGUAGE);
+				startActivityForResult(itLanguage, REQUEST_CODE_WONDERFUL_VIDEO_QUALITY);
 				break;
 			default:
 				break;
