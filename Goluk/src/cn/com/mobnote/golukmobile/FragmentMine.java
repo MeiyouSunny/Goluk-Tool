@@ -1,5 +1,7 @@
 package cn.com.mobnote.golukmobile;
 
+import android.support.v4.app.Fragment;
+
 import org.json.JSONObject;
 
 import cn.com.mobnote.application.GolukApplication;
@@ -15,6 +17,7 @@ import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import android.net.Uri;
+import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,7 +28,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,9 +52,9 @@ import cn.com.tiros.debug.GolukDebugUtils;
  */
 
 @SuppressLint({ "HandlerLeak", "Instantiatable" })
-public class IndexMoreActivity implements OnClickListener, UserInterface, VideoSuqareManagerFn {
+public class FragmentMine extends Fragment implements OnClickListener, UserInterface, VideoSuqareManagerFn {
 	/** 上下文 */
-	private Context mContext = null;
+//	private Context mContext = null;
 
 	/** 个人中心 **/
 	private RelativeLayout mUserCenterItem = null;
@@ -87,7 +92,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	private SharedPreferences mPreferences = null;
 	private boolean isFirstLogin;
 	private Editor mEditor = null;
-	LinearLayout mRootLayout = null;
+//	LinearLayout mRootLayout = null;
 	private MainActivity ma;
 
 	/** 用户信息 **/
@@ -100,23 +105,46 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	private static final int TYPE_SHARE_PRAISE = 2;
 	/**我的收益**/
 	private static final int TYPE_PROFIT = 3;
-	private static final String TAG = "IndexMoreActivity";
+	private static final String TAG = "FragmentMine";
 
-	public IndexMoreActivity(LinearLayout rootlayout, Context context) {
-		mRootLayout = rootlayout;
-		mContext = context;
-		ma = (MainActivity) mContext;
-		setListener();
+//	public FragmentMine(LinearLayout rootlayout, Context context) {
+//		mRootLayout = rootlayout;
+//		mContext = context;
+//		ma = (MainActivity) mContext;
+//		setListener();
+//
+//		mPreferences = mContext.getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+//		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
+//
+//		ma.mApp.mUser.setUserInterface(this);
+//		init();
+//	}
+	LinearLayout mMineRootView = null;
 
-		mPreferences = mContext.getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
-		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
-
-		ma.mApp.mUser.setUserInterface(this);
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.index_more, null);
+		mMineRootView = (LinearLayout)rootView;
+//		density = SoundUtils.getInstance().getDisplayMetrics().density;
+//		lineParams = new RelativeLayout.LayoutParams((int) (50 * density), (int) (2 * density));
+//		lineTop = (int) (5 * density);
+//		textColorSelect = getActivity().getResources().getColor(R.color.textcolor_select);
+//		textcolorQx = getActivity().getResources().getColor(R.color.textcolor_qx);
+		ma = (MainActivity)getActivity();
 		init();
+		return rootView;
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onActivityCreated(savedInstanceState);
 	}
 
 	public void showView() {
-		mPreferences = mContext.getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+		mPreferences = getActivity().getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
 
 		ma.mApp.mUser.setUserInterface(this);
@@ -130,31 +158,31 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		// 获取页面元素
 
 		// 个人中心 我的相册 摄像头管理 通用设置 极路客小技巧 安装指导 版本信息 购买极路客
-		mUserCenterItem = (RelativeLayout) mRootLayout.findViewById(R.id.user_center_item);
+		mUserCenterItem = (RelativeLayout) mMineRootView.findViewById(R.id.user_center_item);
 //		mUserCenterId = (RelativeLayout) mRootLayout.findViewById(R.id.user_center_id_layout);
-		mVideoItem = (TextView) mRootLayout.findViewById(R.id.video_item);
-		mCameraItem = (TextView) mRootLayout.findViewById(R.id.camera_item);
-		mSetItem = (TextView) mRootLayout.findViewById(R.id.set_item);
-		mSkillItem = (TextView) mRootLayout.findViewById(R.id.skill_item);
-		mInstallItem = (TextView) mRootLayout.findViewById(R.id.install_item);
-		mQuestionItem = (TextView) mRootLayout.findViewById(R.id.question_item);
+		mVideoItem = (TextView) mMineRootView.findViewById(R.id.video_item);
+		mCameraItem = (TextView) mMineRootView.findViewById(R.id.camera_item);
+		mSetItem = (TextView) mMineRootView.findViewById(R.id.set_item);
+		mSkillItem = (TextView) mMineRootView.findViewById(R.id.skill_item);
+		mInstallItem = (TextView) mMineRootView.findViewById(R.id.install_item);
+		mQuestionItem = (TextView) mMineRootView.findViewById(R.id.question_item);
 //		mShoppingItem = (TextView) mRootLayout.findViewById(R.id.shopping_item);
-		mProfitItem = (TextView) mRootLayout.findViewById(R.id.profit_item);
-		mMsgCenterItem = (RelativeLayout) mRootLayout.findViewById(R.id.rl_my_message);
-		mPraisedListItem = (TextView)mRootLayout.findViewById(R.id.tv_praise_item);
+		mProfitItem = (TextView) mMineRootView.findViewById(R.id.profit_item);
+		mMsgCenterItem = (RelativeLayout) mMineRootView.findViewById(R.id.rl_my_message);
+		mPraisedListItem = (TextView)mMineRootView.findViewById(R.id.tv_praise_item);
 
 		// 头像、昵称、id
-		mImageHead = (ImageView) mRootLayout.findViewById(R.id.user_center_head);
-		mImageAuthentication = (ImageView) mRootLayout.findViewById(R.id.im_user_center_head_authentication);
-		mTextName = (TextView) mRootLayout.findViewById(R.id.user_center_name_text);
-		mTextId = (TextView) mRootLayout.findViewById(R.id.user_center_id_text);
-		mVideoLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_center_video_layout);
-		mTextShare = (TextView) mRootLayout.findViewById(R.id.user_share_count);
-		mTextPraise = (TextView) mRootLayout.findViewById(R.id.user_praise_count);
-		mTextFollow =  (TextView) mRootLayout.findViewById(R.id.user_follow_count);
-		mShareLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_share);
-		mPraiseLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_praise);
-		mFollowLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_follow);
+		mImageHead = (ImageView) mMineRootView.findViewById(R.id.user_center_head);
+		mImageAuthentication = (ImageView) mMineRootView.findViewById(R.id.im_user_center_head_authentication);
+		mTextName = (TextView) mMineRootView.findViewById(R.id.user_center_name_text);
+		mTextId = (TextView) mMineRootView.findViewById(R.id.user_center_id_text);
+		mVideoLayout = (LinearLayout) mMineRootView.findViewById(R.id.user_center_video_layout);
+		mTextShare = (TextView) mMineRootView.findViewById(R.id.user_share_count);
+		mTextPraise = (TextView) mMineRootView.findViewById(R.id.user_praise_count);
+		mTextFollow =  (TextView) mMineRootView.findViewById(R.id.user_follow_count);
+		mShareLayout = (LinearLayout) mMineRootView.findViewById(R.id.user_share);
+		mPraiseLayout = (LinearLayout) mMineRootView.findViewById(R.id.user_praise);
+		mFollowLayout = (LinearLayout) mMineRootView.findViewById(R.id.user_follow);
 		// 注册事件
 		// 个人中心 我的相册 摄像头管理 通用设置 极路客小技巧 安装指导 版本信息 购买极路客
 		mUserCenterItem.setOnClickListener(this);
@@ -187,14 +215,15 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			mVideoLayout.setVisibility(View.GONE);
 			mImageAuthentication.setVisibility(View.GONE);
 			this.showHead(mImageHead, "7");
-			mTextName.setText(mContext.getResources().getString(R.string.str_click_to_login));
+			mTextName.setText(getActivity().getResources().getString(R.string.str_click_to_login));
 			mTextId.setTextColor(Color.rgb(128, 138, 135));
-			mTextId.setText(mContext.getResources().getString(R.string.str_login_tosee_usercenter));
+			mTextId.setText(getActivity().getResources().getString(R.string.str_login_tosee_usercenter));
 		}
 	}
 
-	protected void onResume() {
-		mPreferences = mContext.getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+	@Override
+	public void onResume() {
+		mPreferences = getActivity().getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
 		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
 
 		// 获得GolukApplication对象
@@ -202,7 +231,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		// mApp.setContext(mContext, "IndexMore");
 
 		ma.mApp.mUser.setUserInterface(this);
-
+		super.onResume();
 	}
 
 	AlertDialog dialog = null;
@@ -231,36 +260,36 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		// 我的相册
 		case R.id.video_item:
 			ma.mApp.mUser.setUserInterface(null);
-			intent = new Intent(mContext, PhotoAlbumActivity.class);
+			intent = new Intent(getActivity(), PhotoAlbumActivity.class);
 			intent.putExtra("from", "local");
-			mContext.startActivity(intent);
+			getActivity().startActivity(intent);
 			break;
 		// 摄像头管理
 		case R.id.camera_item:
-			Intent itCamera = new Intent(mContext, UnbindActivity.class);
-			mContext.startActivity(itCamera);
+			Intent itCamera = new Intent(getActivity(), UnbindActivity.class);
+			getActivity().startActivity(itCamera);
 			break;
 		// 通用设置
 		case R.id.set_item:
-			Intent itSet = new Intent(mContext, UserSetupActivity.class);
-			mContext.startActivity(itSet);
+			Intent itSet = new Intent(getActivity(), UserSetupActivity.class);
+			getActivity().startActivity(itSet);
 			break;
 		// 极路客小技巧
 		case R.id.skill_item:
-			Intent itSkill = new Intent(mContext, UserOpenUrlActivity.class);
+			Intent itSkill = new Intent(getActivity(), UserOpenUrlActivity.class);
 			itSkill.putExtra(UserOpenUrlActivity.FROM_TAG, "skill");
-			mContext.startActivity(itSkill);
+			getActivity().startActivity(itSkill);
 			break;
 		// 安装指导
 		case R.id.install_item:
-			Intent itInstall = new Intent(mContext, UserOpenUrlActivity.class);
+			Intent itInstall = new Intent(getActivity(), UserOpenUrlActivity.class);
 			itInstall.putExtra(UserOpenUrlActivity.FROM_TAG, "install");
-			mContext.startActivity(itInstall);
+			getActivity().startActivity(itInstall);
 			break;
 		// 版本信息
 		case R.id.question_item:
-			Intent itQuestion = new Intent(mContext, UserVersionActivity.class);
-			mContext.startActivity(itQuestion);
+			Intent itQuestion = new Intent(getActivity(), UserVersionActivity.class);
+			getActivity().startActivity(itQuestion);
 			break;
 		// 购买极路客
 //		case R.id.shopping_item:
@@ -273,23 +302,23 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			clickAuto(TYPE_PROFIT, 0);
 			break;
 		case R.id.rl_my_message:
-			Intent msgIntent = new Intent(mContext, MessageCenterActivity.class);
-			mContext.startActivity(msgIntent);
+			Intent msgIntent = new Intent(getActivity(), MessageCenterActivity.class);
+			getActivity().startActivity(msgIntent);
 			break;
 		case R.id.tv_praise_item:
-			if(!GolukUtils.isNetworkConnected(mContext)) {
-				Toast.makeText(mContext, mContext.getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+			if(!GolukUtils.isNetworkConnected(getActivity())) {
+				Toast.makeText(getActivity(), getActivity().getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 				return;
 			}
-			GolukApplication app = (GolukApplication)((Activity)mContext).getApplication();
+			GolukApplication app = (GolukApplication)(getActivity()).getApplication();
 			if (!app.isUserLoginSucess) {
 //				GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
-				Intent loginIntent = new Intent(mContext, UserLoginActivity.class);
-				mContext.startActivity(loginIntent);
+				Intent loginIntent = new Intent(getActivity(), UserLoginActivity.class);
+				getActivity().startActivity(loginIntent);
 				return;
 			}
-			Intent praiseIntent = new Intent(mContext, MyPraisedActivity.class);
-			mContext.startActivity(praiseIntent);
+			Intent praiseIntent = new Intent(getActivity(), MyPraisedActivity.class);
+			getActivity().startActivity(praiseIntent);
 			break;
 		default:
 			GolukDebugUtils.d(TAG, "unknown view clicked");
@@ -306,8 +335,9 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		if (!isFirstLogin && (ma.mApp.loginStatus == 1 || ma.mApp.registStatus == 2 
 				|| ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 2)) {// 登录过
 			if (ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 4) {
-				mBuilder = new AlertDialog.Builder(mContext);
-				dialog = mBuilder.setMessage(mContext.getResources().getString(R.string.user_personal_autoloading_progress)).create();
+				mBuilder = new AlertDialog.Builder(getActivity());
+				dialog = mBuilder.setMessage(
+						getActivity().getResources().getString(R.string.user_personal_autoloading_progress)).create();
 				dialog.show();
 			} else if (ma.mApp.autoLoginStatus == 2 || ma.mApp.isUserLoginSucess) {
 				if(type == TYPE_USER) {
@@ -315,10 +345,10 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 				} else if(type == TYPE_SHARE_PRAISE) {
 					intentToUserCenter(shareOrPraise);
 				} else if(type == TYPE_PROFIT) {
-					Intent itProfit = new Intent(mContext,MyProfitActivity.class);
+					Intent itProfit = new Intent(getActivity(),MyProfitActivity.class);
 //					itProfit.putExtra("uid", userUId);
 //					itProfit.putExtra("phone", userPhone);
-					mContext.startActivity(itProfit);
+					getActivity().startActivity(itProfit);
 				}
 			} else {
 				clickToLogin(type);
@@ -333,9 +363,9 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	 * @param intentType
 	 */
 	private void clickToLogin(int intentType) {
-		mPreferences = mContext.getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
+		mPreferences = getActivity().getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
 		mEditor = mPreferences.edit();
-		Intent itNo = new Intent(mContext, UserLoginActivity.class);
+		Intent itNo = new Intent(getActivity(), UserLoginActivity.class);
 		if(intentType == TYPE_USER) {
 			itNo.putExtra("isInfo", "indexmore");
 			mEditor.putString("toRepwd", "more");
@@ -346,7 +376,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		}
 		mEditor.commit();
 
-		mContext.startActivity(itNo);
+		getActivity().startActivity(itNo);
 	}
 	
 	/**
@@ -363,10 +393,10 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		user.praisemenumber = praiseCount + "";
 		user.sharevideonumber = shareCount + "";
 
-		Intent intent = new Intent(mContext, UserCenterActivity.class);
+		Intent intent = new Intent(getActivity(), UserCenterActivity.class);
 		intent.putExtra("userinfo", user);
 		intent.putExtra("type", type);
-		mContext.startActivity(intent);
+		getActivity().startActivity(intent);
 	}
 
 	private void dismissDialog() {
@@ -413,7 +443,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			
 			if(customavatar != null && !"".equals(customavatar)){
 				mImageHead.setImageURI(Uri.parse(customavatar));
-				GlideUtils.loadNetHead(mContext, mImageHead, customavatar, R.drawable.editor_head_feault7);
+				GlideUtils.loadNetHead(getActivity(), mImageHead, customavatar, R.drawable.editor_head_feault7);
 			}else{
 				showHead(mImageHead,userHead);
 			}
@@ -436,7 +466,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			GolukDebugUtils.i("lily", userHead);
 
 			if ("".equals(userDesc) || null == userDesc) {
-				mTextId.setText(mContext.getResources().getString(R.string.str_let_sharevideo));
+				mTextId.setText(getActivity().getResources().getString(R.string.str_let_sharevideo));
 			} else {
 				mTextId.setText(userDesc);
 			}
@@ -445,7 +475,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			mTextPraise.setText(GolukUtils.getFormatNumber(fansCount));
 			mTextFollow.setText(GolukUtils.getFormatNumber(followCount));
 			if(newFansCout > 0) {
-				Drawable redPoint = mContext.getResources().getDrawable(R.drawable.home_red_point_little);
+				Drawable redPoint = getActivity().getResources().getDrawable(R.drawable.home_red_point_little);
 				redPoint.setBounds(0, 0, redPoint.getMinimumWidth(), redPoint.getMinimumHeight());
 				mTextPraise.setCompoundDrawables(null, null, redPoint, null);
 			} else {
@@ -459,9 +489,9 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	
 	private void showHead(ImageView view, String headportrait) {
 		try {
-			GlideUtils.loadLocalHead(mContext, view, ILive.mBigHeadImg[Integer.parseInt(headportrait)]);
+			GlideUtils.loadLocalHead(getActivity(), view, ILive.mBigHeadImg[Integer.parseInt(headportrait)]);
 		} catch (Exception e) {
-			GlideUtils.loadLocalHead(mContext, view, R.drawable.editor_head_feault7);
+			GlideUtils.loadLocalHead(getActivity(), view, R.drawable.editor_head_feault7);
 		}
 	}
 
@@ -506,9 +536,9 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			personalChanged();
 			mVideoLayout.setVisibility(View.GONE);
 			mImageAuthentication.setVisibility(View.GONE);
-			mTextName.setText(mContext.getResources().getString(R.string.str_click_to_login));
+			mTextName.setText(getActivity().getResources().getString(R.string.str_click_to_login));
 			mTextId.setTextColor(Color.rgb(128, 138, 135));
-			mTextId.setText(mContext.getResources().getString(R.string.str_login_tosee_usercenter));
+			mTextId.setText(getActivity().getResources().getString(R.string.str_login_tosee_usercenter));
 		} else if (ma.mApp.autoLoginStatus == 5) {
 			mVideoLayout.setVisibility(View.VISIBLE);
 			mImageAuthentication.setVisibility(View.VISIBLE);
@@ -523,9 +553,9 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		if(ma.mApp.autoLoginStatus == 3 || ma.mApp.autoLoginStatus == 4) {
 			mVideoLayout.setVisibility(View.GONE);
 			mImageAuthentication.setVisibility(View.GONE);
-			mTextName.setText(mContext.getResources().getString(R.string.str_click_to_login));
+			mTextName.setText(getActivity().getResources().getString(R.string.str_click_to_login));
 			mTextId.setTextColor(Color.rgb(128, 138, 135));
-			mTextId.setText(mContext.getResources().getString(R.string.str_login_tosee_usercenter));
+			mTextId.setText(getActivity().getResources().getString(R.string.str_login_tosee_usercenter));
 			showHead(mImageHead, "7");
 			return ;
 		}
@@ -537,11 +567,12 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		} else {// 没有用户信息
 			mVideoLayout.setVisibility(View.GONE);
 			mImageAuthentication.setVisibility(View.GONE);
-			mTextName.setText(mContext.getResources().getString(R.string.str_click_to_login));
+			mTextName.setText(getActivity().getResources().getString(R.string.str_click_to_login));
 			mTextId.setTextColor(Color.rgb(128, 138, 135));
-			mTextId.setText(mContext.getResources().getString(R.string.str_login_tosee_usercenter));
+			mTextId.setText(getActivity().getResources().getString(R.string.str_login_tosee_usercenter));
 			showHead(mImageHead, "7");
 		}
 	}
 
 }
+

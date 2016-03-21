@@ -23,7 +23,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-
+import android.util.Log;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventIpcConnState;
 import cn.com.mobnote.eventbus.EventMessageUpdate;
@@ -1774,7 +1774,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			String userInfo = mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
 					IPageNotifyFn.PageType_GetUserInfo_Get, "");
 
-			GolukDebugUtils.e("", "getUserInfo------------------logic-userInfo:" + userInfo);
+			Log.e("dengting", "getUserInfo------------------logic-userInfo:" + userInfo);
 
 			if (null != userInfo) {
 				myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(userInfo));

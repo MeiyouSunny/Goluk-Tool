@@ -1,7 +1,8 @@
 <!-- goluk首页 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent" >
 
     <LinearLayout
@@ -11,6 +12,7 @@
         android:layout_alignParentBottom="true"
         android:background="#344450"
         android:baselineAligned="false"
+        android:visibility="gone"
         android:orientation="horizontal" >
 
         <!-- 更多 -->
@@ -86,9 +88,26 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/status_layout"
         layout="@layout/video_square_main"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <!-- 用户中心布局 -->
+    <FrameLayout
+        android:id="@+id/realtabcontent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1000" />
+
+    <android.support.v4.app.FragmentTabHost
+        android:id="@android:id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="0" />
+    </android.support.v4.app.FragmentTabHost>
 
     <include
         android:id="@+id/user_info"
@@ -115,4 +134,4 @@
             android:contentDescription="@string/imgdes" />
     </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>

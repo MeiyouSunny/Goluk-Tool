@@ -16,6 +16,7 @@ import android.media.SoundPool;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -23,12 +24,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TabWidget;
 import android.widget.TextView;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
@@ -118,7 +122,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public SharedPreferences mPreferencesAuto;
 	public boolean isFirstLogin;
 
-	private RelativeLayout mRootLayout = null;
+	private LinearLayout mRootLayout = null;
 
 	private View videoSquareLayout = null;
 
@@ -173,7 +177,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			});
 		}
 	}
-
+	private FragmentTabHost mTabHost;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -182,7 +186,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		// 在使用SDK各组件之前初始化context信息，传入ApplicationContext
 		// 注意该方法要再setContentView方法之前实现
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-		mRootLayout = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.index, null);
+		mRootLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.index, null);
 		setContentView(mRootLayout);
 		mSoundPool = new SoundPool(1, AudioManager.STREAM_NOTIFICATION, 0);
 		// Register EventBus
@@ -280,6 +284,60 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukUtils.getMobileInfo(this);
 
 		// msgRequest();
+		LayoutInflater inflater = LayoutInflater.from(this);
+		mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
+		mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
+
+		Bundle b = new Bundle();
+		b.putString("key", "Discover");
+		LinearLayout discover = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_discover, null);
+		mTabHost.addTab(mTabHost.newTabSpec("Discover").setIndicator(discover),
+				FragmentDiscover.class, b);
+
+		b = new Bundle();
+		b.putString("key", "Follow");
+		LinearLayout follow = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_follow, null);
+		mTabHost.addTab(mTabHost.newTabSpec("Follow")
+				.setIndicator(follow), Fragment2.class, b);
+
+		b = new Bundle();
+		b.putString("key", "CarRecorder");
+		LinearLayout carRecorder = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_carrecorder, null);
+		mTabHost.addTab(mTabHost.newTabSpec("CarRecorder").setIndicator(carRecorder),
+				Fragment3.class, b);
+
+		b = new Bundle();
+		b.putString("key", "Album");
+		LinearLayout album = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_album, null);
+		mTabHost.addTab(mTabHost.newTabSpec("Album").setIndicator(album),
+				Fragment3.class, b);
+
+		b = new Bundle();
+		b.putString("key", "Mine");
+		LinearLayout mine = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_mine, null);
+		mTabHost.addTab(mTabHost.newTabSpec("Mine").setIndicator(mine),
+				FragmentMine.class, b);
+		TabWidget widget = mTabHost.getTabWidget();
+		widget.setDividerDrawable(null);
+		mTabHost.getTabWidget().setBackgroundResource(android.R.color.darker_gray);
+		View lineView = new View(this);
+		lineView.setBackgroundResource(android.R.color.black);
+		LinearLayout.LayoutParams lineParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 1);
+		lineView.setLayoutParams(lineParams);
+		mTabHost.addView(lineView);
+		for (int i = 0; i < mTabHost.getTabWidget().getTabCount(); i++) {
+			mTabHost.getTabWidget().getChildAt(i).getLayoutParams().height = 141;
+		}
+
+		mTabHost.getTabWidget().getChildTabViewAt(2)
+				.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(MainActivity.this,
+								CarRecorderActivity.class);
+						startActivity(intent);
+					}
+				});
 	}
 
 	private void msgRequest() {
