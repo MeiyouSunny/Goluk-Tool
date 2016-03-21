@@ -118,5 +118,7 @@
 	
 	<color name="color_bind_btn_txt">#047cf3</color>
 	<color name="color_ipcbind_bg">#f7f9fa</color>
+	<color name="color_main_tab_bg">#f7f7f8</color>
+	<color name="color_list_divider">#bbbbbb</color>
 
 </resources>
