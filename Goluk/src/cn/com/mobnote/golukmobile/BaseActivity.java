@@ -2,7 +2,6 @@ package cn.com.mobnote.golukmobile;
 
 import java.util.List;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.content.ComponentName;
@@ -11,9 +10,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.http.HttpManager;
+
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -24,7 +25,7 @@ import com.umeng.analytics.MobclickAgent;
  *
  * @author xuhw
  */
-public class BaseActivity extends Activity {
+public class BaseActivity extends FragmentActivity {
 	/** IPC默认要修改的密码 */
 	public static final String IPC_PWD_DEFAULT = "123456789";
 	/** 手机创建热点默认密码 */

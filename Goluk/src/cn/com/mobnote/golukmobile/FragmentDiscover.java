@@ -1,23 +1,60 @@
-package cn.com.mobnote.golukmobile.videosuqare;
+package cn.com.mobnote.golukmobile;
 
-import android.annotation.SuppressLint;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareAdapter;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.tiros.debug.GolukDebugUtils;
 
-@SuppressLint("Instantiatable")
-public class VideoSquareActivity implements OnClickListener {
+public class FragmentDiscover extends Fragment implements OnClickListener {
+
+	public FragmentDiscover() {
+
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+	}
+
+	View mSquareRootView;
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.video_square_main,
+				null);
+		mSquareRootView = rootView;
+		density = SoundUtils.getInstance().getDisplayMetrics().density;
+		lineParams = new RelativeLayout.LayoutParams((int) (50 * density), (int) (2 * density));
+		lineTop = (int) (5 * density);
+		textColorSelect = getActivity().getResources().getColor(R.color.textcolor_select);
+		textcolorQx = getActivity().getResources().getColor(R.color.textcolor_qx);
+		init();
+		return rootView;
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onActivityCreated(savedInstanceState);
+	}
+
 	public VideoSquareAdapter mVideoSquareAdapter = null;
 	private ViewPager mViewPager = null;
 	private ImageView hot = null;
@@ -25,8 +62,8 @@ public class VideoSquareActivity implements OnClickListener {
 	private TextView squareTitle = null;
 	public String shareVideoId;
 
-	LinearLayout mRootLayout = null;
-	Context mContext = null;
+//	LinearLayout mRootLayout = null;
+///	Context mContext = null;
 
 	private float density;
 
@@ -35,31 +72,31 @@ public class VideoSquareActivity implements OnClickListener {
 	private int textColorSelect = 0;
 	private int textcolorQx = 0;
 
-	public VideoSquareActivity(LinearLayout rootlayout, Context context) {
-		mRootLayout = rootlayout;
-		mContext = context;
-		density = SoundUtils.getInstance().getDisplayMetrics().density;
-		lineParams = new RelativeLayout.LayoutParams((int) (50 * density), (int) (2 * density));
-		lineTop = (int) (5 * density);
-		textColorSelect = mContext.getResources().getColor(R.color.textcolor_select);
-		textcolorQx = mContext.getResources().getColor(R.color.textcolor_qx);
-		init();
-
-	}
+//	public VideoSquareActivity(LinearLayout rootlayout, Context context) {
+//		mRootLayout = rootlayout;
+//		mContext = context;
+//		density = SoundUtils.getInstance().getDisplayMetrics().density;
+//		lineParams = new RelativeLayout.LayoutParams((int) (50 * density), (int) (2 * density));
+//		lineTop = (int) (5 * density);
+//		textColorSelect = mContext.getResources().getColor(R.color.textcolor_select);
+//		textcolorQx = mContext.getResources().getColor(R.color.textcolor_qx);
+//		init();
+//
+//	}
 
 	public VideoSquareAdapter getVideoSquareAdapter() {
 		return mVideoSquareAdapter;
 	}
 
 	public void init() {
-		mViewPager = (ViewPager) mRootLayout.findViewById(R.id.mViewpager);
+		mViewPager = (ViewPager) mSquareRootView.findViewById(R.id.mViewpager);
 		mViewPager.setOffscreenPageLimit(3);
-		mVideoSquareAdapter = new VideoSquareAdapter(mContext);
+		mVideoSquareAdapter = new VideoSquareAdapter(getActivity());
 		mViewPager.setAdapter(mVideoSquareAdapter);
 		mViewPager.setOnPageChangeListener(opcl);
-		hot = (ImageView) mRootLayout.findViewById(R.id.line_hot);
-		hotTitle = (TextView) mRootLayout.findViewById(R.id.hot_title);
-		squareTitle = (TextView) mRootLayout.findViewById(R.id.square_title);
+		hot = (ImageView) mSquareRootView.findViewById(R.id.line_hot);
+		hotTitle = (TextView) mSquareRootView.findViewById(R.id.hot_title);
+		squareTitle = (TextView) mSquareRootView.findViewById(R.id.square_title);
 		setListener();
 	}
 
@@ -164,34 +201,36 @@ public class VideoSquareActivity implements OnClickListener {
 		}
 	}
 
-	public void onResume() {
-		if (null != mVideoSquareAdapter) {
-			mVideoSquareAdapter.onResume();
-		}
-	}
-
-	public void onPause() {
-		if (null != mVideoSquareAdapter) {
-			mVideoSquareAdapter.onPause();
-		}
-	}
-
-	public void onStop() {
-		if (null != mVideoSquareAdapter) {
-			mVideoSquareAdapter.onStop();
-		}
-	}
-
-	public void onDestroy() {
-		if (null != mVideoSquareAdapter) {
-			mVideoSquareAdapter.onDestroy();
-		}
-	}
-
+//	@Override
+//	public void onResume() {
+//		if (null != mVideoSquareAdapter) {
+//			mVideoSquareAdapter.onResume();
+//		}
+//	}
+//
+//	public void onPause() {
+//		if (null != mVideoSquareAdapter) {
+//			mVideoSquareAdapter.onPause();
+//		}
+//	}
+//
+//	public void onStop() {
+//		if (null != mVideoSquareAdapter) {
+//			mVideoSquareAdapter.onStop();
+//		}
+//	}
+//
+//	public void onDestroy() {
+//		if (null != mVideoSquareAdapter) {
+//			mVideoSquareAdapter.onDestroy();
+//		}
+//	}
+//
 	public void exit() {
 		if (null != mVideoSquareAdapter) {
 			mVideoSquareAdapter.onDestroy();
 		}
 	}
+
 
 }
