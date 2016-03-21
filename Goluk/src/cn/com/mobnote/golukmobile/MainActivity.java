@@ -319,10 +319,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				FragmentMine.class, b);
 		TabWidget widget = mTabHost.getTabWidget();
 		widget.setDividerDrawable(null);
-		mTabHost.getTabWidget().setBackgroundResource(android.R.color.darker_gray);
+		mTabHost.getTabWidget().setBackgroundResource(R.color.color_main_tab_bg);
 		View lineView = new View(this);
-		lineView.setBackgroundResource(android.R.color.black);
-		LinearLayout.LayoutParams lineParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 1);
+		lineView.setBackgroundResource(R.color.color_list_divider);
+		LinearLayout.LayoutParams lineParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 3);
 		lineView.setLayoutParams(lineParams);
 		mTabHost.addView(lineView);
 		for (int i = 0; i < mTabHost.getTabWidget().getTabCount(); i++) {
