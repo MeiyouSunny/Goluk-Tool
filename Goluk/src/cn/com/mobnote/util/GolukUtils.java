@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -524,6 +525,22 @@ public class GolukUtils {
 			}
 		} catch (Exception e) {
 			return fmtnumber;
+		}
+
+		return number;
+	}
+	
+	public static String getNumber(int formatNumber) {
+		String number = "";
+		try {
+			if (10000 < formatNumber) {
+				DecimalFormat df = new DecimalFormat(".##");
+				number = df.format(formatNumber);
+//				BigDecimal bd = new BigDecimal(number);
+//				number = bd.setScale(1, BigDecimal.ROUND_HALF_UP).toString() + "K";
+			}
+		} catch (Exception e) {
+			return number;
 		}
 
 		return number;

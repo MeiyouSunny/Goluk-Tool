@@ -266,8 +266,22 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			clickAuto(TYPE_PROFIT, 0);
 			break;
 		case R.id.rl_my_message:
-			Intent msgIntent = new Intent(mContext, TestGridViewActivity.class);
-			mContext.startActivity(msgIntent);
+//			Intent msgIntent = new Intent(mContext, MessageCenterActivity.class);
+//			mContext.startActivity(msgIntent);
+			UCUserInfo user = new UCUserInfo();
+			user.uid = userUId;
+			user.nickname = userName;
+			user.headportrait = userHead;
+			user.introduce = userDesc;
+			user.sex = userSex;
+			user.customavatar = customavatar;
+			user.praisemenumber = praiseCount + "";
+			user.sharevideonumber = shareCount + "";
+
+			Intent its = new Intent(mContext, UserCenterActivity.class);
+			its.putExtra("userinfo", user);
+			its.putExtra("type", 1);
+			mContext.startActivity(its);
 			break;
 		case R.id.tv_praise_item:
 			Intent praiseIntent = new Intent(mContext, MyPraisedActivity.class);
@@ -298,8 +312,6 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 					intentToUserCenter(shareOrPraise);
 				} else if(type == TYPE_PROFIT) {
 					Intent itProfit = new Intent(mContext,MyProfitActivity.class);
-//					itProfit.putExtra("uid", userUId);
-//					itProfit.putExtra("phone", userPhone);
 					mContext.startActivity(itProfit);
 				}
 			} else {
@@ -345,7 +357,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		user.praisemenumber = praiseCount + "";
 		user.sharevideonumber = shareCount + "";
 
-		Intent intent = new Intent(mContext, UserCenterActivity.class);
+//		Intent intent = new Intent(mContext, UserCenterActivity.class);
+		Intent intent = new Intent(mContext, TestGridViewActivity.class);
 		intent.putExtra("userinfo", user);
 		intent.putExtra("type", type);
 		mContext.startActivity(intent);

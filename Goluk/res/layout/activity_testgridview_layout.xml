@@ -2,26 +2,52 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white" >
+    android:background="#F3F5F5"
+    android:orientation="vertical" >
 
-    <cn.com.mobnote.golukmobile.gridview.PullToRefreshGridView
-        android:id="@+id/gv_testgridview"
+    <!-- title -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="#313131" >
+
+        <ImageButton
+            android:id="@+id/ib_usercenter_back"
+            android:layout_width="36.66dp"
+            android:layout_height="36.66dp"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/cross_screen_arrow_icon1"
+            android:contentDescription="@string/imgdes" />
+
+        <TextView
+            android:id="@+id/tv_usercenter_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:id="@+id/ib_usercenter_more"
+            android:layout_width="36.66dp"
+            android:layout_height="36.66dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/mine_icon_more"
+            android:contentDescription="@string/imgdes" />
+    </RelativeLayout>
+
+    <cn.com.mobnote.headergridview.PullToRefreshHeaderGridView
+        android:id="@+id/gv_usercenter"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:cacheColorHint="#ffffff"
         android:divider="@drawable/solid"
         android:dividerHeight="1dp" >
-    </cn.com.mobnote.golukmobile.gridview.PullToRefreshGridView>
-    
-    <!-- <cn.com.mobnote.golukmobile.gridview.HeaderGridView 
-       android:id="@+id/gv_testgridview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:cacheColorHint="#ffffff"
-        android:divider="@drawable/solid"
-        android:dividerHeight="1dp" >
-        
-    </cn.com.mobnote.golukmobile.gridview.HeaderGridView> -->
+    </cn.com.mobnote.headergridview.PullToRefreshHeaderGridView>
 
 </LinearLayout>

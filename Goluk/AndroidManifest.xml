@@ -278,6 +278,11 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name=".usercenter.UserVideoCategoryActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name=".promotion.PromotionActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />

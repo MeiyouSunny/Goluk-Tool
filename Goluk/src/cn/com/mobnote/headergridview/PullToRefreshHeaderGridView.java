@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package cn.com.mobnote.golukmobile.gridview;
+package cn.com.mobnote.headergridview;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -27,21 +27,21 @@ import com.handmark.pulltorefresh.library.OverscrollHelper;
 import com.handmark.pulltorefresh.library.PullToRefreshAdapterViewBase;
 import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
 
-public class PullToRefreshGridView extends PullToRefreshAdapterViewBase<HeaderGridView> {
+public class PullToRefreshHeaderGridView extends PullToRefreshAdapterViewBase<HeaderGridView> {
 
-	public PullToRefreshGridView(Context context) {
+	public PullToRefreshHeaderGridView(Context context) {
 		super(context);
 	}
 
-	public PullToRefreshGridView(Context context, AttributeSet attrs) {
+	public PullToRefreshHeaderGridView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 
-	public PullToRefreshGridView(Context context, Mode mode) {
+	public PullToRefreshHeaderGridView(Context context, Mode mode) {
 		super(context, mode);
 	}
 
-	public PullToRefreshGridView(Context context, Mode mode, AnimationStyle style) {
+	public PullToRefreshHeaderGridView(Context context, Mode mode, AnimationStyle style) {
 		super(context, mode, style);
 	}
 
@@ -72,7 +72,7 @@ public class PullToRefreshGridView extends PullToRefreshAdapterViewBase<HeaderGr
 
 		@Override
 		public void setEmptyView(View emptyView) {
-			PullToRefreshGridView.this.setEmptyView(emptyView);
+			PullToRefreshHeaderGridView.this.setEmptyView(emptyView);
 		}
 
 		@Override
@@ -96,7 +96,7 @@ public class PullToRefreshGridView extends PullToRefreshAdapterViewBase<HeaderGr
 					scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
 
 			// Does all of the hard work...
-			OverscrollHelper.overScrollBy(PullToRefreshGridView.this, deltaX, scrollX, deltaY, scrollY, isTouchEvent);
+			OverscrollHelper.overScrollBy(PullToRefreshHeaderGridView.this, deltaX, scrollX, deltaY, scrollY, isTouchEvent);
 
 			return returnValue;
 		}

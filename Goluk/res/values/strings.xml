@@ -965,4 +965,8 @@
     <string name="str_praised_list_connect_error">网络不给力，轻触屏幕重试</string>
     <string name="str_praised_list_request_no_data">暂无点赞记录</string>
     <string name="str_wonderful_share">Goluk精彩分享</string>
+    
+    <string name="str_user_video_type_wonderful_text">精选作品</string>
+    <string name="str_user_video_type_recommend_text">被推荐活动</string>
+    <string name="str_user_video_type_headline_text">入选头条</string>
 </resources>

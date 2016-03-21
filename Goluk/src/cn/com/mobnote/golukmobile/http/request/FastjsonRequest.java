@@ -1,5 +1,7 @@
 package cn.com.mobnote.golukmobile.http.request;
 
+import cn.com.tiros.debug.GolukDebugUtils;
+
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -80,6 +82,7 @@ public class FastjsonRequest<T> extends Request<T> {
 	protected Response<T> parseNetworkResponse(NetworkResponse response) {
 		try {
 			String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+			GolukDebugUtils.e("", "-------------parseNetworkResponse--------json: " + json);
 			return Response.success(JSON.parseObject(json, clazz), HttpHeaderParser.parseCacheHeaders(response));
 		} catch (UnsupportedEncodingException e) {
 			return Response.error(new ParseError(e));

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.com.mobnote.golukmobile.gridview;
+package cn.com.mobnote.headergridview;
 
 import android.content.Context;
 import android.database.DataSetObservable;
