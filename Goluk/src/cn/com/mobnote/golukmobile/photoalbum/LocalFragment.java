@@ -55,13 +55,13 @@ public class LocalFragment extends Fragment{
 	
 	private float density = 1;
 	
-	private PhotoAlbumActivity mPhotoAlbumActivity;
+	private FragmentAlbum mFragmentAlbum;
 	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mPhotoAlbumActivity = (PhotoAlbumActivity) this.getContext();
+		mFragmentAlbum = (FragmentAlbum)getParentFragment();
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		mLocalVideoView = inflater.inflate(R.layout.wonderful_listview, (ViewGroup)getActivity().findViewById(R.id.viewpager), false);
 		density = SoundUtils.getInstance().getDisplayMetrics().density;
@@ -77,7 +77,7 @@ public class LocalFragment extends Fragment{
 		empty = (TextView) mLocalVideoView.findViewById(R.id.empty);
 		mCustomProgressDialog = new CustomLoadingDialog(this.getContext(), null);
 		mStickyListHeadersListView = (StickyListHeadersListView) mLocalVideoView.findViewById(R.id.mStickyListHeadersListView);
-		mWonderfulVideoAdapter = new LocalWonderfulVideoAdapter(this.getContext(), mStickyListHeadersListView, IPCManagerFn.TYPE_CIRCULATE, "local");
+		mWonderfulVideoAdapter = new LocalWonderfulVideoAdapter(this.getContext(), mFragmentAlbum, mStickyListHeadersListView, IPCManagerFn.TYPE_CIRCULATE, "local");
 		loadData(IPCManagerFn.TYPE_SHORTCUT, true);
 		setListener();
 	}
@@ -131,7 +131,7 @@ public class LocalFragment extends Fragment{
 					RelativeLayout mTMLayout2 = (RelativeLayout) arg1.findViewById(R.id.mTMLayout2);
 					String tag1 = (String) mTMLayout1.getTag();
 					String tag2 = (String) mTMLayout2.getTag();
-					if (mPhotoAlbumActivity.getEditState()) {
+					if (mFragmentAlbum.getEditState()) {
 						if ((screenX > 0) && (screenX < (screenWidth / 2))) {
 							selectedVideoItem(tag1, mTMLayout1);
 						} else {
@@ -244,7 +244,7 @@ public class LocalFragment extends Fragment{
 	 * @param mTMLayout1
 	 */
 	private void selectedVideoItem(String tag1, RelativeLayout mTMLayout1) {
-		List<String> selectedListData = mPhotoAlbumActivity.getSelectedList();
+		List<String> selectedListData = mFragmentAlbum.getSelectedList();
 		if (!TextUtils.isEmpty(tag1)) {
 			if (selectedListData.contains(tag1)) {
 				selectedListData.remove(tag1);
@@ -255,11 +255,11 @@ public class LocalFragment extends Fragment{
 			}
 
 			if (selectedListData.size() == 0) {
-				mPhotoAlbumActivity.updateTitleName(this.getContext().getResources().getString(R.string.local_video_title_text));
-				mPhotoAlbumActivity.updateEditBtnState(false);
+				mFragmentAlbum.updateTitleName(this.getContext().getResources().getString(R.string.local_video_title_text));
+				mFragmentAlbum.updateEditBtnState(false);
 			} else {
-				mPhotoAlbumActivity.updateEditBtnState(true);
-				mPhotoAlbumActivity.updateTitleName(this.getContext().getResources().getString(R.string.str_photo_select1)
+				mFragmentAlbum.updateEditBtnState(true);
+				mFragmentAlbum.updateTitleName(this.getContext().getResources().getString(R.string.str_photo_select1)
 						+ selectedListData.size() + this.getContext().getResources().getString(R.string.str_photo_select2));
 			}
 		}

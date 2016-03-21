@@ -80,7 +80,7 @@ public class PhotoalbumFragment extends Fragment implements OnClickListener {
 	private CustomFormatDialog mConnectionDialog;
 	private CustomDialog backHomeDialog;
 	
-	PhotoAlbumActivity photoActivity;
+	FragmentAlbum photoActivity;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater,ViewGroup container,  Bundle savedInstanceState) {

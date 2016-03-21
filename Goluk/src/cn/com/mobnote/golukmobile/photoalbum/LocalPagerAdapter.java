@@ -28,22 +28,25 @@ public class LocalPagerAdapter extends PagerAdapter {
 
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
-		if (0 == position) {
-			mWonderfulVideoLiseView = new LocalWonderfulVideoListView(mContext, mLocalVideoListView,
-					IPCManagerFn.TYPE_SHORTCUT, from, mPromotionSelectItem);
-			container.addView(mWonderfulVideoLiseView.getRootView());
-			return mWonderfulVideoLiseView.getRootView();
-		} else if (1 == position) {
-			mEmergencyVideoLiseView = new LocalWonderfulVideoListView(mContext, mLocalVideoListView,
-					IPCManagerFn.TYPE_URGENT, from, mPromotionSelectItem);
-			container.addView(mEmergencyVideoLiseView.getRootView());
-			return mEmergencyVideoLiseView.getRootView();
-		} else {
-			mLoopVideoLiseView = new LocalWonderfulVideoListView(mContext, mLocalVideoListView, IPCManagerFn.TYPE_CIRCULATE,
-					from, mPromotionSelectItem);
-			container.addView(mLoopVideoLiseView.getRootView());
-			return mLoopVideoLiseView.getRootView();
-		}
+		// CK Start
+//		if (0 == position) {
+//			mWonderfulVideoLiseView = new LocalWonderfulVideoListView(mContext, mLocalVideoListView,
+//					IPCManagerFn.TYPE_SHORTCUT, from, mPromotionSelectItem);
+//			container.addView(mWonderfulVideoLiseView.getRootView());
+//			return mWonderfulVideoLiseView.getRootView();
+//		} else if (1 == position) {
+//			mEmergencyVideoLiseView = new LocalWonderfulVideoListView(mContext, mLocalVideoListView,
+//					IPCManagerFn.TYPE_URGENT, from, mPromotionSelectItem);
+//			container.addView(mEmergencyVideoLiseView.getRootView());
+//			return mEmergencyVideoLiseView.getRootView();
+//		} else {
+//			mLoopVideoLiseView = new LocalWonderfulVideoListView(mContext, mLocalVideoListView, IPCManagerFn.TYPE_CIRCULATE,
+//					from, mPromotionSelectItem);
+//			container.addView(mLoopVideoLiseView.getRootView());
+//			return mLoopVideoLiseView.getRootView();
+//		}
+		// CK End
+		return null;
 	}
 
 	public boolean isWonderfulHasData() {

@@ -9,7 +9,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.msg.MessageCenterActivity;
-import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
+import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
 import cn.com.mobnote.golukmobile.praised.MyPraisedActivity;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
@@ -260,7 +260,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		// 我的相册
 		case R.id.video_item:
 			ma.mApp.mUser.setUserInterface(null);
-			intent = new Intent(getActivity(), PhotoAlbumActivity.class);
+			intent = new Intent(getActivity(), FragmentAlbum.class);
 			intent.putExtra("from", "local");
 			getActivity().startActivity(intent);
 			break;

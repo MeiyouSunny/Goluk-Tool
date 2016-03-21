@@ -80,7 +80,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 	/** 列表添加页脚标识 */
 	private boolean addFooter = false;
 	
-	private PhotoAlbumActivity mPhotoAlbumActivity;
+	private FragmentAlbum mFragmentAlbum;
 	
 	private boolean isShowPlayer = false;
 	
@@ -132,9 +132,9 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT, this);
 		}
-		
-		mPhotoAlbumActivity = (PhotoAlbumActivity) this.getContext();
-		
+
+//		mFragmentAlbum = (FragmentAlbum) this.getContext();
+		mFragmentAlbum = (FragmentAlbum)getParentFragment();
 		this.mDataList = new ArrayList<VideoInfo>();
 		this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
 		this.mGroupListName = new ArrayList<String>();
@@ -219,7 +219,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 		this.mCustomProgressDialog = new CustomLoadingDialog(this.getContext(), null);
 		mStickyListHeadersListView = (StickyListHeadersListView) mWonderfulVideoView
 				.findViewById(R.id.mStickyListHeadersListView);
-		mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(this.getContext(), mStickyListHeadersListView);
+		mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(this.getContext(), (FragmentAlbum)getParentFragment(), mStickyListHeadersListView);
 		//this.loadData(false);
 		setListener();
 	}
@@ -297,7 +297,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 					RelativeLayout mTMLayout2 = (RelativeLayout) arg1.findViewById(R.id.mTMLayout2);
 					String tag1 = (String) mTMLayout1.getTag();
 					String tag2 = (String) mTMLayout2.getTag();
-					if (mPhotoAlbumActivity.getEditState()) {
+					if (mFragmentAlbum.getEditState()) {
 						if ((screenX > 0) && (screenX < (screenWidth / 2))) {
 							selectedVideoItem(tag1, mTMLayout1);
 						} else {
@@ -375,7 +375,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 	 * @param mTMLayout1
 	 */
 	private void selectedVideoItem(String tag1, RelativeLayout mTMLayout1) {
-		List<String> selectedListData = mPhotoAlbumActivity.getSelectedList();
+		List<String> selectedListData = mFragmentAlbum.getSelectedList();
 		if (!TextUtils.isEmpty(tag1)) {
 			if (selectedListData.contains(tag1)) {
 				selectedListData.remove(tag1);
@@ -386,11 +386,11 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 			}
 
 			if (selectedListData.size() == 0) {
-				mPhotoAlbumActivity.updateTitleName(this.getContext().getString(R.string.local_video_title_text));
-				mPhotoAlbumActivity.updateEditBtnState(false);
+				mFragmentAlbum.updateTitleName(this.getContext().getString(R.string.local_video_title_text));
+				mFragmentAlbum.updateEditBtnState(false);
 			} else {
-				mPhotoAlbumActivity.updateEditBtnState(true);
-				mPhotoAlbumActivity.updateTitleName(this.getContext().getString(R.string.str_photo_select1) + selectedListData.size()
+				mFragmentAlbum.updateEditBtnState(true);
+				mFragmentAlbum.updateTitleName(this.getContext().getString(R.string.str_photo_select1) + selectedListData.size()
 						+ this.getContext().getString(R.string.str_photo_select2));
 			}
 		}

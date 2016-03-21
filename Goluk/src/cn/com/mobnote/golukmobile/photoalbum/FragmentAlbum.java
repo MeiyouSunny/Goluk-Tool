@@ -9,14 +9,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 
-public class PhotoAlbumActivity extends FragmentActivity implements OnClickListener{
+public class FragmentAlbum extends Fragment implements OnClickListener{
 	
 	/** 活动分享 */
 	public static final String ACTIVITY_INFO = "activityinfo";
@@ -32,21 +34,25 @@ public class PhotoAlbumActivity extends FragmentActivity implements OnClickListe
 	private TextView mTabWonderful;
 	private TextView mTabUrgent;
 	private TextView mTabLoop;
-	
+
 	private ImageView mEditBtn;
 
 	private int mCurrentType = 0;
-	
 
 	// 页面列表
 	private ArrayList<Fragment> fragmentList;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.photo_album);
+	private View mAlbumRootView;
 
-		mViewPager = (ViewPager) findViewById(R.id.viewpager);
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
+//		setContentView(R.layout.photo_album);
+		View rootView = inflater.inflate(R.layout.photo_album, null);
+		mAlbumRootView = rootView;
+
+		mViewPager = (ViewPager) mAlbumRootView.findViewById(R.id.viewpager);
 		mViewPager.setOffscreenPageLimit(1);
 		mLocalFragment = new LocalFragment();
 		mWonderfulFragment = new WonderfulFragment(); //WonderfulFragment.newInstance(IPCManagerFn.TYPE_SHORTCUT, IPCManagerFn.TYPE_SHORTCUT);
@@ -61,7 +67,7 @@ public class PhotoAlbumActivity extends FragmentActivity implements OnClickListe
 		
 
 		initView();
-		mViewPager.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager()));
+		mViewPager.setAdapter(new MyViewPagerAdapter(getChildFragmentManager()));
 		mViewPager.addOnPageChangeListener(new OnPageChangeListener() {
 
 			@Override
@@ -80,15 +86,16 @@ public class PhotoAlbumActivity extends FragmentActivity implements OnClickListe
 
 			}
 		});
+
+		return rootView;
 	}
 
 	public void initView() {
-
-		mTabLocal = (TextView) findViewById(R.id.tab_local);
-		mTabWonderful = (TextView) findViewById(R.id.tab_wonderful);
-		mTabUrgent = (TextView) findViewById(R.id.tab_urgent);
-		mTabLoop = (TextView) findViewById(R.id.tab_loop);
-		mEditBtn = (ImageView) findViewById(R.id.edit_btn);
+		mTabLocal = (TextView) mAlbumRootView.findViewById(R.id.tab_local);
+		mTabWonderful = (TextView) mAlbumRootView.findViewById(R.id.tab_wonderful);
+		mTabUrgent = (TextView) mAlbumRootView.findViewById(R.id.tab_urgent);
+		mTabLoop = (TextView) mAlbumRootView.findViewById(R.id.tab_loop);
+		mEditBtn = (ImageView) mAlbumRootView.findViewById(R.id.edit_btn);
 
 		mTabLocal.setOnClickListener(this);
 		mTabWonderful.setOnClickListener(this);

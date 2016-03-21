@@ -7,7 +7,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.msg.MessageCenterActivity;
-import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
+import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
 import cn.com.mobnote.golukmobile.praised.MyPraisedActivity;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
@@ -231,7 +231,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		// 我的相册
 		case R.id.video_item:
 			ma.mApp.mUser.setUserInterface(null);
-			intent = new Intent(mContext, PhotoAlbumActivity.class);
+			intent = new Intent(mContext, FragmentAlbum.class);
 			intent.putExtra("from", "local");
 			mContext.startActivity(intent);
 			break;

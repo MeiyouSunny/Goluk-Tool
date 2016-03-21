@@ -65,6 +65,7 @@ import cn.com.mobnote.golukmobile.msg.MessageBadger;
 import cn.com.mobnote.golukmobile.msg.MsgCenterCounterRequest;
 import cn.com.mobnote.golukmobile.msg.bean.MessageCounterBean;
 import cn.com.mobnote.golukmobile.newest.WonderfulSelectedListView;
+import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
@@ -310,7 +311,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		b.putString("key", "Album");
 		LinearLayout album = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_album, null);
 		mTabHost.addTab(mTabHost.newTabSpec("Album").setIndicator(album),
-				Fragment3.class, b);
+				FragmentAlbum.class, b);
 
 		b = new Bundle();
 		b.putString("key", "Mine");

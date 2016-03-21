@@ -29,7 +29,7 @@ import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
 import cn.com.mobnote.golukmobile.fileinfo.VideoFileInfoBean;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.live.UserInfo;
-import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
+import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
 import cn.com.mobnote.golukmobile.promotion.PromotionItem;
 import cn.com.mobnote.golukmobile.promotion.PromotionListRequest;
 import cn.com.mobnote.golukmobile.promotion.PromotionModel;
@@ -137,7 +137,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			mFilePath = savedInstanceState.getString("cn.com.mobnote.video.path");
 			mCurrentVideoType = savedInstanceState.getInt("type", 2);
 			mPromotionSelectItem = (PromotionSelectItem) savedInstanceState
-					.getSerializable(PhotoAlbumActivity.ACTIVITY_INFO);
+					.getSerializable(FragmentAlbum.ACTIVITY_INFO);
 		}
 
 		// 获得GolukApplication对象
@@ -180,14 +180,14 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		Intent intent = getIntent();
 		mFilePath = intent.getStringExtra("cn.com.mobnote.video.path");
 		mCurrentVideoType = intent.getIntExtra("type", 2);
-		mPromotionSelectItem = (PromotionSelectItem) intent.getSerializableExtra(PhotoAlbumActivity.ACTIVITY_INFO);
+		mPromotionSelectItem = (PromotionSelectItem) intent.getSerializableExtra(FragmentAlbum.ACTIVITY_INFO);
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		// TODO Auto-generated method stub
 		if (mPromotionSelectItem != null) {
-			outState.putSerializable(PhotoAlbumActivity.ACTIVITY_INFO, mPromotionSelectItem);
+			outState.putSerializable(FragmentAlbum.ACTIVITY_INFO, mPromotionSelectItem);
 		}
 		outState.putString("cn.com.mobnote.video.path", mFilePath);
 		outState.putInt("type", mCurrentVideoType);
