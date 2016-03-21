@@ -113,9 +113,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public GolukApplication mApp = null;
 
 	/** 更多按钮 */
-	private Button mMoreBtn = null;
+//	private Button mMoreBtn = null;
 	/** 视频广场按钮 */
-	private Button msquareBtn = null;
+//	private Button msquareBtn = null;
 	/** wifi列表manage */
 	private WifiConnectManager mWac = null;
 
@@ -123,11 +123,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public SharedPreferences mPreferencesAuto;
 	public boolean isFirstLogin;
 
-	private LinearLayout mRootLayout = null;
+//	private LinearLayout mRootLayout = null;
 
-	private View videoSquareLayout = null;
+//	private View videoSquareLayout = null;
 
-	private View userInfoLayout = null;
+//	private View userInfoLayout = null;
 
 	/** 未连接 */
 	public static final int WIFI_STATE_FAILED = 0;
@@ -139,7 +139,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public CustomLoadingDialog mCustomProgressDialog;
 	public String shareVideoId;
 	/** 链接行车记录仪 */
-	private ImageButton indexCarrecoderBtn = null;
+//	private ImageButton indexCarrecoderBtn = null;
 	/** 连接ipc时的动画 */
 	Animation anim = null;
 
@@ -147,20 +147,20 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private Editor mEditor = null;
 	private long exitTime = 0;
 	/** 首次进入的引导div */
-	private RelativeLayout indexDiv = null;
-	private ImageView mIndexImg = null;
-	private int divIndex = 0;
+//	private RelativeLayout indexDiv = null;
+//	private ImageView mIndexImg = null;
+//	private int divIndex = 0;
 
-	public VideoSquareActivity mVideoSquareActivity;
+//	public VideoSquareActivity mVideoSquareActivity;
 
-	private IndexMoreActivity indexMoreActivity;
+//	private IndexMoreActivity indexMoreActivity;
 
-	private RelativeLayout indexCarrecoderBtnlayout;
+//	private RelativeLayout indexCarrecoderBtnlayout;
 	private WifiManager mWifiManager = null;
 	// Play video sync from camera completion sound
 	private SoundPool mSoundPool;
 	private final static String TAG = "MainActivity";
-	private String mCityCode;
+//	private String mCityCode;
 	private boolean mBannerLoaded;
 	private StartAppBean mStartAppBean = null;
 	/** 把当前连接的设备保存起来，主要是为了兼容以前的连接状态 */
@@ -184,11 +184,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		GolukDebugUtils.e("", "start App ------ MainActivity-----onCreate------------:");
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.index);
 		// 在使用SDK各组件之前初始化context信息，传入ApplicationContext
 		// 注意该方法要再setContentView方法之前实现
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-		mRootLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.index, null);
-		setContentView(mRootLayout);
+//		mRootLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.index, null);
+//		setContentView(mRootLayout);
 		mSoundPool = new SoundPool(1, AudioManager.STREAM_NOTIFICATION, 0);
 		// Register EventBus
 		EventBus.getDefault().register(this);
@@ -215,7 +216,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		// 取得相应的值,如果没有该值,说明还未写入,用true作为默认值
 		boolean isFirstIndex = preferences.getBoolean("isFirstIndex", true);
 		if (isFirstIndex) { // 如果是第一次启动
-			indexDiv.setVisibility(View.VISIBLE);
+//			indexDiv.setVisibility(View.VISIBLE);
 			Editor editor = preferences.edit();
 			editor.putBoolean("isFirstIndex", false);
 			// 提交修改
@@ -276,7 +277,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			}
 		}
 
-		mCityCode = SharedPrefUtil.getCityIDString();
+//		mCityCode = SharedPrefUtil.getCityIDString();
 		dealPush(itStart_have);
 
 		if (NetworkStateReceiver.isNetworkAvailable(this)) {
@@ -352,23 +353,23 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		GolukDebugUtils.i("newintent", "-------str------------" + intent.getStringExtra("showMe"));
-		if (null != intent.getStringExtra("showMe")) {
-			String str = intent.getStringExtra("showMe").toString();
-			if ("showMe".equals(str)) {
-				Drawable user_down = this.getResources().getDrawable(R.drawable.index_user_btn_press);
-				mMoreBtn.setCompoundDrawablesWithIntrinsicBounds(null, user_down, null, null);
-				mMoreBtn.setTextColor(Color.rgb(59, 151, 245));
-
-				Drawable square_up = this.getResources().getDrawable(R.drawable.index_find_btn);
-				msquareBtn.setCompoundDrawablesWithIntrinsicBounds(null, square_up, null, null);
-				msquareBtn.setTextColor(Color.rgb(204, 204, 204));
-
-				userInfoLayout.setVisibility(View.VISIBLE);
-				videoSquareLayout.setVisibility(View.GONE);
-
-				indexMoreActivity.showView();
-			}
-		}
+//		if (null != intent.getStringExtra("showMe")) {
+//			String str = intent.getStringExtra("showMe").toString();
+//			if ("showMe".equals(str)) {
+//				Drawable user_down = this.getResources().getDrawable(R.drawable.index_user_btn_press);
+//				mMoreBtn.setCompoundDrawablesWithIntrinsicBounds(null, user_down, null, null);
+//				mMoreBtn.setTextColor(Color.rgb(59, 151, 245));
+//
+//				Drawable square_up = this.getResources().getDrawable(R.drawable.index_find_btn);
+//				msquareBtn.setCompoundDrawablesWithIntrinsicBounds(null, square_up, null, null);
+//				msquareBtn.setTextColor(Color.rgb(204, 204, 204));
+//
+//				userInfoLayout.setVisibility(View.VISIBLE);
+//				videoSquareLayout.setVisibility(View.GONE);
+//
+//				indexMoreActivity.showView();
+//			}
+//		}
 
 		dealPush(intent);
 	}
@@ -452,33 +453,33 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		mVideoSquareActivity.onActivityResult(requestCode, resultCode, data);
+//		mVideoSquareActivity.onActivityResult(requestCode, resultCode, data);
 	}
 
 	/**
 	 * 页面初始化,获取页面元素,注册事件
 	 */
 	private void init() {
-		indexDiv = (RelativeLayout) findViewById(R.id.index_div);
-		mIndexImg = (ImageView) findViewById(R.id.index_img);
+//		indexDiv = (RelativeLayout) findViewById(R.id.index_div);
+//		mIndexImg = (ImageView) findViewById(R.id.index_img);
 
-		mMoreBtn = (Button) findViewById(R.id.more_btn);
-		msquareBtn = (Button) findViewById(R.id.index_square_btn);
-		videoSquareLayout = findViewById(R.id.video_square_layout);
+//		mMoreBtn = (Button) findViewById(R.id.more_btn);
+//		msquareBtn = (Button) findViewById(R.id.index_square_btn);
+//		videoSquareLayout = findViewById(R.id.video_square_layout);
 
-		indexCarrecoderBtn = (ImageButton) findViewById(R.id.index_carrecoder_btn);
-		this.updateRecoderBtn(mApp.mWiFiStatus);// 设置行测记录仪状态
+//		indexCarrecoderBtn = (ImageButton) findViewById(R.id.index_carrecoder_btn);
+//		this.updateRecoderBtn(mApp.mWiFiStatus);// 设置行测记录仪状态
 
-		indexCarrecoderBtnlayout = (RelativeLayout) findViewById(R.id.index_carrecoder_btn_layout);
-		userInfoLayout = findViewById(R.id.user_info);
+//		indexCarrecoderBtnlayout = (RelativeLayout) findViewById(R.id.index_carrecoder_btn_layout);
+//		userInfoLayout = findViewById(R.id.user_info);
 
-		indexCarrecoderBtn.setOnClickListener(this);
-		indexCarrecoderBtnlayout.setOnClickListener(this);
+//		indexCarrecoderBtn.setOnClickListener(this);
+//		indexCarrecoderBtnlayout.setOnClickListener(this);
 
-		indexDiv.setOnClickListener(this);
-		mMoreBtn.setOnClickListener(this);
-		mMoreBtn.setOnTouchListener(this);
-		msquareBtn.setOnClickListener(this);
+//		indexDiv.setOnClickListener(this);
+//		mMoreBtn.setOnClickListener(this);
+//		mMoreBtn.setOnTouchListener(this);
+//		msquareBtn.setOnClickListener(this);
 
 		boolean hotPointState = SettingUtils.getInstance().getBoolean("HotPointState", false);
 		updateHotPointState(hotPointState);
@@ -517,11 +518,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	private void initVideoSquare() {
-		mVideoSquareActivity = new VideoSquareActivity(mRootLayout, this);
+//		mVideoSquareActivity = new VideoSquareActivity(mRootLayout, this);
 	}
 
 	private void initUserInfo() {
-		indexMoreActivity = new IndexMoreActivity(mRootLayout, this);
+//		indexMoreActivity = new IndexMoreActivity(mRootLayout, this);
 	}
 
 	/**
@@ -603,23 +604,23 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 更新行车记录仪按钮 1:连接中 2：已连接 0：未连接
 	 */
 	public void updateRecoderBtn(int state) {
-		if (this.isFinishing() == false) {
-			AnimationDrawable ad = null;
-			if (state == WIFI_STATE_CONNING && mApp.isBindSucess()) {
-				indexCarrecoderBtn.setBackgroundResource(R.anim.carrecoder_btn);
-				ad = (AnimationDrawable) indexCarrecoderBtn.getBackground();
-				if (ad.isRunning() == false) {
-					ad.setOneShot(false);
-					ad.start();
-				}
-			} else if (state == WIFI_STATE_SUCCESS) {
-				indexCarrecoderBtn.setBackgroundResource(R.drawable.index_video_icon);
-			} else if (state == WIFI_STATE_FAILED) {
-				indexCarrecoderBtn.setBackgroundResource(R.drawable.tb_notconnected);
-			} else {
-				indexCarrecoderBtn.setBackgroundResource(R.drawable.tb_notconnected);
-			}
-		}
+//		if (this.isFinishing() == false) {
+//			AnimationDrawable ad = null;
+//			if (state == WIFI_STATE_CONNING && mApp.isBindSucess()) {
+//				indexCarrecoderBtn.setBackgroundResource(R.anim.carrecoder_btn);
+//				ad = (AnimationDrawable) indexCarrecoderBtn.getBackground();
+//				if (ad.isRunning() == false) {
+//					ad.setOneShot(false);
+//					ad.start();
+//				}
+//			} else if (state == WIFI_STATE_SUCCESS) {
+//				indexCarrecoderBtn.setBackgroundResource(R.drawable.index_video_icon);
+//			} else if (state == WIFI_STATE_FAILED) {
+//				indexCarrecoderBtn.setBackgroundResource(R.drawable.tb_notconnected);
+//			} else {
+//				indexCarrecoderBtn.setBackgroundResource(R.drawable.tb_notconnected);
+//			}
+//		}
 	}
 
 	private void startWifi() {
@@ -745,75 +746,81 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mWac.createWifiAP(wifiName, pwd, ipcssid, ipcmac);
 	}
 
-	public void onEventMainThread(EventLocationFinish event) {
-		if (null == event) {
-			return;
-		}
-
-		switch (event.getOpCode()) {
-		case EventConfig.LOCATION_FINISH:
-			Log.d(TAG, "Location Finished: " + event.getCityCode());
-			// Start load banner
-			VideoSquareAdapter videoSquareAdapter = mVideoSquareActivity.getVideoSquareAdapter();
-			if (null == videoSquareAdapter) {
-				return;
-			}
-			WonderfulSelectedListView listView = videoSquareAdapter.getWonderfulSelectedListView();
-			if (null == listView) {
-				return;
-			}
-
-			if (!mBannerLoaded) {
-				Log.d(TAG, "Activity first start, fill everything anyway");
-				if (event.getCityCode().equals("-1")) {
-					if (null == mCityCode || mCityCode.trim().equals("")) {
-						mCityCode = event.getCityCode();
-						SharedPrefUtil.setCityIDString(mCityCode);
-						listView.loadBannerData(mCityCode);
-					} else {
-						listView.loadBannerData(mCityCode);
-					}
-				} else {
-					mCityCode = event.getCityCode();
-					SharedPrefUtil.setCityIDString(mCityCode);
-					listView.loadBannerData(mCityCode);
-				}
-				mBannerLoaded = true;
-			}
-
-			if (null == mCityCode || mCityCode.trim().equals("")) {
-				Log.d(TAG, "First located, fill everything anyway");
-				mCityCode = event.getCityCode();
-				SharedPrefUtil.setCityIDString(mCityCode);
-				listView.loadBannerData(mCityCode);
-			} else {
-				// In whole nation
-				if ("-1".equals(mCityCode)) {
-					if (event.getCityCode().equals("-1")) {
-						// do nothing
-					} else {
-						mCityCode = event.getCityCode();
-						SharedPrefUtil.setCityIDString(mCityCode);
-						listView.loadBannerData(mCityCode);
-					}
-				} else { // In city
-					if (event.getCityCode().equals("-1")) {
-						// do nothing
-					} else {
-						if (!mCityCode.equals(event.getCityCode())) {
-							mCityCode = event.getCityCode();
-							SharedPrefUtil.setCityIDString(mCityCode);
-							listView.loadBannerData(mCityCode);
-						}
-					}
-				}
-			}
-
-			break;
-		default:
-			break;
-		}
-	}
+//	public void onEventMainThread(EventLocationFinish event) {
+//		if (null == event) {
+//			return;
+//		}
+//
+//		switch (event.getOpCode()) {
+//		case EventConfig.LOCATION_FINISH:
+//			Log.d(TAG, "Location Finished: " + event.getCityCode());
+//			// Start load banner
+//			VideoSquareAdapter videoSquareAdapter = mVideoSquareActivity.getVideoSquareAdapter();
+//			FragmentDiscover fragmentDiscover = (FragmentDiscover)getSupportFragmentManager().findFragmentByTag("Discover");
+//			FragmentDiscover fragmentDiscover = (FragmentDiscover)getSupportFragmentManager()
+//					.findFragmentByTag("tabsfragment")
+//					.getChildFragmentManager().findFragmentByTag("Discover");
+//			VideoSquareAdapter videoSquareAdapter = fragmentDiscover.getVideoSquareAdapter();
+//			if (null == videoSquareAdapter) {
+//				return;
+//			}
+//			WonderfulSelectedListView listView = videoSquareAdapter.getWonderfulSelectedListView();
+//
+//			if (null == listView) {
+//				return;
+//			}
+//
+//			if (!mBannerLoaded) {
+//				Log.d(TAG, "Activity first start, fill everything anyway");
+//				if (event.getCityCode().equals("-1")) {
+//					if (null == mCityCode || mCityCode.trim().equals("")) {
+//						mCityCode = event.getCityCode();
+//						SharedPrefUtil.setCityIDString(mCityCode);
+//						listView.loadBannerData(mCityCode);
+//					} else {
+//						listView.loadBannerData(mCityCode);
+//					}
+//				} else {
+//					mCityCode = event.getCityCode();
+//					SharedPrefUtil.setCityIDString(mCityCode);
+//					listView.loadBannerData(mCityCode);
+//				}
+//				mBannerLoaded = true;
+//			}
+//
+//			if (null == mCityCode || mCityCode.trim().equals("")) {
+//				Log.d(TAG, "First located, fill everything anyway");
+//				mCityCode = event.getCityCode();
+//				SharedPrefUtil.setCityIDString(mCityCode);
+//				listView.loadBannerData(mCityCode);
+//			} else {
+//				// In whole nation
+//				if ("-1".equals(mCityCode)) {
+//					if (event.getCityCode().equals("-1")) {
+//						// do nothing
+//					} else {
+//						mCityCode = event.getCityCode();
+//						SharedPrefUtil.setCityIDString(mCityCode);
+//						listView.loadBannerData(mCityCode);
+//					}
+//				} else { // In city
+//					if (event.getCityCode().equals("-1")) {
+//						// do nothing
+//					} else {
+//						if (!mCityCode.equals(event.getCityCode())) {
+//							mCityCode = event.getCityCode();
+//							SharedPrefUtil.setCityIDString(mCityCode);
+//							listView.loadBannerData(mCityCode);
+//						}
+//					}
+//				}
+//			}
+//
+//			break;
+//		default:
+//			break;
+//		}
+//	}
 
 	public void onEventMainThread(EventMapQuery event) {
 		if (null == event) {
@@ -886,9 +893,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		mApp.setBinding(false);
 
-		if (null != mVideoSquareActivity) {
-			mVideoSquareActivity.onResume();
-		}
+//		if (null != mVideoSquareActivity) {
+//			mVideoSquareActivity.onResume();
+//		}
 
 		GetBaiduAddress.getInstance().setCallBackListener(this);
 
@@ -904,7 +911,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		this.updateRecoderBtn(mApp.mWiFiStatus);
 
-		indexMoreActivity.showView();
+//		indexMoreActivity.showView();
 		super.onResume();
 	}
 
@@ -921,9 +928,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if (null != mVideoSquareActivity) {
-			mVideoSquareActivity.onPause();
-		}
+//		if (null != mVideoSquareActivity) {
+//			mVideoSquareActivity.onPause();
+//		}
 	}
 
 	@Override
@@ -989,81 +996,81 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	public boolean onTouch(View v, MotionEvent event) {
 
 		int action = event.getAction();
-		switch (v.getId()) {
-
-		case R.id.more_btn:
-			switch (action) {
-			case MotionEvent.ACTION_DOWN:
-				Drawable user_down = this.getResources().getDrawable(R.drawable.index_user_btn_press);
-				mMoreBtn.setCompoundDrawablesWithIntrinsicBounds(null, user_down, null, null);
-				mMoreBtn.setTextColor(Color.rgb(11, 89, 190));
-				break;
-			case MotionEvent.ACTION_UP:
-				Drawable user_up = this.getResources().getDrawable(R.drawable.index_user_btn);
-				mMoreBtn.setCompoundDrawablesWithIntrinsicBounds(null, user_up, null, null);
-				mMoreBtn.setTextColor(Color.rgb(204, 204, 204));
-				break;
-			}
-			break;
-		}
+//		switch (v.getId()) {
+//
+//		case R.id.more_btn:
+//			switch (action) {
+//			case MotionEvent.ACTION_DOWN:
+//				Drawable user_down = this.getResources().getDrawable(R.drawable.index_user_btn_press);
+//				mMoreBtn.setCompoundDrawablesWithIntrinsicBounds(null, user_down, null, null);
+//				mMoreBtn.setTextColor(Color.rgb(11, 89, 190));
+//				break;
+//			case MotionEvent.ACTION_UP:
+//				Drawable user_up = this.getResources().getDrawable(R.drawable.index_user_btn);
+//				mMoreBtn.setCompoundDrawablesWithIntrinsicBounds(null, user_up, null, null);
+//				mMoreBtn.setTextColor(Color.rgb(204, 204, 204));
+//				break;
+//			}
+//			break;
+//		}
 		return false;
 	}
 
 	@Override
 	public void onClick(View v) {
-		int id = v.getId();
-		switch (id) {
-		case R.id.more_btn:
-			// 更多页面
-			Drawable user_down = this.getResources().getDrawable(R.drawable.index_user_btn_press);
-			mMoreBtn.setCompoundDrawablesWithIntrinsicBounds(null, user_down, null, null);
-			mMoreBtn.setTextColor(Color.rgb(11, 89, 190));
-
-			Drawable square_up = this.getResources().getDrawable(R.drawable.index_find_btn);
-			msquareBtn.setCompoundDrawablesWithIntrinsicBounds(null, square_up, null, null);
-			msquareBtn.setTextColor(Color.rgb(204, 204, 204));
-
-			userInfoLayout.setVisibility(View.VISIBLE);
-			videoSquareLayout.setVisibility(View.GONE);
-
-			indexMoreActivity.showView();
-			break;
-		case R.id.index_square_btn:
-			// 视频广场
-			Drawable square_down = this.getResources().getDrawable(R.drawable.index_find_btn_press);
-			msquareBtn.setCompoundDrawablesWithIntrinsicBounds(null, square_down, null, null);
-			msquareBtn.setTextColor(Color.rgb(11, 89, 190));
-
-			Drawable user_up = this.getResources().getDrawable(R.drawable.index_user_btn);
-			mMoreBtn.setCompoundDrawablesWithIntrinsicBounds(null, user_up, null, null);
-			mMoreBtn.setTextColor(Color.rgb(204, 204, 204));
-
-			userInfoLayout.setVisibility(View.GONE);
-			videoSquareLayout.setVisibility(View.VISIBLE);
-			setBelowItem(R.id.index_square_btn);
-			break;
-		case R.id.index_carrecoder_btn_layout:
-		case R.id.index_carrecoder_btn:
-			checkWiFiStatus();
-			break;
-		case R.id.index_div:
-			if (divIndex == 0) {
-				GolukUtils.freeBitmap(mIndexImg.getBackground());
-				indexDiv.setVisibility(View.GONE);
-			}
-			break;
-		}
+//		int id = v.getId();
+//		switch (id) {
+//		case R.id.more_btn:
+//			// 更多页面
+//			Drawable user_down = this.getResources().getDrawable(R.drawable.index_user_btn_press);
+//			mMoreBtn.setCompoundDrawablesWithIntrinsicBounds(null, user_down, null, null);
+//			mMoreBtn.setTextColor(Color.rgb(11, 89, 190));
+//
+//			Drawable square_up = this.getResources().getDrawable(R.drawable.index_find_btn);
+//			msquareBtn.setCompoundDrawablesWithIntrinsicBounds(null, square_up, null, null);
+//			msquareBtn.setTextColor(Color.rgb(204, 204, 204));
+//
+//			userInfoLayout.setVisibility(View.VISIBLE);
+//			videoSquareLayout.setVisibility(View.GONE);
+//
+//			indexMoreActivity.showView();
+//			break;
+//		case R.id.index_square_btn:
+//			// 视频广场
+//			Drawable square_down = this.getResources().getDrawable(R.drawable.index_find_btn_press);
+//			msquareBtn.setCompoundDrawablesWithIntrinsicBounds(null, square_down, null, null);
+//			msquareBtn.setTextColor(Color.rgb(11, 89, 190));
+//
+//			Drawable user_up = this.getResources().getDrawable(R.drawable.index_user_btn);
+//			mMoreBtn.setCompoundDrawablesWithIntrinsicBounds(null, user_up, null, null);
+//			mMoreBtn.setTextColor(Color.rgb(204, 204, 204));
+//
+//			userInfoLayout.setVisibility(View.GONE);
+//			videoSquareLayout.setVisibility(View.VISIBLE);
+//			setBelowItem(R.id.index_square_btn);
+//			break;
+//		case R.id.index_carrecoder_btn_layout:
+//		case R.id.index_carrecoder_btn:
+//			checkWiFiStatus();
+//			break;
+//		case R.id.index_div:
+//			if (divIndex == 0) {
+//				GolukUtils.freeBitmap(mIndexImg.getBackground());
+//				indexDiv.setVisibility(View.GONE);
+//			}
+//			break;
+//		}
 	}
 
 	public void setBelowItem(int id) {
-		Drawable drawable;
-		if (id == R.id.index_square_btn) {
-			videoSquareLayout.setVisibility(View.VISIBLE);
-			mVideoSquareActivity.onResume();
-			drawable = this.getResources().getDrawable(R.drawable.index_find_btn_press);
-			msquareBtn.setTextColor(Color.rgb(11, 89, 180));
-			msquareBtn.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
-		}
+//		Drawable drawable;
+//		if (id == R.id.index_square_btn) {
+//			videoSquareLayout.setVisibility(View.VISIBLE);
+//			mVideoSquareActivity.onResume();
+//			drawable = this.getResources().getDrawable(R.drawable.index_find_btn_press);
+//			msquareBtn.setTextColor(Color.rgb(11, 89, 180));
+//			msquareBtn.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
+//		}
 	}
 
 	/**
@@ -1294,33 +1301,33 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	private void setMessageTipCount(int total) {
-		ImageView mainMsgTip = (ImageView) findViewById(R.id.iv_main_message_tip);
-		if (total > 0) {
-			mainMsgTip.setVisibility(View.VISIBLE);
-		} else {
-			mainMsgTip.setVisibility(View.GONE);
-		}
-
-		// Also set user page message count tip
-		if (null == indexMoreActivity || indexMoreActivity.mRootLayout == null) {
-			GolukDebugUtils.d(TAG, "index more has been finished");
-			return;
-		}
-
-		TextView userMsgCounterTV = (TextView) indexMoreActivity.mRootLayout.findViewById(R.id.tv_my_message_tip);
-		String strTotal = null;
-		if (total > 99) {
-			strTotal = "99+";
-			userMsgCounterTV.setVisibility(View.VISIBLE);
-		} else if (total <= 0) {
-			strTotal = "0";
-			userMsgCounterTV.setVisibility(View.GONE);
-		} else {
-			userMsgCounterTV.setVisibility(View.VISIBLE);
-			strTotal = String.valueOf(total);
-		}
-
-		userMsgCounterTV.setText(strTotal);
+//		ImageView mainMsgTip = (ImageView) findViewById(R.id.iv_main_message_tip);
+//		if (total > 0) {
+//			mainMsgTip.setVisibility(View.VISIBLE);
+//		} else {
+//			mainMsgTip.setVisibility(View.GONE);
+//		}
+//
+//		// Also set user page message count tip
+//		if (null == indexMoreActivity || indexMoreActivity.mRootLayout == null) {
+//			GolukDebugUtils.d(TAG, "index more has been finished");
+//			return;
+//		}
+//
+//		TextView userMsgCounterTV = (TextView) indexMoreActivity.mRootLayout.findViewById(R.id.tv_my_message_tip);
+//		String strTotal = null;
+//		if (total > 99) {
+//			strTotal = "99+";
+//			userMsgCounterTV.setVisibility(View.VISIBLE);
+//		} else if (total <= 0) {
+//			strTotal = "0";
+//			userMsgCounterTV.setVisibility(View.GONE);
+//		} else {
+//			userMsgCounterTV.setVisibility(View.VISIBLE);
+//			strTotal = String.valueOf(total);
+//		}
+//
+//		userMsgCounterTV.setText(strTotal);
 	}
 
 	@Override

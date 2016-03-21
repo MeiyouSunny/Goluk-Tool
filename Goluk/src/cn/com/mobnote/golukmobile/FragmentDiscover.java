@@ -1,15 +1,21 @@
 package cn.com.mobnote.golukmobile;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.newest.WonderfulSelectedListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareAdapter;
+import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class FragmentDiscover extends Fragment implements OnClickListener {
+	private static final String TAG = "FragmentDiscover";
 
 	public FragmentDiscover() {
 
@@ -29,9 +36,11 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		EventBus.getDefault().register(this);
 	}
 
 	View mSquareRootView;
+	private String mCityCode;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,6 +55,8 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 		textColorSelect = getActivity().getResources().getColor(R.color.textcolor_select);
 		textcolorQx = getActivity().getResources().getColor(R.color.textcolor_qx);
 		init();
+		mBannerLoaded = false;
+		mCityCode = SharedPrefUtil.getCityIDString();
 		return rootView;
 	}
 
@@ -201,6 +212,84 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 		}
 	}
 
+	private boolean mBannerLoaded;
+
+	public void onEventMainThread(EventLocationFinish event) {
+		if (null == event) {
+			return;
+		}
+
+		switch (event.getOpCode()) {
+		case EventConfig.LOCATION_FINISH:
+			Log.d(TAG, "Location Finished: " + event.getCityCode());
+			// Start load banner
+//			VideoSquareAdapter videoSquareAdapter = mVideoSquareActivity.getVideoSquareAdapter();
+//			FragmentDiscover fragmentDiscover = (FragmentDiscover)getSupportFragmentManager().findFragmentByTag("Discover");
+//			FragmentDiscover fragmentDiscover = (FragmentDiscover)getSupportFragmentManager()
+//					.findFragmentByTag("tabsfragment")
+//					.getChildFragmentManager().findFragmentByTag("Discover");
+			VideoSquareAdapter videoSquareAdapter = getVideoSquareAdapter();
+			if (null == videoSquareAdapter) {
+				return;
+			}
+			WonderfulSelectedListView listView = videoSquareAdapter.getWonderfulSelectedListView();
+
+			if (null == listView) {
+				return;
+			}
+
+			if (!mBannerLoaded) {
+				Log.d(TAG, "Activity first start, fill everything anyway");
+				if (event.getCityCode().equals("-1")) {
+					if (null == mCityCode || mCityCode.trim().equals("")) {
+						mCityCode = event.getCityCode();
+						SharedPrefUtil.setCityIDString(mCityCode);
+						listView.loadBannerData(mCityCode);
+					} else {
+						listView.loadBannerData(mCityCode);
+					}
+				} else {
+					mCityCode = event.getCityCode();
+					SharedPrefUtil.setCityIDString(mCityCode);
+					listView.loadBannerData(mCityCode);
+				}
+				mBannerLoaded = true;
+			}
+
+			if (null == mCityCode || mCityCode.trim().equals("")) {
+				Log.d(TAG, "First located, fill everything anyway");
+				mCityCode = event.getCityCode();
+				SharedPrefUtil.setCityIDString(mCityCode);
+				listView.loadBannerData(mCityCode);
+			} else {
+				// In whole nation
+				if ("-1".equals(mCityCode)) {
+					if (event.getCityCode().equals("-1")) {
+						// do nothing
+					} else {
+						mCityCode = event.getCityCode();
+						SharedPrefUtil.setCityIDString(mCityCode);
+						listView.loadBannerData(mCityCode);
+					}
+				} else { // In city
+					if (event.getCityCode().equals("-1")) {
+						// do nothing
+					} else {
+						if (!mCityCode.equals(event.getCityCode())) {
+							mCityCode = event.getCityCode();
+							SharedPrefUtil.setCityIDString(mCityCode);
+							listView.loadBannerData(mCityCode);
+						}
+					}
+				}
+			}
+
+			break;
+		default:
+			break;
+		}
+	}
+
 //	@Override
 //	public void onResume() {
 //		if (null != mVideoSquareAdapter) {
@@ -219,13 +308,17 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 //			mVideoSquareAdapter.onStop();
 //		}
 //	}
-//
-//	public void onDestroy() {
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
 //		if (null != mVideoSquareAdapter) {
 //			mVideoSquareAdapter.onDestroy();
 //		}
-//	}
-//
+		mBannerLoaded = false;
+		EventBus.getDefault().register(this);
+	}
+
 	public void exit() {
 		if (null != mVideoSquareAdapter) {
 			mVideoSquareAdapter.onDestroy();
