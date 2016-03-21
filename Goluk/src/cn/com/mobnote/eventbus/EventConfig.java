@@ -57,4 +57,8 @@ public class EventConfig {
 	public final static int MESSAGE_UPDATE = 10001;
 	/** Update request */
 	public final static int MESSAGE_REQUEST = 10002;
+	/**告诉activity  remove handler消息**/
+	public final static int PHOTO_ALBUM_REMOVE_HANLDER = 1003;
+	/**告诉activity  delayed handler消息**/
+	public final static int PHOTO_ALBUM_DELAYED_HANLDER = 1004;
 }

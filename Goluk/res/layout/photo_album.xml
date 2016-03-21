@@ -1,59 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff" >
-
-    <!-- 标题栏 -->
+    android:background="#ffffff"
+    android:orientation="vertical" >
 
     <RelativeLayout
-        android:id="@+id/title_layout"
+        android:id="@+id/ll_tabs"
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:background="@color/photoalbum_title_bg_color" >
+        android:background="#242629">
 
-        <ImageButton
-            android:id="@+id/mBackBtn"
-            android:layout_width="36.66dp"
-            android:layout_height="36.66dp"
-            android:layout_centerVertical="true"
-            android:background="@drawable/cross_screen_arrow_icon1"
-            android:contentDescription="@string/def" />
-
-        <TextView
-            android:id="@+id/mTitleName"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/tab_type"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            android:text="@string/photoalbum_default_title"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:orientation="horizontal" >
 
-        <!-- 编辑按钮 -->
+            <TextView
+                android:id="@+id/tab_local"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="本地"
+                android:textSize="17sp" />
 
-        <Button
-            android:id="@+id/mEditBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            <TextView
+                android:id="@+id/tab_wonderful"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="精彩"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/tab_urgent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="紧急"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/tab_loop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="循环"
+                android:textSize="17sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/edit_btn"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:background="#00000000"
-            android:paddingLeft="20dp"
-            android:paddingRight="10dp"
-            android:text="@string/videolist_edit"
-            android:textColor="#0080ff"
-            android:textSize="14sp" />
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/adas_index_background"/>
     </RelativeLayout>
 
-    <!-- 底部布局 -->
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </android.support.v4.view.ViewPager>
 
     <RelativeLayout
         android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
         android:background="#ffffff" >
 
         <TextView
@@ -119,18 +140,9 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/mMainLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/bottomLayout"
-        android:layout_below="@+id/title_layout" >
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/mEditLayout"
         android:layout_width="match_parent"
         android:layout_height="42dp"
-        android:layout_alignParentBottom="true"
         android:background="#f8f8f8"
         android:visibility="gone" >
 
@@ -178,4 +190,4 @@
         </LinearLayout>
     </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>

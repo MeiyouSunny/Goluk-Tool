@@ -32,13 +32,17 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 	GolukVideoInfoDbManager mGolukVideoInfoDbManager = GolukVideoInfoDbManager.getInstance();
 	@Override
 	protected String doInBackground(String... arg0) {
-		String[] videoPaths = { "", "loop/", "urgent/", "", "wonderful/" };
+		String[] videoPaths = {"","loop/", "urgent/", "", "wonderful/" };
 //		String[] filePaths = { "", "loop/loop.txt", "urgent/urgent.txt", "", "wonderful/wonderful.txt" };
 //		String file = mFilePath + filePaths[type];
 
 //		List<String> files = FileInfoManagerUtils.getVideoConfigFile(file);
 		
-		List<String> files = FileInfoManagerUtils.getFileNames(mFilePath + videoPaths[type], "(.+?mp4)");
+		List<String> files = new ArrayList<String>();
+		files.addAll(FileInfoManagerUtils.getFileNames(mFilePath + videoPaths[1], "(.+?mp4)"));
+		files.addAll(FileInfoManagerUtils.getFileNames(mFilePath + videoPaths[2], "(.+?mp4)"));
+		files.addAll(FileInfoManagerUtils.getFileNames(mFilePath + videoPaths[4], "(.+?mp4)"));
+		
 		if (null == files || files.size() <= 0) {
 			return null;
 		}
