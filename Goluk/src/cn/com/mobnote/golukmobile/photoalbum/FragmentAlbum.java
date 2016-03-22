@@ -2,6 +2,7 @@ package cn.com.mobnote.golukmobile.photoalbum;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Application;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 
@@ -37,7 +39,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 
 	private ImageView mEditBtn;
 
-	private int mCurrentType = 0;
+	public int mCurrentType = 0;
 
 	// 页面列表
 	private ArrayList<Fragment> fragmentList;
@@ -48,7 +50,6 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-//		setContentView(R.layout.photo_album);
 		View rootView = inflater.inflate(R.layout.photo_album, null);
 		mAlbumRootView = rootView;
 
@@ -64,7 +65,6 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 		fragmentList.add(mWonderfulFragment);
 		fragmentList.add(mUrgentFragment);
 		fragmentList.add(mLoopFragment);
-		
 
 		initView();
 		mViewPager.setAdapter(new MyViewPagerAdapter(getChildFragmentManager()));
@@ -114,15 +114,16 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 		mTabUrgent.setTextColor(this.getResources().getColor(R.color.wonderful_item_nor_color));
 		mTabLoop.setTextColor(this.getResources().getColor(R.color.wonderful_item_nor_color));
 		if (position == 0) {
+			mLocalFragment.loadData(IPCManagerFn.TYPE_SHORTCUT, true);
 			mTabLocal.setTextColor(this.getResources().getColor(R.color.wonderful_item_sel_color));
 		} else if (position == 1) {
-			mWonderfulFragment.loadData(true);
+			mWonderfulFragment.loadData(GolukApplication.getInstance().isIpcLoginSuccess);
 			mTabWonderful.setTextColor(this.getResources().getColor(R.color.wonderful_item_sel_color));
 		} else if (position == 2) {
-			mUrgentFragment.loadData(true);
+			mUrgentFragment.loadData(GolukApplication.getInstance().isIpcLoginSuccess);
 			mTabUrgent.setTextColor(this.getResources().getColor(R.color.wonderful_item_sel_color));
 		} else if (position == 3) {
-			mLoopFragment.loadData(true);
+			mLoopFragment.loadData(GolukApplication.getInstance().isIpcLoginSuccess);
 			mTabLoop.setTextColor(this.getResources().getColor(R.color.wonderful_item_sel_color));
 		}
 	}

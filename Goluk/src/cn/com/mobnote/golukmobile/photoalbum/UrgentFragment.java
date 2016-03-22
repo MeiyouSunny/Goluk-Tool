@@ -53,8 +53,6 @@ private View mWonderfulVideoView;
 	private float screenX = 0;
 	private int screenWidth = 0;
 	
-	private TextView empty = null;
-	
 	private CustomLoadingDialog mCustomProgressDialog = null;
 	
 	private StickyListHeadersListView mStickyListHeadersListView = null;
@@ -88,19 +86,18 @@ private View mWonderfulVideoView;
 	
 	private List<String> mGroupListName = null;
 	
+	private TextView empty = null;
+	
 	//private CloudVideoManager mCloudVideoListView = null;
 	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_URGENT, this);
 		}
 		
-		LayoutInflater inflater = getActivity().getLayoutInflater();
-		mWonderfulVideoView = inflater.inflate(R.layout.wonderful_listview, (ViewGroup)getActivity().findViewById(R.id.viewpager), false);
-//		mFragmentAlbum = (FragmentAlbum) this.getContext();
 		mFragmentAlbum = (FragmentAlbum)getParentFragment();
 		this.mDataList = new ArrayList<VideoInfo>();
 		this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
@@ -108,19 +105,19 @@ private View mWonderfulVideoView;
 		
 //		mCloudVideoListView = new CloudVideoManager(this.getContext());
 		this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-		this.mWonderfulVideoView = LayoutInflater.from(this.getContext()).inflate(R.layout.wonderful_listview, null, false);
+		this.mWonderfulVideoView = inflater.inflate(R.layout.wonderful_listview, null, false);
 		this.density = SoundUtils.getInstance().getDisplayMetrics().density;
 		initView();
 		
+		return mWonderfulVideoView;
 	}
+	
 	
 	private void initView() {
 		empty = (TextView) mWonderfulVideoView.findViewById(R.id.empty);
 		this.mCustomProgressDialog = new CustomLoadingDialog(this.getContext(), null);
-		mStickyListHeadersListView = (StickyListHeadersListView) mWonderfulVideoView
-				.findViewById(R.id.mStickyListHeadersListView);
+		mStickyListHeadersListView = (StickyListHeadersListView) mWonderfulVideoView.findViewById(R.id.mStickyListHeadersListView);
 		mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(this.getContext(), (FragmentAlbum)getParentFragment(), mStickyListHeadersListView);
-//		this.loadData(false);
 		setListener();
 	}
 
@@ -311,18 +308,6 @@ private View mWonderfulVideoView;
 		}
 	}
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		Log.v("huahua", "fragment1-->onCreateView()");
-		
-		ViewGroup p = (ViewGroup) mWonderfulVideoView.getParent(); 
-        if (p != null) { 
-            p.removeAllViewsInLayout(); 
-        } 
-		
-		return mWonderfulVideoView;
-	}
 	
 	public void loadData(boolean flag) {
 		if (isGetFileListDataing || (mDataList.size() != 0)) {
@@ -333,14 +318,20 @@ private View mWonderfulVideoView;
 			if (!mCustomProgressDialog.isShowing()) {
 				mCustomProgressDialog.show();
 			}
-		}
-
-		isGetFileListDataing = true;
-		boolean isSucess = GolukApplication.getInstance().getIPCControlManager()
-				.queryFileListInfo(IPCManagerFn.TYPE_URGENT, pageCount, 0, timeend);
-		GolukDebugUtils.e("", "YYYYYY=====queryFileListInfo====isSucess=" + isSucess);
-		if (!isSucess) {
-			isGetFileListDataing = false;
+			empty.setVisibility(View.GONE);
+			mStickyListHeadersListView.setVisibility(View.VISIBLE);
+			isGetFileListDataing = true;
+			boolean isSucess = GolukApplication
+					.getInstance()
+					.getIPCControlManager()
+					.queryFileListInfo(IPCManagerFn.TYPE_URGENT, pageCount, 0,timeend);
+			GolukDebugUtils.e("", "YYYYYY=====queryFileListInfo====isSucess="+ isSucess);
+			if (!isSucess) {
+				isGetFileListDataing = false;
+			}
+		}else{
+			empty.setVisibility(View.VISIBLE);
+			mStickyListHeadersListView.setVisibility(View.GONE);
 		}
 
 	}
@@ -484,30 +475,4 @@ private View mWonderfulVideoView;
 
 	}
 	
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-	}
-
 }

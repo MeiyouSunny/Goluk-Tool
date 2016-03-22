@@ -20,12 +20,14 @@ import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.player.VitamioPlayerActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.api.Image;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,6 +35,9 @@ import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
@@ -52,8 +57,6 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 	/** 保存屏幕点击横坐标点 */
 	private float screenX = 0;
 	private int screenWidth = 0;
-
-	private TextView empty = null;
 
 	private CustomLoadingDialog mCustomProgressDialog = null;
 
@@ -87,13 +90,16 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 	private int timeend = 2147483647;
 
 	private List<String> mGroupListName = null;
+	
+	private TextView empty = null;
 
 	// private CloudVideoManager mCloudVideoListView = null;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		Log.v("huahua", "fragment1-->onCreateView()");
+		
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication
 					.getInstance()
@@ -101,10 +107,6 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 					.addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_CIRCULATE, this);
 		}
 
-		LayoutInflater inflater = getActivity().getLayoutInflater();
-		mWonderfulVideoView = inflater.inflate(R.layout.wonderful_listview,
-				(ViewGroup) getActivity().findViewById(R.id.viewpager), false);
-//		mFragmentAlbum = (FragmentAlbum) this.getContext();
 		mFragmentAlbum = (FragmentAlbum)getParentFragment();
 
 		this.mDataList = new ArrayList<VideoInfo>();
@@ -113,24 +115,21 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 
 		// mCloudVideoListView = new CloudVideoManager(this.getContext());
 		this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-		this.mWonderfulVideoView = LayoutInflater.from(this.getContext())
-				.inflate(R.layout.wonderful_listview, null, false);
+		this.mWonderfulVideoView =inflater.inflate(R.layout.wonderful_listview, null, false);
 		this.density = SoundUtils.getInstance().getDisplayMetrics().density;
 		initView();
-
+		
+		return mWonderfulVideoView;
 	}
 
 	private void initView() {
 		empty = (TextView) mWonderfulVideoView.findViewById(R.id.empty);
-		this.mCustomProgressDialog = new CustomLoadingDialog(this.getContext(),
-				null);
-		mStickyListHeadersListView = (StickyListHeadersListView) mWonderfulVideoView
-				.findViewById(R.id.mStickyListHeadersListView);
-		mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(
-				this.getContext(), (FragmentAlbum)getParentFragment(), mStickyListHeadersListView);
-//		this.loadData(false);
+		this.mCustomProgressDialog = new CustomLoadingDialog(this.getContext(),null);
+		mStickyListHeadersListView = (StickyListHeadersListView) mWonderfulVideoView.findViewById(R.id.mStickyListHeadersListView);
+		mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(this.getContext(), (FragmentAlbum)getParentFragment(), mStickyListHeadersListView);
 		setListener();
 	}
+	
 
 	private void setListener() {
 		// 屏蔽某些机型的下拉悬停操作
@@ -206,8 +205,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 			}
 		});
 
-		mStickyListHeadersListView
-				.setOnItemClickListener(new OnItemClickListener() {
+		mStickyListHeadersListView.setOnItemClickListener(new OnItemClickListener() {
 					@Override
 					public void onItemClick(AdapterView<?> arg0, View arg1,
 							int arg2, long arg3) {
@@ -348,18 +346,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 		}
 	}
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		Log.v("huahua", "fragment1-->onCreateView()");
-
-		ViewGroup p = (ViewGroup) mWonderfulVideoView.getParent();
-		if (p != null) {
-			p.removeAllViewsInLayout();
-		}
-
-		return mWonderfulVideoView;
-	}
+	
 
 	public void loadData(boolean flag) {
 		if (isGetFileListDataing || (mDataList.size() != 0)) {
@@ -370,18 +357,20 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 			if (!mCustomProgressDialog.isShowing()) {
 				mCustomProgressDialog.show();
 			}
-		}
-
-		isGetFileListDataing = true;
-		boolean isSucess = GolukApplication
-				.getInstance()
-				.getIPCControlManager()
-				.queryFileListInfo(IPCManagerFn.TYPE_CIRCULATE, pageCount, 0,
-						timeend);
-		GolukDebugUtils.e("", "YYYYYY=====queryFileListInfo====isSucess="
-				+ isSucess);
-		if (!isSucess) {
-			isGetFileListDataing = false;
+			empty.setVisibility(View.GONE);
+			mStickyListHeadersListView.setVisibility(View.VISIBLE);
+			isGetFileListDataing = true;
+			boolean isSucess = GolukApplication
+					.getInstance()
+					.getIPCControlManager()
+					.queryFileListInfo(IPCManagerFn.TYPE_CIRCULATE, pageCount, 0,timeend);
+			GolukDebugUtils.e("", "YYYYYY=====queryFileListInfo====isSucess="+ isSucess);
+			if (!isSucess) {
+				isGetFileListDataing = false;
+			}
+		}else{
+			empty.setVisibility(View.VISIBLE);
+			mStickyListHeadersListView.setVisibility(View.GONE);
 		}
 
 	}
@@ -410,6 +399,9 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 	private void updateData(ArrayList<VideoInfo> fileList) {
 		addFooterView();
 		if (mDataList.size() == 0) {
+			View empty = PhotoAlbumUtile.getInstall().getEmptyView(getActivity(), 3);
+			((ViewGroup)mStickyListHeadersListView.getParent()).addView(empty); 
+			mStickyListHeadersListView.setEmptyView(empty);
 			mStickyListHeadersListView.setAdapter(mCloudWonderfulVideoAdapter);
 		}
 		mDataList.addAll(fileList);
@@ -434,6 +426,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 			mStickyListHeadersListView.removeFooterView(mBottomLoadingView);
 		}
 	}
+	
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
@@ -459,7 +452,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 						int type = IpcDataParser.parseVideoFileType(fileList
 								.get(0).filename);
 						if (type != IPCManagerFn.TYPE_CIRCULATE) {
-							checkListState();
+							//checkListState();
 							return;
 						}
 
@@ -480,10 +473,9 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 									+ param1);
 					// 命令发送失败
 					this.removeFooterView();
-					GolukUtils.showToast(this.getContext(), this.getContext()
-							.getString(R.string.str_inquiry_fail));
+					GolukUtils.showToast(this.getContext(), this.getContext().getString(R.string.str_inquiry_fail));
 				}
-				checkListState();
+				//checkListState();
 			}
 			break;
 		// IPC下载结果应答
@@ -536,31 +528,6 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 			break;
 		}
 
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
 	}
 
 }

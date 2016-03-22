@@ -1,4 +1,5 @@
 package cn.com.mobnote.golukmobile.photoalbum;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,188 +40,153 @@ import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class WonderfulFragment extends Fragment implements IPCManagerFn{
-	
-	
+public class WonderfulFragment extends Fragment implements IPCManagerFn {
+
 	private View mWonderfulVideoView;
-	
+
 	/** 列表数据加载中标识 */
 	private boolean isGetFileListDataing = false;
-	
+
 	private List<VideoInfo> mDataList = null;
 	private List<DoubleVideoInfo> mDoubleDataList = null;
-	
+
 	private float density = 1;
-	
+
 	/** 保存屏幕点击横坐标点 */
 	private float screenX = 0;
 	private int screenWidth = 0;
-	
-	private TextView empty = null;
-	
+
 	private CustomLoadingDialog mCustomProgressDialog = null;
-	
+
 	private StickyListHeadersListView mStickyListHeadersListView = null;
 	private CloudWonderfulVideoAdapter mCloudWonderfulVideoAdapter = null;
-	
+
 	/** 保存列表一个显示项索引 */
 	private int firstVisible;
 	/** 保存列表显示item个数 */
 	private int visibleCount;
-	
+
 	/** 判断服务端是否还有数据 */
 	private boolean isHasData = true;
-	
+
 	/** 数据分页个数 */
 	private final int pageCount = 40;
-	
+
 	/** 列表最后的时间戳 */
 	private int lastTime = 0;
-	
+
 	/** 列表添加页脚标识 */
 	private boolean addFooter = false;
-	
+
 	private FragmentAlbum mFragmentAlbum;
-	
+
 	private boolean isShowPlayer = false;
-	
+
 	/** 添加列表底部加载中布局 */
 	private RelativeLayout mBottomLoadingView = null;
-	
+
 	private int timeend = 2147483647;
-	
+
 	private List<String> mGroupListName = null;
 	
-	private static final String FRAGMENT_INDEX = "fragment_index";
-	
-	 private int mCurIndex = -1;
-	 
-	 /** 标志位，标志已经初始化完成 */
-	 private boolean isPrepared;
-	 /** 是否已被加载过一次，第二次就不再去请求数据了 */
-	 private boolean mHasLoadedOnce;
-	
-	 
-	 /** Fragment当前状态是否可见 */
-	 protected boolean isVisible;
-	 
-	// private static int mFramentType;
-	
-	/**
-     * 创建新实例
-     * 
-     * @param index
-     * @return
-     */
-    public static WonderfulFragment newInstance(int index,int type) {
-        Bundle bundle = new Bundle();
-        bundle.putInt(FRAGMENT_INDEX, index);
-        WonderfulFragment fragment = new WonderfulFragment();
-        fragment.setArguments(bundle);
-        return fragment;
-    }
-	
+	private TextView empty = null;
+
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		LayoutInflater inflater = getActivity().getLayoutInflater();
-		
-		if(mWonderfulVideoView == null) {
-			mWonderfulVideoView = inflater.inflate(R.layout.wonderful_listview, (ViewGroup)getActivity().findViewById(R.id.viewpager), false);
-        }
-		
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+
+		if (mWonderfulVideoView == null) {
+			mWonderfulVideoView = inflater.inflate(R.layout.wonderful_listview,(ViewGroup) getActivity().findViewById(R.id.viewpager),false);
+		}
+
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT, this);
 		}
 
-//		mFragmentAlbum = (FragmentAlbum) this.getContext();
-		mFragmentAlbum = (FragmentAlbum)getParentFragment();
+		mFragmentAlbum = (FragmentAlbum) getParentFragment();
 		this.mDataList = new ArrayList<VideoInfo>();
 		this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
 		this.mGroupListName = new ArrayList<String>();
-		
-//		mCloudVideoListView = new CloudVideoManager(this.getContext());
+
+		// mCloudVideoListView = new CloudVideoManager(this.getContext());
 		this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-		this.mWonderfulVideoView = LayoutInflater.from(this.getContext()).inflate(R.layout.wonderful_listview, null, false);
+		this.mWonderfulVideoView = inflater.inflate(R.layout.wonderful_listview, null, false);
 		this.density = SoundUtils.getInstance().getDisplayMetrics().density;
 		initView();
-		
+
+		return mWonderfulVideoView;
 	}
-	
-//	@Override
-//	public void setUserVisibleHint(boolean isVisibleToUser) {
-//	        super.setUserVisibleHint(isVisibleToUser);
-//	         
-//	        if(getUserVisibleHint()) {
-//	            isVisible = true;
-//	            onVisible();
-//	        } else {
-//	            isVisible = false;
-//	            onInvisible();
-//	        }
-//	 }
-	
-	 
-//    /**
-//     * 可见
-//     */
-//    protected void onVisible() {
-//        lazyLoad();     
-//    }
-//    
-//    /**
-//     * 不可见
-//     */
-//    protected void onInvisible() {
-//         
-//    }
-//	
-//    protected void lazyLoad() {
-//        if (!isPrepared || !isVisible || mHasLoadedOnce) {
-//            return;
-//        }
-//      
-//        new AsyncTask<Void,Boolean,String>() {
-// 
-//            @Override
-//            protected void onPreExecute() {
-//                super.onPreExecute();
-//                //显示加载进度对话框
-//               // UIHelper.showDialogForLoading(getActivity(), "正在加载...", true);
-//            }
-// 
-//            @Override
-//            protected Boolean doInBackground(Void... params) {
-//                try {
-//                    Thread.sleep(2000);
-//                    //在这里添加调用接口获取数据的代码
-//                    //doSomething()
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                return true;
-//            }
-// 
-//            @Override
-//            protected void onPostExecute(Boolean isSuccess) {
-//                if (isSuccess) {
-//                    // 加载成功
-//                    mHasLoadedOnce = true;
-//                } else {
-//                    // 加载失败
-//                }
-//            }
-//        }.execute();
-//    }
- 
-	
+
+	// @Override
+	// public void setUserVisibleHint(boolean isVisibleToUser) {
+	// super.setUserVisibleHint(isVisibleToUser);
+	//
+	// if(getUserVisibleHint()) {
+	// isVisible = true;
+	// onVisible();
+	// } else {
+	// isVisible = false;
+	// onInvisible();
+	// }
+	// }
+
+	// /**
+	// * 可见
+	// */
+	// protected void onVisible() {
+	// lazyLoad();
+	// }
+	//
+	// /**
+	// * 不可见
+	// */
+	// protected void onInvisible() {
+	//
+	// }
+	//
+	// protected void lazyLoad() {
+	// if (!isPrepared || !isVisible || mHasLoadedOnce) {
+	// return;
+	// }
+	//
+	// new AsyncTask<Void,Boolean,String>() {
+	//
+	// @Override
+	// protected void onPreExecute() {
+	// super.onPreExecute();
+	// //显示加载进度对话框
+	// // UIHelper.showDialogForLoading(getActivity(), "正在加载...", true);
+	// }
+	//
+	// @Override
+	// protected Boolean doInBackground(Void... params) {
+	// try {
+	// Thread.sleep(2000);
+	// //在这里添加调用接口获取数据的代码
+	// //doSomething()
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// return true;
+	// }
+	//
+	// @Override
+	// protected void onPostExecute(Boolean isSuccess) {
+	// if (isSuccess) {
+	// // 加载成功
+	// mHasLoadedOnce = true;
+	// } else {
+	// // 加载失败
+	// }
+	// }
+	// }.execute();
+	// }
+
 	private void initView() {
 		empty = (TextView) mWonderfulVideoView.findViewById(R.id.empty);
-		this.mCustomProgressDialog = new CustomLoadingDialog(this.getContext(), null);
-		mStickyListHeadersListView = (StickyListHeadersListView) mWonderfulVideoView
-				.findViewById(R.id.mStickyListHeadersListView);
-		mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(this.getContext(), (FragmentAlbum)getParentFragment(), mStickyListHeadersListView);
-		//this.loadData(false);
+		this.mCustomProgressDialog = new CustomLoadingDialog(this.getContext(),null);
+		mStickyListHeadersListView = (StickyListHeadersListView) mWonderfulVideoView.findViewById(R.id.mStickyListHeadersListView);
+		mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(this.getContext(), (FragmentAlbum) getParentFragment(),mStickyListHeadersListView);
 		setListener();
 	}
 
@@ -244,21 +210,30 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 					break;
 				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
 					// mCloudWonderfulVideoAdapter.unlock();
-					GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====11111111111=");
+					GolukDebugUtils.e("","YYYYYY=====SCROLL_STATE_IDLE====11111111111=");
 					if (mStickyListHeadersListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
-						GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====22222222=");
+						GolukDebugUtils.e("","YYYYYY=====SCROLL_STATE_IDLE====22222222=");
 						final int size = mDataList.size();
 						if (size > 0 && isHasData) {
-							GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====33333=isGetFileListDataing="
-									+ isGetFileListDataing + "====mDataList.size()=" + mDataList.size());
+							GolukDebugUtils.e("","YYYYYY=====SCROLL_STATE_IDLE====33333=isGetFileListDataing="
+											+ isGetFileListDataing
+											+ "====mDataList.size()="
+											+ mDataList.size());
 							if (isGetFileListDataing) {
 								return;
 							}
-							GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====44444=");
+							GolukDebugUtils.e("",
+									"YYYYYY=====SCROLL_STATE_IDLE====44444=");
 							isGetFileListDataing = true;
-							boolean isSucess = GolukApplication.getInstance().getIPCControlManager()
-									.queryFileListInfo(IPCManagerFn.TYPE_SHORTCUT, pageCount, 0, lastTime);
-							GolukDebugUtils.e("", "YYYYYY=====queryFileListInfo====isSucess=" + isSucess);
+							boolean isSucess = GolukApplication
+									.getInstance()
+									.getIPCControlManager()
+									.queryFileListInfo(
+											IPCManagerFn.TYPE_SHORTCUT,
+											pageCount, 0, lastTime);
+							GolukDebugUtils.e("",
+									"YYYYYY=====queryFileListInfo====isSucess="
+											+ isSucess);
 							if (!isSucess) {
 								isGetFileListDataing = false;
 							} else {
@@ -279,61 +254,63 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 			}
 
 			@Override
-			public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
+			public void onScroll(AbsListView arg0, int firstVisibleItem,
+					int visibleItemCount, int arg3) {
 				firstVisible = firstVisibleItem;
 				visibleCount = visibleItemCount;
 			}
 		});
 
 		mStickyListHeadersListView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				if (screenX < (30 * density)) {
-					return;
-				}
-
-				if (arg2 < mDoubleDataList.size()) {
-					RelativeLayout mTMLayout1 = (RelativeLayout) arg1.findViewById(R.id.mTMLayout1);
-					RelativeLayout mTMLayout2 = (RelativeLayout) arg1.findViewById(R.id.mTMLayout2);
-					String tag1 = (String) mTMLayout1.getTag();
-					String tag2 = (String) mTMLayout2.getTag();
-					if (mFragmentAlbum.getEditState()) {
-						if ((screenX > 0) && (screenX < (screenWidth / 2))) {
-							selectedVideoItem(tag1, mTMLayout1);
-						} else {
-							selectedVideoItem(tag2, mTMLayout2);
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View arg1,
+							int arg2, long arg3) {
+						if (screenX < (30 * density)) {
+							return;
 						}
-					} else {
-						DoubleVideoInfo d = mDoubleDataList.get(arg2);
-						// 点击播放
-						if ((screenX > 0) && (screenX < (screenWidth / 2))) {
-							// 点击列表左边项,跳转到视频播放页面
-							VideoInfo info1 = d.getVideoInfo1();
-							gotoVideoPlayPage(IPCManagerFn.TYPE_SHORTCUT, info1.videoPath);
-							String filename = d.getVideoInfo1().filename;
-							updateNewState(filename);
 
-							mDoubleDataList.get(arg2).getVideoInfo1().isNew = false;
-							mCloudWonderfulVideoAdapter.notifyDataSetChanged();
-						} else {
-							// 点击列表右边项,跳转到视频播放页面
-							VideoInfo info2 = d.getVideoInfo2();
-							if (null == info2)
-								return;
-							gotoVideoPlayPage(4, info2.videoPath);
-							String filename = info2.filename;
-							updateNewState(filename);
+						if (arg2 < mDoubleDataList.size()) {
+							RelativeLayout mTMLayout1 = (RelativeLayout) arg1.findViewById(R.id.mTMLayout1);
+							RelativeLayout mTMLayout2 = (RelativeLayout) arg1.findViewById(R.id.mTMLayout2);
+							String tag1 = (String) mTMLayout1.getTag();
+							String tag2 = (String) mTMLayout2.getTag();
+							if (mFragmentAlbum.getEditState()) {
+								if ((screenX > 0)&& (screenX < (screenWidth / 2))) {
+									selectedVideoItem(tag1, mTMLayout1);
+								} else {
+									selectedVideoItem(tag2, mTMLayout2);
+								}
+							} else {
+								DoubleVideoInfo d = mDoubleDataList.get(arg2);
+								// 点击播放
+								if ((screenX > 0)&& (screenX < (screenWidth / 2))) {
+									// 点击列表左边项,跳转到视频播放页面
+									VideoInfo info1 = d.getVideoInfo1();
+									gotoVideoPlayPage(IPCManagerFn.TYPE_SHORTCUT,info1.videoPath);
+									String filename = d.getVideoInfo1().filename;
+									updateNewState(filename);
 
-							mDoubleDataList.get(arg2).getVideoInfo2().isNew = false;
-							mCloudWonderfulVideoAdapter.notifyDataSetChanged();
+									mDoubleDataList.get(arg2).getVideoInfo1().isNew = false;
+									mCloudWonderfulVideoAdapter.notifyDataSetChanged();
+								} else {
+									// 点击列表右边项,跳转到视频播放页面
+									VideoInfo info2 = d.getVideoInfo2();
+									if (null == info2)
+										return;
+									gotoVideoPlayPage(4, info2.videoPath);
+									String filename = info2.filename;
+									updateNewState(filename);
+
+									mDoubleDataList.get(arg2).getVideoInfo2().isNew = false;
+									mCloudWonderfulVideoAdapter.notifyDataSetChanged();
+								}
+							}
 						}
 					}
-				}
-			}
-		});
+				});
 
 	}
-	
+
 	private void updateNewState(String filename) {
 		SettingUtils.getInstance().putBoolean("Cloud_" + filename, false);
 		for (int i = 0; i < mDataList.size(); i++) {
@@ -344,7 +321,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 			}
 		}
 	}
-	
+
 	/**
 	 * 跳转到本地视频播放页面
 	 * 
@@ -356,9 +333,9 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 			// if (null == VitamioPlayerActivity.mHandler) {
 			Intent intent = null;
 			if (1 == from) {
-				intent = new Intent(this.getContext(), VitamioPlayerActivity.class);
+				intent = new Intent(this.getContext(),VitamioPlayerActivity.class);
 			} else {
-				intent = new Intent(this.getContext(), VideoPlayerActivity.class);
+				intent = new Intent(this.getContext(),VideoPlayerActivity.class);
 			}
 			intent.putExtra("from", "ipc");
 			intent.putExtra("type", IPCManagerFn.TYPE_SHORTCUT);
@@ -367,7 +344,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 			// }
 		}
 	}
-	
+
 	/**
 	 * 选择视频item
 	 * 
@@ -390,13 +367,14 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 				mFragmentAlbum.updateEditBtnState(false);
 			} else {
 				mFragmentAlbum.updateEditBtnState(true);
-				mFragmentAlbum.updateTitleName(this.getContext().getString(R.string.str_photo_select1) + selectedListData.size()
+				mFragmentAlbum.updateTitleName(this.getContext().getString(
+						R.string.str_photo_select1)
+						+ selectedListData.size()
 						+ this.getContext().getString(R.string.str_photo_select2));
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * 添加加载loading
 	 * 
@@ -405,25 +383,11 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 	private void addFooterView() {
 		if (!addFooter) {
 			addFooter = true;
-			mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this.getContext()).inflate(
-					R.layout.video_square_below_loading, null);
+			mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this.getContext()).inflate(R.layout.video_square_below_loading, null);
 			mStickyListHeadersListView.addFooterView(mBottomLoadingView);
 		}
 	}
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		Log.v("huahua", "fragment1-->onCreateView()");
-		
-		ViewGroup p = (ViewGroup) mWonderfulVideoView.getParent(); 
-        if (p != null) { 
-            p.removeAllViewsInLayout(); 
-        } 
-		
-		return mWonderfulVideoView;
-	}
-	
 	public void loadData(boolean flag) {
 		if (isGetFileListDataing || (mDataList.size() != 0)) {
 			return;
@@ -433,26 +397,35 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 			if (!mCustomProgressDialog.isShowing()) {
 				mCustomProgressDialog.show();
 			}
+			empty.setVisibility(View.GONE);
+			mStickyListHeadersListView.setVisibility(View.VISIBLE);
+			isGetFileListDataing = true;
+			boolean isSucess = GolukApplication
+					.getInstance()
+					.getIPCControlManager()
+					.queryFileListInfo(IPCManagerFn.TYPE_SHORTCUT, pageCount, 0,timeend);
+			GolukDebugUtils.e("", "YYYYYY=====queryFileListInfo====isSucess="+ isSucess);
+			if (!isSucess) {
+				isGetFileListDataing = false;
+			}
+		}else{
+			empty.setVisibility(View.VISIBLE);
+			mStickyListHeadersListView.setVisibility(View.GONE);
 		}
 
-		isGetFileListDataing = true;
-		boolean isSucess = GolukApplication.getInstance().getIPCControlManager()
-				.queryFileListInfo(IPCManagerFn.TYPE_SHORTCUT, pageCount, 0, timeend);
-		GolukDebugUtils.e("", "YYYYYY=====queryFileListInfo====isSucess=" + isSucess);
-		if (!isSucess) {
-			isGetFileListDataing = false;
-		}
+	
 
 	}
-	
+
 	private void updateEditState(boolean isHasData) {
-		/*GolukDebugUtils.e("", "Album------WondowvideoListView------updateEditState" + isHasData);
-		if (null == mCloudVideoListView) {
-			return;
-		}
-		mCloudVideoListView.updateEdit(4, isHasData);*/
+		/*
+		 * GolukDebugUtils.e("",
+		 * "Album------WondowvideoListView------updateEditState" + isHasData);
+		 * if (null == mCloudVideoListView) { return; }
+		 * mCloudVideoListView.updateEdit(4, isHasData);
+		 */
 	}
-	
+
 	private void checkListState() {
 		if (mDataList.size() <= 0) {
 			empty.setVisibility(View.VISIBLE);
@@ -464,7 +437,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 			updateEditState(true);
 		}
 	}
-	
+
 	private void updateData(ArrayList<VideoInfo> fileList) {
 		addFooterView();
 		if (mDataList.size() == 0) {
@@ -480,7 +453,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 		mGroupListName = VideoDataManagerUtils.getGroupName(mDataList);
 		mCloudWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
 	}
-	
+
 	/**
 	 * 移除loading
 	 * 
@@ -492,7 +465,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 			mStickyListHeadersListView.removeFooterView(mBottomLoadingView);
 		}
 	}
-	
+
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		switch (event) {
@@ -502,7 +475,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 					mCustomProgressDialog.close();
 				}
 				isGetFileListDataing = false;
-				GolukDebugUtils.e("xuhw", "YYYYYY=======获取文件列表===@@@======param1=" + param1 + "=====param2=" + param2);
+				GolukDebugUtils.e("xuhw","YYYYYY=======获取文件列表===@@@======param1=" + param1+ "=====param2=" + param2);
 				if (RESULE_SUCESS == param1) {
 					if (TextUtils.isEmpty((String) param2)) {
 						return;
@@ -528,7 +501,8 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 						removeFooterView();
 					}
 				} else {
-					GolukDebugUtils.e("xuhw", "YYYYYY=======获取文件列表====fail==@@@======param1=" + param1);
+					GolukDebugUtils.e("xuhw",
+							"YYYYYY=======获取文件列表====fail==@@@======param1="+ param1);
 					// 命令发送失败
 					this.removeFooterView();
 					GolukUtils.showToast(this.getContext(), this.getContext().getString(R.string.str_inquiry_fail));
@@ -562,7 +536,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 								}
 
 							} else {
-								GolukDebugUtils.e("xuhw", "TTT======no filelist  file======filename=" + filename);
+								GolukDebugUtils.e("xuhw","TTT======no filelist  file======filename="+ filename);
 							}
 
 						}
@@ -582,32 +556,6 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn{
 			break;
 		}
 
-	}
-	
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
 	}
 
 }

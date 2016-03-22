@@ -44,8 +44,6 @@ public class LocalFragment extends Fragment{
 	
 	private LocalWonderfulVideoAdapter mWonderfulVideoAdapter = null;
 	
-	private TextView empty = null;
-	
 	private List<VideoInfo> mDataList = null;
 	private List<DoubleVideoInfo> mDoubleDataList = null;
 	
@@ -59,10 +57,10 @@ public class LocalFragment extends Fragment{
 	
 	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		mFragmentAlbum = (FragmentAlbum)getParentFragment();
-		LayoutInflater inflater = getActivity().getLayoutInflater();
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+        
+        mFragmentAlbum = (FragmentAlbum)getParentFragment();
 		mLocalVideoView = inflater.inflate(R.layout.wonderful_listview, (ViewGroup)getActivity().findViewById(R.id.viewpager), false);
 		density = SoundUtils.getInstance().getDisplayMetrics().density;
 		
@@ -70,15 +68,21 @@ public class LocalFragment extends Fragment{
 		this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
 		
 		initView();
+		if(mFragmentAlbum.mCurrentType == 0){
+			loadData(IPCManagerFn.TYPE_SHORTCUT, true);
+		}else{
+			loadData(IPCManagerFn.TYPE_SHORTCUT, false);
+		}
 		
+		return mLocalVideoView;
 	}
+
 	
 	private void initView(){
-		empty = (TextView) mLocalVideoView.findViewById(R.id.empty);
 		mCustomProgressDialog = new CustomLoadingDialog(this.getContext(), null);
 		mStickyListHeadersListView = (StickyListHeadersListView) mLocalVideoView.findViewById(R.id.mStickyListHeadersListView);
+		
 		mWonderfulVideoAdapter = new LocalWonderfulVideoAdapter(this.getContext(), mFragmentAlbum, mStickyListHeadersListView, IPCManagerFn.TYPE_CIRCULATE, "local");
-		loadData(IPCManagerFn.TYPE_SHORTCUT, true);
 		setListener();
 	}
 	
@@ -185,6 +189,11 @@ public class LocalFragment extends Fragment{
 				mDataList.addAll(mLocalListData);
 				mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mLocalListData);
 				mWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
+				if(mDoubleDataList == null || mDoubleDataList.size() ==0){
+					View empty = PhotoAlbumUtile.getInstall().getEmptyView(getActivity(),0);
+					((ViewGroup)mStickyListHeadersListView.getParent()).addView(empty); 
+				}
+				
 				mStickyListHeadersListView.setAdapter(mWonderfulVideoAdapter);
 				try {
 					if (mCustomProgressDialog.isShowing()) {
@@ -203,12 +212,10 @@ public class LocalFragment extends Fragment{
 	private void checkListState() {
 		GolukDebugUtils.e("", "Album------WondowvideoListView------checkListState");
 		if (mDataList.size() <= 0) {
-			empty.setVisibility(View.VISIBLE);
 			mStickyListHeadersListView.setVisibility(View.GONE);
 			updateEditState(false);
 		} else {
 			updateEditState(true);
-			empty.setVisibility(View.GONE);
 			mStickyListHeadersListView.setVisibility(View.VISIBLE);
 		}
 	}
@@ -284,50 +291,6 @@ public class LocalFragment extends Fragment{
 			this.getContext().startActivity(intent);
 		}
 	}
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		
-		ViewGroup p = (ViewGroup) mLocalVideoView.getParent(); 
-        if (p != null) { 
-            p.removeAllViewsInLayout(); 
-        } 
-		
-		return mLocalVideoView;
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		Log.v("huahua", "fragment1-->onDestroy()");
-	}
-
-	@Override
-	public void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-		Log.v("huahua", "fragment1-->onPause()");
-	}
-
-	@Override
-	public void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		Log.v("huahua", "fragment1-->onResume()");
-	}
-
-	@Override
-	public void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
-		Log.v("huahua", "fragment1-->onStart()");
-	}
-
-	@Override
-	public void onStop() {
-		// TODO Auto-generated method stub
-		super.onStop();
-		Log.v("huahua", "fragment1-->onStop()");
-	}
+	
 
 }
