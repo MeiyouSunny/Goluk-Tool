@@ -23,6 +23,7 @@ import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.live.ILive;
+import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videosuqare.CategoryListView;
@@ -593,7 +594,8 @@ public class NewestAdapter extends BaseAdapter {
 		user.customavatar = videoSquareInfo.mUserEntity.mCustomAvatar;
 		user.praisemenumber = "0";
 		user.sharevideonumber = "0";
-		Intent i = new Intent(mContext, UserCenterActivity.class);
+//		Intent i = new Intent(mContext, UserCenterActivity.class);
+		Intent i = new Intent(mContext, NewUserCenterActivity.class);
 		i.putExtra("userinfo", user);
 		i.putExtra("type", 0);
 		mContext.startActivity(i);

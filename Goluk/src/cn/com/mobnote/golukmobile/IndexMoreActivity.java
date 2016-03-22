@@ -10,7 +10,7 @@ import cn.com.mobnote.golukmobile.msg.MessageCenterActivity;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.praised.MyPraisedActivity;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
-import cn.com.mobnote.golukmobile.usercenter.TestGridViewActivity;
+import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
@@ -357,8 +357,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		user.praisemenumber = praiseCount + "";
 		user.sharevideonumber = shareCount + "";
 
-//		Intent intent = new Intent(mContext, UserCenterActivity.class);
-		Intent intent = new Intent(mContext, TestGridViewActivity.class);
+		Intent intent = new Intent(mContext, NewUserCenterActivity.class);
 		intent.putExtra("userinfo", user);
 		intent.putExtra("type", type);
 		mContext.startActivity(intent);

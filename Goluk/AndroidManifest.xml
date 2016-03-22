@@ -47,7 +47,7 @@
             android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustResize" >
         </activity>
         <activity
-            android:name="cn.com.mobnote.golukmobile.usercenter.TestGridViewActivity"
+            android:name="cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity"
             android:screenOrientation="portrait" />
 
         <!-- 个人中心模块 -->

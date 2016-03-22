@@ -1,35 +1,53 @@
 package cn.com.mobnote.golukmobile.usercenter;
 
+import com.tencent.bugly.proguard.at;
+
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
+import cn.com.mobnote.golukmobile.http.IRequestResultListener;
+import cn.com.mobnote.golukmobile.usercenter.bean.AttentionJson;
 import cn.com.mobnote.golukmobile.usercenter.bean.HomeData;
 import cn.com.mobnote.golukmobile.usercenter.bean.HomeUser;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
-public class UserCenterHeader implements OnClickListener {
+public class UserCenterHeader implements OnClickListener, IRequestResultListener {
 
 	private Context mContext;
-	private ImageView mImageHead, mAttentionBtn, mLogoImage;
+	private ImageView mImageHead, mLogoImage;
 	private TextView mTextName, mTextAttention, mTextFans, mTextContent;
 	private LinearLayout mWonderfulLayout, mRecommendLayout, mHeadlinesLayout;
 	private TextView mWonderfulText, mRecommednText, mHeadlinesText;
+	private Button mAttentionBtn;
+	private LinearLayout mBackgroundLayout;
+	/** 取消关注 **/
+	private static final String TYPE_ATTENTION_CANCLE = "0";
+	/** 关注 **/
+	private static final String TYPE_ATTENTION = "1";
 
 	private HomeData mData;
-	private TestGridViewActivity mTestGridViewActivity = null;
+	private NewUserCenterActivity mTestGridViewActivity = null;
 
 	public UserCenterHeader(Context context) {
 		super();
 		this.mContext = context;
-		mTestGridViewActivity = (TestGridViewActivity) mContext;
+		mTestGridViewActivity = (NewUserCenterActivity) mContext;
 	}
 
 	public void setHeaderData(HomeData data) {
@@ -39,7 +57,7 @@ public class UserCenterHeader implements OnClickListener {
 	public View createHeader() {
 		View view = LayoutInflater.from(mContext).inflate(R.layout.activity_usercenter_header, null);
 		mImageHead = (ImageView) view.findViewById(R.id.iv_usercenter_header_head);
-		mAttentionBtn = (ImageView) view.findViewById(R.id.btn_usercenter_header_attention);
+		mAttentionBtn = (Button) view.findViewById(R.id.btn_usercenter_header_attention);
 		mLogoImage = (ImageView) view.findViewById(R.id.iv_vip_logo);
 		mTextName = (TextView) view.findViewById(R.id.tv_usercenter_header_name);
 		mTextAttention = (TextView) view.findViewById(R.id.tv_usercenter_header_attention_count);
@@ -51,6 +69,7 @@ public class UserCenterHeader implements OnClickListener {
 		mWonderfulText = (TextView) view.findViewById(R.id.tv_usercenter_header_wonderful_count);
 		mRecommednText = (TextView) view.findViewById(R.id.tv_usercenter_header_recommendcount);
 		mHeadlinesText = (TextView) view.findViewById(R.id.tv_usercenter_header_headlines_count);
+		mBackgroundLayout = (LinearLayout) view.findViewById(R.id.layout_usercenter_header);
 
 		mAttentionBtn.setOnClickListener(this);
 		mTextAttention.setOnClickListener(this);
@@ -58,6 +77,9 @@ public class UserCenterHeader implements OnClickListener {
 		mWonderfulLayout.setOnClickListener(this);
 		mRecommendLayout.setOnClickListener(this);
 		mHeadlinesLayout.setOnClickListener(this);
+		
+//		Bitmap image = ((BitmapDrawable)imageView.getDrawable()).getBitmap(); 
+		
 		return view;
 	}
 
@@ -72,8 +94,9 @@ public class UserCenterHeader implements OnClickListener {
 				UserUtils.focusHead(mContext, user.avatar, mImageHead);
 			}
 			mTextName.setText(user.nickname);
-			mTextAttention.setText("关注 " + user.following);
-			mTextFans.setText("粉丝 " + user.fans);
+			mTextAttention.setText(mContext.getString(R.string.str_usercenter_header_attention_text) + " "
+					+ user.following);
+			mTextFans.setText(mContext.getString(R.string.str_usercenter_header_fans_text) + " " + user.fans);
 			mWonderfulText.setText(mData.selectcount + "");
 			mRecommednText.setText(mData.recommendcount + "");
 			mHeadlinesText.setText(mData.headlinecount + "");
@@ -109,10 +132,18 @@ public class UserCenterHeader implements OnClickListener {
 				} else if ("1".equals(isstar)) {
 					mLogoImage.setImageResource(R.drawable.authentication_star_icon);
 					// TODO 达人接口中没有认证信息
-					mTextContent.setText(user.introduction);
+					if (null == user.introduction || "".equals(user.introduction)) {
+						mTextContent.setText(mContext.getResources().getString(R.string.str_let_sharevideo));
+					} else {
+						mTextContent.setText(user.introduction);
+					}
 				} else {
 					mLogoImage.setVisibility(View.GONE);
-					mTextContent.setText(user.introduction);
+					if (null == user.introduction || "".equals(user.introduction)) {
+						mTextContent.setText(mContext.getResources().getString(R.string.str_let_sharevideo));
+					} else {
+						mTextContent.setText(user.introduction);
+					}
 				}
 			} else {
 				mLogoImage.setVisibility(View.GONE);
@@ -122,23 +153,53 @@ public class UserCenterHeader implements OnClickListener {
 			if(mTestGridViewActivity.testUser()) {
 				//显示修改资料按钮
 				test = 4;
+				mAttentionBtn.setBackgroundResource(R.drawable.bg_edit);
+				Drawable drawable1= mContext.getResources().getDrawable(R.drawable.usercenter_edit);
+				drawable1.setBounds(0, 0, drawable1.getMinimumWidth(), drawable1.getMinimumHeight());
+				mAttentionBtn.setCompoundDrawables(drawable1,null,null,null);
+				mAttentionBtn.setText(mContext.getString(R.string.str_usercenter_header_edit_text));
+				mAttentionBtn.setTextColor(Color.parseColor("#ffffff"));
 			} else {
 				switch (mData.user.link) {
 				case 0:
 					// 未关注——显示关注按钮
 					test = 0;
+					mAttentionBtn.setBackgroundResource(R.drawable.bg_add);
+					Drawable drawable2= mContext.getResources().getDrawable(R.drawable.usercenter_to_attention);
+					drawable2.setBounds(0, 0, drawable2.getMinimumWidth(), drawable2.getMinimumHeight());
+					mAttentionBtn.setCompoundDrawables(drawable2,null,null,null);
+					mAttentionBtn.setText(mContext.getString(R.string.str_usercenter_header_attention_text));
+					mAttentionBtn.setTextColor(Color.parseColor("#0984ff"));
 					break;
 				case 1:
-					// 已关注——显示取消关注按钮
+					// 已关注——显示已关注按钮
 					test = 1;
+					mAttentionBtn.setBackgroundResource(R.drawable.bg_fans);
+					Drawable drawable3= mContext.getResources().getDrawable(R.drawable.usercenter_attention);
+					drawable3.setBounds(0, 0, drawable3.getMinimumWidth(), drawable3.getMinimumHeight());
+					mAttentionBtn.setCompoundDrawables(drawable3,null,null,null);
+					mAttentionBtn.setText(mContext.getString(R.string.str_usercenter_header_attention_already_text));
+					mAttentionBtn.setTextColor(Color.parseColor("#ffffff"));
 					break;
 				case 2:
-					// 互相关注——显示取消关注按钮
+					// 互相关注——显示互相关注按钮
 					test = 2;
+					mAttentionBtn.setBackgroundResource(R.drawable.bg_follow);
+					Drawable drawable4= mContext.getResources().getDrawable(R.drawable.usercenter_attention_each_other);
+					drawable4.setBounds(0, 0, drawable4.getMinimumWidth(), drawable4.getMinimumHeight());
+					mAttentionBtn.setCompoundDrawables(drawable4,null,null,null);
+					mAttentionBtn.setText(mContext.getString(R.string.str_usercenter_header_attention_each_other_text));
+					mAttentionBtn.setTextColor(Color.parseColor("#ffffff"));
 					break;
 				case 3:
-					//别人关注了我——显示关注按钮
+					//别人关注了我——显示去关注按钮
 					test = 3;
+					mAttentionBtn.setBackgroundResource(R.drawable.bg_add);
+					Drawable drawable5= mContext.getResources().getDrawable(R.drawable.usercenter_to_attention);
+					drawable5.setBounds(0, 0, drawable5.getMinimumWidth(), drawable5.getMinimumHeight());
+					mAttentionBtn.setCompoundDrawables(drawable5,null,null,null);
+					mAttentionBtn.setText(mContext.getString(R.string.str_usercenter_header_attention_text));
+					mAttentionBtn.setTextColor(Color.parseColor("#0984ff"));
 					break;
 
 				default:
@@ -161,19 +222,33 @@ public class UserCenterHeader implements OnClickListener {
 			GolukUtils.showToast(mContext, "intent to fans");
 			break;
 		case R.id.btn_usercenter_header_attention:
-			String show = "";
-			if(test == 0) {
-				show = "关注成功";
-			} else if(test == 1) {
-				show = "取消关注成功";
-			} else if(test == 2) {
-				show = "取消关注成功";
-			} else if(test == 3) {
-				show = "关注成功";
+			if (mTestGridViewActivity.testUser()) {
+				// 跳到个人中心编辑页面
+				Intent it = new Intent(mContext, UserPersonalInfoActivity.class);
+				mContext.startActivity(it);
 			} else {
-				show = "编辑资料";
+				switch (mData.user.link) {
+				case 0:
+					// 未关注——去关注
+					attentionRequest(mData.user.uid, TYPE_ATTENTION, mData.user.uid);
+					break;
+				case 1:
+					// 已关注——去取消关注
+					attentionRequest(mData.user.uid, TYPE_ATTENTION_CANCLE, mData.user.uid);
+					break;
+				case 2:
+					// 互相关注——去取消关注
+					attentionRequest(mData.user.uid, TYPE_ATTENTION_CANCLE, mData.user.uid);
+					break;
+				case 3:
+					// 别人关注了我——去关注按钮
+					attentionRequest(mData.user.uid, TYPE_ATTENTION, mData.user.uid);
+					break;
+				default:
+					GolukUtils.showToast(mContext, "没有符合的link");
+					break;
+				}
 			}
-			GolukUtils.showToast(mContext, show);
 			break;
 		case R.id.layout_usercenter_header_category_wonderful:
 			intentToCategory(UserVideoCategoryActivity.COLLECTION_WONDERFUL_VIDEO);
@@ -196,4 +271,42 @@ public class UserCenterHeader implements OnClickListener {
 		it.putExtra("uid", mData.user.uid);
 		mContext.startActivity(it);
 	}
+	
+	private void attentionRequest(String otheruid, String type, String currentuid) {
+		UserAttentionRequest request = new UserAttentionRequest(IPageNotifyFn.PageType_HomeAttention, this);
+		request.get(otheruid, type, currentuid);
+	}
+	
+	private Bitmap getTransparentBitmap(Bitmap sourceImg, int number) {
+		int[] argb = new int[sourceImg.getWidth() * sourceImg.getHeight()];
+
+		sourceImg.getPixels(argb, 0, sourceImg.getWidth(), 0, 0, sourceImg.getWidth(), sourceImg.getHeight());// 获得图片的ARGB值
+
+		number = number * 255 / 100;
+
+		for (int i = 0; i < argb.length; i++) {
+			argb[i] = (number << 24) | (argb[i] & 0x00FFFFFF);
+		}
+		sourceImg = Bitmap.createBitmap(argb, sourceImg.getWidth(), sourceImg.getHeight(), Config.ARGB_8888);
+
+		return sourceImg;
+	}
+
+	@Override
+	public void onLoadComplete(int requestType, Object result) {
+		if (requestType == IPageNotifyFn.PageType_HomeAttention) {
+			AttentionJson attention = (AttentionJson) result;
+			if (null != attention && 0 == attention.code && null != attention.data) {
+				// 0：未关注；1：关注；2：互相关注
+				if (0 == attention.data.link) {
+					GolukUtils.showToast(mContext, "取消关注成功");
+				} else if (1 == attention.data.link) {
+					GolukUtils.showToast(mContext, "关注成功");
+				} else {
+					GolukUtils.showToast(mContext, "关注成功");
+				}
+			}
+		}
+	}  
+	
 }

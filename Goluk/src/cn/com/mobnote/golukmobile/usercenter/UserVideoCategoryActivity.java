@@ -177,12 +177,12 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 					this.mAdapter.appendData(mVideoList);
 				}
 			} else {
-				unsual();
+				unusual();
 			}
 		}
 	}
 
-	private void unsual() {
+	private void unusual() {
 		mNoDataText.setVisibility(View.GONE);
 		mGridView.setVisibility(View.GONE);
 		mToRefreshLayout.setVisibility(View.VISIBLE);

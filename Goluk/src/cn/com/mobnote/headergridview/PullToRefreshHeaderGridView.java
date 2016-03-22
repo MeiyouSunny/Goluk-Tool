@@ -27,7 +27,7 @@ import com.handmark.pulltorefresh.library.OverscrollHelper;
 import com.handmark.pulltorefresh.library.PullToRefreshAdapterViewBase;
 import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
 
-public class PullToRefreshHeaderGridView extends PullToRefreshAdapterViewBase<HeaderGridView> {
+public class PullToRefreshHeaderGridView extends PullToRefreshAdapterViewBase<GridViewWithHeaderAndFooter> {
 
 	public PullToRefreshHeaderGridView(Context context) {
 		super(context);
@@ -51,8 +51,8 @@ public class PullToRefreshHeaderGridView extends PullToRefreshAdapterViewBase<He
 	}
 
 	@Override
-	protected final HeaderGridView createRefreshableView(Context context, AttributeSet attrs) {
-		final HeaderGridView gv;
+	protected final GridViewWithHeaderAndFooter createRefreshableView(Context context, AttributeSet attrs) {
+		final GridViewWithHeaderAndFooter gv;
 		if (VERSION.SDK_INT >= VERSION_CODES.GINGERBREAD) {
 			gv = new InternalGridViewSDK9(context, attrs);
 		} else {
@@ -64,7 +64,7 @@ public class PullToRefreshHeaderGridView extends PullToRefreshAdapterViewBase<He
 		return gv;
 	}
 
-	class InternalGridView extends HeaderGridView implements EmptyViewMethodAccessor {
+	class InternalGridView extends GridViewWithHeaderAndFooter implements EmptyViewMethodAccessor {
 
 		public InternalGridView(Context context, AttributeSet attrs) {
 			super(context, attrs);

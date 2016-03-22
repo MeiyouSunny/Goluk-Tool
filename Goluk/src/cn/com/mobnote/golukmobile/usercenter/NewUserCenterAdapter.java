@@ -14,12 +14,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class TestGridViewAdapter extends BaseAdapter {
+public class NewUserCenterAdapter extends BaseAdapter {
 
 	private Context mContext = null;
 	private List<HomeVideoList> mList = null;
 
-	public TestGridViewAdapter(Context mContext) {
+	public NewUserCenterAdapter(Context mContext) {
 		super();
 		this.mContext = mContext;
 	}

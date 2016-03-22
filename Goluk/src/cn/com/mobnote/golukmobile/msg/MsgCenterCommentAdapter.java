@@ -7,6 +7,7 @@ import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
 import cn.com.mobnote.golukmobile.msg.bean.MessageMsgsBean;
 import cn.com.mobnote.golukmobile.msg.bean.MessageSenderBean;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
+import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
@@ -188,7 +189,8 @@ public class MsgCenterCommentAdapter extends BaseAdapter {
 		if(id == R.id.iv_listview_item_comment_head || id == R.id.tv_listview_item_comment_name) {
 			if (null != bean && null != bean.sender) {
 				//我的主页
-				Intent it = new Intent(mContext, UserCenterActivity.class);
+//				Intent it = new Intent(mContext, UserCenterActivity.class);
+				Intent it = new Intent(mContext, NewUserCenterActivity.class);
 
 				MessageSenderBean sender = bean.sender;
 				UCUserInfo user = new UCUserInfo();

@@ -35,6 +35,7 @@ import cn.com.mobnote.golukmobile.msg.MsgCenterPraiseActivity;
 import cn.com.mobnote.golukmobile.msg.SystemMsgActivity;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
+import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
@@ -536,7 +537,8 @@ public class GolukNotification {
 						user.customavatar = "";// clusterInfo.mUserEntity.mCustomAvatar;
 						user.praisemenumber = "0";
 						user.sharevideonumber = "0";
-						Intent i = new Intent(context, UserCenterActivity.class);
+//						Intent i = new Intent(context, UserCenterActivity.class);
+						Intent i = new Intent(context, NewUserCenterActivity.class);
 						i.putExtra("userinfo", user);
 						i.putExtra("type", 0);
 						context.startActivity(i);

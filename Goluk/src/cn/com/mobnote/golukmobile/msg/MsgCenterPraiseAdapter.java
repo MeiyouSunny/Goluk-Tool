@@ -5,6 +5,7 @@ import java.util.List;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.msg.bean.MessageMsgsBean;
 import cn.com.mobnote.golukmobile.msg.bean.MessageSenderBean;
+import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
@@ -163,7 +164,8 @@ public class MsgCenterPraiseAdapter extends BaseAdapter {
 		}
 		if (id == R.id.iv_listview_item_praise_head || id == R.id.tv_listview_item_praise_name) {
 			if (null != bean && null != bean.sender) {
-				Intent it = new Intent(mContext, UserCenterActivity.class);
+//				Intent it = new Intent(mContext, UserCenterActivity.class);
+				Intent it = new Intent(mContext, NewUserCenterActivity.class);
 
 				MessageSenderBean sender = bean.sender;
 				UCUserInfo user = new UCUserInfo();

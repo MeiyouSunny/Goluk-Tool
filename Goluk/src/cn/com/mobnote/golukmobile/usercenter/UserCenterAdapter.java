@@ -613,7 +613,8 @@ public class UserCenterAdapter extends BaseAdapter implements VideoSuqareManager
 					user.customavatar = prais.customavatar;
 					user.praisemenumber = "0";
 					user.sharevideonumber = "0";
-					Intent i = new Intent(mContext, UserCenterActivity.class);
+//					Intent i = new Intent(mContext, UserCenterActivity.class);
+					Intent i = new Intent(mContext, NewUserCenterActivity.class);
 					i.putExtra("userinfo", user);
 					i.putExtra("type", 0);
 					mContext.startActivity(i);

@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
@@ -143,7 +144,8 @@ public class SpecialListViewAdapter extends BaseAdapter {
 		user.customavatar = specialInfo.customavatar;
 		user.praisemenumber = "0";
 		user.sharevideonumber = "0";
-		Intent i = new Intent(mContext, UserCenterActivity.class);
+//		Intent i = new Intent(mContext, UserCenterActivity.class);
+		Intent i = new Intent(mContext, NewUserCenterActivity.class);
 		i.putExtra("userinfo", user);
 		i.putExtra("type", 0);
 		mContext.startActivity(i);

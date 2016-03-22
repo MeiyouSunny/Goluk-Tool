@@ -20,6 +20,7 @@ import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
 import cn.com.mobnote.golukmobile.http.HttpManager;
 import cn.com.mobnote.golukmobile.msg.bean.MessageMsgsBean;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
+import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
@@ -203,7 +204,8 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 					user.customavatar = "";//clusterInfo.mUserEntity.mCustomAvatar;
 					user.praisemenumber = "0";
 					user.sharevideonumber = "0";
-					intent = new Intent(mContext, UserCenterActivity.class);
+//					intent = new Intent(mContext, UserCenterActivity.class);
+					intent = new Intent(mContext, NewUserCenterActivity.class);
 					intent.putExtra("userinfo", user);
 					intent.putExtra("type", 0);
 					mContext.startActivity(intent);
