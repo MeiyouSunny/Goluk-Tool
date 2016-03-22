@@ -223,11 +223,6 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 		case EventConfig.LOCATION_FINISH:
 			Log.d(TAG, "Location Finished: " + event.getCityCode());
 			// Start load banner
-//			VideoSquareAdapter videoSquareAdapter = mVideoSquareActivity.getVideoSquareAdapter();
-//			FragmentDiscover fragmentDiscover = (FragmentDiscover)getSupportFragmentManager().findFragmentByTag("Discover");
-//			FragmentDiscover fragmentDiscover = (FragmentDiscover)getSupportFragmentManager()
-//					.findFragmentByTag("tabsfragment")
-//					.getChildFragmentManager().findFragmentByTag("Discover");
 			VideoSquareAdapter videoSquareAdapter = getVideoSquareAdapter();
 			if (null == videoSquareAdapter) {
 				return;

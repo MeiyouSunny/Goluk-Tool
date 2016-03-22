@@ -215,7 +215,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 						if ((screenX > 0) && (screenX < (screenWidth / 2))) {
 							// 点击列表左边项,跳转到视频播放页面
 							VideoInfo info1 = d.getVideoInfo1();
-							gotoVideoPlayPage(mCurrentType, info1.videoPath);
+							gotoVideoPlayPage(mCurrentType, info1.videoPath, info1.videoCreateDate, info1.videoHP);
 							String filename = d.getVideoInfo1().filename;
 							updateNewState(filename);
 
@@ -226,7 +226,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 							VideoInfo info2 = d.getVideoInfo2();
 							if (null == info2)
 								return;
-							gotoVideoPlayPage(mCurrentType, info2.videoPath);
+							gotoVideoPlayPage(mCurrentType, info2.videoPath, info2.videoCreateDate, info2.videoHP);
 							String filename = info2.filename;
 							updateNewState(filename);
 
@@ -256,21 +256,28 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 	 * 
 	 * @param path
 	 */
-	private void gotoVideoPlayPage(int from, String path) {
+	private void gotoVideoPlayPage(int from, String path, String createTime, String videoHP) {
 		if (!isShowPlayer) {
 			isShowPlayer = true;
 			// if (null == VitamioPlayerActivity.mHandler) {
-			Intent intent = null;
-			if (1 == from) {
-				intent = new Intent(mContext, VitamioPlayerActivity.class);
-			} else {
-				intent = new Intent(mContext, VideoPlayerActivity.class);
-			}
-			intent.putExtra("from", "ipc");
-			intent.putExtra("type", mCurrentType);
-			intent.putExtra("filename", path);
-			mContext.startActivity(intent);
+//			Intent intent = null;
+//			if (1 == from) {
+//				intent = new Intent(mContext, VitamioPlayerActivity.class);
+//			} else {
+//				intent = new Intent(mContext, VideoPlayerActivity.class);
+//			}
+//			intent.putExtra("from", "ipc");
+//			intent.putExtra("type", mCurrentType);
+//			intent.putExtra("filename", path);
+//			mContext.startActivity(intent);
 			// }
+			Intent intent = new Intent(mContext, PhotoAlbumPlayer.class);
+			intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, "ipc");
+			intent.putExtra(PhotoAlbumPlayer.FILENAME, path);
+			intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
+			intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
+			intent.putExtra(PhotoAlbumPlayer.TYPE, mCurrentType);
+			mContext.startActivity(intent);
 		}
 	}
 

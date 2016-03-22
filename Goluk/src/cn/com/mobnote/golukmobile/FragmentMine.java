@@ -19,7 +19,6 @@ import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import android.net.Uri;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -39,7 +38,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.util.GlideUtils;
-import cn.com.mobnote.util.GolukConfig;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -125,15 +123,18 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.index_more, null);
+		View rootView = inflater.inflate(R.layout.index_more, null);
 		mMineRootView = (LinearLayout)rootView;
-//		density = SoundUtils.getInstance().getDisplayMetrics().density;
-//		lineParams = new RelativeLayout.LayoutParams((int) (50 * density), (int) (2 * density));
-//		lineTop = (int) (5 * density);
-//		textColorSelect = getActivity().getResources().getColor(R.color.textcolor_select);
-//		textcolorQx = getActivity().getResources().getColor(R.color.textcolor_qx);
+
 		ma = (MainActivity)getActivity();
+		setListener();
+
+//		mPreferences = getActivity().getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+//		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
+//
+//		ma.mApp.mUser.setUserInterface(this);
 		init();
+		showView();
 		return rootView;
 	}
 

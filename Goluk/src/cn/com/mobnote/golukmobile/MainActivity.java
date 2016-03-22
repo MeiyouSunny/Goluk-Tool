@@ -16,6 +16,7 @@ import android.media.SoundPool;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -165,6 +166,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private StartAppBean mStartAppBean = null;
 	/** 把当前连接的设备保存起来，主要是为了兼容以前的连接状态 */
 	private WifiRsBean mCurrentConnBean = null;
+	private FragmentTabHost mTabHost;
 
 	private void playDownLoadedSound() {
 		if (null != mSoundPool) {
@@ -178,7 +180,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			});
 		}
 	}
-	private FragmentTabHost mTabHost;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -300,13 +302,13 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		b.putString("key", "Follow");
 		LinearLayout follow = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_follow, null);
 		mTabHost.addTab(mTabHost.newTabSpec("Follow")
-				.setIndicator(follow), Fragment2.class, b);
+				.setIndicator(follow), FragmentFollow.class, b);
 
 		b = new Bundle();
 		b.putString("key", "CarRecorder");
 		LinearLayout carRecorder = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_carrecorder, null);
 		mTabHost.addTab(mTabHost.newTabSpec("CarRecorder").setIndicator(carRecorder),
-				Fragment3.class, b);
+				null, b);
 
 		b = new Bundle();
 		b.putString("key", "Album");
@@ -327,6 +329,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		LinearLayout.LayoutParams lineParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 3);
 		lineView.setLayoutParams(lineParams);
 		mTabHost.addView(lineView);
+
 		for (int i = 0; i < mTabHost.getTabWidget().getTabCount(); i++) {
 			mTabHost.getTabWidget().getChildAt(i).getLayoutParams().height = 141;
 		}
@@ -353,9 +356,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		GolukDebugUtils.i("newintent", "-------str------------" + intent.getStringExtra("showMe"));
-//		if (null != intent.getStringExtra("showMe")) {
-//			String str = intent.getStringExtra("showMe").toString();
-//			if ("showMe".equals(str)) {
+		if (null != intent.getStringExtra("showMe")) {
+			String str = intent.getStringExtra("showMe").toString();
+			if ("showMe".equals(str)) {
 //				Drawable user_down = this.getResources().getDrawable(R.drawable.index_user_btn_press);
 //				mMoreBtn.setCompoundDrawablesWithIntrinsicBounds(null, user_down, null, null);
 //				mMoreBtn.setTextColor(Color.rgb(59, 151, 245));
@@ -366,10 +369,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 //
 //				userInfoLayout.setVisibility(View.VISIBLE);
 //				videoSquareLayout.setVisibility(View.GONE);
-//
+				Fragment fragment = getSupportFragmentManager().findFragmentByTag("Mine");
 //				indexMoreActivity.showView();
-//			}
-//		}
+				Log.d("CK1", "11111111111111111111111111111: " + fragment);
+			}
+		}
 
 		dealPush(intent);
 	}

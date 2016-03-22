@@ -969,4 +969,7 @@
     <string name="str_please_bind_phone_first">提现需要绑定手机号，请先前往通用设置中绑定手机号</string>
     <string name="str_follow">关注</string>
     <string name="str_fans">粉丝</string>
+    <string name="str_discover">极社</string>
+    <string name="str_album">相册</string>
+    <string name="str_mine">我的</string>
 </resources>

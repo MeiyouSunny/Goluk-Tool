@@ -12,10 +12,10 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_gravity="center"
-        android:text="极社"
-        android:textColor="#dddddd"
-        android:textSize="10sp"
+        android:text="@string/str_discover"
+        android:textColor="@drawable/tab_host_item_txt_color_selector"
+        android:textSize="9sp"
         android:drawablePadding="0dp"
-        android:drawableTop="@drawable/index_find_btn_press" />
+        android:drawableTop="@drawable/tab_host_discover_icon_selector" />
 
 </LinearLayout>
