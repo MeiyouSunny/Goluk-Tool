@@ -149,7 +149,7 @@ public class LocalWonderfulVideoListView {
 						if ((screenX > 0) && (screenX < (screenWidth / 2))) {
 							// 点击列表左边项,跳转到视频播放页面
 							VideoInfo info1 = d.getVideoInfo1();
-							gotoVideoPlayPage(mVideoType, info1.videoPath);
+							gotoVideoPlayPage(mVideoType, info1.videoPath, info1.videoCreateDate, info1.videoHP, info1.videoSize);
 							String filename = d.getVideoInfo1().filename;
 							updateNewState(filename);
 
@@ -160,7 +160,7 @@ public class LocalWonderfulVideoListView {
 							VideoInfo info2 = d.getVideoInfo2();
 							if (null == info2)
 								return;
-							gotoVideoPlayPage(mVideoType, info2.videoPath);
+							gotoVideoPlayPage(mVideoType, info2.videoPath, info2.videoCreateDate, info2.videoHP, info2.videoSize);
 							String filename = info2.filename;
 							updateNewState(filename);
 
@@ -190,7 +190,7 @@ public class LocalWonderfulVideoListView {
 	 * 
 	 * @param path
 	 */
-	private void gotoVideoPlayPage(int type, String path) {
+	private void gotoVideoPlayPage(int type, String path, String createTime, String videoHP, String size) {
 		// if (getClickLock()) {
 		// return;
 		// }
@@ -217,13 +217,20 @@ public class LocalWonderfulVideoListView {
 			}
 
 			Intent intent = null;
-			if (1 == type) {
-				intent = new Intent(mContext, VitamioPlayerActivity.class);
-			} else {
-				intent = new Intent(mContext, VideoPlayerActivity.class);
-			}
-			intent.putExtra("from", "local");
-			intent.putExtra("path", path);
+//			if (1 == type) {
+//				intent = new Intent(mContext, VitamioPlayerActivity.class);
+//			} else {
+//				intent = new Intent(mContext, VideoPlayerActivity.class);
+//			}
+//			intent.putExtra("from", "local");
+//			intent.putExtra("path", path);
+			intent = new Intent(mContext, PhotoAlbumPlayer.class);
+			intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, "local");
+			intent.putExtra(PhotoAlbumPlayer.PATH, path);
+			intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
+			intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
+			intent.putExtra(PhotoAlbumPlayer.SIZE, size);
+			intent.putExtra(PhotoAlbumPlayer.TYPE, type);
 			mContext.startActivity(intent);
 		}
 	}

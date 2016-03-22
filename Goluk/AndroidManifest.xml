@@ -516,6 +516,13 @@
             android:hardwareAccelerated="true"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
+        <activity
+            android:name=".photoalbum.PhotoAlbumPlayer"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
