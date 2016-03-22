@@ -165,6 +165,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private StartAppBean mStartAppBean = null;
 	/** 把当前连接的设备保存起来，主要是为了兼容以前的连接状态 */
 	private WifiRsBean mCurrentConnBean = null;
+	private FragmentTabHost mTabHost;
 
 	private void playDownLoadedSound() {
 		if (null != mSoundPool) {
@@ -178,7 +179,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			});
 		}
 	}
-	private FragmentTabHost mTabHost;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);

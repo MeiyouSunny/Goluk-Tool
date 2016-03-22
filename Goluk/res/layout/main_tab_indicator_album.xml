@@ -7,15 +7,15 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/discover_id"
+        android:id="@+id/tab_host_discover_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_gravity="center"
-        android:text="相册"
-        android:textColor="#dddddd"
-        android:textSize="10sp"
+        android:text="@string/str_album"
+        android:textColor="@drawable/tab_host_item_txt_color_selector"
+        android:textSize="9sp"
         android:drawablePadding="0dp"
-        android:drawableTop="@drawable/index_find_btn" />
+        android:drawableTop="@drawable/tab_host_album_icon_selector" />
 
 </LinearLayout>
