@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
@@ -24,7 +25,7 @@ public class VideoSquareActivity implements OnClickListener {
 	private TextView squareTitle = null;
 	public String shareVideoId;
 
-	RelativeLayout mRootLayout = null;
+	LinearLayout mRootLayout = null;
 	Context mContext = null;
 
 	private float density;
@@ -34,7 +35,7 @@ public class VideoSquareActivity implements OnClickListener {
 	private int textColorSelect = 0;
 	private int textcolorQx = 0;
 
-	public VideoSquareActivity(RelativeLayout rootlayout, Context context) {
+	public VideoSquareActivity(LinearLayout rootlayout, Context context) {
 		mRootLayout = rootlayout;
 		mContext = context;
 		density = SoundUtils.getInstance().getDisplayMetrics().density;

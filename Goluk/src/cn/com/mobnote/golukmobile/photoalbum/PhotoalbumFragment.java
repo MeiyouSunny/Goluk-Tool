@@ -3,26 +3,12 @@ package cn.com.mobnote.golukmobile.photoalbum;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.os.Message;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventIpcConnState;
 import cn.com.mobnote.eventbus.EventPhotoUpdateDate;
 import cn.com.mobnote.eventbus.EventPhotoUpdateLoginState;
-import cn.com.mobnote.golukmobile.BaseActivity;
+import cn.com.mobnote.eventbus.EventPhotoalbumHandlerMessage;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
@@ -34,8 +20,26 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import de.greenrobot.event.EventBus;
+import android.app.Activity;
+import android.os.Bundle;
+import android.os.Message;
+import android.support.v4.app.Fragment;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-public class PhotoAlbumActivity extends BaseActivity implements OnClickListener {
+public class PhotoalbumFragment extends Fragment implements OnClickListener {
+	
 	public static final int UPDATELOGINSTATE = -1;
 	public static final int UPDATEDATE = -2;
 	/** 返回主页的消息 */
@@ -75,88 +79,48 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	private boolean mIsExit = false;
 	private CustomFormatDialog mConnectionDialog;
 	private CustomDialog backHomeDialog;
-
+	
+	FragmentAlbum photoActivity;
+	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.photo_album);
-
-		if (savedInstanceState == null) {
-			from = getIntent().getStringExtra("from");
-			mPromotionSelectItem = (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO);
-		} else {
-			from = savedInstanceState.getString("from");
-			mPromotionSelectItem = (PromotionSelectItem) savedInstanceState.getSerializable(ACTIVITY_INFO);
-		}
+	public View onCreateView(LayoutInflater inflater,ViewGroup container,  Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.photo_album, container, false);  
 		selectedListData = new ArrayList<String>();
-		initCache();
-		initView();
-		setListener();
-		mIsExit = false;
-		EventBus.getDefault().register(this);
+		initView(view);
+		return view;
 	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		if (mPromotionSelectItem != null) {
-			outState.putSerializable(ACTIVITY_INFO, mPromotionSelectItem);
-		}
-		if (from != null) {
-			outState.putSerializable("from", from);
-		}
-		super.onSaveInstanceState(outState);
-	}
-
-	private void initCache() {
-//		int maxSize = (int) (Runtime.getRuntime().maxMemory() / 6);
-//		mLruCache = new LruCache<String, Bitmap>(maxSize) {
-//			@Override
-//			protected int sizeOf(String key, Bitmap bitmap) {
-//				if (bitmap == null) {
-//					return 0;
-//				}
-//				return bitmap.getRowBytes() * bitmap.getHeight();
-//			}
-//		};
-	}
-
-	public Bitmap getBitmap(String filename) {
-//		return mLruCache.get(filename);
-		return null;
-	}
-
-	public void putBitmap(String filename, Bitmap mBitmap) {
-//		mLruCache.put(filename, mBitmap);
-	}
-
-	private void initView() {
-		bottomLayout = (RelativeLayout) findViewById(R.id.bottomLayout);
-		mEditLayout = (RelativeLayout) findViewById(R.id.mEditLayout);
-		mDownLoadBtn = (LinearLayout) findViewById(R.id.mDownLoadBtn);
-		mMainLayout = (RelativeLayout) findViewById(R.id.mMainLayout);
-		mTitleName = (TextView) findViewById(R.id.mTitleName);
-		mEditBtn = (Button) findViewById(R.id.mEditBtn);
-		mBackBtn = (ImageButton) findViewById(R.id.mBackBtn);
-		mCloudIcon = (ImageView) findViewById(R.id.mCloudIcon);
-		mLocalIcon = (ImageView) findViewById(R.id.mLocalIcon);
-		mCloudText = (TextView) findViewById(R.id.mCloudText);
-		mLocalText = (TextView) findViewById(R.id.mLocalText);
-		mDownLoadIcon = (ImageView) findViewById(R.id.mDownLoadIcon);
-		mDeleteIcon = (ImageView) findViewById(R.id.mDeleteIcon);
+	
+	
+	private void initView(View view) {
+		bottomLayout = (RelativeLayout) view.findViewById(R.id.bottomLayout);
+		mEditLayout = (RelativeLayout) view.findViewById(R.id.mEditLayout);
+		mDownLoadBtn = (LinearLayout) view.findViewById(R.id.mDownLoadBtn);
+		//mMainLayout = (RelativeLayout) view.findViewById(R.id.mMainLayout);
+		mTitleName = (TextView) view.findViewById(R.id.mTitleName);
+		//mEditBtn = (Button) view.findViewById(R.id.mEditBtn);
+		//mBackBtn = (ImageButton) view.findViewById(R.id.mBackBtn);
+		mCloudIcon = (ImageView) view.findViewById(R.id.mCloudIcon);
+		mLocalIcon = (ImageView) view.findViewById(R.id.mLocalIcon);
+		mCloudText = (TextView) view.findViewById(R.id.mCloudText);
+		mLocalText = (TextView) view.findViewById(R.id.mLocalText);
+		mDownLoadIcon = (ImageView) view.findViewById(R.id.mDownLoadIcon);
+		mDeleteIcon = (ImageView) view.findViewById(R.id.mDeleteIcon);
+		setListener(view);//设置监听
 		setEditBtnState(false);
 		updateBtnState(R.id.mLocalVideoBtn);
 		updateLinkState();
 	}
 
-	private void setListener() {
+	private void setListener(View view) {
 		mBackBtn.setOnClickListener(this);
 		mEditBtn.setOnClickListener(this);
-		findViewById(R.id.mLocalVideoBtn).setOnClickListener(this);
-		findViewById(R.id.mCloudVideoBtn).setOnClickListener(this);
+		view.findViewById(R.id.mLocalVideoBtn).setOnClickListener(this);
+		view.findViewById(R.id.mCloudVideoBtn).setOnClickListener(this);
 		mDownLoadBtn.setOnClickListener(this);
-		findViewById(R.id.mDeleteBtn).setOnClickListener(this);
+		view.findViewById(R.id.mDeleteBtn).setOnClickListener(this);
 	}
-
+	
+	
 	/**
 	 * 获取当前选择的是否是本地视频标签
 	 * 
@@ -195,7 +159,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 			mCloudText.setTextColor(getResources().getColor(R.color.photoalbum_icon_color_gray));
 
 			if (null == mLocalVideoListView) {
-				mLocalVideoListView = new LocalVideoManager(this, from, mPromotionSelectItem);
+				mLocalVideoListView = new LocalVideoManager(this.getContext(), from, mPromotionSelectItem);
 				mMainLayout.addView(mLocalVideoListView.getRootView());
 			}
 			mLocalVideoListView.show();
@@ -204,13 +168,8 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 			if(null != mCloudVideoListView) {
 				mCloudVideoListView.hide();
 			}
-			GlideUtils.clearMemory(this);
+			GlideUtils.clearMemory(this.getContext());
 			System.gc();
-//			if (null != mCloudVideoListView) {
-//				mMainLayout.removeView(mCloudVideoListView.getRootView());
-//				mCloudVideoListView = null;
-//				System.gc();
-//			}
 			break;
 		case R.id.mCloudVideoBtn:
 			mCloudIcon.setBackgroundResource(R.drawable.my_cloud_press);
@@ -219,10 +178,8 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 			mLocalText.setTextColor(getResources().getColor(R.color.photoalbum_icon_color_gray));
 
 			if (null == mCloudVideoListView) {
-				mCloudVideoListView = new CloudVideoManager(this);
+				mCloudVideoListView = new CloudVideoManager(this.getContext());
 				mMainLayout.addView(mCloudVideoListView.getRootView());
-//				mCloudVideoListView.show();
-//				mCloudVideoListView.updateEdit();
 			}
 			mCloudVideoListView.show();
 			mCloudVideoListView.updateEdit();
@@ -234,7 +191,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 //				mLocalVideoListView = null;
 //				System.gc();
 //			}
-			GlideUtils.clearMemory(this);
+			GlideUtils.clearMemory(this.getContext());
 			System.gc();
 			break;
 		default:
@@ -242,7 +199,6 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 		}
 	}
 
-	@Override
 	protected void hMessage(Message msg) {
 		if (MSG_H_SHOWBACK == msg.what) {
 			showBackHomeDialog();
@@ -259,15 +215,11 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 		if (backHomeDialog != null && backHomeDialog.isShowing()) {
 			return;
 		}
-		backHomeDialog = new CustomDialog(this);
+		backHomeDialog = new CustomDialog(this.getContext());
 		backHomeDialog.setMessage(getResources().getString(R.string.str_ipc_no_connect), Gravity.CENTER);
 		backHomeDialog.setLeftButton(this.getResources().getString(R.string.str_button_ok), new OnLeftClickListener() {
 			@Override
 			public void onClickListener() {
-//				Intent it = new Intent(PhotoAlbumActivity.this, MainActivity.class);
-//				it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//				it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//				PhotoAlbumActivity.this.startActivity(it);
 				exit();
 				closeBackHomeDialog();
 			}
@@ -289,18 +241,27 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 		if (mConnectionDialog != null && mConnectionDialog.isShowing()) {
 			return;
 		}
-		mConnectionDialog = new CustomFormatDialog(this);
+		mConnectionDialog = new CustomFormatDialog(this.getContext());
 		mConnectionDialog.setCancelable(false);
 		mConnectionDialog.setMessage(this.getResources().getString(R.string.str_ipc_disconnect));
 		mConnectionDialog.show();
-
 		// 计时10秒后弹出返回主页的对话框
-		mBaseHandler.removeMessages(MSG_H_SHOWBACK);
-		mBaseHandler.sendEmptyMessageDelayed(MSG_H_SHOWBACK, 10000);
+		EventPhotoalbumHandlerMessage ephm = new EventPhotoalbumHandlerMessage();
+		ephm.setCode(EventConfig.PHOTO_ALBUM_REMOVE_HANLDER);
+		ephm.setMsg(MSG_H_SHOWBACK);
+		EventBus.getDefault().post(ephm);
+		
+		ephm.setCode(EventConfig.PHOTO_ALBUM_DELAYED_HANLDER);
+		ephm.setMsg(MSG_H_SHOWBACK);
+		EventBus.getDefault().post(ephm);
 	}
-
+	
 	public void closeConnectionDialog() {
-		mBaseHandler.removeMessages(MSG_H_SHOWBACK);
+		EventPhotoalbumHandlerMessage ephm = new EventPhotoalbumHandlerMessage();
+		ephm.setCode(EventConfig.PHOTO_ALBUM_REMOVE_HANLDER);
+		ephm.setMsg(MSG_H_SHOWBACK);
+		EventBus.getDefault().post(ephm);
+		
 		if (mConnectionDialog != null) {
 			if (mConnectionDialog.isShowing()) {
 				mConnectionDialog.dismiss();
@@ -381,12 +342,12 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
-		case R.id.mBackBtn:
+		/*case R.id.mBackBtn:
 			exit();
 			break;
 		case R.id.mEditBtn:
 			updateEditState();
-			break;
+			break;*/
 		case R.id.mLocalVideoBtn:
 			updateBtnState(R.id.mLocalVideoBtn);
 			break;
@@ -409,19 +370,19 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 
 			if (R.id.mCloudVideoBtn == curId) {
 				if (!isAllowedDelete()) {
-					GolukUtils.showToast(PhotoAlbumActivity.this, getResources().getString(R.string.str_photo_downing));
+					GolukUtils.showToast(this.getContext(), getResources().getString(R.string.str_photo_downing));
 					return;
 				}
 
 				if (!GolukApplication.getInstance().getIpcIsLogin()) {
 					resetEditState();
-					GolukUtils.showToast(PhotoAlbumActivity.this,
+					GolukUtils.showToast(this.getContext(),
 							getResources().getString(R.string.str_photo_check_ipc_state));
 					return;
 				}
 			}
 
-			CustomDialog mCustomDialog = new CustomDialog(this);
+			CustomDialog mCustomDialog = new CustomDialog(this.getContext());
 			mCustomDialog.setMessage(
 					getResources().getString(R.string.str_photo_deletepromote_1) + selectedListData.size()
 							+ getResources().getString(R.string.str_photo_deletepromote_2), Gravity.CENTER);
@@ -468,7 +429,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 		}
 
 		resetEditState();
-		GolukUtils.showToast(PhotoAlbumActivity.this, getResources().getString(R.string.str_photo_delete_ok));
+		GolukUtils.showToast(this.getContext(), getResources().getString(R.string.str_photo_delete_ok));
 	}
 
 	private void downloadVideoFlush() {
@@ -477,7 +438,7 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 				mCloudVideoListView.downloadVideoFlush(selectedListData);
 			}
 		} else {
-			GolukUtils.showToast(PhotoAlbumActivity.this, getResources().getString(R.string.str_photo_check_ipc_state));
+			GolukUtils.showToast(this.getContext(), getResources().getString(R.string.str_photo_check_ipc_state));
 		}
 		resetEditState();
 	}
@@ -567,7 +528,12 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 			return;
 		}
 		mIsExit = true;
-		mBaseHandler.removeMessages(MSG_H_SHOWBACK);
+		
+		EventPhotoalbumHandlerMessage ephm = new EventPhotoalbumHandlerMessage();
+		ephm.setCode(EventConfig.PHOTO_ALBUM_REMOVE_HANLDER);
+		ephm.setMsg(MSG_H_SHOWBACK);
+		EventBus.getDefault().post(ephm);
+		
 		this.closeConnectionDialog();
 		closeBackHomeDialog();
 
@@ -578,20 +544,20 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 				ipcManageControl.removeIPCManagerListener("filemanager" + listener[i]);
 			}
 		}
-		finish();
+		//finish();
 	}
 
-	@Override
+	/*@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			exit();
 			return false;
 		}
 		return super.onKeyDown(keyCode, event);
-	}
+	}*/
 
 	@Override
-	protected void onResume() {
+	public void onResume() {
 		super.onResume();
 		if (null != mLocalVideoListView) {
 			mLocalVideoListView.onResume();
@@ -600,11 +566,11 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 		if (null != mCloudVideoListView) {
 			mCloudVideoListView.onResume();
 		}
-		GolukApplication.getInstance().setContext(this, "ipcfilemanager");
+		GolukApplication.getInstance().setContext(this.getContext(), "ipcfilemanager");
 	}
 
 	@Override
-	protected void onDestroy() {
+	public void onDestroy() {
 		exit();
 //		if (null != mLruCache) {
 //			mLruCache.evictAll();
@@ -612,9 +578,8 @@ public class PhotoAlbumActivity extends BaseActivity implements OnClickListener 
 		if (null != mCloudVideoListView) {
 			mCloudVideoListView.onDestroy();
 		}
-		GlideUtils.clearMemory(this);
-		EventBus.getDefault().unregister(this);
+		GlideUtils.clearMemory(this.getContext());
+		EventBus.getDefault().unregister(this.getContext());
 		super.onDestroy();
 	}
-
 }

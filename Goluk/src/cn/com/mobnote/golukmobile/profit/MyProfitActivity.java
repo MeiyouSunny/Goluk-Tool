@@ -8,7 +8,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.live.UserInfo;
-import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
+import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
@@ -16,6 +16,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -64,10 +65,10 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener, O
 		setContentView(R.layout.my_profit);
 
 		initView();
-		UserInfo userInfo = GolukApplication.getInstance().getMyInfo();
-		if (null != userInfo) {
-			uid = userInfo.uid;
-			phone = userInfo.phone;
+		GolukApplication app = GolukApplication.getInstance();
+		if (null != app) {
+			uid = GolukApplication.getInstance().mCurrentUId;
+			phone = GolukApplication.getInstance().mCurrentPhoneNum;
 		}
 		showLoadingDialog();
 		initData();
@@ -136,6 +137,10 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener, O
 				GolukUtils.showToast(this, this.getResources().getString(R.string.str_network_unavailable));
 				return;
 			}
+			if (TextUtils.isEmpty(phone)) {
+				GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_bind_phone_first));
+				return;
+			}
 			Intent itCash = new Intent(this, UserOpenUrlActivity.class);
 			itCash.putExtra(UserOpenUrlActivity.FROM_TAG, "cash");
 			itCash.putExtra("isChangeUI", true);
@@ -151,7 +156,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener, O
 			break;
 		// 收益为０时，点击跳转带有分享的相册页面
 		case R.id.last_profit_no_hint:
-			Intent photoalbum = new Intent(MyProfitActivity.this, PhotoAlbumActivity.class);
+			Intent photoalbum = new Intent(MyProfitActivity.this, FragmentAlbum.class);
 			photoalbum.putExtra("from", "cloud");
 			startActivity(photoalbum);
 			break;

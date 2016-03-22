@@ -33,7 +33,8 @@ import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyListHeadersAdapter {
-	private PhotoAlbumActivity mActivity = null;
+	private FragmentAlbum mFragment = null;
+	private Context mContext;
 	private LayoutInflater inflater = null;
 	private StickyListHeadersListView mListView = null;
 	private List<DoubleVideoInfo> mDataList = null;
@@ -44,8 +45,9 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	/** 滚动中锁标识 */
 //	private boolean lock = false;
 
-	public CloudWonderfulVideoAdapter(Context c, StickyListHeadersListView listview) {
-		this.mActivity = (PhotoAlbumActivity) c;
+	public CloudWonderfulVideoAdapter(Context c, FragmentAlbum fragment, StickyListHeadersListView listview) {
+		this.mFragment = fragment;
+		this.mContext = c;
 		this.mListView = listview;
 		this.inflater = LayoutInflater.from(c);
 		this.density = SoundUtils.getInstance().getDisplayMetrics().density;
@@ -199,8 +201,8 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	private void updateEditState(DoubleVideoInfo mDoubleVideoInfo, RelativeLayout mTMLayout1, RelativeLayout mTMLayout2) {
 		VideoInfo mVideoInfo1 = mDoubleVideoInfo.getVideoInfo1();
 		VideoInfo mVideoInfo2 = mDoubleVideoInfo.getVideoInfo2();
-		List<String> selectedData = mActivity.getSelectedList();
-		if (mActivity.getEditState()) {
+		List<String> selectedData = mFragment.getSelectedList();
+		if (mFragment.getEditState()) {
 			if (selectedData.contains(mVideoInfo1.videoPath)) {
 				mTMLayout1.setVisibility(View.VISIBLE);
 			} else {
@@ -236,7 +238,7 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	private void loadImage(String filename, ImageView image) {
 		filename = filename.replace(".mp4", ".jpg");
 		String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
-		GlideUtils.loadImage(mActivity, image, filePath + File.separator + filename, R.drawable.album_default_img);
+		GlideUtils.loadImage(mContext, image, filePath + File.separator + filename, R.drawable.album_default_img);
 //		Bitmap mBitmap = mActivity.getBitmap(filename);
 //		if (null != mBitmap) {
 //			image.setImageBitmap(mBitmap);
@@ -357,9 +359,9 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 
 				if (month == o_month) {
 					if (day == o_day) {
-						holder.date.setText(mActivity.getResources().getString(R.string.str_today));
+						holder.date.setText(mContext.getResources().getString(R.string.str_today));
 					} else if (day == (o_day + 1)) {
-						holder.date.setText(mActivity.getResources().getString(R.string.str_yestoday));
+						holder.date.setText(mContext.getResources().getString(R.string.str_yestoday));
 					} else {
 						holder.date.setText(time[1] + "/" + time[2]);
 					}

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.text.TextUtils;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoFileInfo;
@@ -52,7 +53,12 @@ public class VideoDataManagerUtils {
 		info.videoSize = Utils.getSizeShow(mVideoFileInfo.size);
 		info.countTime = Utils.minutesTimeToString(mVideoFileInfo.period);
 		info.videoHP = mVideoFileInfo.resolution;
-		info.videoCreateDate = Utils.getTimeStr(mVideoFileInfo.time * 1000);
+		if (TextUtils.isEmpty(mVideoFileInfo.timestamp)) {
+			info.videoCreateDate = Utils.getTimeStr(mVideoFileInfo.time * 1000);
+		} else {
+			info.videoCreateDate = FileInfoManagerUtils.countFileDateToString(mVideoFileInfo.timestamp);
+		}
+
 		info.videoPath = mVideoFileInfo.location;
 		info.filename = mVideoFileInfo.location;
 		info.time = mVideoFileInfo.time;

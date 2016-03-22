@@ -65,7 +65,7 @@
 	        android:text="@string/str_adas_car_name"/>
 	    <EditText
 	        android:id = "@+id/edittext_car_name"
-	        android:layout_width="wrap_content"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:background="@null"
 	        android:maxLength="6"
@@ -105,7 +105,7 @@
 
         <EditText
             android:id="@+id/edittext_front_wheelbase"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/textview_front_wheelbase_unit"
             android:layout_centerVertical="true"
@@ -167,7 +167,7 @@
             android:textSize="16sp" />
         <EditText
             android:id="@+id/edittext_headway_distance"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:singleLine="true"
@@ -209,7 +209,7 @@
 
         <EditText
             android:id="@+id/edittext_height_distance"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/textview_height_unit"
@@ -261,7 +261,7 @@
 
         <EditText
             android:id="@+id/edittext_left_wheelbase"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/textview_left_wheelbase_unit"
@@ -314,7 +314,7 @@
 
         <EditText
             android:id="@+id/edittext_right_wheelbase"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/textview_right_wheelbase_unit"

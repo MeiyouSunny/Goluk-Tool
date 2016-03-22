@@ -166,7 +166,7 @@ public class LocalVideoManager implements OnClickListener {
 	}
 
 	public void updateEdit(int type, boolean isHasData) {
-		GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit11: " + isHasData);
+		/*GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit11: " + isHasData);
 		if (null == mContext || !(mContext instanceof PhotoAlbumActivity)) {
 			return;
 		}
@@ -179,7 +179,7 @@ public class LocalVideoManager implements OnClickListener {
 			return;
 		}
 		GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit44: ");
-		((PhotoAlbumActivity) mContext).setEditBtnState(isHasData);
+		((PhotoAlbumActivity) mContext).setEditBtnState(isHasData);*/
 
 	}
 

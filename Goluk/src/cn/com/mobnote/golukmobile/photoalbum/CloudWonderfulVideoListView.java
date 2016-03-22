@@ -47,7 +47,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 	private View mRootLayout = null;
 	private Context mContext = null;
 	private CloudVideoManager mCloudVideoListView = null;
-	private PhotoAlbumActivity mActivity = null;
+	private FragmentAlbum mFragment = null;
 	private StickyListHeadersListView mStickyListHeadersListView = null;
 	private CloudWonderfulVideoAdapter mCloudWonderfulVideoAdapter = null;
 	private List<VideoInfo> mDataList = null;
@@ -56,7 +56,9 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 	/** 保存屏幕点击横坐标点 */
 	private float screenX = 0;
 	private int screenWidth = 0;
-	private CustomLoadingDialog mCustomProgressDialog = null;
+	//////// CK Start
+//	private CustomLoadingDialog mCustomProgressDialog = null;
+	//////// CK End
 	/** 列表数据加载中标识 */
 	private boolean isGetFileListDataing = false;
 	/** 数据分页个数 */
@@ -80,14 +82,14 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 	/** 判断服务端是否还有数据 */
 	private boolean isHasData = true;
 
-	public CloudWonderfulVideoListView(Context context, CloudVideoManager cloudVideoListView, int type) {
+	public CloudWonderfulVideoListView(Context context, FragmentAlbum fragment, CloudVideoManager cloudVideoListView, int type) {
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + type, this);
 		}
 		this.mContext = context;
 		mCloudVideoListView = cloudVideoListView;
 		this.mCurrentType = type;
-		this.mActivity = (PhotoAlbumActivity) context;
+		this.mFragment = fragment;
 		this.mDataList = new ArrayList<VideoInfo>();
 		this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
 		this.mGroupListName = new ArrayList<String>();
@@ -103,9 +105,9 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 		}
 
 		if (flag) {
-			if (!mCustomProgressDialog.isShowing()) {
-				mCustomProgressDialog.show();
-			}
+//			if (!mCustomProgressDialog.isShowing()) {
+//				mCustomProgressDialog.show();
+//			}
 		}
 
 		isGetFileListDataing = true;
@@ -120,10 +122,10 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 
 	private void initView() {
 		empty = (TextView) mRootLayout.findViewById(R.id.empty);
-		this.mCustomProgressDialog = new CustomLoadingDialog(mActivity, null);
+//		this.mCustomProgressDialog = new CustomLoadingDialog(mActivity, null);
 		mStickyListHeadersListView = (StickyListHeadersListView) mRootLayout
 				.findViewById(R.id.mStickyListHeadersListView);
-		mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(mContext, mStickyListHeadersListView);
+		mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(mContext, mFragment, mStickyListHeadersListView);
 
 		setListener();
 	}
@@ -201,7 +203,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 					RelativeLayout mTMLayout2 = (RelativeLayout) arg1.findViewById(R.id.mTMLayout2);
 					String tag1 = (String) mTMLayout1.getTag();
 					String tag2 = (String) mTMLayout2.getTag();
-					if (mActivity.getEditState()) {
+					if (mFragment.getEditState()) {
 						if ((screenX > 0) && (screenX < (screenWidth / 2))) {
 							selectedVideoItem(tag1, mTMLayout1);
 						} else {
@@ -213,7 +215,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 						if ((screenX > 0) && (screenX < (screenWidth / 2))) {
 							// 点击列表左边项,跳转到视频播放页面
 							VideoInfo info1 = d.getVideoInfo1();
-							gotoVideoPlayPage(mCurrentType, info1.videoPath);
+							gotoVideoPlayPage(mCurrentType, info1.videoPath, info1.videoCreateDate, info1.videoHP);
 							String filename = d.getVideoInfo1().filename;
 							updateNewState(filename);
 
@@ -224,7 +226,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 							VideoInfo info2 = d.getVideoInfo2();
 							if (null == info2)
 								return;
-							gotoVideoPlayPage(mCurrentType, info2.videoPath);
+							gotoVideoPlayPage(mCurrentType, info2.videoPath, info2.videoCreateDate, info2.videoHP);
 							String filename = info2.filename;
 							updateNewState(filename);
 
@@ -254,21 +256,28 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 	 * 
 	 * @param path
 	 */
-	private void gotoVideoPlayPage(int from, String path) {
+	private void gotoVideoPlayPage(int from, String path, String createTime, String videoHP) {
 		if (!isShowPlayer) {
 			isShowPlayer = true;
 			// if (null == VitamioPlayerActivity.mHandler) {
-			Intent intent = null;
-			if (1 == from) {
-				intent = new Intent(mContext, VitamioPlayerActivity.class);
-			} else {
-				intent = new Intent(mContext, VideoPlayerActivity.class);
-			}
-			intent.putExtra("from", "ipc");
-			intent.putExtra("type", mCurrentType);
-			intent.putExtra("filename", path);
-			mContext.startActivity(intent);
+//			Intent intent = null;
+//			if (1 == from) {
+//				intent = new Intent(mContext, VitamioPlayerActivity.class);
+//			} else {
+//				intent = new Intent(mContext, VideoPlayerActivity.class);
+//			}
+//			intent.putExtra("from", "ipc");
+//			intent.putExtra("type", mCurrentType);
+//			intent.putExtra("filename", path);
+//			mContext.startActivity(intent);
 			// }
+			Intent intent = new Intent(mContext, PhotoAlbumPlayer.class);
+			intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, "ipc");
+			intent.putExtra(PhotoAlbumPlayer.FILENAME, path);
+			intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
+			intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
+			intent.putExtra(PhotoAlbumPlayer.TYPE, mCurrentType);
+			mContext.startActivity(intent);
 		}
 	}
 
@@ -279,7 +288,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 	 * @param mTMLayout1
 	 */
 	private void selectedVideoItem(String tag1, RelativeLayout mTMLayout1) {
-		List<String> selectedListData = mActivity.getSelectedList();
+		List<String> selectedListData = mFragment.getSelectedList();
 		if (!TextUtils.isEmpty(tag1)) {
 			if (selectedListData.contains(tag1)) {
 				selectedListData.remove(tag1);
@@ -290,11 +299,11 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 			}
 
 			if (selectedListData.size() == 0) {
-				mActivity.updateTitleName(mContext.getString(R.string.local_video_title_text));
-				mActivity.updateEditBtnState(false);
+				mFragment.updateTitleName(mContext.getString(R.string.local_video_title_text));
+				mFragment.updateEditBtnState(false);
 			} else {
-				mActivity.updateEditBtnState(true);
-				mActivity.updateTitleName(mContext.getString(R.string.str_photo_select1) + selectedListData.size()
+				mFragment.updateEditBtnState(true);
+				mFragment.updateTitleName(mContext.getString(R.string.str_photo_select1) + selectedListData.size()
 						+ mContext.getString(R.string.str_photo_select2));
 			}
 		}
@@ -441,7 +450,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 	private void addFooterView() {
 		if (!addFooter) {
 			addFooter = true;
-			mBottomLoadingView = (RelativeLayout) LayoutInflater.from(mActivity).inflate(
+			mBottomLoadingView = (RelativeLayout) LayoutInflater.from(mContext).inflate(
 					R.layout.video_square_below_loading, null);
 			mStickyListHeadersListView.addFooterView(mBottomLoadingView);
 		}
@@ -492,9 +501,9 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 		switch (event) {
 		case ENetTransEvent_IPC_VDCP_CommandResp:
 			if (IPC_VDCP_Msg_Query == msg) {
-				if (mCustomProgressDialog != null && mCustomProgressDialog.isShowing()) {
-					mCustomProgressDialog.close();
-				}
+//				if (mCustomProgressDialog != null && mCustomProgressDialog.isShowing()) {
+//					mCustomProgressDialog.close();
+//				}
 				isGetFileListDataing = false;
 				GolukDebugUtils.e("xuhw", "YYYYYY=======获取文件列表===@@@======param1=" + param1 + "=====param2=" + param2);
 				if (RESULE_SUCESS == param1) {
@@ -588,8 +597,8 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 	}
 
 	public void onDestory() {
-		mCustomProgressDialog.close();
-		mCustomProgressDialog = null;
+//		mCustomProgressDialog.close();
+//		mCustomProgressDialog = null;
 	}
 
 }

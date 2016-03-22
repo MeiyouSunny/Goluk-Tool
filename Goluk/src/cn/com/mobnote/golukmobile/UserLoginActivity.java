@@ -1,5 +1,8 @@
 package cn.com.mobnote.golukmobile;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.List;
 
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -19,6 +22,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -332,6 +336,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 				info.userinfo = infoStr;
 				info.devices = GolukFileUtils.loadString(GolukFileUtils.KEY_BIND_HISTORY_LIST, "");
 				boolean b = mApplication.mLoginManage.login(info);
+
 				if (b) {
 					mApplication.loginStatus = 0;
 					showProgressDialog();

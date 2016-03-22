@@ -41,6 +41,7 @@ import cn.com.mobnote.user.IpcUpdateManage;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukConfig;
+import cn.com.mobnote.util.GolukFileUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.mobnote.util.SharedPrefUtil;
@@ -378,6 +379,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mEditor.putBoolean("FirstLogin", true);// 注销完成后，设置为没有登录过的一个状态
 		// 提交修改
 		mEditor.commit();
+		GolukFileUtils.remove(GolukFileUtils.THIRD_USER_INFO);
 		mBindPhone.setVisibility(View.GONE);
 		GolukUtils.showToast(mContext, this.getResources().getString(R.string.str_loginout_success));
 		btnLoginout.setText(this.getResources().getString(R.string.login_text));

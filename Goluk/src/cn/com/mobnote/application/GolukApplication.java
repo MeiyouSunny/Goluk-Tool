@@ -54,7 +54,7 @@ import cn.com.mobnote.golukmobile.fileinfo.VideoFileInfoBean;
 import cn.com.mobnote.golukmobile.http.HttpManager;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
-import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
+import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
 import cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.wifibind.IpcConnSuccessInfo;
@@ -1751,11 +1751,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @author 曾浩
 	 */
 	public boolean isCanShowConnectDialog() {
-		if (mContext instanceof PhotoAlbumActivity) {
-			return true;
-		} else {
-			return false;
-		}
+		//////// CK start
+//		if (mContext instanceof FragmentAlbum) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+		return true;
+		//////// CK End
 	}
 
 	/**
@@ -1774,7 +1777,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			String userInfo = mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
 					IPageNotifyFn.PageType_GetUserInfo_Get, "");
 
-			GolukDebugUtils.e("", "getUserInfo------------------logic-userInfo:" + userInfo);
+			Log.e("dengting", "getUserInfo------------------logic-userInfo:" + userInfo);
 
 			if (null != userInfo) {
 				myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(userInfo));

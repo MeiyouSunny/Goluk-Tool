@@ -106,8 +106,8 @@
 	<color name="text_select_color">#e13737</color>
 	<color name="text_diff_color">#808181</color>
 	
-	<color name="wonderful_item_nor_color">#80000000</color>
-	<color name="wonderful_item_sel_color">#00000000</color>
+	<color name="wonderful_item_nor_color">#ffffff</color>
+	<color name="wonderful_item_sel_color">#0080ff</color>
 	<color name="cagtegory_text_color">#bfffffff</color>
 	<color name="cagtegory_title_color">#e5ffffff</color>
 	<color name="color_comment_can_send">#0080ff</color>
@@ -118,5 +118,8 @@
 	
 	<color name="color_bind_btn_txt">#047cf3</color>
 	<color name="color_ipcbind_bg">#f7f9fa</color>
-
+	<color name="color_main_tab_bg">#f7f7f8</color>
+	<color name="color_list_divider">#bbbbbb</color>
+	<color name="color_tab_host_txt_press">#007aff</color>
+	<color name="color_tab_host_txt_normal">#929292</color>
 </resources>

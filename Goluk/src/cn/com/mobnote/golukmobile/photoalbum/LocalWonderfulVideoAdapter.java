@@ -34,7 +34,8 @@ import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyListHeadersAdapter {
-	private PhotoAlbumActivity mActivity = null;
+	private FragmentAlbum mFragment = null;
+	private Context mContext = null;
 	private LayoutInflater inflater = null;
 //	private StickyListHeadersListView mListView = null;
 	private List<DoubleVideoInfo> mDataList = null;
@@ -46,10 +47,11 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	private String from = null;
 	private int type = 0;
 
-	public LocalWonderfulVideoAdapter(Context c, StickyListHeadersListView listview, int type, String from) {
+	public LocalWonderfulVideoAdapter(Context c, FragmentAlbum fragment, StickyListHeadersListView listview, int type, String from) {
 		this.from = from;
 		this.type = type;
-		this.mActivity = (PhotoAlbumActivity) c;
+		this.mFragment = fragment;
+		this.mContext = c;
 //		this.mListView = listview;
 		this.inflater = LayoutInflater.from(c);
 		this.density = SoundUtils.getInstance().getDisplayMetrics().density;
@@ -209,8 +211,8 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	private void updateEditState(DoubleVideoInfo mDoubleVideoInfo, RelativeLayout mTMLayout1, RelativeLayout mTMLayout2) {
 		VideoInfo mVideoInfo1 = mDoubleVideoInfo.getVideoInfo1();
 		VideoInfo mVideoInfo2 = mDoubleVideoInfo.getVideoInfo2();
-		List<String> selectedData = mActivity.getSelectedList();
-		if (mActivity.getEditState()) {
+		List<String> selectedData = mFragment.getSelectedList();
+		if (mFragment.getEditState()) {
 			if (selectedData.contains(mVideoInfo1.videoPath)) {
 				mTMLayout1.setVisibility(View.VISIBLE);
 			} else {
@@ -247,7 +249,7 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		filename = filename.replace(".mp4", ".jpg");
 		String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 //		GlideUtils.loadLocalImage(mActivity, image, filePath + File.separator + filename, R.drawable.album_default_img);
-		GlideUtils.loadImage(mActivity, image, filePath + File.separator + filename, R.drawable.album_default_img);
+		GlideUtils.loadImage(mContext, image, filePath + File.separator + filename, R.drawable.album_default_img);
 //		Bitmap mBitmap = mActivity.getBitmap(filename);
 //		if (null != mBitmap) {
 //			image.setImageBitmap(mBitmap);

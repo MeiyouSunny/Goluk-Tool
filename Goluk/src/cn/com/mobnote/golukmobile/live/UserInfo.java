@@ -47,6 +47,12 @@ public class UserInfo implements Serializable {
 	public int sharevideonumber;
 	/** 赞我的人的个数 **/
 	public int praisemenumber;
+	/** 关注数**/
+	public int followingnumber;
+	/** 粉丝数**/
+	public int fansnumber;
+	/** 新增粉丝数**/
+	public int newfansnumber;
 	/**手机号**/
 	public String phone;
 

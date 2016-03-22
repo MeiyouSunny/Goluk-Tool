@@ -15,13 +15,15 @@ public class CloudPagerAdapter extends PagerAdapter {
 	private CloudWonderfulVideoListView mCloudLoopVideoListView = null;
 
 	public CloudPagerAdapter(Context c, CloudVideoManager cloudVideoListView) {
-		this.mContext = c;
-		this.mCloudWonderfulVideoListView = new CloudWonderfulVideoListView(mContext, cloudVideoListView,
-				IPCManagerFn.TYPE_SHORTCUT);
-		this.mCloudEmergencyVideoListView = new CloudWonderfulVideoListView(mContext, cloudVideoListView,
-				IPCManagerFn.TYPE_URGENT);
-		this.mCloudLoopVideoListView = new CloudWonderfulVideoListView(mContext, cloudVideoListView,
-				IPCManagerFn.TYPE_CIRCULATE);
+		//CK Start
+//		this.mContext = c;
+//		this.mCloudWonderfulVideoListView = new CloudWonderfulVideoListView(mContext, cloudVideoListView,
+//				IPCManagerFn.TYPE_SHORTCUT);
+//		this.mCloudEmergencyVideoListView = new CloudWonderfulVideoListView(mContext, cloudVideoListView,
+//				IPCManagerFn.TYPE_URGENT);
+//		this.mCloudLoopVideoListView = new CloudWonderfulVideoListView(mContext, cloudVideoListView,
+//				IPCManagerFn.TYPE_CIRCULATE);
+		//CK End
 	}
 
 	@Override

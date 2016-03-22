@@ -413,6 +413,11 @@
     <string name="str_comment_input_hit">写评论</string>
     <string name="str_comment_no_input">该评论已关闭</string>
     <string name="str_category_map">地图</string>
+    <string name="str_local_title">本地</string>
+    <string name="str_wonderful_title">精彩</string>
+    <string name="str_urgent_title">紧急</string>
+    <string name="str_loop_title">循环</string>
+    <string name="str_album_no_connect">点击此处连接极路客</string>
 
     <!-- 意见反馈 -->
     <string name="user_opinion_type_yingjiang">硬件相关</string>
@@ -948,7 +953,7 @@
     <string name="str_get_gateway_fail">热点获取网关失败</string>
     <string name="str_get_gateway_timeout">热点获取网关超时</string>
     <string name="str_asycned">已同步</string>
-    <string name="str_video_sync_setting_title">视频自动同步</string>
+    <string name="str_video_sync_setting_title">视频自动同步设置</string>
     <string name="str_video_sync_setting_sync_five">同步最近录制的5条</string>
     <string name="str_video_sync_setting_sync_twenty">同步最近录制的20条</string>
     <string name="str_video_sync_setting_sync_close">关闭</string>
@@ -976,4 +981,10 @@
     <string name="str_usercenter_header_fans_text">粉丝</string>
     <string name="str_usercenter_more_share">分享主页</string>
     
+    <string name="str_please_bind_phone_first">提现需要绑定手机号，请先前往通用设置中绑定手机号</string>
+    <string name="str_follow">关注</string>
+    <string name="str_fans">粉丝</string>
+    <string name="str_discover">极社</string>
+    <string name="str_album">相册</string>
+    <string name="str_mine">我的</string>
 </resources>

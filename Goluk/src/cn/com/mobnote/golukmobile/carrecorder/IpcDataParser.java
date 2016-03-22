@@ -204,7 +204,7 @@ public class IpcDataParser {
 			String resolution = obj.getString("resolution");
 			int withSnapshot = obj.getInt("withSnapshot");
 			int withGps = obj.getInt("withGps");
-
+			String timeStamp = obj.optString("timestamp");
 			VideoFileInfo fileInfo = new VideoFileInfo();
 			fileInfo.id = id;
 			fileInfo.period = period;
@@ -215,7 +215,7 @@ public class IpcDataParser {
 			fileInfo.resolution = resolution;
 			fileInfo.withSnapshot = withSnapshot;
 			fileInfo.withGps = withGps;
-
+			fileInfo.timestamp = timeStamp;
 			return fileInfo;
 
 		} catch (Exception e) {

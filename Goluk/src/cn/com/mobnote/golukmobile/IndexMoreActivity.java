@@ -7,7 +7,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.msg.MessageCenterActivity;
-import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
+import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
 import cn.com.mobnote.golukmobile.praised.MyPraisedActivity;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
@@ -17,6 +17,7 @@ import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import android.net.Uri;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -24,14 +25,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.util.GlideUtils;
+import cn.com.mobnote.util.GolukConfig;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -64,8 +68,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	private TextView mInstallItem = null;
 	/** 版本信息 **/
 	private TextView mQuestionItem = null;
-	/** 购买极路客 **/
-	private TextView mShoppingItem = null;
+//	/** 购买极路客 **/
+//	private TextView mShoppingItem = null;
 	/**我的收益**/
 	private TextView mProfitItem = null;
 	private RelativeLayout mMsgCenterItem = null;
@@ -75,21 +79,21 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	private ImageView mImageHead, mImageAuthentication;
 	private TextView mTextName, mTextId;
 	private LinearLayout mVideoLayout;
-	private TextView mTextShare, mTextPraise;
+	private TextView mTextShare, mTextPraise, mTextFollow;
 	/** 分享视频 赞我的人 **/
-	private LinearLayout mShareLayout, mPraiseLayout;
+	private LinearLayout mShareLayout, mPraiseLayout, mFollowLayout;
 
 	/** 自动登录中的loading提示框 **/
 	private Builder mBuilder = null;
 	private SharedPreferences mPreferences = null;
 	private boolean isFirstLogin;
 	private Editor mEditor = null;
-	RelativeLayout mRootLayout = null;
+	LinearLayout mRootLayout = null;
 	private MainActivity ma;
 
 	/** 用户信息 **/
 	private String userHead, userName, userDesc, userUId, userSex,customavatar, userPhone;
-	private int shareCount, praiseCount;
+	private int shareCount, praiseCount, followCount, newFansCout, fansCount;
 	
 	/**个人中心**/
 	private static final int TYPE_USER = 1;
@@ -99,7 +103,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 	private static final int TYPE_PROFIT = 3;
 	private static final String TAG = "IndexMoreActivity";
 
-	public IndexMoreActivity(RelativeLayout rootlayout, Context context) {
+	public IndexMoreActivity(LinearLayout rootlayout, Context context) {
 		mRootLayout = rootlayout;
 		mContext = context;
 		ma = (MainActivity) mContext;
@@ -135,7 +139,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		mSkillItem = (TextView) mRootLayout.findViewById(R.id.skill_item);
 		mInstallItem = (TextView) mRootLayout.findViewById(R.id.install_item);
 		mQuestionItem = (TextView) mRootLayout.findViewById(R.id.question_item);
-		mShoppingItem = (TextView) mRootLayout.findViewById(R.id.shopping_item);
+//		mShoppingItem = (TextView) mRootLayout.findViewById(R.id.shopping_item);
 		mProfitItem = (TextView) mRootLayout.findViewById(R.id.profit_item);
 		mMsgCenterItem = (RelativeLayout) mRootLayout.findViewById(R.id.rl_my_message);
 		mPraisedListItem = (TextView)mRootLayout.findViewById(R.id.tv_praise_item);
@@ -148,9 +152,10 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		mVideoLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_center_video_layout);
 		mTextShare = (TextView) mRootLayout.findViewById(R.id.user_share_count);
 		mTextPraise = (TextView) mRootLayout.findViewById(R.id.user_praise_count);
+		mTextFollow =  (TextView) mRootLayout.findViewById(R.id.user_follow_count);
 		mShareLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_share);
 		mPraiseLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_praise);
-
+		mFollowLayout = (LinearLayout) mRootLayout.findViewById(R.id.user_follow);
 		// 注册事件
 		// 个人中心 我的相册 摄像头管理 通用设置 极路客小技巧 安装指导 版本信息 购买极路客
 		mUserCenterItem.setOnClickListener(this);
@@ -160,9 +165,10 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		mSkillItem.setOnClickListener(this);
 		mInstallItem.setOnClickListener(this);
 		mQuestionItem.setOnClickListener(this);
-		mShoppingItem.setOnClickListener(this);
+//		mShoppingItem.setOnClickListener(this);
 		mShareLayout.setOnClickListener(this);
 		mPraiseLayout.setOnClickListener(this);
+		mFollowLayout.setOnClickListener(this);
 		mProfitItem.setOnClickListener(this);
 		mMsgCenterItem.setOnClickListener(this);
 		mPraisedListItem.setOnClickListener(this);
@@ -217,6 +223,8 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		case R.id.user_praise:
 			clickAuto(TYPE_SHARE_PRAISE, 1);
 			break;
+		case R.id.user_follow:
+			break;
 		// 点击跳转到我的主页
 		case R.id.user_center_item:
 			clickAuto(TYPE_USER, 0);
@@ -224,7 +232,7 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 		// 我的相册
 		case R.id.video_item:
 			ma.mApp.mUser.setUserInterface(null);
-			intent = new Intent(mContext, PhotoAlbumActivity.class);
+			intent = new Intent(mContext, FragmentAlbum.class);
 			intent.putExtra("from", "local");
 			mContext.startActivity(intent);
 			break;
@@ -256,34 +264,31 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			mContext.startActivity(itQuestion);
 			break;
 		// 购买极路客
-		case R.id.shopping_item:
-			Intent itShopping = new Intent(mContext, UserOpenUrlActivity.class);
-			itShopping.putExtra(UserOpenUrlActivity.FROM_TAG, "shopping");
-			mContext.startActivity(itShopping);
-			break;
+//		case R.id.shopping_item:
+//			Intent itShopping = new Intent(mContext, UserOpenUrlActivity.class);
+//			itShopping.putExtra(UserOpenUrlActivity.FROM_TAG, "shopping");
+//			mContext.startActivity(itShopping);
+//			break;
 		//我的收益
 		case R.id.profit_item:
 			clickAuto(TYPE_PROFIT, 0);
 			break;
 		case R.id.rl_my_message:
-//			Intent msgIntent = new Intent(mContext, MessageCenterActivity.class);
-//			mContext.startActivity(msgIntent);
-			UCUserInfo user = new UCUserInfo();
-			user.uid = userUId;
-			user.nickname = userName;
-			user.headportrait = userHead;
-			user.introduce = userDesc;
-			user.sex = userSex;
-			user.customavatar = customavatar;
-			user.praisemenumber = praiseCount + "";
-			user.sharevideonumber = shareCount + "";
-
-			Intent its = new Intent(mContext, UserCenterActivity.class);
-			its.putExtra("userinfo", user);
-			its.putExtra("type", 1);
-			mContext.startActivity(its);
+			Intent msgIntent = new Intent(mContext, MessageCenterActivity.class);
+			mContext.startActivity(msgIntent);
 			break;
 		case R.id.tv_praise_item:
+			if(!GolukUtils.isNetworkConnected(mContext)) {
+				Toast.makeText(mContext, mContext.getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+				return;
+			}
+			GolukApplication app = (GolukApplication)((Activity)mContext).getApplication();
+			if (!app.isUserLoginSucess) {
+//				GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
+				Intent loginIntent = new Intent(mContext, UserLoginActivity.class);
+				mContext.startActivity(loginIntent);
+				return;
+			}
 			Intent praiseIntent = new Intent(mContext, MyPraisedActivity.class);
 			mContext.startActivity(praiseIntent);
 			break;
@@ -397,6 +402,9 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 			userDesc = userInfo.desc;
 			shareCount = userInfo.sharevideonumber;
 			praiseCount = userInfo.praisemenumber;
+			followCount = userInfo.followingnumber;
+			fansCount = userInfo.fansnumber;
+			newFansCout = userInfo.newfansnumber;
 			userUId = userInfo.uid;
 			userSex = userInfo.sex;
 			customavatar = userInfo.customavatar;
@@ -432,9 +440,16 @@ public class IndexMoreActivity implements OnClickListener, UserInterface, VideoS
 				mTextId.setText(userDesc);
 			}
 			mTextId.setTextColor(Color.rgb(0, 0, 0));
-			mTextShare.setText(GolukUtils.getFormatNumber(shareCount + ""));
-			mTextPraise.setText(GolukUtils.getFormatNumber(praiseCount + ""));
-
+			mTextShare.setText(GolukUtils.getFormatNumber(shareCount));
+			mTextPraise.setText(GolukUtils.getFormatNumber(fansCount));
+			mTextFollow.setText(GolukUtils.getFormatNumber(followCount));
+			if(newFansCout > 0) {
+				Drawable redPoint = mContext.getResources().getDrawable(R.drawable.home_red_point_little);
+				redPoint.setBounds(0, 0, redPoint.getMinimumWidth(), redPoint.getMinimumHeight());
+				mTextPraise.setCompoundDrawables(null, null, redPoint, null);
+			} else {
+				mTextPraise.setCompoundDrawables(null, null, null, null);
+			}
 			// 获取用户信息
 			boolean b = GolukApplication.getInstance().getVideoSquareManager().getUserInfo(userUId);
 			GolukDebugUtils.e("", "=======IndexMoreActivity====b：" + b);
