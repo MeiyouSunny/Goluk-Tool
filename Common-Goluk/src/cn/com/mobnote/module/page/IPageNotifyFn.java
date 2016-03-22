@@ -122,6 +122,14 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_PraiseCancel = 60;
 
 	public static final int PageType_PraisedList = 61;
+	/** 个人主页 **/
+	public static final int PageType_HomeUserInfo = 62;
+	/** 个人主页——用户视频分类 **/
+	public static final int PageType_HomeVideoList = 63;
+	/** 个人主页——关注 / 取消关注 **/
+	public static final int PageType_HomeAttention = 64;
+	/** 分享个人主页 **/
+	public static final int PageType_HomeShare = 65;
 
 	/**
 	 * 
