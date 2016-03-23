@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
+import cn.com.mobnote.eventbus.EventDeletePhotoAlbumVid;
+import cn.com.mobnote.eventbus.EventMessageUpdate;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
@@ -16,6 +18,7 @@ import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -59,6 +62,8 @@ public class LocalFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		
+		EventBus.getDefault().register(this);
         
         mFragmentAlbum = (FragmentAlbum)getParentFragment();
 		mLocalVideoView = inflater.inflate(R.layout.wonderful_listview, (ViewGroup)getActivity().findViewById(R.id.viewpager), false);
@@ -76,8 +81,26 @@ public class LocalFragment extends Fragment{
 		
 		return mLocalVideoView;
 	}
+	
+	
 
 	
+	@Override
+	public void onDestroyView() {
+		// TODO Auto-generated method stub
+		super.onDestroyView();
+		EventBus.getDefault().unregister(this);
+	}
+	
+	public void onEventMainThread(EventDeletePhotoAlbumVid event){
+		if(event!=null&&event.getmType() == PhotoAlbumConfig.PHOTO_BUM_LOCAL){
+			
+		}
+	}
+
+
+
+
 	private void initView(){
 		mCustomProgressDialog = new CustomLoadingDialog(this.getContext(), null);
 		mStickyListHeadersListView = (StickyListHeadersListView) mLocalVideoView.findViewById(R.id.mStickyListHeadersListView);

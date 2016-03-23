@@ -104,6 +104,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	/** 自动隐藏顶部和底部View的时间 */
 	private static final int HIDE_TIME = 3000;
 	private boolean mDragging;
+	
+	/** 更多对话框 */
+	private PlayerMoreDialog mPlayerMoreDialog ;
 
     private final Runnable mPlayingChecker = new Runnable() {
         @Override
@@ -145,6 +148,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			mDate = intent.getStringExtra(DATE);
 			mHP = intent.getStringExtra(HP);
 			mPath = intent.getStringExtra(PATH);
+			Log.i("path", "path:" + mPath);
 			mVideoFrom = intent.getStringExtra(VIDEO_FROM);
 			mSize = intent.getStringExtra(SIZE);
 			mFileName = intent.getStringExtra(FILENAME);
@@ -227,6 +231,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			mCustomDialog.dismiss();
 		}
 		mCustomDialog = null;
+		
+		if(mPlayerMoreDialog != null &&mPlayerMoreDialog.isShowing()){
+			mPlayerMoreDialog.dismiss();
+		}
+		mPlayerMoreDialog = null;
 		super.onDestroy();
 	}
 
@@ -319,6 +328,35 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			finish();
 			break;
 		case R.id.mMoreBtn:
+			
+			if(mPlayerMoreDialog==null){
+				String tempPath;
+				if (mVideoFrom.equals("local")) {
+					tempPath = mPath;
+				} else {
+					tempPath = mFileName;
+				}
+				
+				int tempType = -1;
+				if(!TextUtils.isEmpty(mVideoFrom)){
+					if("local".equals(mVideoFrom)){
+						tempType = PhotoAlbumConfig.PHOTO_BUM_LOCAL;
+						switch (mType){
+						case IPCManagerFn.TYPE_URGENT:
+							tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
+							break;
+						case IPCManagerFn.TYPE_SHORTCUT:
+							tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
+							break;
+						case IPCManagerFn.TYPE_CIRCULATE:
+							tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
+							break;
+						}	
+					}
+				}
+				mPlayerMoreDialog = new PlayerMoreDialog(PhotoAlbumPlayer.this,tempPath,tempType);
+			}
+			mPlayerMoreDialog.show();
 			break;
 		case R.id.btn_full_screen:
 			setFullScreen(true);
