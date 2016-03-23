@@ -40,6 +40,8 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventDeletePhotoAlbumVid;
+import cn.com.mobnote.eventbus.EventDownloadIpcVid;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
@@ -60,6 +62,7 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, OnPreparedListener, OnErrorListener, OnCompletionListener {
 	private static final String TAG = "PhotoAlbumPlayer";
@@ -334,30 +337,17 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			
 			if(mPlayerMoreDialog==null){
 				String tempPath = "";
-				int tempType = -1;
+			
 				if(!TextUtils.isEmpty(mVideoFrom)){
+					
 					if("local".equals(mVideoFrom)){
 						tempPath = mPath;
-						tempType = PhotoAlbumConfig.PHOTO_BUM_LOCAL;
-							
 					}else{
 						tempPath = mFileName;
-						switch (mType){
-						case IPCManagerFn.TYPE_URGENT:
-							tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
-							break;
-						case IPCManagerFn.TYPE_SHORTCUT:
-							tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
-							break;
-						case IPCManagerFn.TYPE_CIRCULATE:
-							tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
-							break;
-						}
 					}
 				}
 				
-				Log.i("type", "type"+tempType);
-				mPlayerMoreDialog = new PlayerMoreDialog(PhotoAlbumPlayer.this,tempPath,tempType);
+				mPlayerMoreDialog = new PlayerMoreDialog(PhotoAlbumPlayer.this,tempPath,getType());
 			}
 			mPlayerMoreDialog.show();
 			break;
@@ -395,7 +385,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 				intent.putExtra("cn.com.mobnote.video.path", mPath);
 				startActivity(intent);
 			} else {
-				
+				EventBus.getDefault().post(new EventDownloadIpcVid(mFileName, getType()));
 			}
 			finish();
 			break;
@@ -403,6 +393,29 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			Log.e(TAG, "id = " + id);
 			break;
 		}
+	}
+
+	private int getType() {
+		int tempType = 0;
+		if("local".equals(mVideoFrom)){
+			
+			tempType = PhotoAlbumConfig.PHOTO_BUM_LOCAL;
+				
+		}else{
+			
+			switch (mType){
+			case IPCManagerFn.TYPE_URGENT:
+				tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
+				break;
+			case IPCManagerFn.TYPE_SHORTCUT:
+				tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
+				break;
+			case IPCManagerFn.TYPE_CIRCULATE:
+				tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
+				break;
+			}
+		}
+		return tempType;
 	}
 
 	/**
