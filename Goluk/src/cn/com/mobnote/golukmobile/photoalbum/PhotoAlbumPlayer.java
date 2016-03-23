@@ -48,6 +48,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
 import cn.com.mobnote.golukmobile.player.DensityUtil;
 import cn.com.mobnote.golukmobile.player.FullScreenVideoView;
 import cn.com.mobnote.golukmobile.player.factory.GolukPlayer;
@@ -107,6 +108,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	
 	/** 更多对话框 */
 	private PlayerMoreDialog mPlayerMoreDialog ;
+	
+	private OnRightClickListener OnDeleteVidListener;
 
     private final Runnable mPlayingChecker = new Runnable() {
         @Override
@@ -330,17 +333,15 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		case R.id.mMoreBtn:
 			
 			if(mPlayerMoreDialog==null){
-				String tempPath;
-				if (mVideoFrom.equals("local")) {
-					tempPath = mPath;
-				} else {
-					tempPath = mFileName;
-				}
-				
+				String tempPath = "";
 				int tempType = -1;
 				if(!TextUtils.isEmpty(mVideoFrom)){
 					if("local".equals(mVideoFrom)){
+						tempPath = mPath;
 						tempType = PhotoAlbumConfig.PHOTO_BUM_LOCAL;
+							
+					}else{
+						tempPath = mFileName;
 						switch (mType){
 						case IPCManagerFn.TYPE_URGENT:
 							tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
@@ -351,9 +352,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 						case IPCManagerFn.TYPE_CIRCULATE:
 							tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
 							break;
-						}	
+						}
 					}
 				}
+				
+				Log.i("type", "type"+tempType);
 				mPlayerMoreDialog = new PlayerMoreDialog(PhotoAlbumPlayer.this,tempPath,tempType);
 			}
 			mPlayerMoreDialog.show();

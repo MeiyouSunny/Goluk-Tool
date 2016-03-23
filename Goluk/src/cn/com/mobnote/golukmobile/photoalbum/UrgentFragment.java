@@ -1,4 +1,5 @@
 package cn.com.mobnote.golukmobile.photoalbum;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.json.JSONObject;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
@@ -15,11 +17,13 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
 import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.player.VitamioPlayerActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -94,6 +98,7 @@ private View mWonderfulVideoView;
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
+		EventBus.getDefault().register(this);
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_URGENT, this);
 		}
@@ -110,6 +115,50 @@ private View mWonderfulVideoView;
 		initView();
 		
 		return mWonderfulVideoView;
+	}
+	
+	@Override
+	public void onDestroyView() {
+		// TODO Auto-generated method stub
+		super.onDestroyView();
+		EventBus.getDefault().unregister(this);
+	}
+	
+	public void onEventMainThread(EventDeletePhotoAlbumVid event){
+		if(event!=null&&event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_URG){
+			
+			List list = new ArrayList<String>();
+			list.add(event.getVidPath());
+			deleteListData(list);
+		}
+	}
+
+	public void deleteListData(List<String> deleteData) {
+		for (String path : deleteData) {
+			for (VideoInfo info : mDataList) {
+				if (info.filename.equals(path)) {
+					GolukApplication.getInstance().getIPCControlManager().deleteFile(path);
+					mDataList.remove(info);
+					String filename = path.replace(".mp4", ".jpg");
+					SettingUtils.getInstance().putBoolean("Cloud_" + filename, true);
+					break;
+				}
+			}
+		}
+
+		List<String> mGroupListName = new ArrayList<String>();
+		for (VideoInfo info : mDataList) {
+			String time = info.videoCreateDate;
+			String tabTime = time.substring(0, 10);
+			if (!mGroupListName.contains(tabTime)) {
+				mGroupListName.add(tabTime);
+			}
+		}
+
+		mDoubleDataList.clear();
+		mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mDataList);
+		mCloudWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
+		checkListState();
 	}
 	
 	

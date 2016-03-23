@@ -25,6 +25,7 @@ public class PlayerMoreDialog extends Dialog implements android.view.View.OnClic
 	private TextView delvideo;
 	private TextView cancel;
 	private int mType;
+	
 
 	private CustomDialog mCustomDialog;
 
@@ -80,6 +81,7 @@ public class PlayerMoreDialog extends Dialog implements android.view.View.OnClic
 				// TODO Auto-generated method stub
 				mCustomDialog.dismiss();
 				EventBus.getDefault().post(new EventDeletePhotoAlbumVid(mVidPath,mType));
+				((PhotoAlbumPlayer)mContext).finish();
 			}
 			
 		});

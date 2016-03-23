@@ -15,22 +15,12 @@ public class EventDeletePhotoAlbumVid {
 		mType = type;
 	}
 
-	public String getmVidPath() {
+	public String getVidPath() {
 		return mVidPath;
 	}
 
-	public void setmVidPath(String mVidPath) {
-		this.mVidPath = mVidPath;
-	}
-
-	public int getmType() {
+	public int getType() {
 		return mType;
 	}
-
-	public void setmType(int mType) {
-		this.mType = mType;
-	}
 	
-	
-
 }

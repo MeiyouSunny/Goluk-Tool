@@ -1,9 +1,11 @@
 package cn.com.mobnote.golukmobile.photoalbum;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import cn.com.mobnote.eventbus.EventMessageUpdate;
 import cn.com.mobnote.golukmobile.R;
@@ -12,6 +14,7 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
 import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.player.VitamioPlayerActivity;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
@@ -71,7 +74,7 @@ public class LocalFragment extends Fragment{
 		
 		this.mDataList = new ArrayList<VideoInfo>();
 		this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
-		
+		this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		initView();
 		if(mFragmentAlbum.mCurrentType == 0){
 			loadData(IPCManagerFn.TYPE_SHORTCUT, true);
@@ -93,12 +96,54 @@ public class LocalFragment extends Fragment{
 	}
 	
 	public void onEventMainThread(EventDeletePhotoAlbumVid event){
-		if(event!=null&&event.getmType() == PhotoAlbumConfig.PHOTO_BUM_LOCAL){
+		if(event!=null&&event.getType() == PhotoAlbumConfig.PHOTO_BUM_LOCAL){
 			
+			List list = new ArrayList<String>();
+			list.add(event.getVidPath());
+			deleteListData(list);
 		}
 	}
 
+	public void deleteListData(List<String> deleteData) {
+		final String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+		for (String path : deleteData) {
+			for (VideoInfo info : mDataList) {
+				if (info.videoPath.equals(path)) {
+					// 删除视频文件
+					mDataList.remove(info);
+					File mp4file = new File(path);
+					if (mp4file.exists()) {
+						mp4file.delete();
+					}
+					String filename = path.substring(path.lastIndexOf("/") + 1);
+					// 删除数据库中的数据
+					GolukVideoInfoDbManager.getInstance().delVideoInfo(filename);
+					// 删除视频对应的图片
+					filename = filename.replace(".mp4", ".jpg");
+					File imgfile = new File(filePath + File.separator + filename);
+					if (imgfile.exists()) {
+						imgfile.delete();
+					}
+					SettingUtils.getInstance().putBoolean(filename, true);
+					break;
+				}
+			}
+		}
 
+		List<String> mGroupListName = new ArrayList<String>();
+		for (VideoInfo info : mDataList) {
+			String time = info.videoCreateDate;
+			String tabTime = time.substring(0, 10);
+			if (!mGroupListName.contains(tabTime)) {
+				mGroupListName.add(tabTime);
+			}
+		}
+
+		mDoubleDataList.clear();
+		mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mDataList);
+		mWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
+		checkListState();
+	}
 
 
 	private void initView(){
@@ -152,7 +197,6 @@ public class LocalFragment extends Fragment{
 				if (screenX < (30 * density)) {
 					return;
 				}
-
 				if (arg2 < mDoubleDataList.size()) {
 					RelativeLayout mTMLayout1 = (RelativeLayout) arg1.findViewById(R.id.mTMLayout1);
 					RelativeLayout mTMLayout2 = (RelativeLayout) arg1.findViewById(R.id.mTMLayout2);
@@ -169,6 +213,7 @@ public class LocalFragment extends Fragment{
 						// 点击播放
 						if ((screenX > 0) && (screenX < (screenWidth / 2))) {
 							// 点击列表左边项,跳转到视频播放页面
+
 							VideoInfo info1 = d.getVideoInfo1();
 							gotoVideoPlayPage(2, info1.videoPath, info1.videoCreateDate, info1.videoHP, info1.videoSize);
 							String filename = d.getVideoInfo1().filename;
@@ -178,6 +223,7 @@ public class LocalFragment extends Fragment{
 							mWonderfulVideoAdapter.notifyDataSetChanged();
 						} else {
 							// 点击列表右边项,跳转到视频播放页面
+
 							VideoInfo info2 = d.getVideoInfo2();
 							if (null == info2)
 								return;
