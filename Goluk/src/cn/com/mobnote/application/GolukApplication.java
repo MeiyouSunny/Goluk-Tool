@@ -617,6 +617,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			VideoFileInfoBean bean = JsonUtil.jsonToVideoFileInfoBean(data, mIPCControlManager.mProduceName);
 			GolukVideoInfoDbManager.getInstance().addVideoInfoData(bean);
 			// 调用下载视频接口
+			Log.i("download start", "download start");
 			mIPCControlManager.downloadFile(fileName, "videodownload", savePath, time);
 			// 下载视频第一帧截图
 			downLoadVideoThumbnail(fileName, time);

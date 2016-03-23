@@ -91,12 +91,6 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 		this.mCurrentType = type;
 		this.mFragment = fragment;
 		this.mDataList = new ArrayList<VideoInfo>();
-		this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
-		this.mGroupListName = new ArrayList<String>();
-		this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-		this.mRootLayout = LayoutInflater.from(context).inflate(R.layout.wonderful_listview, null, false);
-		this.density = SoundUtils.getInstance().getDisplayMetrics().density;
-		initView();
 	}
 
 	public void loadData(boolean flag) {

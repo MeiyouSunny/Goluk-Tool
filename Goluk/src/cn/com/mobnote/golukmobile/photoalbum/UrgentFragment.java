@@ -1,4 +1,5 @@
 package cn.com.mobnote.golukmobile.photoalbum;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,8 @@ import org.json.JSONObject;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventDeletePhotoAlbumVid;
+import cn.com.mobnote.eventbus.EventDownloadIpcVid;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
@@ -15,11 +18,14 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
 import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.player.VitamioPlayerActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -88,12 +94,16 @@ private View mWonderfulVideoView;
 	
 	private TextView empty = null;
 	
+	/** 防止重复下载 */
+	List<Boolean> exist = new ArrayList<Boolean>();
+	
 	//private CloudVideoManager mCloudVideoListView = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
+		EventBus.getDefault().register(this);
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_URGENT, this);
 		}
@@ -110,6 +120,145 @@ private View mWonderfulVideoView;
 		initView();
 		
 		return mWonderfulVideoView;
+	}
+	
+	@Override
+	public void onDestroyView() {
+		// TODO Auto-generated method stub
+		super.onDestroyView();
+		EventBus.getDefault().unregister(this);
+	}
+	
+	public void onEventMainThread(EventDeletePhotoAlbumVid event){
+		if(event!=null&&event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_URG){
+			
+			List list = new ArrayList<String>();
+			list.add(event.getVidPath());
+			deleteListData(list);
+		}
+	}
+	
+	/**
+	 * 从设备上下载视频到本地
+	 * @param event
+	 */
+	public void onEventMainThread(EventDownloadIpcVid event){
+		if(event!=null&&event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_URG){
+			
+			List list = new ArrayList<String>();
+			list.add(event.getVidPath());
+			downloadVideoFlush(list);
+		}
+	}
+	
+	public void downloadVideoFlush(List<String> selectedListData) {
+		exist.clear();
+		for (String filename : selectedListData) {
+			// 下载视频对应的图片
+			String imgFileName = filename.replace(".mp4", ".jpg");
+			String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+			File imgfile = new File(filePath + File.separator + imgFileName);
+			if (!imgfile.exists()) {
+				GolukApplication.getInstance().getIPCControlManager()
+						.downloadFile(imgFileName, "download", FileUtils.javaToLibPath(filePath), findtime(filename));
+			}
+			
+			// 下载视频文件
+			String mp4 = FileUtils.libToJavaPath(getDownLoadSavePath() + filename);
+			
+			
+			File file = new File(mp4);
+			if (!file.exists()) {
+				List<String> downloadlist = GolukApplication.getInstance().getDownLoadList();
+				if (!downloadlist.contains(filename)) {
+					exist.add(false);
+					Log.i("download", "download:" + mp4);
+					boolean a = GolukApplication.getInstance().getIPCControlManager().querySingleFile(filename);
+					GolukDebugUtils.e("xuhw", "YYYYYY===a=" + a + "==querySingleFile======filename=" + filename);
+				}
+			} else {
+				exist.add(true);
+			}
+
+		}
+
+		boolean isshow = false;
+		for (boolean flag : exist) {
+			if (!flag) {
+				isshow = false;
+				break;
+			} else {
+				isshow = true;
+			}
+		}
+
+		if (isshow) {
+			GolukUtils.showToast(getContext(), getContext().getString(R.string.str_synchronous_video_to_local));
+		}
+
+	}
+	
+	private String getDownLoadSavePath() {
+		String videoSavePath = "fs1:/video/urgent/";
+//		if (IPCManagerFn.TYPE_SHORTCUT == mCurrentType) {
+//			videoSavePath = "fs1:/video/wonderful/";
+//		} else if (IPCManagerFn.TYPE_URGENT == mCurrentType) {
+//			videoSavePath = "fs1:/video/urgent/";
+//		} else {
+//			videoSavePath = "fs1:/video/loop/";
+//		}
+
+		return videoSavePath;
+	}
+	
+	/**
+	 * 查询文件录制起始时间
+	 * 
+	 * @param filename
+	 *            　文件名
+	 * @return 文件录制起始时间
+	 * @author xuhw
+	 * @date 2015年5月5日
+	 */
+	private long findtime(String filename) {
+		long time = 0;
+		if (null != mDataList) {
+			for (int i = 0; i < mDataList.size(); i++) {
+				if (filename.equals(mDataList.get(i).filename)) {
+					return mDataList.get(i).time;
+				}
+			}
+		}
+
+		return time;
+	}
+
+	public void deleteListData(List<String> deleteData) {
+		for (String path : deleteData) {
+			for (VideoInfo info : mDataList) {
+				if (info.filename.equals(path)) {
+					GolukApplication.getInstance().getIPCControlManager().deleteFile(path);
+					mDataList.remove(info);
+					String filename = path.replace(".mp4", ".jpg");
+					SettingUtils.getInstance().putBoolean("Cloud_" + filename, true);
+					break;
+				}
+			}
+		}
+
+		List<String> mGroupListName = new ArrayList<String>();
+		for (VideoInfo info : mDataList) {
+			String time = info.videoCreateDate;
+			String tabTime = time.substring(0, 10);
+			if (!mGroupListName.contains(tabTime)) {
+				mGroupListName.add(tabTime);
+			}
+		}
+
+		mDoubleDataList.clear();
+		mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mDataList);
+		mCloudWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
+		checkListState();
 	}
 	
 	

@@ -485,6 +485,7 @@
     <string name="str_photo_check_ipc_state">请检查摄像头连接状态</string>
     <string name="str_phote_delete_ok">确认</string>
     <string name="str_photo_deletepromote_1">是否删除</string>
+    <string name="str_photo_delete_confirm">确认删除此视频？</string>
     <string name="str_photo_deletepromote_2">个视频？</string>
     <string name="str_photo_delete_ok">删除视频成功</string>
     <string name="str_photo_select1">已选择</string>

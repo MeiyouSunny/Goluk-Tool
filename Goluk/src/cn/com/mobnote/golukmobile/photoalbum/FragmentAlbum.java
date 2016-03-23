@@ -103,6 +103,12 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 		mTabLoop.setOnClickListener(this);
 	}
 
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		GolukApplication.getInstance().setContext(getContext(), "ipcfilemanager");
+	}
 	/**
 	 * 设置tab页的下划线显示和隐藏
 	 * 

@@ -55,7 +55,20 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 				String fileName = files.get(i);
 
 				VideoFileInfoBean videoFileInfoBean = mGolukVideoInfoDbManager.selectSingleData(fileName);
-				String videoPath = mFilePath + videoPaths[type] + fileName;
+				
+				int currType = 0;
+				if(!TextUtils.isEmpty(fileName)){
+					if(fileName.startsWith("NRM")){
+						currType = 1;
+					}else if(fileName.startsWith("URG")){
+						currType = 2;
+					}else if(fileName.startsWith("WND")){
+						currType = 4;
+					}
+				}
+				
+				
+				String videoPath = mFilePath + videoPaths[currType] + fileName;
 				String resolution = "";
 				int period = 8;
 
@@ -81,7 +94,7 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 						periodStr = names[6];
 						periodStr = periodStr.substring(0, periodStr.lastIndexOf("."));
 						dateStr = names[2];
-					} else if (names.length == 8 && type == 1) {
+					} else if (names.length == 8 && currType == 1) {
 						hpStr = names[6];
 						periodStr = names[7];
 						periodStr = periodStr.substring(0, periodStr.lastIndexOf("."));
