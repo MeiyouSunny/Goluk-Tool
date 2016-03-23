@@ -217,20 +217,20 @@ public class LocalWonderfulVideoListView {
 			}
 
 			Intent intent = null;
-//			if (1 == type) {
-//				intent = new Intent(mContext, VitamioPlayerActivity.class);
-//			} else {
-//				intent = new Intent(mContext, VideoPlayerActivity.class);
-//			}
-//			intent.putExtra("from", "local");
-//			intent.putExtra("path", path);
-			intent = new Intent(mContext, PhotoAlbumPlayer.class);
-			intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, "local");
-			intent.putExtra(PhotoAlbumPlayer.PATH, path);
-			intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
-			intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
-			intent.putExtra(PhotoAlbumPlayer.SIZE, size);
-			intent.putExtra(PhotoAlbumPlayer.TYPE, type);
+			if (1 == type) {
+				intent = new Intent(mContext, VitamioPlayerActivity.class);
+			} else {
+				intent = new Intent(mContext, VideoPlayerActivity.class);
+			}
+			intent.putExtra("from", "local");
+			intent.putExtra("path", path);
+//			intent = new Intent(mContext, PhotoAlbumPlayer.class);
+//			intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, "local");
+//			intent.putExtra(PhotoAlbumPlayer.PATH, path);
+//			intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
+//			intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
+//			intent.putExtra(PhotoAlbumPlayer.SIZE, size);
+//			intent.putExtra(PhotoAlbumPlayer.TYPE, type);
 			mContext.startActivity(intent);
 		}
 	}

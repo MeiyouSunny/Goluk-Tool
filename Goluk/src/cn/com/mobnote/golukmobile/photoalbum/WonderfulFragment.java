@@ -286,7 +286,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 								if ((screenX > 0)&& (screenX < (screenWidth / 2))) {
 									// 点击列表左边项,跳转到视频播放页面
 									VideoInfo info1 = d.getVideoInfo1();
-									gotoVideoPlayPage(IPCManagerFn.TYPE_SHORTCUT,info1.videoPath);
+									gotoVideoPlayPage(IPCManagerFn.TYPE_SHORTCUT,info1.videoPath, info1.videoCreateDate, info1.videoHP, info1.videoSize);
 									String filename = d.getVideoInfo1().filename;
 									updateNewState(filename);
 
@@ -297,7 +297,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 									VideoInfo info2 = d.getVideoInfo2();
 									if (null == info2)
 										return;
-									gotoVideoPlayPage(4, info2.videoPath);
+									gotoVideoPlayPage(4, info2.videoPath, info2.videoCreateDate, info2.videoHP, info2.videoSize);
 									String filename = info2.filename;
 									updateNewState(filename);
 
@@ -327,21 +327,29 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	 * 
 	 * @param path
 	 */
-	private void gotoVideoPlayPage(int from, String path) {
+	private void gotoVideoPlayPage(int from, String path, String createTime, String videoHP, String size) {
 		if (!isShowPlayer) {
 			isShowPlayer = true;
 			// if (null == VitamioPlayerActivity.mHandler) {
-			Intent intent = null;
-			if (1 == from) {
-				intent = new Intent(this.getContext(),VitamioPlayerActivity.class);
-			} else {
-				intent = new Intent(this.getContext(),VideoPlayerActivity.class);
-			}
-			intent.putExtra("from", "ipc");
-			intent.putExtra("type", IPCManagerFn.TYPE_SHORTCUT);
-			intent.putExtra("filename", path);
-			this.getContext().startActivity(intent);
-			// }
+//			Intent intent = null;
+//			if (1 == from) {
+//				intent = new Intent(this.getContext(),VitamioPlayerActivity.class);
+//			} else {
+//				intent = new Intent(this.getContext(),VideoPlayerActivity.class);
+//			}
+//			intent.putExtra("from", "ipc");
+//			intent.putExtra("type", IPCManagerFn.TYPE_SHORTCUT);
+//			intent.putExtra("filename", path);
+//			this.getContext().startActivity(intent);
+
+			Intent intent = new Intent(getContext(), PhotoAlbumPlayer.class);
+			intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, "ipc");
+			intent.putExtra(PhotoAlbumPlayer.FILENAME, path);
+			intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
+			intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
+			intent.putExtra(PhotoAlbumPlayer.TYPE, IPCManagerFn.TYPE_SHORTCUT);
+			intent.putExtra(PhotoAlbumPlayer.SIZE, size);
+			getContext().startActivity(intent);
 		}
 	}
 

@@ -147,7 +147,7 @@ public class LocalFragment extends Fragment{
 						if ((screenX > 0) && (screenX < (screenWidth / 2))) {
 							// 点击列表左边项,跳转到视频播放页面
 							VideoInfo info1 = d.getVideoInfo1();
-							gotoVideoPlayPage(2, info1.videoPath);
+							gotoVideoPlayPage(2, info1.videoPath, info1.videoCreateDate, info1.videoHP, info1.videoSize);
 							String filename = d.getVideoInfo1().filename;
 							updateNewState(filename);
 
@@ -159,7 +159,7 @@ public class LocalFragment extends Fragment{
 							if (null == info2)
 								return;
 							//--------------------------------------------------以此标记  type 零时给 1   等主题逻辑调试通了 再去更具文件名称取类型
-							gotoVideoPlayPage(1, info2.videoPath);
+							gotoVideoPlayPage(1, info2.videoPath, info2.videoCreateDate, info2.videoHP, info2.videoSize);
 							String filename = info2.filename;
 							updateNewState(filename);
 
@@ -277,18 +277,26 @@ public class LocalFragment extends Fragment{
 	 * 
 	 * @param path
 	 */
-	private void gotoVideoPlayPage(int type, String path) {
+	private void gotoVideoPlayPage(int type, String path, String createTime, String videoHP, String size) {
 		if (!TextUtils.isEmpty(path)) {
 
 			Intent intent = null;
-			if (1 == type) {
-				intent = new Intent(this.getContext(), VitamioPlayerActivity.class);
-			} else {
-				intent = new Intent(this.getContext(), VideoPlayerActivity.class);
-			}
-			intent.putExtra("from", "local");
-			intent.putExtra("path", path);
-			this.getContext().startActivity(intent);
+//			if (1 == type) {
+//				intent = new Intent(this.getContext(), VitamioPlayerActivity.class);
+//			} else {
+//				intent = new Intent(this.getContext(), VideoPlayerActivity.class);
+//			}
+//			intent.putExtra("from", "local");
+//			intent.putExtra("path", path);
+//			this.getContext().startActivity(intent);
+			intent = new Intent(getContext(), PhotoAlbumPlayer.class);
+			intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, "local");
+			intent.putExtra(PhotoAlbumPlayer.PATH, path);
+			intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
+			intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
+			intent.putExtra(PhotoAlbumPlayer.SIZE, size);
+			intent.putExtra(PhotoAlbumPlayer.TYPE, type);
+			getContext().startActivity(intent);
 		}
 	}
 	
