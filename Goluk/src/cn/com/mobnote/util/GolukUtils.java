@@ -530,22 +530,6 @@ public class GolukUtils {
 		return number;
 	}
 	
-	public static String getNumber(int formatNumber) {
-		String number = "";
-		try {
-			if (10000 < formatNumber) {
-				DecimalFormat df = new DecimalFormat(".##");
-				number = df.format(formatNumber);
-//				BigDecimal bd = new BigDecimal(number);
-//				number = bd.setScale(1, BigDecimal.ROUND_HALF_UP).toString() + "K";
-			}
-		} catch (Exception e) {
-			return number;
-		}
-
-		return number;
-	}
-
 	public static String getFormatNumber(int fmtnumber) {
 		String number;
 
@@ -808,4 +792,63 @@ public class GolukUtils {
 		GolukDebugUtils.e("", "WifiBindList----getIpcType: " + ipcType);
 		return ipcType;
 	}
+	
+	/**
+	 * 获取国家语言编码
+	 * 
+	 * @return
+	 */
+	public static String getLanguage() {
+		return Locale.getDefault().getLanguage();
+	}
+
+	/**
+	 * 获取国家地区编码
+	 * 
+	 * @return
+	 */
+	private static String getCountry() {
+		return Locale.getDefault().getCountry();
+	}
+	
+	/**
+	 * 判断时国际版还是国内版 
+	 * 
+	 * 国内０　　国际１ 默认为国际
+	 * 
+	 * @return
+	 */
+	public static String getCommversion() {
+		String commversion = "1";
+		if (!"zh".equals(getLanguage())) {
+			commversion = "1";
+		} else {
+			commversion = "0";
+		}
+		return commversion;
+	}
+	
+	/**
+	 * 获取语言与国家
+	 * 
+	 * @return
+	 */
+	public static String getLanguageAndCountry() {
+
+		final String realZone = getLanguage() + "_" + getCountry();
+
+		String[] allZone = GolukApplication.getInstance().getApplicationContext().getResources()
+				.getStringArray(R.array.zone_array);
+		if (null == allZone || allZone.length <= 0) {
+			return realZone;
+		}
+		final int length = allZone.length;
+		for (int i = 0; i < length; i++) {
+			if (realZone.equals(allZone[i])) {
+				return allZone[i];
+			}
+		}
+		return realZone;
+	}
+	
 }

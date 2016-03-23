@@ -980,6 +980,7 @@
     <string name="str_usercenter_header_edit_text">编辑资料</string>
     <string name="str_usercenter_header_fans_text">粉丝</string>
     <string name="str_usercenter_more_share">分享主页</string>
+    <string name="str_usercenter_no_introduce_text">暂无介绍</string>
     
     <string name="str_please_bind_phone_first">提现需要绑定手机号，请先前往通用设置中绑定手机号</string>
     <string name="str_follow">关注</string>
@@ -987,4 +988,7 @@
     <string name="str_discover">极社</string>
     <string name="str_album">相册</string>
     <string name="str_mine">我的</string>
+    
+    <string name="str_usercenter_attention_ok">关注成功</string>
+    <string name="str_usercenter_attention_cancle_ok">取消关注成功</string>
 </resources>

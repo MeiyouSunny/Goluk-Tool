@@ -215,5 +215,11 @@
         <item>中文</item>
         <item>英文</item>
     </string-array>
+    
+    <!-- 适配的所有时区 -->
+    <string-array name="zone_array">
+        <item>zh_CN</item>
+        <item>en_US</item>
+    </string-array>
 
 </resources>

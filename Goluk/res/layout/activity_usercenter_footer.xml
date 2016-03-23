@@ -6,6 +6,7 @@
     android:orientation="vertical" >
 
     <RelativeLayout
+        android:id="@+id/ry_usercenter_footer_layout"
         android:layout_width="match_parent"
         android:layout_height="300dp" >
 
@@ -16,6 +17,18 @@
             android:layout_centerInParent="true"
             android:contentDescription="@string/imgdes"
             android:src="@drawable/mine_novideo" />
+        
+        <TextView 
+            android:id="@+id/tv_usercenter_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/mine_qitadifang"
+            android:drawablePadding="17dp"
+            android:textColor="#bfbfbf"
+            android:textSize="16sp"
+            android:text="@string/msg_system_connect_error"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
     </RelativeLayout>
 
 </LinearLayout>

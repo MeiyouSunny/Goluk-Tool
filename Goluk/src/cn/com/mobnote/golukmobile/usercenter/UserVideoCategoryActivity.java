@@ -10,21 +10,28 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
+import cn.com.mobnote.golukmobile.profit.MyProfitDetailActivity;
 import cn.com.mobnote.golukmobile.usercenter.bean.VideoJson;
 import cn.com.mobnote.golukmobile.usercenter.bean.VideoList;
+import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
-public class UserVideoCategoryActivity extends BaseActivity implements OnClickListener, IRequestResultListener {
+public class UserVideoCategoryActivity extends BaseActivity implements OnClickListener, IRequestResultListener,
+		OnItemClickListener {
 
 	private ImageButton mBackBtn = null;
 	private TextView mTitleText, mNoDataText;
@@ -39,8 +46,9 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 	private static final String OPERATOR_UP = "2";
 	/** 当前状态 **/
 	private String mCurrentState = "";
-	private String mUid = "";
+	private String mOtheruid = "";
 	private String mType = "";
+	private String mCurrentUid = "";
 	/** 所有视频 **/
 	public static final String COLLECTION_ALL_VIDEO = "0";
 	/** 精选视频 **/
@@ -64,8 +72,10 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_videocategory_layout);
 
+		mCurrentUid = GolukApplication.getInstance().mCurrentUId;
+
 		Intent it = getIntent();
-		mUid = it.getStringExtra("uid");
+		mOtheruid = it.getStringExtra("uid");
 		mType = it.getStringExtra("type");
 
 		initView();
@@ -81,12 +91,14 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 
 		mBackBtn.setOnClickListener(this);
 		mToRefreshLayout.setOnClickListener(this);
+		mGridView.setOnItemClickListener(this);
 
 		mGridView.getRefreshableView().setNumColumns(2);
-		mGridView.getRefreshableView().setVerticalSpacing(30);
-		mGridView.getRefreshableView().setHorizontalSpacing(30);
+		mGridView.getRefreshableView().setVerticalSpacing(12);// 设置内部item边距
+		mGridView.getRefreshableView().setHorizontalSpacing(12);
 		mGridView.getRefreshableView().setClipToPadding(true);
-		mGridView.getRefreshableView().setPadding(20, 20, 20, 20);
+		mGridView.getRefreshableView().setPadding(12, 12, 12, 12);// 设置外部item边距
+		mGridView.setMode(PullToRefreshBase.Mode.BOTH);
 
 		mAdapter = new UserVideoCategoryAdapter(this);
 		mGridView.setAdapter(mAdapter);
@@ -99,7 +111,7 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 				pullToRefreshBase.getLoadingLayoutProxy(true, false).setLastUpdatedLabel(
 						getResources().getString(R.string.updating)
 								+ GolukUtils.getCurrentFormatTime(UserVideoCategoryActivity.this));
-				httpRequestData(OPERATOR_DOWN, mUid, mUid, mFirstIndex);
+				httpRequestData(OPERATOR_DOWN, mOtheruid, mCurrentUid, "");
 			}
 
 			@Override
@@ -107,17 +119,25 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 				// 上拉加载
 				pullToRefreshBase.getLoadingLayoutProxy(false, true).setLastUpdatedLabel(
 						getResources().getString(R.string.goluk_pull_to_refresh_footer_pull_label));
-				httpRequestData(OPERATOR_UP, mUid, mUid, mLastIndex);
+				httpRequestData(OPERATOR_UP, mOtheruid, mCurrentUid, mLastIndex);
 			}
 		});
 
-		httpRequestData(OPERATOR_FIRST, mUid, mUid, "");
+		httpRequestData(OPERATOR_FIRST, mOtheruid, mCurrentUid, "");
 
 	}
 
 	private void httpRequestData(String operation, String otheruid, String currentuid, String index) {
 		if (operation.equals(OPERATOR_FIRST)) {
 			showLoadinDialog();
+		}
+		if (operation.equals(OPERATOR_DOWN)) {
+			operation = OPERATOR_FIRST;
+		}
+		if (!UserUtils.isNetDeviceAvailable(this)) {
+			closeLoadingDialog();
+			unusual();
+			return;
 		}
 		UserVideoListRequest request = new UserVideoListRequest(IPageNotifyFn.PageType_HomeVideoList, this);
 		if (COLLECTION_RECOMMEND_VIDEO.equals(mType)) {
@@ -140,7 +160,7 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 			finish();
 			break;
 		case R.id.ry_videocategory_refresh:
-			httpRequestData(OPERATOR_FIRST, mUid, mUid, "");
+			httpRequestData(OPERATOR_FIRST, mOtheruid, mCurrentUid, "");
 			break;
 
 		default:
@@ -167,13 +187,15 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 				mGridView.setVisibility(View.VISIBLE);
 				mNoDataText.setVisibility(View.GONE);
 				mToRefreshLayout.setVisibility(View.GONE);
-				mFirstIndex = mVideoList.get(video.data.videocount - 1).index;
-				mLastIndex = mVideoList.get(video.data.videocount - 1).index;
-				GolukDebugUtils.e("", "--------------onLoadComplete---------mLastIndex: " + mLastIndex
-						+ "-------mFirstIndex: " + mFirstIndex);
-				if (mCurrentState.equals(OPERATOR_FIRST) || mCurrentState.equals(OPERATOR_DOWN)) {
+				if (mCurrentState.equals(OPERATOR_FIRST)) {
+					mFirstIndex = mVideoList.get(0).index;
+					mLastIndex = mVideoList.get(video.data.videocount - 1).index;
 					this.mAdapter.setDataInfo(mVideoList);
 				} else {
+					if (0 == mVideoList.size()) {
+						GolukUtils.showToast(this, this.getString(R.string.str_pull_refresh_listview_bottom_reach));
+						return;
+					}
 					this.mAdapter.appendData(mVideoList);
 				}
 			} else {
@@ -186,6 +208,7 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 		mNoDataText.setVisibility(View.GONE);
 		mGridView.setVisibility(View.GONE);
 		mToRefreshLayout.setVisibility(View.VISIBLE);
+		mGridView.setMode(PullToRefreshBase.Mode.PULL_DOWN_TO_REFRESH);
 		GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
 	}
 
@@ -207,6 +230,19 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 	protected void onDestroy() {
 		super.onDestroy();
 		closeLoadingDialog();
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
+		if (null != mAdapter) {
+			VideoList video = (VideoList) mAdapter.getItem(position);
+			if (null != video) {
+				Intent itVideoDetail = new Intent(this, VideoDetailActivity.class);
+				itVideoDetail.putExtra(VideoDetailActivity.VIDEO_ID, video.videoid);
+				startActivity(itVideoDetail);
+			}
+
+		}
 	}
 
 }

@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/layout_usercenter_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="216dp"
         android:background="#484441"
         android:orientation="vertical" >
 
@@ -16,7 +16,7 @@
             android:id="@+id/rl_head_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center"
             android:layout_marginBottom="7dp"
             android:layout_marginTop="10dp" >
 
@@ -46,6 +46,7 @@
             android:textSize="16sp" />
 
         <LinearLayout
+            android:id="@+id/ly_usercenter_header_attention_fans"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="11dp"
@@ -86,11 +87,19 @@
             android:layout_height="31dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/bg_edit"
-            android:drawableLeft="@drawable/usercenter_attention"
-            android:text="@string/str_usercenter_header_attention_text"
+            android:background="@null"
             android:textColor="@color/white"
             android:textSize="10sp" />
+         
+         <TextView 
+             android:id="@+id/tv_usercenter_header_no_introduce"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_gravity="center_horizontal"
+             android:layout_marginTop="18dp"
+             android:text="@string/str_usercenter_no_introduce_text"
+             android:textSize="12sp"
+             android:textColor="@color/white" />
 
     </LinearLayout>
 
@@ -126,6 +135,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="#0984ff"
+                android:text="0"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -160,6 +170,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="#0984ff"
+                android:text="0"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -193,6 +204,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:text="0"
                 android:textColor="#0984ff"
                 android:textSize="16sp" />
         </LinearLayout>

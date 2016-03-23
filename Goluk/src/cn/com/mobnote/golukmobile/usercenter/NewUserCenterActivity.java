@@ -24,6 +24,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.usercenter.bean.AttentionJson;
 import cn.com.mobnote.golukmobile.usercenter.bean.HomeJson;
 import cn.com.mobnote.golukmobile.usercenter.bean.HomeVideoList;
 import cn.com.mobnote.golukmobile.usercenter.bean.ShareJson;
@@ -51,6 +52,8 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	/** footer view **/
 	private View mFooterView = null;
 	private ImageView mFooterImage = null;
+	private TextView mFooterRefresh = null;
+	private RelativeLayout mFooterLayout = null;
 	/** 当前状态 **/
 	private String mCurrentOperator = "";
 	/** header **/
@@ -64,17 +67,19 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	private UserMoreDialog mMoreDialog = null;
 	/** 分享平台 **/
 	private SharePlatformUtil mSharePlatform = null;
-	/**当前用户的uid**/
+	/** 当前用户的uid **/
 	private String mCurrentUid = "";
+	private String mFirstIndex = "";
+	private String mLastIndex = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_testgridview_layout);
+		setContentView(R.layout.activity_usercenter_layout);
 
 		mCurrentUid = GolukApplication.getInstance().mCurrentUId;
-		
+
 		Intent it = getIntent();
 		mUserInfo = (UCUserInfo) it.getSerializableExtra("userinfo");
 
@@ -96,23 +101,20 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 		mRefreshLayout = (RelativeLayout) findViewById(R.id.ry_usercenter_refresh);
 		mFooterView = LayoutInflater.from(this).inflate(R.layout.activity_usercenter_footer, null);
 		mFooterImage = (ImageView) mFooterView.findViewById(R.id.iv_usercenter_footer);
+		mFooterRefresh = (TextView) mFooterView.findViewById(R.id.tv_usercenter_empty);
+		mFooterLayout = (RelativeLayout) mFooterView.findViewById(R.id.ry_usercenter_footer_layout);
 		mFooterView.setVisibility(View.GONE);
-
-		if (testUser()) {
-			mFooterImage.setImageResource(R.drawable.mine_novideo);
-		} else {
-			mFooterImage.setImageResource(R.drawable.mine_tavideo);
-		}
 
 		mBackBtn.setOnClickListener(this);
 		mMoreBtn.setOnClickListener(this);
 		mRefreshLayout.setOnClickListener(this);
+		mFooterLayout.setOnClickListener(this);
 
 		mSharePlatform = new SharePlatformUtil(this);
 
 		mGridView.getRefreshableView().setNumColumns(2);
-		mGridView.getRefreshableView().setVerticalSpacing(20);
-		mGridView.getRefreshableView().setHorizontalSpacing(20);
+		mGridView.getRefreshableView().setVerticalSpacing(12);
+		mGridView.getRefreshableView().setHorizontalSpacing(12);
 
 		mAdapter = new NewUserCenterAdapter(this);
 		mHeader = new UserCenterHeader(this);
@@ -125,35 +127,41 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<GridViewWithHeaderAndFooter> pullToRefreshBase) {
-				GolukDebugUtils.e("", "-----------onPullDownToRefresh-------");
 				// 下拉刷新
 				pullToRefreshBase.getLoadingLayoutProxy(true, false).setLastUpdatedLabel(
 						getResources().getString(R.string.updating)
 								+ GolukUtils.getCurrentFormatTime(NewUserCenterActivity.this));
-				httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_DOWN);
+				httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_DOWN, mFirstIndex);
 			}
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<GridViewWithHeaderAndFooter> pullToRefreshBase) {
-				GolukDebugUtils.e("", "-----------onPullUpToRefresh-------");
 				// 上拉加载
 				pullToRefreshBase.getLoadingLayoutProxy(false, true).setLastUpdatedLabel(
 						getResources().getString(R.string.goluk_pull_to_refresh_footer_pull_label));
-				httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_UP);
+				httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_UP, mLastIndex);
 			}
 
 		});
 
-		httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_FIRST);
+		httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_FIRST, "");
 
 	}
 
-	private void httpRequestData(String otheruid, String currentuid, String operation) {
+	private void httpRequestData(String otheruid, String currentuid, String operation, String index) {
 		if (OPERATOR_FIRST.equals(operation)) {
 			showLoadingDialog();
 		}
+		if (operation.equals(OPERATOR_DOWN)) {
+			operation = OPERATOR_FIRST;
+		}
+		if (!UserUtils.isNetDeviceAvailable(this)) {
+			closeLoadingDialog();
+			unusual();
+			return;
+		}
 		UserInfoRequest request = new UserInfoRequest(IPageNotifyFn.PageType_HomeUserInfo, this);
-		request.get("200", otheruid, "0", currentuid, "");
+		request.get("200", otheruid, operation, currentuid, index);
 		mCurrentOperator = operation;
 	}
 
@@ -165,24 +173,30 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			mHomeJson = (HomeJson) result;
 			if (null != mHomeJson && null != mHomeJson.data && null != mHomeJson.data.user
 					&& null != mHomeJson.data.videolist) {
-				mRefreshLayout.setVisibility(View.GONE);
-				mGridView.setVisibility(View.VISIBLE);
+				mHeader.usercenterNoData(true);
 				List<HomeVideoList> videoList = mHomeJson.data.videolist;
-				mHeader.setHeaderData(mHomeJson.data);
-				mHeader.getHeaderData();
-				if (null != videoList && videoList.size() <= 0) {
+				if (!mCurrentOperator.equals(OPERATOR_UP)) {
+					mHeader.setHeaderData(mHomeJson.data);
+					mHeader.getHeaderData();
+				}
+				if (null != videoList && videoList.size() <= 0 && !mCurrentOperator.equals(OPERATOR_UP)) {
 					mGridView.setMode(PullToRefreshBase.Mode.PULL_DOWN_TO_REFRESH);
-					if (mCurrentOperator.equals(OPERATOR_UP)) {
-						GolukUtils.showToast(this, this.getString(R.string.str_pull_refresh_listview_bottom_reach));
-					} else {
-						addFooterView();
-					}
+					addFooterView(1);
 					return;
 				}
 				removeFooterView();
-				if (mCurrentOperator.equals(OPERATOR_FIRST) || mCurrentOperator.equals(OPERATOR_DOWN)) {
+				GolukDebugUtils.e("", "----------usercenterheader-------PageType_HomeUserInfo----link: " + mHomeJson.data.user.link);
+				if (mCurrentOperator.equals(OPERATOR_FIRST)) {
+					mFirstIndex = videoList.get(0).index;
+					mLastIndex = videoList.get(mHomeJson.data.videocount - 1).index;
+					GolukDebugUtils.e("", "-----newusercenteractivity-----firstindex: " + mFirstIndex
+							+ "----lastindex: " + mLastIndex);
 					this.mAdapter.setData(videoList);
 				} else {
+					if (0 == videoList.size()) {
+						GolukUtils.showToast(this, this.getString(R.string.str_pull_refresh_listview_bottom_reach));
+						return;
+					}
 					this.mAdapter.appendData(videoList);
 				}
 			} else {
@@ -204,17 +218,52 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 						describe, title, null, realDesc, "");
 				shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 			}
+		} else if (requestType == IPageNotifyFn.PageType_HomeAttention) {
+			AttentionJson attention = (AttentionJson) result;
+			GolukDebugUtils.e("", "----------usercenterheader-------PageType_HomeAttention----link: " + attention.data.link);
+			if (null != attention && 0 == attention.code && null != attention.data) {
+				// 0：未关注；1：关注；2：互相关注
+				if (0 == attention.data.link) {
+					GolukUtils.showToast(this, this.getString(R.string.str_usercenter_attention_cancle_ok));
+				} else if (1 == attention.data.link) {
+					GolukUtils.showToast(this, this.getString(R.string.str_usercenter_attention_ok));
+				} else {
+					GolukUtils.showToast(this, this.getString(R.string.str_usercenter_attention_ok));
+				}
+				mHeader.changeAttentionState(attention.data.link);
+				mHomeJson.data.user.link = attention.data.link;
+				mAdapter.notifyDataSetChanged();
+			}
 		}
 	}
 
 	private void unusual() {
-		mGridView.setVisibility(View.GONE);
-		mRefreshLayout.setVisibility(View.VISIBLE);
+		if (!mCurrentOperator.equals(OPERATOR_DOWN)) {
+			mHeader.usercenterNoData(false);
+			addFooterView(2);
+		}
+		mGridView.setMode(PullToRefreshBase.Mode.PULL_DOWN_TO_REFRESH);
 		GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
 	}
 
-	private void addFooterView() {
+	private void addFooterView(int type) {
+		int a = mFooterView.getVisibility();
 		if (null != mFooterView && mFooterView.getVisibility() == View.GONE) {
+			if (1 == type) {
+				mFooterView.setEnabled(false);
+				mFooterImage.setVisibility(View.VISIBLE);
+				mFooterRefresh.setVisibility(View.GONE);
+				if (testUser()) {
+					mFooterImage.setImageResource(R.drawable.mine_novideo);
+				} else {
+					mFooterImage.setImageResource(R.drawable.mine_tavideo);
+				}
+			} else {
+				mFooterView.setEnabled(true);
+				mFooterImage.setVisibility(View.GONE);
+				mFooterRefresh.setVisibility(View.VISIBLE);
+
+			}
 			mGridView.getRefreshableView().addFooterView(mFooterView);
 			mFooterView.setVisibility(View.VISIBLE);
 		}
@@ -224,7 +273,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 		if (null != mGridView && null != mFooterView) {
 			mGridView.getRefreshableView().removeFooterView(mFooterView);
 			mFooterView.setVisibility(View.GONE);
-			// footerView = null;
+			// mFooterView = null;
 		}
 	}
 
@@ -242,8 +291,8 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			mMoreDialog = new UserMoreDialog(this);
 			mMoreDialog.show();
 			break;
-		case R.id.ry_usercenter_refresh:
-			httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_FIRST);
+		case R.id.ry_usercenter_footer_layout:
+			httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_FIRST, "");
 			break;
 
 		default:
@@ -312,11 +361,26 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			mLoadinDialog = null;
 		}
 	}
-	
+
+	/**
+	 * 分享
+	 * 
+	 */
 	public void shareHomePage() {
 		showLoadingDialog();
 		ShareHomePageRequest request = new ShareHomePageRequest(IPageNotifyFn.PageType_HomeShare, this);
-		request.get(GolukApplication.getInstance().mCurrentUId, mHomeJson.data.user.uid);
+		request.get(mCurrentUid, mHomeJson.data.user.uid);
+	}
+
+	/**
+	 * 关注
+	 * @param otheruid
+	 * @param type
+	 * @param currentuid
+	 */
+	public void attentionRequest(String type) {
+		UserAttentionRequest request = new UserAttentionRequest(IPageNotifyFn.PageType_HomeAttention, this);
+		request.get(mHomeJson.data.user.uid, type, mCurrentUid);
 	}
 
 	@Override

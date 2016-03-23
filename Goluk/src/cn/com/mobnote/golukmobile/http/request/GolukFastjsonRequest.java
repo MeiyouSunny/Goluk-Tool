@@ -10,6 +10,7 @@ import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.map.LngLat;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.api.Tapi;
 
@@ -78,6 +79,8 @@ public abstract class GolukFastjsonRequest<T> {
 		} else {
 			mHeaders.put("commuid", uid);
 		}
+		mHeaders.put("commversion", GolukUtils.getCommversion());
+		mHeaders.put("commlocale", GolukUtils.getLanguageAndCountry());
 	}
 
 	protected Map<String, String> getHeader() {
