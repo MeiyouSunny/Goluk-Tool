@@ -173,7 +173,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 			}
 			
 			// 下载视频文件
-			String mp4 = FileUtils.libToJavaPath(getDownLoadSavePath() + filename);
+			String mp4 = FileUtils.libToJavaPath(PhotoAlbumConfig.LOCAL_LOOP_VIDEO_PATH + filename);
 			
 			
 			File file = new File(mp4);
@@ -204,20 +204,6 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 		if (isshow) {
 			GolukUtils.showToast(getContext(), getContext().getString(R.string.str_synchronous_video_to_local));
 		}
-
-	}
-	
-	private String getDownLoadSavePath() {
-		String videoSavePath = "fs1:/video/loop/";
-//		if (IPCManagerFn.TYPE_SHORTCUT == mCurrentType) {
-//			videoSavePath = "fs1:/video/wonderful/";
-//		} else if (IPCManagerFn.TYPE_URGENT == mCurrentType) {
-//			videoSavePath = "fs1:/video/urgent/";
-//		} else {
-//			videoSavePath = "fs1:/video/loop/";
-//		}
-
-		return videoSavePath;
 	}
 	
 	/**

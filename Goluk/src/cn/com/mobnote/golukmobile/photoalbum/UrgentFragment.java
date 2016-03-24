@@ -164,8 +164,7 @@ private View mWonderfulVideoView;
 			}
 			
 			// 下载视频文件
-			String mp4 = FileUtils.libToJavaPath(getDownLoadSavePath() + filename);
-			
+			String mp4 = FileUtils.libToJavaPath(PhotoAlbumConfig.LOCAL_URG_VIDEO_PATH + filename);
 			
 			File file = new File(mp4);
 			if (!file.exists()) {
@@ -196,19 +195,6 @@ private View mWonderfulVideoView;
 			GolukUtils.showToast(getContext(), getContext().getString(R.string.str_synchronous_video_to_local));
 		}
 
-	}
-	
-	private String getDownLoadSavePath() {
-		String videoSavePath = "fs1:/video/urgent/";
-//		if (IPCManagerFn.TYPE_SHORTCUT == mCurrentType) {
-//			videoSavePath = "fs1:/video/wonderful/";
-//		} else if (IPCManagerFn.TYPE_URGENT == mCurrentType) {
-//			videoSavePath = "fs1:/video/urgent/";
-//		} else {
-//			videoSavePath = "fs1:/video/loop/";
-//		}
-
-		return videoSavePath;
 	}
 	
 	/**
