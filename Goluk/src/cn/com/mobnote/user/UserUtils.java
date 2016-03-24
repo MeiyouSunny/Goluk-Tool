@@ -32,6 +32,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.follow.VideoItemClickableSpan;
+import cn.com.mobnote.golukmobile.follow.bean.FollowVideoObjectBean;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.usercenter.CopyOfShuoMClickableSpan;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
@@ -347,6 +349,40 @@ public class UserUtils {
 		if (isHasGot) {
 			if (isCanClick) {
 				ClickableSpan clicksss = new CopyOfShuoMClickableSpan(context, got, videInfo);
+				spanttt.setSpan(clicksss, nikename.length() + text.length() + 1, all.length(),
+						Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+			} else {
+				spanttt.setSpan(new ForegroundColorSpan(Color.rgb(0, 128, 255)), nikename.length() + text.length() + 1,
+						all.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+			}
+		}
+		view.setText(spanttt);
+		view.setMovementMethod(LinkMovementMethod.getInstance());
+	}
+
+	public static void showCommentText(Context context, boolean isCanClick, FollowVideoObjectBean videInfo, TextView view,
+			String nikename, String text, String got) {
+		boolean isHasGot = false;
+		String all = "";
+		if (null != got && got.length() > 0) {
+			isHasGot = true;
+			got = got.trim();
+		}
+
+		if(null != text) {
+			text = text.trim();
+		}
+		if (isHasGot) {
+			all = nikename + " " + text + " " + got;
+		} else {
+			all = nikename + " " + text;
+		}
+		SpannableString spanttt = new SpannableString(all);
+		spanttt.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
+				Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+		if (isHasGot) {
+			if (isCanClick) {
+				ClickableSpan clicksss = new VideoItemClickableSpan(context, got, videInfo);
 				spanttt.setSpan(clicksss, nikename.length() + text.length() + 1, all.length(),
 						Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 			} else {

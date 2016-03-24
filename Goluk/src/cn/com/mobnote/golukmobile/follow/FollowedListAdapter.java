@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile.follow;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
@@ -12,6 +13,7 @@ import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,8 +25,14 @@ import cn.com.mobnote.golukmobile.follow.bean.FollowComListBean;
 import cn.com.mobnote.golukmobile.follow.bean.FollowRecomUserBean;
 import cn.com.mobnote.golukmobile.follow.bean.FollowVideoObjectBean;
 import cn.com.mobnote.golukmobile.live.ILive;
-import cn.com.mobnote.golukmobile.newest.ClickCommentListener;
+import cn.com.mobnote.golukmobile.newest.ClickFunctionListener;
+import cn.com.mobnote.golukmobile.newest.ClickHeadListener;
+import cn.com.mobnote.golukmobile.newest.ClickNewestListener;
+import cn.com.mobnote.golukmobile.newest.ClickPraiseListener;
+import cn.com.mobnote.golukmobile.newest.ClickShareListener;
 import cn.com.mobnote.golukmobile.newest.CommentDataInfo;
+import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
+import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GlideUtils;
@@ -271,9 +279,9 @@ public class FollowedListAdapter extends BaseAdapter {
 			if(null != videoObjectBean.video.gen) {
 				if(!TextUtils.isEmpty(videoObjectBean.video.gen.topicid) &&
 						!TextUtils.isEmpty(videoObjectBean.video.gen.topicname)) {
-//					UserUtils.showCommentText(
-//							mContext, true, videoObjectBean, holderFollow.detail, videoObjectBean.user.nickname,
-//							videoObjectBean.video.describe, "#" + videoObjectBean.video.gen.topicname + "#");
+					UserUtils.showCommentText(
+							mContext, true, videoObjectBean, holderFollow.detail, videoObjectBean.user.nickname,
+							videoObjectBean.video.describe, "#" + videoObjectBean.video.gen.topicname + "#");
 				} else {
 					UserUtils.showCommentText(holderFollow.detail, videoObjectBean.user.nickname,
 							videoObjectBean.video.describe);
@@ -284,26 +292,13 @@ public class FollowedListAdapter extends BaseAdapter {
 			}
 		}
 
-//		if (isLive(videoObjectBean)) {
-//			// 直播
-//			holderFollow.liveImg.setVisibility(View.VISIBLE);
-//			holderFollow.commentText.setVisibility(View.GONE);
-//			holderFollow.surroundWatch.setVisibility(View.GONE);
-//		} else {
-		// 点播
 		holderFollow.liveImg.setVisibility(View.GONE);
 		holderFollow.commentText.setVisibility(View.VISIBLE);
 		holderFollow.surroundWatch.setVisibility(View.VISIBLE);
-//		}
 
 		if ("1".equals(videoObjectBean.video.comment.iscomment)) {
 			List<FollowComListBean> comments = videoObjectBean.video.comment.comlist;
 			if (null != comments && comments.size() > 0) {
-//				if (isLive(mVideoSquareInfo)) {
-//					// 直播不显示评论
-//					holderFollow.totalcomments.setVisibility(View.GONE);
-//					holderFollow.totlaCommentLayout.setVisibility(View.GONE);
-//				} else {
 				int comcount = Integer.parseInt(videoObjectBean.video.comment.comcount);
 				if (comcount <= 3) {
 					holderFollow.totalcomments.setVisibility(View.GONE);
@@ -316,88 +311,71 @@ public class FollowedListAdapter extends BaseAdapter {
 				}
 
 				holderFollow.totlaCommentLayout.setVisibility(View.VISIBLE);
-//				holderFollow.totalcomments
-//						.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
-//				holderFollow.totlaCommentLayout
-//						.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
+				holderFollow.totalcomments
+						.setOnClickListener(new VideoItemCommentClickListener(mContext, videoObjectBean, false));
+				holderFollow.totlaCommentLayout
+						.setOnClickListener(new VideoItemCommentClickListener(mContext, videoObjectBean, false));
 				holderFollow.comment1.setVisibility(View.VISIBLE);
 				holderFollow.comment2.setVisibility(View.VISIBLE);
 				holderFollow.comment3.setVisibility(View.VISIBLE);
 
-//				if (1 == comments.size()) {
-//					if (null != comments.get(0).replyid
-//							&& !"".equals(comments.get(0).replyid)
-//							&& null != comments.get(0).replyname
-//							&& !"".equals(comments.get(0).replyname)) {
-//						showReplyText(holderFollow.comment1,
-//								comments.get(0).name,
-//								comments.get(0).replyname, comments.get(0).text);
-//					} else {
-//						UserUtils.showCommentText(holderFollow.comment1,
-//								comments.get(0).name, comments.get(0).text);
-//					}
-//					holderFollow.comment2.setVisibility(View.GONE);
-//					holderFollow.comment3.setVisibility(View.GONE);
-//				} else if (2 == comments.size()) {
-//					if (null != comments.get(0).replyid
-//							&& !"".equals(comments.get(0).replyid)
-//							&& null != comments.get(0).replyname
-//							&& !"".equals(comments.get(0).replyname)) {
-//						showReplyText(holderFollow.comment1,
-//								comments.get(0).name,
-//								comments.get(0).replyname, comments.get(0).text);
-//					} else {
-//						UserUtils.showCommentText(holderFollow.comment1,
-//								comments.get(0).name, comments.get(0).text);
-//					}
-//					if (null != comments.get(1).replyid
-//							&& !"".equals(comments.get(1).replyid)
-//							&& null != comments.get(1).replyname
-//							&& !"".equals(comments.get(1).replyname)) {
-//						showReplyText(holderFollow.comment2,
-//								comments.get(1).name,
-//								comments.get(1).replyname, comments.get(1).text);
-//					} else {
-//						UserUtils.showCommentText(holderFollow.comment2,
-//								comments.get(1).name, comments.get(1).text);
-//					}
-//					holderFollow.comment3.setVisibility(View.GONE);
-//				} else if (3 == comments.size()) {
-//					if (null != comments.get(0).replyid
-//							&& !"".equals(comments.get(0).replyid)
-//							&& null != comments.get(0).replyname
-//							&& !"".equals(comments.get(0).replyname)) {
-//						showReplyText(holderFollow.comment1,
-//								comments.get(0).name,
-//								comments.get(0).replyname, comments.get(0).text);
-//					} else {
-//						UserUtils.showCommentText(holderFollow.comment1,
-//								comments.get(0).name, comments.get(0).text);
-//					}
-//					if (null != comments.get(1).replyid
-//							&& !"".equals(comments.get(1).replyid)
-//							&& null != comments.get(1).replyname
-//							&& !"".equals(comments.get(1).replyname)) {
-//						showReplyText(holderFollow.comment2,
-//								comments.get(1).name,
-//								comments.get(1).replyname, comments.get(1).text);
-//					} else {
-//						UserUtils.showCommentText(holderFollow.comment2,
-//								comments.get(1).name, comments.get(1).text);
-//					}
-//					if (null != comments.get(2).replyid
-//							&& !"".equals(comments.get(2).replyid)
-//							&& null != comments.get(2).replyname
-//							&& !"".equals(comments.get(2).replyname)) {
-//						showReplyText(holderFollow.comment3,
-//								comments.get(2).name,
-//								comments.get(2).replyname, comments.get(2).text);
-//					} else {
-//						UserUtils.showCommentText(holderFollow.comment3,
-//								comments.get(2).name, comments.get(2).text);
-//					}
-					//					}
-//				}
+				if (1 == comments.size()) {
+					if (null != comments.get(0).replyid && !"".equals(comments.get(0).replyid)
+						&& null != comments.get(0).replyname && !"".equals(comments.get(0).replyname)) {
+						showReplyText(holderFollow.comment1, comments.get(0).name,
+								comments.get(0).replyname, comments.get(0).text);
+					} else {
+						UserUtils.showCommentText(holderFollow.comment1,
+								comments.get(0).name, comments.get(0).text);
+					}
+
+					holderFollow.comment2.setVisibility(View.GONE);
+					holderFollow.comment3.setVisibility(View.GONE);
+				} else if (2 == comments.size()) {
+					if (null != comments.get(0).replyid && !"".equals(comments.get(0).replyid)
+						&& null != comments.get(0).replyname && !"".equals(comments.get(0).replyname)) {
+						showReplyText(holderFollow.comment1, comments.get(0).name,
+								comments.get(0).replyname, comments.get(0).text);
+					} else {
+						UserUtils.showCommentText(holderFollow.comment1,
+								comments.get(0).name, comments.get(0).text);
+					}
+					if (null != comments.get(1).replyid && !"".equals(comments.get(1).replyid)
+						&& null != comments.get(1).replyname && !"".equals(comments.get(1).replyname)) {
+						showReplyText(holderFollow.comment2, comments.get(1).name,
+								comments.get(1).replyname, comments.get(1).text);
+					} else {
+						UserUtils.showCommentText(holderFollow.comment2,
+								comments.get(1).name, comments.get(1).text);
+					}
+					holderFollow.comment3.setVisibility(View.GONE);
+				} else if (3 == comments.size()) {
+					if (null != comments.get(0).replyid && !"".equals(comments.get(0).replyid)
+						&& null != comments.get(0).replyname && !"".equals(comments.get(0).replyname)) {
+						showReplyText(holderFollow.comment1, comments.get(0).name,
+								comments.get(0).replyname, comments.get(0).text);
+					} else {
+						UserUtils.showCommentText(holderFollow.comment1,
+								comments.get(0).name, comments.get(0).text);
+					}
+
+					if (null != comments.get(1).replyid && !"".equals(comments.get(1).replyid)
+						&& null != comments.get(1).replyname && !"".equals(comments.get(1).replyname)) {
+						showReplyText(holderFollow.comment2, comments.get(1).name,
+								comments.get(1).replyname, comments.get(1).text);
+					} else {
+						UserUtils.showCommentText(holderFollow.comment2,
+								comments.get(1).name, comments.get(1).text);
+					}
+					if (null != comments.get(2).replyid && !"".equals(comments.get(2).replyid)
+						&& null != comments.get(2).replyname && !"".equals(comments.get(2).replyname)) {
+						showReplyText(holderFollow.comment3, comments.get(2).name,
+								comments.get(2).replyname, comments.get(2).text);
+					} else {
+						UserUtils.showCommentText(holderFollow.comment3,
+								comments.get(2).name, comments.get(2).text);
+					}
+				}
 			} else {
 				holderFollow.totalcomments.setVisibility(View.GONE);
 				holderFollow.totlaCommentLayout.setVisibility(View.GONE);
@@ -406,7 +384,64 @@ public class FollowedListAdapter extends BaseAdapter {
 			holderFollow.totalcomments.setVisibility(View.GONE);
 			holderFollow.totlaCommentLayout.setVisibility(View.GONE);
 		}
+		initFollowedListener(position, holderFollow);
 		return convertView;
+	}
+
+	private void initFollowedListener(int index, ViewHolderFollow viewHolder) {
+		if (index < 0 || index >= mList.size()) {
+			return;
+		}
+
+		FollowVideoObjectBean videoObjectBean = (FollowVideoObjectBean) mList.get(index);
+		// 分享监听
+//		VideoItemShareClickListener tempShareListener = new VideoItemShareClickListener(mContext, mVideoSquareInfo, mNewestListView);
+//		viewHolder.shareText.setOnClickListener(tempShareListener);
+//		// 举报监听
+		viewHolder.function.setOnClickListener(new VideoItemFunctionClickListener(mContext, videoObjectBean, false, null));
+//		// 评论监听
+		viewHolder.commentText.setOnClickListener(new VideoItemCommentClickListener(mContext, videoObjectBean, true));
+		// 播放区域监听
+		viewHolder.videoImg.setOnClickListener(new VideoItemClickPlayListener(mContext, videoObjectBean));
+		viewHolder.headimg.setOnClickListener(new VideoItemHeadClickListener(mContext, videoObjectBean));
+//		// 点赞
+//		ClickPraiseListener tempPraiseListener = new ClickPraiseListener(mContext, mVideoSquareInfo, mNewestListView);
+//		tempPraiseListener.setCategoryListView(mCategoryListView);
+//		holder.praiseText.setOnClickListener(tempPraiseListener);
+//		// 评论总数监听
+		List<FollowComListBean> comments = videoObjectBean.video.comment.comlist;
+		if (comments.size() > 0) {
+			viewHolder.totalcomments.setOnClickListener(
+					new VideoItemCommentClickListener(mContext, videoObjectBean, false));
+			viewHolder.totlaCommentLayout.setOnClickListener(
+					new VideoItemCommentClickListener(mContext, videoObjectBean, false));
+		}
+//
+		final FollowVideoObjectBean vsInfo = videoObjectBean;
+
+		viewHolder.rlUserInfo.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startUserCenter(vsInfo);
+			}
+		});
+	}
+
+	public void startUserCenter(FollowVideoObjectBean videoObjectBean) {
+		UCUserInfo user = new UCUserInfo();
+		user.uid = videoObjectBean.user.uid;
+		user.nickname = videoObjectBean.user.nickname;
+		user.headportrait = videoObjectBean.user.headportrait;
+		user.introduce = "";
+		user.sex = videoObjectBean.user.sex;
+		user.customavatar = videoObjectBean.user.customavatar;
+		user.praisemenumber = "0";
+		user.sharevideonumber = "0";
+//		Intent i = new Intent(mContext, UserCenterActivity.class);
+		Intent i = new Intent(mContext, NewUserCenterActivity.class);
+		i.putExtra("userinfo", user);
+		i.putExtra("type", 0);
+		mContext.startActivity(i);
 	}
 
 	private void showReplyText(TextView view, String nikename, String replyName, String text) {
