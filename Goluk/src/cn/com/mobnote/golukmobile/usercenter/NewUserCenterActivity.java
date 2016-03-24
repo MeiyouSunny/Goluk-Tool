@@ -71,6 +71,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	private String mCurrentUid = "";
 	private String mFirstIndex = "";
 	private String mLastIndex = "";
+	private boolean mIsFirst = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -128,15 +129,17 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<GridViewWithHeaderAndFooter> pullToRefreshBase) {
 				// 下拉刷新
+				mIsFirst = false;
 				pullToRefreshBase.getLoadingLayoutProxy(true, false).setLastUpdatedLabel(
 						getResources().getString(R.string.updating)
 								+ GolukUtils.getCurrentFormatTime(NewUserCenterActivity.this));
-				httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_DOWN, mFirstIndex);
+				httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_DOWN, "");
 			}
 
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<GridViewWithHeaderAndFooter> pullToRefreshBase) {
 				// 上拉加载
+				mIsFirst = false;
 				pullToRefreshBase.getLoadingLayoutProxy(false, true).setLastUpdatedLabel(
 						getResources().getString(R.string.goluk_pull_to_refresh_footer_pull_label));
 				httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_UP, mLastIndex);
@@ -150,18 +153,14 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 
 	private void httpRequestData(String otheruid, String currentuid, String operation, String index) {
 		if (OPERATOR_FIRST.equals(operation)) {
+			mIsFirst = true;
 			showLoadingDialog();
 		}
 		if (operation.equals(OPERATOR_DOWN)) {
 			operation = OPERATOR_FIRST;
 		}
-		if (!UserUtils.isNetDeviceAvailable(this)) {
-			closeLoadingDialog();
-			unusual();
-			return;
-		}
 		UserInfoRequest request = new UserInfoRequest(IPageNotifyFn.PageType_HomeUserInfo, this);
-		request.get("200", otheruid, operation, currentuid, index);
+		request.get(otheruid, operation, currentuid, index);
 		mCurrentOperator = operation;
 	}
 
@@ -185,7 +184,6 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 					return;
 				}
 				removeFooterView();
-				GolukDebugUtils.e("", "----------usercenterheader-------PageType_HomeUserInfo----link: " + mHomeJson.data.user.link);
 				if (mCurrentOperator.equals(OPERATOR_FIRST)) {
 					mFirstIndex = videoList.get(0).index;
 					mLastIndex = videoList.get(mHomeJson.data.videocount - 1).index;
@@ -220,7 +218,6 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			}
 		} else if (requestType == IPageNotifyFn.PageType_HomeAttention) {
 			AttentionJson attention = (AttentionJson) result;
-			GolukDebugUtils.e("", "----------usercenterheader-------PageType_HomeAttention----link: " + attention.data.link);
 			if (null != attention && 0 == attention.code && null != attention.data) {
 				// 0：未关注；1：关注；2：互相关注
 				if (0 == attention.data.link) {
@@ -238,7 +235,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	}
 
 	private void unusual() {
-		if (!mCurrentOperator.equals(OPERATOR_DOWN)) {
+		if (mIsFirst) {
 			mHeader.usercenterNoData(false);
 			addFooterView(2);
 		}
@@ -247,8 +244,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	}
 
 	private void addFooterView(int type) {
-		int a = mFooterView.getVisibility();
-		if (null != mFooterView && mFooterView.getVisibility() == View.GONE) {
+		if (null != mFooterView && null != mGridView && mFooterView.getVisibility() == View.GONE) {
 			if (1 == type) {
 				mFooterView.setEnabled(false);
 				mFooterImage.setVisibility(View.VISIBLE);
@@ -262,7 +258,6 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 				mFooterView.setEnabled(true);
 				mFooterImage.setVisibility(View.GONE);
 				mFooterRefresh.setVisibility(View.VISIBLE);
-
 			}
 			mGridView.getRefreshableView().addFooterView(mFooterView);
 			mFooterView.setVisibility(View.VISIBLE);
@@ -270,10 +265,10 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	}
 
 	private void removeFooterView() {
-		if (null != mGridView && null != mFooterView) {
+		if (null != mGridView && null != mFooterView && mFooterView.getVisibility() == View.VISIBLE) {
 			mGridView.getRefreshableView().removeFooterView(mFooterView);
 			mFooterView.setVisibility(View.GONE);
-			// mFooterView = null;
+//			mFooterView = null;
 		}
 	}
 

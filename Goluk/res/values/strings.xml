@@ -992,4 +992,8 @@
     
     <string name="str_usercenter_attention_ok">关注成功</string>
     <string name="str_usercenter_attention_cancle_ok">取消关注成功</string>
+    <string name="str_usercenter_nowonderful_video">当前还没有精选视频</string>
+    <string name="str_usercenter_recommend_video">当前还没有被推荐的视频</string>
+    <string name="str_usercenter_headlines_video">当前还没有入选头条的视频</string>
+    
 </resources>

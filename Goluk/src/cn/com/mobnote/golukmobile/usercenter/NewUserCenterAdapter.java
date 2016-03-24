@@ -6,6 +6,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.usercenter.bean.HomeVideoList;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +51,7 @@ public class NewUserCenterAdapter extends BaseAdapter {
 
 	@Override
 	public long getItemId(int arg0) {
-		return 0;
+		return arg0;
 	}
 
 	@Override
@@ -68,12 +69,13 @@ public class NewUserCenterAdapter extends BaseAdapter {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
+		
 		HomeVideoList videos = mList.get(arg0);
 		GlideUtils.loadImage(mContext, viewHolder.mThumbImage, videos.pictureurl, R.drawable.tacitly_pic);
 		viewHolder.mTimeText.setText(GolukUtils.getCommentShowFormatTime(mContext, videos.addtime));
 		viewHolder.mDescribeText.setText(videos.description);
-		viewHolder.mCommentCountText.setText(videos.commentcount+"");
-		viewHolder.mLookCountText.setText(videos.clickcount+"");
+		viewHolder.mCommentCountText.setText(GolukUtils.getFormatNumber(videos.commentcount));
+		viewHolder.mLookCountText.setText(GolukUtils.getFormatNumber(videos.clickcount));
 		
 		return convertView;
 	}

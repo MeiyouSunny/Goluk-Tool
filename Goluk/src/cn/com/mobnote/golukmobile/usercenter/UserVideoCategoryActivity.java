@@ -21,14 +21,11 @@ import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
-import cn.com.mobnote.golukmobile.profit.MyProfitDetailActivity;
 import cn.com.mobnote.golukmobile.usercenter.bean.VideoJson;
 import cn.com.mobnote.golukmobile.usercenter.bean.VideoList;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 public class UserVideoCategoryActivity extends BaseActivity implements OnClickListener, IRequestResultListener,
 		OnItemClickListener {
@@ -134,20 +131,18 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 		if (operation.equals(OPERATOR_DOWN)) {
 			operation = OPERATOR_FIRST;
 		}
-		if (!UserUtils.isNetDeviceAvailable(this)) {
-			closeLoadingDialog();
-			unusual();
-			return;
-		}
 		UserVideoListRequest request = new UserVideoListRequest(IPageNotifyFn.PageType_HomeVideoList, this);
 		if (COLLECTION_RECOMMEND_VIDEO.equals(mType)) {
 			mTitleText.setText(this.getString(R.string.str_user_video_type_recommend_text));
+			mNoDataText.setText(this.getString(R.string.str_usercenter_recommend_video));
 			request.get("200", otheruid, COLLECTION_RECOMMEND_VIDEO, operation, currentuid, index);
 		} else if (COLLECTION_HEADLINES_VIDEO.equals(mType)) {
 			mTitleText.setText(this.getString(R.string.str_user_video_type_headline_text));
+			mNoDataText.setText(this.getString(R.string.str_usercenter_headlines_video));
 			request.get("200", otheruid, COLLECTION_HEADLINES_VIDEO, operation, currentuid, index);
 		} else {
 			mTitleText.setText(this.getString(R.string.str_user_video_type_wonderful_text));
+			mNoDataText.setText(this.getString(R.string.str_usercenter_nowonderful_video));
 			request.get("200", otheruid, COLLECTION_WONDERFUL_VIDEO, operation, currentuid, index);
 		}
 		mCurrentState = operation;
@@ -179,7 +174,6 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 				int size = mVideoList.size();
 				if ((0 == video.data.videocount || size <= 0) && !mCurrentState.equals(OPERATOR_UP)) {
 					mNoDataText.setVisibility(View.VISIBLE);
-					mNoDataText.setText("当前还没有分享视频");
 					mGridView.setVisibility(View.GONE);
 					mToRefreshLayout.setVisibility(View.GONE);
 					return;
@@ -187,6 +181,7 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 				mGridView.setVisibility(View.VISIBLE);
 				mNoDataText.setVisibility(View.GONE);
 				mToRefreshLayout.setVisibility(View.GONE);
+				mGridView.setMode(PullToRefreshBase.Mode.BOTH);
 				if (mCurrentState.equals(OPERATOR_FIRST)) {
 					mFirstIndex = mVideoList.get(0).index;
 					mLastIndex = mVideoList.get(video.data.videocount - 1).index;
@@ -211,7 +206,7 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 		mGridView.setMode(PullToRefreshBase.Mode.PULL_DOWN_TO_REFRESH);
 		GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
 	}
-
+	
 	private void showLoadinDialog() {
 		if (null == mLoadinDialog) {
 			mLoadinDialog = new CustomLoadingDialog(this, null);
@@ -225,7 +220,7 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 			mLoadinDialog = null;
 		}
 	}
-
+	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();

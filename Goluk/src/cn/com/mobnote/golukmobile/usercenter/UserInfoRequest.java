@@ -24,9 +24,9 @@ public class UserInfoRequest extends GolukFastjsonRequest<HomeJson> {
 		return "userHome";
 	}
 	
-	public void get(String xieyi, String otheruid, String operation, String commuid, String index) {
+	public void get(String otheruid, String operation, String commuid, String index) {
 		HashMap<String, String> headers = (HashMap<String, String>) getHeader();
-		headers.put("xieyi", xieyi);
+		headers.put("xieyi", "200");
 		headers.put("otheruid", otheruid);
 		headers.put("operation", operation);
 		headers.put("commuid", commuid);
