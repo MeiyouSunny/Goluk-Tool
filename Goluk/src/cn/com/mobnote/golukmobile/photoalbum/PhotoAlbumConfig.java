@@ -7,11 +7,17 @@ package cn.com.mobnote.golukmobile.photoalbum;
  */
 public class PhotoAlbumConfig {
 	
+	/**
+	 * type
+	 */
 	public static final int PHOTO_BUM_LOCAL = 0;
 	public static final int PHOTO_BUM_IPC_WND = 1;
 	public static final int PHOTO_BUM_IPC_URG = 2;
 	public static final int PHOTO_BUM_IPC_LOOP = 3;
 	
+	/**
+	 * 本地文件存储目录
+	 */
 	public static final String LOCAL_LOOP_VIDEO_PATH = "fs1:/video/loop/";
 	public static final String LOCAL_WND_VIDEO_PATH = "fs1:/video/wonderful/";
 	public static final String LOCAL_URG_VIDEO_PATH = "fs1:/video/urgent/";
