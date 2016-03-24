@@ -513,9 +513,6 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 	private void updateData(ArrayList<VideoInfo> fileList) {
 		addFooterView();
 		if (mDataList.size() == 0) {
-			View empty = PhotoAlbumUtils.getInstall().getEmptyView(getActivity(), 3);
-			((ViewGroup)mStickyListHeadersListView.getParent()).addView(empty); 
-			mStickyListHeadersListView.setEmptyView(empty);
 			mStickyListHeadersListView.setAdapter(mCloudWonderfulVideoAdapter);
 		}
 		mDataList.addAll(fileList);

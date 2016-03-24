@@ -6,36 +6,52 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.util.GolukUtils;
 
 public class FragmentAlbum extends Fragment implements OnClickListener{
 	
 	/** 活动分享 */
 	public static final String ACTIVITY_INFO = "activityinfo";
 	
-	private ViewPager mViewPager;
+	private CustomViewPager mViewPager;
 	private LocalFragment mLocalFragment;
 	private WonderfulFragment mWonderfulFragment;
 	private LoopFragment mLoopFragment;
 	private UrgentFragment mUrgentFragment;
+	
+	private LinearLayout mLinearLayoutTab;
 
 	// 四个tab
 	private TextView mTabLocal;
 	private TextView mTabWonderful;
 	private TextView mTabUrgent;
 	private TextView mTabLoop;
+	
+	private Button mCancelBtn;
 
 	private ImageView mEditBtn;
+	private RelativeLayout mEditLayout = null;
+	private TextView mTitleName = null;
+	
+	private ImageView mDownLoadIcon = null;
+	private ImageView mDeleteIcon = null;
 
 	public int mCurrentType = 0;
 
@@ -43,6 +59,13 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 	private ArrayList<Fragment> fragmentList;
 
 	private View mAlbumRootView;
+	
+	private boolean editState = false;
+	
+	private LinearLayout mDownLoadBtn = null;
+	
+	private List<String> selectedListData = null;
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,13 +73,14 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 		super.onCreateView(inflater, container, savedInstanceState);
 		View rootView = inflater.inflate(R.layout.photo_album, null);
 		mAlbumRootView = rootView;
-
-		mViewPager = (ViewPager) mAlbumRootView.findViewById(R.id.viewpager);
+		editState = false;
+		mViewPager = (CustomViewPager) mAlbumRootView.findViewById(R.id.viewpager);
 		mViewPager.setOffscreenPageLimit(1);
 		mLocalFragment = new LocalFragment();
 		mWonderfulFragment = new WonderfulFragment(); //WonderfulFragment.newInstance(IPCManagerFn.TYPE_SHORTCUT, IPCManagerFn.TYPE_SHORTCUT);
 		mLoopFragment = new  LoopFragment();//newInstance(IPCManagerFn.TYPE_CIRCULATE, IPCManagerFn.TYPE_CIRCULATE);
 		mUrgentFragment = new UrgentFragment(); //newInstance(IPCManagerFn.TYPE_URGENT, IPCManagerFn.TYPE_URGENT);
+		selectedListData = new ArrayList<String>();
 
 		fragmentList = new ArrayList<Fragment>();
 		fragmentList.add(mLocalFragment);
@@ -94,11 +118,23 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 		mTabUrgent = (TextView) mAlbumRootView.findViewById(R.id.tab_urgent);
 		mTabLoop = (TextView) mAlbumRootView.findViewById(R.id.tab_loop);
 		mEditBtn = (ImageView) mAlbumRootView.findViewById(R.id.edit_btn);
+		mEditLayout = (RelativeLayout) mAlbumRootView.findViewById(R.id.mEditLayout);
+		mTitleName = (TextView) mAlbumRootView.findViewById(R.id.video_title_text);
+		mLinearLayoutTab = (LinearLayout) mAlbumRootView.findViewById(R.id.tab_type);
+		mDownLoadBtn = (LinearLayout) mAlbumRootView.findViewById(R.id.mDownLoadBtn);
+		
+		mDownLoadIcon = (ImageView) mAlbumRootView.findViewById(R.id.mDownLoadIcon);
+		mDeleteIcon = (ImageView) mAlbumRootView.findViewById(R.id.mDeleteIcon);
+		mCancelBtn = (Button) mAlbumRootView.findViewById(R.id.cancel_btn);
 
+		mCancelBtn.setOnClickListener(this);
+		mDownLoadBtn.setOnClickListener(this);
+		mAlbumRootView.findViewById(R.id.mDeleteBtn).setOnClickListener(this);
 		mTabLocal.setOnClickListener(this);
 		mTabWonderful.setOnClickListener(this);
 		mTabUrgent.setOnClickListener(this);
 		mTabLoop.setOnClickListener(this);
+		mEditBtn.setOnClickListener(this);
 	}
 
 	@Override
@@ -148,7 +184,38 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 		}
 
 	}
+	
+	private void downloadVideoFlush() {
+		if (GolukApplication.getInstance().getIpcIsLogin()) {
+			if (mCurrentType != 0) {
+				if(mCurrentType == 1){
+					mWonderfulFragment.downloadVideoFlush(selectedListData);
+				}else if(mCurrentType == 2){
+					mUrgentFragment.downloadVideoFlush(selectedListData);
+				}else if(mCurrentType == 3){
+					mLoopFragment.downloadVideoFlush(selectedListData);
+				}
+				
+			}
+		} else {
+			GolukUtils.showToast(getActivity(), getResources().getString(R.string.str_photo_check_ipc_state));
+		}
+		resetEditState();
+	}
 
+	private void resetEditState() {
+		mViewPager.setCanScroll(true);
+		mEditBtn.setVisibility(View.VISIBLE);
+		mCancelBtn.setVisibility(View.GONE);
+		mLinearLayoutTab.setVisibility(View.VISIBLE);
+		mDownLoadIcon.setBackgroundResource(R.drawable.photo_download_icon);
+		mDeleteIcon.setBackgroundResource(R.drawable.select_video_del_icon);
+		editState = false;
+		mTitleName.setVisibility(View.GONE);
+		mEditLayout.setVisibility(View.GONE);
+		selectedListData.clear();
+
+	}
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
@@ -168,17 +235,140 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 			mViewPager.setCurrentItem(3);
 			mCurrentType = 3;
 			break;
+		case R.id.edit_btn:
+			mViewPager.setCanScroll(false);
+			updateEditState();
+			break;
+		case R.id.mDownLoadBtn:
+			if (selectedListData.size() <= 0) {
+				return;
+			}
+
+			downloadVideoFlush();
+			break;
+		case R.id.cancel_btn:
+			resetEditState();
+			break;
+		case R.id.mDeleteBtn:
+			if (selectedListData.size() <= 0) {
+				return;
+			}
+
+			if (mCurrentType == 0) {
+				if (!isAllowedDelete()) {
+					GolukUtils.showToast(getActivity(), getResources().getString(R.string.str_photo_downing));
+					return;
+				}
+
+				if (!GolukApplication.getInstance().getIpcIsLogin()) {
+					resetEditState();
+					GolukUtils.showToast(getActivity(),
+							getResources().getString(R.string.str_photo_check_ipc_state));
+					return;
+				}
+			}
+
+			CustomDialog mCustomDialog = new CustomDialog(getActivity());
+			mCustomDialog.setMessage(
+					getResources().getString(R.string.str_photo_deletepromote_1) + selectedListData.size()
+							+ getResources().getString(R.string.str_photo_deletepromote_2), Gravity.CENTER);
+			mCustomDialog.setLeftButton(getResources().getString(R.string.str_phote_delete_ok),
+					new OnLeftClickListener() {
+						@Override
+						public void onClickListener() {
+							deleteDataFlush();
+						}
+					});
+			mCustomDialog.setRightButton(getResources().getString(R.string.dialog_str_cancel),
+					new OnRightClickListener() {
+						@Override
+						public void onClickListener() {
+							resetEditState();
+						}
+					});
+			mCustomDialog.show();
+			break;
 		default:
 			break;
 		}
 	}
+	
+	private void deleteDataFlush() {
+		
+		if (mCurrentType != 0) {
+			if(mCurrentType == 1){
+				mWonderfulFragment.deleteListData(selectedListData);
+			}else if(mCurrentType == 2){
+				mUrgentFragment.deleteListData(selectedListData);
+			}else if(mCurrentType == 3){
+				mLoopFragment.deleteListData(selectedListData);
+			}
+		}else{
+			mLocalFragment.deleteListData(selectedListData);
+		}
+
+		resetEditState();
+		GolukUtils.showToast(this.getActivity(), getResources().getString(R.string.str_photo_delete_ok));
+	}
+	
+	private boolean isAllowedDelete() {
+		boolean downloading = true;
+		List<String> dlist = GolukApplication.getInstance().getDownLoadList();
+		for (String name : selectedListData) {
+			if (dlist.contains(name)) {
+				downloading = false;
+				break;
+			}
+		}
+
+		return downloading;
+	}
+	
+	private void updateEditState() {
+		if (editState == false) {
+			editState = true;
+			
+			//mEditBtn.setText(this.getResources().getString(R.string.short_input_cancel));
+			mTitleName.setVisibility(View.VISIBLE);
+			mCancelBtn.setVisibility(View.VISIBLE);
+			mEditBtn.setVisibility(View.GONE);
+			
+			mTitleName.setText(this.getResources().getString(R.string.local_video_title_text));
+
+			mLinearLayoutTab.setVisibility(View.GONE);
+			mEditLayout.setVisibility(View.VISIBLE);
+			
+			if(mCurrentType == 0){
+				mDownLoadBtn.setVisibility(View.GONE);
+			}else if(mCurrentType == 1){
+				mDownLoadBtn.setVisibility(View.VISIBLE);
+			}else if(mCurrentType == 2){
+				mDownLoadBtn.setVisibility(View.VISIBLE);
+			}else if(mCurrentType == 3){
+				mDownLoadBtn.setVisibility(View.VISIBLE);
+			}
+			/*if (R.id.mLocalVideoBtn == curId) {
+				mLocalVideoListView.hideTopLaoyout();
+				
+			} else if (R.id.mCloudVideoBtn == curId) {
+				mCloudVideoListView.hideTopLaoyout();
+				
+			}
+
+			RelativeLayout.LayoutParams mainParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+					LayoutParams.MATCH_PARENT);
+			mainParams.addRule(RelativeLayout.BELOW, R.id.title_layout);
+			mainParams.addRule(RelativeLayout.ABOVE, R.id.mEditLayout);
+			mMainLayout.setLayoutParams(mainParams);*/
+		}
+	}
 
 	public boolean getEditState() {
-		return false;
+		return editState;
 	}
 	
 	public List<String> getSelectedList() {
-		return null;
+		return selectedListData;
 	}
 	
 	public void updateEditBtnState(boolean light) {
@@ -193,7 +383,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 	
 	
 	public void updateTitleName(String titlename) {
-//		mTitleName.setText(titlename);
+		mTitleName.setText(titlename);
 	}
 	
 	public void setEditBtnState(boolean isShow) {
