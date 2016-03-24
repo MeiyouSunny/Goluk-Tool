@@ -110,14 +110,14 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 		}
 
 		mFragmentAlbum = (FragmentAlbum) getParentFragment();
-		this.mDataList = new ArrayList<VideoInfo>();
-		this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
-		this.mGroupListName = new ArrayList<String>();
+		mDataList = new ArrayList<VideoInfo>();
+		mDoubleDataList = new ArrayList<DoubleVideoInfo>();
+		mGroupListName = new ArrayList<String>();
 
 		// mCloudVideoListView = new CloudVideoManager(this.getContext());
-		this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-		this.mWonderfulVideoView = inflater.inflate(R.layout.wonderful_listview, null, false);
-		this.density = SoundUtils.getInstance().getDisplayMetrics().density;
+		screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
+		mWonderfulVideoView = inflater.inflate(R.layout.wonderful_listview, null, false);
+		density = SoundUtils.getInstance().getDisplayMetrics().density;
 		initView();
 
 		return mWonderfulVideoView;

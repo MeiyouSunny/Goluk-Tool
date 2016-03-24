@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.photoalbum;
+/*package cn.com.mobnote.golukmobile.photoalbum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,10 +40,10 @@ public class PhotoalbumFragment extends Fragment implements OnClickListener {
 	
 	public static final int UPDATELOGINSTATE = -1;
 	public static final int UPDATEDATE = -2;
-	/** 返回主页的消息 */
+	*//** 返回主页的消息 *//*
 	private static final int MSG_H_SHOWBACK = 1002;
 
-	/** 最后统一移除监听标识 */
+	*//** 最后统一移除监听标识 *//*
 	private final int[] listener = { IPCManagerFn.TYPE_SHORTCUT, IPCManagerFn.TYPE_URGENT, IPCManagerFn.TYPE_CIRCULATE };
 
 	private TextView mTitleName = null;
@@ -57,9 +57,9 @@ public class PhotoalbumFragment extends Fragment implements OnClickListener {
 	private LocalVideoManager mLocalVideoListView = null;
 	private CloudVideoManager mCloudVideoListView = null;
 	private boolean editState = false;
-	/** 图片缓存cache */
+	*//** 图片缓存cache *//*
 //	private LruCache<String, Bitmap> mLruCache = null;
-	/** 表示当前选中的状态，本地 和 行车记录仪视频 */
+	*//** 表示当前选中的状态，本地 和 行车记录仪视频 *//*
 	private int curId = -1;
 	private RelativeLayout bottomLayout = null;
 	private ImageButton mBackBtn = null;
@@ -69,11 +69,11 @@ public class PhotoalbumFragment extends Fragment implements OnClickListener {
 	private ImageView mDownLoadIcon = null;
 	private ImageView mDeleteIcon = null;
 
-	/** 活动分享 */
+	*//** 活动分享 *//*
 	public static final String ACTIVITY_INFO = "activityinfo";
 	private PromotionSelectItem mPromotionSelectItem;
 
-	/** 标记当前界面是否退出 */
+	*//** 标记当前界面是否退出 *//*
 	private boolean mIsExit = false;
 	private CustomFormatDialog mConnectionDialog;
 	private CustomDialog backHomeDialog;
@@ -119,12 +119,12 @@ public class PhotoalbumFragment extends Fragment implements OnClickListener {
 	}
 	
 	
-	/**
+	*//**
 	 * 获取当前选择的是否是本地视频标签
 	 * 
 	 * @return true/false 本地/远程
 	 * @author jyf
-	 */
+	 *//*
 	public boolean isLocalSelect() {
 		if (curId == R.id.mLocalVideoBtn) {
 			return true;
@@ -305,12 +305,12 @@ public class PhotoalbumFragment extends Fragment implements OnClickListener {
 		}
 	}
 
-	/**
+	*//**
 	 * 接受IPC断开或连接成功的消息
 	 * 
 	 * @param event
 	 * @author jyf
-	 */
+	 *//*
 	public void onEventMainThread(EventIpcConnState event) {
 		if (null == event) {
 			return;
@@ -340,12 +340,12 @@ public class PhotoalbumFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
-		/*case R.id.mBackBtn:
+		case R.id.mBackBtn:
 			exit();
 			break;
 		case R.id.mEditBtn:
 			updateEditState();
-			break;*/
+			break;
 		case R.id.mLocalVideoBtn:
 			updateBtnState(R.id.mLocalVideoBtn);
 			break;
@@ -449,13 +449,13 @@ public class PhotoalbumFragment extends Fragment implements OnClickListener {
 		return selectedListData;
 	}
 
-	/**
+	*//**
 	 * 设置“编辑”按钮显示与隐藏, 在没数据时隐藏，有数据时显示
 	 * 
 	 * @param isShow
 	 *            true/false 显示/隐藏
 	 * @author jyf
-	 */
+	 *//*
 	public void setEditBtnState(boolean isShow) {
 		if (null == mEditBtn) {
 			return;
@@ -545,14 +545,14 @@ public class PhotoalbumFragment extends Fragment implements OnClickListener {
 		//finish();
 	}
 
-	/*@Override
+	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			exit();
 			return false;
 		}
 		return super.onKeyDown(keyCode, event);
-	}*/
+	}
 
 	@Override
 	public void onResume() {
@@ -581,3 +581,4 @@ public class PhotoalbumFragment extends Fragment implements OnClickListener {
 		super.onDestroy();
 	}
 }
+*/
