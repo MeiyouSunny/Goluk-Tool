@@ -54,7 +54,6 @@ public class LocalFragment extends Fragment{
 	
 	private FragmentAlbum mFragmentAlbum;
 	
-	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -78,9 +77,6 @@ public class LocalFragment extends Fragment{
 		return mLocalVideoView;
 	}
 	
-	
-
-	
 	@Override
 	public void onDestroyView() {
 		// TODO Auto-generated method stub
@@ -91,7 +87,7 @@ public class LocalFragment extends Fragment{
 	public void onEventMainThread(EventDeletePhotoAlbumVid event){
 		if(event!=null&&event.getType() == PhotoAlbumConfig.PHOTO_BUM_LOCAL){
 			
-			List list = new ArrayList<String>();
+			List<String> list = new ArrayList<String>();
 			list.add(event.getVidPath());
 			deleteListData(list);
 		}
@@ -252,7 +248,7 @@ public class LocalFragment extends Fragment{
 				mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mLocalListData);
 				mWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
 				if(mDoubleDataList == null || mDoubleDataList.size() ==0){
-					View empty = PhotoAlbumUtile.getInstall().getEmptyView(getActivity(),0);
+					View empty = PhotoAlbumUtils.getInstall().getEmptyView(getActivity(),0);
 					((ViewGroup)mStickyListHeadersListView.getParent()).addView(empty); 
 				}
 				
@@ -362,5 +358,4 @@ public class LocalFragment extends Fragment{
 		}
 	}
 	
-
 }

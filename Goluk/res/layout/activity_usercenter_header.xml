@@ -2,14 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="#313131"
     android:orientation="vertical" >
 
     <LinearLayout
         android:id="@+id/layout_usercenter_header"
         android:layout_width="match_parent"
-        android:layout_height="216dp"
-        android:background="#484441"
+        android:layout_height="226dp"
         android:orientation="vertical" >
 
         <RelativeLayout
@@ -24,13 +23,12 @@
                 android:id="@+id/iv_usercenter_header_head"
                 android:layout_width="71dp"
                 android:layout_height="71dp"
-                android:contentDescription="@string/imgdes"
-                android:src="@drawable/usercenter_head_default" />
+                android:contentDescription="@string/imgdes" />
 
             <ImageView
                 android:id="@+id/iv_vip_logo"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_alignBottom="@id/iv_usercenter_header_head"
                 android:layout_alignRight="@id/iv_usercenter_header_head"
                 android:contentDescription="@string/imgdes" />
@@ -78,6 +76,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="11dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:lines="2"
+            android:ellipsize="end"
             android:textColor="@color/white"
             android:textSize="12sp" />
 
@@ -109,6 +111,7 @@
         android:id="@+id/layout_usercenter_header_category"
         android:layout_width="match_parent"
         android:layout_height="51dp"
+        android:background="@color/white"
         android:orientation="horizontal" >
 
         <!-- 精选视频 -->

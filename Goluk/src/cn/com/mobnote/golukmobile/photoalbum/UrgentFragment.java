@@ -51,6 +51,7 @@ private View mWonderfulVideoView;
 	private List<VideoInfo> mDataList = null;
 	private List<DoubleVideoInfo> mDoubleDataList = null;
 	
+	
 	private float density = 1;
 	
 	/** 保存屏幕点击横坐标点 */
@@ -130,7 +131,7 @@ private View mWonderfulVideoView;
 	public void onEventMainThread(EventDeletePhotoAlbumVid event){
 		if(event!=null&&event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_URG){
 			
-			List list = new ArrayList<String>();
+			List<String> list = new ArrayList<String>();
 			list.add(event.getVidPath());
 			deleteListData(list);
 		}
@@ -143,7 +144,7 @@ private View mWonderfulVideoView;
 	public void onEventMainThread(EventDownloadIpcVid event){
 		if(event!=null&&event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_URG){
 			
-			List list = new ArrayList<String>();
+			List<String> list = new ArrayList<String>();
 			list.add(event.getVidPath());
 			downloadVideoFlush(list);
 		}
@@ -158,7 +159,7 @@ private View mWonderfulVideoView;
 			File imgfile = new File(filePath + File.separator + imgFileName);
 			if (!imgfile.exists()) {
 				GolukApplication.getInstance().getIPCControlManager()
-						.downloadFile(imgFileName, "download", FileUtils.javaToLibPath(filePath), findtime(filename));
+						.downloadFile(imgFileName, "download", FileUtils.javaToLibPath(filePath), PhotoAlbumUtils.findtime(filename,mDataList));
 			}
 			
 			// 下载视频文件
@@ -194,28 +195,6 @@ private View mWonderfulVideoView;
 		}
 
 	}
-	
-	/**
-	 * 查询文件录制起始时间
-	 * 
-	 * @param filename
-	 *            　文件名
-	 * @return 文件录制起始时间
-	 * @author xuhw
-	 * @date 2015年5月5日
-	 */
-	private long findtime(String filename) {
-		long time = 0;
-		if (null != mDataList) {
-			for (int i = 0; i < mDataList.size(); i++) {
-				if (filename.equals(mDataList.get(i).filename)) {
-					return mDataList.get(i).time;
-				}
-			}
-		}
-
-		return time;
-	}
 
 	public void deleteListData(List<String> deleteData) {
 		for (String path : deleteData) {
@@ -244,7 +223,6 @@ private View mWonderfulVideoView;
 		mCloudWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
 		checkListState();
 	}
-	
 	
 	private void initView() {
 		empty = (TextView) mWonderfulVideoView.findViewById(R.id.empty);
@@ -294,7 +272,6 @@ private View mWonderfulVideoView;
 							} else {
 								addFooterView();
 							}
-
 						}
 					}
 					break;
@@ -305,7 +282,6 @@ private View mWonderfulVideoView;
 				default:
 					break;
 				}
-
 			}
 
 			@Override
@@ -361,7 +337,6 @@ private View mWonderfulVideoView;
 				}
 			}
 		});
-
 	}
 	
 	private void updateNewState(String filename) {
@@ -474,7 +449,6 @@ private View mWonderfulVideoView;
 			empty.setVisibility(View.VISIBLE);
 			mStickyListHeadersListView.setVisibility(View.GONE);
 		}
-
 	}
 	
 	private void updateEditState(boolean isHasData) {
@@ -596,7 +570,6 @@ private View mWonderfulVideoView;
 							} else {
 								GolukDebugUtils.e("xuhw", "TTT======no filelist  file======filename=" + filename);
 							}
-
 						}
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -613,7 +586,5 @@ private View mWonderfulVideoView;
 		default:
 			break;
 		}
-
 	}
-	
 }

@@ -7,8 +7,22 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
-
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import cn.com.mobnote.eventbus.EventDownloadIpcVid;
@@ -19,35 +33,14 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
-import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
-import cn.com.mobnote.golukmobile.player.VitamioPlayerActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.api.FileUtils;
-import cn.com.tiros.api.Image;
 import cn.com.tiros.debug.GolukDebugUtils;
+
+import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
+
 import de.greenrobot.event.EventBus;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnTouchListener;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class LoopFragment extends Fragment implements IPCManagerFn {
 	private View mWonderfulVideoView;
@@ -141,7 +134,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 	public void onEventMainThread(EventDeletePhotoAlbumVid event){
 		if(event!=null&&event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP){
 			
-			List list = new ArrayList<String>();
+			List<String> list = new ArrayList<String>();
 			list.add(event.getVidPath());
 			deleteListData(list);
 		}
@@ -154,7 +147,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 	public void onEventMainThread(EventDownloadIpcVid event){
 		if(event!=null&&event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP){
 			
-			List list = new ArrayList<String>();
+			List<String> list = new ArrayList<String>();
 			list.add(event.getVidPath());
 			downloadVideoFlush(list);
 		}
@@ -169,7 +162,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 			File imgfile = new File(filePath + File.separator + imgFileName);
 			if (!imgfile.exists()) {
 				GolukApplication.getInstance().getIPCControlManager()
-						.downloadFile(imgFileName, "download", FileUtils.javaToLibPath(filePath), findtime(filename));
+						.downloadFile(imgFileName, "download", FileUtils.javaToLibPath(filePath), PhotoAlbumUtils.findtime(filename,mDataList));
 			}
 			
 			// 下载视频文件
@@ -204,28 +197,6 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 		if (isshow) {
 			GolukUtils.showToast(getContext(), getContext().getString(R.string.str_synchronous_video_to_local));
 		}
-	}
-	
-	/**
-	 * 查询文件录制起始时间
-	 * 
-	 * @param filename
-	 *            　文件名
-	 * @return 文件录制起始时间
-	 * @author xuhw
-	 * @date 2015年5月5日
-	 */
-	private long findtime(String filename) {
-		long time = 0;
-		if (null != mDataList) {
-			for (int i = 0; i < mDataList.size(); i++) {
-				if (filename.equals(mDataList.get(i).filename)) {
-					return mDataList.get(i).time;
-				}
-			}
-		}
-
-		return time;
 	}
 	
 	public void deleteListData(List<String> deleteData) {

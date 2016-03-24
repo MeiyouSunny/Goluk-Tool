@@ -45,7 +45,7 @@ public class UserVideoCategoryAdapter extends BaseAdapter {
 		if (null == mListData || mListData.size() <= 0) {
 			return "";
 		}
-		return null == mListData ? 0 : mListData.size();
+		return mListData.get(arg0);
 	}
 
 	@Override
@@ -75,8 +75,8 @@ public class UserVideoCategoryAdapter extends BaseAdapter {
 		String sharingTime = GolukUtils.getCommentShowFormatTime(mContext, data.addtime);
 		holder.mTimeText.setText(GolukUtils.getCommentShowFormatTime(mContext, sharingTime));
 		holder.mDescribeText.setText(data.description);
-		holder.mCommentCountText.setText(data.commentcount+"");
-		holder.mLookCountText.setText(data.clickcount+"");
+		holder.mCommentCountText.setText(GolukUtils.getFormatNumber(data.commentcount));
+		holder.mLookCountText.setText(GolukUtils.getFormatNumber(data.clickcount));
 		
 		return convertView;
 	}

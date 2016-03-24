@@ -137,7 +137,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	public void onEventMainThread(EventDeletePhotoAlbumVid event){
 		if(event!=null&&event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_WND){
 			
-			List list = new ArrayList<String>();
+			List<String> list = new ArrayList<String>();
 			list.add(event.getVidPath());
 			deleteListData(list);
 		}
@@ -150,7 +150,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	public void onEventMainThread(EventDownloadIpcVid event){
 		if(event!=null&&event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_WND){
 			
-			List list = new ArrayList<String>();
+			List<String> list = new ArrayList<String>();
 			list.add(event.getVidPath());
 			downloadVideoFlush(list);
 		}
@@ -165,7 +165,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 			File imgfile = new File(filePath + File.separator + imgFileName);
 			if (!imgfile.exists()) {
 				GolukApplication.getInstance().getIPCControlManager()
-						.downloadFile(imgFileName, "download", FileUtils.javaToLibPath(filePath), findtime(filename));
+						.downloadFile(imgFileName, "download", FileUtils.javaToLibPath(filePath), PhotoAlbumUtils.findtime(filename,mDataList));
 			}
 			
 			// 下载视频文件
@@ -200,28 +200,6 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 			GolukUtils.showToast(getContext(), getContext().getString(R.string.str_synchronous_video_to_local));
 		}
 
-	}
-	
-	/**
-	 * 查询文件录制起始时间
-	 * 
-	 * @param filename
-	 *            　文件名
-	 * @return 文件录制起始时间
-	 * @author xuhw
-	 * @date 2015年5月5日
-	 */
-	private long findtime(String filename) {
-		long time = 0;
-		if (null != mDataList) {
-			for (int i = 0; i < mDataList.size(); i++) {
-				if (filename.equals(mDataList.get(i).filename)) {
-					return mDataList.get(i).time;
-				}
-			}
-		}
-
-		return time;
 	}
 
 
