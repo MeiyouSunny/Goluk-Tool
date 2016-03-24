@@ -14,7 +14,6 @@ import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 @SuppressLint("InflateParams")
 public class LocalVideoManager implements OnClickListener {

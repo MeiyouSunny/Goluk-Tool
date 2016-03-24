@@ -2,12 +2,12 @@ package cn.com.mobnote.golukmobile.photoalbum;
 
 import java.util.List;
 
-import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
+import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 
 public class LocalPagerAdapter extends PagerAdapter {
 	private Context mContext = null;

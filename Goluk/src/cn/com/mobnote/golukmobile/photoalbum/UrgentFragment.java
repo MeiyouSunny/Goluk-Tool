@@ -6,8 +6,22 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
-
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import cn.com.mobnote.eventbus.EventDownloadIpcVid;
@@ -18,30 +32,14 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
-import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
-import cn.com.mobnote.golukmobile.player.VitamioPlayerActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+
+import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
+
 import de.greenrobot.event.EventBus;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnTouchListener;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView.OnItemClickListener;
 
 
 public class UrgentFragment extends Fragment implements IPCManagerFn{

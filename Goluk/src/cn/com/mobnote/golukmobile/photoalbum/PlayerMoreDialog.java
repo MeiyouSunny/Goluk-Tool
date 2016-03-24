@@ -1,21 +1,16 @@
 package cn.com.mobnote.golukmobile.photoalbum;
 
-import cn.com.mobnote.eventbus.EventDeletePhotoAlbumVid;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.adas.AdasGuideActivity;
-import cn.com.mobnote.golukmobile.adas.AdasVerificationActivity;
-import cn.com.mobnote.golukmobile.carrecorder.settings.SettingsActivity;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
-import cn.com.mobnote.golukmobile.newest.RecomVideoActivity;
-import de.greenrobot.event.EventBus;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cn.com.mobnote.eventbus.EventDeletePhotoAlbumVid;
+import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
+import de.greenrobot.event.EventBus;
 
 public class PlayerMoreDialog extends Dialog implements android.view.View.OnClickListener {
 

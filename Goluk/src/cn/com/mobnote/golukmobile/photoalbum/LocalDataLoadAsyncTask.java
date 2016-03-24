@@ -5,15 +5,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import android.os.AsyncTask;
+import android.text.TextUtils;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
 import cn.com.mobnote.golukmobile.fileinfo.VideoFileInfoBean;
 import cn.com.mobnote.util.SortByDate;
-import android.os.AsyncTask;
-import android.text.TextUtils;
-import android.util.Log;
 
 public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 	private DataCallBack mDataCallBack = null;

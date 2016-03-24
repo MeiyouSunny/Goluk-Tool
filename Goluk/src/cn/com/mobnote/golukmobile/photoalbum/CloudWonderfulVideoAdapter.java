@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -23,9 +22,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
-import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask.ICallBack;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 

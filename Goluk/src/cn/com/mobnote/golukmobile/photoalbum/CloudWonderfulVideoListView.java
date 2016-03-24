@@ -1,46 +1,40 @@
 package cn.com.mobnote.golukmobile.photoalbum;
 
-import java.util.List;
-
-import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
-
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
-import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
+import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
-import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.golukmobile.player.MovieActivity;
 import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.player.VitamioPlayerActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
-import android.content.Intent;
-import android.text.TextUtils;
-import android.view.MotionEvent;
-import android.view.View.OnTouchListener;
-import android.widget.AbsListView;
-import android.widget.TextView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.RelativeLayout;
+
+import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 @SuppressLint("InflateParams")
 public class CloudWonderfulVideoListView implements IPCManagerFn {

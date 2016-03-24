@@ -1,17 +1,14 @@
 package cn.com.mobnote.golukmobile.photoalbum;
 
-import com.baidu.mapapi.map.Text;
-
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.R;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.R;
 
 public class PhotoAlbumUtile {
 	public static PhotoAlbumUtile photoAlbumUtile;
