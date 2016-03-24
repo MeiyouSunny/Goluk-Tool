@@ -2,7 +2,7 @@ package cn.com.mobnote.golukmobile.photoalbum;
 
 /**
  * 相册配置类，所有相册相关的固定配置请写在这里
- * @author uestc
+ * @author leege100
  *
  */
 public class PhotoAlbumConfig {
