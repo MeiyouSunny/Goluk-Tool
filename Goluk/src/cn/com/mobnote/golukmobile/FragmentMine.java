@@ -1,24 +1,7 @@
 package cn.com.mobnote.golukmobile;
 
-import android.support.v4.app.Fragment;
-
 import org.json.JSONObject;
 
-import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.live.ILive;
-import cn.com.mobnote.golukmobile.live.UserInfo;
-import cn.com.mobnote.golukmobile.msg.MessageCenterActivity;
-import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
-import cn.com.mobnote.golukmobile.praised.MyPraisedActivity;
-import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
-import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
-import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
-import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
-import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
-import android.net.Uri;
-import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -28,18 +11,33 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.live.ILive;
+import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.msg.MessageCenterActivity;
+import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
+import cn.com.mobnote.golukmobile.praised.MyPraisedActivity;
+import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
+import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
+import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
+import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.mobnote.util.StartIntentUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -52,8 +50,6 @@ import cn.com.tiros.debug.GolukDebugUtils;
 
 @SuppressLint({ "HandlerLeak", "Instantiatable" })
 public class FragmentMine extends Fragment implements OnClickListener, UserInterface, VideoSuqareManagerFn {
-	/** 上下文 */
-//	private Context mContext = null;
 
 	/** 个人中心 **/
 	private RelativeLayout mUserCenterItem = null;
@@ -89,7 +85,6 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	/** 自动登录中的loading提示框 **/
 	private Builder mBuilder = null;
 	private SharedPreferences mPreferences = null;
-	private boolean isFirstLogin;
 	private Editor mEditor = null;
 //	LinearLayout mRootLayout = null;
 	private MainActivity ma;
@@ -106,18 +101,6 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	private static final int TYPE_PROFIT = 3;
 	private static final String TAG = "FragmentMine";
 
-//	public FragmentMine(LinearLayout rootlayout, Context context) {
-//		mRootLayout = rootlayout;
-//		mContext = context;
-//		ma = (MainActivity) mContext;
-//		setListener();
-//
-//		mPreferences = mContext.getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
-//		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
-//
-//		ma.mApp.mUser.setUserInterface(this);
-//		init();
-//	}
 	LinearLayout mMineRootView = null;
 
 	@Override
@@ -128,14 +111,13 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		mMineRootView = (LinearLayout)rootView;
 
 		ma = (MainActivity)getActivity();
+		
 		setListener();
-
-//		mPreferences = getActivity().getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
-//		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
-//
-//		ma.mApp.mUser.setUserInterface(this);
-		init();
-		showView();
+		
+		initView();
+		
+		setupView();
+		
 		return rootView;
 	}
 
@@ -144,19 +126,23 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 	}
-
-	public void showView() {
-		mPreferences = getActivity().getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
-		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
-
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		resetLoginState();
+	}
+	
+	
+	public void setupView() {
+		
 		ma.mApp.mUser.setUserInterface(this);
-		getDataState();
 	}
 
 	/**
 	 * 页面初始化
 	 */
-	private void init() {
+	private void initView() {
 		// 获取页面元素
 
 		// 个人中心 我的相册 摄像头管理 通用设置 极路客小技巧 安装指导 版本信息 购买极路客
@@ -204,10 +190,14 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	}
 
 	// 获取登录状态及用户信息
-	private void getDataState() {
+	private void resetLoginState() {
+		
+		mPreferences = getActivity().getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+		ma.mApp.mUser.setUserInterface(this);
+		
 		GolukDebugUtils.i("lily", "--------" + ma.mApp.autoLoginStatus + ma.mApp.isUserLoginSucess
 				+ "=====mApp.registStatus ====" + ma.mApp.registStatus);
-		if (!isFirstLogin || ma.mApp.isUserLoginSucess == true || ma.mApp.registStatus == 2) {// 登录过
+		if ( ma.mApp.isUserLoginSucess == true || ma.mApp.registStatus == 2) {// 登录过
 			GolukDebugUtils.i("lily", "---------------" + ma.mApp.autoLoginStatus + "------loginStatus------"
 					+ ma.mApp.loginStatus);
 			// 更多页面
@@ -223,18 +213,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		}
 	}
 
-	@Override
-	public void onResume() {
-		mPreferences = getActivity().getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
-		isFirstLogin = mPreferences.getBoolean("FirstLogin", true);
-
-		// 获得GolukApplication对象
-		// mApp = (GolukApplication) getApplication();
-		// mApp.setContext(mContext, "IndexMore");
-
-		ma.mApp.mUser.setUserInterface(this);
-		super.onResume();
-	}
+	
 
 	AlertDialog dialog = null;
 
@@ -248,16 +227,28 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			// 返回
 			break;
 		case R.id.user_share:
-			clickAuto(TYPE_SHARE_PRAISE, 0);
+			if(isLoginInfoValid()){
+				
+			}else{
+				clickToLogin();
+			}
 			break;
 		case R.id.user_praise:
-			clickAuto(TYPE_SHARE_PRAISE, 1);
+			if(isLoginInfoValid()){
+				
+			}else{
+				clickToLogin();
+			}
 			break;
 		case R.id.user_follow:
 			break;
 		// 点击跳转到我的主页
 		case R.id.user_center_item:
-			clickAuto(TYPE_USER, 0);
+			if(isLoginInfoValid()){
+				intentToUserCenter();
+			}else{
+				clickToLogin();
+			}
 			break;
 		// 我的相册
 		case R.id.video_item:
@@ -301,7 +292,12 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 //			break;
 		//我的收益
 		case R.id.profit_item:
-			clickAuto(TYPE_PROFIT, 0);
+			if(isLoginInfoValid()){
+				Intent itProfit = new Intent(getActivity(),MyProfitActivity.class);
+				getActivity().startActivity(itProfit);
+			}else{
+				clickToLogin();
+			}
 			break;
 		case R.id.rl_my_message:
 			Intent msgIntent = new Intent(getActivity(), MessageCenterActivity.class);
@@ -328,63 +324,63 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		}
 	}
 	
+//	/**
+//	 * 
+//	 * @param type	点击个人中心、分享视频赞我的人、我的收益
+//	 * @param shareOrPraise	０分享视频　　１赞我的人
+//	 */
+//	private void clickAuto(int type,int shareOrPraise) {
+//		if (ma.mApp.loginStatus == 1 || ma.mApp.registStatus == 2 || ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 2) {// 登录过
+//			if (ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 4) {//自动登录中或自动登录
+//				mBuilder = new AlertDialog.Builder(getActivity());
+//				dialog = mBuilder.setMessage(getActivity().getResources().getString(R.string.user_personal_autoloading_progress)).create();
+//				dialog.show();
+//			} else if (ma.mApp.autoLoginStatus == 2 || ma.mApp.isUserLoginSucess) {
+//				if(type == TYPE_USER) {
+//					intentToUserCenter(shareOrPraise);
+//				} else if(type == TYPE_SHARE_PRAISE) {
+//					intentToUserCenter(shareOrPraise);
+//				} else if(type == TYPE_PROFIT) {
+//					Intent itProfit = new Intent(getActivity(),MyProfitActivity.class);
+////					itProfit.putExtra("uid", userUId);
+////					itProfit.putExtra("phone", userPhone);
+//					getActivity().startActivity(itProfit);
+//				}
+//			} else {
+//				clickToLogin();
+//			}
+//		} else {
+//			clickToLogin();
+//		}
+//	}
+	
 	/**
-	 * 
-	 * @param type	点击个人中心、分享视频赞我的人、我的收益
-	 * @param shareOrPraise	０分享视频　　１赞我的人
+	 * 登录状态是否有效s
+	 * @return
 	 */
-	private void clickAuto(int type,int shareOrPraise) {
-		if (!isFirstLogin && (ma.mApp.loginStatus == 1 || ma.mApp.registStatus == 2 
-				|| ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 2)) {// 登录过
-			if (ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 4) {
-				mBuilder = new AlertDialog.Builder(getActivity());
-				dialog = mBuilder.setMessage(
-						getActivity().getResources().getString(R.string.user_personal_autoloading_progress)).create();
-				dialog.show();
-			} else if (ma.mApp.autoLoginStatus == 2 || ma.mApp.isUserLoginSucess) {
-				if(type == TYPE_USER) {
-					intentToUserCenter(shareOrPraise);
-				} else if(type == TYPE_SHARE_PRAISE) {
-					intentToUserCenter(shareOrPraise);
-				} else if(type == TYPE_PROFIT) {
-					Intent itProfit = new Intent(getActivity(),MyProfitActivity.class);
-//					itProfit.putExtra("uid", userUId);
-//					itProfit.putExtra("phone", userPhone);
-					getActivity().startActivity(itProfit);
-				}
-			} else {
-				clickToLogin(type);
-			}
+	private boolean isLoginInfoValid(){
+		if (ma.mApp.loginStatus == 1 || ma.mApp.registStatus == 2 || ma.mApp.autoLoginStatus == 2) {// 登录过
+			return true;
 		} else {
-			clickToLogin(type);
+			return false;
 		}
 	}
+	
 	
 	/**
 	 * 跳转登录页
 	 * @param intentType
 	 */
-	private void clickToLogin(int intentType) {
-		mPreferences = getActivity().getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
-		mEditor = mPreferences.edit();
+	private void clickToLogin() {
+		
 		Intent itNo = new Intent(getActivity(), UserLoginActivity.class);
-		if(intentType == TYPE_USER) {
-			itNo.putExtra("isInfo", "indexmore");
-			mEditor.putString("toRepwd", "more");
-		} else if(intentType == TYPE_PROFIT) {
-			// 登录页回调判断
-			itNo.putExtra("isInfo", "profit");
-			mEditor.putString("toRepwd", "toProfit");
-		}
-		mEditor.commit();
-
 		getActivity().startActivity(itNo);
 	}
 	
 	/**
 	 * 点击个人中心跳转到个人主页
 	 */
-	private void intentToUserCenter(int type) {
+	private void intentToUserCenter() {
 		UCUserInfo user = new UCUserInfo();
 		user.uid = userUId;
 		user.nickname = userName;
@@ -395,11 +391,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		user.praisemenumber = praiseCount + "";
 		user.sharevideonumber = shareCount + "";
 
-//		Intent intent = new Intent(getActivity(), UserCenterActivity.class);
-		Intent intent = new Intent(getActivity(), NewUserCenterActivity.class);
-		intent.putExtra("userinfo", user);
-		intent.putExtra("type", type);
-		getActivity().startActivity(intent);
+		StartIntentUtils.intentToUserCenter(getActivity(), user);
 	}
 
 	private void dismissDialog() {

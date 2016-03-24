@@ -1,5 +1,7 @@
 package cn.com.mobnote.golukmobile.photoalbum;
 
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
@@ -9,13 +11,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 
-public class PhotoAlbumUtile {
-	public static PhotoAlbumUtile photoAlbumUtile;
+public class PhotoAlbumUtils {
+	public static PhotoAlbumUtils photoAlbumUtile;
 	
-	public static PhotoAlbumUtile getInstall(){
+	public static PhotoAlbumUtils getInstall(){
 		if(photoAlbumUtile == null){
-			photoAlbumUtile = new PhotoAlbumUtile();
+			photoAlbumUtile = new PhotoAlbumUtils();
 		}
 		return photoAlbumUtile;
 	}
@@ -30,9 +33,7 @@ public class PhotoAlbumUtile {
 		
 		TextView iv = new TextView(context);
 		
-		
 		Drawable topDrawable = null;
-		
 		
 		if(type == 0){//本地
 			topDrawable = context.getResources().getDrawable(R.drawable.album_img_novideo); 
@@ -56,14 +57,30 @@ public class PhotoAlbumUtile {
 		topDrawable.setBounds(0, 0, topDrawable.getMinimumWidth(), topDrawable.getMinimumHeight());  
 		iv.setCompoundDrawables(null, topDrawable, null, null);
 		
-		
 		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		iv.setGravity(Gravity.CENTER);
 		lp.addRule(RelativeLayout.CENTER_IN_PARENT);
 		iv.setLayoutParams(lp);
 		
-		
 		return iv;
+	}
+	
+	/**
+	 * 查询文件录制起始时间
+	 * @param filename
+	 * @param list
+	 * @return
+	 */
+	public static long findtime(String filename,List<VideoInfo> list) {
+		long time = 0;
+		if (null != list) {
+			for (int i = 0; i < list.size(); i++) {
+				if (filename.equals(list.get(i).filename)) {
+					return list.get(i).time;
+				}
+			}
+		}
+		return time;
 	}
 
 }

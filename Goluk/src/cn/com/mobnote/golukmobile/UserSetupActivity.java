@@ -373,6 +373,8 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mApp.isUserLoginSucess = false;
 		mApp.loginoutStatus = true;// 注销成功
 		mApp.registStatus = 3;// 注册失败
+		mApp.autoLoginStatus = 3;
+		mApp.loginStatus = 3;
 
 		mPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
 		mEditor = mPreferences.edit();

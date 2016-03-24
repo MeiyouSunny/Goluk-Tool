@@ -131,6 +131,9 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	/** 分享个人主页 **/
 	public static final int PageType_HomeShare = 65;
 
+	/** 关注内容 **/
+	public static final int PageType_FollowedContent = 66;
+
 	/**
 	 * 
 	 * 以下为同步获取信息标识
