@@ -1,8 +1,8 @@
-package cn.com.mobnote.golukmobile.follow;
+package cn.com.mobnote.golukmobile.followed;
 
 import java.util.HashMap;
 
-import cn.com.mobnote.golukmobile.follow.bean.FollowRetBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowRetBean;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.http.request.GolukFastjsonRequest;
 

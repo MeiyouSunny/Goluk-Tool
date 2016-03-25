@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.follow;
+package cn.com.mobnote.golukmobile.followed;
 
 import java.util.List;
 
@@ -21,9 +21,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.golukmobile.follow.bean.FollowComListBean;
-import cn.com.mobnote.golukmobile.follow.bean.FollowRecomUserBean;
-import cn.com.mobnote.golukmobile.follow.bean.FollowVideoObjectBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowComListBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowRecomUserBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowVideoObjectBean;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.newest.ClickFunctionListener;
 import cn.com.mobnote.golukmobile.newest.ClickHeadListener;

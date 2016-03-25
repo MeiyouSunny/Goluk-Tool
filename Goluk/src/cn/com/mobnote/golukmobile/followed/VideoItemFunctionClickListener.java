@@ -1,6 +1,6 @@
-package cn.com.mobnote.golukmobile.follow;
+package cn.com.mobnote.golukmobile.followed;
 
-import cn.com.mobnote.golukmobile.follow.bean.FollowVideoObjectBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowVideoObjectBean;
 import cn.com.mobnote.golukmobile.newest.FunctionDialog;
 import cn.com.mobnote.golukmobile.newest.IDialogDealFn;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;

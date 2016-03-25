@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.follow;
+package cn.com.mobnote.golukmobile.followed;
 
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;

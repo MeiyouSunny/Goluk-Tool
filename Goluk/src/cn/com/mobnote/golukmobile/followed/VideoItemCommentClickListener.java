@@ -1,7 +1,7 @@
-package cn.com.mobnote.golukmobile.follow;
+package cn.com.mobnote.golukmobile.followed;
 
 import cn.com.mobnote.golukmobile.BaseActivity;
-import cn.com.mobnote.golukmobile.follow.bean.FollowVideoObjectBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowVideoObjectBean;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import android.content.Context;
 import android.content.Intent;

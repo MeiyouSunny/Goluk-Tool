@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.follow.bean;
+package cn.com.mobnote.golukmobile.followed.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
 

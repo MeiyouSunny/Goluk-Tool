@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.follow;
+package cn.com.mobnote.golukmobile.followed;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,9 +6,9 @@ import java.util.List;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import cn.com.mobnote.golukmobile.follow.bean.FollowListBean;
-import cn.com.mobnote.golukmobile.follow.bean.FollowRecomUserBean;
-import cn.com.mobnote.golukmobile.follow.bean.FollowRetBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowListBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowRecomUserBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowRetBean;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
