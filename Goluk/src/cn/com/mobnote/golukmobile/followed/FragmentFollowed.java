@@ -6,9 +6,9 @@ import java.util.List;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import cn.com.mobnote.golukmobile.followed.bean.FollowListBean;
-import cn.com.mobnote.golukmobile.followed.bean.FollowRecomUserBean;
-import cn.com.mobnote.golukmobile.followed.bean.FollowRetBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowedListBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowedRecomUserBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowedRetBean;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
@@ -28,7 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FragmentFollow extends Fragment implements IRequestResultListener {
+public class FragmentFollowed extends Fragment implements IRequestResultListener {
 	private final static String TAG = "FragmentFollow";
 	private final static String REFRESH_NORMAL = "0";
 	private final static String REFRESH_PULL_DOWN = "1";
@@ -148,7 +148,7 @@ public class FragmentFollow extends Fragment implements IRequestResultListener {
 		}
 
 		if(requestType == IPageNotifyFn.PageType_FollowedContent) {
-			FollowRetBean bean = (FollowRetBean)result;
+			FollowedRetBean bean = (FollowedRetBean)result;
 			if(null == bean) {
 				Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 				if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
@@ -186,14 +186,14 @@ public class FragmentFollow extends Fragment implements IRequestResultListener {
 
 			mListView.setMode(PullToRefreshBase.Mode.BOTH);
 
-			List<FollowListBean> followedBeanList = bean.data.list;
+			List<FollowedListBean> followedBeanList = bean.data.list;
 
 			if(followedBeanList.size() == 0) {
 				Toast.makeText(getActivity(), getString(
 						R.string.str_pull_refresh_listview_bottom_reach), Toast.LENGTH_SHORT).show();
 			}
 
-			FollowListBean last = bean.data.list.get(followedBeanList.size() - 1);
+			FollowedListBean last = bean.data.list.get(followedBeanList.size() - 1);
 //			if(null != last) {
 //				mTimeStamp = last.addtime;
 //			} else {
@@ -204,9 +204,9 @@ public class FragmentFollow extends Fragment implements IRequestResultListener {
 			if("0".equals(bean.data.count)) {
 				if(followedBeanList.size() == 1) {
 					mFollowedList.add(new String(FOLLOWD_EMPTY));
-					FollowListBean followBean = followedBeanList.get(0);
+					FollowedListBean followBean = followedBeanList.get(0);
 					if("1".equals(followBean.type)) {
-						List<FollowRecomUserBean> userBeanList = followBean.recomuser;
+						List<FollowedRecomUserBean> userBeanList = followBean.recomuser;
 						if(null != userBeanList && userBeanList.size() > 0) {
 							int userCount = userBeanList.size();
 							for(int j = 0; j < userCount; j++) {
@@ -220,15 +220,15 @@ public class FragmentFollow extends Fragment implements IRequestResultListener {
 			} else {
 				int count = followedBeanList.size();
 				for(int i = 0; i < count; i++) {
-					FollowListBean followBean = followedBeanList.get(i);
+					FollowedListBean followBean = followedBeanList.get(i);
 					if("0".equals(followBean.type)) {
 						mFollowedList.add(followBean.followvideo);
 					} else {
-						List<FollowRecomUserBean> userBeanList = followBean.recomuser;
+						List<FollowedRecomUserBean> userBeanList = followBean.recomuser;
 						if(null != userBeanList && userBeanList.size() > 0) {
 							int userCount = userBeanList.size();
 							for(int j = 0; j < userCount; j++) {
-								FollowRecomUserBean tmpBean = userBeanList.get(j);
+								FollowedRecomUserBean tmpBean = userBeanList.get(j);
 								tmpBean.position = j;
 								mFollowedList.add(tmpBean);
 							}

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-public class FollowDataBean {
+public class FollowedDataBean {
 	// 0:成功；1:参数错误；2:未知异常
 	@JSONField(name="result")
 	public String result;
@@ -12,7 +12,7 @@ public class FollowDataBean {
 	public String operation;
 	// 混合列表
 	@JSONField(name="list")
-	public ArrayList<FollowListBean> list;
+	public ArrayList<FollowedListBean> list;
 	@JSONField(name="count")
 	public String count;
 }

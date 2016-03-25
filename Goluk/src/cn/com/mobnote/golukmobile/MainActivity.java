@@ -50,7 +50,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentTimerManager;
 import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
-import cn.com.mobnote.golukmobile.followed.FragmentFollow;
+import cn.com.mobnote.golukmobile.followed.FragmentFollowed;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
@@ -309,7 +309,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		b.putString("key", "Follow");
 		LinearLayout follow = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_follow, null);
 		mTabHost.addTab(mTabHost.newTabSpec("Follow")
-				.setIndicator(follow), FragmentFollow.class, b);
+				.setIndicator(follow), FragmentFollowed.class, b);
 
 		b = new Bundle();
 		b.putString("key", "CarRecorder");

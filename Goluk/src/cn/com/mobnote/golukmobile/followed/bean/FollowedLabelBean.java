@@ -2,7 +2,7 @@ package cn.com.mobnote.golukmobile.followed.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-public class FollowLabelBean {
+public class FollowedLabelBean {
 	// 蓝V认证标识 是否认证0.否 1.是
 	@JSONField(name="approvelabel")
 	public String approvelabel;

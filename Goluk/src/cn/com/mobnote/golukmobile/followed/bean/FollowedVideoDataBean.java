@@ -2,7 +2,7 @@ package cn.com.mobnote.golukmobile.followed.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-public class FollowVideoDataBean {
+public class FollowedVideoDataBean {
 	@JSONField(name="aid")
 	public String aid;
 	// 设备id

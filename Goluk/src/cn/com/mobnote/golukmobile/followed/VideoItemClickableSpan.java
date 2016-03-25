@@ -7,13 +7,13 @@ import android.text.TextPaint;
 import android.text.style.ClickableSpan;
 import android.view.View;
 import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
-import cn.com.mobnote.golukmobile.followed.bean.FollowVideoObjectBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowedVideoObjectBean;
 
 public class VideoItemClickableSpan extends ClickableSpan {
 	private Context mContext;
-	private FollowVideoObjectBean mVideInfo;
+	private FollowedVideoObjectBean mVideInfo;
 
-	public VideoItemClickableSpan(Context context, String str, FollowVideoObjectBean videoInfo) {
+	public VideoItemClickableSpan(Context context, String str, FollowedVideoObjectBean videoInfo) {
 		super();
 		this.mContext = context;
 		this.mVideInfo = videoInfo;

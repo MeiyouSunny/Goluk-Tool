@@ -2,7 +2,7 @@ package cn.com.mobnote.golukmobile.followed.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-public class FollowUserBean {
+public class FollowedUserBean {
 	@JSONField(name="uid")
 	public String uid;
 	@JSONField(name="nickname")
@@ -16,5 +16,5 @@ public class FollowUserBean {
 	@JSONField(name="sex")
 	public String sex;
 	@JSONField(name="label")
-	public FollowLabelBean label;
+	public FollowedLabelBean label;
 }

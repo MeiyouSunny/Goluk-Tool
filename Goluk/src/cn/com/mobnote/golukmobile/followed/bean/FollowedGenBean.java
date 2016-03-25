@@ -2,7 +2,7 @@ package cn.com.mobnote.golukmobile.followed.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-public class FollowGenBean {
+public class FollowedGenBean {
 	@JSONField(name="channelid")
 	public String channelid;
 	@JSONField(name="chaname")

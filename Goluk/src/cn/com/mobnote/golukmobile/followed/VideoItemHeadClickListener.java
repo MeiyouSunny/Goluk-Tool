@@ -5,15 +5,15 @@ import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import cn.com.mobnote.golukmobile.BaseActivity;
-import cn.com.mobnote.golukmobile.followed.bean.FollowVideoObjectBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowedVideoObjectBean;
 import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 
 public class VideoItemHeadClickListener implements OnClickListener {
-	private FollowVideoObjectBean mVideoSquareInfo;
+	private FollowedVideoObjectBean mVideoSquareInfo;
 	private Context mContext;
 
-	public VideoItemHeadClickListener(Context context, FollowVideoObjectBean info) {
+	public VideoItemHeadClickListener(Context context, FollowedVideoObjectBean info) {
 		this.mVideoSquareInfo = info;
 		this.mContext = context;
 	}
