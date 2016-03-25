@@ -1,8 +1,8 @@
-package cn.com.mobnote.golukmobile.follow.bean;
+package cn.com.mobnote.golukmobile.followed.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-public class FollowComListBean {
+public class FollowedComListBean {
 	@JSONField(name="commentid")
 	public String commentid;
 	@JSONField(name="authorid")

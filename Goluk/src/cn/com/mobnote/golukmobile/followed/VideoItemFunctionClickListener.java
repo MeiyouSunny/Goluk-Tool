@@ -1,6 +1,6 @@
-package cn.com.mobnote.golukmobile.follow;
+package cn.com.mobnote.golukmobile.followed;
 
-import cn.com.mobnote.golukmobile.follow.bean.FollowVideoObjectBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowedVideoObjectBean;
 import cn.com.mobnote.golukmobile.newest.FunctionDialog;
 import cn.com.mobnote.golukmobile.newest.IDialogDealFn;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
@@ -9,14 +9,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 public class VideoItemFunctionClickListener implements OnClickListener {
-	private FollowVideoObjectBean mVideoSquareInfo;
+	private FollowedVideoObjectBean mVideoSquareInfo;
 	private Context mContext;
 	private boolean mIsDel = false;
 	private IDialogDealFn mListener = null;
 	/** 是否可以举报 */
 	private boolean isCanConfirm = true;
 
-	public VideoItemFunctionClickListener(Context context, FollowVideoObjectBean info, boolean isDel, IDialogDealFn fn) {
+	public VideoItemFunctionClickListener(Context context, FollowedVideoObjectBean info, boolean isDel, IDialogDealFn fn) {
 		this.mVideoSquareInfo = info;
 		this.mContext = context;
 		mListener = fn;

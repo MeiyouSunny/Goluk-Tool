@@ -75,8 +75,8 @@
                 android:contentDescription="@string/imgdes" />
             <ImageView
                 android:id="@+id/iv_list_view_follow_type_recommend_item_auth_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:contentDescription="@string/imgdes" />

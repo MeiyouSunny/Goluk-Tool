@@ -28,6 +28,7 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TabWidget;
 import android.widget.Toast;
 import cn.com.mobnote.application.GlobalWindow;
@@ -49,7 +50,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentTimerManager;
 import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
-import cn.com.mobnote.golukmobile.follow.FragmentFollow;
+import cn.com.mobnote.golukmobile.followed.FragmentFollowed;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
@@ -139,6 +140,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private SharedPreferences mPreferences = null;
 	private Editor mEditor = null;
 	private long exitTime = 0;
+	
+	private View mUnreadTips;
 	/** 首次进入的引导div */
 //	private RelativeLayout indexDiv = null;
 //	private ImageView mIndexImg = null;
@@ -182,7 +185,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.index);
 		
-		initView();
+		initTab();
 		
 		// 在使用SDK各组件之前初始化context信息，传入ApplicationContext
 		// 注意该方法要再setContentView方法之前实现
@@ -290,7 +293,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		
 	}
 
-	private void initView() {
+	private void initTab() {
+		
 		LayoutInflater inflater = LayoutInflater.from(this);
 		mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
 		mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
@@ -305,7 +309,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		b.putString("key", "Follow");
 		LinearLayout follow = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_follow, null);
 		mTabHost.addTab(mTabHost.newTabSpec("Follow")
-				.setIndicator(follow), FragmentFollow.class, b);
+				.setIndicator(follow), FragmentFollowed.class, b);
 
 		b = new Bundle();
 		b.putString("key", "CarRecorder");
@@ -322,7 +326,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		b = new Bundle();
 		b.putString("key", "Mine");
-		LinearLayout mine = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_mine, null);
+		RelativeLayout mine = (RelativeLayout) inflater.inflate(R.layout.main_tab_indicator_mine, null);
+		mUnreadTips = mine.findViewById(R.id.iv_unread_tips);
 		mTabHost.addTab(mTabHost.newTabSpec("Mine").setIndicator(mine),
 				FragmentMine.class, b);
 		TabWidget widget = mTabHost.getTabWidget();
@@ -686,6 +691,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		switch (event.getOpCode()) {
 		case EventConfig.MESSAGE_UPDATE:
+			
 			int msgCount = MessageManager.getMessageManager().getMessageTotalCount();
 			setMessageTipCount(msgCount);
 			MessageBadger.sendBadgeNumber(msgCount, this);
@@ -1313,33 +1319,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	private void setMessageTipCount(int total) {
-//		ImageView mainMsgTip = (ImageView) findViewById(R.id.iv_main_message_tip);
-//		if (total > 0) {
-//			mainMsgTip.setVisibility(View.VISIBLE);
-//		} else {
-//			mainMsgTip.setVisibility(View.GONE);
-//		}
-//
-//		// Also set user page message count tip
-//		if (null == indexMoreActivity || indexMoreActivity.mRootLayout == null) {
-//			GolukDebugUtils.d(TAG, "index more has been finished");
-//			return;
-//		}
-//
-//		TextView userMsgCounterTV = (TextView) indexMoreActivity.mRootLayout.findViewById(R.id.tv_my_message_tip);
-//		String strTotal = null;
-//		if (total > 99) {
-//			strTotal = "99+";
-//			userMsgCounterTV.setVisibility(View.VISIBLE);
-//		} else if (total <= 0) {
-//			strTotal = "0";
-//			userMsgCounterTV.setVisibility(View.GONE);
-//		} else {
-//			userMsgCounterTV.setVisibility(View.VISIBLE);
-//			strTotal = String.valueOf(total);
-//		}
-//
-//		userMsgCounterTV.setText(strTotal);
+		
+		if (total > 0) {
+			mUnreadTips.setVisibility(View.VISIBLE);
+		} else {
+			mUnreadTips.setVisibility(View.GONE);
+		}
 	}
 
 	@Override

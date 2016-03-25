@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.follow;
+package cn.com.mobnote.golukmobile.followed;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,13 +7,13 @@ import android.text.TextPaint;
 import android.text.style.ClickableSpan;
 import android.view.View;
 import cn.com.mobnote.golukmobile.cluster.ClusterActivity;
-import cn.com.mobnote.golukmobile.follow.bean.FollowVideoObjectBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowedVideoObjectBean;
 
 public class VideoItemClickableSpan extends ClickableSpan {
 	private Context mContext;
-	private FollowVideoObjectBean mVideInfo;
+	private FollowedVideoObjectBean mVideInfo;
 
-	public VideoItemClickableSpan(Context context, String str, FollowVideoObjectBean videoInfo) {
+	public VideoItemClickableSpan(Context context, String str, FollowedVideoObjectBean videoInfo) {
 		super();
 		this.mContext = context;
 		this.mVideInfo = videoInfo;

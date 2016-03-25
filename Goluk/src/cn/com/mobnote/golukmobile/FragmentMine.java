@@ -24,21 +24,25 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventMessageUpdate;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.live.UserInfo;
+import cn.com.mobnote.golukmobile.msg.MessageBadger;
 import cn.com.mobnote.golukmobile.msg.MessageCenterActivity;
 import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
 import cn.com.mobnote.golukmobile.praised.MyPraisedActivity;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
-import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
+import cn.com.mobnote.manager.MessageManager;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.StartIntentUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 /**
  * 
@@ -54,7 +58,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	/** 个人中心 **/
 	private RelativeLayout mUserCenterItem = null;
 	/** 未登录不显示用户id **/
-//	private RelativeLayout mUserCenterId = null;
+	// private RelativeLayout mUserCenterId = null;
 	/** 我的相册 **/
 	private TextView mVideoItem = null;
 	/** 摄像头管理 **/
@@ -67,11 +71,14 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	private TextView mInstallItem = null;
 	/** 版本信息 **/
 	private TextView mQuestionItem = null;
-//	/** 购买极路客 **/
-//	private TextView mShoppingItem = null;
-	/**我的收益**/
+	// /** 购买极路客 **/
+	// private TextView mShoppingItem = null;
+	/** 我的收益 **/
 	private TextView mProfitItem = null;
+	/** 消息中心 */
 	private RelativeLayout mMsgCenterItem = null;
+	private TextView mMessageTip;
+
 	private TextView mPraisedListItem = null;
 
 	/** 个人中心的头像、性别、昵称 */
@@ -86,38 +93,39 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	private Builder mBuilder = null;
 	private SharedPreferences mPreferences = null;
 	private Editor mEditor = null;
-//	LinearLayout mRootLayout = null;
+	// LinearLayout mRootLayout = null;
 	private MainActivity ma;
 
 	/** 用户信息 **/
-	private String userHead, userName, userDesc, userUId, userSex,customavatar, userPhone;
+	private String userHead, userName, userDesc, userUId, userSex, customavatar, userPhone;
 	private int shareCount, praiseCount, followCount, newFansCout, fansCount;
-	
-	/**个人中心**/
+
+	/** 个人中心 **/
 	private static final int TYPE_USER = 1;
-	/**分享视频／赞我的人**/
+	/** 分享视频／赞我的人 **/
 	private static final int TYPE_SHARE_PRAISE = 2;
-	/**我的收益**/
+	/** 我的收益 **/
 	private static final int TYPE_PROFIT = 3;
 	private static final String TAG = "FragmentMine";
 
 	LinearLayout mMineRootView = null;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		View rootView = inflater.inflate(R.layout.index_more, null);
-		mMineRootView = (LinearLayout)rootView;
+		mMineRootView = (LinearLayout) rootView;
+		
+		EventBus.getDefault().register(this);
 
-		ma = (MainActivity)getActivity();
-		
+		ma = (MainActivity) getActivity();
+
 		setListener();
-		
+
 		initView();
-		
+
 		setupView();
-		
+
 		return rootView;
 	}
 
@@ -126,16 +134,77 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
 		resetLoginState();
+		int msgCount = MessageManager.getMessageManager().getMessageTotalCount();
+		setMessageTipCount(msgCount);
 	}
 	
 	
+
+	@Override
+	public void onDestroyView() {
+		// TODO Auto-generated method stub
+		super.onDestroyView();
+		EventBus.getDefault().unregister(this);
+	}
+
+	public void onEventMainThread(EventMessageUpdate event) {
+		if (null == event) {
+			return;
+		}
+
+		switch (event.getOpCode()) {
+		case EventConfig.MESSAGE_UPDATE:
+
+			int msgCount = MessageManager.getMessageManager().getMessageTotalCount();
+			setMessageTipCount(msgCount);
+			MessageBadger.sendBadgeNumber(msgCount, getActivity());
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void setMessageTipCount(int total) {
+
+		// ImageView mainMsgTip = (ImageView)
+		// findViewById(R.id.iv_main_message_tip);
+		// if (total > 0) {
+		// mainMsgTip.setVisibility(View.VISIBLE);
+		// } else {
+		// mainMsgTip.setVisibility(View.GONE);
+		// }
+		//
+		// // Also set user page message count tip
+		// if (null == indexMoreActivity || indexMoreActivity.mRootLayout ==
+		// null) {
+		// GolukDebugUtils.d(TAG, "index more has been finished");
+		// return;
+		// }
+		//
+		// TextView userMsgCounterTV = (TextView)
+		// indexMoreActivity.mRootLayout.findViewById(R.id.tv_my_message_tip);
+		String strTotal = null;
+		if (total > 99) {
+			strTotal = "99+";
+			mMessageTip.setVisibility(View.VISIBLE);
+		} else if (total <= 0) {
+			strTotal = "0";
+			mMessageTip.setVisibility(View.GONE);
+		} else {
+			mMessageTip.setVisibility(View.VISIBLE);
+			strTotal = String.valueOf(total);
+		}
+
+		mMessageTip.setText(strTotal);
+	}
+
 	public void setupView() {
-		
+
 		ma.mApp.mUser.setUserInterface(this);
 	}
 
@@ -147,17 +216,20 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 
 		// 个人中心 我的相册 摄像头管理 通用设置 极路客小技巧 安装指导 版本信息 购买极路客
 		mUserCenterItem = (RelativeLayout) mMineRootView.findViewById(R.id.user_center_item);
-//		mUserCenterId = (RelativeLayout) mRootLayout.findViewById(R.id.user_center_id_layout);
+		// mUserCenterId = (RelativeLayout)
+		// mRootLayout.findViewById(R.id.user_center_id_layout);
 		mVideoItem = (TextView) mMineRootView.findViewById(R.id.video_item);
 		mCameraItem = (TextView) mMineRootView.findViewById(R.id.camera_item);
 		mSetItem = (TextView) mMineRootView.findViewById(R.id.set_item);
 		mSkillItem = (TextView) mMineRootView.findViewById(R.id.skill_item);
 		mInstallItem = (TextView) mMineRootView.findViewById(R.id.install_item);
 		mQuestionItem = (TextView) mMineRootView.findViewById(R.id.question_item);
-//		mShoppingItem = (TextView) mRootLayout.findViewById(R.id.shopping_item);
+		// mShoppingItem = (TextView)
+		// mRootLayout.findViewById(R.id.shopping_item);
 		mProfitItem = (TextView) mMineRootView.findViewById(R.id.profit_item);
 		mMsgCenterItem = (RelativeLayout) mMineRootView.findViewById(R.id.rl_my_message);
-		mPraisedListItem = (TextView)mMineRootView.findViewById(R.id.tv_praise_item);
+		mMessageTip = (TextView) mMineRootView.findViewById(R.id.tv_my_message_tip);
+		mPraisedListItem = (TextView) mMineRootView.findViewById(R.id.tv_praise_item);
 
 		// 头像、昵称、id
 		mImageHead = (ImageView) mMineRootView.findViewById(R.id.user_center_head);
@@ -167,7 +239,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		mVideoLayout = (LinearLayout) mMineRootView.findViewById(R.id.user_center_video_layout);
 		mTextShare = (TextView) mMineRootView.findViewById(R.id.user_share_count);
 		mTextPraise = (TextView) mMineRootView.findViewById(R.id.user_praise_count);
-		mTextFollow =  (TextView) mMineRootView.findViewById(R.id.user_follow_count);
+		mTextFollow = (TextView) mMineRootView.findViewById(R.id.user_follow_count);
 		mShareLayout = (LinearLayout) mMineRootView.findViewById(R.id.user_share);
 		mPraiseLayout = (LinearLayout) mMineRootView.findViewById(R.id.user_praise);
 		mFollowLayout = (LinearLayout) mMineRootView.findViewById(R.id.user_follow);
@@ -180,7 +252,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		mSkillItem.setOnClickListener(this);
 		mInstallItem.setOnClickListener(this);
 		mQuestionItem.setOnClickListener(this);
-//		mShoppingItem.setOnClickListener(this);
+		// mShoppingItem.setOnClickListener(this);
 		mShareLayout.setOnClickListener(this);
 		mPraiseLayout.setOnClickListener(this);
 		mFollowLayout.setOnClickListener(this);
@@ -191,13 +263,13 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 
 	// 获取登录状态及用户信息
 	private void resetLoginState() {
-		
+
 		mPreferences = getActivity().getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
 		ma.mApp.mUser.setUserInterface(this);
-		
+
 		GolukDebugUtils.i("lily", "--------" + ma.mApp.autoLoginStatus + ma.mApp.isUserLoginSucess
 				+ "=====mApp.registStatus ====" + ma.mApp.registStatus);
-		if ( ma.mApp.isUserLoginSucess == true || ma.mApp.registStatus == 2) {// 登录过
+		if (ma.mApp.isUserLoginSucess == true || ma.mApp.registStatus == 2) {// 登录过
 			GolukDebugUtils.i("lily", "---------------" + ma.mApp.autoLoginStatus + "------loginStatus------"
 					+ ma.mApp.loginStatus);
 			// 更多页面
@@ -212,8 +284,6 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			mTextId.setText(getActivity().getResources().getString(R.string.str_login_tosee_usercenter));
 		}
 	}
-
-	
 
 	AlertDialog dialog = null;
 
@@ -244,7 +314,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			break;
 		// 点击跳转到我的主页
 		case R.id.user_center_item:
-			if(isLoginInfoValid()){
+			if (isLoginInfoValid()) {
 				intentToUserCenter();
 			}else{
 				clickToLogin(TYPE_USER);
@@ -285,15 +355,15 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			getActivity().startActivity(itQuestion);
 			break;
 		// 购买极路客
-//		case R.id.shopping_item:
-//			Intent itShopping = new Intent(mContext, UserOpenUrlActivity.class);
-//			itShopping.putExtra(UserOpenUrlActivity.FROM_TAG, "shopping");
-//			mContext.startActivity(itShopping);
-//			break;
-		//我的收益
+		// case R.id.shopping_item:
+		// Intent itShopping = new Intent(mContext, UserOpenUrlActivity.class);
+		// itShopping.putExtra(UserOpenUrlActivity.FROM_TAG, "shopping");
+		// mContext.startActivity(itShopping);
+		// break;
+		// 我的收益
 		case R.id.profit_item:
-			if(isLoginInfoValid()){
-				Intent itProfit = new Intent(getActivity(),MyProfitActivity.class);
+			if (isLoginInfoValid()) {
+				Intent itProfit = new Intent(getActivity(), MyProfitActivity.class);
 				getActivity().startActivity(itProfit);
 			}else{
 				clickToLogin(TYPE_PROFIT);
@@ -304,13 +374,15 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			getActivity().startActivity(msgIntent);
 			break;
 		case R.id.tv_praise_item:
-			if(!GolukUtils.isNetworkConnected(getActivity())) {
-				Toast.makeText(getActivity(), getActivity().getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+			if (!GolukUtils.isNetworkConnected(getActivity())) {
+				Toast.makeText(getActivity(), getActivity().getString(R.string.network_error), Toast.LENGTH_SHORT)
+						.show();
 				return;
 			}
-			GolukApplication app = (GolukApplication)(getActivity()).getApplication();
+			GolukApplication app = (GolukApplication) (getActivity()).getApplication();
 			if (!app.isUserLoginSucess) {
-//				GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
+				// GolukUtils.showToast(this,
+				// this.getResources().getString(R.string.str_please_login));
 				Intent loginIntent = new Intent(getActivity(), UserLoginActivity.class);
 				getActivity().startActivity(loginIntent);
 				return;
@@ -323,52 +395,56 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			break;
 		}
 	}
-	
-//	/**
-//	 * 
-//	 * @param type	点击个人中心、分享视频赞我的人、我的收益
-//	 * @param shareOrPraise	０分享视频　　１赞我的人
-//	 */
-//	private void clickAuto(int type,int shareOrPraise) {
-//		if (ma.mApp.loginStatus == 1 || ma.mApp.registStatus == 2 || ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 2) {// 登录过
-//			if (ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 4) {//自动登录中或自动登录
-//				mBuilder = new AlertDialog.Builder(getActivity());
-//				dialog = mBuilder.setMessage(getActivity().getResources().getString(R.string.user_personal_autoloading_progress)).create();
-//				dialog.show();
-//			} else if (ma.mApp.autoLoginStatus == 2 || ma.mApp.isUserLoginSucess) {
-//				if(type == TYPE_USER) {
-//					intentToUserCenter(shareOrPraise);
-//				} else if(type == TYPE_SHARE_PRAISE) {
-//					intentToUserCenter(shareOrPraise);
-//				} else if(type == TYPE_PROFIT) {
-//					Intent itProfit = new Intent(getActivity(),MyProfitActivity.class);
-////					itProfit.putExtra("uid", userUId);
-////					itProfit.putExtra("phone", userPhone);
-//					getActivity().startActivity(itProfit);
-//				}
-//			} else {
-//				clickToLogin();
-//			}
-//		} else {
-//			clickToLogin();
-//		}
-//	}
-	
+
+	// /**
+	// *
+	// * @param type 点击个人中心、分享视频赞我的人、我的收益
+	// * @param shareOrPraise ０分享视频　　１赞我的人
+	// */
+	// private void clickAuto(int type,int shareOrPraise) {
+	// if (ma.mApp.loginStatus == 1 || ma.mApp.registStatus == 2 ||
+	// ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 2) {// 登录过
+	// if (ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 4)
+	// {//自动登录中或自动登录
+	// mBuilder = new AlertDialog.Builder(getActivity());
+	// dialog =
+	// mBuilder.setMessage(getActivity().getResources().getString(R.string.user_personal_autoloading_progress)).create();
+	// dialog.show();
+	// } else if (ma.mApp.autoLoginStatus == 2 || ma.mApp.isUserLoginSucess) {
+	// if(type == TYPE_USER) {
+	// intentToUserCenter(shareOrPraise);
+	// } else if(type == TYPE_SHARE_PRAISE) {
+	// intentToUserCenter(shareOrPraise);
+	// } else if(type == TYPE_PROFIT) {
+	// Intent itProfit = new Intent(getActivity(),MyProfitActivity.class);
+	// // itProfit.putExtra("uid", userUId);
+	// // itProfit.putExtra("phone", userPhone);
+	// getActivity().startActivity(itProfit);
+	// }
+	// } else {
+	// clickToLogin();
+	// }
+	// } else {
+	// clickToLogin();
+	// }
+	// }
+
 	/**
 	 * 登录状态是否有效s
+	 * 
 	 * @return
 	 */
-	private boolean isLoginInfoValid(){
+	private boolean isLoginInfoValid() {
 		if (ma.mApp.loginStatus == 1 || ma.mApp.registStatus == 2 || ma.mApp.autoLoginStatus == 2) {// 登录过
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
-	
+
 	/**
 	 * 跳转登录页
+	 * 
 	 * @param intentType
 	 */
 	private void clickToLogin(int intentType) {
@@ -387,7 +463,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 
 		getActivity().startActivity(itNo);
 	}
-	
+
 	/**
 	 * 点击个人中心跳转到个人主页
 	 */
@@ -428,12 +504,12 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	 * 个人资料信息
 	 */
 	public void initData() {
-		if(null == ma || null == ma.mApp) {
+		if (null == ma || null == ma.mApp) {
 			return;
 		}
 
 		UserInfo userInfo = ma.mApp.getMyInfo();
-		if(null != userInfo) {
+		if (null != userInfo) {
 			userHead = userInfo.head;
 			userName = userInfo.nickName;
 			userDesc = userInfo.desc;
@@ -446,20 +522,20 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			userSex = userInfo.sex;
 			customavatar = userInfo.customavatar;
 			userPhone = userInfo.phone;
-			
-			if(customavatar != null && !"".equals(customavatar)){
+
+			if (customavatar != null && !"".equals(customavatar)) {
 				mImageHead.setImageURI(Uri.parse(customavatar));
 				GlideUtils.loadNetHead(getActivity(), mImageHead, customavatar, R.drawable.editor_head_feault7);
-			}else{
-				showHead(mImageHead,userHead);
+			} else {
+				showHead(mImageHead, userHead);
 			}
-			if(null != userInfo.mUserLabel) {
+			if (null != userInfo.mUserLabel) {
 				mImageAuthentication.setVisibility(View.VISIBLE);
-				if("1".equals(userInfo.mUserLabel.approvelabel)) {
+				if ("1".equals(userInfo.mUserLabel.approvelabel)) {
 					mImageAuthentication.setImageResource(R.drawable.authentication_bluev_icon);
-				} else if( "1".equals(userInfo.mUserLabel.headplusv)) {
+				} else if ("1".equals(userInfo.mUserLabel.headplusv)) {
 					mImageAuthentication.setImageResource(R.drawable.authentication_yellowv_icon);
-				} else if("1".equals(userInfo.mUserLabel.tarento)) {
+				} else if ("1".equals(userInfo.mUserLabel.tarento)) {
 					mImageAuthentication.setImageResource(R.drawable.authentication_star_icon);
 				} else {
 					mImageAuthentication.setVisibility(View.GONE);
@@ -467,7 +543,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			} else {
 				mImageAuthentication.setVisibility(View.GONE);
 			}
-			
+
 			mTextName.setText(userName);
 			GolukDebugUtils.i("lily", userHead);
 
@@ -480,7 +556,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			mTextShare.setText(GolukUtils.getFormatNumber(shareCount));
 			mTextPraise.setText(GolukUtils.getFormatNumber(fansCount));
 			mTextFollow.setText(GolukUtils.getFormatNumber(followCount));
-			if(newFansCout > 0) {
+			if (newFansCout > 0) {
 				Drawable redPoint = getActivity().getResources().getDrawable(R.drawable.home_red_point_little);
 				redPoint.setBounds(0, 0, redPoint.getMinimumWidth(), redPoint.getMinimumHeight());
 				mTextPraise.setCompoundDrawables(null, null, redPoint, null);
@@ -492,7 +568,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			GolukDebugUtils.e("", "=======IndexMoreActivity====b：" + b);
 		}
 	}
-	
+
 	private void showHead(ImageView view, String headportrait) {
 		try {
 			GlideUtils.loadLocalHead(getActivity(), view, ILive.mBigHeadImg[Integer.parseInt(headportrait)]);
@@ -513,10 +589,10 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 					String praisemenumber = data.optString("praisemenumber");
 					String sharevideonumber = data.optString("sharevideonumber");
 					GolukDebugUtils.e("", "=======VideoSuqare_CallBack====praisemenumber：" + praisemenumber);
-					if("".equals(praisemenumber)) {
+					if ("".equals(praisemenumber)) {
 						praisemenumber = "0";
 					}
-					if("".equals(sharevideonumber)) {
+					if ("".equals(sharevideonumber)) {
 						sharevideonumber = "0";
 					}
 					mTextPraise.setText(GolukUtils.getFormatNumber(praisemenumber));
@@ -556,14 +632,14 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	 */
 	public void personalChanged() {
 		GolukDebugUtils.i("lily", "======registStatus====" + ma.mApp.registStatus);
-		if(ma.mApp.autoLoginStatus == 3 || ma.mApp.autoLoginStatus == 4) {
+		if (ma.mApp.autoLoginStatus == 3 || ma.mApp.autoLoginStatus == 4) {
 			mVideoLayout.setVisibility(View.GONE);
 			mImageAuthentication.setVisibility(View.GONE);
 			mTextName.setText(getActivity().getResources().getString(R.string.str_click_to_login));
 			mTextId.setTextColor(Color.rgb(128, 138, 135));
 			mTextId.setText(getActivity().getResources().getString(R.string.str_login_tosee_usercenter));
 			showHead(mImageHead, "7");
-			return ;
+			return;
 		}
 		if (ma.mApp.loginStatus == 1 || ma.mApp.autoLoginStatus == 1 || ma.mApp.autoLoginStatus == 2) {// 登录成功、自动登录中、自动登录成功
 			mVideoLayout.setVisibility(View.VISIBLE);
@@ -581,4 +657,3 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	}
 
 }
-

@@ -1,14 +1,14 @@
-package cn.com.mobnote.golukmobile.follow;
+package cn.com.mobnote.golukmobile.followed;
 
 import java.util.HashMap;
 
-import cn.com.mobnote.golukmobile.follow.bean.FollowRetBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowedRetBean;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.http.request.GolukFastjsonRequest;
 
-public class FollowedListRequest extends GolukFastjsonRequest<FollowRetBean> {
+public class FollowedListRequest extends GolukFastjsonRequest<FollowedRetBean> {
 	public FollowedListRequest(int requestType, IRequestResultListener listener) {
-		super(requestType, FollowRetBean.class, listener);
+		super(requestType, FollowedRetBean.class, listener);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.follow;
+package cn.com.mobnote.golukmobile.followed;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,16 +17,16 @@ import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
-import cn.com.mobnote.golukmobile.follow.bean.FollowVideoObjectBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowedVideoObjectBean;
 import cn.com.mobnote.golukmobile.player.MovieActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoEntity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 
 public class VideoItemClickPlayListener implements OnClickListener {
-	private FollowVideoObjectBean mVideoSquareInfo;
+	private FollowedVideoObjectBean mVideoSquareInfo;
 	private Context mContext;
 
-	public VideoItemClickPlayListener(Context context, FollowVideoObjectBean info) {
+	public VideoItemClickPlayListener(Context context, FollowedVideoObjectBean info) {
 		this.mVideoSquareInfo = info;
 		this.mContext = context;
 	}

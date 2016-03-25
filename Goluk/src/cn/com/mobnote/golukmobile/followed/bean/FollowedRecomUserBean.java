@@ -1,10 +1,10 @@
-package cn.com.mobnote.golukmobile.follow.bean;
+package cn.com.mobnote.golukmobile.followed.bean;
 
 import java.util.List;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-public class FollowRecomUserBean {
+public class FollowedRecomUserBean {
 	@JSONField(name="uid")
 	public String uid;
 	@JSONField(name="nickname")
@@ -19,7 +19,7 @@ public class FollowRecomUserBean {
 	@JSONField(name="introduction")
 	public String introduction;
 	@JSONField(name="certification")
-	public FollowCertificationBean certification;
+	public FollowedCertificationBean certification;
 	// 连接类型 0:未连接;1:关注;2:粉丝;3:互粉(互相关注);
 	@JSONField(name="link")
 	public int link;
@@ -33,5 +33,8 @@ public class FollowRecomUserBean {
 	public String index;
 	// 围观次数最多的视频
 	@JSONField(name="hotvideo")
-	public List<FollowHotVideoBean> hotvideo;
+	public List<FollowedHotVideoBean> hotvideo;
+
+	// Record for the position in recommend user list
+	public int position;
 }

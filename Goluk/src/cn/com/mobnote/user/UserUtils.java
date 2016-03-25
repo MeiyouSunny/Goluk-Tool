@@ -32,8 +32,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.follow.VideoItemClickableSpan;
-import cn.com.mobnote.golukmobile.follow.bean.FollowVideoObjectBean;
+import cn.com.mobnote.golukmobile.followed.VideoItemClickableSpan;
+import cn.com.mobnote.golukmobile.followed.bean.FollowedVideoObjectBean;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.usercenter.CopyOfShuoMClickableSpan;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
@@ -360,7 +360,7 @@ public class UserUtils {
 		view.setMovementMethod(LinkMovementMethod.getInstance());
 	}
 
-	public static void showCommentText(Context context, boolean isCanClick, FollowVideoObjectBean videInfo, TextView view,
+	public static void showCommentText(Context context, boolean isCanClick, FollowedVideoObjectBean videInfo, TextView view,
 			String nikename, String text, String got) {
 		boolean isHasGot = false;
 		String all = "";

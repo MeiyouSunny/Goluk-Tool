@@ -1,7 +1,7 @@
-package cn.com.mobnote.golukmobile.follow;
+package cn.com.mobnote.golukmobile.followed;
 
 import cn.com.mobnote.golukmobile.BaseActivity;
-import cn.com.mobnote.golukmobile.follow.bean.FollowVideoObjectBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowedVideoObjectBean;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 public class VideoItemCommentClickListener implements OnClickListener {
-	private FollowVideoObjectBean mVideoSquareInfo;
+	private FollowedVideoObjectBean mVideoSquareInfo;
 	private Context mContext;
 
-	public VideoItemCommentClickListener(Context context, FollowVideoObjectBean info, boolean showft) {
+	public VideoItemCommentClickListener(Context context, FollowedVideoObjectBean info, boolean showft) {
 		this.mVideoSquareInfo = info;
 		this.mContext = context;
 	}
