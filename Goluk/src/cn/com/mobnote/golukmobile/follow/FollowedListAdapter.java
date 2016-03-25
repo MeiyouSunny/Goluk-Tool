@@ -178,9 +178,11 @@ public class FollowedListAdapter extends BaseAdapter {
 			return convertView;
 		}
 
-//		if(position != 0) {
-//			holderRec.nDividerV.setVisibility(View.GONE);
-//		}
+		if(recomUserBean.position != 0) {
+			holderRec.nDividerV.setVisibility(View.GONE);
+			holderRec.nLabelRL.setVisibility(View.GONE);
+		}
+
 		String headUrl = recomUserBean.customavatar;
 		if (null != headUrl && !"".equals(headUrl)) {
 			// 使用服务器头像地址
@@ -226,6 +228,43 @@ public class FollowedListAdapter extends BaseAdapter {
 					holderRec.nItemUserAuthIV.setVisibility(View.GONE);
 				}
 			}
+		}
+
+		switch(recomUserBean.link) {
+		case 0: // no relations
+		{
+			holderRec.nItemFollowRL.setBackgroundResource(R.drawable.follow_button_border_normal);
+			holderRec.nItemFollowTV.setText("关注");
+			holderRec.nItemFollowTV.setTextColor(Color.parseColor("#0080ff"));
+			Drawable drawable = mContext.getResources().getDrawable(R.drawable.icon_follow_normal);
+			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+			holderRec.nItemFollowTV.setCompoundDrawables(drawable, null, null, null);
+		}
+			break;
+		case 1: // followed
+		{
+			holderRec.nItemFollowRL.setBackgroundResource(R.drawable.follow_button_border_followed);
+			holderRec.nItemFollowTV.setText("已关注");
+			holderRec.nItemFollowTV.setTextColor(Color.parseColor("#ffffff"));
+			Drawable drawable = mContext.getResources().getDrawable(R.drawable.icon_followed);
+			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+			holderRec.nItemFollowTV.setCompoundDrawables(drawable, null, null, null);
+		}
+			break;
+		case 2: // followed each other
+		{
+			holderRec.nItemFollowRL.setBackgroundResource(R.drawable.follow_button_border_mutual);
+			holderRec.nItemFollowTV.setText("相互关注");
+			holderRec.nItemFollowTV.setTextColor(Color.parseColor("#ffffff"));
+			Drawable drawable = mContext.getResources().getDrawable(R.drawable.icon_follow_mutual);
+			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+			holderRec.nItemFollowTV.setCompoundDrawables(drawable, null, null, null);
+		}
+			break;
+		case 3: // fans
+			break;
+		default:
+			break;
 		}
 
 		return convertView;

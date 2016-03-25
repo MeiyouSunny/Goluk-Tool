@@ -34,4 +34,7 @@ public class FollowRecomUserBean {
 	// 围观次数最多的视频
 	@JSONField(name="hotvideo")
 	public List<FollowHotVideoBean> hotvideo;
+
+	// Record for the position in recommend user list
+	public int position;
 }

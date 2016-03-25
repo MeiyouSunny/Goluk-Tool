@@ -228,7 +228,9 @@ public class FragmentFollow extends Fragment implements IRequestResultListener {
 						if(null != userBeanList && userBeanList.size() > 0) {
 							int userCount = userBeanList.size();
 							for(int j = 0; j < userCount; j++) {
-								mFollowedList.add(userBeanList.get(j));
+								FollowRecomUserBean tmpBean = userBeanList.get(j);
+								tmpBean.position = j;
+								mFollowedList.add(tmpBean);
 							}
 						}
 					}
