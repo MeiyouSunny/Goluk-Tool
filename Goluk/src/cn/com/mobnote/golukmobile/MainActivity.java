@@ -181,6 +181,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukDebugUtils.e("", "start App ------ MainActivity-----onCreate------------:");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.index);
+		
+		initView();
+		
 		// 在使用SDK各组件之前初始化context信息，传入ApplicationContext
 		// 注意该方法要再setContentView方法之前实现
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
@@ -284,6 +287,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukUtils.getMobileInfo(this);
 
 		// msgRequest();
+		
+	}
+
+	private void initView() {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
 		mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
@@ -619,7 +626,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				Toast.makeText(MainActivity.this, "连接成功！", Toast.LENGTH_LONG).show();
 				mCarrecorderIv.setImageResource(R.drawable.index_video_icon);
 			} else if (state == WIFI_STATE_FAILED) {
-				Toast.makeText(MainActivity.this, "连接失败！", Toast.LENGTH_LONG).show();
+				//Toast.makeText(MainActivity.this, "连接失败！", Toast.LENGTH_LONG).show();
 				mCarrecorderIv.setImageResource(R.drawable.tb_notconnected);
 			} else {
 				mCarrecorderIv.setImageResource(R.drawable.tb_notconnected);
