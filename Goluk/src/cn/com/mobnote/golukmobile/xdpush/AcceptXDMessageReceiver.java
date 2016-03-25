@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.msg.MessageBadger;
 import cn.com.mobnote.manager.MessageManager;
@@ -60,9 +61,10 @@ public class AcceptXDMessageReceiver extends XGPushBaseReceiver {
 	// 消息透传 收到消息
 	@Override
 	public void onTextMessage(Context context, XGPushTextMessage message) {
+		
 		String customContent = message.getContent();
 		String title = message.getTitle();
-		GolukDebugUtils.e("", "jyf----XG-----AcceptXdMessage  title:" + title + "  msg:" + customContent);
+		//Log.i("", "jyf----XG-----AcceptXdMessage  title:" + title + "  msg:" + customContent);
 		dealTextMsg(context, title, customContent);
 	}
 
@@ -73,6 +75,7 @@ public class AcceptXDMessageReceiver extends XGPushBaseReceiver {
 	 * @author jyf
 	 */
 	private void dealTextMsg(Context context, String title, String json) {
+		
 		if (null == json || json.equals("")) {
 			return;
 		}

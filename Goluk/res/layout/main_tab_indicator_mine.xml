@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:gravity="center"
@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/discover_id"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_gravity="center"
@@ -17,5 +17,18 @@
         android:textSize="9sp"
         android:drawablePadding="0dp"
         android:drawableTop="@drawable/tab_host_mine_icon_selector" />
+    
+    <ImageView 
+        android:id="@+id/iv_unread_tips"
+        android:visibility="gone"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/discover_id"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="-4dp"
+        android:contentDescription="@string/imgdes"
+        android:src="@drawable/home_red_point_little"
+        />
 
-</LinearLayout>
+</RelativeLayout>
