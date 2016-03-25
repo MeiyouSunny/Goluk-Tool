@@ -19,7 +19,7 @@
             android:layout_centerVertical="true"
             android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
-            android:background="@drawable/cross_screen_arrow_icon1"
+            android:background="@drawable/live_btn_back"
             android:contentDescription="@string/imgdes" />
 
         <TextView
@@ -30,17 +30,16 @@
             android:textColor="@color/white"
             android:textSize="18sp" />
     </RelativeLayout>
-    
-    <com.handmark.pulltorefresh.library.PullToRefreshGridView 
+
+    <com.handmark.pulltorefresh.library.PullToRefreshGridView
         android:id="@+id/gv_videocategory"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/ry_videocategory_title_layout"
         android:divider="@null"
-        android:gravity="center">
-        
+        android:gravity="center" >
     </com.handmark.pulltorefresh.library.PullToRefreshGridView>
-    
+
     <RelativeLayout
         android:id="@+id/ry_videocategory_refresh"
         android:layout_width="match_parent"
@@ -48,26 +47,31 @@
         android:layout_below="@id/ry_videocategory_title_layout"
         android:visibility="gone" >
 
-        <TextView 
+        <TextView
             android:id="@+id/tv_videocategory_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableTop="@drawable/mine_qitadifang"
+            android:layout_centerInParent="true"
             android:drawablePadding="17dp"
-            android:textColor="#bfbfbf"
-            android:textSize="16sp"
+            android:drawableTop="@drawable/mine_qitadifang"
             android:text="@string/msg_system_connect_error"
-            android:layout_centerInParent="true" />
+            android:textColor="#bfbfbf"
+            android:textSize="16sp" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tv_videocategory_nodata"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ry_videocategory_title_layout"
-        android:layout_centerInParent="true"
-        android:textSize="16sp"
-        android:textColor="#bfbfbf"
-        android:visibility="gone" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/ry_videocategory_title_layout" >
+
+        <TextView
+            android:id="@+id/tv_videocategory_nodata"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="#bfbfbf"
+            android:textSize="16sp"
+            android:visibility="gone" />
+    </RelativeLayout>
 
 </RelativeLayout>

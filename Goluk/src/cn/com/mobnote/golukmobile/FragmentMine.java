@@ -230,14 +230,14 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			if(isLoginInfoValid()){
 				
 			}else{
-				clickToLogin();
+				clickToLogin(TYPE_SHARE_PRAISE);
 			}
 			break;
 		case R.id.user_praise:
 			if(isLoginInfoValid()){
 				
 			}else{
-				clickToLogin();
+				clickToLogin(TYPE_SHARE_PRAISE);
 			}
 			break;
 		case R.id.user_follow:
@@ -247,7 +247,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			if(isLoginInfoValid()){
 				intentToUserCenter();
 			}else{
-				clickToLogin();
+				clickToLogin(TYPE_USER);
 			}
 			break;
 		// 我的相册
@@ -296,7 +296,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 				Intent itProfit = new Intent(getActivity(),MyProfitActivity.class);
 				getActivity().startActivity(itProfit);
 			}else{
-				clickToLogin();
+				clickToLogin(TYPE_PROFIT);
 			}
 			break;
 		case R.id.rl_my_message:
@@ -371,9 +371,20 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	 * 跳转登录页
 	 * @param intentType
 	 */
-	private void clickToLogin() {
-		
+	private void clickToLogin(int intentType) {
+		mPreferences = getActivity().getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
+		mEditor = mPreferences.edit();
 		Intent itNo = new Intent(getActivity(), UserLoginActivity.class);
+		if (intentType == TYPE_USER) {
+			itNo.putExtra("isInfo", "indexmore");
+			mEditor.putString("toRepwd", "more");
+		} else if (intentType == TYPE_PROFIT) {
+			// 登录页回调判断
+			itNo.putExtra("isInfo", "profit");
+			mEditor.putString("toRepwd", "toProfit");
+		}
+		mEditor.commit();
+
 		getActivity().startActivity(itNo);
 	}
 	

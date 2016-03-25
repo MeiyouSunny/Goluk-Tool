@@ -21,6 +21,7 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 	private TextView mFirstText, mSecondText, mThirdText;
 	private ImageButton mFirstBtn, mSecondBtn, mThirdBtn;
 	public static final String TYPE = "type";
+	public static final String PARAM = "param";
 	public static final String TYPE_WONDERFUL_VIDEO_QUALITY = "wonderful_video_quality";
 	public static final String TYPE_TONE_VOLUME = "tone_volume";
 	public static final String TYPE_SHUTDOWN_TIME = "shutdown_time";
@@ -65,6 +66,8 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 	private void initData() {
 		Intent it = getIntent();
 		mType = it.getStringExtra(TYPE);
+		mCurrentItem = it.getStringExtra(PARAM);
+		GolukDebugUtils.e("", "------------SettingsItemActivity----------mCurrentItem: "+mCurrentItem);
 		getArrays(getTypeList());
 	}
 
@@ -169,7 +172,7 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 	private void exit() {
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
 			Intent intent = new Intent();
-			intent.putExtra("photoselect", mCurrentItem);
+			intent.putExtra("params", mCurrentItem);
 			setResult(Activity.RESULT_OK, intent);
 		}
 		finish();

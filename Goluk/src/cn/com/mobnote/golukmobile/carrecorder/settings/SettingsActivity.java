@@ -168,8 +168,16 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	/**自动同步照片到手机相册开关状态**/
 
 	boolean mAutoState = true;
-	private TextView mTextWonderfulVideoQualityText, mToneText, mShutdownText, mLanguageText;
+	private TextView mTextWonderfulVideoQualityText, mVolumeText, mPowerTimeText, mVoiceTypeText;
 	private RelativeLayout mWonderfulVideoQualityLayout, mToneLayout, mShutdownLayout, mLanguageLayout;
+	/** 精彩视频质量 **/
+	private String mWonderfulVideoResolution = "";
+	/** 提示音音量大小 **/
+	private String mVolume = "";
+	/** 关机时间 **/
+	private String mPowerTime = "";
+	/** 语言 **/
+	private String mVoiceType = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -250,6 +258,19 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			boolean t1GetAdasCofig = GolukApplication.getInstance().getIPCControlManager().getT1AdasConfig();
 			GolukDebugUtils.e("", "--------------SettingsActivity-----t1GetAutoRotaing：" + t1GetAdasCofig);
 		}
+		
+		// 获取精彩视频质量
+		boolean videoResolution = GolukApplication.getInstance().getIPCControlManager().getVideoResolution();
+		GolukDebugUtils.e("", "--------------SettingsActivity-----videoResolution：" + videoResolution);
+		// 获取提示音音量大小
+		boolean volume = GolukApplication.getInstance().getIPCControlManager().getVolume();
+		GolukDebugUtils.e("", "--------------SettingsActivity-----volume：" + volume);
+		// 获取关机时间
+		boolean powerOffTime = GolukApplication.getInstance().getIPCControlManager().getPowerOffTime();
+		GolukDebugUtils.e("", "--------------SettingsActivity-----powerOffTime：" + powerOffTime);
+		// 获取语言设置
+		boolean voiceType = GolukApplication.getInstance().getIPCControlManager().getVoiceType();
+		GolukDebugUtils.e("", "--------------SettingsActivity-----voiceType：" + voiceType);
 
 		showLoading();
 	}
@@ -330,37 +351,45 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			return;
 		}
 		if (null != data) {
-
+			mWonderfulVideoResolution = data.getStringExtra("params");
+			refreshWonderfulVideoData();
+			GolukApplication.getInstance().getIPCControlManager().setVideoResolution(mWonderfulVideoResolution);
 		}
 	}
 
 	// 提示音音量大小
-	private void activityResult_tone(int resultCode, Intent data) {
+	private void activityResult_Volume(int resultCode, Intent data) {
 		if (Activity.RESULT_OK != resultCode) {
 			return;
 		}
 		if (null != data) {
-
+			mVolume = data.getStringExtra("params");
+			refreshVolume();
+			GolukApplication.getInstance().getIPCControlManager().setVolume(Integer.parseInt(mVolume));
 		}
 	}
 
 	// 关机时间
-	private void activityResult_shutdown(int resultCode, Intent data) {
+	private void activityResult_PowerTime(int resultCode, Intent data) {
 		if (Activity.RESULT_OK != resultCode) {
 			return;
 		}
 		if (null != data) {
-
+			mPowerTime = data.getStringExtra("params");
+			refreshPowerTime();
+			GolukApplication.getInstance().getIPCControlManager().setPowerOffTime(Integer.parseInt(mPowerTime));
 		}
 	}
 
 	// 语言设置
-	private void activityResult_language(int resultCode, Intent data) {
+	private void activityResult_VoiceType(int resultCode, Intent data) {
 		if (Activity.RESULT_OK != resultCode) {
 			return;
 		}
 		if (null != data) {
-
+			mVoiceType = data.getStringExtra("params");
+			refreshVoiceType();
+			GolukApplication.getInstance().getIPCControlManager().setVoiceType(Integer.parseInt(mVoiceType));
 		}
 	}
 
@@ -442,13 +471,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			activityResult_wonderful(resultCode, data);
 			break;
 		case REQUEST_CODE_TONE_VOLUMN:
-			activityResult_tone(resultCode, data);
+			activityResult_Volume(resultCode, data);
 			break;
 		case REQUEST_CODE_SHUTDOWN_TIME:
-			activityResult_shutdown(resultCode, data);
+			activityResult_PowerTime(resultCode, data);
 			break;
 		case REQUEST_CODE_LANGUAGE:
-			activityResult_language(resultCode, data);
+			activityResult_VoiceType(resultCode, data);
 			break;
 			/**adas需求变更 暂时拿掉**/
 //		case REQUEST_CODE_ADAS_FCW_WARNING:
@@ -517,11 +546,11 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		
 		mTextWonderfulVideoQualityText = (TextView) findViewById(R.id.tv_carrecorder_settings_wonderfulvideo_quality_text);
 		mWonderfulVideoQualityLayout = (RelativeLayout) findViewById(R.id.rl_carrecorder_settings_wonderfulvideo_quality);
-		mToneText = (TextView) findViewById(R.id.tv_settings_tone_text);
+		mVolumeText = (TextView) findViewById(R.id.tv_settings_tone_text);
 		mToneLayout = (RelativeLayout) findViewById(R.id.rl_settings_tone_line);
-		mShutdownText = (TextView) findViewById(R.id.tv_settings_shutdown_text);
+		mPowerTimeText = (TextView) findViewById(R.id.tv_settings_shutdown_text);
 		mShutdownLayout = (RelativeLayout) findViewById(R.id.rl_settings_shutdown_line);
-		mLanguageText = (TextView) findViewById(R.id.tv_settings_language_text);
+		mVoiceTypeText = (TextView) findViewById(R.id.tv_settings_language_text);
 		mLanguageLayout = (RelativeLayout) findViewById(R.id.rl_settings_language_line);
 
 		// ipc设备型号
@@ -845,22 +874,26 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			case R.id.rl_carrecorder_settings_wonderfulvideo_quality:// 精彩视频质量
 				Intent itWonderful = new Intent(this, SettingsItemActivity.class);
 				itWonderful.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_WONDERFUL_VIDEO_QUALITY);
+				itWonderful.putExtra(SettingsItemActivity.PARAM, mWonderfulVideoResolution);
 				startActivityForResult(itWonderful, REQUEST_CODE_WONDERFUL_VIDEO_QUALITY);
 				break;
 			case R.id.rl_settings_tone_line:// 提示音音量大小
-				Intent itTone = new Intent(this, SettingsItemActivity.class);
-				itTone.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_TONE_VOLUME);
-				startActivityForResult(itTone, REQUEST_CODE_WONDERFUL_VIDEO_QUALITY);
+				Intent itVolume = new Intent(this, SettingsItemActivity.class);
+				itVolume.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_TONE_VOLUME);
+				itVolume.putExtra(SettingsItemActivity.PARAM, mVolume );
+				startActivityForResult(itVolume, REQUEST_CODE_WONDERFUL_VIDEO_QUALITY);
 				break;
 			case R.id.rl_settings_shutdown_line:// 关机时间
-				Intent itShutdown = new Intent(this, SettingsItemActivity.class);
-				itShutdown.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_SHUTDOWN_TIME);
-				startActivityForResult(itShutdown, REQUEST_CODE_WONDERFUL_VIDEO_QUALITY);
+				Intent itPowerTime = new Intent(this, SettingsItemActivity.class);
+				itPowerTime.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_SHUTDOWN_TIME);
+				itPowerTime.putExtra(SettingsItemActivity.PARAM, mPowerTime);
+				startActivityForResult(itPowerTime, REQUEST_CODE_WONDERFUL_VIDEO_QUALITY);
 				break;
 			case R.id.rl_settings_language_line:// 语言设置
-				Intent itLanguage = new Intent(this, SettingsItemActivity.class);
-				itLanguage.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_LANGUAGE);
-				startActivityForResult(itLanguage, REQUEST_CODE_WONDERFUL_VIDEO_QUALITY);
+				Intent itVoiceType = new Intent(this, SettingsItemActivity.class);
+				itVoiceType.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_LANGUAGE);
+				itVoiceType.putExtra(SettingsItemActivity.PARAM, mVoiceType);
+				startActivityForResult(itVoiceType, REQUEST_CODE_WONDERFUL_VIDEO_QUALITY);
 				break;
 			default:
 				break;
@@ -1399,6 +1432,22 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					mAdasConfigParamter.fcw_enable = (Integer) mADASFcarCloseBtn.getTag();
 //					mAdasConfigParamter.osd = (Integer) mADASOsdBtn.getTag();
 				}
+			} else if (msg == IPC_VDCP_Msg_GetVideoResolution) {// 获取精彩视频质量
+				getVideoResolutionCallback(event, msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_SetVideoResolution) {// 设置精彩视频质量
+				setVideoResolutionCallback(event, msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_GetVolume) {// 获取提示音音量大小
+				getVolumeCallback(event, msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_SetVolume) {// 设置提示音音量大小
+				setVolumeCallback(event, msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_GetPowerOffTime) {// 获取关机时间
+				getPowerOffTimeCallback(event, msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_SetPowerOffTime) {// 设置关机时间
+				setPowerOffTimeCallback(event, msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_GetVoiceType) {// 获取语言
+				getVoiceTypeCallback(event, msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_SetVoiceType) {// 设置语言
+				setVoiceTypeCallback(event, msg, param1, param2);
 			}
 		}
 	}
@@ -1747,10 +1796,22 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	/** 图片质量相关 */
 	private String[] mPhotoText = null;
 	private String[] mPhotoValue = null;
+	/** 精彩视频质量 **/
+	private String[] mWonderfulVideo = null;
+	/** 提示音音量大小 **/
+	private String[] mVolumeList = null;
+	/** 关机时间 **/
+	private String[] mPowerTimeList = null;
+	/** 语言 **/
+	private String[] mVoiceTypeList = null;
 
 	private void loadRes() {
 		mPhotoText = getResources().getStringArray(R.array.list_photo_quality_ui);
 		mPhotoValue = getResources().getStringArray(R.array.list_photo_quality_list);
+		mWonderfulVideo = getResources().getStringArray(R.array.list_wonderful_video_quality);
+		mVolumeList = getResources().getStringArray(R.array.list_tone_volume);
+		mPowerTimeList = getResources().getStringArray(R.array.list_shutdown_time);
+		mVoiceTypeList = getResources().getStringArray(R.array.list_language);
 	}
 
 	private void parsePhotoQualityJson(String str) {
@@ -1882,4 +1943,213 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mAdasConfigParamter = event.getData();
 		switchAdasEnableUI(true);
 	}
+	
+	/**
+	 * 获取精彩视频质量
+	 * 
+	 * @param event
+	 * @param msg
+	 * @param param1
+	 * @param param2
+	 */
+	private void getVideoResolutionCallback(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "--------getVideoResolutionCallback------event：" + event + "------msg：" + msg
+				+ "-----param1：" + param1 + "------param2：" + param2);
+		if (RESULE_SUCESS == param1) {
+			try {
+				JSONObject json = new JSONObject((String) param2);
+				mWonderfulVideoResolution = json.getString("wonderful_resolution");
+				refreshWonderfulVideoData();
+			} catch (Exception e) {
+				mWonderfulVideoResolution = "1080P";
+				mTextWonderfulVideoQualityText.setText(mWonderfulVideoResolution);
+			}
+		}
+	}
+
+	/**
+	 * 设置精彩视频质量
+	 * 
+	 * @param event
+	 * @param msg
+	 * @param param1
+	 * @param param2
+	 */
+	private void setVideoResolutionCallback(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "--------setVideoResolutionCallback------event：" + event + "------msg：" + msg
+				+ "-----param1：" + param1 + "------param2：" + param2);
+		closeLoading();
+		if (RESULE_SUCESS == param1) {
+			GolukApplication.getInstance().getIPCControlManager().getVideoResolution();
+		}
+	}
+
+	/**
+	 * 获取提示音音量大小
+	 * 
+	 * @param event
+	 * @param msg
+	 * @param param1
+	 * @param param2
+	 */
+	private void getVolumeCallback(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "--------getVolumeCallback------event：" + event + "------msg：" + msg + "-----param1："
+				+ param1 + "------param2：" + param2);
+		if (RESULE_SUCESS == param1) {
+			try {
+				JSONObject json = new JSONObject((String) param2);
+				int value = json.getInt("value");
+				mVolume = value + "";
+				refreshVolume();
+			} catch (Exception e) {
+
+			}
+		}
+	}
+
+	/**
+	 * 设置提示音音量大小
+	 * 
+	 * @param event
+	 * @param msg
+	 * @param param1
+	 * @param param2
+	 */
+	private void setVolumeCallback(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "--------setVolumeCallback------event：" + event + "------msg：" + msg + "-----param1："
+				+ param1 + "------param2：" + param2);
+		closeLoading();
+		if (RESULE_SUCESS == param1) {
+			GolukApplication.getInstance().getIPCControlManager().getVolume();
+		}
+	}
+
+	/**
+	 * 获取关机时间
+	 * 
+	 * @param event
+	 * @param msg
+	 * @param param1
+	 * @param param2
+	 */
+	private void getPowerOffTimeCallback(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "--------getPowerOffTimeCallback------event：" + event + "------msg：" + msg
+				+ "-----param1：" + param1 + "------param2：" + param2);
+		if (RESULE_SUCESS == param1) {
+			try{
+				JSONObject json = new JSONObject((String)param2);
+				int time = json.getInt("time_second");
+				mPowerTime = time+"";
+				refreshPowerTime();
+			}catch(Exception e) {
+				
+			}
+		}
+	}
+
+	/**
+	 * 设置关机时间
+	 * 
+	 * @param event
+	 * @param msg
+	 * @param param1
+	 * @param param2
+	 */
+	private void setPowerOffTimeCallback(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "--------setPowerOffTimeCallback------event：" + event + "------msg：" + msg
+				+ "-----param1：" + param1 + "------param2：" + param2);
+		closeLoading();
+		if (RESULE_SUCESS == param1) {
+			GolukApplication.getInstance().getIPCControlManager().getPowerOffTime();
+		}
+	}
+
+	/**
+	 * 获取语言类型
+	 * 
+	 * @param event
+	 * @param msg
+	 * @param param1
+	 * @param param2
+	 */
+	private void getVoiceTypeCallback(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "--------getVoiceTypeCallback------event：" + event + "------msg：" + msg + "-----param1："
+				+ param1 + "------param2：" + param2);
+		if (RESULE_SUCESS == param1) {
+			try {
+				JSONObject json = new JSONObject((String) param2);
+				int type = json.getInt("type");
+				mVoiceType = type + "";
+				refreshVoiceType();
+			} catch (Exception e) {
+
+			}
+		}
+	}
+
+	/**
+	 * 设置语言类型
+	 * 
+	 * @param event
+	 * @param msg
+	 * @param param1
+	 * @param param2
+	 */
+	private void setVoiceTypeCallback(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "--------setVoiceTypeCallback------event：" + event + "------msg：" + msg + "-----param1："
+				+ param1 + "------param2：" + param2);
+		closeLoading();
+		if (RESULE_SUCESS == param1) {
+			GolukApplication.getInstance().getIPCControlManager().getVoiceType();
+		}
+	}
+	
+	/**
+	 * 更新精彩视频质量
+	 */
+	private void refreshWonderfulVideoData() {
+		int length = mWonderfulVideo.length;
+		for (int i = 0; i < length; i++) {
+			if (mWonderfulVideoResolution.equals(mWonderfulVideo[i])) {
+				mTextWonderfulVideoQualityText.setText(mWonderfulVideo[i]);
+			}
+		}
+	}
+	
+	/**
+	 * 更新提示音音量大小
+	 */
+	private void refreshVolume() {
+		int length = mVolumeList.length;
+		for (int i = 0; i < length; i++) {
+			if (mVoiceTypeList[i].equals(mVolume)) {
+				mVolumeText.setText(mVolumeList[i]);
+			}
+		}
+	}
+	
+	/**
+	 * 更新关机时间
+	 */
+	private void refreshPowerTime() {
+		int length = mPowerTimeList.length;
+		for (int i = 0; i < length; i++) {
+			if (mPowerTime.equals(mPowerTimeList[i])) {
+				mPowerTimeText.setText(mPowerTimeList[i]);
+			}
+		}
+	}
+	
+	/**
+	 * 更新语言设置
+	 */
+	private void refreshVoiceType() {
+		int length = mVoiceTypeList.length;
+		for (int i = 0; i < length; i++) {
+			if (mVoiceType.equals(mVoiceTypeList[i])) {
+				mVoiceTypeText.setText(mVoiceTypeList[i]);
+			}
+		}
+	}
+	
 }
