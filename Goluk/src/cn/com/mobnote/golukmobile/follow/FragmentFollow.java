@@ -63,7 +63,7 @@ public class FragmentFollow extends Fragment implements IRequestResultListener {
 		mRetryClickIV.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				sendOfficialRequest(REFRESH_NORMAL, null);
+				sendFollowedContentRequest(REFRESH_NORMAL, null);
 			}
 		});
 
@@ -78,7 +78,7 @@ public class FragmentFollow extends Fragment implements IRequestResultListener {
 				pullToRefreshBase.getLoadingLayoutProxy(true, false).setLastUpdatedLabel(
 						getActivity().getString(R.string.updating) +
 						GolukUtils.getCurrentFormatTime(getActivity()));
-				sendOfficialRequest(REFRESH_PULL_DOWN, null);
+				sendFollowedContentRequest(REFRESH_PULL_DOWN, null);
 				mCurMotion = REFRESH_PULL_DOWN;
 			}
 
@@ -87,17 +87,17 @@ public class FragmentFollow extends Fragment implements IRequestResultListener {
 				pullToRefreshBase.getLoadingLayoutProxy(false, true).setPullLabel(
 						getActivity().getResources().getString(
 						R.string.goluk_pull_to_refresh_footer_pull_label));
-				sendOfficialRequest(REFRESH_PULL_UP, mTimeStamp);
+				sendFollowedContentRequest(REFRESH_PULL_UP, mTimeStamp);
 				mCurMotion = REFRESH_PULL_UP;
 			}
 		});
 
-		sendOfficialRequest(REFRESH_NORMAL, null);
+		sendFollowedContentRequest(REFRESH_NORMAL, null);
 		mFollowedList = new ArrayList<Object>();
 		return rootView;
 	}
 
-	private void sendOfficialRequest(String op, String timeStamp) {
+	private void sendFollowedContentRequest(String op, String timeStamp) {
 		String tmpOp = op;
 		if(REFRESH_PULL_DOWN.equals(op)) {
 			tmpOp = REFRESH_NORMAL;
@@ -224,13 +224,13 @@ public class FragmentFollow extends Fragment implements IRequestResultListener {
 					if("0".equals(followBean.type)) {
 						mFollowedList.add(followBean.followvideo);
 					} else {
-//						List<FollowRecomUserBean> userBeanList = followBean.recomuser;
-//						if(null != userBeanList && userBeanList.size() > 0) {
-//							int userCount = userBeanList.size();
-//							for(int j = 0; j < userCount; j++) {
-//								mFollowedList.add(userBeanList.get(j));
-//							}
-//						}
+						List<FollowRecomUserBean> userBeanList = followBean.recomuser;
+						if(null != userBeanList && userBeanList.size() > 0) {
+							int userCount = userBeanList.size();
+							for(int j = 0; j < userCount; j++) {
+								mFollowedList.add(userBeanList.get(j));
+							}
+						}
 					}
 				}
 			}

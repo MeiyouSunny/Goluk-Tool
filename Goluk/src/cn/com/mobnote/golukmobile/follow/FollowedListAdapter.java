@@ -114,9 +114,118 @@ public class FollowedListAdapter extends BaseAdapter {
 		if (TYPE_FOLLOWED == type) {
 			convertView = getFollowedView(position, convertView, viewGroup);
 		} else if(TYPE_RECOMMEND == type) {
-//			convertView = getRecommendView(position, convertView, viewGroup);
+			convertView = getRecommendView(position, convertView, viewGroup);
 		} else {
 //			conertView = getEmptyView(position, convertView, viewGroup);
+		}
+
+		return convertView;
+	}
+
+	private View getRecommendView(int position, View convertView, ViewGroup viewGroup) {
+		ViewHolderRecommend holderRec = null;
+		if(null == convertView) {
+			holderRec = new ViewHolderRecommend();
+			convertView = LayoutInflater.from(mContext).inflate(R.layout.rl_list_view_follow_type_recommend_item, null);
+			holderRec.nDividerV = convertView.findViewById(R.id.v_list_view_follow_type_recommend_item_label_title_div);
+			holderRec.nItemContentTV = (TextView)convertView.findViewById(R.id.tv_list_view_follow_type_recommend_item_content);
+			holderRec.nItemFirstVideoComTV =
+					(TextView)convertView.findViewById(R.id.tv_list_view_follow_type_recommend_item_first_video_comment);
+			holderRec.nItemFirstVideoDesTV =
+					(TextView)convertView.findViewById(R.id.tv_list_view_follow_type_recommend_item_first_video_description);
+			holderRec.nItemFirstVideoIV =
+					(ImageView)convertView.findViewById(R.id.iv_list_view_follow_type_recommend_item_first_video);
+			holderRec.nItemFirstVideoViewTV =
+					(TextView)convertView.findViewById(R.id.tv_list_view_follow_type_recommend_item_first_video_view);
+			holderRec.nItemFollowTV =
+					(TextView)convertView.findViewById(R.id.tv_list_view_follow_type_recommend_item_follow);
+			holderRec.nItemNameTV =
+					(TextView)convertView.findViewById(R.id.tv_list_view_follow_type_recommend_item_name);
+			holderRec.nItemSecondVideoComTV =
+					(TextView)convertView.findViewById(R.id.tv_list_view_follow_type_recommend_item_second_video_comment);
+			holderRec.nItemSecondVideoDesTV =
+					(TextView)convertView.findViewById(R.id.tv_list_view_follow_type_recommend_item_second_video_description);
+			holderRec.nItemSecondVideoIV =
+					(ImageView)convertView.findViewById(R.id.iv_list_view_follow_type_recommend_item_second_video);
+			holderRec.nItemSecondVideoViewTV =
+					(TextView)convertView.findViewById(R.id.tv_list_view_follow_type_recommend_item_second_video_view);
+			holderRec.nItemUserAuthIV =
+					(ImageView)convertView.findViewById(R.id.iv_list_view_follow_type_recommend_item_auth_tag);
+			holderRec.nItemUserAvatarIV =
+					(ImageView)convertView.findViewById(R.id.iv_list_view_follow_type_recommend_item_avatar);
+			holderRec.nItemUserRL =
+					convertView.findViewById(R.id.rl_list_view_follow_type_recommend_item_user);
+			holderRec.nLabelTitleTV =
+					(TextView)convertView.findViewById(R.id.tv_list_view_follow_type_recommend_item_label_title);
+			holderRec.nLabelRL =
+					convertView.findViewById(R.id.rl_list_view_follow_type_recommend_item_label);
+			holderRec.nLableFollowTV =
+					(TextView)convertView.findViewById(R.id.tv_list_view_follow_type_recommend_item_follow_all);
+			holderRec.nItemFollowRL =
+					convertView.findViewById(R.id.rl_list_view_follow_type_recommend_item_follow);
+			holderRec.nLabelFollowAllRL =
+					convertView.findViewById(R.id.rl_list_view_follow_type_recommend_item_follow_all);
+		} else {
+			holderRec = (ViewHolderRecommend)convertView.getTag();
+		}
+
+		if (position < 0 || position >= mList.size()) {
+			return convertView;
+		}
+
+		FollowRecomUserBean recomUserBean = (FollowRecomUserBean)mList.get(position);
+		if(null == recomUserBean) {
+			return convertView;
+		}
+
+//		if(position != 0) {
+//			holderRec.nDividerV.setVisibility(View.GONE);
+//		}
+		String headUrl = recomUserBean.customavatar;
+		if (null != headUrl && !"".equals(headUrl)) {
+			// 使用服务器头像地址
+			GlideUtils.loadNetHead(mContext, holderRec.nItemUserAvatarIV, headUrl, R.drawable.editor_head_feault7);
+		} else {
+			showHead(holderRec.nItemUserAvatarIV, recomUserBean.avatar);
+		}
+
+		holderRec.nItemNameTV.setText(recomUserBean.nickname);
+		holderRec.nItemContentTV.setText(recomUserBean.introduction);
+		GlideUtils.loadImage(mContext, holderRec.nItemFirstVideoIV,
+				recomUserBean.hotvideo.get(0).pictureurl, R.drawable.tacitly_pic);
+		GlideUtils.loadImage(mContext, holderRec.nItemSecondVideoIV,
+				recomUserBean.hotvideo.get(1).pictureurl, R.drawable.tacitly_pic);
+		holderRec.nItemFirstVideoDesTV.setText(recomUserBean.hotvideo.get(0).description);
+		holderRec.nItemSecondVideoDesTV.setText(recomUserBean.hotvideo.get(1).description);
+		holderRec.nItemFirstVideoViewTV.setText(recomUserBean.hotvideo.get(0).clickcount + "");
+		holderRec.nItemSecondVideoViewTV.setText(recomUserBean.hotvideo.get(1).clickcount + "");
+		holderRec.nItemFirstVideoComTV.setText(recomUserBean.hotvideo.get(0).commentcount + "");
+		holderRec.nItemSecondVideoComTV.setText(recomUserBean.hotvideo.get(1).commentcount + "");
+
+		if(null != recomUserBean && null != recomUserBean.certification) {
+			String approveLabel = recomUserBean.certification.isorgcertificated;
+			String approve = recomUserBean.certification.orgcertification;
+			String tarento = recomUserBean.certification.isstar;
+			String headplusv = recomUserBean.certification.isusercertificated;
+			String headplusvdes = recomUserBean.certification.usercertification;
+
+			if(null == approveLabel && null == approve &&
+				null == tarento && null == headplusv && null == headplusvdes) {
+				holderRec.nItemUserAuthIV.setVisibility(View.GONE);
+			} else {
+				if("1".equals(approveLabel)) {
+					holderRec.nItemUserAuthIV.setImageResource(R.drawable.authentication_bluev_icon);
+					holderRec.nItemUserAuthIV.setVisibility(View.VISIBLE);
+				} else if("1".equals(headplusv)) {
+					holderRec.nItemUserAuthIV.setImageResource(R.drawable.authentication_yellowv_icon);
+					holderRec.nItemUserAuthIV.setVisibility(View.VISIBLE);
+				} else if("1".equals(tarento)) {
+					holderRec.nItemUserAuthIV.setImageResource(R.drawable.authentication_star_icon);
+					holderRec.nItemUserAuthIV.setVisibility(View.VISIBLE);
+				} else {
+					holderRec.nItemUserAuthIV.setVisibility(View.GONE);
+				}
+			}
 		}
 
 		return convertView;
@@ -457,10 +566,10 @@ public class FollowedListAdapter extends BaseAdapter {
 
 	static class ViewHolderRecommend {
 		View nDividerV;
-		View nLabelV;
+		View nLabelRL;
 		TextView nLabelTitleTV;
 		TextView nLableFollowTV;
-		View nItemUserTV;
+		View nItemUserRL;
 		ImageView nItemUserAvatarIV;
 		ImageView nItemUserAuthIV;
 		TextView nItemNameTV;
@@ -474,6 +583,8 @@ public class FollowedListAdapter extends BaseAdapter {
 		TextView nItemSecondVideoDesTV;
 		TextView nItemSecondVideoComTV;
 		TextView nItemSecondVideoViewTV;
+		View nLabelFollowAllRL;
+		View nItemFollowRL;
 	}
 
 	static class ViewHolderFollow {
