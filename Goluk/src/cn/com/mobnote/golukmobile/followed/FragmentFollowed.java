@@ -41,7 +41,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 //	private List<FollowListBean> mOrgFollowedList;
 	private List<Object> mFollowedList;
 	private RelativeLayout mEmptyRL;
-	private final static String PAGESIZE = "20";
+	private final static String PAGESIZE = "10";
 	private String mTimeStamp = "";
 	private String mCurMotion = REFRESH_NORMAL;
 	private TextView mRetryClickIV;
@@ -65,7 +65,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 		mRetryClickIV.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				sendFollowedContentRequest(REFRESH_NORMAL, null);
+				sendFollowedContentRequest(REFRESH_NORMAL, mTimeStamp);
 			}
 		});
 
@@ -80,7 +80,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 				pullToRefreshBase.getLoadingLayoutProxy(true, false).setLastUpdatedLabel(
 						getActivity().getString(R.string.updating) +
 						GolukUtils.getCurrentFormatTime(getActivity()));
-				sendFollowedContentRequest(REFRESH_PULL_DOWN, null);
+				sendFollowedContentRequest(REFRESH_PULL_DOWN, mTimeStamp);
 				mCurMotion = REFRESH_PULL_DOWN;
 			}
 
@@ -94,7 +94,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 			}
 		});
 
-		sendFollowedContentRequest(REFRESH_NORMAL, null);
+		sendFollowedContentRequest(REFRESH_NORMAL, mTimeStamp);
 		mFollowedList = new ArrayList<Object>();
 		return rootView;
 	}
@@ -207,23 +207,26 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 			}
 
 			FollowedListBean last = bean.data.list.get(followedBeanList.size() - 1);
-//			if(null != last) {
-//				mTimeStamp = last.addtime;
-//			} else {
-//				return;
-//			}
+			if(null != last) {
+				mTimeStamp = last.followvideo.video.sharingtime;
+			} else {
+				return;
+			}
 
+			List<Object> gotList = new ArrayList<Object>();
 			// Refill to common list
 			if("0".equals(bean.data.count)) {
 				if(followedBeanList.size() == 1) {
-					mFollowedList.add(new String(FOLLOWD_EMPTY));
+//					mFollowedList.add(new String(FOLLOWD_EMPTY));
+					gotList.add(new String(FOLLOWD_EMPTY));
 					FollowedListBean followBean = followedBeanList.get(0);
 					if("1".equals(followBean.type)) {
 						List<FollowedRecomUserBean> userBeanList = followBean.recomuser;
 						if(null != userBeanList && userBeanList.size() > 0) {
 							int userCount = userBeanList.size();
 							for(int j = 0; j < userCount; j++) {
-								mFollowedList.add(userBeanList.get(j));
+//								mFollowedList.add(userBeanList.get(j));
+								gotList.add(userBeanList.get(j));
 							}
 						}
 					}
@@ -235,7 +238,8 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 				for(int i = 0; i < count; i++) {
 					FollowedListBean followBean = followedBeanList.get(i);
 					if("0".equals(followBean.type)) {
-						mFollowedList.add(followBean.followvideo);
+//						mFollowedList.add(followBean.followvideo);
+						gotList.add(followBean.followvideo);
 					} else {
 						List<FollowedRecomUserBean> userBeanList = followBean.recomuser;
 						if(null != userBeanList && userBeanList.size() > 0) {
@@ -243,13 +247,26 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 							for(int j = 0; j < userCount; j++) {
 								FollowedRecomUserBean tmpBean = userBeanList.get(j);
 								tmpBean.position = j;
-								mFollowedList.add(tmpBean);
+//								mFollowedList.add(tmpBean);
+								gotList.add(tmpBean);
 							}
 						}
 					}
 				}
 			}
-			mAdapter.setData(mFollowedList);
+
+			if(REFRESH_PULL_UP.equals(mCurMotion)) {
+				mFollowedList.addAll(gotList);
+				mAdapter.notifyDataSetChanged();
+			} else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
+//				mOfficialMsgList.clear();
+//				mOfficialMsgList.addAll(bean.data.messages);
+				mFollowedList.clear();
+				mFollowedList.addAll(gotList);
+				mAdapter.setData(mFollowedList);
+			} else {
+			}
+
 //			if(mOfficialMsgList.size() < PAGESIZE) {
 //				mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 //			}
@@ -259,12 +276,15 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 			if(null != bean) {
 				// User link uid to find the changed recommend user item status
 				int i = findLinkUserItem(bean.data.linkuid);
-				FollowedRecomUserBean userBean = (FollowedRecomUserBean)mFollowedList.get(i);
-				userBean.link = bean.data.link;
+				if(i >=0 && i < mFollowedList.size()) {
+					FollowedRecomUserBean userBean = (FollowedRecomUserBean)mFollowedList.get(i);
+					userBean.link = bean.data.link;
+					mAdapter.notifyDataSetChanged();
+				}
 			} else {
 				// Toast for operation failed
+				Toast.makeText(getActivity(), "操作失败", Toast.LENGTH_SHORT).show();
 			}
-			mAdapter.notifyDataSetChanged();
 		}
 	}
 
