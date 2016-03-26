@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.videosuqare;
+package cn.com.mobnote.golukmobile.praise;
 
 import java.util.HashMap;
 
@@ -6,13 +6,13 @@ import android.text.TextUtils;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.http.request.GolukFastjsonRequest;
-import cn.com.mobnote.golukmobile.videosuqare.bean.PraiseResultBean;
+import cn.com.mobnote.golukmobile.praise.bean.PraiseCancelResultBean;
 import cn.com.tiros.api.Tapi;
 
-public class PraiseRequest extends GolukFastjsonRequest<PraiseResultBean> {
+public class PraiseCancelRequest extends GolukFastjsonRequest<PraiseCancelResultBean> {
 
-	public PraiseRequest(int requestType, IRequestResultListener listener) {
-		super(requestType, PraiseResultBean.class, listener);
+	public PraiseCancelRequest(int requestType, IRequestResultListener listener) {
+		super(requestType, PraiseCancelResultBean.class, listener);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -25,25 +25,24 @@ public class PraiseRequest extends GolukFastjsonRequest<PraiseResultBean> {
 	@Override
 	protected String getMethod() {
 		// TODO Auto-generated method stub
-		return "shareVideoPraise";
+		return "cancelpraise";
 	}
 
-	public boolean get(String channel, String videoId, String type) {
-		if (TextUtils.isEmpty("channel") || TextUtils.isEmpty(videoId) || TextUtils.isEmpty(type)) {
+	public boolean get(String channel, String videoId) {
+		if (TextUtils.isEmpty("channel")) {
 			return false;
 		}
 		HashMap<String, String> paramters = (HashMap<String, String>) getParam();
 		paramters.put("xieyi", "100");
 		paramters.put("channel", channel);
 		paramters.put("videoid", videoId);
-		paramters.put("type", type);
 		String uid = GolukApplication.getInstance().mCurrentUId;
 		if (TextUtils.isEmpty(uid)) {
-			paramters.put("uid", "");
+			paramters.put("commuid", "");
 		} else {
-			paramters.put("uid", uid);
+			paramters.put("commuid", uid);
 		}
-		paramters.put("mobileid", "" + Tapi.getMobileId());
+		paramters.put("commmid", "" + Tapi.getMobileId());
 		super.get();
 		return true;
 	}
