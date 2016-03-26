@@ -18,8 +18,7 @@
 			android:layout_alignRight="@+id/mImageView"
 			android:layout_alignBottom="@+id/mImageView"
             android:layout_width="match_parent"
-    		android:layout_height="match_parent"  
-    		android:background="@drawable/wonderful_item_mb"
+    		android:layout_height="match_parent"
             />
     
 	<RelativeLayout 
