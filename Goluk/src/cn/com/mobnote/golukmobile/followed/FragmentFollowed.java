@@ -6,6 +6,8 @@ import java.util.List;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.follow.FollowRequest;
+import cn.com.mobnote.golukmobile.follow.bean.FollowRetBean;
 import cn.com.mobnote.golukmobile.followed.bean.FollowedListBean;
 import cn.com.mobnote.golukmobile.followed.bean.FollowedRecomUserBean;
 import cn.com.mobnote.golukmobile.followed.bean.FollowedRetBean;
@@ -67,7 +69,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 			}
 		});
 
-		mAdapter = new FollowedListAdapter(getActivity());
+		mAdapter = new FollowedListAdapter(this);
 		mListView.setAdapter(mAdapter);
 		mLoadingDialog = new CustomLoadingDialog(getActivity(), null);
 		mListView.setMode(PullToRefreshBase.Mode.DISABLED);
@@ -113,6 +115,17 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 
 		if(!mLoadingDialog.isShowing() && REFRESH_NORMAL.equals(op)) {
 			mLoadingDialog.show();
+		}
+	}
+
+	protected void sendFollowRequest(String linkuid, String type) {
+		FollowRequest request =
+				new FollowRequest(IPageNotifyFn.PageType_Follow, this);
+		GolukApplication app = GolukApplication.getInstance();
+		if(null != app && app.isUserLoginSucess) {
+			if(!TextUtils.isEmpty(app.mCurrentUId)) {
+				request.get(PROTOCOL, linkuid, type, app.mCurrentUId);
+			}
 		}
 	}
 
@@ -241,6 +254,38 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 //				mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 //			}
 			mCurMotion = REFRESH_NORMAL;
+		} else if(requestType == IPageNotifyFn.PageType_Follow) {
+			FollowRetBean bean = (FollowRetBean)result;
+			if(null != bean) {
+				// User link uid to find the changed recommend user item status
+				int i = findLinkUserItem(bean.data.linkuid);
+				FollowedRecomUserBean userBean = (FollowedRecomUserBean)mFollowedList.get(i);
+				userBean.link = bean.data.link;
+			} else {
+				// Toast for operation failed
+			}
+			mAdapter.notifyDataSetChanged();
 		}
+	}
+
+	private int findLinkUserItem(String linkuid) {
+		if(null == mFollowedList || mFollowedList.size() == 0 || TextUtils.isEmpty(linkuid)) {
+			return -1;
+		}
+
+		int size = mFollowedList.size();
+		for(int i = 0; i < size; i++) {
+			Object obj = mFollowedList.get(i);
+			if(null != obj && obj instanceof FollowedRecomUserBean) {
+				FollowedRecomUserBean bean = (FollowedRecomUserBean)obj;
+				if(!TextUtils.isEmpty(bean.uid)) {
+					if(bean.uid.equals(linkuid)) {
+						return i;
+					}
+				}
+			}
+		}
+
+		return -1;
 	}
 }

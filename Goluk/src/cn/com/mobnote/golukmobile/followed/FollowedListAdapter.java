@@ -25,30 +25,23 @@ import cn.com.mobnote.golukmobile.followed.bean.FollowedComListBean;
 import cn.com.mobnote.golukmobile.followed.bean.FollowedRecomUserBean;
 import cn.com.mobnote.golukmobile.followed.bean.FollowedVideoObjectBean;
 import cn.com.mobnote.golukmobile.live.ILive;
-import cn.com.mobnote.golukmobile.newest.ClickFunctionListener;
-import cn.com.mobnote.golukmobile.newest.ClickHeadListener;
-import cn.com.mobnote.golukmobile.newest.ClickNewestListener;
-import cn.com.mobnote.golukmobile.newest.ClickPraiseListener;
-import cn.com.mobnote.golukmobile.newest.ClickShareListener;
-import cn.com.mobnote.golukmobile.newest.CommentDataInfo;
 import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 
 public class FollowedListAdapter extends BaseAdapter {
-	private Context mContext;
+	private FragmentFollowed mFragment;
 	private List<Object> mList;
 	private final float widthHeight = 1.78f;
 	private int width = 0;
 
 	private final static String TAG = "FollowedListAdapter";
 
-	public FollowedListAdapter(Context mContext) {
+	public FollowedListAdapter(FragmentFollowed fragment) {
 		super();
-		this.mContext = mContext;
+		this.mFragment = fragment;
 		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 	}
 
@@ -126,7 +119,7 @@ public class FollowedListAdapter extends BaseAdapter {
 		ViewHolderRecommend holderRec = null;
 		if(null == convertView) {
 			holderRec = new ViewHolderRecommend();
-			convertView = LayoutInflater.from(mContext).inflate(R.layout.rl_list_view_follow_type_recommend_item, null);
+			convertView = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.rl_list_view_follow_type_recommend_item, null);
 			holderRec.nDividerV = convertView.findViewById(R.id.v_list_view_follow_type_recommend_item_label_title_div);
 			holderRec.nItemContentTV = (TextView)convertView.findViewById(R.id.tv_list_view_follow_type_recommend_item_content);
 			holderRec.nItemFirstVideoComTV =
@@ -165,6 +158,7 @@ public class FollowedListAdapter extends BaseAdapter {
 					convertView.findViewById(R.id.rl_list_view_follow_type_recommend_item_follow);
 			holderRec.nLabelFollowAllRL =
 					convertView.findViewById(R.id.rl_list_view_follow_type_recommend_item_follow_all);
+			convertView.setTag(holderRec);
 		} else {
 			holderRec = (ViewHolderRecommend)convertView.getTag();
 		}
@@ -186,16 +180,16 @@ public class FollowedListAdapter extends BaseAdapter {
 		String headUrl = recomUserBean.customavatar;
 		if (null != headUrl && !"".equals(headUrl)) {
 			// 使用服务器头像地址
-			GlideUtils.loadNetHead(mContext, holderRec.nItemUserAvatarIV, headUrl, R.drawable.editor_head_feault7);
+			GlideUtils.loadNetHead(mFragment.getActivity(), holderRec.nItemUserAvatarIV, headUrl, R.drawable.editor_head_feault7);
 		} else {
 			showHead(holderRec.nItemUserAvatarIV, recomUserBean.avatar);
 		}
 
 		holderRec.nItemNameTV.setText(recomUserBean.nickname);
 		holderRec.nItemContentTV.setText(recomUserBean.introduction);
-		GlideUtils.loadImage(mContext, holderRec.nItemFirstVideoIV,
+		GlideUtils.loadImage(mFragment.getActivity(), holderRec.nItemFirstVideoIV,
 				recomUserBean.hotvideo.get(0).pictureurl, R.drawable.tacitly_pic);
-		GlideUtils.loadImage(mContext, holderRec.nItemSecondVideoIV,
+		GlideUtils.loadImage(mFragment.getActivity(), holderRec.nItemSecondVideoIV,
 				recomUserBean.hotvideo.get(1).pictureurl, R.drawable.tacitly_pic);
 		holderRec.nItemFirstVideoDesTV.setText(recomUserBean.hotvideo.get(0).description);
 		holderRec.nItemSecondVideoDesTV.setText(recomUserBean.hotvideo.get(1).description);
@@ -236,7 +230,7 @@ public class FollowedListAdapter extends BaseAdapter {
 			holderRec.nItemFollowRL.setBackgroundResource(R.drawable.follow_button_border_normal);
 			holderRec.nItemFollowTV.setText("关注");
 			holderRec.nItemFollowTV.setTextColor(Color.parseColor("#0080ff"));
-			Drawable drawable = mContext.getResources().getDrawable(R.drawable.icon_follow_normal);
+			Drawable drawable = mFragment.getActivity().getResources().getDrawable(R.drawable.icon_follow_normal);
 			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
 			holderRec.nItemFollowTV.setCompoundDrawables(drawable, null, null, null);
 		}
@@ -246,7 +240,7 @@ public class FollowedListAdapter extends BaseAdapter {
 			holderRec.nItemFollowRL.setBackgroundResource(R.drawable.follow_button_border_followed);
 			holderRec.nItemFollowTV.setText("已关注");
 			holderRec.nItemFollowTV.setTextColor(Color.parseColor("#ffffff"));
-			Drawable drawable = mContext.getResources().getDrawable(R.drawable.icon_followed);
+			Drawable drawable = mFragment.getActivity().getResources().getDrawable(R.drawable.icon_followed);
 			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
 			holderRec.nItemFollowTV.setCompoundDrawables(drawable, null, null, null);
 		}
@@ -256,7 +250,7 @@ public class FollowedListAdapter extends BaseAdapter {
 			holderRec.nItemFollowRL.setBackgroundResource(R.drawable.follow_button_border_mutual);
 			holderRec.nItemFollowTV.setText("相互关注");
 			holderRec.nItemFollowTV.setTextColor(Color.parseColor("#ffffff"));
-			Drawable drawable = mContext.getResources().getDrawable(R.drawable.icon_follow_mutual);
+			Drawable drawable = mFragment.getActivity().getResources().getDrawable(R.drawable.icon_follow_mutual);
 			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
 			holderRec.nItemFollowTV.setCompoundDrawables(drawable, null, null, null);
 		}
@@ -267,14 +261,25 @@ public class FollowedListAdapter extends BaseAdapter {
 			break;
 		}
 
+		final String linkuid = recomUserBean.uid;
+		int relation = recomUserBean.link;
+
+		final String type = relation == 0 ? "1" : "0";
+
+		holderRec.nItemFollowTV.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mFragment.sendFollowRequest(linkuid, type);
+			}
+		});
 		return convertView;
 	}
 
 	private void showHead(ImageView view, String headportrait) {
 		try {
-			GlideUtils.loadLocalHead(mContext, view, ILive.mBigHeadImg[Integer.parseInt(headportrait)]);
+			GlideUtils.loadLocalHead(mFragment.getActivity(), view, ILive.mBigHeadImg[Integer.parseInt(headportrait)]);
 		} catch (Exception e) {
-			GlideUtils.loadLocalHead(mContext, view, R.drawable.editor_head_feault7);
+			GlideUtils.loadLocalHead(mFragment.getActivity(), view, R.drawable.editor_head_feault7);
 		}
 	}
 
@@ -282,7 +287,7 @@ public class FollowedListAdapter extends BaseAdapter {
 		ViewHolderFollow holderFollow = null;
 		if (null == convertView) {
 			holderFollow = new ViewHolderFollow();
-			convertView = LayoutInflater.from(mContext).inflate(R.layout.newest_list_item, null);
+			convertView = LayoutInflater.from(mFragment.getActivity()).inflate(R.layout.newest_list_item, null);
 			holderFollow.vDivider = convertView.findViewById(R.id.v_item_divider_line);
 			holderFollow.videoImg = (ImageView) convertView.findViewById(R.id.imageLayout);
 			holderFollow.liveImg = (ImageView) convertView.findViewById(R.id.newlist_item_liveicon);
@@ -330,7 +335,7 @@ public class FollowedListAdapter extends BaseAdapter {
 			holderFollow.vDivider.setVisibility(View.VISIBLE);
 		}
 
-		GlideUtils.loadImage(mContext, holderFollow.videoImg, videoObjectBean.video.picture, R.drawable.tacitly_pic);
+		GlideUtils.loadImage(mFragment.getActivity(), holderFollow.videoImg, videoObjectBean.video.picture, R.drawable.tacitly_pic);
 		if(null != videoObjectBean.user && null != videoObjectBean.user.label) {
 			String approveLabel = videoObjectBean.user.label.approvelabel;
 			String approve = videoObjectBean.user.label.approve;
@@ -359,20 +364,20 @@ public class FollowedListAdapter extends BaseAdapter {
 		String headUrl = videoObjectBean.user.customavatar;
 		if (null != headUrl && !"".equals(headUrl)) {
 			// 使用服务器头像地址
-			GlideUtils.loadNetHead(mContext, holderFollow.headimg, headUrl, R.drawable.editor_head_feault7);
+			GlideUtils.loadNetHead(mFragment.getActivity(), holderFollow.headimg, headUrl, R.drawable.editor_head_feault7);
 		} else {
 			showHead(holderFollow.headimg, videoObjectBean.user.headportrait);
 		}
 
 		holderFollow.nikename.setText(videoObjectBean.user.nickname);
 
-		holderFollow.timeLocation.setText(GolukUtils.getCommentShowFormatTime(mContext,
+		holderFollow.timeLocation.setText(GolukUtils.getCommentShowFormatTime(mFragment.getActivity(),
 				videoObjectBean.video.sharingtime) + " " + videoObjectBean.video.location);
 
 		if(null != videoObjectBean.video.gen) {
 			String recommend = videoObjectBean.video.gen.isrecommend;
 			if(null != recommend && "1".equals(recommend)) {
-				Drawable drawable = mContext.getResources().getDrawable(R.drawable.together_recommend_icon);
+				Drawable drawable = mFragment.getActivity().getResources().getDrawable(R.drawable.together_recommend_icon);
 				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
 				holderFollow.timeLocation.setCompoundDrawables(null, null, drawable, null);
 			} else {
@@ -393,22 +398,22 @@ public class FollowedListAdapter extends BaseAdapter {
 
 		if ("0".equals(videoObjectBean.video.ispraise)) {
 			holderFollow.praiseText.setTextColor(Color.rgb(0x88, 0x88, 0x88));
-			Drawable drawable = mContext.getResources().getDrawable(R.drawable.videodetail_like);
+			Drawable drawable = mFragment.getActivity().getResources().getDrawable(R.drawable.videodetail_like);
 			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
 			holderFollow.praiseText.setCompoundDrawables(drawable, null, null, null);
 		} else {
 			holderFollow.praiseText.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
-			Drawable drawable = mContext.getResources().getDrawable(R.drawable.videodetail_like_press);
+			Drawable drawable = mFragment.getActivity().getResources().getDrawable(R.drawable.videodetail_like_press);
 			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
 			holderFollow.praiseText.setCompoundDrawables(drawable, null, null, null);
 		}
 
 		if ("-1".equals(videoObjectBean.video.praisenumber)) {
-			holderFollow.tvPraiseCount.setText(mContext.getString(R.string.str_usercenter_praise));
+			holderFollow.tvPraiseCount.setText(mFragment.getActivity().getString(R.string.str_usercenter_praise));
 		} else {
 			holderFollow.tvPraiseCount.setText(
 					GolukUtils.getFormatNumber(videoObjectBean.video.praisenumber) +
-					mContext.getString(R.string.str_usercenter_praise));
+					mFragment.getActivity().getString(R.string.str_usercenter_praise));
 		}
 
 		if ("-1".equals(videoObjectBean.video.clicknumber)) {
@@ -428,7 +433,7 @@ public class FollowedListAdapter extends BaseAdapter {
 				if(!TextUtils.isEmpty(videoObjectBean.video.gen.topicid) &&
 						!TextUtils.isEmpty(videoObjectBean.video.gen.topicname)) {
 					UserUtils.showCommentText(
-							mContext, true, videoObjectBean, holderFollow.detail, videoObjectBean.user.nickname,
+							mFragment.getActivity(), true, videoObjectBean, holderFollow.detail, videoObjectBean.user.nickname,
 							videoObjectBean.video.describe, "#" + videoObjectBean.video.gen.topicname + "#");
 				} else {
 					UserUtils.showCommentText(holderFollow.detail, videoObjectBean.user.nickname,
@@ -452,17 +457,17 @@ public class FollowedListAdapter extends BaseAdapter {
 					holderFollow.totalcomments.setVisibility(View.GONE);
 				} else {
 					holderFollow.totalcomments.setVisibility(View.VISIBLE);
-					holderFollow.totalcomments.setText(mContext
+					holderFollow.totalcomments.setText(mFragment.getActivity()
 						.getString(R.string.str_newest_check_all_comments_prefix)+ GolukUtils
 						.getFormatNumber(videoObjectBean.video.comment.comcount)
-						+ mContext.getString(R.string.str_newest_check_all_comments_postfix));
+						+ mFragment.getActivity().getString(R.string.str_newest_check_all_comments_postfix));
 				}
 
 				holderFollow.totlaCommentLayout.setVisibility(View.VISIBLE);
 				holderFollow.totalcomments
-						.setOnClickListener(new VideoItemCommentClickListener(mContext, videoObjectBean, false));
+						.setOnClickListener(new VideoItemCommentClickListener(mFragment.getActivity(), videoObjectBean, false));
 				holderFollow.totlaCommentLayout
-						.setOnClickListener(new VideoItemCommentClickListener(mContext, videoObjectBean, false));
+						.setOnClickListener(new VideoItemCommentClickListener(mFragment.getActivity(), videoObjectBean, false));
 				holderFollow.comment1.setVisibility(View.VISIBLE);
 				holderFollow.comment2.setVisibility(View.VISIBLE);
 				holderFollow.comment3.setVisibility(View.VISIBLE);
@@ -546,12 +551,12 @@ public class FollowedListAdapter extends BaseAdapter {
 //		VideoItemShareClickListener tempShareListener = new VideoItemShareClickListener(mContext, mVideoSquareInfo, mNewestListView);
 //		viewHolder.shareText.setOnClickListener(tempShareListener);
 //		// 举报监听
-		viewHolder.function.setOnClickListener(new VideoItemFunctionClickListener(mContext, videoObjectBean, false, null));
+		viewHolder.function.setOnClickListener(new VideoItemFunctionClickListener(mFragment.getActivity(), videoObjectBean, false, null));
 //		// 评论监听
-		viewHolder.commentText.setOnClickListener(new VideoItemCommentClickListener(mContext, videoObjectBean, true));
+		viewHolder.commentText.setOnClickListener(new VideoItemCommentClickListener(mFragment.getActivity(), videoObjectBean, true));
 		// 播放区域监听
-		viewHolder.videoImg.setOnClickListener(new VideoItemClickPlayListener(mContext, videoObjectBean));
-		viewHolder.headimg.setOnClickListener(new VideoItemHeadClickListener(mContext, videoObjectBean));
+		viewHolder.videoImg.setOnClickListener(new VideoItemClickPlayListener(mFragment.getActivity(), videoObjectBean));
+		viewHolder.headimg.setOnClickListener(new VideoItemHeadClickListener(mFragment.getActivity(), videoObjectBean));
 //		// 点赞
 //		ClickPraiseListener tempPraiseListener = new ClickPraiseListener(mContext, mVideoSquareInfo, mNewestListView);
 //		tempPraiseListener.setCategoryListView(mCategoryListView);
@@ -560,9 +565,9 @@ public class FollowedListAdapter extends BaseAdapter {
 		List<FollowedComListBean> comments = videoObjectBean.video.comment.comlist;
 		if (comments.size() > 0) {
 			viewHolder.totalcomments.setOnClickListener(
-					new VideoItemCommentClickListener(mContext, videoObjectBean, false));
+					new VideoItemCommentClickListener(mFragment.getActivity(), videoObjectBean, false));
 			viewHolder.totlaCommentLayout.setOnClickListener(
-					new VideoItemCommentClickListener(mContext, videoObjectBean, false));
+					new VideoItemCommentClickListener(mFragment.getActivity(), videoObjectBean, false));
 		}
 //
 		final FollowedVideoObjectBean vsInfo = videoObjectBean;
@@ -586,15 +591,15 @@ public class FollowedListAdapter extends BaseAdapter {
 		user.praisemenumber = "0";
 		user.sharevideonumber = "0";
 //		Intent i = new Intent(mContext, UserCenterActivity.class);
-		Intent i = new Intent(mContext, NewUserCenterActivity.class);
+		Intent i = new Intent(mFragment.getActivity(), NewUserCenterActivity.class);
 		i.putExtra("userinfo", user);
 		i.putExtra("type", 0);
-		mContext.startActivity(i);
+		mFragment.getActivity().startActivity(i);
 	}
 
 	private void showReplyText(TextView view, String nikename, String replyName, String text) {
-		String replyText = "@" + replyName + mContext.getString(R.string.str_colon);
-		String str = nikename + " " + mContext.getString(R.string.str_reply) + replyText + text;
+		String replyText = "@" + replyName + mFragment.getActivity().getString(R.string.str_colon);
+		String str = nikename + " " + mFragment.getActivity().getString(R.string.str_reply) + replyText + text;
 		SpannableStringBuilder style = new SpannableStringBuilder(str);
 		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
 				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
