@@ -206,6 +206,11 @@
         <item>中 ( 70% )</item>
         <item>低 ( 40% )</item>
     </string-array>
+    <string-array name="list_tone_volume_value">
+        <item>100</item>
+        <item>70</item>
+        <item>40</item>
+    </string-array>
     <string-array name="list_shutdown_time">
         <item>10秒</item>
         <item>60秒</item>

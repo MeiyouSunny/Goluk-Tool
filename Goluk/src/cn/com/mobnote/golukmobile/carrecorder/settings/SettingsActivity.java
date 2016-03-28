@@ -9,7 +9,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -365,6 +364,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if (null != data) {
 			mVolume = data.getStringExtra("params");
 			refreshVolume();
+			if (null == mVolume || "".equals(mVolume)) {
+				return;
+			}
 			GolukApplication.getInstance().getIPCControlManager().setVolume(Integer.parseInt(mVolume));
 		}
 	}
@@ -377,6 +379,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if (null != data) {
 			mPowerTime = data.getStringExtra("params");
 			refreshPowerTime();
+			if (null == mPowerTime || "".equals(mPowerTime)) {
+				return;
+			}
 			GolukApplication.getInstance().getIPCControlManager().setPowerOffTime(Integer.parseInt(mPowerTime));
 		}
 	}
@@ -389,6 +394,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if (null != data) {
 			mVoiceType = data.getStringExtra("params");
 			refreshVoiceType();
+			if (null == mVoiceType || "".equals(mVoiceType)) {
+				return;
+			}
 			GolukApplication.getInstance().getIPCControlManager().setVoiceType(Integer.parseInt(mVoiceType));
 		}
 	}
@@ -880,20 +888,20 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			case R.id.rl_settings_tone_line:// 提示音音量大小
 				Intent itVolume = new Intent(this, SettingsItemActivity.class);
 				itVolume.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_TONE_VOLUME);
-				itVolume.putExtra(SettingsItemActivity.PARAM, mVolume );
-				startActivityForResult(itVolume, REQUEST_CODE_WONDERFUL_VIDEO_QUALITY);
+				itVolume.putExtra(SettingsItemActivity.PARAM, mVolume);
+				startActivityForResult(itVolume, REQUEST_CODE_TONE_VOLUMN);
 				break;
 			case R.id.rl_settings_shutdown_line:// 关机时间
 				Intent itPowerTime = new Intent(this, SettingsItemActivity.class);
 				itPowerTime.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_SHUTDOWN_TIME);
 				itPowerTime.putExtra(SettingsItemActivity.PARAM, mPowerTime);
-				startActivityForResult(itPowerTime, REQUEST_CODE_WONDERFUL_VIDEO_QUALITY);
+				startActivityForResult(itPowerTime, REQUEST_CODE_SHUTDOWN_TIME);
 				break;
 			case R.id.rl_settings_language_line:// 语言设置
 				Intent itVoiceType = new Intent(this, SettingsItemActivity.class);
 				itVoiceType.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_LANGUAGE);
 				itVoiceType.putExtra(SettingsItemActivity.PARAM, mVoiceType);
-				startActivityForResult(itVoiceType, REQUEST_CODE_WONDERFUL_VIDEO_QUALITY);
+				startActivityForResult(itVoiceType, REQUEST_CODE_LANGUAGE);
 				break;
 			default:
 				break;
@@ -1800,6 +1808,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private String[] mWonderfulVideo = null;
 	/** 提示音音量大小 **/
 	private String[] mVolumeList = null;
+	private String[] mVolumeValue = null;
 	/** 关机时间 **/
 	private String[] mPowerTimeList = null;
 	/** 语言 **/
@@ -1810,6 +1819,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mPhotoValue = getResources().getStringArray(R.array.list_photo_quality_list);
 		mWonderfulVideo = getResources().getStringArray(R.array.list_wonderful_video_quality);
 		mVolumeList = getResources().getStringArray(R.array.list_tone_volume);
+		mVolumeValue = getResources().getStringArray(R.array.list_tone_volume_value);
 		mPowerTimeList = getResources().getStringArray(R.array.list_shutdown_time);
 		mVoiceTypeList = getResources().getStringArray(R.array.list_language);
 	}
@@ -2120,9 +2130,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	 * 更新提示音音量大小
 	 */
 	private void refreshVolume() {
-		int length = mVolumeList.length;
+		int length = mVolumeValue.length;
 		for (int i = 0; i < length; i++) {
-			if (mVoiceTypeList[i].equals(mVolume)) {
+			if (mVolumeValue[i].equals(mVolume)) {
 				mVolumeText.setText(mVolumeList[i]);
 			}
 		}
@@ -2133,8 +2143,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	 */
 	private void refreshPowerTime() {
 		int length = mPowerTimeList.length;
+		String[] value = { "10", "60" };
 		for (int i = 0; i < length; i++) {
-			if (mPowerTime.equals(mPowerTimeList[i])) {
+			if (mPowerTime.equals(value[i])) {
 				mPowerTimeText.setText(mPowerTimeList[i]);
 			}
 		}
@@ -2145,8 +2156,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	 */
 	private void refreshVoiceType() {
 		int length = mVoiceTypeList.length;
+		String[] type = { "0", "1" };
 		for (int i = 0; i < length; i++) {
-			if (mVoiceType.equals(mVoiceTypeList[i])) {
+			if (mVoiceType.equals(type[i])) {
 				mVoiceTypeText.setText(mVoiceTypeList[i]);
 			}
 		}
