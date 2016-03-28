@@ -352,9 +352,12 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 			@Override
 			public void onClick(View arg0) {
 				if(GolukApplication.getInstance().isIpcLoginSuccess == false){
-					Intent intent = new Intent(getActivity(),
-							CarRecorderActivity.class);
-					startActivity(intent);
+					if(!"0".equals(mFragmentAlbum.mPlatform)){
+						getActivity().finish();
+					}else{
+						Intent intent = new Intent(getActivity(),CarRecorderActivity.class);
+						startActivity(intent);
+					}
 				}
 			}
 		});
