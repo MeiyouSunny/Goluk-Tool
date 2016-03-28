@@ -15,6 +15,12 @@ import cn.com.mobnote.golukmobile.followed.bean.FollowedRecomUserBean;
 import cn.com.mobnote.golukmobile.followed.bean.FollowedRetBean;
 import cn.com.mobnote.golukmobile.followed.bean.FollowedVideoObjectBean;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
+import cn.com.mobnote.golukmobile.praise.PraiseCancelRequest;
+import cn.com.mobnote.golukmobile.praise.PraiseRequest;
+import cn.com.mobnote.golukmobile.praise.bean.PraiseCancelResultBean;
+import cn.com.mobnote.golukmobile.praise.bean.PraiseCancelResultDataBean;
+import cn.com.mobnote.golukmobile.praise.bean.PraiseResultBean;
+import cn.com.mobnote.golukmobile.praise.bean.PraiseResultDataBean;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videoshare.ShareVideoShortUrlRequest;
@@ -56,7 +62,8 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 	private CustomLoadingDialog mLoadingDialog;
 	private final static String PROTOCOL = "200";
 	private SharePlatformUtil mSharePlatform = null;
-	private FollowedVideoObjectBean mVideoObjectBean;
+	private int mCurrentIndex;
+	protected final static String FOLLOWD_EMPTY = "FOLLOWED_EMPTY";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -183,7 +190,6 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 			mListView.setMode(PullToRefreshBase.Mode.DISABLED);
 		}
 	}
-	protected final static String FOLLOWD_EMPTY = "FOLLOWED_EMPTY";
 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
@@ -333,20 +339,98 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 				describe = getResources().getString(R.string.str_share_describe);
 			}
 			String ttl = getResources().getString(R.string.str_goluk_wonderful_video);
+			Object obj = mFollowedList.get(mCurrentIndex);
+			if(obj instanceof FollowedVideoObjectBean) {
+				FollowedVideoObjectBean videoBean = (FollowedVideoObjectBean)obj;
+				String videoId = null != videoBean ? videoBean.video.videoid
+						: "";
+				String username = null != videoBean ? videoBean.user.nickname
+						: "";
+				describe = username + this.getString(R.string.str_colon) + describe;
+				CustomShareBoard shareBoard = new CustomShareBoard(this.getActivity(), mSharePlatform, shareurl, coverurl,
+						describe, ttl, null, realDesc, videoId);
+				shareBoard.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+			}
+		} else if(requestType == IPageNotifyFn.PageType_Praise) {
+			// assume the success
+			PraiseResultBean prBean = (PraiseResultBean)result;
+			if(null == result && !prBean.success) {
+				GolukUtils.showToast(getActivity(), getString(R.string.user_net_unavailable));
+				return;
+			}
 
-			String videoId = null != mVideoObjectBean ? mVideoObjectBean.video.videoid
-					: "";
-			String username = null != mVideoObjectBean ? mVideoObjectBean.user.nickname
-					: "";
-			describe = username + this.getString(R.string.str_colon) + describe;
-			CustomShareBoard shareBoard = new CustomShareBoard(this.getActivity(), mSharePlatform, shareurl, coverurl,
-					describe, ttl, null, realDesc, videoId);
-			shareBoard.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+			PraiseResultDataBean ret = prBean.data;
+			if(null != ret && !TextUtils.isEmpty(ret.result)) {
+				if("0".equals(ret.result)) {
+					Object obj = mFollowedList.get(mCurrentIndex);
+					if(obj instanceof FollowedVideoObjectBean) {
+						FollowedVideoObjectBean praisedBean = (FollowedVideoObjectBean)obj;
+						praisedBean.video.ispraise = "1";
+						try {
+							int number = Integer.valueOf(praisedBean.video.praisenumber);
+							praisedBean.video.praisenumber = String.valueOf(++number);
+							mAdapter.notifyDataSetChanged();
+						} catch(NumberFormatException e) {
+							e.printStackTrace();
+							praisedBean.video.praisenumber = "0";
+						}
+					}
+;				} else if("7".equals(ret.result)) {
+					GolukUtils.showToast(getActivity(), getString(R.string.str_no_duplicated_praise));
+				} else {
+					GolukUtils.showToast(getActivity(), getString(R.string.str_praise_failed));
+				}
+			}
+		} else if(requestType == IPageNotifyFn.PageType_PraiseCancel) {
+			// assume the success
+			PraiseCancelResultBean praiseCancelResultBean = (PraiseCancelResultBean) result;
+			if (praiseCancelResultBean == null
+					|| !praiseCancelResultBean.success) {
+				GolukUtils.showToast(getActivity(),
+						this.getString(R.string.user_net_unavailable));
+				return;
+			}
+
+			PraiseCancelResultDataBean cancelRet = praiseCancelResultBean.data;
+			if (null != cancelRet && !TextUtils.isEmpty(cancelRet.result)) {
+				if ("0".equals(cancelRet.result)) {
+					Object obj = mFollowedList.get(mCurrentIndex);
+					if(obj instanceof FollowedVideoObjectBean) {
+						FollowedVideoObjectBean cancelBean = (FollowedVideoObjectBean)obj;
+						cancelBean.video.ispraise = "0";
+						try {
+							int number = Integer.valueOf(cancelBean.video.praisenumber);
+							number--;
+							if(number < 0) {
+								number = 0;
+							}
+							cancelBean.video.praisenumber = String.valueOf(number);
+							mAdapter.notifyDataSetChanged();
+						} catch(NumberFormatException e) {
+							e.printStackTrace();
+							cancelBean.video.praisenumber = "0";
+						}
+					}
+				} else {
+					GolukUtils.showToast(getActivity(),
+							getString(R.string.str_cancel_praise_failed));
+				}
+			}
 		}
 	}
 
-	protected void storeCurrentShareVideo(FollowedVideoObjectBean bean) {
-		mVideoObjectBean = bean;
+	public boolean sendPraiseRequest(String videoId, String type) {
+		PraiseRequest request = new PraiseRequest(IPageNotifyFn.PageType_Praise, this);
+		return request.get("1", videoId, type);
+	}
+
+	public boolean sendCancelPraiseRequest(String videoId) {
+		PraiseCancelRequest request = new PraiseCancelRequest(IPageNotifyFn.PageType_PraiseCancel, this);
+		return request.get("1", videoId);
+	}
+
+	protected void storeCurrentIndex(int index) {
+		mCurrentIndex = index;
 	}
 
 	private int findLinkUserItem(String linkuid) {

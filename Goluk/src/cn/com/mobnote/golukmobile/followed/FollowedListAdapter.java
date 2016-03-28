@@ -2,8 +2,6 @@ package cn.com.mobnote.golukmobile.followed;
 
 import java.util.List;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
@@ -25,9 +23,6 @@ import cn.com.mobnote.golukmobile.followed.bean.FollowedComListBean;
 import cn.com.mobnote.golukmobile.followed.bean.FollowedRecomUserBean;
 import cn.com.mobnote.golukmobile.followed.bean.FollowedVideoObjectBean;
 import cn.com.mobnote.golukmobile.live.ILive;
-import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
-import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
-import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
@@ -515,7 +510,8 @@ public class FollowedListAdapter extends BaseAdapter {
 				if(!TextUtils.isEmpty(videoObjectBean.video.gen.topicid) &&
 						!TextUtils.isEmpty(videoObjectBean.video.gen.topicname)) {
 					UserUtils.showCommentText(
-							mFragment.getActivity(), true, videoObjectBean, holderFollow.detail, videoObjectBean.user.nickname,
+							mFragment.getActivity(), true, videoObjectBean,
+							holderFollow.detail, videoObjectBean.user.nickname,
 							videoObjectBean.video.describe, "#" + videoObjectBean.video.gen.topicname + "#");
 				} else {
 					UserUtils.showCommentText(holderFollow.detail, videoObjectBean.user.nickname,
@@ -623,23 +619,20 @@ public class FollowedListAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-	private void initFollowedListener(int index, ViewHolderFollow viewHolder) {
+	private void initFollowedListener(final int index, ViewHolderFollow viewHolder) {
 		if (index < 0 || index >= mList.size()) {
 			return;
 		}
 
 		final FollowedVideoObjectBean videoObjectBean = (FollowedVideoObjectBean) mList.get(index);
 		// 分享监听
-//		VideoItemShareClickListener tempShareListener = new VideoItemShareClickListener(mContext, mVideoSquareInfo, mNewestListView);
-//		viewHolder.shareText.setOnClickListener(tempShareListener);
-
 		final String videoId = videoObjectBean.video.videoid;
 		final String type = videoObjectBean.video.type;
 		viewHolder.shareText.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mFragment.sendGetShareVideoUrlRequest(videoId, type);
-				mFragment.storeCurrentShareVideo(videoObjectBean);
+				mFragment.storeCurrentIndex(index);
 			}
 		});
 
@@ -651,9 +644,17 @@ public class FollowedListAdapter extends BaseAdapter {
 		viewHolder.videoImg.setOnClickListener(new VideoItemClickPlayListener(mFragment.getActivity(), videoObjectBean));
 		viewHolder.headimg.setOnClickListener(new VideoItemHeadClickListener(mFragment.getActivity(), videoObjectBean));
 //		// 点赞
-//		ClickPraiseListener tempPraiseListener = new ClickPraiseListener(mContext, mVideoSquareInfo, mNewestListView);
-//		tempPraiseListener.setCategoryListView(mCategoryListView);
-//		holder.praiseText.setOnClickListener(tempPraiseListener);
+		viewHolder.praiseText.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if("1".equals(videoObjectBean.video.ispraise)) {
+					mFragment.sendCancelPraiseRequest(videoId);
+				} else {
+					mFragment.sendPraiseRequest(videoId, "1");
+				}
+				mFragment.storeCurrentIndex(index);
+			}
+		});
 //		// 评论总数监听
 		List<FollowedComListBean> comments = videoObjectBean.video.comment.comlist;
 		if (comments.size() > 0) {
@@ -662,7 +663,7 @@ public class FollowedListAdapter extends BaseAdapter {
 			viewHolder.totlaCommentLayout.setOnClickListener(
 					new VideoItemCommentClickListener(mFragment.getActivity(), videoObjectBean, false));
 		}
-//
+
 		final FollowedVideoObjectBean vsInfo = videoObjectBean;
 
 		viewHolder.rlUserInfo.setOnClickListener(new OnClickListener() {
@@ -735,7 +736,6 @@ public class FollowedListAdapter extends BaseAdapter {
 		TextView tvPraiseCount;
 
 		RelativeLayout rlUserInfo;
-//		View rlHead;
 	}
 }
 
