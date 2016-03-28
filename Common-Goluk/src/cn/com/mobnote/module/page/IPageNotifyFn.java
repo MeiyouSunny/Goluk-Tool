@@ -136,6 +136,8 @@ public interface IPageNotifyFn extends IGolukCommFn {
 
 	/** 关注 **/
 	public static final int PageType_Follow = 67;
+	/** 全部关注 **/
+	public static final int PageType_FollowAll = 68;
 
 	/**
 	 * 

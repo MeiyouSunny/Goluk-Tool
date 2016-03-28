@@ -27,6 +27,7 @@ import cn.com.mobnote.golukmobile.followed.bean.FollowedVideoObjectBean;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
+import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
@@ -115,7 +116,7 @@ public class FollowedListAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-	private View getRecommendView(int position, View convertView, ViewGroup viewGroup) {
+	private View getRecommendView(final int position, View convertView, ViewGroup viewGroup) {
 		ViewHolderRecommend holderRec = null;
 		if(null == convertView) {
 			holderRec = new ViewHolderRecommend();
@@ -265,6 +266,9 @@ public class FollowedListAdapter extends BaseAdapter {
 		int relation = recomUserBean.link;
 
 		final String type = relation == 0 ? "1" : "0";
+		final String firstVideoId = recomUserBean.hotvideo.get(0).videoid;
+		final String secondVideoId = recomUserBean.hotvideo.get(1).videoid;
+		final FollowedRecomUserBean finalUserBean = recomUserBean;
 
 		holderRec.nItemFollowTV.setOnClickListener(new OnClickListener() {
 			@Override
@@ -272,7 +276,108 @@ public class FollowedListAdapter extends BaseAdapter {
 				mFragment.sendFollowRequest(linkuid, type);
 			}
 		});
+
+		holderRec.nItemFirstVideoIV.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startVideoDetailActivity(firstVideoId);
+			}
+		});
+
+		holderRec.nItemFirstVideoDesTV.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startVideoDetailActivity(firstVideoId);
+			}
+		});
+
+		holderRec.nItemSecondVideoIV.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startVideoDetailActivity(secondVideoId);
+			}
+		});
+
+		holderRec.nItemSecondVideoDesTV.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startVideoDetailActivity(secondVideoId);
+			}
+		});
+
+		holderRec.nItemUserAvatarIV.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startUserCenterActivity(finalUserBean.uid, finalUserBean.nickname, finalUserBean.avatar,
+						finalUserBean.customavatar, finalUserBean.sex, finalUserBean.introduction);
+			}
+		});
+
+		holderRec.nItemNameTV.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startUserCenterActivity(finalUserBean.uid, finalUserBean.nickname, finalUserBean.avatar,
+						finalUserBean.customavatar, finalUserBean.sex, finalUserBean.introduction);
+			}
+		});
+
+		holderRec.nLableFollowTV.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mFragment.sendFollowAllRequest(get2FollowLinkList(position));
+			}
+		});
+
 		return convertView;
+	}
+
+	private void startUserCenterActivity(String uid, String nickname,
+			String avatar, String customAvatar, String sex, String introduction) {
+		UCUserInfo user = new UCUserInfo();
+		user.uid = uid;
+		user.nickname = nickname;
+		user.headportrait = avatar;
+		user.introduce = introduction;
+		user.sex = sex;
+		user.customavatar = customAvatar;
+		user.praisemenumber = "0";
+		user.sharevideonumber = "0";
+		Intent i = new Intent(mFragment.getActivity(), NewUserCenterActivity.class);
+		i.putExtra("userinfo", user);
+		i.putExtra("type", 0);
+		mFragment.getActivity().startActivity(i);
+	}
+
+	private void startVideoDetailActivity(String videoId) {
+		Intent intent = null;
+		intent = new Intent(mFragment.getActivity(), VideoDetailActivity.class);
+		intent.putExtra(VideoDetailActivity.VIDEO_ID, videoId);
+		intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
+		mFragment.getActivity().startActivity(intent);
+	}
+
+	public String get2FollowLinkList(int index) {
+		StringBuffer linkListBuffer = new StringBuffer();
+		// to count the recommend number
+		int count = 0;
+		if(mList == null || mList.size() == 0) {
+			return null;
+		}
+
+		for(; index < mList.size() && count < 5; index++) {
+			Object obj = mList.get(index);
+			if(obj instanceof FollowedRecomUserBean) {
+				FollowedRecomUserBean bean = (FollowedRecomUserBean)obj;
+				linkListBuffer.append(bean.uid + ",");
+				count++;
+			}
+		}
+
+		if(linkListBuffer.length() > 1) {
+			linkListBuffer.deleteCharAt(linkListBuffer.length() - 1);
+		}
+
+		return linkListBuffer.toString();
 	}
 
 	private void showHead(ImageView view, String headportrait) {

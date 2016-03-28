@@ -6,7 +6,9 @@ import java.util.List;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.follow.FollowAllRequest;
 import cn.com.mobnote.golukmobile.follow.FollowRequest;
+import cn.com.mobnote.golukmobile.follow.bean.FollowAllRetBean;
 import cn.com.mobnote.golukmobile.follow.bean.FollowRetBean;
 import cn.com.mobnote.golukmobile.followed.bean.FollowedListBean;
 import cn.com.mobnote.golukmobile.followed.bean.FollowedRecomUserBean;
@@ -129,6 +131,17 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 		}
 	}
 
+	protected void sendFollowAllRequest(String linkuid) {
+		FollowAllRequest request =
+				new FollowAllRequest(IPageNotifyFn.PageType_FollowAll, this);
+		GolukApplication app = GolukApplication.getInstance();
+		if(null != app && app.isUserLoginSucess) {
+			if(!TextUtils.isEmpty(app.mCurrentUId)) {
+				request.get(PROTOCOL, linkuid, app.mCurrentUId);
+			}
+		}
+	}
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -225,7 +238,6 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 						if(null != userBeanList && userBeanList.size() > 0) {
 							int userCount = userBeanList.size();
 							for(int j = 0; j < userCount; j++) {
-//								mFollowedList.add(userBeanList.get(j));
 								gotList.add(userBeanList.get(j));
 							}
 						}
@@ -238,7 +250,6 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 				for(int i = 0; i < count; i++) {
 					FollowedListBean followBean = followedBeanList.get(i);
 					if("0".equals(followBean.type)) {
-//						mFollowedList.add(followBean.followvideo);
 						gotList.add(followBean.followvideo);
 					} else {
 						List<FollowedRecomUserBean> userBeanList = followBean.recomuser;
@@ -247,7 +258,6 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 							for(int j = 0; j < userCount; j++) {
 								FollowedRecomUserBean tmpBean = userBeanList.get(j);
 								tmpBean.position = j;
-//								mFollowedList.add(tmpBean);
 								gotList.add(tmpBean);
 							}
 						}
@@ -259,8 +269,6 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 				mFollowedList.addAll(gotList);
 				mAdapter.notifyDataSetChanged();
 			} else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
-//				mOfficialMsgList.clear();
-//				mOfficialMsgList.addAll(bean.data.messages);
 				mFollowedList.clear();
 				mFollowedList.addAll(gotList);
 				mAdapter.setData(mFollowedList);
@@ -283,6 +291,15 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 				}
 			} else {
 				// Toast for operation failed
+				Toast.makeText(getActivity(), "操作失败", Toast.LENGTH_SHORT).show();
+			}
+		} else if(requestType == IPageNotifyFn.PageType_FollowAll) {
+			FollowAllRetBean bean = (FollowAllRetBean)result;
+			if(null != bean) {
+				if(bean.code == 0) {
+					sendFollowedContentRequest(REFRESH_NORMAL, "");
+				}
+			} else {
 				Toast.makeText(getActivity(), "操作失败", Toast.LENGTH_SHORT).show();
 			}
 		}
