@@ -320,6 +320,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		b = new Bundle();
 		b.putString("key", "Album");
+		b.putString("platform", "0");
 		LinearLayout album = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_album, null);
 		mTabHost.addTab(mTabHost.newTabSpec("Album").setIndicator(album),
 				FragmentAlbum.class, b);

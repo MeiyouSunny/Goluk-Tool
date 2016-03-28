@@ -398,6 +398,11 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
+        
+        <activity 
+            android:name="cn.com.mobnote.golukmobile.photoalbum.photoAlbumActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"></activity>
 
         <!-- 信鸽 -->
 

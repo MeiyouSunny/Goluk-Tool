@@ -52,6 +52,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 	
 	private ImageView mDownLoadIcon = null;
 	private ImageView mDeleteIcon = null;
+	private ImageView mBackBtn = null;
 
 	public int mCurrentType = 0;
 
@@ -66,11 +67,19 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 	
 	private List<String> selectedListData = null;
 	
+	private String mPlatform = null;
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
+		
+		Bundle bundle = getArguments();
+		if(bundle != null){
+			mPlatform = bundle.getString("platform");
+		}
+		
 		if(mAlbumRootView == null){
 			mAlbumRootView = inflater.inflate(R.layout.photo_album, null);
 
@@ -134,9 +143,17 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 		mDownLoadIcon = (ImageView) mAlbumRootView.findViewById(R.id.mDownLoadIcon);
 		mDeleteIcon = (ImageView) mAlbumRootView.findViewById(R.id.mDeleteIcon);
 		mCancelBtn = (Button) mAlbumRootView.findViewById(R.id.cancel_btn);
+		mBackBtn  = (ImageView) mAlbumRootView.findViewById(R.id.back_btn);
+		
+		if("0".equals(mPlatform)){
+			mBackBtn.setVisibility(View.GONE);
+		}else{
+			mBackBtn.setVisibility(View.VISIBLE);
+		}
 
 		mCancelBtn.setOnClickListener(this);
 		mDownLoadBtn.setOnClickListener(this);
+		mBackBtn.setOnClickListener(this);
 		mAlbumRootView.findViewById(R.id.mDeleteBtn).setOnClickListener(this);
 		mTabLocal.setOnClickListener(this);
 		mTabWonderful.setOnClickListener(this);
@@ -257,12 +274,15 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 		case R.id.cancel_btn:
 			resetEditState();
 			break;
+		case R.id.back_btn:
+			getActivity().finish();
+			break;
 		case R.id.mDeleteBtn:
 			if (selectedListData.size() <= 0) {
 				return;
 			}
 
-			if (mCurrentType == 0) {
+			if (mCurrentType != 0) {
 				if (!isAllowedDelete()) {
 					GolukUtils.showToast(getActivity(), getResources().getString(R.string.str_photo_downing));
 					return;
