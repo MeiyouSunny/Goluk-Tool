@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Bitmap.Config;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -22,17 +24,16 @@ import cn.com.mobnote.golukmobile.usercenter.bean.HomeUser;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 public class UserCenterHeader implements OnClickListener {
 
 	private Context mContext;
 	private ImageView mImageHead, mLogoImage;
-	private TextView mTextName, mTextAttention, mTextFans, mTextContent, mTextNoData;
+	private TextView mTextName, mTextAttention, mTextFans, mTextContent;
 	private LinearLayout mWonderfulLayout, mRecommendLayout, mHeadlinesLayout;
 	private TextView mWonderfulText, mRecommednText, mHeadlinesText;
 	private Button mAttentionBtn;
-	private LinearLayout mAttentionFansLayout, mBackgroundLayout;
+	private LinearLayout mBackgroundLayout;
 	/** 取消关注 **/
 	private static final String TYPE_ATTENTION_CANCLE = "0";
 	/** 关注 **/
@@ -67,8 +68,6 @@ public class UserCenterHeader implements OnClickListener {
 		mRecommednText = (TextView) view.findViewById(R.id.tv_usercenter_header_recommendcount);
 		mHeadlinesText = (TextView) view.findViewById(R.id.tv_usercenter_header_headlines_count);
 		mBackgroundLayout = (LinearLayout) view.findViewById(R.id.layout_usercenter_header);
-		mTextNoData = (TextView) view.findViewById(R.id.tv_usercenter_header_no_introduce);
-		mAttentionFansLayout = (LinearLayout) view.findViewById(R.id.ly_usercenter_header_attention_fans);
 
 		mAttentionBtn.setOnClickListener(this);
 		mTextAttention.setOnClickListener(this);
@@ -77,13 +76,12 @@ public class UserCenterHeader implements OnClickListener {
 		mRecommendLayout.setOnClickListener(this);
 		mHeadlinesLayout.setOnClickListener(this);
 		
-		usercenterNoData(false);
-		
 		return view;
 	}
 
 	public void getHeaderData() {
 		if (null != mData) {
+			mImageHead.setDrawingCacheEnabled(true);
 			HomeUser user = mData.user;
 			if (null != user && !"".equals(user.customavatar)) {
 				// 使用网络地址
@@ -92,6 +90,10 @@ public class UserCenterHeader implements OnClickListener {
 				UserUtils.focusHead(mContext, user.avatar, mImageHead);
 			}
 			
+			Bitmap bitmap = loadBitmapFromView(mImageHead);
+			dealImage(bitmap);
+			mImageHead.setDrawingCacheEnabled(false);
+
 			mTextName.setText(user.nickname);
 			mTextAttention.setText(mContext.getString(R.string.str_usercenter_header_attention_text) + " "
 					+ GolukUtils.getFormatNumber(user.following));
@@ -162,11 +164,6 @@ public class UserCenterHeader implements OnClickListener {
 				changeAttentionState(mData.user.link);
 			}
 			
-			mImageHead.setDrawingCacheEnabled(true);
-			Bitmap bitmap = mImageHead.getDrawingCache();
-			dealImage(bitmap);
-	        mImageHead.setDrawingCacheEnabled(false);
-
 		}
 
 	}
@@ -224,7 +221,7 @@ public class UserCenterHeader implements OnClickListener {
 					}
 					break;
 				default:
-					GolukUtils.showToast(mContext, "没有符合的link");
+					GolukUtils.showToast(mContext, "no match link");
 					break;
 				}
 			}
@@ -282,29 +279,6 @@ public class UserCenterHeader implements OnClickListener {
 	}
 	
 	/**
-	 * 无数据
-	 * @param hasData
-	 */
-	public void usercenterNoData(boolean hasData) {
-		if (!hasData) {
-			mTextName.setVisibility(View.GONE);
-			mTextContent.setVisibility(View.GONE);
-			mAttentionBtn.setVisibility(View.GONE);
-			mTextNoData.setVisibility(View.VISIBLE);
-			mTextAttention.setText(mContext.getString(R.string.str_usercenter_header_attention_text) + " 0");
-			mTextFans.setText(mContext.getString(R.string.str_usercenter_header_fans_text) + " 0");
-			mAttentionFansLayout.setPadding(0, 23, 0, 0);
-			mImageHead.setImageResource(R.drawable.usercenter_head_default);
-		} else {
-			mTextName.setVisibility(View.VISIBLE);
-			mTextContent.setVisibility(View.VISIBLE);
-			mAttentionBtn.setVisibility(View.VISIBLE);
-			mTextNoData.setVisibility(View.GONE);
-			mAttentionFansLayout.setPadding(0, 0, 0, 0);
-		}
-	}
-
-	/**
 	 * 修改关注按钮状态
 	 * @param link
 	 */
@@ -360,6 +334,18 @@ public class UserCenterHeader implements OnClickListener {
 		default:
 			break;
 		}
+	}
+	
+	private Bitmap loadBitmapFromView(View v) {
+		if (v == null) {
+			return null;
+		}
+		Bitmap screenshot;
+		screenshot = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Config.ARGB_8888);
+		Canvas c = new Canvas(screenshot);
+		c.translate(-v.getScrollX(), -v.getScrollY());
+		v.draw(c);
+		return screenshot;
 	}
 	
 }

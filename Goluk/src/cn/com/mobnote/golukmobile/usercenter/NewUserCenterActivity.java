@@ -55,8 +55,6 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	/** footer view **/
 	private View mFooterView = null;
 	private ImageView mFooterImage = null;
-	private TextView mFooterRefresh = null;
-	private RelativeLayout mFooterLayout = null;
 	/** 当前状态 **/
 	private String mCurrentOperator = "";
 	/** header **/
@@ -74,7 +72,6 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	private String mCurrentUid = "";
 	private String mFirstIndex = "";
 	private String mLastIndex = "";
-	private boolean mIsFirst = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,14 +102,11 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 		mRefreshLayout = (RelativeLayout) findViewById(R.id.ry_usercenter_refresh);
 		mFooterView = LayoutInflater.from(this).inflate(R.layout.activity_usercenter_footer, null);
 		mFooterImage = (ImageView) mFooterView.findViewById(R.id.iv_usercenter_footer);
-		mFooterRefresh = (TextView) mFooterView.findViewById(R.id.tv_usercenter_empty);
-		mFooterLayout = (RelativeLayout) mFooterView.findViewById(R.id.ry_usercenter_footer_layout);
 		mFooterView.setVisibility(View.GONE);
 
 		mBackBtn.setOnClickListener(this);
 		mMoreBtn.setOnClickListener(this);
 		mRefreshLayout.setOnClickListener(this);
-		mFooterLayout.setOnClickListener(this);
 		mGridView.setOnItemClickListener(this);
 
 		mSharePlatform = new SharePlatformUtil(this);
@@ -133,7 +127,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<GridViewWithHeaderAndFooter> pullToRefreshBase) {
 				// 下拉刷新
-				mIsFirst = false;
+//				mIsFirst = false;
 				pullToRefreshBase.getLoadingLayoutProxy(true, false).setLastUpdatedLabel(
 						getResources().getString(R.string.updating)
 								+ GolukUtils.getCurrentFormatTime(NewUserCenterActivity.this));
@@ -143,7 +137,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<GridViewWithHeaderAndFooter> pullToRefreshBase) {
 				// 上拉加载
-				mIsFirst = false;
+//				mIsFirst = false;
 				pullToRefreshBase.getLoadingLayoutProxy(false, true).setLastUpdatedLabel(
 						getResources().getString(R.string.goluk_pull_to_refresh_footer_pull_label));
 				httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_UP, mLastIndex);
@@ -157,7 +151,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 
 	private void httpRequestData(String otheruid, String currentuid, String operation, String index) {
 		if (OPERATOR_FIRST.equals(operation)) {
-			mIsFirst = true;
+//			mIsFirst = true;
 			showLoadingDialog();
 		}
 		if (operation.equals(OPERATOR_DOWN)) {
@@ -176,7 +170,8 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			mHomeJson = (HomeJson) result;
 			if (null != mHomeJson && null != mHomeJson.data && null != mHomeJson.data.user
 					&& null != mHomeJson.data.videolist) {
-				mHeader.usercenterNoData(true);
+				mGridView.setVisibility(View.VISIBLE);
+				mRefreshLayout.setVisibility(View.GONE);
 				List<HomeVideoList> videoList = mHomeJson.data.videolist;
 				if (!mCurrentOperator.equals(OPERATOR_UP)) {
 					mHeader.setHeaderData(mHomeJson.data);
@@ -184,7 +179,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 				}
 				if (null != videoList && videoList.size() <= 0 && !mCurrentOperator.equals(OPERATOR_UP)) {
 					mGridView.setMode(PullToRefreshBase.Mode.PULL_DOWN_TO_REFRESH);
-					addFooterView(1);
+					addFooterView();
 					return;
 				}
 				removeFooterView();
@@ -239,35 +234,23 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	}
 
 	private void unusual() {
-		if (mIsFirst) {
-			mHeader.usercenterNoData(false);
-			addFooterView(2);
-		}
-		mGridView.setMode(PullToRefreshBase.Mode.PULL_DOWN_TO_REFRESH);
+		mRefreshLayout.setVisibility(View.VISIBLE);
+		mGridView.setVisibility(View.GONE);
 		GolukUtils.showToast(this, this.getResources().getString(R.string.str_network_unavailable));
 	}
 
-	private void addFooterView(int type) {
+	private void addFooterView() {
 		if (null != mFooterView && null != mGridView && mFooterView.getVisibility() == View.GONE) {
-			if (1 == type) {
-				mFooterView.setEnabled(false);
-				mFooterImage.setVisibility(View.VISIBLE);
-				mFooterRefresh.setVisibility(View.GONE);
-				if (testUser()) {
-					mFooterImage.setImageResource(R.drawable.mine_novideo);
-				} else {
-					mFooterImage.setImageResource(R.drawable.mine_tavideo);
-				}
+			if (testUser()) {
+				mFooterImage.setImageResource(R.drawable.mine_novideo);
 			} else {
-				mFooterView.setEnabled(true);
-				mFooterImage.setVisibility(View.GONE);
-				mFooterRefresh.setVisibility(View.VISIBLE);
+				mFooterImage.setImageResource(R.drawable.mine_tavideo);
 			}
 			mGridView.getRefreshableView().addFooterView(mFooterView);
 			mFooterView.setVisibility(View.VISIBLE);
 		}
 	}
-
+	
 	private void removeFooterView() {
 		if (null != mGridView && null != mFooterView && mFooterView.getVisibility() == View.VISIBLE) {
 			mGridView.getRefreshableView().removeFooterView(mFooterView);
@@ -290,7 +273,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			mMoreDialog = new UserMoreDialog(this);
 			mMoreDialog.show();
 			break;
-		case R.id.ry_usercenter_footer_layout:
+		case R.id.ry_usercenter_refresh:
 			httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_FIRST, "");
 			break;
 

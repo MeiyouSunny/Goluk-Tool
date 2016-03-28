@@ -27,7 +27,8 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 	public static final String TYPE_SHUTDOWN_TIME = "shutdown_time";
 	public static final String TYPE_LANGUAGE = "language";
 	private TextView[] mTextViewList = null;
-	private String[] mWonderfulList, mToneList, mShutdownList, mLanguageList;
+	private String[] mWonderfulList, mVolumeList, mShutdownList, mLanguageList;
+	private String[] mVolumeValue ;
 	private ImageButton[] mImageList = null;
 	private String mCurrentItem = "";
 	private String mType = "";
@@ -39,7 +40,7 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 
 		initView();
 		initData();
-		setData2UI(getBtnList(), getTextList(), getTypeList());
+		setData2UI(getBtnList(), getTextList(), getTypeList(0));
 	}
 
 	private void initView() {
@@ -58,9 +59,11 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 		mThirdLayout.setOnClickListener(this);
 
 		mWonderfulList = getResources().getStringArray(R.array.list_wonderful_video_quality);
-		mToneList = getResources().getStringArray(R.array.list_tone_volume);
+		mVolumeList = getResources().getStringArray(R.array.list_tone_volume);
 		mShutdownList = getResources().getStringArray(R.array.list_shutdown_time);
 		mLanguageList = getResources().getStringArray(R.array.list_language);
+		
+		mVolumeValue = getResources().getStringArray(R.array.list_tone_volume_value);
 	}
 
 	private void initData() {
@@ -68,7 +71,7 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 		mType = it.getStringExtra(TYPE);
 		mCurrentItem = it.getStringExtra(PARAM);
 		GolukDebugUtils.e("", "------------SettingsItemActivity----------mCurrentItem: "+mCurrentItem);
-		getArrays(getTypeList());
+		getArrays(getTypeList(1));
 	}
 
 	// 为UI赋值
@@ -90,16 +93,16 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 			exit();
 			break;
 		case R.id.rl_settings_first_item:
-			this.mCurrentItem = getTypeList()[0];
-			setData2UI(getBtnList(), getTextList(), getTypeList());
+			this.mCurrentItem = getTypeList(0)[0];
+			setData2UI(getBtnList(), getTextList(), getTypeList(0));
 			break;
 		case R.id.rl_settings_second_item:
-			this.mCurrentItem = getTypeList()[1];
-			setData2UI(getBtnList(), getTextList(), getTypeList());
+			this.mCurrentItem = getTypeList(0)[1];
+			setData2UI(getBtnList(), getTextList(), getTypeList(0));
 			break;
 		case R.id.rl_settings_third_item:
-			this.mCurrentItem = getTypeList()[2];
-			setData2UI(getBtnList(), getTextList(), getTypeList());
+			this.mCurrentItem = getTypeList(0)[2];
+			setData2UI(getBtnList(), getTextList(), getTypeList(0));
 			break;
 
 		default:
@@ -120,7 +123,7 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 		}
 	}
 	
-	private String[] getTypeList() {
+	private String[] getTypeList(int valueType) {
 		String[] arrayList;
 		if (TYPE_WONDERFUL_VIDEO_QUALITY.equals(mType)) {
 			mThirdLayout.setVisibility(View.GONE);
@@ -129,15 +132,27 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 		} else if (TYPE_TONE_VOLUME.equals(mType)) {
 			mThirdLayout.setVisibility(View.VISIBLE);
 			setTitle(this.getResources().getString(R.string.str_settings_tone_title));
-			arrayList = mToneList;
+			if (0 == valueType) {
+				arrayList = mVolumeValue;
+			} else {
+				arrayList = mVolumeList;
+			}
 		} else if (TYPE_SHUTDOWN_TIME.equals(mType)) {
 			mThirdLayout.setVisibility(View.GONE);
 			setTitle(this.getResources().getString(R.string.str_settings_shutdown_title));
-			arrayList = mShutdownList;
+			if (0 == valueType) {
+				arrayList = new String[] { "10", "60" };
+			} else {
+				arrayList = mShutdownList;
+			}
 		} else {
 			mThirdLayout.setVisibility(View.GONE);
 			setTitle(this.getResources().getString(R.string.str_settings_language_title));
-			arrayList = mLanguageList;
+			if (0 == valueType) {
+				arrayList = new String[] { "0", "1" };
+			} else {
+				arrayList = mLanguageList;
+			}
 		}
 		getTextList();
 		return arrayList;

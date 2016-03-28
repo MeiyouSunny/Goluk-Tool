@@ -18,7 +18,7 @@
             android:contentDescription="@string/imgdes"
             android:src="@drawable/mine_novideo" />
         
-        <TextView 
+        <!-- <TextView 
             android:id="@+id/tv_usercenter_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
             android:textSize="16sp"
             android:text="@string/msg_system_connect_error"
             android:layout_centerInParent="true"
-            android:visibility="gone" />
+            android:visibility="gone" /> -->
     </RelativeLayout>
 
 </LinearLayout>
