@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserPersonalInfoActivity;
 import cn.com.mobnote.golukmobile.usercenter.bean.HomeData;
@@ -174,9 +175,17 @@ public class UserCenterHeader implements OnClickListener {
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.tv_usercenter_header_attention_count:
+			if (!UserUtils.isNetDeviceAvailable(mContext)) {
+				GolukUtils.showToast(mContext, mContext.getString(R.string.str_network_unavailable));
+				return;
+			}
 			GolukUtils.showToast(mContext, "intent to attention");
 			break;
 		case R.id.tv_usercenter_header_fans_count:
+			if (!UserUtils.isNetDeviceAvailable(mContext)) {
+				GolukUtils.showToast(mContext, mContext.getString(R.string.str_network_unavailable));
+				return;
+			}
 			GolukUtils.showToast(mContext, "intent to fans");
 			break;
 		case R.id.btn_usercenter_header_attention:
@@ -185,7 +194,10 @@ public class UserCenterHeader implements OnClickListener {
 				Intent it = new Intent(mContext, UserPersonalInfoActivity.class);
 				mContext.startActivity(it);
 			} else {
-				GolukDebugUtils.e("", "----------usercenterheader-------onclick----link: " + mData.user.link);
+				if (!GolukApplication.getInstance().isUserLoginSucess) {
+					GolukUtils.showToast(mContext, mContext.getString(R.string.str_usercenter_login_hint_text));
+					return;
+				}
 				switch (mData.user.link) {
 				case 0:
 					// 未关注——去关注
@@ -233,6 +245,10 @@ public class UserCenterHeader implements OnClickListener {
 	}
 
 	private void intentToCategory(String type) {
+		if (!UserUtils.isNetDeviceAvailable(mContext)) {
+			GolukUtils.showToast(mContext, mContext.getString(R.string.str_network_unavailable));
+			return;
+		}
 		if (null != mData && null != mData.user && null != mData.user.uid) {
 			Intent it = new Intent(mContext, UserVideoCategoryActivity.class);
 			it.putExtra("type", type);
@@ -293,6 +309,16 @@ public class UserCenterHeader implements OnClickListener {
 	 * @param link
 	 */
 	public void changeAttentionState(int link) {
+		if (!GolukApplication.getInstance().isUserLoginSucess) {
+			// 未关注——显示关注按钮
+			mAttentionBtn.setBackgroundResource(R.drawable.bg_add);
+			Drawable drawable2 = mContext.getResources().getDrawable(R.drawable.usercenter_to_attention);
+			drawable2.setBounds(0, 0, drawable2.getMinimumWidth(), drawable2.getMinimumHeight());
+			mAttentionBtn.setCompoundDrawables(drawable2, null, null, null);
+			mAttentionBtn.setText(mContext.getString(R.string.str_usercenter_header_attention_text));
+			mAttentionBtn.setTextColor(Color.parseColor("#0984ff"));
+			return;
+		}
 		switch (link) {
 		case 0:
 			// 未关注——显示关注按钮

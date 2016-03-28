@@ -1,8 +1,8 @@
-package cn.com.mobnote.golukmobile.follow.bean;
+package cn.com.mobnote.golukmobile.followed.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-public class FollowVideoBean {
+public class FollowedVideoBean {
 	@JSONField(name="videoid")
 	public String videoid;
 	// 视频类型: 1.直播 2.点播
@@ -34,11 +34,11 @@ public class FollowVideoBean {
 	@JSONField(name="ispraise")
 	public String ispraise;
 	@JSONField(name="videodata")
-	public FollowVideoDataBean videodata;
+	public FollowedVideoDataBean videodata;
 	@JSONField(name="reason")
 	public String reason;
 	@JSONField(name="comment")
-	public FollowCommentBean comment;
+	public FollowedCommentBean comment;
 	// 是否为精华 0.否1.是
 	@JSONField(name="isessence")
 	public String isessence;
@@ -48,7 +48,7 @@ public class FollowVideoBean {
 	@JSONField(name="location")
 	public String location;
 	@JSONField(name="gen")
-	public FollowGenBean gen;
+	public FollowedGenBean gen;
 	// GPS信息是否分享 0.否; 1.是
 	@JSONField(name="isgpsshare")
 	public int isgpsshare;

@@ -1,8 +1,8 @@
-package cn.com.mobnote.golukmobile.follow.bean;
+package cn.com.mobnote.golukmobile.followed.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-public class FollowCertificationBean {
+public class FollowedCertificationBean {
 	// 机构实名认证标识(蓝V) 是否认证。0：否；1：是。(approvelabel)
 	@JSONField(name="isorgcertificated")
 	public String isorgcertificated;

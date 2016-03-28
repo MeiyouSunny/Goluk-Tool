@@ -1,8 +1,8 @@
-package cn.com.mobnote.golukmobile.videosuqare.bean;
+package cn.com.mobnote.golukmobile.praise.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-public class PraiseResultBean {
+public class PraiseCancelResultBean {
 	/**请求是否成功**/
 	@JSONField(name="success")
 	public boolean success;
@@ -13,5 +13,5 @@ public class PraiseResultBean {
 
 	/**结果代码**/
 	@JSONField(name="data")
-	public PraiseResultDataBean data;
+	public PraiseCancelResultDataBean data;
 }

@@ -8,9 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.net.wifi.WifiManager;
@@ -28,19 +26,16 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.animation.Animation;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TabWidget;
-import android.widget.TextView;
+import android.widget.Toast;
 import cn.com.mobnote.application.GlobalWindow;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventBindFinish;
 import cn.com.mobnote.eventbus.EventBindResult;
 import cn.com.mobnote.eventbus.EventConfig;
-import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.mobnote.eventbus.EventMapQuery;
 import cn.com.mobnote.eventbus.EventMessageUpdate;
 import cn.com.mobnote.eventbus.EventPhotoUpdateDate;
@@ -55,7 +50,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentTimerManager;
 import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
-import cn.com.mobnote.golukmobile.follow.FragmentFollow;
+import cn.com.mobnote.golukmobile.followed.FragmentFollowed;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress;
 import cn.com.mobnote.golukmobile.live.GetBaiduAddress.IBaiduGeoCoderFn;
@@ -66,12 +61,9 @@ import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.msg.MessageBadger;
 import cn.com.mobnote.golukmobile.msg.MsgCenterCounterRequest;
 import cn.com.mobnote.golukmobile.msg.bean.MessageCounterBean;
-import cn.com.mobnote.golukmobile.newest.WonderfulSelectedListView;
 import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareActivity;
-import cn.com.mobnote.golukmobile.videosuqare.VideoSquareAdapter;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
 import cn.com.mobnote.golukmobile.xdpush.GolukNotification;
@@ -148,6 +140,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private SharedPreferences mPreferences = null;
 	private Editor mEditor = null;
 	private long exitTime = 0;
+	
+	private View mUnreadTips;
 	/** 首次进入的引导div */
 //	private RelativeLayout indexDiv = null;
 //	private ImageView mIndexImg = null;
@@ -168,6 +162,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	/** 把当前连接的设备保存起来，主要是为了兼容以前的连接状态 */
 	private WifiRsBean mCurrentConnBean = null;
 	private FragmentTabHost mTabHost;
+	
+	ImageView mCarrecorderIv;
 
 	private void playDownLoadedSound() {
 		if (null != mSoundPool) {
@@ -188,6 +184,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukDebugUtils.e("", "start App ------ MainActivity-----onCreate------------:");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.index);
+		
+		initTab();
+		
 		// 在使用SDK各组件之前初始化context信息，传入ApplicationContext
 		// 注意该方法要再setContentView方法之前实现
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
@@ -242,6 +241,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 			autoConnWifi();
 			// 等待IPC连接时间
 			mBaseHandler.sendEmptyMessageDelayed(MSG_H_WIFICONN_TIME, 40 * 1000);
+			
+			
 		} else {
 			wifiConnectFailed();
 		}
@@ -289,6 +290,11 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukUtils.getMobileInfo(this);
 
 		// msgRequest();
+		
+	}
+
+	private void initTab() {
+		
 		LayoutInflater inflater = LayoutInflater.from(this);
 		mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
 		mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
@@ -303,11 +309,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		b.putString("key", "Follow");
 		LinearLayout follow = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_follow, null);
 		mTabHost.addTab(mTabHost.newTabSpec("Follow")
-				.setIndicator(follow), FragmentFollow.class, b);
+				.setIndicator(follow), FragmentFollowed.class, b);
 
 		b = new Bundle();
 		b.putString("key", "CarRecorder");
 		LinearLayout carRecorder = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_carrecorder, null);
+		mCarrecorderIv = (ImageView)carRecorder.findViewById(R.id.carrecorder_iv);
 		mTabHost.addTab(mTabHost.newTabSpec("CarRecorder").setIndicator(carRecorder),
 				null, b);
 
@@ -319,7 +326,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		b = new Bundle();
 		b.putString("key", "Mine");
-		LinearLayout mine = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_mine, null);
+		RelativeLayout mine = (RelativeLayout) inflater.inflate(R.layout.main_tab_indicator_mine, null);
+		mUnreadTips = mine.findViewById(R.id.iv_unread_tips);
 		mTabHost.addTab(mTabHost.newTabSpec("Mine").setIndicator(mine),
 				FragmentMine.class, b);
 		TabWidget widget = mTabHost.getTabWidget();
@@ -609,23 +617,26 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	 * 更新行车记录仪按钮 1:连接中 2：已连接 0：未连接
 	 */
 	public void updateRecoderBtn(int state) {
-//		if (this.isFinishing() == false) {
-//			AnimationDrawable ad = null;
-//			if (state == WIFI_STATE_CONNING && mApp.isBindSucess()) {
-//				indexCarrecoderBtn.setBackgroundResource(R.anim.carrecoder_btn);
-//				ad = (AnimationDrawable) indexCarrecoderBtn.getBackground();
-//				if (ad.isRunning() == false) {
-//					ad.setOneShot(false);
-//					ad.start();
-//				}
-//			} else if (state == WIFI_STATE_SUCCESS) {
-//				indexCarrecoderBtn.setBackgroundResource(R.drawable.index_video_icon);
-//			} else if (state == WIFI_STATE_FAILED) {
-//				indexCarrecoderBtn.setBackgroundResource(R.drawable.tb_notconnected);
-//			} else {
-//				indexCarrecoderBtn.setBackgroundResource(R.drawable.tb_notconnected);
-//			}
-//		}
+		
+		if (this.isFinishing() == false) {
+			AnimationDrawable ad = null;
+			if (state == WIFI_STATE_CONNING && mApp.isBindSucess()) {
+				mCarrecorderIv.setImageResource(R.anim.carrecoder_btn);
+				ad = (AnimationDrawable) mCarrecorderIv.getDrawable();
+				if (ad.isRunning() == false) {
+					ad.setOneShot(false);
+					ad.start();
+				}
+			} else if (state == WIFI_STATE_SUCCESS) {
+				Toast.makeText(MainActivity.this, "连接成功！", Toast.LENGTH_LONG).show();
+				mCarrecorderIv.setImageResource(R.drawable.index_video_icon);
+			} else if (state == WIFI_STATE_FAILED) {
+				//Toast.makeText(MainActivity.this, "连接失败！", Toast.LENGTH_LONG).show();
+				mCarrecorderIv.setImageResource(R.drawable.tb_notconnected);
+			} else {
+				mCarrecorderIv.setImageResource(R.drawable.tb_notconnected);
+			}
+		}
 	}
 
 	private void startWifi() {
@@ -643,6 +654,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mApp.mWiFiStatus = WIFI_STATE_SUCCESS;
 		refreshIpcDataToFile();
 		EventBus.getDefault().post(new EventWifiConnect(EventConfig.WIFI_STATE_SUCCESS));
+		//Toast.makeText(MainActivity.this, "连接成功", Toast.LENGTH_LONG).show();
 	}
 
 	// 连接失败
@@ -651,7 +663,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		mBaseHandler.removeMessages(MSG_H_WIFICONN_TIME);
 		mApp.mWiFiStatus = WIFI_STATE_FAILED;
 		updateRecoderBtn(mApp.mWiFiStatus);
-
+		
 		EventBus.getDefault().post(new EventWifiConnect(EventConfig.WIFI_STATE_FAILED));
 	}
 
@@ -679,6 +691,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		switch (event.getOpCode()) {
 		case EventConfig.MESSAGE_UPDATE:
+			
 			int msgCount = MessageManager.getMessageManager().getMessageTotalCount();
 			setMessageTipCount(msgCount);
 			MessageBadger.sendBadgeNumber(msgCount, this);
@@ -1306,33 +1319,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	private void setMessageTipCount(int total) {
-//		ImageView mainMsgTip = (ImageView) findViewById(R.id.iv_main_message_tip);
-//		if (total > 0) {
-//			mainMsgTip.setVisibility(View.VISIBLE);
-//		} else {
-//			mainMsgTip.setVisibility(View.GONE);
-//		}
-//
-//		// Also set user page message count tip
-//		if (null == indexMoreActivity || indexMoreActivity.mRootLayout == null) {
-//			GolukDebugUtils.d(TAG, "index more has been finished");
-//			return;
-//		}
-//
-//		TextView userMsgCounterTV = (TextView) indexMoreActivity.mRootLayout.findViewById(R.id.tv_my_message_tip);
-//		String strTotal = null;
-//		if (total > 99) {
-//			strTotal = "99+";
-//			userMsgCounterTV.setVisibility(View.VISIBLE);
-//		} else if (total <= 0) {
-//			strTotal = "0";
-//			userMsgCounterTV.setVisibility(View.GONE);
-//		} else {
-//			userMsgCounterTV.setVisibility(View.VISIBLE);
-//			strTotal = String.valueOf(total);
-//		}
-//
-//		userMsgCounterTV.setText(strTotal);
+		
+		if (total > 0) {
+			mUnreadTips.setVisibility(View.VISIBLE);
+		} else {
+			mUnreadTips.setVisibility(View.GONE);
+		}
 	}
 
 	@Override

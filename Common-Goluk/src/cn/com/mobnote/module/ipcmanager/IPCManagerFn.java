@@ -172,10 +172,26 @@ public interface IPCManagerFn extends IGolukCommFn {
 	/**adas 推送的应答消息**/
 	public static final int IPC_VDCP_Msg_PushEvent_ADAS = 3000;
 
-	/**获取ipc ADAS功能**/
+	/** 获取ipc ADAS功能 **/
 	public static final int IPC_VDCP_Msg_GetADASConfig = 2000;
-	/**设置ipc ADAS功能**/
+	/** 设置ipc ADAS功能 **/
 	public static final int IPC_VDCP_Msg_SetADASConfig = 2001;
+	/** 获取精彩视频分辨率 **/
+	public static final int IPC_VDCP_Msg_GetVideoResolution = 2200;
+	/** 设置精彩视频分辨率 **/
+	public static final int IPC_VDCP_Msg_SetVideoResolution = 2201;
+	/** 获取音量大小 **/
+	public static final int IPC_VDCP_Msg_GetVolume = 2202;
+	/** 设置音量大小 **/
+	public static final int IPC_VDCP_Msg_SetVolume = 2203;
+	/** 获取关机时间 **/
+	public static final int IPC_VDCP_Msg_GetPowerOffTime = 2204;
+	/** 设置关机时间 **/
+	public static final int IPC_VDCP_Msg_SetPowerOffTime = 2205;
+	/** 获取语音类型 **/
+	public static final int IPC_VDCP_Msg_GetVoiceType = 2206;
+	/** 设置语音类型 **/
+	public static final int IPC_VDCP_Msg_SetVoiceType = 2207;
 	
 	/**
 	 * 
@@ -323,6 +339,22 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCPCmd_GetADASConfig = 2000;
 	/**设置ipc ADAS功能**/
 	public static final int IPC_VDCPCmd_SetADASConfig = 2001;
+	/** 获取精彩视频分辨率 **/
+	public static final int IPC_VDCPCmd_GetVideoResolution = 2200;
+	/** 设置精彩视频分辨率 **/
+	public static final int IPC_VDCPCmd_SetVideoResolution = 2201;
+	/** 获取音量大小 **/
+	public static final int IPC_VDCPCmd_GetVolume = 2202;
+	/** 设置音量大小 **/
+	public static final int IPC_VDCPCmd_SetVolume = 2203;
+	/** 获取关机时间 **/
+	public static final int IPC_VDCPCmd_GetPowerOffTime = 2204;
+	/** 设置关机时间 **/
+	public static final int IPC_VDCPCmd_SetPowerOffTime = 2205;
+	/** 获取语音类型 **/
+	public static final int IPC_VDCPCmd_GetVoiceType = 2206;
+	/** 设置语音类型 **/
+	public static final int IPC_VDCPCmd_SetVoiceType = 2207;
 
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2);
 }

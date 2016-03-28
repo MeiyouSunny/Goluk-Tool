@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -28,6 +30,7 @@ import cn.com.mobnote.golukmobile.usercenter.bean.AttentionJson;
 import cn.com.mobnote.golukmobile.usercenter.bean.HomeJson;
 import cn.com.mobnote.golukmobile.usercenter.bean.HomeVideoList;
 import cn.com.mobnote.golukmobile.usercenter.bean.ShareJson;
+import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.headergridview.GridViewWithHeaderAndFooter;
 import cn.com.mobnote.headergridview.PullToRefreshHeaderGridView;
 import cn.com.mobnote.logic.GolukModule;
@@ -36,7 +39,7 @@ import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
-public class NewUserCenterActivity extends BaseActivity implements IRequestResultListener, OnClickListener {
+public class NewUserCenterActivity extends BaseActivity implements IRequestResultListener, OnClickListener,OnItemClickListener {
 
 	private static final String OPERATOR_FIRST = "0";
 	private static final String OPERATOR_DOWN = "1";
@@ -110,6 +113,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 		mMoreBtn.setOnClickListener(this);
 		mRefreshLayout.setOnClickListener(this);
 		mFooterLayout.setOnClickListener(this);
+		mGridView.setOnItemClickListener(this);
 
 		mSharePlatform = new SharePlatformUtil(this);
 
@@ -240,7 +244,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			addFooterView(2);
 		}
 		mGridView.setMode(PullToRefreshBase.Mode.PULL_DOWN_TO_REFRESH);
-		GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
+		GolukUtils.showToast(this, this.getResources().getString(R.string.str_network_unavailable));
 	}
 
 	private void addFooterView(int type) {
@@ -383,4 +387,21 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 		super.onDestroy();
 		closeLoadingDialog();
 	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
+		if (!UserUtils.isNetDeviceAvailable(this)) {
+			GolukUtils.showToast(this, this.getString(R.string.str_network_unavailable));
+			return;
+		}
+		if (null != mAdapter) {
+			HomeVideoList video = (HomeVideoList) mAdapter.getItem(position);
+			if (null != video) {
+				Intent itVideoDetail = new Intent(this, VideoDetailActivity.class);
+				itVideoDetail.putExtra(VideoDetailActivity.VIDEO_ID, video.videoid);
+				startActivity(itVideoDetail);
+			}
+		}
+	}
+	
 }

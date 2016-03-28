@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
     android:background="#ffffff"
     android:orientation="vertical"
+    android:paddingTop="0dp"
+    android:paddingBottom="16dp"
     android:layout_height="match_parent" >
 
     <View
@@ -18,6 +18,8 @@
         android:layout_width="match_parent"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_height="wrap_content">
         <TextView
             android:id="@+id/tv_list_view_follow_type_recommend_item_label_title"
@@ -31,26 +33,33 @@
             android:paddingTop="14dp"
             android:paddingBottom="14dp"
             android:layout_centerVertical="true"/>
-        <TextView
-            android:id="@+id/tv_list_view_follow_type_recommend_item_follow_all"
+        <RelativeLayout
+            android:id="@+id/rl_list_view_follow_type_recommend_item_follow_all"
             android:layout_width="82dp"
-            android:layout_height="26dp"
-            android:text="全部关注"
-            android:textSize="12sp"
-            android:textColor="#0080ff"
             android:layout_alignParentRight="true"
-            android:drawableLeft="@drawable/icon_follow_normal"
-            android:paddingTop="6dp"
-            android:gravity="center"
             android:background="@drawable/follow_button_border_normal"
-            android:paddingBottom="6dp"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:layout_height="26dp">
+            <TextView
+                android:id="@+id/tv_list_view_follow_type_recommend_item_follow_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="全部关注"
+                android:textSize="12sp"
+                android:textColor="#0080ff"
+                android:drawablePadding="3dp"
+                android:drawableLeft="@drawable/icon_follow_normal"
+                android:gravity="center"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rl_list_view_follow_type_recommend_item_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_marginTop="8dp">
         <RelativeLayout
             android:id="@+id/rl_list_view_follow_type_recommend_item_head_portrait"
@@ -66,8 +75,8 @@
                 android:contentDescription="@string/imgdes" />
             <ImageView
                 android:id="@+id/iv_list_view_follow_type_recommend_item_auth_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="11.33dp"
+                android:layout_height="11.33dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:contentDescription="@string/imgdes" />
@@ -79,6 +88,7 @@
             android:textColor="#1163a2"
             android:layout_alignParentTop="true"
             android:textSize="14sp"
+            android:layout_marginLeft="7dp"
             android:gravity="left|center_vertical"
             android:layout_marginRight="100dp"
             android:layout_toRightOf="@id/rl_list_view_follow_type_recommend_item_head_portrait"/>
@@ -88,29 +98,39 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="100dp"
             android:textSize="12sp"
+            android:layout_marginLeft="7dp"
             android:gravity="left|center_vertical"
             android:textColor="#919191"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="4dp"
             android:layout_toRightOf="@id/rl_list_view_follow_type_recommend_item_head_portrait"
             android:layout_below="@id/tv_list_view_follow_type_recommend_item_name"/>
 
-        <TextView
-            android:id="@+id/tv_list_view_follow_type_recommend_item_follow"
+        <RelativeLayout
+            android:id="@+id/rl_list_view_follow_type_recommend_item_follow"
             android:layout_width="82dp"
-            android:layout_height="26dp"
-            android:text="关注"
-            android:textSize="12sp"
-            android:textColor="#0080ff"
             android:layout_alignParentRight="true"
-            android:gravity="center"
+            android:background="@drawable/follow_button_border_normal"
             android:layout_centerVertical="true"
-            android:drawableLeft="@drawable/icon_follow_normal"
-            android:background="@drawable/follow_button_border_normal"/>
+            android:layout_height="26dp">
+            <TextView
+                android:id="@+id/tv_list_view_follow_type_recommend_item_follow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="关注"
+                android:textSize="12sp"
+                android:textColor="#0080ff"
+                android:gravity="center"
+                android:drawablePadding="6dp"
+                android:layout_centerInParent="true"
+                android:drawableLeft="@drawable/icon_follow_normal"/>
+        </RelativeLayout>
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="155dp"
+        android:layout_height="160dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_marginTop="7dp"
         android:orientation="horizontal">
         <RelativeLayout
@@ -122,6 +142,7 @@
                 android:id="@+id/iv_list_view_follow_type_recommend_item_first_video"
                 android:layout_width="match_parent"
                 android:layout_height="91dp"
+                android:scaleType="fitXY"
                 android:src="@drawable/tacitly_pic"
                 android:layout_alignParentTop="true"
                 android:contentDescription="@string/imgdes"/>
@@ -150,7 +171,8 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginRight="5dp"
                 android:layout_alignParentRight="true"
-                android:drawableLeft="@drawable/videodetail_comment"/>
+                android:layout_marginBottom="8dp"
+                android:drawableLeft="@drawable/usercenter_comment"/>
             <TextView
                 android:id="@+id/tv_list_view_follow_type_recommend_item_first_video_view"
                 android:layout_width="wrap_content"
@@ -162,8 +184,9 @@
                 android:drawablePadding="4dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginRight="18dp"
+                android:layout_marginBottom="8dp"
                 android:layout_toLeftOf="@id/tv_list_view_follow_type_recommend_item_first_video_comment"
-                android:drawableLeft="@drawable/videodetail_comment"/>
+                android:drawableLeft="@drawable/usercenter_scan"/>
         </RelativeLayout>
         <View
             android:layout_width="12dp"
@@ -177,6 +200,7 @@
                 android:id="@+id/iv_list_view_follow_type_recommend_item_second_video"
                 android:layout_width="match_parent"
                 android:layout_height="91dp"
+               android:scaleType="fitXY"
                 android:src="@drawable/tacitly_pic"
                 android:layout_alignParentTop="true"
                 android:contentDescription="@string/imgdes"/>
@@ -204,8 +228,9 @@
                 android:drawablePadding="4dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginRight="5dp"
+                android:layout_marginBottom="8dp"
                 android:layout_alignParentRight="true"
-                android:drawableLeft="@drawable/videodetail_comment"/>
+                android:drawableLeft="@drawable/usercenter_comment"/>
             <TextView
                 android:id="@+id/tv_list_view_follow_type_recommend_item_second_video_view"
                 android:layout_width="wrap_content"
@@ -217,8 +242,9 @@
                 android:drawablePadding="4dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginRight="18dp"
+                android:layout_marginBottom="8dp"
                 android:layout_toLeftOf="@id/tv_list_view_follow_type_recommend_item_second_video_comment"
-                android:drawableLeft="@drawable/videodetail_comment_press"/>
+                android:drawableLeft="@drawable/usercenter_scan"/>
         </RelativeLayout>
     </LinearLayout>
 

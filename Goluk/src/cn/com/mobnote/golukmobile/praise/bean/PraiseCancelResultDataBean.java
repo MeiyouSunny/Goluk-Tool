@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.videosuqare.bean;
+package cn.com.mobnote.golukmobile.praise.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
 

@@ -25,6 +25,7 @@ import cn.com.mobnote.golukmobile.usercenter.bean.VideoJson;
 import cn.com.mobnote.golukmobile.usercenter.bean.VideoList;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 
 public class UserVideoCategoryActivity extends BaseActivity implements OnClickListener, IRequestResultListener,
@@ -204,7 +205,7 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 		mGridView.setVisibility(View.GONE);
 		mToRefreshLayout.setVisibility(View.VISIBLE);
 		mGridView.setMode(PullToRefreshBase.Mode.PULL_DOWN_TO_REFRESH);
-		GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
+		GolukUtils.showToast(this, this.getResources().getString(R.string.str_network_unavailable));
 	}
 	
 	private void showLoadinDialog() {
@@ -229,6 +230,10 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
+		if (!UserUtils.isNetDeviceAvailable(this)) {
+			GolukUtils.showToast(this, this.getString(R.string.str_network_unavailable));
+			return;
+		}
 		if (null != mAdapter) {
 			VideoList video = (VideoList) mAdapter.getItem(position);
 			if (null != video) {

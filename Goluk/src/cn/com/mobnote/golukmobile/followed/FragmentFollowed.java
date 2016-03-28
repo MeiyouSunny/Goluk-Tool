@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.follow;
+package cn.com.mobnote.golukmobile.followed;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,9 +6,11 @@ import java.util.List;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import cn.com.mobnote.golukmobile.follow.bean.FollowListBean;
-import cn.com.mobnote.golukmobile.follow.bean.FollowRecomUserBean;
+import cn.com.mobnote.golukmobile.follow.FollowRequest;
 import cn.com.mobnote.golukmobile.follow.bean.FollowRetBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowedListBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowedRecomUserBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowedRetBean;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
@@ -28,7 +30,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FragmentFollow extends Fragment implements IRequestResultListener {
+public class FragmentFollowed extends Fragment implements IRequestResultListener {
 	private final static String TAG = "FragmentFollow";
 	private final static String REFRESH_NORMAL = "0";
 	private final static String REFRESH_PULL_DOWN = "1";
@@ -39,7 +41,7 @@ public class FragmentFollow extends Fragment implements IRequestResultListener {
 //	private List<FollowListBean> mOrgFollowedList;
 	private List<Object> mFollowedList;
 	private RelativeLayout mEmptyRL;
-	private final static String PAGESIZE = "20";
+	private final static String PAGESIZE = "10";
 	private String mTimeStamp = "";
 	private String mCurMotion = REFRESH_NORMAL;
 	private TextView mRetryClickIV;
@@ -63,11 +65,11 @@ public class FragmentFollow extends Fragment implements IRequestResultListener {
 		mRetryClickIV.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				sendOfficialRequest(REFRESH_NORMAL, null);
+				sendFollowedContentRequest(REFRESH_NORMAL, mTimeStamp);
 			}
 		});
 
-		mAdapter = new FollowedListAdapter(getActivity());
+		mAdapter = new FollowedListAdapter(this);
 		mListView.setAdapter(mAdapter);
 		mLoadingDialog = new CustomLoadingDialog(getActivity(), null);
 		mListView.setMode(PullToRefreshBase.Mode.DISABLED);
@@ -78,7 +80,7 @@ public class FragmentFollow extends Fragment implements IRequestResultListener {
 				pullToRefreshBase.getLoadingLayoutProxy(true, false).setLastUpdatedLabel(
 						getActivity().getString(R.string.updating) +
 						GolukUtils.getCurrentFormatTime(getActivity()));
-				sendOfficialRequest(REFRESH_PULL_DOWN, null);
+				sendFollowedContentRequest(REFRESH_PULL_DOWN, mTimeStamp);
 				mCurMotion = REFRESH_PULL_DOWN;
 			}
 
@@ -87,17 +89,17 @@ public class FragmentFollow extends Fragment implements IRequestResultListener {
 				pullToRefreshBase.getLoadingLayoutProxy(false, true).setPullLabel(
 						getActivity().getResources().getString(
 						R.string.goluk_pull_to_refresh_footer_pull_label));
-				sendOfficialRequest(REFRESH_PULL_UP, mTimeStamp);
+				sendFollowedContentRequest(REFRESH_PULL_UP, mTimeStamp);
 				mCurMotion = REFRESH_PULL_UP;
 			}
 		});
 
-		sendOfficialRequest(REFRESH_NORMAL, null);
+		sendFollowedContentRequest(REFRESH_NORMAL, mTimeStamp);
 		mFollowedList = new ArrayList<Object>();
 		return rootView;
 	}
 
-	private void sendOfficialRequest(String op, String timeStamp) {
+	private void sendFollowedContentRequest(String op, String timeStamp) {
 		String tmpOp = op;
 		if(REFRESH_PULL_DOWN.equals(op)) {
 			tmpOp = REFRESH_NORMAL;
@@ -113,6 +115,17 @@ public class FragmentFollow extends Fragment implements IRequestResultListener {
 
 		if(!mLoadingDialog.isShowing() && REFRESH_NORMAL.equals(op)) {
 			mLoadingDialog.show();
+		}
+	}
+
+	protected void sendFollowRequest(String linkuid, String type) {
+		FollowRequest request =
+				new FollowRequest(IPageNotifyFn.PageType_Follow, this);
+		GolukApplication app = GolukApplication.getInstance();
+		if(null != app && app.isUserLoginSucess) {
+			if(!TextUtils.isEmpty(app.mCurrentUId)) {
+				request.get(PROTOCOL, linkuid, type, app.mCurrentUId);
+			}
 		}
 	}
 
@@ -148,7 +161,7 @@ public class FragmentFollow extends Fragment implements IRequestResultListener {
 		}
 
 		if(requestType == IPageNotifyFn.PageType_FollowedContent) {
-			FollowRetBean bean = (FollowRetBean)result;
+			FollowedRetBean bean = (FollowedRetBean)result;
 			if(null == bean) {
 				Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 				if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
@@ -186,31 +199,34 @@ public class FragmentFollow extends Fragment implements IRequestResultListener {
 
 			mListView.setMode(PullToRefreshBase.Mode.BOTH);
 
-			List<FollowListBean> followedBeanList = bean.data.list;
+			List<FollowedListBean> followedBeanList = bean.data.list;
 
 			if(followedBeanList.size() == 0) {
 				Toast.makeText(getActivity(), getString(
 						R.string.str_pull_refresh_listview_bottom_reach), Toast.LENGTH_SHORT).show();
 			}
 
-			FollowListBean last = bean.data.list.get(followedBeanList.size() - 1);
-//			if(null != last) {
-//				mTimeStamp = last.addtime;
-//			} else {
-//				return;
-//			}
+			FollowedListBean last = bean.data.list.get(followedBeanList.size() - 1);
+			if(null != last) {
+				mTimeStamp = last.followvideo.video.sharingtime;
+			} else {
+				return;
+			}
 
+			List<Object> gotList = new ArrayList<Object>();
 			// Refill to common list
 			if("0".equals(bean.data.count)) {
 				if(followedBeanList.size() == 1) {
-					mFollowedList.add(new String(FOLLOWD_EMPTY));
-					FollowListBean followBean = followedBeanList.get(0);
+//					mFollowedList.add(new String(FOLLOWD_EMPTY));
+					gotList.add(new String(FOLLOWD_EMPTY));
+					FollowedListBean followBean = followedBeanList.get(0);
 					if("1".equals(followBean.type)) {
-						List<FollowRecomUserBean> userBeanList = followBean.recomuser;
+						List<FollowedRecomUserBean> userBeanList = followBean.recomuser;
 						if(null != userBeanList && userBeanList.size() > 0) {
 							int userCount = userBeanList.size();
 							for(int j = 0; j < userCount; j++) {
-								mFollowedList.add(userBeanList.get(j));
+//								mFollowedList.add(userBeanList.get(j));
+								gotList.add(userBeanList.get(j));
 							}
 						}
 					}
@@ -220,25 +236,76 @@ public class FragmentFollow extends Fragment implements IRequestResultListener {
 			} else {
 				int count = followedBeanList.size();
 				for(int i = 0; i < count; i++) {
-					FollowListBean followBean = followedBeanList.get(i);
+					FollowedListBean followBean = followedBeanList.get(i);
 					if("0".equals(followBean.type)) {
-						mFollowedList.add(followBean.followvideo);
+//						mFollowedList.add(followBean.followvideo);
+						gotList.add(followBean.followvideo);
 					} else {
-//						List<FollowRecomUserBean> userBeanList = followBean.recomuser;
-//						if(null != userBeanList && userBeanList.size() > 0) {
-//							int userCount = userBeanList.size();
-//							for(int j = 0; j < userCount; j++) {
-//								mFollowedList.add(userBeanList.get(j));
-//							}
-//						}
+						List<FollowedRecomUserBean> userBeanList = followBean.recomuser;
+						if(null != userBeanList && userBeanList.size() > 0) {
+							int userCount = userBeanList.size();
+							for(int j = 0; j < userCount; j++) {
+								FollowedRecomUserBean tmpBean = userBeanList.get(j);
+								tmpBean.position = j;
+//								mFollowedList.add(tmpBean);
+								gotList.add(tmpBean);
+							}
+						}
 					}
 				}
 			}
-			mAdapter.setData(mFollowedList);
+
+			if(REFRESH_PULL_UP.equals(mCurMotion)) {
+				mFollowedList.addAll(gotList);
+				mAdapter.notifyDataSetChanged();
+			} else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
+//				mOfficialMsgList.clear();
+//				mOfficialMsgList.addAll(bean.data.messages);
+				mFollowedList.clear();
+				mFollowedList.addAll(gotList);
+				mAdapter.setData(mFollowedList);
+			} else {
+			}
+
 //			if(mOfficialMsgList.size() < PAGESIZE) {
 //				mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 //			}
 			mCurMotion = REFRESH_NORMAL;
+		} else if(requestType == IPageNotifyFn.PageType_Follow) {
+			FollowRetBean bean = (FollowRetBean)result;
+			if(null != bean) {
+				// User link uid to find the changed recommend user item status
+				int i = findLinkUserItem(bean.data.linkuid);
+				if(i >=0 && i < mFollowedList.size()) {
+					FollowedRecomUserBean userBean = (FollowedRecomUserBean)mFollowedList.get(i);
+					userBean.link = bean.data.link;
+					mAdapter.notifyDataSetChanged();
+				}
+			} else {
+				// Toast for operation failed
+				Toast.makeText(getActivity(), "操作失败", Toast.LENGTH_SHORT).show();
+			}
 		}
+	}
+
+	private int findLinkUserItem(String linkuid) {
+		if(null == mFollowedList || mFollowedList.size() == 0 || TextUtils.isEmpty(linkuid)) {
+			return -1;
+		}
+
+		int size = mFollowedList.size();
+		for(int i = 0; i < size; i++) {
+			Object obj = mFollowedList.get(i);
+			if(null != obj && obj instanceof FollowedRecomUserBean) {
+				FollowedRecomUserBean bean = (FollowedRecomUserBean)obj;
+				if(!TextUtils.isEmpty(bean.uid)) {
+					if(bean.uid.equals(linkuid)) {
+						return i;
+					}
+				}
+			}
+		}
+
+		return -1;
 	}
 }
