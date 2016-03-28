@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="71dp"
+    android:background="#ffffff" >
+
+    <ImageView
+        android:id="@+id/iv_followinglist_avatar"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="9dp"
+        android:layout_marginTop="14dp"
+        android:contentDescription="@string/imgdes"
+        android:layout_height="47dp"
+        android:layout_width="47dp"/>
+    
+    <TextView
+        android:id="@+id/tv_followinglist_nickname"
+        android:layout_marginTop="21dp"
+        android:layout_toRightOf="@id/iv_followinglist_avatar"
+        android:layout_marginLeft="9dp"
+        android:textColor="#333333"
+        android:textSize="14sp"
+        android:singleLine="true"/>
+    
+    <TextView
+        android:id="@+id/tv_followinglist_share_followed_fans"
+        android:layout_toRightOf="@id/iv_followinglist_avatar"
+        android:layout_marginLeft="9dp"
+        android:layout_below="@id/tv_followinglist_nickname"
+        android:layout_marginTop="11dp"
+        android:textSize="8sp"/>
+    
+    <TextView 
+        android:id="@+id/tv_followinglist_link"
+        android:layout_height="27dp"
+        android:layout_width="83dp"
+        android:textSize="14sp"
+        android:layout_marginTop="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="9dp"/>
+        
+        "
+        
+</RelativeLayout>
