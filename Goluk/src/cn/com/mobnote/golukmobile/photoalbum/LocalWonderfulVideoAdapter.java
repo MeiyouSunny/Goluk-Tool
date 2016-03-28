@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -94,17 +95,17 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 			holder.mTMLayout2 = (RelativeLayout) convertView.findViewById(R.id.mTMLayout2);
 			holder.image1 = (ImageView) convertView.findViewById(R.id.video_first_needle1);
 			holder.image2 = (ImageView) convertView.findViewById(R.id.video_first_needle2);
-			holder.mVideoCountTime1 = (TextView) convertView.findViewById(R.id.video_countTime1);
-			holder.mVideoCountTime2 = (TextView) convertView.findViewById(R.id.video_countTime2);
-			holder.mVideoQuality1 = (ImageView) convertView.findViewById(R.id.video_quality1);
-			holder.mVideoQuality2 = (ImageView) convertView.findViewById(R.id.video_quality2);
+			//holder.mVideoCountTime1 = (TextView) convertView.findViewById(R.id.video_countTime1);
+			//holder.mVideoCountTime2 = (TextView) convertView.findViewById(R.id.video_countTime2);
+			//holder.mVideoQuality1 = (ImageView) convertView.findViewById(R.id.video_quality1);
+			//holder.mVideoQuality2 = (ImageView) convertView.findViewById(R.id.video_quality2);
 			holder.mVideoCreateTime1 = (TextView) convertView.findViewById(R.id.video_createtime1);
 			holder.mVideoCreateTime2 = (TextView) convertView.findViewById(R.id.video_createtime2);
-			holder.mVideoSize1 = (TextView) convertView.findViewById(R.id.video_size1);
-			holder.mVideoSize2 = (TextView) convertView.findViewById(R.id.video_size2);
+//			holder.mVideoSize1 = (TextView) convertView.findViewById(R.id.video_size1);
+//			holder.mVideoSize2 = (TextView) convertView.findViewById(R.id.video_size2);
 			holder.line = convertView.findViewById(R.id.line);
-			holder.mNewIcon1 = (ImageView) convertView.findViewById(R.id.mNewIcon1);
-			holder.mNewIcon2 = (ImageView) convertView.findViewById(R.id.mNewIcon2);
+			holder.mVide1Type = (Button) convertView.findViewById(R.id.video1_type);
+			holder.mVide2Type = (Button) convertView.findViewById(R.id.video2_type);
 			holder.mPreView1 = (ImageView) convertView.findViewById(R.id.mPreView1);
 			holder.mPreView2 = (ImageView) convertView.findViewById(R.id.mPreView2);
 
@@ -159,32 +160,50 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		VideoInfo mVideoInfo2 = mDataList.get(position).getVideoInfo2();
 		holder.mTMLayout1.setTag(mVideoInfo1.videoPath);
 		holder.mTMLayout2.setTag("");
-		holder.mVideoCountTime1.setText(mVideoInfo1.countTime);
+		//holder.mVideoCountTime1.setText(mVideoInfo1.countTime);
 		holder.mVideoCreateTime1.setText(mVideoInfo1.videoCreateDate.substring(11));
-		holder.mVideoSize1.setText(mVideoInfo1.videoSize);
+//		holder.mVideoSize1.setText(mVideoInfo1.videoSize);
 //		holder.image1.setTag("image:" + mVideoInfo1.filename);
-		displayVideoQuality(mVideoInfo1.videoHP, holder.mVideoQuality1);
+		//displayVideoQuality(mVideoInfo1.videoHP, holder.mVideoQuality1);
 		loadImage(mVideoInfo1.filename, holder.image1);
-		if (mVideoInfo1.isNew) {
-			holder.mNewIcon1.setVisibility(View.VISIBLE);
-		} else {
-			holder.mNewIcon1.setVisibility(View.GONE);
+		int type = getVideoType(mVideoInfo1.filename);
+		if(type == 1){
+			holder.mVide1Type.setText(mContext.getResources().getString(R.string.str_wonderful_title));
+			holder.mVide1Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_wonderful_txt_color));
+		}else if(type == 2){
+			holder.mVide1Type.setText(mContext.getResources().getString(R.string.str_urgent_title));
+			holder.mVide1Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_urgent_txt_color));
+		}else{
+			holder.mVide1Type.setText(mContext.getResources().getString(R.string.str_loop_title));
+			holder.mVide1Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_loop_txt_color));
 		}
 
 		if (null != mVideoInfo2) {
 			holder.mTMLayout2.setTag(mVideoInfo2.videoPath);
 			holder.mVideoLayout2.setVisibility(View.VISIBLE);
-			holder.mVideoCountTime2.setText(mVideoInfo2.countTime);
+			//holder.mVideoCountTime2.setText(mVideoInfo2.countTime);
 			holder.mVideoCreateTime2.setText(mVideoInfo2.videoCreateDate.substring(11));
-			holder.mVideoSize2.setText(mVideoInfo2.videoSize);
+//			holder.mVideoSize2.setText(mVideoInfo2.videoSize);
 //			holder.image2.setTag("image:" + mVideoInfo2.filename);
-			displayVideoQuality(mVideoInfo2.videoHP, holder.mVideoQuality2);
+			//displayVideoQuality(mVideoInfo2.videoHP, holder.mVideoQuality2);
 			loadImage(mVideoInfo2.filename, holder.image2);
 
-			if (mVideoInfo2.isNew) {
-				holder.mNewIcon2.setVisibility(View.VISIBLE);
-			} else {
-				holder.mNewIcon2.setVisibility(View.GONE);
+//			if (mVideoInfo2.isNew) {
+//				holder.mNewIcon2.setVisibility(View.VISIBLE);
+//			} else {
+//				holder.mNewIcon2.setVisibility(View.GONE);
+//			}
+			
+			int type2 = getVideoType(mVideoInfo2.filename);
+			if(type2 == 1){
+				holder.mVide2Type.setText(mContext.getResources().getString(R.string.str_wonderful_title));
+				holder.mVide2Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_wonderful_txt_color));
+			}else if(type2 == 2){
+				holder.mVide2Type.setText(mContext.getResources().getString(R.string.str_urgent_title));
+				holder.mVide2Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_urgent_txt_color));
+			}else{
+				holder.mVide2Type.setText(mContext.getResources().getString(R.string.str_loop_title));
+				holder.mVide2Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_loop_txt_color));
 			}
 		}
 
@@ -287,6 +306,16 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 //				}
 //			});
 //		}
+	}
+	
+	private int getVideoType(String name){
+		if(name.indexOf("WND") >= 0){
+			return 1;
+		}else if(name.indexOf("URG") >= 0){
+			return 2;
+		}else{
+			return 3;
+		}
 	}
 
 	/**
@@ -410,17 +439,19 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		RelativeLayout mTMLayout2;
 		ImageView image1;
 		ImageView image2;
-		TextView mVideoCountTime1;
-		TextView mVideoCountTime2;
-		ImageView mVideoQuality1;
-		ImageView mVideoQuality2;
+		//TextView mVideoCountTime1;
+		//TextView mVideoCountTime2;
+		//ImageView mVideoQuality1;
+		//ImageView mVideoQuality2;
 		TextView mVideoCreateTime1;
 		TextView mVideoCreateTime2;
-		TextView mVideoSize1;
-		TextView mVideoSize2;
+		//TextView mVideoSize1;
+		//TextView mVideoSize2;
 		View line;
-		ImageView mNewIcon1;
-		ImageView mNewIcon2;
+		/*ImageView mNewIcon1;
+		ImageView mNewIcon2;*/
+		Button mVide1Type;
+		Button mVide2Type;
 		ImageView mPreView1;
 		ImageView mPreView2;
 	}

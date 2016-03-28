@@ -22,6 +22,7 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
+import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 
@@ -67,8 +68,9 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 	
 	private List<String> selectedListData = null;
 	
-	private String mPlatform = null;
+	public String mPlatform = null;
 	
+	public PromotionSelectItem mPromotionSelectItem;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,6 +80,12 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 		Bundle bundle = getArguments();
 		if(bundle != null){
 			mPlatform = bundle.getString("platform");
+		}
+		
+		if (savedInstanceState == null) {
+			mPromotionSelectItem = (PromotionSelectItem) getActivity().getIntent().getSerializableExtra(ACTIVITY_INFO);
+		} else {
+			mPromotionSelectItem = (PromotionSelectItem) savedInstanceState.getSerializable(ACTIVITY_INFO);
 		}
 		
 		if(mAlbumRootView == null){

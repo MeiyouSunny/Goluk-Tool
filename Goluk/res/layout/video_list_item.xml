@@ -34,6 +34,7 @@
         android:layout_marginLeft="4dp"
         android:layout_marginTop="4dp"
         android:textColor="#bfffffff"
+        android:visibility="gone"
         android:textSize="10sp" />
 	
     <ImageView
@@ -43,13 +44,16 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="4dp"
         android:layout_marginTop="4dp"
-        android:paddingRight="6dp" />
+        android:paddingRight="6dp"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/video_createtime1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:paddingRight="4dp"
         android:textSize="10sp"
         android:textColor="#bfffffff"
         android:paddingLeft="4dp" />
@@ -62,21 +66,27 @@
         android:layout_alignParentRight="true"
         android:textSize="10sp"
         android:textColor="#bfffffff"
-        android:paddingRight="4dp" />
+        android:paddingRight="4dp"
+        android:visibility="gone"/>
     
-    <ImageView 
-        android:id="@+id/mNewIcon1"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
+    
+    <Button 
+        android:id="@+id/video1_type"
+        android:layout_width="25dp"
+        android:layout_height="12dp"
+        android:background="#ee6051"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/video_new_icon" />
+        android:textSize="8sp"
+        android:clickable="false"
+        android:focusable="false"/>
     
     <ImageView 
         android:id="@+id/mPreView1"
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:layout_centerInParent="true"
+        android:visibility="gone"
         android:src="@drawable/photo_preview_icon" />
 
     	<RelativeLayout 
@@ -126,13 +136,16 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="4dp"
         android:layout_marginTop="4dp"
-        android:paddingRight="6dp" />
+        android:paddingRight="6dp"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/video_createtime2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:paddingRight="4dp"
         android:textSize="10sp"
         android:textColor="#bfffffff"
         android:paddingLeft="4dp" />
@@ -145,22 +158,28 @@
         android:layout_alignParentRight="true"
         android:textSize="10sp"
         android:textColor="#bfffffff"
-        android:paddingRight="4dp" />
+        android:paddingRight="4dp"
+        android:visibility="gone"/>
     
-    <ImageView 
-        android:id="@+id/mNewIcon2"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
+    
+     <Button 
+        android:id="@+id/video2_type"
+        android:layout_width="25dp"
+        android:layout_height="12dp"
+        android:background="#ee6051"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/video_new_icon" />
+        android:textSize="8sp"
+        android:clickable="false"
+        android:focusable="false"/>
     
     <ImageView 
         android:id="@+id/mPreView2"
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/photo_preview_icon" />
+        android:src="@drawable/photo_preview_icon"
+        android:visibility="gone"/>
 
     <RelativeLayout 
     	    android:id="@+id/mTMLayout2"

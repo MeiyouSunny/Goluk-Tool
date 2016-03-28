@@ -26,6 +26,7 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
+import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -213,7 +214,7 @@ public class LocalFragment extends Fragment{
 							// 点击列表左边项,跳转到视频播放页面
 
 							VideoInfo info1 = d.getVideoInfo1();
-							gotoVideoPlayPage(2, info1.videoPath, info1.videoCreateDate, info1.videoHP, info1.videoSize);
+							gotoVideoPlayPage(getVideoType(info1.filename), info1.videoPath, info1.videoCreateDate, info1.videoHP, info1.videoSize);
 							String filename = d.getVideoInfo1().filename;
 							updateNewState(filename);
 
@@ -346,17 +347,25 @@ public class LocalFragment extends Fragment{
 	 */
 	private void gotoVideoPlayPage(int type, String path, String createTime, String videoHP, String size) {
 		if (!TextUtils.isEmpty(path)) {
+			
+			if(!"0".equals(mFragmentAlbum.mPlatform)){
+				if(type != 3){//不是循环视频
+					Intent intent = new Intent(getActivity(), VideoEditActivity.class);
 
-			Intent intent = null;
-//			if (1 == type) {
-//				intent = new Intent(this.getContext(), VitamioPlayerActivity.class);
-//			} else {
-//				intent = new Intent(this.getContext(), VideoPlayerActivity.class);
-//			}
-//			intent.putExtra("from", "local");
-//			intent.putExtra("path", path);
-//			this.getContext().startActivity(intent);
-			intent = new Intent(getContext(), PhotoAlbumPlayer.class);
+					int tempType = 2;
+					if (type == 1) {
+						tempType = 2;
+					}else if(type == 2){
+						tempType = 3;
+					}
+					intent.putExtra("type", tempType);
+					intent.putExtra("cn.com.mobnote.video.path", path);
+					getActivity().startActivity(intent);
+					return;
+				}
+			}
+
+			Intent intent = new Intent(getContext(), PhotoAlbumPlayer.class);
 			intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, "local");
 			intent.putExtra(PhotoAlbumPlayer.PATH, path);
 			intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
@@ -364,6 +373,16 @@ public class LocalFragment extends Fragment{
 			intent.putExtra(PhotoAlbumPlayer.SIZE, size);
 			intent.putExtra(PhotoAlbumPlayer.TYPE, type);
 			getContext().startActivity(intent);
+		}
+	}
+	
+	public int getVideoType(String name){
+		if(name.indexOf("WND") >= 0){
+			return 1;
+		}else if(name.indexOf("URG") >= 0){
+			return 2;
+		}else{
+			return 3;
 		}
 	}
 	
