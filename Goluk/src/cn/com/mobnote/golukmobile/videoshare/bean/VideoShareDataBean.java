@@ -1,8 +1,8 @@
-package cn.com.mobnote.golukmobile.videosuqare.bean;
+package cn.com.mobnote.golukmobile.videoshare.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-public class ShareVideoBean {
+public class VideoShareDataBean {
 	/**请求是否成功**/
 	@JSONField(name="result")
 	public String result;

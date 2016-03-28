@@ -13,7 +13,12 @@ import cn.com.mobnote.golukmobile.follow.bean.FollowRetBean;
 import cn.com.mobnote.golukmobile.followed.bean.FollowedListBean;
 import cn.com.mobnote.golukmobile.followed.bean.FollowedRecomUserBean;
 import cn.com.mobnote.golukmobile.followed.bean.FollowedRetBean;
+import cn.com.mobnote.golukmobile.followed.bean.FollowedVideoObjectBean;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
+import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
+import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.videoshare.ShareVideoShortUrlRequest;
+import cn.com.mobnote.golukmobile.videoshare.bean.VideoShareRetBean;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
 
@@ -23,6 +28,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +55,8 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 	private TextView mRetryClickIV;
 	private CustomLoadingDialog mLoadingDialog;
 	private final static String PROTOCOL = "200";
+	private SharePlatformUtil mSharePlatform = null;
+	private FollowedVideoObjectBean mVideoObjectBean;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -98,6 +106,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 
 		sendFollowedContentRequest(REFRESH_NORMAL, mTimeStamp);
 		mFollowedList = new ArrayList<Object>();
+		mSharePlatform = new SharePlatformUtil(getActivity());
 		return rootView;
 	}
 
@@ -138,6 +147,17 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 		if(null != app && app.isUserLoginSucess) {
 			if(!TextUtils.isEmpty(app.mCurrentUId)) {
 				request.get(PROTOCOL, linkuid, app.mCurrentUId);
+			}
+		}
+	}
+
+	protected void sendGetShareVideoUrlRequest(String videoId, String type) {
+		ShareVideoShortUrlRequest request = new ShareVideoShortUrlRequest(
+				IPageNotifyFn.PageType_GetShareURL, this);
+		GolukApplication app = GolukApplication.getInstance();
+		if(null != app && app.isUserLoginSucess) {
+			if(!TextUtils.isEmpty(app.mCurrentUId)) {
+				request.get(videoId, type);
 			}
 		}
 	}
@@ -302,7 +322,31 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 			} else {
 				Toast.makeText(getActivity(), "操作失败", Toast.LENGTH_SHORT).show();
 			}
+		} else if(requestType == IPageNotifyFn.PageType_GetShareURL) {
+			VideoShareRetBean bean = (VideoShareRetBean)result;
+			String shareurl = bean.data.shorturl;
+			String coverurl = bean.data.coverurl;
+			String describe = bean.data.describe;
+
+			String realDesc = getResources().getString(R.string.str_share_board_real_desc);
+			if (TextUtils.isEmpty(describe)) {
+				describe = getResources().getString(R.string.str_share_describe);
+			}
+			String ttl = getResources().getString(R.string.str_goluk_wonderful_video);
+
+			String videoId = null != mVideoObjectBean ? mVideoObjectBean.video.videoid
+					: "";
+			String username = null != mVideoObjectBean ? mVideoObjectBean.user.nickname
+					: "";
+			describe = username + this.getString(R.string.str_colon) + describe;
+			CustomShareBoard shareBoard = new CustomShareBoard(this.getActivity(), mSharePlatform, shareurl, coverurl,
+					describe, ttl, null, realDesc, videoId);
+			shareBoard.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 		}
+	}
+
+	protected void storeCurrentShareVideo(FollowedVideoObjectBean bean) {
+		mVideoObjectBean = bean;
 	}
 
 	private int findLinkUserItem(String linkuid) {

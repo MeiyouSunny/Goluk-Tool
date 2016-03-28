@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.videosuqare;
+package cn.com.mobnote.golukmobile.videoshare;
 
 import java.util.HashMap;
 
@@ -6,13 +6,13 @@ import android.text.TextUtils;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.http.request.GolukFastjsonRequest;
-import cn.com.mobnote.golukmobile.videosuqare.bean.ShareVideoResultBean;
+import cn.com.mobnote.golukmobile.videoshare.bean.VideoShareRetBean;
 import cn.com.tiros.api.Tapi;
 
-public class ShareVideoShortUrlRequest extends GolukFastjsonRequest<ShareVideoResultBean> {
+public class ShareVideoShortUrlRequest extends GolukFastjsonRequest<VideoShareRetBean> {
 
 	public ShareVideoShortUrlRequest(int requestType, IRequestResultListener listener) {
-		super(requestType, ShareVideoResultBean.class, listener);
+		super(requestType, VideoShareRetBean.class, listener);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -28,7 +28,7 @@ public class ShareVideoShortUrlRequest extends GolukFastjsonRequest<ShareVideoRe
 		return "shareVideoShortUrl";
 	}
 
-	public boolean get(String videoId,String type) {
+	public boolean get(String videoId, String type) {
 		if (TextUtils.isEmpty(videoId) || TextUtils.isEmpty(type)) {
 			return false;
 		}

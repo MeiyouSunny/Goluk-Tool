@@ -43,6 +43,9 @@ import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
+import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
+import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
+import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class GolukUtils {
@@ -850,5 +853,29 @@ public class GolukUtils {
 		}
 		return realZone;
 	}
-	
+
+	public static void startUserCenterActivity(Context context, String uid, String nickname,
+			String avatar, String customAvatar, String sex, String introduction) {
+		UCUserInfo user = new UCUserInfo();
+		user.uid = uid;
+		user.nickname = nickname;
+		user.headportrait = avatar;
+		user.introduce = introduction;
+		user.sex = sex;
+		user.customavatar = customAvatar;
+		user.praisemenumber = "0";
+		user.sharevideonumber = "0";
+		Intent i = new Intent(context, NewUserCenterActivity.class);
+		i.putExtra("userinfo", user);
+		i.putExtra("type", 0);
+		context.startActivity(i);
+	}
+
+	public static void startVideoDetailActivity(Context context, String videoId) {
+		Intent intent = null;
+		intent = new Intent(context, VideoDetailActivity.class);
+		intent.putExtra(VideoDetailActivity.VIDEO_ID, videoId);
+		intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
+		context.startActivity(intent);
+	}
 }

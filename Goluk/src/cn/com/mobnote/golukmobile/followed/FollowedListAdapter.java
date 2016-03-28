@@ -280,35 +280,36 @@ public class FollowedListAdapter extends BaseAdapter {
 		holderRec.nItemFirstVideoIV.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startVideoDetailActivity(firstVideoId);
+				GolukUtils.startVideoDetailActivity(mFragment.getActivity(), firstVideoId);
 			}
 		});
 
 		holderRec.nItemFirstVideoDesTV.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startVideoDetailActivity(firstVideoId);
+				GolukUtils.startVideoDetailActivity(mFragment.getActivity(), firstVideoId);
 			}
 		});
 
 		holderRec.nItemSecondVideoIV.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startVideoDetailActivity(secondVideoId);
+				GolukUtils.startVideoDetailActivity(mFragment.getActivity(), secondVideoId);
 			}
 		});
 
 		holderRec.nItemSecondVideoDesTV.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startVideoDetailActivity(secondVideoId);
+				GolukUtils.startVideoDetailActivity(mFragment.getActivity(), secondVideoId);
 			}
 		});
 
 		holderRec.nItemUserAvatarIV.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startUserCenterActivity(finalUserBean.uid, finalUserBean.nickname, finalUserBean.avatar,
+				GolukUtils.startUserCenterActivity(mFragment.getActivity(), finalUserBean.uid,
+						finalUserBean.nickname, finalUserBean.avatar,
 						finalUserBean.customavatar, finalUserBean.sex, finalUserBean.introduction);
 			}
 		});
@@ -316,7 +317,8 @@ public class FollowedListAdapter extends BaseAdapter {
 		holderRec.nItemNameTV.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startUserCenterActivity(finalUserBean.uid, finalUserBean.nickname, finalUserBean.avatar,
+				GolukUtils.startUserCenterActivity(mFragment.getActivity(), finalUserBean.uid,
+						finalUserBean.nickname, finalUserBean.avatar,
 						finalUserBean.customavatar, finalUserBean.sex, finalUserBean.introduction);
 			}
 		});
@@ -329,31 +331,6 @@ public class FollowedListAdapter extends BaseAdapter {
 		});
 
 		return convertView;
-	}
-
-	private void startUserCenterActivity(String uid, String nickname,
-			String avatar, String customAvatar, String sex, String introduction) {
-		UCUserInfo user = new UCUserInfo();
-		user.uid = uid;
-		user.nickname = nickname;
-		user.headportrait = avatar;
-		user.introduce = introduction;
-		user.sex = sex;
-		user.customavatar = customAvatar;
-		user.praisemenumber = "0";
-		user.sharevideonumber = "0";
-		Intent i = new Intent(mFragment.getActivity(), NewUserCenterActivity.class);
-		i.putExtra("userinfo", user);
-		i.putExtra("type", 0);
-		mFragment.getActivity().startActivity(i);
-	}
-
-	private void startVideoDetailActivity(String videoId) {
-		Intent intent = null;
-		intent = new Intent(mFragment.getActivity(), VideoDetailActivity.class);
-		intent.putExtra(VideoDetailActivity.VIDEO_ID, videoId);
-		intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
-		mFragment.getActivity().startActivity(intent);
 	}
 
 	public String get2FollowLinkList(int index) {
@@ -651,10 +628,21 @@ public class FollowedListAdapter extends BaseAdapter {
 			return;
 		}
 
-		FollowedVideoObjectBean videoObjectBean = (FollowedVideoObjectBean) mList.get(index);
+		final FollowedVideoObjectBean videoObjectBean = (FollowedVideoObjectBean) mList.get(index);
 		// 分享监听
 //		VideoItemShareClickListener tempShareListener = new VideoItemShareClickListener(mContext, mVideoSquareInfo, mNewestListView);
 //		viewHolder.shareText.setOnClickListener(tempShareListener);
+
+		final String videoId = videoObjectBean.video.videoid;
+		final String type = videoObjectBean.video.type;
+		viewHolder.shareText.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mFragment.sendGetShareVideoUrlRequest(videoId, type);
+				mFragment.storeCurrentShareVideo(videoObjectBean);
+			}
+		});
+
 //		// 举报监听
 		viewHolder.function.setOnClickListener(new VideoItemFunctionClickListener(mFragment.getActivity(), videoObjectBean, false, null));
 //		// 评论监听
@@ -680,26 +668,12 @@ public class FollowedListAdapter extends BaseAdapter {
 		viewHolder.rlUserInfo.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startUserCenter(vsInfo);
+				GolukUtils.startUserCenterActivity(mFragment.getActivity(),
+						vsInfo.user.uid, vsInfo.user.nickname,
+						vsInfo.user.headportrait, vsInfo.user.customavatar,
+						vsInfo.user.sex, "");
 			}
 		});
-	}
-
-	public void startUserCenter(FollowedVideoObjectBean videoObjectBean) {
-		UCUserInfo user = new UCUserInfo();
-		user.uid = videoObjectBean.user.uid;
-		user.nickname = videoObjectBean.user.nickname;
-		user.headportrait = videoObjectBean.user.headportrait;
-		user.introduce = "";
-		user.sex = videoObjectBean.user.sex;
-		user.customavatar = videoObjectBean.user.customavatar;
-		user.praisemenumber = "0";
-		user.sharevideonumber = "0";
-//		Intent i = new Intent(mContext, UserCenterActivity.class);
-		Intent i = new Intent(mFragment.getActivity(), NewUserCenterActivity.class);
-		i.putExtra("userinfo", user);
-		i.putExtra("type", 0);
-		mFragment.getActivity().startActivity(i);
 	}
 
 	private void showReplyText(TextView view, String nikename, String replyName, String text) {
