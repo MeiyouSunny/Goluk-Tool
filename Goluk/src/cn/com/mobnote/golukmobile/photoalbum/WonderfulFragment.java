@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -26,7 +27,9 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import cn.com.mobnote.eventbus.EventDownloadIpcVid;
+import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
@@ -99,27 +102,34 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		
+		if(mWonderfulVideoView == null){
+			EventBus.getDefault().register(this);
+			if (mWonderfulVideoView == null) {
+				mWonderfulVideoView = inflater.inflate(R.layout.wonderful_listview,(ViewGroup) getActivity().findViewById(R.id.viewpager),false);
+			}
 
-		EventBus.getDefault().register(this);
-		if (mWonderfulVideoView == null) {
-			mWonderfulVideoView = inflater.inflate(R.layout.wonderful_listview,(ViewGroup) getActivity().findViewById(R.id.viewpager),false);
+			if (null != GolukApplication.getInstance().getIPCControlManager()) {
+				GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT, this);
+			}
+
+			mFragmentAlbum = (FragmentAlbum) getParentFragment();
+			mDataList = new ArrayList<VideoInfo>();
+			mDoubleDataList = new ArrayList<DoubleVideoInfo>();
+			mGroupListName = new ArrayList<String>();
+
+			// mCloudVideoListView = new CloudVideoManager(this.getContext());
+			screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
+			mWonderfulVideoView = inflater.inflate(R.layout.wonderful_listview, null, false);
+			density = SoundUtils.getInstance().getDisplayMetrics().density;
+			initView();
 		}
-
-		if (null != GolukApplication.getInstance().getIPCControlManager()) {
-			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT, this);
+		
+		ViewGroup parent = (ViewGroup) mWonderfulVideoView.getParent();
+		if(parent != null){
+			parent.removeView(mWonderfulVideoView);
 		}
-
-		mFragmentAlbum = (FragmentAlbum) getParentFragment();
-		mDataList = new ArrayList<VideoInfo>();
-		mDoubleDataList = new ArrayList<DoubleVideoInfo>();
-		mGroupListName = new ArrayList<String>();
-
-		// mCloudVideoListView = new CloudVideoManager(this.getContext());
-		screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-		mWonderfulVideoView = inflater.inflate(R.layout.wonderful_listview, null, false);
-		density = SoundUtils.getInstance().getDisplayMetrics().density;
-		initView();
-
+		
 		return mWonderfulVideoView;
 	}
 	
@@ -129,6 +139,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 		super.onDestroyView();
 		EventBus.getDefault().unregister(this);
 	}
+	
 	
 	/**
 	 * 删除本地视频event
@@ -422,6 +433,18 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 						}
 					}
 				});
+		
+		empty.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				if(GolukApplication.getInstance().isIpcLoginSuccess == false){
+					Intent intent = new Intent(getActivity(),
+							CarRecorderActivity.class);
+					startActivity(intent);
+				}
+			}
+		});
 
 	}
 
@@ -531,15 +554,17 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 				isGetFileListDataing = false;
 			}
 		}else{
+			mFragmentAlbum.setEditBtnState(false);
+			empty.setText(getActivity().getResources().getString(R.string.photoalbum_no_ipc_connect_text));
 			empty.setVisibility(View.VISIBLE);
 			mStickyListHeadersListView.setVisibility(View.GONE);
 		}
-
 	
 
 	}
 
 	private void updateEditState(boolean isHasData) {
+		mFragmentAlbum.setEditBtnState(isHasData);
 		/*
 		 * GolukDebugUtils.e("",
 		 * "Album------WondowvideoListView------updateEditState" + isHasData);
@@ -551,6 +576,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	private void checkListState() {
 		if (mDataList.size() <= 0) {
 			empty.setVisibility(View.VISIBLE);
+			empty.setText(getActivity().getResources().getString(R.string.photoalbum_no_video_text));
 			mStickyListHeadersListView.setVisibility(View.GONE);
 			updateEditState(false);
 		} else {

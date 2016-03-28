@@ -58,24 +58,33 @@ public class LocalFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		EventBus.getDefault().register(this);
-        
-        mFragmentAlbum = (FragmentAlbum)getParentFragment();
-		mLocalVideoView = inflater.inflate(R.layout.wonderful_listview, (ViewGroup)getActivity().findViewById(R.id.viewpager), false);
-		density = SoundUtils.getInstance().getDisplayMetrics().density;
-		
-		this.mDataList = new ArrayList<VideoInfo>();
-		this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
-		this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-		initView();
-		if(mFragmentAlbum.mCurrentType == 0){
-			loadData(IPCManagerFn.TYPE_SHORTCUT, true);
-		}else{
-			loadData(IPCManagerFn.TYPE_SHORTCUT, false);
+		if(mLocalVideoView == null){
+			EventBus.getDefault().register(this);
+	        
+	        mFragmentAlbum = (FragmentAlbum)getParentFragment();
+			mLocalVideoView = inflater.inflate(R.layout.wonderful_listview, (ViewGroup)getActivity().findViewById(R.id.viewpager), false);
+			density = SoundUtils.getInstance().getDisplayMetrics().density;
+			
+			this.mDataList = new ArrayList<VideoInfo>();
+			this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
+			this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
+			initView();
 		}
+		
+		ViewGroup parent = (ViewGroup) mLocalVideoView.getParent();
+		if(parent != null){
+			parent.removeView(mLocalVideoView);
+		}
+		
+//		if(mFragmentAlbum.mCurrentType == 0){
+//			loadData(IPCManagerFn.TYPE_SHORTCUT, true);
+//		}else{
+//			loadData(IPCManagerFn.TYPE_SHORTCUT, false);
+//		}
 		
 		return mLocalVideoView;
 	}
+	
 	
 	@Override
 	public void onDestroyView() {
@@ -231,15 +240,13 @@ public class LocalFragment extends Fragment{
 
 	}
 	
-	public void loadData(int type, boolean flag) {
+	public void loadData(boolean flag) {
 		if (flag) {
-			if (IPCManagerFn.TYPE_SHORTCUT == type) {
 				if (!mCustomProgressDialog.isShowing()) {
 					mCustomProgressDialog.show();
 				}
-			}
 		}
-		LocalDataLoadAsyncTask task = new LocalDataLoadAsyncTask(type, new DataCallBack() {
+		LocalDataLoadAsyncTask task = new LocalDataLoadAsyncTask(IPCManagerFn.TYPE_SHORTCUT, new DataCallBack() {
 			@Override
 			public void onSuccess(int type, List<VideoInfo> mLocalListData, List<String> mGroupListName) {
 				mDataList.clear();
@@ -274,12 +281,14 @@ public class LocalFragment extends Fragment{
 			updateEditState(false);
 		} else {
 			updateEditState(true);
+			//empty.setText(getActivity().getResources().getString(R.string.photoalbum_no_video_text));
 			mStickyListHeadersListView.setVisibility(View.VISIBLE);
 		}
 	}
 	
 	private void updateEditState(boolean isHasData) {
 		GolukDebugUtils.e("", "Album------WondowvideoListView------updateEditState" + isHasData);
+		mFragmentAlbum.setEditBtnState(isHasData);
 //		if (null == mLocalVideoListView) {
 //			return;
 //		}

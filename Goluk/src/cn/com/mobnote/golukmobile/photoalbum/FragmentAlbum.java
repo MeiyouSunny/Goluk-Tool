@@ -71,45 +71,53 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		View rootView = inflater.inflate(R.layout.photo_album, null);
-		mAlbumRootView = rootView;
-		editState = false;
-		mViewPager = (CustomViewPager) mAlbumRootView.findViewById(R.id.viewpager);
-		mViewPager.setOffscreenPageLimit(1);
-		mLocalFragment = new LocalFragment();
-		mWonderfulFragment = new WonderfulFragment(); //WonderfulFragment.newInstance(IPCManagerFn.TYPE_SHORTCUT, IPCManagerFn.TYPE_SHORTCUT);
-		mLoopFragment = new  LoopFragment();//newInstance(IPCManagerFn.TYPE_CIRCULATE, IPCManagerFn.TYPE_CIRCULATE);
-		mUrgentFragment = new UrgentFragment(); //newInstance(IPCManagerFn.TYPE_URGENT, IPCManagerFn.TYPE_URGENT);
-		selectedListData = new ArrayList<String>();
+		if(mAlbumRootView == null){
+			mAlbumRootView = inflater.inflate(R.layout.photo_album, null);
 
-		fragmentList = new ArrayList<Fragment>();
-		fragmentList.add(mLocalFragment);
-		fragmentList.add(mWonderfulFragment);
-		fragmentList.add(mUrgentFragment);
-		fragmentList.add(mLoopFragment);
+			editState = false;
+			mViewPager = (CustomViewPager) mAlbumRootView.findViewById(R.id.viewpager);
+			mViewPager.setOffscreenPageLimit(1);
+			mLocalFragment = new LocalFragment();
+			mWonderfulFragment = new WonderfulFragment(); //WonderfulFragment.newInstance(IPCManagerFn.TYPE_SHORTCUT, IPCManagerFn.TYPE_SHORTCUT);
+			mLoopFragment = new  LoopFragment();//newInstance(IPCManagerFn.TYPE_CIRCULATE, IPCManagerFn.TYPE_CIRCULATE);
+			mUrgentFragment = new UrgentFragment(); //newInstance(IPCManagerFn.TYPE_URGENT, IPCManagerFn.TYPE_URGENT);
+			selectedListData = new ArrayList<String>();
 
-		initView();
-		mViewPager.setAdapter(new MyViewPagerAdapter(getChildFragmentManager()));
-		mViewPager.addOnPageChangeListener(new OnPageChangeListener() {
+			fragmentList = new ArrayList<Fragment>();
+			fragmentList.add(mLocalFragment);
+			fragmentList.add(mWonderfulFragment);
+			fragmentList.add(mUrgentFragment);
+			fragmentList.add(mLoopFragment);
+			initView();
+			mViewPager.setAdapter(new MyViewPagerAdapter(getChildFragmentManager()));
+			mViewPager.addOnPageChangeListener(new OnPageChangeListener() {
 
-			@Override
-			public void onPageSelected(int position) {
-				mCurrentType = position;
-				setItemLineState(position);
-			}
+				@Override
+				public void onPageSelected(int position) {
+					mCurrentType = position;
+					setItemLineState(position);
+				}
 
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				@Override
+				public void onPageScrolled(int arg0, float arg1, int arg2) {
 
-			}
+				}
 
-			@Override
-			public void onPageScrollStateChanged(int arg0) {
+				@Override
+				public void onPageScrollStateChanged(int arg0) {
 
-			}
-		});
+				}
+			});
+			
+			mLocalFragment.loadData(false);
+		}
+		
+		ViewGroup parent = (ViewGroup) mAlbumRootView.getParent();
+		if(parent != null){
+			parent.removeView(mAlbumRootView);
+		}
 
-		return rootView;
+		return mAlbumRootView;
 	}
 
 	public void initView() {
@@ -154,7 +162,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 		mTabUrgent.setTextColor(this.getResources().getColor(R.color.wonderful_item_nor_color));
 		mTabLoop.setTextColor(this.getResources().getColor(R.color.wonderful_item_nor_color));
 		if (position == 0) {
-			mLocalFragment.loadData(IPCManagerFn.TYPE_SHORTCUT, true);
+			mLocalFragment.loadData(true);
 			mTabLocal.setTextColor(this.getResources().getColor(R.color.wonderful_item_sel_color));
 		} else if (position == 1) {
 			mWonderfulFragment.loadData(GolukApplication.getInstance().isIpcLoginSuccess);
@@ -387,14 +395,14 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 	}
 	
 	public void setEditBtnState(boolean isShow) {
-//		if (null == mEditBtn) {
-//			return;
-//		}
-//		if (isShow) {
-//			mEditBtn.setVisibility(View.VISIBLE);
-//		} else {
-//			mEditBtn.setVisibility(View.GONE);
-//		}
+		if (null == mEditBtn) {
+			return;
+		}
+		if (isShow) {
+			mEditBtn.setVisibility(View.VISIBLE);
+		} else {
+			mEditBtn.setVisibility(View.GONE);
+		}
 	}
 	
 	/**

@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -26,6 +27,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import cn.com.mobnote.eventbus.EventDownloadIpcVid;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
@@ -43,7 +45,7 @@ import de.greenrobot.event.EventBus;
 
 
 public class UrgentFragment extends Fragment implements IPCManagerFn{
-private View mWonderfulVideoView;
+	private View mUrgentVideoView;
 	
 	/** 列表数据加载中标识 */
 	private boolean isGetFileListDataing = false;
@@ -101,24 +103,31 @@ private View mWonderfulVideoView;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
-		EventBus.getDefault().register(this);
-		if (null != GolukApplication.getInstance().getIPCControlManager()) {
-			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_URGENT, this);
+		
+		if(mUrgentVideoView == null){
+			EventBus.getDefault().register(this);
+			if (null != GolukApplication.getInstance().getIPCControlManager()) {
+				GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_URGENT, this);
+			}
+			
+			mFragmentAlbum = (FragmentAlbum)getParentFragment();
+			this.mDataList = new ArrayList<VideoInfo>();
+			this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
+			this.mGroupListName = new ArrayList<String>();
+			
+//			mCloudVideoListView = new CloudVideoManager(this.getContext());
+			this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
+			this.mUrgentVideoView = inflater.inflate(R.layout.wonderful_listview, null, false);
+			this.density = SoundUtils.getInstance().getDisplayMetrics().density;
+			initView();
 		}
 		
-		mFragmentAlbum = (FragmentAlbum)getParentFragment();
-		this.mDataList = new ArrayList<VideoInfo>();
-		this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
-		this.mGroupListName = new ArrayList<String>();
+		ViewGroup parent = (ViewGroup) mUrgentVideoView.getParent();
+		if(parent != null){
+			parent.removeView(mUrgentVideoView);
+		}
 		
-//		mCloudVideoListView = new CloudVideoManager(this.getContext());
-		this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-		this.mWonderfulVideoView = inflater.inflate(R.layout.wonderful_listview, null, false);
-		this.density = SoundUtils.getInstance().getDisplayMetrics().density;
-		initView();
-		
-		return mWonderfulVideoView;
+		return mUrgentVideoView;
 	}
 	
 	@Override
@@ -225,9 +234,9 @@ private View mWonderfulVideoView;
 	}
 	
 	private void initView() {
-		empty = (TextView) mWonderfulVideoView.findViewById(R.id.empty);
+		empty = (TextView) mUrgentVideoView.findViewById(R.id.empty);
 		this.mCustomProgressDialog = new CustomLoadingDialog(this.getContext(), null);
-		mStickyListHeadersListView = (StickyListHeadersListView) mWonderfulVideoView.findViewById(R.id.mStickyListHeadersListView);
+		mStickyListHeadersListView = (StickyListHeadersListView) mUrgentVideoView.findViewById(R.id.mStickyListHeadersListView);
 		mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(this.getContext(), (FragmentAlbum)getParentFragment(), mStickyListHeadersListView);
 		setListener();
 	}
@@ -334,6 +343,18 @@ private View mWonderfulVideoView;
 							mCloudWonderfulVideoAdapter.notifyDataSetChanged();
 						}
 					}
+				}
+			}
+		});
+		
+		empty.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				if(GolukApplication.getInstance().isIpcLoginSuccess == false){
+					Intent intent = new Intent(getActivity(),
+							CarRecorderActivity.class);
+					startActivity(intent);
 				}
 			}
 		});
@@ -446,12 +467,15 @@ private View mWonderfulVideoView;
 				isGetFileListDataing = false;
 			}
 		}else{
+			mFragmentAlbum.setEditBtnState(false);
 			empty.setVisibility(View.VISIBLE);
+			empty.setText(getActivity().getResources().getString(R.string.photoalbum_no_ipc_connect_text));
 			mStickyListHeadersListView.setVisibility(View.GONE);
 		}
 	}
 	
 	private void updateEditState(boolean isHasData) {
+		mFragmentAlbum.setEditBtnState(isHasData);
 		/*GolukDebugUtils.e("", "Album------WondowvideoListView------updateEditState" + isHasData);
 		if (null == mCloudVideoListView) {
 			return;
@@ -461,6 +485,7 @@ private View mWonderfulVideoView;
 	
 	private void checkListState() {
 		if (mDataList.size() <= 0) {
+			empty.setText(getActivity().getResources().getString(R.string.photoalbum_no_video_text));
 			empty.setVisibility(View.VISIBLE);
 			mStickyListHeadersListView.setVisibility(View.GONE);
 			updateEditState(false);

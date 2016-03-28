@@ -405,6 +405,7 @@
     <string name="photoalbum_local_video_text">本地视频</string>
     <string name="photoalbum_cloud_video_text">记录仪视频</string>
     <string name="photoalbum_no_video_text">当前没有视频</string>
+    <string name="photoalbum_no_ipc_connect_text">未连接行车记录仪</string>
     <string name="short_input_ok">完成</string>
     <string name="short_input_cancel">取消</string>
     <string name="str_shortshare_other">说点其它的！</string>
