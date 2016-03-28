@@ -115,7 +115,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		// TODO Auto-generated method stub
 		View rootView = inflater.inflate(R.layout.index_more, null);
 		mMineRootView = (LinearLayout) rootView;
-		
+
 		EventBus.getDefault().register(this);
 
 		ma = (MainActivity) getActivity();
@@ -142,8 +142,6 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		int msgCount = MessageManager.getMessageManager().getMessageTotalCount();
 		setMessageTipCount(msgCount);
 	}
-	
-	
 
 	@Override
 	public void onDestroyView() {
@@ -298,11 +296,11 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			break;
 		case R.id.user_share:
 			if(isLoginInfoValid()){
-				
+				intentToUserCenter();
 			}else{
 				clickToLogin(TYPE_SHARE_PRAISE);
 			}
-			break;
+				
 		case R.id.user_praise:
 			if(isLoginInfoValid()){
 				
