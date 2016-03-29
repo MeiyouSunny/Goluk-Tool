@@ -28,6 +28,7 @@ import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventIpcConnState;
 import cn.com.mobnote.eventbus.EventMessageUpdate;
 import cn.com.mobnote.eventbus.EventPhotoUpdateLoginState;
+import cn.com.mobnote.eventbus.EventUserLoginRet;
 import cn.com.mobnote.golukmobile.ImageClipActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.PushSettingActivity;
@@ -1096,6 +1097,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			isUserLoginSucess = true;
 
 			EventBus.getDefault().post(new EventMessageUpdate(EventConfig.MESSAGE_REQUEST));
+			EventBus.getDefault().post(new EventUserLoginRet(EventConfig.USER_LOGIN_RET, true));
 			this.showContinuteLive();
 			GolukDebugUtils.e(null, "jyf---------GolukApplication---------mCCurl:" + mCCUrl + " uid:" + mCurrentUId
 					+ " aid:" + mCurrentAid);

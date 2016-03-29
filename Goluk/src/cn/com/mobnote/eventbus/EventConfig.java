@@ -61,4 +61,7 @@ public class EventConfig {
 	public final static int PHOTO_ALBUM_REMOVE_HANLDER = 1003;
 	/**告诉activity  delayed handler消息**/
 	public final static int PHOTO_ALBUM_DELAYED_HANLDER = 1004;
+
+	/** User login result */
+	public final static int USER_LOGIN_RET = 1005;
 }
