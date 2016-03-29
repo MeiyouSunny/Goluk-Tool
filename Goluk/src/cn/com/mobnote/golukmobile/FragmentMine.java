@@ -34,14 +34,12 @@ import cn.com.mobnote.golukmobile.msg.MessageCenterActivity;
 import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
 import cn.com.mobnote.golukmobile.praised.MyPraisedActivity;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
-import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.manager.MessageManager;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
-import cn.com.mobnote.util.StartIntentUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
@@ -299,7 +297,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			break;
 		case R.id.user_share:
 			if(isLoginInfoValid()){
-				intentToUserCenter();
+				GolukUtils.startUserCenterActivity(getActivity(), userUId, userName, userHead, customavatar, userSex, userDesc);
 			}else{
 				clickToLogin(TYPE_SHARE_PRAISE);
 			}
@@ -314,6 +312,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		case R.id.user_follow:
 			if (isLoginInfoValid()) {
 				intent = new Intent(getActivity(),FollowingListActivity.class);
+				intent.putExtra("linkuid", ma.mApp.getMyInfo().uid);
 				getActivity().startActivity(intent);
 				
 			}else{
@@ -323,7 +322,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		// 点击跳转到我的主页
 		case R.id.user_center_item:
 			if (isLoginInfoValid()) {
-				intentToUserCenter();
+				GolukUtils.startUserCenterActivity(getActivity(), userUId, userName, userHead, customavatar, userSex, userDesc);
 			}else{
 				clickToLogin(TYPE_USER);
 			}
@@ -470,23 +469,6 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		mEditor.commit();
 
 		getActivity().startActivity(itNo);
-	}
-
-	/**
-	 * 点击个人中心跳转到个人主页
-	 */
-	private void intentToUserCenter() {
-		UCUserInfo user = new UCUserInfo();
-		user.uid = userUId;
-		user.nickname = userName;
-		user.headportrait = userHead;
-		user.introduce = userDesc;
-		user.sex = userSex;
-		user.customavatar = customavatar;
-		user.praisemenumber = praiseCount + "";
-		user.sharevideonumber = shareCount + "";
-
-		StartIntentUtils.intentToUserCenter(getActivity(), user);
 	}
 
 	private void dismissDialog() {

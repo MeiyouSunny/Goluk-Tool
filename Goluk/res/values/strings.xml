@@ -176,6 +176,8 @@
     <string name="ipc_upgrade_new_text">当前极路客固件版本已是最新</string>
     <string name="ipc_upgrade_voice_text">请耐心等待升级成功后的语音提示</string>
     <string name="shopping_text">去商店</string>
+    <string name="no_following_tips">没有关注的人，好任性啊</string>
+    <string name="no_fans_tips">没有粉丝，好可怜啊</string>
     <string name="cache_size_text">3.15M</string>
     <string name="user_immediately_ok">立即登录</string>
     <string name="user_immediately_regist">马上注册</string>
@@ -1001,5 +1003,10 @@
     <string name="str_usercenter_recommend_video">当前还没有被推荐的视频</string>
     <string name="str_usercenter_headlines_video">当前还没有入选头条的视频</string>
     <string name="str_usercenter_login_hint_text">请登录后再操作</string>
+    
+    <string name="str_confirm_cancel_follow">确定取消关注？</string>
+    <string name="str_follow_fail">关注失败</string>
+    <string name="str_cancel_follow_fail">取消关注失败</string>
+    
     
 </resources>

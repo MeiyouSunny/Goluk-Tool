@@ -3,12 +3,13 @@ package cn.com.mobnote.golukmobile.following;
 import java.util.HashMap;
 
 import cn.com.mobnote.golukmobile.followed.bean.FollowedRetBean;
+import cn.com.mobnote.golukmobile.following.bean.FollowingRetBean;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.http.request.GolukFastjsonRequest;
 
-public class FollowingListRequest extends GolukFastjsonRequest<FollowedRetBean> {
+public class FollowingListRequest extends GolukFastjsonRequest<FollowingRetBean> {
 	public FollowingListRequest(int requestType, IRequestResultListener listener) {
-		super(requestType, FollowedRetBean.class, listener);
+		super(requestType, FollowingRetBean.class, listener);
 	}
 
 	@Override
