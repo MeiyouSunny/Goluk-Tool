@@ -385,7 +385,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mBindPhone.setVisibility(View.GONE);
 		GolukUtils.showToast(mContext, this.getResources().getString(R.string.str_loginout_success));
 		btnLoginout.setText(this.getResources().getString(R.string.login_text));
-		MessageManager.getMessageManager().setMessageEveryCount(0, 0, 0);
+		MessageManager.getMessageManager().setMessageEveryCount(0, 0, 0,0);
 		GolukNotification.getInstance().clearAllNotification(this);
 	}
 

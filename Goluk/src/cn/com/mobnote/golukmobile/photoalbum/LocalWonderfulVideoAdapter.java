@@ -97,8 +97,8 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 			holder.image2 = (ImageView) convertView.findViewById(R.id.video_first_needle2);
 			//holder.mVideoCountTime1 = (TextView) convertView.findViewById(R.id.video_countTime1);
 			//holder.mVideoCountTime2 = (TextView) convertView.findViewById(R.id.video_countTime2);
-			//holder.mVideoQuality1 = (ImageView) convertView.findViewById(R.id.video_quality1);
-			//holder.mVideoQuality2 = (ImageView) convertView.findViewById(R.id.video_quality2);
+			holder.mVideoQuality1 = (TextView) convertView.findViewById(R.id.video_quality1);
+			holder.mVideoQuality2 = (TextView) convertView.findViewById(R.id.video_quality2);
 			holder.mVideoCreateTime1 = (TextView) convertView.findViewById(R.id.video_createtime1);
 			holder.mVideoCreateTime2 = (TextView) convertView.findViewById(R.id.video_createtime2);
 //			holder.mVideoSize1 = (TextView) convertView.findViewById(R.id.video_size1);
@@ -134,19 +134,20 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-
-		if ("local".equals(from)) {
-			holder.mPreView1.setImageResource(R.drawable.photo_preview_icon);
-			holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
-		} else {
-			if (type == IPCManagerFn.TYPE_CIRCULATE) {
-				holder.mPreView1.setImageResource(R.drawable.photo_preview_icon);
-				holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
-			} else {
-				holder.mPreView1.setImageResource(R.drawable.photo_share_icon);
-				holder.mPreView2.setImageResource(R.drawable.photo_share_icon);
-			}
+		
+		if("0".equals(mFragment.mPlatform)){
+			holder.mPreView1.setVisibility(View.GONE);
+			holder.mPreView2.setVisibility(View.GONE);
+			holder.mVideoQuality1.setVisibility(View.GONE);
+			holder.mVideoQuality2.setVisibility(View.GONE);
+		}else{
+			holder.mVideoQuality1.setVisibility(View.VISIBLE);
+			holder.mVideoQuality2.setVisibility(View.VISIBLE);
+			holder.mPreView1.setVisibility(View.VISIBLE);
+			holder.mPreView2.setVisibility(View.VISIBLE);
 		}
+
+		
 
 		holder.image1.setImageResource(R.drawable.tacitly_pic);
 		holder.image2.setImageResource(R.drawable.tacitly_pic);
@@ -164,9 +165,31 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		holder.mVideoCreateTime1.setText(mVideoInfo1.videoCreateDate.substring(11));
 //		holder.mVideoSize1.setText(mVideoInfo1.videoSize);
 //		holder.image1.setTag("image:" + mVideoInfo1.filename);
-		//displayVideoQuality(mVideoInfo1.videoHP, holder.mVideoQuality1);
+		displayVideoQuality(mVideoInfo1.videoHP, holder.mVideoQuality1);
 		loadImage(mVideoInfo1.filename, holder.image1);
 		int type = getVideoType(mVideoInfo1.filename);
+		
+		if (type != 3) {
+			holder.mPreView1.setImageResource(R.drawable.photo_share_icon);
+			holder.mPreView2.setImageResource(R.drawable.photo_share_icon);
+		} else {
+			holder.mPreView1.setImageResource(R.drawable.photo_preview_icon);
+			holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
+		}
+		
+		/*if ("local".equals(from)) {
+			holder.mPreView1.setImageResource(R.drawable.photo_preview_icon);
+			holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
+		} else {
+			if (type != 3) {
+				holder.mPreView1.setImageResource(R.drawable.photo_share_icon);
+				holder.mPreView2.setImageResource(R.drawable.photo_share_icon);
+			} else {
+				holder.mPreView1.setImageResource(R.drawable.photo_preview_icon);
+				holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
+			}
+		}*/
+		
 		if(type == 1){
 			holder.mVide1Type.setText(mContext.getResources().getString(R.string.str_wonderful_title));
 			holder.mVide1Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_wonderful_txt_color));
@@ -176,6 +199,7 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		}else{
 			holder.mVide1Type.setText(mContext.getResources().getString(R.string.str_loop_title));
 			holder.mVide1Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_loop_txt_color));
+			holder.mPreView1.setVisibility(View.GONE);
 		}
 
 		if (null != mVideoInfo2) {
@@ -185,7 +209,7 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 			holder.mVideoCreateTime2.setText(mVideoInfo2.videoCreateDate.substring(11));
 //			holder.mVideoSize2.setText(mVideoInfo2.videoSize);
 //			holder.image2.setTag("image:" + mVideoInfo2.filename);
-			//displayVideoQuality(mVideoInfo2.videoHP, holder.mVideoQuality2);
+			displayVideoQuality(mVideoInfo2.videoHP, holder.mVideoQuality2);
 			loadImage(mVideoInfo2.filename, holder.image2);
 
 //			if (mVideoInfo2.isNew) {
@@ -204,6 +228,7 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 			}else{
 				holder.mVide2Type.setText(mContext.getResources().getString(R.string.str_loop_title));
 				holder.mVide2Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_loop_txt_color));
+				holder.mPreView1.setVisibility(View.GONE);
 			}
 		}
 
@@ -330,11 +355,13 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	 * @author xuhw
 	 * @date 2015年6月8日
 	 */
-	private void displayVideoQuality(String videoHP, ImageView image) {
-		image.setVisibility(View.GONE);
+	private void displayVideoQuality(String videoHP, TextView text) {
 		if ("1080p".equals(videoHP)) {
-			image.setVisibility(View.VISIBLE);
-			image.setBackgroundResource(R.drawable.carrecorder_liveindex_icon_1080);
+			text.setText(mContext.getResources().getString(R.string.str_album_video_1080));
+		}else if("720p".equals(videoHP)){
+			text.setText(mContext.getResources().getString(R.string.str_album_video_720));
+		}else if("480p".equals(videoHP)){
+			text.setText(mContext.getResources().getString(R.string.str_album_video_480));
 		}
 	}
 
@@ -441,8 +468,8 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		ImageView image2;
 		//TextView mVideoCountTime1;
 		//TextView mVideoCountTime2;
-		//ImageView mVideoQuality1;
-		//ImageView mVideoQuality2;
+		TextView mVideoQuality1;
+		TextView mVideoQuality2;
 		TextView mVideoCreateTime1;
 		TextView mVideoCreateTime2;
 		//TextView mVideoSize1;

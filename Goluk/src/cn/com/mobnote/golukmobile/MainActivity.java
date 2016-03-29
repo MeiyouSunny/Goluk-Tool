@@ -1345,7 +1345,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				int praiseCount = 0;
 				int commentCount = 0;
 				int systemCount = 0;
-
+				int followCount = 0;
 				if (null != bean.data.messagecount.user) {
 					praiseCount = bean.data.messagecount.user.like;
 					commentCount = bean.data.messagecount.user.comment;
@@ -1354,7 +1354,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 					systemCount = bean.data.messagecount.system.total;
 				}
 
-				MessageManager.getMessageManager().setMessageEveryCount(praiseCount, commentCount, systemCount);
+				MessageManager.getMessageManager().setMessageEveryCount(praiseCount, commentCount,followCount, systemCount);
 			}
 		}
 	}
