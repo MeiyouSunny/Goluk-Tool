@@ -3,14 +3,13 @@ package cn.com.mobnote.golukmobile.following;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
-
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
@@ -21,19 +20,28 @@ import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.follow.FollowRequest;
-import cn.com.mobnote.golukmobile.followed.FollowedListRequest;
-import cn.com.mobnote.golukmobile.followed.bean.FollowedListBean;
-import cn.com.mobnote.golukmobile.followed.bean.FollowedRecomUserBean;
-import cn.com.mobnote.golukmobile.followed.bean.FollowedRetBean;
+import cn.com.mobnote.golukmobile.follow.bean.FollowRetBean;
 import cn.com.mobnote.golukmobile.following.bean.FollowingItemBean;
+import cn.com.mobnote.golukmobile.following.bean.FollowingRetBean;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
+/**
+ * 关注的用户列表
+ * @author leege100
+ *
+ */
 public class FollowingListActivity extends BaseActivity implements IRequestResultListener, OnClickListener,OnItemClickListener{
 	
-	private final static String TAG = "ActivityFollowing";
+	private final static String TAG = "ActivityFollowingList";
 	private final static String REFRESH_NORMAL = "0";
 	private final static String REFRESH_PULL_DOWN = "1";
 	private final static String REFRESH_PULL_UP = "2";
@@ -48,20 +56,23 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 	private String mCurMotion = REFRESH_NORMAL;
 	private final static String PROTOCOL = "200";
 	
-	private String linkuid;
-	private String index;
+	private String mLinkuid;
 	
-	FollowingListRequest request;
 	
-	private RelativeLayout mEmptyRL;
 	
+	private RelativeLayout mEmptyRl;
+	private TextView mEmptyTv;
+	
+	private CustomLoadingDialog mLoadingDialog;
+	private CustomDialog mCustomDialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setContentView(R.layout.activity_followinglist_layout);
 		super.onCreate(savedInstanceState);
-		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.activity_followinglist_layout);
+		
+		mLinkuid = getIntent().getStringExtra("linkuid");
 		
 		initView();
 		
@@ -70,9 +81,11 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 		setup();
 		
 	}
+	
 
 	private void setup() {
 		// TODO Auto-generated method stub
+		
 		mFollowingList = new ArrayList<FollowingItemBean>();
 		mFollowingListAdapter = new FollowingListAdapter(this,mFollowingList);
 		mFollowinglistPtrList.setAdapter(mFollowingListAdapter);
@@ -85,8 +98,8 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 				pullToRefreshBase.getLoadingLayoutProxy(true, false).setLastUpdatedLabel(
 						FollowingListActivity.this.getString(R.string.updating) +
 						GolukUtils.getCurrentFormatTime(FollowingListActivity.this));
-				sendFollowingListRequest(REFRESH_PULL_DOWN, index);
-				mCurMotion = REFRESH_PULL_DOWN;
+				sendFollowingListRequest(REFRESH_PULL_DOWN);
+				
 			}
 
 			@Override
@@ -94,52 +107,82 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 				pullToRefreshBase.getLoadingLayoutProxy(false, true).setPullLabel(
 						FollowingListActivity.this.getResources().getString(
 						R.string.goluk_pull_to_refresh_footer_pull_label));
-				sendFollowingListRequest(REFRESH_PULL_UP, index);
-				mCurMotion = REFRESH_PULL_UP;
+				sendFollowingListRequest(REFRESH_PULL_UP);
+				
 			}
 		});
 
-		sendFollowingListRequest(REFRESH_NORMAL, index);
+		sendFollowingListRequest(REFRESH_NORMAL);
 		
 	}
 	
-	private void sendFollowingListRequest(String op, String index) {
+	protected void follow(final String linkuid,final String type){
+		
+		if(mCustomDialog==null){
+			mCustomDialog = new CustomDialog(this);
+		}
+		
+		mCustomDialog.setMessage(this.getString(R.string.str_confirm_cancel_follow), Gravity.CENTER);
+		mCustomDialog.setLeftButton(this.getString(R.string.dialog_str_cancel), null);
+		mCustomDialog.setRightButton(this.getString(R.string.str_button_ok), new OnRightClickListener() {
+
+			@Override
+			public void onClickListener() {
+				// TODO Auto-generated method stub
+				mCustomDialog.dismiss();
+				sendFollowRequest( linkuid,  type);
+			}
+			
+		});
+		mCustomDialog.show();
+		
+	}
+	
+	private void sendFollowingListRequest(String op) {
+		
+		mCurMotion = op;
+		
+		String index = null;
 		String tmpOp = op;
 		if(REFRESH_PULL_DOWN.equals(op)) {
 			tmpOp = REFRESH_NORMAL;
 		}
 		
-		if(null == request){
-			request = new FollowingListRequest(IPageNotifyFn.PageType_Following, this);
-		}
-		
-		GolukApplication app = GolukApplication.getInstance();
-		if(null != app && app.isUserLoginSucess) {
-			if(!TextUtils.isEmpty(app.mCurrentUId)) {
-				request.get(PROTOCOL,linkuid,op,index,"20", app.mCurrentUId);
+		if(REFRESH_PULL_UP.equals(mCurMotion)) {
+			
+			if(mFollowingList != null && mFollowingList.size()>0){
+				index = mFollowingList.get(mFollowingList.size()-1).index;
+			}
+		} else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
+			if(mFollowingList != null &&  mFollowingList.size()>0){
+				index = mFollowingList.get(0).index;
 			}
 		}
 		
-//		FollowedListRequest request =
-//				new FollowedListRequest(IPageNotifyFn.PageType_FollowedContent, this);
-//		GolukApplication app = GolukApplication.getInstance();
-//		if(null != app && app.isUserLoginSucess) {
-//			if(!TextUtils.isEmpty(app.mCurrentUId)) {
-//				request.get(PROTOCOL, app.mCurrentUId, PAGESIZE, tmpOp, timeStamp);
-//			}
-//		}
-
-//		if(!mLoadingDialog.isShowing() && REFRESH_NORMAL.equals(op)) {
-//			mLoadingDialog.show();
-//		}
+		FollowingListRequest request = new FollowingListRequest(IPageNotifyFn.PageType_Following, this);
+		
+		GolukApplication app = GolukApplication.getInstance();
+		
+		if(null != app && app.isUserLoginSucess&&!TextUtils.isEmpty(app.mCurrentUId)) {
+			request.get(PROTOCOL,mLinkuid,tmpOp,index,"20", app.mCurrentUId);
+		}else{
+			request.get(PROTOCOL,mLinkuid,tmpOp,index,"20", null);
+		}
 	}
 
-	protected void sendFollowRequest(String linkuid, String type) {
-		FollowRequest request =
-				new FollowRequest(IPageNotifyFn.PageType_Follow, this);
+	private void sendFollowRequest(String linkuid, String type) {
+		
+		if(mLoadingDialog==null){
+			mLoadingDialog = new CustomLoadingDialog(this, null);
+		}
+		
+		FollowRequest request = new FollowRequest(IPageNotifyFn.PageType_Follow, this);
 		GolukApplication app = GolukApplication.getInstance();
 		if(null != app && app.isUserLoginSucess) {
 			if(!TextUtils.isEmpty(app.mCurrentUId)) {
+				if(!mLoadingDialog.isShowing()) {
+					mLoadingDialog.show();
+				}
 				request.get(PROTOCOL, linkuid, type, app.mCurrentUId);
 			}
 		}
@@ -150,6 +193,8 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 		mFollowinglistBackIb.setOnClickListener(this);
 		mFollowinglistTitleTv.setText(R.string.str_usercenter_header_attention_text);
 		
+		mEmptyRl.setOnClickListener(this);
+		
 	}
 
 	private void initView() {
@@ -158,6 +203,9 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 		mFollowinglistBackIb = (ImageButton) findViewById(R.id.ib_followinglist_back);
 		mFollowinglistTitleTv = (TextView) findViewById(R.id.tv_followinglist_title);
 		mFollowinglistPtrList = (PullToRefreshListView) findViewById(R.id.ptrlist_followinglist);
+		
+		mEmptyRl = (RelativeLayout) findViewById(R.id.ry_followinglist_refresh);
+		mEmptyTv = (TextView) findViewById(R.id.tv_followinglist_empty);
 		
 	}
 
@@ -183,6 +231,11 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+		if(mLoadingDialog!=null&&mLoadingDialog.isShowing()){
+			mLoadingDialog.close();
+		}
+		
+		mLoadingDialog = null;
 	}
 
 	@Override
@@ -198,138 +251,120 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 		case R.id.ib_followinglist_back:
 			FollowingListActivity.this.finish();
 			break;
+		case R.id.ry_followinglist_refresh:
+			sendFollowingListRequest(REFRESH_NORMAL);
+			break;
 		}
+		
 	}
 	
-	private void setEmptyView() {
+	private void setEmptyView(String emptyInfo) {
 		if(REFRESH_NORMAL.equals(mCurMotion)) {
-			mFollowinglistPtrList.setEmptyView(mEmptyRL);
+			mFollowinglistPtrList.setEmptyView(mEmptyRl);
 			mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
+			mEmptyTv.setText(emptyInfo);
 		}
 	}
 	protected final static String FOLLOWD_EMPTY = "FOLLOWED_EMPTY";
 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
-		// TODO Auto-generated method stub
-//		mFollowinglistPtrList.onRefreshComplete();
-//		if(null != mLoadingDialog) {
-//			mLoadingDialog.close();
-//		}
 
-//		if(requestType == IPageNotifyFn.PageType_FollowedContent) {
-//			mFollowinglistPtrList.onRefreshComplete();
-//			FollowedRetBean bean = (FollowedRetBean)result;
-//			if(null == bean) {
-//				Toast.makeText(FollowingListActivity.this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
-//				if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
-//					setEmptyView();
-//				}
-//				return;
-//			}
-//
-//			if(!bean.success) {
-//				if(!TextUtils.isEmpty(bean.msg)) {
-//					Toast.makeText(FollowingListActivity.this, bean.msg, Toast.LENGTH_SHORT).show();
-//				}
-//				setEmptyView();
-//				return;
-//			}
-//
-//			if(null == bean.data) {
-//				setEmptyView();
-//				return;
-//			}
-//
-//			if("1".equals(bean.data.result)) {
-//				Toast.makeText(FollowingListActivity.this, FollowingListActivity.this.getString(
-//						R.string.str_server_request_arg_error), Toast.LENGTH_SHORT).show();
-//				setEmptyView();
-//				return;
-//			}
-//
-//			if("2".equals(bean.data.result)) {
-//				Toast.makeText(FollowingListActivity.this, FollowingListActivity.this.getString(
-//						R.string.str_server_request_unknown_error), Toast.LENGTH_SHORT).show();
-//				setEmptyView();
-//				return;
-//			}
-//
-//			mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.BOTH);
-//
-//			List<FollowedListBean> followedBeanList = bean.data.list;
-//
-//			if(followedBeanList.size() == 0) {
-//				Toast.makeText(FollowingListActivity.this, getString(
-//						R.string.str_pull_refresh_listview_bottom_reach), Toast.LENGTH_SHORT).show();
-//			}
-//
-//			FollowedListBean last = bean.data.list.get(followedBeanList.size() - 1);
-//			if(null != last) {
-//			
-//			} else {
-//				return;
-//			}
-//
-//			List<FollowingItemBean> gotList = new ArrayList<FollowingItemBean>();
-//			// Refill to common list
-//			if("0".equals(bean.data.count)) {
-//				if(followedBeanList.size() == 1) {
-////					mFollowingList.add(new String(FOLLOWD_EMPTY));
-//				
-//					FollowedListBean followBean = followedBeanList.get(0);
-//					if("1".equals(followBean.type)) {
-//						List<FollowedRecomUserBean> userBeanList = followBean.recomuser;
-//						if(null != userBeanList && userBeanList.size() > 0) {
-//							int userCount = userBeanList.size();
-//							for(int j = 0; j < userCount; j++) {
-////								mFollowingList.add(userBeanList.get(j));
-//								gotList.add(userBeanList.get(j));
-//							}
-//						}
-//					}
-//				} else {
-//					// TODO: no recommend, no followed
-//				}
-//			} else {
-//				int count = followedBeanList.size();
-//				for(int i = 0; i < count; i++) {
-//					FollowedListBean followBean = followedBeanList.get(i);
-//					if("0".equals(followBean.type)) {
-////						mFollowingList.add(followBean.followvideo);
-//						gotList.add(followBean.followvideo);
-//					} else {
-//						List<FollowedRecomUserBean> userBeanList = followBean.recomuser;
-//						if(null != userBeanList && userBeanList.size() > 0) {
-//							int userCount = userBeanList.size();
-//							for(int j = 0; j < userCount; j++) {
-//								FollowedRecomUserBean tmpBean = userBeanList.get(j);
-//								tmpBean.position = j;
-////								mFollowingList.add(tmpBean);
-//								gotList.add(tmpBean);
-//							}
-//						}
-//					}
-//				}
-//			}
-//
-//			if(REFRESH_PULL_UP.equals(mCurMotion)) {
-//				mFollowingList.addAll(gotList);
-//				mFollowingListAdapter.notifyDataSetChanged();
-//			} else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
-////				mOfficialMsgList.clear();
-////				mOfficialMsgList.addAll(bean.data.messages);
-//				mFollowingList.clear();
-//				mFollowingList.addAll(gotList);
-//				mFollowingListAdapter.setData(mFollowingList);
-//			} else {
-//			}
-//
-////			if(mOfficialMsgList.size() < PAGESIZE) {
-////				mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-////			}
-//			mCurMotion = REFRESH_NORMAL;
-//		}
+		if(requestType == IPageNotifyFn.PageType_Following) {
+			
+			mFollowinglistPtrList.onRefreshComplete();
+			FollowingRetBean bean = (FollowingRetBean)result;
+			
+			if(null == bean) {
+				Toast.makeText(FollowingListActivity.this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+				if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
+					setEmptyView(getString(R.string.msg_system_connect_error));
+				}
+				return;
+			}
+
+			if(null == bean.data) {
+				setEmptyView(getString(R.string.no_following_tips));
+				return;
+			}
+
+			mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.BOTH);
+
+			List<FollowingItemBean> followingBeanList = bean.data.userlist;
+			
+			if(null == followingBeanList || followingBeanList.size() == 0) {
+				
+				if(REFRESH_PULL_UP.equals(mCurMotion)) {
+					
+					Toast.makeText(FollowingListActivity.this, getString(
+							R.string.str_pull_refresh_listview_bottom_reach), Toast.LENGTH_SHORT).show();
+					mCurMotion = REFRESH_NORMAL;
+					return;
+				}else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)){
+					setEmptyView(getString(R.string.no_following_tips));
+					return;
+				}	
+			}else{
+				if(REFRESH_PULL_UP.equals(mCurMotion)) {
+					mFollowingList.addAll(followingBeanList);
+					mFollowingListAdapter.notifyDataSetChanged();
+				} else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
+					mFollowingList.clear();
+					mFollowingList.addAll(followingBeanList);
+					mFollowingListAdapter.setData(mFollowingList);
+				} else {
+				}
+			}
+			mCurMotion = REFRESH_NORMAL;
+		}else if(requestType == IPageNotifyFn.PageType_Follow) {//关注
+			
+			FollowRetBean bean = (FollowRetBean)result;
+			if(null != bean) {
+				// User link uid to find the changed recommend user item status
+				int i = findLinkUserItem(bean.data.linkuid);
+				if(i >=0 && i < mFollowingList.size()) {
+					mFollowingList.remove(i);
+					mFollowingListAdapter.notifyDataSetChanged();
+					
+					if(mFollowingList==null||mFollowingList.size()<=0){
+						setEmptyView(getString(R.string.no_following_tips));
+					}
+					
+					if(bean.data!=null){
+						if(bean.data.link == FollowingConfig.LINK_TYPE_FAN_ONLY
+								||bean.data.link == FollowingConfig.LINK_TYPE_UNLINK){
+							Toast.makeText(FollowingListActivity.this,
+									getResources().getString(R.string.str_usercenter_attention_cancle_ok),Toast.LENGTH_SHORT).show();
+						}
+					}
+				}
+			} else {
+				// Toast for operation failed
+				Toast.makeText(FollowingListActivity.this, 
+						getResources().getString(R.string.str_cancel_follow_fail), Toast.LENGTH_SHORT).show();
+			}
+			
+			if(null!=mLoadingDialog&&mLoadingDialog.isShowing()){
+				mLoadingDialog.close();
+			}
+			
+		} 
 	}
 	
+	private int findLinkUserItem(String linkuid) {
+		if(null == mFollowingList || mFollowingList.size() == 0 || TextUtils.isEmpty(linkuid)) {
+			return -1;
+		}
+
+		int size = mFollowingList.size();
+		for(int i = 0; i < size; i++) {
+			FollowingItemBean bean = mFollowingList.get(i);
+			if(null != bean &&bean.uid.equals(linkuid)) {
+			
+				return i;
+			}
+		}
+
+		return -1;
+	}
 }

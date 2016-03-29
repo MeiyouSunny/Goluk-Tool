@@ -4,9 +4,8 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 public class FollowingRetBean {
 	
-	/**请求是否成功**/
-	@JSONField(name="success")
-	public boolean success;
+	@JSONField(name="code")
+	public int code;
 	
 	/**返回数据**/
 	@JSONField(name="data")
