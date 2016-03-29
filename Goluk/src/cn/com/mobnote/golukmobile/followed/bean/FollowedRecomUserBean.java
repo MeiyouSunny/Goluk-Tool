@@ -37,4 +37,5 @@ public class FollowedRecomUserBean {
 
 	// Record for the position in recommend user list
 	public int position;
+	public boolean showAllFollow;
 }

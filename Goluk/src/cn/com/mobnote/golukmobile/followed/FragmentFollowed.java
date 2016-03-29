@@ -310,7 +310,10 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 						if(null != userBeanList && userBeanList.size() > 0) {
 							int userCount = userBeanList.size();
 							for(int j = 0; j < userCount; j++) {
-								gotList.add(userBeanList.get(j));
+								FollowedRecomUserBean tmpBean = userBeanList.get(j);
+								tmpBean.position = j;
+								tmpBean.showAllFollow = true;
+								gotList.add(tmpBean);
 							}
 						}
 					}
@@ -330,6 +333,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 							for(int j = 0; j < userCount; j++) {
 								FollowedRecomUserBean tmpBean = userBeanList.get(j);
 								tmpBean.position = j;
+								tmpBean.showAllFollow = false;
 								gotList.add(tmpBean);
 							}
 						}

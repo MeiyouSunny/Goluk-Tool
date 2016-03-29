@@ -15,7 +15,6 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -91,6 +90,7 @@ import cn.com.tiros.api.Tapi;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.google.widget.FragmentTabHost;
 import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
@@ -184,9 +184,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		GolukDebugUtils.e("", "start App ------ MainActivity-----onCreate------------:");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.index);
-		
+
 		initTab();
-		
+
 		// 在使用SDK各组件之前初始化context信息，传入ApplicationContext
 		// 注意该方法要再setContentView方法之前实现
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
@@ -297,7 +297,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		
 		LayoutInflater inflater = LayoutInflater.from(this);
 		mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
-		mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
+		mTabHost.setup(this, getSupportFragmentManager(), R.id.fl_main_tab_content);
 
 		Bundle b = new Bundle();
 		b.putString("key", "Discover");
@@ -379,9 +379,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 //
 //				userInfoLayout.setVisibility(View.VISIBLE);
 //				videoSquareLayout.setVisibility(View.GONE);
-				Fragment fragment = getSupportFragmentManager().findFragmentByTag("Mine");
 //				indexMoreActivity.showView();
-				Log.d("CK1", "11111111111111111111111111111: " + fragment);
 			}
 		}
 

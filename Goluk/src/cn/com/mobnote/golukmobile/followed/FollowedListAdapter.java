@@ -201,6 +201,11 @@ public class FollowedListAdapter extends BaseAdapter {
 		holderRec.nItemSecondVideoViewTV.setText(recomUserBean.hotvideo.get(1).clickcount + "");
 		holderRec.nItemFirstVideoComTV.setText(recomUserBean.hotvideo.get(0).commentcount + "");
 		holderRec.nItemSecondVideoComTV.setText(recomUserBean.hotvideo.get(1).commentcount + "");
+		if(recomUserBean.showAllFollow) {
+			holderRec.nLabelFollowAllRL.setVisibility(View.VISIBLE);
+		} else {
+			holderRec.nLabelFollowAllRL.setVisibility(View.GONE);
+		}
 
 		if(null != recomUserBean && null != recomUserBean.certification) {
 			String approveLabel = recomUserBean.certification.isorgcertificated;
