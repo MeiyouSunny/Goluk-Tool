@@ -537,7 +537,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	}
 
 	public void loadData(boolean flag) {
-		if (isGetFileListDataing || (mDataList.size() != 0)) {
+		if (isGetFileListDataing) {
 			return;
 		}
 
@@ -548,6 +548,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 			empty.setVisibility(View.GONE);
 			mStickyListHeadersListView.setVisibility(View.VISIBLE);
 			isGetFileListDataing = true;
+			mDataList.clear();
 			boolean isSucess = GolukApplication
 					.getInstance()
 					.getIPCControlManager()

@@ -483,7 +483,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 	
 
 	public void loadData(boolean flag) {
-		if (isGetFileListDataing || (mDataList.size() != 0)) {
+		if (isGetFileListDataing) {
 			return;
 		}
 
@@ -494,6 +494,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 			empty.setVisibility(View.GONE);
 			mStickyListHeadersListView.setVisibility(View.VISIBLE);
 			isGetFileListDataing = true;
+			mDataList.clear();
 			boolean isSucess = GolukApplication
 					.getInstance()
 					.getIPCControlManager()
@@ -587,7 +588,6 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 						int type = IpcDataParser.parseVideoFileType(fileList
 								.get(0).filename);
 						if (type != IPCManagerFn.TYPE_CIRCULATE) {
-							//checkListState();
 							return;
 						}
 
@@ -610,7 +610,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 					this.removeFooterView();
 					GolukUtils.showToast(this.getContext(), this.getContext().getString(R.string.str_inquiry_fail));
 				}
-				//checkListState();
+				checkListState();
 			}
 			break;
 		// IPC下载结果应答
