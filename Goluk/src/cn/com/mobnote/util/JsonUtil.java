@@ -1293,7 +1293,7 @@ public class JsonUtil {
 			bean.isComment = getJsonStringValue(dataObj, "iscomment", "1");
 			bean.isPraise = getJsonStringValue(dataObj, "ispraise", "1");
 			bean.uid = getJsonStringValue(dataObj, "uid", "");
-
+			bean.isFollow = getJsonStringValue(dataObj, "isfollow", "1");
 			return bean;
 
 		} catch (Exception e) {
@@ -1301,14 +1301,15 @@ public class JsonUtil {
 		}
 	}
 
-	public static String getPushSetJson(boolean iscomment, boolean ispraise) {
+	public static String getPushSetJson(boolean iscomment, boolean ispraise,boolean isfollow) {
 		try {
 			String isC = iscomment ? "1" : "0";
 			String isP = ispraise ? "1" : "0";
+			String isF = isfollow ? "1" : "0";
 			JSONObject obj = new JSONObject();
 			obj.put("iscomment", isC);
 			obj.put("ispraise", isP);
-
+			obj.put("isfollow", isF);
 			return obj.toString();
 		} catch (Exception e) {
 

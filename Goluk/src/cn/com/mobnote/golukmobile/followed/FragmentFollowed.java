@@ -281,6 +281,9 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 			mListView.setMode(PullToRefreshBase.Mode.BOTH);
 
 			List<FollowedListBean> followedBeanList = bean.data.list;
+			if(null == bean.data.list || bean.data.list.size() == 0) {
+				return;
+			}
 
 			if(followedBeanList.size() == 0) {
 				Toast.makeText(getActivity(), getString(
@@ -289,7 +292,9 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 
 			FollowedListBean last = bean.data.list.get(followedBeanList.size() - 1);
 			if(null != last) {
-				mTimeStamp = last.followvideo.video.sharingtime;
+				if(last.followvideo.video != null) {
+					mTimeStamp = last.followvideo.video.sharingtime;
+				}
 			} else {
 				return;
 			}

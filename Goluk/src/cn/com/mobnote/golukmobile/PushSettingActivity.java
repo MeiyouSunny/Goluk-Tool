@@ -19,11 +19,14 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 	public static final String TAG = "PushSettingActivity";
 	private Button mCanCommentBtn = null;
 	private Button mCanPariseBtn = null;
+	private Button mCanFollowBtn = null;
 
 	/** 是否允许评论 */
 	private boolean mIsCanComment = true;
 	/** 是否允许点赞 */
 	private boolean isCanParise = true;
+	/** 有人关注我 */
+	private boolean isCanFollow = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +42,10 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 	private void initView() {
 		mCanCommentBtn = (Button) findViewById(R.id.notify_setting_comment_btn);
 		mCanPariseBtn = (Button) findViewById(R.id.notify_setting_prise_btn);
+		mCanFollowBtn = (Button) findViewById(R.id.notify_setting_follow_btn);
 		mCanCommentBtn.setOnClickListener(this);
 		mCanPariseBtn.setOnClickListener(this);
+		mCanFollowBtn.setOnClickListener(this);
 		findViewById(R.id.back_btn).setOnClickListener(this);
 		// 赋初始值
 		setCommentState(mIsCanComment);
@@ -72,7 +77,7 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 	}
 
 	private void saveConfigToServer() {
-		String json = JsonUtil.getPushSetJson(mIsCanComment, isCanParise);
+		String json = JsonUtil.getPushSetJson(mIsCanComment, isCanParise,isCanFollow);
 		mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SetPushCfg,
 				json);
 	}
@@ -94,6 +99,15 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 			mCanPariseBtn.setBackgroundResource(R.drawable.set_close_btn);
 		}
 	}
+	
+	private void setFollowState(boolean isOpen) {
+		isCanFollow = isOpen;
+		if (isOpen) {
+			mCanFollowBtn.setBackgroundResource(R.drawable.set_open_btn);
+		} else {
+			mCanFollowBtn.setBackgroundResource(R.drawable.set_close_btn);
+		}
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -106,6 +120,9 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 			break;
 		case R.id.notify_setting_prise_btn:
 			setPariseState(!isCanParise);
+			break;
+		case R.id.notify_setting_follow_btn:
+			setFollowState(!isCanFollow);
 			break;
 		}
 	}
@@ -136,6 +153,7 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 			GolukUtils.showToast(this, getResources().getString(R.string.network_error));
 			return;
 		}
+		setFollowState(bean.isFollow.equals("1") ? true : false);
 		setCommentState(bean.isComment.equals("1") ? true : false);
 		setPariseState(bean.isPraise.equals("1") ? true : false);
 	}

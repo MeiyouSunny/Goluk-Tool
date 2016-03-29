@@ -7,6 +7,8 @@ import de.greenrobot.event.EventBus;
 public class MessageManager {
 	private int mPraiseCount;
 	private int mCommentCount;
+	private int mFollowCount;
+
 	private int mSystemMessageCount;
 
 	/** This field remained for future */
@@ -60,10 +62,19 @@ public class MessageManager {
 	}
 
 	public synchronized void setMessageEveryCount(int praiseCount,
-			int commentCount, int systemMessageCount) {
+			int commentCount,int followCout, int systemMessageCount) {
 		this.mSystemMessageCount = systemMessageCount;
 		this.mCommentCount = commentCount;
 		this.mPraiseCount = praiseCount;
+		this.mFollowCount = followCout;
 		EventBus.getDefault().post(new EventMessageUpdate(EventConfig.MESSAGE_UPDATE));
+	}
+	
+	public int getFollowCount() {
+		return mFollowCount;
+	}
+
+	public void setFollowCount(int mFollowCount) {
+		this.mFollowCount = mFollowCount;
 	}
 }
