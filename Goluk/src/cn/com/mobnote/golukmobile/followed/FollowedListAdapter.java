@@ -96,18 +96,26 @@ public class FollowedListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
-//		ViewHolderRecommend holderRecommend = null;
-//		ViewHolderFollow holderFollow = null;
-
 		int type = getItemViewType(position);
 		if (TYPE_FOLLOWED == type) {
 			convertView = getFollowedView(position, convertView, viewGroup);
 		} else if(TYPE_RECOMMEND == type) {
 			convertView = getRecommendView(position, convertView, viewGroup);
 		} else {
-//			conertView = getEmptyView(position, convertView, viewGroup);
+			convertView = getEmptyView(position, convertView, viewGroup);
 		}
 
+		return convertView;
+	}
+
+	private View getEmptyView(int position, View convertView, ViewGroup viewGroup) {
+		ViewHolderEmpty holderEmpty = null;
+		if(null == convertView) {
+			holderEmpty = new ViewHolderEmpty();
+			convertView = LayoutInflater.from(mFragment.getActivity()).inflate(
+					R.layout.rl_list_view_follow_type_recommend_item_empty, null);
+			holderEmpty.nEmptyTV = (TextView)convertView.findViewById(R.id.tv_list_view_follow_type_item_empty);
+		}
 		return convertView;
 	}
 
@@ -736,6 +744,10 @@ public class FollowedListAdapter extends BaseAdapter {
 		TextView tvPraiseCount;
 
 		RelativeLayout rlUserInfo;
+	}
+
+	static class ViewHolderEmpty {
+		TextView nEmptyTV;
 	}
 }
 

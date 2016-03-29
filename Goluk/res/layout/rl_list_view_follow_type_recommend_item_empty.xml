@@ -4,14 +4,16 @@
     android:layout_height="187dp" >
 
     <TextView
+        android:id="@+id/tv_list_view_follow_type_item_empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:drawableTop="@drawable/mine_qitadifang"
-        android:drawablePadding="36dp"
+        android:drawableTop="@drawable/followed_empty"
         android:text="什么内容也没有"
         android:textSize="12sp"
-        android:gravity="center"
+        android:gravity="center_horizontal"
+        android:paddingTop="50dp"
+        android:drawablePadding="12dp"
         android:singleLine="true"
         android:textColor="#bfbfbf"/>
 
