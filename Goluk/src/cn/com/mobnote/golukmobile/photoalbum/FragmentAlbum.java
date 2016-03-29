@@ -182,22 +182,22 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 	 * @param position
 	 */
 	public void setItemLineState(int position) {
-		mTabLocal.setTextColor(this.getResources().getColor(R.color.wonderful_item_nor_color));
-		mTabWonderful.setTextColor(this.getResources().getColor(R.color.wonderful_item_nor_color));
-		mTabUrgent.setTextColor(this.getResources().getColor(R.color.wonderful_item_nor_color));
-		mTabLoop.setTextColor(this.getResources().getColor(R.color.wonderful_item_nor_color));
+		mTabLocal.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
+		mTabWonderful.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
+		mTabUrgent.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
+		mTabLoop.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
 		if (position == 0) {
 			mLocalFragment.loadData(true);
-			mTabLocal.setTextColor(this.getResources().getColor(R.color.wonderful_item_sel_color));
+			mTabLocal.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
 		} else if (position == 1) {
 			mWonderfulFragment.loadData(GolukApplication.getInstance().isIpcLoginSuccess);
-			mTabWonderful.setTextColor(this.getResources().getColor(R.color.wonderful_item_sel_color));
+			mTabWonderful.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
 		} else if (position == 2) {
 			mUrgentFragment.loadData(GolukApplication.getInstance().isIpcLoginSuccess);
-			mTabUrgent.setTextColor(this.getResources().getColor(R.color.wonderful_item_sel_color));
+			mTabUrgent.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
 		} else if (position == 3) {
 			mLoopFragment.loadData(GolukApplication.getInstance().isIpcLoginSuccess);
-			mTabLoop.setTextColor(this.getResources().getColor(R.color.wonderful_item_sel_color));
+			mTabLoop.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
 		}
 	}
 

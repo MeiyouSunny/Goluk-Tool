@@ -91,6 +91,7 @@
     
     <!-- 相册按钮文字颜色 -->
     <color name="photoalbum_text_color">#0080ff</color>
+    <color name="photoalbum_text_color_def">#ffffff</color>
     <color name="photoalbum_text_color_gray">#eeeeee</color>
     <color name="photoalbum_line_color">#c8c7cc</color>
     <color name="photoalbum_title_bg_color">#242629</color>
