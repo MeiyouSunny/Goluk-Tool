@@ -153,7 +153,7 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 			GolukUtils.showToast(this, getResources().getString(R.string.network_error));
 			return;
 		}
-		setFollowState(bean.isComment.equals("1") ? true : false);
+		setFollowState(bean.isFollow.equals("1") ? true : false);
 		setCommentState(bean.isComment.equals("1") ? true : false);
 		setPariseState(bean.isPraise.equals("1") ? true : false);
 	}
