@@ -28,10 +28,6 @@ import android.widget.TextView;
 public class FragmentDiscover extends Fragment implements OnClickListener {
 	private static final String TAG = "FragmentDiscover";
 
-	public FragmentDiscover() {
-
-	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub

@@ -109,8 +109,8 @@
 	<color name="text_select_color">#e13737</color>
 	<color name="text_diff_color">#808181</color>
 	
-	<color name="wonderful_item_nor_color">#ffffff</color>
-	<color name="wonderful_item_sel_color">#0080ff</color>
+	<color name="wonderful_item_nor_color">#4c000000</color>
+	<color name="wonderful_item_sel_color">#4c0080ff</color>
 	<color name="cagtegory_text_color">#bfffffff</color>
 	<color name="cagtegory_title_color">#e5ffffff</color>
 	<color name="color_comment_can_send">#0080ff</color>

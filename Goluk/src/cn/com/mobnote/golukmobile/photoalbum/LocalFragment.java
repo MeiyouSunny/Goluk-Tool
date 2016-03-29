@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -54,6 +55,8 @@ public class LocalFragment extends Fragment{
 	private float density = 1;
 	
 	private FragmentAlbum mFragmentAlbum;
+	
+	private TextView empty = null;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -146,6 +149,7 @@ public class LocalFragment extends Fragment{
 
 
 	private void initView(){
+		empty = (TextView) mLocalVideoView.findViewById(R.id.empty);
 		mCustomProgressDialog = new CustomLoadingDialog(this.getContext(), null);
 		mStickyListHeadersListView = (StickyListHeadersListView) mLocalVideoView.findViewById(R.id.mStickyListHeadersListView);
 		
@@ -255,10 +259,10 @@ public class LocalFragment extends Fragment{
 				mDataList.addAll(mLocalListData);
 				mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mLocalListData);
 				mWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
-				if(mDoubleDataList == null || mDoubleDataList.size() ==0){
-					View empty = PhotoAlbumUtils.getInstall().getEmptyView(getActivity(),0);
-					((ViewGroup)mStickyListHeadersListView.getParent()).addView(empty); 
-				}
+//				if(mDoubleDataList == null || mDoubleDataList.size() ==0){
+//					View empty = PhotoAlbumUtils.getInstall().getEmptyView(getActivity(),0);
+//					((ViewGroup)mStickyListHeadersListView.getParent()).addView(empty); 
+//				}
 				
 				mStickyListHeadersListView.setAdapter(mWonderfulVideoAdapter);
 				try {
@@ -278,12 +282,14 @@ public class LocalFragment extends Fragment{
 	private void checkListState() {
 		GolukDebugUtils.e("", "Album------WondowvideoListView------checkListState");
 		if (mDataList.size() <= 0) {
+			empty.setVisibility(View.VISIBLE);
+			empty.setText(getActivity().getResources().getString(R.string.photoalbum_no_video_text));
 			mStickyListHeadersListView.setVisibility(View.GONE);
 			updateEditState(false);
 		} else {
-			updateEditState(true);
-			//empty.setText(getActivity().getResources().getString(R.string.photoalbum_no_video_text));
+			empty.setVisibility(View.GONE);
 			mStickyListHeadersListView.setVisibility(View.VISIBLE);
+			updateEditState(true);
 		}
 	}
 	

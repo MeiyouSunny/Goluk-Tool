@@ -234,11 +234,12 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 			GolukUtils.showToast(getActivity(), getResources().getString(R.string.str_photo_check_ipc_state));
 		}
 		resetEditState();
+		setEditBtnState(true);
 	}
 
 	private void resetEditState() {
 		mViewPager.setCanScroll(true);
-		mEditBtn.setVisibility(View.VISIBLE);
+		//mEditBtn.setVisibility(View.VISIBLE);
 		mCancelBtn.setVisibility(View.GONE);
 		mLinearLayoutTab.setVisibility(View.VISIBLE);
 		mDownLoadIcon.setBackgroundResource(R.drawable.photo_download_icon);
@@ -281,6 +282,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 			break;
 		case R.id.cancel_btn:
 			resetEditState();
+			setEditBtnState(true);
 			break;
 		case R.id.back_btn:
 			getActivity().finish();

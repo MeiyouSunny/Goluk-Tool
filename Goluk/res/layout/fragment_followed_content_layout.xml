@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tv_follow_fragment_title"
+        android:background="#404246"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="关注"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/plv_follow_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:cacheColorHint="#ffffff">
+    </com.handmark.pulltorefresh.library.PullToRefreshListView>
+
+    <RelativeLayout
+        android:id="@+id/rl_follow_fragment_exception_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/iv_follow_fragment_exception_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawableTop="@drawable/mine_qitadifang"
+            android:textSize="16sp"
+            android:text="@string/msg_system_connect_error"
+            android:drawablePadding="6dp"
+            android:textColor="#bfbfbf" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_follow_fragment_no_login"
+        android:layout_width="match_parent"
+        android:background="#ffffff"
+        android:visibility="gone"
+        android:layout_height="match_parent" >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="#ffffff"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/iv_fragment_followed_content_to_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="登录后才能查看自己关注的内容哟~"
+                android:textColor="#666666"
+                android:contentDescription="@string/imgdes"
+                android:src="@drawable/album_img_novideo"
+                android:textSize="14sp"/>
+
+            <TextView
+                android:id="@+id/tv_fragment_followed_content_to_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_marginBottom="33dp"
+                android:text="登录后才能查看自己关注的内容哟~"
+                android:textColor="#666666"
+                android:textSize="14sp"/>
+
+            <Button
+                android:id="@+id/btn_fragment_followed_content_to_login"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="现在去登录"
+                android:textColor="#ffffff"
+                android:singleLine="true"
+                android:textSize="16sp"
+                android:background="@drawable/follow_button_border_goto_login"
+                android:gravity="center"/>
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>
