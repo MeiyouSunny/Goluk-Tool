@@ -168,7 +168,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	boolean mAutoState = true;
 	private TextView mTextWonderfulVideoQualityText, mVolumeText, mPowerTimeText, mVoiceTypeText;
-	private RelativeLayout mWonderfulVideoQualityLayout, mToneLayout, mShutdownLayout, mLanguageLayout;
+	private RelativeLayout mWonderfulVideoQualityLayout, mVolumeLayout, mPowerTimeLayout, mVoiceTypeLayout;
 	/** 精彩视频质量 **/
 	private String mWonderfulVideoResolution = "";
 	/** 提示音音量大小 **/
@@ -555,11 +555,11 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mTextWonderfulVideoQualityText = (TextView) findViewById(R.id.tv_carrecorder_settings_wonderfulvideo_quality_text);
 		mWonderfulVideoQualityLayout = (RelativeLayout) findViewById(R.id.rl_carrecorder_settings_wonderfulvideo_quality);
 		mVolumeText = (TextView) findViewById(R.id.tv_settings_tone_text);
-		mToneLayout = (RelativeLayout) findViewById(R.id.rl_settings_tone_line);
+		mVolumeLayout = (RelativeLayout) findViewById(R.id.rl_settings_tone_line);
 		mPowerTimeText = (TextView) findViewById(R.id.tv_settings_shutdown_text);
-		mShutdownLayout = (RelativeLayout) findViewById(R.id.rl_settings_shutdown_line);
+		mPowerTimeLayout = (RelativeLayout) findViewById(R.id.rl_settings_shutdown_line);
 		mVoiceTypeText = (TextView) findViewById(R.id.tv_settings_language_text);
-		mLanguageLayout = (RelativeLayout) findViewById(R.id.rl_settings_language_line);
+		mVoiceTypeLayout = (RelativeLayout) findViewById(R.id.rl_settings_language_line);
 
 		// ipc设备型号
 		if (GolukApplication.getInstance().mIPCControlManager.isG1Relative()) {
@@ -573,6 +573,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mParkingSecurityHintText
 					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g1));
 			mCarrecorderWonderfulLine.setVisibility(View.GONE);
+			mWonderfulVideoQualityLayout.setVisibility(View.GONE);
+			mVolumeLayout.setVisibility(View.GONE);
+			mPowerTimeLayout.setVisibility(View.GONE);
+			mVoiceTypeLayout.setVisibility(View.GONE);
 		} else if (mIPCName.equals(IPCControlManager.G2_SIGN)) {
 			mISPLayout.setVisibility(View.VISIBLE);
 			mPhotoQualityLayout.setVisibility(View.GONE);
@@ -584,6 +588,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mParkingSecurityHintText
 					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g2));
 			mCarrecorderWonderfulLine.setVisibility(View.VISIBLE);
+			mWonderfulVideoQualityLayout.setVisibility(View.GONE);
+			mVolumeLayout.setVisibility(View.GONE);
+			mPowerTimeLayout.setVisibility(View.GONE);
+			mVoiceTypeLayout.setVisibility(View.GONE);
 		} else {
 			mISPLayout.setVisibility(View.GONE);
 //			mPhotoQualityLayout.setVisibility(View.VISIBLE);
@@ -597,6 +605,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mParkingSecurityHintText
 					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g2));
 			mCarrecorderWonderfulLine.setVisibility(View.GONE);
+			mWonderfulVideoQualityLayout.setVisibility(View.VISIBLE);
+			mVolumeLayout.setVisibility(View.VISIBLE);
+			mPowerTimeLayout.setVisibility(View.VISIBLE);
+			mVoiceTypeLayout.setVisibility(View.VISIBLE);
 		}
 
 		mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
@@ -653,9 +665,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 //		mADASOsdBtn.setOnClickListener(this);//辅助信息显示
 		mADASConfigLayout.setOnClickListener(this);//ADAS配置
 		mWonderfulVideoQualityLayout.setOnClickListener(this);//精彩视频质量
-		mToneLayout.setOnClickListener(this);//提示音音量
-		mShutdownLayout.setOnClickListener(this);//关机时间
-		mLanguageLayout.setOnClickListener(this);//语言设置
+		mVolumeLayout.setOnClickListener(this);//提示音音量
+		mPowerTimeLayout.setOnClickListener(this);//关机时间
+		mVoiceTypeLayout.setOnClickListener(this);//语言设置
 	}
 
 	/**
@@ -1806,6 +1818,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private String[] mPhotoValue = null;
 	/** 精彩视频质量 **/
 	private String[] mWonderfulVideo = null;
+	private String[] mWonderfulVideoValue = null;
 	/** 提示音音量大小 **/
 	private String[] mVolumeList = null;
 	private String[] mVolumeValue = null;
@@ -1818,6 +1831,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mPhotoText = getResources().getStringArray(R.array.list_photo_quality_ui);
 		mPhotoValue = getResources().getStringArray(R.array.list_photo_quality_list);
 		mWonderfulVideo = getResources().getStringArray(R.array.list_wonderful_video_quality);
+		mWonderfulVideoValue = getResources().getStringArray(R.array.list_wonderful_video_quality_value);
 		mVolumeList = getResources().getStringArray(R.array.list_tone_volume);
 		mVolumeValue = getResources().getStringArray(R.array.list_tone_volume_value);
 		mPowerTimeList = getResources().getStringArray(R.array.list_shutdown_time);
@@ -2051,8 +2065,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				int time = json.getInt("time_second");
 				mPowerTime = time+"";
 				refreshPowerTime();
-			}catch(Exception e) {
-				
+			} catch (Exception e) {
+
 			}
 		}
 	}
@@ -2118,9 +2132,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	 * 更新精彩视频质量
 	 */
 	private void refreshWonderfulVideoData() {
-		int length = mWonderfulVideo.length;
+		int length = mWonderfulVideoValue.length;
 		for (int i = 0; i < length; i++) {
-			if (mWonderfulVideoResolution.equals(mWonderfulVideo[i])) {
+			if (mWonderfulVideoResolution.equals(mWonderfulVideoValue[i])) {
 				mTextWonderfulVideoQualityText.setText(mWonderfulVideo[i]);
 			}
 		}

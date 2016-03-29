@@ -311,7 +311,7 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 //			mVideoSquareAdapter.onDestroy();
 //		}
 		mBannerLoaded = false;
-		EventBus.getDefault().register(this);
+		EventBus.getDefault().unregister(this);
 	}
 
 	public void exit() {

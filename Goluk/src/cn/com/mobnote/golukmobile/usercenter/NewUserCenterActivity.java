@@ -39,7 +39,8 @@ import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
-public class NewUserCenterActivity extends BaseActivity implements IRequestResultListener, OnClickListener,OnItemClickListener {
+public class NewUserCenterActivity extends BaseActivity implements IRequestResultListener, OnClickListener,
+		OnItemClickListener {
 
 	private static final String OPERATOR_FIRST = "0";
 	private static final String OPERATOR_DOWN = "1";
@@ -127,7 +128,6 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<GridViewWithHeaderAndFooter> pullToRefreshBase) {
 				// 下拉刷新
-//				mIsFirst = false;
 				pullToRefreshBase.getLoadingLayoutProxy(true, false).setLastUpdatedLabel(
 						getResources().getString(R.string.updating)
 								+ GolukUtils.getCurrentFormatTime(NewUserCenterActivity.this));
@@ -137,7 +137,6 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<GridViewWithHeaderAndFooter> pullToRefreshBase) {
 				// 上拉加载
-//				mIsFirst = false;
 				pullToRefreshBase.getLoadingLayoutProxy(false, true).setLastUpdatedLabel(
 						getResources().getString(R.string.goluk_pull_to_refresh_footer_pull_label));
 				httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_UP, mLastIndex);
@@ -145,13 +144,16 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 
 		});
 
-		httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_FIRST, "");
+	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_FIRST, "");
 	}
 
 	private void httpRequestData(String otheruid, String currentuid, String operation, String index) {
 		if (OPERATOR_FIRST.equals(operation)) {
-//			mIsFirst = true;
 			showLoadingDialog();
 		}
 		if (operation.equals(OPERATOR_DOWN)) {
@@ -208,9 +210,6 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 				String customavatar = shareJson.data.customavatar;
 				String headportrait = shareJson.data.headportrait;
 				String realDesc = this.getString(R.string.str_usercenter_share_realdesc);
-				if (null == customavatar || "".equals(customavatar)) {
-					customavatar = headportrait;
-				}
 				CustomShareBoard shareBoard = new CustomShareBoard(this, mSharePlatform, shorturl, customavatar,
 						describe, title, null, realDesc, "");
 				shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
@@ -250,12 +249,12 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			mFooterView.setVisibility(View.VISIBLE);
 		}
 	}
-	
+
 	private void removeFooterView() {
 		if (null != mGridView && null != mFooterView && mFooterView.getVisibility() == View.VISIBLE) {
 			mGridView.getRefreshableView().removeFooterView(mFooterView);
 			mFooterView.setVisibility(View.GONE);
-//			mFooterView = null;
+			// mFooterView = null;
 		}
 	}
 
@@ -356,6 +355,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 
 	/**
 	 * 关注
+	 * 
 	 * @param otheruid
 	 * @param type
 	 * @param currentuid
@@ -386,5 +386,5 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			}
 		}
 	}
-	
+
 }

@@ -1,13 +1,11 @@
 package cn.com.mobnote.golukmobile.usercenter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Bitmap.Config;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +31,6 @@ public class UserCenterHeader implements OnClickListener {
 	private LinearLayout mWonderfulLayout, mRecommendLayout, mHeadlinesLayout;
 	private TextView mWonderfulText, mRecommednText, mHeadlinesText;
 	private Button mAttentionBtn;
-	private LinearLayout mBackgroundLayout;
 	/** 取消关注 **/
 	private static final String TYPE_ATTENTION_CANCLE = "0";
 	/** 关注 **/
@@ -67,7 +64,6 @@ public class UserCenterHeader implements OnClickListener {
 		mWonderfulText = (TextView) view.findViewById(R.id.tv_usercenter_header_wonderful_count);
 		mRecommednText = (TextView) view.findViewById(R.id.tv_usercenter_header_recommendcount);
 		mHeadlinesText = (TextView) view.findViewById(R.id.tv_usercenter_header_headlines_count);
-		mBackgroundLayout = (LinearLayout) view.findViewById(R.id.layout_usercenter_header);
 
 		mAttentionBtn.setOnClickListener(this);
 		mTextAttention.setOnClickListener(this);
@@ -90,10 +86,6 @@ public class UserCenterHeader implements OnClickListener {
 				UserUtils.focusHead(mContext, user.avatar, mImageHead);
 			}
 			
-			Bitmap bitmap = loadBitmapFromView(mImageHead);
-			dealImage(bitmap);
-			mImageHead.setDrawingCacheEnabled(false);
-
 			mTextName.setText(user.nickname);
 			mTextAttention.setText(mContext.getString(R.string.str_usercenter_header_attention_text) + " "
 					+ GolukUtils.getFormatNumber(user.following));
@@ -252,30 +244,6 @@ public class UserCenterHeader implements OnClickListener {
 			it.putExtra("uid", mData.user.uid);
 			mContext.startActivity(it);
 		}
-	}
-	
-	@SuppressLint("NewApi")
-	@SuppressWarnings("deprecation")
-	private void dealImage(Bitmap bitmap) {
-		try {
-			Bitmap blurBmp1 = BlurUtil.fastblur(mContext, bitmap, 25);// 0-25，表示模糊值
-			Bitmap blurBmp2 = BlurUtil.fastblur(mContext, blurBmp1, 25);// 0-25，表示模糊值
-			Bitmap blurBmp3 = BlurUtil.fastblur(mContext, blurBmp2, 25);// 0-25，表示模糊值
-			Bitmap blurBmp4 = BlurUtil.fastblur(mContext, blurBmp3, 25);// 0-25，表示模糊值
-			Bitmap blurBmp5 = BlurUtil.fastblur(mContext, blurBmp4, 25);// 0-25，表示模糊值
-			Bitmap blurBmp = BlurUtil.fastblur(mContext, blurBmp5, 25);// 0-25，表示模糊值
-			final Drawable newBitmapDrawable = new BitmapDrawable(blurBmp); // 将Bitmap转换为Drawable
-			mBackgroundLayout.post(new Runnable() {// 处理图片是一个耗时操作,所以需要开启一个线程
-
-						@Override
-						public void run() {
-							mBackgroundLayout.setBackground(newBitmapDrawable);// 设置背景
-						}
-					});
-		} catch (Exception e) {
-			mBackgroundLayout.setBackground(new BitmapDrawable(bitmap));
-		}
-
 	}
 	
 	/**

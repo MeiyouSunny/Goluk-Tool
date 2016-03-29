@@ -28,7 +28,7 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 	public static final String TYPE_LANGUAGE = "language";
 	private TextView[] mTextViewList = null;
 	private String[] mWonderfulList, mVolumeList, mShutdownList, mLanguageList;
-	private String[] mVolumeValue ;
+	private String[] mVolumeValue, mWonderfulValue;
 	private ImageButton[] mImageList = null;
 	private String mCurrentItem = "";
 	private String mType = "";
@@ -63,6 +63,7 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 		mShutdownList = getResources().getStringArray(R.array.list_shutdown_time);
 		mLanguageList = getResources().getStringArray(R.array.list_language);
 		
+		mWonderfulValue = getResources().getStringArray(R.array.list_wonderful_video_quality_value);
 		mVolumeValue = getResources().getStringArray(R.array.list_tone_volume_value);
 	}
 
@@ -128,7 +129,11 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 		if (TYPE_WONDERFUL_VIDEO_QUALITY.equals(mType)) {
 			mThirdLayout.setVisibility(View.GONE);
 			setTitle(this.getResources().getString(R.string.str_wonderful_video_quality_title));
-			arrayList = mWonderfulList;
+			if(0 == valueType) {
+				arrayList = mWonderfulValue;
+			} else {
+				arrayList = mWonderfulList;
+			}
 		} else if (TYPE_TONE_VOLUME.equals(mType)) {
 			mThirdLayout.setVisibility(View.VISIBLE);
 			setTitle(this.getResources().getString(R.string.str_settings_tone_title));
