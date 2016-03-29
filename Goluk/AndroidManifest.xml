@@ -124,6 +124,9 @@
         <activity
             android:name=".profit.MyProfitDetailActivity"
             android:screenOrientation="portrait" />
+         <activity
+            android:name=".following.FollowingListActivity"
+            android:screenOrientation="portrait" />
 
         <!-- 网络变化广播监听 -->
         <receiver android:name="cn.com.mobnote.receiver.NetworkStateReceiver" >

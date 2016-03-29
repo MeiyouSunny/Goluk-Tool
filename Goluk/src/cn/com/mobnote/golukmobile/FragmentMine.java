@@ -26,6 +26,7 @@ import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventMessageUpdate;
+import cn.com.mobnote.golukmobile.following.FollowingListActivity;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.msg.MessageBadger;
@@ -106,6 +107,8 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	private static final int TYPE_SHARE_PRAISE = 2;
 	/** 我的收益 **/
 	private static final int TYPE_PROFIT = 3;
+	/** 我的关注 **/
+	private static final int TYPE_FOLLOWING = 4;
 	private static final String TAG = "FragmentMine";
 
 	LinearLayout mMineRootView = null;
@@ -309,6 +312,13 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			}
 			break;
 		case R.id.user_follow:
+			if (isLoginInfoValid()) {
+				intent = new Intent(getActivity(),FollowingListActivity.class);
+				getActivity().startActivity(intent);
+				
+			}else{
+				clickToLogin(TYPE_FOLLOWING);
+			}
 			break;
 		// 点击跳转到我的主页
 		case R.id.user_center_item:
