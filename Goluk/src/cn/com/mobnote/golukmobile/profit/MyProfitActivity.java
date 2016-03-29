@@ -9,6 +9,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBac
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
+import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
@@ -156,7 +157,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener, O
 			break;
 		// 收益为０时，点击跳转带有分享的相册页面
 		case R.id.last_profit_no_hint:
-			Intent photoalbum = new Intent(MyProfitActivity.this, FragmentAlbum.class);
+			Intent photoalbum = new Intent(MyProfitActivity.this, PhotoAlbumActivity.class);
 			photoalbum.putExtra("from", "cloud");
 			startActivity(photoalbum);
 			break;

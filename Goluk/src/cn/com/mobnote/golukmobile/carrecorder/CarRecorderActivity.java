@@ -70,7 +70,7 @@ import cn.com.mobnote.golukmobile.live.LiveSettingPopWindow;
 import cn.com.mobnote.golukmobile.live.LiveSettingPopWindow.IPopwindowFn;
 import cn.com.mobnote.golukmobile.photoalbum.FileInfoManagerUtils;
 import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
-import cn.com.mobnote.golukmobile.photoalbum.photoAlbumActivity;
+import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.golukmobile.videosuqare.RingView;
 import cn.com.mobnote.golukmobile.wifibind.WifiUnbindSelectListActivity;
@@ -1047,7 +1047,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			}
 			break;
 		case R.id.image3:
-			Intent photoalbum = new Intent(CarRecorderActivity.this, photoAlbumActivity.class);
+			Intent photoalbum = new Intent(CarRecorderActivity.this, PhotoAlbumActivity.class);
 			photoalbum.putExtra("from", "cloud");
 			startActivity(photoalbum);
 

@@ -51,6 +51,7 @@ import cn.com.mobnote.golukmobile.newest.ClickPraiseListener;
 import cn.com.mobnote.golukmobile.newest.ClickShareListener;
 import cn.com.mobnote.golukmobile.newest.CommentDataInfo;
 import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
+import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
@@ -280,7 +281,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 					holder.partakeBtn.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View arg0) {
-							Intent photoalbum = new Intent(mContext,FragmentAlbum.class);
+							Intent photoalbum = new Intent(mContext,PhotoAlbumActivity.class);
 							photoalbum.putExtra("from", "cloud");
 							
 							PromotionSelectItem item = new PromotionSelectItem();

@@ -4,7 +4,7 @@ import cn.com.mobnote.golukmobile.R;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
-public class photoAlbumActivity extends FragmentActivity {
+public class PhotoAlbumActivity extends FragmentActivity {
 	
 
 	@Override
