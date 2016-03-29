@@ -950,7 +950,7 @@ public class IPCControlManager implements IPCManagerFn {
 	 * @return
 	 */
 	public boolean setVideoResolution(String wonderful_resolution) {
-		String s = "{\"wonderful_resolution\":" + wonderful_resolution + "}";
+		String s = "{\"wonderful_resolution\":" + "\"" +  wonderful_resolution + "\"}";
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_SetVideoResolution, s);
 	}

@@ -14,6 +14,8 @@ public class SettingBean {
 	public String isComment;
 	/** 是否接受点赞 1 / 0 接收/不接收 */
 	public String isPraise;
+	/*** 是否有人关注 1 / 0 接收/不接收 */ 
+	public String isFollow;
 	/** 用户 uid */
 	public String uid;
 

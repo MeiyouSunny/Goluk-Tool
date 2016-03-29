@@ -200,16 +200,20 @@
         <item>1080P</item>
         <item>480P</item>
     </string-array>
+    <string-array name="list_wonderful_video_quality_value">
+        <item>1080p</item>
+        <item>480p</item>
+    </string-array>
     
     <string-array name="list_tone_volume">
         <item>高 ( 100% )</item>
-        <item>中 ( 70% )</item>
-        <item>低 ( 40% )</item>
+        <item>中 ( 75% )</item>
+        <item>低 ( 50% )</item>
     </string-array>
     <string-array name="list_tone_volume_value">
         <item>100</item>
-        <item>70</item>
-        <item>40</item>
+        <item>75</item>
+        <item>50</item>
     </string-array>
     <string-array name="list_shutdown_time">
         <item>10秒</item>

@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#313131"
+    android:background="@color/white"
     android:orientation="vertical" >
 
     <LinearLayout
         android:id="@+id/layout_usercenter_header"
         android:layout_width="match_parent"
-        android:layout_height="226dp"
+        android:layout_height="216dp"
+        android:background="#404246"
         android:orientation="vertical" >
 
         <RelativeLayout
@@ -23,13 +24,13 @@
                 android:id="@+id/iv_usercenter_header_head"
                 android:layout_width="71dp"
                 android:layout_height="71dp"
-                android:src="@drawable/usercenter_head_default"
-                android:contentDescription="@string/imgdes" />
+                android:contentDescription="@string/imgdes"
+                android:src="@drawable/usercenter_head_default" />
 
             <ImageView
                 android:id="@+id/iv_vip_logo"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_alignBottom="@id/iv_usercenter_header_head"
                 android:layout_alignRight="@id/iv_usercenter_header_head"
                 android:contentDescription="@string/imgdes" />
@@ -84,7 +85,7 @@
             android:textColor="@color/white"
             android:textSize="12sp" />
 
-         <Button
+        <Button
             android:id="@+id/btn_usercenter_header_attention"
             android:layout_width="114dp"
             android:layout_height="31dp"
@@ -93,17 +94,6 @@
             android:background="@null"
             android:textColor="@color/white"
             android:textSize="10sp" />
-         
-         <!-- <TextView 
-             android:id="@+id/tv_usercenter_header_no_introduce"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_gravity="center_horizontal"
-             android:layout_marginTop="18dp"
-             android:text="@string/str_usercenter_no_introduce_text"
-             android:textSize="12sp"
-             android:textColor="@color/white" /> -->
-
     </LinearLayout>
 
     <!-- 视频分类 -->
@@ -112,7 +102,6 @@
         android:id="@+id/layout_usercenter_header_category"
         android:layout_width="match_parent"
         android:layout_height="51dp"
-        android:background="@color/white"
         android:orientation="horizontal" >
 
         <!-- 精选视频 -->
@@ -121,8 +110,8 @@
             android:id="@+id/layout_usercenter_header_category_wonderful"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center"
+            android:layout_weight="1"
             android:orientation="vertical" >
 
             <TextView
@@ -138,16 +127,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="#0984ff"
                 android:text="0"
+                android:textColor="#0984ff"
                 android:textSize="16sp" />
         </LinearLayout>
 
         <TextView
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:background="#e6e6e6" />
 
         <!-- 被推荐视频 -->
@@ -156,8 +145,8 @@
             android:id="@+id/layout_usercenter_header_category_recommend"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center"
+            android:layout_weight="1"
             android:orientation="vertical" >
 
             <TextView
@@ -173,16 +162,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="#0984ff"
                 android:text="0"
+                android:textColor="#0984ff"
                 android:textSize="16sp" />
         </LinearLayout>
 
         <TextView
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:background="#e6e6e6" />
 
         <!-- 头条视频 -->
@@ -191,8 +180,8 @@
             android:id="@+id/layout_usercenter_header_category_headlines"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center"
+            android:layout_weight="1"
             android:orientation="vertical" >
 
             <TextView

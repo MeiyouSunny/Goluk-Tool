@@ -419,6 +419,9 @@
     <string name="str_urgent_title">紧急</string>
     <string name="str_loop_title">循环</string>
     <string name="str_album_no_connect">点击此处连接极路客</string>
+    <string name="str_album_video_1080">1080p</string>
+    <string name="str_album_video_720">720p</string>
+    <string name="str_album_video_480">480p</string>
 
     <!-- 意见反馈 -->
     <string name="user_opinion_type_yingjiang">硬件相关</string>
@@ -432,6 +435,7 @@
     <string name="logout">注销</string>
     <string name="setting_notify_comment">有人给我评论</string>
     <string name="setting_notify_parise">有人给我点赞</string>
+    <string name="setting_notify_follow">有人关注我</string>
     <string name="dialog_str_confirm">举报不良内容</string>
     <string name="dialog_str_del">删除这个视频</string>
     <string name="dialog_str_tuijian">推荐这个视频</string>

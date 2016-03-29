@@ -120,4 +120,40 @@
             android:background="@drawable/solid" />
     </LinearLayout>
 
+    <!-- 有人关注我 -->
+
+    <LinearLayout
+        android:id="@+id/notify_setting_follow_layout"
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:layout_below="@id/notify_setting_prise_layout"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/notify_setting_follow_item"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#f4f4f4" >
+
+            <TextView
+                android:id="@+id/notify_setting_follow_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="14dp"
+                android:text="@string/setting_notify_follow"
+                android:textColor="#3f3f3f"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/notify_setting_follow_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="14dp"
+                android:background="@drawable/set_open_btn" />
+        </RelativeLayout>
+    </LinearLayout>
+
 </RelativeLayout>
