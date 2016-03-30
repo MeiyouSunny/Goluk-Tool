@@ -35,6 +35,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventBindFinish;
 import cn.com.mobnote.eventbus.EventBindResult;
 import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventFollowPush;
 import cn.com.mobnote.eventbus.EventMapQuery;
 import cn.com.mobnote.eventbus.EventMessageUpdate;
 import cn.com.mobnote.eventbus.EventPhotoUpdateDate;
@@ -664,6 +665,22 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		updateRecoderBtn(mApp.mWiFiStatus);
 		
 		EventBus.getDefault().post(new EventWifiConnect(EventConfig.WIFI_STATE_FAILED));
+	}
+	
+	public void onEventMainThread(EventFollowPush event) {
+		if (null == event) {
+			return;
+		}
+
+		switch (event.getOpCode()) {
+		case EventConfig.FOLLOW_PUSH:
+			if(mTabHost != null){
+				mTabHost.setCurrentTab(4);
+			}
+			break;
+		default:
+			break;
+		}
 	}
 
 	public void onEventMainThread(EventBindFinish event) {

@@ -21,6 +21,9 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventFollowPush;
+import cn.com.mobnote.eventbus.EventPhotoUpdateDate;
 import cn.com.mobnote.golukmobile.GuideActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -43,6 +46,7 @@ import cn.com.mobnote.util.GolukConfig;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.JsonUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 public class GolukNotification {
 	/** 推送标识，主要是主界面接受，用于区分是否是推送数据 */
@@ -431,6 +435,8 @@ public class GolukNotification {
 					Context context = GolukApplication.getInstance().getContext();
 					Intent intent = new Intent(context, MsgCenterPraiseActivity.class);
 					context.startActivity(intent);
+				}else if(103 == type){
+					EventBus.getDefault().post(new EventFollowPush(EventConfig.FOLLOW_PUSH));
 				} else if (type >= 200 && type < 300) {
 					Context context = GolukApplication.getInstance().getContext();
 					Intent intent = new Intent(context, SystemMsgActivity.class);

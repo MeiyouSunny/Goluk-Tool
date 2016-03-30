@@ -64,4 +64,7 @@ public class EventConfig {
 
 	/** User login result */
 	public final static int USER_LOGIN_RET = 1005;
+	
+	/** 关注 推送消息 **/
+	public final static int FOLLOW_PUSH = 1006;
 }
