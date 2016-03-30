@@ -404,7 +404,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
 	@Override
 	protected void onDestroy() {
-
 		super.onDestroy();
 		EventBus.getDefault().unregister(this);
 		if (null != mWac) {
@@ -415,18 +414,21 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		GolukDebugUtils.e("", "通知logic停止连接ipc---WiFiLinkCompleteActivity---onDestroy---1");
 
 		GolukDebugUtils.e("", "jyf-----WifiBind-----WifiCompelete-----onDestroy----");
-
+		mMiddleLayout.removeAllViews();
+		mMiddleLayout = null;
+		mCurrentLayout = null;
 		collectLog("onDestroy", "1");
 		if (null != layout1) {
 			layout1.free();
+			layout1 = null;
 		}
-
 		if (null != layout2) {
 			layout2.free();
+			layout2 = null;
 		}
-
 		if (null != layout3) {
 			layout3.free();
+			layout3 = null;
 		}
 	}
 
@@ -489,13 +491,15 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
 	private void freeLayout() {
 		if (null != mCurrentLayout) {
-			mCurrentLayout.free();
+			mCurrentLayout.getRootLayout().setVisibility(View.GONE);
+			mCurrentLayout.stop();
 		}
 	}
 
 	private void toSucessView() {
 		mBackBtn.setVisibility(View.GONE);
 		this.mState = STATE_SUCESS;
+		mCurrentLayout.getRootLayout().setVisibility(View.GONE);
 		mMiddleLayout.removeAllViews();
 		freeLayout();
 		mMiddleLayout.addView(layout3.getRootLayout());

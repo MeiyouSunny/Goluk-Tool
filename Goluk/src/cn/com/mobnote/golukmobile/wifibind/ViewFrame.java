@@ -14,6 +14,9 @@ public class ViewFrame {
 
 	}
 
+	public void stop() {
+	}
+
 	public void free() {
 
 	}

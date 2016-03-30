@@ -42,6 +42,12 @@ public class GolukAnimal {
 		}
 	}
 
+	public void stopAnimal() {
+		if (null != mAnimation) {
+			mAnimation.stop();
+		}
+	}
+
 	public void free() {
 		if (null != mAnimation) {
 			mAnimation.stop();

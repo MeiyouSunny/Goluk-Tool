@@ -56,6 +56,13 @@ public class WifiLinkSetIpcLayout extends ViewFrame {
 	}
 
 	@Override
+	public void stop() {
+		if (null != mLoadingAnimal) {
+			mLoadingAnimal.stopAnimal();
+		}
+	}
+
+	@Override
 	public void start() {
 		mLoadingAnimal.start();
 	}
