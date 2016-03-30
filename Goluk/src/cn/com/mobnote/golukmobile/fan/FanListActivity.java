@@ -1,4 +1,4 @@
-package cn.com.mobnote.golukmobile.following;
+package cn.com.mobnote.golukmobile.fan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,9 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickList
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.follow.FollowRequest;
 import cn.com.mobnote.golukmobile.follow.bean.FollowRetBean;
+import cn.com.mobnote.golukmobile.following.FollowingConfig;
+import cn.com.mobnote.golukmobile.following.FollowingListAdapter;
+import cn.com.mobnote.golukmobile.following.FollowingListRequest;
 import cn.com.mobnote.golukmobile.following.bean.FollowingItemBean;
 import cn.com.mobnote.golukmobile.following.bean.FollowingRetBean;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
@@ -38,19 +41,19 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * @author leege100
  *
  */
-public class FollowingListActivity extends BaseActivity implements IRequestResultListener, OnClickListener,OnItemClickListener{
+public class FanListActivity extends BaseActivity implements IRequestResultListener, OnClickListener,OnItemClickListener{
 	
 	private final static String TAG = "ActivityFollowingList";
 	private final static String REFRESH_NORMAL = "0";
 	private final static String REFRESH_PULL_DOWN = "1";
 	private final static String REFRESH_PULL_UP = "2";
 	
-	private ImageButton mFollowinglistBackIb;
-	private TextView mFollowinglistTitleTv;
-	private PullToRefreshListView mFollowinglistPtrList;
+	private ImageButton mFanlistBackIb;
+	private TextView mFanlistTitleTv;
+	private PullToRefreshListView mFanlistPtrList;
 	
 	private List<FollowingItemBean> mFollowingList;
-	private FollowingListAdapter mFollowingListAdapter;
+	private FanListAdapter mFansListAdapter;
 	
 	private String mCurMotion = REFRESH_NORMAL;
 	private final static String PROTOCOL = "200";
@@ -69,7 +72,7 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_followinglist_layout);
+		setContentView(R.layout.activity_fan_list);
 		
 		mLinkuid = getIntent().getStringExtra("linkuid");
 		
@@ -86,17 +89,17 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 		// TODO Auto-generated method stub
 		
 		mFollowingList = new ArrayList<FollowingItemBean>();
-		mFollowingListAdapter = new FollowingListAdapter(this,mFollowingList);
-		mFollowinglistPtrList.setAdapter(mFollowingListAdapter);
+		mFansListAdapter = new FanListAdapter(this,mFollowingList);
+		mFanlistPtrList.setAdapter(mFansListAdapter);
 		
-		mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
-		mFollowinglistPtrList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+		mFanlistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
+		mFanlistPtrList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
 				// show latest refresh time
 				pullToRefreshBase.getLoadingLayoutProxy(true, false).setLastUpdatedLabel(
-						FollowingListActivity.this.getString(R.string.updating) +
-						GolukUtils.getCurrentFormatTime(FollowingListActivity.this));
+						FanListActivity.this.getString(R.string.updating) +
+						GolukUtils.getCurrentFormatTime(FanListActivity.this));
 				sendFollowingListRequest(REFRESH_PULL_DOWN);
 				
 			}
@@ -104,7 +107,7 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
 				pullToRefreshBase.getLoadingLayoutProxy(false, true).setPullLabel(
-						FollowingListActivity.this.getResources().getString(
+						FanListActivity.this.getResources().getString(
 						R.string.goluk_pull_to_refresh_footer_pull_label));
 				sendFollowingListRequest(REFRESH_PULL_UP);
 				
@@ -163,7 +166,7 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 			}
 		}
 		
-		FollowingListRequest request = new FollowingListRequest(IPageNotifyFn.PageType_Following, this);
+		FansListRequest request = new FansListRequest(IPageNotifyFn.PageType_Fans, this);
 		
 		GolukApplication app = GolukApplication.getInstance();
 		
@@ -194,8 +197,8 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 
 	private void setupView() {
 		// TODO Auto-generated method stub
-		mFollowinglistBackIb.setOnClickListener(this);
-		mFollowinglistTitleTv.setText(R.string.str_follow);
+		mFanlistBackIb.setOnClickListener(this);
+		mFanlistTitleTv.setText(R.string.str_fans);
 		
 		mEmptyRl.setOnClickListener(this);
 		
@@ -204,12 +207,12 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 	private void initView() {
 		// TODO Auto-generated method stub
 		
-		mFollowinglistBackIb = (ImageButton) findViewById(R.id.ib_followinglist_back);
-		mFollowinglistTitleTv = (TextView) findViewById(R.id.tv_followinglist_title);
-		mFollowinglistPtrList = (PullToRefreshListView) findViewById(R.id.ptrlist_followinglist);
+		mFanlistBackIb = (ImageButton) findViewById(R.id.ib_fanlist_back);
+		mFanlistTitleTv = (TextView) findViewById(R.id.tv_fanlist_title);
+		mFanlistPtrList = (PullToRefreshListView) findViewById(R.id.ptrlist_fanlist);
 		
-		mEmptyRl = (RelativeLayout) findViewById(R.id.ry_followinglist_refresh);
-		mEmptyTv = (TextView) findViewById(R.id.tv_followinglist_empty);
+		mEmptyRl = (RelativeLayout) findViewById(R.id.ry_fanlist_refresh);
+		mEmptyTv = (TextView) findViewById(R.id.tv_fanlist_empty);
 		
 		mLoadingDialog = new CustomLoadingDialog(this, null);
 		
@@ -254,10 +257,10 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch(v.getId()){
-		case R.id.ib_followinglist_back:
-			FollowingListActivity.this.finish();
+		case R.id.ib_fanlist_back:
+			FanListActivity.this.finish();
 			break;
-		case R.id.ry_followinglist_refresh:
+		case R.id.ry_fanlist_refresh:
 			sendFollowingListRequest(REFRESH_NORMAL);
 			break;
 		}
@@ -266,8 +269,8 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 	
 	private void setEmptyView(String emptyInfo) {
 		if(REFRESH_NORMAL.equals(mCurMotion)) {
-			mFollowinglistPtrList.setEmptyView(mEmptyRl);
-			mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
+			mFanlistPtrList.setEmptyView(mEmptyRl);
+			mFanlistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
 			mEmptyTv.setText(emptyInfo);
 		}
 	}
@@ -280,13 +283,13 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 			mLoadingDialog.close();
 		}
 
-		if(requestType == IPageNotifyFn.PageType_Following) {
+		if(requestType == IPageNotifyFn.PageType_Fans) {
 			
-			mFollowinglistPtrList.onRefreshComplete();
+			mFanlistPtrList.onRefreshComplete();
 			FollowingRetBean bean = (FollowingRetBean)result;
 			
 			if(null == bean) {
-				Toast.makeText(FollowingListActivity.this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+				Toast.makeText(FanListActivity.this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 				if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
 					setEmptyView(getString(R.string.msg_system_connect_error));
 				}
@@ -294,11 +297,11 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 			}
 
 			if(null == bean.data) {
-				setEmptyView(getString(R.string.no_following_tips));
+				setEmptyView(getString(R.string.no_fans_tips));
 				return;
 			}
 
-			mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.BOTH);
+			mFanlistPtrList.setMode(PullToRefreshBase.Mode.BOTH);
 
 			List<FollowingItemBean> followingBeanList = bean.data.userlist;
 			
@@ -306,22 +309,22 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 				
 				if(REFRESH_PULL_UP.equals(mCurMotion)) {
 					
-					Toast.makeText(FollowingListActivity.this, getString(
+					Toast.makeText(FanListActivity.this, getString(
 							R.string.str_pull_refresh_listview_bottom_reach), Toast.LENGTH_SHORT).show();
 					mCurMotion = REFRESH_NORMAL;
 					return;
 				}else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)){
-					setEmptyView(getString(R.string.no_following_tips));
+					setEmptyView(getString(R.string.no_fans_tips));
 					return;
 				}	
 			}else{
 				if(REFRESH_PULL_UP.equals(mCurMotion)) {
 					mFollowingList.addAll(followingBeanList);
-					mFollowingListAdapter.notifyDataSetChanged();
+					mFansListAdapter.notifyDataSetChanged();
 				} else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
 					mFollowingList.clear();
 					mFollowingList.addAll(followingBeanList);
-					mFollowingListAdapter.setData(mFollowingList);
+					mFansListAdapter.setData(mFollowingList);
 				} else {
 				}
 			}
@@ -336,19 +339,19 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 					FollowingItemBean tempBean = mFollowingList.get(i);
 					tempBean.link = bean.data.link;
 					mFollowingList.set(i, tempBean);
-					mFollowingListAdapter.notifyDataSetChanged();
+					mFansListAdapter.notifyDataSetChanged();
 					
 					if(mFollowingList==null||mFollowingList.size()<=0){
-						setEmptyView(getString(R.string.no_following_tips));
+						setEmptyView(getString(R.string.no_fans_tips));
 					}
 					
 					if(bean.data!=null){
 						if(bean.data.link == FollowingConfig.LINK_TYPE_FAN_ONLY
 								||bean.data.link == FollowingConfig.LINK_TYPE_UNLINK){
-							Toast.makeText(FollowingListActivity.this,
+							Toast.makeText(FanListActivity.this,
 									getResources().getString(R.string.str_usercenter_attention_cancle_ok),Toast.LENGTH_SHORT).show();
 						}else if(bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER){
-							Toast.makeText(FollowingListActivity.this,
+							Toast.makeText(FanListActivity.this,
 									getResources().getString(R.string.str_usercenter_attention_ok),Toast.LENGTH_SHORT).show();
 						}
 					}
@@ -358,10 +361,10 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 				
 				if(bean.data.link == FollowingConfig.LINK_TYPE_FAN_ONLY
 						||bean.data.link == FollowingConfig.LINK_TYPE_UNLINK){
-					Toast.makeText(FollowingListActivity.this, 
+					Toast.makeText(FanListActivity.this, 
 							getResources().getString(R.string.str_cancel_follow_fail), Toast.LENGTH_SHORT).show();
 				}else if(bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER){
-					Toast.makeText(FollowingListActivity.this,
+					Toast.makeText(FanListActivity.this,
 							getResources().getString(R.string.str_follow_fail),Toast.LENGTH_SHORT).show();
 				}
 				

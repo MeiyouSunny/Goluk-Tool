@@ -26,6 +26,7 @@ import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventMessageUpdate;
+import cn.com.mobnote.golukmobile.fan.FanListActivity;
 import cn.com.mobnote.golukmobile.following.FollowingListActivity;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.live.UserInfo;
@@ -85,9 +86,9 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	private ImageView mImageHead, mImageAuthentication;
 	private TextView mTextName, mTextId;
 	private LinearLayout mVideoLayout;
-	private TextView mTextShare, mTextPraise, mTextFollow;
+	private TextView mTextShare, mTextFans, mTextFollow;
 	/** 分享视频 赞我的人 **/
-	private LinearLayout mShareLayout, mPraiseLayout, mFollowLayout;
+	private LinearLayout mShareLayout, mFansLayout, mFollowLayout;
 
 	/** 自动登录中的loading提示框 **/
 	private Builder mBuilder = null;
@@ -238,10 +239,10 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		mTextId = (TextView) mMineRootView.findViewById(R.id.user_center_id_text);
 		mVideoLayout = (LinearLayout) mMineRootView.findViewById(R.id.user_center_video_layout);
 		mTextShare = (TextView) mMineRootView.findViewById(R.id.user_share_count);
-		mTextPraise = (TextView) mMineRootView.findViewById(R.id.user_praise_count);
+		mTextFans = (TextView) mMineRootView.findViewById(R.id.user_fans_count);
 		mTextFollow = (TextView) mMineRootView.findViewById(R.id.user_follow_count);
 		mShareLayout = (LinearLayout) mMineRootView.findViewById(R.id.user_share);
-		mPraiseLayout = (LinearLayout) mMineRootView.findViewById(R.id.user_praise);
+		mFansLayout = (LinearLayout) mMineRootView.findViewById(R.id.user_fans);
 		mFollowLayout = (LinearLayout) mMineRootView.findViewById(R.id.user_follow);
 		// 注册事件
 		// 个人中心 我的相册 摄像头管理 通用设置 极路客小技巧 安装指导 版本信息 购买极路客
@@ -254,7 +255,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		mQuestionItem.setOnClickListener(this);
 		// mShoppingItem.setOnClickListener(this);
 		mShareLayout.setOnClickListener(this);
-		mPraiseLayout.setOnClickListener(this);
+		mFansLayout.setOnClickListener(this);
 		mFollowLayout.setOnClickListener(this);
 		mProfitItem.setOnClickListener(this);
 		mMsgCenterItem.setOnClickListener(this);
@@ -303,11 +304,14 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 				clickToLogin(TYPE_SHARE_PRAISE);
 			}
 				
-		case R.id.user_praise:
-			if(isLoginInfoValid()){
+		case R.id.user_fans:
+			if (isLoginInfoValid()) {
+				intent = new Intent(getActivity(),FanListActivity.class);
+				intent.putExtra("linkuid", ma.mApp.getMyInfo().uid);
+				getActivity().startActivity(intent);
 				
 			}else{
-				clickToLogin(TYPE_SHARE_PRAISE);
+				clickToLogin(TYPE_FOLLOWING);
 			}
 			break;
 		case R.id.user_follow:
@@ -545,14 +549,14 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			}
 			mTextId.setTextColor(Color.rgb(0, 0, 0));
 			mTextShare.setText(GolukUtils.getFormatNumber(shareCount));
-			mTextPraise.setText(GolukUtils.getFormatNumber(fansCount));
+			mTextFans.setText(GolukUtils.getFormatNumber(fansCount));
 			mTextFollow.setText(GolukUtils.getFormatNumber(followCount));
 			if (newFansCout > 0) {
 				Drawable redPoint = getActivity().getResources().getDrawable(R.drawable.home_red_point_little);
 				redPoint.setBounds(0, 0, redPoint.getMinimumWidth(), redPoint.getMinimumHeight());
-				mTextPraise.setCompoundDrawables(null, null, redPoint, null);
+				mTextFans.setCompoundDrawables(null, null, redPoint, null);
 			} else {
-				mTextPraise.setCompoundDrawables(null, null, null, null);
+				mTextFans.setCompoundDrawables(null, null, null, null);
 			}
 			// 获取用户信息
 			boolean b = GolukApplication.getInstance().getVideoSquareManager().getUserInfo(userUId);
@@ -586,7 +590,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 					if ("".equals(sharevideonumber)) {
 						sharevideonumber = "0";
 					}
-					mTextPraise.setText(GolukUtils.getFormatNumber(praisemenumber));
+					mTextFans.setText(GolukUtils.getFormatNumber(praisemenumber));
 					mTextShare.setText(GolukUtils.getFormatNumber(sharevideonumber));
 				} catch (Exception e) {
 					e.printStackTrace();
