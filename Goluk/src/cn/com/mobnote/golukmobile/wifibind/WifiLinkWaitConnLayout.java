@@ -76,6 +76,13 @@ public class WifiLinkWaitConnLayout extends ViewFrame implements OnClickListener
 	}
 
 	@Override
+	public void stop() {
+		if (null != mLoadingAnimal) {
+			mLoadingAnimal.stopAnimal();
+		}
+	}
+
+	@Override
 	public void free() {
 		mLoadingAnimal.free();
 	}
