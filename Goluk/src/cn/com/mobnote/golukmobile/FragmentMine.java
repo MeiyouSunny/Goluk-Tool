@@ -306,20 +306,14 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 				
 		case R.id.user_fans:
 			if (isLoginInfoValid()) {
-				intent = new Intent(getActivity(),FanListActivity.class);
-				intent.putExtra("linkuid", ma.mApp.getMyInfo().uid);
-				getActivity().startActivity(intent);
-				
+				GolukUtils.startFanListActivity(getActivity(), ma.mApp.getMyInfo().uid);
 			}else{
 				clickToLogin(TYPE_FOLLOWING);
 			}
 			break;
 		case R.id.user_follow:
 			if (isLoginInfoValid()) {
-				intent = new Intent(getActivity(),FollowingListActivity.class);
-				intent.putExtra("linkuid", ma.mApp.getMyInfo().uid);
-				getActivity().startActivity(intent);
-				
+				GolukUtils.startFollowingListActivity(getActivity(), ma.mApp.getMyInfo().uid);
 			}else{
 				clickToLogin(TYPE_FOLLOWING);
 			}
