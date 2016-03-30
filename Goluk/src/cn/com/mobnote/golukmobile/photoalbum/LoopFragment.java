@@ -102,11 +102,12 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		if (null != GolukApplication.getInstance().getIPCControlManager()) {
+			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_CIRCULATE, this);
+		}
+		
 		if(mLoopVideoView == null){
 			EventBus.getDefault().register(this);
-			if (null != GolukApplication.getInstance().getIPCControlManager()) {
-				GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_CIRCULATE, this);
-			}
 
 			mFragmentAlbum = (FragmentAlbum)getParentFragment();
 
@@ -130,9 +131,18 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 	}
 	
 	@Override
+	public void onResume() {
+		super.onResume();
+		if (null != GolukApplication.getInstance().getIPCControlManager()) {
+			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_CIRCULATE, this);
+		}
+	}
+	
+	@Override
 	public void onDestroyView() {
 		// TODO Auto-generated method stub
 		super.onDestroyView();
+		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_CIRCULATE);
 		EventBus.getDefault().unregister(this);
 	}
 	

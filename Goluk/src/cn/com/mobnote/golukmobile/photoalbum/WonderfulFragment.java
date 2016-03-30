@@ -109,9 +109,8 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 				mWonderfulVideoView = inflater.inflate(R.layout.wonderful_listview,(ViewGroup) getActivity().findViewById(R.id.viewpager),false);
 			}
 
-			if (null != GolukApplication.getInstance().getIPCControlManager()) {
-				GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT, this);
-			}
+			
+			mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this.getContext()).inflate(R.layout.video_square_below_loading, null);
 
 			mFragmentAlbum = (FragmentAlbum) getParentFragment();
 			mDataList = new ArrayList<VideoInfo>();
@@ -134,9 +133,17 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	}
 	
 	@Override
+	public void onResume() {
+		super.onResume();
+		if (null != GolukApplication.getInstance().getIPCControlManager()) {
+			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT, this);
+		}
+	}
+	
+	@Override
 	public void onDestroyView() {
-		// TODO Auto-generated method stub
 		super.onDestroyView();
+		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT);
 		EventBus.getDefault().unregister(this);
 	}
 	
@@ -531,7 +538,6 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	private void addFooterView() {
 		if (!addFooter) {
 			addFooter = true;
-			mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this.getContext()).inflate(R.layout.video_square_below_loading, null);
 			mStickyListHeadersListView.addFooterView(mBottomLoadingView);
 		}
 	}
@@ -710,5 +716,6 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 		}
 
 	}
+	
 
 }

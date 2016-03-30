@@ -131,10 +131,19 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 	}
 	
 	@Override
+	public void onResume() {
+		super.onResume();
+		if (null != GolukApplication.getInstance().getIPCControlManager()) {
+			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_URGENT, this);
+		}
+	}
+	
+	@Override
 	public void onDestroyView() {
 		// TODO Auto-generated method stub
 		super.onDestroyView();
 		EventBus.getDefault().unregister(this);
+		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_URGENT);
 	}
 	
 	public void onEventMainThread(EventDeletePhotoAlbumVid event){
