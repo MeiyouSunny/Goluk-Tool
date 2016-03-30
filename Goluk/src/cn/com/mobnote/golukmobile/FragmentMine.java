@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventMessageUpdate;
+import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.msg.MessageBadger;
@@ -33,8 +35,11 @@ import cn.com.mobnote.golukmobile.msg.MessageCenterActivity;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.praised.MyPraisedActivity;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
+import cn.com.mobnote.golukmobile.usercenter.UserInfoRequest;
+import cn.com.mobnote.golukmobile.usercenter.bean.HomeJson;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.manager.MessageManager;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.mobnote.user.UserInterface;
 import cn.com.mobnote.util.GlideUtils;
@@ -51,8 +56,8 @@ import de.greenrobot.event.EventBus;
  */
 
 @SuppressLint({ "HandlerLeak", "Instantiatable" })
-public class FragmentMine extends Fragment implements OnClickListener, UserInterface, VideoSuqareManagerFn {
-
+public class FragmentMine extends Fragment implements OnClickListener, UserInterface, VideoSuqareManagerFn ,IRequestResultListener{
+	
 	/** 个人中心 **/
 	private RelativeLayout mUserCenterItem = null;
 	/** 未登录不显示用户id **/
@@ -88,7 +93,6 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	private LinearLayout mShareLayout, mFansLayout, mFollowLayout;
 
 	/** 自动登录中的loading提示框 **/
-	private Builder mBuilder = null;
 	private SharedPreferences mPreferences = null;
 	private Editor mEditor = null;
 	// LinearLayout mRootLayout = null;
@@ -96,7 +100,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 
 	/** 用户信息 **/
 	private String userHead, userName, userDesc, userUId, userSex, customavatar, userPhone;
-	private int shareCount, praiseCount, followCount, newFansCout, fansCount;
+	private int newFansCout;
 
 	/** 个人中心 **/
 	private static final int TYPE_USER = 1;
@@ -109,6 +113,8 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	private static final String TAG = "FragmentMine";
 
 	LinearLayout mMineRootView = null;
+	
+	private HomeJson mHomeJson;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -141,6 +147,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		resetLoginState();
 		int msgCount = MessageManager.getMessageManager().getMessageTotalCount();
 		setMessageTipCount(msgCount);
+		sendGetUserHomeRequest();
 	}
 
 	@Override
@@ -148,6 +155,15 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		// TODO Auto-generated method stub
 		super.onDestroyView();
 		EventBus.getDefault().unregister(this);
+	}
+	
+	
+
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		// TODO Auto-generated method stub
+		super.onHiddenChanged(hidden);
+		sendGetUserHomeRequest();
 	}
 
 	public void onEventMainThread(EventMessageUpdate event) {
@@ -485,6 +501,18 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			mVideoSquareManager.addVideoSquareManagerListener("indexmore", this);
 		}
 	}
+	
+	/**
+	 * 获取用户个人信息
+	 */
+	private void sendGetUserHomeRequest(){
+		
+		UserInfoRequest request = new UserInfoRequest(IPageNotifyFn.PageType_HomeUserInfo, this);
+		
+		if((ma.mApp.isUserLoginSucess == true || ma.mApp.registStatus == 2) && !TextUtils.isEmpty(userUId) ){
+			request.get(userUId, "0", userUId, null);
+		}
+	}
 
 	/**
 	 * 个人资料信息
@@ -499,10 +527,6 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			userHead = userInfo.head;
 			userName = userInfo.nickName;
 			userDesc = userInfo.desc;
-			shareCount = userInfo.sharevideonumber;
-			praiseCount = userInfo.praisemenumber;
-			followCount = userInfo.followingnumber;
-			fansCount = userInfo.fansnumber;
 			newFansCout = userInfo.newfansnumber;
 			userUId = userInfo.uid;
 			userSex = userInfo.sex;
@@ -539,9 +563,9 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 				mTextId.setText(userDesc);
 			}
 			mTextId.setTextColor(Color.rgb(0, 0, 0));
-			mTextShare.setText(GolukUtils.getFormatNumber(shareCount));
-			mTextFans.setText(GolukUtils.getFormatNumber(fansCount));
-			mTextFollow.setText(GolukUtils.getFormatNumber(followCount));
+//			mTextShare.setText(GolukUtils.getFormatNumber(0));
+//			mTextFans.setText(GolukUtils.getFormatNumber(0));
+//			mTextFollow.setText(GolukUtils.getFormatNumber(0));
 			if (newFansCout > 0) {
 				Drawable redPoint = getActivity().getResources().getDrawable(R.drawable.home_red_point_little);
 				redPoint.setBounds(0, 0, redPoint.getMinimumWidth(), redPoint.getMinimumHeight());
@@ -581,8 +605,8 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 					if ("".equals(sharevideonumber)) {
 						sharevideonumber = "0";
 					}
-					mTextFans.setText(GolukUtils.getFormatNumber(praisemenumber));
-					mTextShare.setText(GolukUtils.getFormatNumber(sharevideonumber));
+					//mTextFans.setText(GolukUtils.getFormatNumber(praisemenumber));
+					//mTextShare.setText(GolukUtils.getFormatNumber(sharevideonumber));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -639,6 +663,24 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			mTextId.setTextColor(Color.rgb(128, 138, 135));
 			mTextId.setText(getActivity().getResources().getString(R.string.str_login_tosee_usercenter));
 			showHead(mImageHead, "7");
+		}
+	}
+
+	@Override
+	public void onLoadComplete(int requestType, Object result) {
+		// TODO Auto-generated method stub
+		if (requestType == IPageNotifyFn.PageType_HomeUserInfo) {
+			mHomeJson = (HomeJson) result;
+			if (null != mHomeJson && null != mHomeJson.data && null != mHomeJson.data.user) {
+				if((ma.mApp.isUserLoginSucess == true || ma.mApp.registStatus == 2) && !TextUtils.isEmpty(userUId) ){
+					mTextShare.setText(GolukUtils.getFormatNumber(mHomeJson.data.user.share));
+					mTextFans.setText(GolukUtils.getFormatNumber(mHomeJson.data.user.fans));
+					mTextFollow.setText(GolukUtils.getFormatNumber(mHomeJson.data.user.following));
+				}
+				
+			} else {
+				
+			}
 		}
 	}
 
