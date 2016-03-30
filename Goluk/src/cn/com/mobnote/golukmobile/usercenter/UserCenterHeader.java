@@ -178,6 +178,10 @@ public class UserCenterHeader implements OnClickListener {
 			GolukUtils.startFanListActivity(mContext, mData.user.uid);
 			break;
 		case R.id.btn_usercenter_header_attention:
+			if (!UserUtils.isNetDeviceAvailable(mContext)) {
+				GolukUtils.showToast(mContext, mContext.getString(R.string.str_network_unavailable));
+				return;
+			}
 			if (mUserCenterActivity.testUser()) {
 				// 跳到个人中心编辑页面
 				Intent it = new Intent(mContext, UserPersonalInfoActivity.class);

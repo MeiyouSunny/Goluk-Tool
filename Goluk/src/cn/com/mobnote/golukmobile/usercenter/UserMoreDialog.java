@@ -2,6 +2,8 @@ package cn.com.mobnote.golukmobile.usercenter;
 
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.user.UserUtils;
+import cn.com.mobnote.util.GolukUtils;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +40,11 @@ public class UserMoreDialog extends Dialog implements android.view.View.OnClickL
 
 	@Override
 	public void onClick(View v) {
+		if (!UserUtils.isNetDeviceAvailable(mContext)) {
+			dismiss();
+			GolukUtils.showToast(mContext, mContext.getString(R.string.str_network_unavailable));
+			return;
+		}
 		switch (v.getId()) {
 		case R.id.btn_user_more_share:
 			dismiss();
