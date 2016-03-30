@@ -168,14 +168,14 @@ public class UserCenterHeader implements OnClickListener {
 				GolukUtils.showToast(mContext, mContext.getString(R.string.str_network_unavailable));
 				return;
 			}
-			GolukUtils.showToast(mContext, "intent to attention");
+			GolukUtils.startFollowingListActivity(mContext, mData.user.uid);
 			break;
 		case R.id.tv_usercenter_header_fans_count:
 			if (!UserUtils.isNetDeviceAvailable(mContext)) {
 				GolukUtils.showToast(mContext, mContext.getString(R.string.str_network_unavailable));
 				return;
 			}
-			GolukUtils.showToast(mContext, "intent to fans");
+			GolukUtils.startFanListActivity(mContext, mData.user.uid);
 			break;
 		case R.id.btn_usercenter_header_attention:
 			if (mUserCenterActivity.testUser()) {

@@ -15,7 +15,6 @@ import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
-import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;

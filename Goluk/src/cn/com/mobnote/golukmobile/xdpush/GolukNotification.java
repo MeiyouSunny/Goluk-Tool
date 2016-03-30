@@ -40,7 +40,6 @@ import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
 import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
-import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.util.GolukConfig;
 import cn.com.mobnote.util.GolukUtils;

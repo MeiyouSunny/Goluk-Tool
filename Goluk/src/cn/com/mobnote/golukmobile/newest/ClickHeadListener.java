@@ -7,7 +7,6 @@ import android.view.View.OnClickListener;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
-import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.util.GolukUtils;
 
