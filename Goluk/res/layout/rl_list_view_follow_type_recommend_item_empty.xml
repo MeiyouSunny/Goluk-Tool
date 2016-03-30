@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:drawableTop="@drawable/followed_empty"
-        android:text="什么内容也没有"
+        android:text="@string/str_follow_no_content"
         android:textSize="12sp"
         android:gravity="center_horizontal"
         android:paddingTop="50dp"

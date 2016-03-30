@@ -237,7 +237,7 @@ public class FollowedListAdapter extends BaseAdapter {
 		case 0: // no relations
 		{
 			holderRec.nItemFollowRL.setBackgroundResource(R.drawable.follow_button_border_normal);
-			holderRec.nItemFollowTV.setText("关注");
+			holderRec.nItemFollowTV.setText(mFragment.getString(R.string.str_follow));
 			holderRec.nItemFollowTV.setTextColor(Color.parseColor("#0080ff"));
 			Drawable drawable = mFragment.getActivity().getResources().getDrawable(R.drawable.icon_follow_normal);
 			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
@@ -247,7 +247,7 @@ public class FollowedListAdapter extends BaseAdapter {
 		case 1: // followed
 		{
 			holderRec.nItemFollowRL.setBackgroundResource(R.drawable.follow_button_border_followed);
-			holderRec.nItemFollowTV.setText("已关注");
+			holderRec.nItemFollowTV.setText(mFragment.getString(R.string.str_usercenter_header_attention_already_text));
 			holderRec.nItemFollowTV.setTextColor(Color.parseColor("#ffffff"));
 			Drawable drawable = mFragment.getActivity().getResources().getDrawable(R.drawable.icon_followed);
 			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
@@ -257,7 +257,7 @@ public class FollowedListAdapter extends BaseAdapter {
 		case 2: // followed each other
 		{
 			holderRec.nItemFollowRL.setBackgroundResource(R.drawable.follow_button_border_mutual);
-			holderRec.nItemFollowTV.setText("相互关注");
+			holderRec.nItemFollowTV.setText(mFragment.getString(R.string.str_usercenter_header_attention_each_other_text));
 			holderRec.nItemFollowTV.setTextColor(Color.parseColor("#ffffff"));
 			Drawable drawable = mFragment.getActivity().getResources().getDrawable(R.drawable.icon_follow_mutual);
 			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());

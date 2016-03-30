@@ -281,18 +281,15 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 			mListView.setMode(PullToRefreshBase.Mode.BOTH);
 
 			List<FollowedListBean> followedBeanList = bean.data.list;
-			if(null == bean.data.list || bean.data.list.size() == 0) {
+			if(null == followedBeanList || followedBeanList.size() == 0) {
+				Toast.makeText(getActivity(), getString(
+						R.string.str_pull_refresh_listview_bottom_reach), Toast.LENGTH_SHORT).show();
 				return;
 			}
 
-			if(followedBeanList.size() == 0) {
-				Toast.makeText(getActivity(), getString(
-						R.string.str_pull_refresh_listview_bottom_reach), Toast.LENGTH_SHORT).show();
-			}
-
-			FollowedListBean last = bean.data.list.get(followedBeanList.size() - 1);
+			FollowedListBean last = followedBeanList.get(followedBeanList.size() - 1);
 			if(null != last) {
-				if(last.followvideo.video != null) {
+				if(null != last.followvideo && last.followvideo.video != null) {
 					mTimeStamp = last.followvideo.video.sharingtime;
 				}
 			} else {
@@ -324,6 +321,9 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 				int count = followedBeanList.size();
 				for(int i = 0; i < count; i++) {
 					FollowedListBean followBean = followedBeanList.get(i);
+					if(null == followBean) {
+						continue;
+					}
 					if("0".equals(followBean.type)) {
 						gotList.add(followBean.followvideo);
 					} else {
@@ -358,6 +358,10 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 		} else if(requestType == IPageNotifyFn.PageType_Follow) {
 			FollowRetBean bean = (FollowRetBean)result;
 			if(null != bean) {
+				if(bean.code != 0) {
+					Toast.makeText(getActivity(), bean.msg, Toast.LENGTH_SHORT).show();
+					return;
+				}
 				// User link uid to find the changed recommend user item status
 				int i = findLinkUserItem(bean.data.linkuid);
 				if(i >=0 && i < mFollowedList.size()) {
@@ -367,19 +371,31 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 				}
 			} else {
 				// Toast for operation failed
-				Toast.makeText(getActivity(), "操作失败", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 			}
 		} else if(requestType == IPageNotifyFn.PageType_FollowAll) {
 			FollowAllRetBean bean = (FollowAllRetBean)result;
 			if(null != bean) {
 				if(bean.code == 0) {
 					sendFollowedContentRequest(REFRESH_NORMAL, "");
+				} else {
+					Toast.makeText(getActivity(), bean.msg, Toast.LENGTH_SHORT).show();
 				}
 			} else {
-				Toast.makeText(getActivity(), "操作失败", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 			}
 		} else if(requestType == IPageNotifyFn.PageType_GetShareURL) {
 			VideoShareRetBean bean = (VideoShareRetBean)result;
+			if(null == bean) {
+				Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+				return;
+			}
+
+			if(!bean.success) {
+				Toast.makeText(getActivity(), bean.msg, Toast.LENGTH_SHORT).show();
+				return;
+			}
+
 			String shareurl = bean.data.shorturl;
 			String coverurl = bean.data.coverurl;
 			String describe = bean.data.describe;
