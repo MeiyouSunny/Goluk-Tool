@@ -373,6 +373,8 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mApp.isUserLoginSucess = false;
 		mApp.loginoutStatus = true;// 注销成功
 		mApp.registStatus = 3;// 注册失败
+		mApp.autoLoginStatus = 3;
+		mApp.loginStatus = 3;
 
 		mPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
 		mEditor = mPreferences.edit();
@@ -383,7 +385,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mBindPhone.setVisibility(View.GONE);
 		GolukUtils.showToast(mContext, this.getResources().getString(R.string.str_loginout_success));
 		btnLoginout.setText(this.getResources().getString(R.string.login_text));
-		MessageManager.getMessageManager().setMessageEveryCount(0, 0, 0);
+		MessageManager.getMessageManager().setMessageEveryCount(0, 0, 0,0);
 		GolukNotification.getInstance().clearAllNotification(this);
 	}
 

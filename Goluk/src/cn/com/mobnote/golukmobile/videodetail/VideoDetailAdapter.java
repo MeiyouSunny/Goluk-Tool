@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,8 +16,8 @@ import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentBean;
+import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
-import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
@@ -199,7 +198,8 @@ public class VideoDetailAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View arg0) {
-				Intent it = new Intent(mContext, UserCenterActivity.class);
+//				Intent it = new Intent(mContext, UserCenterActivity.class);
+				Intent it = new Intent(mContext, NewUserCenterActivity.class);
 
 				CommentBean bean = mDataList.get(index);
 				UCUserInfo user = new UCUserInfo();

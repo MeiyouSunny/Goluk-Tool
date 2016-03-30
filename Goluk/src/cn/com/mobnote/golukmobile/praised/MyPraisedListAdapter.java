@@ -23,8 +23,8 @@ import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.praised.bean.MyPraisedVideoBean;
+import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
-import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
@@ -138,7 +138,8 @@ public class MyPraisedListAdapter extends BaseAdapter {
 
 		@Override
 		public void onClick(View widget) {
-			Intent intent = new Intent(mContext, UserCenterActivity.class);
+//			Intent intent = new Intent(mContext, UserCenterActivity.class);
+			Intent intent = new Intent(mContext, NewUserCenterActivity.class);
 			UCUserInfo user = new UCUserInfo();
 			user.uid = nPraisedBean.uid;
 			user.nickname = nPraisedBean.nickname;

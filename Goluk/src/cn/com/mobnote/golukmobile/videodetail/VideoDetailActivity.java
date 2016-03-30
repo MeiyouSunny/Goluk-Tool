@@ -52,21 +52,21 @@ import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.live.LiveDialogManager.ILiveDialogManagerFn;
+import cn.com.mobnote.golukmobile.praise.PraiseCancelRequest;
+import cn.com.mobnote.golukmobile.praise.PraiseRequest;
+import cn.com.mobnote.golukmobile.praise.bean.PraiseCancelResultBean;
+import cn.com.mobnote.golukmobile.praise.bean.PraiseCancelResultDataBean;
+import cn.com.mobnote.golukmobile.praise.bean.PraiseResultBean;
+import cn.com.mobnote.golukmobile.praise.bean.PraiseResultDataBean;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videoclick.NewestVideoClickRequest;
-import cn.com.mobnote.golukmobile.videosuqare.PraiseCancelRequest;
-import cn.com.mobnote.golukmobile.videosuqare.PraiseRequest;
+import cn.com.mobnote.golukmobile.videoshare.ShareVideoShortUrlRequest;
+import cn.com.mobnote.golukmobile.videoshare.bean.VideoShareDataBean;
+import cn.com.mobnote.golukmobile.videoshare.bean.VideoShareRetBean;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRTScrollListener;
 import cn.com.mobnote.golukmobile.videosuqare.RTPullListView.OnRefreshListener;
-import cn.com.mobnote.golukmobile.videosuqare.ShareVideoShortUrlRequest;
-import cn.com.mobnote.golukmobile.videosuqare.bean.PraiseCancelResultBean;
-import cn.com.mobnote.golukmobile.videosuqare.bean.PraiseCancelResultDataBean;
-import cn.com.mobnote.golukmobile.videosuqare.bean.PraiseResultBean;
-import cn.com.mobnote.golukmobile.videosuqare.bean.PraiseResultDataBean;
-import cn.com.mobnote.golukmobile.videosuqare.bean.ShareVideoBean;
-import cn.com.mobnote.golukmobile.videosuqare.bean.ShareVideoResultBean;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
@@ -1130,9 +1130,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			if (!isHasData()) {
 				return;
 			}
-			ShareVideoResultBean shareVideoResultBean = (ShareVideoResultBean) result;
+			VideoShareRetBean shareVideoResultBean = (VideoShareRetBean) result;
 			if (shareVideoResultBean != null && shareVideoResultBean.success && shareVideoResultBean.data != null) {
-				ShareVideoBean shareVideoBean = shareVideoResultBean.data;
+				VideoShareDataBean shareVideoBean = shareVideoResultBean.data;
 				String shareurl = shareVideoBean.shorturl;
 				String coverurl = shareVideoBean.coverurl;
 				String describe = shareVideoBean.describe;

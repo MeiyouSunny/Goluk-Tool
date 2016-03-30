@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -16,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,9 +23,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
-import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask.ICallBack;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -34,7 +32,8 @@ import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyListHeadersAdapter {
-	private PhotoAlbumActivity mActivity = null;
+	private FragmentAlbum mFragment = null;
+	private Context mContext = null;
 	private LayoutInflater inflater = null;
 //	private StickyListHeadersListView mListView = null;
 	private List<DoubleVideoInfo> mDataList = null;
@@ -46,10 +45,11 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	private String from = null;
 	private int type = 0;
 
-	public LocalWonderfulVideoAdapter(Context c, StickyListHeadersListView listview, int type, String from) {
+	public LocalWonderfulVideoAdapter(Context c, FragmentAlbum fragment, StickyListHeadersListView listview, int type, String from) {
 		this.from = from;
 		this.type = type;
-		this.mActivity = (PhotoAlbumActivity) c;
+		this.mFragment = fragment;
+		this.mContext = c;
 //		this.mListView = listview;
 		this.inflater = LayoutInflater.from(c);
 		this.density = SoundUtils.getInstance().getDisplayMetrics().density;
@@ -95,17 +95,17 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 			holder.mTMLayout2 = (RelativeLayout) convertView.findViewById(R.id.mTMLayout2);
 			holder.image1 = (ImageView) convertView.findViewById(R.id.video_first_needle1);
 			holder.image2 = (ImageView) convertView.findViewById(R.id.video_first_needle2);
-			holder.mVideoCountTime1 = (TextView) convertView.findViewById(R.id.video_countTime1);
-			holder.mVideoCountTime2 = (TextView) convertView.findViewById(R.id.video_countTime2);
-			holder.mVideoQuality1 = (ImageView) convertView.findViewById(R.id.video_quality1);
-			holder.mVideoQuality2 = (ImageView) convertView.findViewById(R.id.video_quality2);
+			//holder.mVideoCountTime1 = (TextView) convertView.findViewById(R.id.video_countTime1);
+			//holder.mVideoCountTime2 = (TextView) convertView.findViewById(R.id.video_countTime2);
+			holder.mVideoQuality1 = (TextView) convertView.findViewById(R.id.video_quality1);
+			holder.mVideoQuality2 = (TextView) convertView.findViewById(R.id.video_quality2);
 			holder.mVideoCreateTime1 = (TextView) convertView.findViewById(R.id.video_createtime1);
 			holder.mVideoCreateTime2 = (TextView) convertView.findViewById(R.id.video_createtime2);
-			holder.mVideoSize1 = (TextView) convertView.findViewById(R.id.video_size1);
-			holder.mVideoSize2 = (TextView) convertView.findViewById(R.id.video_size2);
+//			holder.mVideoSize1 = (TextView) convertView.findViewById(R.id.video_size1);
+//			holder.mVideoSize2 = (TextView) convertView.findViewById(R.id.video_size2);
 			holder.line = convertView.findViewById(R.id.line);
-			holder.mNewIcon1 = (ImageView) convertView.findViewById(R.id.mNewIcon1);
-			holder.mNewIcon2 = (ImageView) convertView.findViewById(R.id.mNewIcon2);
+			holder.mVide1Type = (Button) convertView.findViewById(R.id.video1_type);
+			holder.mVide2Type = (Button) convertView.findViewById(R.id.video2_type);
 			holder.mPreView1 = (ImageView) convertView.findViewById(R.id.mPreView1);
 			holder.mPreView2 = (ImageView) convertView.findViewById(R.id.mPreView2);
 
@@ -134,19 +134,20 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-
-		if ("local".equals(from)) {
-			holder.mPreView1.setImageResource(R.drawable.photo_preview_icon);
-			holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
-		} else {
-			if (type == IPCManagerFn.TYPE_CIRCULATE) {
-				holder.mPreView1.setImageResource(R.drawable.photo_preview_icon);
-				holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
-			} else {
-				holder.mPreView1.setImageResource(R.drawable.photo_share_icon);
-				holder.mPreView2.setImageResource(R.drawable.photo_share_icon);
-			}
+		
+		if("0".equals(mFragment.mPlatform)){
+			holder.mPreView1.setVisibility(View.GONE);
+			holder.mPreView2.setVisibility(View.GONE);
+			holder.mVideoQuality1.setVisibility(View.GONE);
+			holder.mVideoQuality2.setVisibility(View.GONE);
+		}else{
+			holder.mVideoQuality1.setVisibility(View.VISIBLE);
+			holder.mVideoQuality2.setVisibility(View.VISIBLE);
+			holder.mPreView1.setVisibility(View.VISIBLE);
+			holder.mPreView2.setVisibility(View.VISIBLE);
 		}
+
+		
 
 		holder.image1.setImageResource(R.drawable.tacitly_pic);
 		holder.image2.setImageResource(R.drawable.tacitly_pic);
@@ -160,32 +161,74 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		VideoInfo mVideoInfo2 = mDataList.get(position).getVideoInfo2();
 		holder.mTMLayout1.setTag(mVideoInfo1.videoPath);
 		holder.mTMLayout2.setTag("");
-		holder.mVideoCountTime1.setText(mVideoInfo1.countTime);
+		//holder.mVideoCountTime1.setText(mVideoInfo1.countTime);
 		holder.mVideoCreateTime1.setText(mVideoInfo1.videoCreateDate.substring(11));
-		holder.mVideoSize1.setText(mVideoInfo1.videoSize);
+//		holder.mVideoSize1.setText(mVideoInfo1.videoSize);
 //		holder.image1.setTag("image:" + mVideoInfo1.filename);
 		displayVideoQuality(mVideoInfo1.videoHP, holder.mVideoQuality1);
 		loadImage(mVideoInfo1.filename, holder.image1);
-		if (mVideoInfo1.isNew) {
-			holder.mNewIcon1.setVisibility(View.VISIBLE);
+		int type = getVideoType(mVideoInfo1.filename);
+		
+		if (type != 3) {
+			holder.mPreView1.setImageResource(R.drawable.photo_share_icon);
+			holder.mPreView2.setImageResource(R.drawable.photo_share_icon);
 		} else {
-			holder.mNewIcon1.setVisibility(View.GONE);
+			holder.mPreView1.setImageResource(R.drawable.photo_preview_icon);
+			holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
+		}
+		
+		/*if ("local".equals(from)) {
+			holder.mPreView1.setImageResource(R.drawable.photo_preview_icon);
+			holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
+		} else {
+			if (type != 3) {
+				holder.mPreView1.setImageResource(R.drawable.photo_share_icon);
+				holder.mPreView2.setImageResource(R.drawable.photo_share_icon);
+			} else {
+				holder.mPreView1.setImageResource(R.drawable.photo_preview_icon);
+				holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
+			}
+		}*/
+		
+		if(type == 1){
+			holder.mVide1Type.setText(mContext.getResources().getString(R.string.str_wonderful_title));
+			holder.mVide1Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_wonderful_txt_color));
+		}else if(type == 2){
+			holder.mVide1Type.setText(mContext.getResources().getString(R.string.str_urgent_title));
+			holder.mVide1Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_urgent_txt_color));
+		}else{
+			holder.mVide1Type.setText(mContext.getResources().getString(R.string.str_loop_title));
+			holder.mVide1Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_loop_txt_color));
+			holder.mPreView1.setVisibility(View.GONE);
 		}
 
 		if (null != mVideoInfo2) {
 			holder.mTMLayout2.setTag(mVideoInfo2.videoPath);
 			holder.mVideoLayout2.setVisibility(View.VISIBLE);
-			holder.mVideoCountTime2.setText(mVideoInfo2.countTime);
+			//holder.mVideoCountTime2.setText(mVideoInfo2.countTime);
 			holder.mVideoCreateTime2.setText(mVideoInfo2.videoCreateDate.substring(11));
-			holder.mVideoSize2.setText(mVideoInfo2.videoSize);
+//			holder.mVideoSize2.setText(mVideoInfo2.videoSize);
 //			holder.image2.setTag("image:" + mVideoInfo2.filename);
 			displayVideoQuality(mVideoInfo2.videoHP, holder.mVideoQuality2);
 			loadImage(mVideoInfo2.filename, holder.image2);
 
-			if (mVideoInfo2.isNew) {
-				holder.mNewIcon2.setVisibility(View.VISIBLE);
-			} else {
-				holder.mNewIcon2.setVisibility(View.GONE);
+//			if (mVideoInfo2.isNew) {
+//				holder.mNewIcon2.setVisibility(View.VISIBLE);
+//			} else {
+//				holder.mNewIcon2.setVisibility(View.GONE);
+//			}
+			
+			int type2 = getVideoType(mVideoInfo2.filename);
+			if(type2 == 1){
+				holder.mVide2Type.setText(mContext.getResources().getString(R.string.str_wonderful_title));
+				holder.mVide2Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_wonderful_txt_color));
+			}else if(type2 == 2){
+				holder.mVide2Type.setText(mContext.getResources().getString(R.string.str_urgent_title));
+				holder.mVide2Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_urgent_txt_color));
+			}else{
+				holder.mVide2Type.setText(mContext.getResources().getString(R.string.str_loop_title));
+				holder.mVide2Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_loop_txt_color));
+				holder.mPreView1.setVisibility(View.GONE);
 			}
 		}
 
@@ -209,8 +252,8 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	private void updateEditState(DoubleVideoInfo mDoubleVideoInfo, RelativeLayout mTMLayout1, RelativeLayout mTMLayout2) {
 		VideoInfo mVideoInfo1 = mDoubleVideoInfo.getVideoInfo1();
 		VideoInfo mVideoInfo2 = mDoubleVideoInfo.getVideoInfo2();
-		List<String> selectedData = mActivity.getSelectedList();
-		if (mActivity.getEditState()) {
+		List<String> selectedData = mFragment.getSelectedList();
+		if (mFragment.getEditState()) {
 			if (selectedData.contains(mVideoInfo1.videoPath)) {
 				mTMLayout1.setVisibility(View.VISIBLE);
 			} else {
@@ -247,7 +290,7 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		filename = filename.replace(".mp4", ".jpg");
 		String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 //		GlideUtils.loadLocalImage(mActivity, image, filePath + File.separator + filename, R.drawable.album_default_img);
-		GlideUtils.loadImage(mActivity, image, filePath + File.separator + filename, R.drawable.album_default_img);
+		GlideUtils.loadImage(mContext, image, filePath + File.separator + filename, R.drawable.album_default_img);
 //		Bitmap mBitmap = mActivity.getBitmap(filename);
 //		if (null != mBitmap) {
 //			image.setImageBitmap(mBitmap);
@@ -289,6 +332,16 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 //			});
 //		}
 	}
+	
+	private int getVideoType(String name){
+		if(name.indexOf("WND") >= 0){
+			return 1;
+		}else if(name.indexOf("URG") >= 0){
+			return 2;
+		}else{
+			return 3;
+		}
+	}
 
 	/**
 	 * 显示视频质量
@@ -302,11 +355,13 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	 * @author xuhw
 	 * @date 2015年6月8日
 	 */
-	private void displayVideoQuality(String videoHP, ImageView image) {
-		image.setVisibility(View.GONE);
+	private void displayVideoQuality(String videoHP, TextView text) {
 		if ("1080p".equals(videoHP)) {
-			image.setVisibility(View.VISIBLE);
-			image.setBackgroundResource(R.drawable.carrecorder_liveindex_icon_1080);
+			text.setText(mContext.getResources().getString(R.string.str_album_video_1080));
+		}else if("720p".equals(videoHP)){
+			text.setText(mContext.getResources().getString(R.string.str_album_video_720));
+		}else if("480p".equals(videoHP)){
+			text.setText(mContext.getResources().getString(R.string.str_album_video_480));
 		}
 	}
 
@@ -411,17 +466,19 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		RelativeLayout mTMLayout2;
 		ImageView image1;
 		ImageView image2;
-		TextView mVideoCountTime1;
-		TextView mVideoCountTime2;
-		ImageView mVideoQuality1;
-		ImageView mVideoQuality2;
+		//TextView mVideoCountTime1;
+		//TextView mVideoCountTime2;
+		TextView mVideoQuality1;
+		TextView mVideoQuality2;
 		TextView mVideoCreateTime1;
 		TextView mVideoCreateTime2;
-		TextView mVideoSize1;
-		TextView mVideoSize2;
+		//TextView mVideoSize1;
+		//TextView mVideoSize2;
 		View line;
-		ImageView mNewIcon1;
-		ImageView mNewIcon2;
+		/*ImageView mNewIcon1;
+		ImageView mNewIcon2;*/
+		Button mVide1Type;
+		Button mVide2Type;
 		ImageView mPreView1;
 		ImageView mPreView2;
 	}

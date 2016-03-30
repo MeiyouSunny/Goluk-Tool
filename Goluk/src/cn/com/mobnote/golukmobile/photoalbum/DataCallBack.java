@@ -1,6 +1,7 @@
 package cn.com.mobnote.golukmobile.photoalbum;
 
 import java.util.List;
+
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 
 public interface DataCallBack {

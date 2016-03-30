@@ -2,12 +2,12 @@ package cn.com.mobnote.golukmobile.photoalbum;
 
 import java.util.List;
 
-import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
+import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 
 public class LocalPagerAdapter extends PagerAdapter {
 	private Context mContext = null;
@@ -28,22 +28,25 @@ public class LocalPagerAdapter extends PagerAdapter {
 
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
-		if (0 == position) {
-			mWonderfulVideoLiseView = new LocalWonderfulVideoListView(mContext, mLocalVideoListView,
-					IPCManagerFn.TYPE_SHORTCUT, from, mPromotionSelectItem);
-			container.addView(mWonderfulVideoLiseView.getRootView());
-			return mWonderfulVideoLiseView.getRootView();
-		} else if (1 == position) {
-			mEmergencyVideoLiseView = new LocalWonderfulVideoListView(mContext, mLocalVideoListView,
-					IPCManagerFn.TYPE_URGENT, from, mPromotionSelectItem);
-			container.addView(mEmergencyVideoLiseView.getRootView());
-			return mEmergencyVideoLiseView.getRootView();
-		} else {
-			mLoopVideoLiseView = new LocalWonderfulVideoListView(mContext, mLocalVideoListView, IPCManagerFn.TYPE_CIRCULATE,
-					from, mPromotionSelectItem);
-			container.addView(mLoopVideoLiseView.getRootView());
-			return mLoopVideoLiseView.getRootView();
-		}
+		// CK Start
+//		if (0 == position) {
+//			mWonderfulVideoLiseView = new LocalWonderfulVideoListView(mContext, mLocalVideoListView,
+//					IPCManagerFn.TYPE_SHORTCUT, from, mPromotionSelectItem);
+//			container.addView(mWonderfulVideoLiseView.getRootView());
+//			return mWonderfulVideoLiseView.getRootView();
+//		} else if (1 == position) {
+//			mEmergencyVideoLiseView = new LocalWonderfulVideoListView(mContext, mLocalVideoListView,
+//					IPCManagerFn.TYPE_URGENT, from, mPromotionSelectItem);
+//			container.addView(mEmergencyVideoLiseView.getRootView());
+//			return mEmergencyVideoLiseView.getRootView();
+//		} else {
+//			mLoopVideoLiseView = new LocalWonderfulVideoListView(mContext, mLocalVideoListView, IPCManagerFn.TYPE_CIRCULATE,
+//					from, mPromotionSelectItem);
+//			container.addView(mLoopVideoLiseView.getRootView());
+//			return mLoopVideoLiseView.getRootView();
+//		}
+		// CK End
+		return null;
 	}
 
 	public boolean isWonderfulHasData() {

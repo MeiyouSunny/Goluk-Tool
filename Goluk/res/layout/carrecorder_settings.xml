@@ -208,6 +208,51 @@
                     android:layout_marginLeft="15dp"
                     android:background="@color/setting_line_color" />
             </RelativeLayout>
+            
+            <!-- 精彩视频质量 -->
+
+            <RelativeLayout
+                android:id="@+id/rl_carrecorder_settings_wonderfulvideo_quality"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_wonderful_video_quality_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_carrecorder_settings_wonderfulvideo_quality_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="15dp"
+                    android:drawablePadding="10dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:drawableRight="@drawable/icon_next_press"
+                    android:text="1080P"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
 
             <!-- 声音录制开关 -->
 
@@ -333,6 +378,51 @@
                     android:layout_alignParentBottom="true"
                     android:background="@color/setting_line_color" />
             </RelativeLayout>
+            
+            <!-- 提示音音量大小 -->
+
+            <RelativeLayout
+                android:id="@+id/rl_settings_tone_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_tone_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_settings_tone_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:drawableRight="@drawable/icon_next_press"
+                    android:gravity="center_vertical"
+                    android:drawablePadding="10dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
 
             <!-- 开关机提示音 -->
 
@@ -340,7 +430,6 @@
                 android:id="@+id/kgjtsy_line"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:layout_marginTop="15dp"
                 android:background="@color/setting_white_color" >
 
                 <TextView
@@ -361,11 +450,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:background="@drawable/set_open_btn" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/setting_line_color" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -990,6 +1074,90 @@
                     android:layout_alignParentBottom="true"
                     android:background="@color/setting_line_color" />
             </RelativeLayout>
+            
+            <!-- 关机时间 -->
+
+            <RelativeLayout
+                android:id="@+id/rl_settings_shutdown_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_shutdown_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_settings_shutdown_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:drawableRight="@drawable/icon_next_press"
+                    android:gravity="center_vertical"
+                    android:drawablePadding="10dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            
+            <!-- 语言设置 -->
+
+            <RelativeLayout
+                android:id="@+id/rl_settings_language_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_language_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_settings_language_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:drawableRight="@drawable/icon_next_press"
+                    android:gravity="center_vertical"
+                    android:drawablePadding="10dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
 
             <!-- 时间设置 -->
 
@@ -997,7 +1165,6 @@
                 android:id="@+id/sjsz_line"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:layout_marginTop="15dp"
                 android:background="@color/setting_white_color" >
 
                 <TextView
@@ -1019,11 +1186,6 @@
                     android:layout_marginRight="15dp"
                     android:background="@drawable/icon_next_press"
                     android:contentDescription="@string/def" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/setting_line_color" />
 
                 <TextView
                     android:layout_width="match_parent"

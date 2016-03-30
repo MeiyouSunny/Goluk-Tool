@@ -176,6 +176,8 @@
     <string name="ipc_upgrade_new_text">当前极路客固件版本已是最新</string>
     <string name="ipc_upgrade_voice_text">请耐心等待升级成功后的语音提示</string>
     <string name="shopping_text">去商店</string>
+    <string name="no_following_tips">没有关注的人，好任性啊</string>
+    <string name="no_fans_tips">没有粉丝，好可怜啊</string>
     <string name="cache_size_text">3.15M</string>
     <string name="user_immediately_ok">立即登录</string>
     <string name="user_immediately_regist">马上注册</string>
@@ -274,6 +276,10 @@
     <string name="carrecorder_filemagager_title">文件浏览</string>
     <string name="spzl_title">循环视频质量</string>
     <string name="spzl_text">极路客提供四种视频质量，1080P高、1080P中、720P高、720P中。</string>
+    <string name="str_wonderful_video_quality_title">精彩视频质量</string>
+    <string name="str_settings_tone_title">提示音音量大小</string>
+    <string name="str_settings_shutdown_title">关机时间</string>
+    <string name="str_settings_language_title">语言设置</string>
     <string name="zdxhlx_title">自动循环录像</string>
     <string name="hdr_title">HDR模式</string>
     <string name="jcsp_title">精彩视频拍照提示音</string>
@@ -401,6 +407,7 @@
     <string name="photoalbum_local_video_text">本地视频</string>
     <string name="photoalbum_cloud_video_text">记录仪视频</string>
     <string name="photoalbum_no_video_text">当前没有视频</string>
+    <string name="photoalbum_no_ipc_connect_text">未连接行车记录仪</string>
     <string name="short_input_ok">完成</string>
     <string name="short_input_cancel">取消</string>
     <string name="str_shortshare_other">说点其它的！</string>
@@ -409,6 +416,14 @@
     <string name="str_comment_input_hit">写评论</string>
     <string name="str_comment_no_input">该评论已关闭</string>
     <string name="str_category_map">地图</string>
+    <string name="str_local_title">本地</string>
+    <string name="str_wonderful_title">精彩</string>
+    <string name="str_urgent_title">紧急</string>
+    <string name="str_loop_title">循环</string>
+    <string name="str_album_no_connect">点击此处连接极路客</string>
+    <string name="str_album_video_1080">1080p</string>
+    <string name="str_album_video_720">720p</string>
+    <string name="str_album_video_480">480p</string>
 
     <!-- 意见反馈 -->
     <string name="user_opinion_type_yingjiang">硬件相关</string>
@@ -422,6 +437,7 @@
     <string name="logout">注销</string>
     <string name="setting_notify_comment">有人给我评论</string>
     <string name="setting_notify_parise">有人给我点赞</string>
+    <string name="setting_notify_follow">有人关注我</string>
     <string name="dialog_str_confirm">举报不良内容</string>
     <string name="dialog_str_del">删除这个视频</string>
     <string name="dialog_str_tuijian">推荐这个视频</string>
@@ -476,6 +492,7 @@
     <string name="str_photo_check_ipc_state">请检查摄像头连接状态</string>
     <string name="str_phote_delete_ok">确认</string>
     <string name="str_photo_deletepromote_1">是否删除</string>
+    <string name="str_photo_delete_confirm">确认删除此视频？</string>
     <string name="str_photo_deletepromote_2">个视频？</string>
     <string name="str_photo_delete_ok">删除视频成功</string>
     <string name="str_photo_select1">已选择</string>
@@ -961,7 +978,40 @@
     <string name="str_praised_list_connect_error">网络不给力，轻触屏幕重试</string>
     <string name="str_praised_list_request_no_data">暂无点赞记录</string>
     <string name="str_wonderful_share">Goluk精彩分享</string>
+
     <string name="str_please_bind_phone_first">提现需要绑定手机号，请先前往通用设置中绑定手机号</string>
     <string name="str_follow">关注</string>
     <string name="str_fans">粉丝</string>
+
+    <string name="str_user_video_type_wonderful_text">精选作品</string>
+    <string name="str_user_video_type_recommend_text">被推荐活动</string>
+    <string name="str_user_video_type_headline_text">入选头条</string>
+    <string name="str_usercenter_header_attention_text">关注</string>
+    <string name="str_usercenter_header_attention_already_text">已关注</string>
+    <string name="str_usercenter_header_attention_each_other_text">相互关注</string>
+    <string name="str_usercenter_header_edit_text">编辑资料</string>
+    <string name="str_usercenter_header_fans_text">粉丝</string>
+    <string name="str_usercenter_more_share">分享主页</string>
+    <string name="str_usercenter_no_introduce_text">暂无介绍</string>
+
+    <string name="str_please_bind_phone_first">提现需要绑定手机号，请先前往通用设置中绑定手机号</string>
+    <string name="str_follow">关注</string>
+    <string name="str_fans">粉丝</string>
+    <string name="str_discover">极社</string>
+    <string name="str_album">相册</string>
+    <string name="str_mine">我的</string>
+
+    <string name="str_usercenter_attention_ok">关注成功</string>
+    <string name="str_usercenter_attention_cancle_ok">取消关注成功</string>
+    <string name="str_usercenter_nowonderful_video">当前还没有精选视频</string>
+    <string name="str_usercenter_recommend_video">当前还没有被推荐的视频</string>
+    <string name="str_usercenter_headlines_video">当前还没有入选头条的视频</string>
+    <string name="str_usercenter_login_hint_text">请登录后再操作</string>
+
+    <string name="str_confirm_cancel_follow">确定取消关注？</string>
+    <string name="str_follow_fail">关注失败</string>
+    <string name="str_cancel_follow_fail">取消关注失败</string>
+    <string name="str_follow_all">全部关注</string>
+    <string name="str_follow_no_content">什么内容也没有</string>
+    <string name="str_follow_recommend_star">推荐达人</string>
 </resources>

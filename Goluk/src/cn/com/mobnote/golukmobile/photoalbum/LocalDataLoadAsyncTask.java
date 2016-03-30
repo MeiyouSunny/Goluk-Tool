@@ -5,15 +5,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import android.os.AsyncTask;
+import android.text.TextUtils;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.Utils;
 import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
 import cn.com.mobnote.golukmobile.fileinfo.VideoFileInfoBean;
 import cn.com.mobnote.util.SortByDate;
-import android.os.AsyncTask;
-import android.text.TextUtils;
-import android.util.Log;
 
 public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 	private DataCallBack mDataCallBack = null;
@@ -32,13 +31,17 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 	GolukVideoInfoDbManager mGolukVideoInfoDbManager = GolukVideoInfoDbManager.getInstance();
 	@Override
 	protected String doInBackground(String... arg0) {
-		String[] videoPaths = { "", "loop/", "urgent/", "", "wonderful/" };
+		String[] videoPaths = {"","loop/", "urgent/", "", "wonderful/" };
 //		String[] filePaths = { "", "loop/loop.txt", "urgent/urgent.txt", "", "wonderful/wonderful.txt" };
 //		String file = mFilePath + filePaths[type];
 
 //		List<String> files = FileInfoManagerUtils.getVideoConfigFile(file);
 		
-		List<String> files = FileInfoManagerUtils.getFileNames(mFilePath + videoPaths[type], "(.+?mp4)");
+		List<String> files = new ArrayList<String>();
+		files.addAll(FileInfoManagerUtils.getFileNames(mFilePath + videoPaths[1], "(.+?mp4)"));
+		files.addAll(FileInfoManagerUtils.getFileNames(mFilePath + videoPaths[2], "(.+?mp4)"));
+		files.addAll(FileInfoManagerUtils.getFileNames(mFilePath + videoPaths[4], "(.+?mp4)"));
+		
 		if (null == files || files.size() <= 0) {
 			return null;
 		}
@@ -51,7 +54,20 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 				String fileName = files.get(i);
 
 				VideoFileInfoBean videoFileInfoBean = mGolukVideoInfoDbManager.selectSingleData(fileName);
-				String videoPath = mFilePath + videoPaths[type] + fileName;
+				
+				int currType = 0;
+				if(!TextUtils.isEmpty(fileName)){
+					if(fileName.startsWith("NRM")){
+						currType = 1;
+					}else if(fileName.startsWith("URG")){
+						currType = 2;
+					}else if(fileName.startsWith("WND")){
+						currType = 4;
+					}
+				}
+				
+				
+				String videoPath = mFilePath + videoPaths[currType] + fileName;
 				String resolution = "";
 				int period = 8;
 
@@ -77,7 +93,7 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 						periodStr = names[6];
 						periodStr = periodStr.substring(0, periodStr.lastIndexOf("."));
 						dateStr = names[2];
-					} else if (names.length == 8 && type == 1) {
+					} else if (names.length == 8 && currType == 1) {
 						hpStr = names[6];
 						periodStr = names[7];
 						periodStr = periodStr.substring(0, periodStr.lastIndexOf("."));

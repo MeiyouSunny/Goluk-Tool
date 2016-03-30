@@ -50,11 +50,12 @@ import cn.com.mobnote.golukmobile.newest.ClickNewestListener;
 import cn.com.mobnote.golukmobile.newest.ClickPraiseListener;
 import cn.com.mobnote.golukmobile.newest.ClickShareListener;
 import cn.com.mobnote.golukmobile.newest.CommentDataInfo;
+import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
+import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
-import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -286,7 +287,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 							item.activityid = mHeadData.activityid;
 							item.activitytitle = mHeadData.activityname;
 							item.channelid = mHeadData.channelid;
-							photoalbum.putExtra(PhotoAlbumActivity.ACTIVITY_INFO, item);
+							photoalbum.putExtra(FragmentAlbum.ACTIVITY_INFO, item);
 							mContext.startActivity(photoalbum);
 						}
 					});
@@ -886,7 +887,8 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 		user.customavatar = clusterInfo.mUserEntity.mCustomAvatar;
 		user.praisemenumber = "0";
 		user.sharevideonumber = "0";
-		Intent i = new Intent(mContext, UserCenterActivity.class);
+//		Intent i = new Intent(mContext, UserCenterActivity.class);
+		Intent i = new Intent(mContext, NewUserCenterActivity.class);
 		i.putExtra("userinfo", user);
 		i.putExtra("type", 0);
 		mContext.startActivity(i);

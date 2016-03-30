@@ -28,6 +28,7 @@ import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventIpcConnState;
 import cn.com.mobnote.eventbus.EventMessageUpdate;
 import cn.com.mobnote.eventbus.EventPhotoUpdateLoginState;
+import cn.com.mobnote.eventbus.EventUserLoginRet;
 import cn.com.mobnote.golukmobile.ImageClipActivity;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.PushSettingActivity;
@@ -54,7 +55,7 @@ import cn.com.mobnote.golukmobile.fileinfo.VideoFileInfoBean;
 import cn.com.mobnote.golukmobile.http.HttpManager;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
-import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
+import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
 import cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.wifibind.IpcConnSuccessInfo;
@@ -617,6 +618,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			VideoFileInfoBean bean = JsonUtil.jsonToVideoFileInfoBean(data, mIPCControlManager.mProduceName);
 			GolukVideoInfoDbManager.getInstance().addVideoInfoData(bean);
 			// 调用下载视频接口
+			Log.i("download start", "download start");
 			mIPCControlManager.downloadFile(fileName, "videodownload", savePath, time);
 			// 下载视频第一帧截图
 			downLoadVideoThumbnail(fileName, time);
@@ -1095,6 +1097,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			isUserLoginSucess = true;
 
 			EventBus.getDefault().post(new EventMessageUpdate(EventConfig.MESSAGE_REQUEST));
+			EventBus.getDefault().post(new EventUserLoginRet(EventConfig.USER_LOGIN_RET, true));
 			this.showContinuteLive();
 			GolukDebugUtils.e(null, "jyf---------GolukApplication---------mCCurl:" + mCCUrl + " uid:" + mCurrentUId
 					+ " aid:" + mCurrentAid);
@@ -1751,11 +1754,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @author 曾浩
 	 */
 	public boolean isCanShowConnectDialog() {
-		if (mContext instanceof PhotoAlbumActivity) {
-			return true;
-		} else {
-			return false;
-		}
+		//////// CK start
+//		if (mContext instanceof FragmentAlbum) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+		return true;
+		//////// CK End
 	}
 
 	/**

@@ -316,6 +316,7 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 				int praiseCount = 0;
 				int commentCount = 0;
 				int systemCount = 0;
+				int followCount =0;
 				if(null != bean.data.messagecount.user) {
 					praiseCount = bean.data.messagecount.user.like;
 					commentCount = bean.data.messagecount.user.comment;
@@ -327,6 +328,7 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 				MessageManager.getMessageManager().setMessageEveryCount(
 						praiseCount,
 						commentCount,
+						followCount,
 						systemCount);
 			}
 		}

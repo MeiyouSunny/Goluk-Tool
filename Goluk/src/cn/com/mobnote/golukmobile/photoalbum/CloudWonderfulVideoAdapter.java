@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -16,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,9 +23,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
-import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.golukmobile.carrecorder.util.ImageAsyncTask.ICallBack;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -33,7 +31,8 @@ import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyListHeadersAdapter {
-	private PhotoAlbumActivity mActivity = null;
+	private FragmentAlbum mFragment = null;
+	private Context mContext;
 	private LayoutInflater inflater = null;
 	private StickyListHeadersListView mListView = null;
 	private List<DoubleVideoInfo> mDataList = null;
@@ -44,8 +43,9 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	/** 滚动中锁标识 */
 //	private boolean lock = false;
 
-	public CloudWonderfulVideoAdapter(Context c, StickyListHeadersListView listview) {
-		this.mActivity = (PhotoAlbumActivity) c;
+	public CloudWonderfulVideoAdapter(Context c, FragmentAlbum fragment, StickyListHeadersListView listview) {
+		this.mFragment = fragment;
+		this.mContext = c;
 		this.mListView = listview;
 		this.inflater = LayoutInflater.from(c);
 		this.density = SoundUtils.getInstance().getDisplayMetrics().density;
@@ -93,17 +93,19 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 			holder.mTMLayout2 = (RelativeLayout) convertView.findViewById(R.id.mTMLayout2);
 			holder.image1 = (ImageView) convertView.findViewById(R.id.video_first_needle1);
 			holder.image2 = (ImageView) convertView.findViewById(R.id.video_first_needle2);
-			holder.mVideoCountTime1 = (TextView) convertView.findViewById(R.id.video_countTime1);
-			holder.mVideoCountTime2 = (TextView) convertView.findViewById(R.id.video_countTime2);
-			holder.mVideoQuality1 = (ImageView) convertView.findViewById(R.id.video_quality1);
-			holder.mVideoQuality2 = (ImageView) convertView.findViewById(R.id.video_quality2);
+//			holder.mVideoCountTime1 = (TextView) convertView.findViewById(R.id.video_countTime1);
+//			holder.mVideoCountTime2 = (TextView) convertView.findViewById(R.id.video_countTime2);
+//			holder.mVideoQuality1 = (ImageView) convertView.findViewById(R.id.video_quality1);
+//			holder.mVideoQuality2 = (ImageView) convertView.findViewById(R.id.video_quality2);
 			holder.mVideoCreateTime1 = (TextView) convertView.findViewById(R.id.video_createtime1);
 			holder.mVideoCreateTime2 = (TextView) convertView.findViewById(R.id.video_createtime2);
-			holder.mVideoSize1 = (TextView) convertView.findViewById(R.id.video_size1);
-			holder.mVideoSize2 = (TextView) convertView.findViewById(R.id.video_size2);
+//			holder.mVideoSize1 = (TextView) convertView.findViewById(R.id.video_size1);
+//			holder.mVideoSize2 = (TextView) convertView.findViewById(R.id.video_size2);
 			holder.line = convertView.findViewById(R.id.line);
-			holder.mNewIcon1 = (ImageView) convertView.findViewById(R.id.mNewIcon1);
-			holder.mNewIcon2 = (ImageView) convertView.findViewById(R.id.mNewIcon2);
+			holder.mVide1Type = (Button) convertView.findViewById(R.id.video1_type);
+			holder.mVide2Type = (Button) convertView.findViewById(R.id.video2_type);
+//			holder.mNewIcon1 = (ImageView) convertView.findViewById(R.id.mNewIcon1);
+//			holder.mNewIcon2 = (ImageView) convertView.findViewById(R.id.mNewIcon2);
 //			holder.mAsycnedFlag1 = (TextView) convertView.findViewById(R.id.textview_listview_item1_asysc_flag);
 //			holder.mAsycnedFlag2 = (TextView) convertView.findViewById(R.id.textview_listview_item2_asysc_flag);
 			RelativeLayout.LayoutParams lineParams = new RelativeLayout.LayoutParams((int) (2 * density),
@@ -140,16 +142,16 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		VideoInfo mVideoInfo2 = mDataList.get(position).getVideoInfo2();
 		holder.mTMLayout1.setTag(mVideoInfo1.videoPath);
 		holder.mTMLayout2.setTag("");
-		holder.mVideoCountTime1.setText(mVideoInfo1.countTime);
+//		holder.mVideoCountTime1.setText(mVideoInfo1.countTime);
 		holder.mVideoCreateTime1.setText(mVideoInfo1.videoCreateDate.substring(11));
-		holder.mVideoSize1.setText(mVideoInfo1.videoSize);
+//		holder.mVideoSize1.setText(mVideoInfo1.videoSize);
 //		holder.image1.setTag("image:" + mVideoInfo1.filename);
-		displayVideoQuality(mVideoInfo1.videoHP, holder.mVideoQuality1);
+//		displayVideoQuality(mVideoInfo1.videoHP, holder.mVideoQuality1);
 		loadImage(mVideoInfo1.filename, holder.image1);
 		// if(mVideoInfo1.isNew) {
 		// holder.mNewIcon1.setVisibility(View.VISIBLE);
 		// }else {
-		holder.mNewIcon1.setVisibility(View.GONE);
+		holder.mVide1Type.setVisibility(View.GONE);
 		// }
 //		if (mVideoInfo1.isAsync) {
 //			holder.mAsycnedFlag1.setVisibility(View.VISIBLE);
@@ -159,17 +161,17 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		if (null != mVideoInfo2) {
 			holder.mTMLayout2.setTag(mVideoInfo2.videoPath);
 			holder.mVideoLayout2.setVisibility(View.VISIBLE);
-			holder.mVideoCountTime2.setText(mVideoInfo2.countTime);
+//			holder.mVideoCountTime2.setText(mVideoInfo2.countTime);
 			holder.mVideoCreateTime2.setText(mVideoInfo2.videoCreateDate.substring(11));
-			holder.mVideoSize2.setText(mVideoInfo2.videoSize);
+//			holder.mVideoSize2.setText(mVideoInfo2.videoSize);
 //			holder.image2.setTag("image:" + mVideoInfo2.filename);
-			displayVideoQuality(mVideoInfo2.videoHP, holder.mVideoQuality2);
+//			displayVideoQuality(mVideoInfo2.videoHP, holder.mVideoQuality2);
 			loadImage(mVideoInfo2.filename, holder.image2);
 
 			// if(mVideoInfo2.isNew) {
 			// holder.mNewIcon2.setVisibility(View.VISIBLE);
 			// }else {
-			holder.mNewIcon2.setVisibility(View.GONE);
+			holder.mVide2Type.setVisibility(View.GONE);
 			// }
 
 //			if (mVideoInfo2.isAsync) {
@@ -199,8 +201,8 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	private void updateEditState(DoubleVideoInfo mDoubleVideoInfo, RelativeLayout mTMLayout1, RelativeLayout mTMLayout2) {
 		VideoInfo mVideoInfo1 = mDoubleVideoInfo.getVideoInfo1();
 		VideoInfo mVideoInfo2 = mDoubleVideoInfo.getVideoInfo2();
-		List<String> selectedData = mActivity.getSelectedList();
-		if (mActivity.getEditState()) {
+		List<String> selectedData = mFragment.getSelectedList();
+		if (mFragment.getEditState()) {
 			if (selectedData.contains(mVideoInfo1.videoPath)) {
 				mTMLayout1.setVisibility(View.VISIBLE);
 			} else {
@@ -236,7 +238,7 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	private void loadImage(String filename, ImageView image) {
 		filename = filename.replace(".mp4", ".jpg");
 		String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
-		GlideUtils.loadImage(mActivity, image, filePath + File.separator + filename, R.drawable.album_default_img);
+		GlideUtils.loadImage(mContext, image, filePath + File.separator + filename, R.drawable.album_default_img);
 //		Bitmap mBitmap = mActivity.getBitmap(filename);
 //		if (null != mBitmap) {
 //			image.setImageBitmap(mBitmap);
@@ -357,9 +359,9 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 
 				if (month == o_month) {
 					if (day == o_day) {
-						holder.date.setText(mActivity.getResources().getString(R.string.str_today));
+						holder.date.setText(mContext.getResources().getString(R.string.str_today));
 					} else if (day == (o_day + 1)) {
-						holder.date.setText(mActivity.getResources().getString(R.string.str_yestoday));
+						holder.date.setText(mContext.getResources().getString(R.string.str_yestoday));
 					} else {
 						holder.date.setText(time[1] + "/" + time[2]);
 					}
@@ -396,17 +398,19 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		RelativeLayout mTMLayout2;
 		ImageView image1;
 		ImageView image2;
-		TextView mVideoCountTime1;
-		TextView mVideoCountTime2;
-		ImageView mVideoQuality1;
-		ImageView mVideoQuality2;
+		//TextView mVideoCountTime1;
+		//TextView mVideoCountTime2;
+//		ImageView mVideoQuality1;
+//		ImageView mVideoQuality2;
 		TextView mVideoCreateTime1;
 		TextView mVideoCreateTime2;
-		TextView mVideoSize1;
-		TextView mVideoSize2;
+//		TextView mVideoSize1;
+//		TextView mVideoSize2;
 		View line;
-		ImageView mNewIcon1;
-		ImageView mNewIcon2;
+		Button mVide1Type;
+		Button mVide2Type;
+//		ImageView mNewIcon1;
+//		ImageView mNewIcon2;
 //		TextView mAsycnedFlag1;
 //		TextView mAsycnedFlag2;
 	}

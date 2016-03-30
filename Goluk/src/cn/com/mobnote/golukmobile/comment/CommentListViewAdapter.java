@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
-import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
@@ -156,7 +156,8 @@ public class CommentListViewAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View arg0) {
-				Intent it = new Intent(mContext, UserCenterActivity.class);
+//				Intent it = new Intent(mContext, UserCenterActivity.class);
+				Intent it = new Intent(mContext, NewUserCenterActivity.class);
 
 				UCUserInfo user = new UCUserInfo();
 				user.uid = temp.mUserId;

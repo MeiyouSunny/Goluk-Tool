@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="170dp"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/rl_videocategory_item"
+        android:layout_width="match_parent"
+        android:layout_height="99dp" >
+
+        <ImageView
+            android:id="@+id/iv_videocategory_item_image"
+            android:layout_width="match_parent"
+            android:layout_height="99dp"
+            android:contentDescription="@string/imgdes"
+            android:src="@drawable/tacitly_pic" />
+
+        <TextView
+            android:id="@+id/tv_videocategory_item_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="7dp"
+            android:layout_marginBottom="7dp"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_videocategory_item_describe"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="5dp"
+        android:textColor="#666666"
+        android:lines="2"
+        android:ellipsize="end"
+        android:textSize="12sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#f5f5f5" />
+
+    <RelativeLayout
+        android:id="@+id/rl_videocategory_item_look_and_comment"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center_vertical" >
+
+        <TextView
+            android:id="@+id/tv_videocategory_item_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="18dp"
+            android:drawableLeft="@drawable/usercenter_comment"
+            android:drawablePadding="4dp"
+            android:textColor="#888888"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_videocategory_item_look"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/tv_videocategory_item_comment"
+            android:drawableLeft="@drawable/usercenter_scan"
+            android:drawablePadding="4dp"
+            android:textColor="#888888"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -933,6 +933,90 @@ public class IPCControlManager implements IPCManagerFn {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_SetADASConfig, s);
 	}
+	
+	/**
+	 * 获取精彩视频质量
+	 * 
+	 * @return
+	 */
+	public boolean getVideoResolution() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetVideoResolution, "");
+	}
+
+	/**
+	 * 设置精彩视频质量
+	 * 
+	 * @return
+	 */
+	public boolean setVideoResolution(String wonderful_resolution) {
+		String s = "{\"wonderful_resolution\":" + "\"" +  wonderful_resolution + "\"}";
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetVideoResolution, s);
+	}
+	
+	/**
+	 * 获取提示音音量大小
+	 * 
+	 * @return
+	 */
+	public boolean getVolume() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetVolume, "");
+	}
+
+	/**
+	 * 设置提示音音量大小
+	 * 
+	 * @return
+	 */
+	public boolean setVolume(int value) {
+		String s = "{\"value\":" + value + "}";
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetVolume, s);
+	}
+	
+	/**
+	 * 获取关机时间
+	 * 
+	 * @return
+	 */
+	public boolean getPowerOffTime() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetPowerOffTime, "");
+	}
+
+	/**
+	 * 设置关机时间
+	 * 
+	 * @return
+	 */
+	public boolean setPowerOffTime(int time_second) {
+		String s = "{\"time_second\":" + time_second + "}";
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetPowerOffTime, s);
+	}
+	
+	/**
+	 * 获取语言类型
+	 * 
+	 * @return
+	 */
+	public boolean getVoiceType() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetVoiceType, "");
+	}
+
+	/**
+	 * 设置语言类型
+	 * 
+	 * @return
+	 */
+	public boolean setVoiceType(int type) {
+		String s = "{\"type\":" + type + "}";
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetVoiceType, s);
+	}
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {

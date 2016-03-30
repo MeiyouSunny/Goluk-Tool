@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 @SuppressLint("InflateParams")
 public class CloudVideoManager implements OnClickListener {
@@ -163,21 +162,22 @@ public class CloudVideoManager implements OnClickListener {
 	}
 
 	public void updateEdit(int type, boolean isHasData) {
-		GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit11: " + isHasData);
-		if (null == mContext || !(mContext instanceof PhotoAlbumActivity)) {
-			return;
-		}
-		GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit22: ");
-		if (((PhotoAlbumActivity) mContext).isLocalSelect()) {
-			return;
-		}
-		GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit33: ");
-		if (type != getType()) {
-			return;
-		}
-		GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit44: ");
-		((PhotoAlbumActivity) mContext).setEditBtnState(isHasData);
-
+		///////// CK Start
+//		GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit11: " + isHasData);
+//		if (null == mContext || !(mContext instanceof FragmentAlbum)) {
+//			return;
+//		}
+//		GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit22: ");
+//		if (((FragmentAlbum) mContext).isLocalSelect()) {
+//			return;
+//		}
+//		GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit33: ");
+//		if (type != getType()) {
+//			return;
+//		}
+//		GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit44: ");
+//		((FragmentAlbum) mContext).setEditBtnState(isHasData);
+		///////// CK End
 	}
 
 	public View getRootView() {

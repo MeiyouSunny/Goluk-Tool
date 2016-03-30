@@ -7,7 +7,6 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -25,9 +24,7 @@ import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
-import cn.com.mobnote.golukmobile.player.MovieActivity;
 import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.player.VitamioPlayerActivity;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
@@ -42,7 +39,7 @@ public class LocalWonderfulVideoListView {
 	private View mRootLayout = null;
 	private Context mContext = null;
 	private LocalVideoManager mLocalVideoListView = null;
-	private PhotoAlbumActivity mActivity = null;
+	private FragmentAlbum mFragment = null;
 	private StickyListHeadersListView mStickyListHeadersListView = null;
 	private LocalWonderfulVideoAdapter mWonderfulVideoAdapter = null;
 	private List<VideoInfo> mDataList = null;
@@ -52,19 +49,21 @@ public class LocalWonderfulVideoListView {
 	private int screenWidth = 0;
 	/** 视频类型，精彩/紧急/循环 */
 	private int mVideoType;
-	private CustomLoadingDialog mCustomProgressDialog = null;
+	//CK Start
+//	private CustomLoadingDialog mCustomProgressDialog = null;
+	//CK End
 	private String from = null;
 	private TextView empty = null;
 	private float density = 1;
 	// private boolean clickLock = false;
 	private PromotionSelectItem mPromotionSelectItem;
 
-	public LocalWonderfulVideoListView(Context context, LocalVideoManager localVideoListView, int type, String from,
+	public LocalWonderfulVideoListView(Context context, FragmentAlbum fragment, LocalVideoManager localVideoListView, int type, String from,
 			PromotionSelectItem item) {
 		this.from = from;
 		this.mContext = context;
 		mLocalVideoListView = localVideoListView;
-		this.mActivity = (PhotoAlbumActivity) context;
+		this.mFragment = fragment;
 		this.mVideoType = type;
 		this.mDataList = new ArrayList<VideoInfo>();
 		this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
@@ -77,10 +76,10 @@ public class LocalWonderfulVideoListView {
 
 	private void initView() {
 		empty = (TextView) mRootLayout.findViewById(R.id.empty);
-		mCustomProgressDialog = new CustomLoadingDialog(mActivity, null);
+//		mCustomProgressDialog = new CustomLoadingDialog(mActivity, null);
 		mStickyListHeadersListView = (StickyListHeadersListView) mRootLayout
 				.findViewById(R.id.mStickyListHeadersListView);
-		mWonderfulVideoAdapter = new LocalWonderfulVideoAdapter(mContext, mStickyListHeadersListView, mVideoType, from);
+		mWonderfulVideoAdapter = new LocalWonderfulVideoAdapter(mContext, mFragment, mStickyListHeadersListView, mVideoType, from);
 		loadData(mVideoType, true);
 		setListener();
 	}
@@ -134,7 +133,7 @@ public class LocalWonderfulVideoListView {
 					RelativeLayout mTMLayout2 = (RelativeLayout) arg1.findViewById(R.id.mTMLayout2);
 					String tag1 = (String) mTMLayout1.getTag();
 					String tag2 = (String) mTMLayout2.getTag();
-					if (mActivity.getEditState()) {
+					if (mFragment.getEditState()) {
 						if ((screenX > 0) && (screenX < (screenWidth / 2))) {
 							selectedVideoItem(tag1, mTMLayout1);
 						} else {
@@ -146,7 +145,7 @@ public class LocalWonderfulVideoListView {
 						if ((screenX > 0) && (screenX < (screenWidth / 2))) {
 							// 点击列表左边项,跳转到视频播放页面
 							VideoInfo info1 = d.getVideoInfo1();
-							gotoVideoPlayPage(mVideoType, info1.videoPath);
+							gotoVideoPlayPage(mVideoType, info1.videoPath, info1.videoCreateDate, info1.videoHP, info1.videoSize);
 							String filename = d.getVideoInfo1().filename;
 							updateNewState(filename);
 
@@ -157,7 +156,7 @@ public class LocalWonderfulVideoListView {
 							VideoInfo info2 = d.getVideoInfo2();
 							if (null == info2)
 								return;
-							gotoVideoPlayPage(mVideoType, info2.videoPath);
+							gotoVideoPlayPage(mVideoType, info2.videoPath, info2.videoCreateDate, info2.videoHP, info2.videoSize);
 							String filename = info2.filename;
 							updateNewState(filename);
 
@@ -187,7 +186,7 @@ public class LocalWonderfulVideoListView {
 	 * 
 	 * @param path
 	 */
-	private void gotoVideoPlayPage(int type, String path) {
+	private void gotoVideoPlayPage(int type, String path, String createTime, String videoHP, String size) {
 		// if (getClickLock()) {
 		// return;
 		// }
@@ -204,11 +203,11 @@ public class LocalWonderfulVideoListView {
 					}
 
 					if (mPromotionSelectItem != null) {
-						intent.putExtra(PhotoAlbumActivity.ACTIVITY_INFO, mPromotionSelectItem);
+						intent.putExtra(FragmentAlbum.ACTIVITY_INFO, mPromotionSelectItem);
 					}
 					intent.putExtra("type", tempType);
 					intent.putExtra("cn.com.mobnote.video.path", path);
-					mActivity.startActivity(intent);
+					mContext.startActivity(intent);
 					return;
 				}
 			}
@@ -221,7 +220,14 @@ public class LocalWonderfulVideoListView {
 			}
 			intent.putExtra("from", "local");
 			intent.putExtra("path", path);
-			mActivity.startActivity(intent);
+//			intent = new Intent(mContext, PhotoAlbumPlayer.class);
+//			intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, "local");
+//			intent.putExtra(PhotoAlbumPlayer.PATH, path);
+//			intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
+//			intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
+//			intent.putExtra(PhotoAlbumPlayer.SIZE, size);
+//			intent.putExtra(PhotoAlbumPlayer.TYPE, type);
+			mContext.startActivity(intent);
 		}
 	}
 
@@ -232,7 +238,7 @@ public class LocalWonderfulVideoListView {
 	 * @param mTMLayout1
 	 */
 	private void selectedVideoItem(String tag1, RelativeLayout mTMLayout1) {
-		List<String> selectedListData = mActivity.getSelectedList();
+		List<String> selectedListData = mFragment.getSelectedList();
 		if (!TextUtils.isEmpty(tag1)) {
 			if (selectedListData.contains(tag1)) {
 				selectedListData.remove(tag1);
@@ -243,23 +249,23 @@ public class LocalWonderfulVideoListView {
 			}
 
 			if (selectedListData.size() == 0) {
-				mActivity.updateTitleName(mActivity.getResources().getString(R.string.local_video_title_text));
-				mActivity.updateEditBtnState(false);
+				mFragment.updateTitleName(mContext.getResources().getString(R.string.local_video_title_text));
+				mFragment.updateEditBtnState(false);
 			} else {
-				mActivity.updateEditBtnState(true);
-				mActivity.updateTitleName(mActivity.getResources().getString(R.string.str_photo_select1)
-						+ selectedListData.size() + mActivity.getResources().getString(R.string.str_photo_select2));
+				mFragment.updateEditBtnState(true);
+				mFragment.updateTitleName(mContext.getResources().getString(R.string.str_photo_select1)
+						+ selectedListData.size() + mContext.getResources().getString(R.string.str_photo_select2));
 			}
 		}
 	}
 
 	private void loadData(int type, boolean flag) {
 		if (flag) {
-			if (IPCManagerFn.TYPE_SHORTCUT == type) {
-				if (!mCustomProgressDialog.isShowing()) {
-					mCustomProgressDialog.show();
-				}
-			}
+//			if (IPCManagerFn.TYPE_SHORTCUT == type) {
+//				if (!mCustomProgressDialog.isShowing()) {
+//					mCustomProgressDialog.show();
+//				}
+//			}
 		}
 		LocalDataLoadAsyncTask task = new LocalDataLoadAsyncTask(type, new DataCallBack() {
 			@Override
@@ -270,13 +276,13 @@ public class LocalWonderfulVideoListView {
 				mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mLocalListData);
 				mWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
 				mStickyListHeadersListView.setAdapter(mWonderfulVideoAdapter);
-				try {
-					if (mCustomProgressDialog.isShowing()) {
-						mCustomProgressDialog.close();
-					}
-				} catch (Exception e) {
-
-				}
+//				try {
+//					if (mCustomProgressDialog.isShowing()) {
+//						mCustomProgressDialog.close();
+//					}
+//				} catch (Exception e) {
+//
+//				}
 
 				checkListState();
 			}

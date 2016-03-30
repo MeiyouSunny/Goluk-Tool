@@ -172,7 +172,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/user_praise"
+                    android:id="@+id/user_fans"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -180,14 +180,14 @@
                     android:orientation="vertical" >
 
                     <TextView
-                        android:id="@+id/user_praise_count"
+                        android:id="@+id/user_fans_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/user_login_text"
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/tv_user_praise"
+                        android:id="@+id/tv_user_fans"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/str_fans"

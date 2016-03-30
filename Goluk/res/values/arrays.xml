@@ -195,5 +195,40 @@
         <item>6144</item>
         <item>5120</item>
     </string-array>
+    
+    <string-array name="list_wonderful_video_quality">
+        <item>1080P</item>
+        <item>480P</item>
+    </string-array>
+    <string-array name="list_wonderful_video_quality_value">
+        <item>1080p</item>
+        <item>480p</item>
+    </string-array>
+    
+    <string-array name="list_tone_volume">
+        <item>高 ( 100% )</item>
+        <item>中 ( 75% )</item>
+        <item>低 ( 50% )</item>
+    </string-array>
+    <string-array name="list_tone_volume_value">
+        <item>100</item>
+        <item>75</item>
+        <item>50</item>
+    </string-array>
+    <string-array name="list_shutdown_time">
+        <item>10秒</item>
+        <item>60秒</item>
+    </string-array>
+    
+    <string-array name="list_language">
+        <item>中文</item>
+        <item>英文</item>
+    </string-array>
+    
+    <!-- 适配的所有时区 -->
+    <string-array name="zone_array">
+        <item>zh_CN</item>
+        <item>en_US</item>
+    </string-array>
 
 </resources>

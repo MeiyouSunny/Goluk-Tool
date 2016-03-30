@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.msg.MessageBadger;
 import cn.com.mobnote.manager.MessageManager;
@@ -60,9 +61,10 @@ public class AcceptXDMessageReceiver extends XGPushBaseReceiver {
 	// 消息透传 收到消息
 	@Override
 	public void onTextMessage(Context context, XGPushTextMessage message) {
+		
 		String customContent = message.getContent();
 		String title = message.getTitle();
-		GolukDebugUtils.e("", "jyf----XG-----AcceptXdMessage  title:" + title + "  msg:" + customContent);
+		//Log.i("", "jyf----XG-----AcceptXdMessage  title:" + title + "  msg:" + customContent);
 		dealTextMsg(context, title, customContent);
 	}
 
@@ -73,6 +75,7 @@ public class AcceptXDMessageReceiver extends XGPushBaseReceiver {
 	 * @author jyf
 	 */
 	private void dealTextMsg(Context context, String title, String json) {
+		
 		if (null == json || json.equals("")) {
 			return;
 		}
@@ -104,6 +107,7 @@ public class AcceptXDMessageReceiver extends XGPushBaseReceiver {
 
 					// 101 = comment
 					// 102 = like/praise
+					// 103  follow
 					// 200~300 = system
 					// 300~400 = official notification
 					if(0 == type) {
@@ -126,7 +130,16 @@ public class AcceptXDMessageReceiver extends XGPushBaseReceiver {
 										getMessageManager().getMessageTotalCount(), context);
 							}
 						}
-					} else if(type >= 200 && type < 300) {
+					}else if(103 == type){
+						if(!TextUtils.isEmpty(mApp.mCurrentUId)) {
+							int num = MessageManager.getMessageManager().getFollowCount();
+							MessageManager.getMessageManager().setFollowCount(num + 1);
+							if(mApp.isExit()) {
+								MessageBadger.sendBadgeNumber(MessageManager.
+										getMessageManager().getMessageTotalCount(), context);
+							}
+						}
+					}else if(type >= 200 && type < 300) {
 						if(!TextUtils.isEmpty(mApp.mCurrentUId)) {
 							int num = MessageManager.getMessageManager().getSystemMessageCount();
 							MessageManager.getMessageManager().setSystemMessageCount(num + 1);

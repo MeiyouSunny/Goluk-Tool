@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -42,6 +43,11 @@ import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
+import cn.com.mobnote.golukmobile.fan.FanListActivity;
+import cn.com.mobnote.golukmobile.following.FollowingListActivity;
+import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
+import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
+import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class GolukUtils {
@@ -528,7 +534,7 @@ public class GolukUtils {
 
 		return number;
 	}
-
+	
 	public static String getFormatNumber(int fmtnumber) {
 		String number;
 
@@ -790,5 +796,102 @@ public class GolukUtils {
 		}
 		GolukDebugUtils.e("", "WifiBindList----getIpcType: " + ipcType);
 		return ipcType;
+	}
+	
+	/**
+	 * 获取国家语言编码
+	 * 
+	 * @return
+	 */
+	public static String getLanguage() {
+		return Locale.getDefault().getLanguage();
+	}
+
+	/**
+	 * 获取国家地区编码
+	 * 
+	 * @return
+	 */
+	private static String getCountry() {
+		return Locale.getDefault().getCountry();
+	}
+	
+	/**
+	 * 判断时国际版还是国内版 
+	 * 
+	 * 国内０　　国际１ 默认为国际
+	 * 
+	 * @return
+	 */
+	public static String getCommversion() {
+		String commversion = "1";
+		if (!"zh".equals(getLanguage())) {
+			commversion = "1";
+		} else {
+			commversion = "0";
+		}
+		return commversion;
+	}
+	
+	/**
+	 * 获取语言与国家
+	 * 
+	 * @return
+	 */
+	public static String getLanguageAndCountry() {
+
+		final String realZone = getLanguage() + "_" + getCountry();
+
+		String[] allZone = GolukApplication.getInstance().getApplicationContext().getResources()
+				.getStringArray(R.array.zone_array);
+		if (null == allZone || allZone.length <= 0) {
+			return realZone;
+		}
+		final int length = allZone.length;
+		for (int i = 0; i < length; i++) {
+			if (realZone.equals(allZone[i])) {
+				return allZone[i];
+			}
+		}
+		return realZone;
+	}
+
+	public static void startUserCenterActivity(Context context, String uid, String nickname,
+			String avatar, String customAvatar, String sex, String introduction) {
+		UCUserInfo user = new UCUserInfo();
+		user.uid = uid;
+		user.nickname = nickname;
+		user.headportrait = avatar;
+		user.introduce = introduction;
+		user.sex = sex;
+		user.customavatar = customAvatar;
+		user.praisemenumber = "0";
+		user.sharevideonumber = "0";
+		Intent i = new Intent(context, NewUserCenterActivity.class);
+		i.putExtra("userinfo", user);
+		i.putExtra("type", 0);
+		context.startActivity(i);
+	}
+
+	public static void startVideoDetailActivity(Context context, String videoId) {
+		Intent intent = null;
+		intent = new Intent(context, VideoDetailActivity.class);
+		intent.putExtra(VideoDetailActivity.VIDEO_ID, videoId);
+		intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
+		context.startActivity(intent);
+	}
+	
+	public static void startFollowingListActivity(Context context ,String uId){
+		Intent intent = null;
+		intent = new Intent(context, FollowingListActivity.class);
+		intent.putExtra("linkuid", uId);
+		context.startActivity(intent);
+	}
+	
+	public static void startFanListActivity(Context context ,String uId){
+		Intent intent = null;
+		intent = new Intent(context, FanListActivity.class);
+		intent.putExtra("linkuid", uId);
+		context.startActivity(intent);
 	}
 }

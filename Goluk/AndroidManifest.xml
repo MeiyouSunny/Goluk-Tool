@@ -46,6 +46,9 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustResize" >
         </activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity"
+            android:screenOrientation="portrait" />
 
         <!-- 个人中心模块 -->
         <activity
@@ -121,12 +124,20 @@
         <activity
             android:name=".profit.MyProfitDetailActivity"
             android:screenOrientation="portrait" />
+         <activity
+            android:name=".following.FollowingListActivity"
+            android:screenOrientation="portrait" />
+         
+         <activity
+            android:name=".fan.FanListActivity"
+            android:screenOrientation="portrait" />
 
         <!-- 网络变化广播监听 -->
         <receiver android:name="cn.com.mobnote.receiver.NetworkStateReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
 
+                
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
@@ -225,6 +236,11 @@
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
+            android:name=".carrecorder.settings.SettingsItemActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
             android:name=".carrecorder.settings.PhotoQualityActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
@@ -266,6 +282,11 @@
         </activity>
         <activity
             android:name=".usercenter.UserCenterActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".usercenter.UserVideoCategoryActivity"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait" >
         </activity>
@@ -385,6 +406,11 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
+        
+        <activity 
+            android:name="cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"></activity>
 
         <!-- 信鸽 -->
 
@@ -512,6 +538,13 @@
         </activity>
         <activity
             android:name=".praised.MyPraisedActivity"
+            android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name=".photoalbum.PhotoAlbumPlayer"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:hardwareAccelerated="true"
             android:theme="@android:style/Theme.NoTitleBar" >

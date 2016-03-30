@@ -14,7 +14,6 @@ import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 @SuppressLint("InflateParams")
 public class LocalVideoManager implements OnClickListener {
@@ -166,7 +165,7 @@ public class LocalVideoManager implements OnClickListener {
 	}
 
 	public void updateEdit(int type, boolean isHasData) {
-		GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit11: " + isHasData);
+		/*GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit11: " + isHasData);
 		if (null == mContext || !(mContext instanceof PhotoAlbumActivity)) {
 			return;
 		}
@@ -179,7 +178,7 @@ public class LocalVideoManager implements OnClickListener {
 			return;
 		}
 		GolukDebugUtils.e("", "Album------LocalVideoListView------updateEdit44: ");
-		((PhotoAlbumActivity) mContext).setEditBtnState(isHasData);
+		((PhotoAlbumActivity) mContext).setEditBtnState(isHasData);*/
 
 	}
 

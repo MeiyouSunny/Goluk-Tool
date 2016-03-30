@@ -9,8 +9,8 @@ import cn.com.mobnote.golukmobile.http.HttpManager;
 import cn.com.mobnote.golukmobile.msg.bean.MessageMsgsBean;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
+import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
-import cn.com.mobnote.golukmobile.usercenter.UserCenterActivity;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
@@ -172,7 +172,8 @@ public class SystemMsgAdapter extends BaseAdapter {
 						if (mmbTxt.type == msgTypeCertificate) {// 认证消息跳转到个人中心
 							UCUserInfo user = new UCUserInfo();
 							user.uid = mmbTxt.receiver.uid;
-							Intent i = new Intent(mContext, UserCenterActivity.class);
+//							Intent i = new Intent(mContext, UserCenterActivity.class);
+							Intent i = new Intent(mContext, NewUserCenterActivity.class);
 							i.putExtra("userinfo", user);
 							i.putExtra("type", 0);
 							mContext.startActivity(i);

@@ -1,53 +1,47 @@
 package cn.com.mobnote.golukmobile.photoalbum;
 
-import java.util.List;
-
-import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
-
-import cn.com.mobnote.golukmobile.R;
-import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
-import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
+import cn.com.mobnote.golukmobile.carrecorder.entity.DoubleVideoInfo;
+import cn.com.mobnote.golukmobile.carrecorder.entity.VideoInfo;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
-import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
-import cn.com.mobnote.golukmobile.player.MovieActivity;
 import cn.com.mobnote.golukmobile.player.VideoPlayerActivity;
 import cn.com.mobnote.golukmobile.player.VitamioPlayerActivity;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
-import android.content.Intent;
-import android.text.TextUtils;
-import android.view.MotionEvent;
-import android.view.View.OnTouchListener;
-import android.widget.AbsListView;
-import android.widget.TextView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.RelativeLayout;
+
+import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 @SuppressLint("InflateParams")
 public class CloudWonderfulVideoListView implements IPCManagerFn {
 	private View mRootLayout = null;
 	private Context mContext = null;
 	private CloudVideoManager mCloudVideoListView = null;
-	private PhotoAlbumActivity mActivity = null;
+	private FragmentAlbum mFragment = null;
 	private StickyListHeadersListView mStickyListHeadersListView = null;
 	private CloudWonderfulVideoAdapter mCloudWonderfulVideoAdapter = null;
 	private List<VideoInfo> mDataList = null;
@@ -56,7 +50,9 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 	/** 保存屏幕点击横坐标点 */
 	private float screenX = 0;
 	private int screenWidth = 0;
-	private CustomLoadingDialog mCustomProgressDialog = null;
+	//////// CK Start
+//	private CustomLoadingDialog mCustomProgressDialog = null;
+	//////// CK End
 	/** 列表数据加载中标识 */
 	private boolean isGetFileListDataing = false;
 	/** 数据分页个数 */
@@ -80,21 +76,15 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 	/** 判断服务端是否还有数据 */
 	private boolean isHasData = true;
 
-	public CloudWonderfulVideoListView(Context context, CloudVideoManager cloudVideoListView, int type) {
+	public CloudWonderfulVideoListView(Context context, FragmentAlbum fragment, CloudVideoManager cloudVideoListView, int type) {
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + type, this);
 		}
 		this.mContext = context;
 		mCloudVideoListView = cloudVideoListView;
 		this.mCurrentType = type;
-		this.mActivity = (PhotoAlbumActivity) context;
+		this.mFragment = fragment;
 		this.mDataList = new ArrayList<VideoInfo>();
-		this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
-		this.mGroupListName = new ArrayList<String>();
-		this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-		this.mRootLayout = LayoutInflater.from(context).inflate(R.layout.wonderful_listview, null, false);
-		this.density = SoundUtils.getInstance().getDisplayMetrics().density;
-		initView();
 	}
 
 	public void loadData(boolean flag) {
@@ -103,9 +93,9 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 		}
 
 		if (flag) {
-			if (!mCustomProgressDialog.isShowing()) {
-				mCustomProgressDialog.show();
-			}
+//			if (!mCustomProgressDialog.isShowing()) {
+//				mCustomProgressDialog.show();
+//			}
 		}
 
 		isGetFileListDataing = true;
@@ -120,10 +110,10 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 
 	private void initView() {
 		empty = (TextView) mRootLayout.findViewById(R.id.empty);
-		this.mCustomProgressDialog = new CustomLoadingDialog(mActivity, null);
+//		this.mCustomProgressDialog = new CustomLoadingDialog(mActivity, null);
 		mStickyListHeadersListView = (StickyListHeadersListView) mRootLayout
 				.findViewById(R.id.mStickyListHeadersListView);
-		mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(mContext, mStickyListHeadersListView);
+		mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(mContext, mFragment, mStickyListHeadersListView);
 
 		setListener();
 	}
@@ -201,7 +191,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 					RelativeLayout mTMLayout2 = (RelativeLayout) arg1.findViewById(R.id.mTMLayout2);
 					String tag1 = (String) mTMLayout1.getTag();
 					String tag2 = (String) mTMLayout2.getTag();
-					if (mActivity.getEditState()) {
+					if (mFragment.getEditState()) {
 						if ((screenX > 0) && (screenX < (screenWidth / 2))) {
 							selectedVideoItem(tag1, mTMLayout1);
 						} else {
@@ -269,6 +259,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 			intent.putExtra("filename", path);
 			mContext.startActivity(intent);
 			// }
+
 		}
 	}
 
@@ -279,7 +270,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 	 * @param mTMLayout1
 	 */
 	private void selectedVideoItem(String tag1, RelativeLayout mTMLayout1) {
-		List<String> selectedListData = mActivity.getSelectedList();
+		List<String> selectedListData = mFragment.getSelectedList();
 		if (!TextUtils.isEmpty(tag1)) {
 			if (selectedListData.contains(tag1)) {
 				selectedListData.remove(tag1);
@@ -290,11 +281,11 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 			}
 
 			if (selectedListData.size() == 0) {
-				mActivity.updateTitleName(mContext.getString(R.string.local_video_title_text));
-				mActivity.updateEditBtnState(false);
+				mFragment.updateTitleName(mContext.getString(R.string.local_video_title_text));
+				mFragment.updateEditBtnState(false);
 			} else {
-				mActivity.updateEditBtnState(true);
-				mActivity.updateTitleName(mContext.getString(R.string.str_photo_select1) + selectedListData.size()
+				mFragment.updateEditBtnState(true);
+				mFragment.updateTitleName(mContext.getString(R.string.str_photo_select1) + selectedListData.size()
 						+ mContext.getString(R.string.str_photo_select2));
 			}
 		}
@@ -441,7 +432,7 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 	private void addFooterView() {
 		if (!addFooter) {
 			addFooter = true;
-			mBottomLoadingView = (RelativeLayout) LayoutInflater.from(mActivity).inflate(
+			mBottomLoadingView = (RelativeLayout) LayoutInflater.from(mContext).inflate(
 					R.layout.video_square_below_loading, null);
 			mStickyListHeadersListView.addFooterView(mBottomLoadingView);
 		}
@@ -492,9 +483,9 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 		switch (event) {
 		case ENetTransEvent_IPC_VDCP_CommandResp:
 			if (IPC_VDCP_Msg_Query == msg) {
-				if (mCustomProgressDialog != null && mCustomProgressDialog.isShowing()) {
-					mCustomProgressDialog.close();
-				}
+//				if (mCustomProgressDialog != null && mCustomProgressDialog.isShowing()) {
+//					mCustomProgressDialog.close();
+//				}
 				isGetFileListDataing = false;
 				GolukDebugUtils.e("xuhw", "YYYYYY=======获取文件列表===@@@======param1=" + param1 + "=====param2=" + param2);
 				if (RESULE_SUCESS == param1) {
@@ -588,8 +579,8 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 	}
 
 	public void onDestory() {
-		mCustomProgressDialog.close();
-		mCustomProgressDialog = null;
+//		mCustomProgressDialog.close();
+//		mCustomProgressDialog = null;
 	}
 
 }

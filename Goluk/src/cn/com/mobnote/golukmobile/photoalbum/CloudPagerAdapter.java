@@ -2,11 +2,11 @@ package cn.com.mobnote.golukmobile.photoalbum;
 
 import java.util.List;
 
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 
 public class CloudPagerAdapter extends PagerAdapter {
 	private Context mContext = null;
@@ -15,13 +15,15 @@ public class CloudPagerAdapter extends PagerAdapter {
 	private CloudWonderfulVideoListView mCloudLoopVideoListView = null;
 
 	public CloudPagerAdapter(Context c, CloudVideoManager cloudVideoListView) {
-		this.mContext = c;
-		this.mCloudWonderfulVideoListView = new CloudWonderfulVideoListView(mContext, cloudVideoListView,
-				IPCManagerFn.TYPE_SHORTCUT);
-		this.mCloudEmergencyVideoListView = new CloudWonderfulVideoListView(mContext, cloudVideoListView,
-				IPCManagerFn.TYPE_URGENT);
-		this.mCloudLoopVideoListView = new CloudWonderfulVideoListView(mContext, cloudVideoListView,
-				IPCManagerFn.TYPE_CIRCULATE);
+		//CK Start
+//		this.mContext = c;
+//		this.mCloudWonderfulVideoListView = new CloudWonderfulVideoListView(mContext, cloudVideoListView,
+//				IPCManagerFn.TYPE_SHORTCUT);
+//		this.mCloudEmergencyVideoListView = new CloudWonderfulVideoListView(mContext, cloudVideoListView,
+//				IPCManagerFn.TYPE_URGENT);
+//		this.mCloudLoopVideoListView = new CloudWonderfulVideoListView(mContext, cloudVideoListView,
+//				IPCManagerFn.TYPE_CIRCULATE);
+		//CK End
 	}
 
 	@Override
