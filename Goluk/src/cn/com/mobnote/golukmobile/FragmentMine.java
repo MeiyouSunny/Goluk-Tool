@@ -26,13 +26,10 @@ import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventMessageUpdate;
-import cn.com.mobnote.golukmobile.fan.FanListActivity;
-import cn.com.mobnote.golukmobile.following.FollowingListActivity;
 import cn.com.mobnote.golukmobile.live.ILive;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.msg.MessageBadger;
 import cn.com.mobnote.golukmobile.msg.MessageCenterActivity;
-import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.praised.MyPraisedActivity;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
@@ -303,7 +300,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			}else{
 				clickToLogin(TYPE_SHARE_PRAISE);
 			}
-				
+			break;	
 		case R.id.user_fans:
 			if (isLoginInfoValid()) {
 				GolukUtils.startFanListActivity(getActivity(), ma.mApp.getMyInfo().uid);
