@@ -41,7 +41,7 @@
         android:layout_toRightOf="@id/iv_followinglist_avatar"
         android:gravity="left|center_vertical"
         android:singleLine="true"
-        android:textSize="10sp" />
+        android:textSize="11sp" />
 
     <LinearLayout
         android:id="@+id/ll_followinglist_link"
@@ -57,7 +57,7 @@
             android:id="@+id/iv_followinglist_link"
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:layout_marginRight="2dp" 
+            android:layout_marginRight="3dp"
             android:contentDescription="@string/imgdes"/>
 
         <TextView

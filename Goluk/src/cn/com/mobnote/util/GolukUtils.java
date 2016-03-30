@@ -43,6 +43,8 @@ import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
+import cn.com.mobnote.golukmobile.fan.FanListActivity;
+import cn.com.mobnote.golukmobile.following.FollowingListActivity;
 import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
@@ -876,6 +878,20 @@ public class GolukUtils {
 		intent = new Intent(context, VideoDetailActivity.class);
 		intent.putExtra(VideoDetailActivity.VIDEO_ID, videoId);
 		intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
+		context.startActivity(intent);
+	}
+	
+	public static void startFollowingListActivity(Context context ,String uId){
+		Intent intent = null;
+		intent = new Intent(context, FollowingListActivity.class);
+		intent.putExtra("linkuid", uId);
+		context.startActivity(intent);
+	}
+	
+	public static void startFanListActivity(Context context ,String uId){
+		Intent intent = null;
+		intent = new Intent(context, FanListActivity.class);
+		intent.putExtra("linkuid", uId);
 		context.startActivity(intent);
 	}
 }

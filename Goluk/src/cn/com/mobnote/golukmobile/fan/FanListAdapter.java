@@ -1,5 +1,4 @@
-package cn.com.mobnote.golukmobile.following;
-
+package cn.com.mobnote.golukmobile.fan;
 import java.util.List;
 
 import android.app.Activity;
@@ -15,20 +14,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.R.color;
+import cn.com.mobnote.golukmobile.following.FollowingConfig;
 import cn.com.mobnote.golukmobile.following.bean.FollowingItemBean;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 
-public class FollowingListAdapter extends BaseAdapter{
+public class FanListAdapter extends BaseAdapter{
 	
 	List<FollowingItemBean> mFollowingList;
-	FollowingListActivity mFollowingActivity;
+	FanListActivity mFollowingActivity;
 	private final static String TAG = "FollowingListAdapter";
 	
-	public FollowingListAdapter(Activity activity,List<FollowingItemBean> list) {
+	public FanListAdapter(Activity activity,List<FollowingItemBean> list) {
 		super();
-		this.mFollowingActivity = (FollowingListActivity) activity;
+		this.mFollowingActivity = (FanListActivity) activity;
 		this.mFollowingList = list;
 	}
 
