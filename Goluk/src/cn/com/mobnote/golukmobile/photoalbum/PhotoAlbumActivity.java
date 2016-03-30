@@ -1,10 +1,9 @@
 package cn.com.mobnote.golukmobile.photoalbum;
 
+import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-
-public class PhotoAlbumActivity extends FragmentActivity {
+public class PhotoAlbumActivity extends BaseActivity {
 	
 
 	@Override
