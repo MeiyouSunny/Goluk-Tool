@@ -23,6 +23,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
+import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
 import cn.com.mobnote.golukmobile.thirdshare.CustomShareBoard;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
@@ -40,7 +41,7 @@ import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class NewUserCenterActivity extends BaseActivity implements IRequestResultListener, OnClickListener,
-		OnItemClickListener {
+		OnItemClickListener, ForbidBack {
 
 	private static final String OPERATOR_FIRST = "0";
 	private static final String OPERATOR_DOWN = "1";
@@ -227,7 +228,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 				}
 				mHeader.changeAttentionState(attention.data.link);
 				mHomeJson.data.user.link = attention.data.link;
-				mAdapter.notifyDataSetChanged();
+//				mAdapter.notifyDataSetChanged();
 			}
 		}
 	}
@@ -282,10 +283,11 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	}
 
 	private void exit() {
-		finish();
 		if (null != mMoreDialog) {
 			mMoreDialog.dismiss();
 		}
+		closeLoadingDialog();
+		finish();
 	}
 
 	/**
@@ -333,6 +335,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 		if (null == mLoadinDialog) {
 			mLoadinDialog = new CustomLoadingDialog(this, null);
 			mLoadinDialog.show();
+			mLoadinDialog.setListener(this);
 		}
 	}
 
@@ -384,6 +387,13 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 				itVideoDetail.putExtra(VideoDetailActivity.VIDEO_ID, video.videoid);
 				startActivity(itVideoDetail);
 			}
+		}
+	}
+
+	@Override
+	public void forbidBackKey(int backKey) {
+		if (1 == backKey) {
+			exit();
 		}
 	}
 
