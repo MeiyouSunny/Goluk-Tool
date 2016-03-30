@@ -20,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventRefreshUserInfo;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
@@ -39,6 +41,7 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 public class NewUserCenterActivity extends BaseActivity implements IRequestResultListener, OnClickListener,
 		OnItemClickListener, ForbidBack {
@@ -93,6 +96,8 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 		} else {
 			mTitleText.setText(this.getString(R.string.str_his_homepage));
 		}
+		
+		EventBus.getDefault().register(this);
 
 	}
 
@@ -144,13 +149,26 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			}
 
 		});
+		
+		httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_FIRST, "");
 
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_FIRST, "");
+	public void onEventMainThread(EventRefreshUserInfo event) {
+		if (null == event) {
+			return;
+		}
+		switch (event.getOpCode()) {
+		case EventConfig.REFRESH_USER_INFO:
+			if (mUserInfo != null) {
+				if (testUser()) {
+					httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_FIRST, "");
+				}
+			}
+			break;
+		default:
+			break;
+		}
 	}
 
 	private void httpRequestData(String otheruid, String currentuid, String operation, String index) {
@@ -267,7 +285,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			break;
 		case R.id.ib_usercenter_more:
 			if (null == mHomeJson || !UserUtils.isNetDeviceAvailable(this)) {
-				GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
+				GolukUtils.showToast(this, this.getResources().getString(R.string.str_network_unavailable));
 				return;
 			}
 			mMoreDialog = new UserMoreDialog(this);
@@ -372,6 +390,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	protected void onDestroy() {
 		super.onDestroy();
 		closeLoadingDialog();
+		EventBus.getDefault().unregister(this);
 	}
 
 	@Override

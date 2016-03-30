@@ -14,6 +14,7 @@ import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
+import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -104,6 +105,10 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
+		if (!UserUtils.isNetDeviceAvailable(mActivity)) {
+			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_network_unavailable));
+			return;
+		}
 		switch (id) {
 		case R.id.wechat:
 			click_wechat();
