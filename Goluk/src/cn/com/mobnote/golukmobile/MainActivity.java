@@ -628,10 +628,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 					ad.start();
 				}
 			} else if (state == WIFI_STATE_SUCCESS) {
-				Toast.makeText(MainActivity.this, "连接成功！", Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.this, getResources().getString(R.string.wifi_link_success_conn), Toast.LENGTH_LONG).show();
 				mCarrecorderIv.setImageResource(R.drawable.index_video_icon);
 			} else if (state == WIFI_STATE_FAILED) {
-				//Toast.makeText(MainActivity.this, "连接失败！", Toast.LENGTH_LONG).show();
 				mCarrecorderIv.setImageResource(R.drawable.tb_notconnected);
 			} else {
 				mCarrecorderIv.setImageResource(R.drawable.tb_notconnected);
