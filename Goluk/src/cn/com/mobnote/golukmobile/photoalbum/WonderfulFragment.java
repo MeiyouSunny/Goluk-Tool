@@ -637,7 +637,6 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 					if (null != fileList && fileList.size() > 0) {
 						int type = IpcDataParser.parseVideoFileType(fileList.get(0).filename);
 						if (type != IPCManagerFn.TYPE_SHORTCUT) {
-							checkListState();
 							return;
 						}
 
