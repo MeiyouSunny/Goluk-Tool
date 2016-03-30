@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -98,17 +99,18 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 	List<Boolean> exist = new ArrayList<Boolean>();
 
 	// private CloudVideoManager mCloudVideoListView = null;
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		EventBus.getDefault().register(this);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		if (null != GolukApplication.getInstance().getIPCControlManager()) {
-			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_CIRCULATE, this);
-		}
+		
 		
 		if(mLoopVideoView == null){
-			EventBus.getDefault().register(this);
-
 			mFragmentAlbum = (FragmentAlbum)getParentFragment();
 
 			this.mDataList = new ArrayList<VideoInfo>();
@@ -139,12 +141,18 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 	}
 	
 	@Override
-	public void onDestroyView() {
-		// TODO Auto-generated method stub
-		super.onDestroyView();
+	public void onStop() {
+		super.onStop();
 		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_CIRCULATE);
+	}
+	
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
 		EventBus.getDefault().unregister(this);
 	}
+	
 	
 	public void onEventMainThread(EventDeletePhotoAlbumVid event){
 		if(event!=null&&event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP){
@@ -278,6 +286,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 						GolukDebugUtils.e("",
 								"YYYYYY=====SCROLL_STATE_IDLE====22222222=");
 						final int size = mDataList.size();
+						boolean is = isHasData;
 						if (size > 0 && isHasData) {
 							GolukDebugUtils.e("",
 									"YYYYYY=====SCROLL_STATE_IDLE====33333=isGetFileListDataing="
@@ -554,6 +563,8 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 		if (fileList.size() < pageCount) {
 			isHasData = false;
 			removeFooterView();
+		}else{
+			isHasData = true;
 		}
 		mDoubleDataList.clear();
 		mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mDataList);

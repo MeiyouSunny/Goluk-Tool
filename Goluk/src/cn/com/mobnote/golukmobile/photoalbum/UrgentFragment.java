@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -101,15 +102,17 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 	//private CloudVideoManager mCloudVideoListView = null;
 	
 	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		EventBus.getDefault().register(this);
+	}
+	
+	
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
 		if(mUrgentVideoView == null){
-			EventBus.getDefault().register(this);
-			if (null != GolukApplication.getInstance().getIPCControlManager()) {
-				GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_URGENT, this);
-			}
-			
 			mFragmentAlbum = (FragmentAlbum)getParentFragment();
 			this.mDataList = new ArrayList<VideoInfo>();
 			this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
@@ -139,11 +142,16 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 	}
 	
 	@Override
-	public void onDestroyView() {
-		// TODO Auto-generated method stub
-		super.onDestroyView();
-		EventBus.getDefault().unregister(this);
+	public void onStop() {
+		super.onStop();
 		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_URGENT);
+	}
+	
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		EventBus.getDefault().unregister(this);
 	}
 	
 	public void onEventMainThread(EventDeletePhotoAlbumVid event){
@@ -518,6 +526,8 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 		if (fileList.size() < pageCount) {
 			isHasData = false;
 			removeFooterView();
+		}else{
+			isHasData = true;
 		}
 		mDoubleDataList.clear();
 		mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mDataList);

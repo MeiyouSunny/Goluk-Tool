@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -98,17 +99,21 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	
 	/** 防止重复下载 */
 	List<Boolean> exist = new ArrayList<Boolean>();
+	
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		EventBus.getDefault().register(this);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
 		if(mWonderfulVideoView == null){
-			EventBus.getDefault().register(this);
 			if (mWonderfulVideoView == null) {
 				mWonderfulVideoView = inflater.inflate(R.layout.wonderful_listview,(ViewGroup) getActivity().findViewById(R.id.viewpager),false);
 			}
-
 			
 			mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this.getContext()).inflate(R.layout.video_square_below_loading, null);
 
@@ -132,18 +137,10 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 		return mWonderfulVideoView;
 	}
 	
-	@Override
-	public void onResume() {
-		super.onResume();
-		if (null != GolukApplication.getInstance().getIPCControlManager()) {
-			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT, this);
-		}
-	}
 	
 	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT);
+	public void onDestroy() {
+		super.onDestroy();
 		EventBus.getDefault().unregister(this);
 	}
 	
@@ -541,6 +538,20 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 			mStickyListHeadersListView.addFooterView(mBottomLoadingView);
 		}
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (null != GolukApplication.getInstance().getIPCControlManager()) {
+			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT, this);
+		}
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT);
+	}
 
 	public void loadData(boolean flag) {
 		if (isGetFileListDataing) {
@@ -605,6 +616,8 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 		if (fileList.size() < pageCount) {
 			isHasData = false;
 			removeFooterView();
+		}else{
+			isHasData = true;
 		}
 		mDoubleDataList.clear();
 		mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mDataList);
