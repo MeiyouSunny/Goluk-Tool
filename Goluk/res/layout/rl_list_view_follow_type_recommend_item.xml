@@ -140,6 +140,7 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:id="@+id/rl_list_view_follow_type_recommend_item_first_video"
             android:background="@drawable/follow_recommend_video_border"
             android:layout_weight="1">
             <ImageView
@@ -199,6 +200,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@drawable/follow_recommend_video_border"
+            android:id="@+id/rl_list_view_follow_type_recommend_item_second_video"
             android:layout_weight="1">
             <ImageView
                 android:id="@+id/iv_list_view_follow_type_recommend_item_second_video"

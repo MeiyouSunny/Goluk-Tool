@@ -330,6 +330,11 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 			
 			FollowRetBean bean = (FollowRetBean)result;
 			if(null != bean) {
+				
+				if(bean.code != 0) {
+					Toast.makeText(FollowingListActivity.this, bean.msg, Toast.LENGTH_SHORT).show();
+					return;
+				}
 				// User link uid to find the changed recommend user item status
 				int i = findLinkUserItem(bean.data.linkuid);
 				if(i >=0 && i < mFollowingList.size()) {
@@ -355,15 +360,7 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 				}
 			} else {
 				// Toast for operation failed
-				
-				if(bean.data.link == FollowingConfig.LINK_TYPE_FAN_ONLY
-						||bean.data.link == FollowingConfig.LINK_TYPE_UNLINK){
-					Toast.makeText(FollowingListActivity.this, 
-							getResources().getString(R.string.str_cancel_follow_fail), Toast.LENGTH_SHORT).show();
-				}else if(bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER){
-					Toast.makeText(FollowingListActivity.this,
-							getResources().getString(R.string.str_follow_fail),Toast.LENGTH_SHORT).show();
-				}
+				Toast.makeText(FollowingListActivity.this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 				
 			}
 			

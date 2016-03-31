@@ -5,6 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="imgdes">图片说明</string>
+    <string name="guide_start">点击这里开始你的极路客之旅吧</string>
     <string name="index_title">Goluk</string>
     <string name="video_square">视频广场</string>
     <string name="my_video_share">分享我的视频</string>
@@ -1008,7 +1009,7 @@
     <string name="str_usercenter_headlines_video">当前还没有入选头条的视频</string>
     <string name="str_usercenter_login_hint_text">请登录后再操作</string>
 
-    <string name="str_confirm_cancel_follow">确定取消关注？</string>
+    <string name="str_confirm_cancel_follow">确定要取消关注吗？</string>
     <string name="str_follow_fail">关注失败</string>
     <string name="str_cancel_follow_fail">取消关注失败</string>
     <string name="str_follow_all">全部关注</string>
