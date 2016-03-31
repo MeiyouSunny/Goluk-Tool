@@ -162,6 +162,10 @@ public class FollowedListAdapter extends BaseAdapter {
 					convertView.findViewById(R.id.rl_list_view_follow_type_recommend_item_follow);
 			holderRec.nLabelFollowAllRL =
 					convertView.findViewById(R.id.rl_list_view_follow_type_recommend_item_follow_all);
+			holderRec.nItemFirstVideoRL =
+					convertView.findViewById(R.id.rl_list_view_follow_type_recommend_item_first_video);
+			holderRec.nItemSecondVideoRL =
+					convertView.findViewById(R.id.rl_list_view_follow_type_recommend_item_second_video);
 			convertView.setTag(holderRec);
 		} else {
 			holderRec = (ViewHolderRecommend)convertView.getTag();
@@ -191,16 +195,57 @@ public class FollowedListAdapter extends BaseAdapter {
 
 		holderRec.nItemNameTV.setText(recomUserBean.nickname);
 		holderRec.nItemContentTV.setText(recomUserBean.introduction);
-		GlideUtils.loadImage(mFragment.getActivity(), holderRec.nItemFirstVideoIV,
-				recomUserBean.hotvideo.get(0).pictureurl, R.drawable.tacitly_pic);
-		GlideUtils.loadImage(mFragment.getActivity(), holderRec.nItemSecondVideoIV,
-				recomUserBean.hotvideo.get(1).pictureurl, R.drawable.tacitly_pic);
-		holderRec.nItemFirstVideoDesTV.setText(recomUserBean.hotvideo.get(0).description);
-		holderRec.nItemSecondVideoDesTV.setText(recomUserBean.hotvideo.get(1).description);
-		holderRec.nItemFirstVideoViewTV.setText(recomUserBean.hotvideo.get(0).clickcount + "");
-		holderRec.nItemSecondVideoViewTV.setText(recomUserBean.hotvideo.get(1).clickcount + "");
-		holderRec.nItemFirstVideoComTV.setText(recomUserBean.hotvideo.get(0).commentcount + "");
-		holderRec.nItemSecondVideoComTV.setText(recomUserBean.hotvideo.get(1).commentcount + "");
+
+		if(null != recomUserBean.hotvideo && recomUserBean.hotvideo.size() > 0) {
+			int videoNum = recomUserBean.hotvideo.size();
+			GlideUtils.loadImage(mFragment.getActivity(), holderRec.nItemFirstVideoIV,
+					recomUserBean.hotvideo.get(0).pictureurl, R.drawable.tacitly_pic);
+			holderRec.nItemFirstVideoDesTV.setText(recomUserBean.hotvideo.get(0).description);
+			holderRec.nItemFirstVideoViewTV.setText(recomUserBean.hotvideo.get(0).clickcount + "");
+			holderRec.nItemFirstVideoComTV.setText(recomUserBean.hotvideo.get(0).commentcount + "");
+			final String firstVideoId = recomUserBean.hotvideo.get(0).videoid;
+			holderRec.nItemFirstVideoIV.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					GolukUtils.startVideoDetailActivity(mFragment.getActivity(), firstVideoId);
+				}
+			});
+
+			holderRec.nItemFirstVideoDesTV.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					GolukUtils.startVideoDetailActivity(mFragment.getActivity(), firstVideoId);
+				}
+			});
+
+			if(videoNum == 2) {
+				GlideUtils.loadImage(mFragment.getActivity(), holderRec.nItemSecondVideoIV,
+						recomUserBean.hotvideo.get(1).pictureurl, R.drawable.tacitly_pic);
+				holderRec.nItemSecondVideoDesTV.setText(recomUserBean.hotvideo.get(1).description);
+				holderRec.nItemSecondVideoViewTV.setText(recomUserBean.hotvideo.get(1).clickcount + "");
+				holderRec.nItemSecondVideoComTV.setText(recomUserBean.hotvideo.get(1).commentcount + "");
+				holderRec.nItemSecondVideoRL.setVisibility(View.VISIBLE);
+
+				final String secondVideoId = recomUserBean.hotvideo.get(1).videoid;
+
+				holderRec.nItemSecondVideoIV.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						GolukUtils.startVideoDetailActivity(mFragment.getActivity(), secondVideoId);
+					}
+				});
+
+				holderRec.nItemSecondVideoDesTV.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						GolukUtils.startVideoDetailActivity(mFragment.getActivity(), secondVideoId);
+					}
+				});
+			} else if(videoNum == 1) {
+				holderRec.nItemSecondVideoRL.setVisibility(View.INVISIBLE);
+			}
+		}
+
 		if(recomUserBean.showAllFollow) {
 			holderRec.nLabelFollowAllRL.setVisibility(View.VISIBLE);
 		} else {
@@ -274,42 +319,12 @@ public class FollowedListAdapter extends BaseAdapter {
 		int relation = recomUserBean.link;
 
 		final String type = relation == 0 ? "1" : "0";
-		final String firstVideoId = recomUserBean.hotvideo.get(0).videoid;
-		final String secondVideoId = recomUserBean.hotvideo.get(1).videoid;
 		final FollowedRecomUserBean finalUserBean = recomUserBean;
 
 		holderRec.nItemFollowTV.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mFragment.sendFollowRequest(linkuid, type);
-			}
-		});
-
-		holderRec.nItemFirstVideoIV.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				GolukUtils.startVideoDetailActivity(mFragment.getActivity(), firstVideoId);
-			}
-		});
-
-		holderRec.nItemFirstVideoDesTV.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				GolukUtils.startVideoDetailActivity(mFragment.getActivity(), firstVideoId);
-			}
-		});
-
-		holderRec.nItemSecondVideoIV.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				GolukUtils.startVideoDetailActivity(mFragment.getActivity(), secondVideoId);
-			}
-		});
-
-		holderRec.nItemSecondVideoDesTV.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				GolukUtils.startVideoDetailActivity(mFragment.getActivity(), secondVideoId);
 			}
 		});
 
@@ -419,13 +434,18 @@ public class FollowedListAdapter extends BaseAdapter {
 		if(null == videoObjectBean) {
 			return convertView;
 		}
+
 		if(0 == position) {
 			holderFollow.vDivider.setVisibility(View.GONE);
 		} else {
 			holderFollow.vDivider.setVisibility(View.VISIBLE);
 		}
 
-		GlideUtils.loadImage(mFragment.getActivity(), holderFollow.videoImg, videoObjectBean.video.picture, R.drawable.tacitly_pic);
+		if(null != videoObjectBean.video && !TextUtils.isEmpty(videoObjectBean.video.picture)) {
+			GlideUtils.loadImage(mFragment.getActivity(),
+					holderFollow.videoImg, videoObjectBean.video.picture, R.drawable.tacitly_pic);
+		}
+
 		if(null != videoObjectBean.user && null != videoObjectBean.user.label) {
 			String approveLabel = videoObjectBean.user.label.approvelabel;
 			String approve = videoObjectBean.user.label.approve;
@@ -451,88 +471,91 @@ public class FollowedListAdapter extends BaseAdapter {
 			}
 		}
 
-		String headUrl = videoObjectBean.user.customavatar;
-		if (null != headUrl && !"".equals(headUrl)) {
-			// 使用服务器头像地址
-			GlideUtils.loadNetHead(mFragment.getActivity(), holderFollow.headimg, headUrl, R.drawable.editor_head_feault7);
-		} else {
-			showHead(holderFollow.headimg, videoObjectBean.user.headportrait);
+		if(null != videoObjectBean.user) {
+			String headUrl = videoObjectBean.user.customavatar;
+			if (null != headUrl && !"".equals(headUrl)) {
+				// 使用服务器头像地址
+				GlideUtils.loadNetHead(mFragment.getActivity(), holderFollow.headimg, headUrl, R.drawable.editor_head_feault7);
+			} else {
+				showHead(holderFollow.headimg, videoObjectBean.user.headportrait);
+			}
+			holderFollow.nikename.setText(videoObjectBean.user.nickname);
 		}
 
-		holderFollow.nikename.setText(videoObjectBean.user.nickname);
-
-		holderFollow.timeLocation.setText(GolukUtils.getCommentShowFormatTime(mFragment.getActivity(),
+		if(videoObjectBean.video != null) {
+			holderFollow.timeLocation.setText(
+				GolukUtils.getCommentShowFormatTime(mFragment.getActivity(),
 				videoObjectBean.video.sharingtime) + " " + videoObjectBean.video.location);
 
-		if(null != videoObjectBean.video.gen) {
-			String recommend = videoObjectBean.video.gen.isrecommend;
-			if(null != recommend && "1".equals(recommend)) {
-				Drawable drawable = mFragment.getActivity().getResources().getDrawable(R.drawable.together_recommend_icon);
-				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-				holderFollow.timeLocation.setCompoundDrawables(null, null, drawable, null);
+			if(null != videoObjectBean.video.gen) {
+				String recommend = videoObjectBean.video.gen.isrecommend;
+				if(null != recommend && "1".equals(recommend)) {
+					Drawable drawable = mFragment.getActivity().getResources().getDrawable(R.drawable.together_recommend_icon);
+					drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+					holderFollow.timeLocation.setCompoundDrawables(null, null, drawable, null);
+				} else {
+					holderFollow.timeLocation.setCompoundDrawables(null, null, null, null);
+				}
+
+				String reward = videoObjectBean.video.gen.isreward;
+				String sysflag = videoObjectBean.video.gen.sysflag;
+				if(null != reward && "1".equals(reward) && null != sysflag && "1".equals(sysflag)) {
+					holderFollow.ivReward.setVisibility(View.VISIBLE);
+				} else {
+					holderFollow.ivReward.setVisibility(View.GONE);
+				}
 			} else {
 				holderFollow.timeLocation.setCompoundDrawables(null, null, null, null);
-			}
-
-			String reward = videoObjectBean.video.gen.isreward;
-			String sysflag = videoObjectBean.video.gen.sysflag;
-			if(null != reward && "1".equals(reward) && null != sysflag && "1".equals(sysflag)) {
-				holderFollow.ivReward.setVisibility(View.VISIBLE);
-			} else {
 				holderFollow.ivReward.setVisibility(View.GONE);
 			}
-		} else {
-			holderFollow.timeLocation.setCompoundDrawables(null, null, null, null);
-			holderFollow.ivReward.setVisibility(View.GONE);
-		}
 
-		if ("0".equals(videoObjectBean.video.ispraise)) {
-			holderFollow.praiseText.setTextColor(Color.rgb(0x88, 0x88, 0x88));
-			Drawable drawable = mFragment.getActivity().getResources().getDrawable(R.drawable.videodetail_like);
-			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-			holderFollow.praiseText.setCompoundDrawables(drawable, null, null, null);
-		} else {
-			holderFollow.praiseText.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
-			Drawable drawable = mFragment.getActivity().getResources().getDrawable(R.drawable.videodetail_like_press);
-			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-			holderFollow.praiseText.setCompoundDrawables(drawable, null, null, null);
-		}
+			if ("0".equals(videoObjectBean.video.ispraise)) {
+				holderFollow.praiseText.setTextColor(Color.rgb(0x88, 0x88, 0x88));
+				Drawable drawable = mFragment.getActivity().getResources().getDrawable(R.drawable.videodetail_like);
+				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+				holderFollow.praiseText.setCompoundDrawables(drawable, null, null, null);
+			} else {
+				holderFollow.praiseText.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
+				Drawable drawable = mFragment.getActivity().getResources().getDrawable(R.drawable.videodetail_like_press);
+				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+				holderFollow.praiseText.setCompoundDrawables(drawable, null, null, null);
+			}
 
-		if ("-1".equals(videoObjectBean.video.praisenumber)) {
-			holderFollow.tvPraiseCount.setText(mFragment.getActivity().getString(R.string.str_usercenter_praise));
-		} else {
-			holderFollow.tvPraiseCount.setText(
-					GolukUtils.getFormatNumber(videoObjectBean.video.praisenumber) +
-					mFragment.getActivity().getString(R.string.str_usercenter_praise));
-		}
+			if ("-1".equals(videoObjectBean.video.praisenumber)) {
+				holderFollow.tvPraiseCount.setText(mFragment.getActivity().getString(R.string.str_usercenter_praise));
+			} else {
+				holderFollow.tvPraiseCount.setText(
+						GolukUtils.getFormatNumber(videoObjectBean.video.praisenumber) +
+						mFragment.getActivity().getString(R.string.str_usercenter_praise));
+			}
+			if ("-1".equals(videoObjectBean.video.clicknumber)) {
+				holderFollow.surroundWatch.setText("");
+				holderFollow.surroundWatch.setVisibility(View.GONE);
+			} else {
+				holderFollow.surroundWatch.setVisibility(View.VISIBLE);
+				holderFollow.surroundWatch.setText(GolukUtils.getFormatNumber(
+						videoObjectBean.video.clicknumber));
+			}
 
-		if ("-1".equals(videoObjectBean.video.clicknumber)) {
-			holderFollow.surroundWatch.setText("");
-			holderFollow.surroundWatch.setVisibility(View.GONE);
-		} else {
-			holderFollow.surroundWatch.setVisibility(View.VISIBLE);
-			holderFollow.surroundWatch.setText(GolukUtils.getFormatNumber(
-					videoObjectBean.video.clicknumber));
-		}
-
-		if (TextUtils.isEmpty(videoObjectBean.video.describe)) {
-			holderFollow.detail.setVisibility(View.GONE);
-		} else {
-			holderFollow.detail.setVisibility(View.VISIBLE);
-			if(null != videoObjectBean.video.gen) {
-				if(!TextUtils.isEmpty(videoObjectBean.video.gen.topicid) &&
-						!TextUtils.isEmpty(videoObjectBean.video.gen.topicname)) {
-					UserUtils.showCommentText(
-							mFragment.getActivity(), true, videoObjectBean,
-							holderFollow.detail, videoObjectBean.user.nickname,
-							videoObjectBean.video.describe, "#" + videoObjectBean.video.gen.topicname + "#");
+			if (TextUtils.isEmpty(videoObjectBean.video.describe)) {
+				holderFollow.detail.setVisibility(View.GONE);
+			} else {
+				holderFollow.detail.setVisibility(View.VISIBLE);
+				if(null != videoObjectBean.video.gen) {
+					if(!TextUtils.isEmpty(videoObjectBean.video.gen.topicid) &&
+							!TextUtils.isEmpty(videoObjectBean.video.gen.topicname)) {
+						UserUtils.showCommentText(
+								mFragment.getActivity(), true, videoObjectBean,
+								holderFollow.detail, videoObjectBean.user.nickname,
+								videoObjectBean.video.describe, "#" + videoObjectBean.video.gen.topicname + "#");
+					} else {
+						UserUtils.showCommentText(holderFollow.detail, videoObjectBean.user.nickname,
+								videoObjectBean.video.describe);
+					}
 				} else {
 					UserUtils.showCommentText(holderFollow.detail, videoObjectBean.user.nickname,
 							videoObjectBean.video.describe);
 				}
-			} else {
-				UserUtils.showCommentText(holderFollow.detail, videoObjectBean.user.nickname,
-						videoObjectBean.video.describe);
 			}
 		}
 
@@ -540,7 +563,8 @@ public class FollowedListAdapter extends BaseAdapter {
 		holderFollow.commentText.setVisibility(View.VISIBLE);
 		holderFollow.surroundWatch.setVisibility(View.VISIBLE);
 
-		if ("1".equals(videoObjectBean.video.comment.iscomment)) {
+		if (null != videoObjectBean.video && null != videoObjectBean.video.comment &&
+				"1".equals(videoObjectBean.video.comment.iscomment)) {
 			List<FollowedComListBean> comments = videoObjectBean.video.comment.comlist;
 			if (null != comments && comments.size() > 0) {
 				int comcount = Integer.parseInt(videoObjectBean.video.comment.comcount);
@@ -638,6 +662,10 @@ public class FollowedListAdapter extends BaseAdapter {
 		}
 
 		final FollowedVideoObjectBean videoObjectBean = (FollowedVideoObjectBean) mList.get(index);
+
+		if(null == videoObjectBean || videoObjectBean.video == null) {
+			return;
+		}
 		// 分享监听
 		final String videoId = videoObjectBean.video.videoid;
 		final String type = videoObjectBean.video.type;
@@ -649,14 +677,16 @@ public class FollowedListAdapter extends BaseAdapter {
 			}
 		});
 
-//		// 举报监听
-		viewHolder.function.setOnClickListener(new VideoItemFunctionClickListener(mFragment.getActivity(), videoObjectBean, false, null));
-//		// 评论监听
-		viewHolder.commentText.setOnClickListener(new VideoItemCommentClickListener(mFragment.getActivity(), videoObjectBean, true));
+		// 举报监听
+		viewHolder.function.setOnClickListener(
+				new VideoItemFunctionClickListener(mFragment.getActivity(), videoObjectBean, false, null));
+		// 评论监听
+		viewHolder.commentText.setOnClickListener(
+				new VideoItemCommentClickListener(mFragment.getActivity(), videoObjectBean, true));
 		// 播放区域监听
 		viewHolder.videoImg.setOnClickListener(new VideoItemClickPlayListener(mFragment.getActivity(), videoObjectBean));
 		viewHolder.headimg.setOnClickListener(new VideoItemHeadClickListener(mFragment.getActivity(), videoObjectBean));
-//		// 点赞
+		// 点赞
 		viewHolder.praiseText.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -668,7 +698,7 @@ public class FollowedListAdapter extends BaseAdapter {
 				mFragment.storeCurrentIndex(index);
 			}
 		});
-//		// 评论总数监听
+		// 评论总数监听
 		List<FollowedComListBean> comments = videoObjectBean.video.comment.comlist;
 		if (comments.size() > 0) {
 			viewHolder.totalcomments.setOnClickListener(
@@ -682,10 +712,12 @@ public class FollowedListAdapter extends BaseAdapter {
 		viewHolder.rlUserInfo.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				GolukUtils.startUserCenterActivity(mFragment.getActivity(),
+				if(null != vsInfo && null != vsInfo.user) {
+					GolukUtils.startUserCenterActivity(mFragment.getActivity(),
 						vsInfo.user.uid, vsInfo.user.nickname,
 						vsInfo.user.headportrait, vsInfo.user.customavatar,
 						vsInfo.user.sex, "");
+				}
 			}
 		});
 	}
@@ -722,6 +754,8 @@ public class FollowedListAdapter extends BaseAdapter {
 		TextView nItemSecondVideoViewTV;
 		View nLabelFollowAllRL;
 		View nItemFollowRL;
+		View nItemFirstVideoRL;
+		View nItemSecondVideoRL;
 	}
 
 	static class ViewHolderFollow {
