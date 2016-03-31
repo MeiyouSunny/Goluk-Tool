@@ -1741,9 +1741,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	}
 
 	public void connectionDialog() {
-		if (isCanShowConnectDialog()) {
-			EventBus.getDefault().post(new EventIpcConnState(EventConfig.IPC_DISCONNECT));
-		}
+		EventBus.getDefault().post(new EventIpcConnState(EventConfig.IPC_DISCONNECT));
 	}
 
 	/**
@@ -1753,16 +1751,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @return boolean
 	 * @author 曾浩
 	 */
-	public boolean isCanShowConnectDialog() {
-		//////// CK start
-//		if (mContext instanceof FragmentAlbum) {
-//			return true;
-//		} else {
-//			return false;
-//		}
-		return true;
-		//////// CK End
-	}
+//	public boolean isCanShowConnectDialog() {
+//		//////// CK start
+////		if (mContext instanceof FragmentAlbum) {
+////			return true;
+////		} else {
+////			return false;
+////		}
+//		return true;
+//		//////// CK End
+//	}
 
 	/**
 	 * 获取当前登录用户的信息,　未登录則返回NULL
