@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -34,6 +33,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+import android.provider.Settings;
 import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.util.DisplayMetrics;
@@ -503,7 +503,7 @@ public class GolukUtils {
 				// 昨天
 				SimpleDateFormat hhmmFormat = new SimpleDateFormat("HH:mm", Locale.CHINESE);
 				String todayFormatStr = hhmmFormat.format(oldDate);
-				result = context.getString(R.string.str_yestoday)+" " + todayFormatStr;
+				result = context.getString(R.string.str_yestoday) + " " + todayFormatStr;
 			} else if (currentYear == oldYear) {
 				// 本年
 				SimpleDateFormat hhmmFormat = new SimpleDateFormat("MM-dd HH:mm", Locale.CHINESE);
@@ -534,13 +534,13 @@ public class GolukUtils {
 
 		return number;
 	}
-	
+
 	public static String getFormatNumber(int fmtnumber) {
 		String number;
 
 		if (fmtnumber > 10000) {
 			DecimalFormat df = new DecimalFormat("0.0");
-			number = df.format((float)fmtnumber/1000) + "K";
+			number = df.format((float) fmtnumber / 1000) + "K";
 		} else {
 			number = "" + fmtnumber;
 		}
@@ -745,10 +745,15 @@ public class GolukUtils {
 		if (null == context) {
 			return;
 		}
-		Intent intent = new Intent();
-		// intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
-		context.startActivity(intent);
+		try {
+			Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+			// intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			// intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
+			context.startActivity(intent);
+		} catch (Exception e) {
+
+		}
+
 	}
 
 	public static boolean isTestServer() {
@@ -797,7 +802,7 @@ public class GolukUtils {
 		GolukDebugUtils.e("", "WifiBindList----getIpcType: " + ipcType);
 		return ipcType;
 	}
-	
+
 	/**
 	 * 获取国家语言编码
 	 * 
@@ -815,9 +820,9 @@ public class GolukUtils {
 	private static String getCountry() {
 		return Locale.getDefault().getCountry();
 	}
-	
+
 	/**
-	 * 判断时国际版还是国内版 
+	 * 判断时国际版还是国内版
 	 * 
 	 * 国内０　　国际１ 默认为国际
 	 * 
@@ -832,7 +837,7 @@ public class GolukUtils {
 		}
 		return commversion;
 	}
-	
+
 	/**
 	 * 获取语言与国家
 	 * 
@@ -856,8 +861,8 @@ public class GolukUtils {
 		return realZone;
 	}
 
-	public static void startUserCenterActivity(Context context, String uid, String nickname,
-			String avatar, String customAvatar, String sex, String introduction) {
+	public static void startUserCenterActivity(Context context, String uid, String nickname, String avatar,
+			String customAvatar, String sex, String introduction) {
 		UCUserInfo user = new UCUserInfo();
 		user.uid = uid;
 		user.nickname = nickname;
@@ -880,15 +885,15 @@ public class GolukUtils {
 		intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
 		context.startActivity(intent);
 	}
-	
-	public static void startFollowingListActivity(Context context ,String uId){
+
+	public static void startFollowingListActivity(Context context, String uId) {
 		Intent intent = null;
 		intent = new Intent(context, FollowingListActivity.class);
 		intent.putExtra("linkuid", uId);
 		context.startActivity(intent);
 	}
-	
-	public static void startFanListActivity(Context context ,String uId){
+
+	public static void startFanListActivity(Context context, String uId) {
 		Intent intent = null;
 		intent = new Intent(context, FanListActivity.class);
 		intent.putExtra("linkuid", uId);
