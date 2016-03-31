@@ -36,12 +36,6 @@ public class VideoSquareAdapter extends PagerAdapter {
 		}
 	}
 
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (null != mNewestListView) {
-			mNewestListView.onActivityResult(requestCode, resultCode, data);
-		}
-	}
-
 	@Override
 	public int getCount() {
 		return 2;

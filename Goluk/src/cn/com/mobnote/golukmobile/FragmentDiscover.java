@@ -90,10 +90,6 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 		setListener();
 	}
 
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		mVideoSquareAdapter.onActivityResult(requestCode, resultCode, data);
-	}
-
 	private void setListener() {
 		hotTitle.setOnClickListener(this);
 		squareTitle.setOnClickListener(this);

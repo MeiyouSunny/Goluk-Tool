@@ -95,8 +95,10 @@ public class NewestListView implements
 		mRootLayout = new RelativeLayout(mContext);
 		shareBg = (ImageView) View.inflate(context, R.layout.video_square_bj, null);
 
-		sharePlatform = new SharePlatformUtil(mContext);
-		sharePlatform.configPlatforms();// 设置分享平台的参数
+		if(context instanceof MainActivity) {
+			sharePlatform = ((MainActivity)context).getSharePlatform();
+			sharePlatform.configPlatforms();// 设置分享平台的参数
+		}
 
 		initListener();
 		historyDate = SettingUtils.getInstance().getString("hotHistoryDate", "");
@@ -128,12 +130,6 @@ public class NewestListView implements
 				httpPost(true, "0", "");
 			}
 		});
-	}
-
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (null != sharePlatform) {
-			sharePlatform.onActivityResult(requestCode, resultCode, data);
-		}
 	}
 
 	private void loadHistoryData() {
