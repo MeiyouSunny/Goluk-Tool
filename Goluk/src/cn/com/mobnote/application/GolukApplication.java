@@ -1094,10 +1094,12 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			mCurrentUId = dataObj.getString("uid");
 			mCurrentAid = dataObj.getString("aid");
 			mCurrentPhoneNum = dataObj.optString("phone");
+			// New video number published by he followed
+			int followedVideoNum = dataObj.optInt("followvideo");
 			isUserLoginSucess = true;
 
 			EventBus.getDefault().post(new EventMessageUpdate(EventConfig.MESSAGE_REQUEST));
-			EventBus.getDefault().post(new EventUserLoginRet(EventConfig.USER_LOGIN_RET, true));
+			EventBus.getDefault().post(new EventUserLoginRet(EventConfig.USER_LOGIN_RET, true, followedVideoNum));
 			this.showContinuteLive();
 			GolukDebugUtils.e(null, "jyf---------GolukApplication---------mCCurl:" + mCCUrl + " uid:" + mCurrentUId
 					+ " aid:" + mCurrentAid);

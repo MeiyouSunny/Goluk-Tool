@@ -28,6 +28,7 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabWidget;
 import android.widget.Toast;
 import cn.com.mobnote.application.GlobalWindow;
@@ -40,6 +41,7 @@ import cn.com.mobnote.eventbus.EventMapQuery;
 import cn.com.mobnote.eventbus.EventMessageUpdate;
 import cn.com.mobnote.eventbus.EventPhotoUpdateDate;
 import cn.com.mobnote.eventbus.EventUpdateAddr;
+import cn.com.mobnote.eventbus.EventUserLoginRet;
 import cn.com.mobnote.eventbus.EventWifiAuto;
 import cn.com.mobnote.eventbus.EventWifiConnect;
 import cn.com.mobnote.eventbus.EventWifiState;
@@ -143,6 +145,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private long exitTime = 0;
 	
 	private View mUnreadTips;
+	private ImageView mFollowedVideoTipIV;
 	
 //	public VideoSquareActivity mVideoSquareActivity;
 
@@ -154,7 +157,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private SoundPool mSoundPool;
 	private final static String TAG = "MainActivity";
 //	private String mCityCode;
-	private boolean mBannerLoaded;
+//	private boolean mBannerLoaded;
 	private StartAppBean mStartAppBean = null;
 	/** 把当前连接的设备保存起来，主要是为了兼容以前的连接状态 */
 	private WifiRsBean mCurrentConnBean = null;
@@ -195,7 +198,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		EventBus.getDefault().register(this);
 		initThirdSDK();
 
-		mBannerLoaded = false;
+//		mBannerLoaded = false;
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(this, "Main");
@@ -293,14 +296,12 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	private void initView() {
-		
 		mGuideMainViewStub = (ViewStub)findViewById(R.id.viewstub_guide_main);
 		mGuideMainViewStub.setOnInflateListener(new OnInflateListener() {
-			
+
 			@Override
 			public void onInflate(ViewStub stub, View inflated) {
 				inflated.setOnTouchListener(new OnTouchListener() {
-					
 					@Override
 					public boolean onTouch(View v, MotionEvent event) {
 						mGuideMainViewStub.setVisibility(View.GONE);
@@ -309,7 +310,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 				});
 			}
 		});
-		
+
 		LayoutInflater inflater = LayoutInflater.from(this);
 		mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
 		mTabHost.setup(this, getSupportFragmentManager(), R.id.fl_main_tab_content);
@@ -322,14 +323,15 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 
 		b = new Bundle();
 		b.putString("key", "Follow");
-		LinearLayout follow = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_follow, null);
+		RelativeLayout follow = (RelativeLayout) inflater.inflate(R.layout.main_tab_indicator_follow, null);
 		mTabHost.addTab(mTabHost.newTabSpec("Follow")
 				.setIndicator(follow), FragmentFollowed.class, b);
+		mFollowedVideoTipIV = (ImageView)follow.findViewById(R.id.iv_new_followed_video_tips);
 
 		b = new Bundle();
 		b.putString("key", "CarRecorder");
 		LinearLayout carRecorder = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_carrecorder, null);
-		mCarrecorderIv = (ImageView)carRecorder.findViewById(R.id.carrecorder_iv);
+		mCarrecorderIv = (ImageView)carRecorder.findViewById(R.id.tab_host_carrecorder_iv);
 		mTabHost.addTab(mTabHost.newTabSpec("CarRecorder").setIndicator(carRecorder),
 				null, b);
 
@@ -368,6 +370,15 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 						startActivity(intent);
 					}
 				});
+
+		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
+			@Override
+			public void onTabChanged(String tabId) {
+				if("Follow".equals(tabId)) {
+					mFollowedVideoTipIV.setVisibility(View.GONE);
+				}
+			}
+		});
 	}
 
 	private void msgRequest() {
@@ -679,7 +690,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		
 		EventBus.getDefault().post(new EventWifiConnect(EventConfig.WIFI_STATE_FAILED));
 	}
-	
+
 	public void onEventMainThread(EventFollowPush event) {
 		if (null == event) {
 			return;
@@ -689,6 +700,26 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		case EventConfig.FOLLOW_PUSH:
 			if(mTabHost != null){
 				mTabHost.setCurrentTab(4);
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	public void onEventMainThread(EventUserLoginRet event) {
+		if (null == event) {
+			return;
+		}
+
+		switch (event.getOpCode()) {
+		case EventConfig.USER_LOGIN_RET:
+			if(mFollowedVideoTipIV != null){
+				if(event.getFollowedVideoNum() > 0) {
+					mFollowedVideoTipIV.setVisibility(View.VISIBLE);
+				} else {
+					mFollowedVideoTipIV.setVisibility(View.GONE);
+				}
 			}
 			break;
 		default:
@@ -929,7 +960,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		}
 		// Unregister EventBus
 		EventBus.getDefault().unregister(this);
-		mBannerLoaded = false;
+//		mBannerLoaded = false;
 	}
 
 	@Override
@@ -1351,7 +1382,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	}
 
 	private void setMessageTipCount(int total) {
-		
 		if (total > 0) {
 			mUnreadTips.setVisibility(View.VISIBLE);
 		} else {
