@@ -4,7 +4,6 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,8 +34,8 @@ import cn.com.mobnote.golukmobile.msg.MessageCenterActivity;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.golukmobile.praised.MyPraisedActivity;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
-import cn.com.mobnote.golukmobile.usercenter.UserInfoRequest;
-import cn.com.mobnote.golukmobile.usercenter.bean.HomeJson;
+import cn.com.mobnote.golukmobile.userinfohome.UserInfohomeRequest;
+import cn.com.mobnote.golukmobile.userinfohome.bean.UserinfohomeRetBean;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.manager.MessageManager;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -114,7 +113,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 
 	LinearLayout mMineRootView = null;
 	
-	private HomeJson mHomeJson;
+	private UserinfohomeRetBean mUserinfohomeRetBean;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -157,13 +156,16 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		EventBus.getDefault().unregister(this);
 	}
 	
-	
 
 	@Override
 	public void onHiddenChanged(boolean hidden) {
 		// TODO Auto-generated method stub
 		super.onHiddenChanged(hidden);
-		sendGetUserHomeRequest();
+		
+		if(!hidden){
+			sendGetUserHomeRequest();
+		}
+		
 	}
 
 	public void onEventMainThread(EventMessageUpdate event) {
@@ -507,10 +509,10 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	 */
 	private void sendGetUserHomeRequest(){
 		
-		UserInfoRequest request = new UserInfoRequest(IPageNotifyFn.PageType_HomeUserInfo, this);
+		UserInfohomeRequest request = new UserInfohomeRequest(IPageNotifyFn.PageType_UserinfoHome, this);
 		
 		if((ma.mApp.isUserLoginSucess == true || ma.mApp.registStatus == 2) && !TextUtils.isEmpty(userUId) ){
-			request.get(userUId, "0", userUId, null);
+			request.get("100", userUId, userUId);
 		}
 	}
 
@@ -669,16 +671,22 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		// TODO Auto-generated method stub
-		if (requestType == IPageNotifyFn.PageType_HomeUserInfo) {
-			mHomeJson = (HomeJson) result;
-			if (null != mHomeJson && null != mHomeJson.data && null != mHomeJson.data.user) {
+		if (requestType == IPageNotifyFn.PageType_UserinfoHome) {
+			mUserinfohomeRetBean = (UserinfohomeRetBean) result;
+			if (null != mUserinfohomeRetBean && null != mUserinfohomeRetBean.data ) {
 				if((ma.mApp.isUserLoginSucess == true || ma.mApp.registStatus == 2) && !TextUtils.isEmpty(userUId) ){
-					mTextShare.setText(GolukUtils.getFormatNumber(mHomeJson.data.user.share));
-					mTextFans.setText(GolukUtils.getFormatNumber(mHomeJson.data.user.fans));
-					mTextFollow.setText(GolukUtils.getFormatNumber(mHomeJson.data.user.following));
+					mTextShare.setText(GolukUtils.getFormatNumber(mUserinfohomeRetBean.data.sharevideonumber));
+					mTextFans.setText(GolukUtils.getFormatNumber(mUserinfohomeRetBean.data.fansnumber));
+					mTextFollow.setText(GolukUtils.getFormatNumber(mUserinfohomeRetBean.data.followingnumber));
+					
+					int newFansNumber = Integer.valueOf(mUserinfohomeRetBean.data.newfansnumber);
+					if(newFansNumber>0){
+						Drawable drawable= getResources().getDrawable(R.drawable.home_red_point_little);  
+						drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+						mTextFans.setCompoundDrawables(null,null,drawable,null);//设置
+					}else{
+					}
 				}
-				
-			} else {
 				
 			}
 		}

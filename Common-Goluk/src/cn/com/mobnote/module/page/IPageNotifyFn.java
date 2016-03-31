@@ -145,6 +145,9 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	
 	/** 粉丝 */
 	public static final int PageType_Fans = 70;
+	
+	/** userinfoHome */
+	public static final int PageType_UserinfoHome = 71;
 
 
 	/**
