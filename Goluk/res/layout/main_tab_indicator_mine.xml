@@ -3,11 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:gravity="center"
-    android:orientation="vertical"
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/discover_id"
+        android:id="@+id/tab_host_mine_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -22,7 +21,7 @@
         android:id="@+id/iv_unread_tips"
         android:visibility="gone"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/discover_id"
+        android:layout_toRightOf="@id/tab_host_mine_id"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_marginTop="2dp"

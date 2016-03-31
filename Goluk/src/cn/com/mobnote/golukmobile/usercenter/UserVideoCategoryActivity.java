@@ -188,9 +188,11 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 				mNoDataText.setVisibility(View.GONE);
 				mToRefreshLayout.setVisibility(View.GONE);
 				mGridView.setMode(PullToRefreshBase.Mode.BOTH);
-				if (mCurrentState.equals(OPERATOR_FIRST)) {
+				if (null != mVideoList && mVideoList.size() > 0) {
 					mFirstIndex = mVideoList.get(0).index;
 					mLastIndex = mVideoList.get(video.data.videocount - 1).index;
+				}
+				if (mCurrentState.equals(OPERATOR_FIRST)) {
 					this.mAdapter.setDataInfo(mVideoList);
 				} else {
 					if (0 == mVideoList.size()) {
