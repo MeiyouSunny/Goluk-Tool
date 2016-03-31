@@ -77,6 +77,8 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	private String mCurrentUid = "";
 	private String mFirstIndex = "";
 	private String mLastIndex = "";
+	/**是否是第一次请求数据**/
+	private boolean mIsFirst = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +136,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<GridViewWithHeaderAndFooter> pullToRefreshBase) {
 				// 下拉刷新
+				mIsFirst = false;
 				pullToRefreshBase.getLoadingLayoutProxy(true, false).setLastUpdatedLabel(
 						getResources().getString(R.string.updating)
 								+ GolukUtils.getCurrentFormatTime(NewUserCenterActivity.this));
@@ -143,6 +146,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<GridViewWithHeaderAndFooter> pullToRefreshBase) {
 				// 上拉加载
+				mIsFirst = false;
 				pullToRefreshBase.getLoadingLayoutProxy(false, true).setLastUpdatedLabel(
 						getResources().getString(R.string.goluk_pull_to_refresh_footer_pull_label));
 				httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_UP, mLastIndex);
@@ -151,6 +155,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 		});
 		
 		httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_FIRST, "");
+		mIsFirst = true;
 
 	}
 
@@ -162,6 +167,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 		case EventConfig.REFRESH_USER_INFO:
 			if (mUserInfo != null) {
 				if (testUser()) {
+					mIsFirst = false;
 					httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_FIRST, "");
 				}
 			}
@@ -256,9 +262,11 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	}
 
 	private void unusual() {
-		mRefreshLayout.setVisibility(View.VISIBLE);
-		mGridView.setVisibility(View.GONE);
 		GolukUtils.showToast(this, this.getResources().getString(R.string.str_network_unavailable));
+		if (mIsFirst) {
+			mRefreshLayout.setVisibility(View.VISIBLE);
+			mGridView.setVisibility(View.GONE);
+		}
 	}
 
 	private void addFooterView() {
