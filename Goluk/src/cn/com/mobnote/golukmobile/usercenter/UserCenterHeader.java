@@ -119,10 +119,18 @@ public class UserCenterHeader implements OnClickListener {
 				mLogoImage.setVisibility(View.VISIBLE);
 				if ("1".equals(isorgcertificated)) {
 					mLogoImage.setImageResource(R.drawable.authentication_bluev_icon);
-					mTextContent.setText(orgcertification);
+					if (null == orgcertification || "".equals(orgcertification)) {
+						mTextContent.setText(mContext.getResources().getString(R.string.str_let_sharevideo));
+					} else {
+						mTextContent.setText(orgcertification);
+					}
 				} else if ("1".equals(isusercertificated)) {
 					mLogoImage.setImageResource(R.drawable.authentication_yellowv_icon);
-					mTextContent.setText(usercertification);
+					if (null == usercertification || "".equals(usercertification)) {
+						mTextContent.setText(mContext.getResources().getString(R.string.str_let_sharevideo));
+					} else {
+						mTextContent.setText(usercertification);
+					}
 				} else if ("1".equals(isstar)) {
 					mLogoImage.setImageResource(R.drawable.authentication_star_icon);
 					// TODO 达人接口中没有认证信息

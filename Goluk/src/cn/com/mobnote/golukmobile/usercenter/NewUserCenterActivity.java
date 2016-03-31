@@ -210,11 +210,13 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 					return;
 				}
 				removeFooterView();
-				if (mCurrentOperator.equals(OPERATOR_FIRST)) {
+				if (null != videoList && videoList.size() > 0) {
 					mFirstIndex = videoList.get(0).index;
 					mLastIndex = videoList.get(mHomeJson.data.videocount - 1).index;
 					GolukDebugUtils.e("", "-----newusercenteractivity-----firstindex: " + mFirstIndex
 							+ "----lastindex: " + mLastIndex);
+				}
+				if (mCurrentOperator.equals(OPERATOR_FIRST)) {
 					this.mAdapter.setData(videoList);
 				} else {
 					if (0 == videoList.size()) {
