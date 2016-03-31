@@ -25,6 +25,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.follow.FollowRequest;
 import cn.com.mobnote.golukmobile.follow.bean.FollowRetBean;
 import cn.com.mobnote.golukmobile.following.FollowingConfig;
+import cn.com.mobnote.golukmobile.following.FollowingListActivity;
 import cn.com.mobnote.golukmobile.following.FollowingListAdapter;
 import cn.com.mobnote.golukmobile.following.FollowingListRequest;
 import cn.com.mobnote.golukmobile.following.bean.FollowingItemBean;
@@ -333,6 +334,12 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 			
 			FollowRetBean bean = (FollowRetBean)result;
 			if(null != bean) {
+				
+				if(bean.code != 0) {
+					Toast.makeText(FanListActivity.this, bean.msg, Toast.LENGTH_SHORT).show();
+					return;
+				}
+				
 				// User link uid to find the changed recommend user item status
 				int i = findLinkUserItem(bean.data.linkuid);
 				if(i >=0 && i < mFollowingList.size()) {
@@ -358,15 +365,7 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 				}
 			} else {
 				// Toast for operation failed
-				
-				if(bean.data.link == FollowingConfig.LINK_TYPE_FAN_ONLY
-						||bean.data.link == FollowingConfig.LINK_TYPE_UNLINK){
-					Toast.makeText(FanListActivity.this, 
-							getResources().getString(R.string.str_cancel_follow_fail), Toast.LENGTH_SHORT).show();
-				}else if(bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER){
-					Toast.makeText(FanListActivity.this,
-							getResources().getString(R.string.str_follow_fail),Toast.LENGTH_SHORT).show();
-				}
+				Toast.makeText(FanListActivity.this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 				
 			}
 			
