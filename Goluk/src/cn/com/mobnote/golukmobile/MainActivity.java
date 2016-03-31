@@ -48,7 +48,6 @@ import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.carrecorder.util.GFileUtils;
 import cn.com.mobnote.golukmobile.carrecorder.util.SettingUtils;
-import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.comment.CommentTimerManager;
 import cn.com.mobnote.golukmobile.fileinfo.GolukVideoInfoDbManager;
 import cn.com.mobnote.golukmobile.followed.FragmentFollowed;
@@ -121,9 +120,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 	public static final int WIFI_STATE_CONNING = 1;
 	/** 连接 */
 	public static final int WIFI_STATE_SUCCESS = 2;
-
-	public CustomLoadingDialog mCustomProgressDialog;
-	public String shareVideoId;
 
 	/** 连接ipc时的动画 */
 	Animation anim = null;
@@ -206,10 +202,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 			// 提交修改
 			editor.commit();
 		}
-		// 初始化视频广场
-		initVideoSquare();
-		// 初始化个人中心
-		initUserInfo();
 
 		// 为了兼容以前的版本， 把旧的绑定信息读取出来
 		mWac = new WifiConnectManager(mWifiManager, this);
@@ -498,14 +490,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 			GolukDebugUtils.e("", "net-----state-----2222");
 			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_CommCmd_RecoveryNetwork, "");
 		}
-	}
-
-	private void initVideoSquare() {
-//		mVideoSquareActivity = new VideoSquareActivity(mRootLayout, this);
-	}
-
-	private void initUserInfo() {
-//		indexMoreActivity = new IndexMoreActivity(mRootLayout, this);
 	}
 
 	/**

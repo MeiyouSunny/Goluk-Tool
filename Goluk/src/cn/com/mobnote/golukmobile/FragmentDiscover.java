@@ -9,7 +9,6 @@ import cn.com.mobnote.golukmobile.videosuqare.VideoSquareAdapter;
 import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,12 +20,27 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class FragmentDiscover extends Fragment implements OnClickListener {
 	private static final String TAG = "FragmentDiscover";
+
+	public VideoSquareAdapter mVideoSquareAdapter = null;
+	private ViewPager mViewPager = null;
+	private ImageView hot = null;
+	private TextView hotTitle = null;
+	private TextView squareTitle = null;
+	public String shareVideoId;
+	private float density;
+	RelativeLayout.LayoutParams lineParams = null;
+	private int lineTop = 0;
+	private int textColorSelect = 0;
+	private int textcolorQx = 0;
+	View mSquareRootView;
+	private String mCityCode;
+
+	private boolean mBannerLoaded;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -35,8 +49,6 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 		EventBus.getDefault().register(this);
 	}
 
-	View mSquareRootView;
-	private String mCityCode;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,35 +73,6 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 	}
-
-	public VideoSquareAdapter mVideoSquareAdapter = null;
-	private ViewPager mViewPager = null;
-	private ImageView hot = null;
-	private TextView hotTitle = null;
-	private TextView squareTitle = null;
-	public String shareVideoId;
-
-//	LinearLayout mRootLayout = null;
-///	Context mContext = null;
-
-	private float density;
-
-	RelativeLayout.LayoutParams lineParams = null;
-	private int lineTop = 0;
-	private int textColorSelect = 0;
-	private int textcolorQx = 0;
-
-//	public VideoSquareActivity(LinearLayout rootlayout, Context context) {
-//		mRootLayout = rootlayout;
-//		mContext = context;
-//		density = SoundUtils.getInstance().getDisplayMetrics().density;
-//		lineParams = new RelativeLayout.LayoutParams((int) (50 * density), (int) (2 * density));
-//		lineTop = (int) (5 * density);
-//		textColorSelect = mContext.getResources().getColor(R.color.textcolor_select);
-//		textcolorQx = mContext.getResources().getColor(R.color.textcolor_qx);
-//		init();
-//
-//	}
 
 	public VideoSquareAdapter getVideoSquareAdapter() {
 		return mVideoSquareAdapter;
@@ -125,7 +108,6 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 	}
 
 	private OnPageChangeListener opcl = new OnPageChangeListener() {
-
 		@Override
 		public void onPageSelected(int page) {
 			GolukDebugUtils.e("", "VideoSquareActivity------AA------------onPageSelected:" + page);
@@ -134,11 +116,9 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 
 		@Override
 		public void onPageScrolled(int arg0, float arg1, int arg2) {
-
 			// arg0 :当前页面，及你点击滑动的页面
 			// arg1:当前页面偏移的百分比
 			// arg2:当前页面偏移的像素位置
-
 			GolukDebugUtils.e("", "VideoSquareActivity------AA------------onPageScrolled: arg0: " + arg0 + "   arg1:"
 					+ arg1 + "  arg2:" + arg2);
 			if (0 == arg2) {
@@ -160,7 +140,6 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 		@Override
 		public void onPageScrollStateChanged(int state) {
 			GolukDebugUtils.e("", "VideoSquareActivity------AA------------onPageScrollStateChanged: arg0: " + state);
-
 			// 其中state这个参数有三种状态（0，1，2）
 			// state ==1的时辰默示正在滑动，
 			// state==2的时辰默示滑动完毕了
@@ -200,15 +179,10 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 			this.updateState(1);
 			updateLine(100);
 			break;
-		case R.id.back_btn:
-			exit();
-			break;
 		default:
 			break;
 		}
 	}
-
-	private boolean mBannerLoaded;
 
 	public void onEventMainThread(EventLocationFinish event) {
 		if (null == event) {
@@ -281,40 +255,37 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 		}
 	}
 
-//	@Override
-//	public void onResume() {
-//		if (null != mVideoSquareAdapter) {
-//			mVideoSquareAdapter.onResume();
-//		}
-//	}
-//
-//	public void onPause() {
-//		if (null != mVideoSquareAdapter) {
-//			mVideoSquareAdapter.onPause();
-//		}
-//	}
-//
-//	public void onStop() {
-//		if (null != mVideoSquareAdapter) {
-//			mVideoSquareAdapter.onStop();
-//		}
-//	}
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (null != mVideoSquareAdapter) {
+			mVideoSquareAdapter.onResume();
+		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (null != mVideoSquareAdapter) {
+			mVideoSquareAdapter.onPause();
+		}
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		if (null != mVideoSquareAdapter) {
+			mVideoSquareAdapter.onStop();
+		}
+	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-//		if (null != mVideoSquareAdapter) {
-//			mVideoSquareAdapter.onDestroy();
-//		}
-		mBannerLoaded = false;
-		EventBus.getDefault().unregister(this);
-	}
-
-	public void exit() {
 		if (null != mVideoSquareAdapter) {
 			mVideoSquareAdapter.onDestroy();
 		}
+		mBannerLoaded = false;
+		EventBus.getDefault().unregister(this);
 	}
-
-
 }
