@@ -40,11 +40,6 @@ public class UserMoreDialog extends Dialog implements android.view.View.OnClickL
 
 	@Override
 	public void onClick(View v) {
-		if (!UserUtils.isNetDeviceAvailable(mContext)) {
-			dismiss();
-			GolukUtils.showToast(mContext, mContext.getString(R.string.str_network_unavailable));
-			return;
-		}
 		switch (v.getId()) {
 		case R.id.btn_user_more_share:
 			dismiss();

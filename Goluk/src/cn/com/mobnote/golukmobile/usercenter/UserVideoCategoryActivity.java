@@ -63,6 +63,8 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 	private String mLastIndex = "";
 	/** 加载中 **/
 	private CustomLoadingDialog mLoadinDialog = null;
+	/**是否是第一次请求数据**/
+	private boolean mIsFirst = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +108,7 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<GridView> pullToRefreshBase) {
 				// 下拉刷新
+				mIsFirst = false;
 				pullToRefreshBase.getLoadingLayoutProxy(true, false).setLastUpdatedLabel(
 						getResources().getString(R.string.updating)
 								+ GolukUtils.getCurrentFormatTime(UserVideoCategoryActivity.this));
@@ -115,6 +118,7 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 			@Override
 			public void onPullUpToRefresh(PullToRefreshBase<GridView> pullToRefreshBase) {
 				// 上拉加载
+				mIsFirst = false;
 				pullToRefreshBase.getLoadingLayoutProxy(false, true).setLastUpdatedLabel(
 						getResources().getString(R.string.goluk_pull_to_refresh_footer_pull_label));
 				httpRequestData(OPERATOR_UP, mOtheruid, mCurrentUid, mLastIndex);
@@ -122,6 +126,7 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 		});
 
 		httpRequestData(OPERATOR_FIRST, mOtheruid, mCurrentUid, "");
+		mIsFirst = true;
 
 	}
 
@@ -201,11 +206,13 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 	}
 
 	private void unusual() {
-		mNoDataText.setVisibility(View.GONE);
-		mGridView.setVisibility(View.GONE);
-		mToRefreshLayout.setVisibility(View.VISIBLE);
-		mGridView.setMode(PullToRefreshBase.Mode.PULL_DOWN_TO_REFRESH);
 		GolukUtils.showToast(this, this.getResources().getString(R.string.str_network_unavailable));
+		if (mIsFirst) {
+			mNoDataText.setVisibility(View.GONE);
+			mGridView.setVisibility(View.GONE);
+			mToRefreshLayout.setVisibility(View.VISIBLE);
+			mGridView.setMode(PullToRefreshBase.Mode.PULL_DOWN_TO_REFRESH);
+		}
 	}
 	
 	private void showLoadinDialog() {
