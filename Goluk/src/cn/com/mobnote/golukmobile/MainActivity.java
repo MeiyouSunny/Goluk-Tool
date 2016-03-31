@@ -14,8 +14,6 @@ import android.media.SoundPool;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Message;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -23,6 +21,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewStub;
+import android.view.ViewStub.OnInflateListener;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.widget.ImageView;
@@ -143,11 +143,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private long exitTime = 0;
 	
 	private View mUnreadTips;
-	/** 首次进入的引导div */
-//	private RelativeLayout indexDiv = null;
-//	private ImageView mIndexImg = null;
-//	private int divIndex = 0;
-
+	
 //	public VideoSquareActivity mVideoSquareActivity;
 
 //	private IndexMoreActivity indexMoreActivity;
@@ -164,7 +160,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 	private WifiRsBean mCurrentConnBean = null;
 	private FragmentTabHost mTabHost;
 	
-	ImageView mCarrecorderIv;
+	private ImageView mCarrecorderIv;
+	private ViewStub mGuideMainViewStub;
 
 	private void playDownLoadedSound() {
 		if (null != mSoundPool) {
@@ -186,7 +183,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.index);
 
-		initTab();
+		initView();
 
 		// 在使用SDK各组件之前初始化context信息，传入ApplicationContext
 		// 注意该方法要再setContentView方法之前实现
@@ -219,7 +216,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		// 取得相应的值,如果没有该值,说明还未写入,用true作为默认值
 		boolean isFirstIndex = preferences.getBoolean("isFirstIndex", true);
 		if (isFirstIndex) { // 如果是第一次启动
-//			indexDiv.setVisibility(View.VISIBLE);
+			
+			mGuideMainViewStub.inflate();
 			Editor editor = preferences.edit();
 			editor.putBoolean("isFirstIndex", false);
 			// 提交修改
@@ -294,7 +292,23 @@ public class MainActivity extends BaseActivity implements OnClickListener, WifiC
 		
 	}
 
-	private void initTab() {
+	private void initView() {
+		
+		mGuideMainViewStub = (ViewStub)findViewById(R.id.viewstub_guide_main);
+		mGuideMainViewStub.setOnInflateListener(new OnInflateListener() {
+			
+			@Override
+			public void onInflate(ViewStub stub, View inflated) {
+				inflated.setOnTouchListener(new OnTouchListener() {
+					
+					@Override
+					public boolean onTouch(View v, MotionEvent event) {
+						mGuideMainViewStub.setVisibility(View.GONE);
+						return false;
+					}
+				});
+			}
+		});
 		
 		LayoutInflater inflater = LayoutInflater.from(this);
 		mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);

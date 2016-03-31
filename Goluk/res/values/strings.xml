@@ -5,6 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="imgdes">图片说明</string>
+    <string name="guide_start">点击这里开始你的极路客之旅吧</string>
     <string name="index_title">Goluk</string>
     <string name="video_square">视频广场</string>
     <string name="my_video_share">分享我的视频</string>
