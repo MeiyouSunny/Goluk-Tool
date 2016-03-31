@@ -232,6 +232,8 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 				CustomShareBoard shareBoard = new CustomShareBoard(this, mSharePlatform, shorturl, customavatar,
 						describe, title, null, realDesc, "");
 				shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+			} else {
+				GolukUtils.showToast(this, this.getResources().getString(R.string.str_network_unavailable));
 			}
 		} else if (requestType == IPageNotifyFn.PageType_HomeAttention) {
 			AttentionJson attention = (AttentionJson) result;
@@ -247,6 +249,8 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 				mHeader.changeAttentionState(attention.data.link);
 				mHomeJson.data.user.link = attention.data.link;
 //				mAdapter.notifyDataSetChanged();
+			} else {
+				GolukUtils.showToast(this, this.getResources().getString(R.string.str_network_unavailable));
 			}
 		}
 	}
