@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -57,15 +58,18 @@ public class LocalFragment extends Fragment{
 	private FragmentAlbum mFragmentAlbum;
 	
 	private TextView empty = null;
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		EventBus.getDefault().register(this);
+	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		mFragmentAlbum = (FragmentAlbum)getParentFragment();
 		
 		if(mLocalVideoView == null){
-			EventBus.getDefault().register(this);
-	        
-	        mFragmentAlbum = (FragmentAlbum)getParentFragment();
 			mLocalVideoView = inflater.inflate(R.layout.wonderful_listview, (ViewGroup)getActivity().findViewById(R.id.viewpager), false);
 			density = SoundUtils.getInstance().getDisplayMetrics().density;
 			
@@ -89,11 +93,16 @@ public class LocalFragment extends Fragment{
 		return mLocalVideoView;
 	}
 	
+	@Override
+	public void onResume() {
+		super.onResume();
+		loadData(true);
+	}
+	
 	
 	@Override
-	public void onDestroyView() {
-		// TODO Auto-generated method stub
-		super.onDestroyView();
+	public void onDestroy() {
+		super.onDestroy();
 		EventBus.getDefault().unregister(this);
 	}
 	

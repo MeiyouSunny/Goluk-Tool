@@ -105,6 +105,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 			fragmentList.add(mWonderfulFragment);
 			fragmentList.add(mUrgentFragment);
 			fragmentList.add(mLoopFragment);
+			mViewPager.setCurrentItem(0);
 			initView();
 			mViewPager.setAdapter(new MyViewPagerAdapter(getChildFragmentManager()));
 			mViewPager.addOnPageChangeListener(new OnPageChangeListener() {
@@ -126,7 +127,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 				}
 			});
 			
-			mLocalFragment.loadData(false);
+			//mLocalFragment.loadData(false);
 		}
 		
 		ViewGroup parent = (ViewGroup) mAlbumRootView.getParent();
@@ -187,7 +188,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 		mTabUrgent.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
 		mTabLoop.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
 		if (position == 0) {
-			mLocalFragment.loadData(true);
+			//mLocalFragment.loadData(true);
 			mTabLocal.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
 		} else if (position == 1) {
 			mWonderfulFragment.loadData(GolukApplication.getInstance().isIpcLoginSuccess);
