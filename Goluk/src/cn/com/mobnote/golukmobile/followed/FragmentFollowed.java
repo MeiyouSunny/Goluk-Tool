@@ -6,6 +6,7 @@ import java.util.List;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.mobnote.eventbus.EventUserLoginRet;
+import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
@@ -58,7 +59,6 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 
 	private PullToRefreshListView mListView;
 	private FollowedListAdapter mAdapter;
-//	private List<FollowListBean> mOrgFollowedList;
 	private List<Object> mFollowedList;
 	private RelativeLayout mEmptyRL;
 	private final static String PAGESIZE = "10";
@@ -134,7 +134,9 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 		});
 
 		mFollowedList = new ArrayList<Object>();
-		mSharePlatform = new SharePlatformUtil(getActivity());
+		if(getActivity() instanceof MainActivity) {
+			mSharePlatform = ((MainActivity)getActivity()).getSharePlatform();
+		}
 		mApp = GolukApplication.getInstance();
 		if(null != mApp && mApp.isUserLoginSucess) {
 			mLoginRL.setVisibility(View.GONE);
@@ -396,6 +398,9 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 				return;
 			}
 
+			if(null == mSharePlatform) {
+				return;
+			}
 			String shareurl = bean.data.shorturl;
 			String coverurl = bean.data.coverurl;
 			String describe = bean.data.describe;

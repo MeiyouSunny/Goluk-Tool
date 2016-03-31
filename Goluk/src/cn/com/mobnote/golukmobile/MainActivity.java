@@ -63,6 +63,7 @@ import cn.com.mobnote.golukmobile.msg.MsgCenterCounterRequest;
 import cn.com.mobnote.golukmobile.msg.bean.MessageCounterBean;
 import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
 import cn.com.mobnote.golukmobile.special.SpecialListActivity;
+import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindDataCenter;
 import cn.com.mobnote.golukmobile.wifidatacenter.WifiBindHistoryBean;
@@ -135,8 +136,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 	// Play video sync from camera completion sound
 	private SoundPool mSoundPool;
 	private final static String TAG = "MainActivity";
-//	private String mCityCode;
-//	private boolean mBannerLoaded;
 	private StartAppBean mStartAppBean = null;
 	/** 把当前连接的设备保存起来，主要是为了兼容以前的连接状态 */
 	private WifiRsBean mCurrentConnBean = null;
@@ -144,6 +143,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 	
 	private ImageView mCarrecorderIv;
 	private ViewStub mGuideMainViewStub;
+	private SharePlatformUtil mSharePlatform = null;
 
 	private void playDownLoadedSound() {
 		if (null != mSoundPool) {
@@ -175,7 +175,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 		EventBus.getDefault().register(this);
 		initThirdSDK();
 
-//		mBannerLoaded = false;
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(this, "Main");
@@ -253,7 +252,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 			}
 		}
 
-//		mCityCode = SharedPrefUtil.getCityIDString();
 		dealPush(itStart_have);
 
 		if (NetworkStateReceiver.isNetworkAvailable(this)) {
@@ -262,6 +260,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 		GolukUtils.getMobileInfo(this);
 
 		// msgRequest();
+		mSharePlatform = new SharePlatformUtil(this);
 	}
 
 	private void initView() {
@@ -450,6 +449,14 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		// Sina or facebook sso callback
+		if(null != mSharePlatform) {
+			mSharePlatform.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
+	public SharePlatformUtil getSharePlatform() {
+		return mSharePlatform;
 	}
 
 	/**
