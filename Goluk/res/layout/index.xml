@@ -1,5 +1,5 @@
 <!-- goluk首页 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
@@ -9,18 +9,19 @@
     <FrameLayout
         android:id="@+id/fl_main_tab_content"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1000" />
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="48dp"/>
 
     <com.google.widget.FragmentTabHost
         android:id="@android:id/tabhost"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="48dp" >
 
         <FrameLayout
             android:id="@android:id/tabcontent"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="0" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </com.google.widget.FragmentTabHost>
-</LinearLayout>
+</RelativeLayout>
