@@ -23,7 +23,6 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
 
 public class FragmentAlbum extends Fragment implements OnClickListener{
@@ -176,6 +175,19 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 		// TODO Auto-generated method stub
 		super.onResume();
 		GolukApplication.getInstance().setContext(getContext(), "ipcfilemanager");
+		
+		if("0".equals(mPlatform)){
+			if(GolukApplication.getInstance().isconnection){
+				if(mCurrentType == 1){
+					mWonderfulFragment.loadData(true);
+				}else if(mCurrentType == 2){
+					mUrgentFragment.loadData(true);
+				}else if(mCurrentType == 3){
+					mLoopFragment.loadData(true);
+				}
+			}
+		}
+		
 	}
 	/**
 	 * 设置tab页的下划线显示和隐藏

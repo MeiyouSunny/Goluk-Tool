@@ -230,6 +230,8 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingLeft="9.66dp"
+            android:paddingRight="9.66dp"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/vt_total_time"
             android:layout_toRightOf="@+id/vt_play_time"
@@ -237,7 +239,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:progress="0"
-            android:progressDrawable="@drawable/player_seekbar_style"
+            android:progressDrawable="@drawable/player_seekbar_style_vertical"
             android:thumb="@drawable/player_time_control_btn"/>
     </RelativeLayout>
 
