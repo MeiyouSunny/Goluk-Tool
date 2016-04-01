@@ -141,6 +141,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	
 	private RelativeLayout mVoiceLayout, mLaterLayout;
 	public static final String TAG = "carupgrade";
+	
+	/**T1升级检测存储卡**/
+	private AlertDialog mCheckSDCard = null;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -633,20 +636,20 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		GolukDebugUtils.e("lily", "lily====IPC_VDCP_Msg_IPCUpgrade====msg=" + msg + "===param1=" + param1 + "==param2="
 				+ param2 + "--------event-----" + event);
-		if (mIsExit) {
-			return;
-		}
-		if (mApp.mLoadStatus) {
-			return;
-		}
-		if (event == ENetTransEvent_IPC_UpGrade_Resp) {
-			if (IPC_VDCP_Msg_IPCUpgrade == msg) {
-				if (param1 == RESULE_SUCESS) {
-					String str = (String) param2;
-					if (TextUtils.isEmpty(str)) {
-						return;
-					}
-					try {
+		try {
+			if (mIsExit) {
+				return;
+			}
+			if (mApp.mLoadStatus) {
+				return;
+			}
+			if (event == ENetTransEvent_IPC_UpGrade_Resp) {
+				if (IPC_VDCP_Msg_IPCUpgrade == msg) {
+					if (param1 == RESULE_SUCESS) {
+						String str = (String) param2;
+						if (TextUtils.isEmpty(str)) {
+							return;
+						}
 						JSONObject json = new JSONObject(str);
 						mStage = json.getString("stage");
 						mPercent = json.getString("percent");
@@ -658,7 +661,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 								if (mPercent.equals("100")) {
 									timerCancel();
 									// 传输文件成功
-									EventBus.getDefault().post(new EventIPCUpdate(EventConfig.UPDATE_TRANSFER_FILE_OK_T1));
+									EventBus.getDefault().post(
+											new EventIPCUpdate(EventConfig.UPDATE_TRANSFER_FILE_OK_T1));
 								} else {
 									timerTaskOne();
 								}
@@ -695,62 +699,86 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 								mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_CHECK);
 							}
 						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				} else {
-					if (!(null != mFirstDialog && mFirstDialog.isShowing())
-							|| !(null != mSecondDialog && mSecondDialog.isShowing())) {
-						if (mStage.equals("1")) {
-							if (null == mUpdateDialogFail || !mUpdateDialogFail.isShowing()) {
-								mUpdateHandler.sendEmptyMessage(UPDATE_IPC_FIRST_DISCONNECT);
+					} else {
+						// TODO T系列检测存储卡
+						if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+							JSONObject jsonError = new JSONObject((String) param2);
+							int errorcode = jsonError.getInt("errcode");
+							if (1 == errorcode) {
+								UserUtils.dismissUpdateDialog(mPrepareDialog);
+								mPrepareDialog = null;
+								if (null == mCheckSDCard) {
+									mCheckSDCard = new AlertDialog.Builder(this)
+											.setTitle(this.getResources().getString(R.string.user_dialog_hint_title))
+											.setMessage(this.getString(R.string.str_upgrade_check_sdcard_t1))
+											.setPositiveButton(this.getResources().getString(R.string.user_repwd_ok),
+													new DialogInterface.OnClickListener() {
+														
+														@Override
+														public void onClick(DialogInterface arg0, int arg1) {
+															mCheckSDCard.dismiss();
+															mCheckSDCard = null;
+														}
+													}).show();
+								}
+								return;
 							}
-						} else {
-							mApp.updateSuccess = false;
-							// 升级失败
-							if (null == mUpdateDialogFail || !mUpdateDialogFail.isShowing()) {
-								mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_FAIL);
+						}
+						if (!(null != mFirstDialog && mFirstDialog.isShowing())
+								|| !(null != mSecondDialog && mSecondDialog.isShowing())) {
+							if (mStage.equals("1")) {
+								if (null == mUpdateDialogFail || !mUpdateDialogFail.isShowing()) {
+									mUpdateHandler.sendEmptyMessage(UPDATE_IPC_FIRST_DISCONNECT);
+								}
+							} else {
+								mApp.updateSuccess = false;
+								// 升级失败
+								if (null == mUpdateDialogFail || !mUpdateDialogFail.isShowing()) {
+									mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_FAIL);
+								}
 							}
 						}
 					}
 				}
-			}
-		} else if (event == ENetTransEvent_IPC_VDCP_ConnectState) {
-			if (mIsSendFileOk) {
-				return;
-			}
-			if (mIsDisConnect) {
-				return;
-			}
-			if (ConnectionStateMsg_DisConnected == msg) {
-				UserUtils.dismissUpdateDialog(mPrepareDialog);
-				UserUtils.dismissUpdateDialog(mUpdateDialogSuccess);
-				UserUtils.dismissUpdateDialog(mSendDialog);
-				UserUtils.dismissUpdateDialog(mSendOk);
-				UserUtils.dismissUpdateDialog(mUpdateDialog);
-				UserUtils.dismissUpdateDialog(mUpdateDialogFail);
-				UserUtils.dismissUpdateDialog(mFirstDialog);
-				UserUtils.dismissUpdateDialog(mSendDialog);
-				mPrepareDialog = null;
-				mSendDialog = null;
-				mSendOk = null;
-				mUpdateDialog = null;
-				mUpdateDialogFail = null;
-				mFirstDialog = null;
-				mSendDialog = null;
-				if (null != mUpdateDialogSuccess && mUpdateDialogSuccess.isShowing()) {
+			} else if (event == ENetTransEvent_IPC_VDCP_ConnectState) {
+				if (mIsSendFileOk) {
 					return;
 				}
-				UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this,
-						this.getResources().getString(R.string.update_no_connect_ipc_hint));
-				mIsDisConnect = true;
-				mNoBreakImage.setVisibility(View.GONE);
-				mNoBreakText.setVisibility(View.GONE);
-				if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
-					mtfCardImage.setVisibility(View.VISIBLE);
-					mtfCardText.setVisibility(View.VISIBLE);
+				if (mIsDisConnect) {
+					return;
+				}
+				if (ConnectionStateMsg_DisConnected == msg) {
+					UserUtils.dismissUpdateDialog(mPrepareDialog);
+					UserUtils.dismissUpdateDialog(mUpdateDialogSuccess);
+					UserUtils.dismissUpdateDialog(mSendDialog);
+					UserUtils.dismissUpdateDialog(mSendOk);
+					UserUtils.dismissUpdateDialog(mUpdateDialog);
+					UserUtils.dismissUpdateDialog(mUpdateDialogFail);
+					UserUtils.dismissUpdateDialog(mFirstDialog);
+					UserUtils.dismissUpdateDialog(mSendDialog);
+					mPrepareDialog = null;
+					mSendDialog = null;
+					mSendOk = null;
+					mUpdateDialog = null;
+					mUpdateDialogFail = null;
+					mFirstDialog = null;
+					mSendDialog = null;
+					if (null != mUpdateDialogSuccess && mUpdateDialogSuccess.isShowing()) {
+						return;
+					}
+					UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this,
+							this.getResources().getString(R.string.update_no_connect_ipc_hint));
+					mIsDisConnect = true;
+					mNoBreakImage.setVisibility(View.GONE);
+					mNoBreakText.setVisibility(View.GONE);
+					if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+						mtfCardImage.setVisibility(View.VISIBLE);
+						mtfCardText.setVisibility(View.VISIBLE);
+					}
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -832,6 +860,12 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			UserUtils.dismissUpdateDialog(mUpdateDialog);
 			mUpdateDialog = null;
 		}
+		
+		if (null != mCheckSDCard) {
+			mCheckSDCard.dismiss();
+			mCheckSDCard = null;
+		}
+		
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener(TAG);
 		}
@@ -936,6 +970,10 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 		if (null != mSecondDialog) {
 			UserUtils.dismissUpdateDialog(mSendDialog);
 			mSendDialog = null;
+		}
+		if (null != mCheckSDCard) {
+			mCheckSDCard.dismiss();
+			mCheckSDCard = null;
 		}
 
 	}

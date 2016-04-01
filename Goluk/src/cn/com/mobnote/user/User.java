@@ -85,7 +85,6 @@ public class User {
 					GolukDebugUtils.i("setauto", "------自动登录-------"+b+"------自动登录的状态值-----"+mApp.autoLoginStatus);
 				}else{
 					StatusChange(3);//自动登录失败
-//					console.toast("自动登录失败", mContext);
 				}
 			}
 		}
@@ -105,71 +104,74 @@ public class User {
 	 * 
 	 */
 	public void initAutoLoginCallback(int success,Object outTime,Object obj){
-		GolukDebugUtils.e("","---------------自动登录回调---------------");
-		if(mForbidTimer) {
-			return ;
+		GolukDebugUtils.e("","---------------initAutoLoginCallback--------------");
+		if (mForbidTimer) {
+			return;
 		}
 		timerCancel();
 		int codeOut = (Integer) outTime;
-		if(1 == success){
-			try{
-				String data = (String)obj;
+		if (1 == success) {
+			try {
+				String data = (String) obj;
 				JSONObject json = new JSONObject(data);
 				int code = Integer.valueOf(json.getString("code"));
-				GolukDebugUtils.e("",data);
-				GolukDebugUtils.i("lily", "----User-----"+data);
+				GolukDebugUtils.e("", data);
+				GolukDebugUtils.i("lily", "----User-----" + data);
 				switch (code) {
 				case 200:
-					//自动登录成功无提示
-//					console.toast("自动登录成功", mContext);
-					GolukDebugUtils.i("lily", "--------User-----自动登录个人中心页变化--------"+mApp.autoLoginStatus);
-					StatusChange(2);//自动登录成功
-					GolukDebugUtils.i("lily", "----ok---"+mApp.autoLoginStatus);
+					// 自动登录成功无提示
+					// console.toast("自动登录成功", mContext);
+					GolukDebugUtils.i("lily", "--------User-----自动登录个人中心页变化--------" + mApp.autoLoginStatus);
+					StatusChange(2);// 自动登录成功
+					GolukDebugUtils.i("lily", "----ok---" + mApp.autoLoginStatus);
 					mApp.loginoutStatus = false;
 					mApp.isUserLoginSucess = true;
 					mApp.showContinuteLive();
 					timerCancel();
 					break;
-				//自动登录的一切异常都不进行提示
+				// 自动登录的一切异常都不进行提示
 				case 500:
 					timerTask();
-					StatusChange(3);//自动登录失败
-					//服务端异常
+					StatusChange(3);// 自动登录失败
+					// 服务端异常
 					break;
 				case 405:
-					//用户未注册
+					// 用户未注册
+					StatusChange(3);// 自动登录失败
 					break;
 				case 402:
-					//登录密码错误
+					// 登录密码错误
 					StatusChange(5);
 					break;
 				default:
+					StatusChange(3);// 自动登录失败
 					break;
 				}
-			}catch(Exception e){
-				StatusChange(3);//自动登录失败
+			} catch (Exception e) {
+				StatusChange(3);// 自动登录失败
 				e.printStackTrace();
 			}
-		}else{
-			//网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时，5分钟后继续自动登录重试
-			GolukDebugUtils.i("lily", "-----自动登录网络链接超时-----"+codeOut);
+		} else {
+			// 网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时，5分钟后继续自动登录重试
+			GolukDebugUtils.i("lily", "-----自动登录网络链接超时-----" + codeOut);
 			switch (codeOut) {
-			case 1://没有网络
+			case 1:// 没有网络
 				timerTask();
-				StatusChange(4);//自动登录失败
+				StatusChange(4);// 自动登录失败
 				break;
-			case 2://服务端错误
+			case 2:// 服务端错误
 				timerTask();
-				StatusChange(4);//自动登录失败
+				StatusChange(4);// 自动登录失败
 				break;
-			case 3://网络链接超时
+			case 3:// 网络链接超时
 				timerTask();
-				StatusChange(4);//自动登录超时
+				StatusChange(4);// 自动登录超时
 				break;
 			default:
+				StatusChange(3);// 自动登录失败
 				break;
 			}
-			
+
 		}
 }
 	

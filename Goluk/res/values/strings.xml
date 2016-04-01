@@ -1014,4 +1014,6 @@
     <string name="str_follow_all">全部关注</string>
     <string name="str_follow_no_content">什么内容也没有</string>
     <string name="str_follow_recommend_star">推荐达人</string>
+    
+    <string name="str_upgrade_check_sdcard_t1">很抱歉，升级文件传输失败，请检查是否插入存储卡。</string>
 </resources>
