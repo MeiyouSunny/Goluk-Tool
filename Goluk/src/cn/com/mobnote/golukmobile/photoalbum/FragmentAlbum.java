@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -18,6 +19,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventBindPhoneNum;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventIpcConnState;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListener;
@@ -25,6 +29,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickList
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.util.GolukUtils;
+import de.greenrobot.event.EventBus;
 
 public class FragmentAlbum extends Fragment implements OnClickListener{
 	
@@ -176,6 +181,19 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 		// TODO Auto-generated method stub
 		super.onResume();
 		GolukApplication.getInstance().setContext(getContext(), "ipcfilemanager");
+		
+		if("0".equals(mPlatform)){
+			if(GolukApplication.getInstance().isconnection){
+				if(mCurrentType == 1){
+					mWonderfulFragment.loadData(true);
+				}else if(mCurrentType == 2){
+					mUrgentFragment.loadData(true);
+				}else if(mCurrentType == 3){
+					mLoopFragment.loadData(true);
+				}
+			}
+		}
+		
 	}
 	/**
 	 * 设置tab页的下划线显示和隐藏
