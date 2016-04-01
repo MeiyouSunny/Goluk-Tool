@@ -57,8 +57,6 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 	
 	private String mLinkuid;
 	
-	
-	
 	private RelativeLayout mEmptyRl;
 	private TextView mEmptyTv;
 	

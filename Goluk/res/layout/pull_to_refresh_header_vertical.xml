@@ -42,19 +42,17 @@
                 android:id="@+id/pull_to_refresh_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#bfbfbf"
                 android:gravity="center_horizontal"
-                android:textAppearance="?android:attr/textAppearance"
-                android:textStyle="bold" />
+                android:textColor="#bbbbbb"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/pull_to_refresh_sub_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#bfbfbf"
                 android:gravity="center_horizontal"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:visibility="gone" />
+                android:textColor="#bbbbbb"
+                android:textSize="13sp" />
         </LinearLayout>
     </FrameLayout>
 
