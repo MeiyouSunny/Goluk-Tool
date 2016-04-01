@@ -286,7 +286,6 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 						GolukDebugUtils.e("",
 								"YYYYYY=====SCROLL_STATE_IDLE====22222222=");
 						final int size = mDataList.size();
-						boolean is = isHasData;
 						if (size > 0 && isHasData) {
 							GolukDebugUtils.e("",
 									"YYYYYY=====SCROLL_STATE_IDLE====33333=isGetFileListDataing="
