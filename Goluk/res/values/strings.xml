@@ -1016,4 +1016,5 @@
     <string name="str_follow_recommend_star">推荐达人</string>
     
     <string name="str_upgrade_check_sdcard_t1">很抱歉，升级文件传输失败，请检查是否插入存储卡。</string>
+    <string name="str_settings_restart_ipc">修改成功，重启记录仪后生效。</string>
 </resources>

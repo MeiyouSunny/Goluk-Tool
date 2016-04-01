@@ -6,6 +6,9 @@ import org.json.JSONObject;
 import com.alibaba.fastjson.JSON;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -177,6 +180,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private String mPowerTime = "";
 	/** 语言 **/
 	private String mVoiceType = "";
+	/**提示摄像头重启**/
+	private AlertDialog mRestartDialog = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -1207,6 +1212,11 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mCustomDialog.dismiss();
 		}
 		mCustomDialog = null;
+		
+		if (null != mRestartDialog) {
+			mRestartDialog.dismiss();
+			mRestartDialog = null;
+		}
 		super.onDestroy();
 	}
 
@@ -2004,6 +2014,20 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				+ "-----param1：" + param1 + "------param2：" + param2);
 		closeLoading();
 		if (RESULE_SUCESS == param1) {
+			if (null == mRestartDialog) {
+				mRestartDialog = new AlertDialog.Builder(this)
+						.setTitle(this.getString(R.string.user_dialog_hint_title))
+						.setMessage(this.getString(R.string.str_settings_restart_ipc))
+						.setPositiveButton(this.getString(R.string.user_repwd_ok),
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface arg0, int arg1) {
+										mRestartDialog.dismiss();
+										mRestartDialog = null;
+									}
+								}).show();
+			}
 			GolukApplication.getInstance().getIPCControlManager().getVideoResolution();
 		}
 	}
