@@ -14,5 +14,5 @@ public class FollowedDataBean {
 	@JSONField(name="list")
 	public ArrayList<FollowedListBean> list;
 	@JSONField(name="count")
-	public String count;
+	public int count;
 }

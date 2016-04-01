@@ -315,7 +315,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 
 			List<Object> gotList = new ArrayList<Object>();
 			// Refill to common list
-			if("0".equals(bean.data.count)) {
+			if(0 == bean.data.count) {
 				if(followedBeanList.size() == 1) {
 					gotList.add(new String(FOLLOWD_EMPTY));
 					FollowedListBean followBean = followedBeanList.get(0);
@@ -334,6 +334,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 				} else {
 					// TODO: no recommend, no followed
 				}
+				mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 			} else {
 				int count = followedBeanList.size();
 				for(int i = 0; i < count; i++) {
