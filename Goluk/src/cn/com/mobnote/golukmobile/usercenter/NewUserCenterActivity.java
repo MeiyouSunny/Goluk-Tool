@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import com.handmark.pulltorefresh.library.GridViewWithHeaderAndFooter;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshHeaderGridView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,8 +36,6 @@ import cn.com.mobnote.golukmobile.usercenter.bean.HomeJson;
 import cn.com.mobnote.golukmobile.usercenter.bean.HomeVideoList;
 import cn.com.mobnote.golukmobile.usercenter.bean.ShareJson;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
-import cn.com.mobnote.headergridview.GridViewWithHeaderAndFooter;
-import cn.com.mobnote.headergridview.PullToRefreshHeaderGridView;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
