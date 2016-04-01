@@ -286,7 +286,6 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 						GolukDebugUtils.e("",
 								"YYYYYY=====SCROLL_STATE_IDLE====22222222=");
 						final int size = mDataList.size();
-						boolean is = isHasData;
 						if (size > 0 && isHasData) {
 							GolukDebugUtils.e("",
 									"YYYYYY=====SCROLL_STATE_IDLE====33333=isGetFileListDataing="
@@ -589,7 +588,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		switch (event) {
 		case ENetTransEvent_IPC_VDCP_CommandResp:
-			if (IPC_VDCP_Msg_Query == msg) {
+			if (IPC_VDCP_Msg_Query == msg && mFragmentAlbum != null && mFragmentAlbum.mCurrentType == 3) {
 				if (mCustomProgressDialog != null
 						&& mCustomProgressDialog.isShowing()) {
 					mCustomProgressDialog.close();

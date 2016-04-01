@@ -681,7 +681,7 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 					
 					int newFansNumber = Integer.valueOf(mUserinfohomeRetBean.data.newfansnumber);
 					if(newFansNumber>0){
-						Drawable drawable= getResources().getDrawable(R.drawable.home_red_point_little);  
+						Drawable drawable= getResources().getDrawable(R.drawable.icon_new_fans);  
 						drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
 						mTextFans.setCompoundDrawables(null,null,drawable,null);//设置
 					}else{
