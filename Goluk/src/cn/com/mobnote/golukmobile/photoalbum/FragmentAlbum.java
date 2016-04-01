@@ -188,7 +188,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 		mTabUrgent.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
 		mTabLoop.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
 		if (position == 0) {
-			//mLocalFragment.loadData(true);
+			mLocalFragment.loadData(true);
 			mTabLocal.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
 		} else if (position == 1) {
 			mWonderfulFragment.loadData(GolukApplication.getInstance().isIpcLoginSuccess);

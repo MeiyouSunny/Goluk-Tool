@@ -77,6 +77,7 @@ public class LocalFragment extends Fragment{
 			this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
 			this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 			initView();
+			loadData(false);
 		}
 		
 		ViewGroup parent = (ViewGroup) mLocalVideoView.getParent();
@@ -91,12 +92,6 @@ public class LocalFragment extends Fragment{
 //		}
 		
 		return mLocalVideoView;
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-		loadData(true);
 	}
 	
 	
