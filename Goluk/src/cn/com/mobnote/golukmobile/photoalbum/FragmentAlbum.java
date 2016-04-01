@@ -322,6 +322,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 					new OnRightClickListener() {
 						@Override
 						public void onClickListener() {
+							setEditBtnState(true);
 							resetEditState();
 						}
 					});
