@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package cn.com.mobnote.headergridview;
+package com.handmark.pulltorefresh.library;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -23,8 +23,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import cn.com.mobnote.golukmobile.R;
 
-import com.handmark.pulltorefresh.library.OverscrollHelper;
-import com.handmark.pulltorefresh.library.PullToRefreshAdapterViewBase;
 import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
 
 public class PullToRefreshHeaderGridView extends PullToRefreshAdapterViewBase<GridViewWithHeaderAndFooter> {

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -48,7 +49,10 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	private static final int MSG_H_CREATE_HOT = 100;
 	/** 计时时间到，跳转到“等待”界面 */
 	private static final int MSG_H_TO_WAITING_VIEW = 101;
-
+	/** 释放前两个界面 */
+	private static final int MSG_H_FREE_1 = 102;
+	/** 释放第二个界面 */
+	private static final int MSG_H_FREE_2 = 103;
 	/** 设置IPC配置消息超时时间 */
 	private static final int TIMEOUT_SETIPC = 6 * 1000;
 	/** application */
@@ -57,35 +61,25 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	private Context mContext = null;
 	/** 返回按钮 */
 	private ImageButton mBackBtn = null;
-
 	private WifiConnectManager mWac = null;
-
 	private boolean isExit = false;
 	/** 中间的根布局 */
 	private FrameLayout mMiddleLayout = null;
-
 	private WifiLinkSetIpcLayout layout1 = null;
 	private WifiLinkWaitConnLayout layout2 = null;
 	private WifiLinkSucessLayout layout3 = null;
 	/** 当前正在显示的布局 */
 	private ViewFrame mCurrentLayout = null;
-
 	private Button mCompleteBtn = null;
 	private ImageView mProgressImg = null;
-
 	private int connectCount = 0;
-
 	/** ipc连接mac地址 */
 	private String mWiFiIp = "";
-
 	private final int STATE_SET_IPC_INFO = 0;
 	private final int STATE_WAIT_CONN = 1;
 	private final int STATE_SUCESS = 2;
-
 	private int mState = STATE_SET_IPC_INFO;
-
 	private WifiManager mWifiManager = null;
-
 	private int mStep = 0;
 	/** 用户要绑定的设备类型 */
 	private String mIPcType = "";
@@ -98,9 +92,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
 		mApp.setContext(mContext, TAG);
-
 		getIntentData();
-
 		collectLog("onCreate", "-----1");
 		mContext = this;
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
@@ -112,7 +104,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		mProgressImg = (ImageView) findViewById(R.id.wifilink_progress);
 		init();
 		toSetIPCInfoView();
-
 		setIpcLinkInfo();
 		// 6秒后，没有配置成功，直接跳转“等待连接”界面
 		mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_WAITING_VIEW, TIMEOUT_SETIPC);
@@ -152,6 +143,10 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 				// 开始创建手机热点
 				mBaseHandler.sendEmptyMessageDelayed(MSG_H_CREATE_HOT, 3 * 1000);
 			}
+		} else if (MSG_H_FREE_1 == msg.what) {
+			freeLayout1();
+		} else if (MSG_H_FREE_2 == msg.what) {
+			freeLayout2();
 		}
 	}
 
@@ -178,9 +173,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---2---josn---" + json);
 		collectLog("setIpcLinkInfo", "--setIpcLinkPhoneHot---2---josn---" + json);
 		boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
-		if (!b) {
-			// GolukUtils.showToast(mContext, "调用设置IPC连接热点失败");
-		}
 		GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---3---b---" + b);
 		collectLog("setIpcLinkInfo", "--setIpcLinkPhoneHot---3---b---" + b);
 	}
@@ -192,41 +184,26 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		return testJson;
 	}
 
-	private boolean strIsValid(String str) {
-		if (null == str) {
-			return false;
-		}
-		if (str.equals("")) {
-			return false;
-		}
-		return true;
-	}
-
 	private String getSetIpcJson11() {
 		try {
 			JSONObject rootObj = new JSONObject();
 			// if
 			// (!IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName))
 			// {
-			if (strIsValid(WiFiInfo.IPC_PWD)) {
+			if (!TextUtils.isEmpty(WiFiInfo.IPC_PWD)) {
 				rootObj.put("AP_SSID", WiFiInfo.IPC_SSID);
 				rootObj.put("AP_PWD", WiFiInfo.IPC_PWD);
 			}
 			// }
-
 			// Station模式
 			rootObj.put("GolukSSID", WiFiInfo.MOBILE_SSID);
 			rootObj.put("GolukPWD", WiFiInfo.MOBILE_PWD);
-
 			rootObj.put("GolukIP", DEFAULT_IP);
 			rootObj.put("GolukGateway", DEFAULT_WAY);
-
 			return rootObj.toString();
-
 		} catch (Exception e) {
 			return "";
 		}
-
 	}
 
 	/**
@@ -290,14 +267,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
 		collectLog("sendLogicLinkIpc", "2---b:  " + b);
 	}
-
-	// // 保存绑定的wifi名称
-	// private void saveBind(String name) {
-	// SharedPreferences preferences = getSharedPreferences("ipc_wifi_bind",
-	// MODE_PRIVATE);
-	// // 取得相应的值,如果没有该值,说明还未写入,用false作为默认值
-	// preferences.edit().putString("ipc_bind_name", name).commit();
-	// }
 
 	/**
 	 * ipc连接成功回调
@@ -376,6 +345,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		if (this.STATE_SET_IPC_INFO == mState) {
 			// 不支持返回
 		} else if (this.STATE_WAIT_CONN == mState) {
+			removeHMsg();
 			this.finish();
 			// 没连接,关闭热点
 			if (null != mWac) {
@@ -384,6 +354,11 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		} else if (this.STATE_SUCESS == mState) {
 			// 不支持返回
 		}
+	}
+
+	private void removeHMsg() {
+		this.mBaseHandler.removeMessages(MSG_H_FREE_1);
+		this.mBaseHandler.removeMessages(MSG_H_FREE_2);
 	}
 
 	@Override
@@ -405,6 +380,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		removeHMsg();
 		EventBus.getDefault().unregister(this);
 		if (null != mWac) {
 			mWac.unbind();
@@ -418,14 +394,26 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		mMiddleLayout = null;
 		mCurrentLayout = null;
 		collectLog("onDestroy", "1");
+		freeLayout1();
+		freeLayout2();
+		freeLayout3();
+	}
+
+	private void freeLayout1() {
 		if (null != layout1) {
 			layout1.free();
 			layout1 = null;
 		}
+	}
+
+	private void freeLayout2() {
 		if (null != layout2) {
 			layout2.free();
 			layout2 = null;
 		}
+	}
+
+	private void freeLayout3() {
 		if (null != layout3) {
 			layout3.free();
 			layout3 = null;
@@ -487,26 +475,27 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 		mMiddleLayout.addView(layout2.getRootLayout());
 		mCurrentLayout = layout2;
 		layout2.start();
-	}
-
-	private void freeLayout() {
-		if (null != mCurrentLayout) {
-			mCurrentLayout.getRootLayout().setVisibility(View.GONE);
-			mCurrentLayout.stop();
-		}
+		// 释放第一个界面
+		mBaseHandler.sendEmptyMessageDelayed(MSG_H_FREE_1, 500);
 	}
 
 	private void toSucessView() {
 		mBackBtn.setVisibility(View.GONE);
 		this.mState = STATE_SUCESS;
-		mCurrentLayout.getRootLayout().setVisibility(View.GONE);
 		mMiddleLayout.removeAllViews();
-		freeLayout();
 		mMiddleLayout.addView(layout3.getRootLayout());
 		mCurrentLayout = layout3;
 		layout3.start();
 		mCompleteBtn.setBackgroundResource(R.drawable.ipcbind_btn_finish);
 		mProgressImg.setBackgroundResource(R.drawable.setp_4);
+		this.mBaseHandler.sendEmptyMessageDelayed(MSG_H_FREE_2, 500);
+	}
+
+	private void freeLayout() {
+		if (null != mCurrentLayout) {
+			// mCurrentLayout.getRootLayout().setVisibility(View.GONE);
+			mCurrentLayout.stop();
+		}
 	}
 
 	private void wifiCallBack_3(int state, int process, String message, Object arrays) {
@@ -527,8 +516,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 						}
 					}
 				} catch (Exception e) {
-					// GolukUtils.showToast(mContext,
-					// this.getResources().getString(R.string.wifi_link_back_error));
 				}
 				break;
 			default:
@@ -542,7 +529,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 	}
 
 	private void connFailed() {
-
 		collectLog("connFailed", "WifiLinkCompleteActivity-----------connFailed : " + mStep);
 		if (0 == mStep) {
 			collectLog("connFailed", "connFailed show Dialog  please 5~10s");
@@ -645,7 +631,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 			}
 			mWac = null;
 		}
-
 	}
 
 }

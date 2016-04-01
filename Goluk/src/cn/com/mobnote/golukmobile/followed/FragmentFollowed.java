@@ -3,8 +3,21 @@ package cn.com.mobnote.golukmobile.followed;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
-import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.mobnote.eventbus.EventUserLoginRet;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -36,20 +49,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import de.greenrobot.event.EventBus;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class FragmentFollowed extends Fragment implements IRequestResultListener {
 	private final static String TAG = "FragmentFollow";
@@ -148,8 +147,24 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 //			mEmptyRL.setVisibility(View.GONE);
 			mListView.setVisibility(View.GONE);
 		}
-
+		
 		return rootView;
+	}
+	
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		// TODO Auto-generated method stub
+		super.onHiddenChanged(hidden);
+		
+		if(!hidden){
+			if(null != mApp && mApp.isUserLoginSucess) {
+				mLoginRL.setVisibility(View.GONE);
+				mListView.setVisibility(View.VISIBLE);
+			} else {
+				mLoginRL.setVisibility(View.VISIBLE);
+				mListView.setVisibility(View.GONE);
+			}
+		}
 	}
 
 	private void sendFollowedContentRequest(String op, String timeStamp) {

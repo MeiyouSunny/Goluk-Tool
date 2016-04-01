@@ -39,9 +39,8 @@
 		android:layout_gravity="center"
 		android:gravity="center"
 		android:text="@string/goluk_pull_to_refresh_footer_pull_label"
-		android:textAppearance="?android:attr/textAppearanceMedium"
-		android:textColor="@color/white"
-		android:textStyle="bold" />
+		android:textColor="#bbbbbb"
+        android:textSize="16sp" />
 
 </RelativeLayout>
 

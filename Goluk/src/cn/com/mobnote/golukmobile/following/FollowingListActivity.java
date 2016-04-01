@@ -57,8 +57,6 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 	
 	private String mLinkuid;
 	
-	
-	
 	private RelativeLayout mEmptyRl;
 	private TextView mEmptyTv;
 	
@@ -266,6 +264,7 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 	
 	private void setEmptyView(String emptyInfo) {
 		if(REFRESH_NORMAL.equals(mCurMotion)) {
+			mFollowinglistPtrList.setAdapter(null);
 			mFollowinglistPtrList.setEmptyView(mEmptyRl);
 			mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
 			mEmptyTv.setText(emptyInfo);
@@ -311,6 +310,7 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 					mCurMotion = REFRESH_NORMAL;
 					return;
 				}else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)){
+					mCurMotion = REFRESH_NORMAL;
 					setEmptyView(getString(R.string.no_following_tips));
 					return;
 				}	
@@ -321,7 +321,8 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 				} else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
 					mFollowingList.clear();
 					mFollowingList.addAll(followingBeanList);
-					mFollowingListAdapter.setData(mFollowingList);
+//					mFollowingListAdapter.setData(mFollowingList);
+					mFollowinglistPtrList.setAdapter(mFollowingListAdapter);
 				} else {
 				}
 			}
