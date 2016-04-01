@@ -641,7 +641,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		switch (event) {
 		case ENetTransEvent_IPC_VDCP_CommandResp:
-			if (IPC_VDCP_Msg_Query == msg) {
+			if (IPC_VDCP_Msg_Query == msg && mFragmentAlbum != null && mFragmentAlbum.mCurrentType == 1) {
 				if (mCustomProgressDialog != null && mCustomProgressDialog.isShowing()) {
 					mCustomProgressDialog.close();
 				}
