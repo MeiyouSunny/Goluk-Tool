@@ -25,7 +25,7 @@ public class GolukAnimal {
 		mAnimation = new AnimationDrawable();
 		for (int i = 0; i < size; i++) {
 			mBitmapArray[i] = ImageManager.getBitmapFromResource(mResArray[i]);
-			mAnimation.addFrame(new BitmapDrawable(mBitmapArray[i]), 400);
+			mAnimation.addFrame(new BitmapDrawable(mBitmapArray[i]), 500);
 			mAnimation.setOneShot(false);
 		}
 	}
