@@ -25,9 +25,6 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.follow.FollowRequest;
 import cn.com.mobnote.golukmobile.follow.bean.FollowRetBean;
 import cn.com.mobnote.golukmobile.following.FollowingConfig;
-import cn.com.mobnote.golukmobile.following.FollowingListActivity;
-import cn.com.mobnote.golukmobile.following.FollowingListAdapter;
-import cn.com.mobnote.golukmobile.following.FollowingListRequest;
 import cn.com.mobnote.golukmobile.following.bean.FollowingItemBean;
 import cn.com.mobnote.golukmobile.following.bean.FollowingRetBean;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
@@ -44,7 +41,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  */
 public class FanListActivity extends BaseActivity implements IRequestResultListener, OnClickListener,OnItemClickListener{
 	
-	private final static String TAG = "ActivityFollowingList";
+//	private final static String TAG = "ActivityFollowingList";
 	private final static String REFRESH_NORMAL = "0";
 	private final static String REFRESH_PULL_DOWN = "1";
 	private final static String REFRESH_PULL_UP = "2";
@@ -60,8 +57,6 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 	private final static String PROTOCOL = "200";
 	
 	private String mLinkuid;
-	
-	
 	
 	private RelativeLayout mEmptyRl;
 	private TextView mEmptyTv;
@@ -270,6 +265,7 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 	
 	private void setEmptyView(String emptyInfo) {
 		if(REFRESH_NORMAL.equals(mCurMotion)) {
+			mFanlistPtrList.setAdapter(null);
 			mFanlistPtrList.setEmptyView(mEmptyRl);
 			mFanlistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
 			mEmptyTv.setText(emptyInfo);
@@ -315,6 +311,7 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 					mCurMotion = REFRESH_NORMAL;
 					return;
 				}else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)){
+					mCurMotion = REFRESH_NORMAL;
 					setEmptyView(getString(R.string.no_fans_tips));
 					return;
 				}	
@@ -325,7 +322,8 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 				} else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
 					mFollowingList.clear();
 					mFollowingList.addAll(followingBeanList);
-					mFansListAdapter.setData(mFollowingList);
+					//mFansListAdapter.setData(mFollowingList);
+					mFanlistPtrList.setAdapter(mFansListAdapter);
 				} else {
 				}
 			}
