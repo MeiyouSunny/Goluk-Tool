@@ -470,9 +470,9 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 			if (selectedListData.size() == 0) {
 				mFragmentAlbum.updateTitleName(this.getContext()
 						.getString(R.string.local_video_title_text));
-				mFragmentAlbum.updateEditBtnState(false);
+				mFragmentAlbum.updateDeleteState(false);
 			} else {
-				mFragmentAlbum.updateEditBtnState(true);
+				mFragmentAlbum.updateDeleteState(true);
 				mFragmentAlbum.updateTitleName(this.getContext()
 						.getString(R.string.str_photo_select1)
 						+ selectedListData.size()
@@ -587,7 +587,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		switch (event) {
 		case ENetTransEvent_IPC_VDCP_CommandResp:
-			if (IPC_VDCP_Msg_Query == msg && mFragmentAlbum != null && mFragmentAlbum.mCurrentType == 3) {
+			if (IPC_VDCP_Msg_Query == msg && mFragmentAlbum != null && mFragmentAlbum.mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
 				if (mCustomProgressDialog != null
 						&& mCustomProgressDialog.isShowing()) {
 					mCustomProgressDialog.close();

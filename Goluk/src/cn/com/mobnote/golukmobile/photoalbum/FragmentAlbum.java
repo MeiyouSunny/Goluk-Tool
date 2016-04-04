@@ -53,7 +53,8 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 	private ImageView mDownLoadIcon = null;
 	private ImageView mDeleteIcon = null;
 	private ImageView mBackBtn = null;
-
+	
+	/**0:本地  1:远程精彩  2：远程紧急  3：远程循环**/
 	public int mCurrentType = 0;
 
 	// 页面列表
@@ -178,11 +179,11 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 		
 		if("0".equals(mPlatform)){
 			if(GolukApplication.getInstance().isconnection){
-				if(mCurrentType == 1){
+				if(mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND){
 					mWonderfulFragment.loadData(true);
-				}else if(mCurrentType == 2){
+				}else if(mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG){
 					mUrgentFragment.loadData(true);
-				}else if(mCurrentType == 3){
+				}else if(mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP){
 					mLoopFragment.loadData(true);
 				}
 			}
@@ -233,12 +234,12 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 	
 	private void downloadVideoFlush() {
 		if (GolukApplication.getInstance().getIpcIsLogin()) {
-			if (mCurrentType != 0) {
-				if(mCurrentType == 1){
+			if (mCurrentType != PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
+				if(mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND){
 					mWonderfulFragment.downloadVideoFlush(selectedListData);
-				}else if(mCurrentType == 2){
+				}else if(mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG){
 					mUrgentFragment.downloadVideoFlush(selectedListData);
-				}else if(mCurrentType == 3){
+				}else if(mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP){
 					mLoopFragment.downloadVideoFlush(selectedListData);
 				}
 				
@@ -268,19 +269,19 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 		switch (view.getId()) {
 		case R.id.tab_local:
 			mViewPager.setCurrentItem(0);
-			mCurrentType = 0;
+			mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
 			break;
 		case R.id.tab_wonderful:
 			mViewPager.setCurrentItem(1);
-			mCurrentType = 1;
+			mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
 			break;
 		case R.id.tab_urgent:
 			mViewPager.setCurrentItem(2);
-			mCurrentType = 2;
+			mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
 			break;
 		case R.id.tab_loop:
 			mViewPager.setCurrentItem(3);
-			mCurrentType = 3;
+			mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
 			break;
 		case R.id.edit_btn:
 			mViewPager.setCanScroll(false);
@@ -305,7 +306,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 				return;
 			}
 
-			if (mCurrentType != 0) {
+			if (mCurrentType != PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
 				if (!isAllowedDelete()) {
 					GolukUtils.showToast(getActivity(), getResources().getString(R.string.str_photo_downing));
 					return;
@@ -347,12 +348,12 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 	
 	private void deleteDataFlush() {
 		
-		if (mCurrentType != 0) {
-			if(mCurrentType == 1){
+		if (mCurrentType != PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
+			if(mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND){
 				mWonderfulFragment.deleteListData(selectedListData);
-			}else if(mCurrentType == 2){
+			}else if(mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG){
 				mUrgentFragment.deleteListData(selectedListData);
-			}else if(mCurrentType == 3){
+			}else if(mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP){
 				mLoopFragment.deleteListData(selectedListData);
 			}
 		}else{
@@ -390,13 +391,13 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 			mLinearLayoutTab.setVisibility(View.GONE);
 			mEditLayout.setVisibility(View.VISIBLE);
 			
-			if(mCurrentType == 0){
+			if(mCurrentType == PhotoAlbumConfig.PHOTO_BUM_LOCAL){
 				mDownLoadBtn.setVisibility(View.GONE);
-			}else if(mCurrentType == 1){
+			}else if(mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND){
 				mDownLoadBtn.setVisibility(View.VISIBLE);
-			}else if(mCurrentType == 2){
+			}else if(mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG){
 				mDownLoadBtn.setVisibility(View.VISIBLE);
-			}else if(mCurrentType == 3){
+			}else if(mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP){
 				mDownLoadBtn.setVisibility(View.VISIBLE);
 			}
 			/*if (R.id.mLocalVideoBtn == curId) {
@@ -423,14 +424,15 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 		return selectedListData;
 	}
 	
-	public void updateEditBtnState(boolean light) {
-		/*if (light) {
-			mDownLoadIcon.setBackgroundResource(R.drawable.photo_download_icon_press);
+	
+	public void updateDeleteState(boolean light){
+		if(light){
 			mDeleteIcon.setBackgroundResource(R.drawable.select_video_del_press_icon);
-		} else {
-			mDownLoadIcon.setBackgroundResource(R.drawable.photo_download_icon);
+			mDownLoadIcon.setBackgroundResource(R.drawable.photo_download_icon_press);
+		}else{
 			mDeleteIcon.setBackgroundResource(R.drawable.select_video_del_icon);
-		}*/
+			mDownLoadIcon.setBackgroundResource(R.drawable.photo_download_icon);
+		}
 	}
 	
 	

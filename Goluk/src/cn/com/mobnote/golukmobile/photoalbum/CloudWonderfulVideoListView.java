@@ -282,9 +282,9 @@ public class CloudWonderfulVideoListView implements IPCManagerFn {
 
 			if (selectedListData.size() == 0) {
 				mFragment.updateTitleName(mContext.getString(R.string.local_video_title_text));
-				mFragment.updateEditBtnState(false);
+				mFragment.updateDeleteState(false);
 			} else {
-				mFragment.updateEditBtnState(true);
+				mFragment.updateDeleteState(true);
 				mFragment.updateTitleName(mContext.getString(R.string.str_photo_select1) + selectedListData.size()
 						+ mContext.getString(R.string.str_photo_select2));
 			}

@@ -7,12 +7,13 @@ package cn.com.mobnote.golukmobile.photoalbum;
  */
 public class PhotoAlbumConfig {
 	
-	/**
-	 * type
-	 */
+	/***相册本地所有类型视频*/
 	public static final int PHOTO_BUM_LOCAL = 0;
+	/***相册远程精彩视频*/
 	public static final int PHOTO_BUM_IPC_WND = 1;
+	/***相册远程紧急视频*/
 	public static final int PHOTO_BUM_IPC_URG = 2;
+	/***相册远程循环视频*/
 	public static final int PHOTO_BUM_IPC_LOOP = 3;
 	
 	/**
