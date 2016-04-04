@@ -583,6 +583,11 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		mCategoryAdapter.updateClickPraiseNumber(info);
 	}
 
+	public void changePraiseStatus(boolean status, String videoId) {
+		GolukUtils.changePraiseStatus(mDataList, status, videoId);
+		mCategoryAdapter.notifyDataSetChanged();
+	}
+
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.category_list_nodata) {

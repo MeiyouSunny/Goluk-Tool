@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -34,6 +35,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.util.DisplayMetrics;
@@ -50,6 +52,7 @@ import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class GolukUtils {
@@ -933,5 +936,28 @@ public class GolukUtils {
 		intent.putExtra("type", tempType);
 		intent.putExtra("cn.com.mobnote.video.path", path);
 		context.startActivity(intent);
+	}
+
+	public static void changePraiseStatus(List<VideoSquareInfo> dataList, boolean status, String videoId) {
+		if(TextUtils.isEmpty(videoId) || null == dataList || dataList.size() == 0) {
+			return;
+		}
+
+		for (int i = 0; i < dataList.size(); i++) {
+			VideoSquareInfo vs = dataList.get(i);
+			if (videoId.equals(vs.mVideoEntity.videoid)) {
+				int number = Integer.parseInt(vs.mVideoEntity.praisenumber);
+				if (status) {
+					number++;
+				} else {
+					number--;
+				}
+
+				vs.mVideoEntity.praisenumber = "" + number;
+				vs.mVideoEntity.ispraise = status ? "1" : "0";
+//				mNewestAdapter.notifyDataSetChanged();
+				break;
+			}
+		}
 	}
 }

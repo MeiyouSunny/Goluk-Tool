@@ -517,6 +517,11 @@ public class NewestListView implements
 		mNewestAdapter.updateClickPraiseNumber(info);
 	}
 
+	public void changePraiseStatus(boolean status, String videoId) {
+		GolukUtils.changePraiseStatus(mDataList, status, videoId);
+		mNewestAdapter.notifyDataSetChanged();
+	}
+
 	//点赞请求
 	public boolean sendPraiseRequest(String id) {
 		PraiseRequest request = new PraiseRequest(IPageNotifyFn.PageType_Praise, this);

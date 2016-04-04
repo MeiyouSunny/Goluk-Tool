@@ -3,9 +3,12 @@ package cn.com.mobnote.golukmobile;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventLocationFinish;
+import cn.com.mobnote.eventbus.EventPraiseStatusChanged;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
+import cn.com.mobnote.golukmobile.newest.NewestListView;
 import cn.com.mobnote.golukmobile.newest.WonderfulSelectedListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareAdapter;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
@@ -174,6 +177,31 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 			mViewPager.setCurrentItem(1);
 			this.updateState(1);
 			updateLine(100);
+			break;
+		default:
+			break;
+		}
+	}
+
+	public void onEventMainThread(EventPraiseStatusChanged event) {
+		if(null == event) {
+			return;
+		}
+
+		switch(event.getOpCode()) {
+		case EventConfig.PRAISE_STATUS_CHANGE:
+			// Start load banner
+			VideoSquareAdapter videoSquareAdapter = getVideoSquareAdapter();
+			if (null == videoSquareAdapter) {
+				return;
+			}
+
+			NewestListView listView = videoSquareAdapter.getNewestListView();
+
+			if (null == listView) {
+				return;
+			}
+			listView.changePraiseStatus(event.isStatus(), event.getVideoId());
 			break;
 		default:
 			break;

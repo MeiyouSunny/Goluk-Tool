@@ -10,10 +10,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventPraiseStatusChanged;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.newest.NewestListView;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 public class VideoCategoryActivity extends BaseActivity implements OnClickListener {
 	/** application */
@@ -66,6 +70,8 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 		initViewData();
 
 		switchLayout(TYPE_LIST);
+
+		EventBus.getDefault().register(this);
 	}
 
 	private boolean isLive() {
@@ -177,6 +183,20 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 		}
 	}
 
+	public void onEventMainThread(EventPraiseStatusChanged event) {
+		if(null == event) {
+			return;
+		}
+
+		switch(event.getOpCode()) {
+		case EventConfig.PRAISE_STATUS_CHANGE:
+			mCategoryLayout.changePraiseStatus(event.isStatus(), event.getVideoId());
+			break;
+		default:
+			break;
+		}
+	}
+
 	public void pointDataCallback(int success, Object obj) {
 		if (!this.isLive()) {
 			// 当前不是直播界面，不需更新数据
@@ -246,6 +266,12 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 		if (null != mCategoryLayout) {
 			mCategoryLayout.onStop();
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		EventBus.getDefault().unregister(this);
 	}
 
 }
