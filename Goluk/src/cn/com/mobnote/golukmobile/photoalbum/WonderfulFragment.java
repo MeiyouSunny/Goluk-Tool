@@ -545,11 +545,13 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT, this);
 		}
 	}
-	
+
 	@Override
-	public void onStop() {
-		super.onStop();
-		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT);
+	public void onPause() {
+		super.onPause();
+		if (null != GolukApplication.getInstance().getIPCControlManager()) {
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT);
+		}
 	}
 
 	public void loadData(boolean flag) {
