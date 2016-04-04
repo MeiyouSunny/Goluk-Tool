@@ -45,6 +45,8 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.fan.FanListActivity;
 import cn.com.mobnote.golukmobile.following.FollowingListActivity;
+import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumConfig;
+import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
@@ -886,7 +888,6 @@ public class GolukUtils {
 	}
 
 	public static void startVideoDetailActivity(Context context, String videoId) {
-		
 		Intent intent = null;
 		intent = new Intent(context, VideoDetailActivity.class);
 		intent.putExtra(VideoDetailActivity.VIDEO_ID, videoId);
@@ -909,7 +910,6 @@ public class GolukUtils {
 	}
 
 	public static void startFanListActivity(Context context, String uId) {
-		
 		if(!isNetworkConnected(context)){
 			Toast.makeText(context, context.getString(R.string.network_error), Toast.LENGTH_SHORT)
 			.show();
@@ -919,6 +919,19 @@ public class GolukUtils {
 		Intent intent = null;
 		intent = new Intent(context, FanListActivity.class);
 		intent.putExtra("linkuid", uId);
+		context.startActivity(intent);
+	}
+
+	public static void startVideoEditActivity(Context context, int type, String path) {
+		Intent intent = new Intent(context, VideoEditActivity.class);
+
+		int tempType = 2;
+		if (type == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
+			tempType = 3;
+		}
+
+		intent.putExtra("type", tempType);
+		intent.putExtra("cn.com.mobnote.video.path", path);
 		context.startActivity(intent);
 	}
 }

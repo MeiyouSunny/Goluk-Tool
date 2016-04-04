@@ -440,8 +440,8 @@
     <string name="setting_notify_follow">有人关注我</string>
     <string name="dialog_str_confirm">举报不良内容</string>
     <string name="dialog_str_del">删除这个视频</string>
-    <string name="dialog_str_tuijian">推荐这个视频</string>
     <string name="dialog_str_share">分享这个视频</string>
+    <string name="dialog_str_tuijian">推荐这个视频</string>
     <string name="dialog_str_cancel">取消</string>
     <string name="dialog_str_goback">返回首页</string>
     <string name="carrecorder_tcaf_all">移动和振动侦测</string>
