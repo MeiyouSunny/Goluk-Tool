@@ -190,7 +190,6 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 
 		switch(event.getOpCode()) {
 		case EventConfig.PRAISE_STATUS_CHANGE:
-			// Start load banner
 			VideoSquareAdapter videoSquareAdapter = getVideoSquareAdapter();
 			if (null == videoSquareAdapter) {
 				return;
