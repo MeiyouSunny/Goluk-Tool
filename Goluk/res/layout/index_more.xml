@@ -179,12 +179,28 @@
                     android:gravity="center"
                     android:orientation="vertical" >
 
-                    <TextView
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
                         android:id="@+id/user_fans_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/user_login_text"
+                        android:layout_centerHorizontal="true"
                         android:textSize="14sp" />
+
+                        <ImageView
+                            android:id="@+id/iv_new_fans"
+                            android:visibility="gone"
+                            android:layout_alignTop="@id/user_fans_count"
+                            android:layout_toRightOf="@id/user_fans_count"
+                            android:layout_marginLeft="1dp"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:src="@drawable/icon_new_fans"
+                            android:contentDescription="@string/imgdes"/>
+                    </RelativeLayout>
 
                     <TextView
                         android:id="@+id/tv_user_fans"

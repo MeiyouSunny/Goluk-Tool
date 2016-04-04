@@ -112,8 +112,10 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	private static final String TAG = "FragmentMine";
 
 	LinearLayout mMineRootView = null;
-	
+
 	private UserinfohomeRetBean mUserinfohomeRetBean;
+
+	private ImageView mNewFansIv;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -259,6 +261,8 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 		mShareLayout = (LinearLayout) mMineRootView.findViewById(R.id.user_share);
 		mFansLayout = (LinearLayout) mMineRootView.findViewById(R.id.user_fans);
 		mFollowLayout = (LinearLayout) mMineRootView.findViewById(R.id.user_follow);
+		mNewFansIv = (ImageView) mMineRootView.findViewById(R.id.iv_new_fans);
+
 		// 注册事件
 		// 个人中心 我的相册 摄像头管理 通用设置 极路客小技巧 安装指导 版本信息 购买极路客
 		mUserCenterItem.setOnClickListener(this);
@@ -678,13 +682,12 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 					mTextShare.setText(GolukUtils.getFormatNumber(mUserinfohomeRetBean.data.sharevideonumber));
 					mTextFans.setText(GolukUtils.getFormatNumber(mUserinfohomeRetBean.data.fansnumber));
 					mTextFollow.setText(GolukUtils.getFormatNumber(mUserinfohomeRetBean.data.followingnumber));
-					
+
 					int newFansNumber = Integer.valueOf(mUserinfohomeRetBean.data.newfansnumber);
 					if(newFansNumber>0){
-						Drawable drawable= getResources().getDrawable(R.drawable.icon_new_fans);  
-						drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-						mTextFans.setCompoundDrawables(null,null,drawable,null);//设置
+						mNewFansIv.setVisibility(View.VISIBLE);
 					}else{
+						mNewFansIv.setVisibility(View.GONE);
 					}
 				}
 				
