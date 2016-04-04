@@ -136,6 +136,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 	@Override
 	public void onResume() {
 		super.onResume();
+		isShowPlayer = false;
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_URGENT, this);
 		}
