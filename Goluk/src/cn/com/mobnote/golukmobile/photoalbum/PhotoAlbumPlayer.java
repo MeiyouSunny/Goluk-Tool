@@ -214,7 +214,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		
+
 		mResume = true;
 		mHandler.removeCallbacksAndMessages(null);
 		mPlayTime = mVideoView.getCurrentPosition();
@@ -260,8 +260,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		mLoading.setBackgroundResource(R.anim.video_loading);
 		mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
 
-
-
 		mPlayImg = (ImageView) findViewById(R.id.play_img);
 		mBtnVtPlay = (Button) findViewById(R.id.btn_vt_play);
 		mBtnVtPlay.setOnClickListener(this);
@@ -290,7 +288,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		Button shareBtn = (Button) findViewById(R.id.btn_download);
 		shareBtn.setOnClickListener(this);
 		if (mVideoFrom.equals("local")) {
-			if (mType == IPCManagerFn.TYPE_URGENT || mType == IPCManagerFn.TYPE_SHORTCUT) {
+			if (mType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG || mType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
 				shareBtn.setBackgroundResource(R.drawable.btn_photoalbum_share);
 			} else {
 				shareBtn.setVisibility(View.INVISIBLE);
@@ -332,20 +330,18 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			finish();
 			break;
 		case R.id.mMoreBtn:
-			
 			if(mPlayerMoreDialog==null){
 				String tempPath = "";
-			
+
 				if(!TextUtils.isEmpty(mVideoFrom)){
-					
 					if("local".equals(mVideoFrom)){
 						tempPath = mPath;
 					}else{
 						tempPath = mFileName;
 					}
 				}
-				
-				mPlayerMoreDialog = new PlayerMoreDialog(PhotoAlbumPlayer.this,tempPath,getType());
+
+				mPlayerMoreDialog = new PlayerMoreDialog(PhotoAlbumPlayer.this, tempPath, getType(), mVideoFrom);
 			}
 			mPlayerMoreDialog.show();
 			break;
@@ -375,7 +371,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 				Intent intent = new Intent(this, VideoEditActivity.class);
 
 				int tempType = 2;
-				if (mType == IPCManagerFn.TYPE_URGENT) {
+				if (mType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG/*IPCManagerFn.TYPE_URGENT*/) {
 					tempType = 3;
 				}
 
@@ -396,22 +392,20 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	private int getType() {
 		int tempType = 0;
 		if("local".equals(mVideoFrom)){
-			
 			tempType = PhotoAlbumConfig.PHOTO_BUM_LOCAL;
-				
-		}else{
-			
-			switch (mType){
-			case IPCManagerFn.TYPE_URGENT:
-				tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
-				break;
-			case IPCManagerFn.TYPE_SHORTCUT:
-				tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
-				break;
-			case IPCManagerFn.TYPE_CIRCULATE:
-				tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
-				break;
-			}
+		} else {
+//			switch (mType){
+//			case IPCManagerFn.TYPE_URGENT:
+//				tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
+//				break;
+//			case IPCManagerFn.TYPE_SHORTCUT:
+//				tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
+//				break;
+//			case IPCManagerFn.TYPE_CIRCULATE:
+//				tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
+//				break;
+//			}
+			tempType = mType;
 		}
 		return tempType;
 	}
@@ -503,9 +497,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 				String fileName = mFileName;
 				fileName = fileName.replace(".mp4", ".jpg");
 				mImageUrl = filePath + File.separator + fileName;
-				if (4 == mType) {
+				if (PhotoAlbumConfig.PHOTO_BUM_IPC_WND == mType/*4 == mType*/) {
 					mVideoUrl = "http://" + ip + ":5080/rec/wonderful/" + mFileName;
-				} else if (2 == mType) {
+				} else if (PhotoAlbumConfig.PHOTO_BUM_IPC_URG == mType/*2 == mType*/) {
 					mVideoUrl = "http://" + ip + ":5080/rec/urgent/" + mFileName;
 				} else {
 					mVideoUrl = "http://" + ip + ":5080/rec/normal/" + mFileName;
