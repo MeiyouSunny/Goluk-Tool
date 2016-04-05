@@ -32,6 +32,7 @@ import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.user.MyProgressWebView;
 import cn.com.mobnote.util.GolukConfig;
+import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -55,7 +56,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 	private boolean mErrorState = false;
 
 	private RelativeLayout mErrorLayout = null;
-	/**收益页面UI修改**/
+	/** 收益页面UI修改 **/
 	private boolean mProfitChangeUI = false;
 
 	private String mShareId;
@@ -87,7 +88,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
 		mWebView = (MyProgressWebView) findViewById(R.id.my_webview);
 		mTextRight = (TextView) findViewById(R.id.user_title_right);
-		if(GolukConfig.NEED_SHARE.equals(webType)) {
+		if (GolukConfig.NEED_SHARE.equals(webType)) {
 			mNeedShare = true;
 			mTextRight.setText(this.getString(R.string.share_text));
 			mTitle = itIndexMore.getStringExtra(GolukConfig.NEED_H5_TITLE);
@@ -118,7 +119,8 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		}
 		WebSettings webSettings = mWebView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
-		mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);  //设置 缓存模式
+		mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE); // 设置
+																		// 缓存模式
 		mWebView.setDownloadListener(this);
 		mWebView.setWebViewClient(new WebViewClient() {
 			@Override
@@ -156,7 +158,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 				mWebView.setVisibility(View.GONE);
 				mErrorLayout.setVisibility(View.VISIBLE);
 			}
-			
+
 			@Override
 			public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
 				// TODO Auto-generated method stub
@@ -175,38 +177,38 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					if (mErrorState) {
 						return;
 					}
-					mWebView.loadUrl(getRtmpAddress() + "?type=2");
+					mWebView.loadUrl(getRtmpAddress() + "?type=2" + getCommParams());
 				} else if (from_tag.equals("install")) {
 					mTextTitle.setText(this.getResources().getString(R.string.my_install_title_text));
 					if (mErrorState) {
 						return;
 					}
-					mWebView.loadUrl(getRtmpAddress() + "?type=3");
+					mWebView.loadUrl(getRtmpAddress() + "?type=3" + getCommParams());
 				} else if (from_tag.equals("shopping")) {
 					mTextTitle.setText(this.getResources().getString(R.string.my_shopping_title_text));
 					if (mErrorState) {
 						return;
 					}
-					final String shoppintUrl  = "https://goluk.tmall.com/";
-					mWebView.loadUrl(shoppintUrl);
+					final String shoppingUrl = getRtmpAddress() + "?type=4" + getCommParams();
+					mWebView.loadUrl(shoppingUrl);
 				} else if (from_tag.equals("buyline")) {
 					mTextTitle.setText(this.getResources().getString(R.string.my_shopping_buck_line));
 					if (mErrorState) {
 						return;
 					}
-					mWebView.loadUrl(getRtmpAddress() + "?type=1");
+					mWebView.loadUrl(getRtmpAddress() + "?type=1" + getCommParams());
 				} else if (from_tag.equals("wifihelp")) {
 					mTextTitle.setText(this.getResources().getString(R.string.wifi_link_34_text));
 					if (mErrorState) {
 						return;
 					}
-					mWebView.loadUrl(getRtmpAddress() + "?type=3");
-				} else if(from_tag.equals("profitProblem")) {
+					mWebView.loadUrl(getRtmpAddress() + "?type=3" + getCommParams());
+				} else if (from_tag.equals("profitProblem")) {
 					mTextTitle.setText(this.getResources().getString(R.string.my_profit_problem));
 					if (mErrorState) {
 						return;
 					}
-					mWebView.loadUrl(getRtmpAddress() + "?type=8");
+					mWebView.loadUrl(getRtmpAddress() + "?type=8" + getCommParams());
 				} else if (from_tag.equals("cash")) {
 					String uid = itIndexMore.getStringExtra("uid");
 					String phone = itIndexMore.getStringExtra("phone");
@@ -215,14 +217,15 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 						return;
 					}
 					mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-					mWebView.loadUrl(getRtmpAddress() + "?type=7&phone=" + phone + "&uid=" + uid);
-				}else if(from_tag.equals("withdrawals")){
+					mWebView.loadUrl(getRtmpAddress() + "?type=7&phone=" + phone + "&uid=" + uid + getCommParams());
+				} else if (from_tag.equals("withdrawals")) {
 					String url = itIndexMore.getStringExtra("withdraw_url");
-					mWebView.loadUrl(url);
+					final String withDrawUrl = url + getCommParams2();
+					mWebView.loadUrl(withDrawUrl);
 				}
 			} else {
 				String title = itIndexMore.getStringExtra(GolukConfig.NEED_H5_TITLE);
-				if(null != title && !title.equals("")) {
+				if (null != title && !title.equals("")) {
 					mTextTitle.setText(title);
 				} else {
 					mTextTitle.setText("");
@@ -232,7 +235,13 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 				if (mErrorState) {
 					return;
 				}
-				mWebView.loadUrl(url);
+				if (!TextUtils.isEmpty(url)) {
+					if (url.contains("?")) {
+						mWebView.loadUrl(url + getCommParams());
+					} else {
+						mWebView.loadUrl(url + getCommParams2());
+					}
+				}
 			}
 		}
 		mBackBtn.setOnClickListener(this);
@@ -265,7 +274,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 				mErrorState = false;
 				return true;
 			}
-			if(mProfitChangeUI) {
+			if (mProfitChangeUI) {
 				finish();
 				return true;
 			}
@@ -290,9 +299,9 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 				mErrorState = false;
 				return;
 			}
-			if(mProfitChangeUI) {
+			if (mProfitChangeUI) {
 				finish();
-				return ;
+				return;
 			}
 			if (mWebView.canGoBack()) {
 				mWebView.goBack();
@@ -301,12 +310,12 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			}
 			break;
 		case R.id.user_title_right:
-			if(mNeedShare && null != mSharePlatform) {
+			if (mNeedShare && null != mSharePlatform) {
 				String shareurl = mShareAddress;
 				String coverurl = mPicture;
 				String describe = mIntroduction;
 				String urlOpenPath = mUrlOpenPath;
-				if("cluster_adapter".equals(urlOpenPath)) {
+				if ("cluster_adapter".equals(urlOpenPath)) {
 					String realDesc = getString(R.string.str_vote_share_real_description);
 
 					if (TextUtils.isEmpty(describe)) {
@@ -317,12 +326,11 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 						ttl = getString(R.string.str_vote_share_title);
 					}
 
-					CustomShareBoard shareBoard = new CustomShareBoard(this, mSharePlatform,
-							shareurl, coverurl, describe, ttl, null, realDesc, "");
-					shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM,
-							0, 0);
+					CustomShareBoard shareBoard = new CustomShareBoard(this, mSharePlatform, shareurl, coverurl,
+							describe, ttl, null, realDesc, "");
+					shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 				} else {
-					if(TextUtils.isEmpty(shareurl)) {
+					if (TextUtils.isEmpty(shareurl)) {
 						return;
 					}
 
@@ -332,18 +340,15 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					}
 					String realDesc = getString(R.string.str_wonderful_share);
 
-					if(TextUtils.isEmpty(coverurl)) {
-						Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(),
-								R.drawable.ic_launcher);
-						CustomShareBoard shareBoard = new CustomShareBoard(this, mSharePlatform,
-								shareurl, "", describe, ttl, bitmap, realDesc, "");
-						shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM,
-								0, 0);
+					if (TextUtils.isEmpty(coverurl)) {
+						Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_launcher);
+						CustomShareBoard shareBoard = new CustomShareBoard(this, mSharePlatform, shareurl, "",
+								describe, ttl, bitmap, realDesc, "");
+						shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 					} else {
-						CustomShareBoard shareBoard = new CustomShareBoard(this, mSharePlatform,
-								shareurl, coverurl, describe, ttl, null, realDesc, "");
-						shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM,
-								0, 0);
+						CustomShareBoard shareBoard = new CustomShareBoard(this, mSharePlatform, shareurl, coverurl,
+								describe, ttl, null, realDesc, "");
+						shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 					}
 				}
 			} else {
@@ -358,7 +363,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if(mNeedShare) {
+		if (mNeedShare) {
 			if (null != mSharePlatform) {
 				mSharePlatform.onActivityResult(requestCode, resultCode, data);
 			}
@@ -371,6 +376,14 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			mLoadingDialog = null;
 			mBackBtn.setEnabled(true);
 		}
+	}
+
+	private String getCommParams2() {
+		return "?commversion=" + GolukUtils.GOLUK_APP_VERSION + "&commlocale=" + GolukUtils.getLanguageAndCountry();
+	}
+
+	private String getCommParams() {
+		return "&commversion=" + GolukUtils.GOLUK_APP_VERSION + "&commlocale=" + GolukUtils.getLanguageAndCountry();
 	}
 
 	/**
@@ -408,7 +421,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		closeLoading();
 		super.onDestroy();
 		GolukDebugUtils.e("", "--------UserOpenUrlActivity-------onDestory：");
-		if (mWebView != null){
+		if (mWebView != null) {
 			mWebView.destroy();
 			mWebView = null;
 		}
