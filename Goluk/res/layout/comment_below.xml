@@ -68,13 +68,16 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <ImageView
+    <TextView
         android:layout_width="70dp"
         android:layout_height="85dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="36dp"
         android:layout_marginTop="36dp"
-        android:background="@drawable/videodetail_sofaicon"
+        android:drawableTop="@drawable/videodetail_sofaicon"
+        android:text="@string/str_sofa_text"
+        android:textColor="#D9D9D9"
+        android:textSize="14sp"
         android:visibility="gone" />
 
     <LinearLayout

@@ -4,11 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventStartApp;
 import cn.com.mobnote.golukmobile.wifidatacenter.JsonWifiBindManager;
@@ -40,6 +42,7 @@ public class GuideActivity extends BaseActivity {
 	private GolukApplication mApp = null;
 	/** 为了判断网页启动App，当前程序是否启动 */
 	private boolean mPreExist = true;
+	private RelativeLayout mBackground;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,7 @@ public class GuideActivity extends BaseActivity {
 		setContentView(R.layout.guide);
 		mContext = this;
 		GolukApplication.getInstance().setContext(this, "GuideActivity");
+		mBackground = (RelativeLayout) findViewById(R.id.ry_guide_background_layout);
 		getIntentData();
 		boolean isExit = getWebStartData();
 		if (isExit) {
@@ -167,6 +171,7 @@ public class GuideActivity extends BaseActivity {
 	public void initViewPager() {
 		this.mGolukGuideManage = new GolukGuideManage(mContext);
 		this.mGolukGuideManage.initGolukGuide();
+		mBackground.setBackgroundColor(Color.WHITE);
 	}
 
 	@Override

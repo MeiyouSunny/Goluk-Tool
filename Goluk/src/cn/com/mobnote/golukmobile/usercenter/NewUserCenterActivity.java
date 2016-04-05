@@ -9,6 +9,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshHeaderGridView;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -59,7 +60,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	private View mHeaderView = null;
 	/** footer view **/
 	private View mFooterView = null;
-	private ImageView mFooterImage = null;
+	private TextView mFooterText = null;
 	/** 当前状态 **/
 	private String mCurrentOperator = "";
 	/** header **/
@@ -110,7 +111,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 		mMoreBtn = (ImageButton) findViewById(R.id.ib_usercenter_more);
 		mRefreshLayout = (RelativeLayout) findViewById(R.id.ry_usercenter_refresh);
 		mFooterView = LayoutInflater.from(this).inflate(R.layout.activity_usercenter_footer, null);
-		mFooterImage = (ImageView) mFooterView.findViewById(R.id.iv_usercenter_footer);
+		mFooterText = (TextView) mFooterView.findViewById(R.id.tv_usercenter_footer);
 		mFooterView.setVisibility(View.GONE);
 
 		mBackBtn.setOnClickListener(this);
@@ -272,11 +273,14 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	}
 
 	private void addFooterView() {
+		Drawable drawable= getResources().getDrawable(R.drawable.mine_video);  
+		drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());  
+		mFooterText.setCompoundDrawables(null,drawable,null,null);
 		if (null != mFooterView && null != mGridView && mFooterView.getVisibility() == View.GONE) {
 			if (testUser()) {
-				mFooterImage.setImageResource(R.drawable.mine_novideo);
+				mFooterText.setText(this.getString(R.string.str_mine_no_video_text));
 			} else {
-				mFooterImage.setImageResource(R.drawable.mine_tavideo);
+				mFooterText.setText(this.getString(R.string.str_mine_ta_video_text));
 			}
 			mGridView.getRefreshableView().addFooterView(mFooterView);
 			mFooterView.setVisibility(View.VISIBLE);

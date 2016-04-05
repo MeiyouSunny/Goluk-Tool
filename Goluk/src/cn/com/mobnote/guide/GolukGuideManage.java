@@ -6,14 +6,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -51,10 +54,10 @@ public class GolukGuideManage {
 	/** 当前引导页下标 */
 	private int mCurrentItem = 0;
 
-	private Bitmap mBGBitmap2 = null;
-	private Bitmap mBGBitmap3 = null;
-	private Bitmap mBGBitmap4 = null;
-	private Bitmap mBGBitmap5 = null;
+//	private Bitmap mBGBitmap2 = null;
+//	private Bitmap mBGBitmap3 = null;
+//	private Bitmap mBGBitmap4 = null;
+//	private Bitmap mBGBitmap5 = null;
 
 	public GolukGuideManage(Context context) {
 		mContext = context;
@@ -90,20 +93,27 @@ public class GolukGuideManage {
 	@SuppressLint("InflateParams")
 	public void getLocalOnLineVideoList() {
 		mListViews = new ArrayList<View>();
-		mBGBitmap2 = ImageManager.getBitmapFromResource(R.drawable.guide_2);
-		mBGBitmap3 = ImageManager.getBitmapFromResource(R.drawable.guide_3);
-		mBGBitmap4 = ImageManager.getBitmapFromResource(R.drawable.guide_4);
-		mBGBitmap5 = ImageManager.getBitmapFromResource(R.drawable.guide_5);
-
-		Bitmap[] imgId = { mBGBitmap2, mBGBitmap3, mBGBitmap4, mBGBitmap5 };
-		for (int i = 0, len = imgId.length; i < len; i++) {
+//		mBGBitmap2 = ImageManager.getBitmapFromResource(R.drawable.guide_2);
+//		mBGBitmap3 = ImageManager.getBitmapFromResource(R.drawable.guide_3);
+//		mBGBitmap4 = ImageManager.getBitmapFromResource(R.drawable.guide_4);
+//		mBGBitmap5 = ImageManager.getBitmapFromResource(R.drawable.guide_5);
+//
+//		Bitmap[] imgId = { mBGBitmap2, mBGBitmap3, mBGBitmap4, mBGBitmap5 };
+		int[] imageId = { R.drawable.guide_2, R.drawable.guide_3, R.drawable.guide_4, R.drawable.guide_5 };
+		String[] imageText = { mContext.getString(R.string.str_guide_2_top_text),
+				mContext.getString(R.string.str_guide_3_top_text), mContext.getString(R.string.live_title),
+				mContext.getString(R.string.setting_tcaf_title) };
+		String[] textDescrible = { mContext.getString(R.string.str_guide_2_text),
+				mContext.getString(R.string.str_guide_3_text), mContext.getString(R.string.str_guide_4_text),
+				mContext.getString(R.string.str_guide_5_text) };
+		for (int i = 0, len = imageId.length; i < len; i++) {
 			// 最后一个,采用最后一个布局,
 			RelativeLayout view = null;
 			if (i == (len - 1)) {
 				view = (RelativeLayout) mLayoutInflater.inflate(R.layout.guide_item_last, null);
 
 				// 开始goluk按钮
-				ImageButton btn = (ImageButton) view.findViewById(R.id.start_goluk_btn);
+				Button btn = (Button) view.findViewById(R.id.start_goluk_btn);
 				btn.setOnClickListener(new StartGolukBtnClickListener());
 			} else {
 				view = (RelativeLayout) mLayoutInflater.inflate(R.layout.guide_item, null);
@@ -121,10 +131,17 @@ public class GolukGuideManage {
 			view.setLayoutParams(params);
 
 			mListViews.add(view);
-			ImageView img = (ImageView) view.findViewById(R.id.guide_img);
-			img.setScaleType(ScaleType.FIT_XY);
-			img.setImageBitmap(imgId[i]);
-
+//			ImageView img = (ImageView) view.findViewById(R.id.guide_img);
+//			img.setScaleType(ScaleType.FIT_XY);
+//			img.setImageBitmap(imgId[i]);
+			TextView textTop = (TextView) view.findViewById(R.id.tv_guide_item_image);
+			TextView textBottom = (TextView) view.findViewById(R.id.tv_guide_item_text);
+			Drawable drawable = mContext.getResources().getDrawable(imageId[i]);
+			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+			textTop.setCompoundDrawables(null, drawable, null, null);
+			textTop.setText(imageText[i]);
+			textBottom.setText(textDescrible[i]);
+			
 			// 添加圆点图标
 			addImageCursor();
 
@@ -218,30 +235,30 @@ public class GolukGuideManage {
 	}
 
 	public void destoryImage() {
-		if (mBGBitmap2 != null) {
-			if (!mBGBitmap2.isRecycled()) {
-				mBGBitmap2.recycle();
-				mBGBitmap2 = null;
-			}
-		}
-		if (mBGBitmap3 != null) {
-			if (!mBGBitmap3.isRecycled()) {
-				mBGBitmap3.recycle();
-				mBGBitmap3 = null;
-			}
-		}
-		if (mBGBitmap4 != null) {
-			if (!mBGBitmap4.isRecycled()) {
-				mBGBitmap4.recycle();
-				mBGBitmap4 = null;
-			}
-		}
-		if (mBGBitmap5 != null) {
-			if (!mBGBitmap5.isRecycled()) {
-				mBGBitmap5.recycle();
-				mBGBitmap5 = null;
-			}
-		}
+//		if (mBGBitmap2 != null) {
+//			if (!mBGBitmap2.isRecycled()) {
+//				mBGBitmap2.recycle();
+//				mBGBitmap2 = null;
+//			}
+//		}
+//		if (mBGBitmap3 != null) {
+//			if (!mBGBitmap3.isRecycled()) {
+//				mBGBitmap3.recycle();
+//				mBGBitmap3 = null;
+//			}
+//		}
+//		if (mBGBitmap4 != null) {
+//			if (!mBGBitmap4.isRecycled()) {
+//				mBGBitmap4.recycle();
+//				mBGBitmap4 = null;
+//			}
+//		}
+//		if (mBGBitmap5 != null) {
+//			if (!mBGBitmap5.isRecycled()) {
+//				mBGBitmap5.recycle();
+//				mBGBitmap5 = null;
+//			}
+//		}
 	}
 
 	/**

@@ -1017,4 +1017,22 @@
     
     <string name="str_upgrade_check_sdcard_t1">很抱歉，升级文件传输失败，请检查是否插入存储卡。</string>
     <string name="str_settings_restart_ipc">修改成功，重启记录仪后生效。</string>
+    
+    <!-- guide -->
+    <string name="str_guide_2_top_text">行车记录</string>
+    <string name="str_guide_3_top_text">精彩分享</string>
+    <string name="str_guide_2_text">一键预览 轻松完成碰瓷取证\n随时抢拍 做不文明驾驶陋习的曝光台</string>
+    <string name="str_guide_3_text">这些沿途的风光 奇异的境遇 珍贵的瞬间\n多么渴望与人分享</string>
+    <string name="str_guide_4_text">透过散落在世界的极路客\n去发现路上那些叹为观止的美</string>
+    <string name="str_guide_5_text">24小时全天候车辆监控\n极路客做你爱车的守卫星</string>
+    <string name="str_guide_exprience">立即体验</string>
+    <string name="str_guide_have_goluk_text">我有极路客</string>
+    <string name="str_guide_look_text">随便看看</string>
+    <string name="str_mine_no_video_text">您还没有分享过精彩视频</string>
+    <string name="str_mine_ta_video_text">Ta 还没有分享过精彩视频</string>
+    <string name="str_profit_detail_text">明细</string>
+    <string name="str_profit_cash_text">提现</string>
+    <string name="str_carrecorder_connect_text">正在连接极路客…</string>
+    <string name="str_sofa_text">沙发等您来坐</string>
+    
 </resources>

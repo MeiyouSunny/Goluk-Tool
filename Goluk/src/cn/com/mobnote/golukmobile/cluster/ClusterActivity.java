@@ -136,7 +136,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
 	public static class NoVideoDataViewHolder {
 		TextView tips;
-		ImageView emptyImage;
+		TextView emptyImage;
 		TextView tipsText;
 		boolean bMeasureHeight;
 	}

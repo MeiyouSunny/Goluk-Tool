@@ -39,7 +39,8 @@ import android.widget.TextView;
 public class MyProfitActivity extends BaseActivity implements OnClickListener, OnTouchListener, IRequestResultListener,
 		ForbidBack {
 
-	private ImageButton mBtnBack, mBtnDetail, mBtnCash;
+	private ImageButton mBtnBack;
+	private TextView mBtnDetail, mBtnCash;
 	private TextView mTextProblem;
 	private TextView mTextTotalCount, mTextLeaveCount, mTextLastHint;
 	private CustomTextView mTextLastCount;
@@ -85,8 +86,8 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener, O
 
 	private void initView() {
 		mBtnBack = (ImageButton) findViewById(R.id.profit_back);
-		mBtnDetail = (ImageButton) findViewById(R.id.my_profit_detail_btn);
-		mBtnCash = (ImageButton) findViewById(R.id.my_profit_leave_btn);
+		mBtnDetail = (TextView) findViewById(R.id.my_profit_detail_btn);
+		mBtnCash = (TextView) findViewById(R.id.my_profit_leave_btn);
 		mTextProblem = (TextView) findViewById(R.id.profit_problem);
 		mTextLastCount = (CustomTextView) findViewById(R.id.last_profit);
 		mTextTotalCount = (TextView) findViewById(R.id.my_profit_total_count);

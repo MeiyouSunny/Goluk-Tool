@@ -149,12 +149,19 @@
             android:textColor="#a5a7aa"
             android:text="@string/str_or"/>
         </RelativeLayout>
-        <ImageView
+
+        <Button
             android:id="@+id/btn_weixin_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="83dp"
-            android:src="@drawable/weixin_login" />
+            android:drawableLeft="@drawable/weixin_login"
+            android:drawablePadding="10dp"
+            android:text="@string/str_weixin_login"
+            android:textColor="#06BE04"
+            android:textSize="16sp"
+            android:background="@null" />
+
 </RelativeLayout>

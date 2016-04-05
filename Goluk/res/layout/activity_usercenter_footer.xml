@@ -10,13 +10,15 @@
         android:layout_width="match_parent"
         android:layout_height="300dp" >
 
-        <ImageView
-            android:id="@+id/iv_usercenter_footer"
+        <TextView 
+            android:id="@+id/tv_usercenter_footer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:contentDescription="@string/imgdes"
-            android:src="@drawable/mine_novideo" />
+            android:drawableTop="@drawable/mine_video"
+            android:textColor="#D9D9D9"
+            android:drawablePadding="10dp"
+            android:textSize="12sp" />
         
         <!-- <TextView 
             android:id="@+id/tv_usercenter_empty"

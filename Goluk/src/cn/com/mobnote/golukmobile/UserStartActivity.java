@@ -16,6 +16,7 @@ import android.view.View.OnClickListener;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -39,7 +40,7 @@ import de.greenrobot.event.EventBus;
  */
 public class UserStartActivity extends BaseActivity implements OnClickListener, OnErrorListener {
 
-	private ImageView mImageViewHave, mImageViewLook;
+	private Button mImageViewHave, mImageViewLook;
 	//
 	private Context mContext = null;
 	private GolukApplication mApp = null;
@@ -133,8 +134,8 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 
 	public void initView() {
 		mClickLayout = (LinearLayout) findViewById(R.id.user_start_click);
-		mImageViewHave = (ImageView) findViewById(R.id.user_start_have);
-		mImageViewLook = (ImageView) findViewById(R.id.user_start_look);
+		mImageViewHave = (Button) findViewById(R.id.user_start_have);
+		mImageViewLook = (Button) findViewById(R.id.user_start_look);
 		mImageClose = (ImageView) findViewById(R.id.click_close_btn);
 		// 获取注销成功后传来的信息
 		mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
