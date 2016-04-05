@@ -539,7 +539,7 @@ public class NewestListView implements
 		switch(requestType) {
 		case IPageNotifyFn.PageType_Praise:
 			PraiseResultBean prBean = (PraiseResultBean)result;
-			if(null == result && !prBean.success) {
+			if(null == result || !prBean.success) {
 				GolukUtils.showToast(mContext, mContext.getString(R.string.user_net_unavailable));
 				return;
 			}

@@ -477,7 +477,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 		} else if(requestType == IPageNotifyFn.PageType_Praise) {
 			// assume the success
 			PraiseResultBean prBean = (PraiseResultBean)result;
-			if(null == result && !prBean.success) {
+			if(null == prBean || !prBean.success) {
 				GolukUtils.showToast(getActivity(), getString(R.string.user_net_unavailable));
 				return;
 			}

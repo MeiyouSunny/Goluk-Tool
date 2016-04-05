@@ -498,7 +498,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 			}
 		} else if(requestType == IPageNotifyFn.PageType_Praise) {
 			PraiseResultBean prBean = (PraiseResultBean)result;
-			if(null == result && !prBean.success) {
+			if(null == result || !prBean.success) {
 				GolukUtils.showToast(this, this.getString(R.string.user_net_unavailable));
 				return;
 			}
