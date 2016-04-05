@@ -1,10 +1,8 @@
 package cn.com.mobnote.golukmobile;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.List;
 
+import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import android.annotation.SuppressLint;
@@ -22,7 +20,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,7 +27,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -39,7 +35,6 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventMessageUpdate;
-import cn.com.mobnote.eventbus.EventUserLoginRet;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.golukmobile.thirdlogin.ThirdPlatformLoginUtil;
@@ -60,7 +55,8 @@ import de.greenrobot.event.EventBus;
  * 
  * @author mobnote
  */
-public class UserLoginActivity extends BaseActivity implements OnClickListener, UserLoginInterface, OnTouchListener, ThirdUserInfoGet {
+public class UserLoginActivity extends BaseActivity implements OnClickListener, UserLoginInterface, OnTouchListener,
+		ThirdUserInfoGet {
 
 	private static final String TAG = "lily";
 	/** 判断是否能点击提交按钮 **/
@@ -89,32 +85,30 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 
 	private boolean flag = false;
 
-	/**微信登陆**/
+	/** 微信登陆 **/
 	ImageView mImageViewWeiXinLogin;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-//		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		// getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_login);
-
 		mContext = this;
 		// 获得GolukApplication对象
 		mApplication = (GolukApplication) getApplication();
-
 		initView();
 		if (null == mCustomProgressDialog) {
-			mCustomProgressDialog = new CustomLoadingDialog(mContext, this.getResources().getString(R.string.str_loginning));
+			mCustomProgressDialog = new CustomLoadingDialog(mContext, this.getResources().getString(
+					R.string.str_loginning));
 		}
-
 		// 设置title
 		mTextViewTitle.setText(this.getResources().getString(R.string.user_login_title_text));
 
 		if (null != mApplication && null != mApplication.mLoginManage) {
 			mApplication.mLoginManage.initData();
 		}
-		
-//		UserUtils.addActivity(UserLoginActivity.this);
+		mShareAPI = UMShareAPI.get(mContext);
 	}
 
 	@Override
@@ -165,7 +159,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		// 快速注册
 		mTextViewRegist.setOnClickListener(this);
 		mTextViewForgetPwd.setOnClickListener(this);
-		//微信登陆
+		// 微信登陆
 		mImageViewWeiXinLogin = (ImageView) findViewById(R.id.btn_weixin_login);
 		mImageViewWeiXinLogin.setOnClickListener(this);
 
@@ -302,7 +296,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 				itRegist.putExtra("fromRegist", "fromIndexMore");
 			} else if (justLogin.equals("setup")) {// 从设置页注册
 				itRegist.putExtra("fromRegist", "fromSetup");
-			} else if(justLogin.equals("profit")) {
+			} else if (justLogin.equals("profit")) {
 				itRegist.putExtra("fromRegist", "fromProfit");
 			}
 			startActivity(itRegist);
@@ -318,16 +312,15 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 				itForget.putExtra("fromRegist", "fromIndexMore");
 			} else if (justLogin.equals("setup")) {// 从设置页注册
 				itForget.putExtra("fromRegist", "fromSetup");
-			} else if(justLogin.equals("profit")) {
+			} else if (justLogin.equals("profit")) {
 				itForget.putExtra("fromRegist", "fromProfit");
 			}
 			startActivity(itForget);
 			break;
 		case R.id.btn_weixin_login:
-    		String infoStr = GolukFileUtils.loadString(GolukFileUtils.THIRD_USER_INFO, "");
+			String infoStr = GolukFileUtils.loadString(GolukFileUtils.THIRD_USER_INFO, "");
 			if (TextUtils.isEmpty(infoStr)) {
 				ThirdPlatformLoginUtil thirdPlatformLogin = new ThirdPlatformLoginUtil(this);
-				thirdPlatformLogin.addWXPlatform();
 				thirdPlatformLogin.setListener(this);
 				thirdPlatformLogin.login(SHARE_MEDIA.WEIXIN);
 			} else {
@@ -413,10 +406,10 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 			mApplication.autoLoginStatus = 2;
 			mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
 			String uid = mSharedPreferences.getString("uid", "");
-			if("profit".equals(justLogin)) {
-				Intent itProfit = new Intent(UserLoginActivity.this,MyProfitActivity.class);
-//				itProfit.putExtra("uid", uid);
-//				itProfit.putExtra("phone", phone);
+			if ("profit".equals(justLogin)) {
+				Intent itProfit = new Intent(UserLoginActivity.this, MyProfitActivity.class);
+				// itProfit.putExtra("uid", uid);
+				// itProfit.putExtra("phone", phone);
 				startActivity(itProfit);
 			}
 			EventBus.getDefault().post(new EventMessageUpdate(EventConfig.MESSAGE_REQUEST));
@@ -462,7 +455,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 											it.putExtra("fromRegist", "fromIndexMore");
 										} else if (justLogin.equals("setup")) {// 从设置页注册
 											it.putExtra("fromRegist", "fromSetup");
-										} else if(justLogin.equals("profit")) {//从我的收益注册
+										} else if (justLogin.equals("profit")) {// 从我的收益注册
 											it.putExtra("fromRegist", "fromProfit");
 										}
 
@@ -511,7 +504,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 										it.putExtra("fromRegist", "fromIndexMore");
 									} else if (justLogin.equals("setup")) {// 从设置页注册
 										it.putExtra("fromRegist", "fromSetup");
-									} else if(justLogin.equals("profit")) {//从我的收益注册
+									} else if (justLogin.equals("profit")) {// 从我的收益注册
 										it.putExtra("fromRegist", "fromProfit");
 									}
 									startActivity(it);
@@ -574,12 +567,12 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		boolean isCurrentRunningForeground = isRunningForeground();
 		flag = isCurrentRunningForeground;
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-		if(mCustomProgressDialog != null){
-			if(mCustomProgressDialog.isShowing()){
+		if (mCustomProgressDialog != null) {
+			if (mCustomProgressDialog.isShowing()) {
 				mCustomProgressDialog.close();
 				mCustomProgressDialog = null;
 			}
@@ -621,9 +614,18 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		return packageName;
 	}
 
+	private UMShareAPI mShareAPI = null;
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		mShareAPI.onActivityResult(requestCode, resultCode, data);
+	}
+
 	@Override
 	public void getUserInfo(boolean success, String usrInfo, String platform) {
-		// TODO Auto-generated method stub
+
+		GolukDebugUtils.e("", "three login------UserLogingActivity--getUserInfo ---1");
+
 		if (success) {
 			mApplication.mLoginManage.setUserLoginInterface(this);
 			ThirdLoginInfo info = new ThirdLoginInfo();
@@ -631,6 +633,9 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 			info.userinfo = usrInfo;
 			info.devices = GolukFileUtils.loadString(GolukFileUtils.KEY_BIND_HISTORY_LIST, "");
 			boolean b = mApplication.mLoginManage.login(info);
+
+			GolukDebugUtils.e("", "three login------UserLogingActivity--getUserInfo --2: " + b);
+
 			if (b) {
 				mApplication.loginStatus = 0;
 				showProgressDialog();

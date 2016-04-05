@@ -1,9 +1,10 @@
 package cn.com.mobnote.golukmobile.startshare;
 
+import com.umeng.socialize.bean.SHARE_MEDIA;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
@@ -31,10 +32,7 @@ public class ShareDeal implements OnClickListener {
 		mActivity = activity;
 		mYouMengRootLayout = rootLayout;
 		mSharePlatform = new SharePlatformUtil(mActivity);
-//		mSharePlatform.configPlatforms();// 设置分享平台的参数
-
 		txtColor = mActivity.getResources().getColor(R.color.youmeng_share_txt_color);
-
 		initView();
 	}
 
@@ -158,12 +156,12 @@ public class ShareDeal implements OnClickListener {
 		if (!isValid()) {
 			return;
 		}
-		if (mSharePlatform.isInstallWeiXin()) {
-			mCurrentShareType = CustomShareBoard.TYPE_WEIXIN;
-			click_deal(mCurrentShareType);
-		} else {
+		if (!mSharePlatform.isInstallPlatform(SHARE_MEDIA.WEIXIN)) {
 			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_no_weixin));
+			return;
 		}
+		mCurrentShareType = CustomShareBoard.TYPE_WEIXIN;
+		click_deal(mCurrentShareType);
 	}
 
 	/**
@@ -175,12 +173,12 @@ public class ShareDeal implements OnClickListener {
 		if (!isValid()) {
 			return;
 		}
-		if (mSharePlatform.isInstallWeiXin()) {
-			mCurrentShareType = CustomShareBoard.TYPE_WEIXIN_CIRCLE;
-			click_deal(mCurrentShareType);
-		} else {
+		if (!mSharePlatform.isInstallPlatform(SHARE_MEDIA.WEIXIN)) {
 			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_no_weixin));
+			return;
 		}
+		mCurrentShareType = CustomShareBoard.TYPE_WEIXIN_CIRCLE;
+		click_deal(mCurrentShareType);
 	}
 
 	/**
@@ -192,7 +190,7 @@ public class ShareDeal implements OnClickListener {
 		if (!isValid()) {
 			return;
 		}
-		if (mSharePlatform.isInstallQQ()) {
+		if (mSharePlatform.isInstallPlatform(SHARE_MEDIA.QQ)) {
 			mCurrentShareType = CustomShareBoard.TYPE_QQ;
 			click_deal(mCurrentShareType);
 		} else {
@@ -219,7 +217,6 @@ public class ShareDeal implements OnClickListener {
 	 * @author jyf
 	 */
 	private void click_Sina() {
-
 		if (!isValid()) {
 			return;
 		}

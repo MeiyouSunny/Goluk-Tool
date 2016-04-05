@@ -56,6 +56,7 @@ import cn.com.mobnote.golukmobile.http.HttpManager;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
 import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
+import cn.com.mobnote.golukmobile.thirdshare.GolukUmConfig;
 import cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
 import cn.com.mobnote.golukmobile.wifibind.IpcConnSuccessInfo;
@@ -234,6 +235,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			// 初始化绑定信息的数据保存
 			WifiBindDataCenter.getInstance().setAdatper(new JsonWifiBindManager());
 			GolukVideoInfoDbManager.getInstance().initDb(this.getApplicationContext());
+			GolukUmConfig.UmInit();
 		}
 		// TODO 此处不要做初始化相关的工作
 	}

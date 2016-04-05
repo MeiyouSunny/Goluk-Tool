@@ -1,10 +1,15 @@
 package cn.com.mobnote.golukmobile.thirdshare;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +27,12 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.umeng.socialize.Config;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.ShareContent;
+import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.bean.SocializeEntity;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.controller.listener.SocializeListeners.SnsPostListener;
+import com.umeng.socialize.media.UMImage;
 
 public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
@@ -45,8 +51,6 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	public static final String TYPE_SMS = "6";
 	/** QQ空间 **/
 	public static final String TYPE_QQ_ZONE = "7";
-
-	private UMSocialService mController;
 	private Activity mActivity;
 	/** 保存当前的分享方式 */
 	private String mCurrentShareType = "2";
@@ -54,9 +58,9 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	private SharePlatformUtil sharePlatform;
 
 	private String shareurl = "";
-	private String coverurl = "";
-	private String describe = "";
-	private String ttl = "";
+	private String mImageUrl = "";
+	private String mDescribe = "";
+	private String mTitle = "";
 	private Bitmap mThumbBitmap = null;
 	/** 新浪微博Txt */
 	private String mSinaTxt = null;
@@ -65,26 +69,36 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 	public CustomShareBoard(Activity activity, SharePlatformUtil spf, String surl, String curl, String db, String tl,
 			Bitmap bitmap, String realDesc, String videoId) {
-
 		super(activity);
 		this.mActivity = activity;
 		sharePlatform = spf;
 		shareurl = surl;
-		coverurl = curl;
-		describe = db;
-		ttl = tl;
+		mImageUrl = curl;
+		mDescribe = db;
+		mTitle = tl;
 		mThumbBitmap = bitmap;
 		mSinaTxt = realDesc;
 		mVideoId = videoId;
-		
-		mController = UMServiceFactory.getUMSocialService("com.umeng.share");
-
+		modifyUMDialog();
 		initView(activity);
+	}
+	
+	private void modifyUMDialog() {
+		ProgressDialog dialog = new ProgressDialog(mActivity);
+		dialog.setMessage(mActivity.getString(R.string.str_um_share_dialog_txt));
+		dialog.setOnCancelListener(new OnCancelListener() {
+
+			@Override
+			public void onCancel(DialogInterface arg0) {
+				setCanJump();
+			}
+		});
+		Config.dialog = dialog;
 	}
 
 	private void printStr() {
-		GolukDebugUtils.e("", "CustomShareBoard-----shareurl: " + shareurl + "   coverurl:" + coverurl + "   describe:"
-				+ describe + " ttl: " + ttl);
+		GolukDebugUtils.e("", "CustomShareBoard-----shareurl: " + shareurl + "   coverurl:" + mImageUrl
+				+ "   describe:" + mDescribe + " ttl: " + mTitle);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -137,16 +151,18 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 	// 点击　“微信”
 	public void click_wechat() {
-		if (sharePlatform.isInstallWeiXin()) {
-			if (null != mActivity && mActivity instanceof BaseActivity) {
-				if (!((BaseActivity) mActivity).isAllowedClicked()) {
-					return;
-				}
-				((BaseActivity) mActivity).setJumpToNext();
-			}
+		if (!isCanClick()) {
+			return;
 		}
-		System.out.println("zh======wx" + shareurl + coverurl + describe + ttl);
-		sharePlatform.setShareContent(shareurl + "&type=2", coverurl, describe, ttl);
+
+		final ShareContent sc = getShareContent(TYPE_WEIXIN);
+		if (null == sc) {
+			setCanJump();
+			return;
+		}
+
+		new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WEIXIN).setCallback(umShareListener).setShareContent(sc)
+				.share();
 		mCurrentShareType = TYPE_WEIXIN;
 		this.shareUp();// 上报分享统计
 		performShare(SHARE_MEDIA.WEIXIN);
@@ -154,15 +170,16 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 	// 点击　“朋友圈”
 	public void click_wechat_circle() {
-		if (sharePlatform.isInstallWeiXin()) {
-			if (null != mActivity && mActivity instanceof BaseActivity) {
-				if (!((BaseActivity) mActivity).isAllowedClicked()) {
-					return;
-				}
-				((BaseActivity) mActivity).setJumpToNext();
-			}
+		if (!isCanClick()) {
+			return;
 		}
-		sharePlatform.setShareContent(shareurl + "&type=5", coverurl, describe, describe);
+		final ShareContent sc = getShareContent(TYPE_WEIXIN_CIRCLE);
+		if (null == sc) {
+			setCanJump();
+			return;
+		}
+		new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE).setCallback(umShareListener)
+				.setShareContent(sc).share();
 		mCurrentShareType = TYPE_WEIXIN_CIRCLE;
 		this.shareUp();// 上报分享统计
 		performShare(SHARE_MEDIA.WEIXIN_CIRCLE);
@@ -170,47 +187,41 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 	// 点击　“ＱＱ”
 	public void click_QQ() {
-		@SuppressWarnings("static-access")
-		Boolean isQQ = mController.getConfig().isSupportQQZoneSSO(mActivity);
-		if (isQQ) {
-			if (null != mActivity && mActivity instanceof BaseActivity) {
-				if (!((BaseActivity) mActivity).isAllowedClicked()) {
-					return;
-				}
-				((BaseActivity) mActivity).setJumpToNext();
-			}
-			mCurrentShareType = TYPE_QQ;
-			this.shareUp();// 上报分享统计
-			sharePlatform.setShareContent(shareurl + "&type=4", coverurl, describe, ttl);
-			performShare(SHARE_MEDIA.QQ);
-		} else {
-			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_qq_low_version));
+		if (!isCanClick()) {
+			return;
 		}
+		final ShareContent sc = getShareContent(TYPE_QQ);
+		if (null == sc) {
+			setCanJump();
+			return;
+		}
+		mCurrentShareType = TYPE_QQ;
+		this.shareUp();// 上报分享统计
+		new ShareAction(mActivity).setPlatform(SHARE_MEDIA.QQ).setCallback(umShareListener).setShareContent(sc).share();
+		performShare(SHARE_MEDIA.QQ);
 	}
 
 	// 点击　“ＱＱ空间”
 	public void click_qqZone() {
-		@SuppressWarnings("static-access")
-		Boolean isQQ = mController.getConfig().isSupportQQZoneSSO(mActivity);
-		if (isQQ) {
-			if (null != mActivity && mActivity instanceof BaseActivity) {
-				if (!((BaseActivity) mActivity).isAllowedClicked()) {
-					return;
-				}
-				((BaseActivity) mActivity).setJumpToNext();
-			}
-			sharePlatform.setShareContent(shareurl + "&type=7", coverurl, describe, ttl);
-			mCurrentShareType = TYPE_QQ_ZONE;
-			this.shareUp();// 上报分享统计
-			performShare(SHARE_MEDIA.QZONE);
-		} else {
-			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_qq_low_version));
+
+		if (!isCanClick()) {
+			return;
 		}
+		final ShareContent sc = getShareContent(TYPE_QQ_ZONE);
+		if (null == sc) {
+			setCanJump();
+			return;
+		}
+		new ShareAction(mActivity).setPlatform(SHARE_MEDIA.QZONE).setCallback(umShareListener).setShareContent(sc)
+				.share();
+		mCurrentShareType = TYPE_QQ_ZONE;
+		this.shareUp();// 上报分享统计
+		performShare(SHARE_MEDIA.QZONE);
 	}
 
 	public void click_sina() {
 		GolukDebugUtils.e("", "sina-------click----11111");
-		if (TextUtils.isEmpty(coverurl)) {
+		if (TextUtils.isEmpty(mImageUrl)) {
 			Glide.with(mActivity).load(R.drawable.ic_launcher).asBitmap().into(new SimpleTarget<Bitmap>(50, 50) {
 				@Override
 				public void onLoadFailed(Exception e, Drawable errorDrawable) {
@@ -224,17 +235,14 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 				}
 			});
 		} else {
-			Glide.with(mActivity).load(coverurl).asBitmap().into(new SimpleTarget<Bitmap>(50, 50) {
+			Glide.with(mActivity).load(mImageUrl).asBitmap().into(new SimpleTarget<Bitmap>(50, 50) {
 				@Override
 				public void onLoadFailed(Exception e, Drawable errorDrawable) {
-					// TODO Auto-generated method stub
-					// super.onLoadFailed(e, errorDrawable);
 					dismiss();
 				}
 
 				@Override
 				public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
-					// TODO Auto-generated method stub
 					dismiss();
 					doSinaShare(arg0, arg1);
 				}
@@ -242,7 +250,82 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		}
 
 	}
-	
+
+	private UMShareListener umShareListener = new UMShareListener() {
+		@Override
+		public void onResult(SHARE_MEDIA platform) {
+			mHander.sendEmptyMessage(100);
+			GolukDebugUtils.e("", "youmeng----goluk----customShareBoard----umShareListener----onResult");
+		}
+
+		@Override
+		public void onError(SHARE_MEDIA platform, Throwable t) {
+			mHander.sendEmptyMessage(101);
+			GolukDebugUtils.e("", "youmeng----goluk----customShareBoard----umShareListener----onError" + t.toString());
+		}
+
+		@Override
+		public void onCancel(SHARE_MEDIA platform) {
+			mHander.sendEmptyMessage(102);
+
+			GolukDebugUtils.e("", "youmeng----goluk----customShareBoard----umShareListener----onCancel");
+		}
+	};
+
+	// 分享成功后的回调
+	private void callBack_ShareSuccess() {
+		// GolukUtils.showToast(mActivity,
+		// mActivity.getString(R.string.str_share_success));
+		notifyShareState(true);
+		setCanJump();
+		if (GolukUtils.isActivityAlive(mActivity)) {
+			dismiss();
+		}
+	}
+
+	// 分享失败的回调
+	private void callBack_ShareFailed() {
+		GolukDebugUtils.e("", "youmeng----goluk----customShareBoard----callBack_ShareFailed----1");
+		notifyShareState(false);
+		GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_share_fail));
+		// 分享失败的时候，保证下次还可以点击
+		setCanJump();
+		if (GolukUtils.isActivityAlive(mActivity)) {
+			GolukDebugUtils.e("", "youmeng----goluk----customShareBoard----callBack_ShareFailed----3");
+			dismiss();
+		}
+		GolukDebugUtils.e("", "youmeng----goluk----customShareBoard----callBack_ShareFailed----4");
+	}
+
+	Handler mHander = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			switch (msg.what) {
+			case 100:
+				callBack_ShareSuccess();
+				break;
+			case 101:
+				callBack_ShareFailed();
+				break;
+			case 102:
+				GolukUtils.showToast(mActivity, mActivity.getString(R.string.um_share_cancel));
+				break;
+			default:
+				break;
+			}
+		}
+
+	};
+
+	private void setCanJump() {
+		if (null != mActivity && mActivity instanceof BaseActivity) {
+			GolukDebugUtils.e("", "youmeng----goluk----customShareBoard----callBack_ShareFailed----2");
+			((BaseActivity) mActivity).setCanJump();
+		}
+	}
+
 	private void doSinaShare(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
 		if (null == sharePlatform) {
 			return;
@@ -265,9 +348,9 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		mCurrentShareType = TYPE_WEIBO_XINLANG;
 		shareUp();// 上报分享统计
 		printStr();
-		final String t_des = describe;
+		final String t_des = mDescribe;
 		final String inputDefaultContent = mSinaTxt;
-		final String title = ttl;
+		final String title = mTitle;
 		final String dataUrl = shareurl;
 		final String actionUrl = shareurl + "&type=" + TYPE_WEIBO_XINLANG;
 		final Bitmap t_bitmap = arg0;
@@ -289,7 +372,6 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			sharePlatform.mSinaWBUtils.sendMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl, t_bitmap,
 					false);
 			GolukDebugUtils.e("", "sina-------click----999999:  ");
-			// GolukUtils.showToast(mActivity, PROMPT_UNINSTALL);
 		}
 	}
 
@@ -300,7 +382,6 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	 * @date 2015年8月11日
 	 */
 	public void shareUp() {
-
 		GolukDebugUtils.e("", "jyf----thirdshare--------share up: " + "   mVideoId:" + mVideoId);
 		if (this.mVideoId != null && !"".equals(this.mVideoId)) {
 			GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(mCurrentShareType, this.mVideoId);
@@ -317,44 +398,32 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		}
 	}
 
+	private ShareContent getShareContent(String shareType) {
+		if (null == shareType) {
+			return null;
+		}
+		final String videoUrl = shareurl + "&type=" + shareType;
+		final UMImage image = new UMImage(mActivity, mImageUrl);
+		ShareContent sc = new ShareContent();
+		sc.mTitle = mTitle;
+		sc.mText = mDescribe;
+		sc.mTargetUrl = videoUrl;
+		sc.mMedia = image;
+		return sc;
+	}
+
+	private boolean isCanClick() {
+		if (null != mActivity && mActivity instanceof BaseActivity) {
+			if (!((BaseActivity) mActivity).isAllowedClicked()) {
+				return false;
+			}
+			((BaseActivity) mActivity).setJumpToNext();
+			return true;
+		}
+		return false;
+	}
+
 	private void performShare(SHARE_MEDIA platform) {
-		mController.getConfig().cleanListeners();
-
-		mController.postShare(mActivity, platform, new SnsPostListener() {
-
-			@Override
-			public void onStart() {
-				GolukDebugUtils.e("", "jyf----thirdshare--------onStart: " + "   mCurrentShareType:"
-						+ mCurrentShareType);
-			}
-
-			@Override
-			public void onComplete(SHARE_MEDIA platform, int eCode, SocializeEntity entity) {
-				// 第一个参数platform是分享的平台
-				// 第二个参数是状态码（200代码分享成功，非200表示失败）
-				// 第三个参数entity是保存本次分享相关的信息
-
-				if (eCode == 200) {
-					GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_share_success));
-					notifyShareState(true);
-				} else {
-					notifyShareState(false);
-					if (eCode != 40000) {
-						GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_share_fail));
-					}
-					// 分享失败的时候，保证下次还可以点击
-					if (null != mActivity && mActivity instanceof BaseActivity) {
-						((BaseActivity) mActivity).setCanJump();
-					}
-				}
-
-				GolukDebugUtils.e("", "jyf----thirdshare--------onComplete eCode: " + eCode + "   mCurrentShareType:"
-						+ mCurrentShareType);
-				if (GolukUtils.isActivityAlive(mActivity)) {
-					dismiss();
-				}
-			}
-		});
 	}
 
 }

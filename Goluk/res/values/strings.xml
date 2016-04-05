@@ -1017,4 +1017,8 @@
     
     <string name="str_upgrade_check_sdcard_t1">很抱歉，升级文件传输失败，请检查是否插入存储卡。</string>
     <string name="str_settings_restart_ipc">修改成功，重启记录仪后生效。</string>
+    
+    <string name="um_share_cancel">分享取消了</string>
+    <string name="str_facebook_no_install">你未安装相应程序</string>
+      <string name="str_um_share_dialog_txt">正在分享...</string>
 </resources>
