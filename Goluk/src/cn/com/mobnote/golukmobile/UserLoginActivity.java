@@ -1,8 +1,5 @@
 package cn.com.mobnote.golukmobile;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.List;
 
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -22,7 +19,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,7 +26,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -39,7 +34,6 @@ import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventMessageUpdate;
-import cn.com.mobnote.eventbus.EventUserLoginRet;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.profit.MyProfitActivity;
 import cn.com.mobnote.golukmobile.thirdlogin.ThirdPlatformLoginUtil;
@@ -120,10 +114,16 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		mImageViewWeiXinLogin.setEnabled(true);
 		mApplication.setContext(mContext, "UserLogin");
 
 		getInfo();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mImageViewWeiXinLogin.setEnabled(false);
 	}
 
 	@Override
