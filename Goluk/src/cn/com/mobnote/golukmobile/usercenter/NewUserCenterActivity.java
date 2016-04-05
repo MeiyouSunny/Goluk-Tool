@@ -200,10 +200,10 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 				mGridView.setVisibility(View.VISIBLE);
 				mRefreshLayout.setVisibility(View.GONE);
 				List<HomeVideoList> videoList = mHomeJson.data.videolist;
-				if (!mCurrentOperator.equals(OPERATOR_UP)) {
-					mHeader.setHeaderData(mHomeJson.data);
-					mHeader.getHeaderData();
-				}
+
+				mHeader.setHeaderData(mHomeJson.data);
+				mHeader.getHeaderData();
+
 				if (null != videoList && videoList.size() <= 0 && !mCurrentOperator.equals(OPERATOR_UP)) {
 					mGridView.setMode(PullToRefreshBase.Mode.PULL_DOWN_TO_REFRESH);
 					addFooterView();
