@@ -324,6 +324,10 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 			startActivity(itForget);
 			break;
 		case R.id.btn_weixin_login:
+			if(!GolukUtils.isAppInstalled(this, "com.tencent.mm")) {
+				GolukUtils.showToast(this, getString(R.string.str_no_weixin));
+				return;
+			}
     		String infoStr = GolukFileUtils.loadString(GolukFileUtils.THIRD_USER_INFO, "");
 			if (TextUtils.isEmpty(infoStr)) {
 				ThirdPlatformLoginUtil thirdPlatformLogin = new ThirdPlatformLoginUtil(this);
