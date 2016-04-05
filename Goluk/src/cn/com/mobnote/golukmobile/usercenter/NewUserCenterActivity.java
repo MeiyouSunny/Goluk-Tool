@@ -423,8 +423,8 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			GolukUtils.showToast(this, this.getString(R.string.str_network_unavailable));
 			return;
 		}
-		if (null != mAdapter) {
-			HomeVideoList video = (HomeVideoList) mAdapter.getItem(position);
+		if (null != mAdapter && position >= 2) {
+			HomeVideoList video = (HomeVideoList) mAdapter.getItem(position - 2);
 			if (null != video) {
 				Intent itVideoDetail = new Intent(this, VideoDetailActivity.class);
 				itVideoDetail.putExtra(VideoDetailActivity.VIDEO_ID, video.videoid);
