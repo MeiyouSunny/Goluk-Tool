@@ -269,7 +269,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 		switch (view.getId()) {
 		case R.id.tab_local:
 			mViewPager.setCurrentItem(0);
-			mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
+			mCurrentType = PhotoAlbumConfig.PHOTO_BUM_LOCAL;
 			break;
 		case R.id.tab_wonderful:
 			mViewPager.setCurrentItem(1);

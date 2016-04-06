@@ -341,7 +341,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 					}
 				}
 
-				mPlayerMoreDialog = new PlayerMoreDialog(PhotoAlbumPlayer.this, tempPath, getType(), mVideoFrom);
+				mPlayerMoreDialog = new PlayerMoreDialog(PhotoAlbumPlayer.this, tempPath, getType(), mVideoFrom,mType);
 			}
 			mPlayerMoreDialog.show();
 			break;
