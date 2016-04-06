@@ -74,10 +74,7 @@
     <string name="wifi_link_wifi_name">名称为</string>
     <string name="wifi_link_wifi_name2">的WiFi</string>
     <string name="wifi_link_success_conn">已成功连接</string>
-    <string name="wifi_link_index_need">需要</string>
     <string name="wifi_link_index_mobile">手机</string>
-    <string name="wifi_link_index_and">与</string>
-    <string name="wifi_link_index_wificonn">建立WiFi连接</string>
     <string name="wifi_link_complete_wait">等待极路客</string>
     <string name="wifi_link_complete_conn">连接</string>
     <string name="wifi_link_complete_mobile">到手机...</string>
@@ -717,8 +714,7 @@
     <string name="str_set_wifi_pwd">设置wifi密码：</string>
     <string name="str_omit">...</string>
     <string name="str_comment_unit">条</string>
-    <string name="str_participation">参与</string>
-    <string name="str_population">人次</string>
+    <string name="str_participation_population">参与 %1$s 人次</string>
     <string name="str_recommend">推荐</string>
     <string name="str_newest_text">最新</string>
     <string name="str_input_comment_content">请输入评论内容</string>
@@ -729,7 +725,7 @@
     <string name="str_delete_ongoing">正在删除</string>
     <string name="str_parameter_error">参数错误</string>
     <string name="str_save_comment_fail">评论保存失败。</string>
-    <string name="str_floor_text">楼</string>
+    <string name="str_floor_text">%1$s楼</string>
 
     <!-- 直播 -->
     <string name="str_live_start_progress_msg">正在创建直播，请稍候...</string>
@@ -841,9 +837,9 @@
     <!-- wifimanage -->
     <string name="str_wifi_create_success">wifi热点创建成功</string>
     <!-- util -->
-    <string name="str_day_refresh">天前更新</string>
-    <string name="str_hours_refresh">小时前更新</string>
-    <string name="str_minute_refresh">分钟前更新</string>
+    <string name="str_day_refresh">%1$s天前更新</string>
+    <string name="str_hours_refresh">%1$s小时前更新</string>
+    <string name="str_minute_refresh">%1$s分钟前更新</string>
     <string name="str_month_day_refresh">MM.dd更新</string>
     <string name="str_year_month_day_refresh">yyyy.MM.dd更新</string>
     <string name="str_md5_test">This is a 3DES test. 测试</string>
@@ -889,10 +885,6 @@
     <string name="str_praised_list_connect_error">网络不给力，轻触屏幕重试</string>
     <string name="str_praised_list_request_no_data">暂无点赞记录</string>
     <string name="str_wonderful_share">Goluk精彩分享</string>
-
-    <string name="str_please_bind_phone_first">提现需要绑定手机号，请先前往通用设置中绑定手机号</string>
-    <string name="str_follow">关注</string>
-    <string name="str_fans">粉丝</string>
 
     <string name="str_user_video_type_wonderful_text">精选作品</string>
     <string name="str_user_video_type_recommend_text">被推荐活动</string>

@@ -116,7 +116,6 @@
     <string name="goluk_pull_to_refresh_footer_release_label">Upload after release</string>
     <string name="goluk_pull_to_refresh_footer_pull_label">Swipe up to load more.</string>
     <string name="goluk_pull_to_refresh_footer_refreshing_label">Loading\u2026</string>
-    <string name="username_text">BG1TTR</string>
     <string name="like_num_text">56</string>
     <string name="local_video_text">Local Video</string>
     <string name="setup_text">General Settings</string>
@@ -954,5 +953,76 @@
     <string name="str_photo_deletepromote_2">个视频？</string>
     <string name="str_photo_select1">已选择</string>
     <string name="str_photo_select2">个视频</string>
+    <string name="str_refresh_one_minute">一分钟前更新</string>
+    <string name="str_asycned">已同步</string>
+    <string name="str_video_sync_setting_title">视频自动同步设置</string>
+    <string name="str_video_sync_setting_sync_five">同步最近录制的5条</string>
+    <string name="str_video_sync_setting_sync_twenty">同步最近录制的20条</string>
+    <string name="str_video_sync_setting_sync_close">关闭</string>
+    <string name="str_or">或</string>
+    <string name="str_weixin_login">微信登陆</string>
+    <string name="str_binding_phone">绑定手机号</string>
+    <string name="str_already_bind">已绑定</string>
+    <string name="str_not_bind">未绑定</string>
+    <string name="str_bind_fail">绑定失败</string>
+    <string name="str_no_duplicated_praise">已经赞过了，请不要重复点赞</string>
+    <string name="str_praise_failed">点赞失败</string>
+    <string name="str_cancel_praise_failed">取消点赞失败</string>
+    <string name="str_my_praised_list">我赞过的</string>
+    <string name="str_praised_list_connect_error">网络不给力，轻触屏幕重试</string>
+    <string name="str_praised_list_request_no_data">暂无点赞记录</string>
+    <string name="str_wonderful_share">Goluk精彩分享</string>
+    
+    <string name="str_user_video_type_wonderful_text">精选作品</string>
+    <string name="str_user_video_type_recommend_text">被推荐活动</string>
+    <string name="str_user_video_type_headline_text">入选头条</string>
+    <string name="str_usercenter_header_attention_text">关注</string>
+    <string name="str_usercenter_header_attention_already_text">已关注</string>
+    <string name="str_usercenter_header_attention_each_other_text">相互关注</string>
+    <string name="str_usercenter_header_edit_text">编辑资料</string>
+    <string name="str_usercenter_header_fans_text">粉丝</string>
+    <string name="str_usercenter_more_share">分享主页</string>
+    <string name="str_usercenter_no_introduce_text">暂无介绍</string>
+
+    <string name="str_please_bind_phone_first">提现需要绑定手机号，请先前往通用设置中绑定手机号</string>
+    <string name="str_follow">关注</string>
+    <string name="str_fans">粉丝</string>
+    <string name="str_discover">极社</string>
+    <string name="str_album">相册</string>
+    <string name="str_mine">我的</string>
+
+    <string name="str_usercenter_attention_ok">关注成功</string>
+    <string name="str_usercenter_attention_cancle_ok">取消关注成功</string>
+    <string name="str_usercenter_nowonderful_video">当前还没有精选视频</string>
+    <string name="str_usercenter_recommend_video">当前还没有被推荐的视频</string>
+    <string name="str_usercenter_headlines_video">当前还没有入选头条的视频</string>
+    <string name="str_usercenter_login_hint_text">请登录后再操作</string>
+
+    <string name="str_confirm_cancel_follow">确定要取消关注吗？</string>
+    <string name="str_follow_fail">关注失败</string>
+    <string name="str_cancel_follow_fail">取消关注失败</string>
+    <string name="str_follow_all">全部关注</string>
+    <string name="str_follow_no_content">什么内容也没有</string>
+    <string name="str_follow_recommend_star">推荐达人</string>
+    
+    <string name="str_upgrade_check_sdcard_t1">很抱歉，升级文件传输失败，请检查是否插入存储卡。</string>
+    <string name="str_settings_restart_ipc">修改成功，重启记录仪后生效。</string>
+    
+    <!-- guide -->
+    <string name="str_guide_2_top_text">行车记录</string>
+    <string name="str_guide_3_top_text">精彩分享</string>
+    <string name="str_guide_2_text">一键预览 轻松完成碰瓷取证\n随时抢拍 做不文明驾驶陋习的曝光台</string>
+    <string name="str_guide_3_text">这些沿途的风光 奇异的境遇 珍贵的瞬间\n多么渴望与人分享</string>
+    <string name="str_guide_4_text">透过散落在世界的极路客\n去发现路上那些叹为观止的美</string>
+    <string name="str_guide_5_text">24小时全天候车辆监控\n极路客做你爱车的守卫星</string>
+    <string name="str_guide_exprience">立即体验</string>
+    <string name="str_guide_have_goluk_text">我有极路客</string>
+    <string name="str_guide_look_text">随便看看</string>
+    <string name="str_mine_no_video_text">您还没有分享过精彩视频</string>
+    <string name="str_mine_ta_video_text">Ta 还没有分享过精彩视频</string>
+    <string name="str_profit_detail_text">明细</string>
+    <string name="str_profit_cash_text">提现</string>
+    <string name="str_carrecorder_connect_text">正在连接极路客…</string>
+    <string name="str_sofa_text">沙发等您来坐</string>
     
 </resources>
