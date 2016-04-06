@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import cn.com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import cn.com.mobnote.golukmobile.R;
+import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity.VideoType;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
 import cn.com.mobnote.util.GolukUtils;
@@ -24,14 +25,16 @@ public class PlayerMoreDialog extends Dialog implements android.view.View.OnClic
 	private String mVideoFrom;
 
 	private CustomDialog mCustomDialog;
+	private int mVideoType;
 
-	public PlayerMoreDialog(Context context, String path, int type, String videoFrom) {
+	public PlayerMoreDialog(Context context, String path, int type, String videoFrom,int videotype) {
 		super(context, R.style.CustomDialog);
 		setContentView(R.layout.show_delete_dialog);
 		this.mVidPath = path;
 		this.mType = type;
 		mContext = context;
 		mVideoFrom = videoFrom;
+		mVideoType = videotype;
 		intLayout();
 	}
 
@@ -45,7 +48,12 @@ public class PlayerMoreDialog extends Dialog implements android.view.View.OnClic
 		cancel.setOnClickListener(this);
 
 		if("local".equals(mVideoFrom)) {
-			mShareVideoLL.setVisibility(View.VISIBLE);
+			if(mVideoType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP){
+				mShareVideoLL.setVisibility(View.GONE);
+			}else{
+				mShareVideoLL.setVisibility(View.VISIBLE);
+			}
+			
 		} else {
 			mShareVideoLL.setVisibility(View.GONE);
 		}
