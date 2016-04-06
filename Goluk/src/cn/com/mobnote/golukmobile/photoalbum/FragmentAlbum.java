@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -24,6 +25,7 @@ import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnLeftClickListe
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomDialog.OnRightClickListener;
 import cn.com.mobnote.golukmobile.promotion.PromotionSelectItem;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class FragmentAlbum extends Fragment implements OnClickListener{
 	
@@ -71,12 +73,18 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 	public String mPlatform = null;
 	
 	public PromotionSelectItem mPromotionSelectItem;
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		GolukDebugUtils.e("", "crash zh start App ------ FragmentAlbum-----onCreate------------:");
+		super.onCreate(savedInstanceState);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		
+		GolukDebugUtils.e("", "crash zh start App ------ FragmentAlbum-----onCreateView------------:");
 		Bundle bundle = getArguments();
 		if(bundle != null){
 			mPlatform = bundle.getString("platform");
@@ -112,6 +120,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 
 				@Override
 				public void onPageSelected(int position) {
+					GolukDebugUtils.e("", "crash zh start App ------ FragmentAlbum-----onPageSelected------------:");
 					mCurrentType = position;
 					setItemLineState(position);
 				}
@@ -175,6 +184,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		GolukDebugUtils.e("", "crash zh start App ------ FragmentAlbum-----onResume------------:");
 		GolukApplication.getInstance().setContext(getContext(), "ipcfilemanager");
 		
 		if("0".equals(mPlatform)){
