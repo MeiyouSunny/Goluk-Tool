@@ -1,11 +1,14 @@
 package cn.com.mobnote.golukmobile.photoalbum;
 
+import java.util.List;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity.VideoType;
@@ -92,11 +95,33 @@ public class PlayerMoreDialog extends Dialog implements android.view.View.OnClic
 			public void onClickListener() {
 				// TODO Auto-generated method stub
 				mCustomDialog.dismiss();
-				EventBus.getDefault().post(new EventDeletePhotoAlbumVid(mVidPath,mType));
-				((PhotoAlbumPlayer)mContext).finish();
+				if(!"local".equals(mVideoFrom)){
+					if(isAllowedDelete()){
+						EventBus.getDefault().post(new EventDeletePhotoAlbumVid(mVidPath,mType));
+						((PhotoAlbumPlayer)mContext).finish();
+					}else{
+						GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.str_photo_downing));
+					}
+				}else{
+					EventBus.getDefault().post(new EventDeletePhotoAlbumVid(mVidPath,mType));
+					((PhotoAlbumPlayer)mContext).finish();
+				}
+				
+				
 			}
 		});
 		mCustomDialog.show();
+	}
+	
+	private boolean isAllowedDelete() {
+		List<String> dlist = GolukApplication.getInstance().getDownLoadList();
+		if (dlist.contains(mVidPath)) {
+			return false;
+		}else{
+			return true;
+		}
+
+		
 	}
 
 }

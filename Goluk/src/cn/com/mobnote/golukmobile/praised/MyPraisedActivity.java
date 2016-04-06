@@ -207,6 +207,8 @@ public class MyPraisedActivity extends BaseActivity implements IRequestResultLis
 			List<MyPraisedVideoBean> videoList = bean.data.videolist;
 			if(null == videoList || videoList.size() == 0) {
 				if("0".equals(mCurMotion)) {
+					mPraisedList.clear();
+					mAdapter.setData(mPraisedList);
 					setNodataView();
 				} else if(REFRESH_PULL_UP.equals(mCurMotion)) {
 					Toast.makeText(this,
