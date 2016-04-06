@@ -194,6 +194,10 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 		mGridView.onRefreshComplete();
 		closeLoadingDialog();
 		if (requestType == IPageNotifyFn.PageType_HomeUserInfo) {
+			if (!UserUtils.isNetDeviceAvailable(this)) {
+				unusual();
+				return;
+			}
 			mHomeJson = (HomeJson) result;
 			if (null != mHomeJson && null != mHomeJson.data && null != mHomeJson.data.user
 					&& null != mHomeJson.data.videolist) {
@@ -245,18 +249,23 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			}
 		} else if (requestType == IPageNotifyFn.PageType_HomeAttention) {
 			AttentionJson attention = (AttentionJson) result;
-			if (null != attention && 0 == attention.code && null != attention.data) {
+			if (null != attention && 0 == attention.code && null != attention.data && null != mHeader
+					&& null != mHomeJson && null != mHomeJson.data && null != mHomeJson.data.user) {
 				// 0：未关注；1：关注；2：互相关注
 				if (0 == attention.data.link) {
 					GolukUtils.showToast(this, this.getString(R.string.str_usercenter_attention_cancle_ok));
+					mHomeJson.data.user.fans -= 1;
 				} else if (1 == attention.data.link) {
 					GolukUtils.showToast(this, this.getString(R.string.str_usercenter_attention_ok));
+					mHomeJson.data.user.fans += 1;
 				} else {
 					GolukUtils.showToast(this, this.getString(R.string.str_usercenter_attention_ok));
+					mHomeJson.data.user.fans += 1;
 				}
 				mHeader.changeAttentionState(attention.data.link);
 				mHomeJson.data.user.link = attention.data.link;
-//				mAdapter.notifyDataSetChanged();
+				mHeader.setHeaderData(mHomeJson.data);
+				mHeader.getHeaderData();
 			} else {
 				GolukUtils.showToast(this, this.getResources().getString(R.string.str_network_unavailable));
 			}
@@ -403,6 +412,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	public void attentionRequest(String type) {
 		if (null != mHomeJson && null != mHomeJson.data && null != mHomeJson.data.user
 				&& null != mHomeJson.data.user.uid) {
+			showLoadingDialog();
 			UserAttentionRequest request = new UserAttentionRequest(IPageNotifyFn.PageType_HomeAttention, this);
 			request.get(mHomeJson.data.user.uid, type, mCurrentUid);
 		} else {
