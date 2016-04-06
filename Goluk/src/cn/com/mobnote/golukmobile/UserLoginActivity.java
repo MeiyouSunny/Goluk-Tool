@@ -54,7 +54,8 @@ import de.greenrobot.event.EventBus;
  * 
  * @author mobnote
  */
-public class UserLoginActivity extends BaseActivity implements OnClickListener, UserLoginInterface, OnTouchListener, ThirdUserInfoGet {
+public class UserLoginActivity extends BaseActivity implements OnClickListener, UserLoginInterface, OnTouchListener,
+		ThirdUserInfoGet {
 
 	private static final String TAG = "lily";
 	/** 判断是否能点击提交按钮 **/
@@ -83,12 +84,13 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 
 	private boolean flag = false;
 
-	/**微信登陆**/
+	/** 微信登陆 **/
 	ImageView mImageViewWeiXinLogin;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-//		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		// getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_login);
 
@@ -98,7 +100,8 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 
 		initView();
 		if (null == mCustomProgressDialog) {
-			mCustomProgressDialog = new CustomLoadingDialog(mContext, this.getResources().getString(R.string.str_loginning));
+			mCustomProgressDialog = new CustomLoadingDialog(mContext, this.getResources().getString(
+					R.string.str_loginning));
 		}
 
 		// 设置title
@@ -107,14 +110,14 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		if (null != mApplication && null != mApplication.mLoginManage) {
 			mApplication.mLoginManage.initData();
 		}
-		
-//		UserUtils.addActivity(UserLoginActivity.this);
+
+		// UserUtils.addActivity(UserLoginActivity.this);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(null != mImageViewWeiXinLogin) {
+		if (null != mImageViewWeiXinLogin) {
 			mImageViewWeiXinLogin.setEnabled(true);
 		}
 		mApplication.setContext(mContext, "UserLogin");
@@ -125,7 +128,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if(null != mImageViewWeiXinLogin) {
+		if (null != mImageViewWeiXinLogin) {
 			mImageViewWeiXinLogin.setEnabled(false);
 		}
 	}
@@ -169,7 +172,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		// 快速注册
 		mTextViewRegist.setOnClickListener(this);
 		mTextViewForgetPwd.setOnClickListener(this);
-		//微信登陆
+		// 微信登陆
 		mImageViewWeiXinLogin = (ImageView) findViewById(R.id.btn_weixin_login);
 		mImageViewWeiXinLogin.setOnClickListener(this);
 
@@ -309,7 +312,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 				itRegist.putExtra("fromRegist", "fromIndexMore");
 			} else if (justLogin.equals("setup")) {// 从设置页注册
 				itRegist.putExtra("fromRegist", "fromSetup");
-			} else if(justLogin.equals("profit")) {
+			} else if (justLogin.equals("profit")) {
 				itRegist.putExtra("fromRegist", "fromProfit");
 			}
 			startActivity(itRegist);
@@ -325,17 +328,17 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 				itForget.putExtra("fromRegist", "fromIndexMore");
 			} else if (justLogin.equals("setup")) {// 从设置页注册
 				itForget.putExtra("fromRegist", "fromSetup");
-			} else if(justLogin.equals("profit")) {
+			} else if (justLogin.equals("profit")) {
 				itForget.putExtra("fromRegist", "fromProfit");
 			}
 			startActivity(itForget);
 			break;
 		case R.id.btn_weixin_login:
-			if(!GolukUtils.isAppInstalled(this, "com.tencent.mm")) {
+			if (!GolukUtils.isAppInstalled(this, "com.tencent.mm")) {
 				GolukUtils.showToast(this, getString(R.string.str_no_weixin));
 				return;
 			}
-    		String infoStr = GolukFileUtils.loadString(GolukFileUtils.THIRD_USER_INFO, "");
+			String infoStr = GolukFileUtils.loadString(GolukFileUtils.THIRD_USER_INFO, "");
 			if (TextUtils.isEmpty(infoStr)) {
 				ThirdPlatformLoginUtil thirdPlatformLogin = new ThirdPlatformLoginUtil(this);
 				thirdPlatformLogin.addWXPlatform();
@@ -365,7 +368,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 	 * 登录管理类
 	 * 
 	 */
-	public void loginManage() {
+	private void loginManage() {
 		phone = mEditTextPhoneNumber.getText().toString().replace("-", "");
 		pwd = mEditTextPwd.getText().toString();
 		if (!"".equals(phone)) {
@@ -424,10 +427,10 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 			mApplication.autoLoginStatus = 2;
 			mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
 			String uid = mSharedPreferences.getString("uid", "");
-			if("profit".equals(justLogin)) {
-				Intent itProfit = new Intent(UserLoginActivity.this,MyProfitActivity.class);
-//				itProfit.putExtra("uid", uid);
-//				itProfit.putExtra("phone", phone);
+			if ("profit".equals(justLogin)) {
+				Intent itProfit = new Intent(UserLoginActivity.this, MyProfitActivity.class);
+				// itProfit.putExtra("uid", uid);
+				// itProfit.putExtra("phone", phone);
 				startActivity(itProfit);
 			}
 			EventBus.getDefault().post(new EventMessageUpdate(EventConfig.MESSAGE_REQUEST));
@@ -473,7 +476,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 											it.putExtra("fromRegist", "fromIndexMore");
 										} else if (justLogin.equals("setup")) {// 从设置页注册
 											it.putExtra("fromRegist", "fromSetup");
-										} else if(justLogin.equals("profit")) {//从我的收益注册
+										} else if (justLogin.equals("profit")) {// 从我的收益注册
 											it.putExtra("fromRegist", "fromProfit");
 										}
 
@@ -522,7 +525,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 										it.putExtra("fromRegist", "fromIndexMore");
 									} else if (justLogin.equals("setup")) {// 从设置页注册
 										it.putExtra("fromRegist", "fromSetup");
-									} else if(justLogin.equals("profit")) {//从我的收益注册
+									} else if (justLogin.equals("profit")) {// 从我的收益注册
 										it.putExtra("fromRegist", "fromProfit");
 									}
 									startActivity(it);
@@ -585,12 +588,12 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		boolean isCurrentRunningForeground = isRunningForeground();
 		flag = isCurrentRunningForeground;
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-		if(mCustomProgressDialog != null){
-			if(mCustomProgressDialog.isShowing()){
+		if (mCustomProgressDialog != null) {
+			if (mCustomProgressDialog.isShowing()) {
 				mCustomProgressDialog.close();
 				mCustomProgressDialog = null;
 			}
@@ -634,7 +637,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 
 	@Override
 	public void getUserInfo(boolean success, String usrInfo, String platform) {
-		// TODO Auto-generated method stub
 		if (success) {
 			mApplication.mLoginManage.setUserLoginInterface(this);
 			ThirdLoginInfo info = new ThirdLoginInfo();
@@ -654,7 +656,10 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 
 	private void showProgressDialog() {
 		UserUtils.hideSoftMethod(this);
-		mCustomProgressDialog.show();
+		if (!this.isFinishing()) {
+			mCustomProgressDialog.show();
+		}
+
 		mEditTextPhoneNumber.setEnabled(false);
 		mEditTextPwd.setEnabled(false);
 		mTextViewRegist.setEnabled(false);
