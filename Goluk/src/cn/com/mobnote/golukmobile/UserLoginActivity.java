@@ -114,7 +114,9 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mImageViewWeiXinLogin.setEnabled(true);
+		if(null != mImageViewWeiXinLogin) {
+			mImageViewWeiXinLogin.setEnabled(true);
+		}
 		mApplication.setContext(mContext, "UserLogin");
 
 		getInfo();
@@ -123,7 +125,9 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		mImageViewWeiXinLogin.setEnabled(false);
+		if(null != mImageViewWeiXinLogin) {
+			mImageViewWeiXinLogin.setEnabled(false);
+		}
 	}
 
 	@Override
@@ -278,6 +282,9 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 
 	@Override
 	public void onClick(View arg0) {
+		if (GolukUtils.isFastDoubleClick()) {
+			return;
+		}
 		switch (arg0.getId()) {
 		// 返回
 		case R.id.back_btn:
