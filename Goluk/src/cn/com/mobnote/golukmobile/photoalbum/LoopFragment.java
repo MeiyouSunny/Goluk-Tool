@@ -364,7 +364,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 									// 点击列表左边项,跳转到视频播放页面
 									VideoInfo info1 = d.getVideoInfo1();
 									gotoVideoPlayPage(
-											IPCManagerFn.TYPE_CIRCULATE,
+											PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP,
 											info1.videoPath, info1.videoCreateDate, info1.videoHP, info1.videoSize);
 									String filename = d.getVideoInfo1().filename;
 									updateNewState(filename);
@@ -445,7 +445,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 			intent.putExtra(PhotoAlbumPlayer.FILENAME, path);
 			intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
 			intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
-			intent.putExtra(PhotoAlbumPlayer.TYPE, IPCManagerFn.TYPE_CIRCULATE);
+			intent.putExtra(PhotoAlbumPlayer.TYPE, PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP);
 			intent.putExtra(PhotoAlbumPlayer.SIZE, size);
 			getContext().startActivity(intent);
 		}
