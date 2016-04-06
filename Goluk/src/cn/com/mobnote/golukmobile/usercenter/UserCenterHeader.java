@@ -2,10 +2,7 @@ package cn.com.mobnote.golukmobile.usercenter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Bitmap.Config;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -176,14 +173,22 @@ public class UserCenterHeader implements OnClickListener {
 				GolukUtils.showToast(mContext, mContext.getString(R.string.str_network_unavailable));
 				return;
 			}
-			GolukUtils.startFollowingListActivity(mContext, mData.user.uid);
+			if (null != mData && null != mData.user && null != mData.user.uid) {
+				GolukUtils.startFollowingListActivity(mContext, mData.user.uid);
+			} else {
+				GolukUtils.showToast(mContext, mContext.getString(R.string.str_network_unavailable));
+			}
 			break;
 		case R.id.tv_usercenter_header_fans_count:
 			if (!UserUtils.isNetDeviceAvailable(mContext)) {
 				GolukUtils.showToast(mContext, mContext.getString(R.string.str_network_unavailable));
 				return;
 			}
-			GolukUtils.startFanListActivity(mContext, mData.user.uid);
+			if (null != mData && null != mData.user && null != mData.user.uid) {
+				GolukUtils.startFanListActivity(mContext, mData.user.uid);
+			} else {
+				GolukUtils.showToast(mContext, mContext.getString(R.string.str_network_unavailable));
+			}
 			break;
 		case R.id.btn_usercenter_header_attention:
 			if (!UserUtils.isNetDeviceAvailable(mContext)) {
@@ -197,6 +202,10 @@ public class UserCenterHeader implements OnClickListener {
 			} else {
 				if (!GolukApplication.getInstance().isUserLoginSucess) {
 					GolukUtils.showToast(mContext, mContext.getString(R.string.str_usercenter_login_hint_text));
+					return;
+				}
+				if (null == mData || null == mData.user) {
+					GolukUtils.showToast(mContext, mContext.getString(R.string.str_network_unavailable));
 					return;
 				}
 				switch (mData.user.link) {
@@ -314,18 +323,6 @@ public class UserCenterHeader implements OnClickListener {
 		default:
 			break;
 		}
-	}
-	
-	private Bitmap loadBitmapFromView(View v) {
-		if (v == null) {
-			return null;
-		}
-		Bitmap screenshot;
-		screenshot = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Config.ARGB_8888);
-		Canvas c = new Canvas(screenshot);
-		c.translate(-v.getScrollX(), -v.getScrollY());
-		v.draw(c);
-		return screenshot;
 	}
 	
 }

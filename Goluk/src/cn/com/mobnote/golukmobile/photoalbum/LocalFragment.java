@@ -341,9 +341,9 @@ public class LocalFragment extends Fragment{
 
 			if (selectedListData.size() == 0) {
 				mFragmentAlbum.updateTitleName(this.getContext().getResources().getString(R.string.local_video_title_text));
-				mFragmentAlbum.updateEditBtnState(false);
+				mFragmentAlbum.updateDeleteState(false);
 			} else {
-				mFragmentAlbum.updateEditBtnState(true);
+				mFragmentAlbum.updateDeleteState(true);
 				mFragmentAlbum.updateTitleName(this.getContext().getResources().getString(R.string.str_photo_select1)
 						+ selectedListData.size() + this.getContext().getResources().getString(R.string.str_photo_select2));
 			}

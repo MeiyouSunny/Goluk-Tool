@@ -583,6 +583,11 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		mCategoryAdapter.updateClickPraiseNumber(info);
 	}
 
+	public void changePraiseStatus(boolean status, String videoId) {
+		GolukUtils.changePraiseStatus(mDataList, status, videoId);
+		mCategoryAdapter.notifyDataSetChanged();
+	}
+
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.category_list_nodata) {
@@ -607,7 +612,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		switch(requestType) {
 		case IPageNotifyFn.PageType_Praise:
 			PraiseResultBean prBean = (PraiseResultBean)result;
-			if(null == result && !prBean.success) {
+			if(null == result || !prBean.success) {
 				GolukUtils.showToast(mContext, mContext.getString(R.string.user_net_unavailable));
 				return;
 			}

@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,6 +23,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -34,6 +36,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.util.DisplayMetrics;
@@ -46,9 +49,12 @@ import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.IPCControlManager;
 import cn.com.mobnote.golukmobile.fan.FanListActivity;
 import cn.com.mobnote.golukmobile.following.FollowingListActivity;
+import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumConfig;
+import cn.com.mobnote.golukmobile.startshare.VideoEditActivity;
 import cn.com.mobnote.golukmobile.usercenter.NewUserCenterActivity;
 import cn.com.mobnote.golukmobile.usercenter.UCUserInfo;
 import cn.com.mobnote.golukmobile.videodetail.VideoDetailActivity;
+import cn.com.mobnote.golukmobile.videosuqare.VideoSquareInfo;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class GolukUtils {
@@ -886,7 +892,6 @@ public class GolukUtils {
 	}
 
 	public static void startVideoDetailActivity(Context context, String videoId) {
-
 		Intent intent = null;
 		intent = new Intent(context, VideoDetailActivity.class);
 		intent.putExtra(VideoDetailActivity.VIDEO_ID, videoId);
@@ -908,9 +913,9 @@ public class GolukUtils {
 	}
 
 	public static void startFanListActivity(Context context, String uId) {
-
-		if (!isNetworkConnected(context)) {
-			Toast.makeText(context, context.getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+		if(!isNetworkConnected(context)){
+			Toast.makeText(context, context.getString(R.string.network_error), Toast.LENGTH_SHORT)
+			.show();
 			return;
 		}
 
@@ -920,4 +925,54 @@ public class GolukUtils {
 		context.startActivity(intent);
 	}
 
+	public static void startVideoEditActivity(Context context, int type, String path) {
+		Intent intent = new Intent(context, VideoEditActivity.class);
+
+		int tempType = 2;
+		if (type == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
+			tempType = 3;
+		}
+
+		intent.putExtra("type", tempType);
+		intent.putExtra("cn.com.mobnote.video.path", path);
+		context.startActivity(intent);
+	}
+
+	public static void changePraiseStatus(List<VideoSquareInfo> dataList, boolean status, String videoId) {
+		if(TextUtils.isEmpty(videoId) || null == dataList || dataList.size() == 0) {
+			return;
+		}
+
+		for (int i = 0; i < dataList.size(); i++) {
+			VideoSquareInfo vs = dataList.get(i);
+			if (videoId.equals(vs.mVideoEntity.videoid)) {
+				int number = Integer.parseInt(vs.mVideoEntity.praisenumber);
+				if (status) {
+					number++;
+				} else {
+					number--;
+				}
+
+				vs.mVideoEntity.praisenumber = "" + number;
+				vs.mVideoEntity.ispraise = status ? "1" : "0";
+//				mNewestAdapter.notifyDataSetChanged();
+				break;
+			}
+		}
+	}
+
+	public static boolean isAppInstalled(Context context, String appPackage) {
+		final PackageManager packageManager = context.getPackageManager();
+		List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
+		if (pinfo != null) {
+			for (int i = 0; i < pinfo.size(); i++) {
+				String pn = pinfo.get(i).packageName;
+				if (pn.equals(appPackage)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
 }

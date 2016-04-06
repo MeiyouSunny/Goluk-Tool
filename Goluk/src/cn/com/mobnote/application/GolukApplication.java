@@ -1617,8 +1617,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			return;
 		}
 		long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
-		GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==4444===stopDownloadList" + starttime);
 		int syncFlag = SettingUtils.getInstance().getInt(UserSetupActivity.MANUAL_SWITCH, 5);
+		GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==4444===stopDownloadList" + starttime + "  syncFlag: " + syncFlag);
+		
 		mIPCControlManager.queryFileListInfo(6, syncFlag, starttime, 2147483647);
 	}
 

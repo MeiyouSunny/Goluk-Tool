@@ -18,6 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventPraiseStatusChanged;
 import cn.com.mobnote.eventbus.EventUserLoginRet;
 import cn.com.mobnote.golukmobile.MainActivity;
 import cn.com.mobnote.golukmobile.R;
@@ -213,6 +215,40 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 				request.get(videoId, type);
 			}
 		}
+	}
+
+	public void onEventMainThread(EventPraiseStatusChanged event) {
+		if(null == event) {
+			return;
+		}
+
+		switch(event.getOpCode()) {
+		case EventConfig.PRAISE_STATUS_CHANGE:
+			changePraiseStatus(event.isStatus(), event.getVideoId());
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void changePraiseStatus(boolean status, String videoId) {
+		int index = findFollowedVideoItem(videoId);
+		if(-1 == index) {
+			return;
+		}
+
+		FollowedVideoObjectBean bean = (FollowedVideoObjectBean)mFollowedList.get(index);
+
+		int number = Integer.parseInt(bean.video.praisenumber);
+		if (status) {
+			number++;
+		} else {
+			number--;
+		}
+
+		bean.video.praisenumber = "" + number;
+		bean.video.ispraise = status ? "1" : "0";
+		mAdapter.notifyDataSetChanged();
 	}
 
 	public void onEventMainThread(EventUserLoginRet event) {
@@ -441,7 +477,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 		} else if(requestType == IPageNotifyFn.PageType_Praise) {
 			// assume the success
 			PraiseResultBean prBean = (PraiseResultBean)result;
-			if(null == result && !prBean.success) {
+			if(null == prBean || !prBean.success) {
 				GolukUtils.showToast(getActivity(), getString(R.string.user_net_unavailable));
 				return;
 			}
@@ -532,6 +568,27 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 				FollowedRecomUserBean bean = (FollowedRecomUserBean)obj;
 				if(!TextUtils.isEmpty(bean.uid)) {
 					if(bean.uid.equals(linkuid)) {
+						return i;
+					}
+				}
+			}
+		}
+
+		return -1;
+	}
+
+	private int findFollowedVideoItem(String videoId) {
+		if(null == mFollowedList || mFollowedList.size() == 0 || TextUtils.isEmpty(videoId)) {
+			return -1;
+		}
+
+		int size = mFollowedList.size();
+		for(int i = 0; i < size; i++) {
+			Object obj = mFollowedList.get(i);
+			if(null != obj && obj instanceof FollowedVideoObjectBean) {
+				FollowedVideoObjectBean bean = (FollowedVideoObjectBean)obj;
+				if(!TextUtils.isEmpty(bean.video.videoid)) {
+					if(bean.video.videoid.equals(videoId)) {
 						return i;
 					}
 				}

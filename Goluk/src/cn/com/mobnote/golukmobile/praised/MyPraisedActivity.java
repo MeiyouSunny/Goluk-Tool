@@ -16,6 +16,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventPraiseStatusChanged;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
@@ -25,6 +27,7 @@ import cn.com.mobnote.golukmobile.praised.bean.MyPraisedListBean;
 import cn.com.mobnote.golukmobile.praised.bean.MyPraisedVideoBean;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
+import de.greenrobot.event.EventBus;
 
 public class MyPraisedActivity extends BaseActivity implements IRequestResultListener {
 	private final static String REFRESH_NORMAL = "0";
@@ -92,6 +95,7 @@ public class MyPraisedActivity extends BaseActivity implements IRequestResultLis
 
 		sendPraisedListRequest(REFRESH_NORMAL, null);
 		mPraisedList = new ArrayList<MyPraisedVideoBean>();
+		EventBus.getDefault().register(this);
 	}
 
 	private void sendPraisedListRequest(String op, String timeStamp) {
@@ -126,6 +130,20 @@ public class MyPraisedActivity extends BaseActivity implements IRequestResultLis
 		}
 	}
 
+	public void onEventMainThread(EventPraiseStatusChanged event) {
+		if(null == event) {
+			return;
+		}
+
+		switch(event.getOpCode()) {
+		case EventConfig.PRAISE_STATUS_CHANGE:
+			sendPraisedListRequest(REFRESH_NORMAL, null);
+			break;
+		default:
+			break;
+		}
+	}
+
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
@@ -138,6 +156,7 @@ public class MyPraisedActivity extends BaseActivity implements IRequestResultLis
 			mLoadingDialog.close();
 			mLoadingDialog = null;
 		}
+		EventBus.getDefault().unregister(this);
 		super.onDestroy();
 	};
 

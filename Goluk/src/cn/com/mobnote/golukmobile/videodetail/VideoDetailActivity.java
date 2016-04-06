@@ -33,6 +33,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventConfig;
+import cn.com.mobnote.eventbus.EventPraiseStatusChanged;
 import cn.com.mobnote.golukmobile.BaseActivity;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.UserLoginActivity;
@@ -71,6 +73,7 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
 import cn.com.mobnote.util.GolukUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 /**
  * 精选
@@ -1166,7 +1169,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			PraiseResultDataBean ret = praiseResultBean.data;
 			if(null != ret && !TextUtils.isEmpty(ret.result)) {
 				if("0".equals(ret.result)) {
-					// do nothing
+					EventBus.getDefault().post(new EventPraiseStatusChanged(
+							EventConfig.PRAISE_STATUS_CHANGE, mVideoId, true));
 				} else if("7".equals(ret.result)) {
 					GolukUtils.showToast(this, this.getString(R.string.str_no_duplicated_praise));
 				} else {
@@ -1184,7 +1188,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			PraiseCancelResultDataBean cancelRet = praiseCancelResultBean.data;
 			if(null != cancelRet && !TextUtils.isEmpty(cancelRet.result)) {
 				if("0".equals(cancelRet.result)) {
-					// do nothing
+					EventBus.getDefault().post(new EventPraiseStatusChanged(
+							EventConfig.PRAISE_STATUS_CHANGE, mVideoId, false));
 				} else {
 					GolukUtils.showToast(this, this.getString(R.string.str_cancel_praise_failed));
 				}

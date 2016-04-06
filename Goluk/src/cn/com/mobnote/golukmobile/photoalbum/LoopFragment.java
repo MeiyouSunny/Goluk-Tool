@@ -108,8 +108,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
-		
+
 		if(mLoopVideoView == null){
 			mFragmentAlbum = (FragmentAlbum)getParentFragment();
 
@@ -123,37 +122,38 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 			this.density = SoundUtils.getInstance().getDisplayMetrics().density;
 			initView();
 		}
-		
+
 		ViewGroup parent = (ViewGroup) mLoopVideoView.getParent();
 		if(parent != null){
 			parent.removeView(mLoopVideoView);
 		}
-		
+
 		return mLoopVideoView;
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
+		isShowPlayer = false;
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_CIRCULATE, this);
 		}
 	}
-	
+
 	@Override
-	public void onStop() {
-		super.onStop();
-		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_CIRCULATE);
+	public void onPause() {
+		super.onPause();
+		if (null != GolukApplication.getInstance().getIPCControlManager()) {
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_CIRCULATE);
+		}
 	}
-	
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		EventBus.getDefault().unregister(this);
 	}
-	
-	
+
 	public void onEventMainThread(EventDeletePhotoAlbumVid event){
 		if(event!=null&&event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP){
 			
@@ -162,7 +162,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 			deleteListData(list);
 		}
 	}
-	
+
 	/**
 	 * 从设备上下载视频到本地
 	 * @param event
@@ -471,9 +471,9 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 			if (selectedListData.size() == 0) {
 				mFragmentAlbum.updateTitleName(this.getContext()
 						.getString(R.string.local_video_title_text));
-				mFragmentAlbum.updateEditBtnState(false);
+				mFragmentAlbum.updateDeleteState(false);
 			} else {
-				mFragmentAlbum.updateEditBtnState(true);
+				mFragmentAlbum.updateDeleteState(true);
 				mFragmentAlbum.updateTitleName(this.getContext()
 						.getString(R.string.str_photo_select1)
 						+ selectedListData.size()
@@ -588,7 +588,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		switch (event) {
 		case ENetTransEvent_IPC_VDCP_CommandResp:
-			if (IPC_VDCP_Msg_Query == msg && mFragmentAlbum != null && mFragmentAlbum.mCurrentType == 3) {
+			if (IPC_VDCP_Msg_Query == msg && mFragmentAlbum != null && mFragmentAlbum.mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
 				if (mCustomProgressDialog != null
 						&& mCustomProgressDialog.isShowing()) {
 					mCustomProgressDialog.close();

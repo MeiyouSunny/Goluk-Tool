@@ -132,37 +132,38 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 		
 		return mUrgentVideoView;
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
+		isShowPlayer = false;
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_URGENT, this);
 		}
 	}
-	
+
 	@Override
-	public void onStop() {
-		super.onStop();
-		GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_URGENT);
+	public void onPause() {
+		super.onPause();
+		if (null != GolukApplication.getInstance().getIPCControlManager()) {
+			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_URGENT);
+		}
 	}
-	
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		EventBus.getDefault().unregister(this);
 	}
-	
+
 	public void onEventMainThread(EventDeletePhotoAlbumVid event){
 		if(event!=null&&event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_URG){
-			
 			List<String> list = new ArrayList<String>();
 			list.add(event.getVidPath());
 			deleteListData(list);
 		}
 	}
-	
+
 	/**
 	 * 从设备上下载视频到本地
 	 * @param event
@@ -175,7 +176,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 			downloadVideoFlush(list);
 		}
 	}
-	
+
 	public void downloadVideoFlush(List<String> selectedListData) {
 		exist.clear();
 		for (String filename : selectedListData) {
@@ -187,10 +188,10 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 				GolukApplication.getInstance().getIPCControlManager()
 						.downloadFile(imgFileName, "download", FileUtils.javaToLibPath(filePath), PhotoAlbumUtils.findtime(filename,mDataList));
 			}
-			
+
 			// 下载视频文件
 			String mp4 = FileUtils.libToJavaPath(PhotoAlbumConfig.LOCAL_URG_VIDEO_PATH + filename);
-			
+
 			File file = new File(mp4);
 			if (!file.exists()) {
 				List<String> downloadlist = GolukApplication.getInstance().getDownLoadList();
@@ -441,9 +442,9 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 
 			if (selectedListData.size() == 0) {
 				mFragmentAlbum.updateTitleName(this.getContext().getString(R.string.local_video_title_text));
-				mFragmentAlbum.updateEditBtnState(false);
+				mFragmentAlbum.updateDeleteState(false);
 			} else {
-				mFragmentAlbum.updateEditBtnState(true);
+				mFragmentAlbum.updateDeleteState(true);
 				mFragmentAlbum.updateTitleName(this.getContext().getString(R.string.str_photo_select1) + selectedListData.size()
 						+ this.getContext().getString(R.string.str_photo_select2));
 			}
@@ -551,7 +552,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		switch (event) {
 		case ENetTransEvent_IPC_VDCP_CommandResp:
-			if (IPC_VDCP_Msg_Query == msg && mFragmentAlbum != null && mFragmentAlbum.mCurrentType == 2) {
+			if (IPC_VDCP_Msg_Query == msg && mFragmentAlbum != null && mFragmentAlbum.mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
 				if (mCustomProgressDialog != null && mCustomProgressDialog.isShowing()) {
 					mCustomProgressDialog.close();
 				}

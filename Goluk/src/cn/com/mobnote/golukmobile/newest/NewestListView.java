@@ -517,6 +517,11 @@ public class NewestListView implements
 		mNewestAdapter.updateClickPraiseNumber(info);
 	}
 
+	public void changePraiseStatus(boolean status, String videoId) {
+		GolukUtils.changePraiseStatus(mDataList, status, videoId);
+		mNewestAdapter.notifyDataSetChanged();
+	}
+
 	//点赞请求
 	public boolean sendPraiseRequest(String id) {
 		PraiseRequest request = new PraiseRequest(IPageNotifyFn.PageType_Praise, this);
@@ -534,7 +539,7 @@ public class NewestListView implements
 		switch(requestType) {
 		case IPageNotifyFn.PageType_Praise:
 			PraiseResultBean prBean = (PraiseResultBean)result;
-			if(null == result && !prBean.success) {
+			if(null == result || !prBean.success) {
 				GolukUtils.showToast(mContext, mContext.getString(R.string.user_net_unavailable));
 				return;
 			}

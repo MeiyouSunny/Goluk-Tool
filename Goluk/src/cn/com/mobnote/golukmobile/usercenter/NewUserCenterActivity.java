@@ -201,10 +201,10 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 				mGridView.setVisibility(View.VISIBLE);
 				mRefreshLayout.setVisibility(View.GONE);
 				List<HomeVideoList> videoList = mHomeJson.data.videolist;
-				if (!mCurrentOperator.equals(OPERATOR_UP)) {
-					mHeader.setHeaderData(mHomeJson.data);
-					mHeader.getHeaderData();
-				}
+
+				mHeader.setHeaderData(mHomeJson.data);
+				mHeader.getHeaderData();
+
 				if (null != videoList && videoList.size() <= 0 && !mCurrentOperator.equals(OPERATOR_UP)) {
 					mGridView.setMode(PullToRefreshBase.Mode.PULL_DOWN_TO_REFRESH);
 					addFooterView();
@@ -387,9 +387,14 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	 * 
 	 */
 	public void shareHomePage() {
-		showLoadingDialog();
-		ShareHomePageRequest request = new ShareHomePageRequest(IPageNotifyFn.PageType_HomeShare, this);
-		request.get(mCurrentUid, mHomeJson.data.user.uid);
+		if (null != mHomeJson && null != mHomeJson.data && null != mHomeJson.data.user
+				&& null != mHomeJson.data.user.uid) {
+			showLoadingDialog();
+			ShareHomePageRequest request = new ShareHomePageRequest(IPageNotifyFn.PageType_HomeShare, this);
+			request.get(mCurrentUid, mHomeJson.data.user.uid);
+		} else {
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_network_unavailable));
+		}
 	}
 
 	/**
@@ -400,8 +405,13 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	 * @param currentuid
 	 */
 	public void attentionRequest(String type) {
-		UserAttentionRequest request = new UserAttentionRequest(IPageNotifyFn.PageType_HomeAttention, this);
-		request.get(mHomeJson.data.user.uid, type, mCurrentUid);
+		if (null != mHomeJson && null != mHomeJson.data && null != mHomeJson.data.user
+				&& null != mHomeJson.data.user.uid) {
+			UserAttentionRequest request = new UserAttentionRequest(IPageNotifyFn.PageType_HomeAttention, this);
+			request.get(mHomeJson.data.user.uid, type, mCurrentUid);
+		} else {
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_network_unavailable));
+		}
 	}
 
 	@Override
@@ -417,8 +427,8 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			GolukUtils.showToast(this, this.getString(R.string.str_network_unavailable));
 			return;
 		}
-		if (null != mAdapter) {
-			HomeVideoList video = (HomeVideoList) mAdapter.getItem(position);
+		if (null != mAdapter && position >= 2) {
+			HomeVideoList video = (HomeVideoList) mAdapter.getItem(position - 2);
 			if (null != video) {
 				Intent itVideoDetail = new Intent(this, VideoDetailActivity.class);
 				itVideoDetail.putExtra(VideoDetailActivity.VIDEO_ID, video.videoid);

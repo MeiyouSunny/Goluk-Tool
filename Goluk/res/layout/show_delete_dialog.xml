@@ -28,6 +28,27 @@
             android:background="#cccccc" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/fun_dialog_share_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/sharevideo"
+            android:layout_width="fill_parent"
+            android:layout_height="43.3dp"
+            android:gravity="center"
+            android:text="@string/dialog_str_share"
+            android:textColor="#1163a2"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#cccccc" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/cancel"
