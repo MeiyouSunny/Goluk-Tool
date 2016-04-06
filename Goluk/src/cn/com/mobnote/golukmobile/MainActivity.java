@@ -157,11 +157,17 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 			});
 		}
 	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		//super.onSaveInstanceState(outState);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		GolukDebugUtils.e("", "start App ------ MainActivity-----onCreate------------:");
+		GolukDebugUtils.e("", "crash zh start App ------ MainActivity-----onCreate------------:");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.index);
 
@@ -816,6 +822,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 	@Override
 	protected void onResume() {
 //		GolukApplication.getInstance().queryNewFileList();
+		GolukDebugUtils.e("", "crash zh start App ------ MainActivity-----onResume------------:");
 		mApp.setContext(this, "Main");
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 
