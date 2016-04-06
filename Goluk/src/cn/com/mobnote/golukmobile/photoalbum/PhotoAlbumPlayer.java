@@ -378,10 +378,10 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 				intent.putExtra("type", tempType);
 				intent.putExtra("cn.com.mobnote.video.path", mPath);
 				startActivity(intent);
+				finish();
 			} else {
 				EventBus.getDefault().post(new EventDownloadIpcVid(mFileName, getType()));
 			}
-			finish();
 			break;
 		default:
 			Log.e(TAG, "id = " + id);
