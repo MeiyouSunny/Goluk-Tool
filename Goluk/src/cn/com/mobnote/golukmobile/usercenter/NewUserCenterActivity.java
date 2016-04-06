@@ -273,7 +273,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	}
 
 	private void addFooterView() {
-		Drawable drawable= getResources().getDrawable(R.drawable.mine_video);  
+		Drawable drawable= getResources().getDrawable(R.drawable.mine_novideo);
 		drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());  
 		mFooterText.setCompoundDrawables(null,drawable,null,null);
 		if (null != mFooterView && null != mGridView && mFooterView.getVisibility() == View.GONE) {
