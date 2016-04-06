@@ -102,13 +102,14 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		GolukDebugUtils.e("", "crash zh start App ------ WonderfulFragment-----onCreate------------:");
 		EventBus.getDefault().register(this);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
+		GolukDebugUtils.e("", "crash zh start App ------ WonderfulFragment-----onCreateView------------:");
 		if(mWonderfulVideoView == null){
 			if (mWonderfulVideoView == null) {
 				mWonderfulVideoView = inflater.inflate(R.layout.wonderful_listview,(ViewGroup) getActivity().findViewById(R.id.viewpager),false);
@@ -116,7 +117,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 			
 			mBottomLoadingView = (RelativeLayout) LayoutInflater.from(this.getContext()).inflate(R.layout.video_square_below_loading, null);
 
-			mFragmentAlbum = (FragmentAlbum) getParentFragment();
+			mFragmentAlbum = getFragmentAlbum();
 			mDataList = new ArrayList<VideoInfo>();
 			mDoubleDataList = new ArrayList<DoubleVideoInfo>();
 			mGroupListName = new ArrayList<String>();
@@ -134,6 +135,16 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 		}
 		
 		return mWonderfulVideoView;
+	}
+	
+	public FragmentAlbum getFragmentAlbum(){
+		if(mFragmentAlbum == null){
+			GolukDebugUtils.e("", "crash zh start App ------ WonderfulFragment-----getFragmentAlbum------------: null");
+			mFragmentAlbum = (FragmentAlbum) getParentFragment();
+		}
+		GolukDebugUtils.e("", "crash zh start App ------ WonderfulFragment-----getFragmentAlbum------------: not null");
+		return mFragmentAlbum;
+		
 	}
 	
 	
@@ -402,7 +413,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 							RelativeLayout mTMLayout2 = (RelativeLayout) arg1.findViewById(R.id.mTMLayout2);
 							String tag1 = (String) mTMLayout1.getTag();
 							String tag2 = (String) mTMLayout2.getTag();
-							if (mFragmentAlbum.getEditState()) {
+							if (getFragmentAlbum().getEditState()) {
 								if ((screenX > 0)&& (screenX < (screenWidth / 2))) {
 									selectedVideoItem(tag1, mTMLayout1);
 								} else {
@@ -442,7 +453,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 			@Override
 			public void onClick(View arg0) {
 				if(GolukApplication.getInstance().isIpcLoginSuccess == false){
-					if(!"0".equals(mFragmentAlbum.mPlatform)){
+					if(!"0".equals(getFragmentAlbum().mPlatform)){
 						getActivity().finish();
 					}else{
 						Intent intent = new Intent(getActivity(),CarRecorderActivity.class);
@@ -503,7 +514,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	 * @param mTMLayout1
 	 */
 	private void selectedVideoItem(String tag1, RelativeLayout mTMLayout1) {
-		List<String> selectedListData = mFragmentAlbum.getSelectedList();
+		List<String> selectedListData = getFragmentAlbum().getSelectedList();
 		if (!TextUtils.isEmpty(tag1)) {
 			if (selectedListData.contains(tag1)) {
 				selectedListData.remove(tag1);
@@ -514,11 +525,11 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 			}
 
 			if (selectedListData.size() == 0) {
-				mFragmentAlbum.updateTitleName(this.getContext().getString(R.string.local_video_title_text));
-				mFragmentAlbum.updateDeleteState(false);
+				getFragmentAlbum().updateTitleName(this.getContext().getString(R.string.local_video_title_text));
+				getFragmentAlbum().updateDeleteState(false);
 			} else {
-				mFragmentAlbum.updateDeleteState(true);
-				mFragmentAlbum.updateTitleName(this.getContext().getString(
+				getFragmentAlbum().updateDeleteState(true);
+				getFragmentAlbum().updateTitleName(this.getContext().getString(
 						R.string.str_photo_select1)
 						+ selectedListData.size()
 						+ this.getContext().getString(R.string.str_photo_select2));
@@ -541,6 +552,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	@Override
 	public void onResume() {
 		super.onResume();
+		GolukDebugUtils.e("", "crash zh start App ------ WonderfulFragment-----onResume------------:");
 		isShowPlayer = false;
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT, this);
@@ -556,6 +568,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	}
 
 	public void loadData(boolean flag) {
+		GolukDebugUtils.e("", "crash zh start App ------ WonderfulFragment-----loadData------------:");
 		if (isGetFileListDataing) {
 			return;
 		}
@@ -577,7 +590,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 				isGetFileListDataing = false;
 			}
 		}else{
-			mFragmentAlbum.setEditBtnState(false);
+			getFragmentAlbum().setEditBtnState(false);
 			empty.setText(getActivity().getResources().getString(R.string.photoalbum_no_ipc_connect_text));
 			empty.setVisibility(View.VISIBLE);
 			mStickyListHeadersListView.setVisibility(View.GONE);
@@ -587,7 +600,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	}
 
 	private void updateEditState(boolean isHasData) {
-		mFragmentAlbum.setEditBtnState(isHasData);
+		getFragmentAlbum().setEditBtnState(isHasData);
 		/*
 		 * GolukDebugUtils.e("",
 		 * "Album------WondowvideoListView------updateEditState" + isHasData);
@@ -643,7 +656,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		switch (event) {
 		case ENetTransEvent_IPC_VDCP_CommandResp:
-			if (IPC_VDCP_Msg_Query == msg && mFragmentAlbum != null && mFragmentAlbum.mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
+			if (IPC_VDCP_Msg_Query == msg && getFragmentAlbum() != null && getFragmentAlbum().mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
 				if (mCustomProgressDialog != null && mCustomProgressDialog.isShowing()) {
 					mCustomProgressDialog.close();
 				}
