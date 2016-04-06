@@ -20,5 +20,6 @@
 
     <!-- banner text size default for 1920 * 1080 -->
     <dimen name="banner_text_size">18sp</dimen>
+    <dimen name="mainactivity_bottom_height">48dp</dimen>
 
 </resources>
