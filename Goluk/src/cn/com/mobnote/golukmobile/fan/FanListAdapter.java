@@ -127,24 +127,30 @@ public class FanListAdapter extends BaseAdapter{
 		//设置连接状态图片及文字
 	
 		if(followingItemBean.link == FollowingConfig.LINK_TYPE_FOLLOW_ONLY){
+			holderFollowing.llFollowinglistLink.setVisibility(View.VISIBLE);
 			holderFollowing.llFollowinglistLink.setBackgroundResource(R.drawable.follow_button_border_followed);
 			holderFollowing.tvFollowinglistLink.setText(R.string.str_usercenter_header_attention_already_text);
 			holderFollowing.tvFollowinglistLink.setTextColor(mFollowingActivity.getResources().getColor(R.color.white));
 			holderFollowing.ivFollowinglistLink.setImageResource(R.drawable.icon_followed);
 
 		}else if(followingItemBean.link == FollowingConfig.LINK_TYPE_FAN_ONLY){
+			holderFollowing.llFollowinglistLink.setVisibility(View.VISIBLE);
 			holderFollowing.llFollowinglistLink.setBackgroundResource(R.drawable.follow_button_border_normal);
 			holderFollowing.tvFollowinglistLink.setText(R.string.str_follow);
 			holderFollowing.tvFollowinglistLink.setTextColor(Color.parseColor("#0080ff"));
 			holderFollowing.ivFollowinglistLink.setImageResource(R.drawable.icon_follow_normal);
 
 		}else if(followingItemBean.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER){
+			holderFollowing.llFollowinglistLink.setVisibility(View.VISIBLE);
 			holderFollowing.llFollowinglistLink.setBackgroundResource(R.drawable.follow_button_border_mutual);
 			holderFollowing.tvFollowinglistLink.setText(R.string.str_usercenter_header_attention_each_other_text);
 			holderFollowing.tvFollowinglistLink.setTextColor(mFollowingActivity.getResources().getColor(R.color.white));
 			holderFollowing.ivFollowinglistLink.setImageResource(R.drawable.icon_follow_mutual);
 
+		}else if(followingItemBean.link == FollowingConfig.LINK_TYPE_SELF){
+			holderFollowing.llFollowinglistLink.setVisibility(View.GONE);
 		}else{
+			holderFollowing.llFollowinglistLink.setVisibility(View.VISIBLE);
 			holderFollowing.llFollowinglistLink.setBackgroundResource(R.drawable.follow_button_border_normal);
 			holderFollowing.tvFollowinglistLink.setText(R.string.str_follow);
 			holderFollowing.tvFollowinglistLink.setTextColor(Color.parseColor("#0080ff"));
