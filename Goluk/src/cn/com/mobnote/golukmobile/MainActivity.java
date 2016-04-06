@@ -332,7 +332,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 		mTabHost.addView(lineView);
 
 		for (int i = 0; i < mTabHost.getTabWidget().getTabCount(); i++) {
-			mTabHost.getTabWidget().getChildAt(i).getLayoutParams().height = 141;
+			mTabHost.getTabWidget().getChildAt(i).getLayoutParams().height = (int) this.getResources().getDimension(R.dimen.mainactivity_bottom_height);
 		}
 
 		mTabHost.getTabWidget().getChildTabViewAt(2)
