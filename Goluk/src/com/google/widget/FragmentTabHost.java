@@ -1,6 +1,7 @@
 package com.google.widget;
 
 import java.util.ArrayList;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -229,7 +230,7 @@ public class FragmentTabHost extends TabHost implements
 				FragmentTransaction ft = mFragmentManager.beginTransaction();
 //				ft.detach(info.fragment);
 				ft.hide(info.fragment);
-				ft.commit();
+				ft.commitAllowingStateLoss();
 			}
 		}
 
@@ -273,7 +274,7 @@ public class FragmentTabHost extends TabHost implements
 		mAttached = true;
 		ft = doTabChanged(currentTab, ft);
 		if (ft != null) {
-			ft.commit();
+			ft.commitAllowingStateLoss();
 			mFragmentManager.executePendingTransactions();
 		}
 	}
@@ -304,7 +305,7 @@ public class FragmentTabHost extends TabHost implements
 		if (mAttached) {
 			FragmentTransaction ft = doTabChanged(tabId, null);
 			if (ft != null) {
-				ft.commit();
+				ft.commitAllowingStateLoss();
 			}
 		}
 		if (mOnTabChangeListener != null) {
