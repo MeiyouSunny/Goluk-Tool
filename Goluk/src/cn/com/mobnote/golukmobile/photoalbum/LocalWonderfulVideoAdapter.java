@@ -138,11 +138,11 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		if("0".equals(mFragment.mPlatform)){
 			holder.mPreView1.setVisibility(View.GONE);
 			holder.mPreView2.setVisibility(View.GONE);
-			holder.mVideoQuality1.setVisibility(View.GONE);
-			holder.mVideoQuality2.setVisibility(View.GONE);
+			//holder.mVideoQuality1.setVisibility(View.GONE);
+			//holder.mVideoQuality2.setVisibility(View.GONE);
 		}else{
-			holder.mVideoQuality1.setVisibility(View.VISIBLE);
-			holder.mVideoQuality2.setVisibility(View.VISIBLE);
+			//holder.mVideoQuality1.setVisibility(View.VISIBLE);
+			//holder.mVideoQuality2.setVisibility(View.VISIBLE);
 			holder.mPreView1.setVisibility(View.VISIBLE);
 			holder.mPreView2.setVisibility(View.VISIBLE);
 		}
