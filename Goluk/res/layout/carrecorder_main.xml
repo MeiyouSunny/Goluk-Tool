@@ -169,6 +169,8 @@
                     android:layout_height="wrap_content"
                     android:drawableTop="@drawable/video_no_link_pic"
                     android:layout_centerInParent="true"
+                    android:gravity="center_horizontal"
+                    android:drawablePadding="-60dp"
                     android:text="@string/str_carrecorder_connect_text"
                     android:textSize="16sp"
                     android:textColor="#047CF3"/>
@@ -181,19 +183,13 @@
                 android:background="#15171A"
                 android:visibility="gone" >
 
-                <ImageView
-                    android:id="@+id/iv_noconnected_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:contentDescription="@string/imgdes"
-                    android:src="@drawable/video_linking_pic" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/iv_noconnected_image"
-                    android:layout_centerHorizontal="true"
+                    android:layout_centerInParent="true"
+                    android:drawablePadding="-60dp"
+                    android:drawableTop="@drawable/video_linking_pic"
+                    android:gravity="center_horizontal"
                     android:text="@string/str_album_no_connect"
                     android:textColor="#047CF3"
                     android:textSize="16sp" />

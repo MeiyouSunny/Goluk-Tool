@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -55,7 +54,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 	public String shareVideoId;
 
 	/** 广场视频列表默认背景图片 */
-	private ImageView squareTypeDefault;
+	private RelativeLayout squareTypeDefault;
 
 	SharePlatformUtil sharePlatform;
 
@@ -107,7 +106,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 
 		mDataList = new ArrayList<SpecialInfo>();
 		lv = (ListView) findViewById(R.id.special_list);
-		squareTypeDefault = (ImageView) findViewById(R.id.square_type_default);
+		squareTypeDefault = (RelativeLayout) findViewById(R.id.square_type_default);
 		squareTypeDefault.setOnClickListener(new OnClickListener() {
 
 			@Override

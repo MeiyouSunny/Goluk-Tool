@@ -151,16 +151,16 @@
                     android:textColor="@color/user_login_text"
                     android:textSize="18sp" />
 
-                <TextView
+                <Button
                     android:id="@+id/my_profit_detail_btn"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_marginTop="20dp"
+                    android:background="@drawable/profit_btn_border"
                     android:drawableLeft="@drawable/profit_btn_detail"
                     android:textColor="@color/black"
                     android:textSize="12sp"
                     android:text="@string/str_profit_detail_text"
-                    android:drawablePadding="5dp"
                     android:contentDescription="@string/imgdes" />
             </LinearLayout>
             <!-- 中间分割线 -->
@@ -194,29 +194,38 @@
                     android:textColor="@color/user_login_text"
                     android:textSize="18sp" />
 
-                <TextView
+                <Button
                     android:id="@+id/my_profit_leave_btn"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_marginTop="20dp"
+                    android:background="@drawable/profit_btn_border"
                     android:drawableLeft="@drawable/profit_btn_cash"
                     android:textColor="@color/black"
                     android:textSize="12sp"
                     android:text="@string/str_profit_cash_text"
-                    android:drawablePadding="5dp"
                     android:contentDescription="@string/imgdes" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
     </ScrollView>
 
-    <ImageView
+    <RelativeLayout
         android:id="@+id/video_detail_click_refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:contentDescription="@string/imgdes"
-        android:src="@drawable/qitadifang"
-        android:visibility="gone" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/profit_title_layout"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/tv_videocategory_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawableTop="@drawable/mine_qitadifang"
+            android:text="@string/msg_system_connect_error"
+            android:textColor="#bfbfbf"
+            android:textSize="16sp" />
+    </RelativeLayout>
 
 </RelativeLayout>

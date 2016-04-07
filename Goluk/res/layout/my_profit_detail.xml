@@ -2,10 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white" >
-    
-	<!-- title -->
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <!-- title -->
+
     <RelativeLayout
         android:id="@+id/profit_detail_title_layout"
         android:layout_width="match_parent"
@@ -30,26 +31,35 @@
             android:text="@string/my_profit_detail_title_text"
             android:textColor="#e0e0e0"
             android:textSize="18sp" />
-        
     </RelativeLayout>
-    
+
     <!-- body -->
+
     <cn.com.mobnote.golukmobile.videosuqare.RTPullListView
         android:id="@+id/profit_detail_RTPullListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/profit_detail_title_layout"
         android:divider="@null" />
-    
-    <ImageView
+
+    <RelativeLayout
         android:id="@+id/video_detail_click_refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-       	android:layout_centerInParent="true"
-        android:src="@drawable/qitadifang"
-        android:contentDescription="@string/imgdes"
-        android:visibility="gone" />
-    
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/profit_detail_title_layout"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/tv_videocategory_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawableTop="@drawable/mine_qitadifang"
+            android:text="@string/msg_system_connect_error"
+            android:textColor="#bfbfbf"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/my_profit_detail_nodata"
         android:layout_width="wrap_content"
@@ -58,5 +68,6 @@
         android:text="@string/str_profit_nodata"
         android:textColor="#000000"
         android:textSize="20sp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
 </RelativeLayout>

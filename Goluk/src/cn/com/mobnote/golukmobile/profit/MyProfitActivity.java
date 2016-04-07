@@ -7,8 +7,6 @@ import cn.com.mobnote.golukmobile.UserOpenUrlActivity;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog;
 import cn.com.mobnote.golukmobile.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import cn.com.mobnote.golukmobile.http.IRequestResultListener;
-import cn.com.mobnote.golukmobile.live.UserInfo;
-import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
 import cn.com.mobnote.golukmobile.photoalbum.PhotoAlbumActivity;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.user.UserUtils;
@@ -16,6 +14,7 @@ import cn.com.mobnote.util.GolukUtils;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -24,8 +23,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,7 +39,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener, O
 		ForbidBack {
 
 	private ImageButton mBtnBack;
-	private TextView mBtnDetail, mBtnCash;
+	private Button mBtnDetail, mBtnCash;
 	private TextView mTextProblem;
 	private TextView mTextTotalCount, mTextLeaveCount, mTextLastHint;
 	private CustomTextView mTextLastCount;
@@ -49,7 +48,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener, O
 	private ProfitInfo profitInfo = null;
 	private AlertDialog mDialog = null;
 	private LinearLayout mBottomLayout;
-	private ImageView mImageRefresh;
+	private RelativeLayout mImageRefresh;
 	/** 用户id **/
 	private String uid, phone;
 	/** 进入页面的loading **/
@@ -86,8 +85,8 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener, O
 
 	private void initView() {
 		mBtnBack = (ImageButton) findViewById(R.id.profit_back);
-		mBtnDetail = (TextView) findViewById(R.id.my_profit_detail_btn);
-		mBtnCash = (TextView) findViewById(R.id.my_profit_leave_btn);
+		mBtnDetail = (Button) findViewById(R.id.my_profit_detail_btn);
+		mBtnCash = (Button) findViewById(R.id.my_profit_leave_btn);
 		mTextProblem = (TextView) findViewById(R.id.profit_problem);
 		mTextLastCount = (CustomTextView) findViewById(R.id.last_profit);
 		mTextTotalCount = (TextView) findViewById(R.id.my_profit_total_count);
@@ -95,7 +94,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener, O
 		mTextLastHint = (TextView) findViewById(R.id.last_profit_no_hint);
 		mProfitBgLayout = (RelativeLayout) findViewById(R.id.my_profit_bg_layout);
 		mBottomLayout = (LinearLayout) findViewById(R.id.my_profit_bottom_layout);
-		mImageRefresh = (ImageView) findViewById(R.id.video_detail_click_refresh);
+		mImageRefresh = (RelativeLayout) findViewById(R.id.video_detail_click_refresh);
 		mProfitBgLayout.setVisibility(View.GONE);
 		mBottomLayout.setVisibility(View.GONE);
 
@@ -196,14 +195,19 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener, O
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
 		int action = event.getAction();
+		Drawable drawable = null;
 		switch (view.getId()) {
 		case R.id.my_profit_detail_btn:
 			switch (action) {
 			case MotionEvent.ACTION_DOWN:
-				mBtnDetail.setBackgroundResource(R.drawable.profit_btn_detail_press);
+				drawable = getResources().getDrawable(R.drawable.profit_btn_detail_press);
+				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+				mBtnDetail.setCompoundDrawables(drawable, null, null, null);
 				break;
 			case MotionEvent.ACTION_UP:
-				mBtnDetail.setBackgroundResource(R.drawable.profit_btn_detail);
+				drawable = getResources().getDrawable(R.drawable.profit_btn_detail);
+				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+				mBtnDetail.setCompoundDrawables(drawable, null, null, null);
 				break;
 			default:
 				break;
@@ -212,10 +216,14 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener, O
 		case R.id.my_profit_leave_btn:
 			switch (action) {
 			case MotionEvent.ACTION_DOWN:
-				mBtnCash.setBackgroundResource(R.drawable.profit_btn_cash_press);
+				drawable = getResources().getDrawable(R.drawable.profit_btn_cash_press);
+				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+				mBtnCash.setCompoundDrawables(drawable, null, null, null);
 				break;
 			case MotionEvent.ACTION_UP:
-				mBtnCash.setBackgroundResource(R.drawable.profit_btn_cash);
+				drawable = getResources().getDrawable(R.drawable.profit_btn_cash);
+				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+				mBtnCash.setCompoundDrawables(drawable, null, null, null);
 				break;
 			default:
 				break;

@@ -59,7 +59,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	private RTPullListView mRTPullListView = null;
 	private NewestAdapter mCategoryAdapter = null;
 	private String historyDate;
-	private ImageView noDataView = null;
+	private RelativeLayout noDataView = null;
 
 	private SimpleDateFormat sdf;
 
@@ -192,7 +192,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		mRTPullListView = (RTPullListView) mRootLayout.findViewById(R.id.mRTPullListView);
 		mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 
-		noDataView = (ImageView) mRootLayout.findViewById(R.id.category_list_nodata);
+		noDataView = (RelativeLayout) mRootLayout.findViewById(R.id.category_list_nodata);
 		noDataView.setOnClickListener(this);
 
 		if (null == mCategoryAdapter) {

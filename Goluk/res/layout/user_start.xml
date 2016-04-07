@@ -28,23 +28,23 @@
 		    <Button
 		        android:id="@+id/user_start_have"
 		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:background="@drawable/icon_goluk_start"
+		        android:layout_height="35dp"
+		        android:layout_gravity="center"
+		        android:background="@drawable/start_btn_border"
 		        android:text="@string/str_guide_have_goluk_text"
-		        android:textSize="20sp"
-		        android:textColor="@color/white" />
+		        android:textSize="14sp"
+		        android:textColor="#EEF2FB" />
 
 		    <Button
 		        android:id="@+id/user_start_look"
 		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_gravity="center_horizontal"
+		        android:layout_height="35dp"
+		        android:layout_gravity="center"
 		        android:layout_marginTop="20dp"
 		        android:text="@string/str_guide_look_text"
-		        android:textSize="14sp"
-		        android:textColor="@color/white"
-		        android:drawableRight="@drawable/guide_look"
-		        android:background="@drawable/icon_goluk_start" />
+		        android:textSize="12sp"
+		        android:textColor="#EEF2FB"
+		        android:background="@drawable/start_btn_border" />
 		</LinearLayout>
 
 </RelativeLayout>

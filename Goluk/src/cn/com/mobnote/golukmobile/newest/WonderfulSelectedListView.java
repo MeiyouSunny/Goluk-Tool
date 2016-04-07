@@ -31,7 +31,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
@@ -58,7 +57,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	private int firstVisible;
 	/** 保存列表显示item个数 */
 	private int visibleCount;
-	private ImageView shareBg = null;
+	private RelativeLayout shareBg = null;
 	private static final String TAG = "WonderfulSelectedListView";
 
 	private long requestId = 0;
@@ -74,7 +73,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 				RelativeLayout.LayoutParams.MATCH_PARENT);
 		mRTPullListView.setLayoutParams(lp);
 		mRootLayout = new RelativeLayout(mContext);
-		shareBg = (ImageView) View.inflate(context, R.layout.video_square_bj, null);
+		shareBg = (RelativeLayout) View.inflate(context, R.layout.video_square_bj, null);
 
 		initListener();
 		historyDate = SettingUtils.getInstance().getString("hotHistoryDate", "");
