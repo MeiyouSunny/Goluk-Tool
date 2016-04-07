@@ -338,9 +338,11 @@ public class FragmentTabHost extends TabHost implements
 			}
 			if (newTab != null) {
 				if (newTab.fragment == null) {
-					newTab.fragment = Fragment.instantiate(mContext,
+					if(null != newTab.clss) {
+						newTab.fragment = Fragment.instantiate(mContext,
 							newTab.clss.getName(), newTab.args);
-					ft.add(mContainerId, newTab.fragment, newTab.tag);
+						ft.add(mContainerId, newTab.fragment, newTab.tag);
+					}
 				} else {
 					//将attach替换为show，显示Fragment
 //					ft.attach(newTab.fragment);

@@ -112,27 +112,36 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	private static final String TAG = "FragmentMine";
 
 	LinearLayout mMineRootView = null;
-
 	private UserinfohomeRetBean mUserinfohomeRetBean;
-
 	private ImageView mNewFansIv;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		GolukDebugUtils.d(TAG, "onCreate");
+		EventBus.getDefault().register(this);
+	}
+
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		GolukDebugUtils.d(TAG, "onDestroy");
+		EventBus.getDefault().unregister(this);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+		super.onCreateView(inflater, container, savedInstanceState);
+		GolukDebugUtils.d(TAG, "onCreateView");
 		View rootView = inflater.inflate(R.layout.index_more, null);
 		mMineRootView = (LinearLayout) rootView;
-
-		EventBus.getDefault().register(this);
-
 		ma = (MainActivity) getActivity();
-
 		setListener();
-
 		initView();
-
 		setupView();
-
 		return rootView;
 	}
 
@@ -140,11 +149,13 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
+		GolukDebugUtils.d(TAG, "onActivityCreated");
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+		GolukDebugUtils.d(TAG, "onResume");
 		resetLoginState();
 		int msgCount = MessageManager.getMessageManager().getMessageTotalCount();
 		setMessageTipCount(msgCount);
@@ -155,19 +166,53 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	public void onDestroyView() {
 		// TODO Auto-generated method stub
 		super.onDestroyView();
-		EventBus.getDefault().unregister(this);
+		GolukDebugUtils.d(TAG, "onDestroyView");
+		mMineRootView = null;
 	}
-	
+
+	@Override
+	public void onAttach(Context context) {
+		// TODO Auto-generated method stub
+		super.onAttach(context);
+		GolukDebugUtils.d(TAG, "onAttach, context=" + context);
+	}
+
+	@Override
+	public void onDetach() {
+		// TODO Auto-generated method stub
+		super.onDetach();
+		GolukDebugUtils.d(TAG, "onDetach");
+	}
+
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		GolukDebugUtils.d(TAG, "onPause");
+	}
+
+	@Override
+	public void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		GolukDebugUtils.d(TAG, "onStart");
+	}
+
+	@Override
+	public void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		GolukDebugUtils.d(TAG, "onStop");
+	}
 
 	@Override
 	public void onHiddenChanged(boolean hidden) {
 		// TODO Auto-generated method stub
 		super.onHiddenChanged(hidden);
-		
+		GolukDebugUtils.d(TAG, "onHiddenChanged");
 		if(!hidden){
 			sendGetUserHomeRequest();
 		}
-		
 	}
 
 	public void onEventMainThread(EventMessageUpdate event) {
@@ -188,24 +233,6 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	}
 
 	private void setMessageTipCount(int total) {
-
-		// ImageView mainMsgTip = (ImageView)
-		// findViewById(R.id.iv_main_message_tip);
-		// if (total > 0) {
-		// mainMsgTip.setVisibility(View.VISIBLE);
-		// } else {
-		// mainMsgTip.setVisibility(View.GONE);
-		// }
-		//
-		// // Also set user page message count tip
-		// if (null == indexMoreActivity || indexMoreActivity.mRootLayout ==
-		// null) {
-		// GolukDebugUtils.d(TAG, "index more has been finished");
-		// return;
-		// }
-		//
-		// TextView userMsgCounterTV = (TextView)
-		// indexMoreActivity.mRootLayout.findViewById(R.id.tv_my_message_tip);
 		String strTotal = null;
 		if (total > 99) {
 			strTotal = "99+";
@@ -222,7 +249,6 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	}
 
 	public void setupView() {
-
 		ma.mApp.mUser.setUserInterface(this);
 	}
 

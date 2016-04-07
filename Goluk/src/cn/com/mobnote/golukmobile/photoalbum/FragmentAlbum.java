@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile.photoalbum;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -74,18 +75,19 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 	public String mPlatform = null;
 
 	public PromotionSelectItem mPromotionSelectItem;
+	private static final String TAG = "FragmentAlbum";
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		GolukDebugUtils.e("", "crash zh start App ------ FragmentAlbum-----onCreate------------:");
+		GolukDebugUtils.e(TAG, "FragmentAlbum-----onCreate------------:");
 		super.onCreate(savedInstanceState);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		GolukDebugUtils.e("", "crash zh start App ------ FragmentAlbum-----onCreateView------------:");
+		GolukDebugUtils.e(TAG, "FragmentAlbum-----onCreateView------------:");
 		Bundle bundle = getArguments();
 		if (bundle != null) {
 			mPlatform = bundle.getString("platform");
@@ -187,7 +189,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		GolukDebugUtils.e("", "crash zh start App ------ FragmentAlbum-----onResume------------:");
+		GolukDebugUtils.e(TAG, "FragmentAlbum-----onResume------------:");
 		GolukApplication.getInstance().setContext(getContext(), "ipcfilemanager");
 
 		if ("0".equals(mPlatform)) {
@@ -448,6 +450,55 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 		} else {
 			mEditBtn.setVisibility(View.GONE);
 		}
+	}
+
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		GolukDebugUtils.d(TAG, "onDestroy");
+		super.onDestroy();
+	}
+
+	@Override
+	public void onDestroyView() {
+		// TODO Auto-generated method stub
+		GolukDebugUtils.d(TAG, "onDestroyView");
+		super.onDestroyView();
+	}
+
+	@Override
+	public void onStart() {
+		// TODO Auto-generated method stub
+		GolukDebugUtils.d(TAG, "onStart");
+		super.onStart();
+	}
+
+	@Override
+	public void onAttach(Context context) {
+		// TODO Auto-generated method stub
+		GolukDebugUtils.d(TAG, "onAttach, context=" + context);
+		super.onAttach(context);
+	}
+
+	@Override
+	public void onDetach() {
+		// TODO Auto-generated method stub
+		GolukDebugUtils.d(TAG, "onDetach");
+		super.onDetach();
+	}
+
+	@Override
+	public void onStop() {
+		// TODO Auto-generated method stub
+		GolukDebugUtils.d(TAG, "onStop");
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		GolukDebugUtils.d(TAG, "onPause");
+		super.onPause();
 	}
 
 	/**

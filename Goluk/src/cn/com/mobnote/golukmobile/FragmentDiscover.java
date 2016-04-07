@@ -8,11 +8,10 @@ import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.newest.NewestListView;
 import cn.com.mobnote.golukmobile.newest.WonderfulSelectedListView;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareAdapter;
-import cn.com.mobnote.util.GolukUtils;
 import cn.com.mobnote.util.SharedPrefUtil;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -49,6 +48,7 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		GolukDebugUtils.d(TAG, "onCreate");
 		EventBus.getDefault().register(this);
 	}
 
@@ -57,6 +57,8 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+		super.onCreateView(inflater, container, savedInstanceState);
+		GolukDebugUtils.d(TAG, "onCreateView");
 		View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.video_square_main,
 				null);
 		mSquareRootView = rootView;
@@ -75,6 +77,7 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
+		GolukDebugUtils.d(TAG, "onActivityCreated");
 	}
 
 	public VideoSquareAdapter getVideoSquareAdapter() {
@@ -109,7 +112,7 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 	private OnPageChangeListener opcl = new OnPageChangeListener() {
 		@Override
 		public void onPageSelected(int page) {
-			GolukDebugUtils.e("", "VideoSquareActivity------AA------------onPageSelected:" + page);
+			GolukDebugUtils.e(TAG, "onPageSelected:" + page);
 			updateState(page);
 		}
 
@@ -118,8 +121,8 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 			// arg0 :当前页面，及你点击滑动的页面
 			// arg1:当前页面偏移的百分比
 			// arg2:当前页面偏移的像素位置
-			GolukDebugUtils.e("", "VideoSquareActivity------AA------------onPageScrolled: arg0: " + arg0 + "   arg1:"
-					+ arg1 + "  arg2:" + arg2);
+//			GolukDebugUtils.e(TAG, "onPageScrolled: arg0: " + arg0 + "   arg1:"
+//					+ arg1 + "  arg2:" + arg2);
 			if (0 == arg2) {
 				return;
 			}
@@ -138,7 +141,7 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 
 		@Override
 		public void onPageScrollStateChanged(int state) {
-			GolukDebugUtils.e("", "VideoSquareActivity------AA------------onPageScrollStateChanged: arg0: " + state);
+			GolukDebugUtils.e(TAG, "onPageScrollStateChanged: arg0: " + state);
 			// 其中state这个参数有三种状态（0，1，2）
 			// state ==1的时辰默示正在滑动，
 			// state==2的时辰默示滑动完毕了
@@ -149,7 +152,7 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 
 	private void updateLine(int process) {
 		final int leftMargin = (int) (process * density);
-		GolukDebugUtils.e("", "VideoSquareActivity------AA------------updateLine: : " + leftMargin);
+		GolukDebugUtils.e(TAG, "updateLine: " + leftMargin);
 		lineParams.addRule(RelativeLayout.BELOW, R.id.hot_title);
 		lineParams.setMargins(leftMargin, lineTop, 0, 0);
 		hot.setLayoutParams(lineParams);
@@ -281,14 +284,30 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();
+		GolukDebugUtils.d(TAG, "onResume");
 		if (null != mVideoSquareAdapter) {
 			mVideoSquareAdapter.onResume();
 		}
 	}
 
 	@Override
+	public void onAttach(Context context) {
+		// TODO Auto-generated method stub
+		GolukDebugUtils.d(TAG, "onAttach, context=" + context);
+		super.onAttach(context);
+	}
+
+	@Override
+	public void onDetach() {
+		// TODO Auto-generated method stub
+		GolukDebugUtils.d(TAG, "onDetach");
+		super.onDetach();
+	}
+
+	@Override
 	public void onPause() {
 		super.onPause();
+		GolukDebugUtils.d(TAG, "onPause");
 		if (null != mVideoSquareAdapter) {
 			mVideoSquareAdapter.onPause();
 		}
@@ -297,14 +316,23 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 	@Override
 	public void onStop() {
 		super.onStop();
+		GolukDebugUtils.d(TAG, "onStop");
 		if (null != mVideoSquareAdapter) {
 			mVideoSquareAdapter.onStop();
 		}
 	}
 
 	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		GolukDebugUtils.d(TAG, "onDestroyView");
+		mSquareRootView = null;
+	};
+
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		GolukDebugUtils.d(TAG, "onDestroy");
 		if (null != mVideoSquareAdapter) {
 			mVideoSquareAdapter.onDestroy();
 		}
