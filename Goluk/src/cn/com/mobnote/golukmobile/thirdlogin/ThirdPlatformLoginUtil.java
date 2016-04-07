@@ -17,11 +17,15 @@ import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 public class ThirdPlatformLoginUtil {
+	private static final String TAG = "ThirdPlatformLoginUtil";
+
 	public Activity mContext;
 	private ThirdUserInfoGet mListener;
+
 	private UMShareAPI mShareAPI = null;
 
 	public ThirdPlatformLoginUtil(Activity context) {
+
 		mContext = context;
 		mShareAPI = UMShareAPI.get(mContext);
 	}
@@ -88,6 +92,7 @@ public class ThirdPlatformLoginUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	/**
@@ -97,5 +102,6 @@ public class ThirdPlatformLoginUtil {
 	 */
 	public void logout(SHARE_MEDIA platform) {
 		mShareAPI.deleteOauth(mContext, platform, umAuthListener);
+
 	}
 }

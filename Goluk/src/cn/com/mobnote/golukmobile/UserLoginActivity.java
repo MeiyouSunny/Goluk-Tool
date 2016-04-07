@@ -108,16 +108,28 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		if (null != mApplication && null != mApplication.mLoginManage) {
 			mApplication.mLoginManage.initData();
 		}
+
 		mShareAPI = UMShareAPI.get(mContext);
+
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		if (null != mImageViewWeiXinLogin) {
+			mImageViewWeiXinLogin.setEnabled(true);
+		}
 		mApplication.setContext(mContext, "UserLogin");
 
 		getInfo();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (null != mImageViewWeiXinLogin) {
+			mImageViewWeiXinLogin.setEnabled(false);
+		}
 	}
 
 	@Override
@@ -272,6 +284,9 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 
 	@Override
 	public void onClick(View arg0) {
+		if (GolukUtils.isFastDoubleClick()) {
+			return;
+		}
 		switch (arg0.getId()) {
 		// 返回
 		case R.id.back_btn:
@@ -318,6 +333,11 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 			startActivity(itForget);
 			break;
 		case R.id.btn_weixin_login:
+			if (!GolukUtils.isAppInstalled(this, "com.tencent.mm")) {
+				GolukUtils.showToast(this, getString(R.string.str_no_weixin));
+				return;
+			}
+
 			String infoStr = GolukFileUtils.loadString(GolukFileUtils.THIRD_USER_INFO, "");
 			if (TextUtils.isEmpty(infoStr)) {
 				ThirdPlatformLoginUtil thirdPlatformLogin = new ThirdPlatformLoginUtil(this);
@@ -347,7 +367,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 	 * 登录管理类
 	 * 
 	 */
-	public void loginManage() {
+	private void loginManage() {
 		phone = mEditTextPhoneNumber.getText().toString().replace("-", "");
 		pwd = mEditTextPwd.getText().toString();
 		if (!"".equals(phone)) {
@@ -623,9 +643,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 
 	@Override
 	public void getUserInfo(boolean success, String usrInfo, String platform) {
-
 		GolukDebugUtils.e("", "three login------UserLogingActivity--getUserInfo ---1");
-
 		if (success) {
 			mApplication.mLoginManage.setUserLoginInterface(this);
 			ThirdLoginInfo info = new ThirdLoginInfo();
@@ -648,7 +666,10 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 
 	private void showProgressDialog() {
 		UserUtils.hideSoftMethod(this);
-		mCustomProgressDialog.show();
+		if (!this.isFinishing()) {
+			mCustomProgressDialog.show();
+		}
+
 		mEditTextPhoneNumber.setEnabled(false);
 		mEditTextPwd.setEnabled(false);
 		mTextViewRegist.setEnabled(false);

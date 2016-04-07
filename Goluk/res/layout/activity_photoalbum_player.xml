@@ -264,15 +264,12 @@
 	        android:layout_alignParentLeft="true"
 	        android:layout_centerVertical="true"
 	        android:background="@drawable/btn_photoalbum_download"/>
-	    <Button 
+	    <Button
 	        android:id="@+id/btn_vt_play"
 	        android:layout_height="wrap_content"
 	        android:layout_width="wrap_content"
-	        android:layout_toLeftOf="@+id/btn_full_screen"
-	        android:layout_toRightOf="@+id/btn_download"
 	        android:layout_centerVertical="true"
-	        android:layout_marginRight="47dp"
-	        android:layout_marginLeft="47dp"
+	        android:layout_centerHorizontal="true"
 	        android:background="@drawable/btn_vt_pause"
 	        />
 	</RelativeLayout>

@@ -342,7 +342,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 						if ((screenX > 0) && (screenX < (screenWidth / 2))) {
 							// 点击列表左边项,跳转到视频播放页面
 							VideoInfo info1 = d.getVideoInfo1();
-							gotoVideoPlayPage(IPCManagerFn.TYPE_URGENT, info1.videoPath, info1.videoCreateDate, info1.videoHP, info1.videoSize);
+							gotoVideoPlayPage(PhotoAlbumConfig.PHOTO_BUM_IPC_URG, info1.videoPath, info1.videoCreateDate, info1.videoHP, info1.videoSize);
 							String filename = d.getVideoInfo1().filename;
 							updateNewState(filename);
 
@@ -417,7 +417,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 			intent.putExtra(PhotoAlbumPlayer.FILENAME, path);
 			intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
 			intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
-			intent.putExtra(PhotoAlbumPlayer.TYPE, IPCManagerFn.TYPE_URGENT);
+			intent.putExtra(PhotoAlbumPlayer.TYPE, PhotoAlbumConfig.PHOTO_BUM_IPC_URG);
 			intent.putExtra(PhotoAlbumPlayer.SIZE, size);
 			getContext().startActivity(intent);
 		}

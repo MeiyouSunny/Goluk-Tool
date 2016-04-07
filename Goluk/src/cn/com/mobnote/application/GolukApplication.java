@@ -1,7 +1,6 @@
 package cn.com.mobnote.application;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -55,7 +54,6 @@ import cn.com.mobnote.golukmobile.fileinfo.VideoFileInfoBean;
 import cn.com.mobnote.golukmobile.http.HttpManager;
 import cn.com.mobnote.golukmobile.live.LiveActivity;
 import cn.com.mobnote.golukmobile.live.UserInfo;
-import cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum;
 import cn.com.mobnote.golukmobile.thirdshare.GolukUmConfig;
 import cn.com.mobnote.golukmobile.videosuqare.VideoCategoryActivity;
 import cn.com.mobnote.golukmobile.videosuqare.VideoSquareManager;
@@ -130,8 +128,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public String mCurrentUId = null;
 	/** 当前登录用户的Aid */
 	public String mCurrentAid = null;
-	
-	/**当前用户绑定手机号**/
+
+	/** 当前用户绑定手机号 **/
 	public String mCurrentPhoneNum = null;
 	/** 行车记录仪缓冲路径 */
 	private String carrecorderCachePath = "";
@@ -316,7 +314,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		isIpcConnSuccess = false;
 		isUserLoginSucess = false;
 		mCCUrl = null;
-//		mCurrentUId = null;
+		// mCurrentUId = null;
 		mCurrentAid = null;
 		mCurrentPhoneNum = null;
 		carrecorderCachePath = "";
@@ -1211,6 +1209,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			// 获取设备编号
 			getIPCNumber();
 			isconnection = true;// 连接成功
+			setSyncCount();
 			EventBus.getDefault().post(new EventPhotoUpdateLoginState(EventConfig.PHOTO_ALBUM_UPDATE_LOGIN_STATE));
 			EventBus.getDefault().post(new EventIpcConnState(EventConfig.IPC_CONNECT));
 			GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
@@ -1537,27 +1536,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 	}
 
-	/**
-	 * 判断是否可以同步5个最新的视频
-	 * 
-	 * @return true/false 可以/不可以
-	 * @author jyf
-	 */
-	private boolean isCanQueryNewFile() {
-//		if (!SettingUtils.getInstance().getBoolean(UserSetupActivity.AUTO_SWITCH, true)) {
-//			return false;
-//		}
-		// 
-		int syncFlag = SettingUtils.getInstance().getInt(UserSetupActivity.MANUAL_SWITCH, -1);
-		if(syncFlag == 0) {
-			return false;
-		}
-
+	// 设置同步数量
+	private void setSyncCount() {
+		GolukDebugUtils.e("","sync count ---application-----setSyncCount ---1");
 		if (!isBindSucess()) {
-			return false;
+			return;
 		}
-
-		/**初始没有设置同步数量，根据连接设备类型G1，T1S设置自动同步5条，其他设备自动同步20条**/
+		int syncFlag = SettingUtils.getInstance().getInt(UserSetupActivity.MANUAL_SWITCH, -1);
+		
+		GolukDebugUtils.e("","sync count ---application-----setSyncCount ---2:  " + syncFlag + "   nane: " + mIPCControlManager.mProduceName);
+		/** 初始没有设置同步数量，根据连接设备类型G1，T1S设置自动同步5条，其他设备自动同步20条 **/
 		if (syncFlag == -1) {
 			if (IPCControlManager.G1_SIGN.equals(mIPCControlManager.mProduceName)
 					|| IPCControlManager.T1s_SIGN.equalsIgnoreCase(mIPCControlManager.mProduceName)) {
@@ -1566,7 +1554,25 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				SettingUtils.getInstance().putInt(UserSetupActivity.MANUAL_SWITCH, 20);
 			}
 		}
-	
+	}
+
+	/**
+	 * 判断是否可以同步5个最新的视频
+	 * 
+	 * @return true/false 可以/不可以
+	 * @author jyf
+	 */
+	private boolean isCanQueryNewFile() {
+
+		int syncFlag = SettingUtils.getInstance().getInt(UserSetupActivity.MANUAL_SWITCH, -1);
+		if (syncFlag <= 0) {
+			return false;
+		}
+
+		if (!isBindSucess()) {
+			return false;
+		}
+
 		if (!isIpcLoginSuccess) {
 			return false;
 		}
@@ -1619,8 +1625,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			return;
 		}
 		long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
-		GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==4444===stopDownloadList" + starttime);
 		int syncFlag = SettingUtils.getInstance().getInt(UserSetupActivity.MANUAL_SWITCH, 5);
+		GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==4444===stopDownloadList" + starttime + "  syncFlag: "
+				+ syncFlag);
+
 		mIPCControlManager.queryFileListInfo(6, syncFlag, starttime, 2147483647);
 	}
 
@@ -1755,16 +1763,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @return boolean
 	 * @author 曾浩
 	 */
-//	public boolean isCanShowConnectDialog() {
-//		//////// CK start
-////		if (mContext instanceof FragmentAlbum) {
-////			return true;
-////		} else {
-////			return false;
-////		}
-//		return true;
-//		//////// CK End
-//	}
+	// public boolean isCanShowConnectDialog() {
+	// //////// CK start
+	// // if (mContext instanceof FragmentAlbum) {
+	// // return true;
+	// // } else {
+	// // return false;
+	// // }
+	// return true;
+	// //////// CK End
+	// }
 
 	/**
 	 * 获取当前登录用户的信息,　未登录則返回NULL
