@@ -117,7 +117,6 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 	private void initYMShare() {
 		sharePlatform = new SharePlatformUtil(mContext);
-		sharePlatform.configPlatforms();// 设置分享平台的参数
 	}
 
 	public void closeProgressDialog() {

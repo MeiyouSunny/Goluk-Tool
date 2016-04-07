@@ -195,7 +195,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		initView();
 
 		sharePlatform = new SharePlatformUtil(this);
-		sharePlatform.configPlatforms();// 设置分享平台的参数
 		historyDate = GolukUtils.getCurrentFormatTime(this);
 
 		initListener();

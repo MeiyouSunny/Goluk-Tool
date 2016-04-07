@@ -147,7 +147,6 @@ public class ClusterListActivity extends BaseActivity implements
 		textTitle.setText(title);
 
 		sharePlatform = new SharePlatformUtil(this);
-		sharePlatform.configPlatforms();// 设置分享平台的参数
 
 		httpPost(true, "0", "", ztid);
 	}

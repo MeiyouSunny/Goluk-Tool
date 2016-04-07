@@ -97,7 +97,6 @@ public class NewestListView implements
 
 		if(context instanceof MainActivity) {
 			sharePlatform = ((MainActivity)context).getSharePlatform();
-			sharePlatform.configPlatforms();// 设置分享平台的参数
 		}
 
 		initListener();

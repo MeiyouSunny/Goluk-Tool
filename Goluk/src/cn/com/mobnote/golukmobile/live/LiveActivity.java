@@ -200,7 +200,6 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		mApp.setContext(this, "LiveVideo");
 
 		sharePlatform = new SharePlatformUtil(this);
-		sharePlatform.configPlatforms();// 设置分享平台的参数
 
 		// 获取直播所需的地址
 		getURL();

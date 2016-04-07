@@ -131,7 +131,6 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 		titleShare.setOnClickListener(this);
 
 		sharePlatform = new SharePlatformUtil(this);
-		sharePlatform.configPlatforms();// 设置分享平台的参数
 		httpPost(true, ztid);
 	}
 

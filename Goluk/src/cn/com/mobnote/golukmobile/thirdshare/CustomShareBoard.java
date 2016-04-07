@@ -82,7 +82,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		modifyUMDialog();
 		initView(activity);
 	}
-	
+
 	private void modifyUMDialog() {
 		ProgressDialog dialog = new ProgressDialog(mActivity);
 		dialog.setMessage(mActivity.getString(R.string.str_um_share_dialog_txt));
@@ -165,7 +165,6 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 				.share();
 		mCurrentShareType = TYPE_WEIXIN;
 		this.shareUp();// 上报分享统计
-		performShare(SHARE_MEDIA.WEIXIN);
 	}
 
 	// 点击　“朋友圈”
@@ -182,7 +181,6 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 				.setShareContent(sc).share();
 		mCurrentShareType = TYPE_WEIXIN_CIRCLE;
 		this.shareUp();// 上报分享统计
-		performShare(SHARE_MEDIA.WEIXIN_CIRCLE);
 	}
 
 	// 点击　“ＱＱ”
@@ -198,12 +196,10 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		mCurrentShareType = TYPE_QQ;
 		this.shareUp();// 上报分享统计
 		new ShareAction(mActivity).setPlatform(SHARE_MEDIA.QQ).setCallback(umShareListener).setShareContent(sc).share();
-		performShare(SHARE_MEDIA.QQ);
 	}
 
 	// 点击　“ＱＱ空间”
 	public void click_qqZone() {
-
 		if (!isCanClick()) {
 			return;
 		}
@@ -216,7 +212,6 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 				.share();
 		mCurrentShareType = TYPE_QQ_ZONE;
 		this.shareUp();// 上报分享统计
-		performShare(SHARE_MEDIA.QZONE);
 	}
 
 	public void click_sina() {
@@ -274,8 +269,6 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 	// 分享成功后的回调
 	private void callBack_ShareSuccess() {
-		// GolukUtils.showToast(mActivity,
-		// mActivity.getString(R.string.str_share_success));
 		notifyShareState(true);
 		setCanJump();
 		if (GolukUtils.isActivityAlive(mActivity)) {
@@ -381,7 +374,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	 * @author jyf
 	 * @date 2015年8月11日
 	 */
-	public void shareUp() {
+	private void shareUp() {
 		GolukDebugUtils.e("", "jyf----thirdshare--------share up: " + "   mVideoId:" + mVideoId);
 		if (this.mVideoId != null && !"".equals(this.mVideoId)) {
 			GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(mCurrentShareType, this.mVideoId);
@@ -421,9 +414,6 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			return true;
 		}
 		return false;
-	}
-
-	private void performShare(SHARE_MEDIA platform) {
 	}
 
 }
