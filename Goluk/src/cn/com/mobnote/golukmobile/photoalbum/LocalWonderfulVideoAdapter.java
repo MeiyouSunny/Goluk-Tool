@@ -112,7 +112,12 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 			RelativeLayout.LayoutParams lineParams = new RelativeLayout.LayoutParams((int) (2 * density),
 					(int) (height + 4 * density));
 			lineParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-			lineParams.setMargins((int) (29 * density), 0, (int) (12 * density), 0);
+			if(density == 1.5){
+				lineParams.setMargins((int) (29.5 * density), 0, (int) (12 * density), 0);
+			}else{
+				lineParams.setMargins((int) (29 * density), 0, (int) (12 * density), 0);
+			}
+			
 			holder.line.setLayoutParams(lineParams);
 
 			int marginTop = 0;
