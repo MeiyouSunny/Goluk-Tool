@@ -3,6 +3,7 @@ package cn.com.mobnote.golukmobile.followed;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -46,6 +47,7 @@ import cn.com.mobnote.golukmobile.videoshare.ShareVideoShortUrlRequest;
 import cn.com.mobnote.golukmobile.videoshare.bean.VideoShareRetBean;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.util.GolukUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -79,6 +81,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		GolukDebugUtils.d(TAG, "onCreate");
 		EventBus.getDefault().register(this);
 	}
 
@@ -86,6 +89,8 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+		super.onCreateView(inflater, container, savedInstanceState);
+		GolukDebugUtils.d(TAG, "onCreateView");
 		View rootView = inflater.inflate(R.layout.fragment_followed_content_layout, null);
 		mEmptyRL = (RelativeLayout)rootView.findViewById(R.id.rl_follow_fragment_exception_refresh);
 		mRetryClickIV = (TextView)rootView.findViewById(R.id.iv_follow_fragment_exception_refresh);
@@ -152,12 +157,12 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 		
 		return rootView;
 	}
-	
+
 	@Override
 	public void onHiddenChanged(boolean hidden) {
 		// TODO Auto-generated method stub
 		super.onHiddenChanged(hidden);
-		
+		GolukDebugUtils.d(TAG, "onHiddenChanged");
 		if(!hidden){
 			if(null != mApp && mApp.isUserLoginSucess) {
 				mLoginRL.setVisibility(View.GONE);
@@ -267,10 +272,50 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
+		GolukDebugUtils.d(TAG, "onActivityCreated");
+	}
+
+	@Override
+	public void onDestroyView() {
+		GolukDebugUtils.d(TAG, "onDestroyView");
+		super.onDestroyView();
+	}
+
+	@Override
+	public void onPause() {
+		GolukDebugUtils.d(TAG, "onPause");
+		super.onPause();
+	}
+
+	@Override
+	public void onResume() {
+		GolukDebugUtils.d(TAG, "onResume");
+		super.onResume();
+	}
+
+	@Override
+	public void onStop() {
+		GolukDebugUtils.d(TAG, "onStop");
+		super.onStop();
+	}
+
+	@Override
+	public void onAttach(Context context) {
+		// TODO Auto-generated method stub
+		GolukDebugUtils.d(TAG, "onAttach, context=" + context);
+		super.onAttach(context);
+	}
+
+	@Override
+	public void onDetach() {
+		// TODO Auto-generated method stub
+		GolukDebugUtils.d(TAG, "onDetach");
+		super.onDetach();
 	}
 
 	@Override
 	public void onDestroy() {
+		GolukDebugUtils.d(TAG, "onDestroy");
 		if(mLoadingDialog != null) {
 			mLoadingDialog.close();
 			mLoadingDialog = null;
