@@ -329,48 +329,59 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 			}
 			mCurMotion = REFRESH_NORMAL;
 		}else if(requestType == IPageNotifyFn.PageType_Follow) {//关注
-			
+
 			FollowRetBean bean = (FollowRetBean)result;
 			if(null != bean) {
-				
+
 				if(bean.code != 0) {
 					Toast.makeText(FanListActivity.this, bean.msg, Toast.LENGTH_SHORT).show();
 					return;
 				}
-				
+
+				if(bean.data == null){
+					return;
+				}
+
 				// User link uid to find the changed recommend user item status
 				int i = findLinkUserItem(bean.data.linkuid);
 				if(i >=0 && i < mFollowingList.size()) {
 					FollowingItemBean tempBean = mFollowingList.get(i);
 					tempBean.link = bean.data.link;
+
+					if(bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER || bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_ONLY){
+						tempBean.fans = tempBean.fans + 1;
+					}else if(bean.data.link == FollowingConfig.LINK_TYPE_FAN_ONLY || bean.data.link == FollowingConfig.LINK_TYPE_UNLINK){
+						tempBean.fans = tempBean.fans - 1;
+						if(tempBean.fans <0){
+							tempBean.fans = 0;
+						}
+					}
 					mFollowingList.set(i, tempBean);
 					mFansListAdapter.notifyDataSetChanged();
-					
+
 					if(mFollowingList==null||mFollowingList.size()<=0){
 						setEmptyView(getString(R.string.no_fans_tips));
 					}
-					
-					if(bean.data!=null){
-						if(bean.data.link == FollowingConfig.LINK_TYPE_FAN_ONLY
-								||bean.data.link == FollowingConfig.LINK_TYPE_UNLINK){
-							Toast.makeText(FanListActivity.this,
-									getResources().getString(R.string.str_usercenter_attention_cancle_ok),Toast.LENGTH_SHORT).show();
-						}else if(bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER){
-							Toast.makeText(FanListActivity.this,
-									getResources().getString(R.string.str_usercenter_attention_ok),Toast.LENGTH_SHORT).show();
-						}
+
+					if(bean.data.link == FollowingConfig.LINK_TYPE_FAN_ONLY
+							||bean.data.link == FollowingConfig.LINK_TYPE_UNLINK){
+						Toast.makeText(FanListActivity.this,
+								getResources().getString(R.string.str_usercenter_attention_cancle_ok),Toast.LENGTH_SHORT).show();
+					}else if(bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER){
+						Toast.makeText(FanListActivity.this,
+								getResources().getString(R.string.str_usercenter_attention_ok),Toast.LENGTH_SHORT).show();
 					}
 				}
 			} else {
 				// Toast for operation failed
 				Toast.makeText(FanListActivity.this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
-				
+
 			}
-			
+
 			if(null!=mLoadingDialog&&mLoadingDialog.isShowing()){
 				mLoadingDialog.close();
 			}
-			
+
 		} 
 	}
 	
@@ -383,7 +394,6 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 		for(int i = 0; i < size; i++) {
 			FollowingItemBean bean = mFollowingList.get(i);
 			if(null != bean &&bean.uid.equals(linkuid)) {
-			
 				return i;
 			}
 		}
