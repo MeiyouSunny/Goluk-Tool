@@ -1538,13 +1538,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	// 设置同步数量
 	private void setSyncCount() {
-		GolukDebugUtils.e("","sync count ---application-----setSyncCount ---1");
+		GolukDebugUtils.e("", "sync count ---application-----setSyncCount ---1");
 		if (!isBindSucess()) {
 			return;
 		}
 		int syncFlag = SettingUtils.getInstance().getInt(UserSetupActivity.MANUAL_SWITCH, -1);
-		
-		GolukDebugUtils.e("","sync count ---application-----setSyncCount ---2:  " + syncFlag + "   nane: " + mIPCControlManager.mProduceName);
+
+		GolukDebugUtils.e("", "sync count ---application-----setSyncCount ---2:  " + syncFlag + "   nane: "
+				+ mIPCControlManager.mProduceName);
 		/** 初始没有设置同步数量，根据连接设备类型G1，T1S设置自动同步5条，其他设备自动同步20条 **/
 		if (syncFlag == -1) {
 			if (IPCControlManager.G1_SIGN.equals(mIPCControlManager.mProduceName)
@@ -1626,7 +1627,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 		long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
 		int syncFlag = SettingUtils.getInstance().getInt(UserSetupActivity.MANUAL_SWITCH, 5);
-		GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==4444===stopDownloadList" + starttime + "  syncFlag: "
+		GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==4444===stopDownloadList:   " + starttime + "  syncFlag: "
 				+ syncFlag);
 
 		mIPCControlManager.queryFileListInfo(6, syncFlag, starttime, 2147483647);
@@ -1675,9 +1676,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	private void tips() {
 		GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==fuck===stopDownloadList");
-		if ("carrecorder".equals(mPageSource)) {
-			return;
-		}
 		if (null == fileList || fileList.size() <= 0) {
 			return;
 		}

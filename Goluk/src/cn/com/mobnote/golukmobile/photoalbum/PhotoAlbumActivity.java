@@ -20,6 +20,6 @@ public class PhotoAlbumActivity extends BaseActivity {
 		FragmentAlbum fa = new FragmentAlbum();
 		fa.setArguments(bundle);
 		fragmentTransaction.add(R.id.photo_album_fragment, fa);
-		fragmentTransaction.commit();
+		fragmentTransaction.commitAllowingStateLoss();
 	}
 }

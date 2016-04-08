@@ -45,8 +45,7 @@
         android:layout_alignParentLeft="true"
         android:textSize="10sp"
         android:textColor="#bfffffff"
-        android:paddingLeft="4dp"
-        android:visibility="gone"/>
+        android:paddingLeft="4dp"/>
 
     <TextView
         android:id="@+id/video_createtime1"
@@ -80,6 +79,7 @@
         android:layout_alignParentRight="true"
         android:textSize="8sp"
         android:clickable="false"
+        android:textColor="#bfffffff"
         android:focusable="false"/>
     
     <ImageView 
@@ -138,8 +138,7 @@
         android:layout_alignParentLeft="true"
         android:textSize="10sp"
         android:textColor="#bfffffff"
-        android:paddingLeft="4dp"
-        android:visibility="gone"/>
+        android:paddingLeft="4dp"/>
 
     <TextView
         android:id="@+id/video_createtime2"
@@ -173,6 +172,7 @@
         android:layout_alignParentRight="true"
         android:textSize="8sp"
         android:clickable="false"
+        android:textColor="#bfffffff"
         android:focusable="false"/>
     
     <ImageView 
