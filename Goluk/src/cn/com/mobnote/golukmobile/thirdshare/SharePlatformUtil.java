@@ -8,6 +8,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.handler.UMSSOHandler;
 
 public class SharePlatformUtil {
 	public Context mContext;
@@ -37,7 +38,14 @@ public class SharePlatformUtil {
 	}
 
 	public boolean isInstallPlatform(SHARE_MEDIA platform) {
-		return mShareAPI.getHandler(platform).isInstall(mContext);
+		if (null == mShareAPI) {
+			return false;
+		}
+		UMSSOHandler handler = mShareAPI.getHandler(platform);
+		if (null == handler) {
+			return true;
+		}
+		return handler.isInstall(mContext);
 	}
 
 	public boolean isSinaWBValid() {

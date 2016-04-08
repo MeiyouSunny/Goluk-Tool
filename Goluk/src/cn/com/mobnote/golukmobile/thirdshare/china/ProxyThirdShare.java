@@ -1,29 +1,22 @@
 package cn.com.mobnote.golukmobile.thirdshare.china;
 
 import android.app.Activity;
+import android.view.View;
 import cn.com.mobnote.golukmobile.thirdshare.SharePlatformUtil;
 
 public class ProxyThirdShare implements IThirdShareFn {
 
-	public int type = 1;
+	public int type = 2;
 
 	private IThirdShareFn mThirdShare = null;
 
 	public ProxyThirdShare(Activity activity, SharePlatformUtil spf, ThirdShareBean bean) {
-
 		if (type == 1) {
 			mThirdShare = new ChinaThirdShare(activity, spf, bean.surl, bean.curl, bean.db, bean.tl, bean.bitmap,
-					bean.realDesc, bean.videoId);
+					bean.realDesc, bean.videoId, bean.mShareType);
 		} else {
-			mThirdShare = new Abroad(activity, spf, bean.surl, bean.curl, bean.db, bean.tl, bean.bitmap, bean.realDesc,
-					bean.videoId);
-		}
-	}
-
-	@Override
-	public void show() {
-		if (null != mThirdShare) {
-			mThirdShare.show();
+			mThirdShare = new AbroadThirdShare(activity, spf, bean.surl, bean.curl, bean.db, bean.tl, bean.bitmap,
+					bean.realDesc, bean.videoId, bean.mShareType);
 		}
 	}
 
@@ -36,17 +29,32 @@ public class ProxyThirdShare implements IThirdShareFn {
 	}
 
 	@Override
-	public void setCurrentShareType(String type) {
+	public void CallBack_Share(int event) {
 		if (null != mThirdShare) {
-			mThirdShare.setCurrentShareType(type);
+			mThirdShare.CallBack_Share(event);
 		}
 
 	}
 
 	@Override
-	public void CallBack_Share(int event) {
+	public void showAtLocation(View parent, int gravity, int x, int y) {
 		if (null != mThirdShare) {
-			mThirdShare.CallBack_Share(event);
+			mThirdShare.showAtLocation(parent, gravity, x, y);
+		}
+	}
+
+	@Override
+	public void close() {
+		if (null != mThirdShare) {
+			mThirdShare.close();
+		}
+
+	}
+
+	@Override
+	public void setShareType(String type) {
+		if (null != mThirdShare) {
+			mThirdShare.setShareType(type);
 		}
 
 	}

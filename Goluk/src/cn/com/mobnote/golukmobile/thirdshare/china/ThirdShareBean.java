@@ -11,5 +11,7 @@ public class ThirdShareBean {
 	public Bitmap bitmap;
 	public String realDesc;
 	public String videoId;
+	/** 0:普通列表分享 1:即刻分享 **/
+	public String mShareType = "";
 
 }
