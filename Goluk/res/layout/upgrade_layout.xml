@@ -73,7 +73,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="5dp"
                     android:layout_toRightOf="@id/upgrade_ipc_text"
-                    android:text="V1.1.1"
                     android:textColor="#3f3f3f"
                     android:textSize="14sp" />
 
@@ -84,7 +83,6 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
-                    android:text="356MB"
                     android:textColor="#3b97f5"
                     android:textSize="14sp" />
 

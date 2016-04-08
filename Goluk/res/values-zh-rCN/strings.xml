@@ -396,15 +396,13 @@
     <string name="str_ipc_disconnect">摄像头断开，正在为您重连…</string>
     <string name="str_ipc_no_connect">您好像没有连接摄像头哦。</string>
     <string name="str_ipc_no_connect_str">未连接记录仪</string>
-    <string name="str_photo_downing ">视频正在下载，无法删除</string>
+    <string name="str_photo_downing">视频正在下载，无法删除</string>
     <string name="str_photo_check_ipc_state">请检查摄像头连接状态</string>
     <string name="str_phote_delete_ok">确认</string>
-    <string name="str_photo_deletepromote_1">是否删除</string>
     <string name="str_photo_delete_confirm">确认删除此视频？</string>
-    <string name="str_photo_deletepromote_2">个视频？</string>
+    <string name="str_photo_deletepromote">是否删除 %1$s 个视频？</string>
     <string name="str_photo_delete_ok">删除视频成功</string>
-    <string name="str_photo_select1">已选择</string>
-    <string name="str_photo_select2">个视频</string>
+    <string name="str_photo_select">已选择 %1$s 个视频</string>
     <string name="str_today">今天</string>
     <string name="str_yestoday">昨天</string>
     <string name="str_surround_watch">围观</string>
@@ -938,5 +936,79 @@
     <string name="str_carrecorder_connect_text">正在连接极路客…</string>
     <string name="str_sofa_text">沙发等您来坐</string>
     <string name="str_reward_text">获奖</string>
+    <string name="str_to_login_text">登录后才能查看自己关注的内容哟~</string>
+    <string name="str_to_login_now_text">现在去登录</string>
+    
+    
+    <string name="str_live_ok_praise_unit">个赞</string>
+    <string name="str_tencent_weibo">腾讯微博</string>
+    <string name="str_share_to">分享到</string>
+    <string name="str_search">搜索</string>
+    <string name="str_use_an_exit_account_to_post_comments">使用已有账号发表评论</string>
+    <string name="str_renren">人人网</string>
+    <string name="str_watercress">豆瓣</string>
+    <string name="str_anonymous_comments">匿名评论</string>
+    <string name="str_network_failed_to_load">网络加载失败，请点击重试。</string>
+    <string name="str_follow_official_microblogging">关注官方微博</string>
+    <string name="str_camera_text">相机</string>
+    <string name="str_choose_in_album">从相册中选择</string>
+    <string name="str_system_head">系统头像</string>
+    <string name="str_umeng_hint">说点什么吧。。。</string>
+    <string name="str_updated">&#160;</string>
+    <!-- arrays -->
+ 	<string name="str_frame24">24帧</string>
+    <string name="str_frame18">18帧</string>
+    <string name="str_frame15">15帧</string>
+    <string name="str_no_enable">不启用</string>
+    <string name="str_enable">启用</string>
+    <string name="str_high1080">1080P高质量</string>
+    <string name="str_middle1080">1080P中等质量</string>
+    <string name="str_high720">720P高质量</string>
+    <string name="str_middle720">720P中等质量</string>
+    <string name="str_quality_high">高质量</string>
+    <string name="str_quality_middle">中质量</string>
+    <string name="str_quality_low">低质量</string>
+    <string name="str_wonderfulvideo_and_photo">精彩视频+照片</string>
+    <string name="str_wonderfulvideo">精彩视频</string>
+    
+    <!-- <string name="facebook_app_id">1679907912268496</string> -->
+    <string name="facebook_app_id">1679907912268496</string>
+    <string name="login_or_txt">OR</string>
+    <string name="login_in_facebook_btn">Login With Facebook</string>
+    <string name="user_insert_msg">Dont have an account?</string>
+    <string name="user_insert_btn_txt">Sign up.</string>
+
+    <string name="user_insert_add_number">ADD PHONE NUMBER</string>
+    <string name="user_insert_sign_in">Already have an account?</string>
+    <string name="user_sign_in">Sign in.</string>
+    <string name="user_insert_butoom_msg">By signing up, you agree to our Terms  &#038;</string>
+    <string name="user_insert_butoom_msg_agian">Privacy Policy .</string>
+    <string name="test_code_icon_txt">ENTER CONFIRMATION CODE</string>
+    <string name="test_code_icon_txt_number">Enter the code we sent to</string>
+    <string name="resend_code_txt">Resend Code</string>
+    <string name="confirmation_code">Confirmation Code</string>
+    <string name="user_insert_pwd_hint">Enter password (6-16 Characters)</string>
+    <string name="str_select_country_title">SELECT COUNTRY</string>
+    <string name="str_all_countries_title">ALL COUNTRIES</string>
+    <string name="str_select_country_cancle">Cancle</string>
+
+    <string name="str_facebook">Facebook</string>
+    <string name="str_twitter">Twitter</string>
+    <string name="str_instagram">Instagram</string>
+    <string name="str_whatsapp">Whatsapp</string>
+    <string name="str_line">Line</string>
+
+    <string name="str_facebook_no_install">Need Install Facebook</string>
+    <string name="str_whatsapp_no_install">Need Install Whatsapp</string>
+    <string name="str_line_no_install">Need Install Line</string>
+    <string name="str_instagram_no_install">Need Install Instagram</string>
+    <string name="um_share_cancel">cancel Share</string>
+    <string name="str_um_share_dialog_txt">Share...</string>
+    <string name="str_twitter_no_install">Need Install Twitter</string>
+
+    <string name="str_reset_pwd_title">Retrieve password</string>
+    <string name="ipc_check_zone_msg">Do you want to restart the recorder to use the new time zone?</string>
+    <string name="umeng_socialize_text_whatsapp_key">Whatsapp</string>
+    <string name="umeng_socialize_text_line_key">Line</string>
     
 </resources>

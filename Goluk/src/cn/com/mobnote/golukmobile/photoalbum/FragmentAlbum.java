@@ -321,9 +321,8 @@ public class FragmentAlbum extends Fragment implements OnClickListener{
 			}
 
 			CustomDialog mCustomDialog = new CustomDialog(getActivity());
-			mCustomDialog.setMessage(
-					getResources().getString(R.string.str_photo_deletepromote_1) + selectedListData.size()
-							+ getResources().getString(R.string.str_photo_deletepromote_2), Gravity.CENTER);
+			mCustomDialog.setMessage(this.getString(R.string.str_photo_deletepromote, selectedListData.size()),
+					Gravity.CENTER);
 			mCustomDialog.setLeftButton(getResources().getString(R.string.str_phote_delete_ok),
 					new OnLeftClickListener() {
 						@Override

@@ -253,8 +253,7 @@ public class LocalWonderfulVideoListView {
 				mFragment.updateDeleteState(false);
 			} else {
 				mFragment.updateDeleteState(true);
-				mFragment.updateTitleName(mContext.getResources().getString(R.string.str_photo_select1)
-						+ selectedListData.size() + mContext.getResources().getString(R.string.str_photo_select2));
+				mFragment.updateTitleName(mContext.getString(R.string.str_photo_select, selectedListData.size()));
 			}
 		}
 	}

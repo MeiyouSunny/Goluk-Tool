@@ -342,7 +342,6 @@
     <string name="carrecorder_hint_text1">        Vehicle current status will be automatically detected after open Parking Protection function; When the vehicle is in parking status, Goluk will take 1 picture each second</string>
     <string name="carrecorder_hint_text2">        Vehicle detection functions will be activated when open Parking Protection, one is vibration detection(trigger pre 8 seconds + post 8 seconds), the other is movement detection(trigger pre 8 seconds + post 8 seconds)</string>
     <string name="str_usercenter_praise">Like</string>
-    <string name="str_praise_count_unit">Likes</string>
     <string name="str_usercenter_comment">Comment</string>
     <string name="str_usercenter_share">Share</string>
     <string name="str_new">new</string>
@@ -381,7 +380,7 @@
     <string name="str_ipc_disconnect">Dashcam is disconnected. Reconnecting…</string>
     <string name="str_ipc_no_connect">Not correctly connected to Goluk</string>
     <string name="str_ipc_no_connect_str">Disconnected</string>
-    <string name="str_photo_downing ">Video is being downloaded. It can not be deleted</string>
+    <string name="str_photo_downing">Video is being downloaded. It can not be deleted</string>
     <string name="str_photo_check_ipc_state">Check the camera connection status</string>
     <string name="str_phote_delete_ok">Confirm</string>
     <string name="str_photo_deletepromote">Delete %1$s Videos (Y/N)</string>
@@ -948,11 +947,7 @@
     <string name="str_album_video_720">720p</string>
     <string name="str_album_video_480">480p</string>
     <string name="setting_notify_follow">有人关注我</string>
-    <string name="str_photo_deletepromote_1">是否删除</string>
     <string name="str_photo_delete_confirm">确认删除此视频？</string>
-    <string name="str_photo_deletepromote_2">个视频？</string>
-    <string name="str_photo_select1">已选择</string>
-    <string name="str_photo_select2">个视频</string>
     <string name="str_refresh_one_minute">一分钟前更新</string>
     <string name="str_asycned">已同步</string>
     <string name="str_video_sync_setting_title">视频自动同步设置</string>
@@ -1025,5 +1020,7 @@
     <string name="str_carrecorder_connect_text">正在连接极路客…</string>
     <string name="str_sofa_text">沙发等您来坐</string>
     <string name="str_reward_text">获奖</string>
+    <string name="str_to_login_text">登录后才能查看自己关注的内容哟~</string>
+    <string name="str_to_login_now_text">现在去登录</string>
     
 </resources>
