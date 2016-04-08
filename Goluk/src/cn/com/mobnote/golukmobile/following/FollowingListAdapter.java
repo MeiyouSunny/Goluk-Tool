@@ -22,11 +22,11 @@ import cn.com.mobnote.util.GlideUtils;
 import cn.com.mobnote.util.GolukUtils;
 
 public class FollowingListAdapter extends BaseAdapter{
-	
+
 	List<FollowingItemBean> mFollowingList;
 	FollowingListActivity mFollowingActivity;
 	private final static String TAG = "FollowingListAdapter";
-	
+
 	public FollowingListAdapter(Activity activity,List<FollowingItemBean> list) {
 		super();
 		this.mFollowingActivity = (FollowingListActivity) activity;
@@ -39,7 +39,7 @@ public class FollowingListAdapter extends BaseAdapter{
 		// TODO Auto-generated method stub
 		return null == mFollowingList?0:mFollowingList.size();
 	}
-	
+
 	public void setData(List<FollowingItemBean> list) {
 		this.mFollowingList = list;
 		notifyDataSetChanged();
@@ -64,7 +64,7 @@ public class FollowingListAdapter extends BaseAdapter{
 		// TODO Auto-generated method stub
 		return position;
 	}
-	
+
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
@@ -92,7 +92,7 @@ public class FollowingListAdapter extends BaseAdapter{
 		if(null == followingItemBean) {
 			return convertView;
 		}
-		
+
 		// 设置头像
 		String netHeadUrl = followingItemBean.customavatar;
 		if (null != netHeadUrl && !"".equals(netHeadUrl)) {
@@ -110,23 +110,23 @@ public class FollowingListAdapter extends BaseAdapter{
 		}else{
 			holderFollowing.tvFollowinglistNickname.setText(nickname);
 		}
-		
-		//设置分享/关注和粉丝数量		
-		String shareCount = getFormatedNum(followingItemBean.share);
-		String followCount = getFormatedNum(followingItemBean.following);
-		String fansCount = getFormatedNum(followingItemBean.fans);
-		
+
+		//设置分享/关注和粉丝数量
+		String shareCount = GolukUtils.getFormatNumber(followingItemBean.share);
+		String followCount = GolukUtils.getFormatNumber(followingItemBean.following);
+		String fansCount = GolukUtils.getFormatNumber(followingItemBean.fans);
+
 		String shareFolowingAndFans = "<font color='#0080ff'>" + shareCount + "</font>"
 			   + "<font color='#808080'>"  + " " + mFollowingActivity.getResources().getString(R.string.share_text).toString() + " / " + "</font>"
 			   + "<font color='#0080ff'>" + followCount + "</font>"
 			   + "<font color='#808080'>" + " " + mFollowingActivity.getResources().getString(R.string.str_follow).toString() + " / " + "</font>"
 			   + "<font color='#0080ff'>" + fansCount + "</font>"
 			   + "<font color='#808080'>" + " " + mFollowingActivity.getResources().getString(R.string.str_fans).toString() + "</font>";
-		
+
 		holderFollowing.tvFollowinglistShareFollowedAndFans.setText(Html.fromHtml(shareFolowingAndFans));
-		
+
 		//设置连接状态图片及文字
-	
+
 		if(followingItemBean.link == FollowingConfig.LINK_TYPE_FOLLOW_ONLY){
 			holderFollowing.llFollowinglistLink.setVisibility(View.VISIBLE);
 			holderFollowing.llFollowinglistLink.setBackgroundResource(R.drawable.follow_button_border_followed);
@@ -157,31 +157,13 @@ public class FollowingListAdapter extends BaseAdapter{
 			holderFollowing.tvFollowinglistLink.setTextColor(Color.parseColor("#0080ff"));
 			holderFollowing.ivFollowinglistLink.setImageResource(R.drawable.icon_follow_normal);
 		}
-		
+
 		initFollowingItemListener(position, holderFollowing);
 		return convertView;
 	}
-	
-	private String getFormatedNum(int n){
-		
-		if(n<0) n= 0;
-		
-		if(n<1000){
-			return String.valueOf(n);
-		}
-		
-		int intPart = n/1000;
-		
-		if(n - intPart*1000 < 100){
-			return String.valueOf(intPart) + "k";
-		}else{
-			return String.valueOf(intPart) + "." + (n - intPart*1000)/100 + "k";
-		}
-		
-	}
-	
+
 	private void initFollowingItemListener(final int index, VHFollowing viewHolder) {
-		
+
 		if (index < 0 || index >= mFollowingList.size()) {
 			return;
 		}
@@ -199,7 +181,7 @@ public class FollowingListAdapter extends BaseAdapter{
 						tempFollowingItemBean.introduction);
 			}
 		});
-		
+
 		viewHolder.ivFollowinglistAvatar.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -215,7 +197,7 @@ public class FollowingListAdapter extends BaseAdapter{
 						tempFollowingItemBean.introduction);
 			}
 		});
-		
+
 		viewHolder.tvFollowinglistShareFollowedAndFans.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -231,7 +213,7 @@ public class FollowingListAdapter extends BaseAdapter{
 						tempFollowingItemBean.introduction);
 			}
 		});
-		
+
 		viewHolder.llFollowinglistLink.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -249,8 +231,7 @@ public class FollowingListAdapter extends BaseAdapter{
 		});
 
 	}
-	
-	
+
 	static class VHFollowing{
 		ImageView ivFollowinglistAvatar;
 		TextView tvFollowinglistNickname;
@@ -259,7 +240,7 @@ public class FollowingListAdapter extends BaseAdapter{
 		LinearLayout llFollowinglistLink;
 		ImageView ivFollowinglistLink;
 		TextView tvFollowinglistLink;//连接状态
-		
+
 	}
 
 }

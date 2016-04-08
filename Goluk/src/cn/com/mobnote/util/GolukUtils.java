@@ -540,11 +540,29 @@ public class GolukUtils {
 
 		return number;
 	}
+	
+	public static String getFormatedNumber(String fmtnumber){
+		String number;
+		try {
+			int wg = Integer.parseInt(fmtnumber);
+
+			if (wg >= 10000) {
+				DecimalFormat df = new DecimalFormat("0.0");
+				number = df.format((float) wg / 1000) + "K";
+			} else {
+				number = "" + fmtnumber;
+			}
+		} catch (Exception e) {
+			return fmtnumber;
+		}
+
+		return number;
+	}
 
 	public static String getFormatNumber(int fmtnumber) {
 		String number;
 
-		if (fmtnumber > 10000) {
+		if (fmtnumber >= 10000) {
 			DecimalFormat df = new DecimalFormat("0.0");
 			number = df.format((float) fmtnumber / 1000) + "K";
 		} else {

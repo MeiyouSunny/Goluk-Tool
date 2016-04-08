@@ -660,36 +660,6 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			showHead(mImageHead, "7");
 		}
 	}
-	
-	public String getFormatNumber(String fmtnumber) {
-		String number;
-		try {
-			int wg = Integer.parseInt(fmtnumber);
-			number = getFormatedNum(wg);
-		} catch (Exception e) {
-			return fmtnumber;
-		}
-
-		return number;
-	}
-	
-	private String getFormatedNum(int n){
-		
-		if(n<0) n= 0;
-		
-		if(n<1000){
-			return String.valueOf(n);
-		}
-		
-		int intPart = n/1000;
-		
-		if(n - intPart*1000 < 100){
-			return String.valueOf(intPart) + "k";
-		}else{
-			return String.valueOf(intPart) + "." + (n - intPart*1000)/100 + "k";
-		}
-		
-	}
 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
@@ -698,9 +668,9 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			mUserinfohomeRetBean = (UserinfohomeRetBean) result;
 			if (null != mUserinfohomeRetBean && null != mUserinfohomeRetBean.data ) {
 				if((ma.mApp.isUserLoginSucess == true || ma.mApp.registStatus == 2) && !TextUtils.isEmpty(userUId) ){
-					mTextShare.setText(getFormatNumber(mUserinfohomeRetBean.data.sharevideonumber));
-					mTextFans.setText(getFormatNumber(mUserinfohomeRetBean.data.fansnumber));
-					mTextFollow.setText(getFormatNumber(mUserinfohomeRetBean.data.followingnumber));
+					mTextShare.setText(GolukUtils.getFormatedNumber(mUserinfohomeRetBean.data.sharevideonumber));
+					mTextFans.setText(GolukUtils.getFormatedNumber(mUserinfohomeRetBean.data.fansnumber));
+					mTextFollow.setText(GolukUtils.getFormatedNumber(mUserinfohomeRetBean.data.followingnumber));
 
 					int newFansNumber = Integer.valueOf(mUserinfohomeRetBean.data.newfansnumber);
 					if(newFansNumber>0){
