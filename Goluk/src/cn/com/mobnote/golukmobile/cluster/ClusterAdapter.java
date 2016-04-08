@@ -269,7 +269,9 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 //						notifyDataSetChanged();
 //					}
 //				});
-				holder.partakes.setText(mHeadData.participantcount);
+//				holder.partakes.setText(mHeadData.participantcount);
+				holder.partakes.setText(mContext.getString(R.string.str_participation_population,
+						mHeadData.participantcount));
 				//活动过期
 				if("1".equals(mHeadData.expiration)){
 					holder.partakeBtn.setText(mContext.getResources().getString(R.string.activity_time_out));
@@ -534,7 +536,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 				convertView = LayoutInflater.from(mContext).inflate(R.layout.user_center_novideodata, null);
 				noVideoDataViewHolder = new NoVideoDataViewHolder();
 				noVideoDataViewHolder.tipsText = (TextView) convertView.findViewById(R.id.tv_tipstext);
-				noVideoDataViewHolder.emptyImage = (ImageView) convertView.findViewById(R.id.tipsimage);
+				noVideoDataViewHolder.emptyImage = (TextView) convertView.findViewById(R.id.tipsimage);
 				noVideoDataViewHolder.bMeasureHeight = false;
 				convertView.setTag(noVideoDataViewHolder);
 			} else {

@@ -14,7 +14,6 @@
         android:paddingRight="10dp"
         android:singleLine="true"
         android:gravity="center_vertical|left"
-        android:text="2016-2-13"
         android:textSize="12sp"
         android:textColor="#888888"
         android:drawableLeft="@drawable/videodetail_like"
@@ -35,6 +34,5 @@
         android:textSize="14sp"
         android:gravity="left"
         android:textColor="#333333"
-        android:text="神秘的谷歌王朝，什么事谷歌王朝"
         android:singleLine="false"/>
 </LinearLayout>

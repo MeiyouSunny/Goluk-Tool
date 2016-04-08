@@ -436,8 +436,8 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 				mFragmentAlbum.updateDeleteState(false);
 			} else {
 				mFragmentAlbum.updateDeleteState(true);
-				mFragmentAlbum.updateTitleName(this.getContext().getString(R.string.str_photo_select1)
-						+ selectedListData.size() + this.getContext().getString(R.string.str_photo_select2));
+				mFragmentAlbum.updateTitleName(this.getContext().getString(R.string.str_photo_select,
+						selectedListData.size()));
 			}
 		}
 	}

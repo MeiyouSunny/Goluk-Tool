@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:gravity="center_horizontal"
-        android:text="使用已有账号发表评论"
+        android:text="@string/str_use_an_exit_account_to_post_comments"
         android:visibility="gone"
         android:textColor="#ffffff" />
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2007 The Android Open Source Project
+<!--
+     Copyright (C) 2007 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -15,20 +16,24 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/movie_view_root"
-        android:background="@android:color/black"
+    android:id="@+id/movie_view_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black" >
+
+    <cn.com.mobnote.golukmobile.player.FullScreenVideoView
+        android:id="@+id/surface_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <cn.com.mobnote.golukmobile.player.FullScreenVideoView android:id="@+id/surface_view"
-            android:visibility="invisible"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true" />
-    <ImageView 
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:visibility="invisible" />
+
+    <ImageView
         android:id="@+id/ImageView_cover"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-       	android:layout_centerInParent="true"
-       	android:scaleType="centerCrop"
-       	android:contentDescription="cover"/>
+        android:layout_centerInParent="true"
+        android:contentDescription="cover"
+        android:scaleType="centerCrop" />
+
 </RelativeLayout>

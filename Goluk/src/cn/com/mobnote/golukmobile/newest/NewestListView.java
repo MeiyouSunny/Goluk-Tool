@@ -74,7 +74,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 	private RelativeLayout mBottomLoadingView = null;
 	private int curpageCount = 0;
 	private SharePlatformUtil sharePlatform;
-	private ImageView shareBg = null;
+	private RelativeLayout shareBg = null;
 	private static final String TAG = "NewestListView";
 
 	public NewestListView(Context context) {
@@ -89,7 +89,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 				RelativeLayout.LayoutParams.MATCH_PARENT);
 		mRTPullListView.setLayoutParams(lp);
 		mRootLayout = new RelativeLayout(mContext);
-		shareBg = (ImageView) View.inflate(context, R.layout.video_square_bj, null);
+		shareBg = (RelativeLayout) View.inflate(context, R.layout.video_square_bj, null);
 
 		if (context instanceof MainActivity) {
 			sharePlatform = ((MainActivity) context).getSharePlatform();

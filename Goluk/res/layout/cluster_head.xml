@@ -44,7 +44,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp">
 
-        <TextView
+        <!-- <TextView
             android:id="@+id/partake_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
             android:layout_centerVertical="true"
             android:textColor="#333333"
             android:text="@string/str_participation"
-            android:textSize="14sp" />
+            android:textSize="14sp" /> -->
 
         <TextView
             android:id="@+id/partake_num"
@@ -60,18 +60,17 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="6dp"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/partake_txt"
             android:textColor="#216da8"
             android:textSize="14sp" />
         
-        <TextView
+        <!-- <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:textColor="#216da8"
             android:layout_toRightOf="@+id/partake_num"
             android:text="@string/str_population"
-            android:textSize="14sp" />
+            android:textSize="14sp" /> -->
 
         <Button
             android:id="@+id/partake_btn"

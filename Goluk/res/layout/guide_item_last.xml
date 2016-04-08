@@ -3,19 +3,42 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<ImageView
-		android:id="@+id/guide_img"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:contentDescription="@string/imgdes"/>
+	<RelativeLayout
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:layout_centerInParent="true" >
+
+	    <TextView
+	        android:id="@+id/tv_guide_item_image"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:gravity="center"
+	        android:drawablePadding="40dp"
+	        android:textColor="#3B85D4"
+	        android:textSize="16sp" />
+
+	    <TextView
+	        android:id="@+id/tv_guide_item_text"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@id/tv_guide_item_image"
+	        android:gravity="center_horizontal"
+	        android:layout_centerHorizontal="true"
+	        android:textColor="#3B85D4"
+	        android:textSize="12sp" />
+	</RelativeLayout>
 	
-	<ImageButton
+	<Button
 		android:id="@+id/start_goluk_btn"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginBottom="75dp"
 		android:layout_alignParentBottom="true"
 		android:layout_centerHorizontal="true"
+		android:textColor="@color/white"
+		android:textSize="12sp"
+		android:text="@string/str_guide_exprience"
 		android:background="@drawable/icon_goluk_start_btn"
 		android:contentDescription="@string/imgdes"/>
 </RelativeLayout>

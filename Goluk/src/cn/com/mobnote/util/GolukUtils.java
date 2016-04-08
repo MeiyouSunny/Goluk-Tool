@@ -42,6 +42,7 @@ import android.text.format.Time;
 import android.util.DisplayMetrics;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.mobnote.application.GolukApplication;
 import cn.com.mobnote.golukmobile.R;
@@ -873,13 +874,12 @@ public class GolukUtils {
 
 	public static void startUserCenterActivity(Context context, String uid, String nickname, String avatar,
 			String customAvatar, String sex, String introduction) {
-		
-		if(!isNetworkConnected(context)){
-			Toast.makeText(context, context.getString(R.string.network_error), Toast.LENGTH_SHORT)
-			.show();
+
+		if (!isNetworkConnected(context)) {
+			Toast.makeText(context, context.getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 			return;
 		}
-		
+
 		UCUserInfo user = new UCUserInfo();
 		user.uid = uid;
 		user.nickname = nickname;
@@ -904,13 +904,12 @@ public class GolukUtils {
 	}
 
 	public static void startFollowingListActivity(Context context, String uId) {
-		
-		if(!isNetworkConnected(context)){
-			Toast.makeText(context, context.getString(R.string.network_error), Toast.LENGTH_SHORT)
-			.show();
+
+		if (!isNetworkConnected(context)) {
+			Toast.makeText(context, context.getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 			return;
 		}
-		
+
 		Intent intent = null;
 		intent = new Intent(context, FollowingListActivity.class);
 		intent.putExtra("linkuid", uId);
@@ -923,7 +922,7 @@ public class GolukUtils {
 			.show();
 			return;
 		}
-		
+
 		Intent intent = null;
 		intent = new Intent(context, FanListActivity.class);
 		intent.putExtra("linkuid", uId);

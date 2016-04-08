@@ -27,23 +27,33 @@
             android:src="@drawable/btn_player_play" />
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp" >
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btn_special_list_item_reward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/special_list_item_reward"
+            android:text="@string/str_reward_text"
+            android:textColor="#ffffff"
+            android:textSize="10sp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/video_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center_vertical"
+            android:layout_gravity="center"
             android:textColor="#333333"
             android:textSize="14sp" />
-    </RelativeLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

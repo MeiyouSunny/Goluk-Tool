@@ -459,10 +459,9 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 				getFragmentAlbum().updateTitleName(this.getContext().getString(R.string.local_video_title_text));
 				getFragmentAlbum().updateDeleteState(false);
 			} else {
-				getFragmentAlbum().updateDeleteState(true);
-				getFragmentAlbum().updateTitleName(
-						this.getContext().getString(R.string.str_photo_select1) + selectedListData.size()
-								+ this.getContext().getString(R.string.str_photo_select2));
+				mFragmentAlbum.updateDeleteState(true);
+				mFragmentAlbum.updateTitleName(this.getContext().getString(R.string.str_photo_select,
+						selectedListData.size()));
 			}
 		}
 	}

@@ -73,7 +73,7 @@ public class ClusterListActivity extends BaseActivity implements
 	private int uptype = 0;
 
 	/** 广场视频列表默认背景图片 */
-	private ImageView squareTypeDefault;
+	private RelativeLayout squareTypeDefault;
 
 	// 点播分类
 	private String attribute;
@@ -126,7 +126,7 @@ public class ClusterListActivity extends BaseActivity implements
 
 		mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
 		mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-		squareTypeDefault = (ImageView) findViewById(R.id.square_type_default);
+		squareTypeDefault = (RelativeLayout) findViewById(R.id.square_type_default);
 		squareTypeDefault.setOnClickListener(new OnClickListener() {
 
 			@Override

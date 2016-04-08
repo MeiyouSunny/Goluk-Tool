@@ -11,7 +11,7 @@ import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
@@ -39,7 +39,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	private ProfitDetailRequest profitDetailRequest = null;
 	private MyProfitDetailAdapter mAdapter = null;
 	private ProfitDetailInfo detailInfo = null;
-	private ImageView mImageRefresh = null;
+	private RelativeLayout mImageRefresh = null;
 	private TextView mTextNoData = null;
 	/** 首次进入 */
 	private static final String OPERATOR_FIRST = "0";
@@ -96,7 +96,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	private void initView() {
 		mBtnBack = (ImageButton) findViewById(R.id.profit_detail_back);
 		mRTPullListView = (RTPullListView) findViewById(R.id.profit_detail_RTPullListView);
-		mImageRefresh = (ImageView) findViewById(R.id.video_detail_click_refresh);
+		mImageRefresh = (RelativeLayout) findViewById(R.id.video_detail_click_refresh);
 		mTextNoData = (TextView) findViewById(R.id.my_profit_detail_nodata);
 		
 		mBtnBack.setOnClickListener(this);

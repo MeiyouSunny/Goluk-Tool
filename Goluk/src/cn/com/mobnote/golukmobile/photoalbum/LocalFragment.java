@@ -334,9 +334,8 @@ public class LocalFragment extends Fragment {
 				mFragmentAlbum.updateDeleteState(false);
 			} else {
 				mFragmentAlbum.updateDeleteState(true);
-				mFragmentAlbum.updateTitleName(this.getContext().getResources().getString(R.string.str_photo_select1)
-						+ selectedListData.size()
-						+ this.getContext().getResources().getString(R.string.str_photo_select2));
+				mFragmentAlbum.updateTitleName(this.getContext().getString(R.string.str_photo_select,
+						selectedListData.size()));
 			}
 		}
 	}

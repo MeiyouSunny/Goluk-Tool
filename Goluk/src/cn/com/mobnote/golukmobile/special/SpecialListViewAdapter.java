@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -77,6 +78,7 @@ public class SpecialListViewAdapter extends BaseAdapter {
 			holder.mPreLoading = (ImageView) convertView.findViewById(R.id.mPreLoading);
 			holder.videoTitle = (TextView) convertView.findViewById(R.id.video_title);
 			holder.tvLocation = (TextView)convertView.findViewById(R.id.tv_special_list_item_location);
+			holder.rewardBtn = (Button) convertView.findViewById(R.id.btn_special_list_item_reward);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -86,14 +88,16 @@ public class SpecialListViewAdapter extends BaseAdapter {
 			holder.author.setText(mContext.getString(R.string.str_thank_to_author) + " " + specialInfo.author);
 			if(null != specialInfo.gen) {
 				if("1".equals(specialInfo.gen.sysflag)) {
-					SpannableString spanString = new SpannableString(" " + specialInfo.describe);
-					Drawable d = mContext.getResources().getDrawable(
-							R.drawable.special_list_item_reward);
-					d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-					ImageSpan span = new ImageSpan(d, ImageSpan.ALIGN_BASELINE);
-					spanString.setSpan(span, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-					holder.videoTitle.setText(spanString);
+//					SpannableString spanString = new SpannableString(" " + specialInfo.describe);
+//					Drawable d = mContext.getResources().getDrawable(
+//							R.drawable.special_list_item_reward);
+//					d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+//					ImageSpan span = new ImageSpan(d, ImageSpan.ALIGN_BASELINE);
+//					spanString.setSpan(span, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					holder.rewardBtn.setVisibility(View.VISIBLE);
+					holder.videoTitle.setText("  " + specialInfo.describe);
 				} else {
+					holder.rewardBtn.setVisibility(View.GONE);
 					holder.videoTitle.setText(specialInfo.describe);
 				}
 			} else {
@@ -190,6 +194,7 @@ public class SpecialListViewAdapter extends BaseAdapter {
 		TextView videoTitle;
 		TextView author;
 		TextView tvLocation;
+		Button rewardBtn;
 	}
 
 //	public Bitmap getThumbBitmap(String netUrl) {

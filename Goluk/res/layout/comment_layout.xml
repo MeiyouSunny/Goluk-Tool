@@ -97,12 +97,15 @@
 
     <!-- 无数据显示 -->
 
-    <ImageView
+    <TextView
         android:id="@+id/comment_nodata"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="@drawable/videodetail_sofaicon"
+        android:drawableTop="@drawable/videodetail_sofaicon"
+        android:text="@string/str_sofa_text"
+        android:textColor="#D9D9D9"
+        android:textSize="14sp"
         android:contentDescription="@string/imgdes"
         android:visibility="gone" />
     

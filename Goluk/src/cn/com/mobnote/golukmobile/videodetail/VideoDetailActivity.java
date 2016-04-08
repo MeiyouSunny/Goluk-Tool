@@ -95,7 +95,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private TextView mTextSend = null;
 	private EditText mEditInput = null;
 	private RTPullListView mRTPullListView = null;
-	private ImageView mImageRefresh = null;
+	private RelativeLayout mImageRefresh = null;
 	public RelativeLayout mCommentLayout = null;
 	private boolean isCanInput = true;
 	/** 评论 **/
@@ -243,7 +243,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		mTextSend = (TextView) findViewById(R.id.comment_send);
 		mEditInput = (EditText) findViewById(R.id.comment_input);
 		mRTPullListView = (RTPullListView) findViewById(R.id.commentRTPullListView);
-		mImageRefresh = (ImageView) findViewById(R.id.video_detail_click_refresh);
+		mImageRefresh = (RelativeLayout) findViewById(R.id.video_detail_click_refresh);
 		mCommentLayout = (RelativeLayout) findViewById(R.id.comment_layout);
 
 		mImageRight.setImageResource(R.drawable.mine_icon_more);

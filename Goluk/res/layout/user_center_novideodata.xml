@@ -12,14 +12,17 @@
         android:layout_height="300dp" 
         android:orientation="vertical" >  
   
-       <ImageView
+       <TextView
            android:id="@+id/tipsimage"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:layout_centerInParent="true"
            android:layout_marginBottom="10dp"
-           android:background="@drawable/videodetail_sofaicon"
            android:contentDescription="@string/imgdes"
+           android:drawableTop="@drawable/videodetail_sofaicon"
+           android:text="@string/str_sofa_text"
+           android:textColor="#D9D9D9"
+           android:textSize="14sp"
            android:visibility="invisible" />
         
         <TextView 
