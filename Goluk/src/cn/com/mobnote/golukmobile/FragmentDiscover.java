@@ -59,14 +59,14 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 		// TODO Auto-generated method stub
 		super.onCreateView(inflater, container, savedInstanceState);
 		GolukDebugUtils.d(TAG, "onCreateView");
-		View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.video_square_main,
+		View rootView = inflater.inflate(R.layout.video_square_main,
 				null);
 		mSquareRootView = rootView;
 		density = SoundUtils.getInstance().getDisplayMetrics().density;
 		lineParams = new RelativeLayout.LayoutParams((int) (50 * density), (int) (2 * density));
 		lineTop = (int) (5 * density);
-		textColorSelect = getActivity().getResources().getColor(R.color.textcolor_select);
-		textcolorQx = getActivity().getResources().getColor(R.color.textcolor_qx);
+		textColorSelect = getResources().getColor(R.color.textcolor_select);
+		textcolorQx = getResources().getColor(R.color.textcolor_qx);
 		init();
 		mBannerLoaded = false;
 		mCityCode = SharedPrefUtil.getCityIDString();

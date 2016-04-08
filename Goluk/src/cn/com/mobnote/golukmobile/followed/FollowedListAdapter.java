@@ -442,7 +442,7 @@ public class FollowedListAdapter extends BaseAdapter {
 		}
 
 		if(null != videoObjectBean.video && !TextUtils.isEmpty(videoObjectBean.video.picture)) {
-			GlideUtils.loadImage(mFragment.getActivity(),
+			GlideUtils.loadImage(mFragment.getActivity(), mFragment,
 					holderFollow.videoImg, videoObjectBean.video.picture, R.drawable.tacitly_pic);
 		}
 
