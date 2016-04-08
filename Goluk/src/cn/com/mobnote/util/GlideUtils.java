@@ -1,6 +1,7 @@
 package cn.com.mobnote.util;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -60,6 +61,32 @@ public class GlideUtils {
 			Glide.with(context).load(neturl).skipMemoryCache(true).into(view);
 		} else {
 			Glide.with(context).load(neturl).skipMemoryCache(true).placeholder(placeholder).into(view);
+		}
+	}
+
+	public static void loadImage(Context context, Fragment fragment, ImageView view, String neturl, int placeholder) {
+		Glide.get(context).setMemoryCategory(MemoryCategory.LOW);
+		if (placeholder <= 0) {
+			Glide.with(fragment).load(neturl).into(view);
+		} else {
+			Glide.with(fragment).load(neturl).placeholder(placeholder).into(view);
+		}
+	}
+
+	public static void loadLocalImage(Context context, Fragment fragment, ImageView view, int drawid) {
+		Glide.get(context).setMemoryCategory(MemoryCategory.LOW);
+		try {
+			Glide.with(fragment).load(drawid).into(view);
+		} catch (Exception e) {
+
+		}
+	}
+
+	public static void loadLocalImage(Fragment fragment, ImageView view, String neturl, int placeholder) {
+		if (placeholder <= 0) {
+			Glide.with(fragment).load(neturl).skipMemoryCache(true).into(view);
+		} else {
+			Glide.with(fragment).load(neturl).skipMemoryCache(true).placeholder(placeholder).into(view);
 		}
 	}
 }
