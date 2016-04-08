@@ -35,6 +35,7 @@ public class ShareDeal implements OnClickListener {
 		txtColor = mActivity.getResources().getColor(R.color.youmeng_share_txt_color);
 		initView();
 	}
+	
 
 	private void initView() {
 		mYouMengRootLayout.setBackgroundResource(R.color.youmeng_share_bg);
@@ -134,7 +135,7 @@ public class ShareDeal implements OnClickListener {
 	 * @return false/true 不合法/合法
 	 * @author jyf
 	 */
-	public boolean isValid() {
+	private boolean isValid() {
 		if (mIsExit) {
 			return false;
 		}
