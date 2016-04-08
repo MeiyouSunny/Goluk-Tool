@@ -298,11 +298,11 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	 * @date 2015年6月8日
 	 */
 	private void displayVideoQuality(String videoHP, TextView text) {
-		if ("1080p".equals(videoHP)) {
+		if ("1080p".equals(videoHP) || "1080P".equals(videoHP)) {
 			text.setText(mContext.getResources().getString(R.string.str_album_video_1080));
-		}else if("720p".equals(videoHP)){
+		}else if("720p".equals(videoHP) || "720P".equals(videoHP)){
 			text.setText(mContext.getResources().getString(R.string.str_album_video_720));
-		}else if("480p".equals(videoHP)){
+		}else if("480p".equals(videoHP) || "480P".equals(videoHP)){
 			text.setText(mContext.getResources().getString(R.string.str_album_video_480));
 		}
 	}
