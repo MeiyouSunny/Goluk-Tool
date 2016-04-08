@@ -95,8 +95,8 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 			holder.image2 = (ImageView) convertView.findViewById(R.id.video_first_needle2);
 //			holder.mVideoCountTime1 = (TextView) convertView.findViewById(R.id.video_countTime1);
 //			holder.mVideoCountTime2 = (TextView) convertView.findViewById(R.id.video_countTime2);
-//			holder.mVideoQuality1 = (ImageView) convertView.findViewById(R.id.video_quality1);
-//			holder.mVideoQuality2 = (ImageView) convertView.findViewById(R.id.video_quality2);
+			holder.mVideoQuality1 = (TextView) convertView.findViewById(R.id.video_quality1);
+			holder.mVideoQuality2 = (TextView) convertView.findViewById(R.id.video_quality2);
 			holder.mVideoCreateTime1 = (TextView) convertView.findViewById(R.id.video_createtime1);
 			holder.mVideoCreateTime2 = (TextView) convertView.findViewById(R.id.video_createtime2);
 //			holder.mVideoSize1 = (TextView) convertView.findViewById(R.id.video_size1);
@@ -111,7 +111,11 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 			RelativeLayout.LayoutParams lineParams = new RelativeLayout.LayoutParams((int) (2 * density),
 					(int) (height + 4 * density));
 			lineParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-			lineParams.setMargins((int) (29 * density), 0, (int) (12 * density), 0);
+			if(density == 1.5){
+				lineParams.setMargins((int) (29.5 * density), 0, (int) (12 * density), 0);
+			}else{
+				lineParams.setMargins((int) (29 * density), 0, (int) (12 * density), 0);
+			}
 			holder.line.setLayoutParams(lineParams);
 
 			int marginTop = 0;
@@ -146,7 +150,7 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		holder.mVideoCreateTime1.setText(mVideoInfo1.videoCreateDate.substring(11));
 //		holder.mVideoSize1.setText(mVideoInfo1.videoSize);
 //		holder.image1.setTag("image:" + mVideoInfo1.filename);
-//		displayVideoQuality(mVideoInfo1.videoHP, holder.mVideoQuality1);
+		displayVideoQuality(mVideoInfo1.videoHP, holder.mVideoQuality1);
 		loadImage(mVideoInfo1.filename, holder.image1);
 		// if(mVideoInfo1.isNew) {
 		// holder.mNewIcon1.setVisibility(View.VISIBLE);
@@ -165,7 +169,7 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 			holder.mVideoCreateTime2.setText(mVideoInfo2.videoCreateDate.substring(11));
 //			holder.mVideoSize2.setText(mVideoInfo2.videoSize);
 //			holder.image2.setTag("image:" + mVideoInfo2.filename);
-//			displayVideoQuality(mVideoInfo2.videoHP, holder.mVideoQuality2);
+			displayVideoQuality(mVideoInfo2.videoHP, holder.mVideoQuality2);
 			loadImage(mVideoInfo2.filename, holder.image2);
 
 			// if(mVideoInfo2.isNew) {
@@ -293,13 +297,13 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	 * @author xuhw
 	 * @date 2015年6月8日
 	 */
-	private void displayVideoQuality(String videoHP, ImageView image) {
-		image.setVisibility(View.GONE);
-		GolukDebugUtils.e("", "TTTTTTTTTTTT===@@@@@===videoHP=" + videoHP);
-
-		if ("1080P".equalsIgnoreCase(videoHP)) {
-			image.setVisibility(View.VISIBLE);
-			image.setBackgroundResource(R.drawable.carrecorder_liveindex_icon_1080);
+	private void displayVideoQuality(String videoHP, TextView text) {
+		if ("1080p".equals(videoHP) || "1080P".equals(videoHP)) {
+			text.setText(mContext.getResources().getString(R.string.str_album_video_1080));
+		}else if("720p".equals(videoHP) || "720P".equals(videoHP)){
+			text.setText(mContext.getResources().getString(R.string.str_album_video_720));
+		}else if("480p".equals(videoHP) || "480P".equals(videoHP)){
+			text.setText(mContext.getResources().getString(R.string.str_album_video_480));
 		}
 	}
 
@@ -400,8 +404,8 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		ImageView image2;
 		//TextView mVideoCountTime1;
 		//TextView mVideoCountTime2;
-//		ImageView mVideoQuality1;
-//		ImageView mVideoQuality2;
+		TextView mVideoQuality1;
+		TextView mVideoQuality2;
 		TextView mVideoCreateTime1;
 		TextView mVideoCreateTime2;
 //		TextView mVideoSize1;

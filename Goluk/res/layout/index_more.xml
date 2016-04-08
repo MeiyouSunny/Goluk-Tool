@@ -10,7 +10,7 @@
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:background="#313131" >
+        android:background="#f5242629" >
 
         <TextView
             android:layout_width="wrap_content"
@@ -54,7 +54,7 @@
                     android:layout_height="64dp"
                     android:layout_centerVertical="true"
                     android:contentDescription="@string/imgdes" />
-                
+
                 <ImageView
                     android:id="@+id/im_user_center_head_authentication"
                     android:layout_width="wrap_content"
@@ -78,33 +78,18 @@
                         android:id="@+id/user_center_name_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#1163a2"
+                        android:textColor="#333333"
                         android:textSize="16sp" />
 
-                    <RelativeLayout
-                        android:id="@+id/user_center_id_layout"
+                    <TextView
+                        android:id="@+id/user_center_introduction_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp" >
-
-                        <TextView
-                            android:id="@+id/user_center_id_title_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="#585858"
-                            android:textSize="14sp"
-                            android:visibility="gone" />
-
-                        <TextView
-                            android:id="@+id/user_center_id_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_toRightOf="@id/user_center_id_title_text"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:textColor="@color/user_login_text"
-                            android:textSize="14sp" />
-                    </RelativeLayout>
+                        android:layout_marginTop="4dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="#808080"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <ImageView
@@ -115,14 +100,19 @@
                     android:contentDescription="@string/app_name"
                     android:src="@drawable/editor_arrow" />
             </RelativeLayout>
+            
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="#e9e9ea" />
 
             <LinearLayout
                 android:id="@+id/user_center_video_layout"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:background="#f4f4f4"
-                android:gravity="center_vertical"
                 android:baselineAligned="false"
+                android:gravity="center_vertical"
                 android:orientation="horizontal" >
 
                 <LinearLayout
@@ -138,17 +128,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/user_login_text"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        android:text="@string/zero"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/share_text"
-                        android:textColor="@color/live_time_desc"
+                        android:textColor="#666666"
                         android:textSize="12sp" />
                 </LinearLayout>
 
-               <LinearLayout
+                <LinearLayout
                     android:id="@+id/user_follow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -161,13 +152,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/user_login_text"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        android:text="@string/zero" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/str_follow"
-                        android:textColor="@color/live_time_desc"
+                        android:textColor="#666666"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -180,26 +172,27 @@
                     android:orientation="vertical" >
 
                     <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <TextView
-                        android:id="@+id/user_fans_count"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/user_login_text"
-                        android:layout_centerHorizontal="true"
-                        android:textSize="14sp" />
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/user_fans_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/user_login_text"
+                            android:textSize="14sp"
+                            android:text="@string/zero" />
 
                         <ImageView
                             android:id="@+id/iv_new_fans"
-                            android:visibility="gone"
-                            android:layout_alignTop="@id/user_fans_count"
-                            android:layout_toRightOf="@id/user_fans_count"
-                            android:layout_marginLeft="1dp"
-                            android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="2dp"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@id/user_fans_count"
+                            android:contentDescription="@string/imgdes"
                             android:src="@drawable/icon_new_fans"
-                            android:contentDescription="@string/imgdes"/>
+                            android:visibility="gone" />
                     </RelativeLayout>
 
                     <TextView
@@ -207,18 +200,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/str_fans"
-                        android:textColor="@color/live_time_desc"
+                        android:textColor="#666666"
                         android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
 
             <View
-                android:id="@+id/user_personal_solid_2"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@drawable/solid" />
-            
+                android:background="#e9e9ea" />
+
             <!-- 我的收益 -->
+
             <View
                 android:id="@+id/user_personal_solid_17"
                 android:layout_width="wrap_content"
@@ -229,70 +222,76 @@
             <RelativeLayout
                 android:id="@+id/rl_my_message"
                 android:layout_width="match_parent"
+                android:layout_height="40dp"
                 android:background="#f4f4f4"
-                android:paddingRight="14dp"
                 android:paddingLeft="14dp"
-                android:layout_height="40dp">
+                android:paddingRight="14dp" >
+
                 <TextView
                     android:id="@+id/tv_my_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:drawableLeft="@drawable/my_message_icon"
                     android:layout_centerVertical="true"
-                    android:gravity="center_vertical"
+                    android:drawableLeft="@drawable/my_message_icon"
                     android:drawablePadding="10dp"
+                    android:gravity="center_vertical"
                     android:text="@string/str_title_message_center"
-                    android:textColor="#333333"/>
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
+
                 <TextView
                     android:id="@+id/tv_my_message_tip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:layout_toRightOf="@id/tv_my_message"
-                    android:layout_marginLeft="8dp"
                     android:layout_centerVertical="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@id/tv_my_message"
+                    android:background="@drawable/my_message_bg"
                     android:gravity="center_vertical"
                     android:paddingLeft="6dp"
                     android:paddingRight="6dp"
-                    android:visibility="gone"
-                    android:background="@drawable/my_message_bg"
-                    android:textColor="#ffffff"/>
+                    android:textColor="#ffffff"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
                 <ImageView
                     android:id="@+id/iv_my_message_go"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:contentDescription="@string/app_name"
                     android:layout_marginLeft="8dp"
-                    android:src="@drawable/editor_arrow"/>
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/editor_arrow" />
             </RelativeLayout>
+
             <View
                 android:id="@+id/user_personal_solid_19"
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
                 android:background="@drawable/solid" />
+
             <TextView
                 android:id="@+id/profit_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#f4f4f4"
-                android:text="@string/my_profit_title_text"
-                android:gravity="center_vertical"
-                android:paddingRight="14dp"
-                android:paddingLeft="14dp"
-                android:textColor="#333333"
                 android:drawableLeft="@drawable/profit_icon_profit"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/editor_arrow"
+                android:gravity="center_vertical"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:text="@string/my_profit_title_text"
+                android:textColor="#333333"
                 android:textSize="14sp" />
+
             <View
                 android:id="@+id/user_personal_solid_18"
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
                 android:background="@drawable/solid" />
-            
+
             <!-- 我的相册 -->
 
             <View
@@ -303,20 +302,20 @@
                 android:background="@drawable/solid" />
 
             <TextView
-                android:visibility="gone"
                 android:id="@+id/video_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#f4f4f4"
-                android:text="@string/my_video_title_text"
-                android:gravity="center_vertical"
-                android:paddingRight="14dp"
-                android:paddingLeft="14dp"
-                android:textColor="#333333"
                 android:drawableLeft="@drawable/my_video_icon"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/editor_arrow"
-                android:textSize="14sp" />
+                android:gravity="center_vertical"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:text="@string/my_video_title_text"
+                android:textColor="#333333"
+                android:textSize="14sp"
+                android:visibility="gone" />
 
             <View
                 android:id="@+id/user_personal_solid_praise"
@@ -329,14 +328,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#f4f4f4"
-                android:text="@string/str_my_praised_list"
-                android:gravity="center_vertical"
-                android:paddingRight="14dp"
-                android:paddingLeft="14dp"
-                android:textColor="#333333"
                 android:drawableLeft="@drawable/my_message_like_icon"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/editor_arrow"
+                android:gravity="center_vertical"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:text="@string/str_my_praised_list"
+                android:textColor="#333333"
                 android:textSize="14sp" />
 
             <View
@@ -358,14 +357,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#f4f4f4"
-                android:text="@string/my_camera_title_text"
-                android:gravity="center_vertical"
-                android:paddingRight="14dp"
-                android:paddingLeft="14dp"
-                android:textColor="#333333"
                 android:drawableLeft="@drawable/my_camera_icon"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/editor_arrow"
+                android:gravity="center_vertical"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:text="@string/my_camera_title_text"
+                android:textColor="#333333"
                 android:textSize="14sp" />
             <!-- 通用设置 -->
 
@@ -380,15 +379,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#f4f4f4"
-                android:text="@string/my_set_title_text"
-                android:gravity="center_vertical"
-                android:paddingRight="14dp"
-                android:paddingLeft="14dp"
-                android:textColor="#333333"
                 android:drawableLeft="@drawable/my_set_icon"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/editor_arrow"
+                android:gravity="center_vertical"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:text="@string/my_set_title_text"
+                android:textColor="#333333"
                 android:textSize="14sp" />
+
             <View
                 android:id="@+id/user_personal_solid_8"
                 android:layout_width="wrap_content"
@@ -408,14 +408,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#f4f4f4"
-                android:text="@string/my_skill_title_text"
-                android:gravity="center_vertical"
-                android:paddingRight="14dp"
-                android:paddingLeft="14dp"
-                android:textColor="#333333"
                 android:drawableLeft="@drawable/my_skill_icon"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/editor_arrow"
+                android:gravity="center_vertical"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:text="@string/my_skill_title_text"
+                android:textColor="#333333"
                 android:textSize="14sp" />
             <!-- 安装指导 -->
 
@@ -424,19 +424,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
                 android:background="@drawable/solid" />
+
             <TextView
                 android:id="@+id/install_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#f4f4f4"
-                android:text="@string/my_install_title_text"
-                android:gravity="center_vertical"
-                android:paddingRight="14dp"
-                android:paddingLeft="14dp"
-                android:textColor="#333333"
                 android:drawableLeft="@drawable/my_futou_icon"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/editor_arrow"
+                android:gravity="center_vertical"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:text="@string/my_install_title_text"
+                android:textColor="#333333"
                 android:textSize="14sp" />
             <!-- 版本信息 -->
 
@@ -451,14 +452,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#f4f4f4"
-                android:text="@string/my_version_title_text"
-                android:gravity="center_vertical"
-                android:paddingRight="14dp"
-                android:paddingLeft="14dp"
-                android:textColor="#333333"
                 android:drawableLeft="@drawable/my_question_icon"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/editor_arrow"
+                android:gravity="center_vertical"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:text="@string/my_version_title_text"
+                android:textColor="#333333"
                 android:textSize="14sp" />
 
             <View
@@ -468,7 +469,8 @@
                 android:background="@drawable/solid" />
 
             <!-- 购买极路客 -->
-            <!--  View
+            <!--
+            View
                 android:id="@+id/user_personal_solid_15"
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
@@ -494,7 +496,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
                 android:layout_marginBottom="14dp"
-                android:background="@drawable/solid" /-->
+                android:background="@drawable/solid" /
+            -->
         </LinearLayout>
     </ScrollView>
 

@@ -112,7 +112,12 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 			RelativeLayout.LayoutParams lineParams = new RelativeLayout.LayoutParams((int) (2 * density),
 					(int) (height + 4 * density));
 			lineParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-			lineParams.setMargins((int) (29 * density), 0, (int) (12 * density), 0);
+			if(density == 1.5){
+				lineParams.setMargins((int) (29.5 * density), 0, (int) (12 * density), 0);
+			}else{
+				lineParams.setMargins((int) (29 * density), 0, (int) (12 * density), 0);
+			}
+			
 			holder.line.setLayoutParams(lineParams);
 
 			int marginTop = 0;
@@ -138,11 +143,11 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		if("0".equals(mFragment.mPlatform)){
 			holder.mPreView1.setVisibility(View.GONE);
 			holder.mPreView2.setVisibility(View.GONE);
-			holder.mVideoQuality1.setVisibility(View.GONE);
-			holder.mVideoQuality2.setVisibility(View.GONE);
+			//holder.mVideoQuality1.setVisibility(View.GONE);
+			//holder.mVideoQuality2.setVisibility(View.GONE);
 		}else{
-			holder.mVideoQuality1.setVisibility(View.VISIBLE);
-			holder.mVideoQuality2.setVisibility(View.VISIBLE);
+			//holder.mVideoQuality1.setVisibility(View.VISIBLE);
+			//holder.mVideoQuality2.setVisibility(View.VISIBLE);
 			holder.mPreView1.setVisibility(View.VISIBLE);
 			holder.mPreView2.setVisibility(View.VISIBLE);
 		}
@@ -356,11 +361,11 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 	 * @date 2015年6月8日
 	 */
 	private void displayVideoQuality(String videoHP, TextView text) {
-		if ("1080p".equals(videoHP)) {
+		if ("1080p".equals(videoHP) || "1080P".equals(videoHP)) {
 			text.setText(mContext.getResources().getString(R.string.str_album_video_1080));
-		}else if("720p".equals(videoHP)){
+		}else if("720p".equals(videoHP) || "720P".equals(videoHP)){
 			text.setText(mContext.getResources().getString(R.string.str_album_video_720));
-		}else if("480p".equals(videoHP)){
+		}else if("480p".equals(videoHP) || "480P".equals(videoHP)){
 			text.setText(mContext.getResources().getString(R.string.str_album_video_480));
 		}
 	}

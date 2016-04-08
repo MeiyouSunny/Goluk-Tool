@@ -7,9 +7,9 @@
 
     <TextView
         android:id="@+id/tv_follow_fragment_title"
+        android:background="#f5242629"
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:background="#404246"
         android:ellipsize="end"
         android:gravity="center"
         android:singleLine="true"
@@ -65,19 +65,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/imgdes"
-                android:src="@drawable/album_img_novideo"
-                android:text="@string/str_to_login_text"
-                android:textColor="#666666"
-                android:textSize="14sp" />
+                android:src="@drawable/album_img_novideo" />
 
             <TextView
                 android:id="@+id/tv_fragment_followed_content_to_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="33dp"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:text="@string/str_to_login_text"
+                android:text="@string/str_followed_login_to_view_tip"
                 android:textColor="#666666"
                 android:textSize="14sp" />
 
@@ -85,12 +80,12 @@
                 android:id="@+id/btn_fragment_followed_content_to_login"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="@drawable/follow_button_border_goto_login"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="@string/str_to_login_now_text"
+                android:text="@string/str_followed_now_login"
                 android:textColor="#ffffff"
-                android:textSize="16sp" />
+                android:singleLine="true"
+                android:textSize="16sp"
+                android:background="@drawable/follow_button_border_goto_login"
+                android:gravity="center" />
         </LinearLayout>
     </RelativeLayout>
 

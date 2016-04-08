@@ -936,9 +936,6 @@
     <string name="str_carrecorder_connect_text">正在连接极路客…</string>
     <string name="str_sofa_text">沙发等您来坐</string>
     <string name="str_reward_text">获奖</string>
-    <string name="str_to_login_text">登录后才能查看自己关注的内容哟~</string>
-    <string name="str_to_login_now_text">现在去登录</string>
-    
     
     <string name="str_live_ok_praise_unit">个赞</string>
     <string name="str_tencent_weibo">腾讯微博</string>

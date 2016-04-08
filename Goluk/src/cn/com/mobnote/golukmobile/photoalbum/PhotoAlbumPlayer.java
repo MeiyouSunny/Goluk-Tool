@@ -14,6 +14,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -341,7 +342,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 					}
 				}
 
-				mPlayerMoreDialog = new PlayerMoreDialog(PhotoAlbumPlayer.this, tempPath, getType(), mVideoFrom);
+				mPlayerMoreDialog = new PlayerMoreDialog(PhotoAlbumPlayer.this, tempPath, getType(), mVideoFrom,mType);
 			}
 			mPlayerMoreDialog.show();
 			break;
@@ -378,10 +379,10 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 				intent.putExtra("type", tempType);
 				intent.putExtra("cn.com.mobnote.video.path", mPath);
 				startActivity(intent);
+				finish();
 			} else {
 				EventBus.getDefault().post(new EventDownloadIpcVid(mFileName, getType()));
 			}
-			finish();
 			break;
 		default:
 			Log.e(TAG, "id = " + id);
@@ -425,13 +426,20 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			getWindow()
 					.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            DisplayMetrics metrics = new DisplayMetrics(); getWindowManager().getDefaultDisplay().getMetrics(metrics);
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mVideoViewLayout.getLayoutParams();
-            params.width =  metrics.widthPixels;
-            params.height = metrics.heightPixels;
-            params.leftMargin = 0;
-            params.removeRule(RelativeLayout.BELOW);
-            mVideoViewLayout.setLayoutParams(params);
+			DisplayMetrics metrics = new DisplayMetrics();
+			getWindowManager().getDefaultDisplay().getMetrics(metrics);
+			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mVideoViewLayout
+					.getLayoutParams();
+			params.width = metrics.widthPixels;
+			params.height = metrics.heightPixels;
+			params.leftMargin = 0;
+			if (Build.VERSION.SDK_INT > 16) {
+				params.removeRule(RelativeLayout.BELOW);
+			} else {
+				params.addRule(RelativeLayout.BELOW, 0);
+			}
+
+			mVideoViewLayout.setLayoutParams(params);
 			RelativeLayout.LayoutParams norParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
 					LayoutParams.WRAP_CONTENT);
 			norParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);

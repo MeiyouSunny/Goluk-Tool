@@ -960,6 +960,8 @@
     <string name="str_already_bind">已绑定</string>
     <string name="str_not_bind">未绑定</string>
     <string name="str_bind_fail">绑定失败</string>
+    
+    
     <string name="str_no_duplicated_praise">已经赞过了，请不要重复点赞</string>
     <string name="str_praise_failed">点赞失败</string>
     <string name="str_cancel_praise_failed">取消点赞失败</string>
@@ -967,7 +969,9 @@
     <string name="str_praised_list_connect_error">网络不给力，轻触屏幕重试</string>
     <string name="str_praised_list_request_no_data">暂无点赞记录</string>
     <string name="str_wonderful_share">Goluk精彩分享</string>
-    
+
+    <string name="zero">0</string>
+
     <string name="str_user_video_type_wonderful_text">精选作品</string>
     <string name="str_user_video_type_recommend_text">被推荐活动</string>
     <string name="str_user_video_type_headline_text">入选头条</string>
@@ -999,7 +1003,10 @@
     <string name="str_follow_all">全部关注</string>
     <string name="str_follow_no_content">什么内容也没有</string>
     <string name="str_follow_recommend_star">推荐达人</string>
-    
+
+    <string name="str_followed_login_to_view_tip">登录后才能查看自己关注的内容哟~</string>
+
+    <string name="str_followed_now_login">现在去登录</string>
     <string name="str_upgrade_check_sdcard_t1">很抱歉，升级文件传输失败，请检查是否插入存储卡。</string>
     <string name="str_settings_restart_ipc">修改成功，重启记录仪后生效。</string>
     
@@ -1020,7 +1027,5 @@
     <string name="str_carrecorder_connect_text">正在连接极路客…</string>
     <string name="str_sofa_text">沙发等您来坐</string>
     <string name="str_reward_text">获奖</string>
-    <string name="str_to_login_text">登录后才能查看自己关注的内容哟~</string>
-    <string name="str_to_login_now_text">现在去登录</string>
     
 </resources>

@@ -1,4 +1,5 @@
 package cn.com.mobnote.golukmobile.photoalbum;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,74 +37,67 @@ import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 
 import de.greenrobot.event.EventBus;
 
-
-public class LocalFragment extends Fragment{
+public class LocalFragment extends Fragment {
 	private View mLocalVideoView;
-	
+
 	private CustomLoadingDialog mCustomProgressDialog = null;
-	
+
 	private StickyListHeadersListView mStickyListHeadersListView = null;
-	
+
 	private LocalWonderfulVideoAdapter mWonderfulVideoAdapter = null;
-	
+
 	private List<VideoInfo> mDataList = null;
 	private List<DoubleVideoInfo> mDoubleDataList = null;
-	
+
 	/** 保存屏幕点击横坐标点 */
 	private float screenX = 0;
 	private int screenWidth = 0;
-	
+
 	private float density = 1;
-	
+
 	private FragmentAlbum mFragmentAlbum;
-	
+
 	private TextView empty = null;
+
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		EventBus.getDefault().register(this);
 	}
-	
+
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		mFragmentAlbum = (FragmentAlbum)getParentFragment();
-		
-		if(mLocalVideoView == null){
-			mLocalVideoView = inflater.inflate(R.layout.wonderful_listview, (ViewGroup)getActivity().findViewById(R.id.viewpager), false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		mFragmentAlbum = (FragmentAlbum) getParentFragment();
+
+		if (mLocalVideoView == null) {
+			mLocalVideoView = inflater.inflate(R.layout.wonderful_listview,
+					(ViewGroup) getActivity().findViewById(R.id.viewpager), false);
 			density = SoundUtils.getInstance().getDisplayMetrics().density;
-			
+
 			this.mDataList = new ArrayList<VideoInfo>();
 			this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
 			this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 			initView();
 			loadData(false);
 		}
-		
+
 		ViewGroup parent = (ViewGroup) mLocalVideoView.getParent();
-		if(parent != null){
+		if (parent != null) {
 			parent.removeView(mLocalVideoView);
 		}
-		
-//		if(mFragmentAlbum.mCurrentType == 0){
-//			loadData(IPCManagerFn.TYPE_SHORTCUT, true);
-//		}else{
-//			loadData(IPCManagerFn.TYPE_SHORTCUT, false);
-//		}
-		
+
 		return mLocalVideoView;
 	}
-	
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		EventBus.getDefault().unregister(this);
 	}
-	
-	public void onEventMainThread(EventDeletePhotoAlbumVid event){
-		if(event!=null&&event.getType() == PhotoAlbumConfig.PHOTO_BUM_LOCAL){
-			
+
+	public void onEventMainThread(EventDeletePhotoAlbumVid event) {
+		if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
+
 			List<String> list = new ArrayList<String>();
 			list.add(event.getVidPath());
 			deleteListData(list);
@@ -151,16 +145,17 @@ public class LocalFragment extends Fragment{
 		checkListState();
 	}
 
-
-	private void initView(){
+	private void initView() {
 		empty = (TextView) mLocalVideoView.findViewById(R.id.empty);
 		mCustomProgressDialog = new CustomLoadingDialog(this.getContext(), null);
-		mStickyListHeadersListView = (StickyListHeadersListView) mLocalVideoView.findViewById(R.id.mStickyListHeadersListView);
-		
-		mWonderfulVideoAdapter = new LocalWonderfulVideoAdapter(this.getContext(), mFragmentAlbum, mStickyListHeadersListView, IPCManagerFn.TYPE_CIRCULATE, "local");
+		mStickyListHeadersListView = (StickyListHeadersListView) mLocalVideoView
+				.findViewById(R.id.mStickyListHeadersListView);
+
+		mWonderfulVideoAdapter = new LocalWonderfulVideoAdapter(this.getContext(), mFragmentAlbum,
+				mStickyListHeadersListView, IPCManagerFn.TYPE_CIRCULATE, "local");
 		setListener();
 	}
-	
+
 	private void setListener() {
 		// 屏蔽某些机型的下拉悬停操作
 		// mStickyListHeadersListView.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -222,7 +217,8 @@ public class LocalFragment extends Fragment{
 							// 点击列表左边项,跳转到视频播放页面
 
 							VideoInfo info1 = d.getVideoInfo1();
-							gotoVideoPlayPage(getVideoType(info1.filename), info1.videoPath, info1.videoCreateDate, info1.videoHP, info1.videoSize);
+							gotoVideoPlayPage(getVideoType(info1.filename), info1.videoPath, info1.videoCreateDate,
+									info1.videoHP, info1.videoSize);
 							String filename = d.getVideoInfo1().filename;
 							updateNewState(filename);
 
@@ -234,7 +230,8 @@ public class LocalFragment extends Fragment{
 							VideoInfo info2 = d.getVideoInfo2();
 							if (null == info2)
 								return;
-							//--------------------------------------------------以此标记  type 零时给 1   等主题逻辑调试通了 再去更具文件名称取类型
+							// --------------------------------------------------以此标记
+							// type 零时给 1 等主题逻辑调试通了 再去更具文件名称取类型
 							gotoVideoPlayPage(1, info2.videoPath, info2.videoCreateDate, info2.videoHP, info2.videoSize);
 							String filename = info2.filename;
 							updateNewState(filename);
@@ -248,12 +245,12 @@ public class LocalFragment extends Fragment{
 		});
 
 	}
-	
+
 	public void loadData(boolean flag) {
 		if (flag) {
-				if (!mCustomProgressDialog.isShowing()) {
-					mCustomProgressDialog.show();
-				}
+			if (!mCustomProgressDialog.isShowing()) {
+				mCustomProgressDialog.show();
+			}
 		}
 		LocalDataLoadAsyncTask task = new LocalDataLoadAsyncTask(IPCManagerFn.TYPE_SHORTCUT, new DataCallBack() {
 			@Override
@@ -263,11 +260,12 @@ public class LocalFragment extends Fragment{
 				mDataList.addAll(mLocalListData);
 				mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mLocalListData);
 				mWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
-//				if(mDoubleDataList == null || mDoubleDataList.size() ==0){
-//					View empty = PhotoAlbumUtils.getInstall().getEmptyView(getActivity(),0);
-//					((ViewGroup)mStickyListHeadersListView.getParent()).addView(empty); 
-//				}
-				
+				// if(mDoubleDataList == null || mDoubleDataList.size() ==0){
+				// View empty =
+				// PhotoAlbumUtils.getInstall().getEmptyView(getActivity(),0);
+				// ((ViewGroup)mStickyListHeadersListView.getParent()).addView(empty);
+				// }
+
 				mStickyListHeadersListView.setAdapter(mWonderfulVideoAdapter);
 				try {
 					if (mCustomProgressDialog.isShowing()) {
@@ -282,7 +280,7 @@ public class LocalFragment extends Fragment{
 		});
 		task.execute("");
 	}
-	
+
 	private void checkListState() {
 		GolukDebugUtils.e("", "Album------WondowvideoListView------checkListState");
 		if (mDataList.size() <= 0) {
@@ -296,21 +294,12 @@ public class LocalFragment extends Fragment{
 			updateEditState(true);
 		}
 	}
-	
+
 	private void updateEditState(boolean isHasData) {
 		GolukDebugUtils.e("", "Album------WondowvideoListView------updateEditState" + isHasData);
 		mFragmentAlbum.setEditBtnState(isHasData);
-//		if (null == mLocalVideoListView) {
-//			return;
-//		}
-		
-//		if (null == mLocalVideoListView) {
-//			mLocalVideoListView = new LocalVideoManager(this.getContext(),"local", mPromotionSelectItem);
-//			mMainLayout.addView(mLocalVideoListView.getRootView());
-//		}
-//		mLocalVideoListView.updateEdit(mVideoType, isHasData);
 	}
-	
+
 	private void updateNewState(String filename) {
 		SettingUtils.getInstance().putBoolean("Local_" + filename, false);
 		for (int i = 0; i < mDataList.size(); i++) {
@@ -321,7 +310,7 @@ public class LocalFragment extends Fragment{
 			}
 		}
 	}
-	
+
 	/**
 	 * 选择视频item
 	 * 
@@ -340,7 +329,8 @@ public class LocalFragment extends Fragment{
 			}
 
 			if (selectedListData.size() == 0) {
-				mFragmentAlbum.updateTitleName(this.getContext().getResources().getString(R.string.local_video_title_text));
+				mFragmentAlbum.updateTitleName(this.getContext().getResources()
+						.getString(R.string.local_video_title_text));
 				mFragmentAlbum.updateDeleteState(false);
 			} else {
 				mFragmentAlbum.updateDeleteState(true);
@@ -349,7 +339,7 @@ public class LocalFragment extends Fragment{
 			}
 		}
 	}
-	
+
 	/**
 	 * 跳转到本地视频播放页面
 	 * 
@@ -357,15 +347,15 @@ public class LocalFragment extends Fragment{
 	 */
 	private void gotoVideoPlayPage(int type, String path, String createTime, String videoHP, String size) {
 		if (!TextUtils.isEmpty(path)) {
-			
-			if(!"0".equals(mFragmentAlbum.mPlatform)){
-				if(type != 3){//不是循环视频
+
+			if (!"0".equals(mFragmentAlbum.mPlatform)) {
+				if (type != 3) {// 不是循环视频
 					Intent intent = new Intent(getActivity(), VideoEditActivity.class);
 
 					int tempType = 2;
 					if (type == 1) {
 						tempType = 2;
-					}else if(type == 2){
+					} else if (type == 2) {
 						tempType = 3;
 					}
 					intent.putExtra("type", tempType);
@@ -385,15 +375,15 @@ public class LocalFragment extends Fragment{
 			getContext().startActivity(intent);
 		}
 	}
-	
-	public int getVideoType(String name){
-		if(name.indexOf("WND") >= 0){
+
+	public int getVideoType(String name) {
+		if (name.indexOf("WND") >= 0) {
 			return 1;
-		}else if(name.indexOf("URG") >= 0){
+		} else if (name.indexOf("URG") >= 0) {
 			return 2;
-		}else{
+		} else {
 			return 3;
 		}
 	}
-	
+
 }
