@@ -35,7 +35,7 @@
 
     <!-- body -->
 
-    <cn.com.mobnote.golukmobile.videosuqare.RTPullListView
+    <com.mobnote.golukmain.videosuqare.RTPullListView
         android:id="@+id/profit_detail_RTPullListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

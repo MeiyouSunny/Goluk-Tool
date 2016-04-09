@@ -29,9 +29,9 @@ import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
-import cn.com.mobnote.golukmobile.R;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.mobnote.golukmain.R;
 
 @SuppressLint("ViewConstructor")
 public class IndicatorLayout extends FrameLayout implements AnimationListener {

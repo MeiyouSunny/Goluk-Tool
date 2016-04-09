@@ -87,7 +87,7 @@
 
     <!-- 评论显示列表 -->
 
-    <cn.com.mobnote.golukmobile.videosuqare.RTPullListView
+    <com.mobnote.golukmain.videosuqare.RTPullListView
         android:id="@+id/commentRTPullListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

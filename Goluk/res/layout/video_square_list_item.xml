@@ -92,7 +92,7 @@
             android:layout_marginRight="8dp"
             android:background="@drawable/live_icon"/>
 
-        <cn.com.mobnote.golukmobile.videosuqare.RingView
+        <com.mobnote.golukmain.videosuqare.RingView
             android:id="@+id/mRingView"
             android:layout_width="100dp"
             android:layout_height="100dp"

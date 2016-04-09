@@ -8,12 +8,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         
-        <cn.com.mobnote.util.ClipImageView
+        <com.mobnote.util.ClipImageView
         android:id="@+id/src_pic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <cn.com.mobnote.util.ClipView
+    <com.mobnote.util.ClipView
         android:id="@+id/clipview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

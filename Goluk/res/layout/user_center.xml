@@ -41,12 +41,12 @@
             android:background="@drawable/user_center_home_btn" />
     </RelativeLayout>
     
-   <cn.com.mobnote.golukmobile.videosuqare.RTPullListView
+   <com.mobnote.golukmain.videosuqare.RTPullListView
         android:id="@+id/mRTPullListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/title_layout"
         android:divider="@null" >
-    </cn.com.mobnote.golukmobile.videosuqare.RTPullListView>
+    </com.mobnote.golukmain.videosuqare.RTPullListView>
 
 </LinearLayout>

@@ -22,10 +22,10 @@ import android.graphics.drawable.Drawable;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView.ScaleType;
-import cn.com.mobnote.golukmobile.R;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Orientation;
+import com.mobnote.golukmain.R;
 
 public class RotateLoadingLayout extends LoadingLayout {
 

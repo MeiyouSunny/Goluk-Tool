@@ -15,7 +15,8 @@
  *******************************************************************************/
 package com.handmark.pulltorefresh.library;
 
-import cn.com.mobnote.golukmobile.R;
+import com.mobnote.golukmain.R;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build.VERSION;

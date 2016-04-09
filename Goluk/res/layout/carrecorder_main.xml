@@ -397,7 +397,7 @@
                     android:src="@drawable/video_new_icon"
                     android:visibility="gone" />
 
-                <cn.com.mobnote.golukmobile.videosuqare.RingView
+                <com.mobnote.golukmain.videosuqare.RingView
                     android:id="@+id/downloadSize"
                     android:layout_width="50dp"
                     android:layout_height="50dp"

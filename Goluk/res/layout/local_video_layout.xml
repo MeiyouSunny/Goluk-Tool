@@ -97,12 +97,12 @@
         
     </LinearLayout>
     
-    <cn.com.mobnote.golukmobile.photoalbum.CustomViewPager
+    <com.mobnote.golukmain.photoalbum.CustomViewPager
         android:id="@+id/mViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/functionLayout" >
-    </cn.com.mobnote.golukmobile.photoalbum.CustomViewPager>
+    </com.mobnote.golukmain.photoalbum.CustomViewPager>
     
 </RelativeLayout>

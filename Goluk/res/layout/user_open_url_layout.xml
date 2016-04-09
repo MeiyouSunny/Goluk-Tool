@@ -7,7 +7,7 @@
 
     <include layout="@layout/user_title" />
 
-    <cn.com.mobnote.user.MyProgressWebView
+    <com.mobnote.user.MyProgressWebView
         android:id="@+id/my_webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

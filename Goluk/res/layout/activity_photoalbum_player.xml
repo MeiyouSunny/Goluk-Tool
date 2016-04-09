@@ -67,7 +67,7 @@
     	android:layout_height="match_parent"
     	android:layout_below="@+id/RelativeLayout_videoinfo">
 
-   <cn.com.mobnote.golukmobile.player.FullScreenVideoView
+   <com.mobnote.golukmain.player.FullScreenVideoView
         	android:id="@+id/fullscreen_video_view"
         	android:layout_width="match_parent"
         	android:layout_height="match_parent" />

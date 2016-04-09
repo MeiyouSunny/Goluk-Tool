@@ -92,7 +92,7 @@
                     android:textColor="#ffffff"
                     android:textSize="24sp" />
 
-                <cn.com.mobnote.golukmobile.profit.CustomTextView
+                <com.mobnote.golukmain.profit.CustomTextView
                     android:id="@+id/last_profit"
                     android:layout_width="160dp"
                     android:layout_height="100dp"
