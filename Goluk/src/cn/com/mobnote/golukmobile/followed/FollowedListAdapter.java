@@ -8,6 +8,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.util.SoundUtils;
 import cn.com.mobnote.golukmobile.followed.bean.FollowedComListBean;
@@ -690,6 +692,9 @@ public class FollowedListAdapter extends BaseAdapter {
 		viewHolder.praiseText.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				if(GolukUtils.isFastDoubleClick()) {
+					return;
+				}
 				if("1".equals(videoObjectBean.video.ispraise)) {
 					mFragment.sendCancelPraiseRequest(videoId);
 				} else {
