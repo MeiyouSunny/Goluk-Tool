@@ -190,9 +190,9 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 	// 点击　“ＱＱ空间”
 	public void click_qqZone() {
-		@SuppressWarnings("static-access")
-		Boolean isQQ = mController.getConfig().isSupportQQZoneSSO(mActivity);
-		if (isQQ) {
+//		@SuppressWarnings("static-access")
+//		Boolean isQQ = mController.getConfig().isSupportQQZoneSSO(mActivity);
+//		if (isQQ) {
 			if (null != mActivity && mActivity instanceof BaseActivity) {
 				if (!((BaseActivity) mActivity).isAllowedClicked()) {
 					return;
@@ -203,9 +203,9 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			mCurrentShareType = TYPE_QQ_ZONE;
 			this.shareUp();// 上报分享统计
 			performShare(SHARE_MEDIA.QZONE);
-		} else {
-			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_qq_low_version));
-		}
+//		} else {
+//			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_qq_low_version));
+//		}
 	}
 
 	public void click_sina() {
