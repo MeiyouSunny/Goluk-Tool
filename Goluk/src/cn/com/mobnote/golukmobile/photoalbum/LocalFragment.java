@@ -78,7 +78,7 @@ public class LocalFragment extends Fragment {
 			this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
 			this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 			initView();
-			loadData(false);
+			loadData(true);
 		}
 
 		ViewGroup parent = (ViewGroup) mLocalVideoView.getParent();
