@@ -152,7 +152,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		performShare(SHARE_MEDIA.WEIXIN);
 	}
 
-	// 点击　“朋友圈”
+	// 点击 “朋友圈”
 	public void click_wechat_circle() {
 		if (sharePlatform.isInstallWeiXin()) {
 			if (null != mActivity && mActivity instanceof BaseActivity) {
@@ -162,7 +162,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 				((BaseActivity) mActivity).setJumpToNext();
 			}
 		}
-		sharePlatform.setShareContent(shareurl + "&type=5", coverurl, describe, describe);
+		sharePlatform.setShareContent(shareurl + "&type=5", coverurl, describe, ttl);
 		mCurrentShareType = TYPE_WEIXIN_CIRCLE;
 		this.shareUp();// 上报分享统计
 		performShare(SHARE_MEDIA.WEIXIN_CIRCLE);
