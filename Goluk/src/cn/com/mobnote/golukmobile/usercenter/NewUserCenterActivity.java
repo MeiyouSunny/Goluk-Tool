@@ -258,9 +258,12 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 				} else if (1 == attention.data.link) {
 					GolukUtils.showToast(this, this.getString(R.string.str_usercenter_attention_ok));
 					mHomeJson.data.user.fans += 1;
-				} else {
+				} else if (2 == attention.data.link) {
 					GolukUtils.showToast(this, this.getString(R.string.str_usercenter_attention_ok));
 					mHomeJson.data.user.fans += 1;
+				} else {
+					GolukUtils.showToast(this, this.getString(R.string.str_usercenter_attention_cancle_ok));
+					mHomeJson.data.user.fans -= 1;
 				}
 				mHeader.changeAttentionState(attention.data.link);
 				mHomeJson.data.user.link = attention.data.link;
