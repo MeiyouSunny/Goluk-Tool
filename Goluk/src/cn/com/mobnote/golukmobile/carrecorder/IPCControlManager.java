@@ -264,8 +264,8 @@ public class IPCControlManager implements IPCManagerFn {
 	 * @author xuhw
 	 * @date 2015年3月21日
 	 */
-	public boolean queryFileListInfo(int filetype, int limitCount, long timestart, long timeend) {
-		String queryParam = IpcDataParser.getQueryMoreFileJson(filetype, limitCount, timestart, timeend);
+	public boolean queryFileListInfo(int filetype, int limitCount, long timestart, long timeend,String resform) {
+		String queryParam = IpcDataParser.getQueryMoreFileJson(filetype, limitCount, timestart, timeend,resform);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_Query,
 				queryParam);
 	}

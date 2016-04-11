@@ -1628,7 +1628,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==4444===stopDownloadList:   " + starttime + "  syncFlag: "
 				+ syncFlag);
 
-		mIPCControlManager.queryFileListInfo(6, syncFlag, starttime, 2147483647);
+		mIPCControlManager.queryFileListInfo(6, syncFlag, starttime, 2147483647,"0");
 	}
 
 	/**
