@@ -1,13 +1,8 @@
 package com.mobnote.golukmain.http;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;
-
-import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.mobnote.util.GolukUtils;
@@ -16,18 +11,28 @@ public  class UrlHostManager {
 
 	public static final String USER_CENTER_PATH = "/cdcRegister/modifyUserInfo.htm";
 	public static final String UPLOAD_IMAG_PATH = "/fileService/HeadUploadServlet";
+	// 国内版域名
 	public static final String ONLINE_HOST = "http://s.goluk.cn";
+	// 腾讯云域名
 	public static final String QCLOUD_HOST = "http://q.goluk.cn";
+	// 测试服务器
 	public static final String TEST_HOST = "http://server.goluk.cn";
+	// 开发服务器域名
 	public static final String DEV_HOST = "http://svr.goluk.cn";
+	// 国际版域名
+	public static final String INTERNATIIONAL_HOST = "http://iserver.goluk.cn";
+
 	public static final String ONLINE_WEBHOST = "http://surl.goluk.cn";
 	public static final String TEST_WEBHOST = "http://surl3.goluk.cn";
 	public static final String DEV_WEBHOST = "http://surl2.goluk.cn";
 	public static final String QCLOUD_WEBHOST = "http://qsurl.goluk.cn";
+	public static final String INTERNATION_WEBHOST = "http://isurl.goluk.cn";
 	private String mHost = "";
 	private static String mWebPageHost = "";
 
 	private final String SERVER_FLAG_NAME = "serverflag";
+
+	private static final String SIGN_INTERNATION = "invd";
 
 	UrlHostManager() {
 
@@ -41,6 +46,9 @@ public  class UrlHostManager {
 		} else if (flag.equalsIgnoreCase("txy")) {
 			mHost = QCLOUD_HOST;
 			mWebPageHost = QCLOUD_WEBHOST;
+		} else if (flag.equalsIgnoreCase(SIGN_INTERNATION)) {
+			mHost = INTERNATIIONAL_HOST;
+			mWebPageHost = INTERNATION_WEBHOST;
 		} else {
 			mHost = DEV_HOST;
 			mWebPageHost = DEV_WEBHOST;

@@ -929,103 +929,99 @@
     <string name="umeng_socialize_text_line_key">Line</string>
     
     <!-- New -->
-    <string name="guide_start">点击这里开始你的极路客之旅吧</string>
-    <string name="video_square">视频广场</string>
-    <string name="no_following_tips">没有关注的人，好任性啊</string>
-    <string name="no_fans_tips">没有粉丝，好可怜啊</string>
-    <string name="str_wonderful_video_quality_title">精彩视频质量</string>
-    <string name="str_settings_tone_title">提示音音量大小</string>
-    <string name="str_settings_shutdown_title">关机时间</string>
-    <string name="str_settings_language_title">语言设置</string>
-    <string name="photoalbum_no_ipc_connect_text">未连接行车记录仪</string>
-    <string name="str_local_title">本地</string>
-    <string name="str_wonderful_title">精彩</string>
-    <string name="str_urgent_title">紧急</string>
-    <string name="str_loop_title">循环</string>
-    <string name="str_album_no_connect">点击此处连接极路客</string>
+    <string name="guide_start">Start using</string>
+    <string name="video_square">Video Plaza</string>
+    <string name="no_following_tips">No Follows</string>
+    <string name="no_fans_tips">No Fans</string>
+    <string name="str_wonderful_video_quality_title">Wonderful Video Quality</string>
+    <string name="str_settings_tone_title">Prompt tone volume</string>
+    <string name="str_settings_shutdown_title">Delay shutdown time</string>
+    <string name="str_settings_language_title">Language</string>
+    <string name="photoalbum_no_ipc_connect_text">Dashcam Disconnected</string>
+    <string name="str_local_title">LOCAL</string>
+    <string name="str_wonderful_title">WDF</string>
+    <string name="str_urgent_title">URG</string>
+    <string name="str_loop_title">LOOP</string>
+    <string name="str_album_no_connect">Click here to connect Goluk</string>
     <string name="str_album_video_1080">1080p</string>
     <string name="str_album_video_720">720p</string>
     <string name="str_album_video_480">480p</string>
-    <string name="setting_notify_follow">有人关注我</string>
-    <string name="str_photo_delete_confirm">确认删除此视频？</string>
-    <string name="str_refresh_one_minute">一分钟前更新</string>
-    <string name="str_asycned">已同步</string>
-    <string name="str_video_sync_setting_title">视频自动同步设置</string>
-    <string name="str_video_sync_setting_sync_five">同步最近录制的5条</string>
-    <string name="str_video_sync_setting_sync_twenty">同步最近录制的20条</string>
-    <string name="str_video_sync_setting_sync_close">关闭</string>
-    <string name="str_or">或</string>
-    <string name="str_weixin_login">微信登陆</string>
-    <string name="str_binding_phone">绑定手机号</string>
-    <string name="str_already_bind">已绑定</string>
-    <string name="str_not_bind">未绑定</string>
-    <string name="str_bind_fail">绑定失败</string>
+    <string name="setting_notify_follow">Someone has followed me</string>
+    <string name="str_photo_delete_confirm">Confirm delete this video?</string>
+    <string name="str_refresh_one_minute">Update 1min ago</string>
+    <string name="str_asycned">Synchronized</string>
+    <string name="str_video_sync_setting_title">AutoSync Videos</string>
+    <string name="str_video_sync_setting_sync_five">Sync the latest 5 videos</string>
+    <string name="str_video_sync_setting_sync_twenty">Sync the latest 20 videos</string>
+    <string name="str_video_sync_setting_sync_close">Closed</string>
+    <string name="str_or">OR</string>
+    <string name="str_weixin_login">Log In With WeChat</string>
+    <string name="str_binding_phone">Binding Phone</string>
+    <string name="str_already_bind">Already Binding</string>
+    <string name="str_not_bind">No Binding</string>
+    <string name="str_bind_fail">Failed</string>
+    <string name="str_no_duplicated_praise">Already liked</string>
+    <string name="str_praise_failed">Failed</string>
+    <string name="str_cancel_praise_failed">Failed</string>
+    <string name="str_my_praised_list">Liked</string>
+    <string name="str_praised_list_connect_error">Network unavailable. Tap the screen and try again</string>
+    <string name="str_praised_list_request_no_data">No like records.</string>
+    <string name="str_wonderful_share">Goluk Wonderful Videos</string>
     
+    <string name="str_user_video_type_wonderful_text">Essence</string>
+    <string name="str_user_video_type_recommend_text">Recommend</string>
+    <string name="str_user_video_type_headline_text">HeadLine</string>
+    <string name="str_usercenter_header_attention_text">Follow</string>
+    <string name="str_usercenter_header_attention_already_text">followed</string>
+    <string name="str_usercenter_header_attention_each_other_text">followed</string>
+    <string name="str_usercenter_header_edit_text">Edit</string>
+    <string name="str_usercenter_header_fans_text">Fans</string>
+    <string name="str_usercenter_more_share">Share this page</string>
+    <string name="str_usercenter_no_introduce_text">No contents</string>
+
+    <string name="str_please_bind_phone_first">Please go to the general settings to bind the phone number</string>
+    <string name="str_follow">Follow</string>
+    <string name="str_fans">Fans</string>
+    <string name="str_discover">Home</string>
+    <string name="str_album">Album</string>
+    <string name="str_mine">Me</string>
+
+    <string name="str_usercenter_attention_ok">Followe Successfully</string>
+    <string name="str_usercenter_attention_cancle_ok">Cancel followe Successfully</string>
+    <string name="str_usercenter_nowonderful_video">No Videos</string>
+    <string name="str_usercenter_recommend_video">No Videos</string>
+    <string name="str_usercenter_headlines_video">No Videos</string>
+    <string name="str_usercenter_login_hint_text">Please log in before operate</string>
+
+    <string name="str_confirm_cancel_follow">Are you sure cancel to follow?</string>
+    <string name="str_follow_fail">Follow failed.</string>
+    <string name="str_cancel_follow_fail">Cancel follow failed</string>
+    <string name="str_follow_all">Follow all</string>
+    <string name="str_follow_no_content">No contents</string>
+    <string name="str_follow_recommend_star">Star user</string>
     
-    <string name="str_no_duplicated_praise">已经赞过了，请不要重复点赞</string>
-    <string name="str_praise_failed">点赞失败</string>
-    <string name="str_cancel_praise_failed">取消点赞失败</string>
-    <string name="str_my_praised_list">我赞过的</string>
-    <string name="str_praised_list_connect_error">网络不给力，轻触屏幕重试</string>
-    <string name="str_praised_list_request_no_data">暂无点赞记录</string>
-    <string name="str_wonderful_share">Goluk精彩分享</string>
-
-    <string name="zero">0</string>
-
-    <string name="str_user_video_type_wonderful_text">精选作品</string>
-    <string name="str_user_video_type_recommend_text">被推荐活动</string>
-    <string name="str_user_video_type_headline_text">入选头条</string>
-    <string name="str_usercenter_header_attention_text">关注</string>
-    <string name="str_usercenter_header_attention_already_text">已关注</string>
-    <string name="str_usercenter_header_attention_each_other_text">相互关注</string>
-    <string name="str_usercenter_header_edit_text">编辑资料</string>
-    <string name="str_usercenter_header_fans_text">粉丝</string>
-    <string name="str_usercenter_more_share">分享主页</string>
-    <string name="str_usercenter_no_introduce_text">暂无介绍</string>
-
-    <string name="str_please_bind_phone_first">提现需要绑定手机号，请先前往通用设置中绑定手机号</string>
-    <string name="str_follow">关注</string>
-    <string name="str_fans">粉丝</string>
-    <string name="str_discover">极社</string>
-    <string name="str_album">相册</string>
-    <string name="str_mine">我的</string>
-
-    <string name="str_usercenter_attention_ok">关注成功</string>
-    <string name="str_usercenter_attention_cancle_ok">取消关注成功</string>
-    <string name="str_usercenter_nowonderful_video">当前还没有精选视频</string>
-    <string name="str_usercenter_recommend_video">当前还没有被推荐的视频</string>
-    <string name="str_usercenter_headlines_video">当前还没有入选头条的视频</string>
-    <string name="str_usercenter_login_hint_text">请登录后再操作</string>
-
-    <string name="str_confirm_cancel_follow">确定要取消关注吗？</string>
-    <string name="str_follow_fail">关注失败</string>
-    <string name="str_cancel_follow_fail">取消关注失败</string>
-    <string name="str_follow_all">全部关注</string>
-    <string name="str_follow_no_content">什么内容也没有</string>
-    <string name="str_follow_recommend_star">推荐达人</string>
-
-    <string name="str_followed_login_to_view_tip">登录后才能查看自己关注的内容哟~</string>
-
-    <string name="str_followed_now_login">现在去登录</string>
-    <string name="str_upgrade_check_sdcard_t1">很抱歉，升级文件传输失败，请检查是否插入存储卡。</string>
-    <string name="str_settings_restart_ipc">修改成功，重启记录仪后生效。</string>
+    <string name="str_upgrade_check_sdcard_t1">Upgrade file transfer failed</string>
+    <string name="str_settings_restart_ipc">Modify successful, restart the recorder after the entry into force.</string>
     
     <!-- guide -->
-    <string name="str_guide_2_top_text">行车记录</string>
-    <string name="str_guide_3_top_text">精彩分享</string>
-    <string name="str_guide_2_text">一键预览 轻松完成碰瓷取证\n随时抢拍 做不文明驾驶陋习的曝光台</string>
-    <string name="str_guide_3_text">这些沿途的风光 奇异的境遇 珍贵的瞬间\n多么渴望与人分享</string>
-    <string name="str_guide_4_text">透过散落在世界的极路客\n去发现路上那些叹为观止的美</string>
-    <string name="str_guide_5_text">24小时全天候车辆监控\n极路客做你爱车的守卫星</string>
-    <string name="str_guide_exprience">立即体验</string>
-    <string name="str_guide_have_goluk_text">我有极路客</string>
-    <string name="str_guide_look_text">随便看看</string>
-    <string name="str_mine_no_video_text">您还没有分享过精彩视频</string>
-    <string name="str_mine_ta_video_text">Ta 还没有分享过精彩视频</string>
-    <string name="str_profit_detail_text">明细</string>
-    <string name="str_profit_cash_text">提现</string>
-    <string name="str_carrecorder_connect_text">正在连接极路客…</string>
-    <string name="str_sofa_text">沙发等您来坐</string>
-    <string name="str_reward_text">获奖</string>
+    <string name="str_guide_2_top_text">Driving Record</string>
+    <string name="str_guide_3_top_text">Share Wonderful</string>
+    <string name="str_guide_2_text">Easy to restore the truth\nYou can take any time to shoot a video</string>
+    <string name="str_guide_3_text">You can share the record of the scenery along the way and strange encounters, precious moments of the video to friends.</string>
+    <string name="str_guide_4_text">By Goluks all over the world, you can find the beauty of the world which as the acme of perfection.</string>
+    <string name="str_guide_5_text">Protect your vehicle 24 hours all day long\nGoluk will be your car guard</string>
+    <string name="str_guide_exprience">Experience now</string>
+    <string name="str_guide_have_goluk_text">I have a Goluk</string>
+    <string name="str_guide_look_text">Casual look</string>
+    <string name="str_mine_no_video_text">Have not shared any Wonderful Videos yet</string>
+    <string name="str_mine_ta_video_text">Have not shared any Wonderful Videos yet</string>
+    <string name="str_profit_detail_text">Statement</string>
+    <string name="str_profit_cash_text">Withdrawal</string>
+    <string name="str_carrecorder_connect_text">Connecting to Goluk…</string>
+    <string name="str_sofa_text">You could be the first commenter</string>
+    <string name="str_reward_text">Rewarded</string>
+    <string name="str_followed_login_to_view_tip">Log in to view the contents</string>
+    <string name="str_followed_now_login">Log in now</string>
+    <string name="zero">0</string>
     
 </resources>
