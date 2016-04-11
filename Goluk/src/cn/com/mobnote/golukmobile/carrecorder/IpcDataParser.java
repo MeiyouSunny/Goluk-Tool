@@ -38,17 +38,19 @@ public class IpcDataParser {
 	 * @param limitCount
 	 * @param timestart
 	 * @param timeend
+	 * @param resform  0:自动查询  1：相册查询
 	 * @return
 	 * @author jiayf
 	 * @date Mar 10, 2015
 	 */
-	public static String getQueryMoreFileJson(int type, int limitCount, long timestart, long timeend) {
+	public static String getQueryMoreFileJson(int type, int limitCount, long timestart, long timeend,String resForm) {
 		JSONObject json = new JSONObject();
 		try {
 			json.put("type", type);
 			json.put("limitCount", limitCount);
 			json.put("timestart", timestart);
 			json.put("timeend", timeend);
+			json.put("tag", resForm);
 		} catch (Exception e) {
 			return null;
 		}
@@ -169,6 +171,20 @@ public class IpcDataParser {
 			return null;
 		}
 		return list;
+	}
+	
+	public static String getIpcQueryListReqTag(String data){
+		String tag = "";
+		try {
+			JSONObject obj = new JSONObject(data);
+			tag = obj.optString("tag");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return tag;
+		
 	}
 	
 	/**

@@ -26,8 +26,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.application.GolukApplication;
+import cn.com.mobnote.eventbus.EventConfig;
 import cn.com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import cn.com.mobnote.eventbus.EventDownloadIpcVid;
+import cn.com.mobnote.eventbus.EventIpcConnState;
 import cn.com.mobnote.golukmobile.R;
 import cn.com.mobnote.golukmobile.carrecorder.CarRecorderActivity;
 import cn.com.mobnote.golukmobile.carrecorder.IpcDataParser;
@@ -291,7 +293,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 							GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====44444=");
 							isGetFileListDataing = true;
 							boolean isSucess = GolukApplication.getInstance().getIPCControlManager()
-									.queryFileListInfo(IPCManagerFn.TYPE_CIRCULATE, pageCount, 0, lastTime);
+									.queryFileListInfo(IPCManagerFn.TYPE_CIRCULATE, pageCount, 0, lastTime,"1");
 							GolukDebugUtils.e("", "YYYYYY=====queryFileListInfo====isSucess=" + isSucess);
 							if (!isSucess) {
 								isGetFileListDataing = false;
@@ -470,7 +472,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 			isGetFileListDataing = true;
 			mDataList.clear();
 			boolean isSucess = GolukApplication.getInstance().getIPCControlManager()
-					.queryFileListInfo(IPCManagerFn.TYPE_CIRCULATE, pageCount, 0, timeend);
+					.queryFileListInfo(IPCManagerFn.TYPE_CIRCULATE, pageCount, 0, timeend,"1");
 			GolukDebugUtils.e("", "YYYYYY=====queryFileListInfo====isSucess=" + isSucess);
 			if (!isSucess) {
 				isGetFileListDataing = false;
@@ -518,6 +520,25 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 		mGroupListName = VideoDataManagerUtils.getGroupName(mDataList);
 		mCloudWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
 	}
+	
+	public void onEventMainThread(EventIpcConnState event) {
+		if (null == event) {
+			return;
+		}
+		if(mFragmentAlbum != null && mFragmentAlbum.mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP){
+			switch (event.getmOpCode()) {
+			
+			case EventConfig.IPC_DISCONNECT:
+				//showConnectionDialog();
+				break;
+			case EventConfig.IPC_CONNECT:
+				loadData(true);
+				break;
+			default:
+				break;
+			}
+		}
+	}
 
 	/**
 	 * 移除loading
@@ -544,6 +565,11 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 				GolukDebugUtils.e("xuhw", "YYYYYY=======获取文件列表===@@@======param1=" + param1 + "=====param2=" + param2);
 				if (RESULE_SUCESS == param1) {
 					if (TextUtils.isEmpty((String) param2)) {
+						return;
+					}
+					
+					String tag = IpcDataParser.getIpcQueryListReqTag((String) param2);
+					if(!tag.equals(PhotoAlbumConfig.VIDEO_LIST_TAG_PHOTO)){
 						return;
 					}
 
