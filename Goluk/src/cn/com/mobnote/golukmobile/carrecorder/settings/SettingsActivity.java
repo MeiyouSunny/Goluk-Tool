@@ -174,6 +174,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private RelativeLayout mWonderfulVideoQualityLayout, mVolumeLayout, mPowerTimeLayout, mVoiceTypeLayout;
 	/** 精彩视频质量 **/
 	private String mWonderfulVideoResolution = "";
+	/**保存上次精彩视频质量**/
+	private String mSaveLastResolution = "";
 	/** 提示音音量大小 **/
 	private String mVolume = "";
 	/** 关机时间 **/
@@ -261,21 +263,21 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 			boolean t1GetAdasCofig = GolukApplication.getInstance().getIPCControlManager().getT1AdasConfig();
 			GolukDebugUtils.e("", "--------------SettingsActivity-----t1GetAutoRotaing：" + t1GetAdasCofig);
+			
+			// 获取精彩视频质量
+			boolean videoResolution = GolukApplication.getInstance().getIPCControlManager().getVideoResolution();
+			GolukDebugUtils.e("", "--------------SettingsActivity-----videoResolution：" + videoResolution);
+			// 获取提示音音量大小
+			boolean volume = GolukApplication.getInstance().getIPCControlManager().getVolume();
+			GolukDebugUtils.e("", "--------------SettingsActivity-----volume：" + volume);
+			// 获取关机时间
+			boolean powerOffTime = GolukApplication.getInstance().getIPCControlManager().getPowerOffTime();
+			GolukDebugUtils.e("", "--------------SettingsActivity-----powerOffTime：" + powerOffTime);
+			// 获取语言设置
+			boolean voiceType = GolukApplication.getInstance().getIPCControlManager().getVoiceType();
+			GolukDebugUtils.e("", "--------------SettingsActivity-----voiceType：" + voiceType);
 		}
 		
-		// 获取精彩视频质量
-		boolean videoResolution = GolukApplication.getInstance().getIPCControlManager().getVideoResolution();
-		GolukDebugUtils.e("", "--------------SettingsActivity-----videoResolution：" + videoResolution);
-		// 获取提示音音量大小
-		boolean volume = GolukApplication.getInstance().getIPCControlManager().getVolume();
-		GolukDebugUtils.e("", "--------------SettingsActivity-----volume：" + volume);
-		// 获取关机时间
-		boolean powerOffTime = GolukApplication.getInstance().getIPCControlManager().getPowerOffTime();
-		GolukDebugUtils.e("", "--------------SettingsActivity-----powerOffTime：" + powerOffTime);
-		// 获取语言设置
-		boolean voiceType = GolukApplication.getInstance().getIPCControlManager().getVoiceType();
-		GolukDebugUtils.e("", "--------------SettingsActivity-----voiceType：" + voiceType);
-
 		showLoading();
 	}
 
@@ -1993,6 +1995,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			try {
 				JSONObject json = new JSONObject((String) param2);
 				mWonderfulVideoResolution = json.getString("wonderful_resolution");
+				mSaveLastResolution = mWonderfulVideoResolution;
 				refreshWonderfulVideoData();
 			} catch (Exception e) {
 				mWonderfulVideoResolution = "1080P";
@@ -2014,19 +2017,21 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				+ "-----param1：" + param1 + "------param2：" + param2);
 		closeLoading();
 		if (RESULE_SUCESS == param1) {
-			if (null == mRestartDialog) {
-				mRestartDialog = new AlertDialog.Builder(this)
-						.setTitle(this.getString(R.string.user_dialog_hint_title))
-						.setMessage(this.getString(R.string.str_settings_restart_ipc))
-						.setPositiveButton(this.getString(R.string.user_repwd_ok),
-								new DialogInterface.OnClickListener() {
+			if (!mSaveLastResolution.equals(mWonderfulVideoResolution)) {
+				if (null == mRestartDialog) {
+					mRestartDialog = new AlertDialog.Builder(this)
+							.setTitle(this.getString(R.string.user_dialog_hint_title))
+							.setMessage(this.getString(R.string.str_settings_restart_ipc))
+							.setPositiveButton(this.getString(R.string.user_repwd_ok),
+									new DialogInterface.OnClickListener() {
 
-									@Override
-									public void onClick(DialogInterface arg0, int arg1) {
-										mRestartDialog.dismiss();
-										mRestartDialog = null;
-									}
-								}).show();
+										@Override
+										public void onClick(DialogInterface arg0, int arg1) {
+											mRestartDialog.dismiss();
+											mRestartDialog = null;
+										}
+									}).show();
+				}
 			}
 			GolukApplication.getInstance().getIPCControlManager().getVideoResolution();
 		}
