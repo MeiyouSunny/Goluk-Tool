@@ -12,9 +12,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 
+import com.facebook.internal.CallbackManagerImpl;
 import com.mobnote.application.GlobalWindow;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.http.HttpManager;
+import com.mobnote.golukmain.thirdshare.china.FacebookShareHelper;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -157,6 +159,14 @@ public class BaseActivity extends FragmentActivity {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == CallbackManagerImpl.RequestCodeOffset.Share.toRequestCode()) {
+			FacebookShareHelper.getInstance().mCallbackManager.onActivityResult(requestCode, resultCode, data);
+		}
 	}
 
 }

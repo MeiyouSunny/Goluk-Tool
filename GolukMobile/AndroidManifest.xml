@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cn.com.mobnote.golukmobile"
+    package="com.mobnote.golukmobile"
     android:versionCode="101"
     android:versionName="V1.0.1_dev" >
 
@@ -543,6 +543,29 @@
             android:hardwareAccelerated="true"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
+        
+           <!-- facebook 相关 -->
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider1679907912268496"
+            android:exported="true" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        
+          <!-- twitter -->
+        <activity
+            android:name="com.umeng.socialize.handler.TwitterWebActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
