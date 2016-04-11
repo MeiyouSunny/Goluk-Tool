@@ -96,6 +96,8 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 	private List<String> mGroupListName = null;
 
 	private TextView empty = null;
+	
+	private boolean isListener = false;
 
 	/** 防止重复下载 */
 	List<Boolean> exist = new ArrayList<Boolean>();
@@ -133,6 +135,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager()
 					.addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_CIRCULATE, this);
+			isListener = true;
 		}
 	}
 
@@ -142,6 +145,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager()
 					.removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_CIRCULATE);
+			isListener = false;
 		}
 	}
 
@@ -525,7 +529,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 		if (null == event) {
 			return;
 		}
-		if(mFragmentAlbum != null && mFragmentAlbum.mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP){
+		if(mFragmentAlbum != null && mFragmentAlbum.mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP && isListener == true){
 			switch (event.getmOpCode()) {
 			
 			case EventConfig.IPC_DISCONNECT:

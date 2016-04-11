@@ -97,6 +97,8 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	private List<String> mGroupListName = null;
 
 	private TextView empty = null;
+	
+	private boolean isListener = false;
 
 	/** 防止重复下载 */
 	List<Boolean> exist = new ArrayList<Boolean>();
@@ -174,7 +176,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 		if (null == event) {
 			return;
 		}
-		if(getFragmentAlbum().mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND){
+		if(getFragmentAlbum().mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND && isListener == true){
 			switch (event.getmOpCode()) {
 			
 			case EventConfig.IPC_DISCONNECT:
@@ -509,6 +511,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager()
 					.addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT, this);
+			isListener = true;
 		}
 	}
 
@@ -518,6 +521,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager()
 					.removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT);
+			isListener = false;
 		}
 	}
 

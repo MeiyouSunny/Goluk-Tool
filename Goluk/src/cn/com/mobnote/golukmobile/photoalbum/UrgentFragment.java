@@ -101,6 +101,8 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 	/** 防止重复下载 */
 	List<Boolean> exist = new ArrayList<Boolean>();
 	
+	private boolean isListener = true;
+	
 	//private CloudVideoManager mCloudVideoListView = null;
 	
 	@Override
@@ -141,6 +143,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 		isShowPlayer = false;
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_URGENT, this);
+			isListener = true;
 		}
 	}
 
@@ -149,6 +152,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 		super.onPause();
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_URGENT);
+			isListener = false;
 		}
 	}
 
@@ -542,7 +546,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 		if (null == event) {
 			return;
 		}
-		if(mFragmentAlbum != null && mFragmentAlbum.mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG){
+		if(mFragmentAlbum != null && mFragmentAlbum.mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG && isListener == true){
 			switch (event.getmOpCode()) {
 			
 			case EventConfig.IPC_DISCONNECT:
