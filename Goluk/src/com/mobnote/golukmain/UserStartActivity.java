@@ -64,7 +64,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 	private boolean judge = false;
 	private StartAppBean mStartAppBean = null;
 	
-	public static final String VIDEO_URL = "android.resource://com.mobnote.golukmain/";
+	public String VIDEO_URL ;
 
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -81,6 +81,7 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 
 		mContext = this;
 		mApp = (GolukApplication) getApplication();
+		VIDEO_URL = "android.resource://" + getPakageName() +"/";
 
 		// SysApplication.getInstance().addActivity(this);
 
@@ -226,4 +227,14 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 	public boolean onError(MediaPlayer arg0, int arg1, int arg2) {
 		return true;
 	}
+	
+	private String getPakageName() {
+ 		try {
+ 			String pkName = this.getPackageName();
+ 			
+ 			return this.getPackageName();
+ 		} catch (Exception e) {
+ 		}
+ 		return "";
+ 	}
 }
