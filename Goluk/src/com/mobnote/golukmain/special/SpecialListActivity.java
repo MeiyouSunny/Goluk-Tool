@@ -9,23 +9,6 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.BaseActivity;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.UserOpenUrlActivity;
-import com.mobnote.golukmain.carrecorder.util.ImageManager;
-import com.mobnote.golukmain.carrecorder.util.MD5Utils;
-import com.mobnote.golukmain.carrecorder.util.SoundUtils;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
-import com.mobnote.golukmain.comment.CommentActivity;
-import com.mobnote.golukmain.comment.ICommentFn;
-import com.mobnote.golukmain.thirdshare.CustomShareBoard;
-import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
-import com.mobnote.golukmain.videodetail.ZTHead;
-import com.mobnote.user.UserUtils;
-import com.mobnote.util.GlideUtils;
-import com.mobnote.util.GolukUtils;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -45,6 +28,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
+
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.UserOpenUrlActivity;
+import com.mobnote.golukmain.carrecorder.util.ImageManager;
+import com.mobnote.golukmain.carrecorder.util.MD5Utils;
+import com.mobnote.golukmain.carrecorder.util.SoundUtils;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.comment.CommentActivity;
+import com.mobnote.golukmain.comment.ICommentFn;
+import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
+import com.mobnote.golukmain.thirdshare.china.ProxyThirdShare;
+import com.mobnote.golukmain.thirdshare.china.ThirdShareBean;
+import com.mobnote.golukmain.videodetail.ZTHead;
+import com.mobnote.user.UserUtils;
+import com.mobnote.util.GlideUtils;
+import com.mobnote.util.GolukUtils;
 
 public class SpecialListActivity extends BaseActivity implements OnClickListener, VideoSuqareManagerFn {
 	private SpecialListViewAdapter specialListViewAdapter = null;
@@ -90,13 +91,13 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 		setContentView(R.layout.special_list);
 
 		sdf = new SimpleDateFormat(this.getString(R.string.str_date_formatter));
-		
+
 		Intent intent = getIntent();
 
 		ztid = intent.getStringExtra("ztid");
 		title = intent.getStringExtra("title");
 
-		if(!TextUtils.isEmpty(title)) {
+		if (!TextUtils.isEmpty(title)) {
 			if (title.length() > 12) {
 				title = title.substring(0, 12) + this.getString(R.string.str_omit);
 			}
@@ -122,7 +123,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 		textTitle = (TextView) findViewById(R.id.title);
 		titleShare = (Button) findViewById(R.id.title_share);
 
-		if(!TextUtils.isEmpty(title)) {
+		if (!TextUtils.isEmpty(title)) {
 			textTitle.setText(title);
 		} else {
 			textTitle.setText(getString(R.string.str_special_default_title));
@@ -209,13 +210,10 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 			GolukApplication.getInstance().getVideoSquareManager()
 					.removeVideoSquareManagerListener("SpecialListActivity");
 			this.finish();
-		} else if (id == R.id.message
-				|| id == R.id.send
-				|| id == R.id.push_comment) {
+		} else if (id == R.id.message || id == R.id.send || id == R.id.push_comment) {
 			// 输入框
 			this.startCommentActivity(true);
-		} else if (id == R.id.comment_link
-				|| id == R.id.comments) {
+		} else if (id == R.id.comment_link || id == R.id.comments) {
 			// 查看所有评论
 			this.startCommentActivity(false);
 		} else if (id == R.id.outurl) {
@@ -293,7 +291,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 				List<SpecialInfo> list;
 				try {
 					list = sdm.getListData(param2.toString());
-					
+
 					ZTHead headData = sdm.getSpecialHeadData(param2.toString());
 					if (null != headData && null != headData.ztitle && !"".equals(headData.ztitle)) {
 						if (headData.ztitle.length() > 12) {
@@ -368,7 +366,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 							} catch (Exception e) {
 								commentLink.setVisibility(View.GONE);
 							}
-							
+
 						}
 
 						commentLink.setText(this.getString(R.string.cluster_check_all) + "  " + map.get("comcount")
@@ -469,10 +467,19 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 						}
 
 						if (this != null && !this.isFinishing()) {
-							// mCustomProgressDialog.close();
 							closeProgressDialog();
-							CustomShareBoard shareBoard = new CustomShareBoard(SpecialListActivity.this, sharePlatform,
-									shareurl, coverurl, describe, ttl, bitmap, realDesc, ztid);
+
+							ThirdShareBean shareBean = new ThirdShareBean();
+							shareBean.surl = shareurl;
+							shareBean.curl = coverurl;
+							shareBean.db = describe;
+							shareBean.tl = ttl;
+							shareBean.bitmap = bitmap;
+							shareBean.realDesc = realDesc;
+							shareBean.videoId = ztid;
+
+							ProxyThirdShare shareBoard = new ProxyThirdShare(SpecialListActivity.this, sharePlatform,
+									shareBean);
 							shareBoard.showAtLocation(SpecialListActivity.this.getWindow().getDecorView(),
 									Gravity.BOTTOM, 0, 0);
 						}
@@ -483,7 +490,6 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 					e.printStackTrace();
 				}
 			} else {
-				// mCustomProgressDialog.close();
 				closeProgressDialog();
 				GolukUtils.showToast(this, this.getString(R.string.network_error));
 			}
@@ -512,7 +518,8 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 	 */
 	public void loadHistorydata() {
 		String param;
-		param = "";//this.test();// GolukApplication.getInstance().getVideoSquareManager().getSquareList("");
+		param = "";// this.test();//
+					// GolukApplication.getInstance().getVideoSquareManager().getSquareList("");
 		if (param != null && !"".equals(param)) {
 			List<SpecialInfo> list;
 			try {
@@ -531,82 +538,87 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 
 	}
 
-//	public String test() throws JSONException {
-//		JSONObject jx = new JSONObject();
-//		jx.put("success", true);
-//		jx.put("msg", "成功");
-//
-//		JSONObject data = new JSONObject();
-//		data.put("result", "0");
-//		data.put("count", "1");
-//
-//		JSONObject video = new JSONObject();
-//		video.put("videoid", "12121");
-//		video.put("type", "2");
-//		video.put("sharingtime", "2015/08/01");
-//		video.put("describe", "记录卡记录卡据了解乐扣乐扣交流交流框架梁极乐空间垃圾筐拉进来");
-//		video.put("picture", "http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
-//		video.put("livesdkaddress", "http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
-//
-//		JSONObject user = new JSONObject();
-//		user.put("uid", "32323");
-//		user.put("nickname", "为什么不");
-//		user.put("headportrait", "2");
-//		user.put("sex", "1");
-//
-//		JSONObject videodata = new JSONObject();
-//		videodata.put("video", video);
-//		videodata.put("user", user);
-//
-//		JSONArray videos = new JSONArray();
-//		videos.put(videodata);
-//
-//		data.put("videolist", videos);
-//
-//		JSONObject commentdata = new JSONObject();
-//		commentdata.put("commentid", "2312");
-//		commentdata.put("authorid", "34233");
-//		commentdata.put("name", "大狗");
-//		commentdata.put("avatar", "2");
-//		commentdata.put("time", "2015/02/22");
-//		commentdata.put("text", "来健身卡来对付框架思路东风路斯蒂芬简历上");
-//
-//		JSONObject commentdata2 = new JSONObject();
-//		commentdata2.put("commentid", "2312");
-//		commentdata2.put("authorid", "34233");
-//		commentdata2.put("name", "二狗");
-//		commentdata2.put("avatar", "2");
-//		commentdata2.put("time", "2015/02/22");
-//		commentdata2.put("text", "离开家你弄死的放上来的咖啡机三闾大夫接口六角恐龙接口链接冷静冷静记录框架梁");
-//
-//		JSONArray comments = new JSONArray();
-//		comments.put(commentdata);
-//		comments.put(commentdata2);
-//
-//		JSONObject comment = new JSONObject();
-//		comment.put("iscomment", "1");
-//		comment.put("comcount", "2");
-//		comment.put("iscomment", "1");
-//		comment.put("comlist", comments);
-//
-//		data.put("comment", comment);
-//
-//		JSONObject head = new JSONObject();
-//		head.put("showhead", "1");
-//		head.put("headimg", "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
-//		head.put("headvideoimg", "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
-//		head.put("headvideo", "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
-//		head.put("ztIntroduction", "六角恐龙极乐空间六角恐龙极乐空间");
-//		head.put("outurl", "www.baidu.com");
-//		head.put("outurlname", "百度");
-//		head.put("ztitle", "测试title");
-//
-//		data.put("head", head);
-//
-//		jx.put("data", data);
-//		// {“result”:”0”,“head”:{},“videolist”:[],”commentlist”:{}}
-//		return jx.toString();
-//
-//	}
+	// public String test() throws JSONException {
+	// JSONObject jx = new JSONObject();
+	// jx.put("success", true);
+	// jx.put("msg", "成功");
+	//
+	// JSONObject data = new JSONObject();
+	// data.put("result", "0");
+	// data.put("count", "1");
+	//
+	// JSONObject video = new JSONObject();
+	// video.put("videoid", "12121");
+	// video.put("type", "2");
+	// video.put("sharingtime", "2015/08/01");
+	// video.put("describe", "记录卡记录卡据了解乐扣乐扣交流交流框架梁极乐空间垃圾筐拉进来");
+	// video.put("picture",
+	// "http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
+	// video.put("livesdkaddress",
+	// "http://cdn.goluk.cn/files/cdccover/20150706/1436142110232.png");
+	//
+	// JSONObject user = new JSONObject();
+	// user.put("uid", "32323");
+	// user.put("nickname", "为什么不");
+	// user.put("headportrait", "2");
+	// user.put("sex", "1");
+	//
+	// JSONObject videodata = new JSONObject();
+	// videodata.put("video", video);
+	// videodata.put("user", user);
+	//
+	// JSONArray videos = new JSONArray();
+	// videos.put(videodata);
+	//
+	// data.put("videolist", videos);
+	//
+	// JSONObject commentdata = new JSONObject();
+	// commentdata.put("commentid", "2312");
+	// commentdata.put("authorid", "34233");
+	// commentdata.put("name", "大狗");
+	// commentdata.put("avatar", "2");
+	// commentdata.put("time", "2015/02/22");
+	// commentdata.put("text", "来健身卡来对付框架思路东风路斯蒂芬简历上");
+	//
+	// JSONObject commentdata2 = new JSONObject();
+	// commentdata2.put("commentid", "2312");
+	// commentdata2.put("authorid", "34233");
+	// commentdata2.put("name", "二狗");
+	// commentdata2.put("avatar", "2");
+	// commentdata2.put("time", "2015/02/22");
+	// commentdata2.put("text", "离开家你弄死的放上来的咖啡机三闾大夫接口六角恐龙接口链接冷静冷静记录框架梁");
+	//
+	// JSONArray comments = new JSONArray();
+	// comments.put(commentdata);
+	// comments.put(commentdata2);
+	//
+	// JSONObject comment = new JSONObject();
+	// comment.put("iscomment", "1");
+	// comment.put("comcount", "2");
+	// comment.put("iscomment", "1");
+	// comment.put("comlist", comments);
+	//
+	// data.put("comment", comment);
+	//
+	// JSONObject head = new JSONObject();
+	// head.put("showhead", "1");
+	// head.put("headimg",
+	// "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
+	// head.put("headvideoimg",
+	// "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
+	// head.put("headvideo",
+	// "http://cdn.goluk.cn/files/cdccover/20150706/1436143729381.png");
+	// head.put("ztIntroduction", "六角恐龙极乐空间六角恐龙极乐空间");
+	// head.put("outurl", "www.baidu.com");
+	// head.put("outurlname", "百度");
+	// head.put("ztitle", "测试title");
+	//
+	// data.put("head", head);
+	//
+	// jx.put("data", data);
+	// // {“result”:”0”,“head”:{},“videolist”:[],”commentlist”:{}}
+	// return jx.toString();
+	//
+	// }
 
 }

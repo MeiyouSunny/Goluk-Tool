@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.thirdshare.CustomShareBoard;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.thirdshare.china.AppInstallationUtil;
 import com.mobnote.golukmain.thirdshare.china.IThirdShareFn;
@@ -240,7 +239,7 @@ public class ShareDeal implements OnClickListener {
 			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_no_weixin));
 			return;
 		}
-		mCurrentShareType = CustomShareBoard.TYPE_WEIXIN;
+		mCurrentShareType = IThirdShareFn.TYPE_WEIXIN;
 		click_deal(mCurrentShareType);
 	}
 
@@ -257,7 +256,7 @@ public class ShareDeal implements OnClickListener {
 			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_no_weixin));
 			return;
 		}
-		mCurrentShareType = CustomShareBoard.TYPE_WEIXIN_CIRCLE;
+		mCurrentShareType = IThirdShareFn.TYPE_WEIXIN_CIRCLE;
 		click_deal(mCurrentShareType);
 	}
 
@@ -271,7 +270,7 @@ public class ShareDeal implements OnClickListener {
 			return;
 		}
 		if (mSharePlatform.isInstallPlatform(SHARE_MEDIA.QQ)) {
-			mCurrentShareType = CustomShareBoard.TYPE_QQ;
+			mCurrentShareType = IThirdShareFn.TYPE_QQ;
 			click_deal(mCurrentShareType);
 		} else {
 			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_qq_low_version));
@@ -287,7 +286,7 @@ public class ShareDeal implements OnClickListener {
 		if (!isValid()) {
 			return;
 		}
-		mCurrentShareType = CustomShareBoard.TYPE_QQ_ZONE;
+		mCurrentShareType = IThirdShareFn.TYPE_QQ_ZONE;
 		click_deal(mCurrentShareType);
 	}
 
@@ -300,7 +299,7 @@ public class ShareDeal implements OnClickListener {
 		if (!isValid()) {
 			return;
 		}
-		mCurrentShareType = CustomShareBoard.TYPE_WEIBO_XINLANG;
+		mCurrentShareType = IThirdShareFn.TYPE_WEIBO_XINLANG;
 		click_deal(mCurrentShareType);
 	}
 

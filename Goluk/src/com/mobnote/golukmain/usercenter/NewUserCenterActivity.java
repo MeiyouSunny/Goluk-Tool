@@ -4,27 +4,6 @@ import java.util.List;
 
 import org.json.JSONObject;
 
-import com.handmark.pulltorefresh.library.GridViewWithHeaderAndFooter;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshHeaderGridView;
-import com.mobnote.application.GolukApplication;
-import com.mobnote.eventbus.EventConfig;
-import com.mobnote.eventbus.EventRefreshUserInfo;
-import com.mobnote.golukmain.BaseActivity;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
-import com.mobnote.golukmain.http.IRequestResultListener;
-import com.mobnote.golukmain.thirdshare.CustomShareBoard;
-import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
-import com.mobnote.golukmain.usercenter.bean.AttentionJson;
-import com.mobnote.golukmain.usercenter.bean.HomeJson;
-import com.mobnote.golukmain.usercenter.bean.HomeVideoList;
-import com.mobnote.golukmain.usercenter.bean.ShareJson;
-import com.mobnote.golukmain.videodetail.VideoDetailActivity;
-import com.mobnote.user.UserUtils;
-import com.mobnote.util.GolukUtils;
-
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -36,12 +15,34 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
+
+import com.handmark.pulltorefresh.library.GridViewWithHeaderAndFooter;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshHeaderGridView;
+import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventRefreshUserInfo;
+import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
+import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
+import com.mobnote.golukmain.thirdshare.china.ProxyThirdShare;
+import com.mobnote.golukmain.thirdshare.china.ThirdShareBean;
+import com.mobnote.golukmain.usercenter.bean.AttentionJson;
+import com.mobnote.golukmain.usercenter.bean.HomeJson;
+import com.mobnote.golukmain.usercenter.bean.HomeVideoList;
+import com.mobnote.golukmain.usercenter.bean.ShareJson;
+import com.mobnote.golukmain.videodetail.VideoDetailActivity;
+import com.mobnote.user.UserUtils;
+import com.mobnote.util.GolukUtils;
+
 import de.greenrobot.event.EventBus;
 
 public class NewUserCenterActivity extends BaseActivity implements IRequestResultListener, OnClickListener,
@@ -78,7 +79,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	private String mCurrentUid = "";
 	private String mFirstIndex = "";
 	private String mLastIndex = "";
-	/**是否是第一次请求数据**/
+	/** 是否是第一次请求数据 **/
 	private boolean mIsFirst = false;
 
 	@Override
@@ -99,7 +100,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 		} else {
 			mTitleText.setText(this.getString(R.string.str_his_homepage));
 		}
-		
+
 		EventBus.getDefault().register(this);
 
 	}
@@ -154,7 +155,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			}
 
 		});
-		
+
 		httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_FIRST, "");
 		mIsFirst = true;
 
@@ -242,8 +243,17 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 				String customavatar = shareJson.data.customavatar;
 				String headportrait = shareJson.data.headportrait;
 				String realDesc = this.getString(R.string.str_usercenter_share_realdesc);
-				CustomShareBoard shareBoard = new CustomShareBoard(this, mSharePlatform, shorturl, customavatar,
-						describe, title, null, realDesc, "");
+
+				ThirdShareBean shareBean = new ThirdShareBean();
+				shareBean.surl = shorturl;
+				shareBean.curl = customavatar;
+				shareBean.db = describe;
+				shareBean.tl = title;
+				shareBean.bitmap = null;
+				shareBean.realDesc = realDesc;
+				shareBean.videoId = "";
+
+				ProxyThirdShare shareBoard = new ProxyThirdShare(this, mSharePlatform, shareBean);
 				shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 			} else {
 				GolukUtils.showToast(this, this.getResources().getString(R.string.str_network_unavailable));
@@ -282,9 +292,9 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	}
 
 	private void addFooterView() {
-		Drawable drawable= getResources().getDrawable(R.drawable.mine_novideo);
-		drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());  
-		mFooterText.setCompoundDrawables(null,drawable,null,null);
+		Drawable drawable = getResources().getDrawable(R.drawable.mine_novideo);
+		drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+		mFooterText.setCompoundDrawables(null, drawable, null, null);
 		if (null != mFooterView && null != mGridView && mFooterView.getVisibility() == View.GONE) {
 			if (testUser()) {
 				mFooterText.setText(this.getString(R.string.str_mine_no_video_text));

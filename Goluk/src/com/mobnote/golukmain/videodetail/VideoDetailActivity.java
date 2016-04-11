@@ -6,6 +6,34 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Rect;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.tiros.debug.GolukDebugUtils;
+
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventPraiseStatusChanged;
@@ -26,16 +54,17 @@ import com.mobnote.golukmain.comment.bean.CommentItemBean;
 import com.mobnote.golukmain.comment.bean.CommentResultBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.live.LiveDialogManager;
-import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
+import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.praise.PraiseCancelRequest;
 import com.mobnote.golukmain.praise.PraiseRequest;
 import com.mobnote.golukmain.praise.bean.PraiseCancelResultBean;
 import com.mobnote.golukmain.praise.bean.PraiseCancelResultDataBean;
 import com.mobnote.golukmain.praise.bean.PraiseResultBean;
 import com.mobnote.golukmain.praise.bean.PraiseResultDataBean;
-import com.mobnote.golukmain.thirdshare.CustomShareBoard;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
+import com.mobnote.golukmain.thirdshare.china.ProxyThirdShare;
+import com.mobnote.golukmain.thirdshare.china.ThirdShareBean;
 import com.mobnote.golukmain.videoclick.NewestVideoClickRequest;
 import com.mobnote.golukmain.videoshare.ShareVideoShortUrlRequest;
 import com.mobnote.golukmain.videoshare.bean.VideoShareDataBean;
@@ -46,34 +75,6 @@ import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Rect;
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
-import android.view.Window;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -83,8 +84,7 @@ import de.greenrobot.event.EventBus;
  *
  */
 public class VideoDetailActivity extends BaseActivity implements OnClickListener, OnRefreshListener,
-		OnRTScrollListener, ICommentFn, TextWatcher, ILiveDialogManagerFn, OnItemClickListener,
-		IRequestResultListener {
+		OnRTScrollListener, ICommentFn, TextWatcher, ILiveDialogManagerFn, OnItemClickListener, IRequestResultListener {
 
 	/** application */
 	public GolukApplication mApp = null;
@@ -530,13 +530,13 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				LiveDialogManager.DIALOG_TYPE_COMMENT_COMMIT, "", this.getString(R.string.str_comment_ongoing), true);
 	}
 
-	//点赞请求
+	// 点赞请求
 	public boolean sendPraiseRequest() {
 		PraiseRequest request = new PraiseRequest(IPageNotifyFn.PageType_Praise, this);
 		return request.get("1", mVideoJson.data.avideo.video.videoid, "1");
 	}
 
-	//取消点赞请求
+	// 取消点赞请求
 	public boolean sendCancelPraiseRequest() {
 		PraiseCancelRequest request = new PraiseCancelRequest(IPageNotifyFn.PageType_PraiseCancel, this);
 		return request.get("1", mVideoJson.data.avideo.video.videoid);
@@ -746,7 +746,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			}
 		} else if (LiveDialogManager.DIALOG_TYPE_COMMENT_PROGRESS_DELETE == dialogType) {
 			// 取消删除
-		} else if(dialogType == DIALOG_TYPE_VIDEO_DELETED) {
+		} else if (dialogType == DIALOG_TYPE_VIDEO_DELETED) {
 			finish();
 		}
 	}
@@ -952,17 +952,15 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 					});
 				}
 				clickVideoNumber();
-			} else if(mVideoJson != null && !mVideoJson.success) {
+			} else if (mVideoJson != null && !mVideoJson.success) {
 				mRTPullListView.setVisibility(View.GONE);
 				mCommentLayout.setVisibility(View.GONE);
-				if(null != mVideoJson.data) {
-					if("4".equals(mVideoJson.data.result)) {
-						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-								DIALOG_TYPE_VIDEO_DELETED, "",
+				if (null != mVideoJson.data) {
+					if ("4".equals(mVideoJson.data.result)) {
+						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this, DIALOG_TYPE_VIDEO_DELETED, "",
 								this.getResources().getString(R.string.str_video_removed));
-					} else if("3".equals(mVideoJson.data.result)) {
-						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-								DIALOG_TYPE_VIDEO_DELETED, "",
+					} else if ("3".equals(mVideoJson.data.result)) {
+						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this, DIALOG_TYPE_VIDEO_DELETED, "",
 								this.getResources().getString(R.string.str_video_not_exist));
 					} else {
 						dealCondition();
@@ -1138,14 +1136,24 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				String allDescribe = shareDescribe(describe);
 				String ttl = this.getString(R.string.str_video_edit_share_title);
 				Bitmap bitmap = null;
-//				if (null != mVideoJson.data.avideo.video.picture) {
-//					// 缩略图
-//					bitmap = getThumbBitmap(mVideoJson.data.avideo.video.picture);
-//				}
+				// if (null != mVideoJson.data.avideo.video.picture) {
+				// // 缩略图
+				// bitmap =
+				// getThumbBitmap(mVideoJson.data.avideo.video.picture);
+				// }
 				if (!this.isFinishing()) {
 					if (null != mVideoJson.data.avideo.video) {
-						CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shareurl, coverurl,
-								allDescribe, ttl, bitmap, realDesc, mVideoJson.data.avideo.video.videoid);
+
+						ThirdShareBean shareBean = new ThirdShareBean();
+						shareBean.surl = shareurl;
+						shareBean.curl = coverurl;
+						shareBean.db = allDescribe;
+						shareBean.tl = ttl;
+						shareBean.bitmap = bitmap;
+						shareBean.realDesc = realDesc;
+						shareBean.videoId = mVideoJson.data.avideo.video.videoid;
+
+						ProxyThirdShare shareBoard = new ProxyThirdShare(this, sharePlatform, shareBean);
 						shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 					}
 				}
@@ -1162,11 +1170,11 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			}
 
 			PraiseResultDataBean ret = praiseResultBean.data;
-			if(null != ret && !TextUtils.isEmpty(ret.result)) {
-				if("0".equals(ret.result)) {
-					EventBus.getDefault().post(new EventPraiseStatusChanged(
-							EventConfig.PRAISE_STATUS_CHANGE, mVideoId, true));
-				} else if("7".equals(ret.result)) {
+			if (null != ret && !TextUtils.isEmpty(ret.result)) {
+				if ("0".equals(ret.result)) {
+					EventBus.getDefault().post(
+							new EventPraiseStatusChanged(EventConfig.PRAISE_STATUS_CHANGE, mVideoId, true));
+				} else if ("7".equals(ret.result)) {
 					GolukUtils.showToast(this, this.getString(R.string.str_no_duplicated_praise));
 				} else {
 					GolukUtils.showToast(this, this.getString(R.string.str_praise_failed));
@@ -1181,10 +1189,10 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			}
 
 			PraiseCancelResultDataBean cancelRet = praiseCancelResultBean.data;
-			if(null != cancelRet && !TextUtils.isEmpty(cancelRet.result)) {
-				if("0".equals(cancelRet.result)) {
-					EventBus.getDefault().post(new EventPraiseStatusChanged(
-							EventConfig.PRAISE_STATUS_CHANGE, mVideoId, false));
+			if (null != cancelRet && !TextUtils.isEmpty(cancelRet.result)) {
+				if ("0".equals(cancelRet.result)) {
+					EventBus.getDefault().post(
+							new EventPraiseStatusChanged(EventConfig.PRAISE_STATUS_CHANGE, mVideoId, false));
 				} else {
 					GolukUtils.showToast(this, this.getString(R.string.str_cancel_praise_failed));
 				}
@@ -1193,7 +1201,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		case IPageNotifyFn.PageType_VideoClick:
 			break;
 		default:
-//			Log.e("", "======onLoadComplete result==" + result.toString());
+			// Log.e("", "======onLoadComplete result==" + result.toString());
 			break;
 		}
 	}

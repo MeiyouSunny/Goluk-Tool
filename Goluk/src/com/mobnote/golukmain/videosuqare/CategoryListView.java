@@ -4,33 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
-import com.mobnote.golukmain.http.IRequestResultListener;
-import com.mobnote.golukmain.newest.JsonParserUtils;
-import com.mobnote.golukmain.newest.NewestAdapter;
-import com.mobnote.golukmain.newest.ClickPraiseListener.IClickPraiseView;
-import com.mobnote.golukmain.newest.ClickShareListener.IClickShareView;
-import com.mobnote.golukmain.praise.PraiseCancelRequest;
-import com.mobnote.golukmain.praise.PraiseRequest;
-import com.mobnote.golukmain.praise.bean.PraiseCancelResultBean;
-import com.mobnote.golukmain.praise.bean.PraiseCancelResultDataBean;
-import com.mobnote.golukmain.praise.bean.PraiseResultBean;
-import com.mobnote.golukmain.praise.bean.PraiseResultDataBean;
-import com.mobnote.golukmain.thirdshare.CustomShareBoard;
-import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
-import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
-import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
-import com.mobnote.util.GolukUtils;
-import com.mobnote.util.JsonUtil;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -39,12 +17,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
+
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.newest.ClickPraiseListener.IClickPraiseView;
+import com.mobnote.golukmain.newest.ClickShareListener.IClickShareView;
+import com.mobnote.golukmain.newest.JsonParserUtils;
+import com.mobnote.golukmain.newest.NewestAdapter;
+import com.mobnote.golukmain.praise.PraiseCancelRequest;
+import com.mobnote.golukmain.praise.PraiseRequest;
+import com.mobnote.golukmain.praise.bean.PraiseCancelResultBean;
+import com.mobnote.golukmain.praise.bean.PraiseCancelResultDataBean;
+import com.mobnote.golukmain.praise.bean.PraiseResultBean;
+import com.mobnote.golukmain.praise.bean.PraiseResultDataBean;
+import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
+import com.mobnote.golukmain.thirdshare.china.ProxyThirdShare;
+import com.mobnote.golukmain.thirdshare.china.ThirdShareBean;
+import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
+import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
+import com.mobnote.util.GolukUtils;
+import com.mobnote.util.JsonUtil;
 
 public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener, OnRTScrollListener, OnClickListener,
 		IClickShareView, IClickPraiseView, IRequestResultListener {
@@ -100,7 +99,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		mContext = context;
 		mType = type;
 		mAttribute = attr;
-		
+
 		sdf = new SimpleDateFormat(mContext.getString(R.string.str_date_formatter));
 
 		layoutInflater = LayoutInflater.from(mContext);
@@ -365,8 +364,17 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 				String videoId = null != mWillShareSquareInfo ? mWillShareSquareInfo.mVideoEntity.videoid : "";
 				String nickname = null != mWillShareSquareInfo ? mWillShareSquareInfo.mUserEntity.nickname : "";
 				describe = nickname + mContext.getString(R.string.str_colon) + describe;
-				CustomShareBoard shareBoard = new CustomShareBoard(activity, sharePlatform, shareBean.shareurl,
-						shareBean.coverurl, describe, ttl, null, realDesc, videoId);
+
+				ThirdShareBean bean = new ThirdShareBean();
+				bean.surl = shareBean.shareurl;
+				bean.curl = shareBean.coverurl;
+				bean.db = describe;
+				bean.tl = ttl;
+				bean.bitmap = null;
+				bean.realDesc = realDesc;
+				bean.videoId = videoId;
+
+				ProxyThirdShare shareBoard = new ProxyThirdShare(activity, sharePlatform, bean);
 				shareBoard.showAtLocation(activity.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 			}
 		}
@@ -502,7 +510,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		if (null != mDataList) {
 			mDataList.clear();
 		}
-		if (mHandler != null){
+		if (mHandler != null) {
 			mHandler.removeCallbacksAndMessages(null);
 			mHandler = null;
 		}
@@ -526,14 +534,15 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
 			break;
 		case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-			if(null != mRTPullListView && null != mRTPullListView.getAdapter()) {
+			if (null != mRTPullListView && null != mRTPullListView.getAdapter()) {
 				if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {
 					if (isHaveData) {
 						// 上拉刷新
 						uptype = 1;
-						if(null != endtime && null != endtime.mVideoEntity) {
+						if (null != endtime && null != endtime.mVideoEntity) {
 							String timeSign = endtime.mVideoEntity.sharingtime;
-							GolukDebugUtils.e("", "jyf----CategoryListView------------------onRefresh  上拉刷新: " + timeSign);
+							GolukDebugUtils.e("", "jyf----CategoryListView------------------onRefresh  上拉刷新: "
+									+ timeSign);
 							httpPost(mType, mAttribute, "2", timeSign);
 						}
 					}
@@ -595,13 +604,13 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		}
 	}
 
-	//点赞请求
+	// 点赞请求
 	public boolean sendPraiseRequest(String id) {
 		PraiseRequest request = new PraiseRequest(IPageNotifyFn.PageType_Praise, this);
 		return request.get("1", id, "1");
 	}
 
-	//取消点赞请求
+	// 取消点赞请求
 	public boolean sendCancelPraiseRequest(String id) {
 		PraiseCancelRequest request = new PraiseCancelRequest(IPageNotifyFn.PageType_PraiseCancel, this);
 		return request.get("1", id);
@@ -609,24 +618,24 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
-		switch(requestType) {
+		switch (requestType) {
 		case IPageNotifyFn.PageType_Praise:
-			PraiseResultBean prBean = (PraiseResultBean)result;
-			if(null == result || !prBean.success) {
+			PraiseResultBean prBean = (PraiseResultBean) result;
+			if (null == result || !prBean.success) {
 				GolukUtils.showToast(mContext, mContext.getString(R.string.user_net_unavailable));
 				return;
 			}
 
 			PraiseResultDataBean ret = prBean.data;
-			if(null != ret && !TextUtils.isEmpty(ret.result)) {
-				if("0".equals(ret.result)) {
+			if (null != ret && !TextUtils.isEmpty(ret.result)) {
+				if ("0".equals(ret.result)) {
 					if (null != mPraiseVideoSquareInfo) {
 						if ("0".equals(mPraiseVideoSquareInfo.mVideoEntity.ispraise)) {
 							mPraiseVideoSquareInfo.mVideoEntity.ispraise = "1";
 							updateClickPraiseNumber(true, mPraiseVideoSquareInfo);
 						}
 					}
-				} else if("7".equals(ret.result)) {
+				} else if ("7".equals(ret.result)) {
 					GolukUtils.showToast(mContext, mContext.getString(R.string.str_no_duplicated_praise));
 				} else {
 					GolukUtils.showToast(mContext, mContext.getString(R.string.str_praise_failed));
@@ -641,8 +650,8 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 			}
 
 			PraiseCancelResultDataBean cancelRet = praiseCancelResultBean.data;
-			if(null != cancelRet && !TextUtils.isEmpty(cancelRet.result)) {
-				if("0".equals(cancelRet.result)) {
+			if (null != cancelRet && !TextUtils.isEmpty(cancelRet.result)) {
+				if ("0".equals(cancelRet.result)) {
 					if (null != mPraiseVideoSquareInfo) {
 						if ("1".equals(mPraiseVideoSquareInfo.mVideoEntity.ispraise)) {
 							mPraiseVideoSquareInfo.mVideoEntity.ispraise = "0";

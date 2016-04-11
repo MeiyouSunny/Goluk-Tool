@@ -22,7 +22,6 @@ import com.mobnote.golukmain.praise.bean.PraiseCancelResultBean;
 import com.mobnote.golukmain.praise.bean.PraiseCancelResultDataBean;
 import com.mobnote.golukmain.praise.bean.PraiseResultBean;
 import com.mobnote.golukmain.praise.bean.PraiseResultDataBean;
-import com.mobnote.golukmain.thirdshare.CustomShareBoard;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.thirdshare.china.ProxyThirdShare;
 import com.mobnote.golukmain.thirdshare.china.ThirdShareBean;
@@ -364,9 +363,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 
 	@Override
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-
 		GolukDebugUtils.e("", "NewList----------------------------param2: " + (String) param2);
-
 		if (event == VSquare_Req_List_Catlog) {
 			// 最新分类
 			callBack_List_Catlog(msg, param1, param2);
@@ -394,25 +391,9 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 						String realDesc = mContext.getString(R.string.str_share_board_real_desc);
 
 						if (TextUtils.isEmpty(describe)) {
-							// if
-							// ("1".equals(mVideoSquareOnClickListener.mVideoSquareInfo.mVideoEntity.type))
-							// {
-							// describe = "#极路客直播#";
-							// } else {
 							describe = mContext.getString(R.string.str_share_describe);
-							// }
 						}
 						String ttl = mContext.getString(R.string.str_share_ttl);
-
-						// if
-						// ("1".equals(mVideoSquareOnClickListener.mVideoSquareInfo.mVideoEntity.type))
-						// {// 直播
-						// ttl =
-						// mVideoSquareOnClickListener.mVideoSquareInfo.mUserEntity.nickname
-						// + "的直播视频分享";
-						// realDesc = ttl + "(使用#极路客Goluk#拍摄)";
-						// }
-
 						if (mContext instanceof MainActivity) {
 							MainActivity vspa = (MainActivity) mContext;
 							if (vspa != null && !vspa.isFinishing()) {
@@ -430,21 +411,10 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 								bean.bitmap = null;
 								bean.realDesc = realDesc;
 								bean.videoId = videoId;
-								
-								GolukDebugUtils.e("abc","new Share-------------------------------start");
-
 								ProxyThirdShare share = new ProxyThirdShare(vspa, sharePlatform, bean);
 								share.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-								
-								
-
-//								CustomShareBoard shareBoard = new CustomShareBoard(vspa, sharePlatform, shareurl,
-//										coverurl, describe, ttl, null, realDesc, videoId);
-//								shareBoard.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 							}
-
 						}
-
 					} else {
 						GolukUtils.showToast(mContext, mContext.getString(R.string.network_error));
 					}

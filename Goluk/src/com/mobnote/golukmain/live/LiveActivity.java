@@ -1,5 +1,7 @@
 package com.mobnote.golukmain.live;
 
+import static com.mobnote.golukmain.live.ILive.TAG;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -63,8 +65,9 @@ import com.mobnote.golukmain.carrecorder.util.ImageManager;
 import com.mobnote.golukmain.cluster.bean.UserLabelBean;
 import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
 import com.mobnote.golukmain.live.TimerManager.ITimerManagerFn;
-import com.mobnote.golukmain.thirdshare.CustomShareBoard;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
+import com.mobnote.golukmain.thirdshare.china.ProxyThirdShare;
+import com.mobnote.golukmain.thirdshare.china.ThirdShareBean;
 import com.mobnote.golukmain.videosuqare.BaiduMapView;
 import com.mobnote.golukmain.videosuqare.JsonCreateUtils;
 import com.mobnote.golukmain.videosuqare.ShareDataBean;
@@ -586,7 +589,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 
 		@Override
 		public void onLiveRecordFailed(Context context, int nResult, String strResultInfo) {
-			GolukDebugUtils.e("", "jyf------TTTTT------------onLiveRecordFailed----2222:" + nResult + "   " + strResultInfo);
+			GolukDebugUtils.e("", "jyf------TTTTT------------onLiveRecordFailed----2222:" + nResult + "   "
+					+ strResultInfo);
 			liveUploadVideoFailed();
 		}
 	};
@@ -1798,10 +1802,16 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 					+ getShareDes(dataBean.describe);
 			final String sinaTxt = title + this.getString(R.string.str_user_goluk);
 			// 设置分享内容
-			CustomShareBoard sb = new CustomShareBoard(LiveActivity.this, sharePlatform, dataBean.shareurl,
-					dataBean.coverurl, describe, title, mThumbBitmap, sinaTxt, getShareVideoId());
+			ThirdShareBean bean = new ThirdShareBean();
+			bean.surl = dataBean.shareurl;
+			bean.curl = dataBean.coverurl;
+			bean.db = describe;
+			bean.tl = title;
+			bean.bitmap = mThumbBitmap;
+			bean.realDesc = sinaTxt;
+			bean.videoId = getShareVideoId();
+			ProxyThirdShare sb = new ProxyThirdShare(LiveActivity.this, sharePlatform, bean);
 			sb.showAtLocation(LiveActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-
 		}
 	}
 

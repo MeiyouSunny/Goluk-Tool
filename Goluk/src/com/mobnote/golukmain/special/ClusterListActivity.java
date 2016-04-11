@@ -6,23 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.BaseActivity;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.util.ImageManager;
-import com.mobnote.golukmain.carrecorder.util.MD5Utils;
-import com.mobnote.golukmain.carrecorder.util.SettingUtils;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
-import com.mobnote.golukmain.thirdshare.CustomShareBoard;
-import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
-import com.mobnote.golukmain.videosuqare.RTPullListView;
-import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
-import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
-import com.mobnote.util.GolukUtils;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -37,14 +22,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.AbsListView.OnScrollListener;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
+
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.carrecorder.util.ImageManager;
+import com.mobnote.golukmain.carrecorder.util.MD5Utils;
+import com.mobnote.golukmain.carrecorder.util.SettingUtils;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
+import com.mobnote.golukmain.thirdshare.china.ProxyThirdShare;
+import com.mobnote.golukmain.thirdshare.china.ThirdShareBean;
+import com.mobnote.golukmain.videosuqare.RTPullListView;
+import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
+import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
+import com.mobnote.util.GolukUtils;
 
 public class ClusterListActivity extends BaseActivity implements
 		OnClickListener, VideoSuqareManagerFn {
@@ -417,11 +416,18 @@ public class ClusterListActivity extends BaseActivity implements
 
 						if (this != null && !this.isFinishing()) {
 							mCustomProgressDialog.close();
-							CustomShareBoard shareBoard = new CustomShareBoard(this, sharePlatform, shareurl, coverurl,
-									describe, ttl, bitmap, realDesc , getShareVideoId());
-							System.out.println("我日我日我日====bitmap="+bitmap);
+							
+							ThirdShareBean shareBean = new ThirdShareBean();
+							shareBean.surl = shareurl;
+							shareBean.curl = coverurl;
+							shareBean.db= describe;
+							shareBean.tl = ttl;
+							shareBean.bitmap = bitmap;
+							shareBean.realDesc = realDesc;
+							shareBean.videoId = getShareVideoId();
+							
+							ProxyThirdShare shareBoard = new ProxyThirdShare(this, sharePlatform, shareBean);
 							shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-							System.out.println("我擦我擦我擦");
 						}
 					} else {
 						GolukUtils.showToast(this, this.getString(R.string.network_error));

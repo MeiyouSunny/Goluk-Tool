@@ -1,15 +1,5 @@
 package com.mobnote.golukmain;
 
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
-import com.mobnote.golukmain.thirdshare.CustomShareBoard;
-import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
-import com.mobnote.user.MyProgressWebView;
-import com.mobnote.util.GolukConfig;
-import com.mobnote.util.GolukUtils;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -36,6 +26,16 @@ import android.widget.TextView;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.tiros.debug.GolukDebugUtils;
+
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
+import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
+import com.mobnote.golukmain.thirdshare.china.ProxyThirdShare;
+import com.mobnote.golukmain.thirdshare.china.ThirdShareBean;
+import com.mobnote.user.MyProgressWebView;
+import com.mobnote.util.GolukConfig;
+import com.mobnote.util.GolukUtils;
 
 /**
  * 程序内打开浏览器
@@ -327,8 +327,16 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 						ttl = getString(R.string.str_vote_share_title);
 					}
 
-					CustomShareBoard shareBoard = new CustomShareBoard(this, mSharePlatform, shareurl, coverurl,
-							describe, ttl, null, realDesc, "");
+					ThirdShareBean bean = new ThirdShareBean();
+					bean.surl = shareurl;
+					bean.curl = coverurl;
+					bean.db = describe;
+					bean.tl = ttl;
+					bean.bitmap = null;
+					bean.realDesc = realDesc;
+					bean.videoId = "";
+
+					ProxyThirdShare shareBoard = new ProxyThirdShare(this, mSharePlatform, bean);
 					shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 				} else {
 					if (TextUtils.isEmpty(shareurl)) {
@@ -340,17 +348,21 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 						ttl = getString(R.string.str_wonderful_share);
 					}
 					String realDesc = getString(R.string.str_wonderful_share);
-
+					Bitmap bitmap = null;
 					if (TextUtils.isEmpty(coverurl)) {
-						Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_launcher);
-						CustomShareBoard shareBoard = new CustomShareBoard(this, mSharePlatform, shareurl, "",
-								describe, ttl, bitmap, realDesc, "");
-						shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-					} else {
-						CustomShareBoard shareBoard = new CustomShareBoard(this, mSharePlatform, shareurl, coverurl,
-								describe, ttl, null, realDesc, "");
-						shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+						bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_launcher);
+						coverurl = "";
 					}
+					ThirdShareBean bean = new ThirdShareBean();
+					bean.surl = shareurl;
+					bean.curl = coverurl;
+					bean.db = describe;
+					bean.tl = ttl;
+					bean.bitmap = bitmap;
+					bean.realDesc = realDesc;
+					bean.videoId = "";
+					ProxyThirdShare shareBoard = new ProxyThirdShare(this, mSharePlatform, bean);
+					shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 				}
 			} else {
 				this.finish();

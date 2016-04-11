@@ -46,8 +46,9 @@ import com.mobnote.golukmain.praise.bean.PraiseCancelResultBean;
 import com.mobnote.golukmain.praise.bean.PraiseCancelResultDataBean;
 import com.mobnote.golukmain.praise.bean.PraiseResultBean;
 import com.mobnote.golukmain.praise.bean.PraiseResultDataBean;
-import com.mobnote.golukmain.thirdshare.CustomShareBoard;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
+import com.mobnote.golukmain.thirdshare.china.ProxyThirdShare;
+import com.mobnote.golukmain.thirdshare.china.ThirdShareBean;
 import com.mobnote.golukmain.videoshare.ShareVideoShortUrlRequest;
 import com.mobnote.golukmain.videoshare.bean.VideoShareRetBean;
 import com.mobnote.util.GolukUtils;
@@ -515,8 +516,18 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 				String username = null != videoBean ? videoBean.user.nickname
 						: "";
 				describe = username + this.getString(R.string.str_colon) + describe;
-				CustomShareBoard shareBoard = new CustomShareBoard(this.getActivity(), mSharePlatform, shareurl, coverurl,
-						describe, ttl, null, realDesc, videoId);
+				
+				
+				ThirdShareBean shareBean = new ThirdShareBean();
+				shareBean.surl = shareurl;
+				shareBean.curl = coverurl;
+				shareBean.db = describe;
+				shareBean.tl = ttl;
+				shareBean.bitmap = null;
+				shareBean.realDesc = realDesc;
+				shareBean.videoId = videoId;
+				
+				ProxyThirdShare shareBoard = new ProxyThirdShare(this.getActivity(), mSharePlatform, shareBean);
 				shareBoard.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 			}
 		} else if(requestType == IPageNotifyFn.PageType_Praise) {

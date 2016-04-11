@@ -833,7 +833,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		bean.db = describe;
 		bean.tl = title;
 		bean.bitmap = mUploadVideo.getThumbBitmap();
-		bean.inputDeafultStr = sinaTxt;
+		bean.realDesc = sinaTxt;
 		bean.videoId = this.mUploadVideo.getVideoId();
 
 		mShareDealTool.toShare(bean);
