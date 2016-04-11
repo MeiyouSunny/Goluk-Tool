@@ -21,16 +21,8 @@ import android.widget.MediaController.MediaPlayerControl;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
-
-import java.util.LinkedList;
-
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.BaseActivity;
@@ -41,14 +33,13 @@ import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.photoalbum.FragmentAlbum;
-import com.mobnote.golukmain.promotion.PromotionData;
 import com.mobnote.golukmain.promotion.PromotionItem;
 import com.mobnote.golukmain.promotion.PromotionListRequest;
 import com.mobnote.golukmain.promotion.PromotionModel;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.startshare.bean.ShareDataBean;
 import com.mobnote.golukmain.startshare.bean.ShareDataFullBean;
-import com.mobnote.util.GolukFileUtils;
+import com.mobnote.golukmain.thirdshare.china.ThirdShareBean;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.rd.car.editor.Constants;
@@ -79,7 +70,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private int mCurrentVideoType = 0;
 	/** 分享的视频名称 */
 	private String videoName = "";
-	
+
 	private String videoFrom = "";
 	/** 分享的视频创建时间 **/
 	private String videoCreateTime = "";
@@ -122,6 +113,9 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	private boolean mIsResume = false;
 	private boolean mIsFirstLoad = true;
 	private boolean mIsT1Video = false;
+	/** 防止重复点击 */
+	private boolean isSharing = false;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -185,7 +179,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		// TODO Auto-generated method stub
 		if (mPromotionSelectItem != null) {
 			outState.putSerializable(FragmentAlbum.ACTIVITY_INFO, mPromotionSelectItem);
 		}
@@ -266,6 +259,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	}
 
 	GolukVideoInfoDbManager mGolukVideoInfoDbManager = GolukVideoInfoDbManager.getInstance();
+
 	/**
 	 * 
 	 * @Title: interceptVideoName
@@ -387,8 +381,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			// 设置视频源
 			mVVPlayVideo.setVideoPath(mFilePath);
 			mVVPlayVideo.switchFilterId(0);
-//			mVVPlayVideo.start();
-
 		} catch (FilterVideoEditorException e) {
 			e.printStackTrace();
 			GolukUtils.showToast(this, e.getMessage());
@@ -524,12 +516,14 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			mVVPlayVideo.cleanUp();
 			mVVPlayVideo = null;
 		}
-//		// 正在获取连接
-//		if (mShareLoading.getCurrentState() == ShareLoading.STATE_GET_SHARE) {
-//			// 如果正在获取分享连接状态，則要取消
-//			mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Share,
-//					JsonUtil.getCancelJson());
-//		}
+		// // 正在获取连接
+		// if (mShareLoading.getCurrentState() == ShareLoading.STATE_GET_SHARE)
+		// {
+		// // 如果正在获取分享连接状态，則要取消
+		// mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+		// IPageNotifyFn.PageType_Share,
+		// JsonUtil.getCancelJson());
+		// }
 		mShareLoading = null;
 		mYouMengLayout = null;
 		finish();
@@ -568,12 +562,12 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	@Override
 	protected void onStop() {
-		// TODO Auto-generated method stub
 		if (mTypeLayout != null) {
 			mTypeLayout.dismissPopup();
 		}
 		super.onStop();
 	}
+
 	/**
 	 * 点击“下一步”
 	 * 
@@ -627,9 +621,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 			mPlayStatusImage.setVisibility(View.GONE);
 		}
 	}
-
-	/** 防止重复点击 */
-	private boolean isSharing = false;
 
 	public void shareClick(final String type) {
 		GolukDebugUtils.e("", "jyf-----shortshare---VideoEditActivity---------------shareClick---: " + type);
@@ -836,8 +827,16 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		final String describe = getShareDesc();
 		final String sinaTxt = this.getString(R.string.str_share_board_real_desc);
 
-		this.mShareDealTool.toShare(shareData.shorturl, shareData.coverurl, describe, title,
-				mUploadVideo.getThumbBitmap(), sinaTxt, this.mUploadVideo.getVideoId());
+		ThirdShareBean bean = new ThirdShareBean();
+		bean.surl = shareData.shorturl;
+		bean.curl = shareData.coverurl;
+		bean.db = describe;
+		bean.tl = title;
+		bean.bitmap = mUploadVideo.getThumbBitmap();
+		bean.inputDeafultStr = sinaTxt;
+		bean.videoId = this.mUploadVideo.getVideoId();
+
+		mShareDealTool.toShare(bean);
 	}
 
 	/**
@@ -878,7 +877,6 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
-		// TODO Auto-generated method stub
 		switch (requestType) {
 		case IPageNotifyFn.PageType_GetPromotion:
 			PromotionModel data = (PromotionModel) result;

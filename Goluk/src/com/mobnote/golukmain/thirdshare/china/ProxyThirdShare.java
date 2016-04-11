@@ -7,7 +7,7 @@ import android.view.View;
 
 public class ProxyThirdShare implements IThirdShareFn {
 
-	public int type = 2;
+	public static int type = 1;
 
 	private IThirdShareFn mThirdShare = null;
 

@@ -87,7 +87,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 	private boolean flag = false;
 
 	/** 微信登陆 **/
-	ImageView mImageViewWeiXinLogin;
+	Button mImageViewWeiXinLogin;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -173,7 +173,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		mTextViewRegist.setOnClickListener(this);
 		mTextViewForgetPwd.setOnClickListener(this);
 		// 微信登陆
-		mImageViewWeiXinLogin = (ImageView) findViewById(R.id.btn_weixin_login);
+		mImageViewWeiXinLogin = (Button) findViewById(R.id.btn_weixin_login);
 		mImageViewWeiXinLogin.setOnClickListener(this);
 
 	}

@@ -1,29 +1,33 @@
 package com.mobnote.golukmain.startshare;
 
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.BaseActivity;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.thirdshare.CustomShareBoard;
-import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
-import com.mobnote.util.GolukUtils;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.thirdshare.CustomShareBoard;
+import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
+import com.mobnote.golukmain.thirdshare.china.AppInstallationUtil;
+import com.mobnote.golukmain.thirdshare.china.IThirdShareFn;
+import com.mobnote.golukmain.thirdshare.china.ProxyThirdShare;
+import com.mobnote.golukmain.thirdshare.china.ThirdShareBean;
+import com.mobnote.util.GolukConfig;
+import com.mobnote.util.GolukUtils;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+
 public class ShareDeal implements OnClickListener {
 	private RelativeLayout mYouMengRootLayout = null;
 	private Activity mActivity = null;
 	private SharePlatformUtil mSharePlatform;
-	private CustomShareBoard mShareBoard = null;
+	private ProxyThirdShare mShareBoard = null;
 	/** 保存当前的分享方式 */
 	private String mCurrentShareType = "2";
-
 	private int txtColor = 0;
 	/** 标志是否退出 */
 	private boolean mIsExit = false;
@@ -33,53 +37,56 @@ public class ShareDeal implements OnClickListener {
 		mYouMengRootLayout = rootLayout;
 		mSharePlatform = new SharePlatformUtil(mActivity);
 		txtColor = mActivity.getResources().getColor(R.color.youmeng_share_txt_color);
-		initView();
+		if (1 == ProxyThirdShare.type) {
+			initView();
+		} else {
+			initAbroadLayout();
+		}
 	}
-	
+
+	private void initAbroadLayout() {
+		View rootView = LayoutInflater.from(mActivity).inflate(R.layout.custom_board_2, null);
+		rootView.findViewById(R.id.instagram_layout).setVisibility(View.VISIBLE);
+		rootView.findViewById(R.id.share_instagram).setOnClickListener(this);
+		rootView.findViewById(R.id.share_facebook).setOnClickListener(this);
+		rootView.findViewById(R.id.share_twitter).setOnClickListener(this);
+		rootView.findViewById(R.id.share_whatsapp).setOnClickListener(this);
+		rootView.findViewById(R.id.share_line).setOnClickListener(this);
+		// 添加子布局
+		addChildView(rootView);
+	}
 
 	private void initView() {
-		mYouMengRootLayout.setBackgroundResource(R.color.youmeng_share_bg);
-		TextView tv = (TextView) mYouMengRootLayout.findViewById(R.id.share_text);
+		LayoutInflater layoutFlater = LayoutInflater.from(mActivity);
+		RelativeLayout aboardLayout = (RelativeLayout) layoutFlater.inflate(R.layout.custom_board, null);
+		aboardLayout.setBackgroundResource(R.color.youmeng_share_bg);
+		TextView tv = (TextView) aboardLayout.findViewById(R.id.share_text);
 		tv.setTextSize(13);
 		tv.setTextColor(txtColor);
-		mYouMengRootLayout.findViewById(R.id.wechat).setOnClickListener(this);
-		mYouMengRootLayout.findViewById(R.id.wechat_circle).setOnClickListener(this);
-		mYouMengRootLayout.findViewById(R.id.qq).setOnClickListener(this);
-		mYouMengRootLayout.findViewById(R.id.qqZone).setOnClickListener(this);
-		mYouMengRootLayout.findViewById(R.id.sina).setOnClickListener(this);
+		aboardLayout.findViewById(R.id.wechat).setOnClickListener(this);
+		aboardLayout.findViewById(R.id.wechat_circle).setOnClickListener(this);
+		aboardLayout.findViewById(R.id.qq).setOnClickListener(this);
+		aboardLayout.findViewById(R.id.qqZone).setOnClickListener(this);
+		aboardLayout.findViewById(R.id.sina).setOnClickListener(this);
+		// 添加子布局
+		addChildView(aboardLayout);
+	}
+
+	private void addChildView(View view) {
+		mYouMengRootLayout.removeAllViews();
+		mYouMengRootLayout.addView(view, new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+				RelativeLayout.LayoutParams.WRAP_CONTENT));
 	}
 
 	/**
 	 * 请求分享数据成功后，调用此方法进行第三方分享
 	 * 
-	 * @param surl
-	 *            分享地址
-	 * @param curl
-	 *            在线图片地址
-	 * @param db
-	 * @param tl
-	 * @param bitmap
-	 * @param inputDeafultStr
-	 * @param videoId
-	 *            视频 ID
 	 * @author jyf
 	 */
-	public void toShare(String surl, String curl, String db, String tl, Bitmap bitmap, String inputDeafultStr,
-			String videoId) {
-		mShareBoard = new CustomShareBoard(mActivity, mSharePlatform, surl, curl, db, tl, bitmap, inputDeafultStr,
-				videoId);
+	public void toShare(ThirdShareBean bean) {
+		mShareBoard = new ProxyThirdShare(mActivity, mSharePlatform, bean);
 		mShareBoard.setShareType(mCurrentShareType);
-		if (mCurrentShareType.equals(CustomShareBoard.TYPE_WEIXIN)) {
-			mShareBoard.click_wechat();
-		} else if (mCurrentShareType.equals(CustomShareBoard.TYPE_WEIXIN_CIRCLE)) {
-			mShareBoard.click_wechat_circle();
-		} else if (mCurrentShareType.equals(CustomShareBoard.TYPE_QQ)) {
-			mShareBoard.click_QQ();
-		} else if (mCurrentShareType.equals(CustomShareBoard.TYPE_QQ_ZONE)) {
-			mShareBoard.click_qqZone();
-		} else if (mCurrentShareType.equals(CustomShareBoard.TYPE_WEIBO_XINLANG)) {
-			mShareBoard.click_sina();
-		}
+		mShareBoard.click(mCurrentShareType);
 	}
 
 	/**
@@ -98,6 +105,10 @@ public class ShareDeal implements OnClickListener {
 	 */
 	public void setExit() {
 		mIsExit = true;
+		mYouMengRootLayout = null;
+		if (null != mShareBoard) {
+			mShareBoard.close();
+		}
 	}
 
 	@Override
@@ -118,8 +129,83 @@ public class ShareDeal implements OnClickListener {
 		} else if (id == R.id.sina) {
 			// 新浪微博
 			click_Sina();
+		} else if (id == R.id.share_instagram) {
+			click_instagram();
+		} else if (id == R.id.share_facebook) {
+			click_facebook();
+		} else if (id == R.id.share_twitter) {
+			click_twitter();
+		} else if (id == R.id.share_whatsapp) {
+			click_whatsapp();
+		} else if (id == R.id.share_line) {
+			click_line();
 		} else {
 		}
+
+	}
+
+	private void click_instagram() {
+		if (!isValid()) {
+			return;
+		}
+		boolean flog = AppInstallationUtil.isAppInstalled(mActivity, GolukConfig.INSTAGRAM_PACKAGE);
+		if (!flog) {
+			GolukUtils.showToast(mActivity, mActivity.getResources().getString(R.string.str_instagram_no_install));
+			return;
+		}
+		mCurrentShareType = IThirdShareFn.TYPE_INSTAGRAM;
+		click_deal(mCurrentShareType);
+	}
+
+	private void click_facebook() {
+		if (!isValid()) {
+			return;
+		}
+		if (!mSharePlatform.isInstallPlatform(SHARE_MEDIA.FACEBOOK)) {
+			GolukUtils.showToast(mActivity, mActivity.getResources().getString(R.string.str_facebook_no_install));
+			return;
+		}
+		mCurrentShareType = IThirdShareFn.TYPE_FACEBOOK;
+		click_deal(mCurrentShareType);
+	}
+
+	private void click_twitter() {
+		if (!isValid()) {
+			return;
+		}
+		if (!mSharePlatform.isInstallPlatform(SHARE_MEDIA.TWITTER)) {
+			GolukUtils.showToast(mActivity, mActivity.getResources().getString(R.string.str_twitter_no_install));
+			return;
+		}
+		mCurrentShareType = IThirdShareFn.TYPE_TWITTER;
+		click_deal(mCurrentShareType);
+	}
+
+	private void click_whatsapp() {
+		if (!isValid()) {
+			return;
+		}
+
+		if (!AppInstallationUtil.isAppInstalled(mActivity, GolukConfig.WTATSAPP_PACKAGE)) {
+			GolukUtils.showToast(mActivity, mActivity.getResources().getString(R.string.str_whatsapp_no_install));
+			return;
+		}
+
+		mCurrentShareType = IThirdShareFn.TYPE_WHATSAPP;
+		click_deal(mCurrentShareType);
+
+	}
+
+	private void click_line() {
+		if (!isValid()) {
+			return;
+		}
+		if (!AppInstallationUtil.isAppInstalled(mActivity, GolukConfig.LINE_PACKAGE)) {
+			GolukUtils.showToast(mActivity, mActivity.getResources().getString(R.string.str_line_no_install));
+			return;
+		}
+		mCurrentShareType = IThirdShareFn.TYPE_LINE;
+		click_deal(mCurrentShareType);
 	}
 
 	/**
