@@ -48,7 +48,7 @@ public class EventConfig {
 	public static final int IPC_CONNECT = 1;
 
 	public static final int IPC_ADAS_CONFIG_FROM_GUIDE = 1;
-	
+
 	public static final int IPC_ADAS_CONFIG_FROM_MODIFY = 0;
 	public static final int BINDING = 0;
 	/** 绑定成功的消息 */
@@ -57,9 +57,9 @@ public class EventConfig {
 	public final static int MESSAGE_UPDATE = 10001;
 	/** Update request */
 	public final static int MESSAGE_REQUEST = 10002;
-	/**告诉activity  remove handler消息**/
+	/** 告诉activity remove handler消息 **/
 	public final static int PHOTO_ALBUM_REMOVE_HANLDER = 1003;
-	/**告诉activity  delayed handler消息**/
+	/** 告诉activity delayed handler消息 **/
 	public final static int PHOTO_ALBUM_DELAYED_HANLDER = 1004;
 
 	/** User login result */
@@ -69,4 +69,7 @@ public class EventConfig {
 	public final static int FOLLOW_PUSH = 1006;
 
 	public final static int PRAISE_STATUS_CHANGE = 1007;
+
+	/** 删除视频 */
+	public static final int VIDEO_DELETE = 10008;
 }

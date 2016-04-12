@@ -75,13 +75,12 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 */
 	public long getJXListData(String jxid, String pagesize) {
 		String json = JsonCreateUtils.getJXListJson(jxid, pagesize);
-		if(null == json) {
+		if (null == json) {
 			return -1;
 		}
 
-		if(null != mApplication && null != mApplication.mGoluk) {
-			return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square, VSquare_Req_List_HandPick,
-				json);
+		if (null != mApplication && null != mApplication.mGoluk) {
+			return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square, VSquare_Req_List_HandPick, json);
 		}
 		return -1;
 	}
@@ -144,20 +143,6 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 *            　专题id
 	 * @return
 	 */
-	public boolean getVideoDetailListData(String videoid) {
-		String json = JsonCreateUtils.getVideoDetailJson(videoid);
-		GolukDebugUtils.e("", "================getVideoDetailListData==" + json);
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
-				VSquare_Req_Get_VideoDetail_ComentList, json);
-	}
-
-	/**
-	 * 获取视频详情数据
-	 * 
-	 * @param ztid
-	 *            　专题id
-	 * @return
-	 */
 	public boolean getUserInfo(String otheruid) {
 		String json = JsonCreateUtils.getUserInfoJson(otheruid);
 		GolukDebugUtils.e("", "=======getUserInfo==" + json);
@@ -194,52 +179,9 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	 * @author xuhw
 	 * @date 2015年4月17日
 	 */
-	public long getTypeVideoList(String channel, String type, List<String> attribute, String operation,
-			String timestamp) {
+	public long getTypeVideoList(String channel, String type, List<String> attribute, String operation, String timestamp) {
 		String json = JsonCreateUtils.getSquareListRequestJson(channel, type, attribute, operation, timestamp);
-		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square,
-				VSquare_Req_List_Video_Catlog, json);
-	}
-
-	
-
-	/**
-	 * 添加评论
-	 * 
-	 * @param topicid
-	 *            视频、专题、直播等的id(必须)
-	 * @param topictype
-	 *            1:单视频；2:专题；3:直播；4:其它(必须)
-	 * @param text
-	 *            　评论内容(必须)
-	 * @param replyid
-	 *            　回复人id（可选）
-	 * @param replyname
-	 *            　回复人呢称（可选）
-	 * @return
-	 * @author xuhw
-	 * @date 2015年8月6日
-	 */
-	public boolean addComment(String topicid, String topictype, String text, String replyid, String replyname) {
-		String json = JsonCreateUtils.addCommentJson(topicid, topictype, text, replyid, replyname);
-		GolukDebugUtils.e("", "VideoSuqare_CallBack=@@@@====json=" + json);
-		return mApplication.mGoluk
-				.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_Add_Comment, json);
-	}
-
-	/**
-	 * 删除评论
-	 * 
-	 * @param id
-	 *            评论id
-	 * @return
-	 * @author xuhw
-	 * @date 2015年8月6日
-	 */
-	public boolean deleteComment(String id) {
-		String json = JsonCreateUtils.delCommentJson(id);
-		return mApplication.mGoluk
-				.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_Del_Comment, json);
+		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square, VSquare_Req_List_Video_Catlog, json);
 	}
 
 	/**
@@ -256,30 +198,9 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 	public boolean clickNumberUpload(String channel, List<VideoSquareInfo> mDataList) {
 		String json = JsonCreateUtils.getClickVideoUploadRequestJson(channel, mDataList);
 		GolukDebugUtils.e("", "VideoSuqare_CallBack=@@@@===json=" + json);
-		if(null != mApplication && null != mApplication.mGoluk) {
-			return mApplication.mGoluk
-				.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_VOP_ClickUp, json);
-		}
-		return false;
-	}
-
-	/**
-	 * 点赞
-	 * 
-	 * @param channel
-	 *            分享渠道：1.视频广场 2.微信 3.微博 4.QQ
-	 * @param videoid
-	 *            视频id
-	 * @param type
-	 *            点赞类型：0.取消点赞 1.点赞
-	 * @return true:命令发送成功 false:失败
-	 * @author xuhw
-	 * @date 2015年4月17日
-	 */
-	public boolean clickPraise(String channel, String videoid, String type) {
-		String json = JsonCreateUtils.getClickPraiseRequestJson(channel, videoid, type);
-		if(null != mApplication && null != mApplication.mGoluk) {
-			return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_VOP_Praise, json);
+		if (null != mApplication && null != mApplication.mGoluk) {
+			return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_VOP_ClickUp,
+					json);
 		}
 		return false;
 	}
@@ -339,23 +260,6 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
 				json);
 	}
 
-	/**
-	 * 获取分享地址
-	 * 
-	 * @param videoid
-	 *            视频id
-	 * @param type
-	 *            视频类型：1.直播 2.点播
-	 * @return true:命令发送成功 false:失败
-	 * @author xuhw
-	 * @date 2015年4月17日
-	 */
-	public long getShareUrlEx(String videoid, String type) {
-		String json = JsonCreateUtils.getShareUrlRequestJson(videoid, type);
-		return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square,
-				VSquare_Req_VOP_GetShareURL_Video, json);
-	}
-	
 	/**
 	 * 获取分享地址
 	 * 

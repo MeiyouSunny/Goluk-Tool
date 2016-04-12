@@ -78,6 +78,23 @@ public class NewestAdapter extends BaseAdapter {
 		this.notifyDataSetChanged();
 	}
 
+	// 删除视频
+	public void deleteVideo(String vid) {
+		if (TextUtils.isEmpty(vid) || null == mDataList || mDataList.size() <= 0) {
+			return;
+		}
+		boolean isDel = false;
+		for (int i = 0; i < mDataList.size(); i++) {
+			if (mDataList.get(i).mVideoEntity.videoid.equals(vid)) {
+				mDataList.remove(i);
+				isDel = true;
+			}
+		}
+		if (isDel) {
+			this.notifyDataSetChanged();
+		}
+	}
+
 	@Override
 	public int getCount() {
 		return count;
@@ -153,23 +170,23 @@ public class NewestAdapter extends BaseAdapter {
 		holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
 		holder.timeLocation = (TextView) convertView.findViewById(R.id.time_location);
 		holder.function = (ImageView) convertView.findViewById(R.id.function);
-//		holder.rlHead = convertView.findViewById(R.id.rl_head_img);
+		// holder.rlHead = convertView.findViewById(R.id.rl_head_img);
 
-		holder.praiseText = (TextView)convertView.findViewById(R.id.tv_newest_list_item_praise);
-		holder.commentText = (TextView)convertView.findViewById(R.id.tv_newest_list_item_comment);
-		holder.shareText = (TextView)convertView.findViewById(R.id.tv_newest_list_item_share);
+		holder.praiseText = (TextView) convertView.findViewById(R.id.tv_newest_list_item_praise);
+		holder.commentText = (TextView) convertView.findViewById(R.id.tv_newest_list_item_comment);
+		holder.shareText = (TextView) convertView.findViewById(R.id.tv_newest_list_item_share);
 
 		holder.surroundWatch = (TextView) convertView.findViewById(R.id.tv_newest_list_item_surround);
 		holder.totalcomments = (TextView) convertView.findViewById(R.id.totalcomments);
 		holder.detail = (TextView) convertView.findViewById(R.id.detail);
-		holder.ivReward = (ImageView)convertView.findViewById(R.id.iv_reward_tag);
+		holder.ivReward = (ImageView) convertView.findViewById(R.id.iv_reward_tag);
 		holder.totlaCommentLayout = (LinearLayout) convertView.findViewById(R.id.totlaCommentLayout);
 		holder.comment1 = (TextView) convertView.findViewById(R.id.comment1);
 		holder.comment2 = (TextView) convertView.findViewById(R.id.comment2);
 		holder.comment3 = (TextView) convertView.findViewById(R.id.comment3);
 		holder.ivLogoVIP = (ImageView) convertView.findViewById(R.id.iv_vip_logo);
 		holder.rlUserInfo = (RelativeLayout) convertView.findViewById(R.id.rl_user_info);
-		holder.tvPraiseCount = (TextView)convertView.findViewById(R.id.tv_newest_list_item_praise_count);
+		holder.tvPraiseCount = (TextView) convertView.findViewById(R.id.tv_newest_list_item_praise_count);
 
 		int height = (int) ((float) width / widthHeight);
 		RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
@@ -223,30 +240,29 @@ public class NewestAdapter extends BaseAdapter {
 			return;
 		}
 		VideoSquareInfo mVideoSquareInfo = mDataList.get(index);
-		if(0 == index) {
+		if (0 == index) {
 			holder.vDivider.setVisibility(View.GONE);
 		} else {
 			holder.vDivider.setVisibility(View.VISIBLE);
 		}
 
 		GlideUtils.loadImage(mContext, holder.videoImg, mVideoSquareInfo.mVideoEntity.picture, R.drawable.tacitly_pic);
-		if(null != mVideoSquareInfo.mUserEntity && null != mVideoSquareInfo.mUserEntity.label) {
+		if (null != mVideoSquareInfo.mUserEntity && null != mVideoSquareInfo.mUserEntity.label) {
 			String approveLabel = mVideoSquareInfo.mUserEntity.label.approvelabel;
 			String approve = mVideoSquareInfo.mUserEntity.label.approve;
 			String tarento = mVideoSquareInfo.mUserEntity.label.tarento;
 			String headplusv = mVideoSquareInfo.mUserEntity.label.headplusv;
 			String headplusvdes = mVideoSquareInfo.mUserEntity.label.headplusvdes;
-			if(null == approveLabel && null == approve &&
-					null == tarento && null == headplusv && null == headplusvdes) {
+			if (null == approveLabel && null == approve && null == tarento && null == headplusv && null == headplusvdes) {
 				holder.ivLogoVIP.setVisibility(View.GONE);
 			} else {
-				if("1".equals(approveLabel)) {
+				if ("1".equals(approveLabel)) {
 					holder.ivLogoVIP.setImageResource(R.drawable.authentication_bluev_icon);
 					holder.ivLogoVIP.setVisibility(View.VISIBLE);
-				} else if("1".equals(headplusv)) {
+				} else if ("1".equals(headplusv)) {
 					holder.ivLogoVIP.setImageResource(R.drawable.authentication_yellowv_icon);
 					holder.ivLogoVIP.setVisibility(View.VISIBLE);
-				} else if("1".equals(tarento)) {
+				} else if ("1".equals(tarento)) {
 					holder.ivLogoVIP.setImageResource(R.drawable.authentication_star_icon);
 					holder.ivLogoVIP.setVisibility(View.VISIBLE);
 				} else {
@@ -268,9 +284,9 @@ public class NewestAdapter extends BaseAdapter {
 		holder.timeLocation.setText(GolukUtils.getCommentShowFormatTime(mContext,
 				mVideoSquareInfo.mVideoEntity.sharingtime) + " " + mVideoSquareInfo.mVideoEntity.location);
 
-		if(null != mVideoSquareInfo.mVideoEntity.videoExtra) {
+		if (null != mVideoSquareInfo.mVideoEntity.videoExtra) {
 			String recommend = mVideoSquareInfo.mVideoEntity.videoExtra.isrecommend;
-			if(null != recommend && "1".equals(recommend)) {
+			if (null != recommend && "1".equals(recommend)) {
 				Drawable drawable = mContext.getResources().getDrawable(R.drawable.together_recommend_icon);
 				drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
 				holder.timeLocation.setCompoundDrawables(null, null, drawable, null);
@@ -280,7 +296,7 @@ public class NewestAdapter extends BaseAdapter {
 
 			String reward = mVideoSquareInfo.mVideoEntity.videoExtra.isreward;
 			String sysflag = mVideoSquareInfo.mVideoEntity.videoExtra.sysflag;
-			if(null != reward && "1".equals(reward) && null != sysflag && "1".equals(sysflag)) {
+			if (null != reward && "1".equals(reward) && null != sysflag && "1".equals(sysflag)) {
 				holder.ivReward.setVisibility(View.VISIBLE);
 			} else {
 				holder.ivReward.setVisibility(View.GONE);
@@ -305,9 +321,8 @@ public class NewestAdapter extends BaseAdapter {
 		if ("-1".equals(mVideoSquareInfo.mVideoEntity.praisenumber)) {
 			holder.tvPraiseCount.setText(mContext.getString(R.string.str_usercenter_praise));
 		} else {
-			holder.tvPraiseCount.setText(
-					GolukUtils.getFormatNumber(mVideoSquareInfo.mVideoEntity.praisenumber) +
-					mContext.getString(R.string.str_usercenter_praise));
+			holder.tvPraiseCount.setText(GolukUtils.getFormatNumber(mVideoSquareInfo.mVideoEntity.praisenumber)
+					+ mContext.getString(R.string.str_usercenter_praise));
 		}
 
 		if ("-1".equals(mVideoSquareInfo.mVideoEntity.clicknumber)) {
@@ -315,19 +330,19 @@ public class NewestAdapter extends BaseAdapter {
 			holder.surroundWatch.setVisibility(View.GONE);
 		} else {
 			holder.surroundWatch.setVisibility(View.VISIBLE);
-			holder.surroundWatch.setText(GolukUtils.getFormatNumber(
-					mVideoSquareInfo.mVideoEntity.clicknumber));
+			holder.surroundWatch.setText(GolukUtils.getFormatNumber(mVideoSquareInfo.mVideoEntity.clicknumber));
 		}
 
 		if (TextUtils.isEmpty(mVideoSquareInfo.mVideoEntity.describe)) {
 			holder.detail.setVisibility(View.GONE);
 		} else {
 			holder.detail.setVisibility(View.VISIBLE);
-			if(null != mVideoSquareInfo.mVideoEntity.videoExtra) {
-				if(!TextUtils.isEmpty(mVideoSquareInfo.mVideoEntity.videoExtra.topicid) &&
-						!TextUtils.isEmpty(mVideoSquareInfo.mVideoEntity.videoExtra.topicname)) {
-					UserUtils.showCommentText(mContext, true, mVideoSquareInfo, holder.detail, mVideoSquareInfo.mUserEntity.nickname,
-							mVideoSquareInfo.mVideoEntity.describe, "#" + mVideoSquareInfo.mVideoEntity.videoExtra.topicname + "#");
+			if (null != mVideoSquareInfo.mVideoEntity.videoExtra) {
+				if (!TextUtils.isEmpty(mVideoSquareInfo.mVideoEntity.videoExtra.topicid)
+						&& !TextUtils.isEmpty(mVideoSquareInfo.mVideoEntity.videoExtra.topicname)) {
+					UserUtils.showCommentText(mContext, true, mVideoSquareInfo, holder.detail,
+							mVideoSquareInfo.mUserEntity.nickname, mVideoSquareInfo.mVideoEntity.describe, "#"
+									+ mVideoSquareInfo.mVideoEntity.videoExtra.topicname + "#");
 				} else {
 					UserUtils.showCommentText(holder.detail, mVideoSquareInfo.mUserEntity.nickname,
 							mVideoSquareInfo.mVideoEntity.describe);
@@ -363,10 +378,9 @@ public class NewestAdapter extends BaseAdapter {
 						holder.totalcomments.setVisibility(View.GONE);
 					} else {
 						holder.totalcomments.setVisibility(View.VISIBLE);
-						holder.totalcomments.setText(
-								mContext.getString(R.string.str_newest_check_all_comments_prefix) +
-								GolukUtils.getFormatNumber(mVideoSquareInfo.mVideoEntity.comcount) +
-								mContext.getString(R.string.str_newest_check_all_comments_postfix));
+						holder.totalcomments.setText(mContext.getString(R.string.str_newest_check_all_comments_prefix)
+								+ GolukUtils.getFormatNumber(mVideoSquareInfo.mVideoEntity.comcount)
+								+ mContext.getString(R.string.str_newest_check_all_comments_postfix));
 					}
 
 					holder.totlaCommentLayout.setVisibility(View.VISIBLE);
@@ -577,7 +591,7 @@ public class NewestAdapter extends BaseAdapter {
 		TextView tvPraiseCount;
 
 		RelativeLayout rlUserInfo;
-//		View rlHead;
+		// View rlHead;
 	}
 
 	public void setNewestLiseView(NewestListView view) {
@@ -594,7 +608,7 @@ public class NewestAdapter extends BaseAdapter {
 		user.customavatar = videoSquareInfo.mUserEntity.mCustomAvatar;
 		user.praisemenumber = "0";
 		user.sharevideonumber = "0";
-//		Intent i = new Intent(mContext, UserCenterActivity.class);
+		// Intent i = new Intent(mContext, UserCenterActivity.class);
 		Intent i = new Intent(mContext, NewUserCenterActivity.class);
 		i.putExtra("userinfo", user);
 		i.putExtra("type", 0);

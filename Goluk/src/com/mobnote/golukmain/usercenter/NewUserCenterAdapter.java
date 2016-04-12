@@ -7,8 +7,8 @@ import com.mobnote.golukmain.usercenter.bean.HomeVideoList;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
 
-import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +30,26 @@ public class NewUserCenterAdapter extends BaseAdapter {
 		this.mList = list;
 		this.notifyDataSetChanged();
 	}
-	
-	
+
 	public void appendData(List<HomeVideoList> list) {
 		mList.addAll(list);
 		this.notifyDataSetChanged();
+	}
+
+	public void deleteVideo(String vid) {
+		if (TextUtils.isEmpty(vid) || null == mList || mList.size() <= 0) {
+			return;
+		}
+		boolean isDelSuccess = false;
+		for (int i = 0; i < mList.size(); i++) {
+			if (mList.get(i).videoid.equals(vid)) {
+				mList.remove(i);
+				isDelSuccess = true;
+			}
+		}
+		if (isDelSuccess) {
+			this.notifyDataSetChanged();
+		}
 	}
 
 	@Override
@@ -70,14 +85,14 @@ public class NewUserCenterAdapter extends BaseAdapter {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		
+
 		HomeVideoList videos = mList.get(arg0);
 		GlideUtils.loadImage(mContext, viewHolder.mThumbImage, videos.pictureurl, R.drawable.tacitly_pic);
 		viewHolder.mTimeText.setText(GolukUtils.getCommentShowFormatTime(mContext, videos.addtime));
 		viewHolder.mDescribeText.setText(videos.description);
 		viewHolder.mCommentCountText.setText(GolukUtils.getFormatNumber(videos.commentcount));
 		viewHolder.mLookCountText.setText(GolukUtils.getFormatNumber(videos.clickcount));
-		
+
 		return convertView;
 	}
 
