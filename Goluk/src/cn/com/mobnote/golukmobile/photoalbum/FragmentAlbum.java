@@ -195,11 +195,19 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 		if ("0".equals(mPlatform)) {
 			if (GolukApplication.getInstance().isconnection) {
 				if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
-					mWonderfulFragment.loadData(true);
+					if(mWonderfulFragment.isShowPlayer == false){
+						mWonderfulFragment.loadData(true);
+					}
+					
 				} else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
-					mUrgentFragment.loadData(true);
+					if(mUrgentFragment.isShowPlayer == false){
+						mUrgentFragment.loadData(true);
+					}
 				} else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
-					mLoopFragment.loadData(true);
+					if(mLoopFragment.isShowPlayer == false){
+						mLoopFragment.loadData(true);
+					}
+					
 				}
 			}
 		}

@@ -407,6 +407,7 @@
     <string name="photoalbum_local_video_text">本地视频</string>
     <string name="photoalbum_cloud_video_text">记录仪视频</string>
     <string name="photoalbum_no_video_text">当前没有视频</string>
+    <string name="photoalbum_local_no_video_text">本地没有视频</string>
     <string name="photoalbum_no_ipc_connect_text">未连接行车记录仪</string>
     <string name="short_input_ok">完成</string>
     <string name="short_input_cancel">取消</string>
@@ -995,9 +996,6 @@
     <string name="str_usercenter_more_share">分享主页</string>
     <string name="str_usercenter_no_introduce_text">暂无介绍</string>
 
-    <string name="str_please_bind_phone_first">提现需要绑定手机号，请先前往通用设置中绑定手机号</string>
-    <string name="str_follow">关注</string>
-    <string name="str_fans">粉丝</string>
     <string name="str_discover">极社</string>
     <string name="str_album">相册</string>
     <string name="str_mine">我的</string>

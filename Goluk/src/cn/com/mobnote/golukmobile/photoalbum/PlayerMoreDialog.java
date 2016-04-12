@@ -97,13 +97,20 @@ public class PlayerMoreDialog extends Dialog implements android.view.View.OnClic
 				mCustomDialog.dismiss();
 				if(!"local".equals(mVideoFrom)){
 					if(isAllowedDelete()){
-						EventBus.getDefault().post(new EventDeletePhotoAlbumVid(mVidPath,mType));
+						if (!GolukApplication.getInstance().getIpcIsLogin()) {
+							GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.str_photo_check_ipc_state));
+						}else{
+							EventBus.getDefault().post(new EventDeletePhotoAlbumVid(mVidPath,mType));
+							GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.str_photo_delete_ok));
+						}
+						
 						((PhotoAlbumPlayer)mContext).finish();
 					}else{
 						GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.str_photo_downing));
 					}
 				}else{
 					EventBus.getDefault().post(new EventDeletePhotoAlbumVid(mVidPath,mType));
+					GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.str_photo_delete_ok));
 					((PhotoAlbumPlayer)mContext).finish();
 				}
 				
