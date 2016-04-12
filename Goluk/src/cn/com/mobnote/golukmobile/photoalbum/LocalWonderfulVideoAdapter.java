@@ -219,7 +219,7 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 				holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
 				holder.mVide2Type.setText(mContext.getResources().getString(R.string.str_loop_title));
 				holder.mVide2Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_loop_txt_color));
-				holder.mPreView1.setVisibility(View.GONE);
+				holder.mPreView2.setVisibility(View.GONE);
 			}
 		}
 
