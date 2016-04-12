@@ -174,34 +174,17 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 		loadImage(mVideoInfo1.filename, holder.image1);
 		int type = getVideoType(mVideoInfo1.filename);
 		
-		if (type != 3) {
-			holder.mPreView1.setImageResource(R.drawable.photo_share_icon);
-			holder.mPreView2.setImageResource(R.drawable.photo_share_icon);
-		} else {
-			holder.mPreView1.setImageResource(R.drawable.photo_preview_icon);
-			holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
-		}
-		
-		/*if ("local".equals(from)) {
-			holder.mPreView1.setImageResource(R.drawable.photo_preview_icon);
-			holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
-		} else {
-			if (type != 3) {
-				holder.mPreView1.setImageResource(R.drawable.photo_share_icon);
-				holder.mPreView2.setImageResource(R.drawable.photo_share_icon);
-			} else {
-				holder.mPreView1.setImageResource(R.drawable.photo_preview_icon);
-				holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
-			}
-		}*/
 		
 		if(type == 1){
 			holder.mVide1Type.setText(mContext.getResources().getString(R.string.str_wonderful_title));
 			holder.mVide1Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_wonderful_txt_color));
+			holder.mPreView1.setImageResource(R.drawable.photo_share_icon);
 		}else if(type == 2){
 			holder.mVide1Type.setText(mContext.getResources().getString(R.string.str_urgent_title));
 			holder.mVide1Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_urgent_txt_color));
+			holder.mPreView1.setImageResource(R.drawable.photo_share_icon);
 		}else{
+			holder.mPreView1.setImageResource(R.drawable.photo_preview_icon);
 			holder.mVide1Type.setText(mContext.getResources().getString(R.string.str_loop_title));
 			holder.mVide1Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_loop_txt_color));
 			holder.mPreView1.setVisibility(View.GONE);
@@ -225,12 +208,15 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 			
 			int type2 = getVideoType(mVideoInfo2.filename);
 			if(type2 == 1){
+				holder.mPreView2.setImageResource(R.drawable.photo_share_icon);
 				holder.mVide2Type.setText(mContext.getResources().getString(R.string.str_wonderful_title));
 				holder.mVide2Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_wonderful_txt_color));
 			}else if(type2 == 2){
+				holder.mPreView2.setImageResource(R.drawable.photo_share_icon);
 				holder.mVide2Type.setText(mContext.getResources().getString(R.string.str_urgent_title));
 				holder.mVide2Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_urgent_txt_color));
 			}else{
+				holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
 				holder.mVide2Type.setText(mContext.getResources().getString(R.string.str_loop_title));
 				holder.mVide2Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_loop_txt_color));
 				holder.mPreView1.setVisibility(View.GONE);
