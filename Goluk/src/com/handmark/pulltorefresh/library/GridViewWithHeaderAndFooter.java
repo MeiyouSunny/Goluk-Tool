@@ -291,9 +291,11 @@ public class GridViewWithHeaderAndFooter extends GridView {
 				numColumns.setAccessible(true);
 				return numColumns.getInt(this);
 			} catch (NoSuchFieldException e) {
-				throw new RuntimeException(e);
+//				throw new RuntimeException(e);
+				return 240;
 			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
+//				throw new RuntimeException(e);
+				return 240;
 			}
 		}
 	}
