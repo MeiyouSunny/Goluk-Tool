@@ -672,7 +672,11 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 					mTextFans.setText(GolukUtils.getFormatedNumber(mUserinfohomeRetBean.data.fansnumber));
 					mTextFollow.setText(GolukUtils.getFormatedNumber(mUserinfohomeRetBean.data.followingnumber));
 
-					int newFansNumber = Integer.valueOf(mUserinfohomeRetBean.data.newfansnumber);
+					int newFansNumber = 0;
+					if(!TextUtils.isEmpty(mUserinfohomeRetBean.data.newfansnumber)) {
+						newFansNumber = Integer.valueOf(mUserinfohomeRetBean.data.newfansnumber);
+					}
+
 					if(newFansNumber>0){
 						mNewFansIv.setVisibility(View.VISIBLE);
 					}else{
