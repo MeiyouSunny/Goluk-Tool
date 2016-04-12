@@ -193,7 +193,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 		GolukApplication.getInstance().setContext(getContext(), "ipcfilemanager");
 
 		if ("0".equals(mPlatform)) {
-			if (GolukApplication.getInstance().isconnection) {
+			if (GolukApplication.getInstance().isIpcLoginSuccess) {
 				if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
 					if(mWonderfulFragment.isShowPlayer == false){
 						mWonderfulFragment.loadData(true);

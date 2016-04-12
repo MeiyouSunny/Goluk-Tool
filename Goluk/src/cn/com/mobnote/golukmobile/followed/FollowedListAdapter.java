@@ -185,6 +185,9 @@ public class FollowedListAdapter extends BaseAdapter {
 		if(recomUserBean.position != 0) {
 			holderRec.nDividerV.setVisibility(View.GONE);
 			holderRec.nLabelRL.setVisibility(View.GONE);
+		} else {
+			holderRec.nDividerV.setVisibility(View.VISIBLE);
+			holderRec.nLabelRL.setVisibility(View.VISIBLE);
 		}
 
 		String headUrl = recomUserBean.customavatar;
@@ -203,8 +206,8 @@ public class FollowedListAdapter extends BaseAdapter {
 			GlideUtils.loadImage(mFragment.getActivity(), holderRec.nItemFirstVideoIV,
 					recomUserBean.hotvideo.get(0).pictureurl, R.drawable.tacitly_pic);
 			holderRec.nItemFirstVideoDesTV.setText(recomUserBean.hotvideo.get(0).description);
-			holderRec.nItemFirstVideoViewTV.setText(recomUserBean.hotvideo.get(0).clickcount + "");
-			holderRec.nItemFirstVideoComTV.setText(recomUserBean.hotvideo.get(0).commentcount + "");
+			holderRec.nItemFirstVideoViewTV.setText(GolukUtils.getFormatedNumber(recomUserBean.hotvideo.get(0).clickcount + ""));
+			holderRec.nItemFirstVideoComTV.setText(GolukUtils.getFormatedNumber(recomUserBean.hotvideo.get(0).commentcount + ""));
 			final String firstVideoId = recomUserBean.hotvideo.get(0).videoid;
 			holderRec.nItemFirstVideoIV.setOnClickListener(new OnClickListener() {
 				@Override
@@ -224,8 +227,8 @@ public class FollowedListAdapter extends BaseAdapter {
 				GlideUtils.loadImage(mFragment.getActivity(), holderRec.nItemSecondVideoIV,
 						recomUserBean.hotvideo.get(1).pictureurl, R.drawable.tacitly_pic);
 				holderRec.nItemSecondVideoDesTV.setText(recomUserBean.hotvideo.get(1).description);
-				holderRec.nItemSecondVideoViewTV.setText(recomUserBean.hotvideo.get(1).clickcount + "");
-				holderRec.nItemSecondVideoComTV.setText(recomUserBean.hotvideo.get(1).commentcount + "");
+				holderRec.nItemSecondVideoViewTV.setText(GolukUtils.getFormatedNumber(recomUserBean.hotvideo.get(1).clickcount + ""));
+				holderRec.nItemSecondVideoComTV.setText(GolukUtils.getFormatedNumber(recomUserBean.hotvideo.get(1).commentcount + ""));
 				holderRec.nItemSecondVideoRL.setVisibility(View.VISIBLE);
 
 				final String secondVideoId = recomUserBean.hotvideo.get(1).videoid;
