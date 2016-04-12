@@ -55,6 +55,21 @@ public class UserUtils {
 				.create();
 		dialog.show();
 	}
+	
+	/**
+	 * 验证是否是数字
+	 */
+	public static boolean isNumber(String mobiles) {
+		boolean flag = false;
+		try {
+			Pattern p = Pattern.compile("[0-9]*"); // 验证手机号
+			Matcher m = p.matcher(mobiles);
+			flag = m.matches();
+		} catch (Exception e) {
+			flag = false;
+		}
+		return flag;
+	}
 
 	/**
 	 * 隐藏软件盘
