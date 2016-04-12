@@ -9,6 +9,7 @@ import cn.com.mobnote.util.GolukConfig;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.umeng.socialize.bean.HandlerRequestCode;
+import com.umeng.socialize.bean.SocializeConfig;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.media.QQShareContent;
@@ -17,6 +18,7 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMVideo;
 import com.umeng.socialize.sso.QZoneSsoHandler;
 import com.umeng.socialize.sso.UMQQSsoHandler;
+import com.umeng.socialize.sso.UMSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
@@ -147,12 +149,40 @@ public class SharePlatformUtil {
 
 	// 是否安装微信
 	public boolean isInstallWeiXin() {
-		return mController.getConfig().getSsoHandler(HandlerRequestCode.WX_REQUEST_CODE).isClientInstalled();
+		if(mController == null) {
+			return false;
+		}
+
+		SocializeConfig config = mController.getConfig();
+		if(null == config) {
+			return false;
+		}
+
+		UMSsoHandler handler = config.getSsoHandler(HandlerRequestCode.WX_REQUEST_CODE);
+		if(null == handler) {
+			return false;
+		}
+		return handler.isClientInstalled();
+//		return mController.getConfig().getSsoHandler(HandlerRequestCode.WX_REQUEST_CODE).isClientInstalled();
 	}
 
 	// 是否安装微信
 	public boolean isInstallQQ() {
-		return mController.getConfig().getSsoHandler(HandlerRequestCode.QQ_REQUEST_CODE).isClientInstalled();
+		if(mController == null) {
+			return false;
+		}
+
+		SocializeConfig config = mController.getConfig();
+		if(null == config) {
+			return false;
+		}
+
+		UMSsoHandler handler = config.getSsoHandler(HandlerRequestCode.QQ_REQUEST_CODE);
+		if(null == handler) {
+			return false;
+		}
+		return handler.isClientInstalled();
+//		return mController.getConfig().getSsoHandler(HandlerRequestCode.QQ_REQUEST_CODE).isClientInstalled();
 	}
 
 	public boolean isSinaWBValid() {
