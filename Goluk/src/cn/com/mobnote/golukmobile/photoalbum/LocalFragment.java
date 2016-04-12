@@ -234,7 +234,7 @@ public class LocalFragment extends Fragment {
 								return;
 							// --------------------------------------------------以此标记
 							// type 零时给 1 等主题逻辑调试通了 再去更具文件名称取类型
-							gotoVideoPlayPage(1, info2.videoPath, info2.videoCreateDate, info2.videoHP, info2.videoSize);
+							gotoVideoPlayPage(getVideoType(info2.filename), info2.videoPath, info2.videoCreateDate, info2.videoHP, info2.videoSize);
 							String filename = info2.filename;
 							updateNewState(filename);
 
