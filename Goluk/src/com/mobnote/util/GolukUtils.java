@@ -82,6 +82,15 @@ public class GolukUtils {
 
 		GolukDebugUtils.e("", " mobile info:" + mDensity);
 	}
+	
+	public static String getDefaultZone() {
+		String current = getLanguageAndCountry();
+		if (current.equals("zh_CN")) {
+			return "CN +86";
+		} else {
+			return "US +1";
+		}
+	}
 
 	/**
 	 * 秒转换为 时：分：秒

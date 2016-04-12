@@ -55,6 +55,32 @@ public class UserRegistAndRepwdManage {
 					IPageNotifyFn.PageType_ModifyPwd, jsonStr);
 		}
 	}
+	
+	/**
+	 * 注册/重置密码请求
+	 * 
+	 * @param phone
+	 * @param password
+	 * @param vCode
+	 * @return
+	 */
+	public boolean registAndRepwd(boolean b, String phone, String password, String vCode, String zone) {
+		String jsonStr = JsonUtil.registAndRepwdJson(phone, password, vCode, zone);
+		// TODO 判断获取验证码的次数，判断输入的验证码格式
+		if(null == mApp || null == mApp.mGoluk) {
+			return false;
+		}
+		
+		GolukDebugUtils.e("","registAndRepwd: " + jsonStr);
+
+		if (b) {
+			return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+					IPageNotifyFn.PageType_Register, jsonStr);
+		} else {
+			return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+					IPageNotifyFn.PageType_ModifyPwd, jsonStr);
+		}
+	}
 
 	/**
 	 * 绑定手机

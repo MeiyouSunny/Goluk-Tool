@@ -69,4 +69,7 @@ public class EventConfig {
 	public final static int FOLLOW_PUSH = 1006;
 
 	public final static int PRAISE_STATUS_CHANGE = 1007;
+	
+	/** 注册成功 */
+	public static final int EVENT_REGISTER_CODE = 1000;
 }

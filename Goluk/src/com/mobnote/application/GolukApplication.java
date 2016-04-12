@@ -66,6 +66,7 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
 import com.mobnote.golukmain.http.HttpManager;
+import com.mobnote.golukmain.internation.login.CountryBean;
 import com.mobnote.golukmain.live.LiveActivity;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.thirdshare.GolukUmConfig;
@@ -207,6 +208,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private boolean mIsExit = true;
 	/** T1声音录制开关　０关闭１打开 **/
 	public int mT1RecAudioCfg = 1;
+	
+	/** 当前的国家区号 **/
+	public CountryBean mLocationCityCode = null;
 
 	private static final String SNAPSHOT_DIR = "fs1:/pic/";
 	static {
