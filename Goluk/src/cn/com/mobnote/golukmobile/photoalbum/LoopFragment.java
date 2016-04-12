@@ -146,6 +146,9 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 			GolukApplication.getInstance().getIPCControlManager()
 					.removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_CIRCULATE);
 			isListener = false;
+			if(isGetFileListDataing){
+				isGetFileListDataing = false;
+			}
 		}
 	}
 
