@@ -7,7 +7,9 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -87,7 +89,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 
 	private FragmentAlbum mFragmentAlbum;
 
-	private boolean isShowPlayer = false;
+	public boolean isShowPlayer = false;
 
 	/** 添加列表底部加载中布局 */
 	private RelativeLayout mBottomLoadingView = null;
@@ -390,7 +392,8 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 							VideoInfo info2 = d.getVideoInfo2();
 							if (null == info2)
 								return;
-							gotoVideoPlayPage(4, info2.videoPath, info2.videoCreateDate, info2.videoHP, info2.videoSize);
+							gotoVideoPlayPage(PhotoAlbumConfig.PHOTO_BUM_IPC_WND, info2.videoPath, 
+									info2.videoCreateDate, info2.videoHP, info2.videoSize);
 							String filename = info2.filename;
 							updateNewState(filename);
 
@@ -528,6 +531,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 		}
 	}
 
+	@SuppressLint("NewApi")
 	public void loadData(boolean flag) {
 		GolukDebugUtils.e("", "crash zh start App ------ WonderfulFragment-----loadData------------:");
 		if (isGetFileListDataing) {
@@ -549,8 +553,10 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 				isGetFileListDataing = false;
 			}
 		} else {
+			Drawable drawable=this.getResources().getDrawable(R.drawable.img_no_video); 
 			getFragmentAlbum().setEditBtnState(false);
-			empty.setText(getActivity().getResources().getString(R.string.photoalbum_no_ipc_connect_text));
+			empty.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
+			empty.setText(getActivity().getResources().getString(R.string.str_album_no_connect));
 			empty.setVisibility(View.VISIBLE);
 			mStickyListHeadersListView.setVisibility(View.GONE);
 		}
@@ -567,9 +573,12 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 		 */
 	}
 
+	@SuppressLint("NewApi")
 	private void checkListState() {
 		if (mDataList.size() <= 0) {
 			empty.setVisibility(View.VISIBLE);
+			Drawable drawable=this.getResources().getDrawable(R.drawable.album_img_novideo); 
+			empty.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
 			empty.setText(getActivity().getResources().getString(R.string.photoalbum_no_video_text));
 			mStickyListHeadersListView.setVisibility(View.GONE);
 			updateEditState(false);

@@ -4,7 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -281,11 +283,14 @@ public class LocalFragment extends Fragment {
 		task.execute("");
 	}
 
+	@SuppressLint("NewApi")
 	private void checkListState() {
 		GolukDebugUtils.e("", "Album------WondowvideoListView------checkListState");
 		if (mDataList.size() <= 0) {
 			empty.setVisibility(View.VISIBLE);
-			empty.setText(getActivity().getResources().getString(R.string.photoalbum_no_video_text));
+			Drawable drawable=this.getResources().getDrawable(R.drawable.album_img_novideo); 
+			empty.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
+			empty.setText(getActivity().getResources().getString(R.string.photoalbum_local_no_video_text));
 			mStickyListHeadersListView.setVisibility(View.GONE);
 			updateEditState(false);
 		} else {

@@ -6,7 +6,9 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -87,7 +89,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 	
 	private FragmentAlbum mFragmentAlbum;
 	
-	private boolean isShowPlayer = false;
+	public boolean isShowPlayer = false;
 	
 	/** 添加列表底部加载中布局 */
 	private RelativeLayout mBottomLoadingView = null;
@@ -362,7 +364,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 							VideoInfo info2 = d.getVideoInfo2();
 							if (null == info2)
 								return;
-							gotoVideoPlayPage(4, info2.videoPath, info2.videoCreateDate, info2.videoHP, info2.videoSize);
+							gotoVideoPlayPage(PhotoAlbumConfig.PHOTO_BUM_IPC_URG, info2.videoPath, info2.videoCreateDate, info2.videoHP, info2.videoSize);
 							String filename = info2.filename;
 							updateNewState(filename);
 
@@ -409,18 +411,6 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 	private void gotoVideoPlayPage(int from, String path, String createTime, String videoHP, String size) {
 		if (!isShowPlayer) {
 			isShowPlayer = true;
-			// if (null == VitamioPlayerActivity.mHandler) {
-//			Intent intent = null;
-//			if (1 == from) {
-//				intent = new Intent(this.getContext(), VitamioPlayerActivity.class);
-//			} else {
-//				intent = new Intent(this.getContext(), VideoPlayerActivity.class);
-//			}
-//			intent.putExtra("from", "ipc");
-//			intent.putExtra("type", IPCManagerFn.TYPE_URGENT);
-//			intent.putExtra("filename", path);
-//			this.getContext().startActivity(intent);
-			// }
 			Intent intent = new Intent(getContext(), PhotoAlbumPlayer.class);
 			intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, "ipc");
 			intent.putExtra(PhotoAlbumPlayer.FILENAME, path);
@@ -476,6 +466,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 	}
 
 	
+	@SuppressLint("NewApi")
 	public void loadData(boolean flag) {
 		if (isGetFileListDataing) {
 			return;
@@ -500,7 +491,9 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 		}else{
 			mFragmentAlbum.setEditBtnState(false);
 			empty.setVisibility(View.VISIBLE);
-			empty.setText(getActivity().getResources().getString(R.string.photoalbum_no_ipc_connect_text));
+			Drawable drawable=this.getResources().getDrawable(R.drawable.img_no_video); 
+			empty.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
+			empty.setText(getActivity().getResources().getString(R.string.str_album_no_connect));
 			mStickyListHeadersListView.setVisibility(View.GONE);
 		}
 	}
@@ -514,8 +507,11 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 		mCloudVideoListView.updateEdit(4, isHasData);*/
 	}
 	
+	@SuppressLint("NewApi")
 	private void checkListState() {
 		if (mDataList.size() <= 0) {
+			Drawable drawable=this.getResources().getDrawable(R.drawable.album_img_novideo); 
+			empty.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
 			empty.setText(getActivity().getResources().getString(R.string.photoalbum_no_video_text));
 			empty.setVisibility(View.VISIBLE);
 			mStickyListHeadersListView.setVisibility(View.GONE);
