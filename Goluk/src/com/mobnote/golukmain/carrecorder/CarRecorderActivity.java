@@ -68,6 +68,7 @@ import com.mobnote.golukmain.carrecorder.util.ImageManager;
 import com.mobnote.golukmain.carrecorder.util.ReadWifiConfig;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.live.LiveActivity;
 import com.mobnote.golukmain.live.LiveSettingBean;
@@ -999,7 +1000,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		} else if (id == R.id.liveBtn) {
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
 				if (mApp.isUserLoginSucess == false) {
-					Intent it = new Intent(this, UserLoginActivity.class);
+					Intent it = null;
+					if(GolukApplication.getInstance().isInternation){
+						it = new Intent(this, InternationUserLoginActivity.class);
+					}else{
+						it = new Intent(this, UserLoginActivity.class);
+					}
 					it.putExtra("isInfo", "back");
 					startActivity(it);
 				} else {

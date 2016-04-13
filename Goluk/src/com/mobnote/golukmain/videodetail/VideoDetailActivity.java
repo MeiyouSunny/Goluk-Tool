@@ -58,6 +58,7 @@ import com.mobnote.golukmain.comment.bean.CommentDelResultBean;
 import com.mobnote.golukmain.comment.bean.CommentItemBean;
 import com.mobnote.golukmain.comment.bean.CommentResultBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
 import com.mobnote.golukmain.live.UserInfo;
@@ -472,7 +473,12 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private void click_send() {
 		// 发评论／回复 前需要先判断用户是否登录
 		if (!mBaseApp.isUserLoginSucess) {
-			Intent intent = new Intent(this, UserLoginActivity.class);
+			Intent intent = null;
+			if(GolukApplication.getInstance().isInternation){
+				intent = new Intent(this, InternationUserLoginActivity.class);
+			}else{
+				intent = new Intent(this, UserLoginActivity.class);
+			}
 			intent.putExtra("isInfo", "back");
 			startActivity(intent);
 			return;

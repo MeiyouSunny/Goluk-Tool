@@ -25,6 +25,7 @@ import com.mobnote.golukmain.PushSettingActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserLoginActivity;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.msg.bean.MessageCounterBean;
 import com.mobnote.manager.MessageManager;
 import com.mobnote.util.GolukConfig;
@@ -115,7 +116,13 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 			GolukApplication app = (GolukApplication)getApplication();
 			if (!app.isUserLoginSucess) {
 //					GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
-				Intent intent = new Intent(this, UserLoginActivity.class);
+				Intent intent = null;
+				if(GolukApplication.getInstance().isInternation){
+					intent = new Intent(this, InternationUserLoginActivity.class);
+				}else{
+					intent = new Intent(this, UserLoginActivity.class);
+				}
+				
 				startActivityForResult(intent, GolukConfig.REQUEST_CODE_MSG_LOGIN_PRAISE);
 				return;
 			}
@@ -129,7 +136,12 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 			GolukApplication app = (GolukApplication)getApplication();
 			if (!app.isUserLoginSucess) {
 //					GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
-				Intent intent = new Intent(this, UserLoginActivity.class);
+				Intent intent = null;
+				if(GolukApplication.getInstance().isInternation){
+					intent = new Intent(this, InternationUserLoginActivity.class);
+				}else{
+					intent = new Intent(this, UserLoginActivity.class);
+				}
 				startActivityForResult(intent, GolukConfig.REQUEST_CODE_MSG_LOGIN_COMMENT);
 				return;
 			}
@@ -143,7 +155,12 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 			GolukApplication app = (GolukApplication)getApplication();
 			if (!app.isUserLoginSucess) {
 //					GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
-				Intent intent = new Intent(this, UserLoginActivity.class);
+				Intent intent = null;
+				if(GolukApplication.getInstance().isInternation){
+					intent = new Intent(this, InternationUserLoginActivity.class);
+				}else{
+					intent = new Intent(this, UserLoginActivity.class);
+				}
 				startActivityForResult(intent, GolukConfig.REQUEST_CODE_MSG_LOGIN_SYSTEM);
 				return;
 			}
@@ -246,7 +263,12 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 //		}
 		if (!app.isUserLoginSucess) {
 //			GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
-			Intent intent = new Intent(this, UserLoginActivity.class);
+			Intent intent = null;
+			if(GolukApplication.getInstance().isInternation){
+				intent = new Intent(this, InternationUserLoginActivity.class);
+			}else{
+				intent = new Intent(this, UserLoginActivity.class);
+			}
 			startActivityForResult(intent, GolukConfig.REQUEST_CODE_MSG_LOGIN_SETTING);
 			return;
 		}

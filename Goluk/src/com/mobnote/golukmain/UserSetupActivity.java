@@ -9,6 +9,7 @@ import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.base.CarRecordBaseActivity;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
 import com.mobnote.golukmain.msg.MessageBadger;
@@ -260,7 +261,12 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 					dialog.show();
 					return;
 				}
-				initIntent(UserLoginActivity.class);
+				if(GolukApplication.getInstance().isInternation){
+					initIntent(InternationUserLoginActivity.class);
+				}else{
+					initIntent(UserLoginActivity.class);
+				}
+				
 			} else if (btnLoginout.getText().toString().equals(this.getResources().getString(R.string.logout))) {
 				new AlertDialog.Builder(mContext).
 					setTitle(this.getResources().getString(R.string.wifi_link_prompt)).
