@@ -528,6 +528,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 					.removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT);
 			isListener = false;
 			if(isGetFileListDataing){
+				this.removeFooterView();
 				isGetFileListDataing = false;
 			}
 		}

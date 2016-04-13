@@ -151,6 +151,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 					.removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_CIRCULATE);
 			isListener = false;
 			if(isGetFileListDataing){
+				this.removeFooterView();
 				isGetFileListDataing = false;
 			}
 		}

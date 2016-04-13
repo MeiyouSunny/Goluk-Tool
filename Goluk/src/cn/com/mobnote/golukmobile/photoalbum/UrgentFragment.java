@@ -156,6 +156,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_URGENT);
 			isListener = false;
 			if(isGetFileListDataing){
+				this.removeFooterView();
 				isGetFileListDataing = false;
 			}
 		}
