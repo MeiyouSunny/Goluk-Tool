@@ -203,6 +203,14 @@
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.mobnote.golukmain.livevideo.BaidumapLiveActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.mobnote.golukmain.livevideo.GooglemapLiveActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.mobnote.golukmain.player.VitamioPlayerActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:process=":vitamio"
