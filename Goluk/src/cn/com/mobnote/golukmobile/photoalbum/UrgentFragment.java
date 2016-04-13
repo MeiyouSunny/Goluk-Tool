@@ -148,6 +148,14 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 			isListener = true;
 		}
 	}
+	
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		if(mFragmentAlbum != null && mFragmentAlbum.mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG && isVisibleToUser == false){
+			this.removeFooterView();
+		}
+	}
 
 	@Override
 	public void onPause() {

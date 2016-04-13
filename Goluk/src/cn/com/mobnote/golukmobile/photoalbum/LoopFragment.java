@@ -140,6 +140,15 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 			isListener = true;
 		}
 	}
+	
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		if(mFragmentAlbum != null && mFragmentAlbum.mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP && isVisibleToUser == false){
+			this.removeFooterView();
+		}
+	}
+
 
 	@Override
 	public void onPause() {
@@ -168,6 +177,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 			deleteListData(list);
 		}
 	}
+	
 
 	/**
 	 * 从设备上下载视频到本地

@@ -432,6 +432,15 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 			}
 		}
 	}
+	
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		if(getFragmentAlbum() != null && getFragmentAlbum().mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND && isVisibleToUser == false){
+			this.removeFooterView();
+		}
+	}
+
 
 	/**
 	 * 跳转到本地视频播放页面
