@@ -432,9 +432,9 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 
 				if (month == o_month) {
 					if (day == o_day) {
-						holder.date.setText("今天");
+						holder.date.setText(mContext.getString(R.string.str_today));
 					} else if (day == (o_day + 1)) {
-						holder.date.setText("昨天");
+						holder.date.setText(mContext.getString(R.string.str_yestoday));
 					} else {
 						holder.date.setText(time[1] + "/" + time[2]);
 					}

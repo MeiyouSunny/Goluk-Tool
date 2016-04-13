@@ -74,7 +74,6 @@
     <string name="wifi_link_wifi_name">名称为</string>
     <string name="wifi_link_wifi_name2">的WiFi</string>
     <string name="wifi_link_success_conn">已成功连接</string>
-    <string name="wifi_link_index_mobile">手机</string>
     <string name="wifi_link_complete_wait">等待极路客</string>
     <string name="wifi_link_complete_conn">连接</string>
     <string name="wifi_link_complete_mobile">到手机...</string>
@@ -230,7 +229,6 @@
     <string name="hfcc">恢复出厂设置</string>
     <string name="bbxx">版本信息</string>
     <string name="car_recorder_title">行车记录仪</string>
-    <string name="ipcconnecting">摄像头连接中</string>
 
     <!-- 视频列表页 -->
     <string name="videolist_edit">编辑</string>
@@ -967,6 +965,9 @@
     <string name="str_quality_low">低质量</string>
     <string name="str_wonderfulvideo_and_photo">精彩视频+照片</string>
     <string name="str_wonderfulvideo">精彩视频</string>
+    <string name="str_followed_login_to_view_tip">登录后才能查看自己关注的内容哟~</string>
+    <string name="str_followed_now_login">现在去登录</string>
+    <string name="zero">0</string>
     
     <!-- <string name="facebook_app_id">1679907912268496</string> -->
     <string name="facebook_app_id">1679907912268496</string>

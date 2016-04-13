@@ -206,9 +206,9 @@
     </string-array>
     
     <string-array name="list_tone_volume">
-        <item>高 ( 100% )</item>
-        <item>中 ( 75% )</item>
-        <item>低 ( 50% )</item>
+        <item>High ( 100% )</item>
+        <item>Middle ( 75% )</item>
+        <item>Low ( 50% )</item>
     </string-array>
     <string-array name="list_tone_volume_value">
         <item>100</item>
@@ -216,15 +216,15 @@
         <item>50</item>
     </string-array>
     <string-array name="list_shutdown_time">
-        <item>10秒</item>
-        <item>60秒</item>
+        <item>10 seconds</item>
+        <item>60 seconds</item>
     </string-array>
     
     <string-array name="list_language">
-        <item>中文</item>
-        <item>英文</item>
+        <item>Chinese</item>
+        <item>English</item>
     </string-array>
-    
+
     <!-- 适配的所有时区 -->
     <string-array name="zone_array">
         <item>zh_CN</item>

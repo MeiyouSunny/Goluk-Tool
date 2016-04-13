@@ -40,6 +40,7 @@ import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.module.talk.TalkNotifyAdapter;
 import cn.com.mobnote.module.videosquare.VideoSquareManagerAdapter;
 import cn.com.tiros.api.Tapi;
+import cn.com.tiros.baidu.LocationAddressDetailBean;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
@@ -969,7 +970,12 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 			return;
 		}
 
-		final String address = ((ReverseGeoCodeResult) obj).getAddress();
+		String address = "";
+//		if (this.getPackageName().equals("cn.com.mobnote.golukmobile")) {
+//			address = ((ReverseGeoCodeResult) obj).getAddress();
+//		} else {
+			address = ((LocationAddressDetailBean) obj).detail;
+//		}
 		GolukApplication.getInstance().mCurAddr = address;
 		// 更新行车记录仪地址
 		EventBus.getDefault().post(new EventUpdateAddr(EventConfig.CAR_RECORDER_UPDATE_ADDR, address));
