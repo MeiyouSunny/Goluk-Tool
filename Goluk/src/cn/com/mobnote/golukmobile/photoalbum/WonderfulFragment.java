@@ -433,13 +433,6 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 		}
 	}
 	
-	@Override
-	public void setUserVisibleHint(boolean isVisibleToUser) {
-		super.setUserVisibleHint(isVisibleToUser);
-		if(getFragmentAlbum() != null && getFragmentAlbum().mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND && isVisibleToUser == false){
-			this.removeFooterView();
-		}
-	}
 
 
 	/**
@@ -621,9 +614,10 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	 * 
 	 * @author jyf
 	 */
-	private void removeFooterView() {
+	public void removeFooterView() {
 		if (addFooter) {
 			addFooter = false;
+			isGetFileListDataing = false;
 			mStickyListHeadersListView.removeFooterView(mBottomLoadingView);
 		}
 	}

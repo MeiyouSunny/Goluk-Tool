@@ -127,6 +127,13 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 				@Override
 				public void onPageSelected(int position) {
 					GolukDebugUtils.e("", "crash zh start App ------ FragmentAlbum-----onPageSelected------------:");
+					if(mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND){
+						mWonderfulFragment.removeFooterView();
+					}else if(mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG){
+						mUrgentFragment.removeFooterView();
+					}else if(mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP){
+						mLoopFragment.removeFooterView();
+					}
 					mCurrentType = position;
 					setItemLineState(position);
 				}
