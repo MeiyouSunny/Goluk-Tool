@@ -26,6 +26,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -369,40 +370,46 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			mDetailDialog = new DetailDialog(this, mVideoJson, testUser());
 			mDetailDialog.show();
 		} else if (id == R.id.comment_send) {
-			showSoft();
-			// if (!UserUtils.isNetDeviceAvailable(this)) {
-			// GolukUtils.showToast(this,
-			// this.getResources().getString(R.string.user_net_unavailable));
-			// return;
-			// }
-			// if (!isClick) {
-			// return;
-			// }
-			// UserUtils.hideSoftMethod(this);
-			// click_send();
+			if (!UserUtils.isNetDeviceAvailable(this)) {
+				GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
+				return;
+			}
+			if (!isClick) {
+				return;
+			}
+			UserUtils.hideSoftMethod(this);
+			click_send();
 		} else if (id == R.id.video_detail_click_refresh) {
 			clickRefresh = true;
 			getDetailData();
 		} else if (id == R.id.emojicon) {
-			// showEmojocon(false);
-			hideSoft(mEditInput);
-			mHandler.sendEmptyMessageDelayed(100, 80);
+			click_Emojocon();
 		}
 	}
 
-	Handler mHandler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			if (100 == msg.what) {
-				showEmojocon(false);
-			}
-			super.handleMessage(msg);
+	@Override
+	protected void hMessage(Message msg) {
+		if (100 == msg.what) {
+			showEmojocon(false);
 		}
+	}
 
-	};
+	// 点击“显示 表情”
+	private void click_Emojocon() {
+		GolukUtils.hideSoft(this, mEditInput);
+		mBaseHandler.sendEmptyMessageDelayed(100, 80);
+	}
 
+	/** 表情布局 */
 	private FrameLayout emoLayout = null;
+
+	private void setInputAdJust() {
+		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+	}
+
+	private void setResize() {
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+	}
 
 	private void showEmojocon(boolean useSystemDefault) {
 		emoLayout.setVisibility(View.VISIBLE);
@@ -410,13 +417,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 	private void hideEmojocon() {
 		emoLayout.setVisibility(View.GONE);
-	}
-
-	// 强制隐藏键盘
-	@SuppressLint("NewApi")
-	private void hideSoft(View view) {
-		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 
 	private void init() {
@@ -829,17 +829,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	public void showSoft() {
 		if ((mVideoJson.data.avideo.video != null) && (mVideoJson.data.avideo.video.comment != null)
 				&& "1".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
-
-			GolukDebugUtils.e("", "mojiconEdiText-------------------------------------showSoft");
-			// hideEmojocon();
-
-			// mEditInput.requestFocus();
-			// InputMethodManager inputManager = (InputMethodManager)
-			// getSystemService(Context.INPUT_METHOD_SERVICE);
-			// inputManager.showSoftInput(mEditInput, 0);
-
+			// setResize();
 			hideEmojocon();
-
 		} else {
 			mEditInput.clearFocus();
 		}
@@ -1067,12 +1058,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 						removeFooterView();
 						getCommentList(OPERATOR_FIRST, "");
 					}
-					mEditInput.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View arg0) {
-							showSoft();
-						}
-					});
+					this.setOnTouchListener();
+
 				}
 				clickVideoNumber();
 			} else if (mVideoJson != null && !mVideoJson.success) {
@@ -1318,9 +1305,22 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		case IPageNotifyFn.PageType_VideoClick:
 			break;
 		default:
-			// Log.e("", "======onLoadComplete result==" + result.toString());
 			break;
 		}
+	}
+
+	private void setOnTouchListener() {
+		mEditInput.setOnTouchListener(new View.OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View arg0, MotionEvent arg1) {
+				if (MotionEvent.ACTION_DOWN == arg1.getAction()) {
+					GolukUtils.showSoftNotThread(mEditInput);
+					showSoft();
+				}
+				return false;
+			}
+		});
 	}
 
 	private void showDelDialog() {

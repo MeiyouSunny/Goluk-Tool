@@ -52,6 +52,7 @@ import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -59,10 +60,10 @@ import android.widget.Toast;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class GolukUtils {
-	
+
 	/** 1 表示国际版 ，0 表示国内版 （主要与服务器交互） */
 	public static final String GOLUK_APP_VERSION = "1";
-	
+
 	/** Goluk绑定连接出现问题URL */
 	public static final String URL_BIND_CONN_PROBLEM = "http://surl.goluk.cn/faq/link.html";
 
@@ -82,7 +83,7 @@ public class GolukUtils {
 
 		GolukDebugUtils.e("", " mobile info:" + mDensity);
 	}
-	
+
 	public static String getDefaultZone() {
 		String current = getLanguageAndCountry();
 		if (current.equals("zh_CN")) {
@@ -403,6 +404,19 @@ public class GolukUtils {
 				inputManager.showSoftInput(edit, 0);
 			}
 		}, 500);
+	}
+
+	public static final void showSoftNotThread(final View view) {
+		InputMethodManager inputManager = (InputMethodManager) view.getContext().getSystemService(
+				Context.INPUT_METHOD_SERVICE);
+		inputManager.showSoftInput(view, 0);
+	}
+
+	// 强制隐藏键盘
+	@SuppressLint("NewApi")
+	public static void hideSoft(Context context, View view) {
+		InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 
 	public static String getCurrentFormatTime(Context context) {
@@ -927,9 +941,8 @@ public class GolukUtils {
 	}
 
 	public static void startFanListActivity(Context context, String uId) {
-		if(!isNetworkConnected(context)){
-			Toast.makeText(context, context.getString(R.string.network_error), Toast.LENGTH_SHORT)
-			.show();
+		if (!isNetworkConnected(context)) {
+			Toast.makeText(context, context.getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 			return;
 		}
 
@@ -953,7 +966,7 @@ public class GolukUtils {
 	}
 
 	public static void changePraiseStatus(List<VideoSquareInfo> dataList, boolean status, String videoId) {
-		if(TextUtils.isEmpty(videoId) || null == dataList || dataList.size() == 0) {
+		if (TextUtils.isEmpty(videoId) || null == dataList || dataList.size() == 0) {
 			return;
 		}
 
@@ -969,7 +982,7 @@ public class GolukUtils {
 
 				vs.mVideoEntity.praisenumber = "" + number;
 				vs.mVideoEntity.ispraise = status ? "1" : "0";
-//				mNewestAdapter.notifyDataSetChanged();
+				// mNewestAdapter.notifyDataSetChanged();
 				break;
 			}
 		}
