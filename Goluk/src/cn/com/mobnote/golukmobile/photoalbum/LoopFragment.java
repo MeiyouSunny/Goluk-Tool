@@ -141,13 +141,6 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 		}
 	}
 	
-	@Override
-	public void setUserVisibleHint(boolean isVisibleToUser) {
-		super.setUserVisibleHint(isVisibleToUser);
-		if(mFragmentAlbum != null && mFragmentAlbum.mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP && isVisibleToUser == false){
-			this.removeFooterView();
-		}
-	}
 
 
 	@Override
@@ -570,9 +563,10 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 	 * 
 	 * @author jyf
 	 */
-	private void removeFooterView() {
+	public void removeFooterView() {
 		if (addFooter) {
 			addFooter = false;
+			isGetFileListDataing = false;
 			mStickyListHeadersListView.removeFooterView(mBottomLoadingView);
 		}
 	}
