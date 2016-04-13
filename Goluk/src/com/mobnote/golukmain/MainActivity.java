@@ -970,12 +970,13 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 			return;
 		}
 
+		String server = "0";
 		String address = "";
-//		if (this.getPackageName().equals("cn.com.mobnote.golukmobile")) {
-//			address = ((ReverseGeoCodeResult) obj).getAddress();
-//		} else {
-			address = ((LocationAddressDetailBean) obj).detail;
-//		}
+		if (server.equals("1")) {
+			address = ((ReverseGeoCodeResult) obj).getAddress();// 国内
+		} else {
+			address = ((LocationAddressDetailBean) obj).detail;// 国际
+		}
 		GolukApplication.getInstance().mCurAddr = address;
 		// 更新行车记录仪地址
 		EventBus.getDefault().post(new EventUpdateAddr(EventConfig.CAR_RECORDER_UPDATE_ADDR, address));

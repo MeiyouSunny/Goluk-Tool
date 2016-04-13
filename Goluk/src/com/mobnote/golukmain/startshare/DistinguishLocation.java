@@ -3,7 +3,6 @@ package com.mobnote.golukmain.startshare;
 import android.content.Context;
 import android.text.TextUtils;
 import cn.com.tiros.baidu.LocationAddressDetailBean;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult.AddressComponent;
@@ -16,6 +15,8 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult.AddressComponent;
  */
 public class DistinguishLocation {
 
+	private String mServer = "0";
+	
 	private Context mContext = null;
 	private Object mObject = null;
 	private String mCity = "";
@@ -28,16 +29,16 @@ public class DistinguishLocation {
 	public DistinguishLocation(Context context, Object obj) {
 		this.mContext = context;
 		this.mObject = obj;
-//		if (getPackageName().equals("cn.com.mobnote.golukmobile")) {
-//			mLocal = new LocalAddress(mObject);
-//			mCity = mLocal.getCity();
-//			mDistrict = mLocal.getDistrict();
-//		} else {
+		if (mServer.equals("1")) {
+			mLocal = new LocalAddress(mObject);
+			mCity = mLocal.getCity();
+			mDistrict = mLocal.getDistrict();
+		} else {
 			mInternational = new InternationalAddress(mObject);
 			mCity = mInternational.getCity();
 			mDistrict = mInternational.getDistrict();
 			mAdminArea = mInternational.getAdminArea();
-//		}
+		}
 	}
 
 	public String setAllAddress() {
@@ -64,16 +65,6 @@ public class DistinguishLocation {
 		return currentAddress;
 	}
 	
-	private String getPackageName() {
-		String name = "";
-		if (mContext.getPackageName().equals("cn.com.mobnote.golukmobile")) {
-			name = "1";// 国内
-		} else {
-			name = "0";// 国际
-		}
-		return name;
-	}
-
 }
 
 class LocalAddress {
