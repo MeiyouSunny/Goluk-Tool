@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +14,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -29,8 +32,10 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.logic.GolukModule;
@@ -81,6 +86,9 @@ import com.mobnote.golukmain.videosuqare.VideoSquareManager;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
+import com.rockerhieu.emojicon.EmojiconGridFragment;
+import com.rockerhieu.emojicon.EmojiconsFragment;
+import com.rockerhieu.emojicon.emoji.Emojicon;
 
 import de.greenrobot.event.EventBus;
 
@@ -92,7 +100,8 @@ import de.greenrobot.event.EventBus;
  */
 public class VideoDetailActivity extends BaseActivity implements OnClickListener, OnRefreshListener,
 		OnRTScrollListener, ICommentFn, TextWatcher, ILiveDialogManagerFn, OnItemClickListener, IRequestResultListener,
-		VideoSuqareManagerFn {
+		VideoSuqareManagerFn, EmojiconGridFragment.OnEmojiconClickedListener,
+		EmojiconsFragment.OnEmojiconBackspaceClickedListener {
 
 	private static final String TAG = "VideoDetailActivity";
 	private final static int DIALOG_TYPE_VIDEO_DELETED = 24;
@@ -111,7 +120,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private EditText mEditInput = null;
 	private RTPullListView mRTPullListView = null;
 	private RelativeLayout mImageRefresh = null;
-	public RelativeLayout mCommentLayout = null;
+	public LinearLayout mCommentLayout = null;
+	private ImageView mEmojiImg = null;
 	private boolean isCanInput = true;
 	/** 评论 **/
 	private ArrayList<CommentBean> commentDataList = null;
@@ -198,6 +208,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		initListener();
 		addCallBackListener();
 		getDetailData();
+		init();
 	}
 
 	private void addCallBackListener() {
@@ -254,7 +265,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		mEditInput = (EditText) findViewById(R.id.comment_input);
 		mRTPullListView = (RTPullListView) findViewById(R.id.commentRTPullListView);
 		mImageRefresh = (RelativeLayout) findViewById(R.id.video_detail_click_refresh);
-		mCommentLayout = (RelativeLayout) findViewById(R.id.comment_layout);
+		mCommentLayout = (LinearLayout) findViewById(R.id.comment_layout);
+		mEmojiImg = (ImageView) findViewById(R.id.emojicon);
+		emoLayout = (FrameLayout) findViewById(R.id.emojiconsLayout);
 
 		mImageRight.setImageResource(R.drawable.mine_icon_more);
 		mTextTitle.setText(mTitleStr);
@@ -272,6 +285,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		mTextSend.setOnClickListener(this);
 		mImageRight.setOnClickListener(this);
 		mEditInput.addTextChangedListener(this);
+		mEmojiImg.setOnClickListener(this);
 		mImageRefresh.setOnClickListener(this);
 
 		mRTPullListView.setonRefreshListener(this);
@@ -355,20 +369,59 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			mDetailDialog = new DetailDialog(this, mVideoJson, testUser());
 			mDetailDialog.show();
 		} else if (id == R.id.comment_send) {
-			if (!UserUtils.isNetDeviceAvailable(this)) {
-				GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
-				return;
-			}
-			if (!isClick) {
-				return;
-			}
-			UserUtils.hideSoftMethod(this);
-			click_send();
+			showSoft();
+			// if (!UserUtils.isNetDeviceAvailable(this)) {
+			// GolukUtils.showToast(this,
+			// this.getResources().getString(R.string.user_net_unavailable));
+			// return;
+			// }
+			// if (!isClick) {
+			// return;
+			// }
+			// UserUtils.hideSoftMethod(this);
+			// click_send();
 		} else if (id == R.id.video_detail_click_refresh) {
 			clickRefresh = true;
 			getDetailData();
-		} else {
+		} else if (id == R.id.emojicon) {
+			// showEmojocon(false);
+			hideSoft(mEditInput);
+			mHandler.sendEmptyMessageDelayed(100, 80);
 		}
+	}
+
+	Handler mHandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			if (100 == msg.what) {
+				showEmojocon(false);
+			}
+			super.handleMessage(msg);
+		}
+
+	};
+
+	private FrameLayout emoLayout = null;
+
+	private void showEmojocon(boolean useSystemDefault) {
+		emoLayout.setVisibility(View.VISIBLE);
+	}
+
+	private void hideEmojocon() {
+		emoLayout.setVisibility(View.GONE);
+	}
+
+	// 强制隐藏键盘
+	@SuppressLint("NewApi")
+	private void hideSoft(View view) {
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+	}
+
+	private void init() {
+		EmojiconsFragment fg = EmojiconsFragment.newInstance(false);
+		getSupportFragmentManager().beginTransaction().replace(R.id.emojiconsLayout, fg).commit();
 	}
 
 	@Override
@@ -776,9 +829,17 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	public void showSoft() {
 		if ((mVideoJson.data.avideo.video != null) && (mVideoJson.data.avideo.video.comment != null)
 				&& "1".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
-			mEditInput.requestFocus();
-			InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-			inputManager.showSoftInput(mEditInput, 0);
+
+			GolukDebugUtils.e("", "mojiconEdiText-------------------------------------showSoft");
+			// hideEmojocon();
+
+			// mEditInput.requestFocus();
+			// InputMethodManager inputManager = (InputMethodManager)
+			// getSystemService(Context.INPUT_METHOD_SERVICE);
+			// inputManager.showSoftInput(mEditInput, 0);
+
+			hideEmojocon();
+
 		} else {
 			mEditInput.clearFocus();
 		}
@@ -1006,10 +1067,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 						removeFooterView();
 						getCommentList(OPERATOR_FIRST, "");
 					}
-					mCommentLayout.setOnClickListener(new OnClickListener() {
+					mEditInput.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View arg0) {
-
 							showSoft();
 						}
 					});
@@ -1312,5 +1372,17 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		if (VSquare_Req_MainPage_DeleteVideo == event) {
 			callBack_DelVideo(msg, param1, param2);
 		}
+	}
+
+	@Override
+	public void onEmojiconBackspaceClicked(View v) {
+		EmojiconsFragment.backspace(mEditInput);
+
+	}
+
+	@Override
+	public void onEmojiconClicked(Emojicon emojicon) {
+		EmojiconsFragment.input(mEditInput, emojicon);
+
 	}
 }
