@@ -2,6 +2,7 @@ package com.mobnote.golukmain.videosuqare;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventDeleteVideo;
 import com.mobnote.eventbus.EventPraiseStatusChanged;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
@@ -159,7 +160,7 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 		}
 
 		GolukDebugUtils.e("", "jyf----VideoCategoryActivity------back ----3333");
-//		mSwitchLayout.removeAllViews();
+		// mSwitchLayout.removeAllViews();
 
 		GolukDebugUtils.e("", "jyf----VideoCategoryActivity------back ----4444");
 		this.finish();
@@ -182,11 +183,11 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 	}
 
 	public void onEventMainThread(EventPraiseStatusChanged event) {
-		if(null == event) {
+		if (null == event) {
 			return;
 		}
 
-		switch(event.getOpCode()) {
+		switch (event.getOpCode()) {
 		case EventConfig.PRAISE_STATUS_CHANGE:
 			mCategoryLayout.changePraiseStatus(event.isStatus(), event.getVideoId());
 			break;
@@ -216,6 +217,14 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 			return;
 		}
 		GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, shareVideoId);
+	}
+
+	// 删除视频
+	public void onEventMainThread(EventDeleteVideo event) {
+		if (EventConfig.VIDEO_DELETE == event.getOpCode()) {
+			final String delVid = event.getVid(); // 已经删除的id
+			mCategoryLayout.deleteVideo(delVid);
+		}
 	}
 
 	@Override

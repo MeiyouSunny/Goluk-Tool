@@ -82,6 +82,15 @@ public class GolukUtils {
 
 		GolukDebugUtils.e("", " mobile info:" + mDensity);
 	}
+	
+	public static String getDefaultZone() {
+		String current = getLanguageAndCountry();
+		if (current.equals("zh_CN")) {
+			return "CN +86";
+		} else {
+			return "US +1";
+		}
+	}
 
 	/**
 	 * 秒转换为 时：分：秒
@@ -580,15 +589,15 @@ public class GolukUtils {
 			long diff = Math.abs(historytime - curTime);// 时间差
 			if (curYear == history) {
 				if (diff <= WEEK && diff > DAY) {
-					return time = diff / DAY + context.getString(R.string.str_day_refresh);// 天前更新
+					return time = context.getString(R.string.str_day_refresh, (diff / DAY));// 天前更新
 				} else if (diff <= DAY && diff > HOUR) {
-					return time = diff / HOUR + context.getString(R.string.str_hours_refresh);// 小时前更新
+					return time = context.getString(R.string.str_hours_refresh, (diff / HOUR));// 小时前更新
 				} else if (diff <= HOUR) {
 					int min = (int) (diff / MINTUE);
 					if (min < 1) {
 						min = 1;
 					}
-					return time = min + context.getString(R.string.str_minute_refresh);// 分钟前更新
+					return time = context.getString(R.string.str_minute_refresh, min);// 分钟前更新
 				} else {
 					SimpleDateFormat jn = new SimpleDateFormat(context.getString(R.string.str_month_day_refresh));
 					return jn.format(strtodate);// 今年内：月日更新

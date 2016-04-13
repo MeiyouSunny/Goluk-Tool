@@ -26,6 +26,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshHeaderGridView;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventDeleteVideo;
 import com.mobnote.eventbus.EventRefreshUserInfo;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
@@ -176,6 +177,13 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			break;
 		default:
 			break;
+		}
+	}
+
+	public void onEventMainThread(EventDeleteVideo event) {
+		if (EventConfig.VIDEO_DELETE == event.getOpCode()) {
+			final String delVid = event.getVid(); // 已经删除的id
+			this.mAdapter.deleteVideo(delVid);
 		}
 	}
 

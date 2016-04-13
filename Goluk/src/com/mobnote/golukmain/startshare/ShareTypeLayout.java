@@ -5,14 +5,12 @@ import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Queue;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.text.Html;
 import android.text.TextUtils;
 import android.util.SparseIntArray;
 import android.view.Gravity;
@@ -28,9 +26,8 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.com.tiros.debug.GolukDebugUtils;
 
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult.AddressComponent;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.live.GetBaiduAddress.IBaiduGeoCoderFn;
@@ -416,39 +413,15 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			return;
 		}
 		if (function == GetBaiduAddress.FUN_GET_ADDRESS && obj != null) {
-			ReverseGeoCodeResult result = (ReverseGeoCodeResult) obj;
-			AddressComponent addressDetail = result.getAddressDetail();
-			if (null == addressDetail) {
-				return;
-			}
-			// 当前城市
-			final String city = addressDetail.city;
-			// 区，县
-			final String district = addressDetail.district;
-			// 设置最终使用的地址
-			setAllAddress(city, district);
+			DistinguishLocation location = new DistinguishLocation(mContext, obj);
+			mCurrentAddress = location.setAllAddress();
+			GolukDebugUtils.e("", "-----------searchLocation-------mCurrentAddress: "+mCurrentAddress);
 			mLocationState = LOCATION_STATE_SUCCESS;
 			refreshLocationUI();
 		} else {
 			mLocationState = LOCATION_STATE_FAILED;
 			refreshLocationUI();
 		}
-	}
-
-	private void setAllAddress(String city, String district) {
-		boolean isValidCity = false;
-		StringBuffer sb = new StringBuffer();
-		if (!TextUtils.isEmpty(city)) {
-			sb.append(city);
-			isValidCity = true;
-		}
-		if (!TextUtils.isEmpty(district)) {
-			if (isValidCity) {
-				sb.append(".");
-			}
-			sb.append(district);
-		}
-		mCurrentAddress = sb.toString();
 	}
 
 	@Override

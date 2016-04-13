@@ -2,6 +2,7 @@ package com.mobnote.golukmain;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventDeleteVideo;
 import com.mobnote.eventbus.EventPraiseStatusChanged;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
@@ -25,6 +26,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TabWidget;
 import android.widget.TextView;
 
 public class FragmentDiscover extends Fragment implements OnClickListener {
@@ -54,15 +56,12 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 		EventBus.getDefault().register(this);
 	}
 
-
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreateView(inflater, container, savedInstanceState);
 		GolukDebugUtils.d(TAG, "onCreateView");
-		View rootView = inflater.inflate(R.layout.video_square_main,
-				null);
+		View rootView = inflater.inflate(R.layout.video_square_main, null);
 		mSquareRootView = rootView;
 		density = SoundUtils.getInstance().getDisplayMetrics().density;
 		lineParams = new RelativeLayout.LayoutParams((int) (50 * density), (int) (2 * density));
@@ -123,8 +122,9 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 			// arg0 :当前页面，及你点击滑动的页面
 			// arg1:当前页面偏移的百分比
 			// arg2:当前页面偏移的像素位置
-//			GolukDebugUtils.e(TAG, "onPageScrolled: arg0: " + arg0 + "   arg1:"
-//					+ arg1 + "  arg2:" + arg2);
+			// GolukDebugUtils.e(TAG, "onPageScrolled: arg0: " + arg0 +
+			// "   arg1:"
+			// + arg1 + "  arg2:" + arg2);
 			if (0 == arg2) {
 				return;
 			}
@@ -185,12 +185,21 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 		}
 	}
 
+	// 删除视频
+	public void onEventMainThread(EventDeleteVideo event) {
+		if (EventConfig.VIDEO_DELETE == event.getOpCode()) {
+			final String delVid = event.getVid(); // 已经删除的id
+			NewestListView listView = getVideoSquareAdapter().getNewestListView();
+			listView.deleteVideo(delVid);
+		}
+	}
+
 	public void onEventMainThread(EventPraiseStatusChanged event) {
-		if(null == event) {
+		if (null == event) {
 			return;
 		}
 
-		switch(event.getOpCode()) {
+		switch (event.getOpCode()) {
 		case EventConfig.PRAISE_STATUS_CHANGE:
 			VideoSquareAdapter videoSquareAdapter = getVideoSquareAdapter();
 			if (null == videoSquareAdapter) {
