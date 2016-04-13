@@ -313,9 +313,9 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		} else if (mCurrentOperator == OPERATOR_UP) {
 			// 上拉刷新
 			removeFoot();
-			GolukUtils.showToast(this, this.getString(R.string.str_network_unavailable));
 		}
 
+		GolukUtils.showToast(this, this.getString(R.string.str_network_unavailable));
 		noData(mAdapter.getCount() <= 0);
 	}
 
