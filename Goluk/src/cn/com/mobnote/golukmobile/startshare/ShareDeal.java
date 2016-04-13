@@ -31,7 +31,7 @@ public class ShareDeal implements OnClickListener {
 		mActivity = activity;
 		mYouMengRootLayout = rootLayout;
 		mSharePlatform = new SharePlatformUtil(mActivity);
-//		mSharePlatform.configPlatforms();// 设置分享平台的参数
+		// mSharePlatform.configPlatforms();// 设置分享平台的参数
 
 		txtColor = mActivity.getResources().getColor(R.color.youmeng_share_txt_color);
 
@@ -209,8 +209,12 @@ public class ShareDeal implements OnClickListener {
 		if (!isValid()) {
 			return;
 		}
-		mCurrentShareType = CustomShareBoard.TYPE_QQ_ZONE;
-		click_deal(mCurrentShareType);
+		if (mSharePlatform.isInstallQQ()) {
+			mCurrentShareType = CustomShareBoard.TYPE_QQ_ZONE;
+			click_deal(mCurrentShareType);
+		} else {
+			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_qq_low_version));
+		}
 	}
 
 	/**
