@@ -52,7 +52,7 @@ import com.mobnote.util.JsonUtil;
  * @author 陈宣宇
  * 
  */
-public class BaiduMapManage {
+public class BaiduMapManage implements IMapTools{
 
 	private Context mContext = null;
 	private LayoutInflater mLayoutInflater = null;
@@ -179,7 +179,7 @@ public class BaiduMapManage {
 		GolukDebugUtils.e("", "jyf------AddMapPoint----array : 333333");
 	}
 
-	// 添加单个点,不清除数据
+	@Override
 	public void addSinglePoint(String userinfo) {
 		try {
 			JSONObject data = new JSONObject(userinfo);
@@ -212,7 +212,7 @@ public class BaiduMapManage {
 
 	}
 
-	// 更新点的位置
+	@Override
 	public void updatePosition(String aid, double lon, double lat) {
 		if (null == mMarkerData) {
 			return;

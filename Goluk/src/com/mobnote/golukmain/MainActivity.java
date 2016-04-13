@@ -40,6 +40,7 @@ import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.module.talk.TalkNotifyAdapter;
 import cn.com.mobnote.module.videosquare.VideoSquareManagerAdapter;
 import cn.com.tiros.api.Tapi;
+import cn.com.tiros.baidu.LocationAddressDetailBean;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
@@ -75,6 +76,9 @@ import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
+import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
+import com.mobnote.golukmain.livevideo.BaidumapLiveActivity;
+import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
 import com.mobnote.golukmain.msg.MessageBadger;
 import com.mobnote.golukmain.msg.MsgCenterCounterRequest;
 import com.mobnote.golukmain.msg.bean.MessageCounterBean;
@@ -952,12 +956,18 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 		} else if (LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE == dialogType) {
 			if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
 				// 继续直播
-				Intent intent = new Intent(this, LiveActivity.class);
-				intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
-				intent.putExtra(LiveActivity.KEY_LIVE_CONTINUE, true);
-				intent.putExtra(LiveActivity.KEY_GROUPID, "");
-				intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
-				intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+				Intent intent;
+				if(GolukApplication.getInstance().isInteral()){
+					intent = new Intent(this, BaidumapLiveActivity.class);
+				}else{
+					intent = new Intent(this, GooglemapLiveActivity.class);
+				}
+				
+				intent.putExtra(AbstractLiveActivity.KEY_IS_LIVE, true);
+				intent.putExtra(AbstractLiveActivity.KEY_LIVE_CONTINUE, true);
+				intent.putExtra(AbstractLiveActivity.KEY_GROUPID, "");
+				intent.putExtra(AbstractLiveActivity.KEY_PLAY_URL, "");
+				intent.putExtra(AbstractLiveActivity.KEY_JOIN_GROUP, "");
 				startActivity(intent);
 			}
 		} else if (LiveDialogManager.DIALOG_TYPE_APP_EXIT == dialogType) {
@@ -976,7 +986,13 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 			return;
 		}
 
-		final String address = ((ReverseGeoCodeResult) obj).getAddress();
+		String server = "0";
+		String address = "";
+		if (server.equals("1")) {
+			address = ((ReverseGeoCodeResult) obj).getAddress();// 国内
+		} else {
+			address = ((LocationAddressDetailBean) obj).detail;// 国际
+		}
 		GolukApplication.getInstance().mCurAddr = address;
 		// 更新行车记录仪地址
 		EventBus.getDefault().post(new EventUpdateAddr(EventConfig.CAR_RECORDER_UPDATE_ADDR, address));

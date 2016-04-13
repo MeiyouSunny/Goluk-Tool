@@ -74,6 +74,9 @@ import com.mobnote.golukmain.live.LiveActivity;
 import com.mobnote.golukmain.live.LiveSettingBean;
 import com.mobnote.golukmain.live.LiveSettingPopWindow;
 import com.mobnote.golukmain.live.LiveSettingPopWindow.IPopwindowFn;
+import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
+import com.mobnote.golukmain.livevideo.BaidumapLiveActivity;
+import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
 import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
 import com.mobnote.golukmain.photoalbum.FragmentAlbum;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
@@ -1095,17 +1098,24 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * @author jyf
 	 */
 	private void toLive() {
-		Intent intent = new Intent(this, LiveActivity.class);
+		
+		Intent intent;
+		if(GolukApplication.getInstance().isInteral()){
+			intent = new Intent(this, BaidumapLiveActivity.class);
+		}else{
+			intent = new Intent(this, GooglemapLiveActivity.class);
+		}
+		
 		String desc = et.getText().toString();
 		if (null == desc || "".equals(desc)) {
 			desc = this.getResources().getString(R.string.str_wonderful_live);
 		}
 		mSettingData.desc = desc;
-		intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
-		intent.putExtra(LiveActivity.KEY_GROUPID, "");
-		intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
-		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
-		intent.putExtra(LiveActivity.KEY_LIVE_SETTING_DATA, mSettingData);
+		intent.putExtra(AbstractLiveActivity.KEY_IS_LIVE, true);
+		intent.putExtra(AbstractLiveActivity.KEY_GROUPID, "");
+		intent.putExtra(AbstractLiveActivity.KEY_PLAY_URL, "");
+		intent.putExtra(AbstractLiveActivity.KEY_JOIN_GROUP, "");
+		intent.putExtra(AbstractLiveActivity.KEY_LIVE_SETTING_DATA, mSettingData);
 		startActivity(intent);
 	}
 
