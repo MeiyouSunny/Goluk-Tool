@@ -4,10 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
@@ -31,7 +29,6 @@ import com.mobnote.golukmain.videosuqare.VideoSquareManager;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
 import com.mobnote.util.GolukUtils;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -42,7 +39,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -75,7 +71,8 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 	private int curpageCount = 0;
 	private SharePlatformUtil sharePlatform;
 	private RelativeLayout shareBg = null;
-	private static final String TAG = "NewestListView";
+	private long zXRequestId = 0;
+	private long typeVideoRequestId = 0;
 
 	public NewestListView(Context context) {
 		mContext = context;
@@ -147,9 +144,6 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 		}
 
 	}
-
-	private long zXRequestId = 0;
-	private long typeVideoRequestId = 0;
 
 	private void httpPost(boolean flag, String operation, String timestamp) {
 		curOperation = operation;
@@ -498,6 +492,11 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 		}
 
 		mNewestAdapter.updateClickPraiseNumber(info);
+	}
+
+	// 删除视频
+	public void deleteVideo(String vid) {
+		mNewestAdapter.deleteVideo(vid);
 	}
 
 	public void changePraiseStatus(boolean status, String videoId) {

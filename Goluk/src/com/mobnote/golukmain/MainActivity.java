@@ -50,6 +50,7 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventBindFinish;
 import com.mobnote.eventbus.EventBindResult;
 import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventDeleteVideo;
 import com.mobnote.eventbus.EventFollowPush;
 import com.mobnote.eventbus.EventMapQuery;
 import com.mobnote.eventbus.EventMessageUpdate;
@@ -102,8 +103,8 @@ import com.umeng.analytics.MobclickAgent;
 import de.greenrobot.event.EventBus;
 
 @SuppressLint({ "HandlerLeak", "NewApi" })
-public class MainActivity extends BaseActivity implements WifiConnCallBack,
-		ILiveDialogManagerFn, IBaiduGeoCoderFn, IRequestResultListener {
+public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiveDialogManagerFn, IBaiduGeoCoderFn,
+		IRequestResultListener {
 
 	/** 程序启动需要20秒的时间用来等待IPC连接 */
 	private final int MSG_H_WIFICONN_TIME = 100;
@@ -142,7 +143,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 	/** 把当前连接的设备保存起来，主要是为了兼容以前的连接状态 */
 	private WifiRsBean mCurrentConnBean = null;
 	private FragmentTabHost mTabHost;
-	
+
 	private ImageView mCarrecorderIv;
 	private ViewStub mGuideMainViewStub;
 	private SharePlatformUtil mSharePlatform = null;
@@ -159,11 +160,11 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 			});
 		}
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		// TODO Auto-generated method stub
-		//super.onSaveInstanceState(outState);
+		// super.onSaveInstanceState(outState);
 	}
 
 	@Override
@@ -272,7 +273,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 	}
 
 	private void initView() {
-		mGuideMainViewStub = (ViewStub)findViewById(R.id.viewstub_guide_main);
+		mGuideMainViewStub = (ViewStub) findViewById(R.id.viewstub_guide_main);
 		mGuideMainViewStub.setOnInflateListener(new OnInflateListener() {
 
 			@Override
@@ -288,42 +289,37 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 		});
 
 		LayoutInflater inflater = LayoutInflater.from(this);
-		mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
+		mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
 		mTabHost.setup(this, getSupportFragmentManager(), R.id.fl_main_tab_content);
 
 		Bundle b = new Bundle();
 		b.putString("key", "Discover");
 		LinearLayout discover = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_discover, null);
-		mTabHost.addTab(mTabHost.newTabSpec("Discover").setIndicator(discover),
-				FragmentDiscover.class, b);
+		mTabHost.addTab(mTabHost.newTabSpec("Discover").setIndicator(discover), FragmentDiscover.class, b);
 
 		b = new Bundle();
 		b.putString("key", "Follow");
 		RelativeLayout follow = (RelativeLayout) inflater.inflate(R.layout.main_tab_indicator_follow, null);
-		mTabHost.addTab(mTabHost.newTabSpec("Follow")
-				.setIndicator(follow), FragmentFollowed.class, b);
-		mFollowedVideoTipIV = (ImageView)follow.findViewById(R.id.iv_new_followed_video_tips);
+		mTabHost.addTab(mTabHost.newTabSpec("Follow").setIndicator(follow), FragmentFollowed.class, b);
+		mFollowedVideoTipIV = (ImageView) follow.findViewById(R.id.iv_new_followed_video_tips);
 
 		b = new Bundle();
 		b.putString("key", "CarRecorder");
 		LinearLayout carRecorder = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_carrecorder, null);
-		mCarrecorderIv = (ImageView)carRecorder.findViewById(R.id.tab_host_carrecorder_iv);
-		mTabHost.addTab(mTabHost.newTabSpec("CarRecorder").setIndicator(carRecorder),
-				null, b);
+		mCarrecorderIv = (ImageView) carRecorder.findViewById(R.id.tab_host_carrecorder_iv);
+		mTabHost.addTab(mTabHost.newTabSpec("CarRecorder").setIndicator(carRecorder), null, b);
 
 		b = new Bundle();
 		b.putString("key", "Album");
 		b.putString("platform", "0");
 		LinearLayout album = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_album, null);
-		mTabHost.addTab(mTabHost.newTabSpec("Album").setIndicator(album),
-				FragmentAlbum.class, b);
+		mTabHost.addTab(mTabHost.newTabSpec("Album").setIndicator(album), FragmentAlbum.class, b);
 
 		b = new Bundle();
 		b.putString("key", "Mine");
 		RelativeLayout mine = (RelativeLayout) inflater.inflate(R.layout.main_tab_indicator_mine, null);
 		mUnreadTips = mine.findViewById(R.id.iv_unread_tips);
-		mTabHost.addTab(mTabHost.newTabSpec("Mine").setIndicator(mine),
-				FragmentMine.class, b);
+		mTabHost.addTab(mTabHost.newTabSpec("Mine").setIndicator(mine), FragmentMine.class, b);
 		TabWidget widget = mTabHost.getTabWidget();
 		widget.setDividerDrawable(null);
 		mTabHost.getTabWidget().setBackgroundResource(R.color.color_main_tab_bg);
@@ -334,23 +330,22 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 		mTabHost.addView(lineView);
 
 		for (int i = 0; i < mTabHost.getTabWidget().getTabCount(); i++) {
-			mTabHost.getTabWidget().getChildAt(i).getLayoutParams().height = (int) this.getResources().getDimension(R.dimen.mainactivity_bottom_height);
+			mTabHost.getTabWidget().getChildAt(i).getLayoutParams().height = (int) this.getResources().getDimension(
+					R.dimen.mainactivity_bottom_height);
 		}
 
-		mTabHost.getTabWidget().getChildTabViewAt(2)
-				.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(MainActivity.this,
-								CarRecorderActivity.class);
-						startActivity(intent);
-					}
-				});
+		mTabHost.getTabWidget().getChildTabViewAt(2).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MainActivity.this, CarRecorderActivity.class);
+				startActivity(intent);
+			}
+		});
 
 		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
 			@Override
 			public void onTabChanged(String tabId) {
-				if("Follow".equals(tabId)) {
+				if ("Follow".equals(tabId)) {
 					mFollowedVideoTipIV.setVisibility(View.GONE);
 				}
 			}
@@ -458,7 +453,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		// Sina or facebook sso callback
-		if(null != mSharePlatform) {
+		if (null != mSharePlatform) {
 			mSharePlatform.onActivityResult(requestCode, resultCode, data);
 		}
 	}
@@ -586,7 +581,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 	 * 更新行车记录仪按钮 1:连接中 2：已连接 0：未连接
 	 */
 	public void updateRecoderBtn(int state) {
-		
+
 		if (this.isFinishing() == false) {
 			AnimationDrawable ad = null;
 			if (state == WIFI_STATE_CONNING && mApp.isBindSucess()) {
@@ -597,7 +592,8 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 					ad.start();
 				}
 			} else if (state == WIFI_STATE_SUCCESS) {
-				Toast.makeText(MainActivity.this, getResources().getString(R.string.wifi_link_success_conn), Toast.LENGTH_LONG).show();
+				Toast.makeText(MainActivity.this, getResources().getString(R.string.wifi_link_success_conn),
+						Toast.LENGTH_LONG).show();
 				mCarrecorderIv.setImageResource(R.drawable.index_video_icon);
 			} else if (state == WIFI_STATE_FAILED) {
 				mCarrecorderIv.setImageResource(R.drawable.tb_notconnected);
@@ -641,7 +637,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 
 		switch (event.getOpCode()) {
 		case EventConfig.FOLLOW_PUSH:
-			if(mTabHost != null){
+			if (mTabHost != null) {
 				mTabHost.setCurrentTab(4);
 			}
 			break;
@@ -657,8 +653,8 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 
 		switch (event.getOpCode()) {
 		case EventConfig.USER_LOGIN_RET:
-			if(mFollowedVideoTipIV != null){
-				if(event.getFollowedVideoNum() > 0) {
+			if (mFollowedVideoTipIV != null) {
+				if (event.getFollowedVideoNum() > 0) {
 					mFollowedVideoTipIV.setVisibility(View.VISIBLE);
 				} else {
 					mFollowedVideoTipIV.setVisibility(View.GONE);
@@ -797,6 +793,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 		}
 	}
 
+	
 
 	@Override
 	protected void onDestroy() {
@@ -818,12 +815,12 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 		}
 		// Unregister EventBus
 		EventBus.getDefault().unregister(this);
-//		mBannerLoaded = false;
+		// mBannerLoaded = false;
 	}
 
 	@Override
 	protected void onResume() {
-//		GolukApplication.getInstance().queryNewFileList();
+		// GolukApplication.getInstance().queryNewFileList();
 		GolukDebugUtils.e("", "crash zh start App ------ MainActivity-----onResume------------:");
 		mApp.setContext(this, "Main");
 		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
@@ -842,7 +839,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("isIPCMatch");
 		}
 
-		if(!mApp.isIpcLoginSuccess){
+		if (!mApp.isIpcLoginSuccess) {
 			this.updateRecoderBtn(mApp.mWiFiStatus);
 		}
 
@@ -921,7 +918,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 		}
 		mWac.closeAp();
 	}
-
 
 	/**
 	 * 重置红点显示状态
@@ -1190,7 +1186,8 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack,
 					systemCount = bean.data.messagecount.system.total;
 				}
 
-				MessageManager.getMessageManager().setMessageEveryCount(praiseCount, commentCount,followCount, systemCount);
+				MessageManager.getMessageManager().setMessageEveryCount(praiseCount, commentCount, followCount,
+						systemCount);
 			}
 		}
 	}

@@ -1,19 +1,21 @@
 package com.mobnote.golukmain.videodetail;
 
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.MainActivity;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.newest.RecomVideoActivity;
-import com.mobnote.util.GolukUtils;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.MainActivity;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.newest.RecomVideoActivity;
+import com.mobnote.util.GolukUtils;
 
 public class DetailDialog extends Dialog implements android.view.View.OnClickListener {
 
@@ -26,14 +28,21 @@ public class DetailDialog extends Dialog implements android.view.View.OnClickLis
 	private VideoJson mVideoJson = null;
 	private AlertDialog ad;
 	private AlertDialog confirmation;
+	private boolean mIsMy = false;
 
-	public DetailDialog(Context context, VideoJson videoJson) {
+	public DetailDialog(Context context, VideoJson videoJson, boolean isMy) {
 		super(context, R.style.CustomDialog);
-		setContentView(R.layout.video_detail_dialog);
-		
+		mIsMy = isMy;
+		LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.video_detail_dialog,
+				null);
+		if (isMy) {
+			// 如果是自己发布的视频，则显示 “删除这个视频”
+			TextView tv = (TextView) linearLayout.findViewById(R.id.jubao);
+			tv.setText(context.getString(R.string.dialog_str_del));
+		}
+		setContentView(linearLayout);
 		Window window = this.getWindow();
 		window.setGravity(Gravity.BOTTOM);
-		
 		this.mVideoJson = videoJson;
 		mContext = context;
 		initLayout();
@@ -52,6 +61,15 @@ public class DetailDialog extends Dialog implements android.view.View.OnClickLis
 		back.setOnClickListener(this);
 	}
 
+	// 删除自己发布的视频
+	private void click_delVideo() {
+		if (null != mContext) {
+			if (mContext instanceof VideoDetailActivity) {
+				((VideoDetailActivity) mContext).delVideo();
+			}
+		}
+	}
+
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
@@ -62,17 +80,23 @@ public class DetailDialog extends Dialog implements android.view.View.OnClickLis
 			mContext.startActivity(intent);
 		} else if (id == R.id.jubao) {
 			dismiss();
-			showDialog();
+			if (this.mIsMy) {
+				// 删除这个视频
+				click_delVideo();
+			} else {
+				// 显示举报对话框
+				showDialog();
+			}
 		} else if (id == R.id.tv_dialog_item_share) {
 			dismiss();
-			if(null != mContext) {
-				if(mContext instanceof VideoDetailActivity) {
-					((VideoDetailActivity)mContext).getShare();
+			if (null != mContext) {
+				if (mContext instanceof VideoDetailActivity) {
+					((VideoDetailActivity) mContext).getShare();
 				}
 			}
 		} else if (id == R.id.back) {
 			dismiss();
-			Intent it = new Intent(mContext,MainActivity.class);
+			Intent it = new Intent(mContext, MainActivity.class);
 			mContext.startActivity(it);
 		} else if (id == R.id.cancle) {
 			dismiss();
@@ -131,7 +155,8 @@ public class DetailDialog extends Dialog implements android.view.View.OnClickLis
 		confirmation.getWindow().findViewById(R.id.sure).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				boolean flog = GolukApplication.getInstance().getVideoSquareManager().report("1", mVideoJson.data.avideo.video.videoid, reporttype);
+				boolean flog = GolukApplication.getInstance().getVideoSquareManager()
+						.report("1", mVideoJson.data.avideo.video.videoid, reporttype);
 				if (flog) {
 					GolukUtils.showToast(mContext, mContext.getString(R.string.str_report_success));
 				} else {

@@ -115,6 +115,12 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		firstRequest(false);
 	}
 
+	public void deleteVideo(String vid) {
+		if (null != mCategoryAdapter) {
+			mCategoryAdapter.deleteVideo(vid);
+		}
+	}
+
 	private void initYMShare() {
 		sharePlatform = new SharePlatformUtil(mContext);
 	}

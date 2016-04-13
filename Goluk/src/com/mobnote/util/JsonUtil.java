@@ -896,6 +896,22 @@ public class JsonUtil {
 		}
 		return null;
 	}
+	
+	public static String registAndRepwdJson(String phoneNumber, String password, String vCode,String zone) {
+		try {
+			// {PNumber：“13054875692”，Password：“xxx”，VCode：“1234”}
+			JSONObject obj = new JSONObject();
+			obj.put("PNumber", phoneNumber);
+			obj.put("Password", password);
+			obj.put("VCode", vCode);
+			obj.put("tag", "android");
+			obj.put("dialingcode", zone);
+			return obj.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	/**
 	 * 意见反馈请求服务器json串

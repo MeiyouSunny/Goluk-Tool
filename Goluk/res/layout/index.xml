@@ -2,28 +2,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
     <!-- 用户中心布局 -->
+
     <FrameLayout
         android:id="@+id/fl_main_tab_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="@dimen/mainactivity_bottom_height"/>
+        android:layout_marginBottom="@dimen/mainactivity_bottom_height" />
 
     <com.google.widget.FragmentTabHost
         android:id="@android:id/tabhost"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/mainactivity_bottom_height" >
+        android:layout_height="@dimen/mainactivity_bottom_height"
+        android:layout_alignParentBottom="true" >
     </com.google.widget.FragmentTabHost>
 
-    <ViewStub   
-    android:id="@+id/viewstub_guide_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout="@layout/app_guide_layout"/>
+    <ViewStub
+        android:id="@+id/viewstub_guide_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/app_guide_layout" />
 
 </RelativeLayout>
