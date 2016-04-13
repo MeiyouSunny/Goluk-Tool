@@ -16,6 +16,7 @@ import com.facebook.internal.CallbackManagerImpl;
 import com.mobnote.application.GlobalWindow;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.http.HttpManager;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.thirdshare.china.FacebookShareHelper;
 import com.umeng.analytics.MobclickAgent;
 
@@ -136,9 +137,14 @@ public class BaseActivity extends FragmentActivity {
 	 * @author jyf
 	 */
 	public void toLoginBack() {
-		Intent it = new Intent(this, UserLoginActivity.class);
-		it.putExtra("isInfo", "back");
-		startActivity(it);
+		Intent intent = null;
+		if(GolukApplication.getInstance().isInternation){
+			intent = new Intent(this, InternationUserLoginActivity.class);
+		}else{
+			intent = new Intent(this, UserLoginActivity.class);
+		}
+		intent.putExtra("isInfo", "back");
+		startActivity(intent);
 	}
 
 	/**

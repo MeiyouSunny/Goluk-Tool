@@ -68,6 +68,21 @@
         <activity
             android:name="com.mobnote.golukmain.UserIdentifyActivity"
             android:screenOrientation="portrait" />
+        
+        
+        <activity
+            android:name="com.mobnote.golukmain.internation.login.InternationUserLoginActivity"
+            android:screenOrientation="portrait" 
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name="com.mobnote.golukmain.internation.login.InternationUserRegistActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.mobnote.golukmain.internation.login.InternationUserRepwdActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.mobnote.golukmain.internation.login.InternationUserIdentifyActivity"
+            android:screenOrientation="portrait" />
         <!-- 顺序：我的主页、个人资料、编辑资料、编辑签名、编辑昵称 -->
         <activity
             android:name="com.mobnote.golukmain.UserPersonalInfoActivity"

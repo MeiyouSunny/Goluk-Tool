@@ -40,6 +40,7 @@ import com.mobnote.golukmain.followed.bean.FollowedRecomUserBean;
 import com.mobnote.golukmain.followed.bean.FollowedRetBean;
 import com.mobnote.golukmain.followed.bean.FollowedVideoObjectBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.praise.PraiseCancelRequest;
 import com.mobnote.golukmain.praise.PraiseRequest;
 import com.mobnote.golukmain.praise.bean.PraiseCancelResultBean;
@@ -102,7 +103,13 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 		mLoginButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(FragmentFollowed.this.getActivity(), UserLoginActivity.class);
+				Intent intent = null;
+				if(GolukApplication.getInstance().isInternation){
+					intent = new Intent(FragmentFollowed.this.getActivity(), InternationUserLoginActivity.class);
+				}else{
+					intent = new Intent(FragmentFollowed.this.getActivity(), UserLoginActivity.class);
+				}
+				
 				FragmentFollowed.this.getActivity().startActivity(intent);
 				return;
 			}

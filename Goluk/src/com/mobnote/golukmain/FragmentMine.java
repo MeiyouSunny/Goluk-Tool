@@ -7,6 +7,7 @@ import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.ILive;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.msg.MessageBadger;
@@ -403,7 +404,13 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 			if (!app.isUserLoginSucess) {
 				// GolukUtils.showToast(this,
 				// this.getResources().getString(R.string.str_please_login));
-				Intent loginIntent = new Intent(getActivity(), UserLoginActivity.class);
+				Intent loginIntent = null;
+				if(GolukApplication.getInstance().isInternation){
+					loginIntent = new Intent(getActivity(), InternationUserLoginActivity.class);
+				}else{
+					loginIntent = new Intent(getActivity(), UserLoginActivity.class);
+				}
+				
 				getActivity().startActivity(loginIntent);
 				return;
 			}
@@ -435,7 +442,13 @@ public class FragmentMine extends Fragment implements OnClickListener, UserInter
 	private void clickToLogin(int intentType) {
 		mPreferences = getActivity().getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
 		mEditor = mPreferences.edit();
-		Intent itNo = new Intent(getActivity(), UserLoginActivity.class);
+		Intent itNo = null;
+		if(GolukApplication.getInstance().isInternation){
+			itNo = new Intent(getActivity(), InternationUserLoginActivity.class);
+		}else{
+			 itNo = new Intent(getActivity(), UserLoginActivity.class);
+		}
+		
 		if (intentType == TYPE_USER) {
 			itNo.putExtra("isInfo", "indexmore");
 			mEditor.putString("toRepwd", "more");

@@ -67,6 +67,7 @@ import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
 import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.internation.login.CountryBean;
+import com.mobnote.golukmain.internation.login.GolukMobUtils;
 import com.mobnote.golukmain.live.LiveActivity;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
@@ -214,6 +215,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	
 	/** 当前的国家区号 **/
 	public CountryBean mLocationCityCode = null;
+	
+	public boolean isInternation = true;
 
 	private static final String SNAPSHOT_DIR = "fs1:/pic/";
 	static {
@@ -241,6 +244,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			WifiBindDataCenter.getInstance().setAdatper(new JsonWifiBindManager());
 			GolukVideoInfoDbManager.getInstance().initDb(this.getApplicationContext());
 			GolukUmConfig.UmInit();
+			
+			GolukMobUtils.initMob(this);
 		}
 		// TODO 此处不要做初始化相关的工作
 	}
