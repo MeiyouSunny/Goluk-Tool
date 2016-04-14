@@ -67,8 +67,12 @@ import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
 import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.internation.login.CountryBean;
+import com.mobnote.golukmain.internation.login.GolukMobUtils;
 import com.mobnote.golukmain.live.LiveActivity;
 import com.mobnote.golukmain.live.UserInfo;
+import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
+import com.mobnote.golukmain.livevideo.BaidumapLiveActivity;
+import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
 import com.mobnote.golukmain.thirdshare.GolukUmConfig;
 import com.mobnote.golukmain.videosuqare.VideoCategoryActivity;
 import com.mobnote.golukmain.videosuqare.VideoSquareManager;
@@ -211,6 +215,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	
 	/** 当前的国家区号 **/
 	public CountryBean mLocationCityCode = null;
+	
+	public boolean isInternation = true;
 
 	private static final String SNAPSHOT_DIR = "fs1:/pic/";
 	static {
@@ -238,6 +244,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			WifiBindDataCenter.getInstance().setAdatper(new JsonWifiBindManager());
 			GolukVideoInfoDbManager.getInstance().initDb(this.getApplicationContext());
 			GolukUmConfig.UmInit();
+			
+			GolukMobUtils.initMob(this);
 		}
 		// TODO 此处不要做初始化相关的工作
 	}
@@ -516,6 +524,17 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public static GolukApplication getInstance() {
 		return instance;
 	}
+	
+	/**
+	 * 是否是国内版
+	 */
+	public boolean isInteral(){
+		if(null != this.getPackageName() && "cn.com.mobnote.golukmobile".equals(this.getPackageName())){
+			return true;
+		}else {
+			return false;
+		}
+	}
 
 	/**
 	 * 获取IPC登录状态
@@ -720,8 +739,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 
 		try {
-			GolukDebugUtils.e("", "GolukApplication-----ipcVideoDownLoadCallback:  success:" + success + "  data:"
-					+ data);
+			GolukDebugUtils.e("", "GolukApplication-----ipcVideoDownLoadCallback:  success:" + success + "  data:" + data);
 			JSONObject jsonobj = new JSONObject(data);
 			String tag = jsonobj.optString("tag");
 			if (tag.equals("videodownload")) {
@@ -897,9 +915,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		case 7:
 			// 地图大头针数据
 			if (null != mContext) {
-				if (mContext instanceof LiveActivity) {
+				if (mContext instanceof AbstractLiveActivity) {
 					// 为了更新直播界面的别人的位置信息
-					((LiveActivity) mContext).pointDataCallback(success, param2);
+					((AbstractLiveActivity) mContext).pointDataCallback(success, param2);
 				} else if (mContext instanceof VideoCategoryActivity) {
 					((VideoCategoryActivity) mContext).pointDataCallback(success, param2);
 				}
@@ -915,8 +933,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			GolukDebugUtils.e(null, "jyf----20150406----application----999999999999---- : ");
 			if (mPageSource == "LiveVideo") {
 				GolukDebugUtils.e("", "pageNotifyCallBack---直播视频数据--" + String.valueOf(param2));
-				if (mContext instanceof LiveActivity) {
-					((LiveActivity) mContext).LiveVideoDataCallBack(success, param2);
+				if (mContext instanceof AbstractLiveActivity) {
+					((AbstractLiveActivity) mContext).LiveVideoDataCallBack(success, param2);
 				}
 			}
 			break;
@@ -975,8 +993,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			break;
 		case PageType_LiveStart:
 			// 获取直播信息成功
-			if (null != mContext && mContext instanceof LiveActivity) {
-				((LiveActivity) mContext).callBack_LiveLookStart(true, success, param1, param2);
+			if (null != mContext && mContext instanceof AbstractLiveActivity) {
+				((AbstractLiveActivity) mContext).callBack_LiveLookStart(true, success, param1, param2);
 			}
 
 			break;
@@ -1842,7 +1860,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			return;
 		}
 		// 跳转看他人界面
-		Intent intent = new Intent(mContext, LiveActivity.class);
+		
+		Intent intent;
+		if(isInteral()){
+			intent = new Intent(mContext, BaidumapLiveActivity.class);
+		}else{
+			intent = new Intent(mContext, GooglemapLiveActivity.class);
+		}
+
 		intent.putExtra(LiveActivity.KEY_IS_LIVE, false);
 		intent.putExtra(LiveActivity.KEY_GROUPID, "");
 		intent.putExtra(LiveActivity.KEY_PLAY_URL, "");

@@ -69,12 +69,16 @@ import com.mobnote.golukmain.comment.CommentTimerManager;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.golukmain.followed.FragmentFollowed;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.live.LiveActivity;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
+import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
+import com.mobnote.golukmain.livevideo.BaidumapLiveActivity;
+import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
 import com.mobnote.golukmain.msg.MessageBadger;
 import com.mobnote.golukmain.msg.MsgCenterCounterRequest;
 import com.mobnote.golukmain.msg.bean.MessageCounterBean;
@@ -241,9 +245,14 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 		if (null != itStart_have.getStringExtra("userstart")) {
 			String start_have = itStart_have.getStringExtra("userstart").toString();
 			if ("start_have".equals(start_have)) {
-				Intent it = new Intent(MainActivity.this, UserLoginActivity.class);
+				Intent intent =  null;
+				if(GolukApplication.getInstance().isInternation){
+					intent = new Intent(this, InternationUserLoginActivity.class);
+				}else{
+					intent = new Intent(this, UserLoginActivity.class);
+				}
 				// 登录页回调判断
-				it.putExtra("isInfo", "main");
+				intent.putExtra("isInfo", "main");
 				mPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
 				mEditor = mPreferences.edit();
 				mEditor.putString("toRepwd", "start");
@@ -253,10 +262,10 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 					// 获取注销成功后传来的信息
 					mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
 					String phone = mPreferences.getString("setupPhone", "");// 最后一个参数为默认值
-					it.putExtra("startActivity", phone);
-					startActivity(it);
+					intent.putExtra("startActivity", phone);
+					startActivity(intent);
 				} else {
-					startActivity(it);
+					startActivity(intent);
 				}
 			}
 		}
@@ -935,19 +944,30 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 	public void dialogManagerCallBack(int dialogType, int function, String data) {
 		if (dialogType == LiveDialogManager.DIALOG_TYPE_LOGIN) {
 			if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
-				Intent intent = new Intent(this, UserLoginActivity.class);
+				Intent intent =  null;
+				if(GolukApplication.getInstance().isInternation){
+					intent = new Intent(this, InternationUserLoginActivity.class);
+				}else{
+					intent = new Intent(this, UserLoginActivity.class);
+				}
 				intent.putExtra("isInfo", "back");
 				startActivity(intent);
 			}
 		} else if (LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE == dialogType) {
 			if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
 				// 继续直播
-				Intent intent = new Intent(this, LiveActivity.class);
-				intent.putExtra(LiveActivity.KEY_IS_LIVE, true);
-				intent.putExtra(LiveActivity.KEY_LIVE_CONTINUE, true);
-				intent.putExtra(LiveActivity.KEY_GROUPID, "");
-				intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
-				intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+				Intent intent;
+				if(GolukApplication.getInstance().isInteral()){
+					intent = new Intent(this, BaidumapLiveActivity.class);
+				}else{
+					intent = new Intent(this, GooglemapLiveActivity.class);
+				}
+				
+				intent.putExtra(AbstractLiveActivity.KEY_IS_LIVE, true);
+				intent.putExtra(AbstractLiveActivity.KEY_LIVE_CONTINUE, true);
+				intent.putExtra(AbstractLiveActivity.KEY_GROUPID, "");
+				intent.putExtra(AbstractLiveActivity.KEY_PLAY_URL, "");
+				intent.putExtra(AbstractLiveActivity.KEY_JOIN_GROUP, "");
 				startActivity(intent);
 			}
 		} else if (LiveDialogManager.DIALOG_TYPE_APP_EXIT == dialogType) {
