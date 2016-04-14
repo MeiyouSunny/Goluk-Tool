@@ -162,14 +162,39 @@
                 android:id="@+id/mConncetLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/video_no_link_pic" />
+                android:background="#15171A" >
+            
+                <TextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/video_no_link_pic"
+                    android:layout_centerInParent="true"
+                    android:gravity="center_horizontal"
+                    android:drawablePadding="-60dp"
+                    android:text="@string/str_carrecorder_connect_text"
+                    android:textSize="16sp"
+                    android:textColor="#047CF3"/>
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/mNotconnected"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/video_linking_pic"
-                android:visibility="gone" />
+                android:background="#15171A"
+                android:visibility="gone" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:drawablePadding="-60dp"
+                    android:drawableTop="@drawable/video_linking_pic"
+                    android:gravity="center_horizontal"
+                    android:text="@string/str_album_no_connect"
+                    android:textColor="#047CF3"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
         </RelativeLayout>
 
         <ImageButton
@@ -372,7 +397,7 @@
                     android:src="@drawable/video_new_icon"
                     android:visibility="gone" />
 
-                <cn.com.mobnote.golukmobile.videosuqare.RingView
+                <com.mobnote.golukmain.videosuqare.RingView
                     android:id="@+id/downloadSize"
                     android:layout_width="50dp"
                     android:layout_height="50dp"

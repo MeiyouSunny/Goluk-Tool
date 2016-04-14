@@ -96,21 +96,12 @@
 
     <!-- 友盟分享布局 -->
 
-    <include
-        android:id="@+id/shortshare_youmeng_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        layout="@layout/custom_board" />
-    <!--
     <RelativeLayout
         android:id="@+id/shortshare_youmeng_layout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:background="#FF0000" >
-    </RelativeLayout>
-    -->
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
     <!-- 中间的操作区域 -->
 
     <FrameLayout

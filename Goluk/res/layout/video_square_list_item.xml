@@ -34,7 +34,6 @@
                 android:ellipsize="end"
                 android:maxEms="10"
                 android:singleLine="true"
-                android:text="极路客"
                 android:textColor="#1163a2"
                 android:textSize="14sp" />
 
@@ -43,7 +42,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/username"
-                android:text="03-19  13:53"
                 android:textColor="#888888"
                 android:textSize="10sp" />
         </LinearLayout>
@@ -60,7 +58,6 @@
                 android:id="@+id/looknumber_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="100"
                 android:textColor="#999999"
                 android:textSize="14sp" />
 
@@ -69,7 +66,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/looknumber_text"
-                android:text="次围观"
                 android:textColor="#999999"
                 android:textSize="14sp" />
         </RelativeLayout>
@@ -96,7 +92,7 @@
             android:layout_marginRight="8dp"
             android:background="@drawable/live_icon"/>
 
-        <cn.com.mobnote.golukmobile.videosuqare.RingView
+        <com.mobnote.golukmain.videosuqare.RingView
             android:id="@+id/mRingView"
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -118,7 +114,6 @@
             android:layout_marginRight="26dp"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="该死的碰瓷党，还好我有goluk的三十六计三闾大夫框架思路的福建省来对付"
             android:textColor="#4c4c4c"
             android:textSize="14sp" />
 
@@ -161,7 +156,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="个赞"
                 android:textColor="#888888"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -187,7 +181,7 @@
                 android:paddingBottom="5dp"
                 android:paddingLeft="5dp"
                 android:paddingTop="5dp"
-                android:text="分享"
+                android:text="@string/share_text"
                 android:textColor="#888888"
                 android:textSize="12sp" />
         </LinearLayout>

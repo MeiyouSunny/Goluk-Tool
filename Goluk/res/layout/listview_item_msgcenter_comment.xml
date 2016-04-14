@@ -15,6 +15,7 @@
         android:contentDescription="@string/imgdes" />
 
     <!-- 加v -->
+
     <ImageView
         android:id="@+id/iv_listview_item_comment_head_authentication"
         android:layout_width="13dp"
@@ -30,8 +31,8 @@
         android:layout_width="92dp"
         android:layout_height="52dp"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="17dp"
         android:layout_marginRight="10dp"
+        android:layout_marginTop="17dp"
         android:contentDescription="@string/imgdes" />
 
     <!-- 昵称 -->
@@ -55,12 +56,12 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tv_listview_item_comment_name"
         android:layout_below="@id/tv_listview_item_comment_name"
-        android:layout_marginTop="6dp"
         android:layout_marginRight="6dp"
+        android:layout_marginTop="6dp"
         android:layout_toLeftOf="@id/iv_listview_item_comment_thumbnail"
-        android:textColor="@color/user_login_text"
         android:ellipsize="end"
-        android:maxLines="5" />
+        android:maxLines="5"
+        android:textColor="@color/user_login_text" />
 
     <!-- 评论时间 -->
 
@@ -70,8 +71,8 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/tv_listview_item_comment_name"
         android:layout_below="@id/tv_listview_item_comment_content"
-        android:layout_marginTop="7dp"
         android:layout_marginBottom="6dp"
+        android:layout_marginTop="7dp"
         android:layout_toLeftOf="@id/iv_listview_item_comment_thumbnail"
         android:ellipsize="end"
         android:maxLines="5"

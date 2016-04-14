@@ -156,13 +156,13 @@
         </LinearLayout>
     </RelativeLayout>
     
-     <cn.com.mobnote.golukmobile.photoalbum.CustomViewPager
+     <com.mobnote.golukmain.photoalbum.CustomViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/mEditLayout"
         android:layout_below="@+id/ll_tabs">
-    </cn.com.mobnote.golukmobile.photoalbum.CustomViewPager>
+    </com.mobnote.golukmain.photoalbum.CustomViewPager>
     
 
 </RelativeLayout>

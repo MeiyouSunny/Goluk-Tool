@@ -3,18 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <cn.com.mobnote.golukmobile.videosuqare.RTPullListView
+    <com.mobnote.golukmain.videosuqare.RTPullListView
         android:id="@+id/mRTPullListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ImageView
+    <RelativeLayout
         android:id="@+id/category_list_nodata"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/qitadifang"
-        android:contentDescription="@string/imgdes"
-        android:visibility="gone" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawableTop="@drawable/mine_qitadifang"
+            android:text="@string/msg_system_connect_error"
+            android:textColor="#bfbfbf"
+            android:textSize="16sp" />
+    </RelativeLayout>
 
 </RelativeLayout>

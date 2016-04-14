@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    	<cn.com.mobnote.golukmobile.carrecorder.view.CustomVideoView
+    	<com.mobnote.golukmain.carrecorder.view.CustomVideoView
     	    android:id="@+id/videoStart"
     	    android:layout_width="match_parent"
     	    android:layout_height="match_parent" />
@@ -16,27 +16,35 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/btn_close_image" />
 
-		<LinearLayout 
+		<LinearLayout
 		    android:id="@+id/user_start_click"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:orientation="vertical"
 		    android:layout_alignParentBottom="true"
 		    android:layout_centerHorizontal="true"
-		    android:layout_marginBottom="34dp">
-		    <ImageView 
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+		    android:layout_marginBottom="34dp"
+		    android:orientation="vertical" >
+
+		    <Button
 		        android:id="@+id/user_start_have"
-		        android:background="@drawable/have_goluk_btn"
-		        />
-		    <ImageView 
 		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_gravity="center_horizontal"
+		        android:layout_height="35dp"
+		        android:layout_gravity="center"
+		        android:background="@drawable/start_btn_border"
+		        android:text="@string/str_guide_have_goluk_text"
+		        android:textSize="12sp"
+		        android:textColor="#303030" />
+
+		    <Button
 		        android:id="@+id/user_start_look"
-		        android:background="@drawable/guide_look"
+		        android:layout_width="wrap_content"
+		        android:layout_height="35dp"
+		        android:layout_gravity="center"
 		        android:layout_marginTop="20dp"
-		        />
+		        android:text="@string/str_guide_look_text"
+		        android:textSize="12sp"
+		        android:textColor="#303030"
+		        android:background="@drawable/start_btn_border" />
 		</LinearLayout>
+
 </RelativeLayout>

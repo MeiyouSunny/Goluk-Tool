@@ -38,25 +38,33 @@
             android:textColor="#0080ff"
             android:textSize="16sp"
             android:background="#242629"
-            android:text="分享" />
+            android:text="@string/share_text" />
     </RelativeLayout>
 
-    <cn.com.mobnote.golukmobile.videosuqare.RTPullListView
+    <com.mobnote.golukmain.videosuqare.RTPullListView
         android:id="@+id/mRTPullListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/title_layout"
         android:listSelector="@android:color/transparent"
         android:divider="@null" >
-    </cn.com.mobnote.golukmobile.videosuqare.RTPullListView>
+    </com.mobnote.golukmain.videosuqare.RTPullListView>
 
-    <ImageView
+    <RelativeLayout
         android:id="@+id/square_type_default"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/qitadifang"
-        android:contentDescription="TODO"
-        android:visibility="gone" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title_layout"
+        android:visibility="gone" >
+
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/mine_qitadifang"
+            android:textColor="#bfbfbf"
+            android:textSize="16sp"
+            android:text="@string/msg_system_connect_error"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
 
 </RelativeLayout>

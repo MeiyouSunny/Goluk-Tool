@@ -10,6 +10,6 @@
        android:id="@+id/album_fragment_activity"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
-       android:name="cn.com.mobnote.golukmobile.photoalbum.FragmentAlbum"/> -->
+       android:name="com.mobnote.golukmain.photoalbum.FragmentAlbum"/> -->
     
 </RelativeLayout>

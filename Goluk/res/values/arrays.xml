@@ -17,8 +17,8 @@
         <item>2</item>
     </string-array>
     <string-array name="list_frame_key">
-        <item>24帧</item>
-        <item>18帧</item>
+        <item>@string/str_frame24</item>
+        <item>@string/str_frame18</item>
     </string-array>
 
     <integer-array name="list_frame_source_local">
@@ -57,8 +57,8 @@
         <item>1</item>
     </string-array>
     <string-array name="list_frame_live_key">
-        <item>24帧</item>
-        <item>15帧</item>
+        <item>@string/str_frame24</item>
+        <item>@string/str_frame15</item>
     </string-array>
 
     <integer-array name="list_frame_source_live">
@@ -102,8 +102,8 @@
         <item>1</item>
     </string-array>
     <string-array name="list_hw_live_key">
-        <item>不启用</item>
-        <item>启用</item>
+        <item>@string/str_no_enable</item>
+        <item>@string/str_enable</item>
     </string-array>
     <string-array name="list_maxsize_value_local">
         <item>0</item>
@@ -128,10 +128,10 @@
 
     <!-- 视频质量 -->
     <string-array name="list_quality_ui">
-        <item>1080P高质量</item>
-        <item>1080P中等质量</item>
-        <item>720P高质量</item>
-        <item>720P中等质量</item>
+        <item>@string/str_high1080</item>
+        <item>@string/str_middle1080</item>
+        <item>@string/str_high720</item>
+        <item>@string/str_middle720</item>
     </string-array>
     <string-array name="list_quality_list">
         <item>1080P</item>
@@ -139,9 +139,9 @@
         <item>480P</item>
     </string-array>
     <string-array name="list_photo_quality_ui">
-        <item>高质量</item>
-        <item>中质量</item>
-        <item>低质量</item>
+        <item>@string/str_quality_high</item>
+        <item>@string/str_quality_middle</item>
+        <item>@string/str_quality_low</item>
     </string-array>
     <string-array name="list_photo_quality_list">
         <item>90</item>
@@ -149,8 +149,8 @@
         <item>50</item>
     </string-array>
     <string-array name="kit_setting_ui">
-        <item>精彩视频+照片</item>
-        <item>精彩视频</item>
+        <item>@string/str_wonderfulvideo_and_photo</item>
+        <item>@string/str_wonderfulvideo</item>
     </string-array>
 
     <!-- G1分辨率 -->
@@ -169,7 +169,7 @@
     </string-array>
     <!-- T1分辨率 -->
     <string-array name="list_quality_resolution_t1">
-       	<item>1080P</item>
+        <item>1080P</item>
         <item>1080P</item>
         <item>720P</item>
         <item>720P</item>
@@ -206,9 +206,9 @@
     </string-array>
     
     <string-array name="list_tone_volume">
-        <item>高 ( 100% )</item>
-        <item>中 ( 75% )</item>
-        <item>低 ( 50% )</item>
+        <item>High ( 100% )</item>
+        <item>Middle ( 75% )</item>
+        <item>Low ( 50% )</item>
     </string-array>
     <string-array name="list_tone_volume_value">
         <item>100</item>
@@ -216,15 +216,15 @@
         <item>50</item>
     </string-array>
     <string-array name="list_shutdown_time">
-        <item>10秒</item>
-        <item>60秒</item>
+        <item>10 seconds</item>
+        <item>60 seconds</item>
     </string-array>
     
     <string-array name="list_language">
-        <item>中文</item>
-        <item>英文</item>
+        <item>Chinese</item>
+        <item>English</item>
     </string-array>
-    
+
     <!-- 适配的所有时区 -->
     <string-array name="zone_array">
         <item>zh_CN</item>

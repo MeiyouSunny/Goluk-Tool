@@ -27,7 +27,7 @@
             android:textSize="18sp" />
     </RelativeLayout>
 
-    <cn.com.mobnote.golukmobile.videosuqare.RTPullListView
+    <com.mobnote.golukmain.videosuqare.RTPullListView
         android:id="@+id/msg_system_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -35,7 +35,7 @@
         android:divider="@null"
         android:cacheColorHint="#00000000" 
         android:listSelector="@android:color/transparent" >
-    </cn.com.mobnote.golukmobile.videosuqare.RTPullListView>
+    </com.mobnote.golukmain.videosuqare.RTPullListView>
 
     <RelativeLayout
         android:id="@+id/empty"

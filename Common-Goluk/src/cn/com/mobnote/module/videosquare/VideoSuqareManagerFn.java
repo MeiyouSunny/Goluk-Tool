@@ -4,15 +4,6 @@ import cn.com.mobnote.logic.IGolukCommFn;
 
 public interface VideoSuqareManagerFn extends IGolukCommFn {
 	public static final int RESULE_SUCESS = 1;
-	/** 获取热门列表 */
-	public static final int SquareCmd_Req_HotList = 256;
-	/** 获取分享地址 */
-	public static final int SquareCmd_Req_GetShareUrl = 1537;
-
-	/** 获取本地广场视频列表缓存 */
-	public static final int SquareCmd_Get_SquareCache = 0;
-	/** 获取本地热门视频列表缓存 */
-	public static final int SquareCmd_Get_HotCache = 256;
 
 	/** 获取精选列表 */
 	public static final int VSquare_Req_List_HandPick = 0;
@@ -73,7 +64,7 @@ public interface VideoSuqareManagerFn extends IGolukCommFn {
 	public static final int VSquare_Req_List_Catlog_LocalCache = 256;
 	/** 获取视频列表本地缓存 */
 	public static final int VSquare_Req_List_Video_Catlog_LocalCache = 257;
-	/**获取用户信息**/
+	/** 获取用户信息 **/
 	public static final int VSquare_Req_MainPage_UserInfor = 1024;
 
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2);

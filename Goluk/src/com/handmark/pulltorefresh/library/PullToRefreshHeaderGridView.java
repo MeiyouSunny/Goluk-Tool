@@ -21,9 +21,9 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
 import android.view.View;
-import cn.com.mobnote.golukmobile.R;
 
 import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
+import com.mobnote.golukmain.R;
 
 public class PullToRefreshHeaderGridView extends PullToRefreshAdapterViewBase<GridViewWithHeaderAndFooter> {
 
