@@ -413,7 +413,7 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 			return;
 		}
 		if (function == GetBaiduAddress.FUN_GET_ADDRESS && obj != null) {
-			DistinguishLocation location = new DistinguishLocation(mContext, obj);
+			DistinguishLocation location = new DistinguishLocation(obj);
 			mCurrentAddress = location.setAllAddress();
 			GolukDebugUtils.e("", "-----------searchLocation-------mCurrentAddress: "+mCurrentAddress);
 			mLocationState = LOCATION_STATE_SUCCESS;

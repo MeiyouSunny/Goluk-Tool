@@ -2200,7 +2200,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			return;
 		}
 
-		if (event.getCityCode().equals("-1")) {// 定位失败
+		if (event.getCityCode().equals("-1")  && TextUtils.isEmpty(event.getAddress())) {// 定位失败
 			if (mLocationAddress.equals("")) {
 				mAddr.setText(this.getResources().getString(R.string.str_unknow_street));
 			} else {

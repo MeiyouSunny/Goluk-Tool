@@ -973,6 +973,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 		} else {
 			address = ((LocationAddressDetailBean) obj).detail;// 国际
 		}
+		GolukDebugUtils.e("", "-----------CallBack_BaiduGeoCoder----MainActivity------address: "+address);
 		GolukApplication.getInstance().mCurAddr = address;
 		// 更新行车记录仪地址
 		EventBus.getDefault().post(new EventUpdateAddr(EventConfig.CAR_RECORDER_UPDATE_ADDR, address));

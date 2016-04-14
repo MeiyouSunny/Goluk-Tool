@@ -1,6 +1,5 @@
 package com.mobnote.golukmain.startshare;
 
-import android.content.Context;
 import android.text.TextUtils;
 import cn.com.tiros.baidu.LocationAddressDetailBean;
 
@@ -16,8 +15,7 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult.AddressComponent;
 public class DistinguishLocation {
 
 	private String mServer = "0";
-	
-	private Context mContext = null;
+
 	private Object mObject = null;
 	private String mCity = "";
 	private String mDistrict = "";
@@ -25,9 +23,8 @@ public class DistinguishLocation {
 
 	private LocalAddress mLocal = null;
 	private InternationalAddress mInternational = null;
-	
-	public DistinguishLocation(Context context, Object obj) {
-		this.mContext = context;
+
+	public DistinguishLocation(Object obj) {
 		this.mObject = obj;
 		if (mServer.equals("1")) {
 			mLocal = new LocalAddress(mObject);
@@ -64,7 +61,7 @@ public class DistinguishLocation {
 		}
 		return currentAddress;
 	}
-	
+
 }
 
 class LocalAddress {
@@ -111,7 +108,7 @@ class InternationalAddress {
 	// 获取当前城市
 	public String getCity() {
 		String city = "";
-		if (null != result) {
+		if (null == result) {
 			return city;
 		}
 		city = result.cityName;
