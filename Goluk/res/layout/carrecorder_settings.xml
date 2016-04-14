@@ -728,6 +728,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+                android:layout_marginBottom="15dp"
                 android:layout_marginTop="8dp"
                 android:contentDescription="@string/def"
                 android:gravity="center_vertical" >
@@ -752,7 +753,6 @@
                 android:id = "@+id/layout_adas_assistance"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:layout_marginTop="15dp"
                 android:background="@color/setting_white_color" 
                 android:visibility="gone">
 
@@ -1186,6 +1186,11 @@
                     android:layout_marginRight="15dp"
                     android:background="@drawable/icon_next_press"
                     android:contentDescription="@string/def" />
+                
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
 
                 <TextView
                     android:layout_width="match_parent"

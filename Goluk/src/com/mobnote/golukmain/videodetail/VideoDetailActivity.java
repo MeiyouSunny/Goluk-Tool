@@ -684,6 +684,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		} else if (mCurrentOperator == OPERATOR_UP) {
 			// 上拉刷新
 			removeFoot();
+			GolukUtils.showToast(this, this.getString(R.string.str_network_unavailable));
 		}
 
 	}

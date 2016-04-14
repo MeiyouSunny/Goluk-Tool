@@ -388,8 +388,13 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 
 			List<FollowedListBean> followedBeanList = bean.data.list;
 			if(null == followedBeanList || followedBeanList.size() == 0) {
-				Toast.makeText(getActivity(), getString(
+				if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
+					Toast.makeText(getActivity(), getString(
+							R.string.str_follow_no_content), Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(getActivity(), getString(
 						R.string.str_pull_refresh_listview_bottom_reach), Toast.LENGTH_SHORT).show();
+				}
 				return;
 			}
 

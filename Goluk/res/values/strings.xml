@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Goluk</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -534,7 +533,7 @@
 	<string name="str_carrecorder_storage_format_sdcard_dialog_yes">Yes</string>
 	<string name="str_carrecorder_storage_format_sdcard_dialog_no">No</string>
 	<string name="str_carrecorder_storage_format_sdcard_formating">Formatting the SD card. It may take 1 to 2 minutes, please wait</string>
-	
+
 	<string name="str_edittext_format">1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
 
     <string name="str_msgcenter_comment_title">Comment/Reply</string>
@@ -592,7 +591,7 @@
     <string name="str_loginout_fail">Failed logging out</string>
     <string name="str_loginouting">Logging out</string>
     <string name="str_loginout_success">You have been logged out</string>
-    
+
     <string name="str_network_unavailable">Network unavailable</string>
     <string name="str_profit_unit">G Currency</string>
     <string name="str_profit_nodata">No data temporarily</string>
@@ -620,7 +619,7 @@
     <string name="str_wifi_hotspot_fail">Unable to connect to IPC hotspots</string>
     <string name="str_wait">Please wait</string>
     <string name="str_wifi_pwd_hint_text">Wi-Fi password</string>
-    
+
 	<!-- 主页 -->
 	<string name="str_live_continue">Continue to Live Video (Y/N)</string>
 	<string name="str_double_click_to_exit_app">Press again to exit the APP</string>
@@ -710,7 +709,7 @@
 	<string name="str_parameter_error">Parameters error</string>
 	<string name="str_save_comment_fail">Unable to save the comment</string>
 	<string name="str_floor_text">Post # %1$s</string>
-	
+
     <!-- 直播 -->
     <string name="str_live_start_progress_msg">Creating Live Video. Please wait</string>
     <string name="str_live_retry_upload_msg">Live Video is disconnected. Reconnecting</string>
@@ -741,17 +740,17 @@
     <string name="str_confirm_report">Report this Video</string>
     <string name="str_live_settings">Live Video settings</string>
     <string name="str_live_switch">Live Video switch</string>
-    
+
     <string name="str_submit">Submit</string>
     <string name="str_input_recommend_reason">Please enter your reasons for the recommendation</string>
     <string name="str_recommend_fail">Recommendation is not successful</string>
     <string name="str_recomment_success">Recommendation is successful</string>
-    
+
     <string name="str_emergency_video_text">Emergency</string>
     <string name="str_cycle_video_text">Cycled</string>
     <string name="str_synchronous_video_to_local">Video has been synchronized locally</string>
     <string name="str_inquiry_fail">Unable to send queries</string>
-    
+
     <!-- player -->
     <string name="str_cannot_get_light">Unable to get brightness</string>
     <string name="str_play_error">Playing error</string>
@@ -857,7 +856,7 @@
     <string name="str_auto_create_wifi_fail">Automatic hotspot creation failed</string>
     <string name="str_get_gateway_fail">Hotspot getting gateway failed</string>
     <string name="str_get_gateway_timeout">Hotspot getting gateway time out</string>
-    
+
     <string name="str_live_ok_praise_unit">likes</string>
     <string name="str_tencent_weibo">Tencent Weibo</string>
     <string name="str_share_to">Share to</string>
@@ -887,9 +886,9 @@
     <string name="str_quality_low">Low quality</string>
     <string name="str_wonderfulvideo_and_photo">Wonderful Video + Photo</string>
     <string name="str_wonderfulvideo">Wonderful Video</string>
-   
+
     <!-- <string name="facebook_app_id">1679907912268496</string> -->
-    <string name="facebook_app_id">1679907912268496</string>
+    <string name="facebook_app_id">1693308594241132</string>
     <string name="login_or_txt">OR</string>
     <string name="login_in_facebook_btn">Login With Facebook</string>
     <string name="user_insert_msg">Dont have an account?</string>
@@ -915,6 +914,7 @@
     <string name="str_whatsapp">Whatsapp</string>
     <string name="str_line">Line</string>
 
+    <string name="photoalbum_local_no_video_text">本地没有视频</string>
     <string name="str_facebook_no_install">Need Install Facebook</string>
     <string name="str_whatsapp_no_install">Need Install Whatsapp</string>
     <string name="str_line_no_install">Need Install Line</string>
@@ -927,7 +927,7 @@
     <string name="ipc_check_zone_msg">Do you want to restart the recorder to use the new time zone?</string>
     <string name="umeng_socialize_text_whatsapp_key">Whatsapp</string>
     <string name="umeng_socialize_text_line_key">Line</string>
-    
+
     <!-- New -->
     <string name="guide_start">Start using</string>
     <string name="video_square">Video Plaza</string>
@@ -967,7 +967,7 @@
     <string name="str_praised_list_connect_error">Network unavailable. Tap the screen and try again</string>
     <string name="str_praised_list_request_no_data">No like records.</string>
     <string name="str_wonderful_share">Goluk Wonderful Videos</string>
-    
+
     <string name="str_user_video_type_wonderful_text">Essence</string>
     <string name="str_user_video_type_recommend_text">Recommend</string>
     <string name="str_user_video_type_headline_text">HeadLine</string>
@@ -999,10 +999,10 @@
     <string name="str_follow_all">Follow all</string>
     <string name="str_follow_no_content">No contents</string>
     <string name="str_follow_recommend_star">Star user</string>
-    
+
     <string name="str_upgrade_check_sdcard_t1">Upgrade file transfer failed</string>
     <string name="str_settings_restart_ipc">Modify successful, restart the recorder after the entry into force.</string>
-    
+
     <!-- guide -->
     <string name="str_guide_2_top_text">Driving Record</string>
     <string name="str_guide_3_top_text">Share Wonderful</string>
@@ -1023,5 +1023,5 @@
     <string name="str_followed_login_to_view_tip">Log in to view the contents</string>
     <string name="str_followed_now_login">Log in now</string>
     <string name="zero">0</string>
-    
+
 </resources>

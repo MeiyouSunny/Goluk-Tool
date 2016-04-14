@@ -4,7 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -78,7 +80,7 @@ public class LocalFragment extends Fragment {
 			this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
 			this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 			initView();
-			loadData(false);
+			loadData(true);
 		}
 
 		ViewGroup parent = (ViewGroup) mLocalVideoView.getParent();
@@ -232,7 +234,7 @@ public class LocalFragment extends Fragment {
 								return;
 							// --------------------------------------------------以此标记
 							// type 零时给 1 等主题逻辑调试通了 再去更具文件名称取类型
-							gotoVideoPlayPage(1, info2.videoPath, info2.videoCreateDate, info2.videoHP, info2.videoSize);
+							gotoVideoPlayPage(getVideoType(info2.filename), info2.videoPath, info2.videoCreateDate, info2.videoHP, info2.videoSize);
 							String filename = info2.filename;
 							updateNewState(filename);
 
@@ -281,11 +283,14 @@ public class LocalFragment extends Fragment {
 		task.execute("");
 	}
 
+	@SuppressLint("NewApi")
 	private void checkListState() {
 		GolukDebugUtils.e("", "Album------WondowvideoListView------checkListState");
 		if (mDataList.size() <= 0) {
 			empty.setVisibility(View.VISIBLE);
-			empty.setText(getActivity().getResources().getString(R.string.photoalbum_no_video_text));
+			Drawable drawable=this.getResources().getDrawable(R.drawable.album_img_novideo); 
+			empty.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
+			empty.setText(getActivity().getResources().getString(R.string.photoalbum_local_no_video_text));
 			mStickyListHeadersListView.setVisibility(View.GONE);
 			updateEditState(false);
 		} else {

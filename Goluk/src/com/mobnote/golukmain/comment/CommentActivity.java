@@ -353,6 +353,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			removeFoot();
 		}
 
+		GolukUtils.showToast(this, this.getString(R.string.str_network_unavailable));
 		noData(mAdapter.getCount() <= 0);
 	}
 

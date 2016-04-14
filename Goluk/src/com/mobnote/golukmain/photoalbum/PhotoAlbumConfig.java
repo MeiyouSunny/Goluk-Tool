@@ -16,6 +16,11 @@ public class PhotoAlbumConfig {
 	/***相册远程循环视频*/
 	public static final int PHOTO_BUM_IPC_LOOP = 3;
 	
+	/**自动查询**/
+	public static final String VIDEO_LIST_TAG_SEARACH = "0";
+	/**相册查询**/
+	public static final String VIDEO_LIST_TAG_PHOTO = "1";
+	
 	/**
 	 * 本地文件存储目录
 	 */

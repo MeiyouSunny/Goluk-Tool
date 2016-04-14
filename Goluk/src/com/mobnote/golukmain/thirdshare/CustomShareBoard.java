@@ -160,7 +160,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		this.shareUp();// 上报分享统计
 	}
 
-	// 点击　“朋友圈”
+	// 点击 “朋友圈”
 	public void click_wechat_circle() {
 		if (!isCanClick()) {
 			return;
@@ -170,6 +170,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			setCanJump();
 			return;
 		}
+
 		new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE).setCallback(umShareListener)
 				.setShareContent(sc).share();
 		mCurrentShareType = TYPE_WEIXIN_CIRCLE;

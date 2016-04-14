@@ -128,6 +128,13 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 				@Override
 				public void onPageSelected(int position) {
 					GolukDebugUtils.e("", "crash zh start App ------ FragmentAlbum-----onPageSelected------------:");
+					if(mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND){
+						mWonderfulFragment.removeFooterView();
+					}else if(mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG){
+						mUrgentFragment.removeFooterView();
+					}else if(mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP){
+						mLoopFragment.removeFooterView();
+					}
 					mCurrentType = position;
 					setItemLineState(position);
 				}
@@ -194,13 +201,21 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 		GolukApplication.getInstance().setContext(getContext(), "ipcfilemanager");
 
 		if ("0".equals(mPlatform)) {
-			if (GolukApplication.getInstance().isconnection) {
+			if (GolukApplication.getInstance().isIpcLoginSuccess) {
 				if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
-					mWonderfulFragment.loadData(true);
+					if(mWonderfulFragment.isShowPlayer == false){
+						mWonderfulFragment.loadData(true);
+					}
+					
 				} else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
-					mUrgentFragment.loadData(true);
+					if(mUrgentFragment.isShowPlayer == false){
+						mUrgentFragment.loadData(true);
+					}
 				} else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
-					mLoopFragment.loadData(true);
+					if(mLoopFragment.isShowPlayer == false){
+						mLoopFragment.loadData(true);
+					}
+					
 				}
 			}
 		}

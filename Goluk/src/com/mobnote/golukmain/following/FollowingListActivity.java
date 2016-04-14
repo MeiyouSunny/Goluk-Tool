@@ -333,39 +333,52 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 					Toast.makeText(FollowingListActivity.this, bean.msg, Toast.LENGTH_SHORT).show();
 					return;
 				}
+
+				if(bean.data == null){
+					return;
+				}
+
 				// User link uid to find the changed recommend user item status
 				int i = findLinkUserItem(bean.data.linkuid);
 				if(i >=0 && i < mFollowingList.size()) {
 					FollowingItemBean tempBean = mFollowingList.get(i);
 					tempBean.link = bean.data.link;
+
+					if(bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER || bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_ONLY){
+						tempBean.fans = tempBean.fans + 1;
+					}else if(bean.data.link == FollowingConfig.LINK_TYPE_FAN_ONLY || bean.data.link == FollowingConfig.LINK_TYPE_UNLINK){
+						tempBean.fans = tempBean.fans - 1;
+						if(tempBean.fans <0){
+							tempBean.fans = 0;
+						}
+					}
 					mFollowingList.set(i, tempBean);
 					mFollowingListAdapter.notifyDataSetChanged();
 					
 					if(mFollowingList==null||mFollowingList.size()<=0){
 						setEmptyView(getString(R.string.no_following_tips));
 					}
-					
-					if(bean.data!=null){
-						if(bean.data.link == FollowingConfig.LINK_TYPE_FAN_ONLY
-								||bean.data.link == FollowingConfig.LINK_TYPE_UNLINK){
-							Toast.makeText(FollowingListActivity.this,
-									getResources().getString(R.string.str_usercenter_attention_cancle_ok),Toast.LENGTH_SHORT).show();
-						}else if(bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER){
-							Toast.makeText(FollowingListActivity.this,
-									getResources().getString(R.string.str_usercenter_attention_ok),Toast.LENGTH_SHORT).show();
-						}
+
+					if(bean.data.link == FollowingConfig.LINK_TYPE_FAN_ONLY
+							||bean.data.link == FollowingConfig.LINK_TYPE_UNLINK){
+						Toast.makeText(FollowingListActivity.this,
+								getResources().getString(R.string.str_usercenter_attention_cancle_ok),Toast.LENGTH_SHORT).show();
+					}else if(bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER){
+						Toast.makeText(FollowingListActivity.this,
+								getResources().getString(R.string.str_usercenter_attention_ok),Toast.LENGTH_SHORT).show();
 					}
+
 				}
 			} else {
 				// Toast for operation failed
 				Toast.makeText(FollowingListActivity.this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
-				
+
 			}
 			
 			if(null!=mLoadingDialog&&mLoadingDialog.isShowing()){
 				mLoadingDialog.close();
 			}
-			
+
 		} 
 	}
 	
