@@ -443,7 +443,7 @@ public class GoogleMapTools implements IMapTools{
 //
 //			manageHandler.removeMessages(1);
 //			manageHandler.sendEmptyMessageDelayed(1, 10000);
-//			return false;
+			return false;
 		}
 	}
 

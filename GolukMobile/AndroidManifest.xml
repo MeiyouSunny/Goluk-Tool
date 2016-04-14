@@ -400,9 +400,9 @@
         
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAOCQX0S0Y0HIEUIz0M97glDV0Nka0YEKg"/>
-        <meta-data
+        <!-- <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version" /> -->
 
         <activity
             android:name="com.umeng.socialize.view.ShareActivity"
