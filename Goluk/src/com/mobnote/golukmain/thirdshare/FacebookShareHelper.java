@@ -1,4 +1,4 @@
-package com.mobnote.golukmain.thirdshare.china;
+package com.mobnote.golukmain.thirdshare;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;

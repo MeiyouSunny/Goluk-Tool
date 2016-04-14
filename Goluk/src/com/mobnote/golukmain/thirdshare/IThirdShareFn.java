@@ -1,4 +1,4 @@
-package com.mobnote.golukmain.thirdshare.china;
+package com.mobnote.golukmain.thirdshare;
 
 import android.view.View;
 

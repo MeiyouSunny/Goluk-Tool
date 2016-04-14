@@ -1,4 +1,4 @@
-package com.mobnote.golukmain.thirdshare.china;
+package com.mobnote.golukmain.thirdshare;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,10 +1,9 @@
-package com.mobnote.golukmain.thirdshare.china;
+package com.mobnote.golukmain.thirdshare;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.startshare.VideoEditActivity;
-import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.util.GolukUtils;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.ShareContent;
@@ -88,7 +87,7 @@ public abstract class AbsThirdShare implements IThirdShareFn {
 	}
 
 	protected void printStr() {
-		GolukDebugUtils.e("", "CustomShareBoard-----shareurl: " + shareurl + "   coverurl:" + mImageUrl
+		GolukDebugUtils.e("", "AbroadThirdShare-----shareurl: " + shareurl + "   coverurl:" + mImageUrl
 				+ "   describe:" + mDescribe + " ttl: " + mTitle);
 	}
 

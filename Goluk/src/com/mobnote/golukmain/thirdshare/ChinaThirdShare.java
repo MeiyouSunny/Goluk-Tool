@@ -1,4 +1,4 @@
-package com.mobnote.golukmain.thirdshare.china;
+package com.mobnote.golukmain.thirdshare;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -17,7 +17,6 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 import com.umeng.socialize.ShareAction;

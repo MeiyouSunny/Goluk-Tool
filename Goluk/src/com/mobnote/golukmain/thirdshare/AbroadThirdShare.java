@@ -1,4 +1,4 @@
-package com.mobnote.golukmain.thirdshare.china;
+package com.mobnote.golukmain.thirdshare;
 
 import java.io.File;
 
@@ -22,7 +22,6 @@ import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
@@ -164,20 +163,20 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
 		@Override
 		public void onResult(SHARE_MEDIA platform) {
 			mHander.sendEmptyMessage(100);
-			GolukDebugUtils.e("", "youmeng----goluk----customShareBoard----umShareListener----onResult");
+			GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----umShareListener----onResult");
 		}
 
 		@Override
 		public void onError(SHARE_MEDIA platform, Throwable t) {
 			mHander.sendEmptyMessage(101);
-			GolukDebugUtils.e("", "youmeng----goluk----customShareBoard----umShareListener----onError" + t.toString());
+			GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----umShareListener----onError" + t.toString());
 		}
 
 		@Override
 		public void onCancel(SHARE_MEDIA platform) {
 			mHander.sendEmptyMessage(102);
 
-			GolukDebugUtils.e("", "youmeng----goluk----customShareBoard----umShareListener----onCancel");
+			GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----umShareListener----onCancel");
 		}
 	};
 
@@ -228,11 +227,11 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
 			notifyShareState(false);
 			return;
 		}
-		GolukDebugUtils.e("", "youmeng----goluk----CustomShareBoard----click_twitter----0 ");
+		GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----click_twitter----0 ");
 		if (!isCanClick()) {
 			return;
 		}
-		GolukDebugUtils.e("", "youmeng----goluk----CustomShareBoard----click_twitter----1 ");
+		GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----click_twitter----1 ");
 		final ShareContent sc = getShareContent(TYPE_TWITTER);
 		if (null == sc) {
 			setCanJump();
@@ -241,7 +240,7 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
 		final String shareTxt = sc.mText + "   " + sc.mTargetUrl;
 		new ShareAction(mActivity).setPlatform(SHARE_MEDIA.TWITTER).setCallback(umShareListener).withText(shareTxt)
 				.withTitle(sc.mTitle).share();
-		GolukDebugUtils.e("", "youmeng----goluk----CustomShareBoard----click_twitter----3 ");
+		GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----click_twitter----3 ");
 		mCurrentShareType = TYPE_TWITTER;
 		shareUp();// 上报分享统计
 	}

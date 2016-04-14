@@ -1,6 +1,4 @@
-package com.mobnote.golukmain.thirdshare.china;
-
-import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
+package com.mobnote.golukmain.thirdshare;
 
 import android.app.Activity;
 import android.view.View;
