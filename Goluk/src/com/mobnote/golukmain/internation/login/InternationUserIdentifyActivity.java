@@ -105,7 +105,7 @@ public class InternationUserIdentifyActivity extends BaseActivity implements OnC
 		//getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		getInfo();
 		if (justDifferent) {
-			setContentView(R.layout.user_identify_layout);
+			setContentView(R.layout.internation_user_identify_layout);
 		} else {
 			getWindow().setContentView(R.layout.user_reset_pwd_layout);
 			mTitleText = (TextView) findViewById(R.id.user_title_text);

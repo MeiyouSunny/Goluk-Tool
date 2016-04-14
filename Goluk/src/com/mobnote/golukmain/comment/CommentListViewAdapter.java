@@ -148,7 +148,7 @@ public class CommentListViewAdapter extends BaseAdapter {
 		holder.mTime.setText(GolukUtils.getCommentShowFormatTime(mContext, temp.mCommentTime));
 		if (null != temp.mSeq && !"".equals(temp.mSeq)) {
 			holder.nTextCommentFloor.setVisibility(View.VISIBLE);
-			holder.nTextCommentFloor.setText(temp.mSeq + mContext.getString(R.string.str_floor_text));
+			holder.nTextCommentFloor.setText(mContext.getString(R.string.str_floor_text, temp.mSeq));
 		} else {
 			holder.nTextCommentFloor.setVisibility(View.GONE);
 		}

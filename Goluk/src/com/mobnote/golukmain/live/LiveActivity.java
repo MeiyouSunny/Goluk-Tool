@@ -629,6 +629,11 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		mAuthenticationImg.setVisibility(View.GONE);
 	}
 
+	/**
+	 * 设置左上角视频发布者头像
+	 * @param headStr
+	 * @param neturl
+	 */
 	private void setUserHeadImage(String headStr, String neturl) {
 		try {
 			if (null == mHead) {
@@ -795,6 +800,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 		}
 	}
 
+	/**
+	 * 绘制头像
+	 */
 	private void drawPersonsHead() {
 		GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----1: ");
 		try {

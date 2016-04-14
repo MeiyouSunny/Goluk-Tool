@@ -3,9 +3,12 @@ package com.mobnote.golukmain.live;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import cn.com.tiros.baidu.LocationAddressDetailBean;
 import cn.com.tiros.debug.GolukDebugUtils;
+import cn.com.tiros.location.UseGoogle;
 
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.SearchResult;
@@ -25,11 +28,15 @@ public class GetBaiduAddress implements OnGetGeoCoderResultListener {
 
 	public static final int FUN_GET_ADDRESS = 0;
 	private static final int UPDATE = 1;
+	
+	private String mServer = "0";
 
 	private GetBaiduAddress() {
-		// 初始化搜索模块，注册事件监听
-		mSearch = GeoCoder.newInstance();
-		mSearch.setOnGetGeoCodeResultListener(this);
+		if (mServer.equals("1")) {
+			// 初始化搜索模块，注册事件监听
+			mSearch = GeoCoder.newInstance();
+			mSearch.setOnGetGeoCodeResultListener(this);
+		}
 
 		GolukDebugUtils.e("", "GetBaiduAddress------------------init");
 	}
@@ -51,7 +58,11 @@ public class GetBaiduAddress implements OnGetGeoCoderResultListener {
 		GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----searchAddress----22222  : ");
 		mHandler.removeMessages(UPDATE);
 		Message msg = mHandler.obtainMessage(UPDATE);
-		msg.obj = new LatLng(lat, lon);
+		if (mServer.equals("1")) {
+			msg.obj = new LatLng(lat, lon);
+		} else {
+			msg.obj = new Position(lat, lon);
+		}
 		mHandler.sendMessageDelayed(msg, 1000);
 		GolukDebugUtils.e("", "jyf----20150406----LiveActivity----searchAddress----33333  : ");
 	}
@@ -66,10 +77,31 @@ public class GetBaiduAddress implements OnGetGeoCoderResultListener {
 			case UPDATE:
 				removeMessages(UPDATE);
 				if (isNetworkConnected(GolukApplication.getInstance())) {
-					LatLng ptCenter = (LatLng) msg.obj;
-					// 反Geo搜索
-					mSearch.reverseGeoCode(new ReverseGeoCodeOption().location(ptCenter));
-					GolukDebugUtils.e("", "jyf----20150406----LiveActivity----searchAddress--reverseGeoCode--4444  : ");
+					if(mServer.equals("1")) {
+						LatLng p = (LatLng) msg.obj;
+						// 反Geo搜索
+						mSearch.reverseGeoCode(new ReverseGeoCodeOption().location(p));
+						GolukDebugUtils.e("", "jyf----20150406----LiveActivity----searchAddress--reverseGeoCode--4444  : ");
+					} else {
+						final Position ptCenter = (Position) msg.obj;
+						new AsyncTask<Void, Integer, LocationAddressDetailBean>() {
+							@Override
+							protected LocationAddressDetailBean doInBackground(Void... params) {
+								// TODO Auto-generated method stub
+								return UseGoogle.getAddress(ptCenter.lat, ptCenter.lon);
+							}
+
+							@Override
+							protected void onPostExecute(LocationAddressDetailBean result) {
+								GolukDebugUtils.e("",
+										"jyf----20150406----LiveActivity----searchAddress--LocationAddressDetailBean--4444  : ");
+								if (null == result) {
+									return;
+								}
+								sendCallBackData(FUN_GET_ADDRESS, result);
+							}
+						}.execute();
+					}
 				}
 				break;
 			default:
@@ -114,6 +146,16 @@ public class GetBaiduAddress implements OnGetGeoCoderResultListener {
 			return;
 		}
 		sendCallBackData(FUN_GET_ADDRESS, result);
+	}
+	
+	class Position {
+		Position(double la, double ln) {
+			lat = la;
+			lon = ln;
+		}
+
+		double lat;
+		double lon;
 	}
 
 }

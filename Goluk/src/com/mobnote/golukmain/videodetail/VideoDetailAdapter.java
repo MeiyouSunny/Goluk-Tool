@@ -190,7 +190,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 		commentHolder.mCommentTime.setText(GolukUtils.getCommentShowFormatTime(mContext, temp.mCommentTime));
 		if (null != temp.mSeq && !"".equals(temp.mSeq)) {
 			commentHolder.nTextCommentFloor.setVisibility(View.VISIBLE);
-			commentHolder.nTextCommentFloor.setText(temp.mSeq + mContext.getString(R.string.str_floor_text));
+			commentHolder.nTextCommentFloor.setText(mContext.getString(R.string.str_floor_text, temp.mSeq));
 		} else {
 			commentHolder.nTextCommentFloor.setVisibility(View.GONE);
 		}

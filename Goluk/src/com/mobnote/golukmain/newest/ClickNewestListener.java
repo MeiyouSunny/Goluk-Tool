@@ -10,6 +10,9 @@ import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.live.LiveActivity;
 import com.mobnote.golukmain.live.UserInfo;
+import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
+import com.mobnote.golukmain.livevideo.BaidumapLiveActivity;
+import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
 import com.mobnote.golukmain.player.MovieActivity;
 import com.mobnote.golukmain.player.VideoPlayerActivity;
 import com.mobnote.golukmain.videosuqare.VideoCategoryActivity;
@@ -144,12 +147,17 @@ public class ClickNewestListener implements OnClickListener {
 		user.head = mVideoSquareInfo.mUserEntity.headportrait;
 		user.customavatar = mVideoSquareInfo.mUserEntity.mCustomAvatar;
 		user.mUserLabel = mVideoSquareInfo.mUserEntity.label;
-		Intent intent = new Intent(mContext, LiveActivity.class);
-		intent.putExtra(LiveActivity.KEY_IS_LIVE, false);
-		intent.putExtra(LiveActivity.KEY_GROUPID, "");
-		intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
-		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
-		intent.putExtra(LiveActivity.KEY_USERINFO, user);
+		Intent intent;
+		if(GolukApplication.getInstance().isInteral()){
+			intent = new Intent(mContext, BaidumapLiveActivity.class);
+		}else{
+			intent = new Intent(mContext, GooglemapLiveActivity.class);
+		}
+		intent.putExtra(AbstractLiveActivity.KEY_IS_LIVE, false);
+		intent.putExtra(AbstractLiveActivity.KEY_GROUPID, "");
+		intent.putExtra(AbstractLiveActivity.KEY_PLAY_URL, "");
+		intent.putExtra(AbstractLiveActivity.KEY_JOIN_GROUP, "");
+		intent.putExtra(AbstractLiveActivity.KEY_USERINFO, user);
 
 		// uploadPlayer(mVideoSquareInfo.mVideoEntity.videoid, "1", "1");//
 		// 上报播放次数

@@ -68,6 +68,21 @@
         <activity
             android:name="com.mobnote.golukmain.UserIdentifyActivity"
             android:screenOrientation="portrait" />
+        
+        
+        <activity
+            android:name="com.mobnote.golukmain.internation.login.InternationUserLoginActivity"
+            android:screenOrientation="portrait" 
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name="com.mobnote.golukmain.internation.login.InternationUserRegistActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.mobnote.golukmain.internation.login.InternationUserRepwdActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.mobnote.golukmain.internation.login.InternationUserIdentifyActivity"
+            android:screenOrientation="portrait" />
         <!-- 顺序：我的主页、个人资料、编辑资料、编辑签名、编辑昵称 -->
         <activity
             android:name="com.mobnote.golukmain.UserPersonalInfoActivity"
@@ -200,6 +215,14 @@
         </activity>
         <activity
             android:name="com.mobnote.golukmain.live.LiveActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.mobnote.golukmain.livevideo.BaidumapLiveActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.mobnote.golukmain.livevideo.GooglemapLiveActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait" />
         <activity
@@ -374,6 +397,12 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="mobnote" />
+        
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAOCQX0S0Y0HIEUIz0M97glDV0Nka0YEKg"/>
+        <!-- <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" /> -->
 
         <activity
             android:name="com.umeng.socialize.view.ShareActivity"
