@@ -114,7 +114,7 @@
             android:name="com.mobnote.golukmain.videodetail.VideoDetailActivity"
             android:screenOrientation="portrait"
             android:hardwareAccelerated="true"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name="com.mobnote.golukmain.ImageClipActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
