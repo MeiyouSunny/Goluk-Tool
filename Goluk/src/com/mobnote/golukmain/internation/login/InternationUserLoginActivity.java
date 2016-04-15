@@ -173,7 +173,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 					json.put("platform", "facebook");
 					json.put("userinfo", URLEncoder.encode(new JSONObject(data).toString(), "utf-8"));
 					json.put("devices", "");
-					
+					mApplication.mLoginManage.setUserLoginInterface(InternationUserLoginActivity.this);
 					boolean flog = mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 							IPageNotifyFn.PageType_OauthLogin, json.toString());
 					GolukDebugUtils.e("facebooklogin1", "facebooklogin request = " + json.toString() + " flog = " + flog);
@@ -478,6 +478,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 	 */
 	@Override
 	public void loginCallbackStatus() {
+		GolukDebugUtils.e("","facebooklogin loginCallbackStatus = " + mApplication.loginStatus);
 		switch (mApplication.loginStatus) {
 		case 0:
 			break;

@@ -1,8 +1,11 @@
-package com.mobnote.golukmain;
+package com.mobnote.golukmobile;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventStartApp;
+import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.UserStartActivity;
 import com.mobnote.golukmain.wifidatacenter.JsonWifiBindManager;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.xdpush.GolukNotification;

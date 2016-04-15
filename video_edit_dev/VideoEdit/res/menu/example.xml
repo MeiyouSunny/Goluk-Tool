@@ -5,13 +5,16 @@
   <group android:checkableBehavior="single">
     <item
         android:id="@+id/action_layout_linear"
-        android:title="@string/action_layout_linear"
+        android:title="暂定"
         android:checked="true" />
     <item
         android:id="@+id/action_layout_grid"
-        android:title="@string/action_layout_grid" />
+        android:title="播放" />
     <item
         android:id="@+id/action_layout_staggered"
-        android:title="@string/action_layout_staggered" />
+        android:title="导出" />
+    <item
+        android:id="@+id/action_layout_tail"
+        android:title="添加片尾" />
   </group>
 </menu>

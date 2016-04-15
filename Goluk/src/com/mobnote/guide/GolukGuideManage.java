@@ -25,10 +25,10 @@ import android.widget.LinearLayout.LayoutParams;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mobnote.golukmain.GuideActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserStartActivity;
 import com.mobnote.golukmain.carrecorder.util.ImageManager;
+import com.mobnote.golukmobile.GuideActivity;
 
 /**
  * @ 功能描述:引导页管理

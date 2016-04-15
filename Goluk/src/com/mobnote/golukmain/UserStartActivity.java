@@ -7,6 +7,7 @@ import com.mobnote.golukmain.carrecorder.util.ImageManager;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomVideoView;
 import com.mobnote.golukmain.xdpush.StartAppBean;
+import com.mobnote.golukmobile.GuideActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
