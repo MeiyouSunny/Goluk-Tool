@@ -569,7 +569,7 @@
             android:name="com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"
+            
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
 

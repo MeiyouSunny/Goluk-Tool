@@ -5,33 +5,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.mobnote.application.GolukApplication;
-import com.mobnote.eventbus.EventDownloadIpcVid;
-import com.mobnote.golukmain.BaseActivity;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.IPCControlManager;
-import com.mobnote.golukmain.carrecorder.util.GFileUtils;
-import com.mobnote.golukmain.carrecorder.util.SettingUtils;
-import com.mobnote.golukmain.carrecorder.util.SoundUtils;
-import com.mobnote.golukmain.carrecorder.view.CustomDialog;
-import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
-import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
-import com.mobnote.golukmain.player.DensityUtil;
-import com.mobnote.golukmain.player.FullScreenVideoView;
-import com.mobnote.golukmain.player.factory.GolukPlayer;
-import com.mobnote.golukmain.player.factory.GolukPlayer.OnCompletionListener;
-import com.mobnote.golukmain.player.factory.GolukPlayer.OnErrorListener;
-import com.mobnote.golukmain.player.factory.GolukPlayer.OnPreparedListener;
-import com.mobnote.golukmain.startshare.VideoEditActivity;
-import com.mobnote.util.GlideUtils;
-import com.mobnote.util.GolukUtils;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -60,16 +40,39 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
+
+import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventDownloadIpcVid;
+import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.carrecorder.IPCControlManager;
+import com.mobnote.golukmain.carrecorder.util.GFileUtils;
+import com.mobnote.golukmain.carrecorder.util.SettingUtils;
+import com.mobnote.golukmain.carrecorder.util.SoundUtils;
+import com.mobnote.golukmain.carrecorder.view.CustomDialog;
+import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
+import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
+import com.mobnote.golukmain.photoalbum.OrientationManager.IOrientationFn;
+import com.mobnote.golukmain.player.DensityUtil;
+import com.mobnote.golukmain.player.FullScreenVideoView;
+import com.mobnote.golukmain.player.factory.GolukPlayer;
+import com.mobnote.golukmain.player.factory.GolukPlayer.OnCompletionListener;
+import com.mobnote.golukmain.player.factory.GolukPlayer.OnErrorListener;
+import com.mobnote.golukmain.player.factory.GolukPlayer.OnPreparedListener;
+import com.mobnote.golukmain.startshare.VideoEditActivity;
+import com.mobnote.util.GlideUtils;
+import com.mobnote.util.GolukUtils;
+
 import de.greenrobot.event.EventBus;
 
-public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, OnPreparedListener, OnErrorListener, OnCompletionListener {
+public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, OnPreparedListener, OnErrorListener,
+		OnCompletionListener, IOrientationFn {
 	private static final String TAG = "PhotoAlbumPlayer";
 
 	public static final String VIDEO_FROM = "video_from";
 	public static final String PATH = "path";
-	public static final String DATE= "date";
+	public static final String DATE = "date";
 	public static final String HP = "hp";
 	public static final String SIZE = "size";
 	public static final String FILENAME = "file_name";
@@ -108,26 +111,28 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	/** 自动隐藏顶部和底部View的时间 */
 	private static final int HIDE_TIME = 3000;
 	private boolean mDragging;
-	
+
 	/** 更多对话框 */
-	private PlayerMoreDialog mPlayerMoreDialog ;
-	
+	private PlayerMoreDialog mPlayerMoreDialog;
+
 	private OnRightClickListener OnDeleteVidListener;
 
-    private final Runnable mPlayingChecker = new Runnable() {
-        @Override
-        public void run() {
-            if (mVideoView.isPlaying()) {
-    			hideLoading();
-            } else {
-                mHandler.postDelayed(mPlayingChecker, 250);
-            }
-        }
-    };
+	private OrientationManager mOrignManager = null;
 
-    private final Runnable mProgressChecker = new Runnable() {
-        @Override
-        public void run() {
+	private final Runnable mPlayingChecker = new Runnable() {
+		@Override
+		public void run() {
+			if (mVideoView.isPlaying()) {
+				hideLoading();
+			} else {
+				mHandler.postDelayed(mPlayingChecker, 250);
+			}
+		}
+	};
+
+	private final Runnable mProgressChecker = new Runnable() {
+		@Override
+		public void run() {
 			if (!mDragging || mVideoView.isPlaying()) {
 				int duration = mVideoView.getDuration();
 				int position = mVideoView.getCurrentPosition();
@@ -139,13 +144,12 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 					mVtSeekBar.setProgress(progress);
 				}
 			}
-            mHandler.postDelayed(mProgressChecker, 500);
-        }
-    };
+			mHandler.postDelayed(mProgressChecker, 500);
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_photoalbum_player);
 		mApp = (GolukApplication) getApplication();
@@ -171,11 +175,13 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		}
 		threshold = DensityUtil.dip2px(this, 18);
 		initView();
+
+		setOrientation(true);
+		mOrignManager = new OrientationManager(this, this);
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		// TODO Auto-generated method stub
 		super.onSaveInstanceState(outState);
 		if (mDate != null) {
 			outState.putString(DATE, mDate);
@@ -201,34 +207,32 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		mApp.setContext(this, TAG);
 		if (mResume) {
 			mVideoView.seekTo(mPlayTime);
-			mVideoView.resume();;
+			mVideoView.resume();
 		}
-        mHandler.post(mProgressChecker);
-        mHandler.post(mPlayingChecker);
+		mHandler.post(mProgressChecker);
+		mHandler.post(mPlayingChecker);
 	}
+
 	private boolean mResume = false;
+
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
-
 		mResume = true;
 		mHandler.removeCallbacksAndMessages(null);
 		mPlayTime = mVideoView.getCurrentPosition();
 		mVideoView.suspend();
 	}
-	
+
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		mVideoView.stopPlayback();
 		GolukDebugUtils.e("", "jyf----VideoPlayerActivity--------onDestroy----");
-		if (mHandler != null){
+		if (mHandler != null) {
 			mHandler.removeCallbacksAndMessages(null);
 			mHandler = null;
 		}
@@ -237,8 +241,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			mCustomDialog.dismiss();
 		}
 		mCustomDialog = null;
-		
-		if(mPlayerMoreDialog != null &&mPlayerMoreDialog.isShowing()){
+
+		if (mPlayerMoreDialog != null && mPlayerMoreDialog.isShowing()) {
 			mPlayerMoreDialog.dismiss();
 		}
 		mPlayerMoreDialog = null;
@@ -249,12 +253,13 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		mPlayTimeTextView = (TextView) findViewById(R.id.play_time);
 		mVtPlayTimeTextView = (TextView) findViewById(R.id.vt_play_time);
 		mDurationTime = (TextView) findViewById(R.id.total_time);
-		mVtDurationTime = (TextView)findViewById(R.id.vt_total_time);
+		mVtDurationTime = (TextView) findViewById(R.id.vt_total_time);
 		mVtSeekBar = (SeekBar) findViewById(R.id.vt_seekbar);
 		mPlayImageView = (ImageView) findViewById(R.id.play_btn);
 		mPlayImageView.setOnClickListener(this);
 		mSeekBar = (SeekBar) findViewById(R.id.seekbar);
 		mSeekBar.setOnSeekBarChangeListener(mSeekBarChangeListener);
+		mVtSeekBar.setOnSeekBarChangeListener(mSeekBarChangeListener);
 		mTopView = findViewById(R.id.upper_layout);
 		mBottomView = findViewById(R.id.bottom_layout);
 		mLoadingLayout = (LinearLayout) findViewById(R.id.mLoadingLayout);
@@ -316,40 +321,45 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		mVideoView.requestFocus();
 		mVideoView.start();
 		showLoading();
-        mHandler.postDelayed(mPlayingChecker, 250);
+		mHandler.postDelayed(mPlayingChecker, 250);
+	}
+
+	private void exit() {
+		finish();
+		mOrignManager.clearListener();
 	}
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		int id = v.getId();
 		if (GolukUtils.isFastDoubleClick()) {
 			return;
 		}
 		if (id == R.id.imagebutton_back) {
 			// 返回
-			finish();
+			exit();
 		} else if (id == R.id.mMoreBtn) {
-			if(mPlayerMoreDialog==null){
+			if (mPlayerMoreDialog == null) {
 				String tempPath = "";
 
-				if(!TextUtils.isEmpty(mVideoFrom)){
-					if("local".equals(mVideoFrom)){
+				if (!TextUtils.isEmpty(mVideoFrom)) {
+					if ("local".equals(mVideoFrom)) {
 						tempPath = mPath;
-					}else{
+					} else {
 						tempPath = mFileName;
 					}
 				}
 
-				mPlayerMoreDialog = new PlayerMoreDialog(PhotoAlbumPlayer.this, tempPath, getType(), mVideoFrom,mType);
+				mPlayerMoreDialog = new PlayerMoreDialog(PhotoAlbumPlayer.this, tempPath, getType(), mVideoFrom, mType);
 			}
 			mPlayerMoreDialog.show();
 		} else if (id == R.id.btn_full_screen) {
-			setFullScreen(true);
+			click_btnFullScreen();
+
 		} else if (id == R.id.back_btn) {
-			setFullScreen(false);
-		} else if (id == R.id.play_btn
-				|| id == R.id.btn_vt_play) {
+
+			click_back();
+		} else if (id == R.id.play_btn || id == R.id.btn_vt_play) {
 			if (mVideoView.isPlaying() && mVideoView.canPause()) {
 				mVideoView.pause();
 				mPlayImageView.setImageResource(R.drawable.player_play_btn);
@@ -367,7 +377,10 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 				Intent intent = new Intent(this, VideoEditActivity.class);
 
 				int tempType = 2;
-				if (mType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG/*IPCManagerFn.TYPE_URGENT*/) {
+				if (mType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG/*
+																 * IPCManagerFn.
+																 * TYPE_URGENT
+																 */) {
 					tempType = 3;
 				}
 
@@ -385,20 +398,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
 	private int getType() {
 		int tempType = 0;
-		if("local".equals(mVideoFrom)){
+		if ("local".equals(mVideoFrom)) {
 			tempType = PhotoAlbumConfig.PHOTO_BUM_LOCAL;
 		} else {
-//			switch (mType){
-//			case IPCManagerFn.TYPE_URGENT:
-//				tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
-//				break;
-//			case IPCManagerFn.TYPE_SHORTCUT:
-//				tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
-//				break;
-//			case IPCManagerFn.TYPE_CIRCULATE:
-//				tempType = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
-//				break;
-//			}
 			tempType = mType;
 		}
 		return tempType;
@@ -408,21 +410,18 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	 * 设置播放器全屏
 	 * 
 	 * @param bFull
-	 *        		true:全屏　false:普通
+	 *            true:全屏　false:普通
 	 */
-	public void setFullScreen(boolean bFull) {
+	public void setFullScreen(boolean isAuto, boolean bFull) {
 		if (bFull == mIsFullScreen) {
 			// GolukUtils.showToast(this, "已处于全屏状态.");
 			return;
 		}
 		if (bFull) {
-			getWindow()
-					.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
 			DisplayMetrics metrics = new DisplayMetrics();
 			getWindowManager().getDefaultDisplay().getMetrics(metrics);
-			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mVideoViewLayout
-					.getLayoutParams();
+			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mVideoViewLayout.getLayoutParams();
 			params.width = metrics.widthPixels;
 			params.height = metrics.heightPixels;
 			params.leftMargin = 0;
@@ -450,12 +449,10 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			lp.addRule(RelativeLayout.BELOW, R.id.RelativeLayout_videoinfo);
 			mVideoViewLayout.setLayoutParams(lp);
 
-			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
 		mIsFullScreen = bFull;
 	}
-	
+
 	/**
 	 * 获取播放地址
 	 * 
@@ -498,9 +495,12 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 				String fileName = mFileName;
 				fileName = fileName.replace(".mp4", ".jpg");
 				mImageUrl = filePath + File.separator + fileName;
-				if (PhotoAlbumConfig.PHOTO_BUM_IPC_WND == mType/*4 == mType*/) {
+				if (PhotoAlbumConfig.PHOTO_BUM_IPC_WND == mType/* 4 == mType */) {
 					mVideoUrl = "http://" + ip + ":5080/rec/wonderful/" + mFileName;
-				} else if (PhotoAlbumConfig.PHOTO_BUM_IPC_URG == mType/*2 == mType*/) {
+				} else if (PhotoAlbumConfig.PHOTO_BUM_IPC_URG == mType/*
+																	 * 2 ==
+																	 * mType
+																	 */) {
 					mVideoUrl = "http://" + ip + ":5080/rec/urgent/" + mFileName;
 				} else {
 					mVideoUrl = "http://" + ip + ":5080/rec/normal/" + mFileName;
@@ -560,7 +560,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
 	@Override
 	public void onCompletion(GolukPlayer mp) {
-		// TODO Auto-generated method stub
 		mVideoView.seekTo(0);
 		mPlayTimeTextView.setText("00:00");
 		mVtPlayTimeTextView.setText("00:00");
@@ -569,8 +568,12 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	}
 
 	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+	}
+
+	@Override
 	public boolean onError(GolukPlayer mp, int what, int extra) {
-		// TODO Auto-generated method stub
 		String msg = this.getString(R.string.str_play_error);
 		switch (what) {
 		case 1:
@@ -590,9 +593,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 				msg = this.getString(R.string.str_play_video_network_error);
 			}
 		}
-//
-//		error = true;
-//		GolukDebugUtils.e("xuhw", "BBBBBB=====onError==arg1=" + arg1 + "==arg2=" + arg2);
+
 		hideLoading();
 		mPlayTimeTextView.setText("00:00");
 		mVtPlayTimeTextView.setText("00:00");
@@ -610,15 +611,14 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
 	@Override
 	public void onPrepared(GolukPlayer mp) {
-		// TODO Auto-generated method stub
-
-		if(null != mDurationTime) {
+		if (null != mDurationTime) {
 			mDurationTime.setText(formatTime(mVideoView.getDuration()));
 			mVtDurationTime.setText(formatTime(mVideoView.getDuration()));
 		}
 	}
 
 	private boolean isShow = false;
+
 	/**
 	 * 显示加载中布局
 	 * 
@@ -662,7 +662,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	private void backward(float delataX) {
 
 		int duration = mVideoView.getDuration();
-		if(0 >= duration || !mVideoView.canSeekBackward()) {
+		if (0 >= duration || !mVideoView.canSeekBackward()) {
 			return;
 		}
 		int current = mVideoView.getCurrentPosition();
@@ -678,7 +678,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	private void forward(float delataX) {
 
 		int duration = mVideoView.getDuration();
-		if(0 >= duration || !mVideoView.canSeekForward()) {
+		if (0 >= duration || !mVideoView.canSeekForward()) {
 			return;
 		}
 		int current = mVideoView.getCurrentPosition();
@@ -716,43 +716,43 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 				float deltaY = y - mLastMotionY;
 				float absDeltaX = Math.abs(deltaX);
 				float absDeltaY = Math.abs(deltaY);
-//				// 声音调节标识
-//				boolean isAdjustAudio = false;
-//				if (absDeltaX > threshold && absDeltaY > threshold) {
-//					if (absDeltaX < absDeltaY) {
-//						isAdjustAudio = true;
-//					} else {
-//						isAdjustAudio = false;
-//					}
-//				} else if (absDeltaX < threshold && absDeltaY > threshold) {
-//					isAdjustAudio = true;
-//				} else if (absDeltaX > threshold && absDeltaY < threshold) {
-//					isAdjustAudio = false;
-//				} else {
-//					return true;
-//				}
-//				if (isAdjustAudio) {
-//					if (x < width / 2) {
-//						if (deltaY > 0) {
-//							lightDown(absDeltaY);
-//						} else if (deltaY < 0) {
-//							lightUp(absDeltaY);
-//						}
-//					} else {
-//						if (deltaY > 0) {
-//							volumeDown(absDeltaY);
-//						} else if (deltaY < 0) {
-//							volumeUp(absDeltaY);
-//						}
-//					}
-//
-//				} else {
-					if (deltaX > 0) {
-						forward(absDeltaX);
-					} else if (deltaX < 0) {
-						backward(absDeltaX);
-					}
-//				}
+				// // 声音调节标识
+				// boolean isAdjustAudio = false;
+				// if (absDeltaX > threshold && absDeltaY > threshold) {
+				// if (absDeltaX < absDeltaY) {
+				// isAdjustAudio = true;
+				// } else {
+				// isAdjustAudio = false;
+				// }
+				// } else if (absDeltaX < threshold && absDeltaY > threshold) {
+				// isAdjustAudio = true;
+				// } else if (absDeltaX > threshold && absDeltaY < threshold) {
+				// isAdjustAudio = false;
+				// } else {
+				// return true;
+				// }
+				// if (isAdjustAudio) {
+				// if (x < width / 2) {
+				// if (deltaY > 0) {
+				// lightDown(absDeltaY);
+				// } else if (deltaY < 0) {
+				// lightUp(absDeltaY);
+				// }
+				// } else {
+				// if (deltaY > 0) {
+				// volumeDown(absDeltaY);
+				// } else if (deltaY < 0) {
+				// volumeUp(absDeltaY);
+				// }
+				// }
+				//
+				// } else {
+				if (deltaX > 0) {
+					forward(absDeltaX);
+				} else if (deltaX < 0) {
+					backward(absDeltaX);
+				}
+				// }
 				mLastMotionX = x;
 				mLastMotionY = y;
 				break;
@@ -863,7 +863,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	 * @date 2015年6月24日
 	 */
 	private void showOrHide() {
-
 		if (mTopView.getVisibility() == View.VISIBLE) {
 			hideOperator();
 		} else {
@@ -877,23 +876,122 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
 		@Override
 		public void onStopTrackingTouch(SeekBar seekBar) {
-			mDragging = false;
-			mHandler.postDelayed(hideRunnable, HIDE_TIME);
+			if (mIsLand) {
+				mDragging = false;
+				mHandler.postDelayed(hideRunnable, HIDE_TIME);
+			}
+
 		}
 
 		@Override
 		public void onStartTrackingTouch(SeekBar seekBar) {
-			mDragging = true;
-			mHandler.removeCallbacks(hideRunnable);
+			if (mIsLand) {
+				mDragging = true;
+				mHandler.removeCallbacks(hideRunnable);
+			}
 		}
 
 		@Override
 		public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
 			if (fromUser) {
 				int time = progress * mVideoView.getDuration() / 100;
 				mVideoView.seekTo(time);
 			}
 		}
 	};
+
+	/** 是否是横屏 */
+	private boolean mIsLand = false;
+	/** 是否点击 */
+	private boolean mClick = false;
+	/** 点击进入横屏 */
+	private boolean mClickLand = true;
+	/** 点击进入竖屏 */
+	private boolean mClickPort = true;
+
+	private void auto_port() {
+		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		setFullScreen(false, false);
+	}
+
+	private void auto_land() {
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		setFullScreen(false, true);
+	}
+
+	// 开始全屏
+	private void click_btnFullScreen() {
+		this.mClick = true;
+		mIsLand = true;
+		mClickLand = false;
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		setFullScreen(false, true);
+	}
+
+	// 返回小屏
+	private void click_back() {
+		this.mClick = true;
+		mIsLand = false;
+		mClickPort = true;
+		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		setFullScreen(false, false);
+	}
+
+	private void setOrientation(boolean isAuto) {
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			// land
+			GolukDebugUtils.e("", "player---------------------land");
+			mIsLand = true;
+			mClick = false;
+			setFullScreen(isAuto, true);
+		} else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+			// port
+			GolukDebugUtils.e("", "player---------------------port");
+			setFullScreen(isAuto, false);
+		}
+	}
+
+	@Override
+	public void landscape() {
+		// 重力感应设置横屏
+		if (mClick) {
+			if (!mIsLand && !mClickPort) {
+				return;
+			} else {
+				mClickLand = true;
+				mClick = false;
+				mIsLand = true;
+			}
+		} else {
+			if (!mIsLand) {
+				auto_land();
+				mIsLand = true;
+				mClick = false;
+			}
+		}
+	}
+
+	@Override
+	public void portrait() {
+		// 重力感应竖屏
+		if (mClick) {
+			if (mIsLand && !mClickLand) {
+				return;
+			} else {
+				mClickPort = true;
+				mClick = false;
+				mIsLand = false;
+			}
+		} else {
+			if (mIsLand) {
+				auto_port();
+				mIsLand = false;
+				mClick = false;
+			}
+		}
+	}
 }
