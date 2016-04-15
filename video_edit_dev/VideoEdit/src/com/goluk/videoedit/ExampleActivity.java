@@ -219,7 +219,6 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 			if(chunk!=null){
 				Log.d(TAG, "chunk added:" + chunk.prettyString());
 				 afterEffect.generateThumbAsyn(chunk, 2, imageHeight);
-				
 			}
 			break;
 
@@ -257,7 +256,7 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_example);
+		setContentView(R.layout.activity_after_effect);
 
 		int dataSize = 100;
 		List<Bitmap> data = new ArrayList<Bitmap>(dataSize);
@@ -338,11 +337,14 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 			item.setChecked(true);
 			pause();
 			break;
-//		case R.id.action_layout_staggered:
-//			item.setChecked(true);
+		case R.id.action_layout_staggered:
+			item.setChecked(true);
 //			recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3,
 //					StaggeredGridLayoutManager.VERTICAL));
-//			break;
+			break;
+		case R.id.action_layout_tail:
+			afterEffect.setDateString("2016.04.15");
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -437,4 +439,17 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 			String filePath) {
 		// TODO Auto-generated method stub
 	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		afterEffect.onActivityPause();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		afterEffect.onActivityResume();
+	}
+
 }

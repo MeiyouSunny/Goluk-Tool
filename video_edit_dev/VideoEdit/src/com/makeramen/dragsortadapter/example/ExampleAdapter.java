@@ -41,7 +41,7 @@ public class ExampleAdapter extends
 	@Override
 	public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-		View view = inflater.inflate(R.layout.item_example, parent, false);
+		View view = inflater.inflate(R.layout.item_rv_chunk_layout, parent, false);
 		MainViewHolder holder = new MainViewHolder(this, view);
 		view.setOnClickListener(holder);
 		view.setOnLongClickListener(holder);

@@ -13,5 +13,8 @@
     <item
         android:id="@+id/action_layout_staggered"
         android:title="导出" />
+    <item
+        android:id="@+id/action_layout_tail"
+        android:title="添加片尾" />
   </group>
 </menu>
