@@ -2,7 +2,6 @@ package com.makeramen.dragsortadapter.example;
 
 import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,15 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-//import butterknife.ButterKnife;
-//import butterknife.InjectView;
 
-
-
+import com.goluk.videoedit.BitmapWrapper;
 import com.goluk.videoedit.R;
 import com.makeramen.dragsortadapter.DragSortAdapter;
 import com.makeramen.dragsortadapter.NoForegroundShadowBuilder;
-import com.makeramen.dragsortadapter.example.util.EnglishNumberToWords;
 
 import java.util.List;
 
@@ -27,13 +22,13 @@ public class ExampleAdapter extends
 
 	public static final String TAG = ExampleAdapter.class.getSimpleName();
 
-	private List<Bitmap> data;
+	private List<BitmapWrapper> data;
 
-	public void setData(List<Bitmap> src) {
+	public void setData(List<BitmapWrapper> src) {
 		data = src;
 	}
 
-	public ExampleAdapter(RecyclerView recyclerView, List<Bitmap> data) {
+	public ExampleAdapter(RecyclerView recyclerView, List<BitmapWrapper> data) {
 		super(recyclerView);
 		this.data = data;
 	}
@@ -50,21 +45,21 @@ public class ExampleAdapter extends
 
 	@Override
 	public void onBindViewHolder(final MainViewHolder holder, final int position) {
-//		int itemId = data.get(position);
-		Bitmap bitmap = data.get(position);
-//		holder.text.setText(EnglishNumberToWords.convert(itemId));
+		BitmapWrapper wrapper = data.get(position);
+		Bitmap bitmap = data.get(position).bitmap;
 		holder.img.setImageBitmap(bitmap);
+		holder.text.setText(wrapper.index + "");
 		// NOTE: check for getDraggingId() match to set an "invisible space"
 		// while dragging
-//		holder.container
-//				.setVisibility(getDraggingId() == itemId ? View.INVISIBLE
-//						: View.VISIBLE);
+		holder.container
+				.setVisibility(getDraggingId() == wrapper.index ? View.INVISIBLE
+						: View.VISIBLE);
 		holder.container.postInvalidate();
 	}
 
 	@Override
 	public long getItemId(int position) {
-		return position;//data.get(position);
+		return data.get(position).index;
 	}
 
 	@Override
@@ -74,7 +69,13 @@ public class ExampleAdapter extends
 
 	@Override
 	public int getPositionForId(long id) {
-		return data.indexOf((int) id);
+		for (int i = 0; i < data.size(); i++) {
+			BitmapWrapper wrapper = data.get(i);
+			if (wrapper.index == (int) id) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	@Override
@@ -85,26 +86,24 @@ public class ExampleAdapter extends
 
 	static class MainViewHolder extends DragSortAdapter.ViewHolder implements
 			View.OnClickListener, View.OnLongClickListener {
-
-		// @InjectView(R.id.container)
 		ViewGroup container;
-		// @InjectView(R.id.text)
 		ImageView img;
+		TextView text;
 
 		public MainViewHolder(DragSortAdapter adapter, View itemView) {
 			super(adapter, itemView);
 			container = (ViewGroup) itemView.findViewById(R.id.container);
 			img = (ImageView) itemView.findViewById(R.id.img);
-			// ButterKnife.inject(this, itemView);
+			text = (TextView) itemView.findViewById(R.id.text);
 		}
 
 		@Override
-		public void onClick(@NonNull View v) {
+		public void onClick(View v) {
 //			Log.d(TAG, text.getText() + " clicked!");
 		}
 
 		@Override
-		public boolean onLongClick(@NonNull View v) {
+		public boolean onLongClick(View v) {
 			startDrag();
 			return true;
 		}
