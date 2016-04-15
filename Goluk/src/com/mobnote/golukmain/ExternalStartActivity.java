@@ -1,6 +1,7 @@
 package com.mobnote.golukmain;
 
 import com.mobnote.golukmain.xdpush.StartAppBean;
+import com.mobnote.golukmobile.GuideActivity;
 
 import android.app.Activity;
 import android.content.Intent;

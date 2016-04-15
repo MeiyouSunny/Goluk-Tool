@@ -1,7 +1,7 @@
 package com.mobnote.golukmain.xdpush;
 
 import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.GuideActivity;
+import com.mobnote.golukmobile.GuideActivity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

@@ -91,6 +91,7 @@ import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
 import com.mobnote.golukmain.xdpush.GolukNotification;
 import com.mobnote.golukmain.xdpush.StartAppBean;
 import com.mobnote.golukmain.xdpush.XingGeMsgBean;
+import com.mobnote.golukmobile.GuideActivity;
 import com.mobnote.manager.MessageManager;
 import com.mobnote.receiver.NetworkStateReceiver;
 import com.mobnote.util.CrashReportUtil;
