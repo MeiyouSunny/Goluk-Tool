@@ -17,7 +17,7 @@ import com.mobnote.application.GlobalWindow;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
-import com.mobnote.golukmain.thirdshare.china.FacebookShareHelper;
+import com.mobnote.golukmain.thirdshare.FacebookShareHelper;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -138,9 +138,9 @@ public class BaseActivity extends FragmentActivity {
 	 */
 	public void toLoginBack() {
 		Intent intent = null;
-		if(GolukApplication.getInstance().isInternation){
+		if (GolukApplication.getInstance().isInternation) {
 			intent = new Intent(this, InternationUserLoginActivity.class);
-		}else{
+		} else {
 			intent = new Intent(this, UserLoginActivity.class);
 		}
 		intent.putExtra("isInfo", "back");
@@ -170,8 +170,10 @@ public class BaseActivity extends FragmentActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == CallbackManagerImpl.RequestCodeOffset.Share.toRequestCode()) {
-			FacebookShareHelper.getInstance().mCallbackManager.onActivityResult(requestCode, resultCode, data);
+		if (!mBaseApp.isInteral()) {
+			if (requestCode == CallbackManagerImpl.RequestCodeOffset.Share.toRequestCode()) {
+				FacebookShareHelper.getInstance().mCallbackManager.onActivityResult(requestCode, resultCode, data);
+			}
 		}
 	}
 

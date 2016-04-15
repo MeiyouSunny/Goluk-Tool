@@ -2,6 +2,37 @@ package com.mobnote.golukmain.comment;
 
 import java.util.ArrayList;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Message;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnLayoutChangeListener;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.tiros.debug.GolukDebugUtils;
+
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
@@ -15,8 +46,8 @@ import com.mobnote.golukmain.comment.bean.CommentResultBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.LiveDialogManager;
-import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
+import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.videodetail.ReplyDialog;
 import com.mobnote.golukmain.videosuqare.RTPullListView;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
@@ -24,35 +55,14 @@ import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
+import com.rockerhieu.emojicon.EmojiconGridFragment;
+import com.rockerhieu.emojicon.EmojiconsFragment;
+import com.rockerhieu.emojicon.emoji.Emojicon;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
-import cn.com.tiros.debug.GolukDebugUtils;
-
-public class CommentActivity extends BaseActivity implements OnClickListener, OnRefreshListener, OnRTScrollListener, ILiveDialogManagerFn, ICommentFn, TextWatcher, OnItemClickListener,
-		IRequestResultListener {
+public class CommentActivity extends BaseActivity implements OnClickListener, OnRefreshListener, OnRTScrollListener,
+		ILiveDialogManagerFn, ICommentFn, TextWatcher, OnItemClickListener, IRequestResultListener,
+		OnLayoutChangeListener, EmojiconGridFragment.OnEmojiconClickedListener,
+		EmojiconsFragment.OnEmojiconBackspaceClickedListener {
 
 	public static final String TAG = "Comment";
 
@@ -65,7 +75,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	/** 发送评论按钮 */
 	private TextView mSendBtn = null;
 	/** 评论输入框 */
-	private EditText mEditText = null;
+	private EditText mEditInput = null;
 	/** 评论列表无数据时显示 */
 	private TextView mNoData = null;
 	/** 上拉刷新时，在ListView底部显示的布局 */
@@ -73,7 +83,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	/** 评论关闭显示布局 */
 	private TextView mNoInputTv = null;
 	/** 输入评论底部的整体布局 */
-	private RelativeLayout mCommentInputLayout = null;
+	private LinearLayout mCommentInputLayout = null;
 	/** 数据显示适配器 */
 	private CommentListViewAdapter mAdapter = null;
 	/** 可上下拉的ListView */
@@ -110,17 +120,28 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	private long mCommentTime = 0;
 
+	private View mRootLayout = null;
+	private int screenHeight = 0;
+	private int keyHeight = 0;
+	private ImageView mEmojiImg = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		mApp = (GolukApplication) getApplication();
-		getWindow().setContentView(R.layout.comment_layout);
+
+		mRootLayout = LayoutInflater.from(this).inflate(R.layout.comment_layout, null);
+		getWindow().setContentView(mRootLayout);
 		getIntentData();
 		historyDate = GolukUtils.getCurrentFormatTime(this);
 		initView();
 		isExit = false;
 		firstDeal();
+
+		screenHeight = getWindowManager().getDefaultDisplay().getHeight();
+		keyHeight = screenHeight / 3;
+		init();
 	}
 
 	/**
@@ -145,15 +166,18 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	private void initView() {
 		mBackBtn = (ImageButton) findViewById(R.id.comment_back);
 		mSendBtn = (TextView) findViewById(R.id.comment_send);
-		mEditText = (EditText) findViewById(R.id.comment_input);
+		mEditInput = (EditText) findViewById(R.id.comment_input);
 		mRTPullListView = (RTPullListView) findViewById(R.id.commentRTPullListView);
 		mNoData = (TextView) findViewById(R.id.comment_nodata);
-		mCommentInputLayout = (RelativeLayout) findViewById(R.id.comment_layout);
+		mCommentInputLayout = (LinearLayout) findViewById(R.id.comment_layout);
 		mNoInputTv = (TextView) findViewById(R.id.comment_noinput);
+		mEmojiImg = (ImageView) findViewById(R.id.emojicon);
+		emoLayout = (FrameLayout) findViewById(R.id.emojiconsLayout);
 
 		mBackBtn.setOnClickListener(this);
 		mSendBtn.setOnClickListener(this);
-		mEditText.addTextChangedListener(this);
+		mEditInput.addTextChangedListener(this);
+		mEmojiImg.setOnClickListener(this);
 
 		mAdapter = new CommentListViewAdapter(this);
 		mAdapter.setVideoUserId(mVideoUserId);
@@ -164,8 +188,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		}
 		mRTPullListView.setOnItemClickListener(this);
 
+		setOnTouchListener();
 	}
-
 
 	/**
 	 * 初次进入界面，数据初始化操作
@@ -179,8 +203,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		if (isCanInput) {
 			mRTPullListView.setEnabled(true);
 			if (mIsShowSoft) {
-				mEditText.requestFocus();
-				GolukUtils.showSoft(mEditText);
+				mEditInput.requestFocus();
+				GolukUtils.showSoft(mEditInput);
 			}
 			mCommentInputLayout.setVisibility(View.VISIBLE);
 			mNoInputTv.setVisibility(View.GONE);
@@ -198,15 +222,18 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	protected void onResume() {
 		super.onResume();
 		mApp.setContext(this, TAG);
+		mRootLayout.addOnLayoutChangeListener(this);
 	}
 
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
 		if (id == R.id.comment_back) {
-			finish();
+			exit();
 		} else if (id == R.id.comment_send) {
 			click_send();
+		} else if (id == R.id.emojicon) {
+			click_switchInput();
 		}
 	}
 
@@ -219,10 +246,15 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		}
 	}
 
+	private void exit() {
+		removeAllMessage();
+		finish();
+	}
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			finish();
+			exit();
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
@@ -231,10 +263,10 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	private void click_send() {
 		// 发评论前需要先判断用户是否登录
 		if (!mApp.isUserLoginSucess) {
-			Intent intent =  null;
-			if(GolukApplication.getInstance().isInternation){
+			Intent intent = null;
+			if (GolukApplication.getInstance().isInternation) {
 				intent = new Intent(this, InternationUserLoginActivity.class);
-			}else{
+			} else {
 				intent = new Intent(this, UserLoginActivity.class);
 			}
 			intent.putExtra("isInfo", "back");
@@ -255,11 +287,14 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			return;
 		}
 
-		final String content = mEditText.getText().toString().trim();
+		final String content = mEditInput.getText().toString().trim();
 		if (null == content || "".equals(content)) {
 			GolukUtils.showToast(this, this.getString(R.string.str_input_comment_content));
 			return;
 		}
+		UserUtils.hideSoftMethod(this);
+		this.hideEmojocon();
+		setSwitchState(true);
 		httpPost_requestAdd(content);
 	}
 
@@ -390,6 +425,11 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 				GolukUtils.showToast(this,
 						this.getResources().getString(R.string.str_pull_refresh_listview_bottom_reach));
 			}
+		} else if (OnScrollListener.SCROLL_STATE_TOUCH_SCROLL == scrollState) {
+			if (!mInputState) {
+				this.hideEmojocon();
+				this.setSwitchState(true);
+			}
 		}
 	}
 
@@ -507,7 +547,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 					} else {
 						mIsReply = true;
 					}
-					mReplyDialog = new ReplyDialog(this, mWillDelBean, mEditText, mIsReply);
+					mReplyDialog = new ReplyDialog(this, mWillDelBean, mEditInput, mIsReply);
 					mReplyDialog.show();
 				}
 			}
@@ -523,8 +563,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			View v = mCommentInputLayout;
 			if (UserUtils.isShouldHideInput(v, ev)) {
 				UserUtils.hideSoftMethod(this);
-				if ("".equals(mEditText.getText().toString().trim()) && mIsReply) {
-					mEditText.setHint(this.getString(R.string.str_comment_input_hit));
+				if ("".equals(mEditInput.getText().toString().trim()) && mIsReply) {
+					mEditInput.setHint(this.getString(R.string.str_comment_input_hit));
 					mIsReply = false;
 				}
 			}
@@ -534,13 +574,11 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	@Override
 	public void afterTextChanged(Editable arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -554,7 +592,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	@Override
 	public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-		final String txt = mEditText.getText().toString().trim();
+		final String txt = mEditInput.getText().toString().trim();
 		if (null != txt && txt.length() > 0) {
 			switchSendState(true);
 		} else {
@@ -571,7 +609,6 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
-		// TODO Auto-generated method stub
 		switch (requestType) {
 		case IPageNotifyFn.PageType_CommentList:
 
@@ -670,10 +707,10 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 					if ("0".equals(bean.result)) {// 成功
 						this.mAdapter.addFirstData(bean);
 						noData(false);
-						mEditText.setText("");
+						mEditInput.setText("");
 						switchSendState(false);
 						mIsReply = false;
-						mEditText.setHint(this.getString(R.string.str_comment_input_hit));
+						mEditInput.setHint(this.getString(R.string.str_comment_input_hit));
 						mCommentTime = System.currentTimeMillis();
 					} else if ("1".equals(bean.result)) {
 						GolukDebugUtils.e("", this.getString(R.string.str_parameter_error));
@@ -712,6 +749,141 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		default:
 			Log.e("CommentActivity", "onLoadComplete ,requestType = " + requestType);
 			break;
+		}
+	}
+
+	private void setOnTouchListener() {
+		mEditInput.setOnTouchListener(new View.OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View arg0, MotionEvent arg1) {
+				if (MotionEvent.ACTION_DOWN == arg1.getAction()) {
+					click_soft();
+				}
+				return false;
+			}
+		});
+	}
+
+	private boolean isCanShowSoft() {
+		return true;
+	}
+
+	@Override
+	protected void hMessage(Message msg) {
+		if (100 == msg.what) {
+			showEmojocon();
+			setSwitchState(false);
+		} else if (200 == msg.what) {
+			setSwitchState(true);
+			GolukUtils.showSoftNotThread(mEditInput);
+			mBaseHandler.sendEmptyMessageDelayed(300, 1000);
+		} else if (300 == msg.what) {
+			hideEmojocon();
+			this.setResize();
+		}
+	}
+
+	private void click_soft() {
+		if (!this.isCanShowSoft()) {
+			return;
+		}
+		mEditInput.setFocusable(true);
+		mEditInput.requestFocus();
+		if (emoLayout.getVisibility() == View.GONE) {
+			this.setResize();
+		} else {
+			setInputAdJust();
+		}
+		mBaseHandler.sendEmptyMessageDelayed(200, 80);
+	}
+
+	// 点击“显示 表情”
+	private void click_Emojocon() {
+		if (!isCanShowSoft()) {
+			return;
+		}
+		GolukUtils.hideSoft(this, mEditInput);
+		mBaseHandler.sendEmptyMessageDelayed(100, 80);
+	}
+
+	/** 表情布局 */
+	private FrameLayout emoLayout = null;
+	/** true:键盘输入状态, false: 表情输入状态 */
+	private boolean mInputState = true;
+
+	private void setInputAdJust() {
+		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+	}
+
+	private void setResize() {
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+	}
+
+	private void showEmojocon() {
+		emoLayout.setVisibility(View.VISIBLE);
+	}
+
+	private void hideEmojocon() {
+		emoLayout.setVisibility(View.GONE);
+	}
+
+	private void init() {
+		EmojiconsFragment fg = EmojiconsFragment.newInstance(false);
+		getSupportFragmentManager().beginTransaction().replace(R.id.emojiconsLayout, fg).commit();
+	}
+
+	private void click_switchInput() {
+		if (!this.isCanShowSoft()) {
+			return;
+		}
+		if (mInputState) {
+			click_Emojocon();
+		} else {
+			click_soft();
+		}
+	}
+
+	private void setSwitchState(boolean isTextInput) {
+		mInputState = isTextInput;
+		if (isTextInput) {
+			// 显示表情
+			mEmojiImg.setImageDrawable(this.getResources().getDrawable(R.drawable.input_state_emojo));
+		} else {
+			// 显示键盘
+			mEmojiImg.setImageDrawable(this.getResources().getDrawable(R.drawable.input_state_txt));
+		}
+	}
+
+	@Override
+	public void onEmojiconBackspaceClicked(View v) {
+		EmojiconsFragment.backspace(mEditInput);
+	}
+
+	@Override
+	public void onEmojiconClicked(Emojicon emojicon) {
+		EmojiconsFragment.input(mEditInput, emojicon);
+	}
+
+	private void removeAllMessage() {
+		if (null != mBaseHandler) {
+			mBaseHandler.removeMessages(100);
+			mBaseHandler.removeMessages(200);
+			mBaseHandler.removeMessages(300);
+		}
+	}
+
+	@Override
+	public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight,
+			int oldBottom) {
+		if (oldBottom != 0 && bottom != 0 && (oldBottom - bottom > keyHeight)) {
+			setSwitchState(true);
+		} else if (oldBottom != 0 && bottom != 0 && (bottom - oldBottom > keyHeight)) {
+			if (this.emoLayout.getVisibility() == View.GONE) {
+				setSwitchState(true);
+			} else {
+				setSwitchState(false);
+			}
 		}
 	}
 

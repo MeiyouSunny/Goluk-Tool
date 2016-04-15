@@ -39,7 +39,7 @@ import com.mobnote.golukmain.promotion.PromotionModel;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.startshare.bean.ShareDataBean;
 import com.mobnote.golukmain.startshare.bean.ShareDataFullBean;
-import com.mobnote.golukmain.thirdshare.china.ThirdShareBean;
+import com.mobnote.golukmain.thirdshare.ThirdShareBean;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.rd.car.editor.Constants;

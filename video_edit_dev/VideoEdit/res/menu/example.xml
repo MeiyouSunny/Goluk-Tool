@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+  <group android:checkableBehavior="single">
+    <item
+        android:id="@+id/action_layout_linear"
+        android:title="暂定"
+        android:checked="true" />
+    <item
+        android:id="@+id/action_layout_grid"
+        android:title="播放" />
+    <item
+        android:id="@+id/action_layout_staggered"
+        android:title="导出" />
+  </group>
+</menu>
