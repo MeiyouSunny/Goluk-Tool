@@ -1,6 +1,6 @@
 package com.mobnote.golukmain.startshare;
 
-import com.mobnote.golukmain.thirdshare.china.ThirdShareBean;
+import com.mobnote.golukmain.thirdshare.ThirdShareBean;
 
 import android.content.Intent;
 

@@ -44,12 +44,12 @@
             android:name="com.mobnote.golukmain.comment.CommentActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustResize" >
+            android:windowSoftInputMode="stateHidden|adjustResize" >
         </activity>
         <activity
             android:name="com.mobnote.golukmain.usercenter.NewUserCenterActivity"
-            android:screenOrientation="portrait"
-            android:hardwareAccelerated="true" />
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
 
         <!-- 个人中心模块 -->
         <activity
@@ -57,8 +57,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.mobnote.golukmain.UserLoginActivity"
-            android:screenOrientation="portrait" 
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="com.mobnote.golukmain.UserRegistActivity"
             android:screenOrientation="portrait" />
@@ -68,12 +68,10 @@
         <activity
             android:name="com.mobnote.golukmain.UserIdentifyActivity"
             android:screenOrientation="portrait" />
-        
-        
         <activity
             android:name="com.mobnote.golukmain.internation.login.InternationUserLoginActivity"
-            android:screenOrientation="portrait" 
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="com.mobnote.golukmain.internation.login.InternationUserRegistActivity"
             android:screenOrientation="portrait" />
@@ -127,9 +125,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.mobnote.golukmain.videodetail.VideoDetailActivity"
-            android:screenOrientation="portrait"
             android:hardwareAccelerated="true"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustResize" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name="com.mobnote.golukmain.ImageClipActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -140,11 +138,10 @@
         <activity
             android:name="com.mobnote.golukmain.profit.MyProfitDetailActivity"
             android:screenOrientation="portrait" />
-         <activity
+        <activity
             android:name="com.mobnote.golukmain.following.FollowingListActivity"
             android:screenOrientation="portrait" />
-         
-         <activity
+        <activity
             android:name="com.mobnote.golukmain.fan.FanListActivity"
             android:screenOrientation="portrait" />
 
@@ -152,6 +149,7 @@
         <receiver android:name="com.mobnote.receiver.NetworkStateReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
@@ -284,17 +282,17 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
-       <activity
+        <activity
             android:name="com.mobnote.golukmain.player.MovieActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="landscape"
             android:hardwareAccelerated="true"
+            android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
         <activity
             android:name="com.mobnote.golukmain.special.SpecialListActivity"
-            android:screenOrientation="portrait"
             android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
@@ -358,34 +356,34 @@
         <activity
             android:name="com.mobnote.golukmain.adas.AdasVerificationActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait" 
-            android:theme="@android:style/Theme.NoTitleBar"/>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
         <activity
             android:name="com.mobnote.golukmain.adas.AdasGuideActivity"
-			android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait" 
-            android:theme="@android:style/Theme.NoTitleBar"/>
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
         <activity
             android:name="com.mobnote.golukmain.carrecorder.settings.AdasSensibilityActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait" 
-            android:theme="@android:style/Theme.NoTitleBar"/>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
         <activity
             android:name="com.mobnote.golukmain.adas.AdasVehicleConfigActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait" 
-            android:windowSoftInputMode="stateAlwaysVisible|adjustPan"
-            android:theme="@android:style/Theme.NoTitleBar"/>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateAlwaysVisible|adjustPan" />
         <activity
             android:name="com.mobnote.golukmain.adas.AdasSeletedVehicleTypeActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait" 
-            android:theme="@android:style/Theme.NoTitleBar"/>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
         <activity
             android:name="com.mobnote.golukmain.adas.AdasConfigActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait" 
-            android:theme="@android:style/Theme.NoTitleBar"/>
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
         <!-- ###################Glide使用volley传输###################### -->
         <meta-data
             android:name="com.mobnote.util.GlideConfiguration"
@@ -397,12 +395,14 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="mobnote" />
-        
-        <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAOCQX0S0Y0HIEUIz0M97glDV0Nka0YEKg"/>
-        <!-- <meta-data
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAOCQX0S0Y0HIEUIz0M97glDV0Nka0YEKg" />
+        <!--
+             <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" /> -->
+            android:value="@integer/google_play_services_version" />
+        -->
 
         <activity
             android:name="com.umeng.socialize.view.ShareActivity"
@@ -415,13 +415,13 @@
             android:name="com.mobnote.golukmain.photoalbum.PhotoAlbumActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
-            android:screenOrientation="portrait"
             android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
         <activity
             android:name="com.mobnote.golukmain.cluster.ClusterActivity"
-            android:screenOrientation="portrait"
             android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
@@ -561,19 +561,19 @@
         </activity>
         <activity
             android:name="com.mobnote.golukmain.praised.MyPraisedActivity"
-            android:screenOrientation="portrait"
             android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
             android:name="com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
             android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
-        
-           <!-- facebook 相关 -->
+
+        <!-- facebook 相关 -->
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -588,8 +588,8 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-        
-          <!-- twitter -->
+
+        <!-- twitter -->
         <activity
             android:name="com.umeng.socialize.handler.TwitterWebActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -662,10 +662,10 @@
     <!-- 【可选】 信鸽SDK所需权限 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BATTERY_STATS" />
-
     <uses-permission android:name="com.huawei.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="com.huawei.android.launcher.permission.WRITE_SETTINGS" />
     <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
-    <uses-permission android:name="com.miui.mihome2.permission.READ_SETTINGS"/>
-    <uses-permission android:name="com.miui.mihome2.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="com.miui.mihome2.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.miui.mihome2.permission.WRITE_SETTINGS" />
+
 </manifest>

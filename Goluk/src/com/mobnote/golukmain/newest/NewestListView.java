@@ -4,8 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
@@ -20,15 +22,16 @@ import com.mobnote.golukmain.praise.bean.PraiseCancelResultBean;
 import com.mobnote.golukmain.praise.bean.PraiseCancelResultDataBean;
 import com.mobnote.golukmain.praise.bean.PraiseResultBean;
 import com.mobnote.golukmain.praise.bean.PraiseResultDataBean;
+import com.mobnote.golukmain.thirdshare.ProxyThirdShare;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
-import com.mobnote.golukmain.thirdshare.china.ProxyThirdShare;
-import com.mobnote.golukmain.thirdshare.china.ThirdShareBean;
+import com.mobnote.golukmain.thirdshare.ThirdShareBean;
 import com.mobnote.golukmain.videosuqare.RTPullListView;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
 import com.mobnote.golukmain.videosuqare.VideoSquareManager;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
 import com.mobnote.util.GolukUtils;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;

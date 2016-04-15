@@ -7,12 +7,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -22,15 +22,18 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLayoutChangeListener;
 import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.logic.GolukModule;
@@ -68,9 +71,9 @@ import com.mobnote.golukmain.praise.bean.PraiseCancelResultBean;
 import com.mobnote.golukmain.praise.bean.PraiseCancelResultDataBean;
 import com.mobnote.golukmain.praise.bean.PraiseResultBean;
 import com.mobnote.golukmain.praise.bean.PraiseResultDataBean;
+import com.mobnote.golukmain.thirdshare.ProxyThirdShare;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
-import com.mobnote.golukmain.thirdshare.china.ProxyThirdShare;
-import com.mobnote.golukmain.thirdshare.china.ThirdShareBean;
+import com.mobnote.golukmain.thirdshare.ThirdShareBean;
 import com.mobnote.golukmain.videoclick.NewestVideoClickRequest;
 import com.mobnote.golukmain.videoshare.ShareVideoShortUrlRequest;
 import com.mobnote.golukmain.videoshare.bean.VideoShareDataBean;
@@ -82,6 +85,9 @@ import com.mobnote.golukmain.videosuqare.VideoSquareManager;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
+import com.rockerhieu.emojicon.EmojiconGridFragment;
+import com.rockerhieu.emojicon.EmojiconsFragment;
+import com.rockerhieu.emojicon.emoji.Emojicon;
 
 import de.greenrobot.event.EventBus;
 
@@ -93,7 +99,8 @@ import de.greenrobot.event.EventBus;
  */
 public class VideoDetailActivity extends BaseActivity implements OnClickListener, OnRefreshListener,
 		OnRTScrollListener, ICommentFn, TextWatcher, ILiveDialogManagerFn, OnItemClickListener, IRequestResultListener,
-		VideoSuqareManagerFn {
+		VideoSuqareManagerFn, EmojiconGridFragment.OnEmojiconClickedListener,
+		EmojiconsFragment.OnEmojiconBackspaceClickedListener, OnLayoutChangeListener {
 
 	private static final String TAG = "VideoDetailActivity";
 	private final static int DIALOG_TYPE_VIDEO_DELETED = 24;
@@ -112,7 +119,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private EditText mEditInput = null;
 	private RTPullListView mRTPullListView = null;
 	private RelativeLayout mImageRefresh = null;
-	public RelativeLayout mCommentLayout = null;
+	public LinearLayout mCommentLayout = null;
+	private ImageView mEmojiImg = null;
 	private boolean isCanInput = true;
 	/** 评论 **/
 	private ArrayList<CommentBean> commentDataList = null;
@@ -162,11 +170,20 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private View mHeaderView;
 	private String mTitleStr;
 
+	private View activityRootView = null;
+	private int screenHeight = 0;
+	private int keyHeight = 0;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.comment);
+
+		activityRootView = findViewById(R.id.all_layout);
+		screenHeight = getWindowManager().getDefaultDisplay().getHeight();
+		keyHeight = screenHeight / 3;
+
 		Intent intent = getIntent();
 		if (savedInstanceState == null) {
 			String type = intent.getStringExtra(TYPE);
@@ -199,6 +216,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		initListener();
 		addCallBackListener();
 		getDetailData();
+		init();
 	}
 
 	private void addCallBackListener() {
@@ -242,6 +260,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 	@Override
 	protected void onResume() {
+		activityRootView.addOnLayoutChangeListener(this);
 		mHeader.startPlayer();
 		super.onResume();
 		mBaseApp.setContext(this, "detailcomment");
@@ -255,7 +274,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		mEditInput = (EditText) findViewById(R.id.comment_input);
 		mRTPullListView = (RTPullListView) findViewById(R.id.commentRTPullListView);
 		mImageRefresh = (RelativeLayout) findViewById(R.id.video_detail_click_refresh);
-		mCommentLayout = (RelativeLayout) findViewById(R.id.comment_layout);
+		mCommentLayout = (LinearLayout) findViewById(R.id.comment_layout);
+		mEmojiImg = (ImageView) findViewById(R.id.emojicon);
+		emoLayout = (FrameLayout) findViewById(R.id.emojiconsLayout);
 
 		mImageRight.setImageResource(R.drawable.mine_icon_more);
 		mTextTitle.setText(mTitleStr);
@@ -273,6 +294,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		mTextSend.setOnClickListener(this);
 		mImageRight.setOnClickListener(this);
 		mEditInput.addTextChangedListener(this);
+		mEmojiImg.setOnClickListener(this);
 		mImageRefresh.setOnClickListener(this);
 
 		mRTPullListView.setonRefreshListener(this);
@@ -342,6 +364,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			if (GolukUtils.isFastDoubleClick()) {
 				return;
 			}
+			removeAllMessage();
 			finish();
 		} else if (id == R.id.comment_title_right) {
 			if (!isClick) {
@@ -363,12 +386,16 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			if (!isClick) {
 				return;
 			}
+			// 隐藏键盘
 			UserUtils.hideSoftMethod(this);
+			this.hideEmojocon();
+			setSwitchState(true);
 			click_send();
 		} else if (id == R.id.video_detail_click_refresh) {
 			clickRefresh = true;
 			getDetailData();
-		} else {
+		} else if (id == R.id.emojicon) {
+			click_switchInput();
 		}
 	}
 
@@ -393,6 +420,11 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			if ((count == visibleCount) && (count > 20) && !mIsHaveData) {
 				GolukUtils.showToast(this,
 						this.getResources().getString(R.string.str_pull_refresh_listview_bottom_reach));
+			}
+		} else if (OnScrollListener.SCROLL_STATE_TOUCH_SCROLL == scrollState) {
+			if (!mInputState) {
+				this.hideEmojocon();
+				this.setSwitchState(true);
 			}
 		}
 	}
@@ -474,9 +506,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		// 发评论／回复 前需要先判断用户是否登录
 		if (!mBaseApp.isUserLoginSucess) {
 			Intent intent = null;
-			if(GolukApplication.getInstance().isInternation){
+			if (GolukApplication.getInstance().isInternation) {
 				intent = new Intent(this, InternationUserLoginActivity.class);
-			}else{
+			} else {
 				intent = new Intent(this, UserLoginActivity.class);
 			}
 			intent.putExtra("isInfo", "back");
@@ -500,6 +532,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			GolukUtils.showToast(this, this.getString(R.string.str_input_comment_content));
 			return;
 		}
+
+		GolukDebugUtils.e("", "client  send---comment: " + content);
+
 		httpPost_requestAdd(content);
 	}
 
@@ -629,6 +664,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	}
 
 	private void exit() {
+		removeAllMessage();
 		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
 		if (null != mReplyDialog) {
 			mReplyDialog.dismiss();
@@ -638,6 +674,14 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		}
 		mIsReply = false;
 		mHeader.exit();
+	}
+
+	private void removeAllMessage() {
+		if (null != mBaseHandler) {
+			mBaseHandler.removeMessages(100);
+			mBaseHandler.removeMessages(200);
+			mBaseHandler.removeMessages(300);
+		}
 	}
 
 	private void callBackFailed() {
@@ -783,12 +827,19 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	public void showSoft() {
 		if ((mVideoJson.data.avideo.video != null) && (mVideoJson.data.avideo.video.comment != null)
 				&& "1".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
-			mEditInput.requestFocus();
-			InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-			inputManager.showSoftInput(mEditInput, 0);
+			// setResize();
+			hideEmojocon();
 		} else {
 			mEditInput.clearFocus();
 		}
+	}
+
+	private boolean isCanShowSoft() {
+		if ((mVideoJson.data.avideo.video != null) && (mVideoJson.data.avideo.video.comment != null)
+				&& "1".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -797,6 +848,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			if (GolukUtils.isFastDoubleClick()) {
 				return true;
 			}
+			removeAllMessage();
 			finish();
 			return true;
 		}
@@ -1013,13 +1065,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 						removeFooterView();
 						getCommentList(OPERATOR_FIRST, "");
 					}
-					mCommentLayout.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View arg0) {
+					this.setOnTouchListener();
 
-							showSoft();
-						}
-					});
 				}
 				clickVideoNumber();
 			} else if (mVideoJson != null && !mVideoJson.success) {
@@ -1265,9 +1312,21 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		case IPageNotifyFn.PageType_VideoClick:
 			break;
 		default:
-			// Log.e("", "======onLoadComplete result==" + result.toString());
 			break;
 		}
+	}
+
+	private void setOnTouchListener() {
+		mEditInput.setOnTouchListener(new View.OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View arg0, MotionEvent arg1) {
+				if (MotionEvent.ACTION_DOWN == arg1.getAction()) {
+					click_soft();
+				}
+				return false;
+			}
+		});
 	}
 
 	private void showDelDialog() {
@@ -1318,6 +1377,116 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
 		if (VSquare_Req_MainPage_DeleteVideo == event) {
 			callBack_DelVideo(msg, param1, param2);
+		}
+	}
+
+	@Override
+	protected void hMessage(Message msg) {
+		if (100 == msg.what) {
+			showEmojocon();
+			setSwitchState(false);
+		} else if (200 == msg.what) {
+			setSwitchState(true);
+			GolukUtils.showSoftNotThread(mEditInput);
+			mBaseHandler.sendEmptyMessageDelayed(300, 1000);
+		} else if (300 == msg.what) {
+			hideEmojocon();
+			this.setResize();
+		}
+	}
+
+	private void click_soft() {
+		if (!this.isCanShowSoft()) {
+			return;
+		}
+		mEditInput.setFocusable(true);
+		mEditInput.requestFocus();
+		if (emoLayout.getVisibility() == View.GONE) {
+			this.setResize();
+		} else {
+			setInputAdJust();
+		}
+		mBaseHandler.sendEmptyMessageDelayed(200, 80);
+	}
+
+	// 点击“显示 表情”
+	private void click_Emojocon() {
+		if (!isCanShowSoft()) {
+			return;
+		}
+		GolukUtils.hideSoft(this, mEditInput);
+		mBaseHandler.sendEmptyMessageDelayed(100, 80);
+	}
+
+	/** 表情布局 */
+	private FrameLayout emoLayout = null;
+	/** true:键盘输入状态, false: 表情输入状态 */
+	private boolean mInputState = true;
+
+	private void setInputAdJust() {
+		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+	}
+
+	private void setResize() {
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+	}
+
+	private void showEmojocon() {
+		emoLayout.setVisibility(View.VISIBLE);
+	}
+
+	private void hideEmojocon() {
+		emoLayout.setVisibility(View.GONE);
+	}
+
+	private void init() {
+		EmojiconsFragment fg = EmojiconsFragment.newInstance(false);
+		getSupportFragmentManager().beginTransaction().replace(R.id.emojiconsLayout, fg).commit();
+	}
+
+	private void click_switchInput() {
+		if (!this.isCanShowSoft()) {
+			return;
+		}
+		if (mInputState) {
+			click_Emojocon();
+		} else {
+			click_soft();
+		}
+	}
+
+	private void setSwitchState(boolean isTextInput) {
+		mInputState = isTextInput;
+		if (isTextInput) {
+			// 显示表情
+			mEmojiImg.setImageDrawable(this.getResources().getDrawable(R.drawable.input_state_emojo));
+		} else {
+			// 显示键盘
+			mEmojiImg.setImageDrawable(this.getResources().getDrawable(R.drawable.input_state_txt));
+		}
+	}
+
+	@Override
+	public void onEmojiconBackspaceClicked(View v) {
+		EmojiconsFragment.backspace(mEditInput);
+	}
+
+	@Override
+	public void onEmojiconClicked(Emojicon emojicon) {
+		EmojiconsFragment.input(mEditInput, emojicon);
+	}
+
+	@Override
+	public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight,
+			int oldBottom) {
+		if (oldBottom != 0 && bottom != 0 && (oldBottom - bottom > keyHeight)) {
+			setSwitchState(true);
+		} else if (oldBottom != 0 && bottom != 0 && (bottom - oldBottom > keyHeight)) {
+			if (this.emoLayout.getVisibility() == View.GONE) {
+				setSwitchState(true);
+			} else {
+				setSwitchState(false);
+			}
 		}
 	}
 }
