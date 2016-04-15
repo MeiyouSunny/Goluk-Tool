@@ -1,5 +1,6 @@
 package com.makeramen.dragsortadapter.example;
 
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -7,9 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 //import butterknife.ButterKnife;
 //import butterknife.InjectView;
+
+
 
 import com.goluk.videoedit.R;
 import com.makeramen.dragsortadapter.DragSortAdapter;
@@ -23,9 +27,13 @@ public class ExampleAdapter extends
 
 	public static final String TAG = ExampleAdapter.class.getSimpleName();
 
-	private final List<Integer> data;
+	private List<Bitmap> data;
 
-	public ExampleAdapter(RecyclerView recyclerView, List<Integer> data) {
+	public void setData(List<Bitmap> src) {
+		data = src;
+	}
+
+	public ExampleAdapter(RecyclerView recyclerView, List<Bitmap> data) {
 		super(recyclerView);
 		this.data = data;
 	}
@@ -42,19 +50,21 @@ public class ExampleAdapter extends
 
 	@Override
 	public void onBindViewHolder(final MainViewHolder holder, final int position) {
-		int itemId = data.get(position);
-		holder.text.setText(EnglishNumberToWords.convert(itemId));
+//		int itemId = data.get(position);
+		Bitmap bitmap = data.get(position);
+//		holder.text.setText(EnglishNumberToWords.convert(itemId));
+		holder.img.setImageBitmap(bitmap);
 		// NOTE: check for getDraggingId() match to set an "invisible space"
 		// while dragging
-		holder.container
-				.setVisibility(getDraggingId() == itemId ? View.INVISIBLE
-						: View.VISIBLE);
+//		holder.container
+//				.setVisibility(getDraggingId() == itemId ? View.INVISIBLE
+//						: View.VISIBLE);
 		holder.container.postInvalidate();
 	}
 
 	@Override
 	public long getItemId(int position) {
-		return data.get(position);
+		return position;//data.get(position);
 	}
 
 	@Override
@@ -79,18 +89,18 @@ public class ExampleAdapter extends
 		// @InjectView(R.id.container)
 		ViewGroup container;
 		// @InjectView(R.id.text)
-		TextView text;
+		ImageView img;
 
 		public MainViewHolder(DragSortAdapter adapter, View itemView) {
 			super(adapter, itemView);
 			container = (ViewGroup) itemView.findViewById(R.id.container);
-			text = (TextView) itemView.findViewById(R.id.text);
+			img = (ImageView) itemView.findViewById(R.id.img);
 			// ButterKnife.inject(this, itemView);
 		}
 
 		@Override
 		public void onClick(@NonNull View v) {
-			Log.d(TAG, text.getText() + " clicked!");
+//			Log.d(TAG, text.getText() + " clicked!");
 		}
 
 		@Override
