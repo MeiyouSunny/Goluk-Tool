@@ -26,7 +26,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TabWidget;
 import android.widget.TextView;
 
 public class FragmentDiscover extends Fragment implements OnClickListener {
