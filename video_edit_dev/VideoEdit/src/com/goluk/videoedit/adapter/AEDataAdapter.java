@@ -234,14 +234,14 @@ public class AEDataAdapter extends DragSortAdapter<DragSortAdapter.ViewHolder>{
 			// TODO Auto-generated constructor stub
 			mAddIv = (ImageView) itemView.findViewById(R.id.iv_ae_data_add);
 			mAddIv.setOnClickListener(new View.OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					addSection();
 				}
 			});
-			
+
 			ViewGroup.LayoutParams lp =  itemView.getLayoutParams();
 			lp.width = DeviceUtil.getScreenWidthSize(mContext) - DeviceUtil.dp2px(mContext, 65);
 			itemView.setLayoutParams(lp);
