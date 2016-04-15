@@ -8,7 +8,8 @@
         android:id="@+id/fl_video_sur_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#272727" >
+        android:layout_alignParentTop="true"
+        android:background="#ff0000" >
     </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -20,5 +21,11 @@
         android:layout_height="wrap_content"
         android:scrollbarStyle="outsideOverlay"
         android:scrollbars="horizontal"/>
+    <FrameLayout
+        android:id="@+id/fl_video_edit_controller"
+        android:layout_width="match_parent"
+        android:layout_height="143dp"
+        android:background="#242629"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

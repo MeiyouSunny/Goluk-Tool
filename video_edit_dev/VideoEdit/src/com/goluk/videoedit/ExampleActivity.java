@@ -37,27 +37,22 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 	RecyclerView mRecyclerView;
 	LinearLayoutManager mLayoutManager;
 	Handler mPlaySyncHandler;
-//	private FrameLayout videoSurLayout;
 	private GLSurfaceView glSurfaceView;
 	AfterEffect afterEffect;
 	Project project;
 	int imageHeight;
-	List<Bitmap> mVideoBitmapList;
+	List<BitmapWrapper> mVideoBitmapList;
 	Handler handler;
 	private ExampleAdapter mAdapter;
 	private FrameLayout mSurfaceLayout;
 
-	String mVideoPath = "/storage/emulated/0/goluk/video/urgent/URG_event_20160218175931_1_TX_1_0015.mp4";
-	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND3_160104165107_0012.mp4";
+	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
+	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406204409_1_TX_3_0012.mp4";
+
 	private void startParse() {
 		if (mVideoPath != null) {
 			try {
 				afterEffect.editAddChunk(mVideoPath, 0);
-
-//				afterEffect.generateThumbAsyn(chunk, 2, imageHeight);
-//				if (this.chunkThumbList == null)
-//					chunkThumbList = new ArrayList<ChunkThumbs>();
-//				chunkThumbList.add(chunkThumb);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -75,6 +70,7 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 	private void pause() {
 		afterEffect.playPause();
 	}
+
 	private void initPlayer() {
 		mSurfaceLayout = (FrameLayout)findViewById(R.id.fl_video_sur_layout);
 		glSurfaceView = new GLSurfaceView(this);
@@ -155,7 +151,7 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 				}
 			}
 		};
-		mVideoBitmapList = new ArrayList<Bitmap>();
+		mVideoBitmapList = new ArrayList<BitmapWrapper>();
 		startParse();
 	}
 
@@ -183,7 +179,6 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 				@Override
 				public void run() {
 					mRecyclerView.scrollBy(scrollX, 0);
-//					mRecyclerView.scrollTo(2, 2);
 				}
 			});
 			break;
@@ -221,14 +216,14 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 				 afterEffect.generateThumbAsyn(chunk, 2, imageHeight);
 			}
 			break;
-
 		}
+
 		case MSG_AE_CHUNK_ADD_FAILED: {
 			String filePath=(String)msg.obj;
 			Log.d(TAG, "chunk added fialed:" + filePath);
 			break;
-
 		}
+
 		case MSG_AE_BITMAP_READ_OUT: {
 //			String filePath=(String)msg.obj;
 //			Log.d(TAG, "chunk added fialed:" + filePath);
@@ -240,16 +235,21 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 			if(thumbList != null && thumbList.size() > 0) {
 				for(int i = 0; i < thumbList.size(); i++) {
 					VideoThumb thumb = thumbList.get(i);
-					mVideoBitmapList.add(thumb.getBitmap());
+					BitmapWrapper wrapper = new BitmapWrapper();
+					wrapper.bitmap = thumb.getBitmap();
+					wrapper.index = i;
+//					mVideoBitmapList.add(thumb.getBitmap());
+					mVideoBitmapList.add(wrapper);
 				}
 			}
 			mAdapter.setData(mVideoBitmapList);
 			mAdapter.notifyDataSetChanged();
 			break;
-
 		}
 
 		default:
+			Log.d(TAG, "unknown operation happened");
+			break;
 		}
 	}
 
@@ -259,10 +259,7 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 		setContentView(R.layout.activity_after_effect);
 
 		int dataSize = 100;
-		List<Bitmap> data = new ArrayList<Bitmap>(dataSize);
-//		for (int i = 1; i < dataSize + 1; i++) {
-//			data.add(i);
-//		}
+		List<BitmapWrapper> data = new ArrayList<BitmapWrapper>(dataSize);
 
 		mLayoutManager = new LinearLayoutManager(this);
 		mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -270,50 +267,7 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 		mAdapter = new ExampleAdapter(mRecyclerView, data);
 		mRecyclerView.setAdapter(mAdapter);
 		mRecyclerView.setLayoutManager(mLayoutManager);
-//		recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-//		mPlaySyncHandler = new Handler() {
-//			@Override
-//			public void handleMessage(Message msg) {
-//				switch (msg.what) {
-//				case 3003:
-//					mRecyclerView.post(new Runnable() {
-//					@Override
-//					public void run() {
-//						mRecyclerView.scrollBy(20, 0);
-//					}
-//				});
-//					break;
-//				default:
-//					break;
-//				}
-//				super.handleMessage(msg);
-//			}
-//		};
-
-//		Thread thread = new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//				for(int i = 0; i < 1000; i++) {
-//					mRecyclerView.post(new Runnable() {
-//						@Override
-//						public void run() {
-//							mRecyclerView.scrollBy(20, 0);
-//						}
-//					});
-////					mPlaySyncHandler.removeMessages(3003);
-////					Message msg = mPlaySyncHandler.obtainMessage(3003);
-////					mPlaySyncHandler.sendMessage(msg);
-//					try {
-//						Thread.sleep(10);
-//					} catch (InterruptedException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//				}
-//			}
-//		});
-//		thread.start();
+		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 		imageHeight = DeviceUtil.dp2px(this, 40);
 		initPlayer();
 	}
@@ -339,8 +293,6 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 			break;
 		case R.id.action_layout_staggered:
 			item.setChecked(true);
-//			recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3,
-//					StaggeredGridLayoutManager.VERTICAL));
 			break;
 		case R.id.action_layout_tail:
 			afterEffect.setDateString("2016.04.15");
