@@ -425,6 +425,11 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 				GolukUtils.showToast(this,
 						this.getResources().getString(R.string.str_pull_refresh_listview_bottom_reach));
 			}
+		} else if (OnScrollListener.SCROLL_STATE_TOUCH_SCROLL == scrollState) {
+			if (!mInputState) {
+				this.hideEmojocon();
+				this.setSwitchState(true);
+			}
 		}
 	}
 

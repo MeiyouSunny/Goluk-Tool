@@ -421,6 +421,11 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				GolukUtils.showToast(this,
 						this.getResources().getString(R.string.str_pull_refresh_listview_bottom_reach));
 			}
+		} else if (OnScrollListener.SCROLL_STATE_TOUCH_SCROLL == scrollState) {
+			if (!mInputState) {
+				this.hideEmojocon();
+				this.setSwitchState(true);
+			}
 		}
 	}
 
@@ -501,9 +506,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		// 发评论／回复 前需要先判断用户是否登录
 		if (!mBaseApp.isUserLoginSucess) {
 			Intent intent = null;
-			if(GolukApplication.getInstance().isInternation){
+			if (GolukApplication.getInstance().isInternation) {
 				intent = new Intent(this, InternationUserLoginActivity.class);
-			}else{
+			} else {
 				intent = new Intent(this, UserLoginActivity.class);
 			}
 			intent.putExtra("isInfo", "back");
