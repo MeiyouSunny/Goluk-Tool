@@ -31,7 +31,11 @@ import cn.npnt.ae.model.ChunkThumbs;
 import cn.npnt.ae.model.Project;
 import cn.npnt.ae.model.VideoThumb;
 
-import com.makeramen.dragsortadapter.example.ExampleAdapter;
+import com.goluk.videoedit.bean.ChunkBean;
+import com.goluk.videoedit.bean.DummyFooterBean;
+import com.goluk.videoedit.bean.ProjectItemBean;
+import com.goluk.videoedit.bean.TailBean;
+import com.makeramen.dragsortadapter.example.ProjectLineAdapter;
 
 public class ExampleActivity extends Activity implements AfterEffectListener {
 	RecyclerView mRecyclerView;
@@ -41,9 +45,9 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 	AfterEffect afterEffect;
 	Project project;
 	int imageHeight;
-	List<BitmapWrapper> mVideoBitmapList;
+	List<ProjectItemBean> mProjectItemList;
 	Handler handler;
-	private ExampleAdapter mAdapter;
+	private ProjectLineAdapter mAdapter;
 	private FrameLayout mSurfaceLayout;
 
 	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
@@ -95,27 +99,27 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 				switch (msg.what) {
 //				case PRO:
 //					if (progress >= MAX_PROGRESS) {
-//						// ÖØÐÂÉèÖÃ
+//						// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 //						progress = 0;
-//						progressDialog.dismiss();// Ïú»Ù¶Ô»°¿ò
+//						progressDialog.dismiss();// ï¿½ï¿½Ù¶Ô»ï¿½ï¿½ï¿½
 //					} else {
 //						progress++;
 //						progressDialog.setProgress(progress);
-//						// ÑÓ³Ù·¢ËÍÏûÏ¢
+//						// ï¿½Ó³Ù·ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 //						handler.sendEmptyMessageDelayed(PRO, 100);
 //					}
 //					break;
 //				case UPDATE_VIEW:
 //					if (canUpdateView) {
 //
-//						// ¸üÐÂÊÓÍ¼
+//						// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼
 //						updateView(msg.arg1);
 //
 //						canUpdateView = false;
 //						canTimer = true;
 //					} else {
 //						if (canTimer) {
-//							// Ð´Ò»¸ö¶¨Ê±Æ÷£¬¶¨Ê±Æ÷Î¨Ò»
+//							// Ð´Ò»ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Î¨Ò»
 //							new Thread(new Runnable() {
 //
 //								@Override
@@ -151,7 +155,7 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 				}
 			}
 		};
-		mVideoBitmapList = new ArrayList<BitmapWrapper>();
+
 		startParse();
 	}
 
@@ -232,17 +236,21 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 			ArrayList<VideoThumb> thumbList = chunkThumbs.getThumbs();
 			//VideoThumb thumb = thumbList.get(0);
 			//thumb.getBitmap();
-			if(thumbList != null && thumbList.size() > 0) {
-				for(int i = 0; i < thumbList.size(); i++) {
-					VideoThumb thumb = thumbList.get(i);
-					BitmapWrapper wrapper = new BitmapWrapper();
-					wrapper.bitmap = thumb.getBitmap();
-					wrapper.index = i;
-//					mVideoBitmapList.add(thumb.getBitmap());
-					mVideoBitmapList.add(wrapper);
-				}
-			}
-			mAdapter.setData(mVideoBitmapList);
+//			if(thumbList != null && thumbList.size() > 0) {
+//				for(int i = 0; i < thumbList.size(); i++) {
+//					VideoThumb thumb = thumbList.get(i);
+//					BitmapWrapper wrapper = new BitmapWrapper();
+//					wrapper.bitmap = thumb.getBitmap();
+//					wrapper.index = i;
+////					mVideoBitmapList.add(thumb.getBitmap());
+//					mVideoBitmapList.add(wrapper);
+//				}
+//			}
+			ChunkBean chunkBean = new ChunkBean();
+			chunkBean.chunk = chunk;
+			chunkBean.index_tag = DeviceUtil.generateIndexTag(mProjectItemList);
+			mProjectItemList.add(0, chunkBean);
+			mAdapter.setData(mProjectItemList);
 			mAdapter.notifyDataSetChanged();
 			break;
 		}
@@ -258,13 +266,21 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_after_effect);
 
-		int dataSize = 100;
-		List<BitmapWrapper> data = new ArrayList<BitmapWrapper>(dataSize);
+//		List<ProjectItemBean> data = new ArrayList<ProjectItemBean>();
+		// default tail and footer
+		mProjectItemList = new ArrayList<ProjectItemBean>();
+		TailBean tailBean = new TailBean();
+		tailBean.index_tag = DeviceUtil.generateIndexTag(mProjectItemList);
+		mProjectItemList.add(tailBean);
+		DummyFooterBean footerBean = new DummyFooterBean();
+		footerBean.index_tag = DeviceUtil.generateIndexTag(mProjectItemList);
+		mProjectItemList.add(footerBean);
 
 		mLayoutManager = new LinearLayoutManager(this);
 		mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mRecyclerView = (RecyclerView) findViewById(R.id.rv_video_edit_pic_list);
-		mAdapter = new ExampleAdapter(mRecyclerView, data);
+		mAdapter = new ProjectLineAdapter(this, mRecyclerView, mProjectItemList);
+//		mProjectItemList = data;
 		mRecyclerView.setAdapter(mAdapter);
 		mRecyclerView.setLayoutManager(mLayoutManager);
 		mRecyclerView.setItemAnimator(new DefaultItemAnimator());

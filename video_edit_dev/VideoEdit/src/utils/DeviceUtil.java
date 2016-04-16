@@ -3,6 +3,9 @@ package utils;
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
+
+import com.goluk.videoedit.bean.ProjectItemBean;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -18,7 +21,7 @@ import android.util.DisplayMetrics;
 
 public class DeviceUtil {
 	/**
-	 * dp转像�?
+	 * dp转像�?
 	 * 
 	 * @param context
 	 * @param dp
@@ -52,7 +55,7 @@ public class DeviceUtil {
 	}
 
 	/**
-	 * 获取屏幕的尺�?
+	 * 获取屏幕的尺�?
 	 * 
 	 * @param context
 	 * @return
@@ -109,7 +112,7 @@ public class DeviceUtil {
 		return statusBarHeight;
 	}
 
-	// 根据手机的五项参数，获取手机的id，用于日志提�?
+	// 根据手机的五项参数，获取手机的id，用于日志提�?
 	public static String getDeviceID(String deviceId, Activity a) {
 		if (TextUtils.isEmpty(deviceId)) {
 
@@ -129,14 +132,14 @@ public class DeviceUtil {
 					+ Build.MODEL.length() % 10 + Build.PRODUCT.length() % 10
 					+ Build.TAGS.length() % 10 + Build.TYPE.length() % 10
 					+ Build.USER.length() % 10;
-			// 3. The Android ID , 通常被认为不可信，因为它有时为null�?
+			// 3. The Android ID , 通常被认为不可信，因为它有时为null�?
 			String m_szAndroidID = Secure.getString(
 					appContext.getContentResolver(), Secure.ANDROID_ID);
-			// 4. The WLAN MAC Address string, 是另�?��唯一ID�?
+			// 4. The WLAN MAC Address string, 是另�?��唯一ID�?
 			WifiManager wm = (WifiManager) appContext
 					.getSystemService(appContext.WIFI_SERVICE);
 			String m_szWLANMAC = wm.getConnectionInfo().getMacAddress();
-			// 5. The BT MAC Address string, 只在有蓝牙的设备上运行�?
+			// 5. The BT MAC Address string, 只在有蓝牙的设备上运行�?
 			BluetoothAdapter m_BluetoothAdapter = null; // Local Bluetooth
 														// adapter
 			m_BluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -170,4 +173,11 @@ public class DeviceUtil {
 		return deviceId;
 	}
 
+	public static int generateIndexTag(List<ProjectItemBean> list) {
+		if(null == list || list.size() == 0) {
+			return 0;
+		} else {
+			return list.size();
+		}
+	}
 }
