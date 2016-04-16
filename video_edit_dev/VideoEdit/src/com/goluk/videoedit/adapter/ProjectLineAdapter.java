@@ -23,14 +23,14 @@ import com.goluk.videoedit.bean.DummyHeaderBean;
 import com.goluk.videoedit.bean.ProjectItemBean;
 import com.goluk.videoedit.bean.TailBean;
 import com.goluk.videoedit.bean.TransitionBean;
+import com.goluk.videoedit.constant.VideoEditConstant;
+import com.goluk.videoedit.utils.DeviceUtil;
 import com.makeramen.dragsortadapter.DragSortAdapter;
 import com.makeramen.dragsortadapter.NoForegroundShadowBuilder;
 import com.makeramen.dragsortadapter.DragSortAdapter.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import utils.DeviceUtil;
 
 
 
@@ -241,13 +241,25 @@ public class ProjectLineAdapter extends
 					if(null != videoThumbList && videoThumbList.size() > 0) {
 						int count = videoThumbList.size();
 						for(int i = 0; i < count; i++) {
+							VideoThumb videoThumb = videoThumbList.get(i);
 							ImageView imageView = new ImageView(mContext);
-							LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-									DeviceUtil.dp2px(mContext, 45),
+							// Last, to calc bitmap width
+							if(i == count - 1) {
+								float delta = chunk.getDuration()
+										- (count - 1) * VideoEditConstant.BITMAP_TIME_INTERVAL;
+								float widthRatio = delta / VideoEditConstant.BITMAP_TIME_INTERVAL;
+								LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+									DeviceUtil.dp2px(mContext, (int)(45 * widthRatio)),
 									LayoutParams.MATCH_PARENT);
-							imageView.setLayoutParams(params);
+								imageView.setLayoutParams(params);
+							} else {
+								LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+										DeviceUtil.dp2px(mContext, 45),
+										LayoutParams.MATCH_PARENT);
+									imageView.setLayoutParams(params);
+							}
 							imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-							imageView.setImageBitmap(videoThumbList.get(i).getBitmap());
+							imageView.setImageBitmap(videoThumb.getBitmap());
 							viewHolder.nChunkContainerLL.addView(imageView);
 						}
 					}

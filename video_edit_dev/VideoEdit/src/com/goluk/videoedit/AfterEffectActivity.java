@@ -31,33 +31,35 @@ import cn.npnt.ae.model.VideoThumb;
 import com.goluk.videoedit.adapter.ProjectLineAdapter;
 import com.goluk.videoedit.bean.ChunkBean;
 import com.goluk.videoedit.bean.DummyFooterBean;
+import com.goluk.videoedit.bean.DummyHeaderBean;
 import com.goluk.videoedit.bean.ProjectItemBean;
 import com.goluk.videoedit.bean.TailBean;
 import com.goluk.videoedit.bean.TransitionBean;
+import com.goluk.videoedit.constant.VideoEditConstant;
 public class AfterEffectActivity extends Activity implements AfterEffectListener {
 	RecyclerView mRecyclerView;
 	LinearLayoutManager mLayoutManager;
 	Handler mPlaySyncHandler;
 	private GLSurfaceView glSurfaceView;
-	AfterEffect afterEffect;
-	Project project;
+	AfterEffect mAfterEffect;
+	Project mProject;
 	int imageHeight;
 	List<ProjectItemBean> mProjectItemList;
 	Handler handler;
 	private ProjectLineAdapter mAdapter;
 	private FrameLayout mSurfaceLayout;
 
-//	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
-//	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406204409_1_TX_3_0012.mp4";
+	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
+	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406204409_1_TX_3_0012.mp4";
 
 	/** htc d820u */
-	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160323164958_1_TX_3_0012.mp4";
-	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160331111526_1_TX_3_0012.mp4";
+//	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160323164958_1_TX_3_0012.mp4";
+//	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160331111526_1_TX_3_0012.mp4";
 
 	private void startParse() {
 		if (mVideoPath != null) {
 			try {
-				afterEffect.editAddChunk(mVideoPath, 0);
+				mAfterEffect.editAddChunk(mVideoPath, 0);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -66,14 +68,14 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 
 	private void play() {
 		try {
-			afterEffect.play();
+			mAfterEffect.play();
 		} catch (InvalidVideoSourceException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void pause() {
-		afterEffect.playPause();
+		mAfterEffect.playPause();
 	}
 
 	private void initPlayer() {
@@ -90,8 +92,8 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		LayoutParams params = mSurfaceLayout.getLayoutParams();
 		params.height = height;
 
-		afterEffect = new AfterEffect(this, glSurfaceView, this, width, height);
-		project = afterEffect.getProject();
+		mAfterEffect = new AfterEffect(this, glSurfaceView, this, width, height);
+		mProject = mAfterEffect.getProject();
 
 		handler = new Handler() {
 			@Override
@@ -217,7 +219,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			Chunk chunk=(Chunk)msg.obj;
 			if(chunk!=null){
 				Log.d(TAG, "chunk added:" + chunk.prettyString());
-				 afterEffect.generateThumbAsyn(chunk, 2, imageHeight);
+				 mAfterEffect.generateThumbAsyn(chunk, VideoEditConstant.BITMAP_TIME_INTERVAL, imageHeight);
 			}
 			break;
 		}
@@ -283,6 +285,9 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 //		List<ProjectItemBean> data = new ArrayList<ProjectItemBean>();
 		// default tail and footer
 		mProjectItemList = new ArrayList<ProjectItemBean>();
+		DummyHeaderBean headerBean = new DummyHeaderBean();
+		headerBean.index_tag = DeviceUtil.generateIndexTag(mProjectItemList);
+		mProjectItemList.add(headerBean);
 		TailBean tailBean = new TailBean();
 		tailBean.index_tag = DeviceUtil.generateIndexTag(mProjectItemList);
 		mProjectItemList.add(tailBean);
@@ -298,7 +303,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		mRecyclerView.setAdapter(mAdapter);
 		mRecyclerView.setLayoutManager(mLayoutManager);
 		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-		imageHeight = DeviceUtil.dp2px(this, 40);
+		imageHeight = DeviceUtil.dp2px(this, 45);
 		initPlayer();
 	}
 
@@ -325,7 +330,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			item.setChecked(true);
 			break;
 		case R.id.action_layout_tail:
-			afterEffect.setDateString("2016.04.15");
+			mAfterEffect.setDateString("2016.04.15");
 			break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -394,8 +399,8 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	
 	@Override
 	protected void onDestroy() {
-		if(afterEffect==null){
-			afterEffect.release();
+		if(mAfterEffect==null){
+			mAfterEffect.release();
 		}
 		super.onDestroy();
 	}
@@ -411,7 +416,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	public void onChunkAddedFinished(AfterEffect self, Project project,
 			Chunk chunk) {
 		// TODO Auto-generated method stub
-		Log.d("CK1", "onChunkAddedFinished");
+		Log.d(TAG, "onChunkAddedFinished");
 		Message msg = handler.obtainMessage(MSG_AE_CHUNK_ADD_FINISHED, chunk);
 		handler.sendMessage(msg);
 	}
@@ -425,13 +430,13 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	@Override
 	public void onPause() {
 		super.onPause();
-		afterEffect.onActivityPause();
+		mAfterEffect.onActivityPause();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		afterEffect.onActivityResume();
+		mAfterEffect.onActivityResume();
 	}
 
 }

@@ -3,10 +3,9 @@ package com.goluk.videoedit.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import utils.DeviceUtil;
-
 import com.goluk.videoedit.R;
 import com.goluk.videoedit.bean.AEDataBean;
+import com.goluk.videoedit.utils.DeviceUtil;
 import com.makeramen.dragsortadapter.DragSortAdapter;
 
 import android.content.Context;
