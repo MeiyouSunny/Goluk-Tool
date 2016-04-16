@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_ae_data_chunk"
     android:layout_width="wrap_content"
-    android:layout_height="45dp"
+    android:layout_height="@dimen/ae_meta_height"
     android:background="#ffffff"
     android:orientation="horizontal">
 </LinearLayout>

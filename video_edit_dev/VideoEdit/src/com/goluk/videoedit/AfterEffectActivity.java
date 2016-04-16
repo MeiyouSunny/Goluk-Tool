@@ -3,7 +3,6 @@ package com.goluk.videoedit;
 import java.util.ArrayList;
 import java.util.List;
 
-import utils.DeviceUtil;
 import android.app.Activity;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
@@ -36,6 +35,8 @@ import com.goluk.videoedit.bean.ProjectItemBean;
 import com.goluk.videoedit.bean.TailBean;
 import com.goluk.videoedit.bean.TransitionBean;
 import com.goluk.videoedit.constant.VideoEditConstant;
+import com.goluk.videoedit.utils.DeviceUtil;
+import com.goluk.videoedit.utils.VideoEditUtils;
 public class AfterEffectActivity extends Activity implements AfterEffectListener {
 	RecyclerView mRecyclerView;
 	LinearLayoutManager mLayoutManager;
@@ -253,7 +254,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			{
 				ChunkBean chunkBean = new ChunkBean();
 				chunkBean.chunk = chunk;
-				chunkBean.index_tag = DeviceUtil.generateIndexTag(mProjectItemList);
+				chunkBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
 				int insertIndex = mProjectItemList.size() - 2;
 				mProjectItemList.add(insertIndex, chunkBean);
 			}
@@ -261,7 +262,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			{
 				TransitionBean transitionBean = new TransitionBean();
 				Transition transtion = Transition.createNoneTransition();
-				transitionBean.index_tag = DeviceUtil.generateIndexTag(mProjectItemList);
+				transitionBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
 				transitionBean.transiton = transtion;
 				int insertIndex = mProjectItemList.size() - 2;
 				mProjectItemList.add(insertIndex, transitionBean);
@@ -286,13 +287,13 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		// default tail and footer
 		mProjectItemList = new ArrayList<ProjectItemBean>();
 		DummyHeaderBean headerBean = new DummyHeaderBean();
-		headerBean.index_tag = DeviceUtil.generateIndexTag(mProjectItemList);
+		headerBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
 		mProjectItemList.add(headerBean);
 		TailBean tailBean = new TailBean();
-		tailBean.index_tag = DeviceUtil.generateIndexTag(mProjectItemList);
+		tailBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
 		mProjectItemList.add(tailBean);
 		DummyFooterBean footerBean = new DummyFooterBean();
-		footerBean.index_tag = DeviceUtil.generateIndexTag(mProjectItemList);
+		footerBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
 		mProjectItemList.add(footerBean);
 
 		mLayoutManager = new LinearLayoutManager(this);
