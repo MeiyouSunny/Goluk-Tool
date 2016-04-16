@@ -19,18 +19,18 @@ import android.widget.ImageView;
 
 public class AEDataAdapter extends DragSortAdapter<DragSortAdapter.ViewHolder>{
 
-	/** 空白头 */
+	/** 绌虹櫧澶�*/
 	private final int VIEW_TYPE_HEADER = 0;
-	/** 段落 */
+	/** 娈佃惤 */
 	private final int VIEW_TYPE_SECTION = 1;
-	/** 转场 */
+	/** 杞満 */
 	private final int VIEW_TYPE_TRANSFER = 2;
-	/** 片尾 */
+	/** 鐗囧熬 */
 	private final int VIEW_TYPE_SECTION_TAIL = 3;
-	/** 尾部 */
+	/** 灏鹃儴 */
 	private final int VIEW_TYEE_FOOTER = 4;
 
-	/** 列表 */
+	/** 鍒楄〃 */
 	private List<AEDataBean> mDataList;
 
 	private int mItemCount;
@@ -100,7 +100,7 @@ public class AEDataAdapter extends DragSortAdapter<DragSortAdapter.ViewHolder>{
 	@Override
 	public int getItemCount() {
 		// TODO Auto-generated method stub
-		// 列表长度 = 空头(1) + 段落长度 + 转场长度 + 片尾长度(0/1) + 添加按钮长度(1)
+		// 鍒楄〃闀垮害 = 绌哄ご(1) + 娈佃惤闀垮害 + 杞満闀垮害 + 鐗囧熬闀垮害(0/1) + 娣诲姞鎸夐挳闀垮害(1)
 		int dataCount = 0;
 		if(mDataList != null){
 			dataCount = mDataList.size() * 2;
@@ -120,26 +120,26 @@ public class AEDataAdapter extends DragSortAdapter<DragSortAdapter.ViewHolder>{
 	public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 		// TODO Auto-generated method stub
 
-		LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-
-		if(VIEW_TYPE_HEADER == viewType){
-			View view = inflater.inflate(R.layout.ae_data_header, viewGroup, false);
-			return new HeaderViewHolder(this,view);
-		}else if(VIEW_TYEE_FOOTER == viewType){
-			View view = inflater.inflate(R.layout.ae_data_footer, viewGroup, false);
-			return new FooterViewHolder(this,view);
-		}else if(VIEW_TYPE_SECTION_TAIL == viewType){
-			View view = inflater.inflate(R.layout.ae_data_section_tail, viewGroup, false);
-			return new SectionTailViewHolder(this,view);
-		}else if(VIEW_TYPE_TRANSFER == viewType){
-			View view = inflater.inflate(R.layout.ae_data_transfer, viewGroup, false);
-			return new TransferViewHolder(this,view);
-		}else if(VIEW_TYPE_SECTION == viewType){
-			View view = inflater.inflate(R.layout.ae_data_section, viewGroup, false);
-			SectionViewHolder vHolder = new SectionViewHolder(this,view);
-			view.setOnLongClickListener(vHolder);
-			return vHolder;
-		}
+//		LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+//
+//		if(VIEW_TYPE_HEADER == viewType){
+////			View view = inflater.inflate(R.layout.ae_data_header, viewGroup, false);
+//			return new HeaderViewHolder(this,view);
+//		}else if(VIEW_TYEE_FOOTER == viewType){
+////			View view = inflater.inflate(R.layout.ae_data_footer, viewGroup, false);
+//			return new FooterViewHolder(this,view);
+//		}else if(VIEW_TYPE_SECTION_TAIL == viewType){
+////			View view = inflater.inflate(R.layout.ae_data_section_tail, viewGroup, false);
+//			return new SectionTailViewHolder(this,view);
+//		}else if(VIEW_TYPE_TRANSFER == viewType){
+////			View view = inflater.inflate(R.layout.ae_data_transfer, viewGroup, false);
+//			return new TransferViewHolder(this,view);
+//		}else if(VIEW_TYPE_SECTION == viewType){
+//			View view = inflater.inflate(R.layout.ae_data_section, viewGroup, false);
+//			SectionViewHolder vHolder = new SectionViewHolder(this,view);
+//			view.setOnLongClickListener(vHolder);
+//			return vHolder;
+//		}
 
 		return null;
 	}
@@ -153,7 +153,7 @@ public class AEDataAdapter extends DragSortAdapter<DragSortAdapter.ViewHolder>{
 	}
 
 	/**
-	 * 段落viewholder
+	 * 娈佃惤viewholder
 	 * @author uestc
 	 *
 	 */
@@ -182,7 +182,7 @@ public class AEDataAdapter extends DragSortAdapter<DragSortAdapter.ViewHolder>{
 	}
 
 	/**
-	 * 转场viewholder
+	 * 杞満viewholder
 	 * @author uestc
 	 *
 	 */
@@ -197,7 +197,7 @@ public class AEDataAdapter extends DragSortAdapter<DragSortAdapter.ViewHolder>{
 	}
 
 	/**
-	 * 片头viewholder
+	 * 鐗囧ごviewholder
 	 * @author uestc
 	 *
 	 */
@@ -210,7 +210,7 @@ public class AEDataAdapter extends DragSortAdapter<DragSortAdapter.ViewHolder>{
 	}
 
 	/**
-	 * 片尾viewholder
+	 * 鐗囧熬viewholder
 	 * @author uestc
 	 *
 	 */
@@ -222,7 +222,7 @@ public class AEDataAdapter extends DragSortAdapter<DragSortAdapter.ViewHolder>{
 		}
 	}
 	/**
-	 * 尾部viewholder
+	 * 灏鹃儴viewholder
 	 * @author uestc
 	 *
 	 */

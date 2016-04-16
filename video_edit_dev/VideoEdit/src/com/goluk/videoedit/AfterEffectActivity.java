@@ -1,27 +1,23 @@
 package com.goluk.videoedit;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import utils.DeviceUtil;
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import utils.DeviceUtil;
 import cn.npnt.ae.AfterEffect;
 import cn.npnt.ae.AfterEffectListener;
 import cn.npnt.ae.exceptions.EffectException;
@@ -29,16 +25,16 @@ import cn.npnt.ae.exceptions.InvalidVideoSourceException;
 import cn.npnt.ae.model.Chunk;
 import cn.npnt.ae.model.ChunkThumbs;
 import cn.npnt.ae.model.Project;
+import cn.npnt.ae.model.Transition;
 import cn.npnt.ae.model.VideoThumb;
 
+import com.goluk.videoedit.adapter.ProjectLineAdapter;
 import com.goluk.videoedit.bean.ChunkBean;
 import com.goluk.videoedit.bean.DummyFooterBean;
 import com.goluk.videoedit.bean.ProjectItemBean;
 import com.goluk.videoedit.bean.TailBean;
-import com.goluk.videoedit.view.CustomLinearlayoutManager;
-import com.makeramen.dragsortadapter.example.ProjectLineAdapter;
-
-public class ExampleActivity extends Activity implements AfterEffectListener {
+import com.goluk.videoedit.bean.TransitionBean;
+public class AfterEffectActivity extends Activity implements AfterEffectListener {
 	RecyclerView mRecyclerView;
 	LinearLayoutManager mLayoutManager;
 	Handler mPlaySyncHandler;
@@ -51,8 +47,12 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 	private ProjectLineAdapter mAdapter;
 	private FrameLayout mSurfaceLayout;
 
-	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
-	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406204409_1_TX_3_0012.mp4";
+//	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
+//	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406204409_1_TX_3_0012.mp4";
+
+	/** htc d820u */
+	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160323164958_1_TX_3_0012.mp4";
+	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160331111526_1_TX_3_0012.mp4";
 
 	private void startParse() {
 		if (mVideoPath != null) {
@@ -79,7 +79,7 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 	private void initPlayer() {
 		mSurfaceLayout = (FrameLayout)findViewById(R.id.fl_video_sur_layout);
 		glSurfaceView = new GLSurfaceView(this);
-		mSurfaceLayout.addView(glSurfaceView,0);
+		mSurfaceLayout.addView(glSurfaceView);
 		glSurfaceView.setEGLContextClientVersion(2);
 		glSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 		glSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
@@ -100,27 +100,26 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 				switch (msg.what) {
 //				case PRO:
 //					if (progress >= MAX_PROGRESS) {
-//						// ��������
+//						// 锟斤拷锟斤拷锟斤拷锟斤拷
 //						progress = 0;
-//						progressDialog.dismiss();// ��ٶԻ���
-//					} else {
+//						progressDialog.dismiss();// 锟斤拷俣曰锟斤拷锟�//					} else {
 //						progress++;
 //						progressDialog.setProgress(progress);
-//						// �ӳٷ�����Ϣ
+//						// 锟接迟凤拷锟斤拷锟斤拷息
 //						handler.sendEmptyMessageDelayed(PRO, 100);
 //					}
 //					break;
 //				case UPDATE_VIEW:
 //					if (canUpdateView) {
 //
-//						// ������ͼ
+//						// 锟斤拷锟斤拷锟斤拷图
 //						updateView(msg.arg1);
 //
 //						canUpdateView = false;
 //						canTimer = true;
 //					} else {
 //						if (canTimer) {
-//							// дһ����ʱ������ʱ��Ψһ
+//							// 写一锟斤拷锟斤拷时锟斤拷锟斤拷锟斤拷时锟斤拷唯一
 //							new Thread(new Runnable() {
 //
 //								@Override
@@ -247,10 +246,24 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 //					mVideoBitmapList.add(wrapper);
 //				}
 //			}
-			ChunkBean chunkBean = new ChunkBean();
-			chunkBean.chunk = chunk;
-			chunkBean.index_tag = DeviceUtil.generateIndexTag(mProjectItemList);
-			mProjectItemList.add(0, chunkBean);
+
+			// Get to insert index
+			{
+				ChunkBean chunkBean = new ChunkBean();
+				chunkBean.chunk = chunk;
+				chunkBean.index_tag = DeviceUtil.generateIndexTag(mProjectItemList);
+				int insertIndex = mProjectItemList.size() - 2;
+				mProjectItemList.add(insertIndex, chunkBean);
+			}
+
+			{
+				TransitionBean transitionBean = new TransitionBean();
+				Transition transtion = Transition.createNoneTransition();
+				transitionBean.index_tag = DeviceUtil.generateIndexTag(mProjectItemList);
+				transitionBean.transiton = transtion;
+				int insertIndex = mProjectItemList.size() - 2;
+				mProjectItemList.add(insertIndex, transitionBean);
+			}
 			mAdapter.setData(mProjectItemList);
 			mAdapter.notifyDataSetChanged();
 			break;
@@ -277,11 +290,7 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 		footerBean.index_tag = DeviceUtil.generateIndexTag(mProjectItemList);
 		mProjectItemList.add(footerBean);
 
-		int playerHeight = DeviceUtil.getScreenWidthSize(this) / 16 * 9;
-		int recyclerviewHeight = DeviceUtil.getScreenHeightSize(this) - 
-				playerHeight  - DeviceUtil.dp2px(this, 143);
-		int paddingTop = DeviceUtil.px2dp(this,(recyclerviewHeight - DeviceUtil.dp2px(this, 45))/2);
-		mLayoutManager = new CustomLinearlayoutManager(this,paddingTop,paddingTop);
+		mLayoutManager = new LinearLayoutManager(this);
 		mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mRecyclerView = (RecyclerView) findViewById(R.id.rv_video_edit_pic_list);
 		mAdapter = new ProjectLineAdapter(this, mRecyclerView, mProjectItemList);
