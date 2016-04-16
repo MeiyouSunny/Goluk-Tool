@@ -78,7 +78,7 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 	private void initPlayer() {
 		mSurfaceLayout = (FrameLayout)findViewById(R.id.fl_video_sur_layout);
 		glSurfaceView = new GLSurfaceView(this);
-		mSurfaceLayout.addView(glSurfaceView);
+		mSurfaceLayout.addView(glSurfaceView,0);
 		glSurfaceView.setEGLContextClientVersion(2);
 		glSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 		glSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);

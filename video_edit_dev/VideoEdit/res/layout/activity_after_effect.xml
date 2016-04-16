@@ -10,22 +10,65 @@
         android:layout_height="0dp"
         android:layout_alignParentTop="true"
         android:background="#ff0000" >
-    </FrameLayout>
+        <ImageView 
+            android:id="@+id/iv_video_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/btn_player_play"
+            android:visibility="visible" />
+         </FrameLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_below="@id/fl_video_sur_layout"
-        android:layout_marginTop="100dp"
-        android:id="@+id/rv_video_edit_pic_list"
-        android:layout_centerVertical="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scrollbarStyle="outsideOverlay"
-        android:scrollbars="horizontal"/>
     <FrameLayout
         android:id="@+id/fl_video_edit_controller"
         android:layout_width="match_parent"
         android:layout_height="143dp"
         android:background="#242629"
         android:layout_alignParentBottom="true"/>
+
+    <FrameLayout
+        android:id="@+id/fl_video_edit_music_controller"
+        android:layout_width="match_parent"
+        android:layout_height="143dp"
+        android:background="#242629"
+        android:layout_alignParentBottom="true"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/fl_video_sur_layout"
+        android:layout_marginBottom="143dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_video_edit_pic_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+        <ImageView 
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="57dp"
+            android:layout_height="8dp"
+            android:layout_width="15dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_frame_top"/>
+        <ImageView 
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="57dp"
+            android:layout_height="8dp"
+            android:layout_width="15dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_frame_bottom"/>
+        <ImageView 
+            android:layout_height="match_parent"
+            android:layout_width="1dp"
+            android:layout_marginStart="64dp"
+            android:layout_alignParentStart="true"
+            android:background="#ef2e2e"/>
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

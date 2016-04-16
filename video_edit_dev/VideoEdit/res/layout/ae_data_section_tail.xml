@@ -7,7 +7,7 @@
   <ImageView
       android:id="@+id/iv_ae_data_tail"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
+      android:layout_height="45dp"
       android:src="@drawable/img_ae_trailer"
       android:scaleType="centerCrop"/>"
 </LinearLayout>
