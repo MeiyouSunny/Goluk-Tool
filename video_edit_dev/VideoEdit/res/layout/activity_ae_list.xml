@@ -38,7 +38,7 @@
             android:layout_width="15dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_frame_bottom"/>
-        <ImageView 
+        <ImageView
             android:layout_height="match_parent"
             android:layout_width="1dp"
             android:layout_marginStart="64dp"

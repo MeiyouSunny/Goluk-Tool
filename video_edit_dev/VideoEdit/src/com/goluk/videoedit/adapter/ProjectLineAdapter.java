@@ -1,4 +1,4 @@
-package com.makeramen.dragsortadapter.example;
+package com.goluk.videoedit.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,11 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import cn.npnt.ae.model.Chunk;
+import cn.npnt.ae.model.ChunkThumbs;
+import cn.npnt.ae.model.VideoThumb;
 
-import com.goluk.videoedit.BitmapWrapper;
 import com.goluk.videoedit.R;
-import com.goluk.videoedit.bean.AEDataBean;
 import com.goluk.videoedit.bean.ChunkBean;
 import com.goluk.videoedit.bean.DummyFooterBean;
 import com.goluk.videoedit.bean.DummyHeaderBean;
@@ -34,23 +37,14 @@ import utils.DeviceUtil;
 public class ProjectLineAdapter extends
 		DragSortAdapter<ProjectLineAdapter.ProjectItemViewHolder> {
 
-	/** 空白头 */
 	private final int VIEW_TYPE_HEADER = 0;
-	/** 段落 */
 	private final int VIEW_TYPE_CHUNK = 1;
-	/** 转场 */
 	private final int VIEW_TYPE_TRANSITION = 2;
-	/** 片尾 */
 	private final int VIEW_TYPE_CHUNK_TAIL = 3;
-	/** 尾部 */
 	private final int VIEW_TYEE_FOOTER = 4;
-
-	/** 列表 */
 	private List<ProjectItemBean> mDataList;
-
-	private int mItemCount;
-
 	private Context mContext;
+	private int mFooterWidth;
 
 	public static final String TAG = ProjectLineAdapter.class.getSimpleName();
 
@@ -69,6 +63,7 @@ public class ProjectLineAdapter extends
 		super(recyclerView);
 		this.mDataList = dataList;
 		this.mContext = cxt;
+		mFooterWidth = DeviceUtil.getScreenWidthSize(mContext) - DeviceUtil.dp2px(mContext, 65);
 	}
 
 	//TODO: TBD
@@ -135,21 +130,21 @@ public class ProjectLineAdapter extends
 	public ProjectItemViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 		LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
 
-		if(VIEW_TYPE_HEADER == viewType){
-			View view = inflater.inflate(R.layout.ae_data_header, viewGroup, false);
-			return new HeaderViewHolder(this,view);
-		}else if(VIEW_TYEE_FOOTER == viewType){
-			View view = inflater.inflate(R.layout.ae_data_footer, viewGroup, false);
-			return new FooterViewHolder(this,view);
-		}else if(VIEW_TYPE_CHUNK_TAIL == viewType){
-			View view = inflater.inflate(R.layout.ae_data_section_tail, viewGroup, false);
-			return new ChunkTailViewHolder(this,view);
-		}else if(VIEW_TYPE_TRANSITION == viewType){
-			View view = inflater.inflate(R.layout.ae_data_transfer, viewGroup, false);
-			return new TransitionViewHolder(this,view);
-		}else if(VIEW_TYPE_CHUNK == viewType){
-			View view = inflater.inflate(R.layout.ae_data_section, viewGroup, false);
-			ChunkViewHolder vHolder = new ChunkViewHolder(this,view);
+		if(VIEW_TYPE_HEADER == viewType) {
+			View view = inflater.inflate(R.layout.ae_data_item_header_layout, viewGroup, false);
+			return new HeaderViewHolder(this, view);
+		}else if(VIEW_TYEE_FOOTER == viewType) {
+			View view = inflater.inflate(R.layout.ae_data_item_footer_layout, viewGroup, false);
+			return new FooterViewHolder(this, view, mFooterWidth);
+		}else if(VIEW_TYPE_CHUNK_TAIL == viewType) {
+			View view = inflater.inflate(R.layout.ae_data_item_tail_layout, viewGroup, false);
+			return new ChunkTailViewHolder(this, view);
+		}else if(VIEW_TYPE_TRANSITION == viewType) {
+			View view = inflater.inflate(R.layout.ae_data_item_transition_layout, viewGroup, false);
+			return new TransitionViewHolder(this, view);
+		}else if(VIEW_TYPE_CHUNK == viewType) {
+			View view = inflater.inflate(R.layout.ae_data_item_chunk_layout, viewGroup, false);
+			ChunkViewHolder vHolder = new ChunkViewHolder(this, view);
 			view.setOnLongClickListener(vHolder);
 			return vHolder;
 		}
@@ -165,54 +160,35 @@ public class ProjectLineAdapter extends
 //		return false;
 //	}
 
-	/**
-	 * 段落viewholder
-	 * @author uestc
-	 *
-	 */
 	static class ChunkViewHolder extends ProjectItemViewHolder implements
-		View.OnClickListener, View.OnLongClickListener{
+		View.OnClickListener, View.OnLongClickListener {
 
-		public ChunkViewHolder(DragSortAdapter<?> dragSortAdapter,
-				View itemView) {
+		LinearLayout nChunkContainerLL;
+
+		public ChunkViewHolder(DragSortAdapter<?> dragSortAdapter, View itemView) {
 			super(dragSortAdapter, itemView);
-			// TODO Auto-generated constructor stub
+			nChunkContainerLL = (LinearLayout)itemView.findViewById(R.id.ll_ae_data_chunk);
 		}
 
 		@Override
 		public boolean onLongClick(View v) {
-			// TODO Auto-generated method stub
 			startDrag();
 			return true;
 		}
 
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			
 		}
-
 	}
 
-	/**
-	 * 转场viewholder
-	 * @author uestc
-	 *
-	 */
 	static class TransitionViewHolder extends ProjectItemViewHolder {
 		public TransitionViewHolder(DragSortAdapter<?> dragSortAdapter,
 				View itemView) {
 			super(dragSortAdapter, itemView);
 			// TODO Auto-generated constructor stub
 		}
-
 	}
 
-	/**
-	 * 片头viewholder
-	 * @author uestc
-	 *
-	 */
 	static class HeaderViewHolder extends ProjectItemViewHolder {
 		public HeaderViewHolder(DragSortAdapter<?> dragSortAdapter, View itemView) {
 			super(dragSortAdapter, itemView);
@@ -220,11 +196,7 @@ public class ProjectLineAdapter extends
 		}
 	}
 
-	/**
-	 * 片尾viewholder
-	 * @author uestc
-	 *
-	 */
+
 	static class ChunkTailViewHolder extends ProjectItemViewHolder {
 		public ChunkTailViewHolder(DragSortAdapter<?> dragSortAdapter, View itemView) {
 			super(dragSortAdapter, itemView);
@@ -232,19 +204,14 @@ public class ProjectLineAdapter extends
 		}
 	}
 
-	/**
-	 * 尾部viewholder
-	 * @author uestc
-	 *
-	 */
 	static class FooterViewHolder extends ProjectItemViewHolder {
-		ImageView mAddIv;
-		public FooterViewHolder(DragSortAdapter<?> dragSortAdapter, View itemView) {
+		ImageView nAddIv;
+
+		public FooterViewHolder(DragSortAdapter<?> dragSortAdapter, View itemView, int FooterWidth) {
 			super(dragSortAdapter, itemView);
 			// TODO Auto-generated constructor stub
-			mAddIv = (ImageView) itemView.findViewById(R.id.iv_ae_data_add);
-			mAddIv.setOnClickListener(new View.OnClickListener() {
-
+			nAddIv = (ImageView) itemView.findViewById(R.id.iv_ae_data_add);
+			nAddIv.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
@@ -253,24 +220,43 @@ public class ProjectLineAdapter extends
 			});
 
 			ViewGroup.LayoutParams lp =  itemView.getLayoutParams();
-			lp.width = 100;//DeviceUtil.getScreenWidthSize(mContext) - DeviceUtil.dp2px(mContext, 65);
+			lp.width = FooterWidth;
 			itemView.setLayoutParams(lp);
 		}
-
 	}
 
 	@Override
 	public void onBindViewHolder(final ProjectItemViewHolder holder, final int position) {
 		ProjectItemBean bean = mDataList.get(position);
-//		Bitmap bitmap = data.get(position).bitmap;
-//		holder.img.setImageBitmap(bitmap);
-//		holder.text.setText(wrapper.index + "");
-//		// NOTE: check for getDraggingId() match to set an "invisible space"
-//		// while dragging
-//		holder.container
-//				.setVisibility(getDraggingId() == wrapper.index ? View.INVISIBLE
-//						: View.VISIBLE);
-//		holder.container.postInvalidate();
+
+		if(holder instanceof ChunkViewHolder) {
+			ChunkViewHolder viewHolder = (ChunkViewHolder)holder;
+			viewHolder.nChunkContainerLL.removeAllViews();
+			if(bean instanceof ChunkBean) {
+				ChunkBean chunkBean = (ChunkBean)bean;
+				Chunk chunk = chunkBean.chunk;
+				if(null != chunk) {
+					ChunkThumbs chunkThumbList = chunk.getChunkThumbs();
+					List<VideoThumb> videoThumbList = chunkThumbList.getThumbs();
+					if(null != videoThumbList && videoThumbList.size() > 0) {
+						int count = videoThumbList.size();
+						for(int i = 0; i < count; i++) {
+							ImageView imageView = new ImageView(mContext);
+							LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+									DeviceUtil.dp2px(mContext, 45),
+									LayoutParams.MATCH_PARENT);
+							imageView.setLayoutParams(params);
+							imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+							imageView.setImageBitmap(videoThumbList.get(i).getBitmap());
+							viewHolder.nChunkContainerLL.addView(imageView);
+						}
+					}
+				}
+				viewHolder.nChunkContainerLL.setVisibility(getDraggingId() == chunkBean.index_tag ? View.INVISIBLE
+						: View.VISIBLE);
+				viewHolder.nChunkContainerLL.postInvalidate();
+			}
+		}
 	}
 
 	@Override
@@ -282,19 +268,6 @@ public class ProjectLineAdapter extends
 	public int getItemCount() {
 		return mDataList.size();
 	}
-
-//	@Override
-//	public int getItemCount() {
-//		// TODO Auto-generated method stub
-//		// 列表长度 = 空头(1) + 段落长度 + 转场长度 + 片尾长度(0/1) + 添加按钮长度(1)
-//		int dataCount = 0;
-//		if(mDataList != null){
-//			dataCount = mDataList.size() * 2;
-//		}
-//		mItemCount = dataCount + 3;
-//
-//		return mItemCount;
-//	}
 
 	@Override
 	public int getPositionForId(long id) {
@@ -309,21 +282,26 @@ public class ProjectLineAdapter extends
 
 	@Override
 	public boolean move(int fromPosition, int toPosition) {
-		mDataList.add(toPosition, mDataList.remove(fromPosition));
-		return true;
+		ProjectItemBean bean = mDataList.get(toPosition);
+		if(bean instanceof ChunkBean) {
+			mDataList.add(toPosition, mDataList.remove(fromPosition));
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	static class ProjectItemViewHolder extends DragSortAdapter.ViewHolder implements
 			View.OnClickListener, View.OnLongClickListener {
-		ViewGroup container;
-		ImageView img;
-		TextView text;
+//		ViewGroup container;
+//		ImageView img;
+//		TextView text;
 
-		public ProjectItemViewHolder(DragSortAdapter adapter, View itemView) {
+		public ProjectItemViewHolder(DragSortAdapter<?> adapter, View itemView) {
 			super(adapter, itemView);
-			container = (ViewGroup) itemView.findViewById(R.id.container);
-			img = (ImageView) itemView.findViewById(R.id.img);
-			text = (TextView) itemView.findViewById(R.id.text);
+//			container = (ViewGroup) itemView.findViewById(R.id.container);
+//			img = (ImageView) itemView.findViewById(R.id.img);
+//			text = (TextView) itemView.findViewById(R.id.text);
 		}
 
 		@Override
