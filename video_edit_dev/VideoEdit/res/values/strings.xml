@@ -3,4 +3,8 @@
   <string name="action_layout_linear">LinearLayoutManager</string>
   <string name="action_layout_grid">GridLayoutManager</string>
   <string name="action_layout_staggered">StaggeredLayoutManager</string>
+  <string name="ae_cut">裁剪</string>
+  <string name="ae_split">拆分</string>
+  <string name="ae_volume">音量</string>
+  <string name="ae_delete">删除</string>
 </resources>
