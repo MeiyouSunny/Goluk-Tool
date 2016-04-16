@@ -15,8 +15,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import cn.npnt.ae.AfterEffect;
 import cn.npnt.ae.AfterEffectListener;
 import cn.npnt.ae.exceptions.EffectException;
@@ -37,7 +39,7 @@ import com.goluk.videoedit.bean.TransitionBean;
 import com.goluk.videoedit.constant.VideoEditConstant;
 import com.goluk.videoedit.utils.DeviceUtil;
 import com.goluk.videoedit.utils.VideoEditUtils;
-public class AfterEffectActivity extends Activity implements AfterEffectListener {
+public class AfterEffectActivity extends Activity implements AfterEffectListener , View.OnClickListener{
 	RecyclerView mRecyclerView;
 	LinearLayoutManager mLayoutManager;
 	Handler mPlaySyncHandler;
@@ -50,12 +52,15 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	private ProjectLineAdapter mAdapter;
 	private FrameLayout mSurfaceLayout;
 
-	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
-	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406204409_1_TX_3_0012.mp4";
+	ImageView mVideoThumeIv;
+	ImageView mVideoPlayIv;
+
+//	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
+//	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406204409_1_TX_3_0012.mp4";
 
 	/** htc d820u */
-//	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160323164958_1_TX_3_0012.mp4";
-//	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160331111526_1_TX_3_0012.mp4";
+	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160331125315_1_TX_3_0012.mp4";
+	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160401124245_1_TX_3_0012.mp4";
 
 	private void startParse() {
 		if (mVideoPath != null) {
@@ -80,9 +85,16 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	}
 
 	private void initPlayer() {
+
+		mVideoThumeIv = (ImageView) findViewById(R.id.iv_video_thumb);
+		mVideoPlayIv = (ImageView) findViewById(R.id.iv_video_play);
+
+		mVideoThumeIv.setOnClickListener(this);
+		mVideoPlayIv.setOnClickListener(this);
+
 		mSurfaceLayout = (FrameLayout)findViewById(R.id.fl_video_sur_layout);
 		glSurfaceView = new GLSurfaceView(this);
-		mSurfaceLayout.addView(glSurfaceView);
+		mSurfaceLayout.addView(glSurfaceView, 0);
 		glSurfaceView.setEGLContextClientVersion(2);
 		glSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 		glSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
@@ -438,6 +450,20 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	public void onResume() {
 		super.onResume();
 		mAfterEffect.onActivityResume();
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		int vId = v.getId();
+		if(vId == R.id.iv_video_play){
+			mVideoPlayIv.setVisibility(View.GONE);
+			mVideoThumeIv.setVisibility(View.GONE);
+			play();
+		}else if (vId == R.id.iv_video_thumb){
+//			mVideoPlayIv.setVisibility(View.GONE);
+//			mVideoThumeIv.setVisibility(View.GONE);	
+		}
 	}
 
 }
