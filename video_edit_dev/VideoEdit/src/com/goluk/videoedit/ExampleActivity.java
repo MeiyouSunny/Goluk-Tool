@@ -35,6 +35,7 @@ import com.goluk.videoedit.bean.ChunkBean;
 import com.goluk.videoedit.bean.DummyFooterBean;
 import com.goluk.videoedit.bean.ProjectItemBean;
 import com.goluk.videoedit.bean.TailBean;
+import com.goluk.videoedit.view.CustomLinearlayoutManager;
 import com.makeramen.dragsortadapter.example.ProjectLineAdapter;
 
 public class ExampleActivity extends Activity implements AfterEffectListener {
@@ -276,7 +277,11 @@ public class ExampleActivity extends Activity implements AfterEffectListener {
 		footerBean.index_tag = DeviceUtil.generateIndexTag(mProjectItemList);
 		mProjectItemList.add(footerBean);
 
-		mLayoutManager = new LinearLayoutManager(this);
+		int playerHeight = DeviceUtil.getScreenWidthSize(this) / 16 * 9;
+		int recyclerviewHeight = DeviceUtil.getScreenHeightSize(this) - 
+				playerHeight  - DeviceUtil.dp2px(this, 143);
+		int paddingTop = DeviceUtil.px2dp(this,(recyclerviewHeight - DeviceUtil.dp2px(this, 45))/2);
+		mLayoutManager = new CustomLinearlayoutManager(this,paddingTop,paddingTop);
 		mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mRecyclerView = (RecyclerView) findViewById(R.id.rv_video_edit_pic_list);
 		mAdapter = new ProjectLineAdapter(this, mRecyclerView, mProjectItemList);

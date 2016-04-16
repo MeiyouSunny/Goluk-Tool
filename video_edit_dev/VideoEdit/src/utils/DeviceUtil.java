@@ -55,6 +55,16 @@ public class DeviceUtil {
 	}
 
 	/**
+	 * 获取屏幕高度,单位px
+	 * @param context
+	 * @return
+	 */
+    public static int getScreenHeightSize (Context context){
+    	DisplayMetrics dm = new DisplayMetrics();
+		dm = context.getResources().getDisplayMetrics();
+		return dm.heightPixels;
+    }
+	/**
 	 * 获取屏幕的尺�?
 	 * 
 	 * @param context
