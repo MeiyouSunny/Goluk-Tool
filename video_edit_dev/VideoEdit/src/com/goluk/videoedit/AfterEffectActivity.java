@@ -19,6 +19,10 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import cn.npnt.ae.AfterEffect;
 import cn.npnt.ae.AfterEffectListener;
 import cn.npnt.ae.exceptions.EffectException;
@@ -41,11 +45,12 @@ import com.goluk.videoedit.constant.VideoEditConstant;
 import com.goluk.videoedit.utils.DeviceUtil;
 import com.goluk.videoedit.utils.VideoEditUtils;
 public class AfterEffectActivity extends Activity implements AfterEffectListener , View.OnClickListener{
+
 	RecyclerView mAERecyclerView;
 	LinearLayoutManager mAELayoutManager;
 	RecyclerView mAEMusicRecyclerView;
 	LinearLayoutManager mAEMusicLayoutManager;
-	
+
 	Handler mPlaySyncHandler;
 	private GLSurfaceView glSurfaceView;
 	AfterEffect mAfterEffect;
@@ -58,6 +63,17 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 
 	ImageView mVideoThumeIv;
 	ImageView mVideoPlayIv;
+
+	RelativeLayout mAEVolumeSettingLayout;
+	ImageView mAEVolumeSettingIv;
+	TextView mAEVolumePercentTv;
+	SeekBar mAEVolumeSeekBar;
+
+	LinearLayout mAESplitAndDeleteLayout;
+	LinearLayout mAESplitLayout;
+	LinearLayout mAEDeleteLayout;
+	LinearLayout mAECutLayout;
+	LinearLayout mAEVolumeLayout;
 
 //	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
 //	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406204409_1_TX_3_0012.mp4";
@@ -88,6 +104,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		mAfterEffect.playPause();
 	}
 
+	
 	private void initPlayer() {
 
 		mVideoThumeIv = (ImageView) findViewById(R.id.iv_video_thumb);
@@ -294,6 +311,53 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		}
 	}
 
+	private void initController(){
+
+		mAEVolumeSettingLayout = (RelativeLayout) findViewById(R.id.rl_ae_volume_setting);
+		mAEVolumeSettingIv = (ImageView) findViewById(R.id.iv_ae_volume_setting);
+        mAEVolumePercentTv = (TextView) findViewById(R.id.tv_ae_volume_percent);
+		mAEVolumeSeekBar = (SeekBar) findViewById(R.id.seekbar_ae_volume);
+
+		mAESplitAndDeleteLayout = (LinearLayout) findViewById(R.id.ll_ae_split_and_delete);
+		mAESplitLayout = (LinearLayout) findViewById(R.id.ll_ae_split);
+		mAEDeleteLayout = (LinearLayout) findViewById(R.id.ll_ae_split_and_delete);
+		mAECutLayout = (LinearLayout) findViewById(R.id.ll_ae_cut);
+		mAEVolumeLayout = (LinearLayout) findViewById(R.id.ll_ae_volume);
+		
+		mAEMusicLayoutManager = new LinearLayoutManager(this);
+		mAEMusicLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+		mAEMusicRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_ae_music);
+		AEMusicAdapter mAeMusicAdapter = new AEMusicAdapter();
+		mAEMusicRecyclerView.setAdapter(mAeMusicAdapter);
+		mAEMusicRecyclerView.setLayoutManager(mAEMusicLayoutManager);
+
+		mAEVolumeLayout.setOnClickListener(this);
+
+		mAEVolumeSeekBar.setMax(100);
+		mAEVolumeSeekBar.setProgress(100);
+		mAEVolumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				// TODO Auto-generated method stub
+				mAEVolumePercentTv.setText(progress + "%");
+			}
+		});
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -321,14 +385,10 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		mAERecyclerView.setLayoutManager(mAELayoutManager);
 		mAERecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-		mAEMusicLayoutManager = new LinearLayoutManager(this);
-		mAEMusicLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-		mAEMusicRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_ae_music);
-		AEMusicAdapter mAeMusicAdapter = new AEMusicAdapter();
-		mAEMusicRecyclerView.setAdapter(mAeMusicAdapter);
-		mAEMusicRecyclerView.setLayoutManager(mAEMusicLayoutManager);
 		imageHeight = DeviceUtil.dp2px(this, 45);
 		initPlayer();
+
+		initController();
 	}
 
 	@Override
@@ -355,6 +415,10 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			break;
 		case R.id.action_layout_tail:
 			mAfterEffect.setDateString("2016.04.15");
+			break;
+		case R.id.action_layout_music:
+			mAfterEffect.editBackgroundMusic(mMusicPath);
+			item.setChecked(true);
 			break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -474,6 +538,9 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		}else if (vId == R.id.iv_video_thumb){
 //			mVideoPlayIv.setVisibility(View.GONE);
 //			mVideoThumeIv.setVisibility(View.GONE);	
+		}else if (vId == R.id.ll_ae_volume){
+			mAESplitAndDeleteLayout.setVisibility(View.GONE);
+			mAEVolumeSettingLayout.setVisibility(View.VISIBLE);
 		}
 	}
 
