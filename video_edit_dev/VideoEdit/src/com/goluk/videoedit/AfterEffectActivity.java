@@ -29,6 +29,7 @@ import cn.npnt.ae.model.Project;
 import cn.npnt.ae.model.Transition;
 import cn.npnt.ae.model.VideoThumb;
 
+import com.goluk.videoedit.adapter.AEMusicAdapter;
 import com.goluk.videoedit.adapter.ProjectLineAdapter;
 import com.goluk.videoedit.bean.ChunkBean;
 import com.goluk.videoedit.bean.DummyFooterBean;
@@ -40,8 +41,11 @@ import com.goluk.videoedit.constant.VideoEditConstant;
 import com.goluk.videoedit.utils.DeviceUtil;
 import com.goluk.videoedit.utils.VideoEditUtils;
 public class AfterEffectActivity extends Activity implements AfterEffectListener , View.OnClickListener{
-	RecyclerView mRecyclerView;
-	LinearLayoutManager mLayoutManager;
+	RecyclerView mAERecyclerView;
+	LinearLayoutManager mAELayoutManager;
+	RecyclerView mAEMusicRecyclerView;
+	LinearLayoutManager mAEMusicLayoutManager;
+	
 	Handler mPlaySyncHandler;
 	private GLSurfaceView glSurfaceView;
 	AfterEffect mAfterEffect;
@@ -61,7 +65,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	/** htc d820u */
 	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160331125315_1_TX_3_0012.mp4";
 	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160401124245_1_TX_3_0012.mp4";
-
+	String mMusicPath = "/storage/emulated/0/qqmusic/song/500miles.mp3";
 	private void startParse() {
 		if (mVideoPath != null) {
 			try {
@@ -191,13 +195,13 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			float totalSec = ((float) msg.arg2) / 100;
 			Log.d(TAG, "MSG_AE_PLAY_PROGRESS " + currentPos + "/" + totalSec);
 			float delta = currentPos - currentPlayPosition;
-			final int scrollX = (int)(delta / totalSec * mRecyclerView.getWidth());
+			final int scrollX = (int)(delta / totalSec * mAERecyclerView.getWidth());
 			currentPlayPosition = currentPos;
 
-			mRecyclerView.post(new Runnable() {
+			mAERecyclerView.post(new Runnable() {
 				@Override
 				public void run() {
-					mRecyclerView.scrollBy(scrollX, 0);
+					mAERecyclerView.scrollBy(scrollX, 0);
 				}
 			});
 			break;
@@ -308,14 +312,21 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		footerBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
 		mProjectItemList.add(footerBean);
 
-		mLayoutManager = new LinearLayoutManager(this);
-		mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-		mRecyclerView = (RecyclerView) findViewById(R.id.rv_video_edit_pic_list);
-		mAdapter = new ProjectLineAdapter(this, mRecyclerView, mProjectItemList);
+		mAELayoutManager = new LinearLayoutManager(this);
+		mAELayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+		mAERecyclerView = (RecyclerView) findViewById(R.id.rv_video_edit_pic_list);
+		mAdapter = new ProjectLineAdapter(this, mAERecyclerView, mProjectItemList);
 //		mProjectItemList = data;
-		mRecyclerView.setAdapter(mAdapter);
-		mRecyclerView.setLayoutManager(mLayoutManager);
-		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+		mAERecyclerView.setAdapter(mAdapter);
+		mAERecyclerView.setLayoutManager(mAELayoutManager);
+		mAERecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+		mAEMusicLayoutManager = new LinearLayoutManager(this);
+		mAEMusicLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+		mAEMusicRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_ae_music);
+		AEMusicAdapter mAeMusicAdapter = new AEMusicAdapter();
+		mAEMusicRecyclerView.setAdapter(mAeMusicAdapter);
+		mAEMusicRecyclerView.setLayoutManager(mAEMusicLayoutManager);
 		imageHeight = DeviceUtil.dp2px(this, 45);
 		initPlayer();
 	}

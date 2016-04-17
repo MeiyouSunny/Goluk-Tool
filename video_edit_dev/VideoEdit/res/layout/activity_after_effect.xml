@@ -36,8 +36,23 @@
     -->
     <!-- </FrameLayout> -->
 
+    <FrameLayout 
+        android:id="@+id/fl_music_chooser"
+        android:layout_width="match_parent"
+        android:layout_height="143dp"
+        android:background="#242629"
+        android:visibility="gone">
+    </FrameLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_ae_music"
+        android:layout_width="match_parent"
+        android:layout_height="143dp"
+        android:layout_alignParentBottom="true"
+        android:background="#242629"/>
+        
     <LinearLayout
         android:id="@+id/ll_video_edit"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="143dp"
         android:layout_alignParentBottom="true"
