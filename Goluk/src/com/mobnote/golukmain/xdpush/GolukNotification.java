@@ -10,14 +10,12 @@ import org.json.JSONObject;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventFollowPush;
-import com.mobnote.eventbus.EventPhotoUpdateDate;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpenUrlActivity;
 import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
 import com.mobnote.golukmain.cluster.ClusterActivity;
 import com.mobnote.golukmain.http.HttpManager;
-import com.mobnote.golukmain.live.LiveActivity;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
 import com.mobnote.golukmain.msg.MsgCenterCommentActivity;
@@ -436,7 +434,7 @@ public class GolukNotification {
 					Context context = GolukApplication.getInstance().getContext();
 					Intent intent = new Intent(context, MsgCenterPraiseActivity.class);
 					context.startActivity(intent);
-				}else if(103 == type){
+				} else if (103 == type) {
 					EventBus.getDefault().post(new EventFollowPush(EventConfig.FOLLOW_PUSH));
 				} else if (type >= 200 && type < 300) {
 					Context context = GolukApplication.getInstance().getContext();
@@ -544,7 +542,8 @@ public class GolukNotification {
 						user.customavatar = "";// clusterInfo.mUserEntity.mCustomAvatar;
 						user.praisemenumber = "0";
 						user.sharevideonumber = "0";
-//						Intent i = new Intent(context, UserCenterActivity.class);
+						// Intent i = new Intent(context,
+						// UserCenterActivity.class);
 						Intent i = new Intent(context, NewUserCenterActivity.class);
 						i.putExtra("userinfo", user);
 						i.putExtra("type", 0);

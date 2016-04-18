@@ -6,7 +6,7 @@ buildparentdir=${mybuildpath%/*}
 #所在文件夹名称
 mybuilddirname=${mybuildpath##*/}
 
-apkName="Goluk"
+apkName="GolukMobile"
 
 echo "开始构建android脚本"
 
