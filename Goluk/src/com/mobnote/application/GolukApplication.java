@@ -216,7 +216,6 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	/** 当前的国家区号 **/
 	public CountryBean mLocationCityCode = null;
 	
-	public boolean isInternation = true;
 
 	private static final String SNAPSHOT_DIR = "fs1:/pic/";
 	static {

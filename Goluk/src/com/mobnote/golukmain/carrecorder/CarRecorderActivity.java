@@ -1004,7 +1004,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
 				if (mApp.isUserLoginSucess == false) {
 					Intent it = null;
-					if(GolukApplication.getInstance().isInternation){
+					if(GolukApplication.getInstance().isInteral()){
 						it = new Intent(this, InternationUserLoginActivity.class);
 					}else{
 						it = new Intent(this, UserLoginActivity.class);

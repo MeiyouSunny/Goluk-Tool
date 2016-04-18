@@ -261,7 +261,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 					dialog.show();
 					return;
 				}
-				if(GolukApplication.getInstance().isInternation){
+				if(GolukApplication.getInstance().isInteral()){
 					initIntent(InternationUserLoginActivity.class);
 				}else{
 					initIntent(UserLoginActivity.class);
