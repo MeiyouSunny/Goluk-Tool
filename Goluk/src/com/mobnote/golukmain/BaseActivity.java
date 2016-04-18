@@ -138,7 +138,7 @@ public class BaseActivity extends FragmentActivity {
 	 */
 	public void toLoginBack() {
 		Intent intent = null;
-		if (GolukApplication.getInstance().isInteral()) {
+		if (GolukApplication.getInstance().isInteral() == false) {
 			intent = new Intent(this, InternationUserLoginActivity.class);
 		} else {
 			intent = new Intent(this, UserLoginActivity.class);
