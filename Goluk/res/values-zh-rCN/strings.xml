@@ -1010,5 +1010,9 @@
     <string name="ipc_check_zone_msg">Do you want to restart the recorder to use the new time zone?</string>
     <string name="umeng_socialize_text_whatsapp_key">Whatsapp</string>
     <string name="umeng_socialize_text_line_key">Line</string>
+    <string name="str_global_dialog_title">提示</string>
+    <string name="str_global_dialog_msg">请确认是否需要中止本次同步任务?</string>
+    <string name="str_global_dialog_right_btn">中止</string>
+    <string name="str_global_cancel_success">视频同步已被取消</string>
     
 </resources>

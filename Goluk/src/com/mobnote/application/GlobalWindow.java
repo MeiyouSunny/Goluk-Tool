@@ -3,7 +3,9 @@ package com.mobnote.application;
 import com.mobnote.golukmain.R;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.Message;
@@ -12,22 +14,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.tiros.debug.GolukDebugUtils;
 
-public class GlobalWindow {
+public class GlobalWindow implements View.OnClickListener {
 
 	private GolukApplication mApplication = null;
 	/** 全局提示框 */
 	public WindowManager mWindowManager = null;
 	public WindowManager.LayoutParams mWMParams = null;
-
 	/** 总体布局 */
 	public RelativeLayout mVideoUploadLayout = null;
 	/** 显示当前的传输状态，传输中/传输完成/传输失败 */
@@ -36,18 +34,13 @@ public class GlobalWindow {
 	private TextView mPrompTv = null;
 	/** 百分比 显示 */
 	public TextView mPrecentTv = null;
-
 	/** 用来控制顶层窗口只显示一次 */
 	private boolean isShowGlobalwindow = false;
-
 	private Context mContext = null;
-
 	private static GlobalWindow mInstance = new GlobalWindow();
-
 	public final int MSG_H_COUNT = 10;
 	/** 统计 */
 	private int finishShowCount = 0;
-
 	private ProgressBar mProgressBar = null;
 
 	private Handler mHandler = new Handler() {
@@ -74,7 +67,6 @@ public class GlobalWindow {
 	};
 
 	private GlobalWindow() {
-
 	}
 
 	public void setApplication(GolukApplication app) {
@@ -95,19 +87,10 @@ public class GlobalWindow {
 		if (null == mApplication) {
 			return;
 		}
-
-		GolukDebugUtils.e("", "jyf----------createVideoUploadWindow:-------2222: ");
-
 		if (isShowGlobalwindow) {
 			dimissGlobalWindow();
 		}
-
-		GolukDebugUtils.e("", "jyf----------createVideoUploadWindow:-------333333: ");
-
 		cancelTimer();
-
-		GolukDebugUtils.e("", "jyf----------createVideoUploadWindow:-------444444: ");
-
 		mContext = mApplication;
 
 		// 获取LayoutParams对象
@@ -121,7 +104,7 @@ public class GlobalWindow {
 		// mWMParams.flags = LayoutParams.FLAG_FULLSCREEN |
 		// LayoutParams.FLAG_LAYOUT_IN_SCREEN;
 		mWMParams.flags = LayoutParams.FLAG_FULLSCREEN | LayoutParams.FLAG_LAYOUT_IN_SCREEN
-				| LayoutParams.FLAG_NOT_TOUCH_MODAL | LayoutParams.FLAG_NOT_FOCUSABLE | LayoutParams.FLAG_NOT_TOUCHABLE;
+				| LayoutParams.FLAG_NOT_TOUCH_MODAL | LayoutParams.FLAG_NOT_FOCUSABLE;
 		mWMParams.gravity = Gravity.LEFT | Gravity.TOP;
 		mWMParams.x = 0;
 		mWMParams.y = 0;
@@ -143,22 +126,12 @@ public class GlobalWindow {
 		mProgressBar.setProgress(0);
 
 		// 显示顶层窗口
-		if(null != mWindowManager && null != mVideoUploadLayout) {
+		if (null != mWindowManager && null != mVideoUploadLayout) {
 			mWindowManager.addView(mVideoUploadLayout, mWMParams);
 		}
-
-		GolukDebugUtils.e("", "jyf----------createVideoUploadWindow:----55555---showTopwindow: ");
-
 		isShowGlobalwindow = true;
-
 		mPrompTv.setText(promptText);
-		// 开启传输中的菊花
-		// Animation rotateAnimation = AnimationUtils.loadAnimation(mContext,
-		// R.anim.upload_loading);
-		// LinearInterpolator lin = new LinearInterpolator();
-		// rotateAnimation.setInterpolator(lin);
-		// mStateImg.startAnimation(rotateAnimation);
-
+		mVideoUploadLayout.setOnClickListener(this);
 	}
 
 	public boolean isShow() {
@@ -178,7 +151,6 @@ public class GlobalWindow {
 			// 窗口未显示
 			return;
 		}
-
 		if (null != mPrompTv) {
 			mPrompTv.setText(promptText);
 		}
@@ -227,17 +199,13 @@ public class GlobalWindow {
 			// mStateImg.clearAnimation();
 			mStateImg.setBackgroundResource(R.drawable.tips_close);
 		}
-
 		if (null != mPrompTv) {
 			mPrompTv.setText(msg);
 		}
-
 		if (null != mPrecentTv) {
 			mPrecentTv.setVisibility(View.GONE);
 		}
-
 		startTimer();
-
 	}
 
 	private void cancelTimer() {
@@ -293,6 +261,7 @@ public class GlobalWindow {
 		if (!isShowGlobalwindow) {
 			return;
 		}
+		this.dimissDialog();
 		isShowGlobalwindow = false;
 		mWindowManager.removeView(mVideoUploadLayout);
 		mStateImg = null;
@@ -300,5 +269,50 @@ public class GlobalWindow {
 		mPrecentTv = null;
 		mProgressBar = null;
 		mVideoUploadLayout = null;
+	}
+
+	private AlertDialog mTwoButtonDialog = null;
+
+	public void dimissDialog() {
+		if (null != mTwoButtonDialog) {
+			mTwoButtonDialog.dismiss();
+			mTwoButtonDialog = null;
+		}
+	}
+
+	private void showDialog() {
+		dimissDialog();
+		Context cc = GolukApplication.getInstance().getContext();
+		String title = cc.getString(R.string.str_global_dialog_title);
+		String message = cc.getString(R.string.str_global_dialog_msg);
+		mTwoButtonDialog = new AlertDialog.Builder(cc).create();
+		mTwoButtonDialog.setTitle(title);
+		mTwoButtonDialog.setMessage(message);
+		mTwoButtonDialog.setCancelable(false);
+
+		mTwoButtonDialog.setButton(DialogInterface.BUTTON_NEGATIVE, cc.getString(R.string.dialog_str_cancel),
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						dimissDialog();
+					}
+				});
+
+		mTwoButtonDialog.setButton(DialogInterface.BUTTON_POSITIVE, cc.getString(R.string.str_global_dialog_right_btn),
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialoginterface, int i) {
+						dimissDialog();
+						GolukApplication.getInstance().userStopDownLoadList();
+					}
+				});
+		mTwoButtonDialog.show();
+	}
+
+	@Override
+	public void onClick(View v) {
+		if (v == mVideoUploadLayout) {
+			showDialog();
+		}
 	}
 }

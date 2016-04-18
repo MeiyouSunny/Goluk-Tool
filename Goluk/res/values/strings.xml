@@ -1023,5 +1023,9 @@
     <string name="str_followed_login_to_view_tip">Log in to view the contents</string>
     <string name="str_followed_now_login">Log in now</string>
     <string name="zero">0</string>
+     <string name="str_global_dialog_title">Prompt</string>
+    <string name ="str_global_dialog_msg">Please confirm whether you need to abort this synchronization task?</string>
+    <string name="str_global_dialog_right_btn">Stop</string>
+     <string name="str_global_cancel_success">Video synchronization has been canceled</string>
 
 </resources>

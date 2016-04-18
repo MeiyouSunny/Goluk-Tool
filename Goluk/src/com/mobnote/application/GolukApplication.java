@@ -212,10 +212,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private boolean mIsExit = true;
 	/** T1声音录制开关　０关闭１打开 **/
 	public int mT1RecAudioCfg = 1;
-	
+
 	/** 当前的国家区号 **/
 	public CountryBean mLocationCityCode = null;
-	
 
 	private static final String SNAPSHOT_DIR = "fs1:/pic/";
 	static {
@@ -243,7 +242,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			WifiBindDataCenter.getInstance().setAdatper(new JsonWifiBindManager());
 			GolukVideoInfoDbManager.getInstance().initDb(this.getApplicationContext());
 			GolukUmConfig.UmInit();
-			
+
 			GolukMobUtils.initMob(this);
 		}
 		// TODO 此处不要做初始化相关的工作
@@ -523,14 +522,14 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public static GolukApplication getInstance() {
 		return instance;
 	}
-	
+
 	/**
 	 * 是否是国内版
 	 */
-	public boolean isInteral(){
-		if(null != this.getPackageName() && "cn.com.mobnote.golukmobile".equals(this.getPackageName())){
+	public boolean isInteral() {
+		if (null != this.getPackageName() && "cn.com.mobnote.golukmobile".equals(this.getPackageName())) {
 			return true;
-		}else {
+		} else {
 			return false;
 		}
 	}
@@ -738,7 +737,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 
 		try {
-			GolukDebugUtils.e("", "GolukApplication-----ipcVideoDownLoadCallback:  success:" + success + "  data:" + data);
+			GolukDebugUtils.e("", "GolukApplication-----ipcVideoDownLoadCallback:  success:" + success + "  data:"
+					+ data);
 			JSONObject jsonobj = new JSONObject(data);
 			String tag = jsonobj.optString("tag");
 			if (tag.equals("videodownload")) {
@@ -1651,7 +1651,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==4444===stopDownloadList:   " + starttime + "  syncFlag: "
 				+ syncFlag);
 
-		mIPCControlManager.queryFileListInfo(6, syncFlag, starttime, 2147483647,"0");
+		mIPCControlManager.queryFileListInfo(6, syncFlag, starttime, 2147483647, "0");
 	}
 
 	/**
@@ -1669,13 +1669,24 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				mNoDownLoadFileList.clear();
 				if (GlobalWindow.getInstance().isShow()) {
 					GlobalWindow.getInstance().dimissGlobalWindow();
-					GolukDebugUtils.e("xuhw", "BBBBBB===1111==m=====stopDownloadList=");
 				}
 			}
-			GolukDebugUtils.e("xuhw", "BBBBBB===2222==m=====stopDownloadList=");
 			mIPCControlManager.stopDownloadFile();
-			GolukDebugUtils.e("xuhw", "BBBBBB===3333==m=====stopDownloadList=");
 		}
+	}
+
+	public void userStopDownLoadList() {
+
+		autodownloadfile = false;
+		mIPCControlManager.stopDownloadFile();
+		if (mDownLoadFileList.size() > 0) {
+			mDownLoadFileList.clear();
+			mNoDownLoadFileList.clear();
+			if (GlobalWindow.getInstance().isShow()) {
+				GlobalWindow.getInstance().toFailed(mContext.getString(R.string.str_global_cancel_success));
+			}
+		}
+
 	}
 
 	/**
@@ -1859,11 +1870,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			return;
 		}
 		// 跳转看他人界面
-		
+
 		Intent intent;
-		if(isInteral()){
+		if (isInteral()) {
 			intent = new Intent(mContext, BaidumapLiveActivity.class);
-		}else{
+		} else {
 			intent = new Intent(mContext, GooglemapLiveActivity.class);
 		}
 
