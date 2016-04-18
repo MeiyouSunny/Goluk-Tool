@@ -12,11 +12,13 @@ import android.os.Message;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,10 +30,8 @@ import cn.npnt.ae.AfterEffectListener;
 import cn.npnt.ae.exceptions.EffectException;
 import cn.npnt.ae.exceptions.InvalidVideoSourceException;
 import cn.npnt.ae.model.Chunk;
-import cn.npnt.ae.model.ChunkThumbs;
 import cn.npnt.ae.model.Project;
 import cn.npnt.ae.model.Transition;
-import cn.npnt.ae.model.VideoThumb;
 
 import com.goluk.videoedit.adapter.AEMusicAdapter;
 import com.goluk.videoedit.adapter.ProjectLineAdapter;
@@ -44,18 +44,20 @@ import com.goluk.videoedit.bean.TransitionBean;
 import com.goluk.videoedit.constant.VideoEditConstant;
 import com.goluk.videoedit.utils.DeviceUtil;
 import com.goluk.videoedit.utils.VideoEditUtils;
-public class AfterEffectActivity extends Activity implements AfterEffectListener , View.OnClickListener{
 
+public class AfterEffectActivity extends Activity implements AfterEffectListener , View.OnClickListener{
 	RecyclerView mAERecyclerView;
 	LinearLayoutManager mAELayoutManager;
 	RecyclerView mAEMusicRecyclerView;
 	LinearLayoutManager mAEMusicLayoutManager;
 
 	Handler mPlaySyncHandler;
-	private GLSurfaceView glSurfaceView;
+	private GLSurfaceView mGLSurfaceView;
 	AfterEffect mAfterEffect;
 	Project mProject;
-	int imageHeight;
+	int mImageHeight;
+	int mImageWidth;
+	int mTransitionWidth;
 	List<ProjectItemBean> mProjectItemList;
 	Handler handler;
 	private ProjectLineAdapter mAdapter;
@@ -63,7 +65,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 
 	ImageView mVideoThumeIv;
 	ImageView mVideoPlayIv;
-
+	float mChunksTotalTime;
 	RelativeLayout mAEVolumeSettingLayout;
 	ImageView mAEVolumeSettingIv;
 	TextView mAEVolumePercentTv;
@@ -74,14 +76,21 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	LinearLayout mAEDeleteLayout;
 	LinearLayout mAECutLayout;
 	LinearLayout mAEVolumeLayout;
+	int mTimeLineX;
 
-//	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
-//	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406204409_1_TX_3_0012.mp4";
+	private final static String TAG = "AfterEffectActivity";
+	private float currentPlayPosition = 0f;
+	// If the AE value larger than 1, scroll 1 px to reduce it
+	private float mCEValue = 0f;
+
+	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
+	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406204409_1_TX_3_0012.mp4";
 
 	/** htc d820u */
-	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160331125315_1_TX_3_0012.mp4";
-	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160401124245_1_TX_3_0012.mp4";
+//	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160331125315_1_TX_3_0012.mp4";
+//	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160401124245_1_TX_3_0012.mp4";
 	String mMusicPath = "/storage/emulated/0/qqmusic/song/500miles.mp3";
+
 	private void startParse() {
 		if (mVideoPath != null) {
 			try {
@@ -104,9 +113,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		mAfterEffect.playPause();
 	}
 
-	
 	private void initPlayer() {
-
 		mVideoThumeIv = (ImageView) findViewById(R.id.iv_video_thumb);
 		mVideoPlayIv = (ImageView) findViewById(R.id.iv_video_play);
 
@@ -114,11 +121,11 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		mVideoPlayIv.setOnClickListener(this);
 
 		mSurfaceLayout = (FrameLayout)findViewById(R.id.fl_video_sur_layout);
-		glSurfaceView = new GLSurfaceView(this);
-		mSurfaceLayout.addView(glSurfaceView, 0);
-		glSurfaceView.setEGLContextClientVersion(2);
-		glSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
-		glSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
+		mGLSurfaceView = new GLSurfaceView(this);
+		mSurfaceLayout.addView(mGLSurfaceView, 0);
+		mGLSurfaceView.setEGLContextClientVersion(2);
+		mGLSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+		mGLSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
 
 		int screenWidthSize = DeviceUtil.getScreenWidthSize(this);
 		int width = screenWidthSize;
@@ -126,7 +133,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		LayoutParams params = mSurfaceLayout.getLayoutParams();
 		params.height = height;
 
-		mAfterEffect = new AfterEffect(this, glSurfaceView, this, width, height);
+		mAfterEffect = new AfterEffect(this, mGLSurfaceView, this, width, height);
 		mProject = mAfterEffect.getProject();
 
 		handler = new Handler() {
@@ -195,9 +202,6 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		startParse();
 	}
 
-	private final static String TAG = "CK1";
-	private float currentPlayPosition = -1;
-
 	private void handlerAECallBack(Message msg) {
 
 		switch (msg.what) {
@@ -208,26 +212,59 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			break;
 
 		case MSG_AE_PLAY_PROGRESS:
-			float currentPos = ((float) msg.arg1) / 100;
-			float totalSec = ((float) msg.arg2) / 100;
-			Log.d(TAG, "MSG_AE_PLAY_PROGRESS " + currentPos + "/" + totalSec);
+		{
+			ChunkPlayBean playBean = (ChunkPlayBean)msg.obj;
+			float currentPos = playBean.currentSec;
+			float totalSec = playBean.totalSec;
+			float chunkPosition = playBean.position;
+			AfterEffect afterEffect = playBean.effect;
+			int chunkIndex = playBean.chunkIndex;
+
+			Log.d(TAG, "MSG_AE_PLAY_PROGRESS " + currentPos + "/" + totalSec + "/" + currentPlayPosition);
+			int totalWidth = VideoEditUtils.ChunkTime2Width(totalSec, mImageWidth);
+
 			float delta = currentPos - currentPlayPosition;
-			final int scrollX = (int)(delta / totalSec * mAERecyclerView.getWidth());
 			currentPlayPosition = currentPos;
 
-			mAERecyclerView.post(new Runnable() {
-				@Override
-				public void run() {
-					mAERecyclerView.scrollBy(scrollX, 0);
-				}
-			});
+			float offset = delta * totalWidth / totalSec;
+			final float realOff = offset + mCEValue;
+			if((int)realOff >= 1) {
+				// Worth scroll
+				mAERecyclerView.post(new Runnable() {
+					@Override
+					public void run() {
+						mAERecyclerView.scrollBy((int)realOff, 0);
+					}
+				});
+				// restore and remember new CE
+				mCEValue = (realOff - (int)realOff);
+			} else {
+				mCEValue = realOff;
+			}
+
+			Log.d(TAG, "time line scroll params: offset=" +
+					offset + ", realOff=" + realOff + ", mCEValue=" + mCEValue + ", chunkPosition=" + chunkPosition);
+			List<Chunk> chunkList = afterEffect.getMainChunks();
+			Chunk chunk = chunkList.get(chunkIndex);
+			if(chunk.getDuration() - chunkPosition < 0.001) {
+				mAERecyclerView.post(new Runnable() {
+					@Override
+					public void run() {
+						mAERecyclerView.scrollBy(mTransitionWidth, 0);
+					}
+				});
+				mCEValue = 0f;
+			}
+		}
 			break;
 		case MSG_AE_PLAY_FINISHED:
 			Log.d(TAG, "MSG_AE_PLAY_FINISHED");
 			break;
 		case MSG_AE_PLAY_FAILED:
+		{
 			Log.d(TAG, "MSG_AE_PLAY_FAILED");
-			currentPos = -1;
+			float currentPos = -1;
+		}
 			break;
 		case MSG_AE_EXPORT_STARTED:
 			Log.d(TAG, "MSG_AE_EXPORT_STARTED");
@@ -250,10 +287,11 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			break;
 		}
 		case MSG_AE_CHUNK_ADD_FINISHED: {
-			Chunk chunk=(Chunk)msg.obj;
-			if(chunk!=null){
+			Chunk chunk = (Chunk)msg.obj;
+			if(chunk != null) {
 				Log.d(TAG, "chunk added:" + chunk.prettyString());
-				 mAfterEffect.generateThumbAsyn(chunk, VideoEditConstant.BITMAP_TIME_INTERVAL, imageHeight);
+				mChunksTotalTime += chunk.getDuration();
+				mAfterEffect.generateThumbAsyn(chunk, VideoEditConstant.BITMAP_TIME_INTERVAL, mImageHeight);
 			}
 			break;
 		}
@@ -265,29 +303,14 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		}
 
 		case MSG_AE_BITMAP_READ_OUT: {
-//			String filePath=(String)msg.obj;
-//			Log.d(TAG, "chunk added fialed:" + filePath);
 			Chunk chunk = (Chunk) msg.obj;
-			ChunkThumbs chunkThumbs = chunk.getChunkThumbs();
-			ArrayList<VideoThumb> thumbList = chunkThumbs.getThumbs();
-			//VideoThumb thumb = thumbList.get(0);
-			//thumb.getBitmap();
-//			if(thumbList != null && thumbList.size() > 0) {
-//				for(int i = 0; i < thumbList.size(); i++) {
-//					VideoThumb thumb = thumbList.get(i);
-//					BitmapWrapper wrapper = new BitmapWrapper();
-//					wrapper.bitmap = thumb.getBitmap();
-//					wrapper.index = i;
-////					mVideoBitmapList.add(thumb.getBitmap());
-//					mVideoBitmapList.add(wrapper);
-//				}
-//			}
 
 			// Get to insert index
 			{
 				ChunkBean chunkBean = new ChunkBean();
 				chunkBean.chunk = chunk;
 				chunkBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
+				chunkBean.width = VideoEditUtils.ChunkTime2Width(chunk.getDuration(), mImageWidth);
 				int insertIndex = mProjectItemList.size() - 2;
 				mProjectItemList.add(insertIndex, chunkBean);
 			}
@@ -310,6 +333,8 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			break;
 		}
 	}
+	private View mTimeLineGateV;
+	private int mGateLocationX;
 
 	private void initController(){
 
@@ -335,20 +360,21 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 
 		mAEVolumeSeekBar.setMax(100);
 		mAEVolumeSeekBar.setProgress(100);
+
 		mAEVolumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-			
+
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
 				// TODO Auto-generated method stub
 				
 			}
-			
+
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
@@ -363,7 +389,6 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_after_effect);
 
-//		List<ProjectItemBean> data = new ArrayList<ProjectItemBean>();
 		// default tail and footer
 		mProjectItemList = new ArrayList<ProjectItemBean>();
 		DummyHeaderBean headerBean = new DummyHeaderBean();
@@ -380,12 +405,49 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		mAELayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mAERecyclerView = (RecyclerView) findViewById(R.id.rv_video_edit_pic_list);
 		mAdapter = new ProjectLineAdapter(this, mAERecyclerView, mProjectItemList);
-//		mProjectItemList = data;
 		mAERecyclerView.setAdapter(mAdapter);
 		mAERecyclerView.setLayoutManager(mAELayoutManager);
 		mAERecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-		imageHeight = DeviceUtil.dp2px(this, 45);
+		mImageHeight = DeviceUtil.dp2px(this, VideoEditConstant.BITMAP_COMMON_WIDTH);
+		mImageWidth = mImageHeight;
+		mTimeLineGateV = findViewById(R.id.v_time_line_gate);
+		mTimeLineGateV.getViewTreeObserver().addOnGlobalLayoutListener(
+				new OnGlobalLayoutListener() {
+					public void onGlobalLayout() {
+						mTimeLineGateV.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+						int[] locations = new int[2];
+						mTimeLineGateV.getLocationOnScreen(locations);
+						int x = locations[0];
+						int y = locations[1];
+						mGateLocationX = x;
+						Log.d(TAG, "Base UI data: mGateLocationX=" + mGateLocationX);
+					}
+				});
+		mTransitionWidth = DeviceUtil.dp2px(this, VideoEditConstant.TRANSITION_COMMON_WIDTH);
+		mAERecyclerView.addOnScrollListener(new OnScrollListener() {
+			@Override
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//				Log.d(TAG, "time line scrolled: dx=" + dx + ", dy=" + dy);
+
+				int firstVisibleIndex = mAELayoutManager.findFirstVisibleItemPosition();
+				int lastVisibleIndex = mAELayoutManager.findLastVisibleItemPosition();
+//				Log.d(TAG, "first visible index=" + firstVisibleIndex + ", lastVisibleIndex=" + lastVisibleIndex);
+				for(int i = firstVisibleIndex; i <= lastVisibleIndex; i++) {
+					View view = mAELayoutManager.findViewByPosition(i);
+
+					if(view.getId() == R.id.ll_ae_data_transition) {
+						int pX = VideoEditUtils.getViewXLocation(view);
+						Log.d(TAG, "Transition scrolled to: pX=" + pX);
+
+						if(VideoEditUtils.judgeGateOverlap(mGateLocationX, pX, mTransitionWidth)) {
+							// Skip seek player
+						}
+					}
+				}
+			}
+		});
 		initPlayer();
 
 		initController();
@@ -443,9 +505,24 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		handler.sendMessage(msg);
 	}
 
+	static class ChunkPlayBean {
+		int chunkIndex;
+		float position;
+		AfterEffect effect;
+		float currentSec;
+		float totalSec;
+	}
+
 	@Override
-	public void onPlaying(AfterEffect afterEffcet, float currentSec, float totalSec) {
-		Message msg = handler.obtainMessage(MSG_AE_PLAY_PROGRESS, (int) (currentSec * 100), (int) (totalSec * 100), afterEffcet);
+	public void onPlaying(AfterEffect afterEffcet, float currentSec, float totalSec, int chunkIndex, float position) {
+		ChunkPlayBean bean = new ChunkPlayBean();
+		bean.chunkIndex = chunkIndex;
+		bean.position = position;
+		bean.effect = afterEffcet;
+		bean.currentSec = currentSec;
+		bean.totalSec = totalSec;
+
+		Message msg = handler.obtainMessage(MSG_AE_PLAY_PROGRESS, 0, 0, bean);
 		handler.sendMessage(msg);
 	}
 
@@ -542,6 +619,18 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			mAESplitAndDeleteLayout.setVisibility(View.GONE);
 			mAEVolumeSettingLayout.setVisibility(View.VISIBLE);
 		}
+	}
+
+	@Override
+	public void onPlayPaused(AfterEffect afterEffcet) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPlayResume(AfterEffect afterEffect) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
