@@ -236,7 +236,8 @@
             android:scaleType="fitCenter"
             android:src="@drawable/ic_frame_bottom" />
 
-        <ImageView
+        <View
+            android:id="@+id/v_time_line_gate"
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"

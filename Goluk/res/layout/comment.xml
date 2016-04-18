@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="7dp"
                 android:src="@drawable/input_state_emojo" />
 
             <com.rockerhieu.emojicon.EmojiconEditText
@@ -90,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
                 android:layout_marginBottom="8dp"
-                android:layout_marginLeft="8dp"
+                android:layout_marginLeft="3dp"
                 android:layout_marginTop="8dp"
                 android:layout_toLeftOf="@id/comment_send"
                 android:layout_toRightOf="@id/emojicon"

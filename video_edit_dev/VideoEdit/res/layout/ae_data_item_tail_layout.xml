@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="80dp"
+    android:id="@+id/ll_ae_data_tail"
     android:layout_height="@dimen/ae_meta_height">
   <ImageView
       android:id="@+id/iv_ae_data_tail"
