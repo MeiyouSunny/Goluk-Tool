@@ -117,7 +117,7 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 			if (!app.isUserLoginSucess) {
 //					GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
 				Intent intent = null;
-				if(GolukApplication.getInstance().isInteral()){
+				if(GolukApplication.getInstance().isInteral() == false){
 					intent = new Intent(this, InternationUserLoginActivity.class);
 				}else{
 					intent = new Intent(this, UserLoginActivity.class);
@@ -137,7 +137,7 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 			if (!app.isUserLoginSucess) {
 //					GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
 				Intent intent = null;
-				if(GolukApplication.getInstance().isInteral()){
+				if(GolukApplication.getInstance().isInteral() == false){
 					intent = new Intent(this, InternationUserLoginActivity.class);
 				}else{
 					intent = new Intent(this, UserLoginActivity.class);
@@ -156,7 +156,7 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 			if (!app.isUserLoginSucess) {
 //					GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
 				Intent intent = null;
-				if(GolukApplication.getInstance().isInteral()){
+				if(GolukApplication.getInstance().isInteral() == false){
 					intent = new Intent(this, InternationUserLoginActivity.class);
 				}else{
 					intent = new Intent(this, UserLoginActivity.class);
@@ -264,7 +264,7 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 		if (!app.isUserLoginSucess) {
 //			GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
 			Intent intent = null;
-			if(GolukApplication.getInstance().isInteral()){
+			if(GolukApplication.getInstance().isInteral() == false){
 				intent = new Intent(this, InternationUserLoginActivity.class);
 			}else{
 				intent = new Intent(this, UserLoginActivity.class);

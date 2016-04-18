@@ -247,7 +247,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 			String start_have = itStart_have.getStringExtra("userstart").toString();
 			if ("start_have".equals(start_have)) {
 				Intent intent =  null;
-				if(GolukApplication.getInstance().isInteral()){
+				if(GolukApplication.getInstance().isInteral() == false){
 					intent = new Intent(this, InternationUserLoginActivity.class);
 				}else{
 					intent = new Intent(this, UserLoginActivity.class);
@@ -946,7 +946,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 		if (dialogType == LiveDialogManager.DIALOG_TYPE_LOGIN) {
 			if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
 				Intent intent =  null;
-				if(GolukApplication.getInstance().isInteral()){
+				if(GolukApplication.getInstance().isInteral() == false){
 					intent = new Intent(this, InternationUserLoginActivity.class);
 				}else{
 					intent = new Intent(this, UserLoginActivity.class);
@@ -958,7 +958,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 			if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
 				// 继续直播
 				Intent intent;
-				if(GolukApplication.getInstance().isInteral()){
+				if(GolukApplication.getInstance().isInteral() == false){
 					intent = new Intent(this, BaidumapLiveActivity.class);
 				}else{
 					intent = new Intent(this, GooglemapLiveActivity.class);
