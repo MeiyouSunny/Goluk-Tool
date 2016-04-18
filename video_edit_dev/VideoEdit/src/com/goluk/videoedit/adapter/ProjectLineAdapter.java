@@ -25,6 +25,7 @@ import com.goluk.videoedit.bean.TailBean;
 import com.goluk.videoedit.bean.TransitionBean;
 import com.goluk.videoedit.constant.VideoEditConstant;
 import com.goluk.videoedit.utils.DeviceUtil;
+import com.goluk.videoedit.utils.VideoEditUtils;
 import com.makeramen.dragsortadapter.DragSortAdapter;
 import com.makeramen.dragsortadapter.NoForegroundShadowBuilder;
 import com.makeramen.dragsortadapter.DragSortAdapter.ViewHolder;
@@ -160,7 +161,7 @@ public class ProjectLineAdapter extends
 //		return false;
 //	}
 
-	static class ChunkViewHolder extends ProjectItemViewHolder implements
+	public static class ChunkViewHolder extends ProjectItemViewHolder implements
 		View.OnClickListener, View.OnLongClickListener {
 
 		LinearLayout nChunkContainerLL;
@@ -181,7 +182,7 @@ public class ProjectLineAdapter extends
 		}
 	}
 
-	static class TransitionViewHolder extends ProjectItemViewHolder {
+	public static class TransitionViewHolder extends ProjectItemViewHolder {
 		public TransitionViewHolder(DragSortAdapter<?> dragSortAdapter,
 				View itemView) {
 			super(dragSortAdapter, itemView);
@@ -189,7 +190,7 @@ public class ProjectLineAdapter extends
 		}
 	}
 
-	static class HeaderViewHolder extends ProjectItemViewHolder {
+	public static class HeaderViewHolder extends ProjectItemViewHolder {
 		public HeaderViewHolder(DragSortAdapter<?> dragSortAdapter, View itemView) {
 			super(dragSortAdapter, itemView);
 			// TODO Auto-generated constructor stub
@@ -197,14 +198,14 @@ public class ProjectLineAdapter extends
 	}
 
 
-	static class ChunkTailViewHolder extends ProjectItemViewHolder {
+	public static class ChunkTailViewHolder extends ProjectItemViewHolder {
 		public ChunkTailViewHolder(DragSortAdapter<?> dragSortAdapter, View itemView) {
 			super(dragSortAdapter, itemView);
 			// TODO Auto-generated constructor stub
 		}
 	}
 
-	static class FooterViewHolder extends ProjectItemViewHolder {
+	public static class FooterViewHolder extends ProjectItemViewHolder {
 		ImageView nAddIv;
 
 		public FooterViewHolder(DragSortAdapter<?> dragSortAdapter, View itemView, int FooterWidth) {
@@ -267,6 +268,7 @@ public class ProjectLineAdapter extends
 				viewHolder.nChunkContainerLL.setVisibility(getDraggingId() == chunkBean.index_tag ? View.INVISIBLE
 						: View.VISIBLE);
 				viewHolder.nChunkContainerLL.postInvalidate();
+		//		Log.d("CK1", "" + VideoEditUtils.ChunkWidth2Time(viewHolder.nChunkContainerLL.getWidth(), DeviceUtil.dp2px(mContext, 45)));
 			}
 		}
 	}
