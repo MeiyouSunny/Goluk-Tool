@@ -104,7 +104,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 			@Override
 			public void onClick(View v) {
 				Intent intent = null;
-				if(GolukApplication.getInstance().isInternation){
+				if(GolukApplication.getInstance().isInteral()){
 					intent = new Intent(FragmentFollowed.this.getActivity(), InternationUserLoginActivity.class);
 				}else{
 					intent = new Intent(FragmentFollowed.this.getActivity(), UserLoginActivity.class);

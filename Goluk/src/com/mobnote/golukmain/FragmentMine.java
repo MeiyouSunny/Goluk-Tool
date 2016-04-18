@@ -437,7 +437,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
 				// GolukUtils.showToast(this,
 				// this.getResources().getString(R.string.str_please_login));
 				Intent loginIntent = null;
-				if(GolukApplication.getInstance().isInternation){
+				if(GolukApplication.getInstance().isInteral()){
 					loginIntent = new Intent(getActivity(), InternationUserLoginActivity.class);
 				}else{
 					loginIntent = new Intent(getActivity(), UserLoginActivity.class);
@@ -476,7 +476,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
 				Context.MODE_PRIVATE);
 		mEditor = mPreferences.edit();
 		Intent itNo = null;
-		if(GolukApplication.getInstance().isInternation){
+		if(GolukApplication.getInstance().isInteral()){
 			itNo = new Intent(getActivity(), InternationUserLoginActivity.class);
 		}else{
 			 itNo = new Intent(getActivity(), UserLoginActivity.class);
