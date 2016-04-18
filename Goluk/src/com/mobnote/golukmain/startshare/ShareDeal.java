@@ -36,7 +36,7 @@ public class ShareDeal implements OnClickListener {
 		mYouMengRootLayout = rootLayout;
 		mSharePlatform = new SharePlatformUtil(mActivity);
 		txtColor = mActivity.getResources().getColor(R.color.youmeng_share_txt_color);
-		if (1 == ProxyThirdShare.type) {
+		if (GolukApplication.getInstance().isInteral()) {
 			initView();
 		} else {
 			initAbroadLayout();

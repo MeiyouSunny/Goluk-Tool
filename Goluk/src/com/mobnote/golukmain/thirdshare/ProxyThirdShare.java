@@ -1,16 +1,16 @@
 package com.mobnote.golukmain.thirdshare;
 
+import com.mobnote.application.GolukApplication;
+
 import android.app.Activity;
 import android.view.View;
 
 public class ProxyThirdShare implements IThirdShareFn {
 
-	public static int type = 1;
-
 	private IThirdShareFn mThirdShare = null;
 
 	public ProxyThirdShare(Activity activity, SharePlatformUtil spf, ThirdShareBean bean) {
-		if (type == 1) {
+		if (GolukApplication.getInstance().isInteral()) {
 			mThirdShare = new ChinaThirdShare(activity, spf, bean.surl, bean.curl, bean.db, bean.tl, bean.bitmap,
 					bean.realDesc, bean.videoId, bean.mShareType);
 		} else {
