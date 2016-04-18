@@ -50,6 +50,10 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	private static final String TAG = "WiFiLinkListActivity";
 	private static final String CONNECT_IPC_IP = "192.168.62.1";
 
+	private final String G1G2_ShowName = " Goluk xxxxxx ";
+	private final String T1_ShowName = " Goluk_T1_xxxxxx ";
+	private final String T1S_ShowName = " Goluk_T1S_xxxxxx ";
+
 	/** 未连接或连接失败 */
 	private static final int STATE_FAILED = 0;
 	/** 连接中 */
@@ -105,7 +109,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 		collectLog("onCreate", "---1");
 
 		getIntentData();
-		
+
 		ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setHdType(mIpcRealtype);
 
 		mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
@@ -129,10 +133,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			mIpcRealtype = intent.getStringExtra(WifiUnbindSelectTypeActivity.KEY_IPC_REAL_TYPE);
 		}
 	}
-
-	private final String G1G2_ShowName = " Goluk xxxxxx ";
-	private final String T1_ShowName = " Goluk_T1_xxxxxx ";
-	private final String T1S_ShowName = " Goluk_T1S_xxxxxx ";
 
 	private String getWifiShowName() {
 		if (TextUtils.isEmpty(mIpcRealtype)) {
