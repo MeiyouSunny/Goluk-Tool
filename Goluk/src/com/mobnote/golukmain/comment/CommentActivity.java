@@ -254,6 +254,11 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if (View.GONE != emoLayout.getVisibility()) {
+				this.hideEmojocon();
+				setSwitchState(true);
+				return true;
+			}
 			exit();
 			return true;
 		}

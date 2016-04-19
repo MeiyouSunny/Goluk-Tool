@@ -334,7 +334,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.mobnote.golukmain.wxapi.WXEntryActivity"
+            android:name="cn.com.mobnote.golukmobile.wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"

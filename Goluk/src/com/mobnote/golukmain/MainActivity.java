@@ -987,9 +987,8 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 			return;
 		}
 
-		String server = "0";
 		String address = "";
-		if (server.equals("1")) {
+		if (GolukApplication.getInstance().isInteral()) {
 			address = ((ReverseGeoCodeResult) obj).getAddress();// 国内
 		} else {
 			address = ((LocationAddressDetailBean) obj).detail;// 国际
