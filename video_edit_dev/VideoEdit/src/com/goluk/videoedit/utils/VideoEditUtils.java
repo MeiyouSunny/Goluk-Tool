@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.goluk.videoedit.bean.ChunkBean;
 import com.goluk.videoedit.bean.ProjectItemBean;
+import com.goluk.videoedit.bean.TransitionBean;
 import com.goluk.videoedit.constant.VideoEditConstant;
 
 public class VideoEditUtils {
@@ -69,5 +70,29 @@ public class VideoEditUtils {
 		}
 
 		return false;
+	}
+
+	public static int getTransitionFromChunk(List<ProjectItemBean> list, int chunkIndex) {
+		if(null == list || list.size() == 0) {
+			return -1;
+		}
+
+		ProjectItemBean itemBean = list.get(chunkIndex);
+		int count = list.size();
+
+		if(itemBean instanceof ChunkBean) {
+			ChunkBean chunkBean = (ChunkBean)itemBean;
+			for(int i = 0; i < count; i++) {
+				ProjectItemBean tmpBean = list.get(i);
+				if(tmpBean instanceof TransitionBean) {
+					TransitionBean transBean = (TransitionBean)tmpBean;
+					if(transBean.ct_pair_tag.equals(chunkBean.ct_pair_tag)) {
+						return i;
+					}
+				}
+			}
+		}
+
+		return -1;
 	}
 }

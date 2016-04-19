@@ -6,8 +6,12 @@ import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnGenericMotionListener;
+import android.view.View.OnLongClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -31,7 +35,6 @@ import com.goluk.videoedit.utils.DeviceUtil;
 import com.goluk.videoedit.utils.VideoEditUtils;
 import com.makeramen.dragsortadapter.DragSortAdapter;
 import com.makeramen.dragsortadapter.NoForegroundShadowBuilder;
-import com.makeramen.dragsortadapter.DragSortAdapter.ViewHolder;
 import com.goluk.videoedit.AfterEffectActivity;
 
 import java.util.ArrayList;
@@ -50,28 +53,24 @@ public class ChannelLineAdapter extends
 	private List<ProjectItemBean> mDataList;
 	private Context mContext;
 	private int mFooterWidth;
+	RecyclerView mRecyclerView;
 
 	public static final String TAG = ChannelLineAdapter.class.getSimpleName();
-
-//	private List<BitmapWrapper> data;
 
 	public void setData(List<ProjectItemBean> src) {
 		mDataList = src;
 	}
 
-//	public ExampleAdapter(RecyclerView recyclerView, List<BitmapWrapper> data) {
-//		super(recyclerView);
-//		this.data = data;
-//	}
 	public ChannelLineAdapter(Context cxt,
 			RecyclerView recyclerView, List<ProjectItemBean> dataList) {
 		super(recyclerView);
 		this.mDataList = dataList;
 		this.mContext = cxt;
+		mRecyclerView = recyclerView;
 		mFooterWidth = DeviceUtil.getScreenWidthSize(mContext) - DeviceUtil.dp2px(mContext, 65);
 	}
 
-	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
+	String mVideoPath = VideoEditConstant.VIDEO_PATH_1;
 
 	//TODO: TBD
 	public void addChunk() {
@@ -140,7 +139,6 @@ public class ChannelLineAdapter extends
 		public ChunkViewHolder(DragSortAdapter<?> dragSortAdapter, View itemView) {
 			super(dragSortAdapter, itemView);
 			nChunkContainerLL = (LinearLayout)itemView.findViewById(R.id.ll_ae_data_chunk);
-//			nChunkContainerLL.setBackgroundResource(R.drawable.video_edit_chunk_item_mask);
 			nChunkMaskLL = itemView.findViewById(R.id.v_ae_data_chunk_mask);
 			nChunkDurationTV = (TextView)itemView.findViewById(R.id.tv_ae_data_chunk_duration);
 		}
@@ -181,11 +179,13 @@ public class ChannelLineAdapter extends
 
 	static class FooterViewHolder extends ProjectItemViewHolder {
 		ImageView nAddChunkIV;
+		TextView nChannelTimeIV;
 
 		public FooterViewHolder(DragSortAdapter<?> dragSortAdapter, View itemView, int FooterWidth) {
 			super(dragSortAdapter, itemView);
 			// TODO Auto-generated constructor stub
 			nAddChunkIV = (ImageView)itemView.findViewById(R.id.iv_ae_data_add);
+			nChannelTimeIV = (TextView)itemView.findViewById(R.id.tv_ae_data_totaltime);
 
 			ViewGroup.LayoutParams lp =  itemView.getLayoutParams();
 			lp.width = FooterWidth;
@@ -198,7 +198,7 @@ public class ChannelLineAdapter extends
 		ProjectItemBean bean = mDataList.get(position);
 
 		if(holder instanceof ChunkViewHolder) {
-			ChunkViewHolder viewHolder = (ChunkViewHolder)holder;
+			final ChunkViewHolder viewHolder = (ChunkViewHolder)holder;
 			viewHolder.nChunkContainerLL.removeAllViews();
 			if(bean instanceof ChunkBean) {
 				final ChunkBean chunkBean = (ChunkBean)bean;
@@ -254,7 +254,6 @@ public class ChannelLineAdapter extends
 				}
 
 				int duration = (int)(chunk.getDuration() * 10);
-				Log.d("CK1", "" + (float)duration / 10);
 				viewHolder.nChunkDurationTV.setText("" + (float)duration / 10 + "\'\'");
 
 				// Chunk click edit
@@ -265,6 +264,35 @@ public class ChannelLineAdapter extends
 						notifyItemChanged(position);
 					}
 				});
+
+				viewHolder.nChunkContainerLL.setOnLongClickListener(new OnLongClickListener() {
+					@Override
+					public boolean onLongClick(View v) {
+						viewHolder.startDrag();
+						return true;
+					}
+				});
+
+//				viewHolder.nChunkContainerLL.setOnGenericMotionListener(new OnGenericMotionListener() {
+//					@Override
+//					public boolean onGenericMotion(View v, MotionEvent event) {
+//						if(event.getAction() == MotionEvent.ACTION_MOVE) {
+//							float x = event.getX();
+//							float y = event.getY();
+//							Log.d("CK1", "x=" + x + ",y=" + y);
+//						}
+//						return true;
+//					}
+//				});
+//
+//				viewHolder.nChunkContainerLL.setOnTouchListener(new OnTouchListener() {
+//					@Override
+//					public boolean onTouch(View v, MotionEvent event) {
+//						chunkBean.isEditState = !chunkBean.isEditState;
+//						notifyItemChanged(position);
+//						return false;
+//					}
+//				});
 			}
 		}  else if(holder instanceof FooterViewHolder) {
 			FooterViewHolder viewHolder = (FooterViewHolder)holder;
@@ -275,6 +303,10 @@ public class ChannelLineAdapter extends
 					addChunk();
 				}
 			});
+
+			float duration = ((AfterEffectActivity)mContext).getChannelDuration();
+			int trimDuration = (int)(duration * 10);
+			viewHolder.nChannelTimeIV.setText("" + (float)trimDuration / 10 + "s");
 		}
 	}
 
@@ -299,11 +331,18 @@ public class ChannelLineAdapter extends
 		return -1;
 	}
 
+	private void swapChunk(int fromPosition, int toPosition) {
+		mDataList.add(toPosition, mDataList.remove(fromPosition));
+		// Continue process transition
+		mDataList.add(toPosition + 1, mDataList.remove(fromPosition + 1));
+	}
+
 	@Override
 	public boolean move(int fromPosition, int toPosition) {
 		ProjectItemBean bean = mDataList.get(toPosition);
 		if(bean instanceof ChunkBean) {
-			mDataList.add(toPosition, mDataList.remove(fromPosition));
+//			mDataList.add(toPosition, mDataList.remove(fromPosition));
+			swapChunk(fromPosition, toPosition);
 			return true;
 		} else {
 			return false;
@@ -312,26 +351,20 @@ public class ChannelLineAdapter extends
 
 	static class ProjectItemViewHolder extends DragSortAdapter.ViewHolder implements
 			View.OnClickListener, View.OnLongClickListener {
-//		ViewGroup container;
-//		ImageView img;
-//		TextView text;
 
 		public ProjectItemViewHolder(DragSortAdapter<?> adapter, View itemView) {
 			super(adapter, itemView);
-//			container = (ViewGroup) itemView.findViewById(R.id.container);
-//			img = (ImageView) itemView.findViewById(R.id.img);
-//			text = (TextView) itemView.findViewById(R.id.text);
 		}
 
 		@Override
 		public void onClick(View v) {
-//			Log.d(TAG, text.getText() + " clicked!");
+
 		}
 
 		@Override
 		public boolean onLongClick(View v) {
-			startDrag();
-			return true;
+//			startDrag();
+			return false;
 		}
 
 		@Override

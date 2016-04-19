@@ -5,6 +5,7 @@ import cn.com.tiros.baidu.LocationAddressDetailBean;
 
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult.AddressComponent;
+import com.mobnote.application.GolukApplication;
 
 /**
  * 区分定位
@@ -13,8 +14,6 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult.AddressComponent;
  *
  */
 public class DistinguishLocation {
-
-	private String mServer = "0";
 
 	private Object mObject = null;
 	private String mCity = "";
@@ -26,7 +25,7 @@ public class DistinguishLocation {
 
 	public DistinguishLocation(Object obj) {
 		this.mObject = obj;
-		if (mServer.equals("1")) {
+		if (GolukApplication.getInstance().isInteral()) {
 			mLocal = new LocalAddress(mObject);
 			mCity = mLocal.getCity();
 			mDistrict = mLocal.getDistrict();
