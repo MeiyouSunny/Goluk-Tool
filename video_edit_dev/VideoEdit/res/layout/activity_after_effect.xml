@@ -102,7 +102,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:paddingStart="58dp"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:background="@drawable/ae_controller_bg" >
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -126,7 +127,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:paddingEnd="58dp"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:background="@drawable/ae_controller_bg" >
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -160,7 +162,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:background="#16181a"
+                android:background="@color/ae_controller_pressed"
                 android:orientation="vertical" >
 
                 <ImageView
@@ -184,6 +186,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:background="@color/ae_controller_normal"
                 android:orientation="vertical" >
 
                 <ImageView

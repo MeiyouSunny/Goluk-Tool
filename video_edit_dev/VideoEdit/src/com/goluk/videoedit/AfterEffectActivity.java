@@ -29,6 +29,8 @@ import android.widget.TextView;
 import cn.npnt.ae.AfterEffect;
 import cn.npnt.ae.AfterEffectListener;
 import cn.npnt.ae.exceptions.EffectException;
+import cn.npnt.ae.exceptions.EffectRuntimeException;
+import cn.npnt.ae.exceptions.InvalidLengthException;
 import cn.npnt.ae.exceptions.InvalidVideoSourceException;
 import cn.npnt.ae.model.Chunk;
 import cn.npnt.ae.model.Project;
@@ -78,7 +80,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	LinearLayout mAECutLayout;
 	LinearLayout mAEVolumeLayout;
 	int mTimeLineX;
-
+	
 	/** 是否为静音 */
 	private boolean isMute;
 	/** 当前音量 */
@@ -94,9 +96,6 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 
 	String mMusicPath = VideoEditConstant.MUSIC_PATH;
 
-	final int checkedColor = Color.parseColor("#16181a");
-	final int normalColor = Color.parseColor("#242629");
-
 	public void addChunk(String videoPath) {
 		int addFlag = -1;
 		// if no chunk added, then the init data would be header, footer, tail
@@ -111,6 +110,46 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 				e.printStackTrace();
 			}
 		}
+	}
+
+	/**
+	 * 删除某个chunk片段
+	 * @param chunkIndex
+	 */
+	public void removeChunk(int  chunkIndex){
+		if(mProjectItemList == null || mProjectItemList.size() <=3){
+			return ;
+		}
+
+		try{
+			mAfterEffect.editRemoveChunk(chunkIndex);
+		}catch(EffectRuntimeException e){
+			return;
+		}
+	}
+
+	/**
+	 * 
+	 * @param chunkIndex
+	 * @param position 基于当前chunk的拆分的位置。单位秒。
+	 */
+	public void splitChunk(int chunkIndex, float position){
+		if(mProjectItemList == null || mProjectItemList.size() <=3){
+			return ;
+		}
+
+		if(!mAfterEffect.canSplit(chunkIndex, position)){
+			return;
+		}
+		try{
+			mAfterEffect.editSplitChunk(chunkIndex, position);
+		}catch(InvalidLengthException | EffectRuntimeException e){
+			if(e instanceof InvalidLengthException){
+			}else if(e instanceof EffectRuntimeException){
+			}
+			return;
+		}
+		mAdapter.notifyDataSetChanged();
 	}
 
 	private void play() {
@@ -654,20 +693,17 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 //			mVideoThumeIv.setVisibility(View.GONE);	
 		}else if (vId == R.id.ll_ae_volume){
 
-			mAEVolumeLayout.setBackgroundColor(checkedColor);
-			mAECutLayout.setBackgroundColor(normalColor);
-			mAESplitLayout.setBackgroundColor(normalColor);
-			mAEDeleteLayout.setBackgroundColor(normalColor);
+			mAEVolumeLayout.setBackgroundColor(AfterEffectActivity.this.getResources().getColor(R.color.ae_controller_pressed));
+			mAECutLayout.setBackgroundResource(R.drawable.ae_controller_bg);
+			//(AfterEffectActivity.this.getResources().getColor(R.color.ae_controller_normal));
 
 			mAESplitAndDeleteLayout.setVisibility(View.GONE);
 			mAEVolumeSettingLayout.setVisibility(View.VISIBLE);
 
 		}else if(vId == R.id.ll_ae_cut){
 
-			mAEVolumeLayout.setBackgroundColor(normalColor);
-			mAECutLayout.setBackgroundColor(checkedColor);
-			mAESplitLayout.setBackgroundColor(normalColor);
-			mAEDeleteLayout.setBackgroundColor(normalColor);
+			mAEVolumeLayout.setBackgroundResource(R.drawable.ae_controller_bg);
+			mAECutLayout.setBackgroundColor(AfterEffectActivity.this.getResources().getColor(R.color.ae_controller_pressed));
 
 			if(mAEVolumeSettingLayout.getVisibility() == View.VISIBLE){
 				mAEVolumeSettingLayout.setVisibility(View.GONE);
@@ -676,17 +712,11 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 
 		}else if(vId == R.id.ll_ae_split){
 
-			mAEVolumeLayout.setBackgroundColor(normalColor);
-			mAECutLayout.setBackgroundColor(normalColor);
-			mAESplitLayout.setBackgroundColor(checkedColor);
-			mAEDeleteLayout.setBackgroundColor(normalColor);
+			splitChunk(0,1);
 
 		}else if(vId == R.id.ll_ae_delete){
 
-			mAEVolumeLayout.setBackgroundColor(normalColor);
-			mAECutLayout.setBackgroundColor(normalColor);
-			mAESplitLayout.setBackgroundColor(normalColor);
-			mAEDeleteLayout.setBackgroundColor(checkedColor);
+			removeChunk(0);
 
 		}else if(vId == R.id.iv_ae_volume_setting){
 
