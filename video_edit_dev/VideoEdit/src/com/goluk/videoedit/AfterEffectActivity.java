@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -78,18 +79,26 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	LinearLayout mAEVolumeLayout;
 	int mTimeLineX;
 
+	/** 是否为静音 */
+	private boolean isMute;
+	/** 当前音量 */
+	private int mCurrVolumeProgress;
+
 	private final static String TAG = "AfterEffectActivity";
 	private float currentPlayPosition = 0f;
 	// If the AE value larger than 1, scroll 1 px to reduce it
 	private float mCEValue = 0f;
 
-	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
-	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406204409_1_TX_3_0012.mp4";
+//	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
+//	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406204409_1_TX_3_0012.mp4";
 
 	/** htc d820u */
-//	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160331125315_1_TX_3_0012.mp4";
-//	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160401124245_1_TX_3_0012.mp4";
+	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160331125315_1_TX_3_0012.mp4";
+	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160401124245_1_TX_3_0012.mp4";
 	String mMusicPath = "/storage/emulated/0/qqmusic/song/500miles.mp3";
+
+	final int checkedColor = Color.parseColor("#16181a");
+	final int normalColor = Color.parseColor("#242629");
 
 	public void addChunk(String videoPath) {
 		if (mVideoPath != null) {
@@ -349,7 +358,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 
 		mAESplitAndDeleteLayout = (LinearLayout) findViewById(R.id.ll_ae_split_and_delete);
 		mAESplitLayout = (LinearLayout) findViewById(R.id.ll_ae_split);
-		mAEDeleteLayout = (LinearLayout) findViewById(R.id.ll_ae_split_and_delete);
+		mAEDeleteLayout = (LinearLayout) findViewById(R.id.ll_ae_delete);
 		mAECutLayout = (LinearLayout) findViewById(R.id.ll_ae_cut);
 		mAEVolumeLayout = (LinearLayout) findViewById(R.id.ll_ae_volume);
 		
@@ -360,10 +369,15 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		mAEMusicRecyclerView.setAdapter(mAeMusicAdapter);
 		mAEMusicRecyclerView.setLayoutManager(mAEMusicLayoutManager);
 
+		mAEVolumeSettingIv.setOnClickListener(this);
+		mAESplitLayout.setOnClickListener(this);
+		mAEDeleteLayout.setOnClickListener(this);
+		mAECutLayout.setOnClickListener(this);
 		mAEVolumeLayout.setOnClickListener(this);
 
 		mAEVolumeSeekBar.setMax(100);
-		mAEVolumeSeekBar.setProgress(100);
+		mCurrVolumeProgress = 100;
+		mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);
 
 		mAEVolumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -376,14 +390,26 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
 				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress,
-					boolean fromUser) {
-				// TODO Auto-generated method stub
+			public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
+
+				/** 如果来自用户对seekbar的操作，则记录progress。如果来自代码调用setProgress()则不记录 */
+				if(fromUser){
+					mCurrVolumeProgress = progress;
+				}
 				mAEVolumePercentTv.setText(progress + "%");
+
+				if(progress == 0){
+					mAEVolumeSettingIv.setImageDrawable(AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume_closed));
+					isMute = true;
+				}else{
+					mAEVolumeSettingIv.setImageDrawable(AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume));
+					isMute = false;
+				}
+
+				
 			}
 		});
 	}
@@ -620,9 +646,50 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 //			mVideoPlayIv.setVisibility(View.GONE);
 //			mVideoThumeIv.setVisibility(View.GONE);	
 		}else if (vId == R.id.ll_ae_volume){
+
+			mAEVolumeLayout.setBackgroundColor(checkedColor);
+			mAECutLayout.setBackgroundColor(normalColor);
+			mAESplitLayout.setBackgroundColor(normalColor);
+			mAEDeleteLayout.setBackgroundColor(normalColor);
+
 			mAESplitAndDeleteLayout.setVisibility(View.GONE);
 			mAEVolumeSettingLayout.setVisibility(View.VISIBLE);
+
+		}else if(vId == R.id.ll_ae_cut){
+
+			mAEVolumeLayout.setBackgroundColor(normalColor);
+			mAECutLayout.setBackgroundColor(checkedColor);
+			mAESplitLayout.setBackgroundColor(normalColor);
+			mAEDeleteLayout.setBackgroundColor(normalColor);
+
+			if(mAEVolumeSettingLayout.getVisibility() == View.VISIBLE){
+				mAEVolumeSettingLayout.setVisibility(View.GONE);
+				mAESplitAndDeleteLayout.setVisibility(View.VISIBLE);
+			}
+
+		}else if(vId == R.id.ll_ae_split){
+
+			mAEVolumeLayout.setBackgroundColor(normalColor);
+			mAECutLayout.setBackgroundColor(normalColor);
+			mAESplitLayout.setBackgroundColor(checkedColor);
+			mAEDeleteLayout.setBackgroundColor(normalColor);
+
+		}else if(vId == R.id.ll_ae_delete){
+
+			mAEVolumeLayout.setBackgroundColor(normalColor);
+			mAECutLayout.setBackgroundColor(normalColor);
+			mAESplitLayout.setBackgroundColor(normalColor);
+			mAEDeleteLayout.setBackgroundColor(checkedColor);
+
+		}else if(vId == R.id.iv_ae_volume_setting){
+
+			if(isMute){
+				mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);
+			}else{
+				mAEVolumeSeekBar.setProgress(0);
+			}
 		}
+
 	}
 
 	@Override

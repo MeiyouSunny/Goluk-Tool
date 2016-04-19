@@ -84,7 +84,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/iv_ae_volume_setting"
-                android:layout_toStartOf="@id/tv_ae_volume_percent"/>
+                android:layout_toStartOf="@id/tv_ae_volume_percent"
+                android:progressDrawable="@drawable/player_seekbar_style"  
+                android:thumb="@drawable/ae_seekbar_thumb"/>
        </RelativeLayout>
 
         <LinearLayout
