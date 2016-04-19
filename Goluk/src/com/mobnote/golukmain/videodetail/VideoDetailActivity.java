@@ -845,6 +845,11 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if (View.GONE != emoLayout.getVisibility()) {
+				this.hideEmojocon();
+				setSwitchState(true);
+				return true;
+			}
 			if (GolukUtils.isFastDoubleClick()) {
 				return true;
 			}
