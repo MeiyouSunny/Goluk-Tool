@@ -1,4 +1,4 @@
-package com.mobnote.golukmain.wxapi;
+package cn.com.mobnote.golukmobile.wxapi;
 
 import com.umeng.socialize.weixin.view.WXCallbackActivity;
 
