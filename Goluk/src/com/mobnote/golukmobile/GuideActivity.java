@@ -23,6 +23,7 @@ import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import cn.com.tiros.baidu.BaiduLocation;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
@@ -66,6 +67,10 @@ public class GuideActivity extends BaseActivity {
 		if (isExit) {
 			return;
 		}
+		BaiduLocation.mServerFlag = GolukApplication.getInstance().isInteral();
+		GolukDebugUtils.e("", "-------------GuideActivity-------------isInteral: "
+				+ GolukApplication.getInstance().isInteral() + "--------------BaiduLocation.mServerFlag: "
+				+ BaiduLocation.mServerFlag);
 		((GolukApplication) this.getApplication()).initLogic();
 		// 注册信鸽的推送
 		GolukNotification.getInstance().createXG();
@@ -199,4 +204,5 @@ public class GuideActivity extends BaseActivity {
 		}
 		return false;
 	}
+
 }
