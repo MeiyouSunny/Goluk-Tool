@@ -34,7 +34,7 @@ import cn.npnt.ae.model.Project;
 import cn.npnt.ae.model.Transition;
 
 import com.goluk.videoedit.adapter.AEMusicAdapter;
-import com.goluk.videoedit.adapter.ProjectLineAdapter;
+import com.goluk.videoedit.adapter.ChannelLineAdapter;
 import com.goluk.videoedit.bean.ChunkBean;
 import com.goluk.videoedit.bean.DummyFooterBean;
 import com.goluk.videoedit.bean.DummyHeaderBean;
@@ -60,7 +60,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	int mTransitionWidth;
 	List<ProjectItemBean> mProjectItemList;
 	Handler handler;
-	private ProjectLineAdapter mAdapter;
+	private ChannelLineAdapter mAdapter;
 	private FrameLayout mSurfaceLayout;
 
 	ImageView mVideoThumeIv;
@@ -83,18 +83,18 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	// If the AE value larger than 1, scroll 1 px to reduce it
 	private float mCEValue = 0f;
 
-	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
-	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406204409_1_TX_3_0012.mp4";
+	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
+	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406204409_1_TX_3_0012.mp4";
 
 	/** htc d820u */
 //	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160331125315_1_TX_3_0012.mp4";
 //	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160401124245_1_TX_3_0012.mp4";
 	String mMusicPath = "/storage/emulated/0/qqmusic/song/500miles.mp3";
 
-	private void startParse() {
+	public void addChunk(String videoPath) {
 		if (mVideoPath != null) {
 			try {
-				mAfterEffect.editAddChunk(mVideoPath, 0);
+				mAfterEffect.editAddChunk(videoPath, -1);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -199,7 +199,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			}
 		};
 
-		startParse();
+		addChunk(mVideoPath);
 	}
 
 	private void handlerAECallBack(Message msg) {
@@ -242,10 +242,14 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 				mCEValue = realOff;
 			}
 
-			Log.d(TAG, "time line scroll params: offset=" +
-					offset + ", realOff=" + realOff + ", mCEValue=" + mCEValue + ", chunkPosition=" + chunkPosition);
 			List<Chunk> chunkList = afterEffect.getMainChunks();
 			Chunk chunk = chunkList.get(chunkIndex);
+
+			Log.d(TAG, "time line scroll params: offset=" +
+					offset + ", realOff=" + realOff +
+					", mCEValue=" + mCEValue + ", chunkPosition=" + chunkPosition +
+					", chunk duration=" + chunk.getDuration());
+
 			if(chunk.getDuration() - chunkPosition < 0.001) {
 				mAERecyclerView.post(new Runnable() {
 					@Override
@@ -404,7 +408,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		mAELayoutManager = new LinearLayoutManager(this);
 		mAELayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mAERecyclerView = (RecyclerView) findViewById(R.id.rv_video_edit_pic_list);
-		mAdapter = new ProjectLineAdapter(this, mAERecyclerView, mProjectItemList);
+		mAdapter = new ChannelLineAdapter(this, mAERecyclerView, mProjectItemList);
 		mAERecyclerView.setAdapter(mAdapter);
 		mAERecyclerView.setLayoutManager(mAELayoutManager);
 		mAERecyclerView.setItemAnimator(new DefaultItemAnimator());
