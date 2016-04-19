@@ -73,6 +73,7 @@ public abstract class GolukFastjsonRequest<T> {
 		mHeaders.put("commmid", "" + Tapi.getMobileId());
 		mHeaders.put("commostag", "android");
 		mHeaders.put("commosversion", android.os.Build.VERSION.RELEASE);
+		mHeaders.put("commticket", SharedPrefUtil.getUserToken());
 		String uid = GolukApplication.getInstance().mCurrentUId;
 		if (TextUtils.isEmpty(uid)) {
 			mHeaders.put("commuid", "");

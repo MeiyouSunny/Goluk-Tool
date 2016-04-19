@@ -370,14 +370,15 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 							GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
 						} else {
 							mApplication.mLoginManage.setUserLoginInterface(this);
-							boolean b = mApplication.mLoginManage.login(phone, pwd);
-							if (b) {
-								mApplication.loginStatus = 0;
-								showProgressDialog();
-							} else {
+							mApplication.mLoginManage.login(phone, pwd);
+							mApplication.loginStatus = 0;
+							showProgressDialog();
+//							if (b) {
+								
+							/*} else {
 								closeProgressDialog();
 								mApplication.loginStatus = 2;
-							}
+							}*/
 						}
 
 					} else {
