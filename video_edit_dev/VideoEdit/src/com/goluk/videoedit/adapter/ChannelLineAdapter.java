@@ -247,9 +247,15 @@ public class ChannelLineAdapter extends
 							//(android.widget.FrameLayout.LayoutParams) viewHolder.nChunkContainerLL.getLayoutParams();
 					viewHolder.nChunkMaskLL.setLayoutParams(params);
 					viewHolder.nChunkMaskLL.setVisibility(View.VISIBLE);
+					viewHolder.nChunkDurationTV.setVisibility(View.VISIBLE);
 				} else {
 					viewHolder.nChunkMaskLL.setVisibility(View.GONE);
+					viewHolder.nChunkDurationTV.setVisibility(View.GONE);
 				}
+
+				int duration = (int)(chunk.getDuration() * 10);
+				Log.d("CK1", "" + (float)duration / 10);
+				viewHolder.nChunkDurationTV.setText("" + (float)duration / 10 + "\'\'");
 
 				// Chunk click edit
 				viewHolder.nChunkContainerLL.setOnClickListener(new OnClickListener() {
