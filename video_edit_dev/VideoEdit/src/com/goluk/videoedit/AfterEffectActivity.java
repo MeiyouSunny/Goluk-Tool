@@ -322,23 +322,23 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			Chunk chunk = (Chunk) msg.obj;
 
 			// Get to insert index
-			{
-				ChunkBean chunkBean = new ChunkBean();
-				chunkBean.chunk = chunk;
-				chunkBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
-				chunkBean.width = VideoEditUtils.ChunkTime2Width(chunk.getDuration(), mImageWidth);
-				int insertIndex = mProjectItemList.size() - 2;
-				mProjectItemList.add(insertIndex, chunkBean);
-			}
+			ChunkBean chunkBean = new ChunkBean();
+			chunkBean.chunk = chunk;
+			chunkBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
+			chunkBean.width = VideoEditUtils.ChunkTime2Width(chunk.getDuration(), mImageWidth);
 
-			{
-				TransitionBean transitionBean = new TransitionBean();
-				Transition transtion = Transition.createNoneTransition();
-				transitionBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
-				transitionBean.transiton = transtion;
-				int insertIndex = mProjectItemList.size() - 2;
-				mProjectItemList.add(insertIndex, transitionBean);
-			}
+			int cInsertIndex = mProjectItemList.size() - 2;
+			chunkBean.ct_pair_tag = cInsertIndex + "chunkIndex";
+			mProjectItemList.add(cInsertIndex, chunkBean);
+
+			TransitionBean transitionBean = new TransitionBean();
+//			Transition transtion = Transition.createNoneTransition();
+			transitionBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
+//			transitionBean.transiton = transtion;
+			int tInsertIndex = mProjectItemList.size() - 2;
+			transitionBean.ct_pair_tag = cInsertIndex + "chunkIndex";
+			mProjectItemList.add(tInsertIndex, transitionBean);
+
 			mAdapter.setData(mProjectItemList);
 			mAdapter.notifyDataSetChanged();
 			break;
@@ -502,7 +502,6 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		switch (item.getItemId()) {
 		case R.id.action_layout_grid:
 			item.setChecked(true);
-//			startParse();
 			play();
 			break;
 		case R.id.action_layout_linear:
