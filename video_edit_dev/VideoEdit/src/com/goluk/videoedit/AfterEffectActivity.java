@@ -89,21 +89,24 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	// If the AE value larger than 1, scroll 1 px to reduce it
 	private float mCEValue = 0f;
 
-//	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
-//	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406204409_1_TX_3_0012.mp4";
+	String mVideoPath1 = VideoEditConstant.VIDEO_PATH_1;
+	String mVideoPath = VideoEditConstant.VIDEO_PATH;
 
-	/** htc d820u */
-	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160331125315_1_TX_3_0012.mp4";
-	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160401124245_1_TX_3_0012.mp4";
-	String mMusicPath = "/storage/emulated/0/qqmusic/song/500miles.mp3";
+	String mMusicPath = VideoEditConstant.MUSIC_PATH;
 
 	final int checkedColor = Color.parseColor("#16181a");
 	final int normalColor = Color.parseColor("#242629");
 
 	public void addChunk(String videoPath) {
+		int addFlag = -1;
+		// if no chunk added, then the init data would be header, footer, tail
+		if(mProjectItemList == null || mProjectItemList.size() <= 3) {
+			addFlag = 0;
+		}
+
 		if (mVideoPath != null) {
 			try {
-				mAfterEffect.editAddChunk(videoPath, -1);
+				mAfterEffect.editAddChunk(videoPath, addFlag);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -481,6 +484,10 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		initPlayer();
 
 		initController();
+	}
+
+	public float getChannelDuration() {
+		return mAfterEffect.getDuration();
 	}
 
 	@Override

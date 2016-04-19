@@ -31,7 +31,6 @@ import com.goluk.videoedit.utils.DeviceUtil;
 import com.goluk.videoedit.utils.VideoEditUtils;
 import com.makeramen.dragsortadapter.DragSortAdapter;
 import com.makeramen.dragsortadapter.NoForegroundShadowBuilder;
-import com.makeramen.dragsortadapter.DragSortAdapter.ViewHolder;
 import com.goluk.videoedit.AfterEffectActivity;
 
 import java.util.ArrayList;
@@ -53,16 +52,10 @@ public class ChannelLineAdapter extends
 
 	public static final String TAG = ChannelLineAdapter.class.getSimpleName();
 
-//	private List<BitmapWrapper> data;
-
 	public void setData(List<ProjectItemBean> src) {
 		mDataList = src;
 	}
 
-//	public ExampleAdapter(RecyclerView recyclerView, List<BitmapWrapper> data) {
-//		super(recyclerView);
-//		this.data = data;
-//	}
 	public ChannelLineAdapter(Context cxt,
 			RecyclerView recyclerView, List<ProjectItemBean> dataList) {
 		super(recyclerView);
@@ -71,10 +64,8 @@ public class ChannelLineAdapter extends
 		mFooterWidth = DeviceUtil.getScreenWidthSize(mContext) - DeviceUtil.dp2px(mContext, 65);
 	}
 
-	//String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
+	String mVideoPath = VideoEditConstant.VIDEO_PATH_1;
 
-	//htc d820u
-	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160401124245_1_TX_3_0012.mp4";
 	//TODO: TBD
 	public void addChunk() {
 		if(mDataList == null) {
@@ -183,11 +174,13 @@ public class ChannelLineAdapter extends
 
 	static class FooterViewHolder extends ProjectItemViewHolder {
 		ImageView nAddChunkIV;
+		TextView nChannelTimeIV;
 
 		public FooterViewHolder(DragSortAdapter<?> dragSortAdapter, View itemView, int FooterWidth) {
 			super(dragSortAdapter, itemView);
 			// TODO Auto-generated constructor stub
 			nAddChunkIV = (ImageView)itemView.findViewById(R.id.iv_ae_data_add);
+			nChannelTimeIV = (TextView)itemView.findViewById(R.id.tv_ae_data_totaltime);
 
 			ViewGroup.LayoutParams lp =  itemView.getLayoutParams();
 			lp.width = FooterWidth;
@@ -256,7 +249,6 @@ public class ChannelLineAdapter extends
 				}
 
 				int duration = (int)(chunk.getDuration() * 10);
-				Log.d("CK1", "" + (float)duration / 10);
 				viewHolder.nChunkDurationTV.setText("" + (float)duration / 10 + "\'\'");
 
 				// Chunk click edit
@@ -277,6 +269,10 @@ public class ChannelLineAdapter extends
 					addChunk();
 				}
 			});
+
+			float duration = ((AfterEffectActivity)mContext).getChannelDuration();
+			int trimDuration = (int)(duration * 10);
+			viewHolder.nChannelTimeIV.setText("" + (float)trimDuration / 10 + "s");
 		}
 	}
 
