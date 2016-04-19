@@ -7,11 +7,14 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.npnt.ae.model.Chunk;
 import cn.npnt.ae.model.ChunkThumbs;
 import cn.npnt.ae.model.VideoThumb;
@@ -29,14 +32,15 @@ import com.goluk.videoedit.utils.VideoEditUtils;
 import com.makeramen.dragsortadapter.DragSortAdapter;
 import com.makeramen.dragsortadapter.NoForegroundShadowBuilder;
 import com.makeramen.dragsortadapter.DragSortAdapter.ViewHolder;
+import com.goluk.videoedit.AfterEffectActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 
-public class ProjectLineAdapter extends
-		DragSortAdapter<ProjectLineAdapter.ProjectItemViewHolder> {
+public class ChannelLineAdapter extends
+		DragSortAdapter<ChannelLineAdapter.ProjectItemViewHolder> {
 
 	private final int VIEW_TYPE_HEADER = 0;
 	private final int VIEW_TYPE_CHUNK = 1;
@@ -47,7 +51,7 @@ public class ProjectLineAdapter extends
 	private Context mContext;
 	private int mFooterWidth;
 
-	public static final String TAG = ProjectLineAdapter.class.getSimpleName();
+	public static final String TAG = ChannelLineAdapter.class.getSimpleName();
 
 //	private List<BitmapWrapper> data;
 
@@ -59,7 +63,7 @@ public class ProjectLineAdapter extends
 //		super(recyclerView);
 //		this.data = data;
 //	}
-	public ProjectLineAdapter(Context cxt,
+	public ChannelLineAdapter(Context cxt,
 			RecyclerView recyclerView, List<ProjectItemBean> dataList) {
 		super(recyclerView);
 		this.mDataList = dataList;
@@ -67,14 +71,17 @@ public class ProjectLineAdapter extends
 		mFooterWidth = DeviceUtil.getScreenWidthSize(mContext) - DeviceUtil.dp2px(mContext, 65);
 	}
 
+	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
+
 	//TODO: TBD
-	public void addSection(){
-		if(mDataList == null){
+	public void addChunk() {
+		if(mDataList == null) {
 			mDataList = new ArrayList<ProjectItemBean>();
 		}
 
-//		mDataList.add(new AEDataBean(1));
-		this.notifyDataSetChanged();
+		Toast.makeText(mContext, "add more", Toast.LENGTH_SHORT).show();
+		((AfterEffectActivity)mContext).addChunk(mVideoPath);
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -93,39 +100,9 @@ public class ProjectLineAdapter extends
 		} else if(obj instanceof TailBean) {
 			return VIEW_TYPE_CHUNK_TAIL;
 		}
-//		if(position == 0){
-//			return VIEW_TYPE_HEADER;
-//		}
-//		if(position == mItemCount - 1){
-//			return VIEW_TYEE_FOOTER;
-//		}
-//
-//		if(isTailItem(position)){
-//			return VIEW_TYPE_CHUNK_TAIL;
-//		}
-//
-//		if(mDataList != null && mDataList.size()*2 + 1> position){
-//
-//			if(position%2 == 1){
-//				return VIEW_TYPE_CHUNK;
-//			}else{
-//				return VIEW_TYPE_TRANSITION;
-//			}
-//		}
+
 		return -1;
 	}
-	
-
-
-//	@Override
-//	public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//		LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-//		View view = inflater.inflate(R.layout.item_rv_chunk_layout, parent, false);
-//		MainViewHolder holder = new MainViewHolder(this, view);
-//		view.setOnClickListener(holder);
-//		view.setOnLongClickListener(holder);
-//		return holder;
-//	}
 
 	@Override
 	public ProjectItemViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -153,22 +130,19 @@ public class ProjectLineAdapter extends
 		return null;
 	}
 
-//	private boolean isTailItem(int position){
-//
-//		if(position == this.getItemCount() -2 ){
-//			return true;
-//		}	
-//		return false;
-//	}
-
-	public static class ChunkViewHolder extends ProjectItemViewHolder implements
+	static class ChunkViewHolder extends ProjectItemViewHolder implements
 		View.OnClickListener, View.OnLongClickListener {
 
 		LinearLayout nChunkContainerLL;
+		View nChunkMaskLL;
+		TextView nChunkDurationTV;
 
 		public ChunkViewHolder(DragSortAdapter<?> dragSortAdapter, View itemView) {
 			super(dragSortAdapter, itemView);
 			nChunkContainerLL = (LinearLayout)itemView.findViewById(R.id.ll_ae_data_chunk);
+//			nChunkContainerLL.setBackgroundResource(R.drawable.video_edit_chunk_item_mask);
+			nChunkMaskLL = itemView.findViewById(R.id.v_ae_data_chunk_mask);
+			nChunkDurationTV = (TextView)itemView.findViewById(R.id.tv_ae_data_chunk_duration);
 		}
 
 		@Override
@@ -182,7 +156,7 @@ public class ProjectLineAdapter extends
 		}
 	}
 
-	public static class TransitionViewHolder extends ProjectItemViewHolder {
+	static class TransitionViewHolder extends ProjectItemViewHolder {
 		public TransitionViewHolder(DragSortAdapter<?> dragSortAdapter,
 				View itemView) {
 			super(dragSortAdapter, itemView);
@@ -190,7 +164,7 @@ public class ProjectLineAdapter extends
 		}
 	}
 
-	public static class HeaderViewHolder extends ProjectItemViewHolder {
+	static class HeaderViewHolder extends ProjectItemViewHolder {
 		public HeaderViewHolder(DragSortAdapter<?> dragSortAdapter, View itemView) {
 			super(dragSortAdapter, itemView);
 			// TODO Auto-generated constructor stub
@@ -198,27 +172,20 @@ public class ProjectLineAdapter extends
 	}
 
 
-	public static class ChunkTailViewHolder extends ProjectItemViewHolder {
+	static class ChunkTailViewHolder extends ProjectItemViewHolder {
 		public ChunkTailViewHolder(DragSortAdapter<?> dragSortAdapter, View itemView) {
 			super(dragSortAdapter, itemView);
 			// TODO Auto-generated constructor stub
 		}
 	}
 
-	public static class FooterViewHolder extends ProjectItemViewHolder {
-		ImageView nAddIv;
+	static class FooterViewHolder extends ProjectItemViewHolder {
+		ImageView nAddChunkIV;
 
 		public FooterViewHolder(DragSortAdapter<?> dragSortAdapter, View itemView, int FooterWidth) {
 			super(dragSortAdapter, itemView);
 			// TODO Auto-generated constructor stub
-			nAddIv = (ImageView) itemView.findViewById(R.id.iv_ae_data_add);
-			nAddIv.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-//					addSection();
-				}
-			});
+			nAddChunkIV = (ImageView)itemView.findViewById(R.id.iv_ae_data_add);
 
 			ViewGroup.LayoutParams lp =  itemView.getLayoutParams();
 			lp.width = FooterWidth;
@@ -234,7 +201,7 @@ public class ProjectLineAdapter extends
 			ChunkViewHolder viewHolder = (ChunkViewHolder)holder;
 			viewHolder.nChunkContainerLL.removeAllViews();
 			if(bean instanceof ChunkBean) {
-				ChunkBean chunkBean = (ChunkBean)bean;
+				final ChunkBean chunkBean = (ChunkBean)bean;
 				Chunk chunk = chunkBean.chunk;
 				if(null != chunk) {
 					ChunkThumbs chunkThumbList = chunk.getChunkThumbs();
@@ -255,9 +222,9 @@ public class ProjectLineAdapter extends
 								imageView.setLayoutParams(params);
 							} else {
 								LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-										DeviceUtil.dp2px(mContext, 45),
+										DeviceUtil.dp2px(mContext, VideoEditConstant.BITMAP_COMMON_WIDTH),
 										LayoutParams.MATCH_PARENT);
-									imageView.setLayoutParams(params);
+								imageView.setLayoutParams(params);
 							}
 							imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 							imageView.setImageBitmap(videoThumb.getBitmap());
@@ -267,9 +234,47 @@ public class ProjectLineAdapter extends
 				}
 				viewHolder.nChunkContainerLL.setVisibility(getDraggingId() == chunkBean.index_tag ? View.INVISIBLE
 						: View.VISIBLE);
+
 				viewHolder.nChunkContainerLL.postInvalidate();
-		//		Log.d("CK1", "" + VideoEditUtils.ChunkWidth2Time(viewHolder.nChunkContainerLL.getWidth(), DeviceUtil.dp2px(mContext, 45)));
+				if(chunkBean.isEditState) {
+					// Set mask layout params
+					FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+							VideoEditUtils.ChunkTime2Width(chunk.getDuration(),
+							DeviceUtil.dp2px(mContext, VideoEditConstant.BITMAP_COMMON_WIDTH)),
+							FrameLayout.LayoutParams.MATCH_PARENT);
+//					FrameLayout.LayoutParams params = 
+//							new FrameLayout.LayoutParams(viewHolder.nChunkContainerLL.getMeasuredWidth(), FrameLayout.LayoutParams.MATCH_PARENT);
+							//(android.widget.FrameLayout.LayoutParams) viewHolder.nChunkContainerLL.getLayoutParams();
+					viewHolder.nChunkMaskLL.setLayoutParams(params);
+					viewHolder.nChunkMaskLL.setVisibility(View.VISIBLE);
+					viewHolder.nChunkDurationTV.setVisibility(View.VISIBLE);
+				} else {
+					viewHolder.nChunkMaskLL.setVisibility(View.GONE);
+					viewHolder.nChunkDurationTV.setVisibility(View.GONE);
+				}
+
+				int duration = (int)(chunk.getDuration() * 10);
+				Log.d("CK1", "" + (float)duration / 10);
+				viewHolder.nChunkDurationTV.setText("" + (float)duration / 10 + "\'\'");
+
+				// Chunk click edit
+				viewHolder.nChunkContainerLL.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						chunkBean.isEditState = !chunkBean.isEditState;
+						notifyItemChanged(position);
+					}
+				});
 			}
+		}  else if(holder instanceof FooterViewHolder) {
+			FooterViewHolder viewHolder = (FooterViewHolder)holder;
+			viewHolder.nAddChunkIV.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					addChunk();
+				}
+			});
 		}
 	}
 
