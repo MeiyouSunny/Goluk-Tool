@@ -49,7 +49,6 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		GolukDebugUtils.d(TAG, "onCreate");
 		EventBus.getDefault().register(this);
@@ -57,7 +56,6 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreateView(inflater, container, savedInstanceState);
 		GolukDebugUtils.d(TAG, "onCreateView");
 		View rootView = inflater.inflate(R.layout.video_square_main, null);
@@ -75,7 +73,6 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		GolukDebugUtils.d(TAG, "onActivityCreated");
 	}
@@ -121,9 +118,6 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 			// arg0 :当前页面，及你点击滑动的页面
 			// arg1:当前页面偏移的百分比
 			// arg2:当前页面偏移的像素位置
-			// GolukDebugUtils.e(TAG, "onPageScrolled: arg0: " + arg0 +
-			// "   arg1:"
-			// + arg1 + "  arg2:" + arg2);
 			if (0 == arg2) {
 				return;
 			}
