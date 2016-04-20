@@ -10,30 +10,28 @@ import com.mobnote.golukmain.http.request.GolukFastjsonRequest;
 import android.text.TextUtils;
 import cn.com.tiros.api.Tapi;
 
-public class UserloginBeanRequest extends GolukFastjsonRequest<UserResult> {
+public class OhterUserloginBeanRequest extends GolukFastjsonRequest<UserResult> {
 
-	public UserloginBeanRequest(int requestType, IRequestResultListener listener) {
+	public OhterUserloginBeanRequest(int requestType, IRequestResultListener listener) {
 		super(requestType, UserResult.class, listener);
 	}
 
 	@Override
 	protected String getPath() {
-		return "/cdcRegister/getLogin.htm";
+		return "/cdcRegister/oauthLogin.htm";
 	}
 
 	@Override
 	protected String getMethod() {
-		return "getLogin";
+		return "oauthLogin";
 	}
 
-	public void get(String phone,String pwd,String uid) {
-		HashMap<String, String> headers = (HashMap<String, String>) getHeader();
-		headers.put("phone", phone);
-		headers.put("pwd", pwd);
-		headers.put("uid", uid);
-		headers.put("tag", "android");
-		headers.put("mid", "" + Tapi.getMobileId());
-		get();
-	}
 	
+	public void get(HashMap<String, String> other) {
+		HashMap<String, String> headers = (HashMap<String, String>) getHeader();
+		headers.putAll(other);
+		headers.put("mid", Tapi.getMobileId());
+		headers.put("xieyi", "100");
+		super.post();
+	}
 }

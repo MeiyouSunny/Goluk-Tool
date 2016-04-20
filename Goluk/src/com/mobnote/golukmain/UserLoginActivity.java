@@ -1,7 +1,10 @@
 package com.mobnote.golukmain;
 
+import java.util.HashMap;
 import java.util.List;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventMessageUpdate;
@@ -15,6 +18,7 @@ import com.mobnote.user.UserLoginInterface;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.SharedPrefUtil;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
@@ -337,19 +341,14 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 				thirdPlatformLogin.login(SHARE_MEDIA.WEIXIN);
 			} else {
 				mApplication.mLoginManage.setUserLoginInterface(this);
-				ThirdLoginInfo info = new ThirdLoginInfo();
-				info.platform = "weixin";
-				info.userinfo = infoStr;
-				info.devices = GolukFileUtils.loadString(GolukFileUtils.KEY_BIND_HISTORY_LIST, "");
-				boolean b = mApplication.mLoginManage.login(info);
-
-				if (b) {
-					mApplication.loginStatus = 0;
-					showProgressDialog();
-				} else {
-					closeProgressDialog();
-					mApplication.loginStatus = 2;
-				}
+				
+				HashMap<String,String> info = new HashMap<String, String>();
+				info.put("platform", "weixin");
+				info.put("userinfo", infoStr);
+				info.put("devices", GolukFileUtils.loadString(GolukFileUtils.KEY_BIND_HISTORY_LIST, ""));
+				mApplication.mLoginManage.login(info);
+				mApplication.loginStatus = 0;
+				showProgressDialog();
 			}
 		}
 	}
@@ -370,7 +369,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 							GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
 						} else {
 							mApplication.mLoginManage.setUserLoginInterface(this);
-							mApplication.mLoginManage.login(phone, pwd);
+							mApplication.mLoginManage.login(phone, pwd,"");
 							mApplication.loginStatus = 0;
 							showProgressDialog();
 //							if (b) {
@@ -635,21 +634,13 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		GolukDebugUtils.e("", "three login------UserLogingActivity--getUserInfo ---1");
 		if (success) {
 			mApplication.mLoginManage.setUserLoginInterface(this);
-			ThirdLoginInfo info = new ThirdLoginInfo();
-			info.platform = platform;
-			info.userinfo = usrInfo;
-			info.devices = GolukFileUtils.loadString(GolukFileUtils.KEY_BIND_HISTORY_LIST, "");
-			boolean b = mApplication.mLoginManage.login(info);
-
-			GolukDebugUtils.e("", "three login------UserLogingActivity--getUserInfo --2: " + b);
-
-			if (b) {
-				mApplication.loginStatus = 0;
-				showProgressDialog();
-			} else {
-				closeProgressDialog();
-				mApplication.loginStatus = 2;
-			}
+			HashMap<String,String> info = new HashMap<String, String>();
+			info.put("platform", platform);
+			info.put("userinfo", usrInfo);
+			info.put("devices", GolukFileUtils.loadString(GolukFileUtils.KEY_BIND_HISTORY_LIST, ""));
+			mApplication.mLoginManage.login(info);
+			mApplication.loginStatus = 0;
+			showProgressDialog();
 		}
 	}
 
