@@ -1,11 +1,13 @@
 package com.goluk.videoedit.adapter;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.List;
 
 import com.goluk.videoedit.R;
+import com.goluk.videoedit.utils.GlideUtils;
 
 import android.content.Context;
+import android.os.Environment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 public class VideoChooserAdapter extends BaseAdapter{
 	private List<String> mFileNameList;
@@ -21,6 +22,9 @@ public class VideoChooserAdapter extends BaseAdapter{
     private LayoutInflater mInflater;
     private Context mContext;
     LinearLayout.LayoutParams params;
+
+    private final String filePath = Environment.getExternalStorageDirectory() + File.separator + "goluk" + File.separator
+			+ "goluk_carrecorder" + File.separator + "image";
 
     public VideoChooserAdapter(Context context, List<String> mVideoPathList) {
         mFileNameList = mVideoPathList;
@@ -52,12 +56,13 @@ public class VideoChooserAdapter extends BaseAdapter{
 
             viewTag = new ItemViewTag((ImageView) convertView.findViewById(R.id.iv_video_chooser_item));
             convertView.setTag(viewTag);
-        } else
-        {
+        } else {
             viewTag = (ItemViewTag) convertView.getTag();
         }
 
-        viewTag.mVidThumbIv.setImageDrawable(mContext.getResources().getDrawable(R.drawable.img_ae_trailer));
+        String thumbPath = mFileNameList.get(position).replace(".mp4", ".jpg");
+		GlideUtils.loadImage(mContext, viewTag.mVidThumbIv, filePath + File.separator + thumbPath, R.drawable.album_default_img);
+
         //viewTag.mVidThumbIv.setLayoutParams(params);
         return convertView;
     }
