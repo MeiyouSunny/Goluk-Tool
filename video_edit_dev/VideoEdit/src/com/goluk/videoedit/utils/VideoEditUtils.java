@@ -95,4 +95,9 @@ public class VideoEditUtils {
 
 		return -1;
 	}
+
+	// Map item index 2 chunk index
+	public static int mapI2CIndex(int itemIndex) {
+		return (itemIndex - 1) / 2;
+	}
 }
