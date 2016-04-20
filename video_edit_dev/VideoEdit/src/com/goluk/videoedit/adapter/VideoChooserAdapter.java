@@ -33,7 +33,7 @@ public class VideoChooserAdapter extends BaseAdapter{
 
         params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT); 
         params.gravity = Gravity.CENTER;
-    }  
+    }
 
     public int getCount() {
         return mFileNameList.size();

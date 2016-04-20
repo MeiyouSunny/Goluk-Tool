@@ -101,6 +101,9 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 
 	String mMusicPath = VideoEditConstant.MUSIC_PATH;
 
+	private boolean isPlaying;
+	private boolean isPlayFinished;
+
 	public void addChunk(String videoPath) {
 		// always add from end
 		int addFlag = -1;
@@ -158,11 +161,41 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		mAdapter.notifyDataSetChanged();
 	}
 
-	private void play() {
-		try {
-			mAfterEffect.play();
-		} catch (InvalidVideoSourceException e) {
-			e.printStackTrace();
+	private void playOrPause() {
+		if(isPlaying){
+			mAfterEffect.playPause();
+			mVideoPlayIv.setVisibility(View.VISIBLE);
+		}else{
+
+			//如果当前是播放完成状态，则重置数据
+			if(isPlayFinished){
+				mAERecyclerView.smoothScrollToPosition(0);
+				currentPlayPosition = 0f;
+			}
+			if(mVideoThumeIv.getVisibility() == View.VISIBLE){
+				mVideoThumeIv.setVisibility(View.GONE);
+			}
+			if(mVideoPlayIv.getVisibility() == View.VISIBLE){
+				mVideoPlayIv.setVisibility(View.GONE);
+			}
+
+			//当前播放进度大于0，则从当前位置开始播放，否则从头开始播放
+			try {
+				mAfterEffect.play();
+			} catch (InvalidVideoSourceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+//			if(currentPlayPosition > 0f){
+//				mAfterEffect.playResume();
+//			}else{
+//				try {
+//					mAfterEffect.play();
+//				} catch (InvalidVideoSourceException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
 		}
 	}
 
@@ -189,6 +222,15 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		int height = width / 16 * 9;
 		LayoutParams params = mSurfaceLayout.getLayoutParams();
 		params.height = height;
+
+		mGLSurfaceView.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				playOrPause();
+			}
+		});
 
 		mAfterEffect = new AfterEffect(this, mGLSurfaceView, this, width, height);
 		mProject = mAfterEffect.getProject();
@@ -266,6 +308,10 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		case MSG_AE_PLAY_STARTED:
 			Log.d(TAG, "MSG_AE_PLAY_STARTED");
 			currentPlayPosition = 0;
+			if(!isPlaying){
+				mVideoPlayIv.setVisibility(View.GONE);
+				isPlaying = true;
+			}
 			break;
 
 		case MSG_AE_PLAY_PROGRESS:
@@ -320,12 +366,17 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			break;
 		case MSG_AE_PLAY_FINISHED:
 			Log.d(TAG, "MSG_AE_PLAY_FINISHED");
+			mVideoPlayIv.setVisibility(View.VISIBLE);
+			isPlayFinished = true;
+			isPlaying = false;
 			break;
 		case MSG_AE_PLAY_FAILED:
 		{
 			Log.d(TAG, "MSG_AE_PLAY_FAILED");
 			float currentPos = -1;
 		}
+		mVideoPlayIv.setVisibility(View.VISIBLE);
+		isPlaying = false;
 			break;
 		case MSG_AE_EXPORT_STARTED:
 			Log.d(TAG, "MSG_AE_EXPORT_STARTED");
@@ -360,6 +411,18 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		case MSG_AE_CHUNK_ADD_FAILED: {
 			String filePath=(String)msg.obj;
 			Log.d(TAG, "chunk added fialed:" + filePath);
+			break;
+		}
+
+		case MSG_AE_PLAY_PAUSED:{
+			mVideoPlayIv.setVisibility(View.VISIBLE);
+			isPlaying = false;
+			break;
+		}
+
+		case MSG_AE_PLAY_RESUMED:{
+			mVideoPlayIv.setVisibility(View.GONE);
+			isPlaying = true;
 			break;
 		}
 
@@ -549,7 +612,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		switch (item.getItemId()) {
 		case R.id.action_layout_grid:
 			item.setChecked(true);
-			play();
+			playOrPause();
 			break;
 		case R.id.action_layout_linear:
 			item.setChecked(true);
@@ -581,6 +644,8 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	public final static int MSG_AE_CHUNK_ADD_FINISHED = 1010;
 	public final static int MSG_AE_CHUNK_ADD_FAILED = 1011;
 	public final static int MSG_AE_BITMAP_READ_OUT = 1012;
+	public final static int MSG_AE_PLAY_PAUSED = 1013;
+	public final static int MSG_AE_PLAY_RESUMED = 1014;
 
 	@Override
 	public void onStartToPlay(AfterEffect afterEffcet) {
@@ -607,6 +672,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 
 		Message msg = handler.obtainMessage(MSG_AE_PLAY_PROGRESS, 0, 0, bean);
 		handler.sendMessage(msg);
+
 	}
 
 	@Override
@@ -679,12 +745,16 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	public void onPause() {
 		super.onPause();
 		mAfterEffect.onActivityPause();
+		mVideoPlayIv.setVisibility(View.VISIBLE);
+		isPlaying = false;
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
 		mAfterEffect.onActivityResume();
+		mVideoPlayIv.setVisibility(View.VISIBLE);
+		isPlaying = false;
 	}
 
 	@Override
@@ -692,9 +762,8 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		// TODO Auto-generated method stub
 		int vId = v.getId();
 		if(vId == R.id.iv_video_play) {
-			mVideoPlayIv.setVisibility(View.GONE);
-			mVideoThumeIv.setVisibility(View.GONE);
-			play();
+			playOrPause();
+
 		} else if (vId == R.id.iv_video_thumb) {
 //			mVideoPlayIv.setVisibility(View.GONE);
 //			mVideoThumeIv.setVisibility(View.GONE);	
@@ -728,15 +797,17 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	}
 
 	@Override
-	public void onPlayPaused(AfterEffect afterEffcet) {
+	public void onPlayPaused(AfterEffect afterEffect) {
 		// TODO Auto-generated method stub
-		
+		Message msg = handler.obtainMessage(MSG_AE_PLAY_PAUSED, afterEffect);
+		handler.sendMessage(msg);
 	}
 
 	@Override
 	public void onPlayResume(AfterEffect afterEffect) {
 		// TODO Auto-generated method stub
-		
+		Message msg = handler.obtainMessage(MSG_AE_PLAY_RESUMED, afterEffect);
+		handler.sendMessage(msg);
 	}
 
 	public void goToChooseVideo(){
