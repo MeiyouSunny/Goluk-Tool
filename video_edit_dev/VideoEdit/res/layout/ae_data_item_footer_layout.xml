@@ -6,21 +6,23 @@
     android:layout_width="150dp"
     android:layout_height="@dimen/ae_meta_height"
     android:orientation="horizontal">
-    <ImageView 
+    <ImageView
         android:id="@+id/iv_ae_data_add"
         android:layout_width="80dp"
         android:layout_height="@dimen/ae_meta_height"
         android:layout_marginStart="18dp"
+        android:contentDescription="@string/app_name"
         android:src="@drawable/img_ae_add"
         android:scaleType="centerCrop"/>
-    <TextView 
+    <TextView
         android:id="@+id/tv_ae_data_totaltime"
         android:background="@drawable/img_ae_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
         android:layout_gravity="center_vertical"
         android:textColor="#ffffff"
         android:gravity="center"
-        android:layout_marginStart="9dp"
-        android:text="0秒"/>
+        android:layout_marginStart="9dp"/>
 </LinearLayout>

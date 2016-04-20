@@ -442,8 +442,8 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 							GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
 						} else {
 							mApplication.mLoginManage.setUserLoginInterface(this);
-							boolean b = mApplication.mLoginManage.login(phone, pwd);
-							if (b) {
+							mApplication.mLoginManage.login(phone, pwd);
+//							if (b) {
 								mApplication.loginStatus = 0;
 								UserUtils.hideSoftMethod(this);
 								mCustomProgressDialog.show();
@@ -453,10 +453,10 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 								mTextViewForgetPwd.setEnabled(false);
 								mBtnLogin.setEnabled(false);
 								// mBackButton.setEnabled(false);
-							} else {
-								closeProgressDialog();
-								mApplication.loginStatus = 2;
-							}
+//							} else {
+//								closeProgressDialog();
+//								mApplication.loginStatus = 2;
+//							}
 						}
 
 					} else {

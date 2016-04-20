@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -28,6 +29,8 @@ import android.widget.TextView;
 import cn.npnt.ae.AfterEffect;
 import cn.npnt.ae.AfterEffectListener;
 import cn.npnt.ae.exceptions.EffectException;
+import cn.npnt.ae.exceptions.EffectRuntimeException;
+import cn.npnt.ae.exceptions.InvalidLengthException;
 import cn.npnt.ae.exceptions.InvalidVideoSourceException;
 import cn.npnt.ae.model.Chunk;
 import cn.npnt.ae.model.Project;
@@ -77,28 +80,79 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	LinearLayout mAECutLayout;
 	LinearLayout mAEVolumeLayout;
 	int mTimeLineX;
+	
+	/** 是否为静音 */
+	private boolean isMute;
+	/** 当前音量 */
+	private int mCurrVolumeProgress;
 
 	private final static String TAG = "AfterEffectActivity";
 	private float currentPlayPosition = 0f;
 	// If the AE value larger than 1, scroll 1 px to reduce it
 	private float mCEValue = 0f;
 
-	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406121432_1_TX_3_0012.mp4";
-	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160406204409_1_TX_3_0012.mp4";
+	private View mTimeLineGateV;
+	private int mGateLocationX;
 
-	/** htc d820u */
-//	String mVideoPath = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160331125315_1_TX_3_0012.mp4";
-//	String mVideoPath1 = "/storage/emulated/0/goluk/video/wonderful/WND_event_20160401124245_1_TX_3_0012.mp4";
-	String mMusicPath = "/storage/emulated/0/qqmusic/song/500miles.mp3";
+	String mVideoPath1 = VideoEditConstant.VIDEO_PATH_1;
+	String mVideoPath = VideoEditConstant.VIDEO_PATH;
+
+	String mMusicPath = VideoEditConstant.MUSIC_PATH;
 
 	public void addChunk(String videoPath) {
+		int addFlag = -1;
+		// if no chunk added, then the init data would be header, footer, tail
+		if(mProjectItemList == null || mProjectItemList.size() <= 3) {
+			addFlag = 0;
+		}
+
 		if (mVideoPath != null) {
 			try {
-				mAfterEffect.editAddChunk(videoPath, -1);
+				mAfterEffect.editAddChunk(videoPath, addFlag);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	/**
+	 * 删除某个chunk片段
+	 * @param chunkIndex
+	 */
+	public void removeChunk(int  chunkIndex){
+		if(mProjectItemList == null || mProjectItemList.size() <=3){
+			return ;
+		}
+
+		try{
+			mAfterEffect.editRemoveChunk(chunkIndex);
+		}catch(EffectRuntimeException e){
+			return;
+		}
+	}
+
+	/**
+	 * 
+	 * @param chunkIndex
+	 * @param position 基于当前chunk的拆分的位置。单位秒。
+	 */
+	public void splitChunk(int chunkIndex, float position){
+		if(mProjectItemList == null || mProjectItemList.size() <=3){
+			return ;
+		}
+
+		if(!mAfterEffect.canSplit(chunkIndex, position)){
+			return;
+		}
+		try{
+			mAfterEffect.editSplitChunk(chunkIndex, position);
+		}catch(InvalidLengthException | EffectRuntimeException e){
+			if(e instanceof InvalidLengthException){
+			}else if(e instanceof EffectRuntimeException){
+			}
+			return;
+		}
+		mAdapter.notifyDataSetChanged();
 	}
 
 	private void play() {
@@ -310,23 +364,24 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			Chunk chunk = (Chunk) msg.obj;
 
 			// Get to insert index
-			{
-				ChunkBean chunkBean = new ChunkBean();
-				chunkBean.chunk = chunk;
-				chunkBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
-				chunkBean.width = VideoEditUtils.ChunkTime2Width(chunk.getDuration(), mImageWidth);
-				int insertIndex = mProjectItemList.size() - 2;
-				mProjectItemList.add(insertIndex, chunkBean);
-			}
+			ChunkBean chunkBean = new ChunkBean();
+			chunkBean.chunk = chunk;
+			chunkBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
+			chunkBean.width = VideoEditUtils.ChunkTime2Width(chunk.getDuration(), mImageWidth);
+			chunkBean.isEditState = false;
 
-			{
-				TransitionBean transitionBean = new TransitionBean();
-				Transition transtion = Transition.createNoneTransition();
-				transitionBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
-				transitionBean.transiton = transtion;
-				int insertIndex = mProjectItemList.size() - 2;
-				mProjectItemList.add(insertIndex, transitionBean);
-			}
+			int cInsertIndex = mProjectItemList.size() - 2;
+			chunkBean.ct_pair_tag = cInsertIndex + "chunkIndex";
+			mProjectItemList.add(cInsertIndex, chunkBean);
+
+			TransitionBean transitionBean = new TransitionBean();
+//			Transition transtion = Transition.createNoneTransition();
+			transitionBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
+//			transitionBean.transiton = transtion;
+			int tInsertIndex = mProjectItemList.size() - 2;
+			transitionBean.ct_pair_tag = cInsertIndex + "chunkIndex";
+			mProjectItemList.add(tInsertIndex, transitionBean);
+
 			mAdapter.setData(mProjectItemList);
 			mAdapter.notifyDataSetChanged();
 			break;
@@ -337,22 +392,19 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			break;
 		}
 	}
-	private View mTimeLineGateV;
-	private int mGateLocationX;
 
 	private void initController(){
-
 		mAEVolumeSettingLayout = (RelativeLayout) findViewById(R.id.rl_ae_volume_setting);
 		mAEVolumeSettingIv = (ImageView) findViewById(R.id.iv_ae_volume_setting);
-        mAEVolumePercentTv = (TextView) findViewById(R.id.tv_ae_volume_percent);
+		mAEVolumePercentTv = (TextView) findViewById(R.id.tv_ae_volume_percent);
 		mAEVolumeSeekBar = (SeekBar) findViewById(R.id.seekbar_ae_volume);
 
 		mAESplitAndDeleteLayout = (LinearLayout) findViewById(R.id.ll_ae_split_and_delete);
 		mAESplitLayout = (LinearLayout) findViewById(R.id.ll_ae_split);
-		mAEDeleteLayout = (LinearLayout) findViewById(R.id.ll_ae_split_and_delete);
+		mAEDeleteLayout = (LinearLayout) findViewById(R.id.ll_ae_delete);
 		mAECutLayout = (LinearLayout) findViewById(R.id.ll_ae_cut);
 		mAEVolumeLayout = (LinearLayout) findViewById(R.id.ll_ae_volume);
-		
+
 		mAEMusicLayoutManager = new LinearLayoutManager(this);
 		mAEMusicLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mAEMusicRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_ae_music);
@@ -360,10 +412,15 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		mAEMusicRecyclerView.setAdapter(mAeMusicAdapter);
 		mAEMusicRecyclerView.setLayoutManager(mAEMusicLayoutManager);
 
+		mAEVolumeSettingIv.setOnClickListener(this);
+		mAESplitLayout.setOnClickListener(this);
+		mAEDeleteLayout.setOnClickListener(this);
+		mAECutLayout.setOnClickListener(this);
 		mAEVolumeLayout.setOnClickListener(this);
 
 		mAEVolumeSeekBar.setMax(100);
-		mAEVolumeSeekBar.setProgress(100);
+		mCurrVolumeProgress = 100;
+		mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);
 
 		mAEVolumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -376,14 +433,26 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
 				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress,
-					boolean fromUser) {
-				// TODO Auto-generated method stub
+			public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
+
+				/** 如果来自用户对seekbar的操作，则记录progress。如果来自代码调用setProgress()则不记录 */
+				if(fromUser){
+					mCurrVolumeProgress = progress;
+				}
 				mAEVolumePercentTv.setText(progress + "%");
+
+				if(progress == 0){
+					mAEVolumeSettingIv.setImageDrawable(AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume_closed));
+					isMute = true;
+				}else{
+					mAEVolumeSettingIv.setImageDrawable(AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume));
+					isMute = false;
+				}
+
+				
 			}
 		});
 	}
@@ -457,6 +526,10 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		initController();
 	}
 
+	public float getChannelDuration() {
+		return mAfterEffect.getDuration();
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -469,7 +542,6 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		switch (item.getItemId()) {
 		case R.id.action_layout_grid:
 			item.setChecked(true);
-//			startParse();
 			play();
 			break;
 		case R.id.action_layout_linear:
@@ -620,9 +692,41 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 //			mVideoPlayIv.setVisibility(View.GONE);
 //			mVideoThumeIv.setVisibility(View.GONE);	
 		}else if (vId == R.id.ll_ae_volume){
+
+			mAEVolumeLayout.setBackgroundColor(AfterEffectActivity.this.getResources().getColor(R.color.ae_controller_pressed));
+			mAECutLayout.setBackgroundResource(R.drawable.ae_controller_bg);
+			//(AfterEffectActivity.this.getResources().getColor(R.color.ae_controller_normal));
+
 			mAESplitAndDeleteLayout.setVisibility(View.GONE);
 			mAEVolumeSettingLayout.setVisibility(View.VISIBLE);
+
+		}else if(vId == R.id.ll_ae_cut){
+
+			mAEVolumeLayout.setBackgroundResource(R.drawable.ae_controller_bg);
+			mAECutLayout.setBackgroundColor(AfterEffectActivity.this.getResources().getColor(R.color.ae_controller_pressed));
+
+			if(mAEVolumeSettingLayout.getVisibility() == View.VISIBLE){
+				mAEVolumeSettingLayout.setVisibility(View.GONE);
+				mAESplitAndDeleteLayout.setVisibility(View.VISIBLE);
+			}
+
+		}else if(vId == R.id.ll_ae_split){
+
+			splitChunk(0,1);
+
+		}else if(vId == R.id.ll_ae_delete){
+
+			removeChunk(0);
+
+		}else if(vId == R.id.iv_ae_volume_setting){
+
+			if(isMute){
+				mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);
+			}else{
+				mAEVolumeSeekBar.setProgress(0);
+			}
 		}
+
 	}
 
 	@Override

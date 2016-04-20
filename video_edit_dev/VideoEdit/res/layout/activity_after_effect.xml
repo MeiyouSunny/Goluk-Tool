@@ -84,7 +84,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/iv_ae_volume_setting"
-                android:layout_toStartOf="@id/tv_ae_volume_percent"/>
+                android:layout_toStartOf="@id/tv_ae_volume_percent"
+                android:progressDrawable="@drawable/player_seekbar_style"  
+                android:thumb="@drawable/ae_seekbar_thumb"/>
        </RelativeLayout>
 
         <LinearLayout
@@ -100,7 +102,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:paddingStart="58dp"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:background="@drawable/ae_controller_bg" >
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -124,7 +127,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:paddingEnd="58dp"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:background="@drawable/ae_controller_bg" >
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -158,7 +162,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:background="#16181a"
+                android:background="@color/ae_controller_pressed"
                 android:orientation="vertical" >
 
                 <ImageView
@@ -182,6 +186,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:background="@color/ae_controller_normal"
                 android:orientation="vertical" >
 
                 <ImageView

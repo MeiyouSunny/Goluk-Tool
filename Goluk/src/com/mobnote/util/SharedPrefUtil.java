@@ -66,6 +66,12 @@ public class SharedPrefUtil {
 
 	/** ipc密码 **/
 	public static final String PROPERTY_SAVE_IPC_PASSWORD = "property_ipc_password";
+	
+	/**用户的token**/
+	public static final String USER_TOKEN = "user_token";
+	
+	/**当前登录的用户信息**/
+	public static final String USER_INFO = "user_info";
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Android config, by Micle
@@ -566,4 +572,26 @@ public class SharedPrefUtil {
 		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("UnbindActivity", Activity.MODE_PRIVATE);
 		return preference.getString(PROPERTY_SAVE_IPC_NUMBER, "");
 	}
+	
+	public static String getUserToken(){
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
+		return preference.getString(USER_TOKEN, "");
+	}
+	
+	public static void saveUserToken(String token) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
+		preference.edit().putString(USER_TOKEN, token).commit();
+	}
+	
+	public static String getUserInfo(){
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
+		return preference.getString(USER_INFO, "");
+	}
+	
+	public static void saveUserInfo(String user) {
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
+		preference.edit().putString(USER_INFO, user).commit();
+	}
+	
+	
 }

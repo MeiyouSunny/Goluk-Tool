@@ -1813,12 +1813,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 */
 	public UserInfo getMyInfo() {
 		try {
-			// if (!isUserLoginSucess) {
-			// return null;
-			// }
 			UserInfo myInfo = null;
-			String userInfo = mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
-					IPageNotifyFn.PageType_GetUserInfo_Get, "");
+			String userInfo = SharedPrefUtil.getUserInfo();
 
 			Log.e("dengting", "getUserInfo------------------logic-userInfo:" + userInfo);
 
