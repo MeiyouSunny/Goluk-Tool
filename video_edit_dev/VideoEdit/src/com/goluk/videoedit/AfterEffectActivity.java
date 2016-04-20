@@ -102,11 +102,12 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	String mMusicPath = VideoEditConstant.MUSIC_PATH;
 
 	public void addChunk(String videoPath) {
+		// always add from end
 		int addFlag = -1;
 		// if no chunk added, then the init data would be header, footer, tail
-		if(mProjectItemList == null || mProjectItemList.size() <= 3) {
-			addFlag = 0;
-		}
+//		if(mProjectItemList == null || mProjectItemList.size() <= 3) {
+//			addFlag = 0;
+//		}
 
 		if (mVideoPath != null) {
 			try {
@@ -376,13 +377,17 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			chunkBean.ct_pair_tag = cInsertIndex + "chunkIndex";
 			mProjectItemList.add(cInsertIndex, chunkBean);
 
+			// truncate to the end
+			Transition transtion = mAfterEffect.getTransition(
+					VideoEditUtils.mapI2CIndex(cInsertIndex), true);
+//			if(transtion != null) {
 			TransitionBean transitionBean = new TransitionBean();
-//			Transition transtion = Transition.createNoneTransition();
 			transitionBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
-//			transitionBean.transiton = transtion;
+			transitionBean.transiton = transtion;
 			int tInsertIndex = mProjectItemList.size() - 2;
 			transitionBean.ct_pair_tag = cInsertIndex + "chunkIndex";
 			mProjectItemList.add(tInsertIndex, transitionBean);
+//			}
 
 			mAdapter.setData(mProjectItemList);
 			mAdapter.notifyDataSetChanged();
@@ -479,10 +484,6 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		mAELayoutManager = new LinearLayoutManager(this);
 		mAELayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mAERecyclerView = (RecyclerView) findViewById(R.id.rv_video_edit_pic_list);
-		mAdapter = new ChannelLineAdapter(this, mAERecyclerView, mProjectItemList);
-		mAERecyclerView.setAdapter(mAdapter);
-		mAERecyclerView.setLayoutManager(mAELayoutManager);
-		mAERecyclerView.setItemAnimator(new DefaultItemAnimator());
 
 		mImageHeight = DeviceUtil.dp2px(this, VideoEditConstant.BITMAP_COMMON_WIDTH);
 		mImageWidth = mImageHeight;
@@ -524,9 +525,12 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			}
 		});
 		initPlayer();
+		mAdapter = new ChannelLineAdapter(this, mAERecyclerView, mProjectItemList, mAfterEffect);
+		mAERecyclerView.setAdapter(mAdapter);
+		mAERecyclerView.setLayoutManager(mAELayoutManager);
+		mAERecyclerView.setItemAnimator(new DefaultItemAnimator());
 
 		initController();
-
 	}
 
 	public float getChannelDuration() {
@@ -718,11 +722,8 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			splitChunk(0,1);
 
 		}else if(vId == R.id.ll_ae_delete){
-
 			removeChunk(0);
-
 		}else if(vId == R.id.iv_ae_volume_setting){
-
 			if(isMute){
 				mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);
 			}else{
