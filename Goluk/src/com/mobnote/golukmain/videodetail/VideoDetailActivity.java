@@ -23,7 +23,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLayoutChangeListener;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
@@ -904,20 +903,16 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		if (!isLoginSucess()) {
 			return false;
 		}
-		String info = mBaseApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
-		try {
-			JSONObject json = new JSONObject(info);
-			String id = json.getString("uid");
-
-			if (mVideoJson.data.avideo.user.uid.equals(id)) {
-				return true;
-			} else {
-				return false;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		UserInfo info = mBaseApp.getMyInfo();
+		if (null == info) {
 			return false;
 		}
+		if (mVideoJson.data.avideo.user.uid.equals(info.uid)) {
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 
 	void delVideo() {

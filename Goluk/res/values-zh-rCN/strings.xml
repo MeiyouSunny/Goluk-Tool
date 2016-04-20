@@ -816,7 +816,7 @@
     <string name="str_request_error">请求异常，请检查网络是否正常</string>
     <string name="str_delete_video_fail">删除视频失败</string>
     <string name="str_delete_video_title">删除视频</string>
-    <string name="str_delete_video_message">删除后相关的获赞、评论数据将被清除是否还要删除？</string>
+    <string name="str_delete_video_message">删除后相关的获赞、评论数据将被清除。是否还要删除？</string>
     <string name="str_delete_ongoing_with_omit">正在删除...</string>
     <string name="str_his_homepage">Ta的主页</string>
     <string name="str_praise_him">赞Ta的人</string>
