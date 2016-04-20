@@ -54,6 +54,7 @@ public class ChannelLineAdapter extends
 	private Context mContext;
 	private int mFooterWidth;
 	RecyclerView mRecyclerView;
+	private AfterEffectActivity mAeActivity;
 
 	public static final String TAG = ChannelLineAdapter.class.getSimpleName();
 
@@ -66,6 +67,7 @@ public class ChannelLineAdapter extends
 		super(recyclerView);
 		this.mDataList = dataList;
 		this.mContext = cxt;
+		this.mAeActivity = (AfterEffectActivity) cxt;
 		mRecyclerView = recyclerView;
 		mFooterWidth = DeviceUtil.getScreenWidthSize(mContext) - DeviceUtil.dp2px(mContext, 65);
 	}
@@ -300,7 +302,8 @@ public class ChannelLineAdapter extends
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					addChunk();
+					//addChunk();
+					mAeActivity.goToChooseVideo();
 				}
 			});
 

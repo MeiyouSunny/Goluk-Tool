@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
@@ -26,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.npnt.ae.AfterEffect;
 import cn.npnt.ae.AfterEffectListener;
 import cn.npnt.ae.exceptions.EffectException;
@@ -523,6 +525,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		initPlayer();
 
 		initController();
+
 	}
 
 	public float getChannelDuration() {
@@ -738,6 +741,23 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	public void onPlayResume(AfterEffect afterEffect) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void goToChooseVideo(){
+		Intent videoChooseIntent = new Intent();
+		videoChooseIntent.setClass(this, VideoChooserActivity.class);
+		startActivityForResult(videoChooseIntent, 0);
+	}
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		if(resultCode == RESULT_OK){
+			Bundle b = data.getExtras(); //data为B中回传的Intent
+		    String vidPath = b.getString("vidPath");//str即为回传的值
+		    if(vidPath != null){
+		    	Toast.makeText(this, vidPath, Toast.LENGTH_LONG).show();
+		    }
+		}
 	}
 
 }
