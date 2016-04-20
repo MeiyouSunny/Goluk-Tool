@@ -5,6 +5,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -83,8 +84,9 @@ public class VideoChooserActivity extends Activity implements View.OnClickListen
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		// TODO Auto-generated method stub
 		if(mVideoPathList != null && mVideoPathList.size()>position){
+			String selectedVidPath = getAbsoluteVidPath(mVideoPathList.get(position));
 			Bundle bundle = new Bundle();
-			bundle.putString("vidPath", mVideoPathList.get(position));
+			bundle.putString("vidPath", selectedVidPath);
 			Intent intent = new Intent();
 			intent.putExtras(bundle);
 			setResult(RESULT_OK,intent);
@@ -92,4 +94,17 @@ public class VideoChooserActivity extends Activity implements View.OnClickListen
 		}
 	}
 
+	private String getAbsoluteVidPath(String path){
+		if(TextUtils.isEmpty(path)){
+			return null;
+		}
+		if(path.startsWith("WND")){
+			return android.os.Environment.getExternalStorageDirectory().getPath() + "/goluk/video/wonderful/" + path;
+		}else if(path.startsWith("URG")){
+			return android.os.Environment.getExternalStorageDirectory().getPath() + "/goluk/video/urgent/" + path;
+		}else if(path.startsWith("NRM")){
+			return android.os.Environment.getExternalStorageDirectory().getPath() + "/goluk/video/loop/" + path;
+		}
+		return path;
+	}
 }

@@ -6,7 +6,7 @@
     <ImageView
         android:id="@+id/iv_video_chooser_item"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="65dp"
         android:scaleType="centerCrop"
         android:contentDescription="@string/imgdes"/>
 

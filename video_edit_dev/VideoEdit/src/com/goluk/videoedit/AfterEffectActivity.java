@@ -756,7 +756,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			Bundle b = data.getExtras(); //data为B中回传的Intent
 		    String vidPath = b.getString("vidPath");//str即为回传的值
 		    if(vidPath != null){
-		    	Toast.makeText(this, vidPath, Toast.LENGTH_LONG).show();
+		    	mAdapter.addChunk(vidPath);
 		    }
 		}
 	}

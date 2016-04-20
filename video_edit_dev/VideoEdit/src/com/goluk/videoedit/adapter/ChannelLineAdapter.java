@@ -76,13 +76,13 @@ public class ChannelLineAdapter extends
 		mFooterWidth = DeviceUtil.getScreenWidthSize(mContext) - DeviceUtil.dp2px(mContext, 65);
 	}
 
-	public void addChunk() {
+	public void addChunk(String path) {
 		if(mDataList == null) {
 			mDataList = new ArrayList<ProjectItemBean>();
 		}
 
 		Toast.makeText(mContext, "add more", Toast.LENGTH_SHORT).show();
-		((AfterEffectActivity)mContext).addChunk(mVideoPath);
+		((AfterEffectActivity)mContext).addChunk(path);
 		notifyDataSetChanged();
 	}
 
