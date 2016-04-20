@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.npnt.ae.AfterEffect;
 import cn.npnt.ae.model.Chunk;
 import cn.npnt.ae.model.ChunkThumbs;
 import cn.npnt.ae.model.VideoThumb;
@@ -53,6 +54,7 @@ public class ChannelLineAdapter extends
 	private AfterEffectActivity mAeActivity;
 
 	int mEditIndex = -1;
+	AfterEffect mAfterEffect;
 
 	String mVideoPath = VideoEditConstant.VIDEO_PATH_1;
 
@@ -67,22 +69,23 @@ public class ChannelLineAdapter extends
 	}
 
 	public ChannelLineAdapter(Context cxt,
-			RecyclerView recyclerView, List<ProjectItemBean> dataList) {
+			RecyclerView recyclerView, List<ProjectItemBean> dataList, AfterEffect ae) {
 		super(recyclerView);
 		this.mDataList = dataList;
 		this.mContext = cxt;
 		this.mAeActivity = (AfterEffectActivity) cxt;
 		mRecyclerView = recyclerView;
+		mAfterEffect = ae;
 		mFooterWidth = DeviceUtil.getScreenWidthSize(mContext) - DeviceUtil.dp2px(mContext, 65);
 	}
 
-	public void addChunk() {
+	public void addChunk(String path) {
 		if(mDataList == null) {
 			mDataList = new ArrayList<ProjectItemBean>();
 		}
 
 		Toast.makeText(mContext, "add more", Toast.LENGTH_SHORT).show();
-		((AfterEffectActivity)mContext).addChunk(mVideoPath);
+		((AfterEffectActivity)mContext).addChunk(path);
 		notifyDataSetChanged();
 	}
 
@@ -356,6 +359,7 @@ public class ChannelLineAdapter extends
 
 	private void swapChunk(int fromPosition, int toPosition) {
 		mDataList.add(toPosition, mDataList.remove(fromPosition));
+		mAfterEffect.editExchangeChunk(VideoEditUtils.mapI2CIndex(toPosition), VideoEditUtils.mapI2CIndex(fromPosition));
 		// Continue process transition
 		mDataList.add(toPosition + 1, mDataList.remove(fromPosition + 1));
 	}
