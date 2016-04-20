@@ -251,6 +251,17 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			click_switchInput();
 		}
 	}
+	
+	
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (emoLayout.getVisibility() != View.GONE) {
+			this.hideEmojocon();
+			setSwitchState(true);
+		}
+	}
 
 	private void back() {
 		isExit = true;
