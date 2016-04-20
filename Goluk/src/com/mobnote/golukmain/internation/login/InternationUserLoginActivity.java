@@ -442,7 +442,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 							GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
 						} else {
 							mApplication.mLoginManage.setUserLoginInterface(this);
-							mApplication.mLoginManage.login(phone, pwd);
+							mApplication.mLoginManage.login(phone, pwd,"");
 //							if (b) {
 								mApplication.loginStatus = 0;
 								UserUtils.hideSoftMethod(this);

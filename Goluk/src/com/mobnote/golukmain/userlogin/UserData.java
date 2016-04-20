@@ -55,7 +55,7 @@ public class UserData {
 	
 	/**关注的视频计数**/
 	@JSONField(name="followvideo")
-	public String followvideo;
+	public int followvideo;
 	
 	/**授权令牌 **/
 	@JSONField(name="token")

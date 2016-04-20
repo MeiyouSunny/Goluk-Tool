@@ -74,6 +74,7 @@ import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
 import com.mobnote.golukmain.livevideo.BaidumapLiveActivity;
 import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
 import com.mobnote.golukmain.thirdshare.GolukUmConfig;
+import com.mobnote.golukmain.userlogin.UserData;
 import com.mobnote.golukmain.videosuqare.VideoCategoryActivity;
 import com.mobnote.golukmain.videosuqare.VideoSquareManager;
 import com.mobnote.golukmain.wifibind.IpcConnSuccessInfo;
@@ -938,31 +939,31 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			}
 			break;
 		// 登陆
-		case PageType_Login:
-			// 取消自动登录
-			mUser.timerCancel();
-			// 登录
-			if (mPageSource != "UserIdentify") {
-				mLoginManage.loginCallBack(success, param1, param2);
-			} else {
-				((UserIdentifyActivity) mContext).registLoginCallBack(success, param2);
-			}
-			parseLoginData(success, param2);
-
-			break;
-		// 第三方登陆
-		case PageType_OauthLogin:
-			// 取消自动登录
-			mUser.timerCancel();
-			// 登录
-			mLoginManage.loginCallBack(success, param1, param2);
-			parseLoginData(success, param2);
-			break;
+//		case PageType_Login:
+//			// 取消自动登录
+//			mUser.timerCancel();
+//			// 登录
+//			if (mPageSource != "UserIdentify") {
+//				mLoginManage.loginCallBack(success, param1, param2);
+//			} else {
+//				((UserIdentifyActivity) mContext).registLoginCallBack(success, param2);
+//			}
+//			parseLoginData(success, param2);
+//
+//			break;
+//		// 第三方登陆
+//		case PageType_OauthLogin:
+//			// 取消自动登录
+//			mUser.timerCancel();
+//			// 登录
+//			mLoginManage.loginCallBack(success, param1, param2);
+//			parseLoginData(success, param2);
+//			break;
 		// 自动登录
-		case PageType_AutoLogin:
-			mUser.initAutoLoginCallback(success, param1, param2);
-			parseLoginData(success, param2);
-			break;
+//		case PageType_AutoLogin:
+//			mUser.initAutoLoginCallback(success, param1, param2);
+//			parseLoginData(success, param2);
+//			break;
 		// 验证码PageType_GetVCode
 		case PageType_GetVCode:
 			// 注册获取验证码
@@ -1098,34 +1099,21 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @author jiayf
 	 * @date Apr 20, 2015
 	 */
-	private void parseLoginData(int success, Object param2) {
-		if (1 != success || null == param2) {
-			return;
-		}
-		try {
-			JSONObject rootObj = new JSONObject((String) param2);
-			int code = Integer.valueOf(rootObj.getString("code"));
-			if (200 != code) {
-				return;
-			}
-
-			JSONObject dataObj = rootObj.getJSONObject("data");
+	public void parseLoginData(UserData userdata) {
+		if(userdata != null){
 			// 获得CC上传视频接口
-			mCCUrl = dataObj.getString("ccbackurl");
-			mCurrentUId = dataObj.getString("uid");
-			mCurrentAid = dataObj.getString("aid");
-			mCurrentPhoneNum = dataObj.optString("phone");
+			mCCUrl = userdata.ccbackurl;
+			mCurrentUId =userdata.uid;
+			mCurrentAid = userdata.aid;
+			mCurrentPhoneNum = userdata.phone;
 			// New video number published by he followed
-			int followedVideoNum = dataObj.optInt("followvideo");
+			int followedVideoNum = userdata.followvideo;
 			isUserLoginSucess = true;
-
 			EventBus.getDefault().post(new EventMessageUpdate(EventConfig.MESSAGE_REQUEST));
 			EventBus.getDefault().post(new EventUserLoginRet(EventConfig.USER_LOGIN_RET, true, followedVideoNum));
 			this.showContinuteLive();
 			GolukDebugUtils.e(null, "jyf---------GolukApplication---------mCCurl:" + mCCUrl + " uid:" + mCurrentUId
-					+ " aid:" + mCurrentAid);
-		} catch (Exception e) {
-			e.printStackTrace();
+								+ " aid:" + mCurrentAid);
 		}
 	}
 

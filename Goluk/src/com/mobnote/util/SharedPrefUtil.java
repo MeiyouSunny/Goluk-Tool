@@ -72,6 +72,9 @@ public class SharedPrefUtil {
 	
 	/**当前登录的用户信息**/
 	public static final String USER_INFO = "user_info";
+	
+	/**登陆的用户密码 和手机号**/
+	public static final String USER_PASSWORD = "user_password";
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Android config, by Micle
@@ -591,6 +594,16 @@ public class SharedPrefUtil {
 	public static void saveUserInfo(String user) {
 		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
 		preference.edit().putString(USER_INFO, user).commit();
+	}
+	
+	public static void saveUserPwd(String pwd){
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
+		preference.edit().putString(USER_PASSWORD, pwd).commit();
+	}
+	
+	public static String getUserPwd(){
+		SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
+		return preference.getString(USER_PASSWORD, "");
 	}
 	
 	

@@ -46,5 +46,8 @@ public class GolukConfig {
 
 	/** Line package name **/
 	public final static String LINE_PACKAGE = "jp.naver.line.android";
+	
+	/**第三方登陆默认密码**/
+	public final static String OTHER_PASSWORD = "lovegoluk@2016";
 
 }
