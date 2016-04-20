@@ -93,6 +93,9 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	// If the AE value larger than 1, scroll 1 px to reduce it
 	private float mCEValue = 0f;
 
+	private View mTimeLineGateV;
+	private int mGateLocationX;
+
 	String mVideoPath1 = VideoEditConstant.VIDEO_PATH_1;
 	String mVideoPath = VideoEditConstant.VIDEO_PATH;
 
@@ -367,6 +370,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			chunkBean.chunk = chunk;
 			chunkBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
 			chunkBean.width = VideoEditUtils.ChunkTime2Width(chunk.getDuration(), mImageWidth);
+			chunkBean.isEditState = false;
 
 			int cInsertIndex = mProjectItemList.size() - 2;
 			chunkBean.ct_pair_tag = cInsertIndex + "chunkIndex";
@@ -390,14 +394,11 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			break;
 		}
 	}
-	private View mTimeLineGateV;
-	private int mGateLocationX;
 
 	private void initController(){
-
 		mAEVolumeSettingLayout = (RelativeLayout) findViewById(R.id.rl_ae_volume_setting);
 		mAEVolumeSettingIv = (ImageView) findViewById(R.id.iv_ae_volume_setting);
-        mAEVolumePercentTv = (TextView) findViewById(R.id.tv_ae_volume_percent);
+		mAEVolumePercentTv = (TextView) findViewById(R.id.tv_ae_volume_percent);
 		mAEVolumeSeekBar = (SeekBar) findViewById(R.id.seekbar_ae_volume);
 
 		mAESplitAndDeleteLayout = (LinearLayout) findViewById(R.id.ll_ae_split_and_delete);
@@ -405,7 +406,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		mAEDeleteLayout = (LinearLayout) findViewById(R.id.ll_ae_delete);
 		mAECutLayout = (LinearLayout) findViewById(R.id.ll_ae_cut);
 		mAEVolumeLayout = (LinearLayout) findViewById(R.id.ll_ae_volume);
-		
+
 		mAEMusicLayoutManager = new LinearLayoutManager(this);
 		mAEMusicLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mAEMusicRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_ae_music);

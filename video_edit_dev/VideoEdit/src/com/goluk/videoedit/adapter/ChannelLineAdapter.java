@@ -1,17 +1,15 @@
 package com.goluk.videoedit.adapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnGenericMotionListener;
 import android.view.View.OnLongClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -23,6 +21,7 @@ import cn.npnt.ae.model.Chunk;
 import cn.npnt.ae.model.ChunkThumbs;
 import cn.npnt.ae.model.VideoThumb;
 
+import com.goluk.videoedit.AfterEffectActivity;
 import com.goluk.videoedit.R;
 import com.goluk.videoedit.bean.ChunkBean;
 import com.goluk.videoedit.bean.DummyFooterBean;
@@ -35,10 +34,6 @@ import com.goluk.videoedit.utils.DeviceUtil;
 import com.goluk.videoedit.utils.VideoEditUtils;
 import com.makeramen.dragsortadapter.DragSortAdapter;
 import com.makeramen.dragsortadapter.NoForegroundShadowBuilder;
-import com.goluk.videoedit.AfterEffectActivity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 
@@ -54,7 +49,16 @@ public class ChannelLineAdapter extends
 	private Context mContext;
 	private int mFooterWidth;
 	RecyclerView mRecyclerView;
+
 	private AfterEffectActivity mAeActivity;
+
+	int mEditIndex = -1;
+
+	String mVideoPath = VideoEditConstant.VIDEO_PATH_1;
+
+	public int getEditIndex() {
+		return mEditIndex;
+	}
 
 	public static final String TAG = ChannelLineAdapter.class.getSimpleName();
 
@@ -72,9 +76,6 @@ public class ChannelLineAdapter extends
 		mFooterWidth = DeviceUtil.getScreenWidthSize(mContext) - DeviceUtil.dp2px(mContext, 65);
 	}
 
-	String mVideoPath = VideoEditConstant.VIDEO_PATH_1;
-
-	//TODO: TBD
 	public void addChunk() {
 		if(mDataList == null) {
 			mDataList = new ArrayList<ProjectItemBean>();
@@ -87,8 +88,6 @@ public class ChannelLineAdapter extends
 
 	@Override
 	public int getItemViewType(int position) {
-		// TODO Auto-generated method stub
-
 		Object obj = mDataList.get(position);
 		if(obj instanceof DummyHeaderBean) {
 			return VIEW_TYPE_HEADER;
@@ -153,6 +152,7 @@ public class ChannelLineAdapter extends
 
 		@Override
 		public void onClick(View v) {
+
 		}
 	}
 
@@ -258,12 +258,32 @@ public class ChannelLineAdapter extends
 				int duration = (int)(chunk.getDuration() * 10);
 				viewHolder.nChunkDurationTV.setText("" + (float)duration / 10 + "\'\'");
 
-				// Chunk click edit
+				// Chunk click edit, mutual click
 				viewHolder.nChunkContainerLL.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						chunkBean.isEditState = !chunkBean.isEditState;
-						notifyItemChanged(position);
+						if(-1 == mEditIndex) { // no selection before
+							mEditIndex = position;
+							chunkBean.isEditState = true;
+							notifyItemChanged(mEditIndex);
+						} else {
+							if(mEditIndex == position) { // tap same item to cancel selection
+								chunkBean.isEditState = false;
+								mEditIndex = -1;
+								notifyItemChanged(position);
+							} else {
+								ProjectItemBean bean = mDataList.get(mEditIndex);
+								if(bean instanceof ChunkBean) {
+									ChunkBean preBean = (ChunkBean)bean;
+									preBean.isEditState = !preBean.isEditState;
+								}
+								notifyItemChanged(mEditIndex);
+								chunkBean.isEditState = !chunkBean.isEditState;
+
+								notifyItemChanged(position);
+								mEditIndex = position;
+							}
+						}
 					}
 				});
 
@@ -281,7 +301,6 @@ public class ChannelLineAdapter extends
 //						if(event.getAction() == MotionEvent.ACTION_MOVE) {
 //							float x = event.getX();
 //							float y = event.getY();
-//							Log.d("CK1", "x=" + x + ",y=" + y);
 //						}
 //						return true;
 //					}
@@ -301,9 +320,10 @@ public class ChannelLineAdapter extends
 			viewHolder.nAddChunkIV.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
+
 					//addChunk();
 					mAeActivity.goToChooseVideo();
+
 				}
 			});
 
