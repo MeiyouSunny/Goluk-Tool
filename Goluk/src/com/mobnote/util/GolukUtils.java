@@ -55,7 +55,6 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -73,6 +72,26 @@ public class GolukUtils {
 	public static final String T1_WIFINAME_SIGN = "Goluk_T1";
 	public static final String G1G2_WIFINAME_SIGN = "Goluk";
 
+	// 键盘的高度
+	private static int keyBoardHeight = 250;
+	private static boolean isSettingBoardHeight = false;
+
+	public static int getKeyBoardHeight() {
+		return keyBoardHeight;
+	}
+
+	public static void setKeyBoardHeight(int height) {
+		if (height <= 0) {
+			return;
+		}
+		keyBoardHeight = height;
+		isSettingBoardHeight = true;
+	}
+
+	public static boolean isSettingBoardHeight() {
+		return isSettingBoardHeight;
+	}
+
 	public static void getMobileInfo(Activity activity) {
 		DisplayMetrics metric = new DisplayMetrics();
 		activity.getWindowManager().getDefaultDisplay().getMetrics(metric);
@@ -80,6 +99,8 @@ public class GolukUtils {
 		int height = metric.heightPixels; // 屏幕高度（像素）
 		mDensity = metric.density; // 屏幕密度（0.75 / 1.0 / 1.5）
 		int densityDpi = metric.densityDpi; // 屏幕密度DPI（120 / 160 / 240）
+
+		keyBoardHeight = (int) (keyBoardHeight * mDensity);
 
 		GolukDebugUtils.e("", " mobile info:" + mDensity);
 	}
@@ -569,8 +590,8 @@ public class GolukUtils {
 
 		return number;
 	}
-	
-	public static String getFormatedNumber(String fmtnumber){
+
+	public static String getFormatedNumber(String fmtnumber) {
 		String number;
 		try {
 			int wg = Integer.parseInt(fmtnumber);

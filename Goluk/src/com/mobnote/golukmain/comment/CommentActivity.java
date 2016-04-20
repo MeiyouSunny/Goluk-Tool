@@ -49,6 +49,7 @@ import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.videodetail.ReplyDialog;
+import com.mobnote.golukmain.videodetail.SoftKeyBoardListener;
 import com.mobnote.golukmain.videosuqare.RTPullListView;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
@@ -142,6 +143,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		screenHeight = getWindowManager().getDefaultDisplay().getHeight();
 		keyHeight = screenHeight / 3;
 		init();
+		observeSoftKeyboard();
 	}
 
 	/**
@@ -189,6 +191,19 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		mRTPullListView.setOnItemClickListener(this);
 
 		setOnTouchListener();
+	}
+	
+	public void observeSoftKeyboard() {
+		SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+			@Override
+			public void keyBoardShow(int height) {
+				GolukUtils.setKeyBoardHeight(height);
+			}
+
+			@Override
+			public void keyBoardHide(int height) {
+			}
+		});
 	}
 
 	/**
@@ -771,7 +786,10 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	}
 
 	private boolean isCanShowSoft() {
-		return true;
+		if (isSwitchStateFinish) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -779,22 +797,31 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		if (100 == msg.what) {
 			showEmojocon();
 			setSwitchState(false);
+			isSwitchStateFinish = true;
 		} else if (200 == msg.what) {
 			setSwitchState(true);
 			GolukUtils.showSoftNotThread(mEditInput);
-			mBaseHandler.sendEmptyMessageDelayed(300, 1000);
+			mBaseHandler.sendEmptyMessageDelayed(300, 800);
 		} else if (300 == msg.what) {
 			hideEmojocon();
 			this.setResize();
+			isSwitchStateFinish = true;
 		}
 	}
+	
+	/** 标志一个状态是否切换完成 */
+	private boolean isSwitchStateFinish = true;
 
 	private void click_soft() {
 		if (!this.isCanShowSoft()) {
 			return;
 		}
+		isSwitchStateFinish = false;
 		mEditInput.setFocusable(true);
 		mEditInput.requestFocus();
+		if (!GolukUtils.isSettingBoardHeight()) {
+			this.hideEmojocon();
+		}
 		if (emoLayout.getVisibility() == View.GONE) {
 			this.setResize();
 		} else {
@@ -808,6 +835,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		if (!isCanShowSoft()) {
 			return;
 		}
+		this.isSwitchStateFinish = false;
 		GolukUtils.hideSoft(this, mEditInput);
 		mBaseHandler.sendEmptyMessageDelayed(100, 80);
 	}
@@ -824,8 +852,15 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	private void setResize() {
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 	}
+	
+	private void setLayoutHeight() {
+		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) emoLayout.getLayoutParams();
+		lp.height = GolukUtils.getKeyBoardHeight();
+		emoLayout.setLayoutParams(lp);
+	}
 
 	private void showEmojocon() {
+		setLayoutHeight();
 		emoLayout.setVisibility(View.VISIBLE);
 	}
 

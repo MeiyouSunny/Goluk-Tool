@@ -23,6 +23,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLayoutChangeListener;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
@@ -217,6 +218,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		addCallBackListener();
 		getDetailData();
 		init();
+		observeSoftKeyboard();
 	}
 
 	private void addCallBackListener() {
@@ -821,22 +823,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		}
 	}
 
-	/**
-	 * 点击评论弹出键盘
-	 */
-	public void showSoft() {
-		if ((mVideoJson.data.avideo.video != null) && (mVideoJson.data.avideo.video.comment != null)
-				&& "1".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
-			// setResize();
-			hideEmojocon();
-		} else {
-			mEditInput.clearFocus();
-		}
-	}
-
 	private boolean isCanShowSoft() {
 		if ((mVideoJson.data.avideo.video != null) && (mVideoJson.data.avideo.video.comment != null)
-				&& "1".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
+				&& "1".equals(mVideoJson.data.avideo.video.comment.iscomment) && isSwitchStateFinish) {
 			return true;
 		}
 		return false;
@@ -1390,22 +1379,33 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		if (100 == msg.what) {
 			showEmojocon();
 			setSwitchState(false);
+			isSwitchStateFinish = true;
 		} else if (200 == msg.what) {
 			setSwitchState(true);
 			GolukUtils.showSoftNotThread(mEditInput);
-			mBaseHandler.sendEmptyMessageDelayed(300, 1000);
+			mBaseHandler.sendEmptyMessageDelayed(300, 800);
 		} else if (300 == msg.what) {
 			hideEmojocon();
 			this.setResize();
+			isSwitchStateFinish = true;
 		}
 	}
+
+	/** 标志一个状态是否切换完成 */
+	private boolean isSwitchStateFinish = true;
 
 	private void click_soft() {
 		if (!this.isCanShowSoft()) {
 			return;
 		}
+		isSwitchStateFinish = false;
 		mEditInput.setFocusable(true);
 		mEditInput.requestFocus();
+
+		if (!GolukUtils.isSettingBoardHeight()) {
+			this.hideEmojocon();
+		}
+
 		if (emoLayout.getVisibility() == View.GONE) {
 			this.setResize();
 		} else {
@@ -1419,6 +1419,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		if (!isCanShowSoft()) {
 			return;
 		}
+		isSwitchStateFinish = false;
 		GolukUtils.hideSoft(this, mEditInput);
 		mBaseHandler.sendEmptyMessageDelayed(100, 80);
 	}
@@ -1436,7 +1437,27 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 	}
 
+	public void observeSoftKeyboard() {
+		SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+			@Override
+			public void keyBoardShow(int height) {
+				GolukUtils.setKeyBoardHeight(height);
+			}
+
+			@Override
+			public void keyBoardHide(int height) {
+			}
+		});
+	}
+
+	private void setLayoutHeight() {
+		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) emoLayout.getLayoutParams();
+		lp.height = GolukUtils.getKeyBoardHeight();
+		emoLayout.setLayoutParams(lp);
+	}
+
 	private void showEmojocon() {
+		setLayoutHeight();
 		emoLayout.setVisibility(View.VISIBLE);
 	}
 
