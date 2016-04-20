@@ -3,6 +3,7 @@ package com.goluk.videoedit.utils;
 import java.util.List;
 
 import android.view.View;
+import cn.npnt.ae.AfterEffect;
 
 import com.goluk.videoedit.bean.ChunkBean;
 import com.goluk.videoedit.bean.ProjectItemBean;
@@ -99,5 +100,20 @@ public class VideoEditUtils {
 	// Map item index 2 chunk index
 	public static int mapI2CIndex(int itemIndex) {
 		return (itemIndex - 1) / 2;
+	}
+
+	// Map item index 2 chunk index
+	public static void removeChunk(AfterEffect afterEffect, List<ProjectItemBean> list, int chunkIndex) {
+		if(-1 == chunkIndex || null == list) {
+			return;
+		}
+
+		// remove chunk and transition
+		ProjectItemBean bean = list.get(chunkIndex + 1);
+		if(bean instanceof TransitionBean) {
+			list.remove(chunkIndex + 1);
+		}
+		list.remove(chunkIndex);
+		afterEffect.editRemoveChunk(mapI2CIndex(chunkIndex));
 	}
 }

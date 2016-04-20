@@ -691,24 +691,21 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		int vId = v.getId();
-		if(vId == R.id.iv_video_play){
+		if(vId == R.id.iv_video_play) {
 			mVideoPlayIv.setVisibility(View.GONE);
 			mVideoThumeIv.setVisibility(View.GONE);
 			play();
-		}else if (vId == R.id.iv_video_thumb){
+		} else if (vId == R.id.iv_video_thumb) {
 //			mVideoPlayIv.setVisibility(View.GONE);
 //			mVideoThumeIv.setVisibility(View.GONE);	
-		}else if (vId == R.id.ll_ae_volume){
-
+		} else if (vId == R.id.ll_ae_volume) {
 			mAEVolumeLayout.setBackgroundColor(AfterEffectActivity.this.getResources().getColor(R.color.ae_controller_pressed));
 			mAECutLayout.setBackgroundResource(R.drawable.ae_controller_bg);
 			//(AfterEffectActivity.this.getResources().getColor(R.color.ae_controller_normal));
 
 			mAESplitAndDeleteLayout.setVisibility(View.GONE);
 			mAEVolumeSettingLayout.setVisibility(View.VISIBLE);
-
-		}else if(vId == R.id.ll_ae_cut){
-
+		} else if(vId == R.id.ll_ae_cut) {
 			mAEVolumeLayout.setBackgroundResource(R.drawable.ae_controller_bg);
 			mAECutLayout.setBackgroundColor(AfterEffectActivity.this.getResources().getColor(R.color.ae_controller_pressed));
 
@@ -716,21 +713,18 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 				mAEVolumeSettingLayout.setVisibility(View.GONE);
 				mAESplitAndDeleteLayout.setVisibility(View.VISIBLE);
 			}
-
-		}else if(vId == R.id.ll_ae_split){
-
+		} else if(vId == R.id.ll_ae_split) {
 			splitChunk(0,1);
-
-		}else if(vId == R.id.ll_ae_delete){
-			removeChunk(0);
-		}else if(vId == R.id.iv_ae_volume_setting){
-			if(isMute){
+		} else if(vId == R.id.ll_ae_delete) {
+			VideoEditUtils.removeChunk(mAfterEffect, mProjectItemList, mAdapter.getEditIndex());
+			mAdapter.notifyDataSetChanged();
+		} else if(vId == R.id.iv_ae_volume_setting) {
+			if(isMute) {
 				mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);
-			}else{
+			} else {
 				mAEVolumeSeekBar.setProgress(0);
 			}
 		}
-
 	}
 
 	@Override
