@@ -7,4 +7,6 @@
   <string name="ae_split">拆分</string>
   <string name="ae_volume">音量</string>
   <string name="ae_delete">删除</string>
+  <string name="imgdes">图片描述</string>
+  <string name="local_video">本地视频</string>
 </resources>

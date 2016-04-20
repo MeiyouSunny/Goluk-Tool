@@ -1,17 +1,15 @@
 package com.goluk.videoedit.adapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnGenericMotionListener;
 import android.view.View.OnLongClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -23,6 +21,7 @@ import cn.npnt.ae.model.Chunk;
 import cn.npnt.ae.model.ChunkThumbs;
 import cn.npnt.ae.model.VideoThumb;
 
+import com.goluk.videoedit.AfterEffectActivity;
 import com.goluk.videoedit.R;
 import com.goluk.videoedit.bean.ChunkBean;
 import com.goluk.videoedit.bean.DummyFooterBean;
@@ -35,10 +34,6 @@ import com.goluk.videoedit.utils.DeviceUtil;
 import com.goluk.videoedit.utils.VideoEditUtils;
 import com.makeramen.dragsortadapter.DragSortAdapter;
 import com.makeramen.dragsortadapter.NoForegroundShadowBuilder;
-import com.goluk.videoedit.AfterEffectActivity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 
@@ -54,6 +49,9 @@ public class ChannelLineAdapter extends
 	private Context mContext;
 	private int mFooterWidth;
 	RecyclerView mRecyclerView;
+
+	private AfterEffectActivity mAeActivity;
+
 	int mEditIndex = -1;
 
 	String mVideoPath = VideoEditConstant.VIDEO_PATH_1;
@@ -73,6 +71,7 @@ public class ChannelLineAdapter extends
 		super(recyclerView);
 		this.mDataList = dataList;
 		this.mContext = cxt;
+		this.mAeActivity = (AfterEffectActivity) cxt;
 		mRecyclerView = recyclerView;
 		mFooterWidth = DeviceUtil.getScreenWidthSize(mContext) - DeviceUtil.dp2px(mContext, 65);
 	}
@@ -321,7 +320,10 @@ public class ChannelLineAdapter extends
 			viewHolder.nAddChunkIV.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					addChunk();
+
+					//addChunk();
+					mAeActivity.goToChooseVideo();
+
 				}
 			});
 
