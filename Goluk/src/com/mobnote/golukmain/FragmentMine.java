@@ -6,6 +6,7 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.carrecorder.settings.TSettingsActivity;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.ILive;
@@ -422,8 +423,10 @@ public class FragmentMine extends Fragment implements OnClickListener,
 				clickToLogin(TYPE_PROFIT);
 			}
 		} else if (id == R.id.rl_my_message) {
-			Intent msgIntent = new Intent(getActivity(), MessageCenterActivity.class);
-			getActivity().startActivity(msgIntent);
+//			Intent msgIntent = new Intent(getActivity(), MessageCenterActivity.class);
+//			getActivity().startActivity(msgIntent);
+			Intent it = new Intent(getActivity(), TSettingsActivity.class);
+			getActivity().startActivity(it);
 		} else if (id == R.id.tv_praise_item) {
 			if (!GolukUtils.isNetworkConnected(getActivity())) {
 				Toast.makeText(getActivity(),

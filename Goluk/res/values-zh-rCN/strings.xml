@@ -206,6 +206,7 @@
     <string name="setting_title_text">设置</string>
     <string name="setting_tcaf_title">停车安防</string>
     <string name="spzl_title">循环视频质量</string>
+    <string name="str_wonderful_video_type_title">精彩视频类型</string>
     <string name="str_wonderful_video_quality_title">精彩视频质量</string>
     <string name="str_settings_tone_title">提示音音量大小</string>
     <string name="str_settings_shutdown_title">关机时间</string>
@@ -215,6 +216,7 @@
     <string name="jcsp_title">精彩视频拍照提示音</string>
     <string name="str_settings_fatigue_title">疲劳驾驶语音提示</string>
     <string name="str_settings_image_flip_title">图像自动翻转</string>
+    <string name="str_settings_video_logo_title">视频水印显示</string>
     <string name="str_settings_parking_sleep_title">停车休眠模式</string>
     <string name="str_settings_photographic_quality_title">照片质量</string>
     <string name="str_settings_handset_title">遥控器按键功能</string>

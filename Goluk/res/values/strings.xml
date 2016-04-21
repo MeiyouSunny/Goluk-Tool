@@ -1027,5 +1027,8 @@
     <string name ="str_global_dialog_msg">Please confirm whether you need to abort this synchronization task?</string>
     <string name="str_global_dialog_right_btn">Stop</string>
      <string name="str_global_cancel_success">Video synchronization has been canceled</string>
+     
+     <string name="str_wonderful_video_type_title">精彩视频类型</string>
+     <string name="str_settings_video_logo_title">视频水印显示</string>
 
 </resources>

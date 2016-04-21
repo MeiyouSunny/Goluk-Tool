@@ -1017,6 +1017,37 @@ public class IPCControlManager implements IPCManagerFn {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_SetVoiceType, s);
 	}
+	
+	/**
+	 * 获取全局设置列表
+	 * 
+	 * @return
+	 */
+	public boolean getCapacityList() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetCapacityList, "");
+	}
+	
+	/**
+	 * 获取精彩视频类型（时长）
+	 * 
+	 * @return
+	 */
+	public boolean getWonderfulVideoType() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetVideoTimeConf, "");
+	}
+
+	/**
+	 * 设置精彩视频类型（时长）
+	 * 
+	 * @return
+	 */
+	public boolean setWonderfulVideoType(int historyTime, int futureTime) {
+		String str = JsonUtil.setWonderfulVideoTypeJson(historyTime, futureTime);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetVideoTimeConf, str);
+	}
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {

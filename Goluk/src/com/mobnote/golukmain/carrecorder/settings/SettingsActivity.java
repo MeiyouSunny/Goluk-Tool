@@ -1370,7 +1370,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				getKitConfigCallback(event, msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_SetKitCfg) {// 设置遥控器按键功能
 				setKitConfigCallback(event, msg, param1, param2);
-			} else if (IPC_VDCP_Msg_GetRecAudioCfg == msg) {
+			} else if (IPC_VDCP_Msg_GetRecAudioCfg == msg) {//声音录制
 				IPCCallBack_getRecAudioCfg(msg, param1, param2);
 			} else if (IPC_VDCP_Msg_SetRecAudioCfg == msg) {
 				IPCCallBack_setRecAudioCfg(msg, param1, param2);
