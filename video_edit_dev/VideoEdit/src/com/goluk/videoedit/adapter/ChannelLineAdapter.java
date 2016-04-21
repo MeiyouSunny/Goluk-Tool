@@ -62,6 +62,10 @@ public class ChannelLineAdapter extends
 		return mEditIndex;
 	}
 
+	public void setEditIndex(int index) {
+		mEditIndex = index;
+	}
+
 	public static final String TAG = ChannelLineAdapter.class.getSimpleName();
 
 	public void setData(List<ProjectItemBean> src) {
@@ -209,20 +213,39 @@ public class ChannelLineAdapter extends
 				final ChunkBean chunkBean = (ChunkBean)bean;
 				Chunk chunk = chunkBean.chunk;
 				if(null != chunk) {
-					ChunkThumbs chunkThumbList = chunk.getChunkThumbs();
-					List<VideoThumb> videoThumbList = chunkThumbList.getThumbs();
+					ChunkThumbs chunkThumbs = chunk.getChunkThumbs();
+					List<VideoThumb> videoThumbList = chunkThumbs.getThumbs();
+
+					float begin = chunkThumbs.getBegin();
+					float end = chunkThumbs.getLength();
+					float delta = end - begin;
+
+					int bitmapCount = 0;
+					if(delta > 0 && delta <= 1) {
+						bitmapCount = 1;
+					}
+
+					if(delta > 1) {
+						if(delta - (int)delta > 0) {
+							bitmapCount = (int)delta + 1;
+						} else {
+							bitmapCount = (int)delta;
+						}
+					}
+
 					if(null != videoThumbList && videoThumbList.size() > 0) {
-						int count = videoThumbList.size();
-						for(int i = 0; i < count; i++) {
+//						int count = videoThumbList.size();
+						for(int i = 0; i < bitmapCount; i++) {
 							VideoThumb videoThumb = videoThumbList.get(i);
 							ImageView imageView = new ImageView(mContext);
 							// Last, to calc bitmap width
-							if(i == count - 1) {
-								float delta = chunk.getDuration()
-										- (count - 1) * VideoEditConstant.BITMAP_TIME_INTERVAL;
-								float widthRatio = delta / VideoEditConstant.BITMAP_TIME_INTERVAL;
+							if(i == bitmapCount - 1) {
+//								float lastD = chunk.getDuration()
+//										- (count - 1) * VideoEditConstant.BITMAP_TIME_INTERVAL;
+								float lastD = delta - (int)delta;
+//								float widthRatio = lastD / VideoEditConstant.BITMAP_TIME_INTERVAL;
 								LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-									DeviceUtil.dp2px(mContext, (int)(45 * widthRatio)),
+									(int)(DeviceUtil.dp2px(mContext, VideoEditConstant.BITMAP_COMMON_WIDTH) * lastD),
 									LayoutParams.MATCH_PARENT);
 								imageView.setLayoutParams(params);
 							} else {
@@ -243,16 +266,20 @@ public class ChannelLineAdapter extends
 				viewHolder.nChunkContainerLL.postInvalidate();
 				if(chunkBean.isEditState) {
 					// Set mask layout params
-					FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-							VideoEditUtils.ChunkTime2Width(chunk.getDuration(),
-							DeviceUtil.dp2px(mContext, VideoEditConstant.BITMAP_COMMON_WIDTH)),
+					if(null != chunk) {
+						float begin = chunk.getChunkThumbs().getBegin();
+						float end = chunk.getChunkThumbs().getLength();
+
+						FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+//								VideoEditUtils.ChunkTime2Width(chunk.getDuration(),
+//								DeviceUtil.dp2px(mContext, VideoEditConstant.BITMAP_COMMON_WIDTH)),
+							(int)((end - begin) * 135),
 							FrameLayout.LayoutParams.MATCH_PARENT);
-//					FrameLayout.LayoutParams params = 
-//							new FrameLayout.LayoutParams(viewHolder.nChunkContainerLL.getMeasuredWidth(), FrameLayout.LayoutParams.MATCH_PARENT);
-							//(android.widget.FrameLayout.LayoutParams) viewHolder.nChunkContainerLL.getLayoutParams();
-					viewHolder.nChunkMaskLL.setLayoutParams(params);
-					viewHolder.nChunkMaskLL.setVisibility(View.VISIBLE);
-					viewHolder.nChunkDurationTV.setVisibility(View.VISIBLE);
+
+						viewHolder.nChunkMaskLL.setLayoutParams(params);
+						viewHolder.nChunkMaskLL.setVisibility(View.VISIBLE);
+						viewHolder.nChunkDurationTV.setVisibility(View.VISIBLE);
+					}
 				} else {
 					viewHolder.nChunkMaskLL.setVisibility(View.GONE);
 					viewHolder.nChunkDurationTV.setVisibility(View.GONE);
