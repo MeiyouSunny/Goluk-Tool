@@ -998,13 +998,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			}
 
 			break;
-		// 注销
-		case PageType_SignOut:
-			if (mPageSource == "UserSetup") {
-				((UserSetupActivity) mContext).getLogintoutCallback(success, param2);
-			}
-			break;
-		// APP升级+IPC升级检测
+//		// 注销
+//		case PageType_SignOut:
+//			if (mPageSource == "UserSetup") {
+//				((UserSetupActivity) mContext).getLogintoutCallback(success, param2);
+//			}
+//			break;
+//		// APP升级+IPC升级检测
 		case PageType_CheckUpgrade:
 			mIpcUpdateManage.requestInfoCallback(success, param1, param2);
 			break;
@@ -1800,20 +1800,20 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @date 2015年8月7日
 	 */
 	public UserInfo getMyInfo() {
+		UserInfo myInfo = null;
 		try {
-			UserInfo myInfo = null;
-			String userInfo = SharedPrefUtil.getUserInfo();
+			String user = SharedPrefUtil.getUserInfo();
 
-			Log.e("dengting", "getUserInfo------------------logic-userInfo:" + userInfo);
+			Log.e("dengting", "getUserInfo------------------logic-userInfo:" + user);
 
-			if (null != userInfo) {
-				myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(userInfo));
+			if (null != user) {
+				myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(user));
 			}
-			return myInfo;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return myInfo;
 	}
 
 	/**

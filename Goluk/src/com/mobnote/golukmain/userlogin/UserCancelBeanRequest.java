@@ -10,29 +10,28 @@ import com.mobnote.golukmain.http.request.GolukFastjsonRequest;
 import android.text.TextUtils;
 import cn.com.tiros.api.Tapi;
 
-public class UserloginBeanRequest extends GolukFastjsonRequest<UserResult> {
+public class UserCancelBeanRequest extends GolukFastjsonRequest<CancelResult> {
 
-	public UserloginBeanRequest(int requestType, IRequestResultListener listener) {
-		super(requestType, UserResult.class, listener);
+	public UserCancelBeanRequest(int requestType, IRequestResultListener listener) {
+		super(requestType, CancelResult.class, listener);
 	}
 
 	@Override
 	protected String getPath() {
-		return "/cdcRegister/getLogin.htm";
+		return "/cdcRegister/pushService.htm";
 	}
 
 	@Override
 	protected String getMethod() {
-		return "getLogin";
+		return "userCancel";
 	}
 
-	public void get(String phone,String pwd,String uid) {
+	public void get(String uid) {
 		HashMap<String, String> headers = (HashMap<String, String>) getHeader();
-		headers.put("phone", phone);
-		headers.put("pwd", pwd);
-		headers.put("commuid", uid);
+		headers.put("uid", uid);
 		headers.put("tag", "android");
 		headers.put("mid", "" + Tapi.getMobileId());
+		headers.put("method", "userCancel");
 		get();
 	}
 	
