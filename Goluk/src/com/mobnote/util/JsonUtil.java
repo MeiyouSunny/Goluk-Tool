@@ -354,7 +354,7 @@ public class JsonUtil {
 			JSONObject obj = new JSONObject();
 			obj.put("uid", userInfo.uid);
 			obj.put("aid", userInfo.aid);
-			obj.put("nickname", userInfo.nickName);
+			obj.put("nickname", userInfo.nickname);
 			obj.put("active", "" + userInfo.active);
 			obj.put("tag", userInfo.tag);
 			obj.put("persons", "" + userInfo.persons);
@@ -381,7 +381,7 @@ public class JsonUtil {
 			UserInfo userInfo = new UserInfo();
 			userInfo.uid = getJsonStringValue(rootObj, "uid", "");
 			userInfo.aid = getJsonStringValue(rootObj, "aid", "");
-			userInfo.nickName = getJsonStringValue(rootObj, "nickname", "");
+			userInfo.nickname = getJsonStringValue(rootObj, "nickname", "");
 			userInfo.picurl = getJsonStringValue(rootObj, "picurl", "");
 			userInfo.sex = getJsonStringValue(rootObj, "sex", "");
 			userInfo.lon = getJsonStringValue(rootObj, "lon", "");
@@ -1187,7 +1187,6 @@ public class JsonUtil {
 		try {
 			JSONObject obj = new JSONObject();
 			obj.put("nickname", nickName);
-
 			return obj.toString();
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -3,6 +3,7 @@ package com.mobnote.golukmain;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.util.GolukUtils;
@@ -282,8 +283,9 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 						String rst = data.getString("result");
 						// 图片上传成功
 						if ("0".equals(rst)) {
-
+							
 							String head = data.getString("head");
+							GolukApplication.getInstance().setMyinfo("", head, "");
 							GolukUtils.showToast(UserPersonalHeadActivity.this, this.getResources().getString(R.string.str_save_success));
 
 							Intent itHead = new Intent(UserPersonalHeadActivity.this, UserPersonalInfoActivity.class);

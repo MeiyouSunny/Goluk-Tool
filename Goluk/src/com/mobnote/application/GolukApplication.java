@@ -1815,6 +1815,34 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 		return myInfo;
 	}
+	
+	public void setMyinfo(String name,String head,String desc){
+		
+		String user = SharedPrefUtil.getUserInfo();
+
+		Log.e("dengting", "getUserInfo------------------logic-userInfo:" + user);
+
+		try {
+			if(user != null && !"".equals(user)){
+				UserInfo myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(user));
+				if(name !=null && !"".equals(name)){
+					myInfo.nickname = name;
+				}
+				if(head !=null && !"".equals(head)){
+					myInfo.head = head;
+				}
+				if(desc !=null && !"".equals(desc)){
+					myInfo.desc = desc;
+				}
+				SharedPrefUtil.saveUserInfo(JSON.toJSONString(myInfo));
+			}
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
+	}
 
 	/**
 	 * 获取下载列表

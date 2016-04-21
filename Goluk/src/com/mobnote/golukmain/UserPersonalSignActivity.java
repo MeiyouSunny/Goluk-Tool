@@ -205,7 +205,7 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 			mCustomProgressDialog.close();
 		}
 		if (1 == success) {
-
+			GolukApplication.getInstance().setMyinfo("", "", mSignNewText);
 			Intent it = new Intent(UserPersonalSignActivity.this, UserPersonalInfoActivity.class);
 			it.putExtra("itSign", mSignNewText);
 			this.setResult(RESULT_OK, it);

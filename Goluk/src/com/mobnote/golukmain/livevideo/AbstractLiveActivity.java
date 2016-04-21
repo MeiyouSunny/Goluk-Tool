@@ -230,7 +230,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements
 			startVideoAndLive("");
 			mTitleTv.setText(this.getString(R.string.str_mylive_text));
 			mMoreImg.setVisibility(View.GONE);
-			mNickName.setText(myInfo.nickName);
+			mNickName.setText(myInfo.nickname);
 			setUserHeadImage(myInfo.head, myInfo.customavatar);
 			setAuthentication(myInfo.mUserLabel);
 
@@ -243,8 +243,8 @@ public abstract class AbstractLiveActivity extends BaseActivity implements
 			if (null != currentUserInfo) {
 				mLiveCountSecond = currentUserInfo.liveDuration;
 			}
-			mTitleTv.setText(currentUserInfo.nickName + this.getString(R.string.str_live_someone));
-			mNickName.setText(currentUserInfo.nickName);
+			mTitleTv.setText(currentUserInfo.nickname + this.getString(R.string.str_live_someone));
+			mNickName.setText(currentUserInfo.nickname);
 			setUserHeadImage(currentUserInfo.head, currentUserInfo.customavatar);
 			setAuthentication(currentUserInfo.mUserLabel);
 		}
@@ -1763,9 +1763,9 @@ public abstract class AbstractLiveActivity extends BaseActivity implements
 	 */
 	private String getLiveUserName() {
 		if (this.isShareLive) {
-			return this.myInfo.nickName;
+			return this.myInfo.nickname;
 		} else {
-			return this.currentUserInfo.nickName;
+			return this.currentUserInfo.nickname;
 		}
 	}
 

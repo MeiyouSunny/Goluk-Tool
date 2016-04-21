@@ -543,7 +543,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
 		UserInfo userInfo = ma.mApp.getMyInfo();
 		if (null != userInfo) {
 			userHead = userInfo.head;
-			userName = userInfo.nickName;
+			userName = userInfo.nickname;
 			userDesc = userInfo.desc;
 			newFansCout = userInfo.newfansnumber;
 			userUId = userInfo.uid;

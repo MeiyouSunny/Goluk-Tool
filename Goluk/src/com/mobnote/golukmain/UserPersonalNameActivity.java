@@ -6,6 +6,9 @@ import java.net.URLEncoder;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.userlogin.UpNameResult;
+import com.mobnote.golukmain.userlogin.UpdUserNameBeanRequest;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
@@ -35,7 +38,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * @author mobnote
  * 
  */
-public class UserPersonalNameActivity extends BaseActivity implements OnClickListener {
+public class UserPersonalNameActivity extends BaseActivity implements OnClickListener,IRequestResultListener {
 
 	/** application **/
 	private GolukApplication mApplication = null;
@@ -57,6 +60,8 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 
 	// 保存数据的loading
 	private CustomLoadingDialog mCustomProgressDialog = null;
+	
+	private UpdUserNameBeanRequest mUpUserNameBeanRequest = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +91,8 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		mTextCount.setText("" + (MAX_COUNT - count));
 		mTextCountAll.setText(this.getResources().getString(R.string.str_slash) + MAX_COUNT
 				+ this.getResources().getString(R.string.str_bracket_rigth));
+		
+		mUpUserNameBeanRequest = new UpdUserNameBeanRequest(IPageNotifyFn.PageType_ModifyNickName, this);
 
 	}
 
@@ -212,15 +219,11 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		} else {
 			// {NickName：“昵称”}
 			mNameNewText = name;
-			boolean b;
+			
 			try {
-				b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-						IPageNotifyFn.PageType_ModifyNickName,
-						JsonUtil.getUserNickNameJson(URLEncoder.encode(name, "UTF-8")));
-				if (b) {
-					// 保存中
-					mCustomProgressDialog.show();
-				}
+				mUpUserNameBeanRequest.get(mApplication.getMyInfo().uid, mApplication.getMyInfo().phone, URLEncoder.encode(name, "UTF-8"));
+				// 保存中
+				mCustomProgressDialog.show();
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -239,13 +242,35 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 			mCustomProgressDialog.close();
 		}
 		if (1 == success) {
-
+			mApplication.setMyinfo(mNameNewText, "", "");
 			Intent it = new Intent(UserPersonalNameActivity.this, UserPersonalInfoActivity.class);
 			it.putExtra("itName", mNameNewText);
 			this.setResult(RESULT_OK, it);
 			this.finish();
 		} else {
 			GolukUtils.showToast(this, getString(R.string.user_personal_save_failed));
+		}
+	}
+
+	@Override
+	public void onLoadComplete(int requestType, Object result) {
+
+		if(requestType == IPageNotifyFn.PageType_ModifyNickName){
+			UpNameResult upnameresult = (UpNameResult) result;
+			
+			if (mCustomProgressDialog.isShowing()) {
+				mCustomProgressDialog.close();
+			}
+			
+			if (upnameresult.success) {
+				mApplication.setMyinfo(mNameNewText, "", "");
+				Intent it = new Intent(UserPersonalNameActivity.this, UserPersonalInfoActivity.class);
+				it.putExtra("itName", mNameNewText);
+				this.setResult(RESULT_OK, it);
+				this.finish();
+			} else {
+				GolukUtils.showToast(this, getString(R.string.user_personal_save_failed));
+			}
 		}
 	}
 }

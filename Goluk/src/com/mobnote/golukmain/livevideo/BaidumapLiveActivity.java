@@ -179,7 +179,7 @@ public class BaidumapLiveActivity extends AbstractLiveActivity implements
 			}
 			GolukDebugUtils.e(null,
 					"jyf----20150406----LiveActivity----drawMyLocation---3: "
-							+ myInfo.nickName);
+							+ myInfo.nickname);
 			if (null != myInfo) {
 				GolukDebugUtils
 						.e(null,
