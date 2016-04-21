@@ -269,11 +269,13 @@ public class ChannelLineAdapter extends
 							mEditIndex = position;
 							chunkBean.isEditState = true;
 							notifyItemChanged(mEditIndex);
+							mAeActivity.showEditController();
 						} else {
 							if(mEditIndex == position) { // tap same item to cancel selection
 								chunkBean.isEditState = false;
 								mEditIndex = -1;
 								notifyItemChanged(position);
+								mAeActivity.showMusicController();
 							} else {
 								ProjectItemBean bean = mDataList.get(mEditIndex);
 								if(bean instanceof ChunkBean) {
@@ -285,6 +287,7 @@ public class ChannelLineAdapter extends
 
 								notifyItemChanged(position);
 								mEditIndex = position;
+								mAeActivity.showEditController();
 							}
 						}
 					}

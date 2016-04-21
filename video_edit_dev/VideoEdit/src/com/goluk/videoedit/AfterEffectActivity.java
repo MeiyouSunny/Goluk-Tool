@@ -76,6 +76,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	TextView mAEVolumePercentTv;
 	SeekBar mAEVolumeSeekBar;
 
+	LinearLayout mAEEditController;
 	LinearLayout mAESplitAndDeleteLayout;
 	LinearLayout mAESplitLayout;
 	LinearLayout mAEDeleteLayout;
@@ -163,15 +164,10 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 
 	private void playOrPause() {
 		if(isPlaying){
-			mAfterEffect.playPause();
 			mVideoPlayIv.setVisibility(View.VISIBLE);
+			mAfterEffect.playPause();
 		}else{
 
-			//如果当前是播放完成状态，则重置数据
-			if(isPlayFinished){
-				mAERecyclerView.smoothScrollToPosition(0);
-				currentPlayPosition = 0f;
-			}
 			if(mVideoThumeIv.getVisibility() == View.VISIBLE){
 				mVideoThumeIv.setVisibility(View.GONE);
 			}
@@ -179,23 +175,29 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 				mVideoPlayIv.setVisibility(View.GONE);
 			}
 
-			//当前播放进度大于0，则从当前位置开始播放，否则从头开始播放
-			try {
-				mAfterEffect.play();
-			} catch (InvalidVideoSourceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			//如果当前是播放完成状态，则重置数据
+			if(isPlayFinished){
+				mAERecyclerView.smoothScrollToPosition(0);
+				currentPlayPosition = 0f;
 			}
-//			if(currentPlayPosition > 0f){
-//				mAfterEffect.playResume();
-//			}else{
-//				try {
-//					mAfterEffect.play();
-//				} catch (InvalidVideoSourceException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
+
+//			//当前播放进度大于0，则从当前位置开始播放，否则从头开始播放
+//			try {
+//				mAfterEffect.play();
+//			} catch (InvalidVideoSourceException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
 //			}
+			if(currentPlayPosition > 0f){
+				mAfterEffect.playResume();
+			}else{
+				try {
+					mAfterEffect.play();
+				} catch (InvalidVideoSourceException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
@@ -308,6 +310,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		case MSG_AE_PLAY_STARTED:
 			Log.d(TAG, "MSG_AE_PLAY_STARTED");
 			currentPlayPosition = 0;
+			isPlayFinished = false;
 			if(!isPlaying){
 				mVideoPlayIv.setVisibility(View.GONE);
 				isPlaying = true;
@@ -463,7 +466,19 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		}
 	}
 
+	public void showEditController(){
+		mAEEditController.setVisibility(View.VISIBLE);
+		mAEMusicRecyclerView.setVisibility(View.GONE);
+	}
+
+	public void showMusicController(){
+		mAEEditController.setVisibility(View.GONE);
+		mAEMusicRecyclerView.setVisibility(View.VISIBLE);
+	}
+
 	private void initController(){
+
+		mAEEditController = (LinearLayout) findViewById(R.id.ll_video_edit_controller);
 		mAEVolumeSettingLayout = (RelativeLayout) findViewById(R.id.rl_ae_volume_setting);
 		mAEVolumeSettingIv = (ImageView) findViewById(R.id.iv_ae_volume_setting);
 		mAEVolumePercentTv = (TextView) findViewById(R.id.tv_ae_volume_percent);
@@ -478,7 +493,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		mAEMusicLayoutManager = new LinearLayoutManager(this);
 		mAEMusicLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mAEMusicRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_ae_music);
-		AEMusicAdapter mAeMusicAdapter = new AEMusicAdapter();
+		AEMusicAdapter mAeMusicAdapter = new AEMusicAdapter(this);
 		mAEMusicRecyclerView.setAdapter(mAeMusicAdapter);
 		mAEMusicRecyclerView.setLayoutManager(mAEMusicLayoutManager);
 
