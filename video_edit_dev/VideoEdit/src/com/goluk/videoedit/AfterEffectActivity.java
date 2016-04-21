@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -143,20 +144,65 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	 * @param chunkIndex
 	 * @param position 基于当前chunk的拆分的位置。单位秒。
 	 */
-	public void splitChunk(int chunkIndex, float position){
-		if(mProjectItemList == null || mProjectItemList.size() <=3){
+	public void splitChunk(int chunkIndex, float position) {
+		if(mProjectItemList == null || mProjectItemList.size() <= 3) {
 			return ;
 		}
 
-		if(!mAfterEffect.canSplit(chunkIndex, position)){
+		if(!mAfterEffect.canSplit(chunkIndex, position)) {
 			return;
 		}
-		try{
-			mAfterEffect.editSplitChunk(chunkIndex, position);
-		}catch(InvalidLengthException | EffectRuntimeException e){
-			if(e instanceof InvalidLengthException){
-			}else if(e instanceof EffectRuntimeException){
+
+		try {
+			float realPosition = mAfterEffect.editSplitChunk(chunkIndex, position);
+
+			int itemIndex = VideoEditUtils.mapC2IIndex(chunkIndex);
+			List<Chunk> mainChunks = mAfterEffect.getMainChunks();
+
+			Chunk first = mainChunks.get(chunkIndex);
+			Chunk second = mainChunks.get(chunkIndex + 1);
+
+			// Get to insert index
+			ChunkBean chunkBean1 = new ChunkBean();
+			chunkBean1.chunk = first;
+			chunkBean1.index_tag = VideoEditUtils.generateIndexTag();
+			chunkBean1.width = VideoEditUtils.ChunkTime2Width(first, mImageWidth);
+			chunkBean1.isEditState = false;
+
+			chunkBean1.ct_pair_tag = itemIndex + "chunkIndex";
+			mProjectItemList.set(itemIndex, chunkBean1);
+
+			// ignore transition, the same since now
+
+			// insert second chunk
+			ChunkBean chunkBean2 = new ChunkBean();
+			chunkBean2.chunk = second;
+			chunkBean2.index_tag = VideoEditUtils.generateIndexTag();
+			chunkBean2.width = VideoEditUtils.ChunkTime2Width(second, mImageWidth);
+			chunkBean2.isEditState = true;
+
+//			int cInsertIndex = mProjectItemList.size() - 2;
+			chunkBean2.ct_pair_tag = (itemIndex + 2) + "chunkIndex";
+			mProjectItemList.add(itemIndex + 2, chunkBean2);
+
+			// truncate to the end
+			Transition transtion = mAfterEffect.getTransition(chunkIndex + 1, true);
+//			if(transtion != null) {
+			TransitionBean transitionBean = new TransitionBean();
+			transitionBean.index_tag = VideoEditUtils.generateIndexTag();
+			transitionBean.transiton = transtion;
+			transitionBean.ct_pair_tag = (itemIndex + 2) + "chunkIndex";
+			mProjectItemList.add(itemIndex + 3, transitionBean);
+			mAdapter.setEditIndex(itemIndex + 2);
+
+			VideoEditUtils.refreshCTTag(mProjectItemList);
+		} catch(InvalidLengthException | EffectRuntimeException e) {
+			if(e instanceof InvalidLengthException) {
+				e.printStackTrace();
+			} else if(e instanceof EffectRuntimeException) {
+				e.printStackTrace();
 			}
+
 			return;
 		}
 		mAdapter.notifyDataSetChanged();
@@ -435,8 +481,8 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			// Get to insert index
 			ChunkBean chunkBean = new ChunkBean();
 			chunkBean.chunk = chunk;
-			chunkBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
-			chunkBean.width = VideoEditUtils.ChunkTime2Width(chunk.getDuration(), mImageWidth);
+			chunkBean.index_tag = VideoEditUtils.generateIndexTag();
+			chunkBean.width = VideoEditUtils.ChunkTime2Width(chunk, mImageWidth);
 			chunkBean.isEditState = false;
 
 			int cInsertIndex = mProjectItemList.size() - 2;
@@ -448,7 +494,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 					VideoEditUtils.mapI2CIndex(cInsertIndex), true);
 //			if(transtion != null) {
 			TransitionBean transitionBean = new TransitionBean();
-			transitionBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
+			transitionBean.index_tag = VideoEditUtils.generateIndexTag();
 			transitionBean.transiton = transtion;
 			int tInsertIndex = mProjectItemList.size() - 2;
 			transitionBean.ct_pair_tag = cInsertIndex + "chunkIndex";
@@ -550,13 +596,13 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		// default tail and footer
 		mProjectItemList = new ArrayList<ProjectItemBean>();
 		DummyHeaderBean headerBean = new DummyHeaderBean();
-		headerBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
+		headerBean.index_tag = VideoEditUtils.generateIndexTag();
 		mProjectItemList.add(headerBean);
 		TailBean tailBean = new TailBean();
-		tailBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
+		tailBean.index_tag = VideoEditUtils.generateIndexTag();
 		mProjectItemList.add(tailBean);
 		DummyFooterBean footerBean = new DummyFooterBean();
-		footerBean.index_tag = VideoEditUtils.generateIndexTag(mProjectItemList);
+		footerBean.index_tag = VideoEditUtils.generateIndexTag();
 		mProjectItemList.add(footerBean);
 
 		mAELayoutManager = new LinearLayoutManager(this);
@@ -798,7 +844,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 				mAESplitAndDeleteLayout.setVisibility(View.VISIBLE);
 			}
 		} else if(vId == R.id.ll_ae_split) {
-			splitChunk(0,1);
+			splitChunk(VideoEditUtils.mapI2CIndex(mAdapter.getEditIndex()), 1);
 		} else if(vId == R.id.ll_ae_delete) {
 			VideoEditUtils.removeChunk(mAfterEffect, mProjectItemList, mAdapter.getEditIndex());
 			mAdapter.notifyDataSetChanged();
