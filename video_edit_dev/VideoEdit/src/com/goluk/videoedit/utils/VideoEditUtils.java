@@ -37,7 +37,7 @@ public class VideoEditUtils {
 		return (thumbCount + last) * VideoEditConstant.BITMAP_TIME_INTERVAL;
 	}
 
-	public static int ChunkTime2Width(Chunk chunk, int bitmapDefaultWidth) {
+	public static int ChunkTime2Width(Chunk chunk) {
 //		int thumbCount = (int)(time / VideoEditConstant.BITMAP_TIME_INTERVAL);
 //		float last = (int)(time % VideoEditConstant.BITMAP_TIME_INTERVAL);
 //		return thumbCount * bitmapDefaultWidth
@@ -46,18 +46,20 @@ public class VideoEditUtils {
 			return 0;
 		}
 //		return (int)(bitmapDefaultWidth / VideoEditConstant.BITMAP_TIME_INTERVAL * time);
-		return (int)((chunk.getChunkThumbs().getLength() - chunk.getChunkThumbs().getBegin()) * bitmapDefaultWidth);
-	}
-
-	public static int ChunkTime2Width(float time, int bitmapDefaultWidth) {
-//		int thumbCount = (int)(time / VideoEditConstant.BITMAP_TIME_INTERVAL);
-//		float last = (int)(time % VideoEditConstant.BITMAP_TIME_INTERVAL);
-//		return thumbCount * bitmapDefaultWidth
-//				+ (int)((last / VideoEditConstant.BITMAP_TIME_INTERVAL) * bitmapDefaultWidth);
-
-		return (int)(bitmapDefaultWidth / VideoEditConstant.BITMAP_TIME_INTERVAL * time);
 //		return (int)((chunk.getChunkThumbs().getLength() - chunk.getChunkThumbs().getBegin()) * bitmapDefaultWidth);
+		return (int)(chunk.getChunkThumbs().getLength() * chunk.getChunkThumbs().getThumbWidth());
 	}
+
+//	public static int ChunkTime2Width(float time, int bitmapDefaultWidth) {
+////		int thumbCount = (int)(time / VideoEditConstant.BITMAP_TIME_INTERVAL);
+////		float last = (int)(time % VideoEditConstant.BITMAP_TIME_INTERVAL);
+////		return thumbCount * bitmapDefaultWidth
+////				+ (int)((last / VideoEditConstant.BITMAP_TIME_INTERVAL) * bitmapDefaultWidth);
+//
+////		return (int)(bitmapDefaultWidth / VideoEditConstant.BITMAP_TIME_INTERVAL * time);
+//		return (int)(bitmapDefaultWidth / VideoEditConstant.BITMAP_TIME_INTERVAL * time);
+////		return (int)((chunk.getChunkThumbs().getLength() - chunk.getChunkThumbs().getBegin()) * bitmapDefaultWidth);
+//	}
 
 	private static final float TIME_ADJUST = 0.1f;
 
@@ -91,6 +93,14 @@ public class VideoEditUtils {
 
 	public static boolean judgeGateOverlap(int gateX, int itemX, int itemWidth) {
 		if(gateX >= itemX && gateX <= itemX + itemWidth) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public static boolean judgeChunkOverlap(int chunkX, int itemX, int itemWidth) {
+		if(chunkX >= itemX && chunkX <= itemX + itemWidth) {
 			return true;
 		}
 

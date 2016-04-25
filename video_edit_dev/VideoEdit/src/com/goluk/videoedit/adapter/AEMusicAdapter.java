@@ -16,32 +16,33 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder>{
+public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
 
-    int mCurrSelectedIndex;
-    Context mContext;
-    List<AEMusic> mAEMusicList;
-    public AEMusicAdapter(Context cxt){
-    	this.mContext = cxt;
-    	mCurrSelectedIndex = 0;
-    	fillupMusicList();
-    }
+	int mCurrSelectedIndex;
+	Context mContext;
+	List<AEMusic> mAEMusicList;
 
-    private void fillupMusicList(){
+	public AEMusicAdapter(Context cxt) {
+		this.mContext = cxt;
+		mCurrSelectedIndex = 0;
+		fillupMusicList();
+	}
 
-    	mAEMusicList = new ArrayList<AEMusic>();
-    	mAEMusicList.add(new AEMusic("无","",true));
-    	mAEMusicList.add(new AEMusic("Dreamer","",false));
-    	mAEMusicList.add(new AEMusic("Champions","",false));
-    	mAEMusicList.add(new AEMusic("HollyWood","",false));
-    	mAEMusicList.add(new AEMusic("PretyMood","",false));
-    	mAEMusicList.add(new AEMusic("Yongth","",false));
-    }
+	private void fillupMusicList() {
+
+		mAEMusicList = new ArrayList<AEMusic>();
+		mAEMusicList.add(new AEMusic("无", "", true));
+		mAEMusicList.add(new AEMusic("Dreamer", "", false));
+		mAEMusicList.add(new AEMusic("Champions", "", false));
+		mAEMusicList.add(new AEMusic("HollyWood", "", false));
+		mAEMusicList.add(new AEMusic("PretyMood", "", false));
+		mAEMusicList.add(new AEMusic("Yongth", "", false));
+	}
 
 	@Override
 	public int getItemCount() {
 		// TODO Auto-generated method stub
-		if(mAEMusicList != null){
+		if (mAEMusicList != null) {
 			return mAEMusicList.size();
 		}
 		return 0;
@@ -51,7 +52,7 @@ public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder>{
 	public void onBindViewHolder(ViewHolder vHolder, int position) {
 		// TODO Auto-generated method stub
 
-		if(vHolder instanceof MusicViewHolder){
+		if (vHolder instanceof MusicViewHolder) {
 			MusicViewHolder mViewHolder = (MusicViewHolder) vHolder;
 			mViewHolder.bindView(position);
 		}
@@ -64,37 +65,45 @@ public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder>{
 		return new MusicViewHolder(view);
 	}
 
-	public class MusicViewHolder extends RecyclerView.ViewHolder{
+	public class MusicViewHolder extends RecyclerView.ViewHolder {
 
 		View mItemView;
 		ImageView mAEMusicIv;
 		TextView mAEMusicTv;
+
 		public MusicViewHolder(View itemView) {
 			super(itemView);
 			// TODO Auto-generated constructor stub
 			this.mItemView = itemView;
-			mAEMusicIv = (ImageView) itemView.findViewById(R.id.iv_ae_music_item);
-			mAEMusicTv = (TextView) itemView.findViewById(R.id.tv_ae_music_item);
+			mAEMusicIv = (ImageView) itemView
+					.findViewById(R.id.iv_ae_music_item);
+			mAEMusicTv = (TextView) itemView
+					.findViewById(R.id.tv_ae_music_item);
 		}
-		public void bindView(final int position){
 
-			if(mAEMusicList != null && mAEMusicList.size() > position && mAEMusicList.size() > mCurrSelectedIndex){
+		public void bindView(final int position) {
+
+			if (mAEMusicList != null && mAEMusicList.size() > position
+					&& mAEMusicList.size() > mCurrSelectedIndex) {
 
 				AEMusic aeMusic = mAEMusicList.get(position);
-				if(aeMusic.isSelected()){
+				if (aeMusic.isSelected()) {
 					mAEMusicTv.setTextColor(Color.parseColor("#ffffff"));
-				}else{
+				} else {
 					mAEMusicTv.setTextColor(Color.parseColor("#88ffffff"));
 				}
 				mAEMusicTv.setText(aeMusic.getMusicName());
 
-				if(position == 0){
-					mAEMusicIv.setImageDrawable(mContext.getResources().getDrawable(R.drawable.no_music));
-				}else{
-					if(aeMusic.isSelected()){
-						mAEMusicIv.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_ae_cd_selected));
-					}else{
-						mAEMusicIv.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_ae_cd_unselected));
+				if (position == 0) {
+					mAEMusicIv.setImageDrawable(mContext.getResources()
+							.getDrawable(R.drawable.no_music));
+				} else {
+					if (aeMusic.isSelected()) {
+						mAEMusicIv.setImageDrawable(mContext.getResources()
+								.getDrawable(R.drawable.ic_ae_cd_selected));
+					} else {
+						mAEMusicIv.setImageDrawable(mContext.getResources()
+								.getDrawable(R.drawable.ic_ae_cd_unselected));
 					}
 				}
 				mItemView.setOnClickListener(new View.OnClickListener() {
@@ -102,14 +111,17 @@ public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder>{
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-						if(mCurrSelectedIndex != position){
+						if (mCurrSelectedIndex != position) {
 
-							AEMusic preSeletedMusic = mAEMusicList.get(mCurrSelectedIndex);
+							AEMusic preSeletedMusic = mAEMusicList
+									.get(mCurrSelectedIndex);
 							preSeletedMusic.setSelected(false);
-							mAEMusicList.set(mCurrSelectedIndex, preSeletedMusic);
+							mAEMusicList.set(mCurrSelectedIndex,
+									preSeletedMusic);
 							notifyItemChanged(mCurrSelectedIndex);
 
-							AEMusic newSelectedMusic = mAEMusicList.get(position);
+							AEMusic newSelectedMusic = mAEMusicList
+									.get(position);
 							newSelectedMusic.setSelected(true);
 							mAEMusicList.set(position, newSelectedMusic);
 							notifyItemChanged(position);
@@ -120,7 +132,7 @@ public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder>{
 					}
 				});
 			}
-			
+
 		}
 	}
 
