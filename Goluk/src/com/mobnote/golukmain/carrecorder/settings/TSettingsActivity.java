@@ -1368,6 +1368,15 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener(TAG);
 		}
 		EventBus.getDefault().unregister(this);
+		if (mCustomDialog != null && mCustomDialog.isShowing()) {
+			mCustomDialog.dismiss();
+		}
+		mCustomDialog = null;
+		
+		if (null != mRestartDialog) {
+			mRestartDialog.dismiss();
+			mRestartDialog = null;
+		}
 	}
 
 	private void loadRes() {

@@ -1019,7 +1019,7 @@
     
     <string name="str_settings_wonderful_video_type_hint_text">精彩抓拍（6+6）：按下遥控器（KIT）按键，触发录制前6秒+后6秒的12秒
         精彩视频片段。\n经典模式：按下遥控器（KIT）按键，触发录制一段30秒精彩视频。</string>
-     <string name="str_settings_video_type1">精彩抓拍（6+6）</string>
+     <string name="str_settings_video_type1">精彩抓拍 ( 6+6 )</string>
      <string name="str_settings_video_type2">经典模式</string>
     
 </resources>

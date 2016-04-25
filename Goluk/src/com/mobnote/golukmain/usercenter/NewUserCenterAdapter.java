@@ -81,17 +81,25 @@ public class NewUserCenterAdapter extends BaseAdapter {
 			viewHolder.mDescribeText = (TextView) convertView.findViewById(R.id.tv_videocategory_item_describe);
 			viewHolder.mCommentCountText = (TextView) convertView.findViewById(R.id.tv_videocategory_item_comment);
 			viewHolder.mLookCountText = (TextView) convertView.findViewById(R.id.tv_videocategory_item_look);
+			viewHolder.mLockImage = (ImageView) convertView.findViewById(R.id.iv_videocategory_item_lock);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 
 		HomeVideoList videos = mList.get(arg0);
-		GlideUtils.loadImage(mContext, viewHolder.mThumbImage, videos.pictureurl, R.drawable.tacitly_pic);
-		viewHolder.mTimeText.setText(GolukUtils.getCommentShowFormatTime(mContext, videos.addtime));
-		viewHolder.mDescribeText.setText(videos.description);
-		viewHolder.mCommentCountText.setText(GolukUtils.getFormatNumber(videos.commentcount));
-		viewHolder.mLookCountText.setText(GolukUtils.getFormatNumber(videos.clickcount));
+		if(null != videos) {
+			GlideUtils.loadImage(mContext, viewHolder.mThumbImage, videos.pictureurl, R.drawable.tacitly_pic);
+			viewHolder.mTimeText.setText(GolukUtils.getCommentShowFormatTime(mContext, videos.addtime));
+			viewHolder.mDescribeText.setText(videos.description);
+			viewHolder.mCommentCountText.setText(GolukUtils.getFormatNumber(videos.commentcount));
+			viewHolder.mLookCountText.setText(GolukUtils.getFormatNumber(videos.clickcount));
+			if (videos.isopen == 0) {
+				viewHolder.mLockImage.setVisibility(View.VISIBLE);
+			} else {
+				viewHolder.mLockImage.setVisibility(View.GONE);
+			}
+		}
 
 		return convertView;
 	}
@@ -102,6 +110,7 @@ public class NewUserCenterAdapter extends BaseAdapter {
 		TextView mDescribeText;
 		TextView mCommentCountText;
 		TextView mLookCountText;
+		ImageView mLockImage;
 	}
 
 }
