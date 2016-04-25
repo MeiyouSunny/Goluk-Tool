@@ -119,7 +119,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 	private boolean isContinueLive = false;
 	private LayoutInflater mLayoutFlater = null;
 	private RelativeLayout mRootLayout = null;
-	private boolean isShowPop = false;
+	// private boolean isShowPop = false;
 	// private boolean isSucessBind = false;
 	/** 是否已经点过“赞” */
 	private boolean isAlreadClickOK = false;
@@ -177,6 +177,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 
 	protected IMapTools mMapTools;
 	private ILiveOperateFn mLiveOperator = null;
+	private boolean isSetAudioMute = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -423,7 +424,6 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 		isRequestedForServer = true;
 		String json = null;
 		if (this.isContinueLive) {
-
 		} else {
 			json = JsonUtil.getStartLiveJson(mCurrentVideoId, mSettingData);
 		}
@@ -434,6 +434,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 		// mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 		// IPageNotifyFn.PageType_LiveStart, json);
 
+		// 请求发起直播
 		LiveStartRequest liveRequest = new LiveStartRequest(IPageNotifyFn.PageType_LiveStart, this);
 		boolean isSucess = liveRequest.get(json);
 
@@ -462,11 +463,6 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 				IPageNotifyFn.PageType_GetVideoDetail, condi);
 		if (!isSucess) {
 			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----startLiveLook----22 : FASE False FAlse");
-			startLiveLookFailed();
-		} else {
-			// TODO 弹对话框
-			// showToast("查看他人直播：" + userInfo.uid);
-			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----startLiveLook----22 : TRUE TRUE");
 		}
 	}
 
@@ -477,10 +473,6 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 					LiveDialogManager.DIALOG_TYPE_LIVE_REQUEST_SERVER, LIVE_DIALOG_TITLE,
 					this.getString(R.string.str_live_upload_first_error));
 		}
-	}
-
-	private void startLiveLookFailed() {
-		// showToast("查看他人直播失败");
 	}
 
 	/**
@@ -601,68 +593,12 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 		}
 	}
 
-	// private void stopRTSPUpload() {
-	// if (CarRecorderManager.isRTSPLiving()) {
-	// try {
-	// // showToast("停止上传直播");
-	// isStartLive = false;
-	// CarRecorderManager.stopRTSPLive();
-	// } catch (RecorderStateException e) {
-	// e.printStackTrace();
-	// }
-	// }
-	// }
-
 	private String getRtmpAddress() {
 		String rtmpUrl = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_GetServerAddress,
 				IGetServerAddressType.GetServerAddress_RtmpServer, "UploadVedioPre");
 		GolukDebugUtils.e("", "jyf-----MainActivity-----test:" + rtmpUrl);
 		return rtmpUrl;
 	}
-
-	// /**
-	// * 响应视频Manager消息
-	// */
-	// private BroadcastReceiver managerReceiver = new RecorderMsgReceiverBase()
-	// {
-	// @Override
-	// public void onManagerBind(Context context, int nResult, String
-	// strResultInfo) {
-	// }
-	//
-	// public void onLiveRecordBegin(Context context, int nResult, String
-	// strResultInfo) {
-	// if (nResult >= ResultConstants.SUCCESS) {
-	// // 视频录制上传成功
-	// isUploadSucessed = true;
-	// isTryingReUpload = false;
-	// // 取消90秒
-	// mBaseHandler.removeMessages(MSG_H_UPLOAD_TIMEOUT);
-	//
-	// if (!isRequestedForServer) {
-	// // 没有请求过服务器
-	// if (!isContinueLive) {
-	// // 不是续播，才可以请求
-	// mBaseHandler.sendEmptyMessage(101);
-	// }
-	// } else {
-	// LiveDialogManager.getManagerInstance().dismissProgressDialog();
-	// }
-	// } else {
-	// // 视频录制上传失败
-	// liveUploadVideoFailed();
-	// }
-	// }
-	//
-	// @Override
-	// public void onLiveRecordFailed(Context context, int nResult, String
-	// strResultInfo) {
-	// GolukDebugUtils.e("",
-	// "jyf------TTTTT------------onLiveRecordFailed----2222:" + nResult + "   "
-	// + strResultInfo);
-	// liveUploadVideoFailed();
-	// }
-	// };
 
 	private void uploadLiveSuccess() {
 		isUploadSucessed = true;
@@ -676,6 +612,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 				// 不是续播，才可以请求
 				mBaseHandler.sendEmptyMessage(101);
 			}
+			LiveDialogManager.getManagerInstance().dismissProgressDialog();
 		} else {
 			LiveDialogManager.getManagerInstance().dismissProgressDialog();
 		}
@@ -794,11 +731,6 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 	// 停止传视频直播
 	private void liveStopUploadVideo() {
 		this.mLiveOperator.stopLive();
-		// try {
-		// CarRecorderManager.stopRTSPLive();
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
 	}
 
 	Runnable mRunnable = new Runnable() {
@@ -825,18 +757,10 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 	protected void onResume() {
 		super.onResume();
 		mApp.setContext(this, "LiveVideo");
-		// if (!isSucessBind) {
-		// registerReceiver(managerReceiver, new
-		// IntentFilter(CarRecorderManager.ACTION_RECORDER_MESSAGE));
-		// }
-		//
-		// isSucessBind = true;
-		if (!isShowPop) {
-			isShowPop = true;
+		if (null != mLiveOperator) {
+			mLiveOperator.onResume();
 		}
 	}
-
-	private boolean isSetAudioMute = false;
 
 	/**
 	 * 视频播放初始化
@@ -883,8 +807,6 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 		GolukDebugUtils.e("", "newlive-----LiveActivity-----liveFailedStart :--");
 		if (isLive) {
 			startLiveFailed();
-		} else {
-			startLiveLookFailed();
 		}
 	}
 

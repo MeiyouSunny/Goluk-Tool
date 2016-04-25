@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import cn.com.tiros.debug.GolukDebugUtils;
+
 import com.mobnote.golukmain.carrecorder.PreferencesReader;
 import com.mobnote.golukmain.carrecorder.RecorderMsgReceiverBase;
 import com.rd.car.CarRecorderManager;
@@ -27,13 +29,16 @@ public class LiveOperateCarrecord implements ILiveOperateFn {
 
 	@Override
 	public boolean startLive(final StartLiveBean bean) {
+		GolukDebugUtils.e("", "newlive-----LiveOperateCarrecord-----startLive :11 ");
 		if (isStartLive) {
 			return true;
 		}
+		GolukDebugUtils.e("", "newlive-----LiveOperateCarrecord-----startLive :22 ");
 		if (CarRecorderManager.isRTSPLiving()) {
 			// 正在直播，不可以开始
 			// liveUploadVideoFailed();
 			sendResult(ILiveFnAdapter.STATE_FAILED);
+			GolukDebugUtils.e("", "newlive-----LiveOperateCarrecord-----startLive :failed");
 			return false;
 		}
 		try {
@@ -65,6 +70,18 @@ public class LiveOperateCarrecord implements ILiveOperateFn {
 	public void sendResult(int state) {
 		if (null != mListener) {
 			mListener.Live_CallBack(state);
+		}
+	}
+
+	@Override
+	public void onStart() {
+		try {
+			if (!isStart) {
+				isStart = true;
+				CarRecorderManager.onStartRTSP(mContext);
+			}
+		} catch (RecorderStateException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -106,19 +123,6 @@ public class LiveOperateCarrecord implements ILiveOperateFn {
 			mContext.unregisterReceiver(managerReceiver);
 			isSucessBind = false;
 		}
-	}
-
-	@Override
-	public void onStart() {
-		try {
-			if (!isStart) {
-				isStart = true;
-				CarRecorderManager.onStartRTSP(mContext);
-			}
-		} catch (RecorderStateException e) {
-			e.printStackTrace();
-		}
-
 	}
 
 	@Override

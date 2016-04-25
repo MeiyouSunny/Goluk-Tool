@@ -1100,7 +1100,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private void toLive() {
 		
 		Intent intent;
-		if(GolukApplication.getInstance().isInteral()  == false){
+		if(GolukApplication.getInstance().isInteral()){
 			intent = new Intent(this, BaidumapLiveActivity.class);
 		}else{
 			intent = new Intent(this, GooglemapLiveActivity.class);

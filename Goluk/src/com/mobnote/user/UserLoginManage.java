@@ -209,6 +209,8 @@ public class UserLoginManage implements IRequestResultListener {
 			try {
 				GolukDebugUtils.i("lily", "-----UserLoginManage-----" + result);
 				UserResult userresult = (UserResult) result;
+				String loginMsg = GolukFastJsonUtil.setParseObj(userresult);
+				mApp.setLoginRespInfo(loginMsg);
 				int code = Integer.parseInt(userresult.code);
 				switch (code) {
 				case 200:
@@ -283,8 +285,9 @@ public class UserLoginManage implements IRequestResultListener {
 	public void setCommHeadToLogic() {
 		HttpCommHeaderBean bean = new HttpCommHeaderBean();
 		String str = GolukFastJsonUtil.setParseObj(bean);
-		GolukDebugUtils.e("","jyf---UserLoginManager----setCommHeadToLogic: " + str);
+		GolukDebugUtils.e("", "jyf---UserLoginManager----setCommHeadToLogic: " + str);
 		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_AddCommHeader, str);
 	}
 
+	
 }

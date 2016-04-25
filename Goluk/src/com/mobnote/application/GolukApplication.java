@@ -1171,8 +1171,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	// VDCP 连接状态 回调
 	private void IPC_VDCP_Connect_CallBack(int msg, int param1, Object param2) {
-		GolukDebugUtils
-				.e("", "wifilist----GolukApplication----wifiConn----IPC_VDCP_Connect_CallBack-------msg :" + msg);
+		
 		// 如果不是连接成功,都标识为失败
 		switch (msg) {
 		case ConnectionStateMsg_Idle:
@@ -1187,6 +1186,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			}
 			break;
 		case ConnectionStateMsg_Connecting:
+			GolukDebugUtils
+			.e("", "newlive-----GolukApplication----wifiConn----IPC_VDCP_Connect_CallBack----连接中... :");
 			setIpcLoginState(false);
 			ipcDisconnect();
 			// 已经连接成功过
@@ -1203,6 +1204,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			// 只是,ipc信号连接了,初始化的东西还没完成,所以要等到ipc初始化成功,才能把isIpcLoginSuccess=true
 			break;
 		case ConnectionStateMsg_DisConnected:
+			GolukDebugUtils
+			.e("", "newlive-----GolukApplication----wifiConn----IPC_VDCP_Connect_CallBack----连接失败... :");
 			setIpcLoginState(false);
 			ipcDisconnect();
 			// 已经连接成功过
@@ -1962,4 +1965,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 		return false;
 	}
+	
+	public void setLoginRespInfo(String info) {
+		mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SetLoginRespInfo,
+				info);
+	}
+
+	
 }

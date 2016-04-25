@@ -14,7 +14,7 @@ import com.umeng.socialize.net.utils.Base64;
 
 public class LiveOperateVdcp implements ILiveOperateFn {
 
-	private final int TIMER_OUT = 10 * 1000;
+	private final int TIMER_OUT = 20 * 1000;
 	private boolean isSuccess = false;
 	private ILiveFnAdapter mListener = null;
 	private Timer mTimer = null;
@@ -26,6 +26,7 @@ public class LiveOperateVdcp implements ILiveOperateFn {
 		@Override
 		public void handleMessage(Message msg) {
 			if (100 == msg.what) {
+				GolukDebugUtils.e("", "newlive-----LiveOperateVdcp-----timeout:  ");
 				isSuccess = false;
 				sendResult(ILiveFnAdapter.STATE_FAILED);
 			}
@@ -69,7 +70,11 @@ public class LiveOperateVdcp implements ILiveOperateFn {
 		bean.url = Base64.encodeBase64String(bean.url.getBytes());
 		String jsonData = GolukFastJsonUtil.setParseObj(bean);
 		GolukDebugUtils.e("", "newlive-----LiveOperateVdcp-----startLive  jsonData" + jsonData);
-		boolean isSuccess = GolukApplication.getInstance().mIPCControlManager.startLive(jsonData);
+		boolean is = GolukApplication.getInstance().mIPCControlManager.startLive(jsonData);
+		if (!is) {
+			isSuccess = false;
+			sendResult(ILiveFnAdapter.STATE_FAILED);
+		}
 		GolukDebugUtils.e("", "newlive-----LiveOperateVdcp-----startLive isSuccess: " + isSuccess);
 		return isSuccess;
 	}
@@ -106,6 +111,7 @@ public class LiveOperateVdcp implements ILiveOperateFn {
 				this.cancelTimer();
 				this.startTimer();
 			} else if ("disconnect".equals(content)) {
+				isSuccess = false;
 				sendResult(ILiveFnAdapter.STATE_FAILED);
 			} else if ("retrying".equals(content)) {
 
@@ -115,6 +121,8 @@ public class LiveOperateVdcp implements ILiveOperateFn {
 
 			}
 		} catch (Exception e) {
+			GolukDebugUtils.e("", "newlive-----LiveOperateVdcp-----CallBack_Ipc Exception:  " );
+			
 		}
 	}
 
