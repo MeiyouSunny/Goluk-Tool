@@ -26,12 +26,14 @@ public class UserloginBeanRequest extends GolukFastjsonRequest<UserResult> {
 		return "getLogin";
 	}
 
-	public void get(String phone,String pwd) {
+	public void get(String phone,String pwd,String uid) {
 		HashMap<String, String> headers = (HashMap<String, String>) getHeader();
 		headers.put("phone", phone);
 		headers.put("pwd", pwd);
+		headers.put("commuid", uid);
 		headers.put("tag", "android");
 		headers.put("mid", "" + Tapi.getMobileId());
 		get();
 	}
+	
 }

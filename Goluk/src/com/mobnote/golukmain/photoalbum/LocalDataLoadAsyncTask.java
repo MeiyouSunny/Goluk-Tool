@@ -42,7 +42,7 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 		files.addAll(FileInfoManagerUtils.getFileNames(mFilePath + videoPaths[1], "(.+?mp4)"));
 		files.addAll(FileInfoManagerUtils.getFileNames(mFilePath + videoPaths[2], "(.+?mp4)"));
 		files.addAll(FileInfoManagerUtils.getFileNames(mFilePath + videoPaths[4], "(.+?mp4)"));
-		
+
 		if (null == files || files.size() <= 0) {
 			return null;
 		}

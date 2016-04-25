@@ -7,6 +7,7 @@ import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventRefreshUserInfo;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.live.ILive;
+import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SettingImageView;
@@ -208,25 +209,25 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	 * 初始化用户信息
 	 */
 	public void initData() {
-		String info = mApplication.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
+		UserInfo info = mApplication.getMyInfo();
 		try {
-			JSONObject json = new JSONObject(info);
+			if(info != null){
+				head = info.head;
+				name = info.nickname;
+				sign = info.desc;
+				sex = info.sex;
+				customavatar = info.customavatar;
+				if (customavatar != null && !"".equals(customavatar)) {
+					GlideUtils.loadNetHead(this, mImageHead, customavatar, R.drawable.editor_head_feault7);
+				} else {
+					showHead(mImageHead, head);
+				}
 
-			GolukDebugUtils.i("lily", "====json====" + json);
-			head = json.getString("head");
-			name = json.getString("nickname");
-			sign = json.getString("desc");
-			sex = json.getString("sex");
-			customavatar = json.getString("customavatar");
-			if (customavatar != null && !"".equals(customavatar)) {
-				GlideUtils.loadNetHead(this, mImageHead, customavatar, R.drawable.editor_head_feault7);
-			} else {
-				showHead(mImageHead, head);
+				mTextName.setText(name);
+
+				mTextSign.setText(sign);
 			}
-
-			mTextName.setText(name);
-
-			mTextSign.setText(sign);
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();

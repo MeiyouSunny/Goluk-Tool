@@ -915,9 +915,14 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		setFullScreen(false, false);
 	}
 
-	private void auto_land() {
+	private void auto_land(boolean isLeft) {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		if (isLeft) {
+			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		} else {
+			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+		}
+		
 		setFullScreen(false, true);
 	}
 
@@ -928,6 +933,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		mClickLand = false;
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		
 		setFullScreen(false, true);
 	}
 
@@ -968,7 +974,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			}
 		} else {
 			if (!mIsLand) {
-				auto_land();
+				auto_land(true);
 				mIsLand = true;
 				mClick = false;
 			}
@@ -993,5 +999,25 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 				mClick = false;
 			}
 		}
+	}
+
+	@Override
+	public void landscape_left() {
+		if (mClick) {
+			if (!mIsLand && !mClickPort) {
+				return;
+			} else {
+				mClickLand = true;
+				mClick = false;
+				mIsLand = true;
+			}
+		} else {
+			if (!mIsLand) {
+				auto_land(false);
+				mIsLand = true;
+				mClick = false;
+			}
+		}
+		
 	}
 }

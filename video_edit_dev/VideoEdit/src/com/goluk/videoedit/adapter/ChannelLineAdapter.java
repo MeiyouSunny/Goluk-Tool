@@ -1,17 +1,16 @@
 package com.goluk.videoedit.adapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnGenericMotionListener;
 import android.view.View.OnLongClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -19,10 +18,12 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.npnt.ae.AfterEffect;
 import cn.npnt.ae.model.Chunk;
 import cn.npnt.ae.model.ChunkThumbs;
 import cn.npnt.ae.model.VideoThumb;
 
+import com.goluk.videoedit.AfterEffectActivity;
 import com.goluk.videoedit.R;
 import com.goluk.videoedit.bean.ChunkBean;
 import com.goluk.videoedit.bean.DummyFooterBean;
@@ -35,10 +36,6 @@ import com.goluk.videoedit.utils.DeviceUtil;
 import com.goluk.videoedit.utils.VideoEditUtils;
 import com.makeramen.dragsortadapter.DragSortAdapter;
 import com.makeramen.dragsortadapter.NoForegroundShadowBuilder;
-import com.goluk.videoedit.AfterEffectActivity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 
@@ -54,12 +51,20 @@ public class ChannelLineAdapter extends
 	private Context mContext;
 	private int mFooterWidth;
 	RecyclerView mRecyclerView;
+
+	private AfterEffectActivity mAeActivity;
+
 	int mEditIndex = -1;
+	AfterEffect mAfterEffect;
 
 	String mVideoPath = VideoEditConstant.VIDEO_PATH_1;
 
 	public int getEditIndex() {
 		return mEditIndex;
+	}
+
+	public void setEditIndex(int index) {
+		mEditIndex = index;
 	}
 
 	public static final String TAG = ChannelLineAdapter.class.getSimpleName();
@@ -69,21 +74,23 @@ public class ChannelLineAdapter extends
 	}
 
 	public ChannelLineAdapter(Context cxt,
-			RecyclerView recyclerView, List<ProjectItemBean> dataList) {
+			RecyclerView recyclerView, List<ProjectItemBean> dataList, AfterEffect ae) {
 		super(recyclerView);
 		this.mDataList = dataList;
 		this.mContext = cxt;
+		this.mAeActivity = (AfterEffectActivity) cxt;
 		mRecyclerView = recyclerView;
+		mAfterEffect = ae;
 		mFooterWidth = DeviceUtil.getScreenWidthSize(mContext) - DeviceUtil.dp2px(mContext, 65);
 	}
 
-	public void addChunk() {
+	public void addChunk(String path) {
 		if(mDataList == null) {
 			mDataList = new ArrayList<ProjectItemBean>();
 		}
 
 		Toast.makeText(mContext, "add more", Toast.LENGTH_SHORT).show();
-		((AfterEffectActivity)mContext).addChunk(mVideoPath);
+		((AfterEffectActivity)mContext).addChunk(path);
 		notifyDataSetChanged();
 	}
 
@@ -207,29 +214,52 @@ public class ChannelLineAdapter extends
 				final ChunkBean chunkBean = (ChunkBean)bean;
 				Chunk chunk = chunkBean.chunk;
 				if(null != chunk) {
-					ChunkThumbs chunkThumbList = chunk.getChunkThumbs();
-					List<VideoThumb> videoThumbList = chunkThumbList.getThumbs();
+					ChunkThumbs chunkThumbs = chunk.getChunkThumbs();
+					List<VideoThumb> videoThumbList = chunkThumbs.getThumbs();
+
+//					float begin = chunkThumbs.getBegin();
+					float delta = chunkThumbs.getLength();
+//					float delta = end;
+
+					int bitmapCount = 0;
+					if(delta > 0 && delta <= 1) {
+						bitmapCount = 1;
+					}
+
+					if(delta > 1) {
+						if(delta - (int)delta > 0) {
+							bitmapCount = (int)delta + 1;
+						} else {
+							bitmapCount = (int)delta;
+						}
+					}
+
 					if(null != videoThumbList && videoThumbList.size() > 0) {
-						int count = videoThumbList.size();
-						for(int i = 0; i < count; i++) {
+//						int count = videoThumbList.size();
+						for(int i = 0; i < bitmapCount; i++) {
 							VideoThumb videoThumb = videoThumbList.get(i);
 							ImageView imageView = new ImageView(mContext);
 							// Last, to calc bitmap width
-							if(i == count - 1) {
-								float delta = chunk.getDuration()
-										- (count - 1) * VideoEditConstant.BITMAP_TIME_INTERVAL;
-								float widthRatio = delta / VideoEditConstant.BITMAP_TIME_INTERVAL;
+							if(i == bitmapCount - 1) {
+//								float lastD = chunk.getDuration()
+//										- (count - 1) * VideoEditConstant.BITMAP_TIME_INTERVAL;
+								float lastD = delta - (int)delta;
+//								float widthRatio = lastD / VideoEditConstant.BITMAP_TIME_INTERVAL;
 								LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-									DeviceUtil.dp2px(mContext, (int)(45 * widthRatio)),
+									/*(int)(DeviceUtil.dp2px(mContext, VideoEditConstant.BITMAP_COMMON_WIDTH) * lastD)*/
+									(int)(chunkThumbs.getThumbWidth() * lastD),
 									LayoutParams.MATCH_PARENT);
+								Log.d("CK1", "$$$$$$$$$$$$$$$: " + chunkThumbs.getThumbWidth() + ", " +
+										(int)(chunkThumbs.getThumbWidth() * lastD));
 								imageView.setLayoutParams(params);
 							} else {
 								LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-										DeviceUtil.dp2px(mContext, VideoEditConstant.BITMAP_COMMON_WIDTH),
+//										DeviceUtil.dp2px(mContext, VideoEditConstant.BITMAP_COMMON_WIDTH),
+										chunkThumbs.getThumbWidth(),
 										LayoutParams.MATCH_PARENT);
 								imageView.setLayoutParams(params);
 							}
-							imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+							imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 							imageView.setImageBitmap(videoThumb.getBitmap());
 							viewHolder.nChunkContainerLL.addView(imageView);
 						}
@@ -241,16 +271,20 @@ public class ChannelLineAdapter extends
 				viewHolder.nChunkContainerLL.postInvalidate();
 				if(chunkBean.isEditState) {
 					// Set mask layout params
-					FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-							VideoEditUtils.ChunkTime2Width(chunk.getDuration(),
-							DeviceUtil.dp2px(mContext, VideoEditConstant.BITMAP_COMMON_WIDTH)),
+					if(null != chunk) {
+						float begin = chunk.getChunkThumbs().getBegin();
+						float end = chunk.getChunkThumbs().getLength();
+
+						FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+//								VideoEditUtils.ChunkTime2Width(chunk.getDuration(),
+//								DeviceUtil.dp2px(mContext, VideoEditConstant.BITMAP_COMMON_WIDTH)),
+							(int)(end * chunk.getChunkThumbs().getThumbWidth()),
 							FrameLayout.LayoutParams.MATCH_PARENT);
-//					FrameLayout.LayoutParams params = 
-//							new FrameLayout.LayoutParams(viewHolder.nChunkContainerLL.getMeasuredWidth(), FrameLayout.LayoutParams.MATCH_PARENT);
-							//(android.widget.FrameLayout.LayoutParams) viewHolder.nChunkContainerLL.getLayoutParams();
-					viewHolder.nChunkMaskLL.setLayoutParams(params);
-					viewHolder.nChunkMaskLL.setVisibility(View.VISIBLE);
-					viewHolder.nChunkDurationTV.setVisibility(View.VISIBLE);
+
+						viewHolder.nChunkMaskLL.setLayoutParams(params);
+						viewHolder.nChunkMaskLL.setVisibility(View.VISIBLE);
+						viewHolder.nChunkDurationTV.setVisibility(View.VISIBLE);
+					}
 				} else {
 					viewHolder.nChunkMaskLL.setVisibility(View.GONE);
 					viewHolder.nChunkDurationTV.setVisibility(View.GONE);
@@ -267,11 +301,13 @@ public class ChannelLineAdapter extends
 							mEditIndex = position;
 							chunkBean.isEditState = true;
 							notifyItemChanged(mEditIndex);
+							mAeActivity.showEditController();
 						} else {
 							if(mEditIndex == position) { // tap same item to cancel selection
 								chunkBean.isEditState = false;
 								mEditIndex = -1;
 								notifyItemChanged(position);
+								mAeActivity.showMusicController();
 							} else {
 								ProjectItemBean bean = mDataList.get(mEditIndex);
 								if(bean instanceof ChunkBean) {
@@ -283,6 +319,7 @@ public class ChannelLineAdapter extends
 
 								notifyItemChanged(position);
 								mEditIndex = position;
+								mAeActivity.showEditController();
 							}
 						}
 					}
@@ -321,7 +358,10 @@ public class ChannelLineAdapter extends
 			viewHolder.nAddChunkIV.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					addChunk();
+
+					//addChunk();
+					mAeActivity.goToChooseVideo();
+
 				}
 			});
 
@@ -354,6 +394,7 @@ public class ChannelLineAdapter extends
 
 	private void swapChunk(int fromPosition, int toPosition) {
 		mDataList.add(toPosition, mDataList.remove(fromPosition));
+		mAfterEffect.editExchangeChunk(VideoEditUtils.mapI2CIndex(toPosition), VideoEditUtils.mapI2CIndex(fromPosition));
 		// Continue process transition
 		mDataList.add(toPosition + 1, mDataList.remove(fromPosition + 1));
 	}

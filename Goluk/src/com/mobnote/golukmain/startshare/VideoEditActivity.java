@@ -853,7 +853,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 		UserInfo info = mApp.getMyInfo();
 		if (null != info) {
-			describe = info.nickName + this.getString(R.string.str_colon) + describe;
+			describe = info.nickname + this.getString(R.string.str_colon) + describe;
 		}
 
 		return describe;

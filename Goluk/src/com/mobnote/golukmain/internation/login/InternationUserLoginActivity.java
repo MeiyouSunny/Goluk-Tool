@@ -442,7 +442,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 							GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
 						} else {
 							mApplication.mLoginManage.setUserLoginInterface(this);
-							mApplication.mLoginManage.login(phone, pwd);
+							mApplication.mLoginManage.login(phone, pwd,"");
 //							if (b) {
 								mApplication.loginStatus = 0;
 								UserUtils.hideSoftMethod(this);
@@ -701,47 +701,47 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 		return packageName;
 	}
 
-	public void pageNotifyCallBack(int success, Object param1, Object param2) {
-		GolukDebugUtils.e("","facebooklogin success = " + success + "data = " + param2.toString());
-
-		JSONObject rootObj;
-		try {
-			rootObj = new JSONObject((String) param2);
-
-			// 登录成功后，存储用户的登录信息
-			mSharedPreferences = mApplication.getContext().getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
-			mEditor = mSharedPreferences.edit();
-			mEditor.putBoolean("FirstLogin", false);
-			// 提交
-			mEditor.commit();
-
-			mSharedPreferences = mApplication.getContext().getSharedPreferences("setup", Context.MODE_PRIVATE);
-			mEditor = mSharedPreferences.edit();
-			mEditor.putString("uid", rootObj.getJSONObject("data").getString("uid").toString());
-			mEditor.commit();
-			GolukApplication.getInstance().mCurrentUId = rootObj.getJSONObject("data").getString("uid").toString();
-			mApplication.isUserLoginSucess = true;
-			mApplication.loginoutStatus = false;
-
-			mEditTextPhoneNumber.setEnabled(true);
-			mEditTextPwd.setEnabled(true);
-			mTextViewRegist.setEnabled(true);
-			mTextViewForgetPwd.setEnabled(true);
-			mBtnLogin.setEnabled(true);
-			mApplication.mUser.timerCancel();
-			mApplication.autoLoginStatus = 2;
-			Intent it = new Intent();
-			if ("profit".equals(justLogin)) {
-				it.setClass(InternationUserLoginActivity.this, MyProfitActivity.class);
-				startActivity(it);
-			} else {
-				setResult(Activity.RESULT_OK, it);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-		this.finish();
-	}
+//	public void pageNotifyCallBack(int success, Object param1, Object param2) {
+//		GolukDebugUtils.e("","facebooklogin success = " + success + "data = " + param2.toString());
+//
+//		JSONObject rootObj;
+//		try {
+//			rootObj = new JSONObject((String) param2);
+//
+//			// 登录成功后，存储用户的登录信息
+//			mSharedPreferences = mApplication.getContext().getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+//			mEditor = mSharedPreferences.edit();
+//			mEditor.putBoolean("FirstLogin", false);
+//			// 提交
+//			mEditor.commit();
+//
+//			mSharedPreferences = mApplication.getContext().getSharedPreferences("setup", Context.MODE_PRIVATE);
+//			mEditor = mSharedPreferences.edit();
+//			mEditor.putString("uid", rootObj.getJSONObject("data").getString("uid").toString());
+//			mEditor.commit();
+//			GolukApplication.getInstance().mCurrentUId = rootObj.getJSONObject("data").getString("uid").toString();
+//			mApplication.isUserLoginSucess = true;
+//			mApplication.loginoutStatus = false;
+//
+//			mEditTextPhoneNumber.setEnabled(true);
+//			mEditTextPwd.setEnabled(true);
+//			mTextViewRegist.setEnabled(true);
+//			mTextViewForgetPwd.setEnabled(true);
+//			mBtnLogin.setEnabled(true);
+//			mApplication.mUser.timerCancel();
+//			mApplication.autoLoginStatus = 2;
+//			Intent it = new Intent();
+//			if ("profit".equals(justLogin)) {
+//				it.setClass(InternationUserLoginActivity.this, MyProfitActivity.class);
+//				startActivity(it);
+//			} else {
+//				setResult(Activity.RESULT_OK, it);
+//			}
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//
+//		this.finish();
+//	}
 
 }

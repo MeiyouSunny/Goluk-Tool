@@ -5,7 +5,15 @@ import java.util.TimerTask;
 
 import org.json.JSONObject;
 
+import com.alibaba.fastjson.JSON;
 import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.userlogin.UserData;
+import com.mobnote.golukmain.userlogin.UserResult;
+import com.mobnote.golukmain.userlogin.UserloginBeanRequest;
+import com.mobnote.util.GolukConfig;
+import com.mobnote.util.SharedPrefUtil;
+import com.sina.weibo.sdk.utils.MD5;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -22,7 +30,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  *
  */
 @SuppressLint("HandlerLeak")
-public class User {
+public class User implements IRequestResultListener{
 	
 	/**记录登录状态**/
 	public SharedPreferences mPreferencesAuto ;
@@ -39,9 +47,12 @@ public class User {
 	/**APP退出后不再进行自动登录**/
 	public boolean mForbidTimer = false;
 	
+	private UserloginBeanRequest userloginBean = null;
+	
 	public User(GolukApplication mApp) {
 		this.mApp = mApp;
 		mContext = mApp.getApplicationContext();
+		userloginBean = new UserloginBeanRequest(IPageNotifyFn.PageType_AutoLogin, this);
 		mForbidTimer = false;
 		
 		//初始化Handler
@@ -77,15 +88,20 @@ public class User {
 				//是第一次登录
 				return;
 			}else{//不是第一次登录
-				//{tag:”android/ios/pad/pc”}
-				String autoLogin = "{\"tag\":\"android\"}";
-				GolukDebugUtils.i("setauto", "------自动登录-------");
-				boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_AutoLogin, autoLogin);
-				if(b){
-					StatusChange(1);//自动登录中
-					GolukDebugUtils.i("setauto", "------自动登录-------"+b+"------自动登录的状态值-----"+mApp.autoLoginStatus);
-				}else{
+				String userinfo = SharedPrefUtil.getUserPwd(); 
+				GolukDebugUtils.i("lily", "-----initAtuoLogin --------- userinfo " + userinfo);
+				if(userinfo == null || "".equals(userinfo)){
 					StatusChange(3);//自动登录失败
+				}else{
+					com.alibaba.fastjson.JSONObject user = com.alibaba.fastjson.JSONObject.parseObject(userinfo);
+					String pwd = user.getString("pwd");
+					if(pwd == null || "".equals(pwd)){
+						pwd = GolukConfig.OTHER_PASSWORD;
+					}
+					GolukDebugUtils.i("zh", "zh-----initAtuoLogin --------- userinfo " + userinfo + "pwd = " + pwd);
+					userloginBean.get(user.getString("phone"), MD5.hexdigest(pwd),user.getString("uid"));
+					
+					StatusChange(1);//自动登录中
 				}
 			}
 		}
@@ -100,81 +116,6 @@ public class User {
 		}
 	}
 	
-	/**
-	 * 自动登录回调
-	 * 
-	 */
-	public void initAutoLoginCallback(int success,Object outTime,Object obj){
-		GolukDebugUtils.e("","---------------initAutoLoginCallback--------------");
-		if (mForbidTimer) {
-			return;
-		}
-		timerCancel();
-		int codeOut = (Integer) outTime;
-		if (1 == success) {
-			try {
-				String data = (String) obj;
-				JSONObject json = new JSONObject(data);
-				int code = Integer.valueOf(json.getString("code"));
-				GolukDebugUtils.e("", data);
-				GolukDebugUtils.i("lily", "----User-----" + data);
-				switch (code) {
-				case 200:
-					// 自动登录成功无提示
-					// console.toast("自动登录成功", mContext);
-					GolukDebugUtils.i("lily", "--------User-----自动登录个人中心页变化--------" + mApp.autoLoginStatus);
-					StatusChange(2);// 自动登录成功
-					GolukDebugUtils.i("lily", "----ok---" + mApp.autoLoginStatus);
-					mApp.loginoutStatus = false;
-					mApp.isUserLoginSucess = true;
-					mApp.showContinuteLive();
-					timerCancel();
-					break;
-				// 自动登录的一切异常都不进行提示
-				case 500:
-					timerTask();
-					StatusChange(3);// 自动登录失败
-					// 服务端异常
-					break;
-				case 405:
-					// 用户未注册
-					StatusChange(3);// 自动登录失败
-					break;
-				case 402:
-					// 登录密码错误
-					StatusChange(5);
-					break;
-				default:
-					StatusChange(3);// 自动登录失败
-					break;
-				}
-			} catch (Exception e) {
-				StatusChange(3);// 自动登录失败
-				e.printStackTrace();
-			}
-		} else {
-			// 网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时，5分钟后继续自动登录重试
-			GolukDebugUtils.i("lily", "-----自动登录网络链接超时-----" + codeOut);
-			switch (codeOut) {
-			case 1:// 没有网络
-				timerTask();
-				StatusChange(4);// 自动登录失败
-				break;
-			case 2:// 服务端错误
-				timerTask();
-				StatusChange(4);// 自动登录失败
-				break;
-			case 3:// 网络链接超时
-				timerTask();
-				StatusChange(4);// 自动登录超时
-				break;
-			default:
-				StatusChange(3);// 自动登录失败
-				break;
-			}
-
-		}
-}
 	
 	/**
 	 * 设置网络5分钟自动重试机制的定时器
@@ -203,5 +144,55 @@ public class User {
 	public void exitApp(){
 		mForbidTimer = true;
 		timerCancel();
+	}
+	
+	@Override
+	public void onLoadComplete(int requestType, Object result) {
+		if(IPageNotifyFn.PageType_AutoLogin == requestType){
+			GolukDebugUtils.e("","---------------initAutoLoginCallback--------------");
+			if (mForbidTimer) {
+				return;
+			}
+			timerCancel();
+			try {
+				UserResult userresult = (UserResult) result;
+				int code = Integer.parseInt(userresult.code);
+				GolukDebugUtils.i("lily", "----User-----" + com.alibaba.fastjson.JSONObject.toJSONString(userresult));
+				switch (code) {
+				case 200:
+						// 自动登录成功无提示
+						// console.toast("自动登录成功", mContext);
+						GolukDebugUtils.i("lily", "--------User-----自动登录个人中心页变化--------" + mApp.autoLoginStatus);
+						StatusChange(2);// 自动登录成功
+						GolukDebugUtils.i("lily", "----ok---" + mApp.autoLoginStatus);
+						mApp.loginoutStatus = false;
+						mApp.isUserLoginSucess = true;
+						mApp.showContinuteLive();
+						mApp.parseLoginData(userresult.data);
+						SharedPrefUtil.saveUserInfo(com.alibaba.fastjson.JSONObject.toJSONString(userresult.data));
+						break;
+					// 自动登录的一切异常都不进行提示
+				case 500:
+						timerTask();
+						StatusChange(3);// 自动登录失败
+						// 服务端异常
+						break;
+				case 405:
+						// 用户未注册
+						StatusChange(3);// 自动登录失败
+						break;
+				case 402:
+						// 登录密码错误
+						StatusChange(5);
+						break;
+				default:
+						StatusChange(3);// 自动登录失败
+						break;
+					}
+			} catch (Exception e) {
+					StatusChange(3);// 自动登录失败
+					e.printStackTrace();
+			}
+		}
 	}
 }

@@ -136,7 +136,7 @@ public class ClickNewestListener implements OnClickListener {
 		}
 
 		user.lon = mVideoSquareInfo.mVideoEntity.livevideodata.lon;
-		user.nickName = mVideoSquareInfo.mUserEntity.nickname;
+		user.nickname = mVideoSquareInfo.mUserEntity.nickname;
 		user.persons = mVideoSquareInfo.mVideoEntity.clicknumber;
 		user.picurl = mVideoSquareInfo.mVideoEntity.picture;
 		user.sex = mVideoSquareInfo.mUserEntity.sex;
