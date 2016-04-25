@@ -41,6 +41,7 @@ import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
@@ -48,7 +49,7 @@ import com.mobnote.util.JsonUtil;
 
 import de.greenrobot.event.EventBus;
 
-public class TSettingsActivity extends BaseActivity implements OnClickListener,IPCManagerFn {
+public class TSettingsActivity extends BaseActivity implements OnClickListener,IPCManagerFn,ForbidBack {
 
 	/** 声音录制开关 **/
 	private final int STATE_CLOSE = 0;
@@ -1232,6 +1233,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 	private void showLoading() {
 		if (!mCustomProgressDialog.isShowing()) {
 			mCustomProgressDialog.show();
+			mCustomProgressDialog.setListener(this);
 		}
 	}
 
@@ -1836,6 +1838,13 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 
 		}
 		return "";
+	}
+
+	@Override
+	public void forbidBackKey(int backKey) {
+		if(1 == backKey) {
+			exit();
+		}
 	}
 	
 }
