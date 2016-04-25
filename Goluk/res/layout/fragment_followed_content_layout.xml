@@ -5,17 +5,34 @@
     android:background="#ffffff"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/tv_follow_fragment_title"
-        android:background="#f5242629"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:singleLine="true"
-        android:text="@string/str_follow"
-        android:textColor="@color/white"
-        android:textSize="18sp" />
+        android:background="#f5242629" >
+
+        <TextView
+            android:id="@+id/tv_follow_fragment_title"
+            android:layout_width="wrap_content"
+            android:layout_height="46dp"
+            android:background="#f5242629"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:singleLine="true"
+            android:text="@string/str_follow"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+        <ImageView
+            android:id="@+id/iv_followed_search"
+            android:layout_width="36.6dp"
+            android:layout_height="36.6dp"
+            android:scaleType="centerCrop"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/icon_search"
+            android:contentDescription="@string/imgdes" />
+    </RelativeLayout>
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/plv_follow_fragment"
@@ -80,12 +97,12 @@
                 android:id="@+id/btn_fragment_followed_content_to_login"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:background="@drawable/follow_button_border_goto_login"
+                android:gravity="center"
+                android:singleLine="true"
                 android:text="@string/str_followed_now_login"
                 android:textColor="#ffffff"
-                android:singleLine="true"
-                android:textSize="16sp"
-                android:background="@drawable/follow_button_border_goto_login"
-                android:gravity="center" />
+                android:textSize="16sp" />
         </LinearLayout>
     </RelativeLayout>
 

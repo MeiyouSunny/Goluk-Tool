@@ -207,11 +207,6 @@
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.mobnote.golukmain.carrecorder.settings.TSettingsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
-        </activity>
-        <activity
             android:name="com.mobnote.golukmain.carrecorder.settings.CarrecoderKitSettingActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
@@ -561,6 +556,11 @@
         </activity>
         <activity
             android:name="com.mobnote.golukmain.VideoSyncSettingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.mobnote.golukmain.search.SearchUserAcivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>

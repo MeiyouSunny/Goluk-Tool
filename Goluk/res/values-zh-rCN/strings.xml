@@ -1008,6 +1008,7 @@
     <string name="str_um_share_dialog_txt">Share...</string>
     <string name="str_twitter_no_install">Need Install Twitter</string>
 
+    <string name="cancel">取消</string>
     <string name="str_reset_pwd_title">Retrieve password</string>
     <string name="ipc_check_zone_msg">Do you want to restart the recorder to use the new time zone?</string>
     <string name="umeng_socialize_text_whatsapp_key">Whatsapp</string>

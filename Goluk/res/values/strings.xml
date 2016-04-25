@@ -1003,6 +1003,7 @@
     <string name="str_upgrade_check_sdcard_t1">Upgrade file transfer failed</string>
     <string name="str_settings_restart_ipc">Modify successful, restart the recorder after the entry into force.</string>
 
+    <string name="cancel">cancel</string>
     <!-- guide -->
     <string name="str_guide_2_top_text">Driving Record</string>
     <string name="str_guide_3_top_text">Share Wonderful</string>
