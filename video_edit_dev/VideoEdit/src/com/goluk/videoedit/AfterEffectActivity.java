@@ -1,12 +1,18 @@
 package com.goluk.videoedit;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.graphics.Typeface;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
@@ -295,6 +301,27 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 
 		mAfterEffect = new AfterEffect(this, mGLSurfaceView, this, width, height);
 		mProject = mAfterEffect.getProject();
+		InputStream istr = null;
+		try {
+			istr = getAssets().open("tailer.png");
+			Bitmap bitmap = BitmapFactory.decodeStream(istr);
+			Typeface font = Typeface.createFromAsset(this.getAssets(), "PingFang Regular.ttf");
+			Bitmap tailerBitmap = mAfterEffect.createTailer(bitmap, "crackerli", "2016-09-09", font);
+//			File file = new File("/sdcard/Movies/tailer.png");
+//			if (file.exists())
+//				file.delete();
+//			saveBitmapToPng(tailerBitmap, file);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (istr != null)
+				try {
+					istr.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		}
 
 		handler = new Handler() {
 			@Override
@@ -714,6 +741,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			break;
 		case R.id.action_layout_tail:
 //			mAfterEffect.setDateString("2016.04.15");
+//			mAfterEffect.setTailer(bitmap);
 			break;
 		case R.id.action_layout_music:
 			mAfterEffect.editBackgroundMusic(mMusicPath);
@@ -895,7 +923,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		handler.sendMessage(msg);
 	}
 
-	public void goToChooseVideo(){
+	public void goToChooseVideo() {
 		Intent videoChooseIntent = new Intent();
 		videoChooseIntent.setClass(this, VideoChooserActivity.class);
 		startActivityForResult(videoChooseIntent, 0);
