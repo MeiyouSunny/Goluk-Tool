@@ -727,8 +727,7 @@
                 android:id="@+id/ry_t_settings_adas_assistance"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color"
-                android:visibility="gone" >
+                android:background="@color/setting_white_color" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -830,7 +829,7 @@
                     android:background="@color/setting_line_color" />
             </RelativeLayout>
 
-            <!-- ADAS配置 -->
+            <!-- 前向距离预警配置 -->
 
             <RelativeLayout
                 android:id="@+id/ry_t_settings_adas_config"

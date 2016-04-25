@@ -21,18 +21,22 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 	private RelativeLayout mFirstLayout, mSecondLayout, mThirdLayout;
 	private TextView mFirstText, mSecondText, mThirdText;
 	private ImageButton mFirstBtn, mSecondBtn, mThirdBtn;
+	private TextView mWonderfulVideoTypeText;
 	public static final String TYPE = "type";
 	public static final String PARAM = "param";
 	public static final String TYPE_WONDERFUL_VIDEO_QUALITY = "wonderful_video_quality";
 	public static final String TYPE_TONE_VOLUME = "tone_volume";
 	public static final String TYPE_SHUTDOWN_TIME = "shutdown_time";
 	public static final String TYPE_LANGUAGE = "language";
+	public static final String TYPE_WONDERFUL_VIDEO_TYPE = "wonderful_video_type";
 	private TextView[] mTextViewList = null;
 	private String[] mWonderfulList, mVolumeList, mShutdownList, mLanguageList;
 	private String[] mVolumeValue, mWonderfulValue;
 	private ImageButton[] mImageList = null;
 	private String mCurrentItem = "";
 	private String mType = "";
+	/**精彩视频类型**/
+	private String[] mWonderfulVideoTypeList, mWonderfulVideoTypeValue;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,7 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 		mFirstBtn = (ImageButton) findViewById(R.id.ib_settings_first);
 		mSecondBtn = (ImageButton) findViewById(R.id.ib_settings_second);
 		mThirdBtn = (ImageButton) findViewById(R.id.ib_settings_third);
+		mWonderfulVideoTypeText = (TextView) findViewById(R.id.tv_settings_wonderful_video_type_hint_desc);
 
 		mFirstLayout.setOnClickListener(this);
 		mSecondLayout.setOnClickListener(this);
@@ -66,6 +71,9 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 		
 		mWonderfulValue = getResources().getStringArray(R.array.list_wonderful_video_quality_value);
 		mVolumeValue = getResources().getStringArray(R.array.list_tone_volume_value);
+		
+		mWonderfulVideoTypeList = getResources().getStringArray(R.array.list_wonderful_video_type);
+		mWonderfulVideoTypeValue = getResources().getStringArray(R.array.list_wonderful_video_type_value);
 	}
 
 	private void initData() {
@@ -102,8 +110,8 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 		} else if (id == R.id.rl_settings_third_item) {
 			this.mCurrentItem = getTypeList(0)[2];
 			setData2UI(getBtnList(), getTextList(), getTypeList(0));
-		} else {
 		}
+		GolukDebugUtils.e("", "------------SettingsItemActivity-----onClick-----mCurrentItem: "+mCurrentItem);
 	}
 	
 	// 遍历分辨率，区分码率，改变UI
@@ -123,14 +131,16 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 		String[] arrayList;
 		if (TYPE_WONDERFUL_VIDEO_QUALITY.equals(mType)) {
 			mThirdLayout.setVisibility(View.GONE);
+			mWonderfulVideoTypeText.setVisibility(View.GONE);
 			setTitle(this.getResources().getString(R.string.str_wonderful_video_quality_title));
-			if(0 == valueType) {
+			if (0 == valueType) {
 				arrayList = mWonderfulValue;
 			} else {
 				arrayList = mWonderfulList;
 			}
 		} else if (TYPE_TONE_VOLUME.equals(mType)) {
 			mThirdLayout.setVisibility(View.VISIBLE);
+			mWonderfulVideoTypeText.setVisibility(View.GONE);
 			setTitle(this.getResources().getString(R.string.str_settings_tone_title));
 			if (0 == valueType) {
 				arrayList = mVolumeValue;
@@ -139,19 +149,29 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 			}
 		} else if (TYPE_SHUTDOWN_TIME.equals(mType)) {
 			mThirdLayout.setVisibility(View.GONE);
+			mWonderfulVideoTypeText.setVisibility(View.GONE);
 			setTitle(this.getResources().getString(R.string.str_settings_shutdown_title));
 			if (0 == valueType) {
 				arrayList = new String[] { "10", "60" };
 			} else {
 				arrayList = mShutdownList;
 			}
-		} else {
+		} else if (TYPE_LANGUAGE.equals(mType)) {
 			mThirdLayout.setVisibility(View.GONE);
+			mWonderfulVideoTypeText.setVisibility(View.GONE);
 			setTitle(this.getResources().getString(R.string.str_settings_language_title));
 			if (0 == valueType) {
 				arrayList = new String[] { "0", "1" };
 			} else {
 				arrayList = mLanguageList;
+			}
+		} else {
+			mThirdLayout.setVisibility(View.GONE);
+			mWonderfulVideoTypeText.setVisibility(View.VISIBLE);
+			if (0 == valueType) {
+				arrayList = mWonderfulVideoTypeValue;
+			} else {
+				arrayList = mWonderfulVideoTypeList;
 			}
 		}
 		getTextList();
@@ -164,6 +184,8 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 		} else if (TYPE_TONE_VOLUME.equals(mType)) {
 			mTextViewList = new TextView[] { mFirstText, mSecondText, mThirdText };
 		} else if (TYPE_SHUTDOWN_TIME.equals(mType)) {
+			mTextViewList = new TextView[] { mFirstText, mSecondText };
+		} else if (TYPE_LANGUAGE.equals(mType)) {
 			mTextViewList = new TextView[] { mFirstText, mSecondText };
 		} else {
 			mTextViewList = new TextView[] { mFirstText, mSecondText };
@@ -178,6 +200,8 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 			mImageList = new ImageButton[] { mFirstBtn, mSecondBtn, mThirdBtn };
 		} else if (TYPE_SHUTDOWN_TIME.equals(mType)) {
 			mImageList = new ImageButton[] { mFirstBtn, mSecondBtn };
+		} else if (TYPE_LANGUAGE.equals(mType)) {
+			mImageList = new ImageButton[] { mFirstBtn, mSecondBtn };
 		} else {
 			mImageList = new ImageButton[] { mFirstBtn, mSecondBtn };
 		}
@@ -189,6 +213,8 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 			Intent intent = new Intent();
 			intent.putExtra("params", mCurrentItem);
 			setResult(Activity.RESULT_OK, intent);
+			GolukDebugUtils.e("", "------------SettingsItemActivity-----exit-----mCurrentItem: "+mCurrentItem);
+			
 		}
 		finish();
 	}

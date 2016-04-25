@@ -1048,6 +1048,28 @@ public class IPCControlManager implements IPCManagerFn {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_SetVideoTimeConf, str);
 	}
+	
+	/**
+	 * 获取视频水印
+	 * 
+	 * @return
+	 */
+	public boolean getVideoLogo() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetOSDConf, "");
+	}
+
+	/**
+	 * 设置视频水印
+	 * 
+	 * @return
+	 */
+	public boolean setVideoLogo(int logoVisible, int timeVisible) {
+		String str = JsonUtil.setVideoLogoJson(logoVisible, timeVisible);
+		GolukDebugUtils.e("", "----------------------setVideoLogo-------str:" +str);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetOSDConf, str);
+	}
 
 	@Override
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {

@@ -1491,5 +1491,23 @@ public class JsonUtil {
 			return "";
 		}
 	}
+	
+	/**
+	 * 视频水印
+	 * @param logoVisible
+	 * @return
+	 */
+	public static String setVideoLogoJson(int logoVisible, int timeVisible) {
+		try {
+			JSONObject rootObj = new JSONObject();
+			rootObj.put("logo_visible", logoVisible);
+			rootObj.put("time_visible", 0);
+
+			return rootObj.toString();
+		} catch (Exception e) {
+
+		}
+		return "";
+	}
 
 }
