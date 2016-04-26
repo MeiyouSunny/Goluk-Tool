@@ -2,15 +2,22 @@ package com.mobnote.golukmain;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.userlogin.UpHeadData;
+import com.mobnote.golukmain.userlogin.UpHeadResult;
+import com.mobnote.golukmain.userlogin.UpdUserHeadBeanRequest;
+import com.mobnote.golukmain.userlogin.UploadUtil;
 import com.mobnote.util.ClipImageView;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SettingImageView;
@@ -24,12 +31,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class ImageClipActivity extends BaseActivity implements OnClickListener, IPageNotifyFn {
+public class ImageClipActivity extends BaseActivity implements OnClickListener, IPageNotifyFn,IRequestResultListener{
 
 	private ClipImageView imageView;
 
@@ -50,6 +59,14 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 
 	private String cachePath = "";
 	
+	private Handler mHandler = null;
+	
+	private  final static int UPLOAD_HEAD_PIC = 9000;
+	
+	private UpdUserHeadBeanRequest updUserHeadBeanRequest = null;
+	
+	private String urlhead = null;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +80,8 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 		saveHead = (Button) findViewById(R.id.saveBtn);
 		cancelBtn = (Button) findViewById(R.id.cancelBtn);
 		imageView = (ClipImageView) findViewById(R.id.src_pic);
+		
+		updUserHeadBeanRequest = new UpdUserHeadBeanRequest(IPageNotifyFn.PageType_ModifyHeadPic, this);
 
 		try {
 			String uriStr = getIntent().getStringExtra("imageuri");
@@ -94,10 +113,64 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		 mHandler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				if(msg.what == UPLOAD_HEAD_PIC){
+					
+					try {
+						JSONObject result = new JSONObject(msg.obj.toString());
+						Boolean suc = result.getBoolean("success");
+
+						if (suc) {
+							JSONObject data = result.getJSONObject("data");
+							String rst = data.getString("result");
+							// 图片上传成功
+							if ("0".equals(rst)) {
+								if (cachePath != null && !"".equals(cachePath)) {
+									File file = new File(cachePath);
+									if (file.exists()) {
+										file.delete();
+									}
+									cachePath = "";
+								}
+
+								urlhead = data.getString("url");
+								updUserHeadBeanRequest.get(GolukApplication.getInstance().getMyInfo().uid, GolukApplication.getInstance().getMyInfo().phone, "2", urlhead, "");
+								
+							} else {
+								GolukUtils.showToast(ImageClipActivity.this,
+										ImageClipActivity.this.getResources().getString(R.string.str_save_photo_fail));
+							}
+
+						} else {
+							isSave = true;
+							
+							if (mCustomProgressDialog.isShowing()) {
+								mCustomProgressDialog.close();
+							}
+							GolukUtils.showToast(ImageClipActivity.this,
+									ImageClipActivity.this.getResources().getString(R.string.str_save_photo_fail));
+						}
+					} catch (JSONException e) {
+						isSave = true;
+						
+						if (mCustomProgressDialog.isShowing()) {
+							mCustomProgressDialog.close();
+						}
+						GolukUtils.showToast(ImageClipActivity.this,
+								ImageClipActivity.this.getResources().getString(R.string.str_save_photo_fail));
+						e.printStackTrace();
+					}
+				}
+			}
+		 };
 
 		initListener();
 
 	}
+	
 
 	/*
 	 * 旋转图片
@@ -140,22 +213,21 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 				try {
 					
 					String request = this.saveBitmap(SettingImageView.toRoundBitmap(bitmap));
-					if (request != null) {
-						boolean flog = this.uploadImageHead(request);
-						isSave = true;
-						if(flog){
-							if (mCustomProgressDialog != null) {
-								mCustomProgressDialog.show();
-							}
-							
-						} else {
-							GolukUtils.showToast(ImageClipActivity.this,
-									this.getResources().getString(R.string.str_network_error));
-							return;
-						}
-						
-						
+//					boolean flog = this.uploadImageHead(request);
+					isSave = true;
+//					if(flog){
+					if (mCustomProgressDialog != null) {
+							mCustomProgressDialog.show();
 					}
+							
+//					} 
+//					else {
+//						GolukUtils.showToast(ImageClipActivity.this,
+//								this.getResources().getString(R.string.str_network_error));
+//						return;
+//					}
+						
+						
 				} catch (IOException e) {
 					isSave = true;
 					e.printStackTrace();
@@ -219,11 +291,38 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 			md5key = GolukUtils.compute32(bb);
 			baos.writeTo(out);
 			requestStr = new JSONObject();
-			requestStr.put("PicMD5", md5key);
+			requestStr.put("md5", md5key);
 			requestStr.put("PicPath", FileUtils.javaToLibPath(cachePath));
 			requestStr.put("channel", "2");
+			
+			final Map<String, File> files = new HashMap<String, File>();
+			File file = new File(cachePath);
+			files.put("head", file);
+			
+			final Map<String, String> params = new HashMap<String, String>();
+			params.put("md5", GolukUtils.getFileMD5(file));
+			
 
-		} catch (FileNotFoundException e) {
+			new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					try {
+						String result = UploadUtil.post("http://server.goluk.cn/fileService/HeadUploadServlet", params, files);
+						Message message = new Message();
+						message.obj = result;
+						message.what = UPLOAD_HEAD_PIC;
+						mHandler.sendMessage(message);
+						System.out.println("ddd"+result);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+			}).start();
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			if (out != null) {
@@ -238,6 +337,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 		}
 
 	}
+	
 
 	/**
 	 * 把图片压缩到100k 之下
@@ -319,49 +419,48 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 				mCustomProgressDialog.close();
 			}
 			if (success == 1) {
-				try {
-					JSONObject result = new JSONObject(param2.toString());
-					Boolean suc = result.getBoolean("success");
-
-					if (suc) {
-						JSONObject data = result.getJSONObject("data");
-						String rst = data.getString("result");
-						// 图片上传成功
-						if ("0".equals(rst)) {
-							if (cachePath != null && !"".equals(cachePath)) {
-								File file = new File(cachePath);
-								if (file.exists()) {
-									file.delete();
-								}
-								cachePath = "";
-							}
-
-							String path = data.getString("customavatar");
-							GolukUtils.showToast(ImageClipActivity.this,
-									this.getResources().getString(R.string.str_save_photo_success));
-
-							Intent it = new Intent(ImageClipActivity.this, UserPersonalInfoActivity.class);
-							it.putExtra("imagepath", path);
-							this.setResult(RESULT_OK, it);
-							this.finish();
-						} else {
-							GolukUtils.showToast(ImageClipActivity.this,
-									this.getResources().getString(R.string.str_save_photo_fail));
-						}
-
-					} else {
-						GolukUtils.showToast(ImageClipActivity.this,
-								this.getResources().getString(R.string.str_save_photo_fail));
-					}
-				} catch (JSONException e) {
-					GolukUtils.showToast(ImageClipActivity.this,
-							this.getResources().getString(R.string.str_save_photo_fail));
-					e.printStackTrace();
-				}
+				
 			} else {
 
 				GolukUtils.showToast(ImageClipActivity.this,
 						this.getResources().getString(R.string.str_network_unavailable));
+			}
+		}
+	}
+
+
+	@Override
+	public void onLoadComplete(int requestType, Object result) {
+		if(IPageNotifyFn.PageType_ModifyHeadPic == requestType){
+			isSave = true;
+			
+			if (mCustomProgressDialog.isShowing()) {
+				mCustomProgressDialog.close();
+			}
+			
+			UpHeadResult headResult = (UpHeadResult) result;
+
+			if (headResult.success) {
+				UpHeadData data = headResult.data;
+				String rst = data.result;
+				// 图片上传成功
+				if ("0".equals(rst)) {
+					
+					GolukApplication.getInstance().setMyinfo("", "", "",urlhead);
+					GolukUtils.showToast(ImageClipActivity.this, this.getResources().getString(R.string.str_save_success));
+
+					GolukUtils.showToast(ImageClipActivity.this,ImageClipActivity.this.getResources().getString(R.string.str_save_photo_success));
+
+					Intent it = new Intent(ImageClipActivity.this, UserPersonalInfoActivity.class);
+					it.putExtra("imagepath", urlhead);
+					ImageClipActivity.this.setResult(RESULT_OK, it);
+					ImageClipActivity.this.finish();
+				} else {
+					GolukUtils.showToast(ImageClipActivity.this,this.getResources().getString(R.string.str_save_network_error));
+				}
+
+			} else {
+				GolukUtils.showToast(ImageClipActivity.this,this.getResources().getString(R.string.str_save_network_error));
 			}
 		}
 	}

@@ -1031,15 +1031,15 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				((PushSettingActivity) mContext).page_CallBack(type, success, param1, param2);
 			}
 			break;
-		case PageType_ModifyHeadPic:
-			if (mContext instanceof ImageClipActivity) {
-				((ImageClipActivity) mContext).pageNotifyCallBack(type, success, param1, param2);
-			}
-
-			if (mContext instanceof UserPersonalHeadActivity) {
-				((UserPersonalHeadActivity) mContext).pageNotifyCallBack(type, success, param1, param2);
-			}
-			break;
+//		case PageType_ModifyHeadPic:
+//			if (mContext instanceof ImageClipActivity) {
+//				((ImageClipActivity) mContext).pageNotifyCallBack(type, success, param1, param2);
+//			}
+//
+//			if (mContext instanceof UserPersonalHeadActivity) {
+//				((UserPersonalHeadActivity) mContext).pageNotifyCallBack(type, success, param1, param2);
+//			}
+//			break;
 		}
 	}
 
@@ -1816,7 +1816,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		return myInfo;
 	}
 	
-	public void setMyinfo(String name,String head,String desc){
+	public void setMyinfo(String name,String head,String desc,String url){
 		
 		String user = SharedPrefUtil.getUserInfo();
 
@@ -1834,6 +1834,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				if(desc !=null && !"".equals(desc)){
 					myInfo.desc = desc;
 				}
+				if(url !=null){
+					myInfo.customavatar = url;
+				}
+				
 				SharedPrefUtil.saveUserInfo(JSON.toJSONString(myInfo));
 			}
 			
