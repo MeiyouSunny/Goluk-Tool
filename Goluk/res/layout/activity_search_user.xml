@@ -70,4 +70,30 @@
 
     </RelativeLayout>
 
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/ptrlist_searchlist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="#ffffff"
+        android:divider="@drawable/solid"
+        android:dividerHeight="1dp" >
+    </com.handmark.pulltorefresh.library.PullToRefreshListView>
+    
+    <RelativeLayout
+        android:id="@+id/ry_searchlist_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" >
+
+        <TextView 
+            android:id="@+id/tv_searchlist_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/mine_qitadifang"
+            android:textColor="#bfbfbf"
+            android:textSize="16sp"
+            android:text="@string/msg_system_connect_error"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
 </LinearLayout>
