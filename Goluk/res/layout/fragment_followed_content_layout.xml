@@ -14,7 +14,6 @@
             android:id="@+id/tv_follow_fragment_title"
             android:layout_width="wrap_content"
             android:layout_height="46dp"
-            android:background="#f5242629"
             android:ellipsize="end"
             android:gravity="center"
             android:layout_centerInParent="true"

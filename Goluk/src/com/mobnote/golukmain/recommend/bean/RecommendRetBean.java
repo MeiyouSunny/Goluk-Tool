@@ -5,11 +5,11 @@ import com.alibaba.fastjson.annotation.JSONField;
 public class RecommendRetBean {
 
 	@JSONField(name = "code")
-	int code;
+	public int code;
 	@JSONField(name = "msg")
-	String msg;
+	public String msg;
 	@JSONField(name = "xieyi")
-	int xieyi;
+	public int xieyi;
 	@JSONField(name = "data")
-	RecommendDataBean data;
+	public RecommendDataBean data;
 }

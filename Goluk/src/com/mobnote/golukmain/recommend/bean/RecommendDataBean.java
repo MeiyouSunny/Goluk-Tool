@@ -8,7 +8,7 @@ import com.mobnote.golukmain.following.bean.FollowingItemBean;
 public class RecommendDataBean {
 
 	@JSONField(name = "userlist")
-	List<FollowingItemBean> userlist;
+	public List<FollowingItemBean> userlist;
 	@JSONField(name = "usercount")
-	int usercount;
+	public int usercount;
 }

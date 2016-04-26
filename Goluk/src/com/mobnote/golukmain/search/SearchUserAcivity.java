@@ -40,6 +40,8 @@ import com.mobnote.golukmain.following.FollowingListAdapter;
 import com.mobnote.golukmain.following.FollowingListRequest;
 import com.mobnote.golukmain.following.bean.FollowingItemBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.recommend.RecommendRequest;
+import com.mobnote.golukmain.recommend.bean.RecommendRetBean;
 import com.mobnote.golukmain.search.bean.SearchListBean;
 import com.mobnote.golukmain.search.bean.SearchRetBean;
 import com.mobnote.util.GolukUtils;
@@ -72,6 +74,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 	private CustomDialog mCustomDialog;
 
 	private String searchContent;
+	private boolean hasSearched;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +87,8 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 		setupView();
 
 		setup();
+
+		sendRecommendRequest();
 	}
 
 	private void setup() {
@@ -143,6 +148,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				// TODO Auto-generated method stub
 				if (actionId==EditorInfo.IME_ACTION_SEARCH){
+					hasSearched = true;
 					searchContent = v.getText().toString();
 					if(TextUtils.isEmpty(searchContent)){
 						Toast.makeText(SearchUserAcivity.this,getResources().getString(R.string.str_search_keywards_cannot_be_empty), Toast.LENGTH_SHORT).show();
@@ -198,6 +204,18 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 		}
 
 		mLoadingDialog = null;
+	}
+
+	private void sendRecommendRequest(){
+		RecommendRequest recommendRequest = new RecommendRequest(IPageNotifyFn.PageType_RecommendUser, this);
+		GolukApplication app = GolukApplication.getInstance();
+
+		if(null != app && app.isUserLoginSucess&&!TextUtils.isEmpty(app.mCurrentUId)) {
+			recommendRequest.get(PROTOCOL, app.mCurrentUId);
+		}else{
+			recommendRequest.get(PROTOCOL, null);
+		}
+
 	}
 
 	private void sendSearchUserRequest(String op,String searchContent) {
@@ -347,6 +365,31 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 				}
 			}
 			mCurMotion = REFRESH_NORMAL;
+		}else if(requestType == IPageNotifyFn.PageType_RecommendUser){
+			if(hasSearched){
+				return;
+			}
+			RecommendRetBean bean = (RecommendRetBean)result;
+
+			if(null == bean||null == bean.data) {
+				return;
+			}
+
+			mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
+
+			List<FollowingItemBean> followingBeanList = bean.data.userlist;
+
+			if(null == followingBeanList || followingBeanList.size() == 0) {
+				return;
+			}else{
+				mFollowingList.clear();
+				for(FollowingItemBean userBean:followingBeanList){
+					mFollowingList.add(new SearchListBean(3, userBean));
+				}
+				mFollowinglistPtrList.setAdapter(mFollowingListAdapter);
+			}
+			mCurMotion = REFRESH_NORMAL;
+
 		}else if(requestType == IPageNotifyFn.PageType_Follow) {//关注
 
 			FollowRetBean bean = (FollowRetBean)result;
