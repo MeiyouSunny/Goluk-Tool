@@ -94,10 +94,14 @@ public class NewUserCenterAdapter extends BaseAdapter {
 			viewHolder.mDescribeText.setText(videos.description);
 			viewHolder.mCommentCountText.setText(GolukUtils.getFormatNumber(videos.commentcount));
 			viewHolder.mLookCountText.setText(GolukUtils.getFormatNumber(videos.clickcount));
-			if (videos.isopen == 0) {
-				viewHolder.mLockImage.setVisibility(View.VISIBLE);
-			} else {
-				viewHolder.mLockImage.setVisibility(View.GONE);
+			if (mContext instanceof NewUserCenterActivity) {
+				if (((NewUserCenterActivity) mContext).testUser()) {
+					if (videos.isopen == 0) {
+						viewHolder.mLockImage.setVisibility(View.VISIBLE);
+					} else {
+						viewHolder.mLockImage.setVisibility(View.GONE);
+					}
+				}
 			}
 		}
 

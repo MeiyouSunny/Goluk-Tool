@@ -367,7 +367,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					startTrimVideo();
 					break;
 				case CLASSIC:
-					
+					start30TrimVideo();
 					break;
 				case STARTVIDEORECORD:
 					updateVideoRecordTime();
@@ -439,7 +439,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mNotconnected.setVisibility(View.GONE);
 			mConncetLayout.setVisibility(View.GONE);
 			mChangeBtn.setVisibility(View.VISIBLE);
-			if (mApp.isIpcLoginSuccess && !this.isT1()) {
+			if (mApp.isIpcLoginSuccess) {
 				liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon);
 			} else {
 				liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
@@ -1033,9 +1033,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					it.putExtra("isInfo", "back");
 					startActivity(it);
 				} else {
-					if (!this.isT1()) {
+//					if (!this.isT1()) {
 						toLive();
-					}
+//					}
 
 				}
 
@@ -1121,7 +1121,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private void toLive() {
 		
 		Intent intent;
-		if(GolukApplication.getInstance().isInteral()  == false){
+		if(GolukApplication.getInstance().isInteral()){
 			intent = new Intent(this, BaidumapLiveActivity.class);
 		}else{
 			intent = new Intent(this, GooglemapLiveActivity.class);
@@ -1255,11 +1255,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		mChangeBtn.setVisibility(View.VISIBLE);
 		mSettingBtn.setVisibility(View.VISIBLE);
 		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
-		if (!isT1()) {
+//		if (!isT1()) {
 			liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon);
-		} else {
-			liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
-		}
+//		} else {
+//			liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+//		}
 
 	}
 
@@ -1393,6 +1393,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 */
 	private void startTrimVideo() {
 		if (null == m8sTimer) {
+			m8sBtn.setText("");
 			mShootTime = 0;
 			m8sTimer = new Timer();
 			TimerTask task = new TimerTask() {
@@ -1455,7 +1456,213 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * 30s精彩抢拍
 	 */
 	private void start30TrimVideo(){
-		
+		if (null == m8sTimer) {
+			mShootTime = 0;
+			m8sTimer = new Timer();
+			TimerTask task = new TimerTask() {
+				public void run() {
+					mShootTime++;
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							switch (mShootTime) {
+							case 1:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("30");
+								break;
+							case 2:
+								break;
+							case 3:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("29");
+								break;
+							case 4:
+								break;
+							case 5:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("28");
+								break;
+							case 6:
+								break;
+							case 7:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("27");
+								break;
+							case 8:
+								break;
+							case 9:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("26");
+								break;
+							case 10:
+								break;
+							case 11:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("25");
+								break;
+							case 13:
+								break;
+							case 14:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("24");
+								break;
+							case 15:
+								break;
+							case 16:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("23");
+								break;
+							case 17:
+								break;
+							case 18:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("22");
+								break;
+							case 19:
+								break;
+							case 20:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("21");
+								break;
+							case 21:
+								break;
+							case 22:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("20");
+								break;
+							case 23:
+								break;
+							case 24:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("19");
+								break;
+							case 25:
+								break;
+							case 26:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("18");
+								break;
+							case 27:
+								break;
+							case 28:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("17");
+								break;
+							case 29:
+								break;
+							case 30:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("16");
+								break;
+							case 31:
+								break;
+							case 32:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("15");
+								break;
+							case 33:
+								break;
+							case 34:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("14");
+								break;
+							case 35:
+								break;
+							case 36:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("13");
+								break;
+							case 37:
+								break;
+							case 38:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("12");
+								break;
+							case 39:
+								break;
+							case 40:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("11");
+								break;
+							case 41:
+								break;
+							case 42:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("10");
+								break;
+							case 43:
+								break;
+							case 44:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("9");
+								break;
+							case 45:
+								break;
+							case 46:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("8");
+								break;
+							case 47:
+								break;
+							case 48:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("7");
+								break;
+							case 49:
+								break;
+							case 50:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("6");
+								break;
+							case 51:
+								break;
+							case 52:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("5");
+								break;
+							case 53:
+								break;
+							case 54:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("4");
+								break;
+							case 55:
+								break;
+							case 56:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("3");
+								break;
+							case 57:
+								break;
+							case 58:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("2");
+								break;
+							case 61:
+								break;
+							case 59:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("1");
+								break;
+							case 60:
+								break;
+							default:
+								break;
+							}
+
+							if (mShootTime > 60) {
+								stopTrimVideo();
+							}
+						}
+					});
+
+				}
+			};
+			m8sTimer.schedule(task, 500, 500);
+
+		} else {
+
+		}
 	}
 
 	/**
@@ -1469,6 +1676,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT, CarRecorderActivity.QUERYFILETIME);
 		}
 		mShootTime = 0;
+		m8sBtn.setText("");
 		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 		if (null != m8sTimer) {
 			m8sTimer.cancel();
@@ -1664,10 +1872,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					+ param2);
 			if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
 				if (RESULE_SUCESS == param1) {
-					if(mWonderfulTime == 6) {
+					if (mWonderfulTime == 6) {
 						mHandler.sendEmptyMessage(MOUNTS);
 					} else {
-						//TODO 30ｓ
+						mHandler.sendEmptyMessage(CLASSIC);
 					}
 				}  else {
 					videoTriggerFail();

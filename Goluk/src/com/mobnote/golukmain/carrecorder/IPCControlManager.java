@@ -80,6 +80,11 @@ public class IPCControlManager implements IPCManagerFn {
 			// 不处理
 		}
 	}
+	
+	// 判断是否是T1设备
+	public boolean isT1Relative() {
+		return T1_SIGN.equals(mProduceName);
+	}
 
 	/**
 	 * 判断是否是G1与T1S，两个处理流程是一样的
@@ -1018,6 +1023,16 @@ public class IPCControlManager implements IPCManagerFn {
 				IPCManagerFn.IPC_VDCPCmd_SetVoiceType, s);
 	}
 	
+
+	public boolean startLive(String jsonData) {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_LiveStart, jsonData);
+	}
+	
+	public boolean stopLive() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_LiveStop, "");
+	}
 	/**
 	 * 获取全局设置列表
 	 * 
@@ -1058,6 +1073,7 @@ public class IPCControlManager implements IPCManagerFn {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_GetOSDConf, "");
 	}
+	
 
 	/**
 	 * 设置视频水印
@@ -1069,6 +1085,15 @@ public class IPCControlManager implements IPCManagerFn {
 		GolukDebugUtils.e("", "----------------------setVideoLogo-------str:" +str);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_SetOSDConf, str);
+	}
+	
+	/**
+	 * 重启IPC
+	 * @return
+	 */
+	public boolean setIPCReboot() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_Reboot, "");
 	}
 
 	@Override

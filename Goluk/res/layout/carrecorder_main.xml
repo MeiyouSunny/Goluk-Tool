@@ -512,7 +512,10 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/driving_car_living_defalut_icon" />
+            android:background="@drawable/driving_car_living_defalut_icon"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:textColor="@color/white" />
 
         <ImageButton
             android:id="@+id/liveBtn"

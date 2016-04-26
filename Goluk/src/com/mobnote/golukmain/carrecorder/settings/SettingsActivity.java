@@ -1468,6 +1468,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				callback_getWonderfulVideoType(event, msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_SetVideoTimeConf) {
 				callback_setWonderfulVideoType(event, msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_Reboot) {// 重启IPC
+				GolukDebugUtils.e("", "SettingsActivity-----------IPC_VDCP_Msg_Reboot-----param2: " + param2);
 			}
 		}
 	}
@@ -1928,19 +1930,36 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mCustomProgressDialog.close();
 		}
 	}
-	
+	/**
+	 *　重启IPC
+	 */
 	private void showRebootDialog() {
 		if (null == mRestartDialog) {
-			mRestartDialog = new AlertDialog.Builder(this).setTitle(this.getString(R.string.user_dialog_hint_title))
+			mRestartDialog = new AlertDialog.Builder(this)
+					.setTitle(this.getString(R.string.user_dialog_hint_title))
 					.setMessage(this.getString(R.string.str_settings_restart_ipc))
-					.setPositiveButton(this.getString(R.string.user_repwd_ok), new DialogInterface.OnClickListener() {
+					.setNegativeButton(this.getString(R.string.str_reboot_ipc_later),
+							new DialogInterface.OnClickListener() {
 
-						@Override
-						public void onClick(DialogInterface arg0, int arg1) {
-							mRestartDialog.dismiss();
-							mRestartDialog = null;
-						}
-					}).show();
+								@Override
+								public void onClick(DialogInterface arg0, int arg1) {
+									mRestartDialog.dismiss();
+									mRestartDialog = null;
+								}
+							})
+					.setPositiveButton(this.getString(R.string.str_reboot_ipc_now),
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface arg0, int arg1) {
+									boolean reboot = GolukApplication.getInstance().getIPCControlManager()
+											.setIPCReboot();
+									if (reboot) {
+										mRestartDialog.dismiss();
+										mRestartDialog = null;
+									}
+								}
+							}).show();
 		}
 	}
 

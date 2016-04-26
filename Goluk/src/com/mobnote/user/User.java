@@ -12,6 +12,7 @@ import com.mobnote.golukmain.userlogin.UserData;
 import com.mobnote.golukmain.userlogin.UserResult;
 import com.mobnote.golukmain.userlogin.UserloginBeanRequest;
 import com.mobnote.util.GolukConfig;
+import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.SharedPrefUtil;
 import com.sina.weibo.sdk.utils.MD5;
 
@@ -157,6 +158,10 @@ public class User implements IRequestResultListener{
 			try {
 				UserResult userresult = (UserResult) result;
 				int code = Integer.parseInt(userresult.code);
+				
+				String loginMsg = GolukFastJsonUtil.setParseObj(userresult);
+				mApp.setLoginRespInfo(loginMsg);
+				
 				GolukDebugUtils.i("lily", "----User-----" + com.alibaba.fastjson.JSONObject.toJSONString(userresult));
 				switch (code) {
 				case 200:

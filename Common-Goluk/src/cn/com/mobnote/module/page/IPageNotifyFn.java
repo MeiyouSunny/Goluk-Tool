@@ -74,6 +74,8 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_OauthLogin = 37;
 	public static final int PageType_BindInfo = 38;
 	public static final int PageType_GetPromotion = 39;
+	/** 设置登录应答信息 */
+	public static final int PageType_SetLoginRespInfo = 39;
 
 	public static final int PageType_ClusterMain =  40;
 	
