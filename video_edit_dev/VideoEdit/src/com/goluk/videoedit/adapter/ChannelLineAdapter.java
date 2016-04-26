@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -216,9 +217,9 @@ public class ChannelLineAdapter extends
 					ChunkThumbs chunkThumbs = chunk.getChunkThumbs();
 					List<VideoThumb> videoThumbList = chunkThumbs.getThumbs();
 
-					float begin = chunkThumbs.getBegin();
-					float end = chunkThumbs.getLength();
-					float delta = end - begin;
+//					float begin = chunkThumbs.getBegin();
+					float delta = chunkThumbs.getLength();
+//					float delta = end;
 
 					int bitmapCount = 0;
 					if(delta > 0 && delta <= 1) {
@@ -245,16 +246,20 @@ public class ChannelLineAdapter extends
 								float lastD = delta - (int)delta;
 //								float widthRatio = lastD / VideoEditConstant.BITMAP_TIME_INTERVAL;
 								LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-									(int)(DeviceUtil.dp2px(mContext, VideoEditConstant.BITMAP_COMMON_WIDTH) * lastD),
+									/*(int)(DeviceUtil.dp2px(mContext, VideoEditConstant.BITMAP_COMMON_WIDTH) * lastD)*/
+									(int)(chunkThumbs.getThumbWidth() * lastD),
 									LayoutParams.MATCH_PARENT);
+								Log.d("CK1", "$$$$$$$$$$$$$$$: " + chunkThumbs.getThumbWidth() + ", " +
+										(int)(chunkThumbs.getThumbWidth() * lastD));
 								imageView.setLayoutParams(params);
 							} else {
 								LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-										DeviceUtil.dp2px(mContext, VideoEditConstant.BITMAP_COMMON_WIDTH),
+//										DeviceUtil.dp2px(mContext, VideoEditConstant.BITMAP_COMMON_WIDTH),
+										chunkThumbs.getThumbWidth(),
 										LayoutParams.MATCH_PARENT);
 								imageView.setLayoutParams(params);
 							}
-							imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+							imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 							imageView.setImageBitmap(videoThumb.getBitmap());
 							viewHolder.nChunkContainerLL.addView(imageView);
 						}
@@ -273,7 +278,7 @@ public class ChannelLineAdapter extends
 						FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
 //								VideoEditUtils.ChunkTime2Width(chunk.getDuration(),
 //								DeviceUtil.dp2px(mContext, VideoEditConstant.BITMAP_COMMON_WIDTH)),
-							(int)((end - begin) * 135),
+							(int)(end * chunk.getChunkThumbs().getThumbWidth()),
 							FrameLayout.LayoutParams.MATCH_PARENT);
 
 						viewHolder.nChunkMaskLL.setLayoutParams(params);

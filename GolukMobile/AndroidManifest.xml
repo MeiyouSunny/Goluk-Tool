@@ -560,6 +560,11 @@
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
+            android:name="com.mobnote.golukmain.search.SearchUserAcivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
             android:name="com.mobnote.golukmain.praised.MyPraisedActivity"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"

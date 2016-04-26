@@ -1,5 +1,7 @@
 package com.mobnote.util;
 
+import java.util.List;
+
 import com.alibaba.fastjson.JSON;
 
 public class GolukFastJsonUtil {
@@ -17,6 +19,10 @@ public class GolukFastJsonUtil {
 
 	public static String setParseObj(Object obj) {
 		return JSON.toJSONString(obj);
+	}
+	
+	public static <T> List<T> parseList(String param, Class<T> cls) {
+		return JSON.parseArray(param, cls);
 	}
 
 }

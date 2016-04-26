@@ -28,6 +28,17 @@
             android:layout_marginBottom="7dp"
             android:textColor="@color/white"
             android:textSize="10sp" />
+        
+        <ImageView 
+            android:id="@+id/iv_videocategory_item_lock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/mine_icon_lock"
+            android:contentDescription="@string/imgdes"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <TextView

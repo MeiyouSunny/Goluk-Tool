@@ -43,5 +43,9 @@ public class VideoList {
 	/** 索引 **/
 	@JSONField(name = "index")
 	public String index;
+	
+	/** 索引 **/
+	@JSONField(name = "isopen")
+	public int isopen;
 
 }

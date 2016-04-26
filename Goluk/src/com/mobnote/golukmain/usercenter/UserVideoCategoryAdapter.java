@@ -65,19 +65,26 @@ public class UserVideoCategoryAdapter extends BaseAdapter {
 			holder.mDescribeText = (TextView) convertView.findViewById(R.id.tv_videocategory_item_describe);
 			holder.mCommentCountText = (TextView) convertView.findViewById(R.id.tv_videocategory_item_comment);
 			holder.mLookCountText = (TextView) convertView.findViewById(R.id.tv_videocategory_item_look);
+			holder.mLockImage = (ImageView) convertView.findViewById(R.id.iv_videocategory_item_lock);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		
 		VideoList data = mListData.get(arg0);
-		
-		GlideUtils.loadImage(mContext, holder.mThumbImage, data.pictureurl, R.drawable.tacitly_pic);
-		String sharingTime = GolukUtils.getCommentShowFormatTime(mContext, data.addtime);
-		holder.mTimeText.setText(GolukUtils.getCommentShowFormatTime(mContext, sharingTime));
-		holder.mDescribeText.setText(data.description);
-		holder.mCommentCountText.setText(GolukUtils.getFormatNumber(data.commentcount));
-		holder.mLookCountText.setText(GolukUtils.getFormatNumber(data.clickcount));
+		if(null != data) {
+			GlideUtils.loadImage(mContext, holder.mThumbImage, data.pictureurl, R.drawable.tacitly_pic);
+			String sharingTime = GolukUtils.getCommentShowFormatTime(mContext, data.addtime);
+			holder.mTimeText.setText(GolukUtils.getCommentShowFormatTime(mContext, sharingTime));
+			holder.mDescribeText.setText(data.description);
+			holder.mCommentCountText.setText(GolukUtils.getFormatNumber(data.commentcount));
+			holder.mLookCountText.setText(GolukUtils.getFormatNumber(data.clickcount));
+			if (data.isopen == 0) {
+				holder.mLockImage.setVisibility(View.VISIBLE);
+			} else {
+				holder.mLockImage.setVisibility(View.GONE);
+			}
+		}
 		
 		return convertView;
 	}
@@ -88,6 +95,7 @@ public class UserVideoCategoryAdapter extends BaseAdapter {
 		TextView mDescribeText;
 		TextView mCommentCountText;
 		TextView mLookCountText;
+		ImageView mLockImage;
 	}
 
 }

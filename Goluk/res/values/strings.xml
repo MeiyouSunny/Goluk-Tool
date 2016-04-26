@@ -1003,6 +1003,7 @@
     <string name="str_upgrade_check_sdcard_t1">Upgrade file transfer failed</string>
     <string name="str_settings_restart_ipc">Modify successful, restart the recorder after the entry into force.</string>
 
+    <string name="cancel">cancel</string>
     <!-- guide -->
     <string name="str_guide_2_top_text">Driving Record</string>
     <string name="str_guide_3_top_text">Share Wonderful</string>
@@ -1027,5 +1028,12 @@
     <string name ="str_global_dialog_msg">Please confirm whether you need to abort this synchronization task?</string>
     <string name="str_global_dialog_right_btn">Stop</string>
      <string name="str_global_cancel_success">Video synchronization has been canceled</string>
+     
+     <string name="str_wonderful_video_type_title">精彩视频类型</string>
+     <string name="str_settings_video_logo_title">视频水印显示</string>
+     <string name="str_settings_wonderful_video_type_hint_text">精彩抓拍（6+6）：按下遥控器（KIT）按键，触发录制前6秒+后6秒的12秒
+        精彩视频片段。\n经典模式：按下遥控器（KIT）按键，触发录制一段30秒精彩视频。</string>
+     <string name="str_settings_video_type1">精彩抓拍（6+6）</string>
+     <string name="str_settings_video_type2">经典模式</string>
 
 </resources>

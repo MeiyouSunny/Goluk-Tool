@@ -1471,5 +1471,42 @@ public class JsonUtil {
 		}
 		return "";
 	}
+	
+	/**
+	 * 精彩视频类型
+	 * @param historyTime
+	 * @param futureTime
+	 * @return
+	 */
+	public static String setWonderfulVideoTypeJson(int historyTime, int futureTime) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("wonder_history_time", historyTime);
+			obj.put("wonder_future_time", futureTime);
+//			obj.put("urgent_history_time", 0);
+//			obj.put("urgent_future_time", 0);
+			return obj.toString();
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	
+	/**
+	 * 视频水印
+	 * @param logoVisible
+	 * @return
+	 */
+	public static String setVideoLogoJson(int logoVisible, int timeVisible) {
+		try {
+			JSONObject rootObj = new JSONObject();
+			rootObj.put("logo_visible", logoVisible);
+			rootObj.put("time_visible", 0);
+
+			return rootObj.toString();
+		} catch (Exception e) {
+
+		}
+		return "";
+	}
 
 }
