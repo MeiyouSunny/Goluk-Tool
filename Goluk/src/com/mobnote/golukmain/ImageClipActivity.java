@@ -38,7 +38,7 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class ImageClipActivity extends BaseActivity implements OnClickListener, IPageNotifyFn,IRequestResultListener{
+public class ImageClipActivity extends BaseActivity implements OnClickListener,IRequestResultListener{
 
 	private ClipImageView imageView;
 
@@ -48,7 +48,6 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 
 	private CustomLoadingDialog mCustomProgressDialog = null;
 
-//	private SettingImageView siv = null;
 
 	private boolean isSave = true;
 
@@ -212,21 +211,11 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 				}
 				try {
 					
-					String request = this.saveBitmap(SettingImageView.toRoundBitmap(bitmap));
-//					boolean flog = this.uploadImageHead(request);
+					this.saveBitmap(SettingImageView.toRoundBitmap(bitmap));
 					isSave = true;
-//					if(flog){
 					if (mCustomProgressDialog != null) {
 							mCustomProgressDialog.show();
 					}
-							
-//					} 
-//					else {
-//						GolukUtils.showToast(ImageClipActivity.this,
-//								this.getResources().getString(R.string.str_network_error));
-//						return;
-//					}
-						
 						
 				} catch (IOException e) {
 					isSave = true;
@@ -242,16 +231,6 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 		} else {
 		}
 
-	}
-
-	/**
-	 * 调用图像上传功能
-	 * 
-	 * @return
-	 */
-	public boolean uploadImageHead(String requestStr) {
-		return mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, PageType_ModifyHeadPic,
-				requestStr);
 	}
 
 	/**
@@ -409,23 +388,6 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener, 
 	protected void onResume() {
 		mBaseApp.setContext(this, "imageClipActivity");
 		super.onResume();
-	}
-
-	@Override
-	public void pageNotifyCallBack(int type, int success, Object param1, Object param2) {
-		if (type == PageType_ModifyHeadPic) {
-			isSave = true;
-			if (mCustomProgressDialog.isShowing()) {
-				mCustomProgressDialog.close();
-			}
-			if (success == 1) {
-				
-			} else {
-
-				GolukUtils.showToast(ImageClipActivity.this,
-						this.getResources().getString(R.string.str_network_unavailable));
-			}
-		}
 	}
 
 
