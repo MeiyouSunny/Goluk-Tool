@@ -981,16 +981,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			mRegistAndRepwdManage.registAndRepwdCallback(success, param1, param2);
 			break;
 
-		case PageType_ModifyNickName:
-			if (mPageSource == "UserPersonalName") {
-				((UserPersonalNameActivity) mContext).saveNameCallBack(success, param2);
-			}
-			break;
-		case PageType_ModifySignature:
-			if (mPageSource == "UserPersonalSign") {
-				((UserPersonalSignActivity) mContext).saveSignCallBack(success, param2);
-			}
-			break;
+//		case PageType_ModifyNickName:
+//			if (mPageSource == "UserPersonalName") {
+//				((UserPersonalNameActivity) mContext).saveNameCallBack(success, param2);
+//			}
+//			break;
+//		case PageType_ModifySignature:
+//			if (mPageSource == "UserPersonalSign") {
+//				((UserPersonalSignActivity) mContext).saveSignCallBack(success, param2);
+//			}
+//			break;
 		case PageType_LiveStart:
 			// 获取直播信息成功
 			if (null != mContext && mContext instanceof AbstractLiveActivity) {
