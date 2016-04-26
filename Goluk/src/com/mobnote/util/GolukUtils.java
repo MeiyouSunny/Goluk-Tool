@@ -2,10 +2,12 @@ package com.mobnote.util;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -184,7 +186,9 @@ public class GolukUtils {
 			intent.setData(content_url);
 			mContext.startActivity(intent);
 		} catch (ActivityNotFoundException anfe) {
-			Toast.makeText(mContext, mContext.getString(R.string.str_no_browser_found), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext,
+					mContext.getString(R.string.str_no_browser_found),
+					Toast.LENGTH_SHORT).show();
 			anfe.printStackTrace();
 		}
 	}
@@ -192,7 +196,8 @@ public class GolukUtils {
 	// 获取版本号
 	public static String getVersion(Context context) {
 		try {
-			PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+			PackageInfo pi = context.getPackageManager().getPackageInfo(
+					context.getPackageName(), 0);
 			return pi.versionName;
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
@@ -203,7 +208,8 @@ public class GolukUtils {
 	public static int getVersionCode(Context context)// 获取版本号(内部识别号)
 	{
 		try {
-			PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+			PackageInfo pi = context.getPackageManager().getPackageInfo(
+					context.getPackageName(), 0);
 			return pi.versionCode;
 		} catch (NameNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -223,7 +229,8 @@ public class GolukUtils {
 	 */
 	public static void showToast(Context context, String text) {
 		if (mToast == null) {
-			mToast = Toast.makeText(GolukApplication.getInstance(), text, Toast.LENGTH_SHORT);
+			mToast = Toast.makeText(GolukApplication.getInstance(), text,
+					Toast.LENGTH_SHORT);
 		} else {
 			mToast.setText(text);
 		}
@@ -247,7 +254,8 @@ public class GolukUtils {
 
 	public static void showToast(Context context, String text, int duration) {
 		if (mToast == null) {
-			mToast = Toast.makeText(GolukApplication.getInstance(), text, duration);
+			mToast = Toast.makeText(GolukApplication.getInstance(), text,
+					duration);
 		} else {
 			mToast.setText(text);
 			mToast.setDuration(duration);
@@ -422,28 +430,31 @@ public class GolukUtils {
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 			public void run() {
-				InputMethodManager inputManager = (InputMethodManager) edit.getContext().getSystemService(
-						Context.INPUT_METHOD_SERVICE);
+				InputMethodManager inputManager = (InputMethodManager) edit
+						.getContext().getSystemService(
+								Context.INPUT_METHOD_SERVICE);
 				inputManager.showSoftInput(edit, 0);
 			}
 		}, 500);
 	}
 
 	public static final void showSoftNotThread(final View view) {
-		InputMethodManager inputManager = (InputMethodManager) view.getContext().getSystemService(
-				Context.INPUT_METHOD_SERVICE);
+		InputMethodManager inputManager = (InputMethodManager) view
+				.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		inputManager.showSoftInput(view, 0);
 	}
 
 	// 强制隐藏键盘
 	@SuppressLint("NewApi")
 	public static void hideSoft(Context context, View view) {
-		InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+		InputMethodManager imm = (InputMethodManager) context
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 
 	public static String getCurrentFormatTime(Context context) {
-		String time = DateFormat.format(context.getString(R.string.str_date_formatter),
+		String time = DateFormat.format(
+				context.getString(R.string.str_date_formatter),
 				Calendar.getInstance().getTime()).toString();
 		return time;
 	}
@@ -502,12 +513,14 @@ public class GolukUtils {
 	public static String formatTimeYMDHMS(String date) {
 		String time = "";
 		if (null != date) {
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS", Locale.CHINESE);
+			SimpleDateFormat formatter = new SimpleDateFormat(
+					"yyyyMMddHHmmssSSS", Locale.CHINESE);
 
 			try {
 				Date strtodate = formatter.parse(date);
 				if (null != strtodate) {
-					formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE);
+					formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+							Locale.CHINESE);
 					if (null != formatter) {
 						time = formatter.format(strtodate);
 					}
@@ -531,7 +544,8 @@ public class GolukUtils {
 	public static String getCommentShowFormatTime(Context context, String time) {
 		try {
 			String result = formatTimeYMDHMS(time);
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINESE);
+			SimpleDateFormat formatter = new SimpleDateFormat(
+					"yyyy-MM-dd HH:mm", Locale.CHINESE);
 			Date oldDate = formatter.parse(result);
 			// 转换成 2010-11-20 11:10
 			String ymdhm = formatter.format(oldDate);
@@ -552,19 +566,26 @@ public class GolukUtils {
 			int currentMonth = currentCalendar.get(Calendar.MONTH) + 1;
 			int currentDay = currentCalendar.get(Calendar.DAY_OF_MONTH);
 
-			if (currentYear == oldYear && oldMonth == currentMonth && oldDay == currentDay) {
+			if (currentYear == oldYear && oldMonth == currentMonth
+					&& oldDay == currentDay) {
 				// 今天
-				SimpleDateFormat hhmmFormat = new SimpleDateFormat("HH:mm", Locale.CHINESE);
+				SimpleDateFormat hhmmFormat = new SimpleDateFormat("HH:mm",
+						Locale.CHINESE);
 				String todayFormatStr = hhmmFormat.format(oldDate);
-				result = context.getString(R.string.str_today) + " " + todayFormatStr;
-			} else if (currentYear == oldYear && oldMonth == currentMonth && oldDay + 1 == currentDay) {
+				result = context.getString(R.string.str_today) + " "
+						+ todayFormatStr;
+			} else if (currentYear == oldYear && oldMonth == currentMonth
+					&& oldDay + 1 == currentDay) {
 				// 昨天
-				SimpleDateFormat hhmmFormat = new SimpleDateFormat("HH:mm", Locale.CHINESE);
+				SimpleDateFormat hhmmFormat = new SimpleDateFormat("HH:mm",
+						Locale.CHINESE);
 				String todayFormatStr = hhmmFormat.format(oldDate);
-				result = context.getString(R.string.str_yestoday) + " " + todayFormatStr;
+				result = context.getString(R.string.str_yestoday) + " "
+						+ todayFormatStr;
 			} else if (currentYear == oldYear) {
 				// 本年
-				SimpleDateFormat hhmmFormat = new SimpleDateFormat("MM-dd HH:mm", Locale.CHINESE);
+				SimpleDateFormat hhmmFormat = new SimpleDateFormat(
+						"MM-dd HH:mm", Locale.CHINESE);
 				String todayFormatStr = hhmmFormat.format(oldDate);
 				result = todayFormatStr;
 			}
@@ -633,7 +654,8 @@ public class GolukUtils {
 		String time = null;
 		try {
 			long curTime = System.currentTimeMillis();
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+			SimpleDateFormat formatter = new SimpleDateFormat(
+					"yyyyMMddHHmmssSSS");
 			Date strtodate = formatter.parse(date);
 			long historytime = strtodate.getTime();
 
@@ -644,21 +666,26 @@ public class GolukUtils {
 			long diff = Math.abs(historytime - curTime);// 时间差
 			if (curYear == history) {
 				if (diff <= WEEK && diff > DAY) {
-					return time = context.getString(R.string.str_day_refresh, (diff / DAY));// 天前更新
+					return time = context.getString(R.string.str_day_refresh,
+							(diff / DAY));// 天前更新
 				} else if (diff <= DAY && diff > HOUR) {
-					return time = context.getString(R.string.str_hours_refresh, (diff / HOUR));// 小时前更新
+					return time = context.getString(R.string.str_hours_refresh,
+							(diff / HOUR));// 小时前更新
 				} else if (diff <= HOUR) {
 					int min = (int) (diff / MINTUE);
 					if (min < 1) {
 						min = 1;
 					}
-					return time = context.getString(R.string.str_minute_refresh, min);// 分钟前更新
+					return time = context.getString(
+							R.string.str_minute_refresh, min);// 分钟前更新
 				} else {
-					SimpleDateFormat jn = new SimpleDateFormat(context.getString(R.string.str_month_day_refresh));
+					SimpleDateFormat jn = new SimpleDateFormat(
+							context.getString(R.string.str_month_day_refresh));
 					return jn.format(strtodate);// 今年内：月日更新
 				}
 			} else {
-				SimpleDateFormat jn = new SimpleDateFormat(context.getString(R.string.str_year_month_day_refresh));
+				SimpleDateFormat jn = new SimpleDateFormat(
+						context.getString(R.string.str_year_month_day_refresh));
 				return jn.format(strtodate);// 非今年：年月日更新
 			}
 		} catch (ParseException e) {
@@ -783,6 +810,29 @@ public class GolukUtils {
 		return buf.toString();
 	}
 
+	public static String getFileMD5(File file) {
+		if (!file.isFile()) {
+			return null;
+		}
+		MessageDigest digest = null;
+		FileInputStream in = null;
+		byte buffer[] = new byte[1024];
+		int len;
+		try {
+			digest = MessageDigest.getInstance("MD5");
+			in = new FileInputStream(file);
+			while ((len = in.read(buffer, 0, 1024)) != -1) {
+				digest.update(buffer, 0, len);
+			}
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		BigInteger bigInt = new BigInteger(1, digest.digest());
+		return bigInt.toString(16);
+	}
+
 	public static boolean isNetworkConnected(Context context) {
 		ConnectivityManager mConnectivityManager = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -835,7 +885,9 @@ public class GolukUtils {
 	public static boolean isTestServer() {
 		String serverSign = GolukUtils.getAssestFileContent("serverflag");
 		GolukDebugUtils.e("aaa", "serverSign: " + serverSign);
-		if (null != serverSign && (serverSign.trim().equals("test") || serverSign.trim().equals("dev"))) {
+		if (null != serverSign
+				&& (serverSign.trim().equals("test") || serverSign.trim()
+						.equals("dev"))) {
 			return true;
 		} else {
 			return false;
@@ -923,7 +975,8 @@ public class GolukUtils {
 
 		final String realZone = getLanguage() + "_" + getCountry();
 
-		String[] allZone = GolukApplication.getInstance().getApplicationContext().getResources()
+		String[] allZone = GolukApplication.getInstance()
+				.getApplicationContext().getResources()
 				.getStringArray(R.array.zone_array);
 		if (null == allZone || allZone.length <= 0) {
 			return realZone;
@@ -937,11 +990,13 @@ public class GolukUtils {
 		return realZone;
 	}
 
-	public static void startUserCenterActivity(Context context, String uid, String nickname, String avatar,
-			String customAvatar, String sex, String introduction) {
+	public static void startUserCenterActivity(Context context, String uid,
+			String nickname, String avatar, String customAvatar, String sex,
+			String introduction) {
 
 		if (!isNetworkConnected(context)) {
-			Toast.makeText(context, context.getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, context.getString(R.string.network_error),
+					Toast.LENGTH_SHORT).show();
 			return;
 		}
 
@@ -971,7 +1026,8 @@ public class GolukUtils {
 	public static void startFollowingListActivity(Context context, String uId) {
 
 		if (!isNetworkConnected(context)) {
-			Toast.makeText(context, context.getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, context.getString(R.string.network_error),
+					Toast.LENGTH_SHORT).show();
 			return;
 		}
 
@@ -983,7 +1039,8 @@ public class GolukUtils {
 
 	public static void startFanListActivity(Context context, String uId) {
 		if (!isNetworkConnected(context)) {
-			Toast.makeText(context, context.getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, context.getString(R.string.network_error),
+					Toast.LENGTH_SHORT).show();
 			return;
 		}
 
@@ -993,7 +1050,8 @@ public class GolukUtils {
 		context.startActivity(intent);
 	}
 
-	public static void startVideoEditActivity(Context context, int type, String path) {
+	public static void startVideoEditActivity(Context context, int type,
+			String path) {
 		Intent intent = new Intent(context, VideoEditActivity.class);
 
 		int tempType = 2;
@@ -1006,8 +1064,10 @@ public class GolukUtils {
 		context.startActivity(intent);
 	}
 
-	public static void changePraiseStatus(List<VideoSquareInfo> dataList, boolean status, String videoId) {
-		if (TextUtils.isEmpty(videoId) || null == dataList || dataList.size() == 0) {
+	public static void changePraiseStatus(List<VideoSquareInfo> dataList,
+			boolean status, String videoId) {
+		if (TextUtils.isEmpty(videoId) || null == dataList
+				|| dataList.size() == 0) {
 			return;
 		}
 
@@ -1043,9 +1103,10 @@ public class GolukUtils {
 
 		return false;
 	}
-	
+
 	/**
 	 * 读取assets下文件
+	 * 
 	 * @param context
 	 * @param fileName
 	 * @return
@@ -1053,7 +1114,8 @@ public class GolukUtils {
 	public static String getDataFromAssets(Context context, String fileName) {
 		InputStreamReader inputReader = null;
 		try {
-			inputReader = new InputStreamReader(context.getAssets().open(fileName));
+			inputReader = new InputStreamReader(context.getAssets().open(
+					fileName));
 			BufferedReader bufReader = new BufferedReader(inputReader);
 			String line = "";
 			String result = "";
@@ -1076,7 +1138,7 @@ public class GolukUtils {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 容量大小转字符串
 	 * 

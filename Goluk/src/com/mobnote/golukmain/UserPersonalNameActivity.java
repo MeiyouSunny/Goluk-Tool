@@ -242,7 +242,7 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 			mCustomProgressDialog.close();
 		}
 		if (1 == success) {
-			mApplication.setMyinfo(mNameNewText, "", "");
+			mApplication.setMyinfo(mNameNewText, "", "",null);
 			Intent it = new Intent(UserPersonalNameActivity.this, UserPersonalInfoActivity.class);
 			it.putExtra("itName", mNameNewText);
 			this.setResult(RESULT_OK, it);
@@ -263,7 +263,7 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 			}
 			
 			if (upnameresult.success) {
-				mApplication.setMyinfo(mNameNewText, "", "");
+				mApplication.setMyinfo(mNameNewText, "", "",null);
 				Intent it = new Intent(UserPersonalNameActivity.this, UserPersonalInfoActivity.class);
 				it.putExtra("itName", mNameNewText);
 				this.setResult(RESULT_OK, it);
