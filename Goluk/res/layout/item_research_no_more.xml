@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:paddingTop="38dp"
-    android:paddingBottom="18dp"
+    android:paddingBottom="38dp"
     android:orientation="vertical">
     <TextView
         android:layout_width="wrap_content"
@@ -12,5 +12,5 @@
         android:gravity="center_horizontal"
         android:textColor="#bfbfbf"
         android:textSize="13sp"
-        android:text="@string/str_search_no_result"/>
+        android:text="@string/str_search_no_more_result"/>
 </LinearLayout>

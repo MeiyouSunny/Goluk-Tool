@@ -5,6 +5,7 @@ import io.vov.vitamio.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -12,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -76,6 +78,8 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 	private String searchContent;
 	private boolean hasSearched;
 
+	private final int requestOffset = 10;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -106,7 +110,6 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 				pullToRefreshBase.getLoadingLayoutProxy(true, false).setLastUpdatedLabel(
 						SearchUserAcivity.this.getString(R.string.updating) +
 						GolukUtils.getCurrentFormatTime(SearchUserAcivity.this));
-				//sendFollowingListRequest(REFRESH_PULL_DOWN);
 
 			}
 
@@ -115,7 +118,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 				pullToRefreshBase.getLoadingLayoutProxy(false, true).setPullLabel(
 						SearchUserAcivity.this.getResources().getString(
 						R.string.goluk_pull_to_refresh_footer_pull_label));
-				//sendFollowingListRequest(REFRESH_PULL_UP);
+				sendSearchUserRequest(REFRESH_PULL_UP,searchContent);
 				
 			}
 		});
@@ -154,6 +157,8 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 						Toast.makeText(SearchUserAcivity.this,getResources().getString(R.string.str_search_keywards_cannot_be_empty), Toast.LENGTH_SHORT).show();
 					}else{
 						sendSearchUserRequest(REFRESH_NORMAL,searchContent);
+						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
+						imm.hideSoftInputFromWindow(mSearchContentEt.getWindowToken(), 0);
 					}
 				}
 				return true;
@@ -235,7 +240,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 			}
 		} else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
 			if(mFollowingList != null &&  mFollowingList.size()>0){
-				index = mFollowingList.get(0).getUserItemBean().index;
+				//index = mFollowingList.get(0).getUserItemBean().index;
 			}
 		}
 
@@ -243,9 +248,9 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 		GolukApplication app = GolukApplication.getInstance();
 
 		if(null != app && app.isUserLoginSucess&&!TextUtils.isEmpty(app.mCurrentUId)) {
-			request.get(PROTOCOL,searchContent,tmpOp,index,"20", app.mCurrentUId);
+			request.get(PROTOCOL,searchContent,tmpOp,index,String.valueOf(requestOffset), app.mCurrentUId);
 		}else{
-			request.get(PROTOCOL,searchContent,tmpOp,index,"20", null);
+			request.get(PROTOCOL,searchContent,tmpOp,index,String.valueOf(requestOffset), null);
 		}
 
 		if(!mLoadingDialog.isShowing() && REFRESH_NORMAL.equals(op)) {
@@ -328,24 +333,42 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 
 			if(null == bean.data) {
 				setEmptyView(getString(R.string.no_following_tips));
+				mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
 				return;
 			}
-
-			mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.BOTH);
 
 			List<FollowingItemBean> followingBeanList = bean.data.userlist;
 
 			if(null == followingBeanList || followingBeanList.size() == 0) {
 
+				mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
 				if(REFRESH_PULL_UP.equals(mCurMotion)) {
 
 					Toast.makeText(SearchUserAcivity.this, getString(
 							R.string.str_pull_refresh_listview_bottom_reach), Toast.LENGTH_SHORT).show();
 					mCurMotion = REFRESH_NORMAL;
+					if(mFollowingList.size() < requestOffset){
+						mFollowingList.add(new SearchListBean(4, null));
+						mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
+					}else{
+						mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
+					}
 					return;
 				}else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)){
 					mCurMotion = REFRESH_NORMAL;
-					setEmptyView(getString(R.string.no_following_tips));
+					mFollowingList.clear();
+					mFollowingList.add(new SearchListBean(1, null));
+					mFollowingList.add(new SearchListBean(2, null));
+					List<FollowingItemBean> recommendBeanList = bean.data.recomlist;
+					for(FollowingItemBean userBean:recommendBeanList){
+						mFollowingList.add(new SearchListBean(3, userBean));
+					}
+					mFollowinglistPtrList.setAdapter(mFollowingListAdapter);
+					if(mFollowingList.size() < requestOffset){
+						mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
+					}else{
+						mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
+					}
 					return;
 				}
 			}else{
@@ -353,13 +376,24 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 					for(FollowingItemBean userBean:followingBeanList){
 						mFollowingList.add(new SearchListBean(3, userBean));
 					}
+					if(mFollowingList.size() < requestOffset){
+						mFollowingList.add(new SearchListBean(4, null));
+						mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
+					}else{
+						mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
+					}
 					mFollowingListAdapter.notifyDataSetChanged();
 				} else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
 					mFollowingList.clear();
 					for(FollowingItemBean userBean:followingBeanList){
 						mFollowingList.add(new SearchListBean(3, userBean));
 					}
-//					mFollowingListAdapter.setData(mFollowingList);
+					if(mFollowingList.size() < requestOffset){
+						mFollowingList.add(new SearchListBean(4, null));
+						mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
+					}else{
+						mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
+					}
 					mFollowinglistPtrList.setAdapter(mFollowingListAdapter);
 				} else {
 				}
@@ -383,6 +417,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 				return;
 			}else{
 				mFollowingList.clear();
+				mFollowingList.add(new SearchListBean(2,null));
 				for(FollowingItemBean userBean:followingBeanList){
 					mFollowingList.add(new SearchListBean(3, userBean));
 				}
@@ -433,7 +468,6 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 						Toast.makeText(SearchUserAcivity.this,
 								getResources().getString(R.string.str_usercenter_attention_ok),Toast.LENGTH_SHORT).show();
 					}
-
 				}
 			} else {
 				// Toast for operation failed
