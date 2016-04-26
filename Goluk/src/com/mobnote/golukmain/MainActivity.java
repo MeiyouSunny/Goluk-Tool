@@ -246,10 +246,10 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 		if (null != itStart_have.getStringExtra("userstart")) {
 			String start_have = itStart_have.getStringExtra("userstart").toString();
 			if ("start_have".equals(start_have)) {
-				Intent intent =  null;
-				if(GolukApplication.getInstance().isInteral() == false){
+				Intent intent = null;
+				if (GolukApplication.getInstance().isInteral() == false) {
 					intent = new Intent(this, InternationUserLoginActivity.class);
-				}else{
+				} else {
 					intent = new Intent(this, UserLoginActivity.class);
 				}
 				// 登录页回调判断
@@ -803,8 +803,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 		}
 	}
 
-	
-
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -945,10 +943,10 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 	public void dialogManagerCallBack(int dialogType, int function, String data) {
 		if (dialogType == LiveDialogManager.DIALOG_TYPE_LOGIN) {
 			if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
-				Intent intent =  null;
-				if(GolukApplication.getInstance().isInteral() == false){
+				Intent intent = null;
+				if (GolukApplication.getInstance().isInteral() == false) {
 					intent = new Intent(this, InternationUserLoginActivity.class);
-				}else{
+				} else {
 					intent = new Intent(this, UserLoginActivity.class);
 				}
 				intent.putExtra("isInfo", "back");
@@ -958,18 +956,22 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 			if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
 				// 继续直播
 				Intent intent;
-				if(GolukApplication.getInstance().isInteral() == false){
+				if (GolukApplication.getInstance().isInteral()) {
 					intent = new Intent(this, BaidumapLiveActivity.class);
-				}else{
+				} else {
 					intent = new Intent(this, GooglemapLiveActivity.class);
 				}
-				
+
 				intent.putExtra(AbstractLiveActivity.KEY_IS_LIVE, true);
 				intent.putExtra(AbstractLiveActivity.KEY_LIVE_CONTINUE, true);
 				intent.putExtra(AbstractLiveActivity.KEY_GROUPID, "");
 				intent.putExtra(AbstractLiveActivity.KEY_PLAY_URL, "");
 				intent.putExtra(AbstractLiveActivity.KEY_JOIN_GROUP, "");
 				startActivity(intent);
+			} else if (LiveDialogManager.FUNCTION_DIALOG_CANCEL == function) {
+				if (mApp.mIPCControlManager.isT1Relative()) {
+					mApp.mIPCControlManager.stopLive();
+				}
 			}
 		} else if (LiveDialogManager.DIALOG_TYPE_APP_EXIT == dialogType) {
 			if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
@@ -993,7 +995,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 		} else {
 			address = ((LocationAddressDetailBean) obj).detail;// 国际
 		}
-		GolukDebugUtils.e("", "-----------CallBack_BaiduGeoCoder----MainActivity------address: "+address);
+		GolukDebugUtils.e("", "-----------CallBack_BaiduGeoCoder----MainActivity------address: " + address);
 		GolukApplication.getInstance().mCurAddr = address;
 		// 更新行车记录仪地址
 		EventBus.getDefault().post(new EventUpdateAddr(EventConfig.CAR_RECORDER_UPDATE_ADDR, address));

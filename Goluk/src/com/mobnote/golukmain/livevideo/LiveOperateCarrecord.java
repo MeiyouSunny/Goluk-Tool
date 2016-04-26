@@ -52,6 +52,7 @@ public class LiveOperateCarrecord implements ILiveOperateFn {
 		} catch (RecorderStateException e) {
 			e.printStackTrace();
 			// liveUploadVideoFailed();
+			isStart = false;
 			sendResult(ILiveFnAdapter.STATE_FAILED);
 		}
 		return false;
@@ -60,8 +61,10 @@ public class LiveOperateCarrecord implements ILiveOperateFn {
 	@Override
 	public void stopLive() {
 		try {
-			isStartLive = false;
-			CarRecorderManager.stopRTSPLive();
+			if (isStart) {
+				isStartLive = false;
+				CarRecorderManager.stopRTSPLive();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -102,16 +105,19 @@ public class LiveOperateCarrecord implements ILiveOperateFn {
 
 		public void onLiveRecordBegin(Context context, int nResult, String strResultInfo) {
 			if (nResult >= ResultConstants.SUCCESS) {
+				isStart = true;
 				sendResult(ILiveFnAdapter.STATE_SUCCESS);
 			} else {
 				// 视频录制上传失败
 				// liveUploadVideoFailed();
+				isStart = false;
 				sendResult(ILiveFnAdapter.STATE_FAILED);
 			}
 		}
 
 		@Override
 		public void onLiveRecordFailed(Context context, int nResult, String strResultInfo) {
+			isStart = false;
 			sendResult(ILiveFnAdapter.STATE_FAILED);
 			// liveUploadVideoFailed();
 		}

@@ -75,13 +75,13 @@ public class LiveOperateVdcp implements ILiveOperateFn {
 			isSuccess = false;
 			sendResult(ILiveFnAdapter.STATE_FAILED);
 		}
-		GolukDebugUtils.e("", "newlive-----LiveOperateVdcp-----startLive isSuccess: " + isSuccess);
+		GolukDebugUtils.e("", "newlive-----LiveOperateVdcp-----startLive isSuccess: " + is);
 		return isSuccess;
 	}
 
 	@Override
 	public void stopLive() {
-
+		GolukApplication.getInstance().mIPCControlManager.stopLive();
 	}
 
 	public void sendResult(int state) {
@@ -93,8 +93,10 @@ public class LiveOperateVdcp implements ILiveOperateFn {
 	private void CallBack_commPush(int param1, Object param2) {
 		try {
 			VdcpLiveBean bean = GolukFastJsonUtil.getParseObj((String) param2, VdcpLiveBean.class);
-			GolukDebugUtils.e("", "newlive-----LiveOperateVdcp-----CallBack_Ipc content:  " + bean.content + "  top:"
-					+ bean.topic);
+			// GolukDebugUtils.e("",
+			// "newlive-----LiveOperateVdcp-----CallBack_Ipc content:  " +
+			// bean.content + "  top:"
+			// + bean.topic);
 			final String content = bean.content.trim();
 			if ("begin".equals(content)) {
 
@@ -121,8 +123,8 @@ public class LiveOperateVdcp implements ILiveOperateFn {
 
 			}
 		} catch (Exception e) {
-			GolukDebugUtils.e("", "newlive-----LiveOperateVdcp-----CallBack_Ipc Exception:  " );
-			
+			GolukDebugUtils.e("", "newlive-----LiveOperateVdcp-----CallBack_Ipc Exception:  ");
+
 		}
 	}
 
