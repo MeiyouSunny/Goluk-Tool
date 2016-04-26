@@ -1058,6 +1058,7 @@ public class IPCControlManager implements IPCManagerFn {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_GetOSDConf, "");
 	}
+	
 
 	/**
 	 * 设置视频水印
@@ -1069,6 +1070,15 @@ public class IPCControlManager implements IPCManagerFn {
 		GolukDebugUtils.e("", "----------------------setVideoLogo-------str:" +str);
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_SetOSDConf, str);
+	}
+	
+	/**
+	 * 重启IPC
+	 * @return
+	 */
+	public boolean setIPCReboot() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_Reboot, "");
 	}
 
 	@Override
