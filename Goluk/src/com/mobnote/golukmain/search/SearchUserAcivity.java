@@ -341,18 +341,14 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 
 			if(null == followingBeanList || followingBeanList.size() == 0) {
 
-				mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
 				if(REFRESH_PULL_UP.equals(mCurMotion)) {
 
 					Toast.makeText(SearchUserAcivity.this, getString(
 							R.string.str_pull_refresh_listview_bottom_reach), Toast.LENGTH_SHORT).show();
 					mCurMotion = REFRESH_NORMAL;
-					if(mFollowingList.size() < requestOffset){
-						mFollowingList.add(new SearchListBean(4, null));
-						mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
-					}else{
-						mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
-					}
+
+					//mFollowingList.add(new SearchListBean(4, null));
+					mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
 					return;
 				}else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)){
 					mCurMotion = REFRESH_NORMAL;
@@ -364,11 +360,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 						mFollowingList.add(new SearchListBean(3, userBean));
 					}
 					mFollowinglistPtrList.setAdapter(mFollowingListAdapter);
-					if(mFollowingList.size() < requestOffset){
-						mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
-					}else{
-						mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
-					}
+					mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
 					return;
 				}
 			}else{
