@@ -21,7 +21,7 @@ public class CommentAddRequest extends GolukFastjsonRequest<CommentAddResultBean
 	@Override
 	protected String getPath() {
 		// TODO Auto-generated method stub
-		return "/cdcComment/comment.htm";
+		return "/activePlay.htm";
 	}
 
 	@Override

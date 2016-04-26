@@ -74,6 +74,8 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_OauthLogin = 37;
 	public static final int PageType_BindInfo = 38;
 	public static final int PageType_GetPromotion = 39;
+	/** 设置登录应答信息 */
+	public static final int PageType_SetLoginRespInfo = 39;
 
 	public static final int PageType_ClusterMain =  40;
 	
@@ -142,12 +144,18 @@ public interface IPageNotifyFn extends IGolukCommFn {
 
 	/** 关注的人 **/
 	public static final int PageType_Following = 69;
-	
+
 	/** 粉丝 */
 	public static final int PageType_Fans = 70;
-	
+
 	/** userinfoHome */
 	public static final int PageType_UserinfoHome = 71;
+
+	/** searchUser */
+	public static final int PageType_SearchUser = 72;
+
+	/** recommenduser */
+	public static final int PageType_RecommendUser = 73;
 
 
 	/**

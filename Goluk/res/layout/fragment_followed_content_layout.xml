@@ -24,13 +24,13 @@
             android:textSize="18sp" />
         <ImageView
             android:id="@+id/iv_followed_search"
-            android:layout_width="36.6dp"
-            android:layout_height="36.6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:background="@drawable/icon_search"
+            android:background="@drawable/icon_search_white"
             android:contentDescription="@string/imgdes" />
     </RelativeLayout>
 

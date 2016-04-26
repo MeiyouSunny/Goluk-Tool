@@ -439,7 +439,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mNotconnected.setVisibility(View.GONE);
 			mConncetLayout.setVisibility(View.GONE);
 			mChangeBtn.setVisibility(View.VISIBLE);
-			if (mApp.isIpcLoginSuccess && !this.isT1()) {
+			if (mApp.isIpcLoginSuccess) {
 				liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon);
 			} else {
 				liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
@@ -1033,9 +1033,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					it.putExtra("isInfo", "back");
 					startActivity(it);
 				} else {
-					if (!this.isT1()) {
+//					if (!this.isT1()) {
 						toLive();
-					}
+//					}
 
 				}
 
@@ -1121,7 +1121,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private void toLive() {
 		
 		Intent intent;
-		if(GolukApplication.getInstance().isInteral()  == false){
+		if(GolukApplication.getInstance().isInteral()){
 			intent = new Intent(this, BaidumapLiveActivity.class);
 		}else{
 			intent = new Intent(this, GooglemapLiveActivity.class);
@@ -1255,11 +1255,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		mChangeBtn.setVisibility(View.VISIBLE);
 		mSettingBtn.setVisibility(View.VISIBLE);
 		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
-		if (!isT1()) {
+//		if (!isT1()) {
 			liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon);
-		} else {
-			liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
-		}
+//		} else {
+//			liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+//		}
 
 	}
 

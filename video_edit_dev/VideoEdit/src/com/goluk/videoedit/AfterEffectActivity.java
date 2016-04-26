@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
 import android.opengl.GLSurfaceView;
@@ -22,12 +22,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -90,7 +90,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	LinearLayout mAECutLayout;
 	LinearLayout mAEVolumeLayout;
 	int mTimeLineX;
-	
+
 	/** 是否为静音 */
 	private boolean isMute;
 	/** 当前音量 */
@@ -104,8 +104,8 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	private View mTimeLineGateV;
 	private int mGateLocationX;
 
-	String mVideoPath1 = VideoEditConstant.VIDEO_PATH_1;
-	String mVideoPath = VideoEditConstant.VIDEO_PATH;
+	String mVideoPath1 = VideoEditConstant.VIDEO_PATH;
+	String mVideoPath = VideoEditConstant.VIDEO_PATH_1;
 
 	String mMusicPath = VideoEditConstant.MUSIC_PATH;
 
@@ -150,7 +150,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	 * @param chunkIndex
 	 * @param position 基于当前chunk的拆分的位置。单位秒。
 	 */
-	public void splitChunk(/*int chunkIndex, float position*/) {
+	public void splitChunk() {
 		if(mProjectItemList == null || mProjectItemList.size() <= 3) {
 			return ;
 		}
@@ -301,81 +301,13 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 
 		mAfterEffect = new AfterEffect(this, mGLSurfaceView, this, width, height);
 		mProject = mAfterEffect.getProject();
-		InputStream istr = null;
-		try {
-			istr = getAssets().open("tailer.png");
-			Bitmap bitmap = BitmapFactory.decodeStream(istr);
-			Typeface font = Typeface.createFromAsset(this.getAssets(), "PingFang Regular.ttf");
-			Bitmap tailerBitmap = mAfterEffect.createTailer(bitmap, "crackerli", "2016-09-09", font);
-//			File file = new File("/sdcard/Movies/tailer.png");
-//			if (file.exists())
-//				file.delete();
-//			saveBitmapToPng(tailerBitmap, file);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (istr != null)
-				try {
-					istr.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-		}
 
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
 				switch (msg.what) {
-//				case PRO:
-//					if (progress >= MAX_PROGRESS) {
-//						// 锟斤拷锟斤拷锟斤拷锟斤拷
-//						progress = 0;
-//						progressDialog.dismiss();// 锟斤拷俣曰锟斤拷锟�//					} else {
-//						progress++;
-//						progressDialog.setProgress(progress);
-//						// 锟接迟凤拷锟斤拷锟斤拷息
-//						handler.sendEmptyMessageDelayed(PRO, 100);
-//					}
-//					break;
-//				case UPDATE_VIEW:
-//					if (canUpdateView) {
-//
-//						// 锟斤拷锟斤拷锟斤拷图
-//						updateView(msg.arg1);
-//
-//						canUpdateView = false;
-//						canTimer = true;
-//					} else {
-//						if (canTimer) {
-//							// 写一锟斤拷锟斤拷时锟斤拷锟斤拷锟斤拷时锟斤拷唯一
-//							new Thread(new Runnable() {
-//
-//								@Override
-//								public void run() {
-//									try {
-//										canTimer = false;
-//										Thread.sleep(50);
-//										canUpdateView = true;
-//									} catch (InterruptedException e) {
-//										e.printStackTrace();
-//									}
-//								}
-//							}).start();
-//						}
-//					}
-//					break;
-//				case SRCOVIEW_STOP: {
-//					int lastX = (int) msg.obj;
-//					if (lastX == contentScrollView.getScrollX()) {
-//						handleStop(contentScrollView);
-//					} else {
-//						handler.sendMessageDelayed(handler.obtainMessage(SRCOVIEW_STOP, contentScrollView.getScrollX()), 5);
-//
-//					}
-//				}
-//					break;
+
 				default: {
 					if (msg.what >= 1000 && msg.what < 2000) {
 						handlerAECallBack(msg);
@@ -389,14 +321,37 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		addChunk(mVideoPath);
 	}
 
-	float currentChunkPosition = 0f;
+	private void addTail(String nickName, String date) {
+		InputStream istr = null;
+
+		try {
+			istr = getAssets().open("tailer.png");
+			Bitmap bitmap = BitmapFactory.decodeStream(istr);
+			Typeface font = Typeface.createFromAsset(this.getAssets(), "PingFang Regular.ttf");
+			Bitmap tailerBitmap = mAfterEffect.createTailer(bitmap, nickName, date, font);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (istr != null)
+				try {
+					istr.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		}
+	}
+
+	float mPlayingChunkPosition = 0f;
+
+	// Tail index is -1
+	int mPlayChunkIndex = -2;
 
 	private void handlerAECallBack(Message msg) {
 
 		switch (msg.what) {
 
 		case MSG_AE_PLAY_STARTED:
-			Log.d(TAG, "MSG_AE_PLAY_STARTED");
+			Log.d("CK1", "MSG_AE_PLAY_STARTED");
 			currentPlayPosition = 0;
 			isPlayFinished = false;
 			if(!isPlaying){
@@ -408,23 +363,77 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		case MSG_AE_PLAY_PROGRESS:
 		{
 			ChunkPlayBean playBean = (ChunkPlayBean)msg.obj;
-//			float currentPos = playBean.currentSec;
-//			float totalSec = playBean.totalSec;
+			float currentPos = playBean.currentSec;
+			float totalSec = playBean.totalSec;
 			float chunkPosition = playBean.position;
 			AfterEffect afterEffect = playBean.effect;
-			int chunkIndex = playBean.chunkIndex;
+			final int chunkIndex = playBean.chunkIndex;
+
 			Chunk chunk = afterEffect.getMainChunks().get(chunkIndex);
 
-			Log.d(TAG, "MSG_AE_PLAY_PROGRESS " + currentChunkPosition + "/" + chunkPosition + "/" + currentPlayPosition);
+//			Log.d("CK1", "MSG_AE_PLAY_PROGRESS " + currentChunkPosition + "/" + chunkPosition + "/" + currentPlayPosition);
+			Log.d("CK1", "MSG_AE_PLAY_PROGRESS " + currentPos + "/" + totalSec + ","
+						+ chunkIndex + "-" + chunkPosition + ", chunk duration: " +
+						chunk.getDuration() + ", mPlayingChunkPosition=" + mPlayingChunkPosition);
 			int chunkWidth = VideoEditUtils.ChunkTime2Width(chunk);
 
-//			float delta = currentPos - currentPlayPosition;
-//			float delta = currentPos - currentPlayPosition;
-//			currentPlayPosition = currentPos;
-			float delta = chunkPosition - currentChunkPosition;
-			currentChunkPosition = chunkPosition;
+			if(mPlayChunkIndex == -2) {
+				// no need to adjust CE
+				mPlayChunkIndex = chunkIndex;
+			} else {
+				if(mPlayChunkIndex > -2 && mPlayChunkIndex != chunkIndex) {
+					Chunk preChunk = afterEffect.getMainChunks().get(mPlayChunkIndex);
+					float lastDelta = preChunk.getDuration() - mPreLastPlayTime;
+					if(lastDelta > 0.001) {
+						// last time lose lots of frames
+						float offset = lastDelta * chunkWidth / chunk.getDuration();
+						final float realOff = offset + mCEValue;
+						if((int)realOff >= 1) {
+							// Worth scroll
+							mAERecyclerView.post(new Runnable() {
+								@Override
+								public void run() {
+									Log.d("CK1", "realOff2=" + realOff);
+									mAERecyclerView.scrollBy((int)realOff, 0);
+								}
+							});
+							// restore and remember new CE
+							mCEValue = (realOff - (int)realOff);
+						} else {
+							mCEValue = realOff;
+						}
 
-	//		float offset = delta * totalWidth / totalSec;
+//						Log.d(TAG, "time line scroll params: offset=" +
+//								offset + ", realOff=" + realOff +
+//								", mCEValue=" + mCEValue + ", chunkPosition=" + chunkPosition +
+//								", chunk duration=" + chunk.getDuration());
+
+						mAERecyclerView.post(new Runnable() {
+							@Override
+							public void run() {
+								Log.d("CK1", "skip transition with wrong playing data, width=" + mTransitionWidth);
+								mAERecyclerView.scrollBy(mTransitionWidth, 0);
+							}
+						});
+//							mCEValue = 0f;
+//							currentChunkPosition = 0;
+					}
+					mPlayingChunkPosition = 0;
+					mCEValue = 0f;
+					mPlayChunkIndex = chunkIndex;
+//					mPreLastPlayTime = 0;
+				} else {
+					// same chunk, no need to adjust CE
+				}
+			}
+
+			Log.d("CK1", "mPlayingChunkPosition=" + mPlayingChunkPosition + ", mCEValue=" + mCEValue);
+			float delta = chunkPosition - mPlayingChunkPosition;
+			mPlayingChunkPosition = chunkPosition;
+//			if(chunkPosition != 0) {
+				mPreLastPlayTime = chunkPosition;
+//			}
+
 			float offset = delta * chunkWidth / chunk.getDuration();
 			final float realOff = offset + mCEValue;
 			if((int)realOff >= 1) {
@@ -432,6 +441,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 				mAERecyclerView.post(new Runnable() {
 					@Override
 					public void run() {
+						Log.d("CK1", "realOff=" + realOff);
 						mAERecyclerView.scrollBy((int)realOff, 0);
 					}
 				});
@@ -440,9 +450,6 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			} else {
 				mCEValue = realOff;
 			}
-
-//			List<Chunk> chunkList = afterEffect.getMainChunks();
-//			Chunk chunk = chunkList.get(chunkIndex);
 
 			Log.d(TAG, "time line scroll params: offset=" +
 					offset + ", realOff=" + realOff +
@@ -453,11 +460,12 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 				mAERecyclerView.post(new Runnable() {
 					@Override
 					public void run() {
+						Log.d("CK1", "skip transition with right playing data, width=" + mTransitionWidth);
 						mAERecyclerView.scrollBy(mTransitionWidth, 0);
 					}
 				});
-				mCEValue = 0f;
-				currentChunkPosition = 0;
+//				mCEValue = 0f;
+//				currentChunkPosition = 0;
 			}
 		}
 			break;
@@ -466,6 +474,8 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			mVideoPlayIv.setVisibility(View.VISIBLE);
 			isPlayFinished = true;
 			isPlaying = false;
+			mPlayChunkIndex = -2;
+//			mPlayingChunkPosition = 0;
 			break;
 		case MSG_AE_PLAY_FAILED:
 		{
@@ -554,11 +564,71 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			break;
 		}
 
+		case MSG_AE_CHUNK_PLAY_END:
+		{
+			ChunkPlayBean playBean = (ChunkPlayBean)msg.obj;
+			float currentPos = playBean.currentSec;
+			float totalSec = playBean.totalSec;
+			float chunkPosition = playBean.position;
+//			AfterEffect afterEffect = playBean.effect;
+			int chunkIndex = playBean.chunkIndex;
+			Chunk chunk = mAfterEffect.getMainChunks().get(chunkIndex);
+
+//			Log.d("CK1", "MSG_AE_PLAY_PROGRESS " + currentChunkPosition + "/" + chunkPosition + "/" + currentPlayPosition);
+			Log.d("CK2", "MSG_AE_PLAY_PROGRESS " + currentPos + "/" + totalSec + "," + chunkIndex + "-" + chunkPosition);
+			int chunkWidth = VideoEditUtils.ChunkTime2Width(chunk);
+
+//			float delta = currentPos - currentPlayPosition;
+//			float delta = currentPos - currentPlayPosition;
+//			currentPlayPosition = currentPos;
+			float delta = chunkPosition - mPlayingChunkPosition;
+			mPlayingChunkPosition = chunkPosition;
+
+	//		float offset = delta * totalWidth / totalSec;
+			float offset = delta * chunkWidth / chunk.getDuration();
+			final float realOff = offset + mCEValue;
+			if((int)realOff >= 1) {
+				// Worth scroll
+				mAERecyclerView.post(new Runnable() {
+					@Override
+					public void run() {
+						mAERecyclerView.scrollBy((int)realOff, 0);
+					}
+				});
+				// restore and remember new CE
+				mCEValue = (realOff - (int)realOff);
+			} else {
+				mCEValue = realOff;
+			}
+
+//			List<Chunk> chunkList = afterEffect.getMainChunks();
+//			Chunk chunk = chunkList.get(chunkIndex);
+
+			Log.d(TAG, "time line scroll params: offset=" +
+					offset + ", realOff=" + realOff +
+					", mCEValue=" + mCEValue + ", chunkPosition=" + chunkPosition +
+					", chunk duration=" + chunk.getDuration());
+
+			if(chunk.getDuration() - chunkPosition < 0.001) {
+				mAERecyclerView.post(new Runnable() {
+					@Override
+					public void run() {
+						mAERecyclerView.scrollBy(mTransitionWidth, 0);
+					}
+				});
+				mCEValue = 0f;
+				mPlayingChunkPosition = 0;
+			}
+		}
+			break;
+
 		default:
 			Log.d(TAG, "unknown operation happened");
 			break;
 		}
 	}
+
+	private float mPreLastPlayTime;
 
 	public void showEditController(){
 		mAEEditController.setVisibility(View.VISIBLE);
@@ -616,27 +686,31 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
-
 				/** 如果来自用户对seekbar的操作，则记录progress。如果来自代码调用setProgress()则不记录 */
-				if(fromUser){
+				if(fromUser) {
 					mCurrVolumeProgress = progress;
 				}
 				mAEVolumePercentTv.setText(progress + "%");
 
-				if(progress == 0){
-					mAEVolumeSettingIv.setImageDrawable(AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume_closed));
+				if(progress == 0) {
+					mAEVolumeSettingIv.setImageDrawable(
+							AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume_closed));
 					isMute = true;
-				}else{
-					mAEVolumeSettingIv.setImageDrawable(AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume));
+				} else {
+					mAEVolumeSettingIv.setImageDrawable(
+							AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume));
 					isMute = false;
 				}
-
-				
 			}
 		});
 	}
 
 	int mCurrentPointedIndex;
+
+	private void seekWith(int chunkIndex, int chunkWidth, float delta) {
+		Chunk chunk = mAfterEffect.getMainChunks().get(chunkIndex);
+		mAfterEffect.seekTo(chunkIndex, delta / chunkWidth * chunk.getDuration());
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -700,6 +774,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 						int pX = VideoEditUtils.getViewXLocation(view);
 						if(VideoEditUtils.judgeChunkOverlap(mGateLocationX, pX, view.getWidth())) {
 							mCurrentPointedIndex = i;
+//							seekWith(VideoEditUtils.mapI2CIndex(i), view.getWidth(), mGateLocationX - pX);
 						}
 					}
 				}
@@ -712,7 +787,15 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		mAERecyclerView.setItemAnimator(new DefaultItemAnimator());
 
 		initController();
+
+//		WindowManager wm = (WindowManager) this
+//		        .getSystemService(Context.WINDOW_SERVICE);
+//		windowWidth = wm.getDefaultDisplay().getWidth();
+//		windowHeight = wm.getDefaultDisplay().getHeight();
 	}
+
+//	private int windowWidth;
+//	private int windowHeight;
 
 	public float getChannelDuration() {
 		return mAfterEffect.getDuration();
@@ -742,9 +825,15 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		case R.id.action_layout_tail:
 //			mAfterEffect.setDateString("2016.04.15");
 //			mAfterEffect.setTailer(bitmap);
+			addTail("crackerli", "2016-09-09");
 			break;
 		case R.id.action_layout_music:
-			mAfterEffect.editBackgroundMusic(mMusicPath);
+			try {
+				mAfterEffect.editBackgroundMusic(mMusicPath);
+			} catch (InvalidVideoSourceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			item.setChecked(true);
 			break;
 		}
@@ -765,6 +854,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	public final static int MSG_AE_BITMAP_READ_OUT = 1012;
 	public final static int MSG_AE_PLAY_PAUSED = 1013;
 	public final static int MSG_AE_PLAY_RESUMED = 1014;
+	public final static int MSG_AE_CHUNK_PLAY_END = 1015;
 
 	@Override
 	public void onStartToPlay(AfterEffect afterEffcet) {
@@ -791,7 +881,6 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 
 		Message msg = handler.obtainMessage(MSG_AE_PLAY_PROGRESS, 0, 0, bean);
 		handler.sendMessage(msg);
-
 	}
 
 	@Override
@@ -891,7 +980,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			mAEVolumeLayout.setBackgroundResource(R.drawable.ae_controller_bg);
 			mAECutLayout.setBackgroundColor(AfterEffectActivity.this.getResources().getColor(R.color.ae_controller_pressed));
 
-			if(mAEVolumeSettingLayout.getVisibility() == View.VISIBLE){
+			if(mAEVolumeSettingLayout.getVisibility() == View.VISIBLE) {
 				mAEVolumeSettingLayout.setVisibility(View.GONE);
 				mAESplitAndDeleteLayout.setVisibility(View.VISIBLE);
 			}
@@ -942,6 +1031,20 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	@Override
 	public void onExportFinished(AfterEffect afterEffcet, String path) {
 		Message msg = handler.obtainMessage(MSG_AE_EXPORT_FINISHED, path);
+		handler.sendMessage(msg);
+	}
+
+	@Override
+	public void onplayingChunkEnd(float currentSec, float totalSec,
+			int chunkIndex, float currentChunkSec) {
+		ChunkPlayBean bean = new ChunkPlayBean();
+		bean.chunkIndex = chunkIndex;
+		bean.position = currentChunkSec;
+//		bean.effect = afterEffcet;
+		bean.currentSec = currentSec;
+		bean.totalSec = totalSec;
+
+		Message msg = handler.obtainMessage(MSG_AE_CHUNK_PLAY_END, 0, 0, bean);
 		handler.sendMessage(msg);
 	}
 }
