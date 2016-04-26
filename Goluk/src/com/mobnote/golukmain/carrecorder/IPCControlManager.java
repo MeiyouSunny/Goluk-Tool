@@ -1023,6 +1023,7 @@ public class IPCControlManager implements IPCManagerFn {
 				IPCManagerFn.IPC_VDCPCmd_SetVoiceType, s);
 	}
 	
+
 	public boolean startLive(String jsonData) {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_LiveStart, jsonData);
@@ -1031,6 +1032,68 @@ public class IPCControlManager implements IPCManagerFn {
 	public boolean stopLive() {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_LiveStop, "");
+	}
+	/**
+	 * 获取全局设置列表
+	 * 
+	 * @return
+	 */
+	public boolean getCapacityList() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetCapacityList, "");
+	}
+	
+	/**
+	 * 获取精彩视频类型（时长）
+	 * 
+	 * @return
+	 */
+	public boolean getWonderfulVideoType() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetVideoTimeConf, "");
+	}
+
+	/**
+	 * 设置精彩视频类型（时长）
+	 * 
+	 * @return
+	 */
+	public boolean setWonderfulVideoType(int historyTime, int futureTime) {
+		String str = JsonUtil.setWonderfulVideoTypeJson(historyTime, futureTime);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetVideoTimeConf, str);
+	}
+	
+	/**
+	 * 获取视频水印
+	 * 
+	 * @return
+	 */
+	public boolean getVideoLogo() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_GetOSDConf, "");
+	}
+	
+
+	/**
+	 * 设置视频水印
+	 * 
+	 * @return
+	 */
+	public boolean setVideoLogo(int logoVisible, int timeVisible) {
+		String str = JsonUtil.setVideoLogoJson(logoVisible, timeVisible);
+		GolukDebugUtils.e("", "----------------------setVideoLogo-------str:" +str);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_SetOSDConf, str);
+	}
+	
+	/**
+	 * 重启IPC
+	 * @return
+	 */
+	public boolean setIPCReboot() {
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+				IPCManagerFn.IPC_VDCPCmd_Reboot, "");
 	}
 
 	@Override

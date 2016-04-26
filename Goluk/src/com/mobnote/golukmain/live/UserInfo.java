@@ -13,7 +13,7 @@ public class UserInfo implements Serializable {
 	/** 用户爱滔客aid */
 	public String aid;
 	/** 用户昵称 */
-	public String nickName;
+	public String nickname;
 	/** 图片地址 */
 	public String picurl;
 	/** 性别 */

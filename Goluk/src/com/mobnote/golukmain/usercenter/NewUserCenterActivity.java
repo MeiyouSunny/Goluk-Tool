@@ -33,6 +33,7 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.thirdshare.ProxyThirdShare;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.thirdshare.ThirdShareBean;
@@ -360,12 +361,10 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 		if (!isLoginSucess()) {
 			return false;
 		}
-		String info = mBaseApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
+		UserInfo info = mBaseApp.getMyInfo();
 		try {
-			JSONObject json = new JSONObject(info);
-			String id = json.getString("uid");
 
-			if (id.equals(mUserInfo.uid)) {
+			if (info != null && info.uid.equals(mUserInfo.uid)) {
 				return true;
 			} else {
 				return false;

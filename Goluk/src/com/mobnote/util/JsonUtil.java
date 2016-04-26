@@ -354,7 +354,7 @@ public class JsonUtil {
 			JSONObject obj = new JSONObject();
 			obj.put("uid", userInfo.uid);
 			obj.put("aid", userInfo.aid);
-			obj.put("nickname", userInfo.nickName);
+			obj.put("nickname", userInfo.nickname);
 			obj.put("active", "" + userInfo.active);
 			obj.put("tag", userInfo.tag);
 			obj.put("persons", "" + userInfo.persons);
@@ -381,7 +381,7 @@ public class JsonUtil {
 			UserInfo userInfo = new UserInfo();
 			userInfo.uid = getJsonStringValue(rootObj, "uid", "");
 			userInfo.aid = getJsonStringValue(rootObj, "aid", "");
-			userInfo.nickName = getJsonStringValue(rootObj, "nickname", "");
+			userInfo.nickname = getJsonStringValue(rootObj, "nickname", "");
 			userInfo.picurl = getJsonStringValue(rootObj, "picurl", "");
 			userInfo.sex = getJsonStringValue(rootObj, "sex", "");
 			userInfo.lon = getJsonStringValue(rootObj, "lon", "");
@@ -1187,7 +1187,6 @@ public class JsonUtil {
 		try {
 			JSONObject obj = new JSONObject();
 			obj.put("nickname", nickName);
-
 			return obj.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1467,6 +1466,43 @@ public class JsonUtil {
 				timestamp = "20" + timestamp;
 			}
 			return timestamp;
+		} catch (Exception e) {
+
+		}
+		return "";
+	}
+	
+	/**
+	 * 精彩视频类型
+	 * @param historyTime
+	 * @param futureTime
+	 * @return
+	 */
+	public static String setWonderfulVideoTypeJson(int historyTime, int futureTime) {
+		try {
+			JSONObject obj = new JSONObject();
+			obj.put("wonder_history_time", historyTime);
+			obj.put("wonder_future_time", futureTime);
+//			obj.put("urgent_history_time", 0);
+//			obj.put("urgent_future_time", 0);
+			return obj.toString();
+		} catch (Exception e) {
+			return "";
+		}
+	}
+	
+	/**
+	 * 视频水印
+	 * @param logoVisible
+	 * @return
+	 */
+	public static String setVideoLogoJson(int logoVisible, int timeVisible) {
+		try {
+			JSONObject rootObj = new JSONObject();
+			rootObj.put("logo_visible", logoVisible);
+			rootObj.put("time_visible", 0);
+
+			return rootObj.toString();
 		} catch (Exception e) {
 
 		}

@@ -206,6 +206,7 @@
     <string name="setting_title_text">设置</string>
     <string name="setting_tcaf_title">停车安防</string>
     <string name="spzl_title">循环视频质量</string>
+    <string name="str_wonderful_video_type_title">精彩视频类型</string>
     <string name="str_wonderful_video_quality_title">精彩视频质量</string>
     <string name="str_settings_tone_title">提示音音量大小</string>
     <string name="str_settings_shutdown_title">关机时间</string>
@@ -215,6 +216,7 @@
     <string name="jcsp_title">精彩视频拍照提示音</string>
     <string name="str_settings_fatigue_title">疲劳驾驶语音提示</string>
     <string name="str_settings_image_flip_title">图像自动翻转</string>
+    <string name="str_settings_video_logo_title">视频水印显示</string>
     <string name="str_settings_parking_sleep_title">停车休眠模式</string>
     <string name="str_settings_photographic_quality_title">照片质量</string>
     <string name="str_settings_handset_title">遥控器按键功能</string>
@@ -1006,6 +1008,7 @@
     <string name="str_um_share_dialog_txt">Share...</string>
     <string name="str_twitter_no_install">Need Install Twitter</string>
 
+    <string name="cancel">取消</string>
     <string name="str_reset_pwd_title">Retrieve password</string>
     <string name="ipc_check_zone_msg">Do you want to restart the recorder to use the new time zone?</string>
     <string name="umeng_socialize_text_whatsapp_key">Whatsapp</string>
@@ -1014,5 +1017,12 @@
     <string name="str_global_dialog_msg">请确认是否需要中止本次同步任务?</string>
     <string name="str_global_dialog_right_btn">中止</string>
     <string name="str_global_cancel_success">视频同步已被取消</string>
+    
+    <string name="str_settings_wonderful_video_type_hint_text">精彩抓拍（6+6）：按下遥控器（KIT）按键，触发录制前6秒+后6秒的12秒
+        精彩视频片段。\n经典模式：按下遥控器（KIT）按键，触发录制一段30秒精彩视频。</string>
+     <string name="str_settings_video_type1">精彩抓拍 ( 6+6 )</string>
+     <string name="str_settings_video_type2">经典模式</string>
+     <string name="str_reboot_ipc_now">现在重启</string>
+     <string name="str_reboot_ipc_later">以后在说</string>
     
 </resources>

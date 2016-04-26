@@ -3,8 +3,14 @@ package com.mobnote.golukmain;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.userlogin.UpHeadData;
+import com.mobnote.golukmain.userlogin.UpHeadResult;
+import com.mobnote.golukmain.userlogin.UpdUserDescBeanRequest;
+import com.mobnote.golukmain.userlogin.UpdUserHeadBeanRequest;
 import com.mobnote.util.GolukUtils;
 
 import cn.com.mobnote.logic.GolukModule;
@@ -23,7 +29,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class UserPersonalHeadActivity extends BaseActivity implements OnClickListener, OnTouchListener, IPageNotifyFn {
+public class UserPersonalHeadActivity extends BaseActivity implements OnClickListener, OnTouchListener, IPageNotifyFn,IRequestResultListener {
 
 	// title
 	private ImageButton btnBack;
@@ -39,13 +45,15 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 	private String imageIndex = "";
 	// 头像的提示
 	private ImageView mImageHint1, mImageHint2, mImageHint3, mImageHint4, mImageHint5, mImageHint6, mImageHint7;
+	
+	private UpdUserHeadBeanRequest updUserHeadBeanRequest = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_personal_edit_head);
-
+		updUserHeadBeanRequest = new UpdUserHeadBeanRequest(IPageNotifyFn.PageType_ModifyHeadPic, this);
 		initView();
 		mTextTitle.setText(this.getResources().getString(R.string.str_choose_head));
 	}
@@ -212,14 +220,15 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		boolean flog = mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, PageType_ModifyHeadPic,
-				requestStr.toString());
-		if (!flog) {
-			// 失败
-			closeLoadDialog();
-			GolukUtils.showToast(this, this.getResources().getString(R.string.str_save_fail));
-			return;
-		}
+		updUserHeadBeanRequest.get(GolukApplication.getInstance().getMyInfo().uid, GolukApplication.getInstance().getMyInfo().phone, "1", "", imageIndex);
+//		boolean flog = mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, PageType_ModifyHeadPic,
+//				requestStr.toString());
+//		if (!flog) {
+//			// 失败
+//			closeLoadDialog();
+//			GolukUtils.showToast(this, this.getResources().getString(R.string.str_save_fail));
+//			return;
+//		}
 		showLoadingDialog();
 	}
 
@@ -282,8 +291,9 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 						String rst = data.getString("result");
 						// 图片上传成功
 						if ("0".equals(rst)) {
-
+							
 							String head = data.getString("head");
+							GolukApplication.getInstance().setMyinfo("", head, "");
 							GolukUtils.showToast(UserPersonalHeadActivity.this, this.getResources().getString(R.string.str_save_success));
 
 							Intent itHead = new Intent(UserPersonalHeadActivity.this, UserPersonalInfoActivity.class);
@@ -311,5 +321,39 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 						this.getResources().getString(R.string.str_save_network_error));
 			}
 		}
+	}
+
+	@Override
+	public void onLoadComplete(int requestType, Object result) {
+		if(IPageNotifyFn.PageType_ModifyHeadPic == requestType){
+			closeLoadDialog();
+			UpHeadResult headResult = (UpHeadResult) result;
+
+			if (headResult.success) {
+				UpHeadData data = headResult.data;
+				String rst = data.result;
+				// 图片上传成功
+				if ("0".equals(rst)) {
+					
+					GolukApplication.getInstance().setMyinfo("", imageIndex, "");
+					GolukUtils.showToast(UserPersonalHeadActivity.this, this.getResources().getString(R.string.str_save_success));
+
+					Intent itHead = new Intent(UserPersonalHeadActivity.this, UserPersonalInfoActivity.class);
+					Bundle bundle = new Bundle();
+					bundle.putString("intentSevenHead", imageIndex);
+					itHead.putExtras(bundle);
+					this.setResult(RESULT_OK, itHead);
+					this.finish();
+				} else {
+					GolukUtils.showToast(UserPersonalHeadActivity.this,
+							this.getResources().getString(R.string.str_save_network_error));
+				}
+
+			} else {
+				GolukUtils.showToast(UserPersonalHeadActivity.this,
+						this.getResources().getString(R.string.str_save_network_error));
+			}
+		}
+		
 	}
 }

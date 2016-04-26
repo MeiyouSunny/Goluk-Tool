@@ -1,9 +1,11 @@
 package com.mobnote.util;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -1040,5 +1042,63 @@ public class GolukUtils {
 		}
 
 		return false;
+	}
+	
+	/**
+	 * 读取assets下文件
+	 * @param context
+	 * @param fileName
+	 * @return
+	 */
+	public static String getDataFromAssets(Context context, String fileName) {
+		InputStreamReader inputReader = null;
+		try {
+			inputReader = new InputStreamReader(context.getAssets().open(fileName));
+			BufferedReader bufReader = new BufferedReader(inputReader);
+			String line = "";
+			String result = "";
+			while ((line = bufReader.readLine()) != null) {
+				result += line;
+			}
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (inputReader != null) {
+				try {
+					inputReader.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+		return null;
+	}
+	
+	/**
+	 * 容量大小转字符串
+	 * 
+	 * @param size
+	 *            容量大小
+	 * @return
+	 * @author xuhw
+	 * @date 2015年4月11日
+	 */
+	public static String getSize(double size) {
+		String result = "";
+		double totalsize = 0;
+
+		java.text.DecimalFormat df = new java.text.DecimalFormat("#.##");
+		if (size >= 1024) {
+			totalsize = size / 1024;
+			result = df.format(totalsize) + "GB";
+		} else {
+			totalsize = size;
+			result = df.format(totalsize) + "MB";
+		}
+
+		return result;
 	}
 }

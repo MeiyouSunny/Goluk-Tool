@@ -2,6 +2,7 @@ package com.mobnote.golukmain;
 
 import org.json.JSONObject;
 
+import com.alibaba.fastjson.JSON;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventBindPhoneNum;
 import com.mobnote.eventbus.EventConfig;
@@ -9,10 +10,14 @@ import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.base.CarRecordBaseActivity;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
+import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
+import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.msg.MessageBadger;
+import com.mobnote.golukmain.userlogin.CancelResult;
+import com.mobnote.golukmain.userlogin.UserCancelBeanRequest;
 import com.mobnote.golukmain.xdpush.GolukNotification;
 import com.mobnote.manager.MessageManager;
 import com.mobnote.user.DataCleanManage;
@@ -60,7 +65,7 @@ import de.greenrobot.event.EventBus;
  * 
  */
 
-public class UserSetupActivity extends CarRecordBaseActivity implements OnClickListener, UserInterface,
+public class UserSetupActivity extends CarRecordBaseActivity implements OnClickListener, UserInterface,IRequestResultListener,
 		ILiveDialogManagerFn {
 	/** application */
 	private GolukApplication mApp = null;
@@ -96,6 +101,8 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	private View mBtnSwitch = null;
 	public static final String MANUAL_SWITCH = "manualswitch";
 	
+	private UserCancelBeanRequest userCancelBeanRequest;
+	
 	@SuppressLint("HandlerLeak")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -111,6 +118,8 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		// 页面初始化
 		init();
 		EventBus.getDefault().register(this);
+		
+		userCancelBeanRequest = new UserCancelBeanRequest(IPageNotifyFn.PageType_SignOut, this);
 //		int b = SettingUtils.getInstance().getInt(MANUAL_SWITCH, 5);
 //		if (b) {
 ////			mBtnSwitch.setBackgroundResource(R.drawable.set_open_btn);
@@ -354,12 +363,12 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		if (!UserUtils.isNetDeviceAvailable(mContext)) {
 			GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
 		} else {
-			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-					IPageNotifyFn.PageType_SignOut, "");
-			if (!b) {
-				GolukUtils.showToast(this, this.getResources().getString(R.string.str_loginout_fail));
-				return;
-			}
+			userCancelBeanRequest.get(mApp.getMyInfo().uid);
+//			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_SignOut, "");
+//			if (!b) {
+//				GolukUtils.showToast(this, this.getResources().getString(R.string.str_loginout_fail));
+//				return;
+//			}
 			LiveDialogManager.getManagerInstance().showCommProgressDialog(this, LiveDialogManager.DIALOG_TYPE_LOGOUT,
 					"", this.getResources().getString(R.string.str_loginouting), true);
 		}
@@ -386,34 +395,21 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		GolukNotification.getInstance().clearAllNotification(this);
 	}
 
-	/**
-	 * 注销的回调
-	 */
-	public void getLogintoutCallback(int success, Object obj) {
-		GolukDebugUtils.e("", "-----------------getLogintoutCallback--------------------");
-		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
-		if (1 != success) {
-			GolukUtils.showToast(this, this.getResources().getString(R.string.str_loginout_fail));
-			return;
-		}
-		logoutSucess();
-	}
 
 	/**
 	 * 同步获取用户信息
 	 */
 	public void initData() {
-		String info = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, 0, "");
+		UserInfo info = mApp.getMyInfo();
 		try {
-			JSONObject json = new JSONObject(info);
-
-			GolukDebugUtils.i("lily", "====json()====" + json);
-			phone = json.getString("phone");
-			// 注销后，将信息存储
-			mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
-			mEditor = mPreferences.edit();
-			mEditor.putString("setupPhone", phone);
-			mEditor.commit();
+			if(info != null && info.phone!= null  && !"".equals(info.phone)){
+				GolukDebugUtils.i("lily", "====json()====" + JSON.toJSONString(info));
+				// 注销后，将信息存储
+				mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+				mEditor = mPreferences.edit();
+				mEditor.putString("setupPhone", info.phone);
+				mEditor.commit();
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -492,10 +488,31 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	public void dialogManagerCallBack(int dialogType, int function, String data) {
 		if (dialogType == LiveDialogManager.DIALOG_TYPE_LOGOUT) {
 			if (LiveDialogManager.FUNCTION_DIALOG_CANCEL == function) {
-				// 用户取消注销
-				mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SignOut,
-						JsonUtil.getCancelJson());
+//				// 用户取消注销
+//				mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SignOut,
+//						JsonUtil.getCancelJson());
 			}
+		}
+	}
+
+	@Override
+	public void onLoadComplete(int requestType, Object result) {
+		if(requestType == IPageNotifyFn.PageType_SignOut){
+			LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
+			CancelResult cancelResult = (CancelResult) result;
+			if(cancelResult!=null && cancelResult.success){
+				if("0".equals(cancelResult.data.result)){
+					SharedPrefUtil.saveUserInfo("");
+					SharedPrefUtil.saveUserPwd("");
+					SharedPrefUtil.saveUserToken("");
+					logoutSucess();
+				}else{
+					GolukUtils.showToast(this, this.getResources().getString(R.string.str_loginout_fail));
+				}
+			}else{
+				GolukUtils.showToast(this, this.getResources().getString(R.string.str_loginout_fail));
+			}
+			
 		}
 	}
 

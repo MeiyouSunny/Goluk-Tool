@@ -96,10 +96,12 @@ public class User implements IRequestResultListener{
 				}else{
 					com.alibaba.fastjson.JSONObject user = com.alibaba.fastjson.JSONObject.parseObject(userinfo);
 					String pwd = user.getString("pwd");
-					if("".equals(pwd)){
+					if(pwd == null || "".equals(pwd)){
 						pwd = GolukConfig.OTHER_PASSWORD;
 					}
+					GolukDebugUtils.i("zh", "zh-----initAtuoLogin --------- userinfo " + userinfo + "pwd = " + pwd);
 					userloginBean.get(user.getString("phone"), MD5.hexdigest(pwd),user.getString("uid"));
+					
 					StatusChange(1);//自动登录中
 				}
 			}

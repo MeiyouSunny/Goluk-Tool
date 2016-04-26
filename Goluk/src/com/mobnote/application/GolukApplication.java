@@ -985,16 +985,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			mRegistAndRepwdManage.registAndRepwdCallback(success, param1, param2);
 			break;
 
-		case PageType_ModifyNickName:
-			if (mPageSource == "UserPersonalName") {
-				((UserPersonalNameActivity) mContext).saveNameCallBack(success, param2);
-			}
-			break;
-		case PageType_ModifySignature:
-			if (mPageSource == "UserPersonalSign") {
-				((UserPersonalSignActivity) mContext).saveSignCallBack(success, param2);
-			}
-			break;
+//		case PageType_ModifyNickName:
+//			if (mPageSource == "UserPersonalName") {
+//				((UserPersonalNameActivity) mContext).saveNameCallBack(success, param2);
+//			}
+//			break;
+//		case PageType_ModifySignature:
+//			if (mPageSource == "UserPersonalSign") {
+//				((UserPersonalSignActivity) mContext).saveSignCallBack(success, param2);
+//			}
+//			break;
 		case PageType_LiveStart:
 			// 获取直播信息成功
 			if (null != mContext && mContext instanceof AbstractLiveActivity) {
@@ -1002,13 +1002,13 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			}
 
 			break;
-		// 注销
-		case PageType_SignOut:
-			if (mPageSource == "UserSetup") {
-				((UserSetupActivity) mContext).getLogintoutCallback(success, param2);
-			}
-			break;
-		// APP升级+IPC升级检测
+//		// 注销
+//		case PageType_SignOut:
+//			if (mPageSource == "UserSetup") {
+//				((UserSetupActivity) mContext).getLogintoutCallback(success, param2);
+//			}
+//			break;
+//		// APP升级+IPC升级检测
 		case PageType_CheckUpgrade:
 			mIpcUpdateManage.requestInfoCallback(success, param1, param2);
 			break;
@@ -1884,20 +1884,48 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @date 2015年8月7日
 	 */
 	public UserInfo getMyInfo() {
+		UserInfo myInfo = null;
 		try {
-			UserInfo myInfo = null;
-			String userInfo = SharedPrefUtil.getUserInfo();
+			String user = SharedPrefUtil.getUserInfo();
 
-			Log.e("dengting", "getUserInfo------------------logic-userInfo:" + userInfo);
+			Log.e("dengting", "getUserInfo------------------logic-userInfo:" + user);
 
-			if (null != userInfo) {
-				myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(userInfo));
+			if (null != user) {
+				myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(user));
 			}
-			return myInfo;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return myInfo;
+	}
+	
+	public void setMyinfo(String name,String head,String desc){
+		
+		String user = SharedPrefUtil.getUserInfo();
+
+		Log.e("dengting", "getUserInfo------------------logic-userInfo:" + user);
+
+		try {
+			if(user != null && !"".equals(user)){
+				UserInfo myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(user));
+				if(name !=null && !"".equals(name)){
+					myInfo.nickname = name;
+				}
+				if(head !=null && !"".equals(head)){
+					myInfo.head = head;
+				}
+				if(desc !=null && !"".equals(desc)){
+					myInfo.desc = desc;
+				}
+				SharedPrefUtil.saveUserInfo(JSON.toJSONString(myInfo));
+			}
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
 	}
 
 	/**

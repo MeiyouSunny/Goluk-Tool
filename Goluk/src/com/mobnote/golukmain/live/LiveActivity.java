@@ -223,7 +223,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			startVideoAndLive("");
 			mTitleTv.setText(this.getString(R.string.str_mylive_text));
 			mMoreImg.setVisibility(View.GONE);
-			mNickName.setText(myInfo.nickName);
+			mNickName.setText(myInfo.nickname);
 			setUserHeadImage(myInfo.head, myInfo.customavatar);
 			setAuthentication(myInfo.mUserLabel);
 
@@ -236,8 +236,8 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			if (null != currentUserInfo) {
 				mLiveCountSecond = currentUserInfo.liveDuration;
 			}
-			mTitleTv.setText(currentUserInfo.nickName + this.getString(R.string.str_live_someone));
-			mNickName.setText(currentUserInfo.nickName);
+			mTitleTv.setText(currentUserInfo.nickname + this.getString(R.string.str_live_someone));
+			mNickName.setText(currentUserInfo.nickname);
 			setUserHeadImage(currentUserInfo.head, currentUserInfo.customavatar);
 			setAuthentication(currentUserInfo.mUserLabel);
 		}
@@ -847,7 +847,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			if (null == myInfo) {
 				myInfo = mApp.getMyInfo();
 			}
-			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---3: " + myInfo.nickName);
+			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---3: " + myInfo.nickname);
 			if (null != myInfo) {
 				GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---4: ");
 				mCurrentLocationType = LOCATION_TYPE_HEAD;
@@ -1844,9 +1844,9 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 	 */
 	private String getLiveUserName() {
 		if (this.isShareLive) {
-			return this.myInfo.nickName;
+			return this.myInfo.nickname;
 		} else {
-			return this.currentUserInfo.nickName;
+			return this.currentUserInfo.nickname;
 		}
 	}
 

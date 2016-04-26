@@ -207,12 +207,12 @@
     
     <string-array name="list_tone_volume">
         <item>高 ( 100% )</item>
-        <item>中 ( 75% )</item>
+        <item>中 ( 70% )</item>
         <item>低 ( 50% )</item>
     </string-array>
     <string-array name="list_tone_volume_value">
         <item>100</item>
-        <item>75</item>
+        <item>70</item>
         <item>50</item>
     </string-array>
     <string-array name="list_shutdown_time">
@@ -229,6 +229,16 @@
     <string-array name="zone_array">
         <item>zh_CN</item>
         <item>en_US</item>
+    </string-array>
+    
+    <string-array name="list_wonderful_video_type">
+        <item>精彩抓拍（6+6）</item>
+        <item>经典模式</item>
+    </string-array>
+    
+    <string-array name="list_wonderful_video_type_value">
+        <item>6</item>
+        <item>30</item>
     </string-array>
 
 </resources>

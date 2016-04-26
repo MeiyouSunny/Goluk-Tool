@@ -63,6 +63,8 @@ import com.mobnote.golukmain.carrecorder.entity.VideoConfigState;
 import com.mobnote.golukmain.carrecorder.entity.VideoFileInfo;
 import com.mobnote.golukmain.carrecorder.entity.VideoShareInfo;
 import com.mobnote.golukmain.carrecorder.settings.SettingsActivity;
+import com.mobnote.golukmain.carrecorder.settings.TSettingsActivity;
+import com.mobnote.golukmain.carrecorder.settings.bean.WonderfulVideoJson;
 import com.mobnote.golukmain.carrecorder.util.GFileUtils;
 import com.mobnote.golukmain.carrecorder.util.ImageManager;
 import com.mobnote.golukmain.carrecorder.util.ReadWifiConfig;
@@ -83,6 +85,7 @@ import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.startshare.VideoEditActivity;
 import com.mobnote.golukmain.videosuqare.RingView;
 import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
+import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SortByDate;
@@ -120,13 +123,15 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	public static final int EMERGENCY = 113;
 	/** 8s视频 */
 	public static final int MOUNTS = 114;
+	/** 经典模式30ｓ **/
+	public static final int CLASSIC = 115;
 	/** 精彩视频下载检查计时 */
 	public static final int DOWNLOADWONDERFULVIDEO = 119;
 	/** 隐藏adasView **/
 	private static final int CLOSE_ADAS_VIEW = 120;
 
 	public enum VideoType {
-		mounts, emergency, idle
+		mounts, emergency, idle, classic
 	};
 
 	/** 定时截图 */
@@ -138,7 +143,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	/** 当前拍摄时间 */
 	private int mShootTime = 0;
 	/** 一键抢拍按钮 */
-	private ImageButton m8sBtn = null;
+	private Button m8sBtn = null;
 	/** 发起直播 **/
 	private ImageButton liveBtn = null;
 	/** 文件管理按钮 */
@@ -322,6 +327,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	public static final String ADASCONTENTTARGETSTATE3 = "3";
 	/**adas的显示时长**/
 	public static final long ADASTIMER = 2000;
+	/**精彩视频类型**/
+	private int mWonderfulTime;
 	
 	@SuppressLint("HandlerLeak")
 	@Override
@@ -358,6 +365,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					break;
 				case MOUNTS:
 					startTrimVideo();
+					break;
+				case CLASSIC:
+					start30TrimVideo();
 					break;
 				case STARTVIDEORECORD:
 					updateVideoRecordTime();
@@ -527,7 +537,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		mVideoResolutions = (ImageView) findViewById(R.id.mVideoResolutions);
 		mRtmpPlayerLayout = (RelativeLayout) findViewById(R.id.mRtmpPlayerLayout);
 		mVLayout = (RelativeLayout) findViewById(R.id.vLayout);
-		m8sBtn = (ImageButton) findViewById(R.id.m8sBtn);
+		m8sBtn = (Button) findViewById(R.id.m8sBtn);
 		mSettingBtn = (ImageView) findViewById(R.id.mSettingBtn);
 		mTime = (TextView) findViewById(R.id.mTime);
 		mAddr = (TextView) findViewById(R.id.mAddr);
@@ -897,7 +907,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				if (!isRecording) {
 					m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 					isRecording = true;
-					mCurVideoType = VideoType.mounts;
+					if (mWonderfulTime == 6) {
+						mCurVideoType = VideoType.mounts;
+					} else {
+						mCurVideoType = VideoType.classic;
+					}
 					GolukDebugUtils.e("xuhw", "m8sBtn========================2222======");
 					boolean isSucess = GolukApplication.getInstance().getIPCControlManager().startWonderfulVideo();
 
@@ -912,8 +926,15 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				return;
 			}
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
-				Intent setting = new Intent(CarRecorderActivity.this, SettingsActivity.class);
-				startActivity(setting);
+				Intent setting = null;
+				if (IPCControlManager.T1_SIGN
+						.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+					setting = new Intent(CarRecorderActivity.this, TSettingsActivity.class);
+					startActivity(setting);
+				} else {
+					setting = new Intent(CarRecorderActivity.this, SettingsActivity.class);
+					startActivity(setting);
+				}
 			}
 		} else if (id == R.id.mFullScreen) {
 			setFullScreen(true);
@@ -1302,6 +1323,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		// mApp.addLocationListener(SelfContextTag, this);
 		// GetBaiduAddress.getInstance().setCallBackListener(mBaiduGeoCoderFn);
 		initVideoImage();// 初始化相册列表
+		
+		// 获取精彩视频类型
+		boolean wonderfulType = GolukApplication.getInstance().getIPCControlManager().getWonderfulVideoType();
+		GolukDebugUtils.e("", "CarRecorderActivity-------------------wonderfulType：" + wonderfulType);
 	}
 
 	@Override
@@ -1368,6 +1393,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 */
 	private void startTrimVideo() {
 		if (null == m8sTimer) {
+			m8sBtn.setText("");
 			mShootTime = 0;
 			m8sTimer = new Timer();
 			TimerTask task = new TimerTask() {
@@ -1425,6 +1451,219 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 		}
 	}
+	
+	/**
+	 * 30s精彩抢拍
+	 */
+	private void start30TrimVideo(){
+		if (null == m8sTimer) {
+			mShootTime = 0;
+			m8sTimer = new Timer();
+			TimerTask task = new TimerTask() {
+				public void run() {
+					mShootTime++;
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							switch (mShootTime) {
+							case 1:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("30");
+								break;
+							case 2:
+								break;
+							case 3:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("29");
+								break;
+							case 4:
+								break;
+							case 5:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("28");
+								break;
+							case 6:
+								break;
+							case 7:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("27");
+								break;
+							case 8:
+								break;
+							case 9:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("26");
+								break;
+							case 10:
+								break;
+							case 11:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("25");
+								break;
+							case 13:
+								break;
+							case 14:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("24");
+								break;
+							case 15:
+								break;
+							case 16:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("23");
+								break;
+							case 17:
+								break;
+							case 18:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("22");
+								break;
+							case 19:
+								break;
+							case 20:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("21");
+								break;
+							case 21:
+								break;
+							case 22:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("20");
+								break;
+							case 23:
+								break;
+							case 24:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("19");
+								break;
+							case 25:
+								break;
+							case 26:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("18");
+								break;
+							case 27:
+								break;
+							case 28:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("17");
+								break;
+							case 29:
+								break;
+							case 30:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("16");
+								break;
+							case 31:
+								break;
+							case 32:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("15");
+								break;
+							case 33:
+								break;
+							case 34:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("14");
+								break;
+							case 35:
+								break;
+							case 36:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("13");
+								break;
+							case 37:
+								break;
+							case 38:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("12");
+								break;
+							case 39:
+								break;
+							case 40:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("11");
+								break;
+							case 41:
+								break;
+							case 42:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("10");
+								break;
+							case 43:
+								break;
+							case 44:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("9");
+								break;
+							case 45:
+								break;
+							case 46:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("8");
+								break;
+							case 47:
+								break;
+							case 48:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("7");
+								break;
+							case 49:
+								break;
+							case 50:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("6");
+								break;
+							case 51:
+								break;
+							case 52:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("5");
+								break;
+							case 53:
+								break;
+							case 54:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("4");
+								break;
+							case 55:
+								break;
+							case 56:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("3");
+								break;
+							case 57:
+								break;
+							case 58:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("2");
+								break;
+							case 61:
+								break;
+							case 59:
+								m8sBtn.setBackgroundResource(R.drawable.btn_12s);
+								m8sBtn.setText("1");
+								break;
+							case 60:
+								break;
+							default:
+								break;
+							}
+
+							if (mShootTime > 60) {
+								stopTrimVideo();
+							}
+						}
+					});
+
+				}
+			};
+			m8sTimer.schedule(task, 500, 500);
+
+		} else {
+
+		}
+	}
 
 	/**
 	 * 停止８s视频操作
@@ -1437,6 +1676,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT, CarRecorderActivity.QUERYFILETIME);
 		}
 		mShootTime = 0;
+		m8sBtn.setText("");
 		m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 		if (null != m8sTimer) {
 			m8sTimer.cancel();
@@ -1632,7 +1872,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					+ param2);
 			if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
 				if (RESULE_SUCESS == param1) {
-					mHandler.sendEmptyMessage(MOUNTS);
+					if (mWonderfulTime == 6) {
+						mHandler.sendEmptyMessage(MOUNTS);
+					} else {
+						mHandler.sendEmptyMessage(CLASSIC);
+					}
 				}  else {
 					videoTriggerFail();
 				}
@@ -1645,7 +1889,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 								+ record.type);
 						// 精彩视频
 						if (TYPE_SHORTCUT == record.type) {
-							mHandler.sendEmptyMessage(MOUNTS);
+							if(mWonderfulTime == 6) {
+								mHandler.sendEmptyMessage(MOUNTS);
+							} else {
+								//TODO 30ｓ
+							}
 						} else {
 							mHandler.sendEmptyMessage(EMERGENCY);
 						}
@@ -1752,6 +2000,21 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
+				}
+			}
+			break;
+		case IPC_VDCP_Msg_GetVideoTimeConf:
+			GolukDebugUtils.e("", "CarRecorderActivity-----------callback_getWonderfulVideoType-----param2: " + param2);
+			if (RESULE_SUCESS == param1) {
+				WonderfulVideoJson videoJson = GolukFastJsonUtil.getParseObj((String) param2, WonderfulVideoJson.class);
+				if (null != videoJson && null != videoJson.data) {
+					if (videoJson.data.wonder_history_time == 6 && videoJson.data.wonder_future_time == 6) {
+						// 精彩抓拍（前6后6）
+						mWonderfulTime = videoJson.data.wonder_future_time;
+					} else if (videoJson.data.wonder_history_time == 0 && videoJson.data.wonder_future_time == 30) {
+						// 经典模式
+						mWonderfulTime = videoJson.data.wonder_future_time;
+					}
 				}
 			}
 			break;

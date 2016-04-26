@@ -194,10 +194,23 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCP_Msg_GetVoiceType = 2206;
 	/** 设置语音类型 **/
 	public static final int IPC_VDCP_Msg_SetVoiceType = 2207;
+
 	/** 开始IPC直播推流 */
 	public static final int IPC_VDCP_Msg_LiveStart = 2213;
 	/** 停止IPC直播推流 */
 	public static final int IPC_VDCP_Msg_LiveStop = 2214;
+
+	/** 获取精彩等视频获取时长配置 **/
+	public static final int IPC_VDCP_Msg_GetVideoTimeConf = 2208;
+	/** 设置精彩等视频获取时长配置 **/
+	public static final int IPC_VDCP_Msg_SetVideoTimeConf = 2209;
+	/** 获取OSD水印显示配置 **/
+	public static final int IPC_VDCP_Msg_GetOSDConf = 2210;
+	/** 设置OSD水印显示配置 **/
+	public static final int IPC_VDCP_Msg_SetOSDConf = 2211;
+	/** 获取全局设置项列表 **/
+	public static final int IPC_VDCP_Msg_GetCapacityList = 2212;
+
 	
 
 	/**
@@ -362,6 +375,7 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCPCmd_GetVoiceType = 2206;
 	/** 设置语音类型 **/
 	public static final int IPC_VDCPCmd_SetVoiceType = 2207;
+
 	/** 开始IPC直播推流 */
 	public static final int IPC_VDCPCmd_LiveStart = 2213;
 	/** 停止IPC直播推流 */
@@ -370,6 +384,18 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCPCmd_GetLiveStatus = 2215;
 	/** 命令数量 */
 	public static final int IPC_VDCPCmd_Msg_COUNT = 2216;
+
+	/** 获取精彩等视频时长配置 **/
+	public static final int IPC_VDCPCmd_GetVideoTimeConf = 2208;
+	/** 设置精彩等视频时长配置 **/
+	public static final int IPC_VDCPCmd_SetVideoTimeConf = 2209;
+	/** 获取OSD水印显示配置 **/
+	public static final int IPC_VDCPCmd_GetOSDConf = 2210;
+	/** 设置OSD水印显示配置 **/
+	public static final int IPC_VDCPCmd_SetOSDConf = 2211;
+	/** 获取全局设置项列表 **/
+	public static final int IPC_VDCPCmd_GetCapacityList = 2212;
+
 
 	public void IPCManage_CallBack(int event, int msg, int param1, Object param2);
 }
