@@ -6,6 +6,10 @@ import java.net.URLEncoder;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.userlogin.UpDescResult;
+import com.mobnote.golukmain.userlogin.UpNameResult;
+import com.mobnote.golukmain.userlogin.UpdUserDescBeanRequest;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
@@ -32,7 +36,7 @@ import android.widget.TextView;
  * @author mobnote
  * 
  */
-public class UserPersonalSignActivity extends BaseActivity implements OnClickListener {
+public class UserPersonalSignActivity extends BaseActivity implements OnClickListener,IRequestResultListener{
 
 	/** application **/
 	private GolukApplication mApplication = null;
@@ -52,6 +56,8 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 
 	// 保存数据的loading
 	private CustomLoadingDialog mCustomProgressDialog = null;
+	
+	private UpdUserDescBeanRequest updUserDescBeanRequest = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +72,8 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		 * 获取从编辑界面传来的信息
 		 * 
 		 */
+		
+		updUserDescBeanRequest = new UpdUserDescBeanRequest(IPageNotifyFn.PageType_ModifySignature, this);
 
 		if (savedInstanceState == null) {
 			Intent it = getIntent();
@@ -178,40 +186,69 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		} else {
 			// {desc：“个性签名”}
 			mSignNewText = sign;
-			boolean b;
 			try {
-				b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-						IPageNotifyFn.PageType_ModifySignature,
-						JsonUtil.getUserSignJson(URLEncoder.encode(sign, "UTF-8")));
-				if (b) {
-					// 保存中
-					mCustomProgressDialog.show();
-				}
+				updUserDescBeanRequest.get(mApplication.getMyInfo().uid, mApplication.getMyInfo().phone,URLEncoder.encode(sign, "UTF-8"));
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			mCustomProgressDialog.show();
+//			boolean b;
+//			try {
+//				b = mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+//						IPageNotifyFn.PageType_ModifySignature,
+//						JsonUtil.getUserSignJson(URLEncoder.encode(sign, "UTF-8")));
+//				if (b) {
+					// 保存中
+//					mCustomProgressDialog.show();
+//				}
+//			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 
 		}
 	}
 
-	/**
-	 * 修改用户名回调
-	 */
+//	/**
+//	 * 修改用户名回调
+//	 */
+//
+//	public void saveSignCallBack(int success, Object obj) {
+//		GolukDebugUtils.e("", "---saveSignCallBack---" + success + "---" + obj);
+//		if (mCustomProgressDialog.isShowing()) {
+//			mCustomProgressDialog.close();
+//		}
+//		if (1 == success) {
+//			GolukApplication.getInstance().setMyinfo("", "", mSignNewText);
+//			Intent it = new Intent(UserPersonalSignActivity.this, UserPersonalInfoActivity.class);
+//			it.putExtra("itSign", mSignNewText);
+//			this.setResult(RESULT_OK, it);
+//			this.finish();
+//		} else {
+//			GolukUtils.showToast(this, getString(R.string.user_personal_save_failed));
+//		}
+//	}
 
-	public void saveSignCallBack(int success, Object obj) {
-		GolukDebugUtils.e("", "---saveSignCallBack---" + success + "---" + obj);
-		if (mCustomProgressDialog.isShowing()) {
-			mCustomProgressDialog.close();
-		}
-		if (1 == success) {
-			GolukApplication.getInstance().setMyinfo("", "", mSignNewText);
-			Intent it = new Intent(UserPersonalSignActivity.this, UserPersonalInfoActivity.class);
-			it.putExtra("itSign", mSignNewText);
-			this.setResult(RESULT_OK, it);
-			this.finish();
-		} else {
-			GolukUtils.showToast(this, getString(R.string.user_personal_save_failed));
+	@Override
+	public void onLoadComplete(int requestType, Object result) {
+
+		if(requestType == IPageNotifyFn.PageType_ModifySignature){
+			UpDescResult upnameresult = (UpDescResult) result;
+			
+			if (mCustomProgressDialog.isShowing()) {
+				mCustomProgressDialog.close();
+			}
+			
+			if (upnameresult.success) {
+				GolukApplication.getInstance().setMyinfo("", "", mSignNewText);
+				Intent it = new Intent(UserPersonalSignActivity.this, UserPersonalInfoActivity.class);
+				it.putExtra("itSign", mSignNewText);
+				this.setResult(RESULT_OK, it);
+				this.finish();
+			} else {
+				GolukUtils.showToast(this, getString(R.string.user_personal_save_failed));
+			}
 		}
 	}
 }
