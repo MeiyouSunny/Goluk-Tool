@@ -210,26 +210,6 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		}
 	}
 
-//	/**
-//	 * 修改用户名回调
-//	 */
-//
-//	public void saveSignCallBack(int success, Object obj) {
-//		GolukDebugUtils.e("", "---saveSignCallBack---" + success + "---" + obj);
-//		if (mCustomProgressDialog.isShowing()) {
-//			mCustomProgressDialog.close();
-//		}
-//		if (1 == success) {
-//			GolukApplication.getInstance().setMyinfo("", "", mSignNewText);
-//			Intent it = new Intent(UserPersonalSignActivity.this, UserPersonalInfoActivity.class);
-//			it.putExtra("itSign", mSignNewText);
-//			this.setResult(RESULT_OK, it);
-//			this.finish();
-//		} else {
-//			GolukUtils.showToast(this, getString(R.string.user_personal_save_failed));
-//		}
-//	}
-
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 
@@ -241,7 +221,7 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 			}
 			
 			if (upnameresult.success) {
-				GolukApplication.getInstance().setMyinfo("", "", mSignNewText);
+				GolukApplication.getInstance().setMyinfo("", "", mSignNewText,null);
 				Intent it = new Intent(UserPersonalSignActivity.this, UserPersonalInfoActivity.class);
 				it.putExtra("itSign", mSignNewText);
 				this.setResult(RESULT_OK, it);

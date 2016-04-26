@@ -29,7 +29,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class UserPersonalHeadActivity extends BaseActivity implements OnClickListener, OnTouchListener, IPageNotifyFn,IRequestResultListener {
+public class UserPersonalHeadActivity extends BaseActivity implements OnClickListener, OnTouchListener,IRequestResultListener {
 
 	// title
 	private ImageButton btnBack;
@@ -277,51 +277,51 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 		super.onResume();
 	}
 
-	@Override
-	public void pageNotifyCallBack(int type, int success, Object param1, Object param2) {
-		if (type == PageType_ModifyHeadPic) {
-			closeLoadDialog();
-			if (success == 1) {
-				try {
-					JSONObject result = new JSONObject(param2.toString());
-					Boolean suc = result.getBoolean("success");
-
-					if (suc) {
-						JSONObject data = result.getJSONObject("data");
-						String rst = data.getString("result");
-						// 图片上传成功
-						if ("0".equals(rst)) {
-							
-							String head = data.getString("head");
-							GolukApplication.getInstance().setMyinfo("", head, "");
-							GolukUtils.showToast(UserPersonalHeadActivity.this, this.getResources().getString(R.string.str_save_success));
-
-							Intent itHead = new Intent(UserPersonalHeadActivity.this, UserPersonalInfoActivity.class);
-							Bundle bundle = new Bundle();
-							bundle.putString("intentSevenHead", head);
-							itHead.putExtras(bundle);
-							this.setResult(RESULT_OK, itHead);
-							this.finish();
-						} else {
-							GolukUtils.showToast(UserPersonalHeadActivity.this,
-									this.getResources().getString(R.string.str_save_network_error));
-						}
-
-					} else {
-						GolukUtils.showToast(UserPersonalHeadActivity.this,
-								this.getResources().getString(R.string.str_save_network_error));
-					}
-				} catch (JSONException e) {
-					GolukUtils.showToast(UserPersonalHeadActivity.this,
-							this.getResources().getString(R.string.str_save_network_error));
-					e.printStackTrace();
-				}
-			} else {
-				GolukUtils.showToast(UserPersonalHeadActivity.this,
-						this.getResources().getString(R.string.str_save_network_error));
-			}
-		}
-	}
+//	@Override
+//	public void pageNotifyCallBack(int type, int success, Object param1, Object param2) {
+//		if (type == PageType_ModifyHeadPic) {
+//			closeLoadDialog();
+//			if (success == 1) {
+//				try {
+//					JSONObject result = new JSONObject(param2.toString());
+//					Boolean suc = result.getBoolean("success");
+//
+//					if (suc) {
+//						JSONObject data = result.getJSONObject("data");
+//						String rst = data.getString("result");
+//						// 图片上传成功
+//						if ("0".equals(rst)) {
+//							
+//							String head = data.getString("head");
+//							GolukApplication.getInstance().setMyinfo("", head, "",null);
+//							GolukUtils.showToast(UserPersonalHeadActivity.this, this.getResources().getString(R.string.str_save_success));
+//
+//							Intent itHead = new Intent(UserPersonalHeadActivity.this, UserPersonalInfoActivity.class);
+//							Bundle bundle = new Bundle();
+//							bundle.putString("intentSevenHead", head);
+//							itHead.putExtras(bundle);
+//							this.setResult(RESULT_OK, itHead);
+//							this.finish();
+//						} else {
+//							GolukUtils.showToast(UserPersonalHeadActivity.this,
+//									this.getResources().getString(R.string.str_save_network_error));
+//						}
+//
+//					} else {
+//						GolukUtils.showToast(UserPersonalHeadActivity.this,
+//								this.getResources().getString(R.string.str_save_network_error));
+//					}
+//				} catch (JSONException e) {
+//					GolukUtils.showToast(UserPersonalHeadActivity.this,
+//							this.getResources().getString(R.string.str_save_network_error));
+//					e.printStackTrace();
+//				}
+//			} else {
+//				GolukUtils.showToast(UserPersonalHeadActivity.this,
+//						this.getResources().getString(R.string.str_save_network_error));
+//			}
+//		}
+//	}
 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
@@ -335,7 +335,7 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 				// 图片上传成功
 				if ("0".equals(rst)) {
 					
-					GolukApplication.getInstance().setMyinfo("", imageIndex, "");
+					GolukApplication.getInstance().setMyinfo("", imageIndex, "","");
 					GolukUtils.showToast(UserPersonalHeadActivity.this, this.getResources().getString(R.string.str_save_success));
 
 					Intent itHead = new Intent(UserPersonalHeadActivity.this, UserPersonalInfoActivity.class);

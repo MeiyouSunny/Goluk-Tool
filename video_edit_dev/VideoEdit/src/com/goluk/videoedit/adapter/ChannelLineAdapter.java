@@ -393,10 +393,14 @@ public class ChannelLineAdapter extends
 	}
 
 	private void swapChunk(int fromPosition, int toPosition) {
-		mDataList.add(toPosition, mDataList.remove(fromPosition));
+//		mDataList.add(toPosition, mDataList.remove(fromPosition));
+		ProjectItemBean fromBean = mDataList.get(fromPosition);
+		ProjectItemBean toBean = mDataList.get(toPosition);
+		mDataList.set(toPosition, fromBean);
+		mDataList.set(fromPosition, toBean);
 		mAfterEffect.editExchangeChunk(VideoEditUtils.mapI2CIndex(toPosition), VideoEditUtils.mapI2CIndex(fromPosition));
 		// Continue process transition
-		mDataList.add(toPosition + 1, mDataList.remove(fromPosition + 1));
+//		mDataList.add(toPosition + 1, mDataList.remove(fromPosition + 1));
 	}
 
 	@Override
