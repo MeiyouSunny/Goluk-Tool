@@ -79,7 +79,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 	private String searchContent;
 	private boolean hasSearched;
 
-	private final int requestOffset = 10;
+	private final int requestOffset = 20;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -174,7 +174,6 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 //						SearchUserAcivity.this.getString(R.string.updating) +
 //						GolukUtils.getCurrentFormatTime(SearchUserAcivity.this));
 //				sendSearchUserRequest(REFRESH_NORMAL,searchContent);
-				
 			}
 
 			@Override
@@ -183,9 +182,9 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 						SearchUserAcivity.this.getResources().getString(
 						R.string.goluk_pull_to_refresh_footer_pull_label));
 				sendSearchUserRequest(REFRESH_PULL_UP,searchContent);
-				
 			}
 		});
+		mFollowinglistPtrList.setOnItemClickListener(this);
 	}
 
 	private void initView() {
@@ -274,40 +273,40 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 
 	protected void follow(final String linkuid,final String type){
 
-		if (GolukApplication.getInstance().loginStatus == 1) {
+		if (GolukApplication.getInstance().isUserLoginSucess) {
+			if("1".equals(type)){
+				sendFollowRequest( linkuid,  type);
+				return;
+			}
+
+			if(mCustomDialog==null){
+				mCustomDialog = new CustomDialog(this);
+			}
+
+			mCustomDialog.setMessage(this.getString(R.string.str_confirm_cancel_follow), Gravity.CENTER);
+			mCustomDialog.setLeftButton(this.getString(R.string.dialog_str_cancel), null);
+			mCustomDialog.setRightButton(this.getString(R.string.str_button_ok), new OnRightClickListener() {
+
+				@Override
+				public void onClickListener() {
+					// TODO Auto-generated method stub
+					mCustomDialog.dismiss();
+					sendFollowRequest( linkuid,  type);
+				}
+
+			});
+			mCustomDialog.show();
 		}else {
 			GolukUtils.startLoginActivity(this);
 		}
-
-		if("1".equals(type)){
-			sendFollowRequest( linkuid,  type);
-			return;
-		}
-
-		if(mCustomDialog==null){
-			mCustomDialog = new CustomDialog(this);
-		}
-
-		mCustomDialog.setMessage(this.getString(R.string.str_confirm_cancel_follow), Gravity.CENTER);
-		mCustomDialog.setLeftButton(this.getString(R.string.dialog_str_cancel), null);
-		mCustomDialog.setRightButton(this.getString(R.string.str_button_ok), new OnRightClickListener() {
-
-			@Override
-			public void onClickListener() {
-				// TODO Auto-generated method stub
-				mCustomDialog.dismiss();
-				sendFollowRequest( linkuid,  type);
-			}
-
-		});
-		mCustomDialog.show();
 
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		// TODO Auto-generated method stub
-		
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
+		imm.hideSoftInputFromWindow(mSearchContentEt.getWindowToken(), 0);
 	}
 
 	@Override

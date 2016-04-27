@@ -115,30 +115,33 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 	}
 	
 	protected void follow(final String linkuid,final String type){
-		
-		if("1".equals(type)){
-			sendFollowRequest( linkuid,  type);
-			return;
-		}
-		
-		if(mCustomDialog==null){
-			mCustomDialog = new CustomDialog(this);
-		}
-		
-		mCustomDialog.setMessage(this.getString(R.string.str_confirm_cancel_follow), Gravity.CENTER);
-		mCustomDialog.setLeftButton(this.getString(R.string.dialog_str_cancel), null);
-		mCustomDialog.setRightButton(this.getString(R.string.str_button_ok), new OnRightClickListener() {
+		if (GolukApplication.getInstance().isUserLoginSucess) {
 
-			@Override
-			public void onClickListener() {
-				// TODO Auto-generated method stub
-				mCustomDialog.dismiss();
+			if("1".equals(type)){
 				sendFollowRequest( linkuid,  type);
+				return;
 			}
-			
-		});
-		mCustomDialog.show();
-		
+
+			if(mCustomDialog==null){
+				mCustomDialog = new CustomDialog(this);
+			}
+
+			mCustomDialog.setMessage(this.getString(R.string.str_confirm_cancel_follow), Gravity.CENTER);
+			mCustomDialog.setLeftButton(this.getString(R.string.dialog_str_cancel), null);
+			mCustomDialog.setRightButton(this.getString(R.string.str_button_ok), new OnRightClickListener() {
+
+				@Override
+				public void onClickListener() {
+					// TODO Auto-generated method stub
+					mCustomDialog.dismiss();
+					sendFollowRequest( linkuid,  type);
+				}
+				
+			});
+			mCustomDialog.show();
+		}else{
+			GolukUtils.startLoginActivity(this);
+		}
 	}
 	
 	private void sendFollowingListRequest(String op) {
