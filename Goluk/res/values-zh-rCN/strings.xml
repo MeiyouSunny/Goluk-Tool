@@ -871,7 +871,7 @@
     <string name="str_video_sync_setting_sync_twenty">同步最近录制的20条</string>
     <string name="str_video_sync_setting_sync_close">关闭</string>
     <string name="str_or">或</string>
-    <string name="str_weixin_login">微信登陆</string>
+    <string name="str_weixin_login">微信登录</string>
     <string name="str_binding_phone">绑定手机号</string>
     <string name="str_already_bind">已绑定</string>
     <string name="str_not_bind">未绑定</string>
