@@ -41,12 +41,12 @@ import com.mobnote.golukmain.following.FollowingConfig;
 import com.mobnote.golukmain.following.FollowingListActivity;
 import com.mobnote.golukmain.following.FollowingListAdapter;
 import com.mobnote.golukmain.following.FollowingListRequest;
-import com.mobnote.golukmain.following.bean.FollowingItemBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.recommend.RecommendRequest;
 import com.mobnote.golukmain.recommend.bean.RecommendRetBean;
 import com.mobnote.golukmain.search.bean.SearchListBean;
 import com.mobnote.golukmain.search.bean.SearchRetBean;
+import com.mobnote.golukmain.userbase.bean.SimpleUserItemBean;
 import com.mobnote.util.GolukUtils;
 
 public class SearchUserAcivity extends BaseActivity implements IRequestResultListener, OnClickListener,OnItemClickListener{
@@ -79,7 +79,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 	private String searchContent;
 	private boolean hasSearched;
 
-	private final int requestOffset = 10;
+	private final int requestOffset = 20;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -154,9 +154,12 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 				if (actionId==EditorInfo.IME_ACTION_SEARCH){
 					hasSearched = true;
 					searchContent = v.getText().toString().trim();
-					mSearchContentEt.setText(searchContent);
 					if(TextUtils.isEmpty(searchContent)){
 						Toast.makeText(SearchUserAcivity.this,getResources().getString(R.string.str_search_keywards_cannot_be_empty), Toast.LENGTH_SHORT).show();
+						mSearchContentEt.setText(searchContent);
+					}else if(!searchContent.matches("[a-zA-Z0-9_\u4e00-\u9fa5]*")){
+			            //非法字符
+						Toast.makeText(SearchUserAcivity.this,getResources().getString(R.string.str_search_supported_words), Toast.LENGTH_SHORT).show();
 					}else{
 						sendSearchUserRequest(REFRESH_NORMAL,searchContent);
 						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
@@ -174,7 +177,6 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 //						SearchUserAcivity.this.getString(R.string.updating) +
 //						GolukUtils.getCurrentFormatTime(SearchUserAcivity.this));
 //				sendSearchUserRequest(REFRESH_NORMAL,searchContent);
-				
 			}
 
 			@Override
@@ -183,9 +185,9 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 						SearchUserAcivity.this.getResources().getString(
 						R.string.goluk_pull_to_refresh_footer_pull_label));
 				sendSearchUserRequest(REFRESH_PULL_UP,searchContent);
-				
 			}
 		});
+		mFollowinglistPtrList.setOnItemClickListener(this);
 	}
 
 	private void initView() {
@@ -274,40 +276,40 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 
 	protected void follow(final String linkuid,final String type){
 
-		if (GolukApplication.getInstance().loginStatus == 1) {
+		if (GolukApplication.getInstance().isUserLoginSucess) {
+			if("1".equals(type)){
+				sendFollowRequest( linkuid,  type);
+				return;
+			}
+
+			if(mCustomDialog==null){
+				mCustomDialog = new CustomDialog(this);
+			}
+
+			mCustomDialog.setMessage(this.getString(R.string.str_confirm_cancel_follow), Gravity.CENTER);
+			mCustomDialog.setLeftButton(this.getString(R.string.dialog_str_cancel), null);
+			mCustomDialog.setRightButton(this.getString(R.string.str_button_ok), new OnRightClickListener() {
+
+				@Override
+				public void onClickListener() {
+					// TODO Auto-generated method stub
+					mCustomDialog.dismiss();
+					sendFollowRequest( linkuid,  type);
+				}
+
+			});
+			mCustomDialog.show();
 		}else {
 			GolukUtils.startLoginActivity(this);
 		}
-
-		if("1".equals(type)){
-			sendFollowRequest( linkuid,  type);
-			return;
-		}
-
-		if(mCustomDialog==null){
-			mCustomDialog = new CustomDialog(this);
-		}
-
-		mCustomDialog.setMessage(this.getString(R.string.str_confirm_cancel_follow), Gravity.CENTER);
-		mCustomDialog.setLeftButton(this.getString(R.string.dialog_str_cancel), null);
-		mCustomDialog.setRightButton(this.getString(R.string.str_button_ok), new OnRightClickListener() {
-
-			@Override
-			public void onClickListener() {
-				// TODO Auto-generated method stub
-				mCustomDialog.dismiss();
-				sendFollowRequest( linkuid,  type);
-			}
-
-		});
-		mCustomDialog.show();
 
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		// TODO Auto-generated method stub
-		
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
+		imm.hideSoftInputFromWindow(mSearchContentEt.getWindowToken(), 0);
 	}
 
 	@Override
@@ -342,7 +344,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 				return;
 			}
 
-			List<FollowingItemBean> followingBeanList = bean.data.userlist;
+			List<SimpleUserItemBean> followingBeanList = bean.data.userlist;
 
 			if(null == followingBeanList || followingBeanList.size() == 0) {
 
@@ -358,11 +360,15 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 				}else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)){
 					mCurMotion = REFRESH_NORMAL;
 					mFollowingList.clear();
-					mFollowingList.add(new SearchListBean(1, null));
-					mFollowingList.add(new SearchListBean(2, null));
-					List<FollowingItemBean> recommendBeanList = bean.data.recomlist;
-					for(FollowingItemBean userBean:recommendBeanList){
-						mFollowingList.add(new SearchListBean(3, userBean));
+					List<SimpleUserItemBean> recommendBeanList = bean.data.recomlist;
+					if(recommendBeanList == null || recommendBeanList.size() == 0){
+
+					}else{
+						mFollowingList.add(new SearchListBean(1, null));
+						mFollowingList.add(new SearchListBean(2, null));
+						for(SimpleUserItemBean userBean:recommendBeanList){
+							mFollowingList.add(new SearchListBean(3, userBean));
+						}	
 					}
 					mFollowinglistPtrList.setAdapter(mFollowingListAdapter);
 					mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
@@ -370,7 +376,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 				}
 			}else{
 				if(REFRESH_PULL_UP.equals(mCurMotion)) {
-					for(FollowingItemBean userBean:followingBeanList){
+					for(SimpleUserItemBean userBean:followingBeanList){
 						mFollowingList.add(new SearchListBean(3, userBean));
 					}
 					if(mFollowingList.size() < requestOffset){
@@ -382,7 +388,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 					mFollowingListAdapter.notifyDataSetChanged();
 				} else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
 					mFollowingList.clear();
-					for(FollowingItemBean userBean:followingBeanList){
+					for(SimpleUserItemBean userBean:followingBeanList){
 						mFollowingList.add(new SearchListBean(3, userBean));
 					}
 					if(mFollowingList.size() < requestOffset){
@@ -408,14 +414,14 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 
 			mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
 
-			List<FollowingItemBean> followingBeanList = bean.data.userlist;
+			List<SimpleUserItemBean> followingBeanList = bean.data.userlist;
 
 			if(null == followingBeanList || followingBeanList.size() == 0) {
 				return;
 			}else{
 				mFollowingList.clear();
 				mFollowingList.add(new SearchListBean(2,null));
-				for(FollowingItemBean userBean:followingBeanList){
+				for(SimpleUserItemBean userBean:followingBeanList){
 					mFollowingList.add(new SearchListBean(3, userBean));
 				}
 				mFollowinglistPtrList.setAdapter(mFollowingListAdapter);
@@ -439,7 +445,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 				// User link uid to find the changed recommend user item status
 				int i = findLinkUserItem(bean.data.linkuid);
 				if(i >=0 && i < mFollowingList.size()) {
-					FollowingItemBean tempBean = mFollowingList.get(i).getUserItemBean();
+					SimpleUserItemBean tempBean = mFollowingList.get(i).getUserItemBean();
 					tempBean.link = bean.data.link;
 
 					if(bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER || bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_ONLY){
@@ -486,7 +492,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 
 		int size = mFollowingList.size();
 		for(int i = 0; i < size; i++) {
-			FollowingItemBean bean = mFollowingList.get(i).getUserItemBean();
+			SimpleUserItemBean bean = mFollowingList.get(i).getUserItemBean();
 			if(null != bean &&bean.uid.equals(linkuid)) {
 			
 				return i;

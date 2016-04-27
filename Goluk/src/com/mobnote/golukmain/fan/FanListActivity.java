@@ -29,9 +29,9 @@ import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
 import com.mobnote.golukmain.follow.FollowRequest;
 import com.mobnote.golukmain.follow.bean.FollowRetBean;
 import com.mobnote.golukmain.following.FollowingConfig;
-import com.mobnote.golukmain.following.bean.FollowingItemBean;
 import com.mobnote.golukmain.following.bean.FollowingRetBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.userbase.bean.SimpleUserItemBean;
 import com.mobnote.util.GolukUtils;
 
 /**
@@ -50,7 +50,7 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 	private TextView mFanlistTitleTv;
 	private PullToRefreshListView mFanlistPtrList;
 	
-	private List<FollowingItemBean> mFollowingList;
+	private List<SimpleUserItemBean> mFollowingList;
 	private FanListAdapter mFansListAdapter;
 	
 	private String mCurMotion = REFRESH_NORMAL;
@@ -84,7 +84,7 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 	private void setup() {
 		// TODO Auto-generated method stub
 		
-		mFollowingList = new ArrayList<FollowingItemBean>();
+		mFollowingList = new ArrayList<SimpleUserItemBean>();
 		mFansListAdapter = new FanListAdapter(this,mFollowingList);
 		mFanlistPtrList.setAdapter(mFansListAdapter);
 		
@@ -115,30 +115,33 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 	}
 	
 	protected void follow(final String linkuid,final String type){
-		
-		if("1".equals(type)){
-			sendFollowRequest( linkuid,  type);
-			return;
-		}
-		
-		if(mCustomDialog==null){
-			mCustomDialog = new CustomDialog(this);
-		}
-		
-		mCustomDialog.setMessage(this.getString(R.string.str_confirm_cancel_follow), Gravity.CENTER);
-		mCustomDialog.setLeftButton(this.getString(R.string.dialog_str_cancel), null);
-		mCustomDialog.setRightButton(this.getString(R.string.str_button_ok), new OnRightClickListener() {
+		if (GolukApplication.getInstance().isUserLoginSucess) {
 
-			@Override
-			public void onClickListener() {
-				// TODO Auto-generated method stub
-				mCustomDialog.dismiss();
+			if("1".equals(type)){
 				sendFollowRequest( linkuid,  type);
+				return;
 			}
-			
-		});
-		mCustomDialog.show();
-		
+
+			if(mCustomDialog==null){
+				mCustomDialog = new CustomDialog(this);
+			}
+
+			mCustomDialog.setMessage(this.getString(R.string.str_confirm_cancel_follow), Gravity.CENTER);
+			mCustomDialog.setLeftButton(this.getString(R.string.dialog_str_cancel), null);
+			mCustomDialog.setRightButton(this.getString(R.string.str_button_ok), new OnRightClickListener() {
+
+				@Override
+				public void onClickListener() {
+					// TODO Auto-generated method stub
+					mCustomDialog.dismiss();
+					sendFollowRequest( linkuid,  type);
+				}
+				
+			});
+			mCustomDialog.show();
+		}else{
+			GolukUtils.startLoginActivity(this);
+		}
 	}
 	
 	private void sendFollowingListRequest(String op) {
@@ -297,7 +300,7 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 
 			mFanlistPtrList.setMode(PullToRefreshBase.Mode.BOTH);
 
-			List<FollowingItemBean> followingBeanList = bean.data.userlist;
+			List<SimpleUserItemBean> followingBeanList = bean.data.userlist;
 			
 			if(null == followingBeanList || followingBeanList.size() == 0) {
 				
@@ -342,7 +345,7 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 				// User link uid to find the changed recommend user item status
 				int i = findLinkUserItem(bean.data.linkuid);
 				if(i >=0 && i < mFollowingList.size()) {
-					FollowingItemBean tempBean = mFollowingList.get(i);
+					SimpleUserItemBean tempBean = mFollowingList.get(i);
 					tempBean.link = bean.data.link;
 
 					if(bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER || bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_ONLY){
@@ -389,7 +392,7 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 
 		int size = mFollowingList.size();
 		for(int i = 0; i < size; i++) {
-			FollowingItemBean bean = mFollowingList.get(i);
+			SimpleUserItemBean bean = mFollowingList.get(i);
 			if(null != bean &&bean.uid.equals(linkuid)) {
 				return i;
 			}

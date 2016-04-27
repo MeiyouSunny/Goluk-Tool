@@ -1,6 +1,6 @@
 package com.mobnote.golukmain.search.bean;
 
-import com.mobnote.golukmain.following.bean.FollowingItemBean;
+import com.mobnote.golukmain.userbase.bean.SimpleUserItemBean;
 
 public class SearchListBean {
 
@@ -10,9 +10,9 @@ public class SearchListBean {
 	public static final int ITEM_NO_MORE = 4;
 
 	private int type;
-	private FollowingItemBean userItemBean;
+	private SimpleUserItemBean userItemBean;
 
-	public SearchListBean(int t,FollowingItemBean bean){
+	public SearchListBean(int t,SimpleUserItemBean bean){
 		this.type = t;
 		this.userItemBean = bean;
 	}
@@ -25,11 +25,11 @@ public class SearchListBean {
 		this.type = type;
 	}
 
-	public FollowingItemBean getUserItemBean() {
+	public SimpleUserItemBean getUserItemBean() {
 		return userItemBean;
 	}
 
-	public void setUserItemBean(FollowingItemBean userItemBean) {
+	public void setUserItemBean(SimpleUserItemBean userItemBean) {
 		this.userItemBean = userItemBean;
 	}
 
