@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -23,6 +24,8 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import com.alibaba.fastjson.JSON;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventAdasConfigStatus;
+import com.mobnote.eventbus.EventBindFinish;
+import com.mobnote.eventbus.EventConfig;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpenUrlActivity;
@@ -42,6 +45,8 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
+import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
+import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
 import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
@@ -1145,6 +1150,28 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			GolukApplication.getInstance().getIPCControlManager().getVoiceType();
 		}
 	}
+	
+	@Override
+	protected void hMessage(Message msg) {
+		if (100 == msg.what) {
+			restoreSuccess();
+		}
+	}
+	
+	private void restoreSuccess() {
+		GolukDebugUtils.e("","restore  init-----SettingActivity--------restoreSuccess: 11");
+		EventBindFinish eventFnish = new EventBindFinish(EventConfig.BIND_LIST_DELETE_CONFIG);
+		EventBus.getDefault().post(eventFnish);
+		GolukApplication.getInstance().setIpcDisconnect();
+		WifiBindHistoryBean bean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
+		
+		GolukDebugUtils.e("","restore  init-----SettingActivity--------restoreSuccess: 22: " + bean.ipc_ssid);
+		
+		if (null != bean) {
+			WifiBindDataCenter.getInstance().deleteBindData(bean.ipc_ssid);
+		}
+	}
+
 	
 	/**
 	 * 恢复出厂设置
