@@ -106,10 +106,13 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 
 	// 点击　“微信”
 	public void click_wechat() {
+		if (!sharePlatform.isInstallPlatform(SHARE_MEDIA.WEIXIN)) {
+			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_no_weixin));
+			return;
+		}
 		if (!isCanClick()) {
 			return;
 		}
-
 		final ShareContent sc = getShareContent(TYPE_WEIXIN);
 		if (null == sc) {
 			setCanJump();
@@ -124,6 +127,10 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 
 	// 点击　“朋友圈”
 	public void click_wechat_circle() {
+		if (!sharePlatform.isInstallPlatform(SHARE_MEDIA.WEIXIN)) {
+			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_no_weixin));
+			return;
+		}
 		if (!isCanClick()) {
 			return;
 		}
@@ -140,6 +147,10 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 
 	// 点击　“ＱＱ”
 	public void click_QQ() {
+		if (!sharePlatform.isInstallPlatform(SHARE_MEDIA.QQ)) {
+			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_qq_low_version));
+			return;
+		}
 		if (!isCanClick()) {
 			return;
 		}
@@ -155,6 +166,10 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 
 	// 点击　“ＱＱ空间”
 	public void click_qqZone() {
+		if (!sharePlatform.isInstallPlatform(SHARE_MEDIA.QQ)) {
+			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_qq_low_version));
+			return;
+		}
 		if (!isCanClick()) {
 			return;
 		}
