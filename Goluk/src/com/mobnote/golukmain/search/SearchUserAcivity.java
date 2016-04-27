@@ -31,6 +31,7 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.fan.FanListActivity;
 import com.mobnote.golukmain.follow.FollowRequest;
 import com.mobnote.golukmain.follow.bean.FollowRetBean;
 import com.mobnote.golukmain.following.FollowingConfig;
@@ -143,19 +144,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				// TODO Auto-generated method stub
 				if (actionId==EditorInfo.IME_ACTION_SEARCH){
-					hasSearched = true;
-					searchContent = v.getText().toString().trim();
-					if(TextUtils.isEmpty(searchContent)){
-						Toast.makeText(SearchUserAcivity.this,getResources().getString(R.string.str_search_keywards_cannot_be_empty), Toast.LENGTH_SHORT).show();
-						mSearchContentEt.setText(searchContent);
-					}else if(!searchContent.matches("[a-zA-Z0-9_\u4e00-\u9fa5]*")){
-			            //非法字符
-						Toast.makeText(SearchUserAcivity.this,getResources().getString(R.string.str_search_supported_words), Toast.LENGTH_SHORT).show();
-					}else{
-						sendSearchUserRequest(REFRESH_NORMAL,searchContent);
-						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
-						imm.hideSoftInputFromWindow(mSearchContentEt.getWindowToken(), 0);
-					}
+					doSearch();
 				}
 				return true;
 			}
@@ -216,6 +205,22 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 			recommendRequest.get(PROTOCOL, null);
 		}
 
+	}
+
+	private void doSearch(){
+		hasSearched = true;
+		searchContent = mSearchContentEt.getText().toString().trim();
+		if(TextUtils.isEmpty(searchContent)){
+			Toast.makeText(SearchUserAcivity.this,getResources().getString(R.string.str_search_keywards_cannot_be_empty), Toast.LENGTH_SHORT).show();
+			mSearchContentEt.setText(searchContent);
+		}else if(!searchContent.matches("[a-zA-Z0-9_\u4e00-\u9fa5]*")){
+            //非法字符
+			Toast.makeText(SearchUserAcivity.this,getResources().getString(R.string.str_search_supported_words), Toast.LENGTH_SHORT).show();
+		}else{
+			sendSearchUserRequest(REFRESH_NORMAL,searchContent);
+			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
+			imm.hideSoftInputFromWindow(mSearchContentEt.getWindowToken(), 0);
+		}
 	}
 
 	private void sendSearchUserRequest(String op,String searchContent) {
@@ -307,6 +312,9 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		int id = v.getId();
+		if (id == R.id.ry_searchlist_refresh) {
+			doSearch();
+		}
 	}
 
 	@Override
