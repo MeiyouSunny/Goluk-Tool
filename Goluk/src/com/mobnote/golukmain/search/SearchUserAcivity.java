@@ -1,12 +1,9 @@
 package com.mobnote.golukmain.search;
 
-import io.vov.vitamio.utils.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -16,15 +13,14 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -33,14 +29,11 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.follow.FollowRequest;
 import com.mobnote.golukmain.follow.bean.FollowRetBean;
 import com.mobnote.golukmain.following.FollowingConfig;
-import com.mobnote.golukmain.following.FollowingListActivity;
-import com.mobnote.golukmain.following.FollowingListAdapter;
-import com.mobnote.golukmain.following.FollowingListRequest;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.recommend.RecommendRequest;
 import com.mobnote.golukmain.recommend.bean.RecommendRetBean;
@@ -60,15 +53,13 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 	private final static String REFRESH_PULL_DOWN = "1";
 	private final static String REFRESH_PULL_UP = "2";
 
-	private PullToRefreshListView mFollowinglistPtrList;
+	private PullToRefreshListView mUserlistPtrList;
 
-	private List<SearchListBean> mFollowingList;
-	private SearchListAdapter mFollowingListAdapter;
+	private List<SearchListBean> mUserList;
+	private SearchListAdapter mUserListAdapter;
 
 	private String mCurMotion = REFRESH_NORMAL;
 	private final static String PROTOCOL = "200";
-
-	private String mLinkuid;
 
 	private RelativeLayout mEmptyRl;
 	private TextView mEmptyTv;
@@ -99,12 +90,12 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 	private void setup() {
 		// TODO Auto-generated method stub
 		
-		mFollowingList = new ArrayList<SearchListBean>();
-		mFollowingListAdapter = new SearchListAdapter(this,mFollowingList);
-		mFollowinglistPtrList.setAdapter(mFollowingListAdapter);
+		mUserList = new ArrayList<SearchListBean>();
+		mUserListAdapter = new SearchListAdapter(this,mUserList);
+		mUserlistPtrList.setAdapter(mUserListAdapter);
 		
-		mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
-		mFollowinglistPtrList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+		mUserlistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
+		mUserlistPtrList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
 				// show latest refresh time
@@ -169,7 +160,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 				return true;
 			}
 		});
-		mFollowinglistPtrList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+		mUserlistPtrList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
 				// show latest refresh time
@@ -187,7 +178,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 				sendSearchUserRequest(REFRESH_PULL_UP,searchContent);
 			}
 		});
-		mFollowinglistPtrList.setOnItemClickListener(this);
+		mUserlistPtrList.setOnItemClickListener(this);
 	}
 
 	private void initView() {
@@ -195,7 +186,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 		mSearchDeleteIv = (ImageView) findViewById(R.id.iv_search_delete);
 		mSearchContentEt = (EditText) findViewById(R.id.et_search_content);
 
-		mFollowinglistPtrList = (PullToRefreshListView) findViewById(R.id.ptrlist_searchlist);
+		mUserlistPtrList = (PullToRefreshListView) findViewById(R.id.ptrlist_searchlist);
 
 		mEmptyRl = (RelativeLayout) findViewById(R.id.ry_searchlist_refresh);
 		mEmptyTv = (TextView) findViewById(R.id.tv_searchlist_empty);
@@ -239,11 +230,11 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 
 		if(REFRESH_PULL_UP.equals(mCurMotion)) {
 
-			if(mFollowingList != null && mFollowingList.size()>0){
-				index = mFollowingList.get(mFollowingList.size()-1).getUserItemBean().index;
+			if(mUserList != null && mUserList.size()>0){
+				index = mUserList.get(mUserList.size()-1).getUserItemBean().index;
 			}
 		} else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
-			if(mFollowingList != null &&  mFollowingList.size()>0){
+			if(mUserList != null &&  mUserList.size()>0){
 				//index = mFollowingList.get(0).getUserItemBean().index;
 			}
 		}
@@ -327,7 +318,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 
 		if(requestType == IPageNotifyFn.PageType_SearchUser) {
 
-			mFollowinglistPtrList.onRefreshComplete();
+			mUserlistPtrList.onRefreshComplete();
 			SearchRetBean bean = (SearchRetBean)result;
 
 			if(null == bean) {
@@ -340,7 +331,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 
 			if(null == bean.data) {
 				setEmptyView(getString(R.string.no_following_tips));
-				mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
+				mUserlistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
 				return;
 			}
 
@@ -355,49 +346,49 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 					mCurMotion = REFRESH_NORMAL;
 
 					//mFollowingList.add(new SearchListBean(4, null));
-					mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
+					mUserlistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
 					return;
 				}else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)){
 					mCurMotion = REFRESH_NORMAL;
-					mFollowingList.clear();
+					mUserList.clear();
 					List<SimpleUserItemBean> recommendBeanList = bean.data.recomlist;
 					if(recommendBeanList == null || recommendBeanList.size() == 0){
 
 					}else{
-						mFollowingList.add(new SearchListBean(1, null));
-						mFollowingList.add(new SearchListBean(2, null));
+						mUserList.add(new SearchListBean(1, null));
+						mUserList.add(new SearchListBean(2, null));
 						for(SimpleUserItemBean userBean:recommendBeanList){
-							mFollowingList.add(new SearchListBean(3, userBean));
+							mUserList.add(new SearchListBean(3, userBean));
 						}	
 					}
-					mFollowinglistPtrList.setAdapter(mFollowingListAdapter);
-					mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
+					mUserlistPtrList.setAdapter(mUserListAdapter);
+					mUserlistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
 					return;
 				}
 			}else{
 				if(REFRESH_PULL_UP.equals(mCurMotion)) {
 					for(SimpleUserItemBean userBean:followingBeanList){
-						mFollowingList.add(new SearchListBean(3, userBean));
+						mUserList.add(new SearchListBean(3, userBean));
 					}
-					if(mFollowingList.size() < requestOffset){
-						mFollowingList.add(new SearchListBean(4, null));
-						mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
+					if(mUserList.size() < requestOffset){
+						mUserList.add(new SearchListBean(4, null));
+						mUserlistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
 					}else{
-						mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
+						mUserlistPtrList.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
 					}
-					mFollowingListAdapter.notifyDataSetChanged();
+					mUserListAdapter.notifyDataSetChanged();
 				} else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
-					mFollowingList.clear();
+					mUserList.clear();
 					for(SimpleUserItemBean userBean:followingBeanList){
-						mFollowingList.add(new SearchListBean(3, userBean));
+						mUserList.add(new SearchListBean(3, userBean));
 					}
-					if(mFollowingList.size() < requestOffset){
-						mFollowingList.add(new SearchListBean(4, null));
-						mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
+					if(mUserList.size() < requestOffset){
+						mUserList.add(new SearchListBean(4, null));
+						mUserlistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
 					}else{
-						mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
+						mUserlistPtrList.setMode(PullToRefreshBase.Mode.PULL_UP_TO_REFRESH);
 					}
-					mFollowinglistPtrList.setAdapter(mFollowingListAdapter);
+					mUserlistPtrList.setAdapter(mUserListAdapter);
 				} else {
 				}
 			}
@@ -412,19 +403,19 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 				return;
 			}
 
-			mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
+			mUserlistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
 
 			List<SimpleUserItemBean> followingBeanList = bean.data.userlist;
 
 			if(null == followingBeanList || followingBeanList.size() == 0) {
 				return;
 			}else{
-				mFollowingList.clear();
-				mFollowingList.add(new SearchListBean(2,null));
+				mUserList.clear();
+				mUserList.add(new SearchListBean(2,null));
 				for(SimpleUserItemBean userBean:followingBeanList){
-					mFollowingList.add(new SearchListBean(3, userBean));
+					mUserList.add(new SearchListBean(3, userBean));
 				}
-				mFollowinglistPtrList.setAdapter(mFollowingListAdapter);
+				mUserlistPtrList.setAdapter(mUserListAdapter);
 			}
 			mCurMotion = REFRESH_NORMAL;
 
@@ -444,8 +435,8 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 
 				// User link uid to find the changed recommend user item status
 				int i = findLinkUserItem(bean.data.linkuid);
-				if(i >=0 && i < mFollowingList.size()) {
-					SimpleUserItemBean tempBean = mFollowingList.get(i).getUserItemBean();
+				if(i >=0 && i < mUserList.size()) {
+					SimpleUserItemBean tempBean = mUserList.get(i).getUserItemBean();
 					tempBean.link = bean.data.link;
 
 					if(bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER || bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_ONLY){
@@ -456,10 +447,10 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 							tempBean.fans = 0;
 						}
 					}
-					mFollowingList.set(i, new SearchListBean(3, tempBean));
-					mFollowingListAdapter.notifyDataSetChanged();
+					mUserList.set(i, new SearchListBean(3, tempBean));
+					mUserListAdapter.notifyDataSetChanged();
 					
-					if(mFollowingList==null||mFollowingList.size()<=0){
+					if(mUserList==null||mUserList.size()<=0){
 						setEmptyView(getString(R.string.no_following_tips));
 					}
 
@@ -486,13 +477,13 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 	}
 
 	private int findLinkUserItem(String linkuid) {
-		if(null == mFollowingList || mFollowingList.size() == 0 || TextUtils.isEmpty(linkuid)) {
+		if(null == mUserList || mUserList.size() == 0 || TextUtils.isEmpty(linkuid)) {
 			return -1;
 		}
 
-		int size = mFollowingList.size();
+		int size = mUserList.size();
 		for(int i = 0; i < size; i++) {
-			SimpleUserItemBean bean = mFollowingList.get(i).getUserItemBean();
+			SimpleUserItemBean bean = mUserList.get(i).getUserItemBean();
 			if(null != bean &&bean.uid.equals(linkuid)) {
 			
 				return i;
@@ -503,9 +494,9 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 	}
 	private void setEmptyView(String emptyInfo) {
 		if(REFRESH_NORMAL.equals(mCurMotion)) {
-			mFollowinglistPtrList.setAdapter(null);
-			mFollowinglistPtrList.setEmptyView(mEmptyRl);
-			mFollowinglistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
+			mUserlistPtrList.setAdapter(null);
+			mUserlistPtrList.setEmptyView(mEmptyRl);
+			mUserlistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
 			mEmptyTv.setText(emptyInfo);
 		}
 	}

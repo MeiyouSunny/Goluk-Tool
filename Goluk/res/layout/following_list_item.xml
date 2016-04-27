@@ -15,6 +15,13 @@
         android:layout_marginLeft="9dp"
         android:contentDescription="@string/imgdes"
         android:scaleType="centerCrop" />
+    <ImageView
+        android:id="@+id/iv_userlist_auth_tag"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_alignBottom="@id/iv_followinglist_avatar"
+        android:layout_alignRight="@id/iv_followinglist_avatar"
+        android:contentDescription="@string/imgdes" />
 
     <TextView
         android:id="@+id/tv_followinglist_nickname"

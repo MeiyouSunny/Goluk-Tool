@@ -133,6 +133,7 @@ public class SearchListAdapter extends BaseAdapter{
 
 	class VHUser{
 		ImageView ivUserlistAvatar;
+		ImageView ivUserAuthTag;
 		TextView tvUserlistNickname;
 		TextView tvUserlistShareFollowedAndFans;//分享/关注和赞
 
@@ -144,6 +145,7 @@ public class SearchListAdapter extends BaseAdapter{
 		}
 		public void initView(View convertView){
 			ivUserlistAvatar = (ImageView) convertView.findViewById(R.id.iv_userlist_avatar);
+			ivUserAuthTag = (ImageView) convertView.findViewById(R.id.iv_userlist_auth_tag);
 			tvUserlistNickname = (TextView) convertView.findViewById(R.id.tv_userlist_nickname);
 			tvUserlistShareFollowedAndFans = (TextView) convertView.findViewById(R.id.tv_userlist_share_followed_fans);
 			tvUserlistLink = (TextView) convertView.findViewById(R.id.tv_userlist_link);
@@ -216,6 +218,32 @@ public class SearchListAdapter extends BaseAdapter{
 				tvUserlistLink.setText(R.string.str_follow);
 				tvUserlistLink.setTextColor(Color.parseColor("#0080ff"));
 				ivUserlistLink.setImageResource(R.drawable.icon_follow_normal);
+			}
+
+			if(null != followingItemBean.certification) {
+				String approveLabel = followingItemBean.certification.isorgcertificated;
+				String approve = followingItemBean.certification.orgcertification;
+				String tarento = followingItemBean.certification.isstar;
+				String headplusv = followingItemBean.certification.isusercertificated;
+				String headplusvdes = followingItemBean.certification.usercertification;
+
+				if(null == approveLabel && null == approve &&
+					null == tarento && null == headplusv && null == headplusvdes) {
+					ivUserAuthTag.setVisibility(View.GONE);
+				} else {
+					if("1".equals(approveLabel)) {
+						ivUserAuthTag.setImageResource(R.drawable.authentication_bluev_icon);
+						ivUserAuthTag.setVisibility(View.VISIBLE);
+					} else if("1".equals(headplusv)) {
+						ivUserAuthTag.setImageResource(R.drawable.authentication_yellowv_icon);
+						ivUserAuthTag.setVisibility(View.VISIBLE);
+					} else if("1".equals(tarento)) {
+						ivUserAuthTag.setImageResource(R.drawable.authentication_star_icon);
+						ivUserAuthTag.setVisibility(View.VISIBLE);
+					} else {
+						ivUserAuthTag.setVisibility(View.GONE);
+					}
+				}
 			}
 
 			tvUserlistNickname.setOnClickListener(new OnClickListener() {
