@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.rockerhieu.emojicon">
 
     <application
@@ -6,5 +7,5 @@
         android:icon="@drawable/ic_launcher">
 
     </application>
-
+    <uses-sdk tools:overrideLibrary="android.support.v4"/>
 </manifest>
