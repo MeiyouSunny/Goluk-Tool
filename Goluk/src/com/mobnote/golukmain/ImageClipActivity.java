@@ -22,7 +22,6 @@ import com.mobnote.util.ClipImageView;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SettingImageView;
 
-import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.api.FileUtils;
 import android.content.Intent;

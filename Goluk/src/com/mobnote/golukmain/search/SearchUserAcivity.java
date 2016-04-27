@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -152,7 +153,8 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 				// TODO Auto-generated method stub
 				if (actionId==EditorInfo.IME_ACTION_SEARCH){
 					hasSearched = true;
-					searchContent = v.getText().toString();
+					searchContent = v.getText().toString().trim();
+					mSearchContentEt.setText(searchContent);
 					if(TextUtils.isEmpty(searchContent)){
 						Toast.makeText(SearchUserAcivity.this,getResources().getString(R.string.str_search_keywards_cannot_be_empty), Toast.LENGTH_SHORT).show();
 					}else{
@@ -261,18 +263,21 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 	private void sendFollowRequest(String linkuid, String type) {
 
 		FollowRequest request = new FollowRequest(IPageNotifyFn.PageType_Follow, this);
-		GolukApplication app = GolukApplication.getInstance();
-		if(null != app && app.isUserLoginSucess) {
-			if(!TextUtils.isEmpty(app.mCurrentUId)) {
-				if(!mLoadingDialog.isShowing()) {
-					mLoadingDialog.show();
-				}
-				request.get(PROTOCOL, linkuid, type, app.mCurrentUId);
+		if (GolukApplication.getInstance().isUserLoginSucess && GolukApplication.getInstance().getMyInfo() != null) {
+
+			if (!mLoadingDialog.isShowing()) {
+				mLoadingDialog.show();
 			}
-		}
+			request.get(PROTOCOL, linkuid, type, GolukApplication.getInstance().getMyInfo().uid);
+		} 
 	}
 
 	protected void follow(final String linkuid,final String type){
+
+		if (GolukApplication.getInstance().loginStatus == 1) {
+		}else {
+			GolukUtils.startLoginActivity(this);
+		}
 
 		if("1".equals(type)){
 			sendFollowRequest( linkuid,  type);
