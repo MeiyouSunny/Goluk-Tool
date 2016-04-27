@@ -362,6 +362,14 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 		});
 	}
 
+	public void setTabHostVisibility(boolean visible) {
+		if(visible) {
+			mTabHost.setVisibility(View.VISIBLE);
+		} else {
+			mTabHost.setVisibility(View.GONE);
+		}
+	}
+
 	private void msgRequest() {
 		if (GolukApplication.getInstance().isUserLoginSucess) {
 			MsgCenterCounterRequest msgCounterReq = new MsgCenterCounterRequest(IPageNotifyFn.PageType_MsgCounter, this);

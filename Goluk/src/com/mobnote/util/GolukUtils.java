@@ -21,6 +21,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserLoginActivity;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
@@ -1178,5 +1179,15 @@ public class GolukUtils {
 		}
 
 		return result;
+	}
+
+	public static void setTabHostVisibility(boolean visible, Activity activity) {
+		if(!isActivityAlive(activity)) {
+			return;
+		}
+		if(activity instanceof MainActivity) {
+			MainActivity main = (MainActivity)activity;
+			main.setTabHostVisibility(visible);
+		}
 	}
 }
