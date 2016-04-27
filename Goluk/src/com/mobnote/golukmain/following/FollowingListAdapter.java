@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.R.color;
-import com.mobnote.golukmain.following.bean.FollowingItemBean;
+import com.mobnote.golukmain.userbase.bean.SimpleUserItemBean;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
@@ -24,11 +24,11 @@ import android.widget.Toast;
 
 public class FollowingListAdapter extends BaseAdapter{
 
-	List<FollowingItemBean> mFollowingList;
+	List<SimpleUserItemBean> mFollowingList;
 	FollowingListActivity mFollowingActivity;
 	private final static String TAG = "FollowingListAdapter";
 
-	public FollowingListAdapter(Activity activity,List<FollowingItemBean> list) {
+	public FollowingListAdapter(Activity activity,List<SimpleUserItemBean> list) {
 		super();
 		this.mFollowingActivity = (FollowingListActivity) activity;
 		this.mFollowingList = list;
@@ -41,12 +41,12 @@ public class FollowingListAdapter extends BaseAdapter{
 		return null == mFollowingList?0:mFollowingList.size();
 	}
 
-	public void setData(List<FollowingItemBean> list) {
+	public void setData(List<SimpleUserItemBean> list) {
 		this.mFollowingList = list;
 		notifyDataSetChanged();
 	}
 
-	public void appendData(List<FollowingItemBean> list) {
+	public void appendData(List<SimpleUserItemBean> list) {
 		mFollowingList.addAll(list);
 		this.notifyDataSetChanged();
 	}
@@ -89,7 +89,7 @@ public class FollowingListAdapter extends BaseAdapter{
 			return convertView;
 		}
 
-		FollowingItemBean followingItemBean = (FollowingItemBean)mFollowingList.get(position);
+		SimpleUserItemBean followingItemBean = (SimpleUserItemBean)mFollowingList.get(position);
 		if(null == followingItemBean) {
 			return convertView;
 		}
@@ -172,7 +172,7 @@ public class FollowingListAdapter extends BaseAdapter{
 		viewHolder.tvFollowinglistNickname.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FollowingItemBean tempFollowingItemBean = mFollowingList.get(index);
+				SimpleUserItemBean tempFollowingItemBean = mFollowingList.get(index);
 				GolukUtils.startUserCenterActivity(mFollowingActivity, 
 						tempFollowingItemBean.uid, 
 						tempFollowingItemBean.nickname,
@@ -188,7 +188,7 @@ public class FollowingListAdapter extends BaseAdapter{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				FollowingItemBean tempFollowingItemBean = mFollowingList.get(index);
+				SimpleUserItemBean tempFollowingItemBean = mFollowingList.get(index);
 				GolukUtils.startUserCenterActivity(mFollowingActivity, 
 						tempFollowingItemBean.uid, 
 						tempFollowingItemBean.nickname,
@@ -204,7 +204,7 @@ public class FollowingListAdapter extends BaseAdapter{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				FollowingItemBean tempFollowingItemBean = mFollowingList.get(index);
+				SimpleUserItemBean tempFollowingItemBean = mFollowingList.get(index);
 				GolukUtils.startUserCenterActivity(mFollowingActivity, 
 						tempFollowingItemBean.uid, 
 						tempFollowingItemBean.nickname,
@@ -220,7 +220,7 @@ public class FollowingListAdapter extends BaseAdapter{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				FollowingItemBean tempFollowingItemBean = mFollowingList.get(index);
+				SimpleUserItemBean tempFollowingItemBean = mFollowingList.get(index);
 				if(tempFollowingItemBean.link == FollowingConfig.LINK_TYPE_FOLLOW_ONLY||
 						tempFollowingItemBean.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER){
 					mFollowingActivity.follow(tempFollowingItemBean.uid, "0");

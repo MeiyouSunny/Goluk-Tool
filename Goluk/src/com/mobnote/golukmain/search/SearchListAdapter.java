@@ -16,8 +16,8 @@ import android.widget.TextView;
 
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.following.FollowingConfig;
-import com.mobnote.golukmain.following.bean.FollowingItemBean;
 import com.mobnote.golukmain.search.bean.SearchListBean;
+import com.mobnote.golukmain.userbase.bean.SimpleUserItemBean;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
@@ -151,7 +151,7 @@ public class SearchListAdapter extends BaseAdapter{
 			ivUserlistLink = (ImageView) convertView.findViewById(R.id.iv_userlist_link);
 		}
 		public void setupView(final int position){
-			FollowingItemBean followingItemBean = (FollowingItemBean)(mResultList.get(position).getUserItemBean());
+			SimpleUserItemBean followingItemBean = (SimpleUserItemBean)(mResultList.get(position).getUserItemBean());
 
 			// 设置头像
 			String netHeadUrl = followingItemBean.customavatar;
@@ -221,7 +221,7 @@ public class SearchListAdapter extends BaseAdapter{
 			tvUserlistNickname.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					FollowingItemBean tempFollowingItemBean = mResultList.get(position).getUserItemBean();
+					SimpleUserItemBean tempFollowingItemBean = mResultList.get(position).getUserItemBean();
 					GolukUtils.startUserCenterActivity(mSearchActivity, 
 							tempFollowingItemBean.uid, 
 							tempFollowingItemBean.nickname,
@@ -237,7 +237,7 @@ public class SearchListAdapter extends BaseAdapter{
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					FollowingItemBean tempFollowingItemBean = mResultList.get(position).getUserItemBean();
+					SimpleUserItemBean tempFollowingItemBean = mResultList.get(position).getUserItemBean();
 					GolukUtils.startUserCenterActivity(mSearchActivity, 
 							tempFollowingItemBean.uid, 
 							tempFollowingItemBean.nickname,
@@ -253,7 +253,7 @@ public class SearchListAdapter extends BaseAdapter{
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					FollowingItemBean tempFollowingItemBean = mResultList.get(position).getUserItemBean();
+					SimpleUserItemBean tempFollowingItemBean = mResultList.get(position).getUserItemBean();
 					GolukUtils.startUserCenterActivity(mSearchActivity, 
 							tempFollowingItemBean.uid, 
 							tempFollowingItemBean.nickname,
@@ -269,7 +269,7 @@ public class SearchListAdapter extends BaseAdapter{
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					FollowingItemBean tempUserItemBean = mResultList.get(position).getUserItemBean();
+					SimpleUserItemBean tempUserItemBean = mResultList.get(position).getUserItemBean();
 					if(tempUserItemBean.link == FollowingConfig.LINK_TYPE_FOLLOW_ONLY||
 							tempUserItemBean.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER){
 						mSearchActivity.follow(tempUserItemBean.uid, "0");
