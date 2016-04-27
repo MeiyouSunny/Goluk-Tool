@@ -67,7 +67,7 @@ public class GuideActivity extends BaseActivity {
 		if (isExit) {
 			return;
 		}
-		BaiduLocation.mServerFlag = GolukApplication.getInstance().isInteral();
+//		BaiduLocation.mServerFlag = GolukApplication.getInstance().isInteral();
 		GolukDebugUtils.e("", "-------------GuideActivity-------------isInteral: "
 				+ GolukApplication.getInstance().isInteral() + "--------------BaiduLocation.mServerFlag: "
 				+ BaiduLocation.mServerFlag);

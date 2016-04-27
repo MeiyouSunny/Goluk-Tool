@@ -21,10 +21,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.UserLoginActivity;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.fan.FanListActivity;
 import com.mobnote.golukmain.following.FollowingListActivity;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.startshare.VideoEditActivity;
 import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
@@ -1050,6 +1053,20 @@ public class GolukUtils {
 		context.startActivity(intent);
 	}
 
+	/**
+	 * 跳转到登录页面,国内则跳转到国内登录页面，否则跳转到国际版登录页面
+	 * @param context
+	 */
+	public static void startLoginActivity(Context context){
+		Intent intent = new Intent();
+		if(GolukApplication.getInstance().isInteral()){
+			intent.setClass(context, UserLoginActivity.class);
+		}else{
+			intent.setClass(context, InternationUserLoginActivity.class);
+		}
+		context.startActivity(intent);
+	}
+
 	public static void startVideoEditActivity(Context context, int type,
 			String path) {
 		Intent intent = new Intent(context, VideoEditActivity.class);
@@ -1162,5 +1179,15 @@ public class GolukUtils {
 		}
 
 		return result;
+	}
+
+	public static void setTabHostVisibility(boolean visible, Activity activity) {
+		if(!isActivityAlive(activity)) {
+			return;
+		}
+		if(activity instanceof MainActivity) {
+			MainActivity main = (MainActivity)activity;
+			main.setTabHostVisibility(visible);
+		}
 	}
 }

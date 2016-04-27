@@ -33,6 +33,7 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
+import cn.com.tiros.baidu.BaiduLocation;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -249,6 +250,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 			GolukMobUtils.initMob(this);
 		}
+		BaiduLocation.mServerFlag = GolukApplication.getInstance().isInteral();
 		// TODO 此处不要做初始化相关的工作
 	}
 

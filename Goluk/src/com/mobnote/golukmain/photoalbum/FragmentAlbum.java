@@ -200,7 +200,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 		GolukDebugUtils.e(TAG, "FragmentAlbum-----onResume------------:");
 		GolukApplication.getInstance().setContext(getContext(), "ipcfilemanager");
 
-		if ("0".equals(mPlatform)) {
+		if ("0".equals(mPlatform) && !getEditState()) {
 			if (GolukApplication.getInstance().isIpcLoginSuccess) {
 				if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
 					if(mWonderfulFragment.isShowPlayer == false){
@@ -281,6 +281,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 		}
 		resetEditState();
 		setEditBtnState(true);
+		GolukUtils.setTabHostVisibility(true, getActivity());
 	}
 
 	private void resetEditState() {
@@ -323,6 +324,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 		} else if (id == R.id.cancel_btn) {
 			resetEditState();
 			setEditBtnState(true);
+			GolukUtils.setTabHostVisibility(true, getActivity());
 		} else if (id == R.id.back_btn) {
 			getActivity().finish();
 		} else if (id == R.id.mDeleteBtn) {
@@ -356,6 +358,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 						@Override
 						public void onClickListener() {
 							setEditBtnState(true);
+							GolukUtils.setTabHostVisibility(true, getActivity());
 							resetEditState();
 						}
 					});
@@ -379,6 +382,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 		}
 
 		resetEditState();
+		GolukUtils.setTabHostVisibility(true, getActivity());
 		GolukUtils.showToast(this.getActivity(), getResources().getString(R.string.str_photo_delete_ok));
 	}
 
@@ -398,12 +402,12 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 	private void updateEditState() {
 		if (editState == false) {
 			editState = true;
-
+			
 			// mEditBtn.setText(this.getResources().getString(R.string.short_input_cancel));
 			mTitleName.setVisibility(View.VISIBLE);
 			mCancelBtn.setVisibility(View.VISIBLE);
 			mEditBtn.setVisibility(View.GONE);
-
+			GolukUtils.setTabHostVisibility(false, getActivity());
 			mTitleName.setText(this.getResources().getString(R.string.local_video_title_text));
 
 			mLinearLayoutTab.setVisibility(View.GONE);

@@ -117,7 +117,7 @@ public class SearchListAdapter extends BaseAdapter{
 
 			holderFollowing.setupView(position);
 		}else if(ITEM_NO_MORE == itemViewType){
-			convertView = LayoutInflater.from(mSearchActivity).inflate(R.layout.item_research_no_more, null);
+			convertView = LayoutInflater.from(mSearchActivity).inflate(R.layout.item_search_no_more, null);
 		}
 		return convertView;
 	}

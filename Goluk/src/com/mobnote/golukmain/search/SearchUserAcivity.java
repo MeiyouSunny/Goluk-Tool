@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -78,7 +79,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 	private String searchContent;
 	private boolean hasSearched;
 
-	private final int requestOffset = 10;
+	private final int requestOffset = 20;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +153,8 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 				// TODO Auto-generated method stub
 				if (actionId==EditorInfo.IME_ACTION_SEARCH){
 					hasSearched = true;
-					searchContent = v.getText().toString();
+					searchContent = v.getText().toString().trim();
+					mSearchContentEt.setText(searchContent);
 					if(TextUtils.isEmpty(searchContent)){
 						Toast.makeText(SearchUserAcivity.this,getResources().getString(R.string.str_search_keywards_cannot_be_empty), Toast.LENGTH_SHORT).show();
 					}else{
@@ -172,7 +174,6 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 //						SearchUserAcivity.this.getString(R.string.updating) +
 //						GolukUtils.getCurrentFormatTime(SearchUserAcivity.this));
 //				sendSearchUserRequest(REFRESH_NORMAL,searchContent);
-				
 			}
 
 			@Override
@@ -181,9 +182,9 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 						SearchUserAcivity.this.getResources().getString(
 						R.string.goluk_pull_to_refresh_footer_pull_label));
 				sendSearchUserRequest(REFRESH_PULL_UP,searchContent);
-				
 			}
 		});
+		mFollowinglistPtrList.setOnItemClickListener(this);
 	}
 
 	private void initView() {
@@ -261,48 +262,51 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 	private void sendFollowRequest(String linkuid, String type) {
 
 		FollowRequest request = new FollowRequest(IPageNotifyFn.PageType_Follow, this);
-		GolukApplication app = GolukApplication.getInstance();
-		if(null != app && app.isUserLoginSucess) {
-			if(!TextUtils.isEmpty(app.mCurrentUId)) {
-				if(!mLoadingDialog.isShowing()) {
-					mLoadingDialog.show();
-				}
-				request.get(PROTOCOL, linkuid, type, app.mCurrentUId);
+		if (GolukApplication.getInstance().isUserLoginSucess && GolukApplication.getInstance().getMyInfo() != null) {
+
+			if (!mLoadingDialog.isShowing()) {
+				mLoadingDialog.show();
 			}
-		}
+			request.get(PROTOCOL, linkuid, type, GolukApplication.getInstance().getMyInfo().uid);
+		} 
 	}
 
 	protected void follow(final String linkuid,final String type){
 
-		if("1".equals(type)){
-			sendFollowRequest( linkuid,  type);
-			return;
-		}
-
-		if(mCustomDialog==null){
-			mCustomDialog = new CustomDialog(this);
-		}
-
-		mCustomDialog.setMessage(this.getString(R.string.str_confirm_cancel_follow), Gravity.CENTER);
-		mCustomDialog.setLeftButton(this.getString(R.string.dialog_str_cancel), null);
-		mCustomDialog.setRightButton(this.getString(R.string.str_button_ok), new OnRightClickListener() {
-
-			@Override
-			public void onClickListener() {
-				// TODO Auto-generated method stub
-				mCustomDialog.dismiss();
+		if (GolukApplication.getInstance().isUserLoginSucess) {
+			if("1".equals(type)){
 				sendFollowRequest( linkuid,  type);
+				return;
 			}
 
-		});
-		mCustomDialog.show();
+			if(mCustomDialog==null){
+				mCustomDialog = new CustomDialog(this);
+			}
+
+			mCustomDialog.setMessage(this.getString(R.string.str_confirm_cancel_follow), Gravity.CENTER);
+			mCustomDialog.setLeftButton(this.getString(R.string.dialog_str_cancel), null);
+			mCustomDialog.setRightButton(this.getString(R.string.str_button_ok), new OnRightClickListener() {
+
+				@Override
+				public void onClickListener() {
+					// TODO Auto-generated method stub
+					mCustomDialog.dismiss();
+					sendFollowRequest( linkuid,  type);
+				}
+
+			});
+			mCustomDialog.show();
+		}else {
+			GolukUtils.startLoginActivity(this);
+		}
 
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		// TODO Auto-generated method stub
-		
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
+		imm.hideSoftInputFromWindow(mSearchContentEt.getWindowToken(), 0);
 	}
 
 	@Override
