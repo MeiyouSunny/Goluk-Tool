@@ -505,6 +505,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 					SharedPrefUtil.saveUserInfo("");
 					SharedPrefUtil.saveUserPwd("");
 					SharedPrefUtil.saveUserToken("");
+					GolukApplication.getInstance().mCurrentUId = "";
 					logoutSucess();
 				}else{
 					GolukUtils.showToast(this, this.getResources().getString(R.string.str_loginout_fail));
