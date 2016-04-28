@@ -272,6 +272,12 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 
 	protected void follow(final String linkuid,final String type){
 
+		if(!GolukUtils.isNetworkConnected(this)) {
+			Toast.makeText(this,getString(R.string.network_error),
+					Toast.LENGTH_SHORT).show();
+			return;
+		}
+
 		if (GolukApplication.getInstance().isUserLoginSucess) {
 			if("1".equals(type)){
 				sendFollowRequest( linkuid,  type);

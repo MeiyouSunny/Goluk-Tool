@@ -346,7 +346,8 @@ public class FragmentMine extends Fragment implements OnClickListener,
 			// 未登录
 			mVideoLayout.setVisibility(View.GONE);
 			mImageAuthentication.setVisibility(View.GONE);
-			this.showHead(mImageHead, "7");
+			GlideUtils.loadLocalHead(getActivity(), mImageHead,
+					R.drawable.usercenter_head_default);
 			mTextName.setText(getActivity().getResources().getString(
 					R.string.str_click_to_login));
 			mTextIntroduction.setTextColor(Color.rgb(128, 138, 135));
@@ -611,7 +612,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
 					ILive.mBigHeadImg[Integer.parseInt(headportrait)]);
 		} catch (Exception e) {
 			GlideUtils.loadLocalHead(getActivity(), view,
-					R.drawable.editor_head_feault7);
+					R.drawable.usercenter_head_default);
 		}
 	}
 
