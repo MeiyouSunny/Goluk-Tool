@@ -220,6 +220,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	public CountryBean mLocationCityCode = null;
 	/** 是否发起过直播 */
 	public boolean isAlreadyLive = false;
+	
+	private boolean mIsQuery = false;
 
 	private static final String SNAPSHOT_DIR = "fs1:/pic/";
 	static {
@@ -1300,6 +1302,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			if ("ipcfilemanager".equals(mPageSource)) {
 				return;
 			}
+			if(!mIsQuery){
+				return;
+			}else{
+				mIsQuery = false;
+			}
 			GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==6666===stopDownloadList");
 			if (TextUtils.isEmpty((String) param2)) {
 				return;
@@ -1723,12 +1730,16 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			// 不允许同步视频
 			return;
 		}
+		
 		long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
 		int syncFlag = SettingUtils.getInstance().getInt(UserSetupActivity.MANUAL_SWITCH, 5);
 		GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==4444===stopDownloadList:   " + starttime + "  syncFlag: "
 				+ syncFlag);
 
-		mIPCControlManager.queryFileListInfo(6, syncFlag, starttime, 2147483647, "0");
+		boolean flog = mIPCControlManager.queryFileListInfo(6, syncFlag, starttime, 2147483647, "0");
+		if(flog){
+			mIsQuery = true;
+		}
 	}
 
 	/**
