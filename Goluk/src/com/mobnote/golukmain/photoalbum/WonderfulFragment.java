@@ -587,7 +587,9 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 		} else {
 			empty.setVisibility(View.GONE);
 			mStickyListHeadersListView.setVisibility(View.VISIBLE);
-			updateEditState(true);
+			if(!mFragmentAlbum.getEditState()){
+				updateEditState(true);
+			}
 		}
 	}
 

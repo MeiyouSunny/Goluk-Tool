@@ -440,7 +440,12 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
 		} else {
 			mVideoView.setOnTouchListener(null);
-			mHandler.removeCallbacks(hideRunnable);
+			try {
+				mHandler.removeCallbacks(hideRunnable);
+			} catch (Exception e) {
+				
+			}
+			
 			hideOperator();
 			RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVideoViewLayout.getLayoutParams();
 			lp.width = mScreenWidth;
@@ -867,7 +872,12 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			hideOperator();
 		} else {
 			showOperator();
-			mHandler.removeCallbacks(hideRunnable);
+			try {
+				mHandler.removeCallbacks(hideRunnable);
+			} catch (Exception e) {
+				
+			}
+			
 			mHandler.postDelayed(hideRunnable, HIDE_TIME);
 		}
 	}

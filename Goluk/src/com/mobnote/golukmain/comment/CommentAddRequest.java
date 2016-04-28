@@ -1,7 +1,5 @@
 package com.mobnote.golukmain.comment;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 
 import com.mobnote.application.GolukApplication;
@@ -15,18 +13,15 @@ public class CommentAddRequest extends GolukFastjsonRequest<CommentAddResultBean
 
 	public CommentAddRequest(int requestType, IRequestResultListener listener) {
 		super(requestType, CommentAddResultBean.class, listener);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	protected String getPath() {
-		// TODO Auto-generated method stub
 		return "/cdcComment/comment.htm";
 	}
 
 	@Override
 	protected String getMethod() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

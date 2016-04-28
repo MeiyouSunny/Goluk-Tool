@@ -1,14 +1,13 @@
-package com.mobnote.golukmain.following.bean;
+package com.mobnote.golukmain.userbase.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.mobnote.golukmain.userbase.bean.BaseUserBean;
 
 /**
  * 关注的用户
  * @author leege100
  *
  */
-public class FollowingItemBean extends BaseUserBean{
+public class SimpleUserItemBean extends BaseUserBean{
 
 	/** 连接类型 **/
 	@JSONField(name = "link")

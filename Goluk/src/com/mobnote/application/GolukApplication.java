@@ -33,6 +33,7 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
+import cn.com.tiros.baidu.BaiduLocation;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -46,7 +47,6 @@ import com.mobnote.golukmain.ImageClipActivity;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.PushSettingActivity;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.UserIdentifyActivity;
 import com.mobnote.golukmain.UserOpinionActivity;
 import com.mobnote.golukmain.UserPersonalHeadActivity;
 import com.mobnote.golukmain.UserPersonalNameActivity;
@@ -73,6 +73,8 @@ import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
 import com.mobnote.golukmain.livevideo.BaidumapLiveActivity;
 import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
+import com.mobnote.golukmain.livevideo.LiveOperateVdcp;
+import com.mobnote.golukmain.livevideo.VdcpLiveBean;
 import com.mobnote.golukmain.thirdshare.GolukUmConfig;
 import com.mobnote.golukmain.userlogin.UserData;
 import com.mobnote.golukmain.videosuqare.VideoCategoryActivity;
@@ -216,6 +218,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	/** 当前的国家区号 **/
 	public CountryBean mLocationCityCode = null;
+	/** 是否发起过直播 */
+	public boolean isAlreadyLive = false;
 
 	private static final String SNAPSHOT_DIR = "fs1:/pic/";
 	static {
@@ -246,6 +250,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 			GolukMobUtils.initMob(this);
 		}
+		BaiduLocation.mServerFlag = GolukApplication.getInstance().isInteral();
 		// TODO 此处不要做初始化相关的工作
 	}
 
@@ -904,8 +909,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 */
 	@Override
 	public void pageNotifyCallBack(int type, int success, Object param1, Object param2) {
-		GolukDebugUtils.e("", "chxy send pageNotifyCallBack--" + "type:" + type + ",success:" + success + ",param1:"
-				+ param1 + ",param2:" + param2);
+//		GolukDebugUtils.e("", "chxy send pageNotifyCallBack--" + "type:" + type + ",success:" + success + ",param1:"
+//				+ param1 + ",param2:" + param2);
 
 		if (this.isExit()) {
 			return;
@@ -939,31 +944,32 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			}
 			break;
 		// 登陆
-//		case PageType_Login:
-//			// 取消自动登录
-//			mUser.timerCancel();
-//			// 登录
-//			if (mPageSource != "UserIdentify") {
-//				mLoginManage.loginCallBack(success, param1, param2);
-//			} else {
-//				((UserIdentifyActivity) mContext).registLoginCallBack(success, param2);
-//			}
-//			parseLoginData(success, param2);
-//
-//			break;
-//		// 第三方登陆
-//		case PageType_OauthLogin:
-//			// 取消自动登录
-//			mUser.timerCancel();
-//			// 登录
-//			mLoginManage.loginCallBack(success, param1, param2);
-//			parseLoginData(success, param2);
-//			break;
+		// case PageType_Login:
+		// // 取消自动登录
+		// mUser.timerCancel();
+		// // 登录
+		// if (mPageSource != "UserIdentify") {
+		// mLoginManage.loginCallBack(success, param1, param2);
+		// } else {
+		// ((UserIdentifyActivity) mContext).registLoginCallBack(success,
+		// param2);
+		// }
+		// parseLoginData(success, param2);
+		//
+		// break;
+		// // 第三方登陆
+		// case PageType_OauthLogin:
+		// // 取消自动登录
+		// mUser.timerCancel();
+		// // 登录
+		// mLoginManage.loginCallBack(success, param1, param2);
+		// parseLoginData(success, param2);
+		// break;
 		// 自动登录
-//		case PageType_AutoLogin:
-//			mUser.initAutoLoginCallback(success, param1, param2);
-//			parseLoginData(success, param2);
-//			break;
+		// case PageType_AutoLogin:
+		// mUser.initAutoLoginCallback(success, param1, param2);
+		// parseLoginData(success, param2);
+		// break;
 		// 验证码PageType_GetVCode
 		case PageType_GetVCode:
 			// 注册获取验证码
@@ -1031,15 +1037,15 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				((PushSettingActivity) mContext).page_CallBack(type, success, param1, param2);
 			}
 			break;
-		case PageType_ModifyHeadPic:
-			if (mContext instanceof ImageClipActivity) {
-				((ImageClipActivity) mContext).pageNotifyCallBack(type, success, param1, param2);
-			}
-
-			if (mContext instanceof UserPersonalHeadActivity) {
-				((UserPersonalHeadActivity) mContext).pageNotifyCallBack(type, success, param1, param2);
-			}
-			break;
+//		case PageType_ModifyHeadPic:
+//			if (mContext instanceof ImageClipActivity) {
+//				((ImageClipActivity) mContext).pageNotifyCallBack(type, success, param1, param2);
+//			}
+//
+//			if (mContext instanceof UserPersonalHeadActivity) {
+//				((UserPersonalHeadActivity) mContext).pageNotifyCallBack(type, success, param1, param2);
+//			}
+//			break;
 		}
 	}
 
@@ -1047,46 +1053,85 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	private boolean isCallContinue = false;
 	public boolean isCheckContinuteLiveFinish = false;
 	private final int CONTINUTE_TIME_OUT = 15 * 1000;
+	/** T1回调的消息是否回来 */
+	private boolean isT1Success = false;
+
+	private boolean isCanLive() {
+		if (isCheckContinuteLiveFinish) {
+			GolukDebugUtils.e("", "newlive----Application---isCanLive----0");
+			// 已经完成
+			return false;
+		}
+		if (!isIpcLoginSuccess || !isUserLoginSucess) {
+			GolukDebugUtils.e("", "newlive----Application---isCanLive----1");
+			return false;
+		}
+		if (System.currentTimeMillis() - startTime > CONTINUTE_TIME_OUT) {
+			// 超时,不需要直播
+			isCheckContinuteLiveFinish = true;
+			GolukDebugUtils.e("", "newlive----Application---isCanLive----2");
+			return false;
+		}
+		return true;
+	}
+
+	// T1 续直播
+	private void T1ContinuteLive() {
+		GolukDebugUtils.e("", "newlive----Application---T1ContinuteLive----0");
+		if (!isCanLive()) {
+			GolukDebugUtils.e("", "newlive----Application---T1ContinuteLive----1");
+			return;
+		}
+		if (this.isAlreadyLive) {
+			GolukDebugUtils.e("", "newlive----Application---T1ContinuteLive----2");
+			isCheckContinuteLiveFinish = true;
+			return;
+		}
+		if (!isT1Success) {
+			GolukDebugUtils.e("", "newlive----Application---T1ContinuteLive----3");
+			return;
+		}
+		if (isCallContinue) {
+			return;
+		}
+		isCallContinue = true;
+		realStartContinuteLive();
+		isCallContinue = false;
+	}
 
 	// 显示
 	public void showContinuteLive() {
-
+		GolukDebugUtils.e("", "newlive----Application---showContinuteLive----0");
+		// 如果是T1，在IPC回调的时候，发起直播
+		if (mIPCControlManager.isT1Relative()) {
+			T1ContinuteLive();
+			return;
+		}
+		// 正常退出，不需要直播
 		if (SharedPrefUtil.getIsLiveNormalExit()) {
 			isCheckContinuteLiveFinish = true;
 			// 不需要续直播
 			return;
 		}
-		if (System.currentTimeMillis() - startTime > CONTINUTE_TIME_OUT) {
-			// 超时
-			isCheckContinuteLiveFinish = true;
+		if (!isCanLive()) {
 			return;
 		}
-		if (isCheckContinuteLiveFinish) {
-			// 已经完成
-			return;
-		}
-		if (!isIpcLoginSuccess || !isUserLoginSucess) {
-			return;
-		}
-
 		if (isCallContinue) {
 			return;
 		}
 		isCallContinue = true;
-		GolukDebugUtils
-				.e(null, "jyf----20150406----showContinuteLive----mApp :" + SharedPrefUtil.getIsLiveNormalExit());
+		realStartContinuteLive();
+		isCallContinue = false;
+	}
 
+	private void realStartContinuteLive() {
 		if (mContext instanceof MainActivity) {
-			GolukDebugUtils.e(null, "jyf----20150406----showContinuteLive----mApp2222 :");
 			isNeedCheckLive = false;
 			isCheckContinuteLiveFinish = true;
 			((MainActivity) mContext).showContinuteLive();
 		} else {
-			GolukDebugUtils.e(null, "jyf----20150406----showContinuteLive----mApp33333 :");
 			isNeedCheckLive = true;
 		}
-
-		isCallContinue = false;
 	}
 
 	/**
@@ -1100,10 +1145,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	 * @date Apr 20, 2015
 	 */
 	public void parseLoginData(UserData userdata) {
-		if(userdata != null){
+		if (userdata != null) {
 			// 获得CC上传视频接口
 			mCCUrl = userdata.ccbackurl;
-			mCurrentUId =userdata.uid;
+			mCurrentUId = userdata.uid;
 			mCurrentAid = userdata.aid;
 			mCurrentPhoneNum = userdata.phone;
 			// New video number published by he followed
@@ -1113,7 +1158,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			EventBus.getDefault().post(new EventUserLoginRet(EventConfig.USER_LOGIN_RET, true, followedVideoNum));
 			this.showContinuteLive();
 			GolukDebugUtils.e(null, "jyf---------GolukApplication---------mCCurl:" + mCCUrl + " uid:" + mCurrentUId
-								+ " aid:" + mCurrentAid);
+					+ " aid:" + mCurrentAid);
 		}
 	}
 
@@ -1128,8 +1173,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	// VDCP 连接状态 回调
 	private void IPC_VDCP_Connect_CallBack(int msg, int param1, Object param2) {
-		GolukDebugUtils
-				.e("", "wifilist----GolukApplication----wifiConn----IPC_VDCP_Connect_CallBack-------msg :" + msg);
+		
 		// 如果不是连接成功,都标识为失败
 		switch (msg) {
 		case ConnectionStateMsg_Idle:
@@ -1144,6 +1188,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			}
 			break;
 		case ConnectionStateMsg_Connecting:
+			GolukDebugUtils
+			.e("", "newlive-----GolukApplication----wifiConn----IPC_VDCP_Connect_CallBack----连接中... :");
 			setIpcLoginState(false);
 			ipcDisconnect();
 			// 已经连接成功过
@@ -1160,6 +1206,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 			// 只是,ipc信号连接了,初始化的东西还没完成,所以要等到ipc初始化成功,才能把isIpcLoginSuccess=true
 			break;
 		case ConnectionStateMsg_DisConnected:
+			GolukDebugUtils
+			.e("", "newlive-----GolukApplication----wifiConn----IPC_VDCP_Connect_CallBack----连接失败... :");
 			setIpcLoginState(false);
 			ipcDisconnect();
 			// 已经连接成功过
@@ -1335,6 +1383,8 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	}
 
 	private void IPC_VDC_CommandResp_CallBack(int event, int msg, int param1, Object param2) {
+//		GolukDebugUtils.e("", "newlive----Application-IPC_VDC_CommandResp_CallBack msg: " + msg + "  param1: " + param1
+//				+ "   param2: " + param2);
 		switch (msg) {
 		case IPC_VDCP_Msg_Init:
 			IPC_VDCP_Command_Init_CallBack(msg, param1, param2);
@@ -1413,6 +1463,42 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				}
 			}
 			break;
+		case IPC_VDCP_Msg_PushEvent_Comm:
+			IPC_VDCP_PushEvent_Comm(msg, param1, param2);
+			break;
+		case IPC_VDCP_Msg_LiveStart:
+			// 开始直播
+			if (null != mLiveOperater) {
+				mLiveOperater.CallBack_Ipc(msg, param1, param2);
+			}
+			break;
+		case IPC_VDCP_Msg_LiveStop:
+
+			break;
+		}
+	}
+
+	public LiveOperateVdcp mLiveOperater = null;
+
+	private void IPC_VDCP_PushEvent_Comm(int msg, int param1, Object param2) {
+		if (RESULE_SUCESS != param1) {
+			GolukDebugUtils.e("", "newlive-----GolukApplication----IPC_VDCP_PushEvent_Comm:  " + param2);
+			return;
+		}
+		if (!this.isAlreadyLive) {
+			// 未发起过直播
+			try {
+				VdcpLiveBean bean = GolukFastJsonUtil.getParseObj((String) param2, VdcpLiveBean.class);
+				if ("sending".equals(bean.content)) {
+					isT1Success = true;
+					showContinuteLive();
+				}
+			} catch (Exception e) {
+			}
+		}
+
+		if (null != mLiveOperater) {
+			mLiveOperater.CallBack_Ipc(msg, param1, param2);
 		}
 	}
 
@@ -1816,7 +1902,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		return myInfo;
 	}
 	
-	public void setMyinfo(String name,String head,String desc){
+	public void setMyinfo(String name,String head,String desc,String url){
 		
 		String user = SharedPrefUtil.getUserInfo();
 
@@ -1834,6 +1920,10 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 				if(desc !=null && !"".equals(desc)){
 					myInfo.desc = desc;
 				}
+				if(url !=null){
+					myInfo.customavatar = url;
+				}
+				
 				SharedPrefUtil.saveUserInfo(JSON.toJSONString(myInfo));
 			}
 			
@@ -1909,4 +1999,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 		}
 		return false;
 	}
+	
+	public void setLoginRespInfo(String info) {
+		mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SetLoginRespInfo,
+				info);
+	}
+
+	
 }

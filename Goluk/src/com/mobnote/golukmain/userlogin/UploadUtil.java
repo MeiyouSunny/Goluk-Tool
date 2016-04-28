@@ -87,8 +87,6 @@ public class UploadUtil {
                  */
                 int res = conn.getResponseCode();
                 GolukDebugUtils.e(TAG, "response code:" + res);
-                // if(res==200)
-                // {
                 GolukDebugUtils.e(TAG, "request success");
                 InputStream input = conn.getInputStream();
                 StringBuffer sb1 = new StringBuffer();
@@ -98,10 +96,6 @@ public class UploadUtil {
                 }
                 result = sb1.toString();
                 GolukDebugUtils.e(TAG, "result : " + result);
-                // }
-                // else{
-                // Log.e(TAG, "request error");
-                // }
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -110,7 +104,7 @@ public class UploadUtil {
         }
         return result;
     }
-
+    
 
     /**
      * 通过拼接的方式构造请求内容，实现参数传输以及文件传输
@@ -124,10 +118,7 @@ public class UploadUtil {
     public static String post(String url, Map<String, String> params, Map<String, File> files)
             throws IOException {
         String BOUNDARY = java.util.UUID.randomUUID().toString();
-        String PREFIX = "--", LINEND = "\r\n";
-        String MULTIPART_FROM_DATA = "multipart/form-data";
-        String CHARSET = "UTF-8";
-
+        String MULTIPART_FROM_DATA = "application/octest-stream";
 
         URL uri = new URL(url);
         HttpURLConnection conn = (HttpURLConnection) uri.openConnection();
@@ -139,38 +130,16 @@ public class UploadUtil {
         conn.setRequestProperty("connection", "keep-alive");
         conn.setRequestProperty("Charsert", "UTF-8");
         conn.setRequestProperty("Content-Type", MULTIPART_FROM_DATA + ";boundary=" + BOUNDARY);
+       
 
-
-        // 首先组拼文本类型的参数
-        StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> entry : params.entrySet()) {
-            sb.append(PREFIX);
-            sb.append(BOUNDARY);
-            sb.append(LINEND);
-            sb.append("Content-Disposition: form-data; name=\"" + entry.getKey() + "\"" + LINEND);
-            sb.append("Content-Type: text/plain; charset=" + CHARSET + LINEND);
-            sb.append("Content-Transfer-Encoding: 8bit" + LINEND);
-            sb.append(LINEND);
-            sb.append(entry.getValue());
-            sb.append(LINEND);
+            conn.addRequestProperty("md5", entry.getValue());
         }
 
-
         DataOutputStream outStream = new DataOutputStream(conn.getOutputStream());
-        outStream.write(sb.toString().getBytes());
         // 发送文件数据
         if (files != null)
             for (Map.Entry<String, File> file : files.entrySet()) {
-                StringBuilder sb1 = new StringBuilder();
-                sb1.append(PREFIX);
-                sb1.append(BOUNDARY);
-                sb1.append(LINEND);
-                sb1.append("Content-Disposition: form-data; name=\"uploadfile\"; filename=\""
-                        + file.getValue().getName() + "\"" + LINEND);
-                sb1.append("Content-Type: application/octet-stream; charset=" + CHARSET + LINEND);
-                sb1.append(LINEND);
-                outStream.write(sb1.toString().getBytes());
-
 
                 InputStream is = new FileInputStream(file.getValue());
                 byte[] buffer = new byte[1024];
@@ -179,15 +148,9 @@ public class UploadUtil {
                     outStream.write(buffer, 0, len);
                 }
 
-
                 is.close();
-                outStream.write(LINEND.getBytes());
             }
 
-
-        // 请求结束标志
-        byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINEND).getBytes();
-        outStream.write(end_data);
         outStream.flush();
         // 得到响应码
         int res = conn.getResponseCode();

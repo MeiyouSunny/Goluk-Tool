@@ -286,8 +286,12 @@ public class ShareDeal implements OnClickListener {
 		if (!isValid()) {
 			return;
 		}
-		mCurrentShareType = IThirdShareFn.TYPE_QQ_ZONE;
-		click_deal(mCurrentShareType);
+		if (mSharePlatform.isInstallPlatform(SHARE_MEDIA.QQ)) {
+			mCurrentShareType = IThirdShareFn.TYPE_QQ_ZONE;
+			click_deal(mCurrentShareType);
+		} else {
+			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_qq_low_version));
+		}
 	}
 
 	/**
