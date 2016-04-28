@@ -823,6 +823,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	}
 
 	private boolean isCanShowSoft() {
+		if (null == mVideoJson || null == mVideoJson.data || null == mVideoJson.data.avideo) {
+			return false;
+		}
 		if ((mVideoJson.data.avideo.video != null) && (mVideoJson.data.avideo.video.comment != null)
 				&& "1".equals(mVideoJson.data.avideo.video.comment.iscomment) && isSwitchStateFinish) {
 			return true;

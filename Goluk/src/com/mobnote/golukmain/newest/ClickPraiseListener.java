@@ -12,8 +12,8 @@ import android.net.NetworkInfo;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-public class ClickPraiseListener implements OnClickListener{
-	
+public class ClickPraiseListener implements OnClickListener {
+
 	public interface IClickPraiseView{
 		public void updateClickPraiseNumber(boolean flag, VideoSquareInfo info);
 	}
@@ -21,19 +21,22 @@ public class ClickPraiseListener implements OnClickListener{
 	private Context mContext;
 	private IClickPraiseView mNewestListView;
 	private CategoryListView mCategoryListView = null;
-	
+
 	public ClickPraiseListener(Context context, VideoSquareInfo info, IClickPraiseView view) {
 		this.mVideoSquareInfo = info;
 		this.mContext = context;
 		this.mNewestListView = view;
 	}
-	
+
 	public void setCategoryListView(CategoryListView view) {
 		mCategoryListView = view;
 	}
 
 	@Override
 	public void onClick(View arg0) {
+		if(GolukUtils.isFastDoubleClick()) {
+			return;
+		}
 		if (!isNetworkConnected()) {
 			GolukUtils.showToast(mContext, mContext.getString(R.string.network_error));
 			return;
@@ -50,11 +53,7 @@ public class ClickPraiseListener implements OnClickListener{
 				mCategoryListView.sendCancelPraiseRequest(mVideoSquareInfo.mVideoEntity.videoid);
 				mCategoryListView.updateClickPraiseNumber(true, mVideoSquareInfo);
 			}
-
-		}else {
-//			GolukApplication.getInstance().getVideoSquareManager().
-//			clickPraise("1", mVideoSquareInfo.mVideoEntity.videoid, "1");
-
+		} else {
 			if (null != mNewestListView) {
 				if(mNewestListView instanceof NewestListView) {
 					((NewestListView)mNewestListView).sendPraiseRequest(mVideoSquareInfo.mVideoEntity.videoid);
@@ -64,10 +63,9 @@ public class ClickPraiseListener implements OnClickListener{
 				mCategoryListView.sendPraiseRequest(mVideoSquareInfo.mVideoEntity.videoid);
 				mCategoryListView.updateClickPraiseNumber(false, mVideoSquareInfo);
 			}
-			
 		}
 	}
-	
+
 	/**
 	 * 检查是否有可用网络
 	 * @return
@@ -81,6 +79,5 @@ public class ClickPraiseListener implements OnClickListener{
 			return mNetworkInfo.isAvailable();
 		}
 		return false;
-	} 
-	
+	}
 }
