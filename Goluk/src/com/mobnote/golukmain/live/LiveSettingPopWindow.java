@@ -9,7 +9,6 @@ import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
 import com.mobnote.util.GolukUtils;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -34,6 +33,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 	public static final int EVENT_ENTER = 1;
 	/** 默认直播时长 */
 	private final int DEFAULT_SECOND = 30 * 60;
+	private final int MAX_SECOND = 30 * 60;
 
 	private Context mContext = null;
 	private PopupWindow mPopWindow = null;
@@ -41,21 +41,20 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 
 	private RelativeLayout mRootLayout = null;
 	private ViewGroup mParentLayout = null;
-	//private EditText mDescEdit = null;
 	/** 时长设置滚动 */
 	private SeekBar mSeekBar = null;
 	/** 视频直播设置时长 */
 	private TextView mTimeTv = null;
 	/** 预计本次流量 */
 	private TextView mFlowTv = null;
-	
+
 	/** 回调对象 */
 	private IPopwindowFn mListener = null;
 	/** 是否可以支持声音按钮 */
 	private Button mSoundBtn = null;
 	/** 是否可以对讲按钮 */
 	private Button mCanTalkBtn = null;
-	
+
 	private ImageView back = null;
 
 	private boolean mIsCanTalk = false;
@@ -68,10 +67,9 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 	private boolean isShow = false;
 	/** 是否用户主动点击取消 */
 	private boolean isUserDimiss = false;
-	
+
 	/** 音视频配置信息 */
 	private VideoConfigState mVideoConfigState = null;
-	
 
 	public void setCallBackNotify(IPopwindowFn fn) {
 		this.mListener = fn;
@@ -93,16 +91,16 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 		mRootLayout = (RelativeLayout) mLayoutFlater.inflate(R.layout.carrecorder_live_share_setting, null);
 		mPopWindow = new PopupWindow(mRootLayout, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
-		//mEnter = (RelativeLayout) mRootLayout.findViewById(R.id.sysz_line);
+		// mEnter = (RelativeLayout) mRootLayout.findViewById(R.id.sysz_line);
 		mCanTalkBtn = (Button) mRootLayout.findViewById(R.id.live_talk_btn);
 		mSoundBtn = (Button) mRootLayout.findViewById(R.id.voice_switch_btn);
 		mTimeTv = (TextView) mRootLayout.findViewById(R.id.live_time);
-		//mDescEdit = (EditText) mRootLayout.findViewById(R.id.description);
+		// mDescEdit = (EditText) mRootLayout.findViewById(R.id.description);
 		mSeekBar = (SeekBar) mRootLayout.findViewById(R.id.progress);
 		mFlowTv = (TextView) mRootLayout.findViewById(R.id.live_flowl_txt);
-		
-		back = (ImageView) mRootLayout.findViewById(R.id.back_btn);
 
+		back = (ImageView) mRootLayout.findViewById(R.id.back_btn);
+		mSeekBar.setMax(MAX_SECOND);
 		mSeekBar.setProgress(DEFAULT_SECOND);
 		mTimeTv.setText(GolukUtils.secondToString(DEFAULT_SECOND));
 		if (mIsCanTalk) {
@@ -120,7 +118,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 		mFlowTv.setText(getCurrentFlow(mCurrentLiveSecond));
 
 		// 设置监听
-		//mEnter.setOnClickListener(this);
+		// mEnter.setOnClickListener(this);
 		mSoundBtn.setOnClickListener(this);
 		mSeekBar.setOnSeekBarChangeListener(this);
 		mCanTalkBtn.setOnClickListener(this);
@@ -144,9 +142,9 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 					if (!isUserDimiss) {
 						if (null != mContext && mContext instanceof AbstractLiveActivity) {
 
-							if(GolukApplication.getInstance().isInteral()){
+							if (GolukApplication.getInstance().isInteral()) {
 								((BaidumapLiveActivity) mContext).exit();
-							}else{
+							} else {
 								((GooglemapLiveActivity) mContext).exit();
 							}
 						}
@@ -167,7 +165,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 		if (null != mPopWindow) {
 			isShow = false;
 			mPopWindow.dismiss();
-			//mPopWindow = null;
+			// mPopWindow = null;
 		}
 	}
 
@@ -176,10 +174,10 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 		bean.vtype = mVideoType;
 		// 时长
 		bean.duration = mCurrentLiveSecond;
-		/*// 描述
-		if (null != mDescEdit) {
-			bean.desc = mDescEdit.getText().toString();
-		}*/
+		/*
+		 * // 描述 if (null != mDescEdit) { bean.desc =
+		 * mDescEdit.getText().toString(); }
+		 */
 		bean.isCanTalk = false;
 		bean.isCanVoice = mIsCanSound;
 		bean.netCountStr = getCurrentFlow(mCurrentLiveSecond);
@@ -216,8 +214,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 			mIsCanSound = false;
 			mSoundBtn.setBackgroundResource(R.drawable.set_close_btn);
 		}
-		
-		
+
 	}
 
 	@Override
@@ -241,12 +238,11 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		GolukDebugUtils.e("", "LiveSetting-------onProgressChanged : " + progress + "	fromUser:" + fromUser);
-		if (progress < 180) {
-			progress = 180;
+		if (progress < (MAX_SECOND / 60)) {
+			progress = MAX_SECOND / 60;
 		}
 		mCurrentLiveSecond = progress;
 		mTimeTv.setText(GolukUtils.secondToString(progress));
-
 		mFlowTv.setText(getCurrentFlow(progress));
 	}
 
@@ -259,6 +255,5 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 	public void onStopTrackingTouch(SeekBar seekBar) {
 
 	}
-	
-	
+
 }
