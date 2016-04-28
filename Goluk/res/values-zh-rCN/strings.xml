@@ -1009,6 +1009,7 @@
     <string name="str_line">Line</string>
 
     <string name="str_facebook_no_install">Need Install Facebook</string>
+    <string name="str_weixin_no_install">你未安装微信</string>
     <string name="str_whatsapp_no_install">Need Install Whatsapp</string>
     <string name="str_line_no_install">Need Install Line</string>
     <string name="str_instagram_no_install">Need Install Instagram</string>
@@ -1032,5 +1033,7 @@
      <string name="str_settings_video_type2">经典模式</string>
      <string name="str_reboot_ipc_now">现在重启</string>
      <string name="str_reboot_ipc_later">以后在说</string>
+     <string name="str_authorize_cancel">取消登录</string>
+     <string name="str_authorize_fail">登录失败</string>
     
 </resources>

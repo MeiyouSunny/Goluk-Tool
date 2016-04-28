@@ -916,6 +916,7 @@
 
     <string name="photoalbum_local_no_video_text">本地没有视频</string>
     <string name="str_facebook_no_install">Need Install Facebook</string>
+    <string name="str_weixin_no_install">Need Install WeChat</string>
     <string name="str_whatsapp_no_install">Need Install Whatsapp</string>
     <string name="str_line_no_install">Need Install Line</string>
     <string name="str_instagram_no_install">Need Install Instagram</string>
@@ -1037,5 +1038,6 @@
      <string name="str_settings_video_type2">经典模式</string>
      <string name="str_reboot_ipc_now">现在重启</string>
      <string name="str_reboot_ipc_later">以后在说</string>
-
+	 <string name="str_authorize_cancel">Authorize cancel</string>
+     <string name="str_authorize_fail">Authorize fail</string>
 </resources>

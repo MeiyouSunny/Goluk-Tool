@@ -44,7 +44,7 @@ public class ThirdPlatformLoginUtil {
 		if (mShareAPI.isInstall(mContext, platform)) {
 			mShareAPI.doOauthVerify(mContext, platform, umAuthListener);
 		} else {
-			GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.str_facebook_no_install));
+			GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.str_weixin_no_install));
 		}
 	}
 
@@ -62,7 +62,7 @@ public class ThirdPlatformLoginUtil {
 
 		@Override
 		public void onError(SHARE_MEDIA platform, int action, Throwable t) {
-			Toast.makeText(mContext.getApplicationContext(), "Authorize fail", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext.getApplicationContext(),  mContext.getResources().getString(R.string.str_authorize_fail), Toast.LENGTH_SHORT).show();
 			if (mListener != null) {
 				mListener.getUserInfo(false, null, null);
 			}
@@ -71,7 +71,7 @@ public class ThirdPlatformLoginUtil {
 
 		@Override
 		public void onCancel(SHARE_MEDIA platform, int action) {
-			Toast.makeText(mContext.getApplicationContext(), "Authorize cancel", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext.getApplicationContext(), mContext.getResources().getString(R.string.str_authorize_cancel), Toast.LENGTH_SHORT).show();
 			GolukDebugUtils.e("", "youmeng----goluk----SharePlatformUtil----umAuthListener----onCancel");
 			if (mListener != null) {
 				mListener.getUserInfo(false, null, null);
