@@ -414,30 +414,42 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 	}
 	
 	private void matchDataToRefreshUI() {
-		String[] mSettingList = null;
+		String[] settingList = null;
+		String[] layoutList = new String[] { "sd", "conf_stream", "record", "conf_event_time", "conf_event_resolution",
+				"conf_volume", "conf_voice", "auto_flip", "conf_logo", "conf_gsensor", "conf_mode", "adas",
+				"conf_powoff_time", "conf_voice_type", "time", "systeminfo", "restore" };
+
 		String basicList = GolukUtils.getDataFromAssets(this, GOLUK_BASIC_LIST);
 		String localList = GolukUtils.getDataFromAssets(this, GOLUK_LOCAL_LIST);
 		TSettingsJson localJson = GolukFastJsonUtil.getParseObj(localList, TSettingsJson.class);
 		if (null != localJson && null != localJson.data) {
-			mSettingList = localJson.data.list;
-			GolukDebugUtils.e("", "TSettingsActivity----------matchDataToRefreshUI------mSettingList1: "+mSettingList.length);
+			settingList = localJson.data.list;
+			GolukDebugUtils.e("", "TSettingsActivity----------matchDataToRefreshUI------mSettingList1: "
+					+ settingList.length);
 		}
-		if (null != mIPCList && 0 != mIPCList.length && null != mSettingList) {
-			for (int i = 0; i < mSettingList.length; i++) {
-				for (int j = 0; j < mIPCList.length; j++) {
-					if (mSettingList[i].equals(mIPCList[j])) {
-						mLayoutList[i].setVisibility(View.VISIBLE);
+		if (null != mIPCList && 0 != mIPCList.length && null != settingList) {
+			for (int k = 0; k < layoutList.length; k++) {
+				for (int i = 0; i < settingList.length; i++) {
+					for (int j = 0; j < mIPCList.length; j++) {
+						if (settingList[i].equals(mIPCList[j]) && settingList[i].equals(layoutList[k])) {
+							mLayoutList[k].setVisibility(View.VISIBLE);
+						}
 					}
 				}
 			}
+
 		} else {
 			TSettingsJson basicJson = GolukFastJsonUtil.getParseObj(basicList, TSettingsJson.class);
 			if (null != basicJson && null != basicJson.data) {
-				mSettingList = basicJson.data.list;
+				settingList = basicJson.data.list;
 			}
-			if (null != mSettingList) {
-				for (int k = 0; k <= mSettingList.length; k++) {
-					mLayoutList[k].setVisibility(View.VISIBLE);
+			if (null != settingList) {
+				for (int m = 0; m < layoutList.length; m++) {
+					for (int n = 0; n < settingList.length; n++) {
+						if (layoutList[m].equals(settingList[n])) {
+							mLayoutList[m].setVisibility(View.VISIBLE);
+						}
+					}
 				}
 			}
 		}
@@ -451,16 +463,22 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		if (mKgjtsyLayout.getVisibility() == View.VISIBLE) {
 			mWonderfulTakephtotLayout.setVisibility(View.VISIBLE);
 			mFatigueLayout.setVisibility(View.VISIBLE);
+			findViewById(R.id.tv_t_settings_smartgo_text).setVisibility(View.VISIBLE);
 		} else {
 			mWonderfulTakephtotLayout.setVisibility(View.GONE);
 			mFatigueLayout.setVisibility(View.GONE);
+			findViewById(R.id.tv_t_settings_smartgo_text).setVisibility(View.GONE);
 		}
 		if (mParkingsleepLayout.getVisibility() == View.VISIBLE) {
 			mAFLayout.setVisibility(View.VISIBLE);
+			findViewById(R.id.tv_t_settings_parking_sleep_desc).setVisibility(View.VISIBLE);
+			findViewById(R.id.tv_t_settings_security_desc).setVisibility(View.VISIBLE);
 		} else {
 			mAFLayout.setVisibility(View.GONE);
+			findViewById(R.id.tv_t_settings_parking_sleep_desc).setVisibility(View.GONE);
+			findViewById(R.id.tv_t_settings_security_desc).setVisibility(View.GONE);
 		}
-		// TODO 判断Adas前向距离安全预警是否打开，如果打开，则显示
+		findViewById(R.id.ly_t_settings_buy).setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -561,7 +579,10 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 				matchDataToRefreshUI();
 			} catch (Exception e) {
 				e.printStackTrace();
+				matchDataToRefreshUI();
 			}
+		} else {
+			matchDataToRefreshUI();
 		}
 	}
 	
@@ -1075,7 +1096,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		if (GolukApplication.getInstance().getContext() != this) {
 			return;
 		}
-//		closeLoading();
+		closeLoading();
 		if (RESULE_SUCESS == param1) {
 			GolukFileUtils.saveInt(GolukFileUtils.ADAS_FLAG, mAdasConfigParamter.enable);
 			switchAdasEnableUI(mAdasConfigParamter.enable == 1);
@@ -1728,7 +1749,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			});
 			mCustomDialog.show();
 		} else {
-//			showLoading();
+			showLoading();
 			if (mAdasConfigParamter.enable == 0) {
 				mAdasConfigParamter.enable = 1;
 			} else {
@@ -1742,7 +1763,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		if (mAdasConfigParamter == null) {
 			return;
 		}
-//		showLoading();
+		showLoading();
 		if (mAdasConfigParamter.fcw_enable == 0) {
 			mAdasConfigParamter.fcw_enable = 1;
 		} else {
@@ -1755,7 +1776,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		if (mAdasConfigParamter == null) {
 			return;
 		}
-//		showLoading();
+		showLoading();
 		if (mAdasConfigParamter.fcs_enable == 0) {
 			mAdasConfigParamter.fcs_enable = 1;
 		} else {
