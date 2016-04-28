@@ -1500,7 +1500,7 @@ public class JsonUtil {
 		try {
 			JSONObject rootObj = new JSONObject();
 			rootObj.put("logo_visible", logoVisible);
-			rootObj.put("time_visible", 0);
+			rootObj.put("time_visible", timeVisible);
 
 			return rootObj.toString();
 		} catch (Exception e) {
