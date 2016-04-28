@@ -109,6 +109,12 @@ public class ShareTypeLayout implements OnClickListener, IBaiduGeoCoderFn, IDial
 	private String mMd5String;
 	private Toast mToast;
 
+	public void setLocationAddress(String address){
+		mCurrentAddress = address;
+		mLocationState = LOCATION_STATE_SUCCESS;
+		refreshLocationUI();
+	}
+
 	public ShareTypeLayout(Context context, PromotionSelectItem item) {
 		mContext = context;
 		mLayoutFlater = LayoutInflater.from(mContext);

@@ -21,10 +21,13 @@ import android.widget.MediaController.MediaPlayerControl;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventUpdateAddr;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
@@ -45,6 +48,8 @@ import com.mobnote.util.JsonUtil;
 import com.rd.car.editor.Constants;
 import com.rd.car.editor.FilterPlaybackView;
 import com.rd.car.editor.FilterVideoEditorException;
+
+import de.greenrobot.event.EventBus;
 
 @SuppressLint("HandlerLeak")
 public class VideoEditActivity extends BaseActivity implements OnClickListener, ICreateNewVideoFn, IUploadVideoFn,
@@ -120,6 +125,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
+		EventBus.getDefault().register(this);
 		mLayoutFlater = LayoutInflater.from(this);
 		mRootLayout = (RelativeLayout) mLayoutFlater.inflate(R.layout.video_edit, null);
 		mYouMengLayout = (RelativeLayout) mRootLayout.findViewById(R.id.shortshare_youmeng_layout);
@@ -164,6 +170,24 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		}
 		loadData();
 	}
+
+	public void onEventMainThread(EventLocationFinish event) {
+		if (null == event) {
+			return;
+		}
+
+		if(mTypeLayout != null && event.getAddress() != null){
+			mTypeLayout.setLocationAddress(event.getAddress());
+		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		EventBus.getDefault().unregister(this);
+		super.onDestroy();
+	}
+
 
 	private void loadData() {
 		PromotionListRequest request = new PromotionListRequest(IPageNotifyFn.PageType_GetPromotion, this);
