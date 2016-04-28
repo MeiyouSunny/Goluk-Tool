@@ -225,7 +225,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 	private static final String SNAPSHOT_DIR = "fs1:/pic/";
 	static {
-		System.loadLibrary("golukmobile");
+//		System.loadLibrary("golukmobile");
 	}
 
 	public void setExit(boolean isExit) {
@@ -239,6 +239,9 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		BaiduLocation.mServerFlag = isInteral();
+		System.loadLibrary("golukmobile");
+
 		instance = this;
 		Const.setAppContext(this);
 
@@ -252,7 +255,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 
 			GolukMobUtils.initMob(this);
 		}
-		BaiduLocation.mServerFlag = GolukApplication.getInstance().isInteral();
+
 		// TODO 此处不要做初始化相关的工作
 	}
 

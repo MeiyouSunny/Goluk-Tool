@@ -46,7 +46,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginTop="15dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -97,7 +98,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginTop="15dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -146,7 +148,8 @@
                 android:id="@+id/ry_t_settings_auto_recycle"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -180,7 +183,8 @@
                 android:id="@+id/ry_t_settings_wonderful_video_type"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -217,7 +221,8 @@
                 android:id="@+id/ry_t_settings_wonderful_video_quality"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -253,7 +258,8 @@
                 android:id="@+id/ry_t_settings_voice_record"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -287,7 +293,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginTop="15dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -325,7 +332,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginTop="15dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -368,7 +376,8 @@
                 android:id="@+id/ry_t_settings_kgjtsy"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -402,7 +411,8 @@
                 android:id="@+id/ry_t_settings_wonderful_takephoto_voice"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color" 
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -436,7 +446,8 @@
                 android:id="@+id/ry_t_settings_image_flip"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -470,7 +481,8 @@
                 android:id="@+id/ry_t_settings_video_logo"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -500,13 +512,15 @@
             <!-- Smart Go -->
 
             <TextView
+                android:id="@+id/tv_t_settings_smartgo_text"
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
                 android:paddingLeft="15dp"
                 android:paddingTop="15dp"
                 android:text="@string/str_smart_driving"
                 android:textColor="#999999"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:visibility="gone" />
 
             <!-- 疲劳驾驶语音提示 -->
 
@@ -514,7 +528,8 @@
                 android:id="@+id/ry_t_settings_fatigue"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -554,7 +569,8 @@
                 android:id="@+id/ry_t_settings_urgent_crash"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -600,7 +616,8 @@
                 android:id="@+id/ry_t_settings_parking_sleep"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -638,7 +655,8 @@
                 android:paddingTop="10dp"
                 android:text="@string/str_settings_sleep_hint_text_g1"
                 android:textColor="#999999"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:visibility="gone" />
 
             <!-- 停车安防开关 -->
 
@@ -647,7 +665,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginTop="15dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -690,7 +709,8 @@
                 android:paddingTop="10dp"
                 android:text="@string/str_settings_security_hint_text_g1"
                 android:textColor="#999999"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:visibility="gone" />
             <!-- 购买连接 -->
 
             <LinearLayout
@@ -703,7 +723,8 @@
                 android:layout_marginTop="8dp"
                 android:contentDescription="@string/def"
                 android:gravity="center_vertical"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:visibility="gone" >
 
                 <ImageView
                     android:layout_width="14dp"
@@ -727,7 +748,8 @@
                 android:id="@+id/ry_t_settings_adas_assistance"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -872,7 +894,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginTop="15dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -915,7 +938,8 @@
                 android:id="@+id/ry_t_settings_language"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -953,7 +977,8 @@
                 android:id="@+id/ry_t_settings_time"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -988,7 +1013,8 @@
                 android:id="@+id/ry_t_settings_version"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color" 
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -1023,7 +1049,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:layout_marginBottom="15dp"
-                android:background="@color/setting_white_color" >
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
 
                 <TextView
                     android:layout_width="match_parent"
