@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
-
 	int mCurrSelectedIndex;
 	Context mContext;
 	List<AEMusic> mAEMusicList;
@@ -29,7 +28,6 @@ public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
 	}
 
 	private void fillupMusicList() {
-
 		mAEMusicList = new ArrayList<AEMusic>();
 		mAEMusicList.add(new AEMusic("无", "", true));
 		mAEMusicList.add(new AEMusic("Dreamer", "", false));
@@ -112,7 +110,6 @@ public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
 						if (mCurrSelectedIndex != position) {
-
 							AEMusic preSeletedMusic = mAEMusicList
 									.get(mCurrSelectedIndex);
 							preSeletedMusic.setSelected(false);
@@ -125,14 +122,11 @@ public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
 							newSelectedMusic.setSelected(true);
 							mAEMusicList.set(position, newSelectedMusic);
 							notifyItemChanged(position);
-
 							mCurrSelectedIndex = position;
-
 						}
 					}
 				});
 			}
-
 		}
 	}
 
