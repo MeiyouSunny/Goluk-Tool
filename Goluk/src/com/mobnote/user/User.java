@@ -160,13 +160,13 @@ public class User implements IRequestResultListener{
 				int code = Integer.parseInt(userresult.code);
 				
 				String loginMsg = GolukFastJsonUtil.setParseObj(userresult);
-				mApp.setLoginRespInfo(loginMsg);
 				
 				GolukDebugUtils.i("lily", "----User-----" + com.alibaba.fastjson.JSONObject.toJSONString(userresult));
 				switch (code) {
 				case 200:
 						// 自动登录成功无提示
 						// console.toast("自动登录成功", mContext);
+						mApp.setLoginRespInfo(loginMsg);
 						GolukDebugUtils.i("lily", "--------User-----自动登录个人中心页变化--------" + mApp.autoLoginStatus);
 						StatusChange(2);// 自动登录成功
 						GolukDebugUtils.i("lily", "----ok---" + mApp.autoLoginStatus);
