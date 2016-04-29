@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -860,6 +861,21 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			showOrHide();
 		}
 	};
+	
+	/** 控制旋转 */
+	private boolean isCanRotate = true;
+	
+	@Override
+	protected void hMessage(Message msg) {
+		if(100 == msg.what) {
+			isCanRotate = true;
+		}
+	}
+	
+	private void lockRotate() {
+		isCanRotate = false;
+		mBaseHandler.sendEmptyMessageDelayed(100, 1000);
+	}
 
 	/**
 	 * 显示隐藏顶部底部布局
@@ -920,12 +936,14 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	private boolean mClickPort = true;
 
 	private void auto_port() {
+		this.lockRotate();
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setFullScreen(false, false);
 	}
 
 	private void auto_land(boolean isLeft) {
+		this.lockRotate();
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		if (isLeft) {
 			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -938,6 +956,10 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
 	// 开始全屏
 	private void click_btnFullScreen() {
+		if (!isCanRotate) {
+			return;
+		}
+		lockRotate();
 		this.mClick = true;
 		mIsLand = true;
 		mClickLand = false;
@@ -949,6 +971,10 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
 	// 返回小屏
 	private void click_back() {
+		if (!isCanRotate) {
+			return;
+		}
+		lockRotate();
 		this.mClick = true;
 		mIsLand = false;
 		mClickPort = true;
@@ -973,6 +999,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
 	@Override
 	public void landscape() {
+		if (!isCanRotate) {
+			return;
+		}
 		// 重力感应设置横屏
 		if (mClick) {
 			if (!mIsLand && !mClickPort) {
@@ -993,6 +1022,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
 	@Override
 	public void portrait() {
+		if (!isCanRotate) {
+			return;
+		}
 		// 重力感应竖屏
 		if (mClick) {
 			if (mIsLand && !mClickLand) {
@@ -1013,6 +1045,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
 	@Override
 	public void landscape_left() {
+		if (!isCanRotate) {
+			return;
+		}
 		if (mClick) {
 			if (!mIsLand && !mClickPort) {
 				return;
