@@ -2176,18 +2176,22 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private void callback_getWonderfulVideoType(int event, int msg, int param1, Object param2) {
 		GolukDebugUtils.e("", "SettingsActivity-----------callback_getWonderfulVideoType-----param2: " + param2);
 		if (RESULE_SUCESS == param1) {
-			WonderfulVideoJson videoJson = GolukFastJsonUtil.getParseObj((String) param2, WonderfulVideoJson.class);
-			if (null != videoJson && null != videoJson.data) {
-				if (videoJson.data.wonder_history_time == 6 && videoJson.data.wonder_future_time == 6) {
+			try {
+				JSONObject json = new JSONObject((String) param2);
+				int wonder_history_time = json.getInt("wonder_history_time");
+				int wonder_future_time = json.getInt("wonder_future_time");
+				if (wonder_history_time == 6 && wonder_future_time == 6) {
 					// 精彩抓拍（前6后6）
-					mVideoType = videoJson.data.wonder_future_time + "";
+					mVideoType = wonder_future_time + "";
 					mVideoTypeDesc.setText(this.getString(R.string.str_settings_video_type1));
-				} else if (videoJson.data.wonder_history_time == 0 && videoJson.data.wonder_future_time == 30) {
+				} else if (wonder_history_time == 0 && wonder_future_time == 30) {
 					// 经典模式
-					mVideoType = videoJson.data.wonder_future_time + "";
+					mVideoType = wonder_future_time + "";
 					mVideoTypeDesc.setText(this.getString(R.string.str_settings_video_type2));
 				}
 				mCurrentVideoType = mVideoType;
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}

@@ -907,10 +907,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				if (!isRecording) {
 					m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 					isRecording = true;
-					if (mWonderfulTime == 6) {
-						mCurVideoType = VideoType.mounts;
-					} else {
+					if (mWonderfulTime == 30) {
 						mCurVideoType = VideoType.classic;
+					} else {
+						mCurVideoType = VideoType.mounts;
 					}
 					GolukDebugUtils.e("xuhw", "m8sBtn========================2222======");
 					boolean isSucess = GolukApplication.getInstance().getIPCControlManager().startWonderfulVideo();
@@ -1381,6 +1381,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			m8sTimer.purge();
 			m8sTimer = null;
 		}
+		mWonderfulTime = 0;
 		EventBus.getDefault().unregister(this);
 		super.onDestroy();
 	}
@@ -1872,10 +1873,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 					+ param2);
 			if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
 				if (RESULE_SUCESS == param1) {
-					if (mWonderfulTime == 6) {
-						mHandler.sendEmptyMessage(MOUNTS);
-					} else {
+					if (mWonderfulTime == 30) {
 						mHandler.sendEmptyMessage(CLASSIC);
+					} else {
+						mHandler.sendEmptyMessage(MOUNTS);
 					}
 				}  else {
 					videoTriggerFail();
@@ -1889,10 +1890,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 								+ record.type);
 						// 精彩视频
 						if (TYPE_SHORTCUT == record.type) {
-							if(mWonderfulTime == 6) {
-								mHandler.sendEmptyMessage(MOUNTS);
+							if (mWonderfulTime == 30) {
+								mHandler.sendEmptyMessage(CLASSIC);
 							} else {
-								//TODO 30ｓ
+								mHandler.sendEmptyMessage(MOUNTS);
 							}
 						} else {
 							mHandler.sendEmptyMessage(EMERGENCY);
@@ -2006,14 +2007,33 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		case IPC_VDCP_Msg_GetVideoTimeConf:
 			GolukDebugUtils.e("", "CarRecorderActivity-----------callback_getWonderfulVideoType-----param2: " + param2);
 			if (RESULE_SUCESS == param1) {
-				WonderfulVideoJson videoJson = GolukFastJsonUtil.getParseObj((String) param2, WonderfulVideoJson.class);
-				if (null != videoJson && null != videoJson.data) {
-					if (videoJson.data.wonder_history_time == 6 && videoJson.data.wonder_future_time == 6) {
-						// 精彩抓拍（前6后6）
-						mWonderfulTime = videoJson.data.wonder_future_time;
-					} else if (videoJson.data.wonder_history_time == 0 && videoJson.data.wonder_future_time == 30) {
-						// 经典模式
-						mWonderfulTime = videoJson.data.wonder_future_time;
+				if (IPCControlManager.T1_SIGN
+						.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+					WonderfulVideoJson videoJson = GolukFastJsonUtil.getParseObj((String) param2,
+							WonderfulVideoJson.class);
+					if (null != videoJson && null != videoJson.data) {
+						if (videoJson.data.wonder_history_time == 6 && videoJson.data.wonder_future_time == 6) {
+							// 精彩抓拍（前6后6）
+							mWonderfulTime = videoJson.data.wonder_future_time;
+						} else if (videoJson.data.wonder_history_time == 0 && videoJson.data.wonder_future_time == 30) {
+							// 经典模式
+							mWonderfulTime = videoJson.data.wonder_future_time;
+						}
+					}
+				} else {
+					try {
+						JSONObject json = new JSONObject((String) param2);
+						int wonder_history_time = json.getInt("wonder_history_time");
+						int wonder_future_time = json.getInt("wonder_future_time");
+						if (wonder_history_time == 6 && wonder_future_time == 6) {
+							// 精彩抓拍（前6后6）
+							mWonderfulTime = wonder_future_time;
+						} else if (wonder_history_time == 0 && wonder_future_time == 30) {
+							// 经典模式
+							mWonderfulTime = wonder_future_time;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				}
 			}
@@ -2224,7 +2244,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	}
 
 	public void exit() {
-
+		mWonderfulTime = 0;
 		finish();
 	}
 
