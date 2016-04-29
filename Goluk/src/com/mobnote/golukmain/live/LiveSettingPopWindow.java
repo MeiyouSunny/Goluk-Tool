@@ -238,9 +238,12 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		GolukDebugUtils.e("", "LiveSetting-------onProgressChanged : " + progress + "	fromUser:" + fromUser);
-		if (progress < (MAX_SECOND / 60)) {
-			progress = MAX_SECOND / 60;
+		if (progress < 180) {
+			progress = 180;
 		}
+//		if (progress < (MAX_SECOND / 60)) {
+//			progress = MAX_SECOND / 60;
+//		}
 		mCurrentLiveSecond = progress;
 		mTimeTv.setText(GolukUtils.secondToString(progress));
 		mFlowTv.setText(getCurrentFlow(progress));
