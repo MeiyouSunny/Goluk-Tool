@@ -2020,6 +2020,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	}
 	
 	public void setLoginRespInfo(String info) {
+		GolukDebugUtils.e("","login----GolukApplication---setLoginRespInfo----info: " + info);
 		mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SetLoginRespInfo,
 				info);
 	}
