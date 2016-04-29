@@ -362,7 +362,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 				return;
 			}
 			if (null == tempUserInfo) {
-				GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type44444:  str：" + str);
+				GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type44444:  ：");
 				// 重新請求大头針数据
 				mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, BaiduMapView.mTiming);
 				return;
@@ -373,14 +373,10 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 					Double.parseDouble(tempUserInfo.lat));
 			currentUserInfo.lat = tempUserInfo.lat;
 			currentUserInfo.lon = tempUserInfo.lon;
-			GolukDebugUtils.e(null, "jyf-------live----LiveActivity--pointDataCallback type55555:  str：" + str);
+			GolukDebugUtils.e(null, "jyf-------live----LiveActivity--pointDataCallback type55555:  ：");
 			// 设置“赞”的人数，和观看人数
 			this.updateCount(Integer.parseInt(tempUserInfo.zanCount), Integer.parseInt(tempUserInfo.persons));
-			GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type66666:  str：" + str);
-			if (!isShareLive) {
-				GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type777777:  str：" + str);
-				GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type88888  str：" + str);
-			}
+			GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type66666:  ：");
 		} catch (Exception e) {
 			e.printStackTrace();
 			GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type999999:  Exception ：");
@@ -429,10 +425,6 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 		if (null == json) {
 			return;
 		}
-		// boolean isSucess =
-		// mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-		// IPageNotifyFn.PageType_LiveStart, json);
-
 		// 请求发起直播
 		LiveStartRequest liveRequest = new LiveStartRequest(IPageNotifyFn.PageType_LiveStart, this);
 		boolean isSucess = liveRequest.get(json);
@@ -1583,9 +1575,17 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 		mThumbBitmap = ImageManager.getBitmapFromCache(picName, 100, 100);
 		String newFilePath = FileUtils.javaToLibPath(picName);
 		String uploadJson = JsonUtil.getUploadSnapJson(mCurrentVideoId, newFilePath);
-		mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_LiveUploadPic,
-				uploadJson);
+		GolukDebugUtils.e("", "jyf----20150406----LiveActivity----uploadImg-----6: " + uploadJson);
+		boolean isSuccess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+				IPageNotifyFn.PageType_LiveUploadPic, uploadJson);
 
+		GolukDebugUtils.e("", "jyf----20150406----LiveActivity----uploadImg-----7: " + isSuccess);
+
+	}
+
+	public void uploadImgCallBack(int success, Object param1, Object param2) {
+		GolukDebugUtils.e("", "jyf----20150406----LiveActivity----uploadImgCallBack-----0: " + success + "  param1: "
+				+ param1 + "   param2: " + param2);
 	}
 
 	private String getShareVideoId() {

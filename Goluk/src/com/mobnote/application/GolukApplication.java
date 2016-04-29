@@ -1051,6 +1051,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 //				((UserPersonalHeadActivity) mContext).pageNotifyCallBack(type, success, param1, param2);
 //			}
 //			break;
+		case IPageNotifyFn.PageType_LiveUploadPic:
+			if (mContext instanceof AbstractLiveActivity) {
+				((AbstractLiveActivity) mContext).uploadImgCallBack(success, param1, param2);
+			}
+			break;
 		}
 	}
 
