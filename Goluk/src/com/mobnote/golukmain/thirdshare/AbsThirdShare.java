@@ -35,9 +35,11 @@ public abstract class AbsThirdShare implements IThirdShareFn {
 	protected String mVideoId = null;
 	/** 0:普通列表分享 1:即刻分享 **/
 	protected String mShareType = "";
+	/**视频文件的本地地址**/
+	protected String filepath = "";
 
 	public AbsThirdShare(Activity activity, SharePlatformUtil spf, String surl, String curl, String db, String tl,
-			Bitmap bitmap, String realDesc, String videoId, String shareType) {
+			Bitmap bitmap, String realDesc, String videoId, String shareType,String filePath) {
 		this.mActivity = activity;
 		sharePlatform = spf;
 		shareurl = surl;
@@ -47,6 +49,7 @@ public abstract class AbsThirdShare implements IThirdShareFn {
 		mThumbBitmap = bitmap;
 		mSinaTxt = realDesc;
 		mVideoId = videoId;
+		filepath = filePath;
 		this.mShareType = shareType;
 	}
 

@@ -29,8 +29,8 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 	private PopupWindow mPopWindow = null;
 
 	public ChinaThirdShare(Activity activity, SharePlatformUtil spf, String surl, String curl, String db, String tl,
-			Bitmap bitmap, String realDesc, String videoId, String shareType) {
-		super(activity, spf, surl, curl, db, tl, bitmap, realDesc, videoId, shareType);
+			Bitmap bitmap, String realDesc, String videoId, String shareType,String filepath) {
+		super(activity, spf, surl, curl, db, tl, bitmap, realDesc, videoId, shareType,filepath);
 		initView();
 		modifyUMDialog();
 	}

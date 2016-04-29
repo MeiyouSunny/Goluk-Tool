@@ -337,7 +337,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		mLayoutFlater = LayoutInflater.from(this);
 		mRootLayout = (RelativeLayout) mLayoutFlater.inflate(R.layout.carrecorder_main, null);
 
-		setContentView(R.layout.carrecorder_main);
+		setContentView(mRootLayout);
 		mApp = (GolukApplication) getApplication();
 		
 		wifiname = this.getResources().getString(R.string.str_disconnect_ipc);

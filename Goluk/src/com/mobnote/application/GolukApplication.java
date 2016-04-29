@@ -1051,6 +1051,11 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 //				((UserPersonalHeadActivity) mContext).pageNotifyCallBack(type, success, param1, param2);
 //			}
 //			break;
+		case IPageNotifyFn.PageType_LiveUploadPic:
+			if (mContext instanceof AbstractLiveActivity) {
+				((AbstractLiveActivity) mContext).uploadImgCallBack(success, param1, param2);
+			}
+			break;
 		}
 	}
 
@@ -2015,6 +2020,7 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	}
 	
 	public void setLoginRespInfo(String info) {
+		GolukDebugUtils.e("","login----GolukApplication---setLoginRespInfo----info: " + info);
 		mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SetLoginRespInfo,
 				info);
 	}

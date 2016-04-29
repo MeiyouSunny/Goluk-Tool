@@ -15,5 +15,7 @@ public class ThirdShareBean {
 	public String videoId;
 	/** 0:普通列表分享 1:即刻分享 **/
 	public String mShareType = "";
+	/**视频文件的本地路径**/
+	public String filePath = "";
 
 }
