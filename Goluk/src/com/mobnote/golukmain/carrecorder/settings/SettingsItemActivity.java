@@ -168,6 +168,7 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 		} else {
 			mThirdLayout.setVisibility(View.GONE);
 			mWonderfulVideoTypeText.setVisibility(View.VISIBLE);
+			setTitle(this.getResources().getString(R.string.str_wonderful_video_type_title));
 			if (0 == valueType) {
 				arrayList = mWonderfulVideoTypeValue;
 			} else {
