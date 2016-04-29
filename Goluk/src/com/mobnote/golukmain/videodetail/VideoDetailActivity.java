@@ -179,6 +179,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.comment);
+		
+		
 
 		activityRootView = findViewById(R.id.all_layout);
 		screenHeight = getWindowManager().getDefaultDisplay().getHeight();
@@ -1457,6 +1459,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private void showEmojocon() {
 		setLayoutHeight();
 		emoLayout.setVisibility(View.VISIBLE);
+		
+		getWindow().setSoftInputMode(  
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);  
 	}
 
 	private void hideEmojocon() {
