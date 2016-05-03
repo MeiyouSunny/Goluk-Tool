@@ -5,6 +5,7 @@ varying highp   vec2 offset[9];
 uniform samplerExternalOES sampler;
 uniform float       uni_Weight[5];
 varying highp vec2 vTextureCoord;
+uniform int    lastFrame;
 void	main()
 {
     vec4   sum = vec4(0.0);
@@ -28,7 +29,10 @@ void	main()
 //    sum += texture2D(sampler, offset[6]);
 //    sum += texture2D(sampler, offset[7]);
 //    sum += texture2D(sampler, offset[8]) ;
-
-    gl_FragColor = sum;
-//    gl_FragColor = texture2D(sampler ,offset[1]);
+    if(lastFrame==1){
+        gl_FragColor = sum;
+ 
+    }else{
+        gl_FragColor = texture2D(sampler,vTextureCoord);
+    }
 }

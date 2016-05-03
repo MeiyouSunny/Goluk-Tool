@@ -14,7 +14,7 @@
         android:id="@+id/action_layout_music"
         android:title="音乐" />
     <item
-        android:id="@+id/action_layout_staggered"
+        android:id="@+id/action_layout_export"
         android:title="导出" />
     <item
         android:id="@+id/action_layout_tail"
