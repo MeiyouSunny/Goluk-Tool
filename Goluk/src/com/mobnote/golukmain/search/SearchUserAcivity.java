@@ -5,11 +5,13 @@ import java.util.List;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -18,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,7 +36,6 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
-import com.mobnote.golukmain.fan.FanListActivity;
 import com.mobnote.golukmain.follow.FollowRequest;
 import com.mobnote.golukmain.follow.bean.FollowRetBean;
 import com.mobnote.golukmain.following.FollowingConfig;
@@ -45,7 +47,7 @@ import com.mobnote.golukmain.search.bean.SearchRetBean;
 import com.mobnote.golukmain.userbase.bean.SimpleUserItemBean;
 import com.mobnote.util.GolukUtils;
 
-public class SearchUserAcivity extends BaseActivity implements IRequestResultListener, OnClickListener,OnItemClickListener{
+public class SearchUserAcivity extends BaseActivity implements IRequestResultListener, OnClickListener{
 
 	private TextView mCancelTv;
 	private ImageView mSearchDeleteIv;
@@ -192,10 +194,11 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 				sendSearchUserRequest(REFRESH_PULL_UP,searchContent);
 			}
 		});
-		mUserlistPtrList.setOnItemClickListener(this);
+
 	}
 
 	private void initView() {
+
 		mCancelTv = (TextView) findViewById(R.id.tv_search_cancel);
 		mSearchDeleteIv = (ImageView) findViewById(R.id.iv_search_delete);
 		mSearchContentEt = (EditText) findViewById(R.id.et_search_content);
@@ -229,7 +232,6 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 		}else{
 			recommendRequest.get(PROTOCOL, null);
 		}
-
 	}
 
 	private void doSearch(){
@@ -330,13 +332,6 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 			GolukUtils.startLoginActivity(this);
 		}
 
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		// TODO Auto-generated method stub
-		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
-		imm.hideSoftInputFromWindow(mSearchContentEt.getWindowToken(), 0);
 	}
 
 	@Override
@@ -488,7 +483,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 					}
 					mUserList.set(i, new SearchListBean(3, tempBean));
 					mUserListAdapter.notifyDataSetChanged();
-					
+
 					if(mUserList==null||mUserList.size()<=0){
 						setEmptyView(getString(R.string.no_following_tips));
 					}
@@ -511,9 +506,57 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 			if(null!=mLoadingDialog&&mLoadingDialog.isShowing()){
 				mLoadingDialog.close();
 			}
-
 		} 
 	}
+
+	@Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (isShouldHideKeyboard(v, ev)) {
+                hideKeyboard(v.getWindowToken());
+            }
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    /**
+     * 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘，因为当用户点击EditText时则不能隐藏
+     *
+     * @param v
+     * @param event
+     * @return
+     */
+    private boolean isShouldHideKeyboard(View v, MotionEvent event) {
+        if (v != null && (v instanceof EditText)) {
+            int[] l = {0, 0};
+            v.getLocationInWindow(l);
+            int left = l[0],
+                top = l[1],
+                bottom = top + v.getHeight(),
+                right = left + v.getWidth();
+            if (event.getX() > left && event.getX() < right
+                    && event.getY() > top && event.getY() < bottom) {
+                // 点击EditText的事件，忽略它。
+                return false;
+            } else {
+                return true;
+            }
+        }
+        // 如果焦点不是EditText则忽略，这个发生在视图刚绘制完，第一个焦点不在EditText上，和用户用轨迹球选择其他的焦点
+        return false;
+    }
+
+    /**
+     * 获取InputMethodManager，隐藏软键盘
+     * @param token
+     */
+    private void hideKeyboard(IBinder token) {
+        if (token != null) {
+            InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            im.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
 
 	private int findLinkUserItem(String linkuid) {
 		if(null == mUserList || mUserList.size() == 0 || TextUtils.isEmpty(linkuid)) {
