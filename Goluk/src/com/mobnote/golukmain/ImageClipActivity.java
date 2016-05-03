@@ -13,7 +13,9 @@ import org.json.JSONObject;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.http.UrlHostManager;
 import com.mobnote.golukmain.userlogin.UpHeadData;
 import com.mobnote.golukmain.userlogin.UpHeadResult;
 import com.mobnote.golukmain.userlogin.UpdUserHeadBeanRequest;
@@ -22,6 +24,7 @@ import com.mobnote.user.UserUtils;
 import com.mobnote.util.ClipImageView;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SettingImageView;
+import com.tencent.open.utils.HttpUtils;
 
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.api.FileUtils;
@@ -66,6 +69,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,I
 	
 	private String urlhead = null;
 	
+	private static String mRequestUrl = HttpManager.getInstance().getWebDirectHost() + "/fileService/HeadUploadServlet";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -294,7 +298,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,I
 				@Override
 				public void run() {
 					try {
-						String result = UploadUtil.post("http://server.goluk.cn/fileService/HeadUploadServlet", params, files);
+						String result = UploadUtil.post(mRequestUrl, params, files);
 						Message message = new Message();
 						message.obj = result;
 						message.what = UPLOAD_HEAD_PIC;

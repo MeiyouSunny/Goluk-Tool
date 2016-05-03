@@ -103,10 +103,6 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	private float mCurrentPlayPosition = 0f;
 	private int mCurrentPointedIndex;
 	float mPlayingChunkPosition = 0f;
-	// Tail index is -1
-//	int mPlayChunkIndex = -2;
-	// If the AE value larger than 1, scroll 1 px to reduce it
-//	private float mCEValue = 0f;
 
 	private View mTimeLineGateV;
 	private int mGateLocationX;
@@ -612,7 +608,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			}
 
 			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				/** 如果来自用户对seekbar的操作，则记录progress。如果来自代码调用setProgress()则不记录 */
 				if(fromUser) {
 					mCurrVolumeProgress = progress;
@@ -623,10 +619,12 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 					mAEVolumeSettingIv.setImageDrawable(
 							AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume_closed));
 					mIsMute = true;
+					mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(mCurrentPointedIndex), 0.0f);
 				} else {
 					mAEVolumeSettingIv.setImageDrawable(
 							AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume));
 					mIsMute = false;
+					mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(mCurrentPointedIndex), (float)(progress * 5) / 100f);
 				}
 			}
 		});
@@ -964,7 +962,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 				mAESplitAndDeleteLayout.setVisibility(View.VISIBLE);
 			}
 		} else if(vId == R.id.ll_ae_split) {
-			splitChunk(/*VideoEditUtils.mapI2CIndex(mAdapter.getEditIndex()), 1*/);
+			splitChunk();
 		} else if(vId == R.id.ll_ae_delete) {
 			VideoEditUtils.removeChunk(mAfterEffect, mProjectItemList, mAdapter.getEditIndex());
 			mAdapter.notifyDataSetChanged();

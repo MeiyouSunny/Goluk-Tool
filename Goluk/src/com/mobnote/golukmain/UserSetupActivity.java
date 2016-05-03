@@ -119,7 +119,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		init();
 		EventBus.getDefault().register(this);
 		
-		userCancelBeanRequest = new UserCancelBeanRequest(IPageNotifyFn.PageType_SignOut, this);
 //		int b = SettingUtils.getInstance().getInt(MANUAL_SWITCH, 5);
 //		if (b) {
 ////			mBtnSwitch.setBackgroundResource(R.drawable.set_open_btn);
@@ -363,6 +362,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		if (!UserUtils.isNetDeviceAvailable(mContext)) {
 			GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
 		} else {
+			userCancelBeanRequest = new UserCancelBeanRequest(IPageNotifyFn.PageType_SignOut, this);
 			userCancelBeanRequest.get(mApp.getMyInfo().uid);
 //			boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,IPageNotifyFn.PageType_SignOut, "");
 //			if (!b) {

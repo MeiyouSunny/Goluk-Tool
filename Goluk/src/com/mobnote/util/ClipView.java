@@ -39,6 +39,7 @@ public class ClipView extends View {
 		mPaint.setColor(Color.WHITE);
 		mPaint.setStrokeWidth(2);
 		mPaint.setStyle(Paint.Style.STROKE);
+		mPaint.setAntiAlias(true);
 		canvas.drawCircle(width / 2, height / 2, innerCircle, mPaint);
 		//将圆以外的部分设置成半透明
 		mPaint.setColor(0xaa000000);

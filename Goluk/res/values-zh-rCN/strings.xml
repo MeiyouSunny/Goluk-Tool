@@ -955,12 +955,13 @@
     <string name="str_umeng_hint">说点什么吧。。。</string>
     <string name="str_updated">&#160;</string>
 
-    <!--  search -->
+    <!--  search user -->
     <string name="str_search_no_result">暂无相关结果</string>
     <string name="str_search_keywards_cannot_be_empty">关键词不能为空</string>
     <string name="str_search_supported_words">搜索词仅支持汉字、英文字母、数字</string>
     <string name="str_search_recommend_user">推荐用户</string>
     <string name="str_search_no_more_result">没有更多的搜索结果</string>
+    <string name="str_search_hint">搜索用户(昵称/认证说明)</string>
 
     <!-- arrays -->
  	<string name="str_frame24">24帧</string>

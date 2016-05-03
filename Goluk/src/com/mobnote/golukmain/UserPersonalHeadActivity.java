@@ -54,7 +54,7 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_personal_edit_head);
-		updUserHeadBeanRequest = new UpdUserHeadBeanRequest(IPageNotifyFn.PageType_ModifyHeadPic, this);
+		
 		initView();
 		mTextTitle.setText(this.getResources().getString(R.string.str_choose_head));
 	}
@@ -224,6 +224,7 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		updUserHeadBeanRequest = new UpdUserHeadBeanRequest(IPageNotifyFn.PageType_ModifyHeadPic, this);
 		updUserHeadBeanRequest.get(GolukApplication.getInstance().getMyInfo().uid, GolukApplication.getInstance().getMyInfo().phone, "1", "", imageIndex);
 //		boolean flog = mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, PageType_ModifyHeadPic,
 //				requestStr.toString());
