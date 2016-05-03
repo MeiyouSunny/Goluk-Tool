@@ -538,7 +538,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 		case MSG_H_PLAY_LOADING:
 			mVideoLoading.setVisibility(View.VISIBLE);
 			break;
-		case 100:
+		case MSG_H_START_NEW_LIVE:
 			isContinueLive = false;
 			if (null == mSettingData) {
 				this.finish();
@@ -546,7 +546,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 			}
 			startLiveForSetting();
 			break;
-		case 101:
+		case MSG_H_REQUEST_SERVER:
 			// 直播视频上传成功，现在请求服务器
 			// 请求直播
 			startLiveForServer();
@@ -587,7 +587,16 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 		return rtmpUrl;
 	}
 
+	boolean isStartTimer = false;
+
 	private void uploadLiveSuccess() {
+		// 正常发起直播 ，开始计时
+		if (!isStartTimer) {
+			isStartTimer = true;
+			if (!this.isContinueLive) {
+				mLiveManager.startTimer(mLiveCountSecond, true);
+			}
+		}
 		isUploadSucessed = true;
 		isTryingReUpload = false;
 		// 取消90秒
@@ -597,7 +606,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 			// 没有请求过服务器
 			if (!isContinueLive) {
 				// 不是续播，才可以请求
-				mBaseHandler.sendEmptyMessage(101);
+				mBaseHandler.sendEmptyMessage(MSG_H_REQUEST_SERVER);
 			}
 		}
 	}
@@ -894,9 +903,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 		if (200 != liveData.code) {
 			// 视频无效下线
 			// 弹设置框,重新发起直播
-			// mBaseHandler.sendEmptyMessage(100);
 			newStartLive();
-			// showToast("需要重新开启直播");
 		} else {
 			// 上次的视频还有效,开始上传直播，调用上报位置
 			if (!mApp.mIPCControlManager.isT1Relative()) {
@@ -929,7 +936,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 			if (null != mLiveOperator) {
 				mLiveOperator.stopLive();
 			}
-			mBaseHandler.sendEmptyMessage(100);
+			mBaseHandler.sendEmptyMessage(MSG_H_START_NEW_LIVE);
 		}
 	}
 
@@ -1379,8 +1386,6 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 		startLive(mCurrentVideoId);
 		updateCountDown(GolukUtils.secondToString(mLiveCountSecond));
 		// 开始计时
-		mLiveManager.startTimer(mLiveCountSecond, true);
-
 		isSettingCallBack = true;
 	}
 
