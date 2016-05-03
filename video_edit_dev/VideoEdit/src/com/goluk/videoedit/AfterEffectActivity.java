@@ -103,10 +103,6 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	private float mCurrentPlayPosition = 0f;
 	private int mCurrentPointedIndex;
 	float mPlayingChunkPosition = 0f;
-	// Tail index is -1
-//	int mPlayChunkIndex = -2;
-	// If the AE value larger than 1, scroll 1 px to reduce it
-//	private float mCEValue = 0f;
 
 	private View mTimeLineGateV;
 	private int mGateLocationX;

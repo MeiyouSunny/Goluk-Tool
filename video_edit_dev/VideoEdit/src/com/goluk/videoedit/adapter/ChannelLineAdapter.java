@@ -8,9 +8,11 @@ import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -89,7 +91,7 @@ public class ChannelLineAdapter extends
 			mDataList = new ArrayList<ProjectItemBean>();
 		}
 
-		Toast.makeText(mContext, "add more", Toast.LENGTH_SHORT).show();
+//		Toast.makeText(mContext, "add more", Toast.LENGTH_SHORT).show();
 		((AfterEffectActivity)mContext).addChunk(path);
 		notifyDataSetChanged();
 	}
@@ -217,9 +219,7 @@ public class ChannelLineAdapter extends
 					ChunkThumbs chunkThumbs = chunk.getChunkThumbs();
 					List<VideoThumb> videoThumbList = chunkThumbs.getThumbs();
 
-//					float begin = chunkThumbs.getBegin();
 					float delta = chunkThumbs.getLength();
-//					float delta = end;
 
 					int bitmapCount = 0;
 					if(delta > 0 && delta <= 1) {
@@ -241,20 +241,13 @@ public class ChannelLineAdapter extends
 							ImageView imageView = new ImageView(mContext);
 							// Last, to calc bitmap width
 							if(i == bitmapCount - 1) {
-//								float lastD = chunk.getDuration()
-//										- (count - 1) * VideoEditConstant.BITMAP_TIME_INTERVAL;
 								float lastD = delta - (int)delta;
-//								float widthRatio = lastD / VideoEditConstant.BITMAP_TIME_INTERVAL;
 								LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-									/*(int)(DeviceUtil.dp2px(mContext, VideoEditConstant.BITMAP_COMMON_WIDTH) * lastD)*/
 									(int)(chunkThumbs.getThumbWidth() * lastD),
 									LayoutParams.MATCH_PARENT);
-								Log.d("CK1", "$$$$$$$$$$$$$$$: " + chunkThumbs.getThumbWidth() + ", " +
-										(int)(chunkThumbs.getThumbWidth() * lastD));
 								imageView.setLayoutParams(params);
 							} else {
 								LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-//										DeviceUtil.dp2px(mContext, VideoEditConstant.BITMAP_COMMON_WIDTH),
 										chunkThumbs.getThumbWidth(),
 										LayoutParams.MATCH_PARENT);
 								imageView.setLayoutParams(params);
@@ -276,8 +269,6 @@ public class ChannelLineAdapter extends
 						float end = chunk.getChunkThumbs().getLength();
 
 						FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-//								VideoEditUtils.ChunkTime2Width(chunk.getDuration(),
-//								DeviceUtil.dp2px(mContext, VideoEditConstant.BITMAP_COMMON_WIDTH)),
 							(int)(end * chunk.getChunkThumbs().getThumbWidth()),
 							FrameLayout.LayoutParams.MATCH_PARENT);
 
@@ -333,6 +324,14 @@ public class ChannelLineAdapter extends
 					}
 				});
 
+				viewHolder.nChunkContainerLL.setOnTouchListener(new OnTouchListener() {
+					@Override
+					public boolean onTouch(View v, MotionEvent event) {
+						mAfterEffect.playPause();
+						return false;
+					}
+				});
+
 //				viewHolder.nChunkContainerLL.setOnGenericMotionListener(new OnGenericMotionListener() {
 //					@Override
 //					public boolean onGenericMotion(View v, MotionEvent event) {
@@ -353,15 +352,13 @@ public class ChannelLineAdapter extends
 //					}
 //				});
 			}
-		}  else if(holder instanceof FooterViewHolder) {
+		} else if(holder instanceof FooterViewHolder) {
 			FooterViewHolder viewHolder = (FooterViewHolder)holder;
 			viewHolder.nAddChunkIV.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-
 					//addChunk();
 					mAeActivity.goToChooseVideo();
-
 				}
 			});
 
