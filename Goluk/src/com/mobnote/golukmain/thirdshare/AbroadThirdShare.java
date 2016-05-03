@@ -36,8 +36,8 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
 	private PopupWindow mPopWindow = null;
 
 	public AbroadThirdShare(Activity activity, SharePlatformUtil spf, String surl, String curl, String db, String tl,
-			Bitmap bitmap, String realDesc, String videoId, String shareType,String filepath) {
-		super(activity, spf, surl, curl, db, tl, bitmap, realDesc, videoId, shareType,filepath);
+			Bitmap bitmap, String realDesc, String videoId, String shareType, String filepath) {
+		super(activity, spf, surl, curl, db, tl, bitmap, realDesc, videoId, shareType, filepath);
 		initView();
 		modifyUMDialog();
 		initFacebook();
@@ -169,7 +169,11 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
 		@Override
 		public void onError(SHARE_MEDIA platform, Throwable t) {
 			mHander.sendEmptyMessage(101);
-			GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----umShareListener----onError" + t.toString());
+			String error = "";
+			if (null != t) {
+				error = t.toString();
+			}
+			GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----umShareListener----onError: " + error);
 		}
 
 		@Override
@@ -253,8 +257,9 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
 			type = "video/*";
 			mediaPath = videoPath;
 		}
-		
-		GolukDebugUtils.e("", "instagram----goluk----AbroadThirdShare----type----" + mShareType + "videoPath + " + mediaPath);
+
+		GolukDebugUtils.e("", "instagram----goluk----AbroadThirdShare----type----" + mShareType + "videoPath + "
+				+ mediaPath);
 		Intent share = new Intent(Intent.ACTION_SEND);
 		boolean flog = AppInstallationUtil.isAppInstalled(mActivity, GolukConfig.INSTAGRAM_PACKAGE);
 

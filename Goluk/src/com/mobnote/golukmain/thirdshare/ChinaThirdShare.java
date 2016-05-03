@@ -29,8 +29,8 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 	private PopupWindow mPopWindow = null;
 
 	public ChinaThirdShare(Activity activity, SharePlatformUtil spf, String surl, String curl, String db, String tl,
-			Bitmap bitmap, String realDesc, String videoId, String shareType,String filepath) {
-		super(activity, spf, surl, curl, db, tl, bitmap, realDesc, videoId, shareType,filepath);
+			Bitmap bitmap, String realDesc, String videoId, String shareType, String filepath) {
+		super(activity, spf, surl, curl, db, tl, bitmap, realDesc, videoId, shareType, filepath);
 		initView();
 		modifyUMDialog();
 	}
@@ -226,7 +226,11 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 		@Override
 		public void onError(SHARE_MEDIA platform, Throwable t) {
 			mHander.sendEmptyMessage(101);
-			GolukDebugUtils.e("", "youmeng----goluk----customShareBoard----umShareListener----onError" + t.toString());
+			String error = "";
+			if (null != t) {
+				error = t.toString();
+			}
+			GolukDebugUtils.e("", "youmeng----goluk----customShareBoard----umShareListener----onError:" + error);
 		}
 
 		@Override
