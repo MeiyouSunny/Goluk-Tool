@@ -26,8 +26,6 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.mobnote.application.GolukApplication;
-import com.mobnote.eventbus.EventConfig;
-import com.mobnote.eventbus.EventUpdateAddr;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
