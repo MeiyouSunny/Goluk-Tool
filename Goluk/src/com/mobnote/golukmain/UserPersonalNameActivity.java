@@ -92,7 +92,6 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 		mTextCountAll.setText(this.getResources().getString(R.string.str_slash) + MAX_COUNT
 				+ this.getResources().getString(R.string.str_bracket_rigth));
 		
-		mUpUserNameBeanRequest = new UpdUserNameBeanRequest(IPageNotifyFn.PageType_ModifyNickName, this);
 
 	}
 
@@ -221,6 +220,7 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 			mNameNewText = name;
 			
 			try {
+				mUpUserNameBeanRequest = new UpdUserNameBeanRequest(IPageNotifyFn.PageType_ModifyNickName, this);
 				mUpUserNameBeanRequest.get(mApplication.getMyInfo().uid, mApplication.getMyInfo().phone, URLEncoder.encode(name, "UTF-8"));
 				// 保存中
 				mCustomProgressDialog.show();

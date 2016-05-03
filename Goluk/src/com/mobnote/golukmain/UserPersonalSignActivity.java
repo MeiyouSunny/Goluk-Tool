@@ -73,8 +73,6 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		 * 
 		 */
 		
-		updUserDescBeanRequest = new UpdUserDescBeanRequest(IPageNotifyFn.PageType_ModifySignature, this);
-
 		if (savedInstanceState == null) {
 			Intent it = getIntent();
 			mSignText = it.getStringExtra("intentSignText");
@@ -187,6 +185,7 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 			// {desc：“个性签名”}
 			mSignNewText = sign;
 			try {
+				updUserDescBeanRequest = new UpdUserDescBeanRequest(IPageNotifyFn.PageType_ModifySignature, this);
 				updUserDescBeanRequest.get(mApplication.getMyInfo().uid, mApplication.getMyInfo().phone,URLEncoder.encode(sign, "UTF-8"));
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
