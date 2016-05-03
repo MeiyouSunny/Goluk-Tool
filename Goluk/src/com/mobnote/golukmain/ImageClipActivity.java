@@ -18,6 +18,7 @@ import com.mobnote.golukmain.userlogin.UpHeadData;
 import com.mobnote.golukmain.userlogin.UpHeadResult;
 import com.mobnote.golukmain.userlogin.UpdUserHeadBeanRequest;
 import com.mobnote.golukmain.userlogin.UploadUtil;
+import com.mobnote.user.UserUtils;
 import com.mobnote.util.ClipImageView;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SettingImageView;
@@ -208,6 +209,13 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,I
 							this.getResources().getString(R.string.request_data_error));
 					return;
 				}
+				
+				if (!UserUtils.isNetDeviceAvailable(this)) {
+					isSave = true;
+					GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
+					return;
+				}
+				
 				try {
 					
 					this.saveBitmap(SettingImageView.toRoundBitmap(bitmap));
