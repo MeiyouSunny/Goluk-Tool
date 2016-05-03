@@ -39,12 +39,6 @@ public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
 
 	public void fillupMusicList(String[] musicPaths, String[] musicNames) {
 		mAEMusicList = new ArrayList<AEMusic>();
-//		mAEMusicList.add(new AEMusic("无", "", true));
-//		mAEMusicList.add(new AEMusic("Dreamer", "", false));
-//		mAEMusicList.add(new AEMusic("Champions", "", false));
-//		mAEMusicList.add(new AEMusic("HollyWood", "", false));
-//		mAEMusicList.add(new AEMusic("PretyMood", "", false));
-//		mAEMusicList.add(new AEMusic("Yongth", "", false));
 		for(int i = 0; i < musicPaths.length; i++) {
 			String destPath = Environment.getExternalStorageDirectory() + "/" + musicPaths[i];
 			mAEMusicList.add(new AEMusic(musicNames[i], destPath, false));
@@ -135,8 +129,13 @@ public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
 							mAEMusicList.set(position, newSelectedMusic);
 							notifyItemChanged(position);
 							mCurrSelectedIndex = position;
+							String destPath = null;
+							if(0 != mCurrSelectedIndex) {
+								destPath = mAEMusicList.get(mCurrSelectedIndex).getMusicPath();
+							}
+
 							try {
-								mAfterEffect.editBackgroundMusic(mAEMusicList.get(mCurrSelectedIndex).getMusicPath());
+								mAfterEffect.editBackgroundMusic(destPath);
 							} catch (InvalidVideoSourceException e) {
 								e.printStackTrace();
 							}
