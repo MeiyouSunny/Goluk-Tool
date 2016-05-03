@@ -984,24 +984,24 @@
     
     <!-- <string name="facebook_app_id">1679907912268496</string> -->
     <string name="facebook_app_id">1679907912268496</string>
-    <string name="login_or_txt">OR</string>
-    <string name="login_in_facebook_btn">Login With Facebook</string>
-    <string name="user_insert_msg">Dont have an account?</string>
-    <string name="user_insert_btn_txt">Sign up.</string>
+    <string name="login_or_txt">或</string>
+    <string name="login_in_facebook_btn">Facebook登录</string>
+    <string name="user_insert_msg">还没有账号</string>
+    <string name="user_insert_btn_txt">注册</string>
 
-    <string name="user_insert_add_number">ADD PHONE NUMBER</string>
-    <string name="user_insert_sign_in">Already have an account?</string>
-    <string name="user_sign_in">Sign in.</string>
-    <string name="user_insert_butoom_msg">By signing up, you agree to our Terms  &#038;</string>
-    <string name="user_insert_butoom_msg_agian">Privacy Policy .</string>
-    <string name="test_code_icon_txt">ENTER CONFIRMATION CODE</string>
-    <string name="test_code_icon_txt_number">Enter the code we sent to</string>
-    <string name="resend_code_txt">Resend Code</string>
-    <string name="confirmation_code">Confirmation Code</string>
-    <string name="user_insert_pwd_hint">Enter password (6-16 Characters)</string>
-    <string name="str_select_country_title">SELECT COUNTRY</string>
-    <string name="str_all_countries_title">ALL COUNTRIES</string>
-    <string name="str_select_country_cancle">Cancle</string>
+    <string name="user_insert_add_number">输入手机号</string>
+    <string name="user_insert_sign_in">我有账号？</string>
+    <string name="user_sign_in">登录</string>
+    <string name="user_insert_butoom_msg">注册表示您同意了我们的用户  &#038;</string>
+    <string name="user_insert_butoom_msg_agian">隐私政策。</string>
+    <string name="test_code_icon_txt">输入验证码</string>
+    <string name="test_code_icon_txt_number">输入以下手机号收到的验证码</string>
+    <string name="resend_code_txt">重发验证码</string>
+    <string name="confirmation_code">验证码</string>
+    <string name="user_insert_pwd_hint">输入密码（6-16位）</string>
+    <string name="str_select_country_title">国家/地区</string>
+    <string name="str_all_countries_title">所有国家地区</string>
+    <string name="str_select_country_cancle">取消</string>
 
     <string name="str_facebook">Facebook</string>
     <string name="str_twitter">Twitter</string>
@@ -1009,18 +1009,18 @@
     <string name="str_whatsapp">Whatsapp</string>
     <string name="str_line">Line</string>
 
-    <string name="str_facebook_no_install">Need Install Facebook</string>
+    <string name="str_facebook_no_install">未安装Facebook</string>
     <string name="str_weixin_no_install">你未安装微信</string>
-    <string name="str_whatsapp_no_install">Need Install Whatsapp</string>
-    <string name="str_line_no_install">Need Install Line</string>
-    <string name="str_instagram_no_install">Need Install Instagram</string>
-    <string name="um_share_cancel">cancel Share</string>
-    <string name="str_um_share_dialog_txt">Share...</string>
-    <string name="str_twitter_no_install">Need Install Twitter</string>
+    <string name="str_whatsapp_no_install">未安装Whatsapp</string>
+    <string name="str_line_no_install">未安装Line</string>
+    <string name="str_instagram_no_install">未安装Instagram</string>
+    <string name="um_share_cancel">取消分享</string>
+    <string name="str_um_share_dialog_txt">分享…</string>
+    <string name="str_twitter_no_install">未安装Twitter</string>
 
     <string name="cancel">取消</string>
-    <string name="str_reset_pwd_title">Retrieve password</string>
-    <string name="ipc_check_zone_msg">Do you want to restart the recorder to use the new time zone?</string>
+    <string name="str_reset_pwd_title">找回密码</string>
+    <string name="ipc_check_zone_msg">是否重启记录仪以便使用新的时区？</string>
     <string name="umeng_socialize_text_whatsapp_key">Whatsapp</string>
     <string name="umeng_socialize_text_line_key">Line</string>
     <string name="str_global_dialog_title">提示</string>

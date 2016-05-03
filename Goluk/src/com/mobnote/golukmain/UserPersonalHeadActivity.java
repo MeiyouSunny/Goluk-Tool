@@ -11,6 +11,7 @@ import com.mobnote.golukmain.userlogin.UpHeadData;
 import com.mobnote.golukmain.userlogin.UpHeadResult;
 import com.mobnote.golukmain.userlogin.UpdUserDescBeanRequest;
 import com.mobnote.golukmain.userlogin.UpdUserHeadBeanRequest;
+import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 
 import cn.com.mobnote.logic.GolukModule;
@@ -200,8 +201,11 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 			mImageHint6.setVisibility(View.GONE);
 			mImageHint7.setVisibility(View.VISIBLE);
 		} else if (id == R.id.user_title_right) {
-			click_save();
-		} else {
+			if (!UserUtils.isNetDeviceAvailable(this)) {
+				GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
+			}else{
+				click_save();
+			}
 		}
 	}
 
@@ -329,7 +333,7 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 			closeLoadDialog();
 			UpHeadResult headResult = (UpHeadResult) result;
 
-			if (headResult.success) {
+			if (headResult != null && headResult.success) {
 				UpHeadData data = headResult.data;
 				String rst = data.result;
 				// 图片上传成功

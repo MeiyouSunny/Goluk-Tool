@@ -22,6 +22,9 @@ import cn.com.tiros.debug.GolukDebugUtils;
 
 public class GlobalWindow implements View.OnClickListener {
 
+	/** 错误提示显示超时时间 */
+	private static final int SHOW_TIMER_OUT = 1000;
+
 	private GolukApplication mApplication = null;
 	/** 全局提示框 */
 	public WindowManager mWindowManager = null;
@@ -39,24 +42,17 @@ public class GlobalWindow implements View.OnClickListener {
 	private Context mContext = null;
 	private static GlobalWindow mInstance = new GlobalWindow();
 	public final int MSG_H_COUNT = 10;
-	/** 统计 */
-	private int finishShowCount = 0;
 	private ProgressBar mProgressBar = null;
 
+	@SuppressLint("HandlerLeak")
 	private Handler mHandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case MSG_H_COUNT:
-				finishShowCount++;
-				if (finishShowCount >= 3) {
-					GlobalWindow.getInstance().dimissGlobalWindow();
-					mHandler.removeMessages(MSG_H_COUNT);
-					finishShowCount = 0;
-				} else {
-					mHandler.sendEmptyMessageDelayed(MSG_H_COUNT, 1000);
-				}
+				GlobalWindow.getInstance().dimissGlobalWindow();
+				mHandler.removeMessages(MSG_H_COUNT);
 				break;
 			default:
 				break;
@@ -196,7 +192,6 @@ public class GlobalWindow implements View.OnClickListener {
 			return;
 		}
 		if (null != mStateImg) {
-			// mStateImg.clearAnimation();
 			mStateImg.setBackgroundResource(R.drawable.tips_close);
 		}
 		if (null != mPrompTv) {
@@ -209,14 +204,12 @@ public class GlobalWindow implements View.OnClickListener {
 	}
 
 	private void cancelTimer() {
-		finishShowCount = 0;
 		mHandler.removeMessages(MSG_H_COUNT);
 	}
 
 	private void startTimer() {
-		finishShowCount = 0;
 		mHandler.removeMessages(MSG_H_COUNT);
-		mHandler.sendEmptyMessageDelayed(MSG_H_COUNT, 1000);
+		mHandler.sendEmptyMessageDelayed(MSG_H_COUNT, SHOW_TIMER_OUT);
 	}
 
 	/**
@@ -235,7 +228,6 @@ public class GlobalWindow implements View.OnClickListener {
 		}
 
 		if (null != mStateImg) {
-			// mStateImg.clearAnimation();
 			mStateImg.setBackgroundResource(R.drawable.tips_success);
 		}
 

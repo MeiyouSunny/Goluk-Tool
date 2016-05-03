@@ -914,7 +914,7 @@
     <string name="str_whatsapp">Whatsapp</string>
     <string name="str_line">Line</string>
 
-    <string name="photoalbum_local_no_video_text">本地没有视频</string>
+    <string name="photoalbum_local_no_video_text">No Videos</string>
     <string name="str_facebook_no_install">Need Install Facebook</string>
     <string name="str_weixin_no_install">Need Install WeChat</string>
     <string name="str_whatsapp_no_install">Need Install Whatsapp</string>
@@ -1030,14 +1030,14 @@
     <string name="str_global_dialog_right_btn">Stop</string>
      <string name="str_global_cancel_success">Video synchronization has been canceled</string>
      
-     <string name="str_wonderful_video_type_title">精彩视频类型</string>
-     <string name="str_settings_video_logo_title">视频水印显示</string>
-     <string name="str_settings_wonderful_video_type_hint_text">精彩抓拍（6+6）：按下遥控器（KIT）按键，触发录制前6秒+后6秒的12秒
-        精彩视频片段。\n经典模式：按下遥控器（KIT）按键，触发录制一段30秒精彩视频。</string>
-     <string name="str_settings_video_type1">精彩抓拍（6+6）</string>
-     <string name="str_settings_video_type2">经典模式</string>
-     <string name="str_reboot_ipc_now">现在重启</string>
-     <string name="str_reboot_ipc_later">以后在说</string>
+     <string name="str_wonderful_video_type_title">Wonderful Video Type</string>
+     <string name="str_settings_video_logo_title">Show Goluk Logo</string>
+     <string name="str_settings_wonderful_video_type_hint_text">12S：Press the remote control (KIT), recording 12 seconds of the wonderful video (6 seconds before press and 6 seconds after press).
+30S：Press the remote control (KIT), recording 30 seconds of the wonderful video.</string>
+     <string name="str_settings_video_type1">12s</string>
+     <string name="str_settings_video_type2">30s</string>
+     <string name="str_reboot_ipc_now">Restart Now</string>
+     <string name="str_reboot_ipc_later">Later</string>
 	 <string name="str_authorize_cancel">Authorize cancel</string>
      <string name="str_authorize_fail">Authorize fail</string>
 </resources>
