@@ -1,8 +1,10 @@
 package com.goluk.videoedit;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,6 +143,27 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	}
 
 	private PlayerState mPlayerState;
+	final String[] mMusicPaths = {
+		"none",
+		"music/01-fasion-48khz-128kbps-final.mp3",
+		"music/02-discover-48khz-128kbps-final.mp3",
+		"music/03-no_effect-48khz-128kbps-final.mp3",
+		"music/04-memory-48khz-128kbps-final.mp3",
+		"music/05-street-48khz-128kbps-final.mp3",
+		"music/06-travel-48khz-128kbps-final.mp3",
+		"music/07-fresh-48khz-128kbps-final.mp3",
+		"music/08-crual-48khz-128kbps-final.mp3"};
+
+	final String[] mMusicNames = {
+			"none",
+			"fasion",
+			"discover",
+			"default",
+			"memory",
+			"street",
+			"travel",
+			"fresh",
+			"crual"};
 
 	public void addChunk(String videoPath) {
 		// always add from end
@@ -561,8 +584,9 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		mAEMusicLayoutManager = new LinearLayoutManager(this);
 		mAEMusicLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mAEMusicRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_ae_music);
-		AEMusicAdapter mAeMusicAdapter = new AEMusicAdapter(this);
-		mAEMusicRecyclerView.setAdapter(mAeMusicAdapter);
+		AEMusicAdapter mAEMusicAdapter = new AEMusicAdapter(this, mAfterEffect);
+		mAEMusicAdapter.fillupMusicList(mMusicPaths, mMusicNames);
+		mAEMusicRecyclerView.setAdapter(mAEMusicAdapter);
 		mAEMusicRecyclerView.setLayoutManager(mAEMusicLayoutManager);
 
 		mAEVolumeSettingIv.setOnClickListener(this);
@@ -606,6 +630,35 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 				}
 			}
 		});
+
+		try {
+			copyBgMusic(mMusicPaths);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void copyBgMusic(String[] musicFiles) throws IOException {
+		for(int i = 1; i < musicFiles.length; i++){
+			String destPath = Environment.getExternalStorageDirectory() + "/" + musicFiles[i];
+			File file = new File(destPath);
+			if (file.exists())
+				continue;
+
+			InputStream myInput;
+			OutputStream myOutput = new FileOutputStream(destPath);
+			myInput = this.getAssets().open(musicFiles[i]);
+			byte[] buffer = new byte[1024];
+			int length = myInput.read(buffer);
+			while (length > 0) {
+				myOutput.write(buffer, 0, length);
+				length = myInput.read(buffer);
+			}
+
+			myOutput.flush();
+			myInput.close();
+			myOutput.close();
+		}
 	}
 
 	private void seekWith(int chunkIndex, int chunkWidth, float delta) {

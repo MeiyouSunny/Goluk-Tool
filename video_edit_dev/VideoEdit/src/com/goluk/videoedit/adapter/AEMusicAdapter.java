@@ -3,11 +3,15 @@ package com.goluk.videoedit.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.npnt.ae.AfterEffect;
+import cn.npnt.ae.exceptions.InvalidVideoSourceException;
+
 import com.goluk.videoedit.R;
 import com.goluk.videoedit.bean.AEMusic;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -17,24 +21,34 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
-	int mCurrSelectedIndex;
+	int mCurrSelectedIndex = -1;
 	Context mContext;
 	List<AEMusic> mAEMusicList;
+	AfterEffect mAfterEffect;
 
-	public AEMusicAdapter(Context cxt) {
+	public AEMusicAdapter(Context cxt, AfterEffect effect) {
 		this.mContext = cxt;
 		mCurrSelectedIndex = 0;
-		fillupMusicList();
+		mAfterEffect = effect;
+//		fillupMusicList();
 	}
 
-	private void fillupMusicList() {
+	public int getSelectedIndex() {
+		return mCurrSelectedIndex;
+	}
+
+	public void fillupMusicList(String[] musicPaths, String[] musicNames) {
 		mAEMusicList = new ArrayList<AEMusic>();
-		mAEMusicList.add(new AEMusic("无", "", true));
-		mAEMusicList.add(new AEMusic("Dreamer", "", false));
-		mAEMusicList.add(new AEMusic("Champions", "", false));
-		mAEMusicList.add(new AEMusic("HollyWood", "", false));
-		mAEMusicList.add(new AEMusic("PretyMood", "", false));
-		mAEMusicList.add(new AEMusic("Yongth", "", false));
+//		mAEMusicList.add(new AEMusic("无", "", true));
+//		mAEMusicList.add(new AEMusic("Dreamer", "", false));
+//		mAEMusicList.add(new AEMusic("Champions", "", false));
+//		mAEMusicList.add(new AEMusic("HollyWood", "", false));
+//		mAEMusicList.add(new AEMusic("PretyMood", "", false));
+//		mAEMusicList.add(new AEMusic("Yongth", "", false));
+		for(int i = 0; i < musicPaths.length; i++) {
+			String destPath = Environment.getExternalStorageDirectory() + "/" + musicPaths[i];
+			mAEMusicList.add(new AEMusic(musicNames[i], destPath, false));
+		}
 	}
 
 	@Override
@@ -64,23 +78,21 @@ public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
 	}
 
 	public class MusicViewHolder extends RecyclerView.ViewHolder {
-
 		View mItemView;
-		ImageView mAEMusicIv;
+		ImageView mAEMusicIV;
 		TextView mAEMusicTv;
 
 		public MusicViewHolder(View itemView) {
 			super(itemView);
 			// TODO Auto-generated constructor stub
 			this.mItemView = itemView;
-			mAEMusicIv = (ImageView) itemView
+			mAEMusicIV = (ImageView) itemView
 					.findViewById(R.id.iv_ae_music_item);
 			mAEMusicTv = (TextView) itemView
 					.findViewById(R.id.tv_ae_music_item);
 		}
 
 		public void bindView(final int position) {
-
 			if (mAEMusicList != null && mAEMusicList.size() > position
 					&& mAEMusicList.size() > mCurrSelectedIndex) {
 
@@ -93,19 +105,19 @@ public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
 				mAEMusicTv.setText(aeMusic.getMusicName());
 
 				if (position == 0) {
-					mAEMusicIv.setImageDrawable(mContext.getResources()
+					mAEMusicIV.setImageDrawable(mContext.getResources()
 							.getDrawable(R.drawable.no_music));
 				} else {
 					if (aeMusic.isSelected()) {
-						mAEMusicIv.setImageDrawable(mContext.getResources()
+						mAEMusicIV.setImageDrawable(mContext.getResources()
 								.getDrawable(R.drawable.ic_ae_cd_selected));
 					} else {
-						mAEMusicIv.setImageDrawable(mContext.getResources()
+						mAEMusicIV.setImageDrawable(mContext.getResources()
 								.getDrawable(R.drawable.ic_ae_cd_unselected));
 					}
 				}
-				mItemView.setOnClickListener(new View.OnClickListener() {
 
+				mItemView.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
@@ -123,11 +135,15 @@ public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
 							mAEMusicList.set(position, newSelectedMusic);
 							notifyItemChanged(position);
 							mCurrSelectedIndex = position;
+							try {
+								mAfterEffect.editBackgroundMusic(mAEMusicList.get(mCurrSelectedIndex).getMusicPath());
+							} catch (InvalidVideoSourceException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				});
 			}
 		}
 	}
-
 }
