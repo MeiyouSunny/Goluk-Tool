@@ -4,25 +4,7 @@ import com.mobnote.golukmain.R;
 
 public interface ILive {
 
-//	public static final String LIVE_START_PROGRESS_MSG = "正在创建直播，请稍候...";
-
-//	public static final String LIVE_RETRY_UPLOAD_MSG = "直播断开，正在为您重新连接...";
-
-//	public static final String LIVE_NET_ERROR = "网络异常，直播结束";
-
 	public static final String LIVE_DIALOG_TITLE = "";
-
-//	public static final String LIVE_RETRY_LIVE = "正在恢复直播，请稍候...";
-
-//	public static final String LIVE_TIME_END = "时光匆匆，直播结束，再见";
-
-//	public static final String LIVE_CREATE = "正在创建直播，请稍候...";
-
-//	public static final String LIVE_EXIT_PROMPT = "您当前正在直播中，是否退出直播？";
-
-//	public static final String LIVE_EXIT_PROMPT2 = "是否退出观看直播？";
-
-//	public static final String LIVE_UPLOAD_FIRST_ERROR = "很抱歉，直播创建不成功，再试一次吧。";
 
 	public static final int LOCATION_TYPE_UNKNOW = -1;
 	public static final int LOCATION_TYPE_POINT = 0;
@@ -87,6 +69,10 @@ public interface ILive {
 	public static final int MSG_H_TO_MYLOCATION = 9;
 	/** 查询地图上的大头針数据 */
 	public static final int MSG_H_TO_GETMAP_PERSONS = 10;
+	/** 重新发起一个新的直播 */
+	public static final int MSG_H_START_NEW_LIVE = 100;
+	/** 开始请求服务器 */
+	public static final int MSG_H_REQUEST_SERVER = 101;
 	/** 文件查询时间 */
 	public static final int QUERYFILETIME = 500;
 }
