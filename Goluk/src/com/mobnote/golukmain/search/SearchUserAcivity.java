@@ -5,7 +5,9 @@ import java.util.List;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -147,6 +149,29 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 					doSearch();
 				}
 				return true;
+			}
+		});
+		mSearchContentEt.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+				if(TextUtils.isEmpty(mSearchContentEt.getText().toString())){
+					mSearchDeleteIv.setVisibility(View.GONE);
+				}else{
+					mSearchDeleteIv.setVisibility(View.VISIBLE);
+				}
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
 			}
 		});
 		mUserlistPtrList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
