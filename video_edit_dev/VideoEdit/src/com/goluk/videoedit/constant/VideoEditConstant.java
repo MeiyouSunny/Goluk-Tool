@@ -25,4 +25,7 @@ public class VideoEditConstant {
 	public static final String TAG_EXPORT_MANAGER = "AEEXPORT_MANAGER";
 	public static final String TAG_EXPORT_ENCODER = "AEEXPORT_ENCODER";
 	public static final String EXPORT_FOLDER_NAME = "/goluk_export_video";
+
+	public static final float MIN_VIDEO_DURATION = 10f;
+	public static final float MAX_VIDEO_DURATION = 90f;
 }

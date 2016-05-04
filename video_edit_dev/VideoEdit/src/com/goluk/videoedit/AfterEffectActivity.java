@@ -773,6 +773,11 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 	}
 
 	private void exportAfterEffectVideo() {
+		float duration= mAfterEffect.getDuration();
+		if(duration < VideoEditConstant.MIN_VIDEO_DURATION || duration > VideoEditConstant.MAX_VIDEO_DURATION) {
+			Toast.makeText(this, "can not export length: " + duration, Toast.LENGTH_SHORT).show();
+			return;
+		}
 		String destPath = Environment.getExternalStorageDirectory() + VideoEditConstant.EXPORT_FOLDER_NAME;
 		File dir = new File(destPath);
 		if (!dir.exists()) {
@@ -792,7 +797,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		String sMinute = (minute < 10) ? "0" + minute : minute + "";
 		int second = c.get(Calendar.SECOND);
 		String sSecond = (second < 10) ? "0" + second : second + "";
-		fileName = "MOV" + sYear + sMonth + sDay + sHour + sMinute + sSecond + (int)mAfterEffect.getDuration();
+		fileName = "MOV" + sYear + sMonth + sDay + sHour + sMinute + sSecond + (int)duration;
 		destPath = destPath + "/" + fileName + ".mp4";
 		try {
 			mAfterEffect.export(destPath,
