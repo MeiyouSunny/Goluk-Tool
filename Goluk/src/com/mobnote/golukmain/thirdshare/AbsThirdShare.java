@@ -52,6 +52,10 @@ public abstract class AbsThirdShare implements IThirdShareFn {
 		mVideoId = videoId;
 		filepath = filePath;
 		this.mShareType = shareType;
+
+		if (TextUtils.isEmpty(mDescribe)) {
+			mDescribe = mActivity.getResources().getString(R.string.app_name);
+		}
 	}
 
 	protected Handler mHander = new Handler() {
