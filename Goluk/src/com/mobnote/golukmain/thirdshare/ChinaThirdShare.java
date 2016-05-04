@@ -23,6 +23,7 @@ import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.ShareContent;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMVideo;
 
 public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 
@@ -118,9 +119,15 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 			setCanJump();
 			return;
 		}
+		if (null == sc.mMedia) {
+			UMVideo video = new UMVideo(sc.mTargetUrl);
+			new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WEIXIN).setCallback(umShareListener).withMedia(video)
+					.withTitle(sc.mTitle).withText(sc.mText).share();
+		} else {
+			new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WEIXIN).setCallback(umShareListener).setShareContent(sc)
+					.share();
+		}
 
-		new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WEIXIN).setCallback(umShareListener).setShareContent(sc)
-				.share();
 		mCurrentShareType = TYPE_WEIXIN;
 		this.shareUp();// 上报分享统计
 	}
@@ -139,8 +146,15 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 			setCanJump();
 			return;
 		}
-		new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE).setCallback(umShareListener)
-				.setShareContent(sc).share();
+		if (null == sc.mMedia) {
+			UMVideo video = new UMVideo(sc.mTargetUrl);
+			new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE).setCallback(umShareListener)
+					.withMedia(video).withTitle(sc.mTitle).withText(sc.mText).share();
+		} else {
+			new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE).setCallback(umShareListener)
+					.setShareContent(sc).share();
+		}
+
 		mCurrentShareType = TYPE_WEIXIN_CIRCLE;
 		this.shareUp();// 上报分享统计
 	}

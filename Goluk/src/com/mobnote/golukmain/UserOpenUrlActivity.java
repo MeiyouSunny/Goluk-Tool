@@ -335,6 +335,8 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					bean.bitmap = null;
 					bean.realDesc = realDesc;
 					bean.videoId = "";
+					
+					GolukDebugUtils.e("","UserOpenUrlActivity------1: title: " + bean.tl + "  txt: " + bean.db);
 
 					ProxyThirdShare shareBoard = new ProxyThirdShare(this, mSharePlatform, bean);
 					shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
@@ -361,6 +363,9 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					bean.bitmap = bitmap;
 					bean.realDesc = realDesc;
 					bean.videoId = "";
+					
+					GolukDebugUtils.e("","UserOpenUrlActivity------2: title: " + bean.tl + "  txt: " + bean.db);
+					
 					ProxyThirdShare shareBoard = new ProxyThirdShare(this, mSharePlatform, bean);
 					shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 				}
