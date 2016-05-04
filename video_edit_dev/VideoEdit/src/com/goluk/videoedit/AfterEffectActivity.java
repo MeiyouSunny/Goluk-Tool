@@ -5,7 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
@@ -533,6 +535,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 
 			mAdapter.setData(mProjectItemList);
 			mAdapter.notifyDataSetChanged();
+			playOrPause();
 			break;
 		}
 
@@ -769,6 +772,40 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		return true;
 	}
 
+	private void exportAfterEffectVideo() {
+		String destPath = Environment.getExternalStorageDirectory() + VideoEditConstant.EXPORT_FOLDER_NAME;
+		File dir = new File(destPath);
+		if (!dir.exists()) {
+			dir.mkdir();
+		}
+		String fileName = null;
+
+		Calendar c = Calendar.getInstance();
+		String sYear = c.get(Calendar.YEAR) + "";
+		int month = c.get(Calendar.MONTH) + 1;
+		String sMonth = (month < 10) ? "0" + month : month + "";
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		String sDay = (day < 10) ? "0" + day : day + "";
+		int hour = c.get(Calendar.HOUR_OF_DAY);
+		String sHour = (hour < 10) ? "0" + hour : hour + "";
+		int minute = c.get(Calendar.MINUTE);
+		String sMinute = (minute < 10) ? "0" + minute : minute + "";
+		int second = c.get(Calendar.SECOND);
+		String sSecond = (second < 10) ? "0" + second : second + "";
+		fileName = "MOV" + sYear + sMonth + sDay + sHour + sMinute + sSecond + (int)mAfterEffect.getDuration();
+		destPath = destPath + "/" + fileName + ".mp4";
+		try {
+			mAfterEffect.export(destPath,
+//					VideoEditConstant.DEFAULT_EXPORT_WIDTH,
+//					VideoEditConstant.DEFAULT_EXPORT_HEIGHT,
+					480,270,
+					(int) VideoEditConstant.DEFAULT_FPS,
+					VideoEditConstant.DEFAULT_EXPORT_BITRATE);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -783,44 +820,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		case R.id.action_layout_export:
 			item.setChecked(true);
 			// VideoUtil.saveVideoOpenDialog(handler, progressDialog);
-			String destPath = Environment.getExternalStorageDirectory() + "/Movies/export";
-
-			File dir = new File(destPath);
-			int index = 0;
-			if (!dir.exists()) {
-				dir.mkdir();
-			} else {
-				for (String fn : dir.list()) {
-					if (!fn.endsWith(".mp4")) {
-						continue;
-					}
-					try {
-						String name = fn.substring(0, fn.length() - 4);
-						if (name.length() != 2)
-							continue;
-						int i = Integer.valueOf(name);
-						index = Math.max(i, index);
-					} catch (Exception e) {
-
-					}
-
-				}
-				index++;
-			}
-
-			String fileName = String.format("%02d", index);
-			destPath = destPath + "/" + fileName + ".mp4";
-			Log.i(VideoEditConstant.TAG_EXPORT_MANAGER, "export to:" + destPath);
-			try {
-				mAfterEffect.export(destPath,
-//						VideoEditConstant.DEFAULT_EXPORT_WIDTH,
-//						VideoEditConstant.DEFAULT_EXPORT_HEIGHT,
-						480,270,
-						(int) VideoEditConstant.DEFAULT_FPS,
-						VideoEditConstant.DEFAULT_EXPORT_BITRATE);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			exportAfterEffectVideo();
 			break;
 		case R.id.action_layout_tail:
 			addTail("crackerli", "2016-09-09");
