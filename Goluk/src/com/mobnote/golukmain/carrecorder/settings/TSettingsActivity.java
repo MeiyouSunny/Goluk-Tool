@@ -1322,7 +1322,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 										mRestartDialog = null;
 									}
 								}
-							}).show();
+							}).setCancelable(false).show();
 		}
 	}
 	
