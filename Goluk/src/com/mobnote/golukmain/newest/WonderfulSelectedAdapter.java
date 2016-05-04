@@ -163,6 +163,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 				bannerHolder.mTextBanner1 = (TextView)convertView.findViewById(R.id.tv_text_banner1);
 				bannerHolder.mTextBanner2 = (TextView)convertView.findViewById(R.id.tv_text_banner2);
 	            bannerHolder.mTextBannerLL = (LinearLayout)convertView.findViewById(R.id.ll_text_banner);
+//	            bannerHolder.mReFreshText = (TextView) convertView.findViewById(R.id.refresh_msg);
 				convertView.setTag(bannerHolder);
 			}
 		} else {
@@ -450,5 +451,6 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 		TextView mTextBanner1;
 		TextView mTextBanner2;
 		LinearLayout mTextBannerLL;
+//		TextView mReFreshText;
 	}
 }

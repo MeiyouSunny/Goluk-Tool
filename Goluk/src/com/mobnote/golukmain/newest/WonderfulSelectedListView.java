@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
@@ -28,11 +31,14 @@ import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AlphaAnimation;
 import android.widget.AbsListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 
@@ -62,6 +68,10 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	private static final String TAG = "WonderfulSelectedListView";
 
 	private long requestId = 0;
+	
+	private TextView mRefresh = null;
+	
+	private AlphaAnimation mHideAnimation = null;
 
 	public WonderfulSelectedListView(Context context) {
 		mContext = context;
@@ -75,7 +85,10 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 		mRTPullListView.setLayoutParams(lp);
 		mRootLayout = new RelativeLayout(mContext);
 		shareBg = (RelativeLayout) View.inflate(context, R.layout.video_square_bj, null);
-
+		if(mRefresh == null){
+			mRefresh = this.createTextView(mContext);
+			RelativeLayout.LayoutParams rl = (RelativeLayout.LayoutParams)mRefresh.getLayoutParams();
+		}
 		initListener();
 		historyDate = SettingUtils.getInstance().getString("hotHistoryDate", "");
 		if ("".equals(historyDate)) {
@@ -93,7 +106,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 		rlp.addRule(RelativeLayout.CENTER_IN_PARENT);
 		mRootLayout.addView(shareBg, rlp);
 		mRootLayout.addView(mRTPullListView);
-
+		mRootLayout.addView(mRefresh);
 		if (null == mWonderfulSelectedAdapter) {
 			mWonderfulSelectedAdapter = new WonderfulSelectedAdapter(mContext);
 		}
@@ -113,6 +126,18 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 
 			}
 		});
+	}
+	
+	public TextView createTextView(Context context){
+		TextView tv = new TextView(context);
+		RelativeLayout.LayoutParams para = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,81);
+		tv.setBackgroundColor(context.getResources().getColor(R.color.color_square_refresh_msg_bg));
+		tv.setTextColor(context.getResources().getColor(R.color.color_square_refresh_msg));
+		tv.setTextSize(12);
+		tv.setLayoutParams(para);
+		tv.setGravity(Gravity.CENTER);
+		tv.setVisibility(View.GONE);
+		return tv;
 	}
 
 	public void loadBannerData(String cityCode) {
@@ -302,6 +327,26 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 							R.string.str_pull_refresh_listview_bottom_reach), Toast.LENGTH_SHORT).show();
 				}
 				initLayout(list);
+				JSONObject json = JsonParserUtils.getRefreshCount((String) param2);
+				if(json != null){
+					//今日首次
+					try {
+						int refreshcount = json.getInt("refreshcount");
+						if(refreshcount > 0){
+							if(json.getInt("isfirst") == 1){
+								startAnimation(mContext.getResources().getString(R.string.str_frist_refresh_begen_txt)+refreshcount+mContext.getResources().getString(R.string.str_frist_refresh_end_txt));
+							}else{
+								startAnimation(mContext.getResources().getString(R.string.str_more_refresh_begen_txt)+refreshcount+mContext.getResources().getString(R.string.str_frist_refresh_end_txt));
+							}
+						}
+						
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}
+				
 			} else {
 				if (!"0".equals(mJxid)) {
 					if (addFooter) {
@@ -330,6 +375,31 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 			shareBg.setVisibility(View.GONE);
 			mRTPullListView.setVisibility(View.VISIBLE);
 		}
+	}
+	
+	public void startAnimation(String txt){
+		
+		if( null == mRefresh ){
+
+	        return;
+
+	    }
+		mRefresh.setVisibility(View.VISIBLE);
+		mRefresh.setText(txt);
+
+	    if( null != mHideAnimation ){
+
+	        mHideAnimation.cancel( );
+
+	    }
+
+	    mHideAnimation = new AlphaAnimation(1.0f, 0.0f);
+
+	    mHideAnimation.setDuration(5000);
+
+	    mHideAnimation.setFillAfter( true );
+
+	    mRefresh.startAnimation( mHideAnimation );
 	}
 
 	public void onDestroy() {

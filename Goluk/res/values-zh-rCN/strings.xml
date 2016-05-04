@@ -1037,5 +1037,8 @@
      <string name="str_reboot_ipc_later">以后在说</string>
      <string name="str_authorize_cancel">取消登录</string>
      <string name="str_authorize_fail">登录失败</string>
-    
+     
+     <string name="str_frist_refresh_begen_txt">今日精选有 </string>
+     <string name="str_frist_refresh_end_txt"> 条新视频</string>
+     <string name="str_more_refresh_begen_txt">又发现了 </string>
 </resources>

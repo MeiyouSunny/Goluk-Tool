@@ -129,4 +129,7 @@
 	<color name="color_list_divider">#bbbbbb</color>
 	<color name="color_tab_host_txt_press">#007aff</color>
 	<color name="color_tab_host_txt_normal">#929292</color>
+	
+	<color name="color_square_refresh_msg_bg">#bfa3d3ff</color>
+	<color name="color_square_refresh_msg">#0080ff</color>
 </resources>

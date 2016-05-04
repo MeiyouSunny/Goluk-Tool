@@ -54,6 +54,27 @@ public class JsonParserUtils {
 
 		return jxlistdata;
 	}
+	
+	public static JSONObject getRefreshCount(String jsonStr) {
+		JSONObject  result = null;
+		try {
+			JSONObject json = new JSONObject(jsonStr);
+			boolean success = json.optBoolean("success");
+			if (success) {
+				JSONObject data = json.optJSONObject("data");
+				if (null != data) {
+					result = new JSONObject();
+					result.put("refreshcount", data.getInt("refreshcount"));
+					result.put("isfirst", data.getInt("isfirst"));
+				}
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+	
 
 	public static int parserJXCount(String jsonStr) {
 		try {
