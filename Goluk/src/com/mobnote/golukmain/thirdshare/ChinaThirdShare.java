@@ -119,15 +119,11 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 			setCanJump();
 			return;
 		}
-		if (null == sc.mMedia) {
-			UMVideo video = new UMVideo(sc.mTargetUrl);
-			new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WEIXIN).setCallback(umShareListener).withMedia(video)
-					.withTitle(sc.mTitle).withText(sc.mText).share();
-		} else {
-			new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WEIXIN).setCallback(umShareListener).setShareContent(sc)
-					.share();
+		if (TextUtils.isEmpty(sc.mText)) {
+			sc.mText = mActivity.getResources().getString(R.string.app_name);
 		}
-
+		new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WEIXIN).setCallback(umShareListener).setShareContent(sc)
+				.share();
 		mCurrentShareType = TYPE_WEIXIN;
 		this.shareUp();// 上报分享统计
 	}
@@ -146,14 +142,12 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 			setCanJump();
 			return;
 		}
-		if (null == sc.mMedia) {
-			UMVideo video = new UMVideo(sc.mTargetUrl);
-			new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE).setCallback(umShareListener)
-					.withMedia(video).withTitle(sc.mTitle).withText(sc.mText).share();
-		} else {
-			new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE).setCallback(umShareListener)
-					.setShareContent(sc).share();
+		if (TextUtils.isEmpty(sc.mText)) {
+			sc.mText = mActivity.getResources().getString(R.string.app_name);
 		}
+
+		new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE).setCallback(umShareListener)
+				.setShareContent(sc).share();
 
 		mCurrentShareType = TYPE_WEIXIN_CIRCLE;
 		this.shareUp();// 上报分享统计
@@ -173,6 +167,9 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 			setCanJump();
 			return;
 		}
+		if (TextUtils.isEmpty(sc.mText)) {
+			sc.mText = mActivity.getResources().getString(R.string.app_name);
+		}
 		mCurrentShareType = TYPE_QQ;
 		this.shareUp();// 上报分享统计
 		new ShareAction(mActivity).setPlatform(SHARE_MEDIA.QQ).setCallback(umShareListener).setShareContent(sc).share();
@@ -191,6 +188,9 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 		if (null == sc) {
 			setCanJump();
 			return;
+		}
+		if (TextUtils.isEmpty(sc.mText)) {
+			sc.mText = mActivity.getResources().getString(R.string.app_name);
 		}
 		new ShareAction(mActivity).setPlatform(SHARE_MEDIA.QZONE).setCallback(umShareListener).setShareContent(sc)
 				.share();
