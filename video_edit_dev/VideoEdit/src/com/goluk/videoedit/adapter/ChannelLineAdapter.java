@@ -146,12 +146,14 @@ public class ChannelLineAdapter extends
 		LinearLayout nChunkContainerLL;
 		View nChunkMaskLL;
 		TextView nChunkDurationTV;
+		View nChunkFrameFL;
 
 		public ChunkViewHolder(DragSortAdapter<?> dragSortAdapter, View itemView) {
 			super(dragSortAdapter, itemView);
 			nChunkContainerLL = (LinearLayout)itemView.findViewById(R.id.ll_ae_data_chunk);
 			nChunkMaskLL = itemView.findViewById(R.id.v_ae_data_chunk_mask);
 			nChunkDurationTV = (TextView)itemView.findViewById(R.id.tv_ae_data_chunk_duration);
+			nChunkFrameFL = itemView.findViewById(R.id.fl_ae_data_chunk);
 		}
 
 		@Override
@@ -258,8 +260,13 @@ public class ChannelLineAdapter extends
 						}
 					}
 				}
-				viewHolder.nChunkContainerLL.setVisibility(getDraggingId() == chunkBean.index_tag ? View.INVISIBLE
+
+				int visibility = (getDraggingId() == chunkBean.index_tag ? View.INVISIBLE
 						: View.VISIBLE);
+//				viewHolder.nChunkContainerLL.setVisibility(visibility);
+//				viewHolder.nChunkMaskLL.setVisibility(visibility);
+//				viewHolder.nChunkDurationTV.setVisibility(visibility);
+				viewHolder.nChunkFrameFL.setVisibility(visibility);
 
 				viewHolder.nChunkContainerLL.postInvalidate();
 				if(chunkBean.isEditState) {
@@ -398,6 +405,13 @@ public class ChannelLineAdapter extends
 		mAfterEffect.editExchangeChunk(VideoEditUtils.mapI2CIndex(toPosition), VideoEditUtils.mapI2CIndex(fromPosition));
 		// Continue process transition
 //		mDataList.add(toPosition + 1, mDataList.remove(fromPosition + 1));
+		if(mEditIndex == toPosition) {
+			mEditIndex = fromPosition;
+		}
+
+		if(mEditIndex == fromPosition) {
+			mEditIndex = toPosition;
+		}
 	}
 
 	@Override

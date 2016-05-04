@@ -22,12 +22,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.com.mobnote.eventbus.EventLocationFinish;
+import cn.com.mobnote.eventbus.EventShortLocationFinish;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.mobnote.application.GolukApplication;
-import com.mobnote.eventbus.EventConfig;
-import com.mobnote.eventbus.EventUpdateAddr;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
@@ -171,13 +170,13 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		loadData();
 	}
 
-	public void onEventMainThread(EventLocationFinish event) {
+	public void onEventMainThread(EventShortLocationFinish event) {
 		if (null == event) {
 			return;
 		}
 
-		if(mTypeLayout != null && event.getAddress() != null){
-			mTypeLayout.setLocationAddress(event.getAddress());
+		if(mTypeLayout != null && event.getShortAddress() != null){
+			mTypeLayout.setLocationAddress(event.getShortAddress());
 		}
 	}
 	

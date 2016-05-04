@@ -280,6 +280,9 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		if(mPlayerState == PlayerState.PLAYING) {
 			mVideoPlayIV.setVisibility(View.VISIBLE);
 			mAfterEffect.playPause();
+		} else if(mPlayerState == PlayerState.PAUSED) {
+			mVideoPlayIV.setVisibility(View.GONE);
+			mAfterEffect.playResume();
 		} else {
 			if(mVideoThumeIv.getVisibility() == View.VISIBLE) {
 				mVideoThumeIv.setVisibility(View.GONE);
@@ -290,10 +293,10 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			}
 
 			//如果当前是播放完成状态，则重置数据
-			if(mPlayerState == PlayerState.STOPPED) {
-				mAERecyclerView.smoothScrollToPosition(0);
-				mCurrentPlayPosition = 0f;
-			}
+//			if(mPlayerState == PlayerState.STOPPED) {
+//				mAERecyclerView.smoothScrollToPosition(0);
+//				mCurrentPlayPosition = 0f;
+//			}
 
 			//当前播放进度大于0，则从当前位置开始播放，否则从头开始播放
 			try {
@@ -302,16 +305,16 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			if(mCurrentPlayPosition > 0f) {
-				mAfterEffect.playResume();
-			} else {
-				try {
-					mAfterEffect.play();
-				} catch (InvalidVideoSourceException e) {
-					e.printStackTrace();
-				}
-			}
+//
+//			if(mCurrentPlayPosition > 0f) {
+//				mAfterEffect.playResume();
+//			} else {
+//				try {
+//					mAfterEffect.play();
+//				} catch (InvalidVideoSourceException e) {
+//					e.printStackTrace();
+//				}
+//			}
 		}
 	}
 
@@ -433,8 +436,6 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			Log.d(TAG, "MSG_AE_PLAY_FINISHED");
 			mVideoPlayIV.setVisibility(View.VISIBLE);
 			mPlayerState = PlayerState.STOPPED;
-//			mPlayChunkIndex = -2;
-//			mPlayingChunkPosition = 0;
 			mAERecyclerView.post(new Runnable() {
 				@Override
 				public void run() {

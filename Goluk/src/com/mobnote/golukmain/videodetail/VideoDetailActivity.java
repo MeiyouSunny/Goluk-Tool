@@ -992,6 +992,21 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				mRTPullListView.setVisibility(View.VISIBLE);
 				mCommentLayout.setVisibility(View.VISIBLE);
 				mImageRefresh.setVisibility(View.GONE);
+				if (null != mVideoJson.data) {
+					if ("4".equals(mVideoJson.data.result)) {
+						mRTPullListView.setVisibility(View.GONE);
+						mCommentLayout.setVisibility(View.GONE);
+						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this, DIALOG_TYPE_VIDEO_DELETED, "",
+								this.getResources().getString(R.string.str_video_removed));
+						return;
+					} else if ("3".equals(mVideoJson.data.result)) {
+						mRTPullListView.setVisibility(View.GONE);
+						mCommentLayout.setVisibility(View.GONE);
+						LiveDialogManager.getManagerInstance().showSingleBtnDialog(this, DIALOG_TYPE_VIDEO_DELETED, "",
+								this.getResources().getString(R.string.str_video_not_exist));
+						return;
+					}
+				}
 				permitInput();
 				isClick = true;
 				mEditInput.setFocusable(true);
