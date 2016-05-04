@@ -871,6 +871,15 @@
     <string name="str_choose_in_album">Choose from album</string>
     <string name="str_system_head">System Avatar</string>
     <string name="str_umeng_hint">Say something...</string>
+
+    <!--  search user -->
+    <string name="str_search_no_result">No search results</string>
+    <string name="str_search_keywards_cannot_be_empty">Keywords cannot be empty</string>
+    <string name="str_search_supported_words">There is unsupported string in keyword</string>
+    <string name="str_search_recommend_user">Star user</string>
+    <string name="str_search_no_more_result">No more search results</string>
+    <string name="str_search_hint">Search users</string>
+
     <!-- arrays -->
  	<string name="str_frame24">24Frame</string>
     <string name="str_frame18">18Frame</string>
