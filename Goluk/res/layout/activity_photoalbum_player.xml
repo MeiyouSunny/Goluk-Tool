@@ -252,7 +252,7 @@
 	    android:layout_below="@+id/rl_vt_seek">
 	    <Button
 	        android:id="@+id/btn_full_screen"
-	        android:layout_alignParentRight="true"
+	        android:layout_alignParentLeft="true"
 	        android:layout_height="wrap_content"
 	        android:layout_width="wrap_content"
 	        android:layout_centerVertical="true"
@@ -261,7 +261,7 @@
 	        android:id="@+id/btn_download"
 	        android:layout_height="wrap_content"
 	        android:layout_width="wrap_content"
-	        android:layout_alignParentLeft="true"
+	        android:layout_alignParentRight="true"
 	        android:layout_centerVertical="true"
 	        android:background="@drawable/btn_photoalbum_download"/>
 	    <Button
