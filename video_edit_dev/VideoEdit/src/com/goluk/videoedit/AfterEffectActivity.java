@@ -215,6 +215,9 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 
 		int chunkIndex = VideoEditUtils.mapI2CIndex(mCurrentPointedIndex);
 		float position = (mGateLocationX - pX) / width * ((ChunkBean)bean).chunk.getDuration();
+		if(position == 0f) {
+			return;
+		}
 
 		if(!mAfterEffect.canSplit(chunkIndex, position)) {
 			Toast.makeText(this, position + "长度不能拆分", Toast.LENGTH_SHORT).show();
@@ -810,8 +813,10 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			Log.i(VideoEditConstant.TAG_EXPORT_MANAGER, "export to:" + destPath);
 			try {
 				mAfterEffect.export(destPath,
-						VideoEditConstant.DEFAULT_EXPORT_WIDTH,
-						VideoEditConstant.DEFAULT_EXPORT_HEIGHT, (int) VideoEditConstant.DEFAULT_FPS,
+//						VideoEditConstant.DEFAULT_EXPORT_WIDTH,
+//						VideoEditConstant.DEFAULT_EXPORT_HEIGHT,
+						480,270,
+						(int) VideoEditConstant.DEFAULT_FPS,
 						VideoEditConstant.DEFAULT_EXPORT_BITRATE);
 			} catch (Exception e) {
 				e.printStackTrace();
