@@ -350,6 +350,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 					new OnLeftClickListener() {
 						@Override
 						public void onClickListener() {
+							editState = false;
 							deleteDataFlush();
 						}
 					});

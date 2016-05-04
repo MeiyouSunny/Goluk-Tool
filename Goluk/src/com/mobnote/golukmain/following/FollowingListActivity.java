@@ -195,7 +195,7 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 	private void setupView() {
 		// TODO Auto-generated method stub
 		mFollowinglistBackIb.setOnClickListener(this);
-		mFollowinglistTitleTv.setText(R.string.str_follow);
+		mFollowinglistTitleTv.setText(R.string.str_follow_list_title);
 		
 		mEmptyRl.setOnClickListener(this);
 		

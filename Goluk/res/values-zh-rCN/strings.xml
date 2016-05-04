@@ -901,6 +901,7 @@
     <string name="str_discover">极社</string>
     <string name="str_album">相册</string>
     <string name="str_mine">我的</string>
+    <string name="str_follow_list_title">我的关注</string>
 
     <string name="photoalbum_local_no_video_text">本地没有视频</string>
 

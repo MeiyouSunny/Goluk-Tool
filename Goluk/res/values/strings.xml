@@ -986,6 +986,7 @@
     <string name="str_discover">Home</string>
     <string name="str_album">Album</string>
     <string name="str_mine">Me</string>
+    <string name="str_follow_list_title">My Follow</string>
 
     <string name="str_usercenter_attention_ok">Followe Successfully</string>
     <string name="str_usercenter_attention_cancle_ok">Cancel followe Successfully</string>
