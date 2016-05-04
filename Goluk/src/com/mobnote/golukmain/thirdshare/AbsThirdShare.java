@@ -16,6 +16,7 @@ import android.content.DialogInterface.OnCancelListener;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public abstract class AbsThirdShare implements IThirdShareFn {
@@ -35,11 +36,11 @@ public abstract class AbsThirdShare implements IThirdShareFn {
 	protected String mVideoId = null;
 	/** 0:普通列表分享 1:即刻分享 **/
 	protected String mShareType = "";
-	/**视频文件的本地地址**/
+	/** 视频文件的本地地址 **/
 	protected String filepath = "";
 
 	public AbsThirdShare(Activity activity, SharePlatformUtil spf, String surl, String curl, String db, String tl,
-			Bitmap bitmap, String realDesc, String videoId, String shareType,String filePath) {
+			Bitmap bitmap, String realDesc, String videoId, String shareType, String filePath) {
 		this.mActivity = activity;
 		sharePlatform = spf;
 		shareurl = surl;
@@ -51,6 +52,10 @@ public abstract class AbsThirdShare implements IThirdShareFn {
 		mVideoId = videoId;
 		filepath = filePath;
 		this.mShareType = shareType;
+
+		if (TextUtils.isEmpty(mDescribe)) {
+			mDescribe = mActivity.getResources().getString(R.string.app_name);
+		}
 	}
 
 	protected Handler mHander = new Handler() {
@@ -144,12 +149,15 @@ public abstract class AbsThirdShare implements IThirdShareFn {
 			return null;
 		}
 		final String videoUrl = shareurl + "&type=" + shareType;
-		final UMImage image = new UMImage(mActivity, mImageUrl);
 		ShareContent sc = new ShareContent();
 		sc.mTitle = mTitle;
 		sc.mText = mDescribe;
 		sc.mTargetUrl = videoUrl;
-		sc.mMedia = image;
+		if (!TextUtils.isEmpty(mImageUrl)) {
+			final UMImage image = new UMImage(mActivity, mImageUrl);
+			sc.mMedia = image;
+		}
+
 		return sc;
 	}
 

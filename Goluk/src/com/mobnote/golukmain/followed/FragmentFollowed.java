@@ -80,7 +80,6 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 	private GolukApplication mApp;
 	private Button mLoginButton;
 	private View mLoginRL;
-	private ImageView mSearchView;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -101,18 +100,6 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 		mListView = (PullToRefreshListView)rootView.findViewById(R.id.plv_follow_fragment);
 		mLoginButton = (Button)rootView.findViewById(R.id.btn_fragment_followed_content_to_login);
 		mLoginRL = rootView.findViewById(R.id.rl_follow_fragment_no_login);
-		mSearchView = (ImageView) rootView.findViewById(R.id.iv_followed_search);
-
-		mSearchView.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent();
-				intent.setClass(FragmentFollowed.this.getActivity(), SearchUserAcivity.class);
-				FragmentFollowed.this.getActivity().startActivity(intent);
-			}
-		});
 
 		mLoginButton.setOnClickListener(new OnClickListener() {
 			@Override

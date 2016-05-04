@@ -6,8 +6,10 @@ import com.mobnote.eventbus.EventDeleteVideo;
 import com.mobnote.eventbus.EventPraiseStatusChanged;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
+import com.mobnote.golukmain.followed.FragmentFollowed;
 import com.mobnote.golukmain.newest.NewestListView;
 import com.mobnote.golukmain.newest.WonderfulSelectedListView;
+import com.mobnote.golukmain.search.SearchUserAcivity;
 import com.mobnote.golukmain.videosuqare.VideoSquareAdapter;
 import com.mobnote.util.SharedPrefUtil;
 
@@ -15,6 +17,7 @@ import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -46,7 +49,7 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 	private String mCityCode;
 
 	private boolean mBannerLoaded;
-
+	private ImageView mSearchView;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,6 +68,18 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 		lineTop = (int) (5 * density);
 		textColorSelect = getResources().getColor(R.color.textcolor_select);
 		textcolorQx = getResources().getColor(R.color.textcolor_qx);
+		mSearchView = (ImageView) rootView.findViewById(R.id.iv_followed_search);
+
+		mSearchView.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent();
+				intent.setClass(FragmentDiscover.this.getActivity(), SearchUserAcivity.class);
+				FragmentDiscover.this.getActivity().startActivity(intent);
+			}
+		});
 		init();
 		mBannerLoaded = false;
 		mCityCode = SharedPrefUtil.getCityIDString();

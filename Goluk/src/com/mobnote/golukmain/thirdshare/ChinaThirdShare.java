@@ -23,6 +23,7 @@ import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.ShareContent;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMVideo;
 
 public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 
@@ -118,7 +119,9 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 			setCanJump();
 			return;
 		}
-
+		if (TextUtils.isEmpty(sc.mText)) {
+			sc.mText = mActivity.getResources().getString(R.string.app_name);
+		}
 		new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WEIXIN).setCallback(umShareListener).setShareContent(sc)
 				.share();
 		mCurrentShareType = TYPE_WEIXIN;
@@ -139,8 +142,13 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 			setCanJump();
 			return;
 		}
+		if (TextUtils.isEmpty(sc.mText)) {
+			sc.mText = mActivity.getResources().getString(R.string.app_name);
+		}
+
 		new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE).setCallback(umShareListener)
 				.setShareContent(sc).share();
+
 		mCurrentShareType = TYPE_WEIXIN_CIRCLE;
 		this.shareUp();// 上报分享统计
 	}
@@ -158,6 +166,9 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 		if (null == sc) {
 			setCanJump();
 			return;
+		}
+		if (TextUtils.isEmpty(sc.mText)) {
+			sc.mText = mActivity.getResources().getString(R.string.app_name);
 		}
 		mCurrentShareType = TYPE_QQ;
 		this.shareUp();// 上报分享统计
@@ -177,6 +188,9 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 		if (null == sc) {
 			setCanJump();
 			return;
+		}
+		if (TextUtils.isEmpty(sc.mText)) {
+			sc.mText = mActivity.getResources().getString(R.string.app_name);
 		}
 		new ShareAction(mActivity).setPlatform(SHARE_MEDIA.QZONE).setCallback(umShareListener).setShareContent(sc)
 				.share();

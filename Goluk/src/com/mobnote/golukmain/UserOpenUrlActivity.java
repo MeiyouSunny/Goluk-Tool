@@ -316,12 +316,22 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 				String coverurl = mPicture;
 				String describe = mIntroduction;
 				String urlOpenPath = mUrlOpenPath;
+
+				if (TextUtils.isEmpty(coverurl)) {
+					if (GolukApplication.getInstance().isInteral()) {
+						coverurl = "http://pic.goluk.cn/ios_icon512.png";
+					} else {
+						coverurl = "http://i.pic.goluk.cn/ios_icon512.png";
+					}
+				}
+
+				if (TextUtils.isEmpty(describe)) {
+					describe = this.getResources().getString(R.string.app_name);
+				}
+
 				if ("cluster_adapter".equals(urlOpenPath)) {
 					String realDesc = getString(R.string.str_vote_share_real_description);
 
-					if (TextUtils.isEmpty(describe)) {
-						describe = "";
-					}
 					String ttl = mTitle;
 					if (TextUtils.isEmpty(mTitle)) {
 						ttl = getString(R.string.str_vote_share_title);
@@ -336,6 +346,8 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					bean.realDesc = realDesc;
 					bean.videoId = "";
 
+					GolukDebugUtils.e("", "UserOpenUrlActivity------1: title: " + bean.tl + "  txt: " + bean.db);
+
 					ProxyThirdShare shareBoard = new ProxyThirdShare(this, mSharePlatform, bean);
 					shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 				} else {
@@ -348,19 +360,18 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 						ttl = getString(R.string.str_wonderful_share);
 					}
 					String realDesc = getString(R.string.str_wonderful_share);
-					Bitmap bitmap = null;
-					if (TextUtils.isEmpty(coverurl)) {
-						bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_launcher);
-						coverurl = "";
-					}
+
 					ThirdShareBean bean = new ThirdShareBean();
 					bean.surl = shareurl;
 					bean.curl = coverurl;
 					bean.db = describe;
 					bean.tl = ttl;
-					bean.bitmap = bitmap;
+					bean.bitmap = null;
 					bean.realDesc = realDesc;
 					bean.videoId = "";
+
+					GolukDebugUtils.e("", "UserOpenUrlActivity------2: title: " + bean.tl + "  txt: " + bean.db);
+
 					ProxyThirdShare shareBoard = new ProxyThirdShare(this, mSharePlatform, bean);
 					shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 				}
