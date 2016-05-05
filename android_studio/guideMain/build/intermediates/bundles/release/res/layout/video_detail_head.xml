@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <!-- 用户信息 -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white" >
+
+        <!-- 围观 -->
+        <TextView
+            android:id="@+id/video_detail_count_look"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/live_time_desc"
+            android:textSize="12sp" />
+
+        <!-- 获奖视频印章 -->
+
+        <ImageView
+            android:id="@+id/video_detail_head_award_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/video_detail_count_look"
+            android:contentDescription="@string/imgdes"
+            android:src="@drawable/together_coin_icon" />
+
+        <RelativeLayout
+            android:id="@+id/rl_video_usercenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toLeftOf="@id/video_detail_head_award_image" >
+
+            <!-- 头像 -->
+            <ImageView
+                android:id="@+id/user_head"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:contentDescription="@string/imgdes" />
+            
+            <ImageView 
+                android:id="@+id/im_listview_item_head_authentication"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_alignRight="@id/user_head"
+                android:layout_alignBottom="@id/user_head"
+                android:contentDescription="@string/imgdes"/>
+
+            <!-- 用户昵称 -->
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/user_head"
+                android:ellipsize="end"
+                android:maxEms="10"
+                android:singleLine="true"
+                android:textColor="#1163a2"
+                android:textSize="14sp" />
+
+            <!-- 时间／地理位置 -->
+            <TextView
+                android:id="@+id/tv_user_time_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/user_name"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_toRightOf="@id/user_head"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <!-- 视频区域 -->
+
+    <RelativeLayout
+        android:id="@+id/mPlayerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="205dp" >
+
+        <com.mobnote.golukmain.player.FullScreenVideoView
+            android:id="@+id/video_detail_videoview"
+            android:layout_width="match_parent"
+            android:layout_height="205dp"
+            android:layout_centerInParent="true"
+            android:background="#0000" />
+
+        <RelativeLayout
+            android:id="@+id/mImageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="205dp" >
+
+            <ImageView
+                android:id="@+id/video_detail_first_pic"
+                android:layout_width="match_parent"
+                android:layout_height="205dp"
+                android:contentDescription="@string/imgdes"
+                android:scaleType="fitXY" />
+        </RelativeLayout>
+
+        <!-- 暂停按钮 -->
+
+        <ImageView
+            android:id="@+id/play_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/imgdes"
+            android:src="@drawable/btn_player_play"
+            android:visibility="gone" />
+
+        <!-- 进度条 -->
+
+        <SeekBar
+            android:id="@+id/seekbar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/progress_bg"
+            android:clickable="false"
+            android:longClickable="false"
+            android:max="100"
+            android:paddingLeft="-3dp"
+            android:paddingRight="-10dp"
+            android:progress="0"
+            android:progressDrawable="@drawable/video_detail_seekbar_style"
+            android:thumb="@null" />
+
+        <!-- loading -->
+
+        <LinearLayout
+            android:id="@+id/mLoadingLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <ImageView
+                android:id="@+id/mLoading"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/imgdes" />
+
+            <TextView
+                android:id="@+id/mLoadingText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="@string/str_video_loading"
+                android:textColor="#ffffff"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- 描述 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="8dp" >
+
+        <TextView
+            android:id="@+id/video_detail_describe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/live_time_desc"
+            android:textSize="12sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp" >
+
+            <TextView
+                android:id="@+id/video_detail_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/live_time_desc"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/video_detail_link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:paddingBottom="2dp"
+                android:paddingLeft="5dp"
+                android:paddingTop="2dp"
+                android:textColor="@color/name_color"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!-- 获奖视频／推荐视频 -->
+
+    <TextView
+        android:id="@+id/video_detail_line1"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/user_login_bg" />
+
+    <LinearLayout
+        android:id="@+id/video_detail_reason_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical" >
+
+        <!-- 第一个获奖视频 -->
+
+        <RelativeLayout
+            android:id="@+id/video_detail_activie_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="9dp"
+            android:layout_marginTop="9dp" >
+
+            <ImageView
+                android:id="@+id/active_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:contentDescription="@string/imgdes"
+                android:src="@drawable/videodetails_award2_icon" />
+
+            <TextView
+                android:id="@+id/active_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:textColor="#e71f19"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="6dp"
+                android:layout_toLeftOf="@id/active_count"
+                android:layout_toRightOf="@id/active_image"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/active_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/video_detail_head_sys_title"
+                    android:textColor="@color/color_comment_not_send"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/active_reason"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textColor="#808080"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </RelativeLayout>
+        <!-- 第二个获奖视频 -->
+
+        <RelativeLayout
+            android:id="@+id/video_detail_sys_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="9dp"
+            android:layout_marginTop="9dp" >
+
+            <ImageView
+                android:id="@+id/sys_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:contentDescription="@string/imgdes"
+                android:src="@drawable/videodetails_award2_icon" />
+
+            <TextView
+                android:id="@+id/sys_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:textColor="#e71f19"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="6dp"
+                android:layout_toLeftOf="@id/sys_count"
+                android:layout_toRightOf="@id/sys_image"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/sys_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/video_detail_head_active_title"
+                    android:textColor="@color/color_comment_not_send"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/sys_reason"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textColor="#808080"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </RelativeLayout>
+        <!-- 第三个推荐视频 -->
+
+        <RelativeLayout
+            android:id="@+id/video_detail_recom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="9dp"
+            android:layout_marginTop="9dp" >
+
+            <ImageView
+                android:id="@+id/recom_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:contentDescription="@string/imgdes"
+                android:src="@drawable/videodetails_recommend_icon" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="6dp"
+                android:layout_toRightOf="@id/recom_image"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/recom_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/video_detail_head_recom_title"
+                    android:textColor="@color/color_comment_not_send"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/recom_reason"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textColor="#808080"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/video_detail_line2"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/user_login_bg" />
+
+    <!-- 操作 -->
+
+    <RelativeLayout
+        android:id="@+id/functionLayouyt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp" >
+
+        <LinearLayout
+            android:id="@+id/praiseLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true" >
+
+            <ImageView
+                android:id="@+id/video_square_detail_like_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/def"
+                android:src="@drawable/videodetail_like" />
+
+            <TextView
+                android:id="@+id/zanName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingLeft="4dp"
+                android:text="@string/str_usercenter_praise"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/zanText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingLeft="4dp"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/shareLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true" >
+
+            <ImageView
+                android:id="@+id/video_square_detail_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/videodetail_share"
+                android:contentDescription="@string/def" />
+
+            <TextView
+                android:id="@+id/shareText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingLeft="4dp"
+                android:text="@string/str_usercenter_share"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/commentLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" >
+
+            <ImageView
+                android:id="@+id/video_square_detail_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/videodetail_comment"
+                android:contentDescription="@string/def" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingLeft="4dp"
+                android:text="@string/str_usercenter_comment"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/commentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingLeft="4dp"
+                android:textColor="#888888"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white" >
+
+        <ImageView
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#e5e5e5"
+            android:contentDescription="@string/imgdes" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,870 @@
+[
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\carrecorder_storage_cpacity_query.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\carrecorder_storage_cpacity_query.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\item_search_no_result.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\item_search_no_result.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\unbind_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\unbind_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_videocategory_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_videocategory_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\main_tab_indicator_carrecorder.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\main_tab_indicator_carrecorder.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\guide_item_last.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\guide_item_last.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\official_message_list_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\official_message_list_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_identify_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_identify_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\carrecorder_impact_sensitivity.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\carrecorder_impact_sensitivity.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\newest_list_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\newest_list_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\carrecorder_videoplayer.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\carrecorder_videoplayer.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\emojicon_grid.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\exploded-aar\\android_studio\\emojicon\\unspecified\\res\\layout\\emojicon_grid.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\loading.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\loading.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_detail_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_detail_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\listview_item_car_type.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\listview_item_car_type.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_socialize_composer_header.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_socialize_composer_header.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_t_settings_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_t_settings_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\category_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\category_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_square_dialog_main.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_square_dialog_main.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\bubble.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\bubble.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\carrecorder_video_photo_quality.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\carrecorder_video_photo_quality.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_open_url_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_open_url_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_adassensibility.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_adassensibility.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\testgridview_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\testgridview_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_identify_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_identify_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\special_list_head.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\special_list_head.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\unbind_connection_head.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\unbind_connection_head.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_personal_edit_head.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_personal_edit_head.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\share_filter_select.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\share_filter_select.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\carrecorder_tcaf_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\carrecorder_tcaf_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_type_list.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_type_list.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_bak_platform_selector_dialog.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_bak_platform_selector_dialog.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\wonderful_selected_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\wonderful_selected_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\guide_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\guide_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\cluster_main.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\cluster_main.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_start.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_start.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_sharepromotion.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_sharepromotion.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_center_praise.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_center_praise.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_adasselected_vehicle_type.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_adasselected_vehicle_type.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\edit_video_dialog.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\edit_video_dialog.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_socialize_base_alert_dialog.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_socialize_base_alert_dialog.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_socialize_post_share.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_socialize_post_share.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\msg_system_list.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\msg_system_list.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\function_dialog.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\function_dialog.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_followinglist_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_followinglist_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\rl_list_view_follow_type_recommend_item_empty.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\rl_list_view_follow_type_recommend_item_empty.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_videoplayer.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_videoplayer.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_setup_changewifi_password.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_setup_changewifi_password.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_socialize_titile_bar.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_socialize_titile_bar.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\videocategory_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\videocategory_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_socialize_at_view.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_socialize_at_view.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\comment_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\comment_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_official_message.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_official_message.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\app_guide_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\app_guide_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\internation_user_identify_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\internation_user_identify_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\photo_album_activity.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\photo_album_activity.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_socialize_oauth_dialog.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_socialize_oauth_dialog.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\show_delete_dialog.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\show_delete_dialog.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_opinion_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_opinion_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\wonderful_banner_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\wonderful_banner_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\category_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\category_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\wonderful_listview.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\wonderful_listview.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\emojicons.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\exploded-aar\\android_studio\\emojicon\\unspecified\\res\\layout\\emojicons.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\shareloading.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\shareloading.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\custom_progress_dialog.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\custom_progress_dialog.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_socialize_simple_spinner_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_socialize_simple_spinner_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_socialize_base_alert_dialog_button.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_socialize_base_alert_dialog_button.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\carrecorder_kit_setting_quality.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\carrecorder_kit_setting_quality.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\main_tab_indicator_follow.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\main_tab_indicator_follow.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_socialize_full_curtain.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_socialize_full_curtain.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_socialize_shareboard_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_socialize_shareboard_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\item_user_select_country.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\item_user_select_country.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_personal_edit_sign.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_personal_edit_sign.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_square_loading.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_square_loading.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_list_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_list_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\promotion_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\promotion_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\emojicon_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\exploded-aar\\android_studio\\emojicon\\unspecified\\res\\layout\\emojicon_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\praised_list_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\praised_list_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\custom_board.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\custom_board.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_square_list_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_square_list_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_usercenter_header.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_usercenter_header.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\share_input_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\share_input_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_search_user.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_search_user.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\listview_item_msgcenter_comment.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\listview_item_msgcenter_comment.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_socialize_bind_select_dialog.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_socialize_bind_select_dialog.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_msgcenter_comment.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_msgcenter_comment.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\pull_to_refresh_header_horizontal.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\pull_to_refresh_header_horizontal.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\wifi_link_waitconn.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\wifi_link_waitconn.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\my_profit_detail.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\my_profit_detail.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\main_tab_indicator_album.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\main_tab_indicator_album.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_socialize_at_overlay.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_socialize_at_overlay.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\carrecorder_settings.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\carrecorder_settings.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_photoalbum_player.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_photoalbum_player.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_detail_head.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_detail_head.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\dialog_user_more.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\dialog_user_more.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_reset_pwd_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_reset_pwd_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_share_upload_window.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_share_upload_window.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_square_play.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_square_play.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\baidu_map.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\baidu_map.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\movie_view.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\movie_view.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\wifi_link_complete2.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\wifi_link_complete2.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\special_list_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\special_list_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\my_profit.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\my_profit.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_title.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_title.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\search_list_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\search_list_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\pull_to_refresh_header_vertical.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\pull_to_refresh_header_vertical.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_adasconfig.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_adasconfig.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\promotion_popup_hint.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\promotion_popup_hint.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\com_facebook_login_fragment.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\com_facebook_login_fragment.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\upgrade_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\upgrade_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_center.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_center.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_personal_edit_title.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_personal_edit_title.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\msg_system_txt.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\msg_system_txt.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_reply_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_reply_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\fragment_followed_content_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\fragment_followed_content_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\usercenter_videos_below_loading.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\usercenter_videos_below_loading.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\listview_item_msgcenter_praise.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\listview_item_msgcenter_praise.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\special_list.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\special_list.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_square_main.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_square_main.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\unbind_dialog_confirmation.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\unbind_dialog_confirmation.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_message_center.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_message_center.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\shortshare_selecttype.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\shortshare_selecttype.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_bak_at_list_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_bak_at_list_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\wifi_link_sucess.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\wifi_link_sucess.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_list_groupname.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_list_groupname.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_opinon_select_type.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_opinon_select_type.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\refresh_footer.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\refresh_footer.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\promotion_group.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\promotion_group.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_login.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_login.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\com_facebook_activity_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\com_facebook_activity_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_personal_setup.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_personal_setup.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_personal_info_title.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_personal_info_title.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\pulllist_head.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\pulllist_head.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\index_more.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\index_more.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\guide.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\guide.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\item_search_recommend.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\item_search_recommend.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_socialize_at_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_socialize_at_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\main_tab_indicator_mine.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\main_tab_indicator_mine.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\wifi_link_list.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\wifi_link_list.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_square_bj.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_square_bj.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_center_novideodata.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_center_novideodata.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\internation_user_regist.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\internation_user_regist.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\internation_user_repwd.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\internation_user_repwd.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_fan_list.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_fan_list.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\following_list_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\following_list_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\internation_user_login.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\internation_user_login.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\carrecorder_live_share_setting.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\carrecorder_live_share_setting.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_bak_platform_item_simple.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_bak_platform_item_simple.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_square_dialog_confirmation.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_square_dialog_confirmation.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\main_tab_indicator_discover.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\main_tab_indicator_discover.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\format_dialog.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\format_dialog.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\live.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\live.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_regist.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_regist.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_praised_list.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_praised_list.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\com_facebook_tooltip_bubble.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\com_facebook_tooltip_bubble.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\pushsetting.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\pushsetting.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\testgridview_item_header.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\testgridview_item_header.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_user_selectcountry.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_user_selectcountry.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_center_sharevideo.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_center_sharevideo.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\cluster_head.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\cluster_head.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\carrecorder_time_setting.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\carrecorder_time_setting.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\custom_dialog.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\custom_dialog.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\my_profit_detail_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\my_profit_detail_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\carrecorder_format_sd_card.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\carrecorder_format_sd_card.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_usercenter_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_usercenter_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\custom_volumn_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\custom_volumn_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_square_dialog_selected.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_square_dialog_selected.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_bak_at_list.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_bak_at_list.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\unbind_connection_history_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\unbind_connection_history_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\cluster_list_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\cluster_list_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_socialize_full_alert_dialog_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_socialize_full_alert_dialog_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_socialize_failed_load_page.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_socialize_failed_load_page.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\item_search_no_more.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\item_search_no_more.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\comment.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\comment.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\rl_list_view_follow_type_recommend_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\rl_list_view_follow_type_recommend_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\mediacontroller.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\exploded-aar\\android_studio\\initActivity\\unspecified\\res\\layout\\mediacontroller.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_detail_forbit_comment_footer.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_detail_forbit_comment_footer.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\carrecorder_main.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\carrecorder_main.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\local_video_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\local_video_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_version_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_version_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_square_below_loading.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_square_below_loading.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\live_ok_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\live_ok_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\comment_below.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\comment_below.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\layout_slideshow.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\layout_slideshow.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_adasguide.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_adasguide.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\carrecorder_version.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\carrecorder_version.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\start_share_function_dialog.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\start_share_function_dialog.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_adasverification.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_adasverification.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_personal_info.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_personal_info.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_center_setting_head.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_center_setting_head.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\main.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\exploded-aar\\android_studio\\commonGoluk\\unspecified\\res\\layout\\main.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\carrecorder_base.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\carrecorder_base.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_video_sync_setting.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_video_sync_setting.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_settings_item_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_settings_item_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_repwd.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_repwd.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\roadbook_crop_pic.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\roadbook_crop_pic.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\internation_user_identify_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\internation_user_identify_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\unbind_type_layout.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\unbind_type_layout.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\cluster_list.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\cluster_list.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\wifi_link_setipcmsg.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\wifi_link_setipcmsg.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_edit.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_edit.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_edit_mv_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_edit_mv_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_detail_dialog.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_detail_dialog.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\video_detail_footer.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\video_detail_footer.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\user_personal_edit_name.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\user_personal_edit_name.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_usercenter_footer.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_usercenter_footer.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\shareselecttype.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\shareselecttype.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\comment_list_item.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\comment_list_item.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\unbind_connection_list.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\unbind_connection_list.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\custom_board_2.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\custom_board_2.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\photo_album.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\photo_album.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\refresh_header.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\refresh_header.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\index.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\index.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\activity_adasvehicleconfig.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\activity_adasvehicleconfig.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\carrecorder_video_quality.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\carrecorder_video_quality.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\msg_system_image.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\msg_system_image.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\build\\intermediates\\res\\merged\\release\\layout\\umeng_socialize_full_alert_dialog.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\guideMain\\src\\main\\res\\layout\\umeng_socialize_full_alert_dialog.xml"
+    }
+]

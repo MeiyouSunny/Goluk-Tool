@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <!-- title -->
+
+    <RelativeLayout
+        android:id="@+id/profit_detail_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="#313131" >
+
+        <ImageButton
+            android:id="@+id/profit_detail_back"
+            android:layout_width="36.66dp"
+            android:layout_height="36.66dp"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/cross_screen_arrow_icon1"
+            android:contentDescription="@string/imgdes" />
+
+        <TextView
+            android:id="@+id/profit_detail_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/my_profit_detail_title_text"
+            android:textColor="#e0e0e0"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <!-- body -->
+
+    <com.mobnote.golukmain.videosuqare.RTPullListView
+        android:id="@+id/profit_detail_RTPullListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/profit_detail_title_layout"
+        android:divider="@null" />
+
+    <RelativeLayout
+        android:id="@+id/video_detail_click_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/profit_detail_title_layout"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/tv_videocategory_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawableTop="@drawable/mine_qitadifang"
+            android:text="@string/msg_system_connect_error"
+            android:textColor="#bfbfbf"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/my_profit_detail_nodata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/str_profit_nodata"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
+</RelativeLayout>

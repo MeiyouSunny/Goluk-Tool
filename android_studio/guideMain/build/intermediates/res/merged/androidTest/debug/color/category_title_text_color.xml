@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:color="@color/wonderful_item_sel_color"
+        android:state_pressed="true" /> 
+    <item
+        android:color="@color/cagtegory_title_color" />
+</selector>

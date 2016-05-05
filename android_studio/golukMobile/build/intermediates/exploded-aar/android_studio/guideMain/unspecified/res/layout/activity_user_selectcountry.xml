@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <!-- title -->
+    <RelativeLayout
+        android:id="@+id/select_country_titlelayout"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="#FAFAFA" >
+        
+        <TextView 
+            android:id="@+id/tv_select_country_title_cancle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp"
+            android:textColor="#007aff"
+            android:text="@string/str_select_country_cancle"/>
+        
+        <TextView 
+            android:id="@+id/tv_select_country_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="@string/str_select_country_title"/>
+    </RelativeLayout>
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E2E2E2" />
+    
+    <!-- all countries -->
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="#FAFAFA">
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:textSize="16sp"
+            android:textColor="#8e8e93"
+			android:text="@string/str_all_countries_title"/>
+    </RelativeLayout>
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E2E2E2" />
+
+    <ListView
+        android:id="@+id/select_count_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:divider="@null"
+        android:dividerHeight="2dp" />
+
+</LinearLayout>

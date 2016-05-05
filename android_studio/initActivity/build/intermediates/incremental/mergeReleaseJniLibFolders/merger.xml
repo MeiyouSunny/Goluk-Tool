@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="D:\golukcode3\goluk\goluk\src\android\android_studio\initActivity\src\main\jniLibs"><file name="armeabi/libvinit.so" path="D:\golukcode3\goluk\goluk\src\android\android_studio\initActivity\src\main\jniLibs\armeabi\libvinit.so"/></source></dataSet><dataSet config="release"><source path="D:\golukcode3\goluk\goluk\src\android\android_studio\initActivity\src\release\jniLibs"/></dataSet></merger>

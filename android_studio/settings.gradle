@@ -1,0 +1,6 @@
+include ':emojicon'
+include ':initActivity'
+include ':systemAPI'
+include ':commonGoluk'
+include ':guideMain'
+include ':golukMobile'

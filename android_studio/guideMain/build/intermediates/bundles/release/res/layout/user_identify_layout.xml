@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/user_login_bg" >
+    
+
+    <!-- title -->
+    <include layout="@layout/user_title"/>
+    
+    <!-- 动画 -->
+    <RelativeLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp"
+        >
+        <ImageView 
+            android:id="@+id/user_identify_anim_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           android:background="@anim/user_identify_animation"
+           android:contentDescription="@string/imgdes" />
+    </RelativeLayout>
+    
+    <TextView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/user_identify_code"
+        android:layout_marginTop="38dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="14sp"
+        android:textColor="@color/black"/>
+    
+    <!-- 6个验证码的输入框 -->
+    <include layout="@layout/user_identify_item"/>
+    
+    <!-- 倒计时 -->
+   <!--  <LinearLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:id="@+id/user_identify_layout_count">
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/user_identify_count"
+            android:textSize="14sp"
+            android:textColor="@color/user_identify_count_color"
+            android:layout_marginRight="5dp"/>
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/user_identify_count_time"
+            android:textSize="14sp"
+            android:textColor="@color/user_identify_count_color"
+            />
+        <ImageView 
+            android:id="@+id/user_identify_count_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/log_in_arrow"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"/>
+    </LinearLayout> -->
+    
+   	<Button 
+        android:id="@+id/user_identify_layout_getidentify_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:text="@string/user_identify_btn_afresh"
+        android:drawableRight="@drawable/log_in_arrow"
+        android:drawablePadding="10dp"
+        android:textSize="14sp"
+        android:textColor="@color/user_identify_count_color"
+        android:background="@null"
+        />
+    
+    <!-- 下一步Button -->
+
+    <Button
+        android:id="@+id/user_identify_btn"
+        android:layout_width="320dp"
+        android:layout_height="42dp"
+        android:background="@drawable/icon_login"
+        android:text="@string/user_regist_btn"
+        android:textColor="#fff"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="28dp" />
+    
+</LinearLayout>

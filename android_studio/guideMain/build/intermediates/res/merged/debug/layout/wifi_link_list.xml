@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 选择WIFI -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_ipcbind_bg" >
+
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:background="@color/color_ipcbind_bg" >
+
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/connect_back_btn_btn"
+            android:contentDescription="@string/imgdes" />
+
+        <ImageView
+            android:id="@+id/wifilink_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/setp_2"
+            android:contentDescription="@string/imgdes" />
+    </RelativeLayout>
+
+    <!-- 确认 wifi指示灯闪烁 -->
+
+    <TextView
+        android:id="@+id/wifilist_textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_layout"
+        android:layout_marginLeft="38dp"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/ipcbinding_setp_1"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:text="@string/wifi_link_17_text"
+        android:textColor="#595959"
+        android:textSize="14sp" />
+
+    <!-- 动画图片 -->
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="158dp"
+        android:layout_height="46dp"
+        android:layout_below="@id/wifilist_textView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:background="@anim/anim_ipcbind_g_direct_connect"
+        android:contentDescription="@string/imgdes" />
+
+    <!-- 提示 "切出程序，在手机设置中连接" -->
+
+    <TextView
+        android:id="@+id/wifilist_textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/wifilist_textView1"
+        android:layout_below="@id/imageView1"
+        android:layout_marginTop="30dp"
+        android:drawableLeft="@drawable/ipcbinding_setp_2"
+        android:drawablePadding="10dp"
+        android:text="@string/wifi_link_17_2_text"
+        android:textColor="#595959"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/wifilist_textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wifilist_textView2"
+        android:layout_marginLeft="68dp"
+        android:text="@string/wifi_link_36_text"
+        android:textColor="#595959"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/wifilist_img"
+        android:layout_width="170dp"
+        android:layout_height="134dp"
+        android:layout_below="@id/wifilist_textView3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/ipcbinding_wifilist_img"
+        android:contentDescription="@string/imgdes" />
+
+    <TextView
+        android:id="@+id/wifilist_textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/wifilist_textView1"
+        android:layout_below="@id/wifilist_img"
+        android:layout_marginTop="30dp"
+        android:drawableLeft="@drawable/ipcbinding_setp_3"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:text="@string/wifi_link_37_text"
+        android:textColor="#595959"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/next_btn"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="18dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/ipcbind_btn_disable"
+        android:text="@string/next_text"
+        android:textColor="@color/color_bind_btn_txt"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/wifi_link_list_help"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/next_btn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:drawableLeft="@drawable/connecthelp_icon"
+        android:drawablePadding="5dp"
+        android:text="@string/wifi_link_33_text"
+        android:textColor="#828282"
+        android:textSize="12sp" />
+
+</RelativeLayout>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:background="#f1f1f1">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:id="@+id/relativelayout_title"
+        android:background="#404246" >
+
+        <ImageButton
+            android:id="@+id/imagebutton_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/connect_back_btn_btn"
+            android:contentDescription="@string/imgdes" />
+
+        <TextView
+            android:id="@+id/textview_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/str_adas_config"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/relativelayout_playerview"
+        android:layout_below="@+id/relativelayout_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <com.rd.car.player.RtspPlayerView
+            android:id="@+id/rtspplayerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.mobnote.golukmain.adas.AdasVerificationFrameLayout
+            android:id="@+id/framelayout_Overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            <LinearLayout
+                android:id="@+id/linearlayout_loading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone" >
+
+                <ImageView
+                    android:id="@+id/imageview_loading"
+                    android:layout_width="93.33dp"
+                    android:layout_height="102.66dp"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:id="@+id/textview_loading"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingTop="20dp"
+                    android:textColor="#ffffff"
+                    android:text="@string/str_video_loading"
+                    android:textSize="18sp" />
+            </LinearLayout>
+            <ImageView 
+                	android:id = "@+id/imageview_leftmove"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/btn_adas_left_image"/>
+            <ImageView
+                android:id="@+id/imageview_rightmove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/btn_adas_right_image" />
+
+           <ImageView
+                android:id="@+id/imageview_upmove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/btn_adas_up_image" />
+           <ImageView
+                android:id="@+id/imageview_downmove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/btn_adas_down_image" />
+        </com.mobnote.golukmain.adas.AdasVerificationFrameLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textview_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:paddingTop="11dp"
+        android:paddingBottom="34dp"
+        android:layout_below="@+id/relativelayout_playerview"
+        android:text="@string/str_adas_verification_des"
+        android:textSize="13sp"
+        android:textColor="#595959"/>
+    <ImageView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textview_description"
+        android:src="@drawable/adas_verification_example"
+        android:scaleType="centerCrop"/>
+    <Button 
+        android:id="@+id/button_verify_complete"
+        android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_centerHorizontal="true"
+		android:layout_marginBottom="22dp"
+		android:background="@drawable/adas_button_background"
+		android:text="@string/str_config_complete"
+		android:gravity="center"
+		android:textColor="@color/white"
+		android:textSize="20sp"
+        />
+</RelativeLayout>

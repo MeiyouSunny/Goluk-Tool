@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp" >
+
+        <!-- 无数据显示 -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/imgdes"
+            android:drawableTop="@drawable/videodetail_sofaicon"
+            android:text="@string/str_sofa_text"
+            android:textColor="#D9D9D9"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+</LinearLayout>

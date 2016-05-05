@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+android:orientation="vertical"
+android:layout_width="260dp"
+android:layout_height="fill_parent"
+android:background="@drawable/custom_dialog_bg">
+
+    <TextView   
+		android:id="@+id/yingjian"
+		android:text="@string/user_opinion_type_yingjiang"
+		android:textSize ="15sp"
+		android:textColor="#1163a2"
+		android:gravity="center" 
+	    android:layout_height="43.3dp" 
+	    android:layout_width="fill_parent"/> 
+	    
+    <TextView   
+	    android:layout_height="1dp" 
+	    android:layout_width="fill_parent"
+	    android:background="#cccccc"/> 
+	    
+     <TextView   
+		android:id="@+id/anzhuang"
+		android:text="@string/user_opinion_type_anzhuang"
+		android:textSize ="15sp"
+		android:textColor="#1163a2"
+		android:gravity="center" 
+	    android:layout_height="43.3dp" 
+	    android:layout_width="fill_parent"/> 
+	    
+     <TextView   
+	    android:layout_height="1dp" 
+	    android:layout_width="fill_parent"
+	    android:background="#cccccc"/>
+	    
+     <TextView   
+		android:id="@+id/tuxiang"
+		android:text="@string/user_opinion_type_tuxiang"
+		android:textSize ="15sp"
+		android:textColor="#1163a2"
+		android:gravity="center" 
+	    android:layout_height="43.3dp" 
+	    android:layout_width="fill_parent"/>
+     <TextView   
+	    android:layout_height="1dp" 
+	    android:layout_width="fill_parent"
+	    android:background="#cccccc"/> 
+	    
+     <TextView   
+		android:id="@+id/shouji"
+		android:text="@string/user_opinion_type_shouji"
+		android:textSize ="15sp"
+		android:textColor="#1163a2"
+		android:gravity="center" 
+	    android:layout_height="43.3dp" 
+	    android:layout_width="fill_parent"/>
+     <TextView   
+	    android:layout_height="1dp" 
+	    android:layout_width="fill_parent"
+	    android:background="#cccccc"/> 
+	    
+     <TextView   
+		android:id="@+id/qita"
+		android:text="@string/user_opinion_type_qita"
+		android:textSize ="15sp"
+		android:textColor="#1163a2"
+		android:gravity="center" 
+	    android:layout_height="43.3dp" 
+	    android:layout_width="fill_parent"/> 
+	    <TextView   
+	    android:layout_height="1dp" 
+	    android:layout_width="fill_parent"
+	    android:background="#cccccc"/> 
+	    
+	    <TextView   
+		android:id="@+id/cancle"
+		android:text="@string/user_opinion_type_cancle"
+		android:textSize ="15sp"
+		android:textColor="#1163a2"
+		android:gravity="center" 
+	    android:layout_height="43.3dp" 
+	    android:layout_width="fill_parent"/> 
+    
+    
+</LinearLayout>

@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\MobCommons.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="8706779baea7a4edecd86770d5779bf3723f6de1">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\MobCommons_2edb9f958956561be90162f3ba03de8381ff3518.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\systemAPI\unspecified\jars\libs\umeng-analytics-v5.5.3.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="b612cc7bd42dffdb12db7d340c150061567e7c3e">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\umeng-analytics-v5.5.3_c01c2f396d1dc02fcffc49e7d7b1897ef10600d3.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\download_1.1.3.300_4200.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="6c5f087afdcf6f0585aeac4cb82d420d4d0ee7ec">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\download_1.1.3.300_4200_f52888b334d291fcb1f5c7f016ee8337a2516e90.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\httpmime-4.1.3.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="348503f010d9d7963ae20d33f0a8a6e033b1c0e5">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\httpmime-4.1.3_e5aa869e06d9ef9880562622a0bf97562a754e39.jar" />
+    </item>
+    <item
+        jar="D:\Android\sdk\extras\android\m2repository\com\android\support\support-v4\19.1.0\support-v4-19.1.0.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\support-v4-19.1.0_73b9883bfda7e9a6ae205d0e99c174e73ba72aaa.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\Xg_sdk_v2.39_20150915_1121.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="7d7ff0c029556b36a22732da70bdbcf4dfea5840">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\Xg_sdk_v2.39_20150915_1121_f79bc03580575963ef8b3fb059edd0121d70f05e.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\SocialSDK_whatsapp.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="b59202d1915c48bbaf482d41dd1e84bf4ea854eb">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\SocialSDK_whatsapp_577b3a86adbd6a8ad00e5c6bb3bd27122b1bf852.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="8ba8e3960f31dfbb83c199432fe5cff5d78f89d2">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\instant-run-bootstrap_b8901ad303911af2af9d8d2bb9c205d5efeeae50.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\weibosdkcore_v3.1.1.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="a3778409e08c2514a54f151053037b6ccebe7ab0">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\weibosdkcore_v3.1.1_594c6d8d75ee08e115cc2c8fe0a8021a34c556b4.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\systemAPI\unspecified\jars\libs\HciCloud_SDK_Java_3.0.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="8dc70e2684a47a0bf471e7a236fc6ffd6f6b1a39">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\HciCloud_SDK_Java_3.0_5c8175369da4c47b1d60f400ba1d9fdc1b97621f.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\com.rd.car.sdk.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="dd06e23cf29c1b75198955c9358d80602e87a9ba">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\com.rd.car.sdk_9485ff39b045b5ddaad594df9f5c9c006f2a175c.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\glide-volley-integration-1.3.1.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="03b770453bdd8e923960ab346cf2498dddab83f8">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\glide-volley-integration-1.3.1_ed6c9fc40fb2cda6cbae740d5230a74f031606fa.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\com.rd.car.player.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="8de9ec47ca6cddd3460079b80262b954994d572c">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\com.rd.car.player_bdb257930bf54f91780b892f925e7f07018d1591.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\stickylistheaderslibrary.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="7e6cd0c11d6751a770cb21d3a216d0ef0b801795">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\stickylistheaderslibrary_787d7850e76d4566424b8b87b4403db2bac7a94c.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\bugly_1.2.7_release.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="eb9c5c9c75095a085f0ffb0e092fd26af26dfa4a">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\bugly_1.2.7_release_14fc40269da05907cd4b329a531e86db2eaa9258.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\exoplayerlib.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="1f6bfc59c2dd22e59d389fecad5d1128fcd4e6cf">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\exoplayerlib_dfd0d591941992c740f48bba03d116f1cfd9621b.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\SocialSDK_WeiXin_1.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="c02568e1251872f156b7545af274125d2e773a73">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\SocialSDK_WeiXin_1_d4ce3701228c8416b76786a1d844c781b5490cea.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\glide-3.6.1.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="700200c66c4b6de2be66c8ea485b8d520b1a7e05">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\glide-3.6.1_be36aa2c81ba0a9ff63ae3592caf19fd5059fc8c.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\systemAPI\unspecified\jars\libs\SpeechApi.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="2e0fe9c4ab9245e1f71ea7d9b42cd0c3f2fd4ef7">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\SpeechApi_6749327a75f25b759739d6554bcd7922c20270df.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\wup-1.0.0-SNAPSHOT.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="c2b5093dd53fdf94dc96995c67b890ee9018a43d">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\wup-1.0.0-SNAPSHOT_811ff0aab274c94d00e93894b163a9b766f72cac.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="0a215d59aad5cce534f1a3bcae8d68456087af82">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\instant-run_bdfd6d6b1fcddc6e6533416d06ece416ef783f1c.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\twitter4j-core-4.0.4.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="f34686501230fadec5c3dc71f61c0ada2bb0c243">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\twitter4j-core-4.0.4_867945b6c06192003a8cbbe5df7dcf9de8b6733c.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\SocialSDK_WeiXin_2.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="988b7b6fc6dd3818438a0fc43eec25cc159a298d">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\SocialSDK_WeiXin_2_e3c24bfa59a596a4ac543df94026d6b108b76242.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\SocialSDK_twitter.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="4a6d51c499caf9b8f7995a56035fd9804bd937ba">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\SocialSDK_twitter_698216c38a649b1f7a5109d12634baeaaa78c393.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\MobTools.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="6f18a379490e7828d95214c3d4f381fdbb6947e7">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\MobTools_738b86c67444bb3a1837733a5179baadd6ed7583.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\SocialSDK_sms.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="a26ca4237fa6848edc7907895aa954af03213216">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\SocialSDK_sms_ede2d3a0afdb24aaf43165319ef0210ae00cd95e.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\systemAPI\unspecified\jars\libs\BaiduLBS_Android.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="d36135e4c2f126fefe686f37964dffa9d1e9a66c">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\BaiduLBS_Android_0928b4b149680768eb0dda042800a83098e5e888.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\SMSSDK-2.0.0.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="a3a656b227f61e2d2916a70d6b85b5073dd8193c">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\SMSSDK-2.0.0_b795754f369c7f40440ce4737fd2e16ad62e7422.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\bolts-android-1.1.4.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="011779c2d1df1a4b18465e82556d780404919869">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\bolts-android-1.1.4_41730556b12ef9ddf1dae721860d5d815f83b858.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\systemAPI\unspecified\jars\libs\AirtalkeeSDK-V2.3.3.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="ba566ec2b5bb9772c46d0d1bf6378995b18b2422">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\AirtalkeeSDK-V2.3.3_21644531c241b03b8f8929b5eee4c4bd5cf348b7.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\SocialSDK_line.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="3d8a72aded62cc6f5ecbed3865f8a784e3d4cebb">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\SocialSDK_line_155c5b294c6e2118000fdd158f389c830e4d835c.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\open_sdk_r5509.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="968c8d463a8f24bbd5ee070611de05e6f2b184ad">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\open_sdk_r5509_b72295336fe5568c215b17fd405b1b8fa5de1286.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\umeng_social_sdk.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="c3a6e2221007bc32e7bede6f36602ede5c3e4c86">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\umeng_social_sdk_b7b62cd5ff82b9e09a449f2c1878d174aaf5fab3.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\commonGoluk\unspecified\jars\libs\volley.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="3a13783f52efb758dcf11c74a8d99fcd453e115c">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\volley_2196c2a07d83a26e950fedca6e3b2ccabf2a9a4a.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\upload_1.1.3.300_4200.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="8cfc68a43064b57fc100eefc04d41c121f5dc08f">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\upload_1.1.3.300_4200_bbdcbba06b6ce67c362465eb7cd699a63b5cc9f3.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\jsr305-3.0.0.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="b10cd98fea4f42d8ae1481d6836e838e9498c9c6">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\jsr305-3.0.0_db20ed4afeaa562f89db356050805e9053d361be.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\systemAPI\unspecified\jars\libs\eventbus-2.4.0.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="02b18f5a7edb8cd6b4cfc5b7656ff4051ce1199d">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\eventbus-2.4.0_270def5ecc681dd4486ca2d4699c34cde919967f.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\SocialSDK_facebook_1.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="c9538ffcdc346fdb88e04b8c63fe6dfdf4d84ad1">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\SocialSDK_facebook_1_6d1b70a4a7b6e71bf8dd1b3383e263ed3db51d93.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\SocialSDK_QQZone_3.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="a548090e722e03777619ae1d1bdd50383bf5f68a">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\SocialSDK_QQZone_3_1d9c79e63dcefca728238b2b5bf338fb393e97bc.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\library-2.4.0.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="e9eb71b653a8bc7fec85d2c35123252ef00d3d1a">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\library-2.4.0_e52ca2561b77eeb7b18a606e855a0da7fbffc862.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\SocialSDK_facebook_2.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="ce9f129f40969533adb0b3c19d421f4e4d480561">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\SocialSDK_facebook_2_54f22a122c257e825b0c48cd32f6ce2d455c00a6.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\jg_filter_sdk_1.1.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="ad2a5e12850227b48314d4351aabfc435fb5f8cd">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\jg_filter_sdk_1.1_9f07edc82de1c11abd2d2a0cec23c5df972e4bf1.jar" />
+    </item>
+    <item
+        jar="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\jars\libs\fastjson-1.1.46.android.jar"
+        jumboMode="true"
+        revision="23.0.3"
+        sha1="93bb71f2f8e34c763ae6ff8181846ee3ca8b6c24">
+        <dex dex="D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\pre-dexed\debug\fastjson-1.1.46.android_a4d812f7416ba1aca5e6c3215b11815671df2b47.jar" />
+    </item>
+
+</items>

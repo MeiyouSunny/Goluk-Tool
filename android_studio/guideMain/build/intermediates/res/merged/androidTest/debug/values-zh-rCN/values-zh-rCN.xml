@@ -1,0 +1,1624 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="kit_setting_ui">
+        <item>@string/str_wonderfulvideo_and_photo</item>
+        <item>@string/str_wonderfulvideo</item>
+    </string-array>
+    <string-array name="list_dpi_key">
+        <item>1920*1080</item>
+        <item>1280*720</item>
+        <item>640*480</item>
+    </string-array>
+    <string-array name="list_dpi_live_key">
+        <item>360*240</item>
+        <item>480*360</item>
+        <item>640*480</item>
+        <item>1280*720</item>
+    </string-array>
+    <string-array name="list_dpi_live_value">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="list_dpi_value">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="list_frame_key">
+        <item>@string/str_frame24</item>
+        <item>@string/str_frame18</item>
+    </string-array>
+    <string-array name="list_frame_live_key">
+        <item>@string/str_frame24</item>
+        <item>@string/str_frame15</item>
+    </string-array>
+    <string-array name="list_frame_live_value">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <integer-array name="list_frame_source_live">
+        <item>24</item>
+        <item>15</item>
+    </integer-array>
+    <integer-array name="list_frame_source_local">
+        <item>24</item>
+        <item>18</item>
+    </integer-array>
+    <string-array name="list_frame_value">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="list_hw_live_key">
+        <item>@string/str_no_enable</item>
+        <item>@string/str_enable</item>
+    </string-array>
+    <string-array name="list_hw_live_value">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="list_language">
+        <item>中文</item>
+        <item>英文</item>
+    </string-array>
+    <string-array name="list_ma_key_local">
+        <item>11M</item>
+        <item>5M</item>
+    </string-array>
+    <string-array name="list_ma_live_key">
+        <item>300K</item>
+        <item>500K</item>
+        <item>800K</item>
+        <item>1M</item>
+        <item>1.2M</item>
+        <item>1.5M</item>
+        <item>2M</item>
+    </string-array>
+    <string-array name="list_ma_live_value">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+    <integer-array name="list_ma_source_live">
+        <item>300</item>
+        <item>500</item>
+        <item>800</item>
+        <item>1000</item>
+        <item>1200</item>
+        <item>1500</item>
+        <item>2000</item>
+    </integer-array>
+    <integer-array name="list_ma_source_local">
+        <item>11</item>
+        <item>5</item>
+    </integer-array>
+    <string-array name="list_ma_value_local">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="list_maxsize_key_local">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+    </string-array>
+    <string-array name="list_maxsize_value_local">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+    <string-array name="list_photo_quality_list">
+        <item>90</item>
+        <item>70</item>
+        <item>50</item>
+    </string-array>
+    <string-array name="list_photo_quality_ui">
+        <item>@string/str_quality_high</item>
+        <item>@string/str_quality_middle</item>
+        <item>@string/str_quality_low</item>
+    </string-array>
+    <string-array name="list_quality_bitrate1">
+        <item>8192</item>
+        <item>6144</item>
+        <item>4096</item>
+        <item>3072</item>
+    </string-array>
+    <string-array name="list_quality_bitrate2">
+        <item>10240</item>
+        <item>8192</item>
+        <item>5120</item>
+        <item>4096</item>
+    </string-array>
+    <string-array name="list_quality_bitrate_t1">
+        <item>12288</item>
+        <item>10240</item>
+        <item>6144</item>
+        <item>5120</item>
+    </string-array>
+    <string-array name="list_quality_list">
+        <item>1080P</item>
+        <item>720P</item>
+        <item>480P</item>
+    </string-array>
+    <string-array name="list_quality_resolution1">
+        <item>1080P</item>
+        <item>1080P</item>
+        <item>720P</item>
+        <item>720P</item>
+    </string-array>
+    <string-array name="list_quality_resolution2">
+        <item>1080P</item>
+        <item>1080P</item>
+        <item>720P</item>
+        <item>720P</item>
+    </string-array>
+    <string-array name="list_quality_resolution_t1">
+        <item>1080P</item>
+        <item>1080P</item>
+        <item>720P</item>
+        <item>720P</item>
+    </string-array>
+    <string-array name="list_quality_ui">
+        <item>@string/str_high1080</item>
+        <item>@string/str_middle1080</item>
+        <item>@string/str_high720</item>
+        <item>@string/str_middle720</item>
+    </string-array>
+    <string-array name="list_shutdown_time">
+        <item>10秒</item>
+        <item>60秒</item>
+    </string-array>
+    <string-array name="list_tone_volume">
+        <item>高 ( 100% )</item>
+        <item>中 ( 70% )</item>
+        <item>低 ( 50% )</item>
+    </string-array>
+    <string-array name="list_tone_volume_value">
+        <item>100</item>
+        <item>70</item>
+        <item>50</item>
+    </string-array>
+    <string-array name="list_wonderful_video_quality">
+        <item>1080P</item>
+        <item>480P</item>
+    </string-array>
+    <string-array name="list_wonderful_video_quality_value">
+        <item>1080p</item>
+        <item>480p</item>
+    </string-array>
+    <string-array name="list_wonderful_video_type">
+        <item>精彩抓拍（6+6）</item>
+        <item>经典模式</item>
+    </string-array>
+    <string-array name="list_wonderful_video_type_value">
+        <item>6</item>
+        <item>30</item>
+    </string-array>
+    <string-array name="smssdk_country_group_a">
+		<item>阿尔巴尼亚,AL,355,110,27601|27602|27603|27604</item>
+		<item>阿尔及利亚,DZ,213,52,60303|60302|60301</item>
+		<item>阿富汗,AF,93,46,41220|41230|41240|41250|41201</item>
+		<item>阿根廷,AR,54,27,722070|72207|72236|722020|72201|72234|72202|722320|722310|722010|722340|722330|722341</item>
+		<item>阿拉伯联合酋长国,AE,971,184,42402|42403</item>
+		<item>阿鲁巴岛,AW,297,102,36301|36302</item>
+		<item>阿曼,OM,968,182,42202|42203</item>
+		<item>阿塞拜疆,AZ,994,193,40002|40001|40004</item>
+		<item>埃及,EG,20,5,60203|60202|60201</item>
+		<item>埃塞俄比亚,ET,251,84,63601</item>
+		<item>爱尔兰,IE,353,108,27201|27213|27202|27211|27205|27203|27209</item>
+		<item>爱沙尼亚,EE,372,117,24803|24802|24801</item>
+		<item>安道尔,AD,376,121,21303</item>
+		<item>安哥拉,AO,244,79,63102|63104</item>
+		<item>安圭拉岛,AI,1264,199,365840</item>
+		<item>安提瓜和巴布达,AG,1268,200,338050|344030|344920</item>
+		<item>奥地利,AT,43,16,23207|23209|23210|23211|23201|23212|23202|23214|23203|23204|23215|23205|23206</item>
+		<item>澳大利亚,AU,61,33,50507|50506|50519|50590|50572|50571|50530|50501|50512|50511|50503|50502|505060|50538|50516|505061|50526</item>
+		<item>澳门,MO,853,169,45501|45500|45503|45502|45505|45504</item>
+    </string-array>
+    <string-array name="smssdk_country_group_b">
+		<item>巴巴多斯,BB,1246,198,342600</item>
+		<item>巴布亚新几内亚,PG,675,155,53701|53702|53703</item>
+		<item>巴哈马群岛,BS,1242,197,364390|36439</item>
+		<item>巴基斯坦,PK,92,45,</item>
+		<item>巴拉圭,PY,595,148,74404|74403|74402|74401</item>
+		<item>巴勒斯坦领土,PS,970,183,42506-PS|42505-PS</item>
+		<item>巴林,BH,973,186,42604|42605|42601|42602</item>
+		<item>巴拿马,PA,507,140,71404|71402|71403|71401</item>
+		<item>巴西,BR,55,28,72416|72405|72439|72406|72403|72415|72437|72404|72434|72423|72402|72432|72410|72433|72400|72411|72430|72431|72407</item>
+		<item>白俄罗斯,BY,375,120,25704|25701|25702</item>
+		<item>百慕大群岛,BM,1441,204,350000</item>
+		<item>保加利亚,BG,359,114,28401|28405|28403</item>
+		<item>贝宁,BJ,229,64,61605|61601|61602|61603|61604</item>
+		<item>比利时,BE,32,9,20610|20620|20640|20606|20605|20601</item>
+		<item>冰岛,IS,354,109,27409|27411|27404|27401|27402|27407</item>
+		<item>波多黎各,PR,1787,212,310970</item>
+		<item>波兰,PL,48,22,26016|26038|26004|26018|26017|26006|26009|26019|26008|26010|26032|26001|26034|26012|26011|26003|26036|26014|26002|26013|26035</item>
+		<item>波利尼西亚（法属）,PF,689,165,54720</item>
+		<item>波斯尼亚和黑塞哥维那,BA,387,129,21890|21805|21803</item>
+		<item>玻利维亚,BO,591,144,73603|73602|73601</item>
+		<item>伯利兹,BZ,501,134,70267</item>
+		<item>博茨瓦纳,BW,267,99,65202|65201|65204</item>
+		<item>不丹,BT,975,188,40211|40277</item>
+		<item>布基纳法索,BF,226,61,61301|61302|61303</item>
+		<item>布隆迪,BI,257,90,64201|64203|64202|64207|64282</item>
+    </string-array>
+    <string-array name="smssdk_country_group_c">
+		<item>朝鲜,KP,850,167,46703</item>
+		<item>赤道几内亚,GQ,240,75,62701|62703</item>
+    </string-array>
+    <string-array name="smssdk_country_group_d">
+		<item>丹麦,DK,45,19,23801|23812|23802|23813|23803|23806|23828|23807|23808|23830|23820|23810|23866|23877</item>
+		<item>德国,DE,49,23,26203|26202|26205|26216|26204|26207|26217|26206|26209|26208|26243|26276|26220|26242|26212|26201|26211|26277</item>
+		<item>东帝汶,TL,670,153,51401|51402</item>
+		<item>多哥,TG,228,63,61501|61503</item>
+		<item>多米尼加共和国,DO,1809,213,37001|37002|37003|37004</item>
+		<item>多米尼克,DM,1767,210,366110</item>
+    </string-array>
+    <string-array name="smssdk_country_group_e">
+		<item>俄罗斯,RU,7,3,25020|25099|25035|25002|25012|25001|25003|25039|25005|25007</item>
+		<item>厄瓜多尔,EC,593,146,74002|74001|74000</item>
+    </string-array>
+    <string-array name="smssdk_country_group_f">
+		<item>法国,FR,33,10,20816|20804|20826|20815|20825|20813|20802|20823|20801|20811|20822|20888|20810|20821|20831|20820|20809|20808|20817</item>
+		<item>法罗群岛,FO,298,103,28801|28802|28803</item>
+		<item>菲律宾,PH,63,35,51518|51502|51501|51503|51505</item>
+		<item>斐济,FJ,679,159,54202|54201</item>
+		<item>芬兰,FI,358,113,24409|24432|24410|24421|24412|24411|24414|24403|24413|24405|24426|24404|24491</item>
+		<item>佛得角,CV,238,73,62501|62502</item>
+    </string-array>
+    <string-array name="smssdk_country_group_g">
+		<item>冈比亚,GM,220,55,60702|60701|60704|60703</item>
+		<item>刚果共和国,CG,242,77,62907|62910|62901</item>
+		<item>刚果民主共和国,CD,243,78,63086|63001|63089|63002|63005</item>
+		<item>哥伦比亚,CO,57,30,732130|732020|732154|732111|732123|732101</item>
+		<item>哥斯达黎加,CR,506,139,71204|71203|71201</item>
+		<item>格林纳达,GD,1473,205,352110</item>
+		<item>格陵兰岛,GL,299,104,29001</item>
+		<item>格鲁吉亚,GE,995,194,28202|28201|28204|28205</item>
+		<item>古巴,CU,53,26,36801</item>
+		<item>瓜德罗普岛,GP,590,143,34008|34003|34002|34001|34020</item>
+		<item>关岛,GU,1671,208,310400|310140|310470|310110</item>
+		<item>圭亚那,GY,592,145,73802|73801</item>
+		<item>圭亚那（法属）,GF,594,147,74201|74220</item>
+    </string-array>
+    <string-array name="smssdk_country_group_h">
+		<item>哈萨克斯坦,KZ,7,4,40102|40101|40177|40108|40107</item>
+		<item>海地,HT,509,142,37201|37202</item>
+		<item>韩国,KR,82,40,45006|45005|45008|45002|45004</item>
+		<item>荷兰,NL,31,8,20423|20412|20410|20465|20420|20462|20409|20408|20407|20418|20406|20417|20428|20416|20405|20415|20404|20414|20469|20403|20468|20424|20402</item>
+		<item>荷属安的列斯群岛,AN,599,152,36269|36202|36201|36251|36294|36282|36281</item>
+		<item>黑山共和国,ME,382,126,29703|29702|29701</item>
+		<item>洪都拉斯,HN,504,137,70830|70840|70802|70801</item>
+    </string-array>
+    <string-array name="smssdk_country_group_i">
+	    
+	</string-array>
+    <string-array name="smssdk_country_group_j">
+		<item>基里巴斯,KI,686,163,54509</item>
+		<item>吉布提,DJ,253,86,63801</item>
+		<item>吉尔吉斯斯坦,KG,996,195,43705|43701</item>
+		<item>几内亚,GN,224,59,61105|61104|61103|61102|61101</item>
+		<item>几内亚比绍,GW,245,80,63202|63203</item>
+		<item>加拿大,CA,1,1,302657|302656|302710|302655|302500|302610|302720|302702|302270|302490|302880|302220|302680|302360|302690|302510|302653|302861|302222|302640|302651|302530|302221|302320</item>
+		<item>加纳,GH,233,68,62001|62002|62003|62004|62006|62007</item>
+		<item>加蓬,GA,241,76,62804|62801|62802|62803</item>
+		<item>柬埔寨,KH,855,170,45602|45601|45608|45618|45609|45604|45603|45606|45605|23455-KH</item>
+		<item>捷克共和国,CZ,420,131,23001|23002|23003|23004|23005|23008</item>
+		<item>津巴布韦,ZW,263,95,64801|64803|64804</item>
+    </string-array>
+    <string-array name="smssdk_country_group_k">
+		<item>喀麦隆,CM,237,72,62401|62402|62404</item>
+		<item>卡塔尔,QA,974,187,42701|42702</item>
+		<item>开曼群岛,KY,1345,203,346140</item>
+		<item>科摩罗,KM,269,101,65401</item>
+		<item>科特迪瓦,CI,225,60,61205|61204|61203|61202</item>
+		<item>科威特,KW,965,179,41904|41903|41902</item>
+		<item>克罗地亚,HR,385,127,21902|21901|21912|21910</item>
+		<item>肯尼亚,KE,254,87,63905|63907|63903|63902</item>
+		<item>库克群岛,CK,682,161,54801</item>
+    </string-array>
+    <string-array name="smssdk_country_group_l">
+		<item>拉脱维亚,LV,371,116,24703|24706|24705|24708|24707|24709|24702|24701</item>
+		<item>莱索托,LS,266,98,65101|65102</item>
+		<item>老挝,LA,856,171,45701|45708|45703|45702</item>
+		<item>黎巴嫩,LB,961,175,41503|41501</item>
+		<item>立陶宛,LT,370,115,24601|24603|24602</item>
+		<item>利比里亚,LR,231,66,61804|61807|61801|61802</item>
+		<item>利比亚,LY,218,54,60603|60601|60600</item>
+		<item>列支敦士登,LI,423,133,29501|29577|29505|29502</item>
+		<item>法属留尼汪岛,RE,262,94,64710|64702</item>
+		<item>卢森堡,LU,352,107,27099|27077|27001</item>
+		<item>卢旺达,RW,250,83,63510|63512|63513|63514</item>
+		<item>罗马尼亚,RO,40,14,22603|22604|22605|22610|22601</item>
+    </string-array>
+    <string-array name="smssdk_country_group_m">
+		<item>马达加斯加,MG,261,93,64601|64602|64604</item>
+		<item>马尔代夫,MV,960,174,47201|47202</item>
+		<item>马耳他,MT,356,111,27821|27877|27801</item>
+		<item>马拉维,MW,265,97,65010|65001</item>
+		<item>马来西亚,MY,60,32,50220|50211|50213|502150|50212|502151|502152|50217|50216|50219|50218</item>
+		<item>马里,ML,223,58,61002|61001</item>
+		<item>马其顿,MK,389,130,29402|29401|29403</item>
+		<item>马提尼克,MQ,596,149,34003|34002|34001|34020</item>
+		<item>毛里求斯,MU,230,65,61710|61701|61702</item>
+		<item>毛里塔尼亚,MR,222,57,60910|60902</item>
+		<item>美国,US,1,2,311090|310080|311050|311370|310160|31150|311010|310680|310120|310560|311650|310880|310760|31190|310320|310630|310710|310090|310290|316993|310170|310050|31060|311580|310690|311020|311340|310570|311660|310450|310011|310770|316995|310012|316994|311730|310004|311610|310840|310005|310600|31100|311190|310180|31050|310060|316883|311150|310380|311030|310260|311230|310020|310340|311991|311430|316885|310660|310100|316884|310540|310023|310980|311740|310410|31016|310610|310016|31130|31011|31611|310190|311040|316011|310150|310790|310990|310870|310420|310300|310740|311710</item>
+		<item>蒙古,MN,976,189,42898|42888|42899|42801</item>
+		<item>蒙特塞拉特岛,MS,1664,207,354860</item>
+		<item>孟加拉国,BD,880,172,47007|47005|47006|47003|47004|47001|47002</item>
+		<item>秘鲁,PE,51,24,71610|71606|71617|71607|71615</item>
+		<item>密克罗尼西亚,FM,691,166,55001</item>
+		<item>缅甸,MM,95,48,41401|41406|41405</item>
+		<item>摩尔多瓦,MD,373,118,25903|25902|25904|25901</item>
+		<item>摩洛哥,MA,212,51,60405|60402|60401|60400</item>
+		<item>摩纳哥,MC,377,122,21201</item>
+		<item>莫桑比克,MZ,258,91,64301|64304|64303</item>
+		<item>墨西哥,MX,52,25,33402|33403|33401|33450|33406|334090|33404|33405</item>
+    </string-array>
+    <string-array name="smssdk_country_group_n">
+		<item>纳米比亚,NA,264,96,64902|64901|64903</item>
+		<item>南非,ZA,27,6,65510|65512|65501|65502|65507|65519</item>
+		<item>南苏丹,SS,211,50,65995</item>
+		<item>尼泊尔,NP,977,190,42901|42902</item>
+		<item>尼加拉瓜,NI,505,138,71021|71030</item>
+		<item>尼日尔,NE,227,62,61401|61402|61403|61404</item>
+		<item>尼日利亚,NG,234,69,62150|62140|62130|62120|62125|23455-NG|62160</item>
+		<item>挪威,NO,47,21,24208|24209|24220|24221|24222|24201|24223|24202|24224|24204|24205|24206</item>
+    </string-array>
+    <string-array name="smssdk_country_group_o">
+	    
+	</string-array>
+    <string-array name="smssdk_country_group_p">
+		<item>帕劳,PW,680,160,55201|55280</item>
+		<item>葡萄牙,PT,351,106,26804|26806|26801|26803</item>
+    </string-array>
+    <string-array name="smssdk_country_group_q">
+	</string-array>
+    <string-array name="smssdk_country_group_r">
+		<item>日本,JP,81,39,44027|44026|44029|44028|44023|44144|44022|44143|44025|44024|44145|44140|44021|44142|44141|44020|44016|44015|44018|44017|44012|44011|44099|44014|44013|44019|44090|44096|44095|44010|44098|44097|44092|44091|44094|44093|44004|44007|44006|44001|44089|44000|44088|44003|44002|44009|44008|44087|44199|44078|44198|44077|44079|44074|44194|44073|44076|44075|44191|44070|44190|44193|44072|44192|44071|44067|44066|44069|44068|44063|44062|44065|44064|44061|44060|44056|44055|44058|44052|44051|44054|44053|44050|44170|44049|44048|44045|44044|44165|44047|44046|44041|44162|44040|44161|44043|44164|44042|44163|44038|44037|44039|44034|44033|44036|44035|44030|44032|44031</item>
+		<item>瑞典,SE,46,20,24035|24013|24036|24014|24037|24015|24038|24016|24039|24017|24018|24019|24030|24031|24010|24032|24033|24012|24034|24002|24003|24026|24027|24028|24006|24029|24007|24008|24040|24020|24043|24022|24000|24044|24023|24001|24045</item>
+		<item>瑞士,CH,41,15,22812|22801|22802|22803|22805|22809|22851|22853|22854</item>
+    </string-array>
+    <string-array name="smssdk_country_group_s">
+		<item>萨尔瓦多,SV,503,136,70602|70601|70604|70603|70605</item>
+		<item>萨摩亚,WS,685,162,54900</item>
+		<item>塞尔维亚,RS,381,125,29341|22001|22003|22005</item>
+		<item>塞拉利昂,SL,232,67,61902|61903|61904|61905|61906|61909|61901</item>
+		<item>塞内加尔,SN,221,56,60801|60803|60802</item>
+		<item>塞浦路斯,CY,357,112,28022|28001|28020|28010</item>
+		<item>塞舌尔,SC,248,81,63310|63301|63302</item>
+		<item>沙特阿拉伯,SA,966,180,42003|42004|42001|42006</item>
+		<item>圣多美和普林西比,ST,239,74,62601</item>
+		<item>圣基茨和尼维斯,KN,1869,215,356110|356070</item>
+		<item>圣卢西亚,LC,1758,209,358110</item>
+		<item>圣马力诺,SM,378,123,29201</item>
+		<item>圣皮埃尔和密克隆岛,PM,508,141,30801</item>
+		<item>圣文森特和格林纳丁斯,VC,1784,211,360110</item>
+		<item>斯里兰卡,LK,94,47,41301|41305|41302|41308</item>
+		<item>斯洛伐克,SK,421,132,23199|23101|23102|23106</item>
+		<item>斯洛文尼亚,SI,386,128,29364|29341|29340|29370</item>
+		<item>斯威士兰,SZ,268,100,65310|65301</item>
+		<item>苏丹,SD,249,82,63401|63402|63407</item>
+		<item>苏里南,SR,597,150,74604|74603|74602</item>
+		<item>所罗门群岛,SB,677,157,54010</item>
+		<item>索马里,SO,252,85,63782|63760|63730|63701|63725|63704</item>
+    </string-array>
+    <string-array name="smssdk_country_group_t">
+		<item>塔吉克斯坦,TJ,992,191,43605|43601|43602|43603|43604</item>
+		<item>台湾,TW,886,173,46602|46668|46603|46688|46699|46601|46689|46656|46697|46610|46609|46606|46607|46605|46693|46692</item>
+		<item>泰国,TH,66,38,52000|52099|52020|52003|52004|52015|52001|52023|52002|52018|52005</item>
+		<item>坦桑尼亚,TZ,255,88,64011|64003|64002|64005|64004|64007|64006|64009|64008</item>
+		<item>汤加,TO,676,156,53901</item>
+		<item>特克斯和凯科斯群岛,TC,1649,206,376352|376350</item>
+		<item>特立尼达，多巴哥,TT,1868,214,374130|37412</item>
+		<item>突尼斯,TN,216,53,60503|60502|60501</item>
+		<item>土耳其,TR,90,43,28602|28603|28601|28604</item>
+		<item>土库曼斯坦,TM,993,192,43801|43802</item>
+    </string-array>
+    <string-array name="smssdk_country_group_u">
+	    
+	</string-array>
+    <string-array name="smssdk_country_group_v">
+	    
+	</string-array>
+    <string-array name="smssdk_country_group_w">
+		<item>瓦努阿图,VU,678,158,54101|54105</item>
+		<item>危地马拉,GT,502,135,70402|70401|70403</item>
+		<item>维尔京群岛（美属）,VI,1284,201,311470</item>
+		<item>维尔京群岛（英属）,VG,1340,202,348570|348170</item>
+		<item>委内瑞拉,VE,58,31,73406|73404|73401</item>
+		<item>文莱,BN,673,154,52811|52802</item>
+		<item>乌干达,UG,256,89,64111|64133|64166|64122|64110|64101|64114</item>
+		<item>乌克兰,UA,380,124,25507|25506|25521|25501|25503|25502|25505|25504</item>
+		<item>乌拉圭,UY,598,151,74803|74802|74801|74800|74810|74807</item>
+		<item>乌兹别克斯坦,UZ,998,196,43401|43402|43407|43403|43404|43405|43406</item>
+    </string-array>
+    <string-array name="smssdk_country_group_x">
+		<item>西班牙,ES,34,11,21402|21401|21423|21411|21422|21410|21421|21432|21420|21409|21408|21419|21407|21418|21417|21406|21405|21427|21416|21404|21415|21425|21403</item>
+		<item>希腊,GR,30,7,20203|20202|20201|20210|20209|20207|20205</item>
+		<item>香港,HK,852,168,45413|45412|45401|45404|45403|45414|45400|45411|45409|45406|45405|45416|45408|45419|45429|45407</item>
+		<item>新加坡,SG,65,37,52502|52503|52512|52501|52505</item>
+		<item>新喀里多尼亚,NC,687,164,54601</item>
+		<item>新西兰,NZ,64,36,53001|53004|53005|53024|53002|53006</item>
+		<item>匈牙利,HU，36,12,21630|21670|21601</item>
+		<item>叙利亚,SY,963,177,41701|41702</item>
+    </string-array>
+    <string-array name="smssdk_country_group_y">
+		<item>牙买加,JM,1876,216,338180|338020|338110</item>
+		<item>亚美尼亚,AM,374,119,28301|28310|28305|28304</item>
+		<item>也门,YE,967,181,42101|42102|42103</item>
+		<item>伊拉克,IQ,964,178,41805|41840|41820|41830|41845</item>
+		<item>伊朗,IR,98,49,43235|43214|43220|43200|43211|43219</item>
+		<item>以色列,IL,972,185,42577|42516|42505|42506|42507|RESTRICTED-IL|42519|42508|42501|42512|42523|42502|42503|42514|42515</item>
+		<item>意大利,IT,39,13,22206|22207|22208|22210|22243|22288|22244|22299|22233|22201|22235|22204|22248|22205|22230</item>
+		<item>印度,IN,91,44,405893|405892|405895|405894|405897|405896|405899|405898|40501|40506|40505|405891|405890|40503|405889|405882|405881|405883|405886|405885|405888|405887|405880|405879|405878|405871|405750|405870|405873|405752|405872|405751|405875|405754|405874|405753|405877|405756|405876|405755|405868|405867|405869|405860|405862|405861|405864|405863|405866|405865|405856|405859|405858|40494|40493|40492|40491|40498|40497|40496|40495|40490|40483|40482|40481|40480|40487|40486|40485|405799|40484|40489|40488|40472|40471|40470|40476|40475|40474|40473|40479|40478|40477|40460|405930|405811|40462|405810|405931|40469|40468|40467|40466|405809|405802|405923|405801|405922|405804|405925|405803|405924|405806|405927|405805|405926|405808|405929|405807|405928|40450|40570|40454|40453|40452|405800|405921|40451|405920|40458|40457|40456|40455|40459|405919|405912|405914|405913|405916|405915|405918|405917|40443|40442|40441|40567|40446|40566|40449|405901|405900|405903|405902|405905|405904|405907|405906|40553|40552|40431|40551|40430|40436|40556|40435|40555|40434|40554|40433|40438|40437|405851|405850|40421|405853|40420|405852|405855|405854|40425|40424|40422|40429|40428|40427|40419|405846|405845|405848|405847|405849|405046|405045|405840|405047|40410|405842|405841|405843|40413|40412|405040|40411|40418|405042|40417|405041|40416|405044|40415|405043|40409|405835|405834|405837|405836|405839|405838|405035|405034|405037|405036|40520|405039|405831|405038|405830|405833|405832|40524|40403|40402|40523|40522|40401|40521|40400|40407|405031|40406|405030|40405|405033|40404|405032|40519|40518|405824|405823|405825|405828|405827|405829|405026|405025|405820|405027|405822|405029|405821|40513|40512|40511|40510|40517|40515|40514|40509|40508|40507|405813|405812|405815|405814|405817|405816|405819|405818</item>
+		<item>印度尼西亚,ID,62,34,51010|51021|51089|51001|51011|51027|51007|51028|51009|51008</item>
+		<item>英国,GB,44,17,23427|23428|23407|23409|23420|23400|23401|23423|23500|23424|23402|23403|23425|23426|23416|23417|23418|23419|23430|23431|23476|23410|23433|23455|23411|23478|23434|23458|23414|23415|23450|23451</item>
+		<item>约旦,JO,962,176,41601|41677|41603</item>
+		<item>越南,VN,84,41,45204|45205|45202|45201|45207</item>
+    </string-array>
+    <string-array name="smssdk_country_group_z">
+		<item>赞比亚,ZM,260,92,64502|64501|64503</item>
+		<item>泽西,JE,44,18,</item>
+		<item>乍得,TD,235,70,62201|62203</item>
+		<item>直布罗陀,GI,350,105,26606|26609|26601</item>
+		<item>智利,CL,56,29,73008|73006|73004|73002|73013|73003|73014|73011|73012|73001</item>
+		<item>中非共和国,CF,236,71,62301|62302|62303|62304</item>
+		<item>中国,CN,86,42,46006|46007|46005|46002|46003|46000|46001</item>
+    </string-array>
+    <string-array name="zone_array">
+        <item>zh_CN</item>
+        <item>en_US</item>
+    </string-array>
+    <dimen name="alphabet_size">12dip</dimen>
+    <dimen name="umeng_socialize_pad_window_height">350dip</dimen>
+    <dimen name="umeng_socialize_pad_window_width">580dip</dimen>
+    <item name="tag_slideshow_item" type="id"/>
+    <string name="action_settings">Settings</string>
+    <string name="activity_time_out">活动已结束</string>
+    <string name="app_name">Goluk</string>
+    <string name="app_update_text">版本检测</string>
+    <string name="attend_activity">我要参加</string>
+    <string name="back_text">返回</string>
+    <string name="bbxx">版本信息</string>
+    <string name="bubble_count">2000</string>
+    <string name="cancel">取消</string>
+    <string name="car_recorder_title">行车记录仪</string>
+    <string name="carrecorder_hint_text1">        开启停车安防功能会自动判断车辆当前状态：当车辆处于停车状态极路客会触发1秒钟拍1张照片；</string>
+    <string name="carrecorder_hint_text2">        开启停车安防同时具备侦测功能，分为振动侦测（触发前8秒+后8秒视频）与移动侦测（触发前8秒+后8秒视频）两种。</string>
+    <string name="carrecorder_tcaf_all">移动和振动侦测</string>
+    <string name="carrecorder_tcaf_close">关闭</string>
+    <string name="carrecorder_tcaf_move">移动侦测</string>
+    <string name="carrecorder_tcaf_vibration">振动侦测</string>
+    <string name="change_wifi_name">密码</string>
+    <string name="change_wifi_password_hint">密码必须为8–15个字符。更改密码将在30秒之后生效。</string>
+    <string name="cluster_check_all">查看所有</string>
+    <string name="cluster_comment_txt">写评论，有机会赢大奖</string>
+    <string name="cluster_jx_zt_share">极路客精选专题分享</string>
+    <string name="cluster_jxzt_share_txt">极路客精选专题(使用#极路客Goluk#拍摄)</string>
+    <string name="cluster_number_pl">条评论</string>
+    <string name="cluster_time_format">MM月dd日 HH时mm分</string>
+    <string name="cluster_weiguan">围观</string>
+    <string name="com_facebook_loading">正在载入   </string>
+    <string name="comment_repeat_text">请勿连续发送相同的评论内容。</string>
+    <string name="comment_sofast_text">您评论的速度太快了，请休息一下再评论。</string>
+    <string name="confirmation_code">验证码</string>
+    <string name="count_background_identify_count">获取验证码失败，此手机号已经达到获取验证码上限</string>
+    <string name="count_identify_count">此手机号已经不能再获取验证码,请确保手机号码正确和手机号所在的设备有信号</string>
+    <string name="count_identify_count_six_limit">获取验证码失败，此手机号已达到获取验证码上限（每天4次）</string>
+    <string name="def">默认</string>
+    <string name="default_comment">啥也不想说，快看视频吧...</string>
+    <string name="default_comment_hint">没有文案，怎样收获无数点赞？</string>
+    <string name="delete_text">删除</string>
+    <string name="dialog_str_cancel">取消</string>
+    <string name="dialog_str_confirm">举报不良内容</string>
+    <string name="dialog_str_del">删除这个视频</string>
+    <string name="dialog_str_goback">返回首页</string>
+    <string name="dialog_str_share">分享这个视频</string>
+    <string name="dialog_str_tuijian">推荐这个视频</string>
+    <string name="edit_text">编辑</string>
+    <string name="facebook_app_id">1679907912268496</string>
+    <string name="get_current_location">点击获取位置</string>
+    <string name="goluk_pull_to_refresh_footer_pull_label">上拉加载更多</string>
+    <string name="goluk_pull_to_refresh_footer_refreshing_label">加载中\u2026</string>
+    <string name="goluk_pull_to_refresh_footer_release_label">松开后加载</string>
+    <string name="goluk_pull_to_refresh_pull_label">下拉刷新</string>
+    <string name="goluk_pull_to_refresh_refreshing_label">刷新\u2026</string>
+    <string name="goluk_pull_to_refresh_release_label">松开后刷新</string>
+    <string name="gsh">格式化SD卡</string>
+    <string name="guide_start">点击这里开始你的极路客之旅吧</string>
+    <string name="hdr_title">HDR模式</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="hfcc">恢复出厂设置</string>
+    <string name="imgdes">图片说明</string>
+    <string name="index_square">发现</string>
+    <string name="index_title">Goluk</string>
+    <string name="ipc_check_zone_msg">是否重启记录仪以便使用新的时区？</string>
+    <string name="ipc_download_text">已下载</string>
+    <string name="ipc_hint_below_image">固件升级过程中　请不要断开电源</string>
+    <string name="ipc_hint_text">安装升级固件前，请确认摄像头已正常连接；安装升级过程中请不要断电，直到升级完成。</string>
+    <string name="ipc_update_info_title">更新说明</string>
+    <string name="ipc_update_layout_text">极路客固件</string>
+    <string name="ipc_update_text">极路客固件升级</string>
+    <string name="ipc_upgrade_new_text">当前极路客固件版本已是最新</string>
+    <string name="ipc_upgrade_voice_text">请耐心等待升级成功后的语音提示</string>
+    <string name="jcsp_title">精彩视频拍照提示音</string>
+    <string name="keep_on_text">继续</string>
+    <string name="like_num_text">56</string>
+    <string name="line_content">Line只支持文本，图片</string>
+    <string name="line_no_client">未安装Line客户端</string>
+    <string name="line_no_content">请设置分享内容</string>
+    <string name="line_showword">LINE</string>
+    <string name="live_exit">结束直播</string>
+    <string name="live_flow">预计消耗流量:</string>
+    <string name="live_guiji">直播轨迹(开发中)</string>
+    <string name="live_pause">暂停</string>
+    <string name="live_setting_timelength">直播时长:</string>
+    <string name="live_str_close">关闭</string>
+    <string name="live_str_default_livedesc">暂无</string>
+    <string name="live_str_default_timer">00:00</string>
+    <string name="live_str_look_default">0</string>
+    <string name="live_str_lookcount">次围观</string>
+    <string name="live_talk">直播对讲(开发中)</string>
+    <string name="live_title">网络直播</string>
+    <string name="local_video_text">本地视频</string>
+    <string name="local_video_title_text">选择视频</string>
+    <string name="login_in_facebook_btn">Facebook登录</string>
+    <string name="login_or_txt">或</string>
+    <string name="login_out">未登录</string>
+    <string name="login_text">登录</string>
+    <string name="loginout_text">退出</string>
+    <string name="logout">注销</string>
+    <string name="more_text">更多</string>
+    <string name="msg_system_certificate_fail">很抱歉，你的认证失败了。</string>
+    <string name="msg_system_certificate_success">您的实名认证通过了，赶紧去看看吧。</string>
+    <string name="msg_system_connect_error">网络不给力，轻触屏幕重试</string>
+    <string name="msg_system_no_message">暂无系统消息</string>
+    <string name="msg_system_poll_txt">您的视频正在投票，快去看看吧。</string>
+    <string name="msg_system_reason_began">理由：</string>
+    <string name="msg_system_recommend_title">视频被推荐啦</string>
+    <string name="msg_system_reward_txt_began">获</string>
+    <string name="msg_system_reward_txt_end">个G币奖励</string>
+    <string name="msg_system_select_txt">恭喜您，视频入选精选啦，快去看看吧。</string>
+    <string name="msg_system_title_txt">系统消息</string>
+    <string name="msg_system_withdraw_check_fail">您的提现未通过审核，点击查看原因。</string>
+    <string name="msg_system_withdraw_check_success">您的提现已通过审核，工作人员将在7个工作日内完成打款。</string>
+    <string name="msg_system_withdraw_fail">您的提现申请失败了，点击查看原因。</string>
+    <string name="msg_system_withdraw_success">您的提现申请已付款，24小时将到账，请注意查收</string>
+    <string name="mv_text">MV</string>
+    <string name="my_camera_title_text">摄像头管理</string>
+    <string name="my_install_title_text">安装指导</string>
+    <string name="my_profit_G_text">获得奖励Ｇ币</string>
+    <string name="my_profit_detail_title_text">收益明细</string>
+    <string name="my_profit_last_no_text">快去参加活动赚Ｇ币吧</string>
+    <string name="my_profit_last_profit">上一次收入</string>
+    <string name="my_profit_leave">余额</string>
+    <string name="my_profit_problem">常见问题</string>
+    <string name="my_profit_title_text">我的收益</string>
+    <string name="my_profit_total">累计获得</string>
+    <string name="my_profit_unit">Ｇ币（个）</string>
+    <string name="my_question_title_text">版本信息</string>
+    <string name="my_set_title_text">通用设置</string>
+    <string name="my_shopping_buck_line">购买极路客专用降压线</string>
+    <string name="my_shopping_title_text">购买极路客</string>
+    <string name="my_skill_title_text">极路客小技巧</string>
+    <string name="my_version_title_text">版本信息</string>
+    <string name="my_video_text">我的视频</string>
+    <string name="my_video_title_text">我的相册</string>
+    <string name="network_error">网络异常，请检查网络</string>
+    <string name="next_text">下一步</string>
+    <string name="no_fans_tips">没有粉丝，好可怜啊</string>
+    <string name="no_following_tips">没有关注的人，好任性啊</string>
+    <string name="opinion_connection">您的联系方式</string>
+    <string name="opinion_content_null">反馈内容不能为空</string>
+    <string name="opinion_fail">反馈失败，请稍候再试</string>
+    <string name="opinion_success">感谢您的反馈，我们正在积极处理中！</string>
+    <string name="opinion_suggest">您的意见或建议</string>
+    <string name="option_connection_hint">选填内容（手机号/微博/QQ等）</string>
+    <string name="option_suggest_hint">必选内容（500字以内）</string>
+    <string name="photoalbum_cloud_video_text">记录仪视频</string>
+    <string name="photoalbum_default_title">我的相册</string>
+    <string name="photoalbum_local_no_video_text">本地没有视频</string>
+    <string name="photoalbum_local_video_text">本地视频</string>
+    <string name="photoalbum_no_ipc_connect_text">未连接行车记录仪</string>
+    <string name="photoalbum_no_video_text">当前没有视频</string>
+    <string name="pull_to_refresh">下拉刷新</string>
+    <string name="pull_to_refresh_from_bottom_pull_label">@string/str_pull_to_refresh_pull_label</string>
+    <string name="pull_to_refresh_from_bottom_refreshing_label">@string/str_pull_to_refresh_refreshing_label</string>
+    <string name="pull_to_refresh_from_bottom_release_label">@string/str_pull_to_refresh_release_label</string>
+    <string name="pull_to_refresh_pull_label">abc</string>
+    <string name="pull_to_refresh_refreshing_label">加载中…</string>
+    <string name="pull_to_refresh_release_label">松开可以刷新</string>
+    <string name="pull_to_refresh_tap_label">点击刷新</string>
+    <string name="pwd_digits">[] {}:;,./~!@#$%^*()_+=-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
+    <string name="pwd_text">密码</string>
+    <string name="pzgy_text">自动判断车辆当前状态；当前车辆处于行驶状态极路客会根据自动循环录像的开关状态进行工作；当车辆处于停车状态极路客会触发1秒钟拍1张照片；同时会打开振动(触发前8秒+后8秒视频)与移动侦测(触发前8秒+后8秒视频)功能。</string>
+    <string name="pzgy_title">紧急碰撞视频感应</string>
+    <string name="refreshing">正在刷新…</string>
+    <string name="release_square">发布到广场(开发中)</string>
+    <string name="release_to_refresh">松开刷新</string>
+    <string name="remove_cache_text">清除缓存</string>
+    <string name="request_data_error">数据异常，请稍候重试</string>
+    <string name="resend_code_txt">重发验证码</string>
+    <string name="rlcx_title">存储卡容量查询</string>
+    <string name="set_ipc_item_hint_text">手机与极路客连接成功后自动同步精彩和紧急视频</string>
+    <string name="set_ipc_item_text">连接极路客后自动同步</string>
+    <string name="setting_msg_notify">消息通知设置</string>
+    <string name="setting_notify_comment">有人给我评论</string>
+    <string name="setting_notify_follow">有人关注我</string>
+    <string name="setting_notify_parise">有人给我点赞</string>
+    <string name="setting_tcaf_title">停车安防</string>
+    <string name="setting_title_text">设置</string>
+    <string name="setup_text">通用设置</string>
+    <string name="share_btn_text">分享</string>
+    <string name="share_filter">滤镜</string>
+    <string name="share_live_text">分享网络直播</string>
+    <string name="share_local_video_text">分享精彩视频</string>
+    <string name="share_myvideo_text">分享我的直播</string>
+    <string name="share_select_promotion">选择活动</string>
+    <string name="share_str_close">不公开</string>
+    <string name="share_str_join_int">快来参加活动，努力被小编选为精选，赢取活动奖励。</string>
+    <string name="share_str_join_promotion">更多活动</string>
+    <string name="share_str_no_location">定位中…</string>
+    <string name="share_str_open">公开(发布到广场)</string>
+    <string name="share_str_type_bg">曝光台</string>
+    <string name="share_str_type_ml">美丽风景</string>
+    <string name="share_str_type_sg">事故爆料</string>
+    <string name="share_str_type_ssp">随手拍</string>
+    <string name="share_text">分享</string>
+    <string name="share_title2">即刻分享</string>
+    <string name="share_type">类型</string>
+    <string name="share_video_upload_text">视频正在传输</string>
+    <string name="short_input_cancel">取消</string>
+    <string name="short_input_ok">完成</string>
+    <string name="sjsz">时间设置</string>
+    <string name="smssdk_error_desc_252">发送短信条数超过限制</string>
+    <string name="smssdk_error_desc_400">无效请求</string>
+    <string name="smssdk_error_desc_401">token为空</string>
+    <string name="smssdk_error_desc_402">token不存在</string>
+    <string name="smssdk_error_desc_403">CRC32为空</string>
+    <string name="smssdk_error_desc_404">CRC32非法</string>
+    <string name="smssdk_error_desc_405">AppKey为空</string>
+    <string name="smssdk_error_desc_406">AppKey错误</string>
+    <string name="smssdk_error_desc_407">缺少数据</string>
+    <string name="smssdk_error_desc_408">无效参数</string>
+    <string name="smssdk_error_desc_418">内部接口调用失败</string>
+    <string name="smssdk_error_desc_419">duid对应的token不存在</string>
+    <string name="smssdk_error_desc_450">权限不足</string>
+    <string name="smssdk_error_desc_451">User-Agent为空</string>
+    <string name="smssdk_error_desc_452">User-Agent格式错误</string>
+    <string name="smssdk_error_desc_453">解密错误</string>
+    <string name="smssdk_error_desc_454">数据格式错误</string>
+    <string name="smssdk_error_desc_455">签名无效</string>
+    <string name="smssdk_error_desc_456">手机号码为空</string>
+    <string name="smssdk_error_desc_457">手机号码格式错误</string>
+    <string name="smssdk_error_desc_458">手机号码在黑名单中</string>
+    <string name="smssdk_error_desc_459">无appKey的控制数据</string>
+    <string name="smssdk_error_desc_460">无权限发送短信</string>
+    <string name="smssdk_error_desc_461">不支持该地区发送短信</string>
+    <string name="smssdk_error_desc_462">每分钟发送次数超限</string>
+    <string name="smssdk_error_desc_463">手机号码每天发送次数超限</string>
+    <string name="smssdk_error_desc_464">每台手机每天发送次数超限</string>
+    <string name="smssdk_error_desc_465">号码在App中每天发送短信的次数超限</string>
+    <string name="smssdk_error_desc_466">校验的验证码为空</string>
+    <string name="smssdk_error_desc_467">校验验证码请求频繁</string>
+    <string name="smssdk_error_desc_468">需要校验的验证码错误</string>
+    <string name="smssdk_error_desc_469">未开启web发送短信</string>
+    <string name="smssdk_error_desc_470">账号余额不足</string>
+    <string name="smssdk_error_desc_471">请求IP错误</string>
+    <string name="smssdk_error_desc_472">客户端请求发送短信验证过于频繁</string>
+    <string name="smssdk_error_desc_473">服务端根据duid获取平台错误 </string>
+    <string name="smssdk_error_desc_474">没有打开服务端验证开关</string>
+    <string name="smssdk_error_desc_475">appKey的应用信息不存在</string>
+    <string name="smssdk_error_desc_476">当前appkey发送短信的数量超过限额</string>
+    <string name="smssdk_error_desc_477">当前手机号发送短信的数量超过当天限额</string>
+    <string name="smssdk_error_desc_478">当前手机号在当前应用内发送超过限额</string>
+    <string name="smssdk_error_desc_500">服务器内部错误</string>
+    <string name="smssdk_error_desc_600">API使用受限制</string>
+    <string name="smssdk_error_desc_601">短信发送受限</string>
+    <string name="smssdk_error_desc_602">无法发送此地区短信</string>
+    <string name="smssdk_error_desc_603">请填写正确的手机号码</string>
+    <string name="smssdk_error_desc_604">当前服务暂不支持此国家，请选择其它国家</string>
+    <string name="smssdk_error_desc_server_busy">服务器繁忙</string>
+    <string name="smssdk_error_detail_400">客户端请求不能被识别。</string>
+    <string name="smssdk_error_detail_401">请求的token为空。</string>
+    <string name="smssdk_error_detail_402">请求的token不存在。</string>
+    <string name="smssdk_error_detail_403">请求Header中的hash为空。</string>
+    <string name="smssdk_error_detail_404">请求Header中的hash非法。</string>
+    <string name="smssdk_error_detail_405">请求的AppKey为空。</string>
+    <string name="smssdk_error_detail_406">请求的AppKey不存在。</string>
+    <string name="smssdk_error_detail_407">请求提交的数据缺少必要的数据。</string>
+    <string name="smssdk_error_detail_408">无效的请求参数。</string>
+    <string name="smssdk_error_detail_418">内部接口调用失败。</string>
+    <string name="smssdk_error_detail_419">appKey_token对应的duid不存在</string>
+    <string name="smssdk_error_detail_450">无权执行该操作。</string>
+    <string name="smssdk_error_detail_451">所有访问服务器的接口，在请求的头部必须加入指定格式的User-Agent。</string>
+    <string name="smssdk_error_detail_452">请求头中的User-Agent格式错误。</string>
+    <string name="smssdk_error_detail_453">解密请求数据错误。</string>
+    <string name="smssdk_error_detail_454">请求传递的数据格式错误，服务器无法转换为JSON格式的数据。</string>
+    <string name="smssdk_error_detail_455">签名检验。</string>
+    <string name="smssdk_error_detail_456">提交的手机号码或者区号为空。</string>
+    <string name="smssdk_error_detail_457">提交的手机号格式不正确（包括手机的区号）。</string>
+    <string name="smssdk_error_detail_458">手机号码在发送黑名单中。</string>
+    <string name="smssdk_error_detail_459">获取appKey控制发送短信的数据失败。</string>
+    <string name="smssdk_error_detail_460">没有打开客户端发送短信的开关。</string>
+    <string name="smssdk_error_detail_461">没有开通给当前地区发送短信的功能。</string>
+    <string name="smssdk_error_detail_462">每分钟发送短信的数量超过限制。</string>
+    <string name="smssdk_error_detail_463">手机号码每天发送短信的次数超出限制。</string>
+    <string name="smssdk_error_detail_464">每台手机每天发送短信的次数超限。</string>
+    <string name="smssdk_error_detail_465">手机号码在APP中每天发送短信的数量超限。</string>
+    <string name="smssdk_error_detail_466">提交的校验验证码为空。</string>
+    <string name="smssdk_error_detail_467">验证失败3次，验证码失效，请重新请求</string>
+    <string name="smssdk_error_detail_468">用户提交校验的验证码错误。</string>
+    <string name="smssdk_error_detail_469">没有打开通过网页端发送短信的开关。</string>
+    <string name="smssdk_error_detail_470">账户的短信余额不足。</string>
+    <string name="smssdk_error_detail_471">通过服务端发送或验证短信的IP错误</string>
+    <string name="smssdk_error_detail_472">服务端根据duid获取平台错误。</string>
+    <string name="smssdk_error_detail_473">服务端根据duid获取平台错误 </string>
+    <string name="smssdk_error_detail_474">没有打开服务端验证开关</string>
+    <string name="smssdk_error_detail_475">appKey的应用信息不存在</string>
+    <string name="smssdk_error_detail_476">如果当前appkey对应的包名没有通过审核，每天次appkey+包名最多可以发送20条短信</string>
+    <string name="smssdk_error_detail_477">当前手机号码每天最多可发送短信10条，包括客户端发送和WebApi发送</string>
+    <string name="smssdk_error_detail_478">当前手机号码在当前应用下12小时内最多可发送文本验证码5条</string>
+    <string name="smssdk_error_detail_500">服务端程序报错。</string>
+    <string name="smssdk_error_detail_600">API使用受限制</string>
+    <string name="smssdk_error_detail_601">短信发送受限</string>
+    <string name="smssdk_error_detail_602">无法发送此地区短信</string>
+    <string name="smssdk_error_detail_603">请填写正确的手机号码</string>
+    <string name="smssdk_error_detail_604">当前服务暂不支持此国家，请选择其它国家</string>
+    <string name="spzl_title">循环视频质量</string>
+    <string name="square_title_text">视频广场</string>
+    <string name="str_activity_rule">活动规则</string>
+    <string name="str_adas_adjust_camera_angle">摄像头角度标定</string>
+    <string name="str_adas_assistance_info">辅助信息显示（OSD叠加）</string>
+    <string name="str_adas_car_name">爱车名称</string>
+    <string name="str_adas_config">前向距离安全预警配置</string>
+    <string name="str_adas_custom_car">自定义车型</string>
+    <string name="str_adas_dialog_confirm">去配置</string>
+    <string name="str_adas_driving_safety_assistance">前向距离安全预警</string>
+    <string name="str_adas_edittext_front_limit">50~350</string>
+    <string name="str_adas_edittext_headway_limit">50~400</string>
+    <string name="str_adas_edittext_height_limit">70~400</string>
+    <string name="str_adas_edittext_left_limit">50~300</string>
+    <string name="str_adas_forward_car_close_warning">前向车距过近提示</string>
+    <string name="str_adas_forward_car_setup_hint">前向车辆启动提示</string>
+    <string name="str_adas_forward_warning_sensibility">前向距离报警灵敏度</string>
+    <string name="str_adas_front_wheelbase">前轴距（A）</string>
+    <string name="str_adas_guide">配置向导</string>
+    <string name="str_adas_guide_des">极路客Smart GO辅助驾驶系统，可以为您提供先进的前向距离安全预警提示。</string>
+    <string name="str_adas_guide_des1">请您将爱车行驶到车辆较少的车道中央</string>
+    <string name="str_adas_guide_des2">停车后，根据配置引导提示，完成初次使用配置</string>
+    <string name="str_adas_guide_des3">为了更好的预警判断：</string>
+    <string name="str_adas_headway_distance">车头距（B）</string>
+    <string name="str_adas_height_distance">高度（C）</string>
+    <string name="str_adas_high_sensibility">高灵敏度</string>
+    <string name="str_adas_hint">您还没有配置前向距离安全预警，是否现在去配置？</string>
+    <string name="str_adas_left_wheelbase">左轮（D）</string>
+    <string name="str_adas_length_unit">cm</string>
+    <string name="str_adas_loding">正在为您配置前向距离安全预警引擎，请稍候</string>
+    <string name="str_adas_low_sensibility">低灵敏度</string>
+    <string name="str_adas_middle_sensibility">中灵敏度</string>
+    <string name="str_adas_paramter_error">为了准确地向您提供驾驶安全辅助信息，请输入正确的位置参数哦</string>
+    <string name="str_adas_right_wheelbase">右轮（E）</string>
+    <string name="str_adas_road_offset_sensibility">道路偏移报警灵敏度</string>
+    <string name="str_adas_select_car">请选择您的车型</string>
+    <string name="str_adas_select_car_type">车型选择</string>
+    <string name="str_adas_verification_des">请参考下图，将上方的十字移动至道路尽头的中央</string>
+    <string name="str_adas_verify_confirm">您已将影像中的十字置于如图所示的位置了吗？</string>
+    <string name="str_adas_verify_not">还没有</string>
+    <string name="str_adas_verify_ok">是的</string>
+    <string name="str_add_v_txt">认证信息: </string>
+    <string name="str_album">相册</string>
+    <string name="str_album_no_connect">点击此处连接极路客</string>
+    <string name="str_album_video_1080">1080p</string>
+    <string name="str_album_video_480">480p</string>
+    <string name="str_album_video_720">720p</string>
+    <string name="str_all_countries_title">所有国家地区</string>
+    <string name="str_already_bind">已绑定</string>
+    <string name="str_anonymous_comments">匿名评论</string>
+    <string name="str_app_download">马上下载</string>
+    <string name="str_app_update_prompt">APP升级提示</string>
+    <string name="str_apply_withdraw">申请提现</string>
+    <string name="str_asycned">已同步</string>
+    <string name="str_atreason_default">理由：活动参与积极奖～</string>
+    <string name="str_authorization_fail">授权失败: </string>
+    <string name="str_authorization_success">授权成功</string>
+    <string name="str_authorize_cancel">取消登录</string>
+    <string name="str_authorize_fail">登录失败</string>
+    <string name="str_auto_connect_client_connected">自动连接--客户端已经连接</string>
+    <string name="str_auto_connect_connected">自动连接--当前已经连接</string>
+    <string name="str_auto_connect_fail">自动连接失败</string>
+    <string name="str_auto_connect_have_active_wifi">自动连接--当前有活动wifi</string>
+    <string name="str_auto_connect_success">自动连接成功</string>
+    <string name="str_auto_connect_timeout">自动连接超时</string>
+    <string name="str_auto_create_wifi_fail">自动创建热点失败</string>
+    <string name="str_bind_fail">绑定失败</string>
+    <string name="str_binding_phone">绑定手机号</string>
+    <string name="str_black_and_white">黑白经典</string>
+    <string name="str_bracket_left">（</string>
+    <string name="str_bracket_rigth">）</string>
+    <string name="str_bubble_image_download_fail">气泡图片下载失败</string>
+    <string name="str_button_ok">确定</string>
+    <string name="str_buy_dropline">立即购买极路客专用降压线</string>
+    <string name="str_camera_text">相机</string>
+    <string name="str_cancel_follow_fail">取消关注失败</string>
+    <string name="str_cancel_praise_failed">取消点赞失败</string>
+    <string name="str_cannot_get_light">无法获取亮度</string>
+    <string name="str_carrecoder_auto">自动同步手机时间</string>
+    <string name="str_carrecoder_auto_gpstime">自动同步 GPS 时间</string>
+    <string name="str_carrecoder_no_login">IPC断开连接</string>
+    <string name="str_carrecoder_setting_failed">设置失败</string>
+    <string name="str_carrecoder_setting_kit_title">遥控器按键功能</string>
+    <string name="str_carrecoder_setting_photo_title">图片质量</string>
+    <string name="str_carrecorder_connect_text">正在连接极路客…</string>
+    <string name="str_carrecorder_storage_all">SD卡总容量</string>
+    <string name="str_carrecorder_storage_cycle">循环视频可用</string>
+    <string name="str_carrecorder_storage_emergency">紧急视频可用</string>
+    <string name="str_carrecorder_storage_format_sdcard">格式化SD卡</string>
+    <string name="str_carrecorder_storage_format_sdcard_dialog_message">是否格式化SD卡？</string>
+    <string name="str_carrecorder_storage_format_sdcard_dialog_no">否</string>
+    <string name="str_carrecorder_storage_format_sdcard_dialog_yes">是</string>
+    <string name="str_carrecorder_storage_format_sdcard_fail">SD卡格式化失败</string>
+    <string name="str_carrecorder_storage_format_sdcard_formating">正在格式化SD卡，可能需要1~2分钟，请稍候...</string>
+    <string name="str_carrecorder_storage_format_sdcard_hint_text">清除SD卡中所有内容。</string>
+    <string name="str_carrecorder_storage_format_sdcard_success">SD卡格式化成功</string>
+    <string name="str_carrecorder_storage_hint_text">温馨提示：\n请使用正规品牌Class 10及以上规格的存储卡，
+	    存储卡质量问题会导致无法正常录像。</string>
+    <string name="str_carrecorder_storage_size_hint_text">每种类型的视频都有独立的空间大小分配。当剩余空间不足时会自动	循环覆盖掉早期的视频影像。</string>
+    <string name="str_carrecorder_storage_size_other">其它可用</string>
+    <string name="str_carrecorder_storage_size_other_hint_text">极路客正常运行中所产生的临时文件。</string>
+    <string name="str_carrecorder_storage_use">已用空间</string>
+    <string name="str_carrecorder_storage_wonderful">精彩视频可用</string>
+    <string name="str_change_wifi_information">修改wifi热点信息</string>
+    <string name="str_check_network">请检查网络连接</string>
+    <string name="str_choose_head">选择头像</string>
+    <string name="str_choose_in_album">从相册中选择</string>
+    <string name="str_choose_one_head">请选择一个头像</string>
+    <string name="str_circle_of_friends">朋友圈</string>
+    <string name="str_classical_film">古典胶片</string>
+    <string name="str_click_to_login">点击登录</string>
+    <string name="str_cluster_newest">活动刚刚上线\n就等您来上传呦~</string>
+    <string name="str_cluster_wonderful">还没有优质视频推荐\n就等您来上传呦~</string>
+    <string name="str_colon">：</string>
+    <string name="str_colon_english">:</string>
+    <string name="str_colorful_dream">缤纷梦幻</string>
+    <string name="str_colorful_summer">多彩夏日</string>
+    <string name="str_comma">,</string>
+    <string name="str_comment_fail">评论失败!</string>
+    <string name="str_comment_input_hit">写评论</string>
+    <string name="str_comment_no_input">该评论已关闭</string>
+    <string name="str_comment_ongoing">正在提交评论</string>
+    <string name="str_comment_send">发送</string>
+    <string name="str_comment_title">评论</string>
+    <string name="str_comment_unit">条</string>
+    <string name="str_config_complete">配置完成</string>
+    <string name="str_confirm_cancel_follow">确定要取消关注吗？</string>
+    <string name="str_confirm_clear_cache">确定清除缓存？</string>
+    <string name="str_confirm_loginout">是否确定退出？</string>
+    <string name="str_confirm_report">确定举报这个视频吗？</string>
+    <string name="str_connect_goluk">已连接Goluk</string>
+    <string name="str_connect_goluk_ongoing">正在连接Goluk...</string>
+    <string name="str_connect_wifi_fail">连接wifi失败,请重试</string>
+    <string name="str_content_out">内容长度超出限制</string>
+    <string name="str_create_wifi_fail">创建热点失败</string>
+    <string name="str_create_wifiap_client_to_join">创建wifiap有客户端加入</string>
+    <string name="str_creating_wifi_ap_success">创建wifiap成功</string>
+    <string name="str_custom">自定义</string>
+    <string name="str_cycle_video_text">循环视频</string>
+    <string name="str_date_formatter">MM月dd日 HH时mm分ss秒</string>
+    <string name="str_day">日</string>
+    <string name="str_day_refresh">%1$s天前更新</string>
+    <string name="str_delete_fail">删除失败</string>
+    <string name="str_delete_locate">删除定位</string>
+    <string name="str_delete_ongoing">正在删除</string>
+    <string name="str_delete_ongoing_with_omit">正在删除...</string>
+    <string name="str_delete_success">删除成功</string>
+    <string name="str_delete_video_fail">删除视频失败</string>
+    <string name="str_delete_video_message">删除后相关的获赞、评论数据将被清除。是否还要删除？</string>
+    <string name="str_delete_video_title">删除视频</string>
+    <string name="str_describe_video">描述下这个视频吧...</string>
+    <string name="str_disconnect_goluk">未连接Goluk</string>
+    <string name="str_disconnect_ipc">未连接到极路客</string>
+    <string name="str_discover">极社</string>
+    <string name="str_double_click_to_exit_app">再按一次退出程序</string>
+    <string name="str_download">立即下载</string>
+    <string name="str_edittext_format">1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="str_emergency_video_text">紧急视频</string>
+    <string name="str_enable">启用</string>
+    <string name="str_facebook">Facebook</string>
+    <string name="str_facebook_no_install">未安装Facebook</string>
+    <string name="str_fans">粉丝</string>
+    <string name="str_file_format_error">文件格式不正确</string>
+    <string name="str_floor_text">%1$s楼</string>
+    <string name="str_follow">关注</string>
+    <string name="str_follow_all">全部关注</string>
+    <string name="str_follow_fail">关注失败</string>
+    <string name="str_follow_list_title">我的关注</string>
+    <string name="str_follow_no_content">什么内容也没有</string>
+    <string name="str_follow_official_microblogging">关注官方微博</string>
+    <string name="str_follow_recommend_star">推荐达人</string>
+    <string name="str_followed_login_to_view_tip">登录后才能查看自己关注的内容哟~</string>
+    <string name="str_followed_now_login">现在去登录</string>
+    <string name="str_format_present_sdcard">格式化当前SD卡</string>
+    <string name="str_frame15">15帧</string>
+    <string name="str_frame18">18帧</string>
+    <string name="str_frame24">24帧</string>
+    <string name="str_fresh_and_elegant">清新淡雅</string>
+    <string name="str_frist_refresh_begen_txt">今日精选有 </string>
+    <string name="str_frist_refresh_end_txt"> 条新视频</string>
+    <string name="str_get_gateway_fail">热点获取网关失败</string>
+    <string name="str_get_gateway_success">热点获取网关成功</string>
+    <string name="str_get_gateway_timeout">热点获取网关超时</string>
+    <string name="str_get_share_address_fail">获取视频分享地址失败</string>
+    <string name="str_get_share_links">获取分享连接...</string>
+    <string name="str_getwificfg_fail">获取失败</string>
+    <string name="str_global_cancel_success">视频同步已被取消</string>
+    <string name="str_global_dialog_msg">请确认是否需要中止本次同步任务?</string>
+    <string name="str_global_dialog_right_btn">中止</string>
+    <string name="str_global_dialog_title">提示</string>
+    <string name="str_goluk">极路客</string>
+    <string name="str_goluk_wonderful_video">goluk精彩视频</string>
+    <string name="str_guide_2_text">一键预览 轻松完成碰瓷取证\n随时抢拍 做不文明驾驶陋习的曝光台</string>
+    <string name="str_guide_2_top_text">行车记录</string>
+    <string name="str_guide_3_text">这些沿途的风光 奇异的境遇 珍贵的瞬间\n多么渴望与人分享</string>
+    <string name="str_guide_3_top_text">精彩分享</string>
+    <string name="str_guide_4_text">透过散落在世界的极路客\n去发现路上那些叹为观止的美</string>
+    <string name="str_guide_5_text">24小时全天候车辆监控\n极路客做你爱车的守卫星</string>
+    <string name="str_guide_exprience">立即体验</string>
+    <string name="str_guide_have_goluk_text">我有极路客</string>
+    <string name="str_guide_look_text">随便看看</string>
+    <string name="str_high">高</string>
+    <string name="str_high1080">1080P高质量</string>
+    <string name="str_high720">720P高质量</string>
+    <string name="str_his_homepage">Ta的主页</string>
+    <string name="str_hour">时</string>
+    <string name="str_hours_refresh">%1$s小时前更新</string>
+    <string name="str_identify_loading">验证码获取中…</string>
+    <string name="str_input_comment_content">请输入评论内容</string>
+    <string name="str_input_recommend_reason">请填写推荐理由</string>
+    <string name="str_inquiry_fail">查询失败!</string>
+    <string name="str_instagram">Instagram</string>
+    <string name="str_instagram_no_install">未安装Instagram</string>
+    <string name="str_ipc_change_bind_news">绑定新设备</string>
+    <string name="str_ipc_change_others">切换其他设备</string>
+    <string name="str_ipc_dialog_normal">请检查摄像头是否正常连接</string>
+    <string name="str_ipc_disconnect">摄像头断开，正在为您重连…</string>
+    <string name="str_ipc_no_connect">您好像没有连接摄像头哦。</string>
+    <string name="str_ipc_no_connect_str">未连接记录仪</string>
+    <string name="str_ipc_number_text">设备编号：</string>
+    <string name="str_ipc_to_bind">去绑定</string>
+    <string name="str_ipc_unmatch">当前固件不支持此项设置，请升级固件后再试</string>
+    <string name="str_ipc_update_check_fail">校验不通过</string>
+    <string name="str_ipc_update_checking">检测中，请稍候…</string>
+    <string name="str_ipc_update_disconnect">摄像头断开连接，请检查后重试</string>
+    <string name="str_ipc_update_download_file">下载新极路客固件程序</string>
+    <string name="str_ipc_update_download_file_fail">很抱歉，新极路客固件下载失败，请检查网络后重试。</string>
+    <string name="str_ipc_update_downloading">下载中</string>
+    <string name="str_ipc_update_downloading_ellipsis">下载中…</string>
+    <string name="str_ipc_update_downloading_omit">正在下载…</string>
+    <string name="str_ipc_update_downloading_zero">下载中…0%</string>
+    <string name="str_ipc_update_fail">很抱歉，升级失败。请您重试。</string>
+    <string name="str_ipc_update_first_period">开始升级，过程可能需要几分钟，\n请不要关闭摄像头电源…\n升级1阶段：</string>
+    <string name="str_ipc_update_first_period_disconnect">很抱歉，升级失败，请先不要关闭摄像头电源，等待摄像头重新启动后再试。</string>
+    <string name="str_ipc_update_install">安装此极路客固件程序</string>
+    <string name="str_ipc_update_install_ok">已安装</string>
+    <string name="str_ipc_update_percent_unit">%</string>
+    <string name="str_ipc_update_prompt">固件升级提示</string>
+    <string name="str_ipc_update_second_period">开始升级，过程可能需要几分钟，\n请不要关闭摄像头电源…\n升级2阶段：</string>
+    <string name="str_ipc_update_second_period_disconnect">很抱歉，摄像头连接异常中断，但它可能仍在升级中。请先不要关闭摄像头电源，等待摄像头升级成功。</string>
+    <string name="str_ipc_update_success">恭喜您，极路客固件升级成功，正在重新启动，请稍候…</string>
+    <string name="str_ipc_update_success_t1">设备升级成功</string>
+    <string name="str_ipc_update_transfer_file_success">文件传输成功，正在为您准备升级</string>
+    <string name="str_ipc_update_transfer_file_t1">正在传输固件安装包到极路客…</string>
+    <string name="str_ipc_update_undownload">未下载</string>
+    <string name="str_ipc_version_text">固件版本：</string>
+    <string name="str_jx_other_day">-精选视频-</string>
+    <string name="str_jx_today">-今日精选-</string>
+    <string name="str_let_sharevideo">大家一起来分享视频吧</string>
+    <string name="str_line">Line</string>
+    <string name="str_line_no_install">未安装Line</string>
+    <string name="str_link_my_profit">查看我的收益</string>
+    <string name="str_live_cannot_get_coordinates">无法获取看直播人的经纬度</string>
+    <string name="str_live_cannot_get_location">无法获取我的位置信息</string>
+    <string name="str_live_continue">是否继续直播</string>
+    <string name="str_live_create">正在创建直播，请稍候...</string>
+    <string name="str_live_default_describe">#极路客直播#</string>
+    <string name="str_live_exit_prompt">您当前正在直播中，是否退出直播？</string>
+    <string name="str_live_exit_prompt2">是否退出观看直播？</string>
+    <string name="str_live_net_error">网络异常，直播结束</string>
+    <string name="str_live_ok_praise_unit">个赞</string>
+    <string name="str_live_over">直播已经结束</string>
+    <string name="str_live_over2">该用户直播己结束，谢谢观看</string>
+    <string name="str_live_retry_live">正在恢复直播，请稍候...</string>
+    <string name="str_live_retry_upload_msg">直播断开，正在为您重新连接...</string>
+    <string name="str_live_settings">直播设置</string>
+    <string name="str_live_someone"> 的直播</string>
+    <string name="str_live_start_progress_msg">正在创建直播，请稍候...</string>
+    <string name="str_live_switch">直播开关</string>
+    <string name="str_live_time_end">时光匆匆，直播结束，再见</string>
+    <string name="str_live_upload_first_error">很抱歉，直播创建不成功，再试一次吧。</string>
+    <string name="str_load_below_txt">正在加载...</string>
+    <string name="str_load_data_ongoing">数据加载中，请稍候再试</string>
+    <string name="str_loading_text">加载中，请稍候...</string>
+    <string name="str_local_title">本地</string>
+    <string name="str_localization_ongoing">定位中</string>
+    <string name="str_localization_ongoing_default">正在定位中</string>
+    <string name="str_login_tosee_usercenter">登录查看个人主页</string>
+    <string name="str_loginning">登录中，请稍候…</string>
+    <string name="str_loginout_fail">注销失败</string>
+    <string name="str_loginout_success">注销成功</string>
+    <string name="str_loginouting">正在注销…</string>
+    <string name="str_loop_title">循环</string>
+    <string name="str_low">低</string>
+    <string name="str_main_page_mine">我的</string>
+    <string name="str_make_live">发起直播</string>
+    <string name="str_md5_test">This is a 3DES test. 测试</string>
+    <string name="str_message_center_comment_reply">评论/回复</string>
+    <string name="str_message_center_official">官方通知</string>
+    <string name="str_message_center_system">系统消息</string>
+    <string name="str_middle">中</string>
+    <string name="str_middle1080">1080P中等质量</string>
+    <string name="str_middle720">720P中等质量</string>
+    <string name="str_mine">我的</string>
+    <string name="str_mine_no_video_text">您还没有分享过精彩视频</string>
+    <string name="str_mine_ta_video_text">Ta 还没有分享过精彩视频</string>
+    <string name="str_minute">分</string>
+    <string name="str_minute_refresh">%1$s分钟前更新</string>
+    <string name="str_month">月</string>
+    <string name="str_month_day_refresh">MM.dd更新</string>
+    <string name="str_more_refresh_begen_txt">又发现了 </string>
+    <string name="str_msg_center_no_comment">暂无评论/回复</string>
+    <string name="str_msg_center_no_praise">还没有收到过赞</string>
+    <string name="str_msg_push_login">请登录后查看消息</string>
+    <string name="str_msgcenter_comment_replyme">我</string>
+    <string name="str_msgcenter_comment_replytext">回复</string>
+    <string name="str_msgcenter_comment_title">评论/回复</string>
+    <string name="str_my_praised_list">我赞过的</string>
+    <string name="str_mylive_text">我的直播</string>
+    <string name="str_network_connect_outtime">网络连接超时，请检查网络</string>
+    <string name="str_network_error">网络异常，请稍候重试</string>
+    <string name="str_network_failed_to_load">网络加载失败，请点击重试。</string>
+    <string name="str_network_unavailable">网络不给力</string>
+    <string name="str_network_unusual">网络异常，请稍后重试</string>
+    <string name="str_new">new</string>
+    <string name="str_new_updatefile_loading">新极路客固件升级文件正在下载…</string>
+    <string name="str_newest_check_all_comments_postfix">条评论</string>
+    <string name="str_newest_check_all_comments_prefix">查看所有</string>
+    <string name="str_newest_text">最新</string>
+    <string name="str_no_browser_found">手机没有浏览器？</string>
+    <string name="str_no_cache">没有缓存数据</string>
+    <string name="str_no_connect_ipc">附近没有可连接的ipc</string>
+    <string name="str_no_duplicated_praise">已经赞过了，请不要重复点赞</string>
+    <string name="str_no_enable">不启用</string>
+    <string name="str_no_nearby_wifi_connection">附近没有可连接的wifi</string>
+    <string name="str_no_space">剩余空间不足</string>
+    <string name="str_no_text">无</string>
+    <string name="str_no_weixin">你未安装微信</string>
+    <string name="str_not_bind">未绑定</string>
+    <string name="str_omit">...</string>
+    <string name="str_opinion_thanks">感谢</string>
+    <string name="str_or">或</string>
+    <string name="str_other_reason_text">其他原因</string>
+    <string name="str_others">说点其他的</string>
+    <string name="str_parameter_error">参数错误</string>
+    <string name="str_participation_population">参与 %1$s 人次</string>
+    <string name="str_phote_delete_ok">确认</string>
+    <string name="str_photo_check_ipc_state">请检查摄像头连接状态</string>
+    <string name="str_photo_delete_confirm">确认删除此视频？</string>
+    <string name="str_photo_delete_ok">删除视频成功</string>
+    <string name="str_photo_deletepromote">是否删除 %1$s 个视频？</string>
+    <string name="str_photo_downing">视频正在下载，无法删除</string>
+    <string name="str_photo_select">已选择 %1$s 个视频</string>
+    <string name="str_play_error">播放错误</string>
+    <string name="str_play_video_error">视频出错，请重试！</string>
+    <string name="str_play_video_network_error">网络访问异常，请重试！</string>
+    <string name="str_please_bind_phone_first">提现需要绑定手机号，请先前往通用设置中绑定手机号</string>
+    <string name="str_please_login">请先登录</string>
+    <string name="str_praise_failed">点赞失败</string>
+    <string name="str_praise_him">赞Ta的人</string>
+    <string name="str_praise_text">赞我的人</string>
+    <string name="str_praised_list_connect_error">网络不给力，轻触屏幕重试</string>
+    <string name="str_praised_list_request_no_data">暂无点赞记录</string>
+    <string name="str_profit_cash_text">提现</string>
+    <string name="str_profit_detail_text">明细</string>
+    <string name="str_profit_detail_unit">Ｇ币</string>
+    <string name="str_profit_nodata">暂时无数据</string>
+    <string name="str_profit_unit">个Ｇ币</string>
+    <string name="str_pull_refresh_listview_bottom_reach">已经拉到底咯</string>
+    <string name="str_pull_to_refresh_pull_label">下拉刷新</string>
+    <string name="str_pull_to_refresh_refreshing_label">正在刷新…</string>
+    <string name="str_pull_to_refresh_release_label">松开刷新</string>
+    <string name="str_pwd_limit">设置密码（6-16位数字或英文）</string>
+    <string name="str_qq_friends">QQ好友</string>
+    <string name="str_qq_low_version">你未安装QQ或版本太低</string>
+    <string name="str_quality_high">高质量</string>
+    <string name="str_quality_low">低质量</string>
+    <string name="str_quality_middle">中质量</string>
+    <string name="str_qzone">QQ空间</string>
+    <string name="str_re_locate">重新定位</string>
+    <string name="str_re_upload">重新开始上传</string>
+    <string name="str_reboot_ipc_later">以后在说</string>
+    <string name="str_reboot_ipc_now">现在重启</string>
+    <string name="str_recommend">推荐</string>
+    <string name="str_recommend_fail">推荐失败</string>
+    <string name="str_recomment_success">推荐成功</string>
+    <string name="str_recorder_time1">00:</string>
+    <string name="str_recorder_time2">00:0</string>
+    <string name="str_refresh_one_minute">一分钟前更新</string>
+    <string name="str_regist_loading">注册中，请稍候…</string>
+    <string name="str_reload_video_failure">重加载视频失败，</string>
+    <string name="str_renren">人人网</string>
+    <string name="str_reply">回复</string>
+    <string name="str_reply_other_text">回复＠</string>
+    <string name="str_report_fail">举报失败!</string>
+    <string name="str_report_success">举报成功，我们稍后会进行处理</string>
+    <string name="str_report_text">举报</string>
+    <string name="str_repwd_loading">重置中，请稍候…</string>
+    <string name="str_request_config_ongoing">正在请求配置...</string>
+    <string name="str_request_error">请求异常，请检查网络是否正常</string>
+    <string name="str_request_fail">请求失败</string>
+    <string name="str_request_share_address">正在请求分享地址</string>
+    <string name="str_reset_message">是否确认恢复Goluk出厂设置</string>
+    <string name="str_reset_pwd_title">找回密码</string>
+    <string name="str_restore_fail">恢复出厂设置失败</string>
+    <string name="str_restore_success">恢复出厂设置成功</string>
+    <string name="str_retro_nostalgia">复古怀旧</string>
+    <string name="str_reward_text">获奖</string>
+    <string name="str_ring">铃声</string>
+    <string name="str_save_comment_fail">评论保存失败。</string>
+    <string name="str_save_fail">保存失败</string>
+    <string name="str_save_head_ongoing">正在保存头像,请稍候!</string>
+    <string name="str_save_network_error">网络异常,保存失败</string>
+    <string name="str_save_photo">保存头像</string>
+    <string name="str_save_photo_fail">头像保存失败，请重试</string>
+    <string name="str_save_photo_success">图片保存成功</string>
+    <string name="str_save_success">保存成功</string>
+    <string name="str_save_video_fail">保存视频失败，</string>
+    <string name="str_save_wifi_config_fail">保存wifi配置失败</string>
+    <string name="str_save_wifi_config_success">保存wifi配置成功</string>
+    <string name="str_search">搜索</string>
+    <string name="str_search_hint">搜索用户(昵称/认证说明)</string>
+    <string name="str_search_keywards_cannot_be_empty">关键词不能为空</string>
+    <string name="str_search_no_more_result">没有更多的搜索结果</string>
+    <string name="str_search_no_result">暂无相关结果</string>
+    <string name="str_search_recommend_user">推荐用户</string>
+    <string name="str_search_supported_words">搜索词仅支持汉字、英文字母、数字</string>
+    <string name="str_seconds">秒</string>
+    <string name="str_select_country_cancle">取消</string>
+    <string name="str_select_country_title">国家/地区</string>
+    <string name="str_send_message">正在发送短信到+86</string>
+    <string name="str_sending">发送中</string>
+    <string name="str_server_request_arg_error">服务器请求参数错误</string>
+    <string name="str_server_request_no_data">暂无官方通知</string>
+    <string name="str_server_request_unknown_error">服务器请求未知异常</string>
+    <string name="str_set_error">用户设置出错</string>
+    <string name="str_set_ok">设置成功</string>
+    <string name="str_set_wifi_name">设置wifi名称：</string>
+    <string name="str_set_wifi_pwd">设置wifi密码：</string>
+    <string name="str_settings_fatigue_title">疲劳驾驶语音提示</string>
+    <string name="str_settings_handset_title">遥控器按键功能</string>
+    <string name="str_settings_image_flip_title">图像自动翻转</string>
+    <string name="str_settings_kgjtsy_title">开关机提示音</string>
+    <string name="str_settings_language_title">语言设置</string>
+    <string name="str_settings_parking_sleep_title">停车休眠模式</string>
+    <string name="str_settings_photographic_quality_title">照片质量</string>
+    <string name="str_settings_restart_ipc">修改成功，重启记录仪后生效。</string>
+    <string name="str_settings_security_hint_text_g1">启动此项后，极路客将自动判断车辆当前的状态：当车辆处于行驶状态，
+        则极路客会根据自动循环录像的开关状态进行工作；当车辆处于停车状态，则极路客会触发1秒1拍，同时会打开异常振动
+        （触发前8秒+后8秒视频）与移动侦测（触发前8秒+后8秒视频）功能。</string>
+    <string name="str_settings_security_hint_text_g2">此项启动后,当车辆处于停车状态,极路客会停止循环视频的录制,但同时会打开振动侦
+	测(触发前 8 秒+后 8 秒视频)与移动侦测(触发前 8 秒+后 8 秒视频)功能。</string>
+    <string name="str_settings_security_title">停车安防模式</string>
+    <string name="str_settings_shutdown_title">关机时间</string>
+    <string name="str_settings_sleep_hint_text_g1">此项开启后，当检测到车辆静止时间超过 20 分钟以上，且未开启停车安防功能，则自动进
+	入超低功耗的停车休眠模式，以便保护您的电瓶不会亏电。如果您的车在停车熄火后，点烟器仍可正常供电，则强烈建议开启此项。</string>
+    <string name="str_settings_sleep_hint_text_t1">此项开启后，当检测到车辆静止时间超过 10 分钟以上，且未开启停车安防功能，则自动进入
+        超低功耗的停车休眠模式，以便保护您的电瓶不会亏电。如果您的车在停车熄火后，点烟器仍可正常供电，则强烈建议开启此项。</string>
+    <string name="str_settings_tone_title">提示音音量大小</string>
+    <string name="str_settings_video_logo_title">视频水印显示</string>
+    <string name="str_settings_video_type1">精彩抓拍 ( 6+6 )</string>
+    <string name="str_settings_video_type2">经典模式</string>
+    <string name="str_settings_wonderful_video_type_hint_text">精彩抓拍（6+6）：按下遥控器（KIT）按键，触发录制前6秒+后6秒的12秒
+        精彩视频片段。\n经典模式：按下遥控器（KIT）按键，触发录制一段30秒精彩视频。</string>
+    <string name="str_setup_autophoto_title">自动同步照片到手机相册</string>
+    <string name="str_share_board_real_desc">极路客精彩视频(使用#极路客Goluk#拍摄)</string>
+    <string name="str_share_describe">#极路客精彩视频#</string>
+    <string name="str_share_fail">分享失败</string>
+    <string name="str_share_success">分享成功</string>
+    <string name="str_share_title">极路客精彩视频分享</string>
+    <string name="str_share_to">分享到</string>
+    <string name="str_share_to_sw">分享到...</string>
+    <string name="str_share_ttl">#极路客精彩视频#</string>
+    <string name="str_sharevideo_text">分享视频</string>
+    <string name="str_sharing">正在分享...</string>
+    <string name="str_shortshare_other">说点其它的！</string>
+    <string name="str_sign_limit">请输入50个字符以内的有效个性签名</string>
+    <string name="str_slash">/</string>
+    <string name="str_smart_driving">Smart Go 智能驾驶安全辅助系统</string>
+    <string name="str_sofa_text">沙发等您来坐</string>
+    <string name="str_soft_quiet">柔和静谧</string>
+    <string name="str_special_default_title">精选专题</string>
+    <string name="str_sqds_text">色情低俗</string>
+    <string name="str_start_album_fail">打开相册失败</string>
+    <string name="str_start_camera_fail">启动相机失败</string>
+    <string name="str_submit">提交</string>
+    <string name="str_surround_watch">围观</string>
+    <string name="str_synchronous_video_to_local">视频已同步到本地</string>
+    <string name="str_system_head">系统头像</string>
+    <string name="str_tell">确定拨打该电话号码？</string>
+    <string name="str_tencent_weibo">腾讯微博</string>
+    <string name="str_tfcard_text">安装新固件前，请确认设备已插好存储卡</string>
+    <string name="str_thank_to_author">感谢作者</string>
+    <string name="str_third_share_fail">第三方分享失败</string>
+    <string name="str_timeout">网络连接超时，请检查后重试</string>
+    <string name="str_title_message_center">消息中心</string>
+    <string name="str_title_message_setting">消息设置</string>
+    <string name="str_today">今天</string>
+    <string name="str_try_again">重试</string>
+    <string name="str_twitter">Twitter</string>
+    <string name="str_twitter_no_install">未安装Twitter</string>
+    <string name="str_um_share_dialog_txt">分享…</string>
+    <string name="str_umeng_hint">说点什么吧。。。</string>
+    <string name="str_unknow_street">未知街道</string>
+    <string name="str_update">马上升级</string>
+    <string name="str_update_app_newest">当前已是最新版本</string>
+    <string name="str_update_file_not_exist">没有找到升级文件。</string>
+    <string name="str_update_find_new_first">发现新极路客固件版本</string>
+    <string name="str_update_find_new_second">，为了正常升级新固件，请先下载最新的APP后再试。</string>
+    <string name="str_update_ipc_ununited">您好像没有连接摄像头哦。</string>
+    <string name="str_update_later">稍后再说</string>
+    <string name="str_update_not_match">当前手机客户端版本与极路客固件版本不匹配，请您升级后再试。正在为您检查更新。</string>
+    <string name="str_update_prepare_file">正在为您准备升级，请稍候……</string>
+    <string name="str_update_prompt">升级提示</string>
+    <string name="str_updated"> </string>
+    <string name="str_upgrade_check_sdcard_t1">很抱歉，升级文件传输失败，请检查是否插入存储卡。</string>
+    <string name="str_upload_fail">上传失败</string>
+    <string name="str_uploading_videos_is_interrupted">正在上传视频，是否中断？</string>
+    <string name="str_urgent_title">紧急</string>
+    <string name="str_url_loading">页面加载中</string>
+    <string name="str_use_an_exit_account_to_post_comments">使用已有账号发表评论</string>
+    <string name="str_user_goluk">(使用#极路客Goluk#拍摄)</string>
+    <string name="str_user_name_limit">请输入10个字符以内的有效昵称</string>
+    <string name="str_user_name_warn">数据修改失败，昵称不能为空</string>
+    <string name="str_user_video_type_headline_text">入选头条</string>
+    <string name="str_user_video_type_recommend_text">被活动推荐</string>
+    <string name="str_user_video_type_wonderful_text">精选作品</string>
+    <string name="str_usercenter_attention_cancle_ok">取消关注成功</string>
+    <string name="str_usercenter_attention_ok">关注成功</string>
+    <string name="str_usercenter_comment">评论</string>
+    <string name="str_usercenter_header_attention_already_text">已关注</string>
+    <string name="str_usercenter_header_attention_each_other_text">相互关注</string>
+    <string name="str_usercenter_header_attention_text">关注</string>
+    <string name="str_usercenter_header_edit_text">编辑资料</string>
+    <string name="str_usercenter_header_fans_text">粉丝</string>
+    <string name="str_usercenter_headlines_video">当前还没有入选头条的视频</string>
+    <string name="str_usercenter_login_hint_text">请登录后再操作</string>
+    <string name="str_usercenter_more_share">分享主页</string>
+    <string name="str_usercenter_no_introduce_text">暂无介绍</string>
+    <string name="str_usercenter_nowonderful_video">当前还没有精选视频</string>
+    <string name="str_usercenter_praise">赞</string>
+    <string name="str_usercenter_recommend_video">当前还没有被推荐的视频</string>
+    <string name="str_usercenter_share">分享</string>
+    <string name="str_usercenter_share_realdesc">极路客个人主页分享(使用#极路客Goluk#拍摄)</string>
+    <string name="str_version_text">极路客版本</string>
+    <string name="str_video_close_hint">您刚刚取消了公开视频</string>
+    <string name="str_video_defaul">Vedio 默认文案</string>
+    <string name="str_video_edit_share_title">极路客精彩视频</string>
+    <string name="str_video_error">播放器出现错误：</string>
+    <string name="str_video_error_info">,info: </string>
+    <string name="str_video_filter_online_soon">视频滤镜功能即将上线，敬请期待</string>
+    <string name="str_video_generation">视频生成中</string>
+    <string name="str_video_loading">视频加载中，请稍候...</string>
+    <string name="str_video_not_exist">视频不存在</string>
+    <string name="str_video_open_hint">参加活动后只能选择公开</string>
+    <string name="str_video_play_error">视频播放出错,errorNo: </string>
+    <string name="str_video_removed">视频已被删除</string>
+    <string name="str_video_sync_setting_sync_close">关闭</string>
+    <string name="str_video_sync_setting_sync_five">同步最近录制的5条</string>
+    <string name="str_video_sync_setting_sync_twenty">同步最近录制的20条</string>
+    <string name="str_video_sync_setting_title">视频自动同步设置</string>
+    <string name="str_video_transfer_cancle">视频传输取消</string>
+    <string name="str_video_transfer_fail">视频传输失败</string>
+    <string name="str_video_transfer_ongoing">正在从Goluk中传输视频到手机</string>
+    <string name="str_video_transfer_success">视频传输完成</string>
+    <string name="str_video_uploading">视频上传中</string>
+    <string name="str_videodetail_text">视频详情</string>
+    <string name="str_vote_now">立即投票</string>
+    <string name="str_vote_share_real_description">极路客投票分享(使用#极路客Goluk#拍摄)</string>
+    <string name="str_vote_share_title">极路客投票分享</string>
+    <string name="str_wait">请稍候…</string>
+    <string name="str_watercress">豆瓣</string>
+    <string name="str_weibo">微博</string>
+    <string name="str_weixin_friends">微信好友</string>
+    <string name="str_weixin_login">微信登录</string>
+    <string name="str_weixin_no_install">你未安装微信</string>
+    <string name="str_whatsapp">Whatsapp</string>
+    <string name="str_whatsapp_no_install">未安装Whatsapp</string>
+    <string name="str_wifi_change_fail">修改密码失败</string>
+    <string name="str_wifi_change_success">修改密码成功</string>
+    <string name="str_wifi_connect_success">wifi连接成功</string>
+    <string name="str_wifi_connect_timeout">连接wifi超时</string>
+    <string name="str_wifi_connection_does_not_match">连接wifi不匹配</string>
+    <string name="str_wifi_create_success">wifi热点创建成功</string>
+    <string name="str_wifi_hotspot_fail">调用设置IPC连接热点失败</string>
+    <string name="str_wifi_pwd_hint_text">WiFi密码</string>
+    <string name="str_wifi_pwd_limit">极路客密码必须为8-15个字符</string>
+    <string name="str_wifi_pwd_title">极路客WiFi密码</string>
+    <string name="str_wifi_scanning_success">wifi扫描成功</string>
+    <string name="str_wifi_scanning_timeout">扫描wifi列表超时</string>
+    <string name="str_wonderful_live">极路客精彩直播</string>
+    <string name="str_wonderful_qiangpai">精彩抢拍</string>
+    <string name="str_wonderful_share">Goluk精彩分享</string>
+    <string name="str_wonderful_text">精选</string>
+    <string name="str_wonderful_title">精彩</string>
+    <string name="str_wonderful_video_quality_title">精彩视频质量</string>
+    <string name="str_wonderful_video_type_title">精彩视频类型</string>
+    <string name="str_wonderfulvideo">精彩视频</string>
+    <string name="str_wonderfulvideo_and_photo">精彩视频+照片</string>
+    <string name="str_year">年</string>
+    <string name="str_year_month_day_refresh">yyyy.MM.dd更新</string>
+    <string name="str_yestoday">昨天</string>
+    <string name="str_yyhz_text">谣言惑众</string>
+    <string name="str_zero_gb_text">0GB</string>
+    <string name="str_zero_mb_text">0MB</string>
+    <string name="str_zzmg_text">政治敏感</string>
+    <string name="sylz_title">声音录制</string>
+    <string name="test_code_icon_txt">输入验证码</string>
+    <string name="test_code_icon_txt_number">输入以下手机号收到的验证码</string>
+    <string name="title_activity_local_video_list">LocalVideoListActivity</string>
+    <string name="um_share_cancel">取消分享</string>
+    <string name="umeng_example_home_btn_plus">社交分享</string>
+    <string name="umeng_socialize_back">返回</string>
+    <string name="umeng_socialize_cancel_btn_str">取消</string>
+    <string name="umeng_socialize_comment">评论</string>
+    <string name="umeng_socialize_comment_detail">评论详情</string>
+    <string name="umeng_socialize_content_hint">说点啥…</string>
+    <string name="umeng_socialize_friends">关注的好友</string>
+    <string name="umeng_socialize_img_des"/>
+    <string name="umeng_socialize_login">登录</string>
+    <string name="umeng_socialize_login_qq">QQ空间</string>
+    <string name="umeng_socialize_msg_hor">小时前</string>
+    <string name="umeng_socialize_msg_min">分钟前</string>
+    <string name="umeng_socialize_msg_sec">秒前</string>
+    <string name="umeng_socialize_near_At">最近\@的好友</string>
+    <string name="umeng_socialize_network_break_alert">请连接网络后再尝试！</string>
+    <string name="umeng_socialize_send">发布</string>
+    <string name="umeng_socialize_send_btn_str">发送</string>
+    <string name="umeng_socialize_share">分享</string>
+    <string name="umeng_socialize_share_content">友盟社会化组件（SDK）让移动应用快速整合社交分享功能，我们简化了社交平台的接入，为开发者提供坚实的基础服务。（一）支持各大主流社交平台， 
+												（二）支持图片、文字、gif动图、音频、视频；@好友，关注官方微博等功能。
+												（三）提供详尽的后台用户社交行为分析。www.umeng.com/social</string>
+    <string name="umeng_socialize_text_add_custom_platform">请配置用户平台</string>
+    <string name="umeng_socialize_text_authorize">授权</string>
+    <string name="umeng_socialize_text_choose_account">选择已有帐号登录</string>
+    <string name="umeng_socialize_text_comment_hint">说点什么吧…</string>
+    <string name="umeng_socialize_text_douban_key">豆瓣网</string>
+    <string name="umeng_socialize_text_friend_list">好友列表</string>
+    <string name="umeng_socialize_text_line_key">Line</string>
+    <string name="umeng_socialize_text_loading_message">载入中,请稍候...</string>
+    <string name="umeng_socialize_text_login_fail">登录失败了，请重试</string>
+    <string name="umeng_socialize_text_qq_key">QQ</string>
+    <string name="umeng_socialize_text_qq_zone_key">QQ空间</string>
+    <string name="umeng_socialize_text_renren_key">人人网</string>
+    <string name="umeng_socialize_text_sina_key">微博</string>
+    <string name="umeng_socialize_text_tencent_key">腾讯微博</string>
+    <string name="umeng_socialize_text_tencent_no_connection">无法连接到腾讯微博客户端</string>
+    <string name="umeng_socialize_text_tencent_no_install">未安装腾讯微博客户端</string>
+    <string name="umeng_socialize_text_tencent_oauth_login_fail">授权登录失败</string>
+    <string name="umeng_socialize_text_tencent_version_no_match">版本不匹配，SSO只对微博客户端V3.8.1及以上的版本提供支持</string>
+    <string name="umeng_socialize_text_ucenter">个人中心</string>
+    <string name="umeng_socialize_text_unauthorize">未授权</string>
+    <string name="umeng_socialize_text_visitor">游客</string>
+    <string name="umeng_socialize_text_waitting">请稍候...</string>
+    <string name="umeng_socialize_text_waitting_message">,请稍候...</string>
+    <string name="umeng_socialize_text_waitting_qq">跳转QQ中，请稍候...</string>
+    <string name="umeng_socialize_text_waitting_qzone">跳转QZone中，请稍候...</string>
+    <string name="umeng_socialize_text_waitting_redirect">跳转</string>
+    <string name="umeng_socialize_text_waitting_share">分享中…</string>
+    <string name="umeng_socialize_text_waitting_weixin">跳转微信中，请稍候...</string>
+    <string name="umeng_socialize_text_waitting_weixin_circle">跳转朋友圈中，请稍候...</string>
+    <string name="umeng_socialize_text_waitting_yixin">跳转易信中，请稍候...</string>
+    <string name="umeng_socialize_text_waitting_yixin_circle">跳转易信朋友圈中，请稍候...</string>
+    <string name="umeng_socialize_text_weixin_circle_key">微信朋友圈</string>
+    <string name="umeng_socialize_text_weixin_key">微信</string>
+    <string name="umeng_socialize_text_whatsapp_key">Whatsapp</string>
+    <string name="umeng_socialize_tip_blacklist">对不起，因为违反了用户协议您已被禁言.</string>
+    <string name="umeng_socialize_tip_loginfailed">登录失败…</string>
+    <string name="umeng_socialize_ucenter_login_title_guide">游客登录</string>
+    <string name="umeng_socialize_ucenter_login_title_platform">登录帐号</string>
+    <string name="unbind_add_mobile_btn">添加新设备</string>
+    <string name="unbind_camera">名称</string>
+    <string name="unbind_camera_change_wifi_pwd_hint">当手机与极路客成功连接可修改密码</string>
+    <string name="unbind_camera_update_text">极路客固件升级</string>
+    <string name="unbind_camera_wifi_hint_text">极路客WIFI信息</string>
+    <string name="unbind_del_confirm_dialog_txt">确认删除此设备信息？</string>
+    <string name="unbind_hint_message">确定要解除设备绑定？（再次连接前将不再能配置设备信息）</string>
+    <string name="unbind_loading_dialog_txt">正在为您切换设备</string>
+    <string name="unbind_loading_dialog_txt2">正在为您连接设备</string>
+    <string name="unbind_nodata_add_txt">请添加</string>
+    <string name="unbind_nodata_txt">您还没有连接任何设备</string>
+    <string name="unbind_select_connect_ing">连接中</string>
+    <string name="unbind_select_connect_no">未连接</string>
+    <string name="unbind_select_connect_yes">已连接</string>
+    <string name="unbind_select_history_txt">历史记录</string>
+    <string name="unbind_select_title_txt">选择设备</string>
+    <string name="unbind_select_type_g1">Goluk G1</string>
+    <string name="unbind_select_type_g1s">Goluk T1S</string>
+    <string name="unbind_select_type_g2">Goluk G2</string>
+    <string name="unbind_select_type_t1">Goluk T1</string>
+    <string name="unbind_select_type_title">选择您的极路客进行配对</string>
+    <string name="unbind_text">摄像头管理</string>
+    <string name="update_no_connect_ipc_hint">固件升级需要您的手机先与摄像头连接。连接成功后进入 我的>摄像头管理>极路客固件升级页面，按照提示内容进行升级即可。</string>
+    <string name="updating">最近更新：</string>
+    <string name="user_already_regist">此手机号已经被注册</string>
+    <string name="user_background_error">服务端程序异常</string>
+    <string name="user_cancle">取消</string>
+    <string name="user_dialog_hint_title">提示</string>
+    <string name="user_getidentify_fail">验证码获取失败</string>
+    <string name="user_getidentify_limit">该手机号1小时内下发4次以上验证码</string>
+    <string name="user_getidentify_success">验证码发送成功，请注意查收</string>
+    <string name="user_identify_btn_afresh">重新获取</string>
+    <string name="user_identify_code">输入6位验证码</string>
+    <string name="user_identify_count">重新发送</string>
+    <string name="user_identify_format">验证码格式输入不正确</string>
+    <string name="user_identify_outtime">输入验证码超时</string>
+    <string name="user_identify_right_hint">请输入正确的验证码</string>
+    <string name="user_immediately_ok">立即登录</string>
+    <string name="user_immediately_regist">马上注册</string>
+    <string name="user_insert_add_number">输入手机号</string>
+    <string name="user_insert_btn_txt">注册</string>
+    <string name="user_insert_butoom_msg">注册表示您同意了我们的用户  &amp;</string>
+    <string name="user_insert_butoom_msg_agian">隐私政策。</string>
+    <string name="user_insert_msg">还没有账号</string>
+    <string name="user_insert_pwd_hint">输入密码（6-16位）</string>
+    <string name="user_insert_sign_in">我有账号？</string>
+    <string name="user_login_forgetpwd">找回密码</string>
+    <string name="user_login_password_hint">请填写密码，6-16位字符</string>
+    <string name="user_login_password_limit_top_hint">登录密码出错已经达到 5 次上限，账户被锁定 2 小时，请重置密码后登录</string>
+    <string name="user_login_password_show_error">密码格式输入不正确，请输入 6-16 位数字、字母,字母区分大小写</string>
+    <string name="user_login_phone">手机快速注册</string>
+    <string name="user_login_phone_hint">输入手机号码</string>
+    <string name="user_login_phone_show_error">手机号格式错误，请重新输入</string>
+    <string name="user_login_success">登录成功</string>
+    <string name="user_login_title_text">登录</string>
+    <string name="user_net_unavailable">当前网络不可用，请检查网络后重试</string>
+    <string name="user_netword_outtime">网络连接超时</string>
+    <string name="user_no_getidentify">请输入验证码</string>
+    <string name="user_no_regist">此手机号码还未被注册</string>
+    <string name="user_opinion_type_anzhuang">安装相关</string>
+    <string name="user_opinion_type_cancle">取消</string>
+    <string name="user_opinion_type_qita">其他</string>
+    <string name="user_opinion_type_select">选择意见类型</string>
+    <string name="user_opinion_type_shouji">手机客户端</string>
+    <string name="user_opinion_type_tuxiang">图像效果</string>
+    <string name="user_opinion_type_yingjiang">硬件相关</string>
+    <string name="user_password_error">密码错误，请重试</string>
+    <string name="user_personal_autoloading_progress">正在为您登录，请稍候……</string>
+    <string name="user_personal_edit_head">头像</string>
+    <string name="user_personal_edit_info">编辑个人资料</string>
+    <string name="user_personal_edit_name">昵称</string>
+    <string name="user_personal_edit_sign">个性签名</string>
+    <string name="user_personal_edit_weibo">新浪微博</string>
+    <string name="user_personal_home_nologin_name">未登录</string>
+    <string name="user_personal_home_share">分享</string>
+    <string name="user_personal_home_title">我的主页</string>
+    <string name="user_personal_info_title">编辑</string>
+    <string name="user_personal_introduce_self">介绍一下自己吧</string>
+    <string name="user_personal_modify_head">修改头像</string>
+    <string name="user_personal_name_edit">编辑昵称</string>
+    <string name="user_personal_save_failed">保存失败，请重试</string>
+    <string name="user_personal_saving">正在保存</string>
+    <string name="user_personal_setup_update">Goluk固件升级</string>
+    <string name="user_personal_sign_edit">编辑签名</string>
+    <string name="user_personal_sign_title">确认</string>
+    <string name="user_personal_title_right">保存</string>
+    <string name="user_phone_input_error">输入手机号异常</string>
+    <string name="user_regist">注册</string>
+    <string name="user_regist_below_hint">请放心，我们不会将您的手机号码用于其他用途</string>
+    <string name="user_regist_btn">下一步</string>
+    <string name="user_regist_fail">注册失败</string>
+    <string name="user_regist_phone_hint">输入手机号码（暂时只支持中国大陆地区）</string>
+    <string name="user_regist_success">注册成功</string>
+    <string name="user_repwd_fail">重置密码失败</string>
+    <string name="user_repwd_identify">获取验证码</string>
+    <string name="user_repwd_ok">确定</string>
+    <string name="user_repwd_success">重置密码成功</string>
+    <string name="user_repwd_title_text">重设密码</string>
+    <string name="user_send_identify_fail">验证码发送失败，请重新发送</string>
+    <string name="user_sign_in">登录</string>
+    <string name="user_timer_count_hint">未够60秒，不能发起请求</string>
+    <string name="version_app_update_text">版本检测</string>
+    <string name="version_bottom_company">北京智趣车联科技有限公司  版权所有</string>
+    <string name="version_bottom_copyright">Copyright@2016 Goluk.All Rights Reserved</string>
+    <string name="version_opinion_text">意见反馈</string>
+    <string name="version_welcome_text">欢迎页</string>
+    <string name="video_detail_head_active_title">此视频获得了活动奖励</string>
+    <string name="video_detail_head_recom_title">此视频已入选推荐视频</string>
+    <string name="video_detail_head_sys_title">此视频获得了系统奖励</string>
+    <string name="video_export_text">视频生成中0%</string>
+    <string name="video_live_5s_tip">稍候片刻,即将进入直播</string>
+    <string name="video_live_desc_text">Young Wanderers Club(Travel Typography)</string>
+    <string name="video_more">我的</string>
+    <string name="video_music_complete_text">完成</string>
+    <string name="video_play_comment_send">发送</string>
+    <string name="video_play_comment_text">写评论</string>
+    <string name="video_share_desc_title">添加描述</string>
+    <string name="video_square">视频广场</string>
+    <string name="video_square_text">直播列表</string>
+    <string name="videolist_edit">编辑</string>
+    <string name="videolist_jcsp">精彩视频</string>
+    <string name="voice_switch">直播声音</string>
+    <string name="voice_type">视频类型</string>
+    <string name="watch_live_text">轻触继续观看</string>
+    <string name="whatsapp_content">有道云笔记只支持文本，图片</string>
+    <string name="whatsapp_no_client">未安装有WhatsApp客户端</string>
+    <string name="whatsapp_no_content">请设置分享内容</string>
+    <string name="whatsapp_showword">WhatsApp</string>
+    <string name="wifi_link_17_2_text">点击下方的 \"去连接\"，在手机设置中连接</string>
+    <string name="wifi_link_17_text">确认WiFi指示灯闪烁</string>
+    <string name="wifi_link_19_text">跳过</string>
+    <string name="wifi_link_1_text">第一次使用</string>
+    <string name="wifi_link_20_text">2.修改Goluk WiFi热点信息</string>
+    <string name="wifi_link_21_text">WiFi名称</string>
+    <string name="wifi_link_22_text">goluk123456</string>
+    <string name="wifi_link_26_text">恭喜</string>
+    <string name="wifi_link_27_text">你的Goluk已成功连接到手机</string>
+    <string name="wifi_link_28_text">开始使用</string>
+    <string name="wifi_link_29_text">Goluk WiFi</string>
+    <string name="wifi_link_2_text">您第一次使用Goluk需要确认您的WiFi是否是开启状态,并设置WiFi连接.</string>
+    <string name="wifi_link_30_text">正常使用中,手机客户端启动后将自动建立WiFi热点,极路客自行连接其热点。在手机客户内可以享受极路客提供的视频预览、精彩分享、网络直播等体验。</string>
+    <string name="wifi_link_31_text">正在为你配置极路客Wifi</string>
+    <string name="wifi_link_32_text">等待极路客连接到手机</string>
+    <string name="wifi_link_33_text">连接出现问题怎么办</string>
+    <string name="wifi_link_34_text">极路客视频安装帮助</string>
+    <string name="wifi_link_35_text">重置你的极路客WiFi热点密码</string>
+    <string name="wifi_link_36_text">名称为GolukXXXX的WiFi</string>
+    <string name="wifi_link_37_text">已成功连接 Goluk3213</string>
+    <string name="wifi_link_38_text">连接中...</string>
+    <string name="wifi_link_7_text">选择WIFI</string>
+    <string name="wifi_link_8_text">选取WIFI</string>
+    <string name="wifi_link_9_text">GP24702115</string>
+    <string name="wifi_link_bind_failed">绑定失败</string>
+    <string name="wifi_link_bind_failed_retry">绑定失败, 重新连接</string>
+    <string name="wifi_link_blackout">请先将极路客断电5~10秒，然后上电重新启动，点确认按钮，等待极路客连接到手机</string>
+    <string name="wifi_link_complete_config">配置</string>
+    <string name="wifi_link_complete_conn">连接</string>
+    <string name="wifi_link_complete_foryou">正在为你</string>
+    <string name="wifi_link_complete_golukwifi">极路客Wifi</string>
+    <string name="wifi_link_complete_mobile">到手机...</string>
+    <string name="wifi_link_complete_sucess_conn">成功连接 </string>
+    <string name="wifi_link_complete_wait">等待极路客</string>
+    <string name="wifi_link_complete_your_goluk">你的极路客</string>
+    <string name="wifi_link_conn_failed">连接失败</string>
+    <string name="wifi_link_go_system">去连接</string>
+    <string name="wifi_link_goluk_bind_failed">极路客绑定失败，请您重试</string>
+    <string name="wifi_link_next">下一步</string>
+    <string name="wifi_link_ok">确认</string>
+    <string name="wifi_link_prompt">提示</string>
+    <string name="wifi_link_success_conn">已成功连接</string>
+    <string name="wifi_link_text">未连接</string>
+    <string name="wifi_link_twinkle">闪烁</string>
+    <string name="wifi_link_wifi_light">WiFi指示灯</string>
+    <string name="wifi_link_wifi_name">名称为</string>
+    <string name="wifi_link_wifi_name2">的WiFi</string>
+    <string name="wifi_name_text">WiFi Name</string>
+    <string name="wifi_pwd_digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
+    <string name="wifibind_defaultpassword">123456789</string>
+    <string name="zdxhlx_title">自动循环录像</string>
+    <string name="zero">0</string>
+</resources>

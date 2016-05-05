@@ -1,0 +1,26 @@
+[
+    {
+        "outputFile": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\res\\merged\\debug\\values-w820dp-v13\\values-w820dp-v13.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 57,
+                    "endOffset": 108
+                },
+                "from": {
+                    "file": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\exploded-aar\\android_studio\\guideMain\\unspecified\\res\\values-w820dp-v13\\values-w820dp-v13.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 4,
+                        "startOffset": 55,
+                        "endColumn": 57,
+                        "endOffset": 108
+                    }
+                }
+            }
+        ]
+    }
+]

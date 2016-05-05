@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- wifi链接完成 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   android:background="@color/color_ipcbind_bg" >
+
+    <!-- Title -->
+
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="62dp"
+        android:background="@color/color_ipcbind_bg" >
+
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/connect_back_btn_btn"
+            android:contentDescription="@string/imgdes" />
+
+        <ImageView
+            android:id="@+id/wifilink_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/setp_3"
+            android:contentDescription="@string/imgdes" />
+    </RelativeLayout>
+
+    <!-- 开始使用按钮 -->
+
+    <Button
+        android:id="@+id/complete_btn"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="34dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/ipcbind_btn_disable"
+        android:text="@string/wifi_link_28_text"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <!-- 中间的布局 -->
+
+    <FrameLayout
+        android:id="@+id/wifi_link_complete_frmelayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/complete_btn"
+        android:layout_below="@id/title_layout" >
+    </FrameLayout>
+
+</RelativeLayout>

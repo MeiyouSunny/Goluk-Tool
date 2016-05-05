@@ -1,0 +1,1323 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f7f9fa"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="@color/photoalbum_title_bg_color" >
+
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/live_btn_back"
+            android:contentDescription="@string/def" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:text="@string/setting_title_text"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <!-- 存储容量查询 -->
+
+            <RelativeLayout
+                android:id="@+id/rlcx_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/rlcx_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/mStorayeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/sc_right"
+                    android:gravity="center_vertical"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+                <ImageButton
+                    android:id="@+id/sc_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+
+            <!-- 视频质量栏目 -->
+
+            <RelativeLayout
+                android:id="@+id/mVideoDefinition"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/spzl_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/mVideoText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/vd_r"
+                    android:gravity="center_vertical"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+                <ImageButton
+                    android:id="@+id/vd_r"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+
+            <!-- HDR模式 -->
+
+            <RelativeLayout
+                android:id="@+id/hdr_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/hdr_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/hdr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+
+            <!-- 自动循环录像 -->
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/zdxhlx_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/zdxhlx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            
+            <!-- 精彩视频类型 -->
+
+            <RelativeLayout
+                android:id="@+id/ry_settings_wonderful_video_type"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_wonderful_video_type_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_settings_wonderfulvideo_type_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:drawablePadding="10dp"
+                    android:drawableRight="@drawable/icon_next_press"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+                
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            
+            <!-- 精彩视频质量 -->
+
+            <RelativeLayout
+                android:id="@+id/rl_carrecorder_settings_wonderfulvideo_quality"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_wonderful_video_quality_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_carrecorder_settings_wonderfulvideo_quality_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="15dp"
+                    android:drawablePadding="10dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:drawableRight="@drawable/icon_next_press"
+                    android:text="1080P"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+
+            <!-- 声音录制开关 -->
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/sylz_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/sylz"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            
+            <!-- 照片质量 -->
+
+            <RelativeLayout
+                android:id="@+id/photographic_quality_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/setting_white_color" 
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_photographic_quality_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_settings_photographic_quality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/imagebtn_settings_photographic_quality"
+                    android:gravity="center_vertical"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+                <ImageButton
+                    android:id="@+id/imagebtn_settings_photographic_quality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            
+            <!-- 自动同步照片到手机相册 -->
+
+            <RelativeLayout
+                android:id="@+id/ry_setup_autophoto"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:id="@+id/tv_setup_autophoto_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="14dp"
+                    android:text="@string/str_setup_autophoto_title"
+                    android:textColor="#3f3f3f"
+                    android:textSize="16sp" />
+
+                <ImageButton
+                    android:id="@+id/ib_setup_autophoto_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="14dp"
+                    android:background="@drawable/set_open_btn"
+                    android:contentDescription="@string/imgdes" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            
+            <!-- 提示音音量大小 -->
+
+            <RelativeLayout
+                android:id="@+id/rl_settings_tone_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_tone_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_settings_tone_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:drawableRight="@drawable/icon_next_press"
+                    android:gravity="center_vertical"
+                    android:drawablePadding="10dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+
+            <!-- 开关机提示音 -->
+
+            <RelativeLayout
+                android:id="@+id/kgjtsy_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_kgjtsy_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/kgjtsy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            
+            <!-- 精彩视频拍照提示音 -->
+
+            <RelativeLayout
+                android:id="@+id/jcsp_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/jcsp_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/jcsp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+                
+                <TextView
+                    android:id="@+id/tv_carrecorder_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color"
+                    android:visibility="gone" />
+            </RelativeLayout>
+			<!-- 图像自动翻转 -->
+
+            <RelativeLayout
+                android:id="@+id/image_flip_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_image_flip_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btn_settings_image_flip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            <TextView 
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+				android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:textColor="#999999"
+                android:textSize="12sp"
+                android:text="@string/str_smart_driving"/>
+            <!-- 疲劳驾驶语音提示 -->
+
+            <RelativeLayout
+                android:id="@+id/fatigue_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_fatigue_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btn_settings_fatigue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="15dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+
+            <!-- 碰撞感应灵敏度 -->
+
+            <RelativeLayout
+                android:id="@+id/pzgylmd_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/pzgy_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/mSensitivityText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/pzgy"
+                    android:gravity="center_vertical"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+                <ImageButton
+                    android:id="@+id/pzgy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+
+            <!-- 停车休眠模式 -->
+
+            <RelativeLayout
+                android:id="@+id/parking_sleep_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_parking_sleep_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btn_settings_parking_sleep"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            
+            <TextView
+                android:id="@+id/tv_settings_parking_sleep_hint_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp"
+                android:text="@string/str_settings_sleep_hint_text_g1"
+                android:textColor="#999999"
+                android:textSize="12sp" />
+
+            <!-- 停车安防开关 -->
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_security_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/tcaf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_settings_security_hint_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp"
+                android:text="@string/str_settings_security_hint_text_g1"
+                android:textColor="#999999"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:id="@+id/mBugLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="8dp"
+                android:contentDescription="@string/def"
+                android:gravity="center_vertical" >
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/my_shopping_car_icon"
+                    android:contentDescription="@string/def" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:contentDescription="@string/def"
+                    android:text="@string/str_buy_dropline"
+                    android:textColor="#047cf3"
+                    android:textSize="10sp" />
+            </LinearLayout>
+            <!-- ADAS 驾驶安全辅助-->
+            <RelativeLayout
+                android:id = "@+id/layout_adas_assistance"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" 
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_adas_driving_safety_assistance"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btn_adas_assistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            <!-- 向前距离报警灵敏度 -->
+            <!--RelativeLayout
+                android:id="@+id/layout_settings_adas_forward_sensibility"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
+
+               <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_adas_forward_warning_sensibility"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_settings_adas_forward_sensibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/imagebtn_settings_adas_forward_sensibility"
+                    android:gravity="center_vertical"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+                <ImageButton
+                    android:id="@+id/imagebtn_settings_adas_forward_sensibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout!-->
+            <!-- 道路偏移报警灵敏度 -->
+            <!--  RelativeLayout
+                android:id="@+id/layout_settings_adas_offset_sensibility"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" 
+                android:visibility="gone">
+
+               <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_adas_road_offset_sensibility"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_settings_adas_offset_sensibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/imagebtn_settings_adas_offset_sensibility"
+                    android:gravity="center_vertical"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+                <ImageButton
+                    android:id="@+id/imagebtn_settings_adas_offset_sensibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout!-->
+            <!-- 前向车距过近提示 -->
+            <RelativeLayout
+                android:id="@+id/layout_settings_forward_car_close_warning"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" 
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_adas_forward_car_close_warning"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btn_settings_forward_car_close_warning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            <!-- 前向车辆启动提示 -->
+            <RelativeLayout
+                android:id="@+id/layout_settings_forward_car_setup_hint"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" 
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_adas_forward_car_setup_hint"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btn_settings_forward_car_setup_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            <!-- 辅助信息显示 -->
+            <!--  RelativeLayout
+                android:id="@+id/layout_settings_assistance_info"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" 
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_adas_assistance_info"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btn_settings_assistance_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout-->
+            <!-- ADAS配置 -->
+            
+            <RelativeLayout
+                android:id="@+id/layout_settings_adas_config"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" 
+                android:visibility="gone">
+
+               <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_adas_config"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <!--TextView
+                    android:id="@+id/tv_settings_adas_config"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/imagebtn_settings_adas_config"
+                    android:gravity="center_vertical"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" /-->
+
+                <ImageButton
+                    android:id="@+id/imagebtn_settings_adas_config"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            <!-- 遥控器按键功能 -->
+
+            <RelativeLayout
+                android:id="@+id/handset_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/setting_white_color"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_handset_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_settings_handset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/imagebtn_settings_handset"
+                    android:gravity="center_vertical"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+                <ImageButton
+                    android:id="@+id/imagebtn_settings_handset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            
+            <!-- 关机时间 -->
+
+            <RelativeLayout
+                android:id="@+id/rl_settings_shutdown_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_shutdown_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_settings_shutdown_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:drawableRight="@drawable/icon_next_press"
+                    android:gravity="center_vertical"
+                    android:drawablePadding="10dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            
+            <!-- 语言设置 -->
+
+            <RelativeLayout
+                android:id="@+id/rl_settings_language_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_language_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_settings_language_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:drawableRight="@drawable/icon_next_press"
+                    android:gravity="center_vertical"
+                    android:drawablePadding="10dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+
+            <!-- 时间设置 -->
+
+            <RelativeLayout
+                android:id="@+id/sjsz_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/sjsz"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <ImageButton
+                    android:id="@+id/sjsz"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+                
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+
+            <!-- 版本信息 -->
+
+            <RelativeLayout
+                android:id="@+id/bbxx_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/bbxx"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+
+            <!-- 恢复出厂设置 -->
+
+            <RelativeLayout
+                android:id="@+id/hfccsz_line"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/hfcc"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <ImageButton
+                    android:id="@+id/hfcc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

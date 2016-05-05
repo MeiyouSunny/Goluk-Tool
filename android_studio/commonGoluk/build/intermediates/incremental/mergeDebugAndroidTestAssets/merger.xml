@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="unspecified"><source path="D:\golukcode3\goluk\goluk\src\android\android_studio\commonGoluk\build\intermediates\exploded-aar\android_studio\systemAPI\unspecified\assets"/></dataSet><dataSet config="debug"><source path="D:\golukcode3\goluk\goluk\src\android\android_studio\commonGoluk\build\intermediates\bundles\debug\assets"/></dataSet><dataSet config="main"><source path="D:\golukcode3\goluk\goluk\src\android\android_studio\commonGoluk\src\androidTest\assets"/></dataSet></merger>

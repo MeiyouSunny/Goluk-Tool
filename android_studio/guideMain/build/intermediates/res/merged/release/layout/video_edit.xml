@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 视频编辑 -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg_comm" >
+
+    <!-- 视频编辑title -->
+
+    <RelativeLayout
+        android:id="@+id/startshare_prompt"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_below="@id/title_layout" >
+
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/share_back_icon"
+            android:contentDescription="@string/imgdes" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/share_title2"
+            android:textColor="@color/share_title_color"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <!-- 视频播放 -->
+
+    <RelativeLayout
+        android:id="@+id/video_play_layout"
+        android:layout_width="match_parent"
+        android:layout_height="204dp"
+        android:layout_below="@id/startshare_prompt" >
+
+        <com.rd.car.editor.FilterPlaybackView
+            android:id="@+id/vvPlayVideo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ProgressBar
+            android:id="@+id/video_progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_alignParentBottom="true"
+            android:progressDrawable="@drawable/video_progress" />
+    </RelativeLayout>
+
+    <!-- 控制视频播放暂停 -->
+
+    <RelativeLayout
+        android:id="@+id/play_layout"
+        android:layout_width="match_parent"
+        android:layout_height="204dp"
+        android:layout_below="@id/startshare_prompt"
+        android:background="#00000000" >
+
+        <!-- 视频播放按钮 -->
+
+        <ImageView
+            android:id="@+id/play_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/video_play_btn"
+            android:contentDescription="@string/imgdes"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <!-- 显示第一帧图片 -->
+
+    <RelativeLayout
+        android:id="@+id/edit_play_img"
+        android:layout_width="match_parent"
+        android:layout_height="204dp"
+        android:layout_below="@id/startshare_prompt"
+        android:background="#00000000" >
+    </RelativeLayout>
+
+    <!-- 类型布局 -->
+
+    <include
+        android:id="@+id/shortshare_typelayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/video_play_layout"
+        android:layout_marginTop="14dp"
+        layout="@layout/shortshare_selecttype" />
+
+    <!-- 友盟分享布局 -->
+
+    <RelativeLayout
+        android:id="@+id/shortshare_youmeng_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+    <!-- 中间的操作区域 -->
+
+    <FrameLayout
+        android:id="@+id/shortshare_operateroot"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/shortshare_youmeng_layout"
+        android:layout_below="@id/shortshare_typelayout" >
+    </FrameLayout>
+
+</RelativeLayout>

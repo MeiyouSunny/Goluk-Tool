@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="42dp" >
+
+    <RelativeLayout
+        android:id="@+id/mFormat"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/carrecorder_line_press"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/str_format_present_sdcard"
+            android:textColor="#333333"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:id="@+id/rlcx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/carrecorder_setup_option_arrow"
+            android:contentDescription="@string/def" />
+    </RelativeLayout>
+    
+    <TextView
+        	android:paddingLeft="15dp"
+        	android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/str_carrecorder_storage_format_sdcard_hint_text"
+            android:textColor="#999999"
+            android:textSize="12sp" />
+
+</LinearLayout>

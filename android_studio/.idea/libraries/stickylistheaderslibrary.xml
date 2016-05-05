@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="stickylistheaderslibrary">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/guideMain/libs/stickylistheaderslibrary.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

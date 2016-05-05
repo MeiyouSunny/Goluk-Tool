@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f7f9fa"
+    android:orientation="vertical" >
+    
+    <ImageView 
+        android:id="@+id/close_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:src="@drawable/connect_close_icon"
+        android:contentDescription="@string/def"/>
+    
+    <TextView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#343434"
+        android:layout_marginTop="40dp"
+        android:textSize="16sp"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/unbind_select_type_title"/>
+    
+    <RelativeLayout 
+        android:id="@+id/goluk_t1_layout"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="#ffffff"
+        android:layout_marginTop="18dp">
+        
+        <ImageView 
+            android:id="@+id/goluk_t1_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/connect_t1_img" 
+            android:contentDescription="@string/def"/>
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#565656"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/goluk_t1_icon"
+            android:textSize="14sp"
+            android:layout_centerVertical="true"
+            android:text="@string/unbind_select_type_t1"/>
+        
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/connect_arrow_icon"
+            android:contentDescription="@string/def"/>
+    </RelativeLayout>
+    
+    <RelativeLayout 
+         android:id="@+id/goluk_t1s_layout"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="#ffffff"
+        android:layout_marginTop="1dp"
+        android:visibility="visible">
+        
+        <ImageView 
+            android:id="@+id/goluk_g1s_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/connect_t1s_img" 
+            android:contentDescription="@string/def"/>
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#565656"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/goluk_g1s_icon"
+            android:textSize="14sp"
+            android:layout_centerVertical="true"
+            android:text="@string/unbind_select_type_g1s"/>
+        
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/connect_arrow_icon"
+            android:contentDescription="@string/def"/>
+    </RelativeLayout>
+    
+    <RelativeLayout 
+        android:id="@+id/goluk_g2_layout"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="#ffffff"
+        android:layout_marginTop="1dp">
+        
+        <ImageView 
+            android:id="@+id/goluk_g2_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/connect_g2_img" 
+            android:contentDescription="@string/def"/>
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#565656"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/goluk_g2_icon"
+            android:textSize="14sp"
+            android:layout_centerVertical="true"
+            android:text="@string/unbind_select_type_g2"/>
+        
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/connect_arrow_icon"
+            android:contentDescription="@string/def"/>
+    </RelativeLayout>
+    
+    
+    <RelativeLayout 
+         android:id="@+id/goluk_g1_layout"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="#ffffff"
+        android:layout_marginTop="1dp">
+        
+        <ImageView 
+            android:id="@+id/goluk_g1_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/connect_g1_img" 
+            android:contentDescription="@string/def"/>
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#565656"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/goluk_g1_icon"
+            android:textSize="14sp"
+            android:layout_centerVertical="true"
+            android:text="@string/unbind_select_type_g1"/>
+        
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/connect_arrow_icon"
+            android:contentDescription="@string/def"/>
+    </RelativeLayout>
+    
+    
+
+
+</LinearLayout>

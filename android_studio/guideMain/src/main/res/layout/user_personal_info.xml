@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/user_login_bg"
+    android:orientation="vertical" >
+
+    <!-- 个人资料title -->
+
+    <include layout="@layout/user_personal_info_title" />
+
+    <!-- body -->
+
+    <View
+        android:id="@+id/user_personal_solid_1"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@drawable/solid"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/user_personal_info_head_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:paddingLeft="15dp" >
+
+        <!-- 视频缩略图片 -->
+
+        <ImageView
+            android:id="@+id/user_personal_info_head"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:contentDescription="@string/imgdes" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp" >
+
+            <TextView
+                android:id="@+id/user_personal_info_modify_head"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="@string/user_personal_modify_head"
+                android:textColor="@color/user_personal_black"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/user_personal_arrow1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/user_personal_info_modify_head"
+                android:src="@drawable/editor_arrow" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/user_personal_solid_2"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@drawable/solid"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/user_personal_solid_3"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/solid" />
+
+    <RelativeLayout
+        android:id="@+id/user_personal_info_name_layout"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/user_personal_edit_name"
+            android:textColor="@color/user_personal_color"
+            android:textSize="14sp" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" >
+
+            <TextView
+                android:id="@+id/user_personal_info_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:textColor="@color/user_personal_black"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/user_personal_arrow2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/user_personal_info_name"
+                android:src="@drawable/editor_arrow" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/user_personal_solid_4"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@drawable/solid" />
+
+    <LinearLayout
+        android:id="@+id/user_personal_info_sign_layout"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
+
+        <TextView
+            android:id="@+id/user_personal_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
+            android:text="@string/user_personal_edit_sign"
+            android:textColor="@color/user_personal_color"
+            android:textSize="14sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical" >
+
+            <TextView
+                android:id="@+id/user_personal_info_sign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@+id/user_personal_arrow3"
+                android:textColor="@color/user_personal_black"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/user_personal_arrow3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/editor_arrow" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/user_personal_solid_5"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@drawable/solid" />
+
+</LinearLayout>

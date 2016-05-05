@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F3F5F5"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/ry_usercenter_footer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="300dp" >
+
+        <TextView 
+            android:id="@+id/tv_usercenter_footer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawableTop="@drawable/mine_novideo"
+            android:textColor="#D9D9D9"
+            android:drawablePadding="10dp"
+            android:textSize="12sp" />
+        
+        <!-- <TextView 
+            android:id="@+id/tv_usercenter_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/mine_qitadifang"
+            android:drawablePadding="17dp"
+            android:textColor="#bfbfbf"
+            android:textSize="16sp"
+            android:text="@string/msg_system_connect_error"
+            android:layout_centerInParent="true"
+            android:visibility="gone" /> -->
+    </RelativeLayout>
+
+</LinearLayout>

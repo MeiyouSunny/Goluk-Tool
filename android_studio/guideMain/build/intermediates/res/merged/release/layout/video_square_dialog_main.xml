@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="200dp"
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"
+	android:background="#00000000"
+	android:orientation="vertical">
+    <Button 
+        android:id="@+id/report"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/video_square_title_btn"
+        android:textColor="#333333"
+        android:textSize="18sp"
+        android:text="@string/str_report_text"/>
+    <View 
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#b1b1b1"/>
+    <Button 
+        android:id="@+id/exit"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/video_square_exit_btn"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        android:text="@string/user_cancle"/>
+    
+</LinearLayout>

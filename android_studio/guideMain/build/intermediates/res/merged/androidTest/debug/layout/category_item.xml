@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    	<ImageView 
+    	    android:id="@+id/mImageView"
+    	    android:layout_width="match_parent"
+    	    android:layout_height="match_parent"
+    	    />
+	        
+	    <ImageView 
+	        android:id="@+id/mengban"
+            android:layout_alignTop="@+id/mImageView"
+			android:layout_alignLeft="@+id/mImageView"
+			android:layout_alignRight="@+id/mImageView"
+			android:layout_alignBottom="@+id/mImageView"
+            android:layout_width="match_parent"
+    		android:layout_height="match_parent"
+    		android:background="@drawable/wonderful_item_mb"
+            />
+    
+	<RelativeLayout 
+	    android:duplicateParentState="true"
+	        android:layout_width="match_parent"
+    		android:layout_height="match_parent" >
+        	    
+            <TextView
+	        android:id="@+id/mTitleName"
+	        android:text="@string/share_str_type_bg"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerInParent="true"
+	        android:gravity="center"
+	        android:duplicateParentState="true"
+	        android:textColor="@color/category_title_text_color"
+	        android:textSize="18sp" />
+            
+            <TextView
+	        android:id="@+id/mUpdateTime"
+	        android:text="@string/str_refresh_one_minute"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginRight="8dp"
+	        android:layout_marginBottom="8dp"
+	        android:layout_alignParentRight="true"
+	        android:layout_alignParentBottom="true"
+	        android:gravity="center"
+	        android:textColor="@color/category_update_text_color"
+	        android:duplicateParentState="true"
+	        android:textSize="12sp" />
+            
+        </RelativeLayout>
+</RelativeLayout>

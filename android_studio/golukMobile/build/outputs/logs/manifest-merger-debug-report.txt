@@ -1,0 +1,1264 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:2:1-682:12
+	xmlns:android
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:2:11-69
+	package
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:3:5-41
+		INJECTED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml
+		INJECTED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml
+	android:versionName
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:5:5-37
+		INJECTED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml
+		INJECTED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml
+	android:versionCode
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:4:5-30
+		INJECTED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml
+		INJECTED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml
+uses-sdk
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:7:5-44
+MERGED from [android_studio:guideMain:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\AndroidManifest.xml:5:5-7:41
+MERGED from [android_studio:emojicon:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\emojicon\unspecified\AndroidManifest.xml:6:5-60
+MERGED from [android_studio:commonGoluk:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\commonGoluk\unspecified\AndroidManifest.xml:7:5-9:41
+MERGED from [android_studio:systemAPI:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\systemAPI\unspecified\AndroidManifest.xml:7:5-9:41
+MERGED from [android_studio:initActivity:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\initActivity\unspecified\AndroidManifest.xml:7:5-9:40
+	android:targetSdkVersion
+		INJECTED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml
+		INJECTED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:7:15-41
+		INJECTED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml
+		MERGED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:7:15-41
+		INJECTED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml
+	tools:overrideLibrary
+		ADDED from [android_studio:emojicon:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\emojicon\unspecified\AndroidManifest.xml:6:15-57
+application
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:9:5-609:19
+MERGED from [android_studio:guideMain:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\guideMain\unspecified\AndroidManifest.xml:9:5-14:19
+MERGED from [android_studio:emojicon:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\emojicon\unspecified\AndroidManifest.xml:8:5-9:19
+MERGED from [android_studio:commonGoluk:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\commonGoluk\unspecified\AndroidManifest.xml:11:5-12:19
+MERGED from [android_studio:systemAPI:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\systemAPI\unspecified\AndroidManifest.xml:11:5-12:19
+MERGED from [android_studio:initActivity:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\initActivity\unspecified\AndroidManifest.xml:15:5-22:19
+	android:label
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:14:9-41
+	android:allowBackup
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:11:9-35
+	android:icon
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:13:9-45
+	android:hardwareAccelerated
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:12:9-44
+	android:largeHeap
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:15:9-33
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:10:9-64
+activity#com.mobnote.golukmobile.GuideActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:16:9-26:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:19:13-49
+	android:label
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:18:13-45
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:20:13-54
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:17:13-65
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:21:13-25:29
+action#android.intent.action.MAIN
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:22:17-69
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:22:25-66
+category#android.intent.category.LAUNCHER
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:24:17-77
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:24:27-74
+activity#com.mobnote.golukmain.ExternalStartActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:27:9-42:20
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:30:13-53
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:28:13-71
+	android:launchMode
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:29:13-44
+intent-filter#android.intent.action.VIEW+android.intent.category.BROWSABLE+android.intent.category.DEFAULT
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:33:13-41:29
+action#android.intent.action.VIEW
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:34:17-69
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:34:25-66
+category#android.intent.category.BROWSABLE
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:36:17-78
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:36:27-75
+category#android.intent.category.DEFAULT
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:37:17-76
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:37:27-73
+data
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:39:17-51
+	android:scheme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:39:23-48
+activity#com.mobnote.golukmain.comment.CommentActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:43:9-48:20
+	android:windowSoftInputMode
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:47:13-67
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:46:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:45:13-74
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:44:13-73
+activity#com.mobnote.golukmain.usercenter.NewUserCenterActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:49:9-52:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:52:13-49
+	android:hardwareAccelerated
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:51:13-47
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:50:13-82
+activity#com.mobnote.golukmain.UserStartActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:55:9-57:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:57:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:56:13-67
+activity#com.mobnote.golukmain.UserLoginActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:58:9-61:63
+	android:windowSoftInputMode
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:61:13-60
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:60:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:59:13-67
+activity#com.mobnote.golukmain.UserRegistActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:62:9-64:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:64:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:63:13-68
+activity#com.mobnote.golukmain.UserRepwdActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:65:9-67:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:67:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:66:13-67
+activity#com.mobnote.golukmain.UserIdentifyActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:68:9-70:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:70:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:69:13-70
+activity#com.mobnote.golukmain.internation.login.InternationUserLoginActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:71:9-74:63
+	android:windowSoftInputMode
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:74:13-60
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:73:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:72:13-96
+activity#com.mobnote.golukmain.internation.login.InternationUserRegistActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:75:9-77:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:77:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:76:13-97
+activity#com.mobnote.golukmain.internation.login.InternationUserRepwdActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:78:9-80:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:80:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:79:13-96
+activity#com.mobnote.golukmain.internation.login.InternationUserIdentifyActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:81:9-83:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:83:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:82:13-99
+activity#com.mobnote.golukmain.UserPersonalInfoActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:85:9-88:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:88:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:87:13-74
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:86:13-74
+activity#com.mobnote.golukmain.UserPersonalEditActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:89:9-91:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:91:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:90:13-74
+activity#com.mobnote.golukmain.UserPersonalSignActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:92:9-94:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:94:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:93:13-74
+activity#com.mobnote.golukmain.UserPersonalNameActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:95:9-97:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:97:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:96:13-74
+activity#com.mobnote.golukmain.UserPersonalHeadActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:98:9-100:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:100:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:99:13-74
+activity#com.mobnote.golukmain.UnbindActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:101:9-103:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:103:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:102:13-64
+activity#com.mobnote.golukmain.UserSetupChangeWifiActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:104:9-106:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:106:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:105:13-77
+activity#com.mobnote.golukmain.IndexMoreActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:107:9-109:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:109:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:108:13-67
+activity#com.mobnote.golukmain.UserSetupActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:110:9-112:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:112:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:111:13-67
+activity#com.mobnote.golukmain.UpdateActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:113:9-115:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:115:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:114:13-64
+activity#com.mobnote.golukmain.UserVersionActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:116:9-118:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:118:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:117:13-69
+activity#com.mobnote.golukmain.UserOpinionActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:119:9-121:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:121:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:120:13-69
+activity#com.mobnote.golukmain.UserOpenUrlActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:122:9-125:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:125:13-49
+	android:hardwareAccelerated
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:124:13-47
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:123:13-69
+activity#com.mobnote.golukmain.videodetail.VideoDetailActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:126:9-130:70
+	android:windowSoftInputMode
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:130:13-67
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:129:13-49
+	android:hardwareAccelerated
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:128:13-47
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:127:13-81
+activity#com.mobnote.golukmain.ImageClipActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:131:9-135:49
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:134:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:133:13-74
+	android:hardwareAccelerated
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:135:13-47
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:132:13-67
+activity#com.mobnote.golukmain.profit.MyProfitActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:136:9-138:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:138:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:137:13-73
+activity#com.mobnote.golukmain.profit.MyProfitDetailActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:139:9-141:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:141:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:140:13-79
+activity#com.mobnote.golukmain.following.FollowingListActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:142:9-144:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:144:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:143:13-81
+activity#com.mobnote.golukmain.fan.FanListActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:145:9-147:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:147:13-49
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:146:13-69
+receiver#com.mobnote.receiver.NetworkStateReceiver
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:150:9-156:20
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:150:19-75
+intent-filter#android.intent.category.DEFAULT+android.net.conn.CONNECTIVITY_CHANGE
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:151:13-155:29
+action#android.net.conn.CONNECTIVITY_CHANGE
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:152:17-79
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:152:25-76
+receiver#com.mobnote.golukmain.xdpush.GolukClickNotificationReceiver
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:157:9-165:20
+	android:exported
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:159:13-36
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:158:13-87
+intent-filter#android.intent.category.DEFAULT+cn.com.goluk.broadcast.clicknotification
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:160:13-164:29
+action#cn.com.goluk.broadcast.clicknotification
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:161:17-83
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:161:25-80
+service#com.baidu.location.f
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:167:9-171:19
+	android:process
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:170:13-38
+	android:enabled
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:169:13-35
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:168:13-48
+activity#com.mobnote.golukmain.videosuqare.VideoCategoryActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:173:9-177:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:177:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:175:13-74
+	android:hardwareAccelerated
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:176:13-47
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:174:13-83
+activity#com.mobnote.golukmain.startshare.VideoEditActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:178:9-183:88
+	android:windowSoftInputMode
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:183:13-85
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:181:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:180:13-74
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:182:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:179:13-78
+activity#com.mobnote.golukmain.MainActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:184:9-190:55
+	android:windowSoftInputMode
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:190:13-52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:189:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:186:13-74
+	android:hardwareAccelerated
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:187:13-47
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:185:13-62
+	android:launchMode
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:188:13-44
+activity#com.mobnote.golukmain.wifibind.WiFiLinkListActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:191:9-194:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:194:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:193:13-74
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:192:13-79
+activity#com.mobnote.golukmain.wifibind.WiFiLinkCompleteActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:195:9-198:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:198:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:197:13-74
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:196:13-83
+activity#com.mobnote.golukmain.carrecorder.CarRecorderActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:199:9-204:63
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:203:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:201:13-74
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:204:13-60
+	android:hardwareAccelerated
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:202:13-47
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:200:13-81
+activity#com.mobnote.golukmain.carrecorder.settings.SettingsActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:205:9-209:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:207:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:208:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:206:13-87
+activity#com.mobnote.golukmain.carrecorder.settings.TSettingsActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:210:9-214:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:212:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:213:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:211:13-88
+activity#com.mobnote.golukmain.carrecorder.settings.CarrecoderKitSettingActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:215:9-219:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:217:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:218:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:216:13-99
+activity#com.mobnote.golukmain.live.LiveActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:220:9-223:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:223:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:222:13-74
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:221:13-67
+activity#com.mobnote.golukmain.livevideo.BaidumapLiveActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:224:9-227:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:227:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:226:13-74
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:225:13-80
+activity#com.mobnote.golukmain.livevideo.GooglemapLiveActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:228:9-231:52
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:231:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:230:13-74
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:229:13-81
+activity#com.mobnote.golukmain.player.VitamioPlayerActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:232:9-238:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:236:13-50
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:234:13-74
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:237:13-71
+	android:process
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:235:13-39
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:233:13-78
+activity#com.mobnote.golukmain.carrecorder.base.CarRecordBaseActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:239:9-243:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:241:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:242:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:240:13-88
+activity#com.mobnote.golukmain.carrecorder.settings.VersionActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:244:9-248:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:246:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:247:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:245:13-86
+activity#com.mobnote.golukmain.carrecorder.settings.FormatSDCardActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:249:9-253:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:251:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:252:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:250:13-91
+activity#com.mobnote.golukmain.carrecorder.settings.ImpactSensitivityActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:254:9-258:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:256:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:257:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:255:13-96
+activity#com.mobnote.golukmain.carrecorder.settings.VideoQualityActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:259:9-263:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:261:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:262:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:260:13-91
+activity#com.mobnote.golukmain.carrecorder.settings.SettingsItemActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:264:9-268:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:266:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:267:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:265:13-91
+activity#com.mobnote.golukmain.carrecorder.settings.PhotoQualityActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:269:9-273:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:271:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:272:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:270:13-91
+activity#com.mobnote.golukmain.carrecorder.settings.StorageCpacityQueryActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:274:9-278:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:276:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:277:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:275:13-98
+activity#com.mobnote.golukmain.carrecorder.settings.TimeSettingActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:279:9-283:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:281:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:282:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:280:13-90
+activity#com.mobnote.golukmain.player.VideoPlayerActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:284:9-290:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:288:13-50
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:286:13-74
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:289:13-71
+	android:hardwareAccelerated
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:287:13-47
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:285:13-76
+activity#com.mobnote.golukmain.player.MovieActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:291:9-297:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:295:13-50
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:293:13-74
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:296:13-71
+	android:hardwareAccelerated
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:294:13-47
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:292:13-70
+activity#com.mobnote.golukmain.special.SpecialListActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:298:9-303:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:301:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:302:13-60
+	android:hardwareAccelerated
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:300:13-47
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:299:13-77
+activity#com.mobnote.golukmain.special.ClusterListActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:304:9-308:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:306:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:307:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:305:13-77
+activity#com.mobnote.golukmain.usercenter.UserCenterActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:309:9-313:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:312:13-49
+	android:hardwareAccelerated
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:311:13-47
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:310:13-79
+activity#com.mobnote.golukmain.usercenter.UserVideoCategoryActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:314:9-318:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:317:13-49
+	android:hardwareAccelerated
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:316:13-47
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:315:13-86
+activity#com.mobnote.golukmain.promotion.PromotionActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:319:9-322:63
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:321:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:322:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:320:13-77
+activity#com.tencent.tauth.AuthActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:324:9-336:20
+	android:noHistory
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:327:13-37
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:325:13-58
+	android:launchMode
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:326:13-44
+activity#com.tencent.connect.common.AssistActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:337:9-341:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:339:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:340:13-72
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:338:13-69
+activity#cn.com.mobnote.golukmobile.wxapi.WXEntryActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:342:9-347:75
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:346:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:344:13-74
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:347:13-72
+	android:exported
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:345:13-36
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:343:13-76
+activity#com.mobnote.golukmain.newest.RecomVideoActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:348:9-354:20
+	android:windowSoftInputMode
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:353:13-55
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:351:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:350:13-74
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:352:13-61
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:349:13-75
+activity#com.mobnote.golukmain.PushSettingActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:355:9-361:20
+	android:windowSoftInputMode
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:360:13-55
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:358:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:357:13-74
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:359:13-61
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:356:13-69
+activity#com.mobnote.golukmain.adas.AdasVerificationActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:362:9-366:63
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:365:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:364:13-74
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:366:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:363:13-79
+activity#com.mobnote.golukmain.adas.AdasGuideActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:367:9-371:63
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:370:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:369:13-74
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:371:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:368:13-72
+activity#com.mobnote.golukmain.carrecorder.settings.AdasSensibilityActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:372:9-376:63
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:375:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:374:13-74
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:376:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:373:13-94
+activity#com.mobnote.golukmain.adas.AdasVehicleConfigActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:377:9-382:74
+	android:windowSoftInputMode
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:382:13-71
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:380:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:379:13-74
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:381:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:378:13-80
+activity#com.mobnote.golukmain.adas.AdasSeletedVehicleTypeActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:383:9-387:63
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:386:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:385:13-74
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:387:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:384:13-85
+activity#com.mobnote.golukmain.adas.AdasConfigActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:388:9-392:63
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:391:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:390:13-74
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:392:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:389:13-73
+meta-data#com.mobnote.util.GlideConfiguration
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:394:9-396:43
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:395:13-63
+	android:value
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:396:13-40
+meta-data#UMENG_APPKEY
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:398:9-400:56
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:399:13-40
+	android:value
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:400:13-53
+meta-data#UMENG_CHANNEL
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:401:9-403:39
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:402:13-41
+	android:value
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:403:13-36
+meta-data#com.google.android.geo.API_KEY
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:404:9-406:71
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:405:13-58
+	android:value
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:406:13-68
+activity#com.umeng.socialize.view.ShareActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:413:9-419:71
+	android:windowSoftInputMode
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:419:13-68
+	android:noHistory
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:417:13-37
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:415:13-57
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:418:13-50
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:414:13-66
+	android:launchMode
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:416:13-44
+activity#com.mobnote.golukmain.photoalbum.PhotoAlbumActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:420:9-426:63
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:425:13-49
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:422:13-74
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:426:13-60
+	android:hardwareAccelerated
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:424:13-47
+	android:exported
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:423:13-36
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:421:13-79
+activity#com.mobnote.golukmain.cluster.ClusterActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:427:9-432:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:430:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:431:13-60
+	android:hardwareAccelerated
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:429:13-47
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:428:13-73
+activity#com.mobnote.golukmain.wifibind.WifiUnbindSelectTypeActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:433:9-437:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:435:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:436:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:434:13-87
+activity#com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:438:9-442:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:440:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:441:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:439:13-87
+receiver#com.tencent.android.tpush.XGPushReceiver
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:448:9-469:20
+	android:process
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:450:13-45
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:449:13-68
+intent-filter#android.bluetooth.adapter.action.STATE_CHANGED+android.intent.action.ACTION_POWER_CONNECTED+android.intent.action.ACTION_POWER_DISCONNECTED+android.intent.action.USER_PRESENT+android.net.conn.CONNECTIVITY_CHANGE+com.tencent.android.tpush.action.INTERNAL_PUSH_MESSAGE+com.tencent.android.tpush.action.SDK
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:451:13-468:29
+	android:priority
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:451:28-57
+action#com.tencent.android.tpush.action.SDK
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:454:17-79
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:454:25-76
+action#com.tencent.android.tpush.action.INTERNAL_PUSH_MESSAGE
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:455:17-97
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:455:25-94
+action#android.intent.action.USER_PRESENT
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:458:17-77
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:458:25-74
+action#android.bluetooth.adapter.action.STATE_CHANGED
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:463:17-89
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:463:25-86
+action#android.intent.action.ACTION_POWER_CONNECTED
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:465:17-87
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:465:25-84
+action#android.intent.action.ACTION_POWER_DISCONNECTED
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:467:17-90
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:467:25-87
+activity#com.tencent.android.tpush.XGPushActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:473:9-481:20
+	android:exported
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:475:13-36
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:474:13-68
+intent-filter#android.intent.action
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:476:13-480:29
+action#android.intent.action
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:479:17-64
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:479:25-61
+service#com.tencent.android.tpush.service.XGPushService
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:484:9-488:48
+	android:process
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:488:13-45
+	android:exported
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:486:13-36
+	android:persistent
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:487:13-38
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:485:13-75
+service#com.tencent.android.tpush.rpc.XGRemoteService
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:491:9-497:19
+	android:exported
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:493:13-36
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:492:13-73
+intent-filter#cn.com.mobnote.golukmobile.PUSH_ACTION
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:494:13-496:29
+action#cn.com.mobnote.golukmobile.PUSH_ACTION
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:495:17-81
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:495:25-78
+meta-data#com.baidu.lbsapi.API_KEY
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:501:9-503:56
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:502:13-52
+	android:value
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:503:13-53
+service#com.rd.car.CarRecorderService
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:506:9-65
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:506:18-62
+receiver#com.mobnote.golukmain.carrecorder.RecordingReceiver
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:509:9-513:20
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:509:19-85
+intent-filter#com.rd.car.RECORDER_MESSAGE
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:510:13-512:29
+action#com.rd.car.RECORDER_MESSAGE
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:511:17-70
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:511:25-67
+receiver#com.mobnote.golukmain.xdpush.AcceptXDMessageReceiver
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:514:9-522:20
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:514:19-86
+intent-filter#com.tencent.android.tpush.action.FEEDBACK+com.tencent.android.tpush.action.PUSH_MESSAGE
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:515:13-521:29
+action#com.tencent.android.tpush.action.PUSH_MESSAGE
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:518:17-88
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:518:25-85
+action#com.tencent.android.tpush.action.FEEDBACK
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:520:17-84
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:520:25-81
+service#com.sina.weibo.sdk.net.DownloadService
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:526:9-529:19
+	android:exported
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:528:13-37
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:527:13-66
+activity#com.sina.weibo.sdk.component.WeiboSdkBrowser
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:532:9-537:20
+	android:windowSoftInputMode
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:536:13-55
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:534:13-63
+	android:exported
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:535:13-37
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:533:13-72
+activity#com.mobnote.golukmain.msg.MessageCenterActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:538:9-542:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:540:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:541:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:539:13-75
+activity#com.mobnote.golukmain.msg.MsgCenterCommentActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:543:9-547:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:545:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:546:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:544:13-78
+activity#com.mobnote.golukmain.msg.SystemMsgActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:548:9-552:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:550:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:551:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:549:13-71
+activity#com.mobnote.golukmain.msg.MsgCenterPraiseActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:553:9-557:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:555:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:556:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:554:13-77
+activity#com.mobnote.golukmain.msg.OfficialMessageActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:558:9-562:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:560:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:561:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:559:13-77
+activity#com.mobnote.golukmain.VideoSyncSettingActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:563:9-567:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:565:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:566:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:564:13-74
+activity#com.mobnote.golukmain.search.SearchUserAcivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:568:9-572:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:570:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:571:13-60
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:569:13-74
+activity#com.mobnote.golukmain.praised.MyPraisedActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:573:9-578:20
+	android:screenOrientation
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:576:13-49
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:577:13-60
+	android:hardwareAccelerated
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:575:13-47
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:574:13-75
+activity#com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:579:9-585:20
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:581:13-74
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:584:13-60
+	android:hardwareAccelerated
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:582:13-47
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:580:13-77
+activity#com.facebook.FacebookActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:588:9-592:75
+	android:label
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:591:13-45
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:590:13-96
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:592:13-72
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:589:13-57
+provider#com.facebook.FacebookContentProvider
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:594:9-597:39
+	android:exported
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:597:13-36
+	android:authorities
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:596:13-91
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:595:13-64
+meta-data#com.facebook.sdk.ApplicationId
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:599:9-601:55
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:600:13-58
+	android:value
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:601:13-52
+activity#com.umeng.socialize.handler.TwitterWebActivity
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:604:9-608:75
+	android:label
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:607:13-45
+	android:configChanges
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:606:13-96
+	android:theme
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:608:13-72
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:605:13-74
+uses-permission#android.permission.GET_ACCOUNTS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:611:5-71
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:611:22-68
+uses-permission#android.permission.USE_CREDENTIALS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:612:5-74
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:612:22-71
+uses-permission#android.permission.MANAGE_ACCOUNTS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:613:5-74
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:613:22-71
+uses-permission#android.permission.AUTHENTICATE_ACCOUNTS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:614:5-80
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:614:22-77
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:615:5-79
+MERGED from [android_studio:initActivity:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\initActivity\unspecified\AndroidManifest.xml:13:5-79
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:615:22-76
+uses-permission#android.permission.INTERNET
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:616:5-67
+MERGED from [android_studio:initActivity:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\initActivity\unspecified\AndroidManifest.xml:12:5-67
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:616:22-64
+uses-permission#com.android.launcher.permission.READ_SETTINGS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:617:5-85
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:617:22-82
+uses-permission#android.permission.CHANGE_WIFI_STATE
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:618:5-76
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:618:22-73
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:619:5-76
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:619:22-73
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:620:5-81
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:620:22-78
+uses-permission#android.permission.BROADCAST_STICKY
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:621:5-75
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:621:22-72
+uses-permission#android.permission.WRITE_SETTINGS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:622:5-73
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:622:22-70
+uses-permission#android.permission.ACCESS_CHECKIN_PROPERTIES
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:624:5-84
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:624:22-81
+uses-permission#android.permission.WAKE_LOCK
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:625:5-68
+MERGED from [android_studio:initActivity:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\initActivity\unspecified\AndroidManifest.xml:11:5-68
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:625:22-65
+uses-permission#android.permission.MODIFY_PHONE_STATE
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:626:5-77
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:626:22-74
+uses-permission#android.permission.KILL_BACKGROUND_PROCESSES
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:627:5-84
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:627:22-81
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:629:5-79
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:629:22-76
+uses-permission#android.permission.ACCESS_COARSE_LOCATION
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:630:5-81
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:630:22-78
+uses-permission#android.permission.SYSTEM_ALERT_WINDOW
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:633:5-78
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:633:22-75
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:634:5-80
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:634:22-77
+uses-permission#android.permission.RECORD_AUDIO
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:635:5-71
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:635:22-68
+uses-permission#android.permission.RECORD_VIDEO
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:636:5-71
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:636:22-68
+uses-permission#android.permission.CAMERA
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:637:5-65
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:637:22-62
+uses-permission#android.permission.ACCESS_GPS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:638:5-69
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:638:22-66
+uses-permission#android.permission.READ_PHONE_STATE
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:639:5-75
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:639:22-72
+uses-permission#android.permission.GET_TASKS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:640:5-68
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:640:22-65
+uses-permission#android.permission.EXPAND_STATUS_BAR
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:642:5-76
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:642:22-73
+uses-permission#android.permission.SET_WALLPAPER
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:643:5-72
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:643:22-69
+uses-permission#android.permission.SET_WALLPAPER_HINTS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:644:5-78
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:644:22-75
+uses-permission#android.permission.READ_CONTACTS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:645:5-72
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:645:22-69
+uses-permission#android.permission.MOUNT_UNMOUNT_FILESYSTEMS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:646:5-84
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:646:22-81
+uses-permission#android.permission.CHANGE_CONFIGURATION
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:647:5-79
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:647:22-76
+uses-permission#android.permission.ACCESS_COARSE_UPDATES
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:648:5-80
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:648:22-77
+uses-permission#android.permission.RECORDE_AUDIO
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:649:5-72
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:649:22-69
+uses-permission#android.permission.DEVICE_POWER
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:650:5-71
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:650:22-68
+uses-permission#android.permission.READ_LOGS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:651:5-68
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:651:22-65
+uses-permission#android.permission.CHANGE_NETWORK_STATE
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:652:5-79
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:652:22-76
+uses-permission#android.permission.WRITE_APN_SETTINGS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:653:5-77
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:653:22-74
+uses-permission#android.permission.MODIFY_AUDIO_SETTINGS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:654:5-80
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:654:22-77
+uses-permission#android.permission.PROCESS_OUTGOING_CALLS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:655:5-81
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:655:22-78
+uses-permission#com.android.launcher.permission.INSTALL_SHORTCUT
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:656:5-88
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:656:22-85
+uses-permission#android.permission.DISABLE_KEYGUARD
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:657:5-75
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:657:22-72
+uses-permission#android.permission.VIBRATE
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:659:5-66
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:659:22-63
+uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:660:5-81
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:660:22-78
+uses-permission#android.permission.RECEIVE_USER_PRESENT
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:661:5-79
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:661:22-76
+uses-permission#android.permission.RESTART_PACKAGES
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:662:5-75
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:662:22-72
+uses-permission#android.permission.SEND_SMS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:664:5-67
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:664:22-64
+uses-permission#android.permission.WRITE_SMS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:665:5-68
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:665:22-65
+uses-permission#android.permission.READ_SMS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:666:5-67
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:666:22-64
+uses-permission#android.permission.RECEIVE_SMS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:667:5-70
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:667:22-67
+uses-permission#android.permission.CALL_PHONE
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:669:5-69
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:669:22-66
+uses-permission#android.permission.INTERACT_ACROSS_USERS_FULL
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:671:5-85
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:671:22-82
+uses-permission#android.permission.BLUETOOTH
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:674:5-68
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:674:22-65
+uses-permission#android.permission.BATTERY_STATS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:675:5-72
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:675:22-69
+uses-permission#com.huawei.android.launcher.permission.READ_SETTINGS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:676:5-92
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:676:22-89
+uses-permission#com.huawei.android.launcher.permission.WRITE_SETTINGS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:677:5-93
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:677:22-90
+uses-permission#com.huawei.android.launcher.permission.CHANGE_BADGE
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:678:5-91
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:678:22-88
+uses-permission#com.miui.mihome2.permission.READ_SETTINGS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:679:5-81
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:679:22-78
+uses-permission#com.miui.mihome2.permission.WRITE_SETTINGS
+ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:680:5-82
+	android:name
+		ADDED from D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\src\main\AndroidManifest.xml:680:22-79
+activity#io.vov.vitamio.activity.InitActivity
+ADDED from [android_studio:initActivity:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\initActivity\unspecified\AndroidManifest.xml:16:9-21:63
+	android:windowSoftInputMode
+		ADDED from [android_studio:initActivity:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\initActivity\unspecified\AndroidManifest.xml:21:13-60
+	android:configChanges
+		ADDED from [android_studio:initActivity:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\initActivity\unspecified\AndroidManifest.xml:18:13-48
+	android:theme
+		ADDED from [android_studio:initActivity:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\initActivity\unspecified\AndroidManifest.xml:20:13-60
+	android:name
+		ADDED from [android_studio:initActivity:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\initActivity\unspecified\AndroidManifest.xml:17:13-64
+	android:launchMode
+		ADDED from [android_studio:initActivity:unspecified] D:\golukcode3\goluk\goluk\src\android\android_studio\golukMobile\build\intermediates\exploded-aar\android_studio\initActivity\unspecified\AndroidManifest.xml:19:13-43

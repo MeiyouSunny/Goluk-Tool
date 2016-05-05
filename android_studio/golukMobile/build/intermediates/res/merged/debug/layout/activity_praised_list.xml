@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/rl_praised_list_title"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="@color/bg" >
+
+        <ImageView
+            android:id="@+id/iv_praised_list_back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/cross_screen_arrow_icon1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_praised_list_title"
+            android:layout_centerInParent="true"
+            android:text="@string/str_my_praised_list"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/plv_praised_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@drawable/solid"
+        android:cacheColorHint="#ffffff"
+        android:dividerHeight="1dp">
+    </com.handmark.pulltorefresh.library.PullToRefreshListView>
+
+    <RelativeLayout
+        android:id="@+id/rl_praised_list_exception_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/tv_praised_list_exception_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawableTop="@drawable/mine_qitadifang"
+            android:textSize="16sp"
+            android:text="@string/str_praised_list_connect_error"
+            android:drawablePadding="6dp"
+            android:textColor="#bfbfbf" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_praised_list_no_data_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone" >
+        <TextView
+            android:id="@+id/tv_praised_list_no_data_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="16sp"
+            android:text="@string/str_praised_list_request_no_data"
+            android:textColor="#bfbfbf" />
+    </RelativeLayout>
+
+</LinearLayout>

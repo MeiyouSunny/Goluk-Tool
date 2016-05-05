@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg_comm" >
+
+    <LinearLayout
+        android:id="@+id/shareselecttype_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal" >
+
+        <!-- 曝光台 -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1" >
+
+            <TextView
+                android:id="@+id/share_type_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="@string/share_str_type_bg"
+                android:textColor="@color/color_shareselecttype"
+                android:textSize="@dimen/share_type_size" />
+        </RelativeLayout>
+
+        <!-- 事故大爆料 -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1" >
+
+            <TextView
+                android:id="@+id/share_type_sg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="@string/share_str_type_sg"
+                android:textColor="@color/color_shareselecttype"
+                android:textSize="@dimen/share_type_size" />
+        </RelativeLayout>
+
+        <!-- 美丽风景 -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1" >
+
+            <TextView
+                android:id="@+id/share_type_ml"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="@string/share_str_type_ml"
+                android:textColor="@color/color_shareselecttype"
+                android:textSize="@dimen/share_type_size" />
+        </RelativeLayout>
+
+        <!-- 随手拍 -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1" >
+
+            <TextView
+                android:id="@+id/share_type_ssp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="@string/share_str_type_ssp"
+                android:textColor="@color/color_shareselecttype"
+                android:textSize="@dimen/share_type_size" />
+        </RelativeLayout>
+    </LinearLayout>
+
+   	<RelativeLayout
+        android:id ="@+id/share_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/shareselecttype_type"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/share_text_bg" >
+
+        <!-- 公开（发布到广场） -->
+
+        <LinearLayout
+            android:id="@+id/share_open_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/join_activity"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="12dp"
+            android:background="@drawable/btn_shareselecttype_open"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/share_open_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/share_close_icon"
+                android:contentDescription="@string/imgdes" />
+
+        </LinearLayout>
+        <!-- 当前地址 -->
+
+        <LinearLayout
+            android:id="@+id/share_address_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@id/share_open_layout"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/btn_shareselecttype_open"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/share_address_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/imgdes" />
+
+            <TextView
+                android:id="@+id/share_address_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:maxLength="18"
+                android:text="@string/share_str_no_location"
+                android:textColor="#bcbdbd"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/share_sayother"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/share_open_layout"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="top"
+            android:hint="@string/default_comment_hint"
+            android:paddingBottom="7dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="7dp"
+            android:textColor="#D8ffffff"
+            android:textSize="12sp" />
+        <LinearLayout
+           android:id="@+id/join_activity"
+           android:layout_width = "wrap_content"
+   	       android:layout_height="wrap_content"
+   	       android:layout_alignParentBottom="true"
+   	       android:layout_alignParentRight="true"
+   	       android:layout_centerHorizontal="true"
+   	       android:layout_marginRight="6dp"
+   	       android:layout_marginLeft="10dp"
+   	       android:layout_marginBottom="10dp"
+   	       android:gravity="center_horizontal"
+   	       android:orientation="vertical">
+           <TextView 
+                android:id="@+id/new_textview"
+                android:layout_width = "wrap_content"
+   	       		android:layout_height="wrap_content"
+   	       		android:paddingLeft="6dp"
+   	       		android:paddingRight="6dp"
+   	       		android:textColor="#FFFFFF"
+   	       		android:textSize="10sp"
+   	       		android:text="@string/str_new"
+   	       		android:visibility="invisible"
+   	       		android:background="@drawable/share_newactivities_bubble"/>
+          <TextView 
+   	       		android:id="@+id/join_activity_textview"
+   	       		android:layout_width = "wrap_content"
+   	       		android:layout_height="wrap_content"
+   	       		android:gravity="center"
+   	       		android:textColor="#bcbdbd"
+           		android:textSize="13sp"
+           		android:text="@string/share_str_join_promotion"
+           		android:background="@drawable/btn_shareselecttype_open"/>
+        </LinearLayout>
+        <LinearLayout 
+		    android:layout_width ="match_parent"
+   	       	android:layout_height="wrap_content"
+   	       	android:layout_marginLeft="5dp"
+		    android:layout_toLeftOf="@+id/join_activity"
+		    android:layout_alignBottom="@+id/join_activity"
+		    android:orientation="horizontal"
+		    android:gravity="center_vertical">
+		    <TextView
+		        android:id="@+id/activity_textview1"
+		        android:layout_width ="0dp"
+   	       		android:layout_height="wrap_content"
+   	       		android:layout_weight="1"
+   	       		android:gravity="center_vertical"
+   	       		android:layout_marginRight="5dp"
+   	       		android:textColor="#bcbdbd"
+   	       		android:singleLine="true"
+   	       		android:ellipsize="end"
+           		android:textSize="13sp"
+   	       		android:background="@drawable/btn_shareselecttype_open"
+   	       		android:visibility="invisible"/>
+		   <TextView
+		       android:id="@+id/activity_textview2"
+		        android:layout_width ="0dp"
+   	       		android:layout_height="wrap_content"
+   	       		android:layout_weight="1"
+   	       		android:layout_marginLeft="5dp"
+   	       		android:gravity="center_vertical"
+   	       		android:singleLine="true"
+   	       		android:textColor="#bcbdbd"
+           		android:textSize="13sp"
+           		android:ellipsize="end"
+   	       		android:background="@drawable/btn_shareselecttype_open"
+   	       		android:visibility="invisible"/>
+		</LinearLayout>
+        </RelativeLayout>
+</RelativeLayout>

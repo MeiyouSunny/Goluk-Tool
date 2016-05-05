@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\res\\merged\\debug\\color\\promotion_textcolor_selector.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\exploded-aar\\android_studio\\guideMain\\unspecified\\res\\color\\promotion_textcolor_selector.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\res\\merged\\debug\\color\\category_title_text_color.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\exploded-aar\\android_studio\\guideMain\\unspecified\\res\\color\\category_title_text_color.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\res\\merged\\debug\\color\\wonder_title_color.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\exploded-aar\\android_studio\\guideMain\\unspecified\\res\\color\\wonder_title_color.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\res\\merged\\debug\\color\\text_color.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\exploded-aar\\android_studio\\guideMain\\unspecified\\res\\color\\text_color.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\res\\merged\\debug\\color\\category_update_text_color.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\exploded-aar\\android_studio\\guideMain\\unspecified\\res\\color\\category_update_text_color.xml"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\res\\merged\\debug\\color\\custom_dialog_btn.xml",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\exploded-aar\\android_studio\\guideMain\\unspecified\\res\\color\\custom_dialog_btn.xml"
+    }
+]

@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <!-- 头部信息,包括用户头像 ，昵称，时间 ，更多按钮 -->
+    <View
+        android:id="@+id/v_item_divider_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#e5e5e5" />
+
+    <RelativeLayout
+        android:id="@+id/headlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp" >
+
+        <!-- "更多" 按钮 -->
+        <ImageView
+            android:id="@+id/function"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/new_more_icon"
+            android:contentDescription="@string/imgdes" />
+
+        <ImageView
+            android:id="@+id/iv_reward_tag"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_toLeftOf="@id/function"
+            android:layout_marginRight="2dp"
+            android:layout_centerVertical="true"
+            android:scaleType="center"
+            android:visibility="gone"
+            android:src="@drawable/together_coin_icon"
+            android:contentDescription="@string/imgdes" />
+
+        <!-- 头像 -->
+        <RelativeLayout
+            android:id="@+id/rl_user_info"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true">
+            <RelativeLayout
+                android:id="@+id/rl_head_img"
+                android:layout_width="37.33dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_height="37.33dp">
+                <ImageView
+                    android:id="@+id/headimg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/imgdes" />
+
+                <ImageView
+                    android:id="@+id/iv_vip_logo"
+                    android:layout_width="11.33dp"
+                    android:layout_height="11.33dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:contentDescription="@string/imgdes" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/nicklayout"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_toRightOf="@+id/rl_head_img"
+                android:gravity="center_vertical"
+                android:orientation="vertical" >
+
+                <!-- 昵称 -->
+                <TextView
+                    android:id="@+id/nikename"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="#1163a2"
+                    android:singleLine="true"
+                    android:textSize="14sp" />
+
+                <!-- 时间 与地址 -->
+                <TextView
+                    android:id="@+id/time_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:gravity="center"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="#888888"
+                    android:drawablePadding="4dp"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/imageoutlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <!-- 视频缩略图片 -->
+
+        <ImageView
+            android:id="@+id/imageLayout"
+            android:layout_width="100dp"
+            android:layout_height="37dp"
+            android:contentDescription="@string/imgdes" />
+
+        <!-- 直播图标 -->
+
+        <ImageView
+            android:id="@+id/newlist_item_liveicon"
+            android:layout_width="28.66dp"
+            android:layout_height="14dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/new_live_icon"
+            android:contentDescription="@string/imgdes"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_newest_list_item_surround"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:drawablePadding="4dp"
+            android:layout_marginTop="11dp"
+            android:layout_marginRight="8dp"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:textColor="#fefeff"
+            android:textSize="14sp"
+            android:drawableLeft="@drawable/icon_eye" />
+
+        <ImageView
+            android:id="@+id/mPlayBigBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/btn_player_play"
+            android:contentDescription="@string/imgdes" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/function_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="16dp" >
+
+        <TextView
+            android:id="@+id/tv_newest_list_item_praise"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:gravity="center"
+            android:paddingLeft="4dp"
+            android:drawableLeft="@drawable/videodetail_like"
+            android:drawablePadding="4dp"
+            android:text="@string/str_usercenter_praise"
+            android:textColor="#888888"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_newest_list_item_comment"
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_height="18dp"
+            android:gravity="center"
+            android:paddingLeft="4dp"
+            android:drawableLeft="@drawable/videodetail_comment"
+            android:drawablePadding="4dp"
+            android:text="@string/str_usercenter_comment"
+            android:textColor="#888888"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_newest_list_item_share"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:gravity="center"
+            android:paddingLeft="4dp"
+            android:drawableLeft="@drawable/videodetail_share"
+            android:drawablePadding="4dp"
+            android:text="@string/str_usercenter_share"
+            android:textColor="#888888"
+            android:textSize="12sp" />
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/tv_newest_list_item_praise_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:drawableLeft="@drawable/videodetail_likeicon"
+        android:drawablePadding="4dp"
+        android:text="@string/str_usercenter_praise"
+        android:textColor="#1163a2"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textColor="#333333"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/totalcomments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|left"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textColor="#a6a6a6"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:id="@+id/totlaCommentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" >
+
+        <com.rockerhieu.emojicon.EmojiconTextView
+            android:id="@+id/comment1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:textColor="#333333"
+            android:textSize="14sp" />
+
+        <com.rockerhieu.emojicon.EmojiconTextView
+            android:id="@+id/comment2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:textColor="#333333"
+            android:textSize="14sp" />
+
+        <com.rockerhieu.emojicon.EmojiconTextView
+            android:id="@+id/comment3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:textColor="#333333"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="#ffffff"/>
+</LinearLayout>
