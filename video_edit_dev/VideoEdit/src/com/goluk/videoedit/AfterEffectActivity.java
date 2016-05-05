@@ -535,7 +535,20 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 
 			mAdapter.setData(mProjectItemList);
 			mAdapter.notifyDataSetChanged();
-			playOrPause();
+			final int addIndex = cInsertIndex;
+			if(mPlayerState == PlayerState.PAUSED) {
+				seekWith(VideoEditUtils.mapI2CIndex(VideoEditUtils.mapI2CIndex(addIndex)));
+				mAERecyclerView.post(new Runnable() {
+					@Override
+					public void run() {
+						mAELayoutManager.scrollToPositionWithOffset(
+								addIndex, mDummyHeaderWidth);
+//						playOrPause();
+					}
+				});
+			} else {
+				playOrPause();
+			}
 			break;
 		}
 
@@ -666,9 +679,15 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		}
 	}
 
+	// Seek to chunk with specified offset
 	private void seekWith(int chunkIndex, int chunkWidth, float delta) {
 		Chunk chunk = mAfterEffect.getMainChunks().get(chunkIndex);
 		mAfterEffect.seekTo(chunkIndex, delta / chunkWidth * chunk.getDuration());
+	}
+
+	// Seek to chunk with 0 offset
+	private void seekWith(int chunkIndex) {
+		mAfterEffect.seekTo(chunkIndex);
 	}
 
 	@Override

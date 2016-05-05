@@ -364,8 +364,15 @@ public class ChannelLineAdapter extends
 			viewHolder.nAddChunkIV.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					//addChunk();
 					mAeActivity.goToChooseVideo();
+				}
+			});
+
+			viewHolder.nAddChunkIV.setOnTouchListener(new OnTouchListener() {
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					mAfterEffect.playPause();
+					return false;
 				}
 			});
 
