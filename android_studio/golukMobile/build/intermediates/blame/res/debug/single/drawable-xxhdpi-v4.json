@@ -620,12 +620,12 @@
         "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\exploded-aar\\android_studio\\guideMain\\unspecified\\res\\drawable-xxhdpi-v4\\driving_voice_icon.png"
     },
     {
-        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\together_talk_icon.png",
-        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\exploded-aar\\android_studio\\guideMain\\unspecified\\res\\drawable-xxhdpi-v4\\together_talk_icon.png"
-    },
-    {
         "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\driving_car_living_icon.png",
         "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\exploded-aar\\android_studio\\guideMain\\unspecified\\res\\drawable-xxhdpi-v4\\driving_car_living_icon.png"
+    },
+    {
+        "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\together_talk_icon.png",
+        "source": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\exploded-aar\\android_studio\\guideMain\\unspecified\\res\\drawable-xxhdpi-v4\\together_talk_icon.png"
     },
     {
         "merged": "D:\\golukcode3\\goluk\\goluk\\src\\android\\android_studio\\golukMobile\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi-v4\\needle_boy_one_big.png",
