@@ -3,17 +3,28 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 17
     buildToolsVersion "23.0.3"
+    dexOptions {
+        jumboMode = true
+    }
 
     defaultConfig {
         applicationId "cn.com.mobnote.golukmobile"
         minSdkVersion 14
         targetSdkVersion 14
     }
-
+    signingConfigs {
+        release {
+            storeFile file("../../makeApk/xiaocheben.keystore")
+            storePassword 'zhiquchelian#xiaocheben.com'
+            keyAlias 'xiaocheben'
+            keyPassword 'zhiquchelian#xiaocheben.com'
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
