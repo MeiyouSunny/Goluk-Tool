@@ -36,8 +36,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:scheme="golukapp" />
-                <data android:host="goluk.app" />
+                <data android:scheme="${HTML_SCHEME}" />
+                <data android:host="${HTML_HOST}" />
             </intent-filter>
         </activity>
         <activity

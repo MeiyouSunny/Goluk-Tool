@@ -35,7 +35,7 @@ public class ExternalStartActivity extends Activity {
 		GolukDebugUtils.e("", "start App: scheme:" + scheme);
 		final Uri uri = intent.getData();
 		final String dataStr = intent.getDataString(); // 获取整个字符串
-		if (null != scheme && "golukapp".equals(scheme) && null != uri) {
+		if (null != scheme && ("golukapp".equals(scheme) || "igolukapp".equals(scheme)) && null != uri) {
 			String host = uri.getHost(); // goluk.app
 			String path = uri.getPath();
 

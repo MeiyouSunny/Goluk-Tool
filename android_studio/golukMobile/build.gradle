@@ -15,10 +15,12 @@ android {
     productFlavors {
         internal {
             applicationId "cn.com.mobnote.golukmobile"
+            manifestPlaceholders=[HTML_SCHEME : "golukapp" , HTML_HOST : "goluk.app"]
         }
 
         international {
             applicationId "com.mobnote.golukmobile"
+            manifestPlaceholders=[HTML_SCHEME : "igolukapp" , HTML_HOST : "goluk.app"]
         }
     }
     signingConfigs {
