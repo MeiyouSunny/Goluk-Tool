@@ -179,8 +179,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.comment);
-		
-		
 
 		activityRootView = findViewById(R.id.all_layout);
 		screenHeight = getWindowManager().getDefaultDisplay().getHeight();
@@ -733,6 +731,13 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		}
 	}
 
+	public void reply() {
+		if (!mInputState) {
+			this.hideEmojocon();
+			this.setSwitchState(true);
+		}
+	}
+
 	/**
 	 * 点击删除或者回复评论
 	 *
@@ -757,6 +762,10 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				}
 				mReplyDialog = new ReplyDialog(this, mWillDelBean, mEditInput, mIsReply);
 				mReplyDialog.show();
+				if (!mInputState) {
+					this.hideEmojocon();
+					this.setSwitchState(true);
+				}
 			}
 		} catch (Exception e) {
 		}
@@ -1409,7 +1418,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	/** 标志一个状态是否切换完成 */
 	private boolean isSwitchStateFinish = true;
 
-	private void click_soft() {
+	public void click_soft() {
 		if (!this.isCanShowSoft()) {
 			return;
 		}
@@ -1474,9 +1483,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private void showEmojocon() {
 		setLayoutHeight();
 		emoLayout.setVisibility(View.VISIBLE);
-		
-		getWindow().setSoftInputMode(  
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);  
+
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 	}
 
 	private void hideEmojocon() {
