@@ -1,12 +1,8 @@
 package com.mobnote.golukmain;
 
-import org.json.JSONObject;
-
 import com.alibaba.fastjson.JSON;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventBindPhoneNum;
-import com.mobnote.eventbus.EventConfig;
-import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.base.CarRecordBaseActivity;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
@@ -15,7 +11,6 @@ import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
 import com.mobnote.golukmain.live.UserInfo;
-import com.mobnote.golukmain.msg.MessageBadger;
 import com.mobnote.golukmain.userlogin.CancelResult;
 import com.mobnote.golukmain.userlogin.UserCancelBeanRequest;
 import com.mobnote.golukmain.xdpush.GolukNotification;
@@ -27,7 +22,6 @@ import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
-import com.mobnote.util.JsonUtil;
 import com.mobnote.util.SharedPrefUtil;
 
 import android.annotation.SuppressLint;
@@ -42,7 +36,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -51,7 +44,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -253,7 +245,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		} else if (id == R.id.loginout_btn) {
 			if (btnLoginout.getText().toString().equals(this.getResources().getString(R.string.login_text))) {
 				if (mApp.autoLoginStatus == 1) {
-					mBuilder = new AlertDialog.Builder(mContext);
+					mBuilder = new Builder(mContext);
 					dialog = mBuilder.
 							setMessage(this.getResources().getString(R.string.user_personal_autoloading_progress)).
 							setCancelable(true).
@@ -276,7 +268,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 				}
 				
 			} else if (btnLoginout.getText().toString().equals(this.getResources().getString(R.string.logout))) {
-				new AlertDialog.Builder(mContext).
+				new Builder(mContext).
 					setTitle(this.getResources().getString(R.string.wifi_link_prompt)).
 					setMessage(this.getResources().getString(R.string.str_confirm_loginout)).
 					setPositiveButton(this.getResources().getString(R.string.str_button_ok), new DialogInterface.OnClickListener() {
@@ -292,7 +284,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			if (mTextCacheSize.getText().toString().equals("0M")) {
 				UserUtils.showDialog(mContext, this.getResources().getString(R.string.str_no_cache));
 			} else {
-				new AlertDialog.Builder(mContext).
+				new Builder(mContext).
 					setTitle(this.getResources().getString(R.string.wifi_link_prompt)).
 					setMessage(this.getResources().getString(R.string.str_confirm_clear_cache)).
 					setNegativeButton(this.getResources().getString(R.string.user_cancle), null).
@@ -407,7 +399,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 				// 注销后，将信息存储
 				mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
 				mEditor = mPreferences.edit();
-				mEditor.putString("setupPhone", info.phone);
+				mEditor.putString("setupPhone", UserUtils.formatSavePhone(info.phone));
 				mEditor.commit();
 			}
 
@@ -502,6 +494,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 			CancelResult cancelResult = (CancelResult) result;
 			if(cancelResult!=null && cancelResult.success){
 				if("0".equals(cancelResult.data.result)){
+					initData();
 					SharedPrefUtil.saveUserInfo("");
 					SharedPrefUtil.saveUserPwd("");
 					SharedPrefUtil.saveUserToken("");

@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 
+import com.facebook.FacebookSdk;
 import com.facebook.internal.CallbackManagerImpl;
 import com.mobnote.application.GlobalWindow;
 import com.mobnote.application.GolukApplication;
@@ -171,6 +172,9 @@ public class BaseActivity extends FragmentActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (!mBaseApp.isInteral()) {
+			if(FacebookSdk.isInitialized() == false){
+				return;
+			}
 			if (requestCode == CallbackManagerImpl.RequestCodeOffset.Share.toRequestCode()) {
 				FacebookShareHelper.getInstance().mCallbackManager.onActivityResult(requestCode, resultCode, data);
 			}
