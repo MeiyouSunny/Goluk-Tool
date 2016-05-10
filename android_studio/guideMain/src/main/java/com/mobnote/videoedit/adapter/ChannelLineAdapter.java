@@ -58,7 +58,7 @@ public class ChannelLineAdapter extends
 	int mEditIndex = -1;
 	AfterEffect mAfterEffect;
 
-	String mVideoPath = VideoEditConstant.VIDEO_PATH_1;
+//	String mVideoPath = VideoEditConstant.VIDEO_PATH_1;
 
 	public int getEditIndex() {
 		return mEditIndex;

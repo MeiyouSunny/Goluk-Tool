@@ -98,6 +98,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	LinearLayout mAEVolumeLayout;
 	int mTimeLineX;
 	int mDummyHeaderWidth;
+	private TextView mNextTV;
 
 	/** 是否为静音 */
 	private boolean mIsMute;
@@ -112,9 +113,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	private View mTimeLineGateV;
 	private int mGateLocationX;
 
-	String mVideoPath1 = VideoEditConstant.VIDEO_PATH;
-	String mVideoPath = VideoEditConstant.VIDEO_PATH_1;
-	String mMusicPath = VideoEditConstant.MUSIC_PATH;
+//	String mVideoPath1 = VideoEditConstant.VIDEO_PATH;
+	String mVideoPath;// = VideoEditConstant.VIDEO_PATH_1;
+//	String mMusicPath = VideoEditConstant.MUSIC_PATH;
 
 	public final static int MSG_AE_PLAY_STARTED = 1001;
 	public final static int MSG_AE_PLAY_PROGRESS = 1002;
@@ -700,6 +701,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_after_effect);
 		mPlayerState = PlayerState.INITED;
+		mVideoPath = getIntent().getStringExtra("vidPath");
 
 		// default tail and footer
 		mProjectItemList = new ArrayList<ProjectItemBean>();
@@ -716,6 +718,13 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		mAELayoutManager = new LinearLayoutManager(this);
 		mAELayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mAERecyclerView = (RecyclerView) findViewById(R.id.rv_video_edit_pic_list);
+		mNextTV = (TextView)findViewById(R.id.tv_ae_next_button);
+		mNextTV.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+//				exportAfterEffectVideo();
+			}
+		});
 
 		mImageHeight = DeviceUtil.dp2px(this, VideoEditConstant.BITMAP_COMMON_HEIGHT);
 		mImageWidth = mImageHeight;
