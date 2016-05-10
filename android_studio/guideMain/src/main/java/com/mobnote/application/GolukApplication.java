@@ -104,6 +104,7 @@ import com.rd.car.RecorderStateException;
 
 import de.greenrobot.event.EventBus;
 import android.support.multidex.MultiDexApplication;
+import com.mobnote.golukmain.userlogin.UserResult;
 
 public class GolukApplication extends MultiDexApplication implements IPageNotifyFn, IPCManagerFn, ITalkFn, ILocationFn {
 	/** JIN接口类 */
