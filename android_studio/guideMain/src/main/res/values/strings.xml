@@ -1063,4 +1063,6 @@
     <string name="ae_volume">音量</string>
     <string name="ae_delete">删除</string>
     <string name="local_video">本地视频</string>
+    <string name="str_video_edit_title">视频制作</string>
+    <string name="str_video_edit_next">下一步</string>
 </resources>

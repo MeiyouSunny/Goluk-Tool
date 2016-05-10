@@ -4,11 +4,44 @@
     android:layout_height="match_parent"
     android:background="#000000" >
 
+    <RelativeLayout
+        android:id="@+id/ae_relativelayout_title"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_height="46dp">
+
+        <ImageButton
+            android:id="@+id/ae_imagebutton_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/cross_screen_arrow_icon1"
+            android:contentDescription="@string/imgdes" />
+
+        <TextView
+            android:id="@+id/ae_textview_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/str_video_edit_title"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+        <TextView
+            android:id="@+id/tv_ae_next_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/str_video_edit_next"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp" />
+    </RelativeLayout>
+
     <FrameLayout
         android:id="@+id/fl_video_sur_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/ae_relativelayout_title"
         android:background="#ff0000" >
 
         <ImageView

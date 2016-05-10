@@ -41,6 +41,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.videoedit.adapter.AEMusicAdapter;
 import com.mobnote.videoedit.adapter.ChannelLineAdapter;
@@ -64,7 +65,7 @@ import cn.npnt.ae.model.Chunk;
 import cn.npnt.ae.model.Project;
 import cn.npnt.ae.model.Transition;
 
-public class AfterEffectActivity extends Activity implements AfterEffectListener, View.OnClickListener {
+public class AfterEffectActivity extends BaseActivity implements AfterEffectListener, View.OnClickListener {
 	RecyclerView mAERecyclerView;
 	LinearLayoutManager mAELayoutManager;
 	RecyclerView mAEMusicRecyclerView;
@@ -356,6 +357,7 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 		});
 
 		mAfterEffect = new AfterEffect(this, mGLSurfaceView, this, width, height);
+		addTail("crackerli", "2016-09-09");
 		mProject = mAfterEffect.getProject();
 
 		mAfterEffecthandler = new Handler() {
@@ -419,6 +421,9 @@ public class AfterEffectActivity extends Activity implements AfterEffectListener
 			AfterEffect afterEffect = playBean.effect;
 			final int chunkIndex = playBean.chunkIndex;
 
+			if(chunkIndex == -1) {
+				return;
+			}
 			Chunk chunk = afterEffect.getMainChunks().get(chunkIndex);
 
 //			Log.d("CK1", "MSG_AE_PLAY_PROGRESS " + currentChunkPosition + "/" + chunkPosition + "/" + currentPlayPosition);
