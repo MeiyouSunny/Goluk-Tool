@@ -225,7 +225,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 			setUserHeadImage(currentUserInfo.head, currentUserInfo.customavatar);
 			setAuthentication(currentUserInfo.mUserLabel);
 		}
-		drawPersonsHead();
+		// drawPersonsHead();
 		mLiveManager = new TimerManager(10);
 		mLiveManager.setListener(this);
 		mApp.addLocationListener(TAG, this);
@@ -278,7 +278,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 			}
 			mVideoSquareManager.addVideoSquareManagerListener("live", this);
 		}
-		mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_MYLOCATION, 10 * 1000);
+		// mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_MYLOCATION, 10 * 1000);
 	}
 
 	private void getURL() {
@@ -370,7 +370,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 			GolukDebugUtils.e("", "jyf----20150406----LiveActivity----pointDataCallback----aid  : " + tempUserInfo.aid
 					+ " lon:" + tempUserInfo.lon + " lat:" + tempUserInfo.lat);
 			mMapTools.updatePosition(tempUserInfo.aid, Double.parseDouble(tempUserInfo.lon),
-					Double.parseDouble(tempUserInfo.lat));
+					Double.parseDouble(tempUserInfo.lat), true);
 			currentUserInfo.lat = tempUserInfo.lat;
 			currentUserInfo.lon = tempUserInfo.lon;
 			GolukDebugUtils.e(null, "jyf-------live----LiveActivity--pointDataCallback type55555:  ：");
@@ -552,10 +552,14 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 			startLiveForServer();
 			break;
 		case MSG_H_TO_MYLOCATION:
-			toMyLocation();
+			// toMyLocation();
 			break;
 		case MSG_H_TO_GETMAP_PERSONS:
 			EventBus.getDefault().post(new EventMapQuery(EventConfig.LIVE_MAP_QUERY));
+			break;
+		case MSG_H_MAPLOAD_FINISH:
+			// 地图加载完成
+			drawPersonsHead();
 			break;
 		}
 	}
@@ -750,6 +754,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 		if (null != mLiveOperator) {
 			mLiveOperator.onResume();
 		}
+
 	}
 
 	/**
@@ -1090,6 +1095,11 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 	 */
 	public boolean report(String channel, String videoid, String reporttype) {
 		return GolukApplication.getInstance().getVideoSquareManager().report(channel, videoid, reporttype);
+	}
+
+	/** 判断当前是否是直播 */
+	public boolean isShareLive() {
+		return isShareLive;
 	}
 
 	private void click_share(boolean isClick) {

@@ -711,6 +711,7 @@
 	<string name="str_floor_text">Post # %1$s</string>
 
     <!-- 直播 -->
+    <string name="str_live_no_live">No live videos</string>
     <string name="str_live_start_progress_msg">Creating Live Video. Please wait</string>
     <string name="str_live_retry_upload_msg">Live Video is disconnected. Reconnecting</string>
     <string name="str_live_net_error">Network anomalies. Live Video has ended</string>
@@ -1052,6 +1053,14 @@
      <string name="str_authorize_fail">Authorize fail</string>
      <string name="str_frist_refresh_begen_txt">Today featured </string>
      <string name="str_frist_refresh_end_txt"> New video</string>
-     
-     <string name="str_more_refresh_begen_txt">Find again </string>
+
+    <string name="str_more_refresh_begen_txt">Find again </string>
+    <string name="action_layout_linear">LinearLayoutManager</string>
+    <string name="action_layout_grid">GridLayoutManager</string>
+    <string name="action_layout_staggered">StaggeredLayoutManager</string>
+    <string name="ae_cut">裁剪</string>
+    <string name="ae_split">拆分</string>
+    <string name="ae_volume">音量</string>
+    <string name="ae_delete">删除</string>
+    <string name="local_video">本地视频</string>
 </resources>

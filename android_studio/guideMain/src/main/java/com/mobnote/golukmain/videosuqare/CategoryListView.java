@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
@@ -60,6 +61,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	private NewestAdapter mCategoryAdapter = null;
 	private String historyDate;
 	private RelativeLayout noDataView = null;
+	private TextView mHintTv;
 
 	private SimpleDateFormat sdf;
 
@@ -79,11 +81,11 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	private RelativeLayout loading = null;
 	/**
 	 * * 0:第一次
-	 * 
+	 *
 	 * 1：上拉
-	 * 
+	 *
 	 * 2：下拉
-	 * 
+	 *
 	 */
 	private int uptype = 0;
 	private SharePlatformUtil sharePlatform;
@@ -194,6 +196,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 	private void initView() {
 		mRootLayout = (RelativeLayout) layoutInflater.inflate(R.layout.video_type_list, null);
+		mHintTv = (TextView)mRootLayout.findViewById(R.id.tv_category_hint);
 		mRTPullListView = (RTPullListView) mRootLayout.findViewById(R.id.mRTPullListView);
 		mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
 
@@ -235,7 +238,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 	/**
 	 * 获取本地缓存数据
-	 * 
+	 *
 	 * @return
 	 * @author jyf
 	 * @date 2015年8月12日
@@ -248,7 +251,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 	/**
 	 * 获取网络数据(请求)
-	 * 
+	 *
 	 * @param flag
 	 *            是否显示加载中对话框
 	 * @author xuhw
@@ -282,6 +285,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		if (1 != msg) {
 			// 失败
 			isFirstShowDialog = false;
+			mHintTv.setText(mContext.getResources().getString(R.string.msg_system_connect_error));
 			callBackFailed();
 			dataCallBackRefresh();
 			return;
@@ -341,7 +345,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
 	/**
 	 * 在用户点击列表分享前，要保存将被分享的实体
-	 * 
+	 *
 	 * @param info
 	 * @author jyf
 	 * @date 2015年8月9日
@@ -470,8 +474,11 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 			// 如果是 直播，下拉刷新后，没有数据，則直接清空列表，证明当前没有直播
 			if ("1".equals(mType)) {
 				mDataList.clear();
+				mHintTv.setText(mContext.getResources().getString(R.string.str_live_no_live));
 			}
 			mRTPullListView.onRefreshComplete(getLastRefreshTime());
+		}else{
+			mHintTv.setText(mContext.getResources().getString(R.string.str_live_no_live));
 		}
 	}
 
@@ -537,28 +544,28 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	@Override
 	public void onScrollStateChanged(AbsListView arg0, int scrollState) {
 		switch (scrollState) {
-		case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-			break;
-		case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-			if (null != mRTPullListView && null != mRTPullListView.getAdapter()) {
-				if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {
-					if (isHaveData) {
-						// 上拉刷新
-						uptype = 1;
-						if (null != endtime && null != endtime.mVideoEntity) {
-							String timeSign = endtime.mVideoEntity.sharingtime;
-							GolukDebugUtils.e("", "jyf----CategoryListView------------------onRefresh  上拉刷新: "
-									+ timeSign);
-							httpPost(mType, mAttribute, "2", timeSign);
+			case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+				break;
+			case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+				if (null != mRTPullListView && null != mRTPullListView.getAdapter()) {
+					if (mRTPullListView.getAdapter().getCount() == (wonderfulFirstVisible + wonderfulVisibleCount)) {
+						if (isHaveData) {
+							// 上拉刷新
+							uptype = 1;
+							if (null != endtime && null != endtime.mVideoEntity) {
+								String timeSign = endtime.mVideoEntity.sharingtime;
+								GolukDebugUtils.e("", "jyf----CategoryListView------------------onRefresh  上拉刷新: "
+										+ timeSign);
+								httpPost(mType, mAttribute, "2", timeSign);
+							}
 						}
 					}
 				}
-			}
-			break;
-		case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-			break;
-		default:
-			break;
+				break;
+			case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+				break;
+			default:
+				break;
 		}
 
 	}
@@ -625,52 +632,52 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		switch (requestType) {
-		case IPageNotifyFn.PageType_Praise:
-			PraiseResultBean prBean = (PraiseResultBean) result;
-			if (null == result || !prBean.success) {
-				GolukUtils.showToast(mContext, mContext.getString(R.string.user_net_unavailable));
-				return;
-			}
-
-			PraiseResultDataBean ret = prBean.data;
-			if (null != ret && !TextUtils.isEmpty(ret.result)) {
-				if ("0".equals(ret.result)) {
-					if (null != mPraiseVideoSquareInfo) {
-						if ("0".equals(mPraiseVideoSquareInfo.mVideoEntity.ispraise)) {
-							mPraiseVideoSquareInfo.mVideoEntity.ispraise = "1";
-							updateClickPraiseNumber(true, mPraiseVideoSquareInfo);
-						}
-					}
-				} else if ("7".equals(ret.result)) {
-					GolukUtils.showToast(mContext, mContext.getString(R.string.str_no_duplicated_praise));
-				} else {
-					GolukUtils.showToast(mContext, mContext.getString(R.string.str_praise_failed));
+			case IPageNotifyFn.PageType_Praise:
+				PraiseResultBean prBean = (PraiseResultBean) result;
+				if (null == result || !prBean.success) {
+					GolukUtils.showToast(mContext, mContext.getString(R.string.user_net_unavailable));
+					return;
 				}
-			}
-			break;
-		case IPageNotifyFn.PageType_PraiseCancel:
-			PraiseCancelResultBean praiseCancelResultBean = (PraiseCancelResultBean) result;
-			if (praiseCancelResultBean == null || !praiseCancelResultBean.success) {
-				GolukUtils.showToast(mContext, mContext.getString(R.string.user_net_unavailable));
-				return;
-			}
 
-			PraiseCancelResultDataBean cancelRet = praiseCancelResultBean.data;
-			if (null != cancelRet && !TextUtils.isEmpty(cancelRet.result)) {
-				if ("0".equals(cancelRet.result)) {
-					if (null != mPraiseVideoSquareInfo) {
-						if ("1".equals(mPraiseVideoSquareInfo.mVideoEntity.ispraise)) {
-							mPraiseVideoSquareInfo.mVideoEntity.ispraise = "0";
-							updateClickPraiseNumber(true, mPraiseVideoSquareInfo);
+				PraiseResultDataBean ret = prBean.data;
+				if (null != ret && !TextUtils.isEmpty(ret.result)) {
+					if ("0".equals(ret.result)) {
+						if (null != mPraiseVideoSquareInfo) {
+							if ("0".equals(mPraiseVideoSquareInfo.mVideoEntity.ispraise)) {
+								mPraiseVideoSquareInfo.mVideoEntity.ispraise = "1";
+								updateClickPraiseNumber(true, mPraiseVideoSquareInfo);
+							}
 						}
+					} else if ("7".equals(ret.result)) {
+						GolukUtils.showToast(mContext, mContext.getString(R.string.str_no_duplicated_praise));
+					} else {
+						GolukUtils.showToast(mContext, mContext.getString(R.string.str_praise_failed));
 					}
-				} else {
-					GolukUtils.showToast(mContext, mContext.getString(R.string.str_cancel_praise_failed));
 				}
-			}
-			break;
-		default:
-			break;
+				break;
+			case IPageNotifyFn.PageType_PraiseCancel:
+				PraiseCancelResultBean praiseCancelResultBean = (PraiseCancelResultBean) result;
+				if (praiseCancelResultBean == null || !praiseCancelResultBean.success) {
+					GolukUtils.showToast(mContext, mContext.getString(R.string.user_net_unavailable));
+					return;
+				}
+
+				PraiseCancelResultDataBean cancelRet = praiseCancelResultBean.data;
+				if (null != cancelRet && !TextUtils.isEmpty(cancelRet.result)) {
+					if ("0".equals(cancelRet.result)) {
+						if (null != mPraiseVideoSquareInfo) {
+							if ("1".equals(mPraiseVideoSquareInfo.mVideoEntity.ispraise)) {
+								mPraiseVideoSquareInfo.mVideoEntity.ispraise = "0";
+								updateClickPraiseNumber(true, mPraiseVideoSquareInfo);
+							}
+						}
+					} else {
+						GolukUtils.showToast(mContext, mContext.getString(R.string.str_cancel_praise_failed));
+					}
+				}
+				break;
+			default:
+				break;
 		}
 	}
 }

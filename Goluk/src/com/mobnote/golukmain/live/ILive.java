@@ -69,6 +69,7 @@ public interface ILive {
 	public static final int MSG_H_TO_MYLOCATION = 9;
 	/** 查询地图上的大头針数据 */
 	public static final int MSG_H_TO_GETMAP_PERSONS = 10;
+	public static final int MSG_H_MAPLOAD_FINISH = 11;
 	/** 重新发起一个新的直播 */
 	public static final int MSG_H_START_NEW_LIVE = 100;
 	/** 开始请求服务器 */

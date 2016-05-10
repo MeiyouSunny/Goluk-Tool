@@ -818,7 +818,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			}
 			GolukDebugUtils
 					.e(null, "jyf----20150406----LiveActivity----drawPersonsHead----3  : " + currentUserInfo.aid);
-			mBaiduMapManage.addSinglePoint(JsonUtil.UserInfoToString(currentUserInfo));
+			mBaiduMapManage.addSinglePoint(JsonUtil.UserInfoToString(currentUserInfo),false);
 		} catch (Exception e) {
 			e.printStackTrace();
 			GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawPersonsHead---4-Exception : ");
@@ -854,7 +854,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 				myInfo.lon = String.valueOf(myPosition.rawLon);
 				myInfo.lat = String.valueOf(myPosition.rawLat);
 				String drawTxt = JsonUtil.UserInfoToString(myInfo);
-				mBaiduMapManage.addSinglePoint(drawTxt);
+				mBaiduMapManage.addSinglePoint(drawTxt,false);
 				GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---5: " + drawTxt);
 			}
 
@@ -1504,7 +1504,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 			GolukDebugUtils.e("", "jyf----20150406----LiveActivity----pointDataCallback----aid  : " + tempUserInfo.aid
 					+ " lon:" + tempUserInfo.lon + " lat:" + tempUserInfo.lat);
 			mBaiduMapManage.updatePosition(tempUserInfo.aid, Double.parseDouble(tempUserInfo.lon),
-					Double.parseDouble(tempUserInfo.lat));
+					Double.parseDouble(tempUserInfo.lat), true);
 			currentUserInfo.lat = tempUserInfo.lat;
 			currentUserInfo.lon = tempUserInfo.lon;
 			GolukDebugUtils.e(null, "jyf-------live----LiveActivity--pointDataCallback type55555:  str：" + str);
@@ -1671,7 +1671,7 @@ public class LiveActivity extends BaseActivity implements OnClickListener, RtmpP
 						// 当前画的是蓝点，需要清除掉蓝点，再画气泡
 					} else {
 						// 当前是画的气泡，直接更新气泡的位置即可
-						mBaiduMapManage.updatePosition(myInfo.aid, location.rawLon, location.rawLat);
+						mBaiduMapManage.updatePosition(myInfo.aid, location.rawLon, location.rawLat, true);
 					}
 					// 设置当前画的是头像
 					mCurrentLocationType = LOCATION_TYPE_HEAD;

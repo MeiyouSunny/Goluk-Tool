@@ -24,7 +24,7 @@ public class ReplyDialog extends Dialog implements android.view.View.OnClickList
 	private Context mContext;
 	private CommentBean mCommentBean = null;
 	private EditText mEditText = null;
-	private boolean mFlagReply ;
+	private boolean mFlagReply;
 
 	public ReplyDialog(Context context, CommentBean commentBean, EditText editText, boolean isReply) {
 		super(context, R.style.CustomDialog);
@@ -67,16 +67,23 @@ public class ReplyDialog extends Dialog implements android.view.View.OnClickList
 		} else {
 		}
 	}
-	
+
 	/**
 	 * 点击回复或删除后处理操作
 	 */
 	private void deal() {
 		if (mFlagReply) {
-			mEditText.requestFocus();
-			GolukUtils.showSoft(mEditText);
+			// mEditText.requestFocus();
+			// GolukUtils.showSoft(mEditText);
 			mEditText.setHint(mContext.getString(R.string.str_reply_other_text) + mCommentBean.mUserName
 					+ mContext.getString(R.string.str_colon));
+
+			if (mContext instanceof VideoDetailActivity) {
+				((VideoDetailActivity) mContext).click_soft();
+			} else if (mContext instanceof CommentActivity) {
+				((CommentActivity) mContext).click_soft();
+			}
+
 		} else {
 			if (mContext instanceof VideoDetailActivity) {
 				((VideoDetailActivity) mContext).httpPost_requestDel(mCommentBean.mCommentId);

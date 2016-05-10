@@ -46,13 +46,13 @@ package com.mobnote.map;
 public class GoogleMapTools implements IMapTools{
 
 	@Override
-	public void updatePosition(String aid, double lon, double lat) {
+	public void updatePosition(String aid, double lon, double lat,boolean isCenter) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void addSinglePoint(String pointStr) {
+	public void addSinglePoint(String pointStr,boolean isCenter) {
 		// TODO Auto-generated method stub
 		
 	}

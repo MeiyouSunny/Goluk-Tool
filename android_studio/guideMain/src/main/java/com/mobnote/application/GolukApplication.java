@@ -103,8 +103,9 @@ import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
 import de.greenrobot.event.EventBus;
+import android.support.multidex.MultiDexApplication;
 
-public class GolukApplication extends Application implements IPageNotifyFn, IPCManagerFn, ITalkFn, ILocationFn {
+public class GolukApplication extends MultiDexApplication implements IPageNotifyFn, IPCManagerFn, ITalkFn, ILocationFn {
 	/** JIN接口类 */
 	public GolukLogic mGoluk = null;
 	/** ip地址 */
@@ -2020,9 +2021,19 @@ public class GolukApplication extends Application implements IPageNotifyFn, IPCM
 	}
 	
 	public void setLoginRespInfo(String info) {
-		GolukDebugUtils.e("","login----GolukApplication---setLoginRespInfo----info: " + info);
-		mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SetLoginRespInfo,
-				info);
+		try {
+			if (!TextUtils.isEmpty(info)) {
+				UserResult result = GolukFastJsonUtil.getParseObj(info, UserResult.class);
+				result.data.nickname = "";
+				result.data.desc = "";
+				info = GolukFastJsonUtil.setParseObj(result);
+			}
+			GolukDebugUtils.e("","login----GolukApplication---setLoginRespInfo----info: " + info);
+			mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SetLoginRespInfo,
+					info);
+		} catch (Exception e) {
+
+		}
 	}
 
 	
