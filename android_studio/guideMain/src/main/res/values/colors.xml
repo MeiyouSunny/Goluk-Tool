@@ -132,4 +132,7 @@
 	
 	<color name="color_square_refresh_msg_bg">#bfa3d3ff</color>
 	<color name="color_square_refresh_msg">#0080ff</color>
+
+    <color name="ae_controller_normal">#242629</color>
+    <color name="ae_controller_pressed">#16181a</color>
 </resources>
