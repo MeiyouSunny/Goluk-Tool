@@ -711,6 +711,7 @@
 	<string name="str_floor_text">Post # %1$s</string>
 
     <!-- 直播 -->
+    <string name="str_live_no_live">No live videos</string>
     <string name="str_live_start_progress_msg">Creating Live Video. Please wait</string>
     <string name="str_live_retry_upload_msg">Live Video is disconnected. Reconnecting</string>
     <string name="str_live_net_error">Network anomalies. Live Video has ended</string>

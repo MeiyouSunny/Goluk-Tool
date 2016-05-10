@@ -726,6 +726,7 @@
     <string name="str_floor_text">%1$s楼</string>
 
     <!-- 直播 -->
+    <string name="str_live_no_live">当前没有直播</string>
     <string name="str_live_start_progress_msg">正在创建直播，请稍候...</string>
     <string name="str_live_retry_upload_msg">直播断开，正在为您重新连接...</string>
     <string name="str_live_net_error">网络异常，直播结束</string>

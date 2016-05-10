@@ -15,6 +15,7 @@
         android:visibility="gone" >
 
         <TextView
+            android:id="@+id/tv_category_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
