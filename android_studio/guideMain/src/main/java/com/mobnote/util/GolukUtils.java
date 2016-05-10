@@ -34,6 +34,7 @@ import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
 import com.mobnote.golukmain.usercenter.UCUserInfo;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
+import com.mobnote.videoedit.AfterEffectActivity;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -123,7 +124,7 @@ public class GolukUtils {
 
 	/**
 	 * 秒转换为 时：分：秒
-	 * 
+	 *
 	 * @param second
 	 * @return
 	 * @author jiayf
@@ -176,7 +177,7 @@ public class GolukUtils {
 
 	/**
 	 * 默认浏览器打开指定的url
-	 * 
+	 *
 	 * @param url
 	 * @param mContext
 	 */
@@ -223,7 +224,7 @@ public class GolukUtils {
 
 	/**
 	 * 显示短提示
-	 * 
+	 *
 	 * @param context
 	 * @param text
 	 *            需要显示的文本信息
@@ -243,7 +244,7 @@ public class GolukUtils {
 
 	/**
 	 * 显示短提示
-	 * 
+	 *
 	 * @param context
 	 *            上下文
 	 * @param text
@@ -269,7 +270,7 @@ public class GolukUtils {
 
 	/**
 	 * 写文件
-	 * 
+	 *
 	 * @param filename
 	 *            文件绝对路径
 	 * @param msg
@@ -310,7 +311,7 @@ public class GolukUtils {
 
 	/**
 	 * 检查sd卡剩余容量是否可用
-	 * 
+	 *
 	 * @param filesize
 	 *            文件大小 MB
 	 * @return
@@ -333,7 +334,7 @@ public class GolukUtils {
 
 	/**
 	 * 打开手机系统WIFI列表
-	 * 
+	 *
 	 * @param context
 	 * @author jyf
 	 * @date 2015年7月3日
@@ -424,7 +425,7 @@ public class GolukUtils {
 
 	/**
 	 * 弹出软键盘
-	 * 
+	 *
 	 * @param edit
 	 * @author jyf
 	 * @date 2015年8月7日
@@ -537,7 +538,7 @@ public class GolukUtils {
 
 	/**
 	 * 获取评论列表显示时间规则()
-	 * 
+	 *
 	 * @param time
 	 *            类似2010-11-20 11:10:10
 	 * @return
@@ -723,7 +724,7 @@ public class GolukUtils {
 
 	/**
 	 * 把drawable中的资源图片转换成Uri格式
-	 * 
+	 *
 	 * @param resId
 	 * @return
 	 * @author jyf
@@ -866,7 +867,7 @@ public class GolukUtils {
 
 	/**
 	 * 打开系统wifi列表
-	 * 
+	 *
 	 * @param context
 	 * @author jyf
 	 */
@@ -911,7 +912,7 @@ public class GolukUtils {
 
 	/**
 	 * 通过wifi的原始 ssid ，获取设备类型 (G系列，T系列)
-	 * 
+	 *
 	 * @param mWillConnName
 	 * @return
 	 * @author jyf
@@ -936,7 +937,7 @@ public class GolukUtils {
 
 	/**
 	 * 获取国家语言编码
-	 * 
+	 *
 	 * @return
 	 */
 	public static String getLanguage() {
@@ -945,7 +946,7 @@ public class GolukUtils {
 
 	/**
 	 * 获取国家地区编码
-	 * 
+	 *
 	 * @return
 	 */
 	private static String getCountry() {
@@ -954,9 +955,9 @@ public class GolukUtils {
 
 	/**
 	 * 判断时国际版还是国内版
-	 * 
+	 *
 	 * 国内０　　国际１ 默认为国际
-	 * 
+	 *
 	 * @return
 	 */
 	public static String getCommversion() {
@@ -971,7 +972,7 @@ public class GolukUtils {
 
 	/**
 	 * 获取语言与国家
-	 * 
+	 *
 	 * @return
 	 */
 	public static String getLanguageAndCountry() {
@@ -1078,6 +1079,19 @@ public class GolukUtils {
 
 		intent.putExtra("type", tempType);
 		intent.putExtra("cn.com.mobnote.video.path", path);
+		context.startActivity(intent);
+	}
+
+	public static void startAEActivity(Context context,int type,String path){
+		Intent intent = new Intent(context, AfterEffectActivity.class);
+
+		int tempType = 2;
+		if (type == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
+			tempType = 3;
+		}
+
+		intent.putExtra("type", tempType);
+		intent.putExtra("vidPath", path);
 		context.startActivity(intent);
 	}
 

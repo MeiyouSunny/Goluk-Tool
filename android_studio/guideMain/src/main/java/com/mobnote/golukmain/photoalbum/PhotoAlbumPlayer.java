@@ -375,7 +375,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			}
 		} else if (id == R.id.btn_download) {
 			if (mVideoFrom.equals("local")) {
-				Intent intent = new Intent(this, VideoEditActivity.class);
 
 				int tempType = 2;
 				if (mType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG/*
@@ -384,10 +383,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 																 */) {
 					tempType = 3;
 				}
-
-				intent.putExtra("type", tempType);
-				intent.putExtra("cn.com.mobnote.video.path", mPath);
-				startActivity(intent);
+				GolukUtils.startAEActivity(this,tempType,mPath);
 				finish();
 			} else {
 				EventBus.getDefault().post(new EventDownloadIpcVid(mFileName, getType()));
