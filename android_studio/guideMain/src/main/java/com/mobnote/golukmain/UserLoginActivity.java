@@ -330,26 +330,31 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 			}
 			startActivity(itForget);
 		} else if (id == R.id.btn_weixin_login) {
-			if (!GolukUtils.isAppInstalled(this, "com.tencent.mm")) {
-				GolukUtils.showToast(this, getString(R.string.str_no_weixin));
-				return;
+			if(GolukUtils.isNetworkConnected(this)){
+				if (!GolukUtils.isAppInstalled(this, "com.tencent.mm")) {
+					GolukUtils.showToast(this, getString(R.string.str_no_weixin));
+					return;
+				}
+				String infoStr = GolukFileUtils.loadString(GolukFileUtils.THIRD_USER_INFO, "");
+				if (TextUtils.isEmpty(infoStr)) {
+					ThirdPlatformLoginUtil thirdPlatformLogin = new ThirdPlatformLoginUtil(this);
+					thirdPlatformLogin.setListener(this);
+					thirdPlatformLogin.login(SHARE_MEDIA.WEIXIN);
+				} else {
+					mApplication.mLoginManage.setUserLoginInterface(this);
+					
+					HashMap<String,String> info = new HashMap<String, String>();
+					info.put("platform", "weixin");
+					info.put("userinfo", infoStr);
+					info.put("devices", GolukFileUtils.loadString(GolukFileUtils.KEY_BIND_HISTORY_LIST, ""));
+					mApplication.mLoginManage.login(info);
+					mApplication.loginStatus = 0;
+					showProgressDialog();
+				}
+			}else{
+				GolukUtils.showToast(this,getResources().getString(R.string.str_check_network));
 			}
-			String infoStr = GolukFileUtils.loadString(GolukFileUtils.THIRD_USER_INFO, "");
-			if (TextUtils.isEmpty(infoStr)) {
-				ThirdPlatformLoginUtil thirdPlatformLogin = new ThirdPlatformLoginUtil(this);
-				thirdPlatformLogin.setListener(this);
-				thirdPlatformLogin.login(SHARE_MEDIA.WEIXIN);
-			} else {
-				mApplication.mLoginManage.setUserLoginInterface(this);
-				
-				HashMap<String,String> info = new HashMap<String, String>();
-				info.put("platform", "weixin");
-				info.put("userinfo", infoStr);
-				info.put("devices", GolukFileUtils.loadString(GolukFileUtils.KEY_BIND_HISTORY_LIST, ""));
-				mApplication.mLoginManage.login(info);
-				mApplication.loginStatus = 0;
-				showProgressDialog();
-			}
+			
 		}
 	}
 
@@ -604,7 +609,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 	public String getTopActivityName(Context context) {
 		String topActivityClassName = null;
 		ActivityManager activityManager = (ActivityManager) (context
-				.getSystemService(android.content.Context.ACTIVITY_SERVICE));
+				.getSystemService(Context.ACTIVITY_SERVICE));
 		// android.app.ActivityManager.getRunningTasks(int maxNum)
 		// 即最多取得的运行中的任务信息(RunningTaskInfo)数量
 		List<RunningTaskInfo> runningTaskInfos = activityManager.getRunningTasks(1);

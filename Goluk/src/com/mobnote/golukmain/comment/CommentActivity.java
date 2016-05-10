@@ -192,7 +192,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 		setOnTouchListener();
 	}
-	
+
 	public void observeSoftKeyboard() {
 		SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
 			@Override
@@ -251,8 +251,6 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			click_switchInput();
 		}
 	}
-	
-	
 
 	@Override
 	protected void onStop() {
@@ -580,6 +578,10 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 					}
 					mReplyDialog = new ReplyDialog(this, mWillDelBean, mEditInput, mIsReply);
 					mReplyDialog.show();
+					if (!mInputState) {
+						this.hideEmojocon();
+						this.setSwitchState(true);
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -819,11 +821,11 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			isSwitchStateFinish = true;
 		}
 	}
-	
+
 	/** 标志一个状态是否切换完成 */
 	private boolean isSwitchStateFinish = true;
 
-	private void click_soft() {
+	public void click_soft() {
 		if (!this.isCanShowSoft()) {
 			return;
 		}
@@ -863,7 +865,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	private void setResize() {
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 	}
-	
+
 	private void setLayoutHeight() {
 		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) emoLayout.getLayoutParams();
 		lp.height = GolukUtils.getKeyBoardHeight();
@@ -921,6 +923,13 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			mBaseHandler.removeMessages(100);
 			mBaseHandler.removeMessages(200);
 			mBaseHandler.removeMessages(300);
+		}
+	}
+
+	public void reply() {
+		if (!mInputState) {
+			this.hideEmojocon();
+			this.setSwitchState(true);
 		}
 	}
 

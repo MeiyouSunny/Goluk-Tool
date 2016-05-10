@@ -1,6 +1,10 @@
 package com.mobnote.golukmain;
 
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.bean.GetPushSettingRequest;
+import com.mobnote.golukmain.bean.PushMsgSettingBean;
+import com.mobnote.golukmain.bean.SetPushSettingRequest;
+import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
 import com.mobnote.golukmain.xdpush.SettingBean;
@@ -16,7 +20,7 @@ import android.widget.Button;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 
-public class PushSettingActivity extends BaseActivity implements OnClickListener, ILiveDialogManagerFn {
+public class PushSettingActivity extends BaseActivity implements OnClickListener, ILiveDialogManagerFn,IRequestResultListener {
 
 	public static final String TAG = "PushSettingActivity";
 	private Button mCanCommentBtn = null;
@@ -29,6 +33,9 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 	private boolean isCanParise = true;
 	/** 有人关注我 */
 	private boolean isCanFollow = true;
+	
+	private GetPushSettingRequest mGetPushSettingRequest = null;
+	private SetPushSettingRequest mSetPushSettingRequest = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,21 +74,20 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 	 * @author jyf
 	 */
 	private void getConfigFromServer() {
-		boolean isSucess = mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_GetPushCfg, "");
-		if (!isSucess) {
-			GolukUtils.showToast(this, this.getResources().getString(R.string.str_getwificfg_fail));
-			return;
-		}
+		mGetPushSettingRequest = new GetPushSettingRequest(IPageNotifyFn.PageType_GetPushCfg, this);
+		mGetPushSettingRequest.get(mBaseApp.getMyInfo().uid);
+		
 		LiveDialogManager.getManagerInstance().showCommProgressDialog(this,
 				LiveDialogManager.DIALOG_TYPE_GET_PUSH_CONFIGE, "",
 				this.getResources().getString(R.string.str_request_config_ongoing), true);
 	}
 
 	private void saveConfigToServer() {
-		String json = JsonUtil.getPushSetJson(mIsCanComment, isCanParise,isCanFollow);
-		mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SetPushCfg,
-				json);
+		mSetPushSettingRequest = new SetPushSettingRequest(IPageNotifyFn.PageType_SetPushCfg, this);
+		mSetPushSettingRequest.get(mBaseApp.getMyInfo().uid, mIsCanComment == true ? "1":"0", isCanParise == true ? "1":"0", isCanFollow == true ? "1":"0");
+//		String json = JsonUtil.getPushSetJson(mIsCanComment, isCanParise,isCanFollow);
+//		mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SetPushCfg,
+//				json);
 	}
 
 	private void setCommentState(boolean isOpen) {
@@ -177,6 +183,28 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 					JsonUtil.getCancelJson());
 		}
 
+	}
+
+	@Override
+	public void onLoadComplete(int requestType, Object result) {
+		if(requestType == IPageNotifyFn.PageType_GetPushCfg){
+			LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
+			PushMsgSettingBean psb = (PushMsgSettingBean) result;
+			if(psb != null){
+//				SettingBean bean = JsonUtil.parsePushSettingJson((String) param2);
+				if (null == psb || !psb.success || !"0".equals(psb.data.result)) {
+					GolukUtils.showToast(this, this.getResources().getString(R.string.str_getwificfg_fail));
+					return;
+				}
+				setFollowState(psb.data.isfollow.equals("1") ? true : false);
+				setCommentState(psb.data.iscomment.equals("1") ? true : false);
+				setPariseState(psb.data.ispraise.equals("1") ? true : false);
+			}else{
+				GolukUtils.showToast(this, getResources().getString(R.string.network_error));
+				return;
+			}
+		}
+		
 	}
 
 }
