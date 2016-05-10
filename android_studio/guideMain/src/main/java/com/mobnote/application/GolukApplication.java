@@ -2021,9 +2021,19 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 	}
 	
 	public void setLoginRespInfo(String info) {
-		GolukDebugUtils.e("","login----GolukApplication---setLoginRespInfo----info: " + info);
-		mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SetLoginRespInfo,
-				info);
+		try {
+			if (!TextUtils.isEmpty(info)) {
+				UserResult result = GolukFastJsonUtil.getParseObj(info, UserResult.class);
+				result.data.nickname = "";
+				result.data.desc = "";
+				info = GolukFastJsonUtil.setParseObj(result);
+			}
+			GolukDebugUtils.e("","login----GolukApplication---setLoginRespInfo----info: " + info);
+			mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SetLoginRespInfo,
+					info);
+		} catch (Exception e) {
+
+		}
 	}
 
 	
