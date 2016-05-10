@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="HciCloud_SDK_Java_3.0">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/systemAPI/libs/HciCloud_SDK_Java_3.0.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
