@@ -38,11 +38,13 @@ import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.Overlay;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.live.UserInfo;
+import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
 import com.mobnote.util.JsonUtil;
 
 /**
@@ -52,7 +54,7 @@ import com.mobnote.util.JsonUtil;
  * @author 陈宣宇
  * 
  */
-public class BaiduMapManage implements IMapTools{
+public class BaiduMapManage implements IMapTools {
 
 	private Context mContext = null;
 	private LayoutInflater mLayoutInflater = null;
@@ -169,6 +171,7 @@ public class BaiduMapManage implements IMapTools{
 					mk.setExtraInfo(bundle);
 					mMarkerData.put(mk, data);
 					mBaiduMap.setOnMarkerClickListener(new MyOnMarkerClickListener());
+					SetMapCenter(Double.parseDouble(lon), Double.parseDouble(lat));
 					GolukDebugUtils.e("", "jyf------AddMapPoint----array[2]: ");
 				}
 			} catch (JSONException e) {
@@ -180,40 +183,69 @@ public class BaiduMapManage implements IMapTools{
 	}
 
 	@Override
-	public void addSinglePoint(String userinfo) {
+	public void addSinglePoint(String userinfo, boolean isNeedMapCenter) {
+		GolukDebugUtils.e("", "jyf------BaiduMapManage----addSinglePoint : 1: " + userinfo);
 		try {
 			JSONObject data = new JSONObject(userinfo);
-			String lon = data.getString("lon");
-			String lat = data.getString("lat");
-			if (!"".equals(lon) && !"".equals(lat)) {
-				// 用户头像类型
-				int utype = Integer.valueOf(data.getString("head"));
-				int head = mHeadImg[utype];
+			final String lon = data.getString("lon");
+			final String lat = data.getString("lat");
 
-				// 定义Maker坐标点
-				LatLng point = ConvertLonLat(Double.parseDouble(lat), Double.parseDouble(lon));
-
-				// 构建Marker图标
-				BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(head);
-				// 构建MarkerOption，用于在地图上添加Marker
-				OverlayOptions option = new MarkerOptions().position(point).icon(bitmap).zIndex(1);
-				// 在地图上添加Marker，并显示
-				Marker mk = (Marker) (mBaiduMap.addOverlay(option));
-				Bundle bundle = new Bundle();
-				bundle.putSerializable("utype", utype);
-				mk.setExtraInfo(bundle);
-				mMarkerData.put(mk, data);
-
-				mBaiduMap.setOnMarkerClickListener(new MyOnMarkerClickListener());
+			GolukDebugUtils.e("", "jyf------BaiduMapManage----addSinglePoint : 2: lon:" + lon + "  lat: " + lat);
+			if (!isPositionValid(lon, lat)) {
+				return;
 			}
+			// 用户头像类型
+			final int utype = Integer.valueOf(data.getString("head"));
+			final int head = mHeadImg[utype];
+			// 定义Maker坐标点
+			LatLng point = ConvertLonLat(Double.parseDouble(lat), Double.parseDouble(lon));
+			// 构建Marker图标
+			BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(head);
+			// 构建MarkerOption，用于在地图上添加Marker
+			OverlayOptions option = new MarkerOptions().position(point).icon(bitmap);
+			// 在地图上添加Marker，并显示
+			Overlay overlay = mBaiduMap.addOverlay(option);
+
+			if (null == overlay) {
+				GolukDebugUtils.e("", "jyf------BaiduMapManage----addSinglePoint : 3--NULL====NULL:");
+			} else {
+				GolukDebugUtils.e("", "jyf------BaiduMapManage----addSinglePoint : 4--:");
+			}
+
+			Marker mk = (Marker) (overlay);
+			mk.setExtraInfo(getBundle(utype));
+			mMarkerData.put(mk, data);
+
+			GolukDebugUtils.e("", "jyf------BaiduMapManage----addSinglePoint : 5--:" + isNeedMapCenter);
+
+			if (isNeedMapCenter) {
+				SetMapCenter(Double.parseDouble(lon), Double.parseDouble(lat));
+			}
+
+			mBaiduMap.setOnMarkerClickListener(new MyOnMarkerClickListener());
+
+			GolukDebugUtils.e("", "jyf------BaiduMapManage----addSinglePoint : END--:");
+
 		} catch (Exception e) {
-
+			GolukDebugUtils.e("", "jyf------BaiduMapManage----addSinglePoint : --Exception ");
 		}
+	}
 
+	private boolean isPositionValid(String lon, String lat) {
+		if (!"".equals(lon) && !"".equals(lat)) {
+			return true;
+		}
+		return false;
+	}
+
+	private Bundle getBundle(int utype) {
+		Bundle bundle = new Bundle();
+		bundle.putSerializable("utype", utype);
+		return bundle;
 	}
 
 	@Override
-	public void updatePosition(String aid, double lon, double lat) {
+	public void updatePosition(String aid, double lon, double lat, boolean isNeedMapCenter) {
 		if (null == mMarkerData) {
 			return;
 		}
@@ -225,15 +257,45 @@ public class BaiduMapManage implements IMapTools{
 			Entry<Marker, Object> obj = it.next();
 			try {
 				UserInfo temp = JsonUtil.parseSingleUserInfoJson((JSONObject) obj.getValue());
-				if (temp.aid.equals(aid)) {
+				if (temp.aid.equals(aid)) { // 找到了原用户
+					if (isNeedMapCenter) {
+						// 更新位置时，需要确定地图中心点
+						SetMapCenter(lon, lat);
+					}
 					// 更新位置
 					Marker marker = obj.getKey();
-					LatLng point = ConvertLonLat(lat, lon);
-					marker.setPosition(point);
+
+					// 移除掉旧的Marker
+					marker.remove();
+					mMarkerData.remove(obj.getKey());
+
+					// 创建一个新的Marker
+					boolean isCenter = true;
+					temp.lat = String.valueOf(lat);
+					temp.lon = String.valueOf(lon);
+					if (mContext instanceof AbstractLiveActivity) {
+						if (((AbstractLiveActivity) mContext).isShareLive()) {
+							// 直播
+							isCenter = false;
+						} else {
+							// 当前登录用户的信息
+							UserInfo loginUserInfo = GolukApplication.getInstance().getMyInfo();
+							if (null != loginUserInfo) {
+								if (loginUserInfo.aid.equals(aid)) {
+									isCenter = false;
+								} else {
+									isCenter = true;
+								}
+							}
+						}
+					}
+					addSinglePoint(JsonUtil.UserInfoToString(temp), isCenter);
+
+					// LatLng point = ConvertLonLat(lat, lon);
+					// marker.setPosition(point);
 
 					GolukDebugUtils.e("", "jyf----20150406----LiveActivity----updatePosition --222 : lat: " + lat
 							+ "  lon:" + lon);
-
 					break;
 				}
 			} catch (Exception e) {
@@ -441,8 +503,8 @@ public class BaiduMapManage implements IMapTools{
 			return false;
 		}
 	}
-	
-	public void release(){
+
+	public void release() {
 		manageHandler.removeCallbacksAndMessages(null);
 		mContext = null;
 		mApp = null;
