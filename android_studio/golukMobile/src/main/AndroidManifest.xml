@@ -176,6 +176,16 @@
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.mobnote.videoedit.AfterEffectActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.mobnote.videoedit.VideoChooserActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name="com.mobnote.golukmain.startshare.VideoEditActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait"
