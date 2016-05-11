@@ -26,6 +26,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -33,7 +34,10 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -54,6 +58,7 @@ import com.mobnote.videoedit.bean.TransitionBean;
 import com.mobnote.videoedit.constant.VideoEditConstant;
 import com.mobnote.videoedit.utils.DeviceUtil;
 import com.mobnote.videoedit.utils.VideoEditUtils;
+import com.mobnote.videoedit.view.VideoEditExportDialog;
 
 import cn.npnt.ae.AfterEffect;
 import cn.npnt.ae.AfterEffectListener;
@@ -81,6 +86,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	Handler mAfterEffecthandler;
 	private ChannelLineAdapter mAdapter;
 	private FrameLayout mSurfaceLayout;
+	private ImageButton mBackBTN;
 
 	ImageView mVideoThumeIv;
 	ImageView mVideoPlayIV;
@@ -200,11 +206,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		}
 	}
 
-	/**
-	 * 
-	 * @param chunkIndex
-	 * @param position 基于当前chunk的拆分的位置。单位秒。
-	 */
 	public void splitChunk() {
 		if(mProjectItemList == null || mProjectItemList.size() <= 3) {
 			return ;
@@ -696,6 +697,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		mAfterEffect.seekTo(chunkIndex);
 	}
 
+	private VideoEditExportDialog mExportDialog;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -714,15 +717,28 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		DummyFooterBean footerBean = new DummyFooterBean();
 		footerBean.index_tag = VideoEditUtils.generateIndexTag();
 		mProjectItemList.add(footerBean);
+		mBackBTN = (ImageButton)findViewById(R.id.ib_ae_imagebutton_back);
+		mBackBTN.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				AfterEffectActivity.this.finish();
+			}
+		});
 
 		mAELayoutManager = new LinearLayoutManager(this);
 		mAELayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mAERecyclerView = (RecyclerView) findViewById(R.id.rv_video_edit_pic_list);
+		mExportDialog = new VideoEditExportDialog(this);
+		Window dialogWindow = mExportDialog.getWindow();
+		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+		dialogWindow.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+
 		mNextTV = (TextView)findViewById(R.id.tv_ae_next_button);
 		mNextTV.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				exportAfterEffectVideo();
+				mExportDialog.setQualityVisibility(true, true, false);
+				mExportDialog.show();
 			}
 		});
 
@@ -805,7 +821,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		return true;
 	}
 
-	private void exportAfterEffectVideo() {
+	public void exportAfterEffectVideo(int exportWidth, int exportHeight) {
 		float duration= mAfterEffect.getDuration();
 		if(duration < VideoEditConstant.MIN_VIDEO_DURATION || duration > VideoEditConstant.MAX_VIDEO_DURATION) {
 			Toast.makeText(this, "can not export length: " + duration, Toast.LENGTH_SHORT).show();
@@ -932,11 +948,15 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_EXPORT_FAILED, afterEffcet);
 		mAfterEffecthandler.sendMessage(msg);
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		if(mAfterEffect==null){
 			mAfterEffect.release();
+		}
+
+		if(null != mExportDialog && mExportDialog.isShowing()) {
+			mExportDialog.dismiss();
 		}
 		super.onDestroy();
 	}
