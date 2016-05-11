@@ -259,6 +259,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		boolean wonderfulType = GolukApplication.getInstance().getIPCControlManager().getWonderfulVideoType();
 		GolukDebugUtils.e("", "TSettingsActivity-------------------wonderfulType：" + wonderfulType);
 
+		// 获取精彩视频质量
+		boolean videoResolution = GolukApplication.getInstance().getIPCControlManager().getVideoResolution();
+		GolukDebugUtils.e("", "--------------SettingsActivity-----videoResolution：" + videoResolution);
+
 
 //		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
 ////			// 获取遥控器按键功能false
@@ -634,27 +638,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mParkingSecurityHintText
 					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g2));
 			mCarrecorderWonderfulLine.setVisibility(View.VISIBLE);
-			mWonderfulVideoQualityLayout.setVisibility(View.GONE);
+			mWonderfulVideoQualityLayout.setVisibility(View.VISIBLE);
 			mVolumeLayout.setVisibility(View.GONE);
 			mPowerTimeLayout.setVisibility(View.GONE);
 			mVoiceTypeLayout.setVisibility(View.GONE);
-		} else {
-			mISPLayout.setVisibility(View.GONE);
-//			mPhotoQualityLayout.setVisibility(View.VISIBLE);
-			mAutoPhotoItem.setVisibility(View.VISIBLE);
-			mFatigueLayout.setVisibility(View.VISIBLE);
-			mImageFlipLayout.setVisibility(View.VISIBLE);
-			mParkingSleepLayout.setVisibility(View.VISIBLE);
-//			mHandsetLayout.setVisibility(View.VISIBLE);
-
-			mADASAssistanceLayout.setVisibility(View.VISIBLE);
-			mParkingSecurityHintText
-					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g2));
-			mCarrecorderWonderfulLine.setVisibility(View.GONE);
-			mWonderfulVideoQualityLayout.setVisibility(View.VISIBLE);
-			mVolumeLayout.setVisibility(View.VISIBLE);
-			mPowerTimeLayout.setVisibility(View.VISIBLE);
-			mVoiceTypeLayout.setVisibility(View.VISIBLE);
 		}
 
 		mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
@@ -2039,9 +2026,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				+ "-----param1：" + param1 + "------param2：" + param2);
 		closeLoading();
 		if (RESULE_SUCESS == param1) {
-			if (!mSaveLastResolution.equals(mWonderfulVideoResolution)) {
-				showRebootDialog();
-			}
+//			if (!mSaveLastResolution.equals(mWonderfulVideoResolution)) {
+//				showRebootDialog();
+//			}
 			GolukApplication.getInstance().getIPCControlManager().getVideoResolution();
 		}
 	}
