@@ -47,6 +47,7 @@ import android.widget.Toast;
 
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.videoedit.adapter.AEMusicAdapter;
 import com.mobnote.videoedit.adapter.ChannelLineAdapter;
 import com.mobnote.videoedit.bean.ChunkBean;
@@ -69,6 +70,8 @@ import cn.npnt.ae.exceptions.InvalidVideoSourceException;
 import cn.npnt.ae.model.Chunk;
 import cn.npnt.ae.model.Project;
 import cn.npnt.ae.model.Transition;
+import com.mobnote.application.GolukApplication;
+import cn.npnt.ae.model.VideoEncoderCapability;
 
 public class AfterEffectActivity extends BaseActivity implements AfterEffectListener, View.OnClickListener {
 	RecyclerView mAERecyclerView;
@@ -284,7 +287,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		mAdapter.notifyDataSetChanged();
 	}
 
-	private void playOrPause() {
+	public void playOrPause() {
 		if(mPlayerState == PlayerState.PLAYING) {
 			mVideoPlayIV.setVisibility(View.VISIBLE);
 			mAfterEffect.playPause();
@@ -359,7 +362,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		});
 
 		mAfterEffect = new AfterEffect(this, mGLSurfaceView, this, width, height);
-		addTail("crackerli", "2016-09-09");
+		addTail();
 		mProject = mAfterEffect.getProject();
 
 		mAfterEffecthandler = new Handler() {
@@ -381,8 +384,18 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		addChunk(mVideoPath);
 	}
 
-	private void addTail(String nickName, String date) {
+	private void addTail() {
 		InputStream istr = null;
+		GolukApplication mApp = GolukApplication.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String date = sdf.format(new java.util.Date());
+		String nickName = null;
+		if(mApp.isUserLoginSucess) {
+			UserInfo userInfo = mApp.getMyInfo();
+			nickName = userInfo.nickname;
+		} else {
+			nickName = getString(R.string.str_default_video_edit_user_name);
+		}
 
 		try {
 			istr = getAssets().open("tailer.png");
@@ -687,13 +700,13 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	}
 
 	// Seek to chunk with specified offset
-	private void seekWith(int chunkIndex, int chunkWidth, float delta) {
+	public void seekWith(int chunkIndex, int chunkWidth, float delta) {
 		Chunk chunk = mAfterEffect.getMainChunks().get(chunkIndex);
 		mAfterEffect.seekTo(chunkIndex, delta / chunkWidth * chunk.getDuration());
 	}
 
 	// Seek to chunk with 0 offset
-	private void seekWith(int chunkIndex) {
+	public void seekWith(int chunkIndex) {
 		mAfterEffect.seekTo(chunkIndex);
 	}
 
@@ -737,7 +750,29 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		mNextTV.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mExportDialog.setQualityVisibility(true, true, false);
+				List<VideoEncoderCapability> capaList = mAfterEffect.getSuportedCapability();
+				if (capaList == null || capaList.size() == 0) {
+					Toast.makeText(AfterEffectActivity.this, "手机不支持合适的分辨率", Toast.LENGTH_SHORT).show();
+					return;
+				}
+
+				VideoEncoderCapability vc = capaList.get(capaList.size() - 1);
+				int width = vc.getWidth();
+				int height = vc.getHeight();
+				float fps = vc.getFps();
+				int bitrate = vc.getBitrate();
+				if(width == 1920 && height == 1080) {
+					mExportDialog.setQualityVisibility(true, true, true);
+				}
+
+				if(width == 1280 && height == 720) {
+					mExportDialog.setQualityVisibility(true, true, false);
+				}
+
+				if(width == 848 && height == 480) {
+					mExportDialog.setQualityVisibility(true, false, false);
+				}
+
 				mExportDialog.show();
 			}
 		});
@@ -814,13 +849,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		return mAfterEffect.getDuration();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		//getMenuInflater().inflate(R.menu.example, menu);
-		return true;
-	}
-
 	public void exportAfterEffectVideo(int exportWidth, int exportHeight) {
 		float duration= mAfterEffect.getDuration();
 		if(duration < VideoEditConstant.MIN_VIDEO_DURATION || duration > VideoEditConstant.MAX_VIDEO_DURATION) {
@@ -852,44 +880,12 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			mAfterEffect.export(destPath,
 //					VideoEditConstant.DEFAULT_EXPORT_WIDTH,
 //					VideoEditConstant.DEFAULT_EXPORT_HEIGHT,
-					480,270,
+					exportWidth, exportHeight,
 					(int) VideoEditConstant.DEFAULT_FPS,
 					VideoEditConstant.DEFAULT_EXPORT_BITRATE);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-/*		case R.id.action_layout_grid:
-			item.setChecked(true);
-			playOrPause();
-			break;
-		case R.id.action_layout_linear:
-			item.setChecked(true);
-			pause();
-			break;
-		case R.id.action_layout_export:
-			item.setChecked(true);
-			// VideoUtil.saveVideoOpenDialog(handler, progressDialog);
-			exportAfterEffectVideo();
-			break;
-		case R.id.action_layout_tail:
-			addTail("crackerli", "2016-09-09");
-			break;
-		case R.id.action_layout_music:
-			try {
-				mAfterEffect.editBackgroundMusic(mMusicPath);
-			} catch (InvalidVideoSourceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			item.setChecked(true);
-			break;*/
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
