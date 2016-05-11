@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -44,6 +45,7 @@ import android.widget.TextView;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import com.mobnote.eventbus.EventDownloadIpcVid;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
@@ -87,6 +89,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
 	private Handler mHandler = new Handler();
 	private CustomDialog mCustomDialog;
+    private CustomDialog mConfirmDeleteDialog;
 	private int mScreenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 	/** 视频播放时间 */
 	private int mPlayTime = 0;
@@ -245,6 +248,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		}
 		mCustomDialog = null;
 
+        if (mConfirmDeleteDialog != null && mConfirmDeleteDialog.isShowing()) {
+            mConfirmDeleteDialog.dismiss();
+        }
+        mConfirmDeleteDialog = null;
+
 		if (mPlayerMoreDialog != null && mPlayerMoreDialog.isShowing()) {
 			mPlayerMoreDialog.dismiss();
 		}
@@ -391,20 +399,30 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 				EventBus.getDefault().post(new EventDownloadIpcVid(mFileName, getType()));
 			}
 		} else if (id == R.id.btn_delete){
-                if (mPlayerMoreDialog == null) {
-                    String tempPath = "";
+//                if (mPlayerMoreDialog == null) {
+//                    String tempPath = "";
+//
+//                    if (!TextUtils.isEmpty(mVideoFrom)) {
+//                        if ("local".equals(mVideoFrom)) {
+//                            tempPath = mPath;
+//                        } else {
+//                            tempPath = mFileName;
+//                        }
+//                    }
+//
+//                    mPlayerMoreDialog = new PlayerMoreDialog(PhotoAlbumPlayer.this, tempPath, getType(), mVideoFrom, mType);
+//                }
+//                mPlayerMoreDialog.show();
+            String tempPath = "";
 
-                    if (!TextUtils.isEmpty(mVideoFrom)) {
-                        if ("local".equals(mVideoFrom)) {
-                            tempPath = mPath;
-                        } else {
-                            tempPath = mFileName;
-                        }
-                    }
-
-                    mPlayerMoreDialog = new PlayerMoreDialog(PhotoAlbumPlayer.this, tempPath, getType(), mVideoFrom, mType);
+            if (!TextUtils.isEmpty(mVideoFrom)) {
+                if ("local".equals(mVideoFrom)) {
+                    tempPath = mPath;
+                } else {
+                    tempPath = mFileName;
                 }
-                mPlayerMoreDialog.show();
+            }
+            showConfimDeleteDialog(tempPath);
         }else {
 			Log.e(TAG, "id = " + id);
 		}
@@ -473,6 +491,53 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		}
 		mIsFullScreen = bFull;
 	}
+
+    private boolean isAllowedDelete(String path) {
+        List<String> dlist = GolukApplication.getInstance().getDownLoadList();
+        if (dlist.contains(path)) {
+            return false;
+        }else{
+            return true;
+        }
+
+
+    }
+
+    private void showConfimDeleteDialog(final String path) {
+        if(mConfirmDeleteDialog==null){
+            mConfirmDeleteDialog = new CustomDialog(this);
+        }
+
+        mConfirmDeleteDialog.setMessage(this.getString(R.string.str_photo_delete_confirm), Gravity.CENTER);
+        mConfirmDeleteDialog.setLeftButton(this.getString(R.string.dialog_str_cancel), null);
+        mConfirmDeleteDialog.setRightButton(this.getString(R.string.str_button_ok), new CustomDialog.OnRightClickListener() {
+
+            @Override
+            public void onClickListener() {
+                // TODO Auto-generated method stub
+                mConfirmDeleteDialog.dismiss();
+                if(!"local".equals(mVideoFrom)){
+                    if(isAllowedDelete(path)){
+                        if (!GolukApplication.getInstance().getIpcIsLogin()) {
+                            GolukUtils.showToast(PhotoAlbumPlayer.this, PhotoAlbumPlayer.this.getResources().getString(R.string.str_photo_check_ipc_state));
+                        }else{
+                            EventBus.getDefault().post(new EventDeletePhotoAlbumVid(path,getType()));
+                            GolukUtils.showToast(PhotoAlbumPlayer.this, PhotoAlbumPlayer.this.getResources().getString(R.string.str_photo_delete_ok));
+                        }
+
+                        PhotoAlbumPlayer.this.finish();
+                    }else{
+                        GolukUtils.showToast(PhotoAlbumPlayer.this, PhotoAlbumPlayer.this.getResources().getString(R.string.str_photo_downing));
+                    }
+                }else{
+                    EventBus.getDefault().post(new EventDeletePhotoAlbumVid(path,getType()));
+                    GolukUtils.showToast(PhotoAlbumPlayer.this, PhotoAlbumPlayer.this.getResources().getString(R.string.str_photo_delete_ok));
+                    PhotoAlbumPlayer.this.finish();
+                }
+            }
+        });
+        mConfirmDeleteDialog.show();
+    }
 
 	/**
 	 * 获取播放地址
