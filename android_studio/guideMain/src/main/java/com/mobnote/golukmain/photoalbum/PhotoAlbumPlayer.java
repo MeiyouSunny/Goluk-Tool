@@ -120,9 +120,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	/** 自动隐藏顶部和底部View的时间 */
 	private static final int HIDE_TIME = 3000;
 	private boolean mDragging;
-
-	/** 更多对话框 */
-	private PlayerMoreDialog mPlayerMoreDialog;
 	private OrientationManager mOrignManager = null;
 
 	private final Runnable mPlayingChecker = new Runnable() {
@@ -253,10 +250,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         }
         mConfirmDeleteDialog = null;
 
-		if (mPlayerMoreDialog != null && mPlayerMoreDialog.isShowing()) {
-			mPlayerMoreDialog.dismiss();
-		}
-		mPlayerMoreDialog = null;
 		super.onDestroy();
 	}
 
@@ -399,20 +392,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 				EventBus.getDefault().post(new EventDownloadIpcVid(mFileName, getType()));
 			}
 		} else if (id == R.id.btn_delete){
-//                if (mPlayerMoreDialog == null) {
-//                    String tempPath = "";
-//
-//                    if (!TextUtils.isEmpty(mVideoFrom)) {
-//                        if ("local".equals(mVideoFrom)) {
-//                            tempPath = mPath;
-//                        } else {
-//                            tempPath = mFileName;
-//                        }
-//                    }
-//
-//                    mPlayerMoreDialog = new PlayerMoreDialog(PhotoAlbumPlayer.this, tempPath, getType(), mVideoFrom, mType);
-//                }
-//                mPlayerMoreDialog.show();
             String tempPath = "";
 
             if (!TextUtils.isEmpty(mVideoFrom)) {
