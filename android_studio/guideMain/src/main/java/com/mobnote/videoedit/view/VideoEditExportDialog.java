@@ -75,8 +75,9 @@ public class VideoEditExportDialog extends Dialog implements android.view.View.O
             mAEActivity.playOrPause();
             mAEActivity.exportAfterEffectVideo(VideoEditConstant.EXPORT_HD720P_WIDTH, VideoEditConstant.EXPORT_HD720P_HEIGHT);
         } else if (id == R.id.tv_ae_video_export_cancel) {
-            dismiss();
+//            dismiss();
         }
+        dismiss();
     }
 }
 
