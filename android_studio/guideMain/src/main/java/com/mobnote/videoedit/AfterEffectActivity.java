@@ -1,6 +1,7 @@
 package com.mobnote.videoedit;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,11 +17,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -47,6 +50,7 @@ import android.widget.Toast;
 
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.videoedit.adapter.AEMusicAdapter;
 import com.mobnote.videoedit.adapter.ChannelLineAdapter;
@@ -121,6 +125,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 
 	private View mTimeLineGateV;
 	private int mGateLocationX;
+    private CustomLoadingDialog mFullLoadingDialog;
 
 //	String mVideoPath1 = VideoEditConstant.VIDEO_PATH;
 	String mVideoPath;// = VideoEditConstant.VIDEO_PATH_1;
@@ -484,10 +489,20 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			Log.d(TAG, "MSG_AE_EXPORT_PROGRESS: " + msg.arg1);
 			break;
 		case MSG_AE_EXPORT_FINISHED:
-			Log.d(TAG, "MSG_AE_EXPORT_FINISHED");
-			break;
-		case MSG_AE_EXPORT_FAILED:
-			break;
+            Log.d(TAG, "MSG_AE_EXPORT_FINISHED");
+            String path = (String)msg.obj;
+            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            intent.setData(Uri.parse("file://" + path));
+            sendBroadcast(intent);
+            if(null != mFullLoadingDialog) {
+                mFullLoadingDialog.close();
+            }
+            break;
+        case MSG_AE_EXPORT_FAILED:
+            if(null != mFullLoadingDialog) {
+                mFullLoadingDialog.close();
+            }
+            break;
 		case MSG_AE_THUMB_GENERATED: {
 			 Chunk chunkThumb = (Chunk) msg.obj;
 			// if (this.chunkThumbList == null)
@@ -745,6 +760,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		Window dialogWindow = mExportDialog.getWindow();
 		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
 		dialogWindow.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+        mFullLoadingDialog = new CustomLoadingDialog(this, "正在导出...");
 
 		mNextTV = (TextView)findViewById(R.id.tv_ae_next_button);
 		mNextTV.setOnClickListener(new View.OnClickListener() {
@@ -876,6 +892,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		String sSecond = (second < 10) ? "0" + second : second + "";
 		fileName = "MOV" + sYear + sMonth + sDay + sHour + sMinute + sSecond + (int)duration;
 		destPath = destPath + "/" + fileName + ".mp4";
+        mFullLoadingDialog.show();
 		try {
 			mAfterEffect.export(destPath,
 //					VideoEditConstant.DEFAULT_EXPORT_WIDTH,
@@ -954,6 +971,10 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		if(null != mExportDialog && mExportDialog.isShowing()) {
 			mExportDialog.dismiss();
 		}
+
+        if(null != mFullLoadingDialog && mFullLoadingDialog.isShowing()) {
+            mFullLoadingDialog.close();
+        }
 		super.onDestroy();
 	}
 
