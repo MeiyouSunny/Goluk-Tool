@@ -349,26 +349,12 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			return;
 		}
         if (id == R.id.tv_start_videoedit){
-            int tempType = 2;
-            if (mType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG/*
-																 * IPCManagerFn.
-																 * TYPE_URGENT
-																 */) {
-                tempType = 3;
-            }
-            GolukUtils.startAEActivity(this,tempType,mPath);
+            GolukUtils.startAEActivity(this,mType,mPath);
         }else if (id == R.id.imagebutton_back) {
 			// 返回
 			exit();
 		} else if (id == R.id.tv_share_video_rightnow) {
-            int tempType = 2;
-            if (mType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG/*
-																 * IPCManagerFn.
-																 * TYPE_URGENT
-																 */) {
-                tempType = 3;
-            }
-            GolukUtils.startVideoEditActivity(this,tempType,mPath);
+            GolukUtils.startVideoEditActivity(this,mType,mPath);
 		}else if (id == R.id.back_btn) {
 
 			click_back();
