@@ -121,6 +121,38 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 	}
 
 	/**
+	 * 删除视频后页面更新
+	 * @param vid
+	 */
+	public void deleteVideo(String vid) {
+		boolean isDelSuccess = false;
+		if (this.getCurrentViewType() == sViewType_RecommendVideoList) {
+			if (TextUtils.isEmpty(vid) || null == mRecommendlist || mRecommendlist.size() <= 0) {
+				return;
+			}
+			for (int i = 0; i < mRecommendlist.size(); i++) {
+				if (mRecommendlist.get(i).mVideoEntity.videoid.equals(vid)) {
+					mRecommendlist.remove(i);
+					isDelSuccess = true;
+				}
+			}
+		} else if (this.getCurrentViewType() == sViewType_NewsVideoList) {
+			if (TextUtils.isEmpty(vid) || null == mNewslist || mNewslist.size() <= 0) {
+				return;
+			}
+			for (int i = 0; i < mNewslist.size(); i++) {
+				if (mNewslist.get(i).mVideoEntity.videoid.equals(vid)) {
+					mNewslist.remove(i);
+					isDelSuccess = true;
+				}
+			}
+		}
+		if (isDelSuccess) {
+			this.notifyDataSetChanged();
+		}
+	}
+
+	/**
 	 * 获取当前分类列表类型
 	 */
 	public int getCurrentViewType() {
