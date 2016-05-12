@@ -1,7 +1,6 @@
 package com.mobnote.videoedit;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,15 +21,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -109,7 +104,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	LinearLayout mAEDeleteLayout;
 	LinearLayout mAECutLayout;
 	LinearLayout mAEVolumeLayout;
-	int mTimeLineX;
 	int mDummyHeaderWidth;
 	private TextView mNextTV;
 
@@ -119,8 +113,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	private int mCurrVolumeProgress;
 
 	private final static String TAG = "AfterEffectActivity";
-	private float mCurrentPlayPosition = 0f;
-	private int mCurrentPointedIndex;
+//	private float mCurrentPlayPosition = 0f;
+	private int mCurrentPointedItemIndex;
 	float mPlayingChunkPosition = 0f;
 
 	private View mTimeLineGateV;
@@ -219,16 +213,17 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			return ;
 		}
 
-		ProjectItemBean bean = mProjectItemList.get(mCurrentPointedIndex);
+		ProjectItemBean bean = mProjectItemList.get(mCurrentPointedItemIndex);
 		if(!(bean instanceof ChunkBean)) {
+            Toast.makeText(this, "此条目不能拆分", Toast.LENGTH_SHORT).show();
 			return;
 		}
 
-		View chunkView = mAELayoutManager.findViewByPosition(mCurrentPointedIndex);
+		View chunkView = mAELayoutManager.findViewByPosition(mCurrentPointedItemIndex);
 		float width = chunkView.getWidth();
 		float pX = VideoEditUtils.getViewXLocation(chunkView);
 
-		int chunkIndex = VideoEditUtils.mapI2CIndex(mCurrentPointedIndex);
+		int chunkIndex = VideoEditUtils.mapI2CIndex(mCurrentPointedItemIndex);
 		float position = (mGateLocationX - pX) / width * ((ChunkBean)bean).chunk.getDuration();
 		if(position == 0f) {
 			return;
@@ -422,8 +417,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	private void handlerAECallBack(Message msg) {
 		switch (msg.what) {
 		case MSG_AE_PLAY_STARTED:
-			Log.d("CK1", "MSG_AE_PLAY_STARTED");
-			mCurrentPlayPosition = 0;
+			Log.d(TAG, "MSG_AE_PLAY_STARTED");
+//			mCurrentPlayPosition = 0;
 //			mIsPlayFinished = false;
 //			if(!mIsPlaying){
 //				mVideoPlayIv.setVisibility(View.GONE);
@@ -447,7 +442,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			Chunk chunk = afterEffect.getMainChunks().get(chunkIndex);
 
 //			Log.d("CK1", "MSG_AE_PLAY_PROGRESS " + currentChunkPosition + "/" + chunkPosition + "/" + currentPlayPosition);
-			Log.d("CK1", "MSG_AE_PLAY_PROGRESS " + currentPos + "/" + totalSec + ","
+			Log.d(TAG, "MSG_AE_PLAY_PROGRESS " + currentPos + "/" + totalSec + ","
 						+ chunkIndex + "-" + chunkPosition + ", chunk duration: " +
 						chunk.getDuration() + ", mPlayingChunkPosition=" + mPlayingChunkPosition);
 			int chunkWidth = VideoEditUtils.ChunkTime2Width(chunk);
@@ -598,7 +593,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			Chunk chunk = mAfterEffect.getMainChunks().get(chunkIndex);
 
 //			Log.d("CK1", "MSG_AE_PLAY_PROGRESS " + currentChunkPosition + "/" + chunkPosition + "/" + currentPlayPosition);
-			Log.d("CK2", "MSG_AE_PLAY_PROGRESS " + currentPos + "/" + totalSec + "," + chunkIndex + "-" + chunkPosition);
+			Log.d(TAG, "MSG_AE_PLAY_PROGRESS " + currentPos + "/" + totalSec + "," + chunkIndex + "-" + chunkPosition);
 			int chunkWidth = VideoEditUtils.ChunkTime2Width(chunk);
 		}
 			break;
@@ -674,12 +669,12 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 					mAEVolumeSettingIv.setImageDrawable(
 							AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume_closed));
 					mIsMute = true;
-					mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(mCurrentPointedIndex), 0.0f);
+					mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(mCurrentPointedItemIndex), 0.0f);
 				} else {
 					mAEVolumeSettingIv.setImageDrawable(
 							AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume));
 					mIsMute = false;
-					mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(mCurrentPointedIndex), (float)(progress * 5) / 100f);
+					mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(mCurrentPointedItemIndex), (float)(progress * 5) / 100f);
 				}
 			}
 		});
@@ -815,33 +810,23 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		mAERecyclerView.addOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-				Log.d(TAG, "time line scrolled: dx=" + dx + ", dy=" + dy);
+//				Log.d(TAG, "time line scrolled: dx=" + dx + ", dy=" + dy);
 
 				int firstVisibleIndex = mAELayoutManager.findFirstVisibleItemPosition();
 				int lastVisibleIndex = mAELayoutManager.findLastVisibleItemPosition();
-//				Log.d(TAG, "first visible index=" + firstVisibleIndex + ", lastVisibleIndex=" + lastVisibleIndex);
 				for(int i = firstVisibleIndex; i <= lastVisibleIndex; i++) {
 					View view = mAELayoutManager.findViewByPosition(i);
 
-//					if(view.getId() == R.id.ll_ae_data_transition) {
-//						int pX = VideoEditUtils.getViewXLocation(view);
-//						Log.d(TAG, "Transition scrolled to: pX=" + pX);
-//
-//						if(VideoEditUtils.judgeGateOverlap(mGateLocationX, pX, mTransitionWidth)) {
-//							// Skip seek player
-//						}
-//					}
-
+                    mCurrentPointedItemIndex = i;
 					if(view.getId() == R.id.fl_ae_data_chunk) {
 						int pX = VideoEditUtils.getViewXLocation(view);
 						if(VideoEditUtils.judgeChunkOverlap(mGateLocationX, pX, view.getWidth())) {
-							mCurrentPointedIndex = i;
 							if(mPlayerState == PlayerState.PAUSED) {
 								seekWith(VideoEditUtils.mapI2CIndex(i), view.getWidth(), mGateLocationX - pX);
 							}
 							break;
 						}
-					}
+                    }
 				}
 			}
 		});
