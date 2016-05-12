@@ -178,7 +178,6 @@
         <activity
             android:name="com.mobnote.videoedit.AfterEffectActivity"
             android:hardwareAccelerated="true"
-            android:theme="@android:style/Theme.NoTitleBar"
             android:screenOrientation="portrait">
         </activity>
         <activity

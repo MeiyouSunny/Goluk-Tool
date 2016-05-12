@@ -13,7 +13,7 @@
         android:background="#404246" >
 
         <TextView
-            android:id="@+id/tv_usercenter_title"
+            android:id="@+id/tv_share_back"
             android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -24,6 +24,133 @@
             android:textSize="18sp" />
     </RelativeLayout>
 
+    <LinearLayout
+        android:layout_below="@+id/ry__title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#404246"
+        android:orientation="vertical">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="6"
+            android:gravity="top"
+            android:padding="5dp"
+            android:background="#ffffff"
+            android:textColor="#333333"
+            android:hint="你的视频需要一个漂亮的描述"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#656565">
+            <TextView
+                android:id="@+id/tv_share_type_bg"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="@string/share_str_type_bg"
+                android:textColor="#0080ff"
+                android:textSize="16sp"/>
+            <TextView
+                android:id="@+id/tv_share_type_sg"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="@string/share_str_type_sg"
+                android:textColor="#aaaaaa"
+                android:textSize="16sp"/>
+            <TextView
+                android:id="@+id/tv_share_type_ml"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="@string/share_str_type_ml"
+                android:textColor="#aaaaaa"
+                android:textSize="16sp"/>
+            <TextView
+                android:id="@+id/tv_share_type_ssp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="@string/share_str_type_ssp"
+                android:textColor="#aaaaaa"
+                android:textSize="16sp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/share_activity_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="5dp"
+            android:padding="6dp"
+            android:background="#656565"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/share_activity_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/imgdes" />
+
+            <TextView
+                android:id="@+id/share_activity_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:maxLength="18"
+                android:text="#加入活动#"
+                android:textColor="#bcbdbd"
+                android:textSize="16sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/share_address_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="5dp"
+            android:padding="6dp"
+            android:background="#656565"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/share_address_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/imgdes" />
+
+            <TextView
+                android:id="@+id/share_address_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:maxLength="18"
+                android:text="@string/share_str_no_location"
+                android:textColor="#bcbdbd"
+                android:textSize="16sp" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_shareTo"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:maxLength="18"
+            android:text="分享到"
+            android:textColor="#bcbdbd"
+            android:textSize="16sp" />
+    </LinearLayout>
     <TextView
         android:id="@+id/tv_share"
         android:layout_width="match_parent"
