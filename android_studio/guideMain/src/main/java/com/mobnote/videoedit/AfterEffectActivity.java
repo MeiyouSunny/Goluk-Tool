@@ -120,6 +120,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	private View mTimeLineGateV;
 	private int mGateLocationX;
     private CustomLoadingDialog mFullLoadingDialog;
+    private int mTailWidth;
 
 //	String mVideoPath1 = VideoEditConstant.VIDEO_PATH;
 	String mVideoPath;// = VideoEditConstant.VIDEO_PATH_1;
@@ -174,6 +175,14 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			"travel",
 			"fresh",
 			"crual"};
+
+    public int getTailWidth() {
+        return mTailWidth;
+    }
+
+    public void moveChunk2Gate(int index) {
+
+    }
 
 	public void addChunk(String videoPath) {
 		// always add from end
@@ -362,6 +371,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		});
 
 		mAfterEffect = new AfterEffect(this, mGLSurfaceView, this, width, height);
+
 		addTail();
 		mProject = mAfterEffect.getProject();
 
@@ -436,15 +446,22 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			AfterEffect afterEffect = playBean.effect;
 			final int chunkIndex = playBean.chunkIndex;
 
-			if(chunkIndex == -1) {
-				return;
-			}
-			Chunk chunk = afterEffect.getMainChunks().get(chunkIndex);
+            if(chunkIndex == -1) {
+                final int tailOffset = (int)(chunkPosition / VideoEditConstant.VIDEO_TAIL_TIME_DURATION * mTailWidth);
+                mAERecyclerView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAELayoutManager.scrollToPositionWithOffset(
+                                mProjectItemList.size() - 2, -tailOffset + mDummyHeaderWidth);
+                    }
+                });
+                return;
+            }
+            Chunk chunk = afterEffect.getMainChunks().get(chunkIndex);
 
-//			Log.d("CK1", "MSG_AE_PLAY_PROGRESS " + currentChunkPosition + "/" + chunkPosition + "/" + currentPlayPosition);
-			Log.d(TAG, "MSG_AE_PLAY_PROGRESS " + currentPos + "/" + totalSec + ","
-						+ chunkIndex + "-" + chunkPosition + ", chunk duration: " +
-						chunk.getDuration() + ", mPlayingChunkPosition=" + mPlayingChunkPosition);
+            Log.d(TAG, "MSG_AE_PLAY_PROGRESS " + currentPos + "/" + totalSec + ","
+                + chunkIndex + "-" + chunkPosition + ", chunk duration: " +
+                chunk.getDuration() + ", mPlayingChunkPosition=" + mPlayingChunkPosition);
 			int chunkWidth = VideoEditUtils.ChunkTime2Width(chunk);
 //			float chunkOffset = chunkPosition - mPlayingChunkPosition;
 			final int moveOffset = (int)(chunkPosition / chunk.getDuration() * chunkWidth);
@@ -465,7 +482,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 				@Override
 				public void run() {
 					mAELayoutManager.scrollToPositionWithOffset(
-							mProjectItemList.size() - 2, mDummyHeaderWidth);
+							mProjectItemList.size() - 1, mDummyHeaderWidth);
 				}
 			});
 			break;
@@ -514,6 +531,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 				mChunksTotalTime += chunk.getDuration();
 				mAfterEffect.generateThumbAsyn(chunk, VideoEditConstant.BITMAP_TIME_INTERVAL, mImageHeight);
 			}
+
 			break;
 		}
 
@@ -539,7 +557,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 
 		case MSG_AE_BITMAP_READ_OUT: {
 			Chunk chunk = (Chunk) msg.obj;
-
+//            mTailWidth = mAfterEffect.getTailerThumbWidth();
+            Log.d(TAG, "tail width from sdk: " + mTailWidth);
 			// Get to insert index
 			ChunkBean chunkBean = new ChunkBean();
 			chunkBean.chunk = chunk;
@@ -807,6 +826,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 					}
 				});
 		mTransitionWidth = DeviceUtil.dp2px(this, VideoEditConstant.TRANSITION_COMMON_WIDTH);
+        mTailWidth = DeviceUtil.dp2px(this, VideoEditConstant.VIDEO_TAIL_WIDTH);
 		mAERecyclerView.addOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
