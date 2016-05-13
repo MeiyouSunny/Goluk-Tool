@@ -300,10 +300,10 @@ public class ChannelLineAdapter extends
 							mAEActivity.showEditController();
 						} else {
 							if(mEditIndex == position) { // tap same item to cancel selection
-								chunkBean.isEditState = false;
-								mEditIndex = -1;
-								notifyItemChanged(position);
-								mAEActivity.showMusicController();
+//								chunkBean.isEditState = false;
+//								mEditIndex = -1;
+//								notifyItemChanged(position);
+//								mAEActivity.showMusicController();
 							} else {
 								ProjectItemBean bean = mDataList.get(mEditIndex);
 								if(bean instanceof ChunkBean) {

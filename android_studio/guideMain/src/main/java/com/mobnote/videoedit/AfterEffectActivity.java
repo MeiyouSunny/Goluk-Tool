@@ -86,7 +86,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	int mTransitionWidth;
 	List<ProjectItemBean> mProjectItemList;
 	Handler mAfterEffecthandler;
-	private ChannelLineAdapter mAdapter;
+	private ChannelLineAdapter mChannelLineAdapter;
 	private FrameLayout mSurfaceLayout;
 	private ImageButton mBackBTN;
 
@@ -121,6 +121,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	private int mGateLocationX;
     private CustomLoadingDialog mFullLoadingDialog;
     private int mTailWidth;
+    private View mTimeLineWrapperRL;
 
 //	String mVideoPath1 = VideoEditConstant.VIDEO_PATH;
 	String mVideoPath;// = VideoEditConstant.VIDEO_PATH_1;
@@ -180,8 +181,18 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         return mTailWidth;
     }
 
-    public void moveChunk2Gate(int index) {
+    public void moveChunk2Gate(final int index) {
+        ProjectItemBean bean = mProjectItemList.get(index);
+        if(!(bean instanceof ChunkBean)) {
+            return;
+        }
 
+        mAERecyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                mAELayoutManager.scrollToPositionWithOffset(index, mDummyHeaderWidth);
+            }
+        });
     }
 
 	public void addChunk(String videoPath) {
@@ -283,7 +294,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			transitionBean.transiton = transtion;
 			transitionBean.ct_pair_tag = (itemIndex + 2) + "chunkIndex";
 			mProjectItemList.add(itemIndex + 3, transitionBean);
-			mAdapter.setEditIndex(itemIndex + 2);
+			mChannelLineAdapter.setEditIndex(itemIndex + 2);
 
 			VideoEditUtils.refreshCTTag(mProjectItemList);
 		} catch(EffectRuntimeException e) {
@@ -293,7 +304,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			e.printStackTrace();
 			return;
 		}
-		mAdapter.notifyDataSetChanged();
+		mChannelLineAdapter.notifyDataSetChanged();
 	}
 
 	public void playOrPause() {
@@ -436,6 +447,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 //			}
 			mPlayerState = PlayerState.PLAYING;
 			mVideoPlayIV.setVisibility(View.GONE);
+            clearChunkFocus();
 			break;
 		case MSG_AE_PLAY_PROGRESS:
 		{
@@ -552,6 +564,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		{
 			mVideoPlayIV.setVisibility(View.GONE);
 			mPlayerState = PlayerState.PLAYING;
+            clearChunkFocus();
 		}
 			break;
 
@@ -582,8 +595,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			mProjectItemList.add(tInsertIndex, transitionBean);
 //			}
 
-			mAdapter.setData(mProjectItemList);
-			mAdapter.notifyDataSetChanged();
+			mChannelLineAdapter.setData(mProjectItemList);
+			mChannelLineAdapter.notifyDataSetChanged();
 			final int addIndex = cInsertIndex;
 			if(mPlayerState == PlayerState.PAUSED) {
 				seekWith(VideoEditUtils.mapI2CIndex(VideoEditUtils.mapI2CIndex(addIndex)));
@@ -739,7 +752,25 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		mAfterEffect.seekTo(chunkIndex);
 	}
 
-	private VideoEditExportDialog mExportDialog;
+    private VideoEditExportDialog mExportDialog;
+
+    private void clearChunkFocus() {
+        int preFocusIdx = mChannelLineAdapter.getEditIndex();
+        // no focus before
+        if(-1 == preFocusIdx) {
+            return;
+        }
+        ProjectItemBean bean = mProjectItemList.get(preFocusIdx);
+        if(!(bean instanceof ChunkBean)) {
+            // something wrong
+            return;
+        }
+        mChannelLineAdapter.setEditIndex(-1);
+        ChunkBean chunkBean = (ChunkBean)bean;
+        chunkBean.isEditState = false;
+        mChannelLineAdapter.notifyItemChanged(preFocusIdx);
+        showMusicController();
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -776,6 +807,13 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
 		dialogWindow.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
         mFullLoadingDialog = new CustomLoadingDialog(this, "正在导出...");
+        mTimeLineWrapperRL = findViewById(R.id.rl_ae_time_line_parent_wrapper);
+        mTimeLineWrapperRL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearChunkFocus();
+            }
+        });
 
 		mNextTV = (TextView)findViewById(R.id.tv_ae_next_button);
 		mNextTV.setOnClickListener(new View.OnClickListener() {
@@ -851,8 +889,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			}
 		});
 		initPlayer();
-		mAdapter = new ChannelLineAdapter(this, mAERecyclerView, mProjectItemList, mAfterEffect);
-		mAERecyclerView.setAdapter(mAdapter);
+		mChannelLineAdapter = new ChannelLineAdapter(this, mAERecyclerView, mProjectItemList, mAfterEffect);
+		mAERecyclerView.setAdapter(mChannelLineAdapter);
 		mAERecyclerView.setLayoutManager(mAELayoutManager);
 		mAERecyclerView.setItemAnimator(new DefaultItemAnimator());
 
@@ -1051,8 +1089,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		} else if(vId == R.id.ll_ae_split) {
 			splitChunk();
 		} else if(vId == R.id.ll_ae_delete) {
-			VideoEditUtils.removeChunk(mAfterEffect, mProjectItemList, mAdapter.getEditIndex());
-			mAdapter.notifyDataSetChanged();
+			VideoEditUtils.removeChunk(mAfterEffect, mProjectItemList, mChannelLineAdapter.getEditIndex());
+			mChannelLineAdapter.notifyDataSetChanged();
 		} else if(vId == R.id.iv_ae_volume_setting) {
 			if(mIsMute) {
 				mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);
@@ -1087,7 +1125,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			Bundle b = data.getExtras(); // data为B中回传的Intent
 			String vidPath = b.getString("vidPath");// str即为回传的值
 			if (vidPath != null) {
-				mAdapter.addChunk(vidPath);
+				mChannelLineAdapter.addChunk(vidPath);
 			}
 		}
 	}
