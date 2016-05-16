@@ -293,31 +293,32 @@ public class ChannelLineAdapter extends
 				viewHolder.nChunkContainerLL.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if(-1 == mEditIndex) { // no selection before
-							mEditIndex = position;
-							chunkBean.isEditState = true;
-							notifyItemChanged(mEditIndex);
-							mAEActivity.showEditController();
-						} else {
-							if(mEditIndex == position) { // tap same item to cancel selection
+					if(-1 == mEditIndex) { // no selection before
+						mEditIndex = position;
+						chunkBean.isEditState = true;
+						notifyItemChanged(mEditIndex);
+						mAEActivity.showEditController();
+					} else {
+						if(mEditIndex == position) { // tap same item to cancel selection
 //								chunkBean.isEditState = false;
 //								mEditIndex = -1;
 //								notifyItemChanged(position);
 //								mAEActivity.showMusicController();
-							} else {
-								ProjectItemBean bean = mDataList.get(mEditIndex);
-								if(bean instanceof ChunkBean) {
-									ChunkBean preBean = (ChunkBean)bean;
-									preBean.isEditState = !preBean.isEditState;
-								}
-								notifyItemChanged(mEditIndex);
-								chunkBean.isEditState = !chunkBean.isEditState;
-
-								notifyItemChanged(position);
-								mEditIndex = position;
-								mAEActivity.showEditController();
+						} else {
+							ProjectItemBean bean = mDataList.get(mEditIndex);
+							if(bean instanceof ChunkBean) {
+								ChunkBean preBean = (ChunkBean)bean;
+								preBean.isEditState = !preBean.isEditState;
 							}
+							notifyItemChanged(mEditIndex);
+							chunkBean.isEditState = !chunkBean.isEditState;
+
+							notifyItemChanged(position);
+							mEditIndex = position;
+							mAEActivity.showEditController();
 						}
+					}
+                    mAEActivity.moveChunk2Gate(mEditIndex);
 					}
 				});
 

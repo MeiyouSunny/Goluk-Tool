@@ -142,6 +142,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	public final static int MSG_AE_PLAY_PAUSED = 1013;
 	public final static int MSG_AE_PLAY_RESUMED = 1014;
 	public final static int MSG_AE_CHUNK_PLAY_END = 1015;
+    public final static int MSG_AE_BITMAP_READ_FAILED = 1016;
 
 //	private boolean mIsPlaying;
 //	private boolean mIsPlayFinished;
@@ -166,16 +167,17 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		"music/07-fresh-48khz-128kbps-final.mp3",
 		"music/08-crual-48khz-128kbps-final.mp3"};
 
-	final String[] mMusicNames = {
-			"none",
-			"fasion",
-			"discover",
-			"default",
-			"memory",
-			"street",
-			"travel",
-			"fresh",
-			"crual"};
+//	final String[] mMusicNames = {
+//			"none",
+//			"fasion",
+//			"discover",
+//			"default",
+//			"memory",
+//			"street",
+//			"travel",
+//			"fresh",
+//			"crual"};
+    String[] mMusicNames;
 
     public int getTailWidth() {
         return mTailWidth;
@@ -184,6 +186,10 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     public void moveChunk2Gate(final int index) {
         ProjectItemBean bean = mProjectItemList.get(index);
         if(!(bean instanceof ChunkBean)) {
+            return;
+        }
+
+        if(VideoEditUtils.judgeChunkOverlap(mAELayoutManager, mGateLocationX, index)) {
             return;
         }
 
@@ -232,6 +238,17 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		if(mProjectItemList == null || mProjectItemList.size() <= 3) {
 			return ;
 		}
+
+        int focusIndex = mChannelLineAdapter.getEditIndex();
+        if(focusIndex == -1) {
+            Toast.makeText(this, "无选中条目", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(!VideoEditUtils.judgeChunkOverlap(mAELayoutManager, mGateLocationX, mChannelLineAdapter.getEditIndex())) {
+            Toast.makeText(this, "只能拆分选中条目", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
 		ProjectItemBean bean = mProjectItemList.get(mCurrentPointedItemIndex);
 		if(!(bean instanceof ChunkBean)) {
@@ -611,9 +628,12 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			} else {
 				playOrPause();
 			}
-			break;
 		}
-
+            break;
+        case MSG_AE_BITMAP_READ_FAILED: {
+            Log.d(TAG, "MSG_AE_BITMAP_READ_FAILED");
+        }
+            break;
 		case MSG_AE_CHUNK_PLAY_END:
 		{
 			ChunkPlayBean playBean = (ChunkPlayBean)msg.obj;
@@ -647,6 +667,22 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	}
 
 	private void initController() {
+        mMusicNames = new String[9];
+        mMusicNames[0] = getString(R.string.str_video_music_none);
+        mMusicNames[1] = getString(R.string.str_video_music_wave);
+        mMusicNames[2] = getString(R.string.str_video_music_discover);
+        mMusicNames[3] = getString(R.string.str_video_music_Humor);
+        mMusicNames[4] = getString(R.string.str_video_music_Memory);
+        mMusicNames[5] = getString(R.string.str_video_music_Crowd);
+        mMusicNames[6] = getString(R.string.str_video_music_Travel);
+        mMusicNames[7] = getString(R.string.str_video_music_Fresh);
+        mMusicNames[8] = getString(R.string.str_video_music_Wild);
+
+        try {
+            copyBgMusic(mMusicPaths);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 		mAEEditController = (LinearLayout) findViewById(R.id.ll_video_edit_controller);
 		mAEVolumeSettingLayout = (RelativeLayout) findViewById(R.id.rl_ae_volume_setting);
 		mAEVolumeSettingIv = (ImageView) findViewById(R.id.iv_ae_volume_setting);
@@ -710,12 +746,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 				}
 			}
 		});
-
-		try {
-			copyBgMusic(mMusicPaths);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void copyBgMusic(String[] musicFiles) throws IOException {
@@ -863,13 +893,25 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 						Log.d(TAG, "Base UI data: mGateLocationX=" + mGateLocationX);
 					}
 				});
-		mTransitionWidth = DeviceUtil.dp2px(this, VideoEditConstant.TRANSITION_COMMON_WIDTH);
+        mTransitionWidth = DeviceUtil.dp2px(this, VideoEditConstant.TRANSITION_COMMON_WIDTH);
         mTailWidth = DeviceUtil.dp2px(this, VideoEditConstant.VIDEO_TAIL_WIDTH);
+//        mAERecyclerView.setOnTouchListener(new OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                Log.d("CK1", "@@@@@@@@@@@@@@@");
+//                if(event.getAction() == MotionEvent.ACTION_MOVE) {
+//                    clearChunkFocus();
+//                }
+//                return false;
+//            }
+//        });
+
 		mAERecyclerView.addOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 //				Log.d(TAG, "time line scrolled: dx=" + dx + ", dy=" + dy);
 
+//                clearChunkFocus();
 				int firstVisibleIndex = mAELayoutManager.findFirstVisibleItemPosition();
 				int lastVisibleIndex = mAELayoutManager.findLastVisibleItemPosition();
 				for(int i = firstVisibleIndex; i <= lastVisibleIndex; i++) {
@@ -1029,6 +1071,13 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		mAfterEffecthandler.sendMessage(msg);
 	}
 
+    @Override
+    public void onGeneratedThumbsFailed(AfterEffect ae, Chunk chunk) {
+        // TODO Auto-generated method stub
+        Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_BITMAP_READ_FAILED, chunk);
+        mAfterEffecthandler.sendMessage(msg);
+    }
+
 	@Override
 	public void onChunkAddedFinished(AfterEffect self, Project project,
 			Chunk chunk) {
@@ -1150,4 +1199,5 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_CHUNK_PLAY_END, 0, 0, bean);
 		mAfterEffecthandler.sendMessage(msg);
 	}
+
 }
