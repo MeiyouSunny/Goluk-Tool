@@ -11,6 +11,8 @@ public class BannerTextBody {
 	public String description;
 	@JSONField(name="type")
 	public String type;
+	@JSONField(name="color")
+	public String color;
 
 	public String getType() {
 		return type;
@@ -42,5 +44,13 @@ public class BannerTextBody {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public String getColor() {
+		return color;
 	}
 }
