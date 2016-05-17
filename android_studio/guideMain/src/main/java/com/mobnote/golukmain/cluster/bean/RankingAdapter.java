@@ -84,9 +84,23 @@ public class RankingAdapter extends BaseAdapter {
         }
 
         GlideUtils.loadImage(mContext,holderView.videoImg,video.pictureurl,-1);
-        holderView.numberIndex.setText(position);
+        holderView.numberIndex.setText(position + 1 + "");
         holderView.popularity.setText("人气值:" + video.rank);
         holderView.userNameText.setText(video.user.nickname);
+
+        if(position == 0){
+            holderView.numberImg.setImageResource(R.drawable.icon__one);
+            holderView.numberIndex.setTextSize(20);
+        }else if(position == 1){
+            holderView.numberImg.setImageResource(R.drawable.icon__three);
+            holderView.numberIndex.setTextSize(20);
+        }else if (position == 2){
+            holderView.numberImg.setImageResource(R.drawable.icon__two);
+            holderView.numberIndex.setTextSize(20);
+        }else{
+            holderView.numberImg.setImageResource(R.drawable.icon__four);
+            holderView.numberIndex.setTextSize(10);
+        }
 
         if (video.user.customavatar != null && !"".equals(video.user.customavatar)) {
             holderView.userHead.setImageURI(Uri.parse(video.user.customavatar));

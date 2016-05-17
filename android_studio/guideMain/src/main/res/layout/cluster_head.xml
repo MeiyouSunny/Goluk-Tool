@@ -38,6 +38,16 @@
             android:textColor="#333333"
             android:textSize="14sp" />
     </RelativeLayout> -->
+    <TextView
+            android:id="@+id/partake_num"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="11dp"
+            android:layout_centerVertical="true"
+            android:textColor="#216da8"
+            android:textSize="14sp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -45,43 +55,18 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp">
 
-        <!-- <TextView
-            android:id="@+id/partake_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_centerVertical="true"
-            android:textColor="#333333"
-            android:text="@string/str_participation"
-            android:textSize="14sp" /> -->
-
-        <TextView
-            android:id="@+id/partake_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="6dp"
-            android:layout_centerVertical="true"
-            android:textColor="#216da8"
-            android:textSize="14sp" />
-        
-        <!-- <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:textColor="#216da8"
-            android:layout_toRightOf="@+id/partake_num"
-            android:text="@string/str_population"
-            android:textSize="14sp" /> -->
         <TextView
             android:id="@+id/now_ranking_btn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="24dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
-            android:background="@color/red"
-            android:drawableLeft="@drawable/share_weizhi_success"
-            android:text="当前总排名"
-            android:visibility="gone"/>
+            android:layout_marginLeft="11dp"
+            android:gravity="center"
+            android:background="@drawable/icon_nor_"
+            android:drawableLeft="@drawable/icon__rank"
+            android:textColor="#ffffff"
+            android:textSize="11sp"
+            android:text="@string/str_cluster_ranking_txt"/>
 
         <Button
             android:id="@+id/partake_btn"
@@ -93,6 +78,7 @@
             android:layout_marginRight="8dp"
             android:padding="4dp"
             android:background="@drawable/together_join_icon"
+            android:layout_centerVertical="true"
             android:textSize="12sp" />
 
         <Button
@@ -105,8 +91,8 @@
             android:textColor="#0080ff"
             android:padding="4dp"
             android:layout_marginRight="8dp"
+            android:layout_centerVertical="true"
             android:background="@drawable/btn_white_body_blue_stroke"
-            android:visibility="gone"
             android:textSize="12sp" />
     </RelativeLayout>
 

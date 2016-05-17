@@ -928,6 +928,19 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		mNextTV.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+                if(getChannelDuration() < VideoEditConstant.MIN_VIDEO_DURATION) {
+                    String org = AfterEffectActivity.this.getString(R.string.str_video_export_min_limit);
+                    String minLimit = String.format(org, (int)VideoEditConstant.MIN_VIDEO_DURATION);
+                    Toast.makeText(AfterEffectActivity.this, minLimit, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if(getChannelDuration() > VideoEditConstant.MAX_VIDEO_DURATION) {
+                    String org = AfterEffectActivity.this.getString(R.string.str_video_export_max_limit);
+                    String maxLimit = String.format(org, (int)VideoEditConstant.MAX_VIDEO_DURATION);
+                    Toast.makeText(AfterEffectActivity.this, maxLimit, Toast.LENGTH_SHORT).show();
+                    return;
+                }
 				List<VideoEncoderCapability> capaList = mAfterEffect.getSuportedCapability();
 				if (capaList == null || capaList.size() == 0) {
 					Toast.makeText(AfterEffectActivity.this, "手机不支持合适的分辨率", Toast.LENGTH_SHORT).show();

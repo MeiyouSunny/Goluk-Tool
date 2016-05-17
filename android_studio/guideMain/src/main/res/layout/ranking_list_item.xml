@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="vertical" >
     <RelativeLayout
         android:id="@+id/img_layout"
-        android:layout_width="200dp"
-        android:layout_height="120dp">
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="161dp"
+        android:layout_height="90dp">
 
         <ImageView
             android:id="@+id/video_img"
@@ -21,20 +23,27 @@
             android:id="@+id/number_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/new_live_icon"/>
+            android:src="@drawable/icon__one"/>
 
         <TextView
             android:id="@+id/number_index"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:textSize="20sp"
             android:text="1"/>
 
         <TextView
             android:id="@+id/popularity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:layout_marginTop="7dp"
+            android:layout_marginRight="7dp"
+            android:textColor="#ffffff"
             android:layout_alignParentRight="true"
             android:text="人气值:13098"/>
+
     </RelativeLayout>
 
 
@@ -42,19 +51,19 @@
         android:id="@+id/userinfo_layout"
         android:layout_toRightOf="@id/img_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="90dp"
         android:background="#f4f4f4"
-        android:gravity="center"
-        android:paddingLeft="14dp"
-        android:paddingRight="14dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
         android:layout_alignBottom="@+id/img_layout"
         android:layout_alignParentTop="true">
 
         <ImageView
             android:id="@+id/user_head"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_centerVertical="true"
+            android:layout_width="37.33dp"
+            android:layout_height="37.33dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginLeft="7dp"
             android:src="@drawable/videodetail_portrait"
             android:contentDescription="@string/imgdes" />
 
@@ -62,8 +71,8 @@
             android:id="@+id/im_user_head_authentication"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/user_center_head"
-            android:layout_alignRight="@id/user_center_head"
+            android:layout_alignBottom="@id/user_head"
+            android:layout_alignRight="@id/user_head"
             android:contentDescription="@string/imgdes"
             android:src="@drawable/authentication_bluev_icon"/>
 
@@ -71,26 +80,24 @@
             android:id="@+id/user_name_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@id/user_center_head"
-            android:textColor="#333333"
-            android:textSize="16sp"
-            android:text="二狗子"/>
+            android:textColor="#1163a2"
+            android:layout_marginLeft="7dp"
+            android:layout_marginTop="19dp"
+            android:textSize="14sp"
+            android:text="二狗子"
+            android:layout_toRightOf="@+id/user_head" />
 
         <TextView
             android:id="@+id/user_introduction_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/user_center_head"
-            android:layout_marginTop="20dp"
+            android:layout_below="@id/user_head"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="7dp"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="#808080"
-            android:textSize="14sp"
+            android:textColor="#666666"
+            android:textSize="12sp"
             android:text="总有刁民想害朕"/>
 
     </RelativeLayout>

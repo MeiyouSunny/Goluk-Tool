@@ -59,6 +59,9 @@ public class RankingActivity extends BaseActivity implements IRequestResultListe
     private ImageView mEmptyImg = null;
     private TextView  mEmptyTxt = null;
 
+    /**时间戳**/
+    private String mTimestamp = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +81,7 @@ public class RankingActivity extends BaseActivity implements IRequestResultListe
             public void onRefresh() {
                 // 下拉刷新个人中心所有数据
                 mRequestType = 0;
-                getRankingData("1","");// 请求数据
+                getRankingData("1",mTimestamp);// 请求数据
             }
         });
 
@@ -88,9 +91,16 @@ public class RankingActivity extends BaseActivity implements IRequestResultListe
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
 
                     if (mRTPullListView.getAdapter().getCount() == (mWonderfulFirstVisible + mWonderfulVisibleCount)) {// 推荐
-                            if (mRandkingList != null && mRandkingList.size() > 0) {// 加载更多视频数据
+                            if (mRandkingList != null && mRandkingList.size() > 0 && mIsHaveData) {// 加载更多视频数据
+
+                                if(GolukUtils.isNetworkConnected(RankingActivity.this) == false){
+                                    mRTPullListView.removeFooterView(1);
+                                    GolukUtils.showToast(RankingActivity.this, RankingActivity.this.getResources().getString(R.string.user_net_unavailable));
+                                    return;
+                                }
+                                mRTPullListView.addFooterView(1);
                                 mRequestType = 1;
-                                getRankingData( "2", "");
+                                getRankingData( "2", mTimestamp);
                             }
                     }
                 }
@@ -132,6 +142,8 @@ public class RankingActivity extends BaseActivity implements IRequestResultListe
     @Override
     public void onLoadComplete(int requestType, Object result) {
         if (requestType == IPageNotifyFn.PageType_RankingList){
+            mRTPullListView.removeFooterView(1);
+            mRTPullListView.removeFooterView(2);
             RankingListBean rlb = (RankingListBean) result;
             if(rlb.success){
                 if (mRequestType == 0){//下拉和首次
@@ -142,13 +154,17 @@ public class RankingActivity extends BaseActivity implements IRequestResultListe
                         mRandkingList = rlb.data.videolist;
                         mRrankingAdapter.setData(mRandkingList);
                         updateViewData(true, 0);
+                        mTimestamp = mRandkingList.get(mRandkingList.size() - 1).addtime;
 
                         if(rlb.data.videolist.size() < 20){
+                            mIsHaveData = false;
                             mRTPullListView.addFooterView(2);
                         }else{
+                            mIsHaveData = true;
                             mRTPullListView.addFooterView(1);
                         }
                     }else{//没有数据
+                        mIsHaveData = false;
                         if (mRandkingList != null && mRandkingList.size() > 0){
                             //说明之前有数据，不作任何处理
                             return;
@@ -168,8 +184,10 @@ public class RankingActivity extends BaseActivity implements IRequestResultListe
                         mRrankingAdapter.setData(mRandkingList);
                         updateViewData(true, count);
                         if(rlb.data.videolist.size() <20){
+                            mIsHaveData = false;
                             mRTPullListView.addFooterView(2);
                         }else{
+                            mIsHaveData = true;
                             mRTPullListView.addFooterView(1);
                         }
                     }else{//数据为空
@@ -178,6 +196,7 @@ public class RankingActivity extends BaseActivity implements IRequestResultListe
                     }
                 }
             }else{
+                updateViewData(false,0);
                 GolukUtils.showToast(this,this.getResources().getString(R.string.request_data_error));
             }
         }
