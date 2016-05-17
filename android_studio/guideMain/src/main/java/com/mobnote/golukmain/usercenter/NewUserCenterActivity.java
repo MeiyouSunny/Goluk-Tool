@@ -423,11 +423,8 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 
 	/**
 	 * 关注
-	 * 
-	 * @param otheruid
 	 * @param type
-	 * @param currentuid
-	 */
+     */
 	public void attentionRequest(String type) {
 		if (null != mHomeJson && null != mHomeJson.data && null != mHomeJson.data.user
 				&& null != mHomeJson.data.user.uid) {

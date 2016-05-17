@@ -735,10 +735,16 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 	private void callback_setVideoResolution(int event, int msg, int param1, Object param2) {
 		GolukDebugUtils.e("", "TSettingsActivity-----------callback_setVideoResolution-----param2: " + param2);
 		if (RESULE_SUCESS == param1) {
-			if (!mSaveLastResolution.equals(mWonderfulVideoResolution)) {
-				showRebootDialog();
+			try {
+				JSONObject obj = new JSONObject((String) param2);
+				String needReboot = obj.getString("need_reboot");
+				if (needReboot.equals("true") && !mSaveLastResolution.equals(mWonderfulVideoResolution)) {
+					showRebootDialog();
+				}
+				GolukApplication.getInstance().getIPCControlManager().getVideoResolution();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			GolukApplication.getInstance().getIPCControlManager().getVideoResolution();
 		}
 	}
 	
