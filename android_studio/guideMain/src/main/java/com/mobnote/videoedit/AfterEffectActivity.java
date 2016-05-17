@@ -368,9 +368,12 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		}
 	}
 
-	private void pause() {
-		mAfterEffect.playPause();
-	}
+    public void pause() {
+        if(mPlayerState == PlayerState.PLAYING) {
+            mVideoPlayIV.setVisibility(View.VISIBLE);
+            mAfterEffect.playPause();
+        }
+    }
 
 	private void initPlayer() {
 		mVideoThumeIv = (ImageView) findViewById(R.id.iv_video_thumb);
