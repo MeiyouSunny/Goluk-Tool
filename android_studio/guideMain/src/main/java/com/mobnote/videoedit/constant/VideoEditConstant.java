@@ -1,7 +1,7 @@
 package com.mobnote.videoedit.constant;
 
 public class VideoEditConstant {
-	public static final int BITMAP_TIME_INTERVAL = 5;
+	public static final int BITMAP_TIME_INTERVAL = 3;
 	// common bitmap width of dp
 	public static final int BITMAP_COMMON_WIDTH = 45;
 	public static final int BITMAP_COMMON_HEIGHT = 45;
