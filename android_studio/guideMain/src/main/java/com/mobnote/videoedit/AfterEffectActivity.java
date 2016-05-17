@@ -108,9 +108,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	private TextView mNextTV;
 
 	/** 是否为静音 */
-	private boolean mIsMute;
+//	private boolean mIsMute;
 	/** 当前音量 */
-	private int mCurrVolumeProgress;
+//	private int mCurrVolumeProgress;
 
 	private final static String TAG = "AfterEffectActivity";
 //	private float mCurrentPlayPosition = 0f;
@@ -286,6 +286,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			chunkBean1.index_tag = VideoEditUtils.generateIndexTag();
 			chunkBean1.width = VideoEditUtils.ChunkTime2Width(first);
 			chunkBean1.isEditState = false;
+            chunkBean1.curVolume = (int)(first.getVolume() * 100);
 
 			chunkBean1.ct_pair_tag = itemIndex + "chunkIndex";
 			mProjectItemList.set(itemIndex, chunkBean1);
@@ -298,6 +299,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			chunkBean2.index_tag = VideoEditUtils.generateIndexTag();
 			chunkBean2.width = VideoEditUtils.ChunkTime2Width(second);
 			chunkBean2.isEditState = true;
+            chunkBean2.curVolume = (int)(second.getVolume() * 100);
 
 //			int cInsertIndex = mProjectItemList.size() - 2;
 			chunkBean2.ct_pair_tag = (itemIndex + 2) + "chunkIndex";
@@ -531,18 +533,25 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			break;
 		case MSG_AE_EXPORT_FINISHED:
             Log.d(TAG, "MSG_AE_EXPORT_FINISHED");
-            String path = (String)msg.obj;
-            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            intent.setData(Uri.parse("file://" + path));
-            sendBroadcast(intent);
-            if(null != mFullLoadingDialog) {
+            ExportRet retBean = (ExportRet)msg.obj;
+//            String path = (String)msg.obj;
+            if (null != mFullLoadingDialog) {
                 mFullLoadingDialog.close();
+            }
+            if(retBean.succeed) {
+                Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                intent.setData(Uri.parse("file://" + retBean.path));
+                sendBroadcast(intent);
+                Toast.makeText(this, getString(R.string.str_video_export_succeed), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, getString(R.string.str_video_export_failed), Toast.LENGTH_SHORT).show();
             }
             break;
         case MSG_AE_EXPORT_FAILED:
             if(null != mFullLoadingDialog) {
                 mFullLoadingDialog.close();
             }
+            Toast.makeText(this, getString(R.string.str_video_export_failed), Toast.LENGTH_SHORT).show();
             break;
 		case MSG_AE_THUMB_GENERATED: {
 			 Chunk chunkThumb = (Chunk) msg.obj;
@@ -595,6 +604,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			chunkBean.index_tag = VideoEditUtils.generateIndexTag();
 			chunkBean.width = VideoEditUtils.ChunkTime2Width(chunk);
 			chunkBean.isEditState = false;
+            chunkBean.curVolume = 100;
 
 			int cInsertIndex = mProjectItemList.size() - 2;
 			chunkBean.ct_pair_tag = cInsertIndex + "chunkIndex";
@@ -678,11 +688,18 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         mMusicNames[7] = getString(R.string.str_video_music_Fresh);
         mMusicNames[8] = getString(R.string.str_video_music_Wild);
 
-        try {
-            copyBgMusic(mMusicPaths);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Thread copyMusicThread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    copyBgMusic(mMusicPaths);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            };
+        };
+        copyMusicThread.start();
+
 		mAEEditController = (LinearLayout) findViewById(R.id.ll_video_edit_controller);
 		mAEVolumeSettingLayout = (RelativeLayout) findViewById(R.id.rl_ae_volume_setting);
 		mAEVolumeSettingIv = (ImageView) findViewById(R.id.iv_ae_volume_setting);
@@ -709,9 +726,10 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		mAECutLayout.setOnClickListener(this);
 		mAEVolumeLayout.setOnClickListener(this);
 
-		mAEVolumeSeekBar.setMax(100);
-		mCurrVolumeProgress = 100;
-		mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);
+		mAEVolumeSeekBar.setMax(VideoEditConstant.VIDEO_VOLUME_MAX);
+//		mCurrVolumeProgress = 100;
+//		mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);
+        mAEVolumeSeekBar.setProgress(100);
 
 		mAEVolumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
@@ -727,26 +745,95 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				/** 如果来自用户对seekbar的操作，则记录progress。如果来自代码调用setProgress()则不记录 */
+                int index = mChannelLineAdapter.getEditIndex();
 				if(fromUser) {
-					mCurrVolumeProgress = progress;
+//					mCurrVolumeProgress = progress;
+                    recordEditChunkVolume(progress);
 				}
 				mAEVolumePercentTv.setText(progress + "%");
 
 				if(progress == 0) {
 					mAEVolumeSettingIv.setImageDrawable(
 							AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume_closed));
-					mIsMute = true;
-					mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(mCurrentPointedItemIndex), 0.0f);
+//					mIsMute = true;
+					mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(index), 0.0f);
 				} else {
 					mAEVolumeSettingIv.setImageDrawable(
 							AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume));
-					mIsMute = false;
-					mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(mCurrentPointedItemIndex), (float)(progress * 5) / 100f);
+//					mIsMute = false;
+					mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(index), progress / 100f);
 				}
 			}
 		});
 	}
+
+    public void recordEditChunkVolume(int volume) {
+        int index = mChannelLineAdapter.getEditIndex();
+        if(index == -1) {
+            return;
+        }
+
+        ProjectItemBean itemBean = mProjectItemList.get(index);
+        if(itemBean instanceof ChunkBean) {
+            ChunkBean chunkBean = (ChunkBean)itemBean;
+            chunkBean.curVolume = volume;
+            if(volume == 0) {
+                chunkBean.isMute = true;
+            } else {
+                chunkBean.isMute = false;
+            }
+        }
+    }
+
+    // index for item bean
+    public void setEditChunkVolume() {
+        int index = mChannelLineAdapter.getEditIndex();
+        if(index == -1) {
+            return;
+        }
+
+        ProjectItemBean itemBean = mProjectItemList.get(index);
+        if(itemBean instanceof ChunkBean) {
+            ChunkBean chunkBean = (ChunkBean)itemBean;
+            mAEVolumeSeekBar.setProgress(chunkBean.curVolume);
+            if(chunkBean.curVolume == 0) {
+                mAEVolumeSettingIv.setImageDrawable(
+                        getResources().getDrawable(R.drawable.ic_ae_volume_closed));
+            } else {
+                mAEVolumeSettingIv.setImageDrawable(
+                        getResources().getDrawable(R.drawable.ic_ae_volume));
+            }
+        }
+    }
+
+    public void muteEditChunkVolume() {
+        int index = mChannelLineAdapter.getEditIndex();
+        if(index == -1) {
+            return;
+        }
+
+        ProjectItemBean itemBean = mProjectItemList.get(index);
+        if(itemBean instanceof ChunkBean) {
+            ChunkBean chunkBean = (ChunkBean)itemBean;
+
+            if(chunkBean.curVolume == 0) {
+                chunkBean.curVolume = 100;
+                mAEVolumeSettingIv.setImageDrawable(
+                        getResources().getDrawable(R.drawable.ic_ae_volume));
+            } else {
+                chunkBean.curVolume = 0;
+                mAEVolumeSettingIv.setImageDrawable(
+                        getResources().getDrawable(R.drawable.ic_ae_volume_closed));
+            }
+            mAEVolumeSeekBar.setProgress(chunkBean.curVolume);
+        }
+    }
+
+    //			if(mIsMute) {
+//				mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);
+//			} else {
+//				mAEVolumeSeekBar.setProgress(0);
+//			}
 
 	private void copyBgMusic(String[] musicFiles) throws IOException {
 		for(int i = 1; i < musicFiles.length; i++){
@@ -981,8 +1068,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         mFullLoadingDialog.show();
 		try {
 			mAfterEffect.export(destPath,
-//					VideoEditConstant.DEFAULT_EXPORT_WIDTH,
-//					VideoEditConstant.DEFAULT_EXPORT_HEIGHT,
 					exportWidth, exportHeight,
 					(int) VideoEditConstant.DEFAULT_FPS,
 					VideoEditConstant.DEFAULT_EXPORT_BITRATE);
@@ -1141,11 +1226,13 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			VideoEditUtils.removeChunk(mAfterEffect, mProjectItemList, mChannelLineAdapter.getEditIndex());
 			mChannelLineAdapter.notifyDataSetChanged();
 		} else if(vId == R.id.iv_ae_volume_setting) {
-			if(mIsMute) {
-				mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);
-			} else {
-				mAEVolumeSeekBar.setProgress(0);
-			}
+//			if(mIsMute) {
+//				mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);
+//			} else {
+//				mAEVolumeSeekBar.setProgress(0);
+//			}
+ //           setEditChunkVolume();
+            muteEditChunkVolume();
 		}
 	}
 
@@ -1179,12 +1266,21 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		}
 	}
 
-	@Override
-	public void onExportFinished(AfterEffect afterEffcet, String path, boolean successful) {
-		Log.d("CK1", "onExportFinished, path=" + path + ", successful=" + successful);
-		Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_EXPORT_FINISHED, path);
-		mAfterEffecthandler.sendMessage(msg);
-	}
+    static class ExportRet {
+        String path;
+        boolean succeed;
+    }
+
+    @Override
+    public void onExportFinished(AfterEffect afterEffcet, String path, boolean successful) {
+        Log.d(TAG, "onExportFinished, path=" + path + ", successful=" + successful);
+        ExportRet retBean = new ExportRet();
+        retBean.path = path;
+        retBean.succeed = successful;
+
+        Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_EXPORT_FINISHED, 0, 0, retBean);
+        mAfterEffecthandler.sendMessage(msg);
+    }
 
 	@Override
 	public void onplayingChunkEnd(float currentSec, float totalSec,

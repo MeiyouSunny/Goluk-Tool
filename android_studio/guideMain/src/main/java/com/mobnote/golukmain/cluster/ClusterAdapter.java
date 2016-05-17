@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.baidu.mapapi.map.Text;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpenUrlActivity;
@@ -241,6 +242,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 					holder.newsBtn = (Button) convertView.findViewById(R.id.news_btn);
 					holder.partakeBtn = (Button) convertView.findViewById(R.id.partake_btn);
 					holder.voteBtn = (Button)convertView.findViewById(R.id.btn_cluster_head_vote);
+					holder.rankingBtn = (TextView) convertView.findViewById(R.id.now_ranking_btn);
 					convertView.setTag(holder);
 				} else {
 					holder = (HeadViewHolder) convertView.getTag();
@@ -250,6 +252,21 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 				mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
 				holder.headImg.setLayoutParams(mPlayerLayoutParams);
 
+				//开启
+				if ("1".equals(mHeadData.isopen)){
+					holder.rankingBtn.setVisibility(View.VISIBLE);
+				}else{
+					holder.rankingBtn.setVisibility(View.GONE);
+				}
+
+				holder.rankingBtn.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(mContext,RankingActivity.class);
+						intent.putExtra("activityid",mHeadData.activityid);
+						mContext.startActivity(intent);
+					}
+				});
 				holder.headImg.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -817,6 +834,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 	public static class HeadViewHolder {
 		TextView title;
 		ImageView headImg;
+		TextView rankingBtn;
 		//TextView describe;
 		TextView partakes;
 		Button recommendBtn;

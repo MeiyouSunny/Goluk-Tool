@@ -14,7 +14,8 @@
             android:id="@+id/mPreLoading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"
+            android:src="@drawable/album_default_img"/>
     </RelativeLayout>
 
     <!-- <RelativeLayout
@@ -71,6 +72,16 @@
             android:layout_toRightOf="@+id/partake_num"
             android:text="@string/str_population"
             android:textSize="14sp" /> -->
+        <TextView
+            android:id="@+id/now_ranking_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:background="@color/red"
+            android:drawableLeft="@drawable/share_weizhi_success"
+            android:text="当前总排名"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/partake_btn"
