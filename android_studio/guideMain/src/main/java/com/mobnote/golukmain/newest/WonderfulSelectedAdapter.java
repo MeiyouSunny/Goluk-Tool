@@ -260,7 +260,9 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 					final BannerTextBody body0 = bannerTextList.get(0);
 					if(null != body0) {
 						bannerHolder.mTextBanner1.setText(body0.getTitle());
-						bannerHolder.mTextBanner1.setTextColor(Color.parseColor(body0.getColor()));
+						if (null != body0.getColor() && body0.getColor().startsWith("#")) {
+							bannerHolder.mTextBanner1.setTextColor(Color.parseColor(body0.getColor()));
+						}
 						bannerHolder.mTextBanner1.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View v) {
@@ -272,7 +274,9 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 					final BannerTextBody body1 = bannerTextList.get(1);
 					if(null != body1) {
 						bannerHolder.mTextBanner2.setText(body1.getTitle());
-						bannerHolder.mTextBanner1.setTextColor(Color.parseColor(body1.getColor()));
+						if(null != body1.getColor() && body1.getColor().startsWith("#")) {
+							bannerHolder.mTextBanner2.setTextColor(Color.parseColor(body1.getColor()));
+						}
 						bannerHolder.mTextBanner2.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View v) {

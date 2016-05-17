@@ -368,9 +368,12 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		}
 	}
 
-	private void pause() {
-		mAfterEffect.playPause();
-	}
+    public void pause() {
+        if(mPlayerState == PlayerState.PLAYING) {
+            mVideoPlayIV.setVisibility(View.VISIBLE);
+            mAfterEffect.playPause();
+        }
+    }
 
 	private void initPlayer() {
 		mVideoThumeIv = (ImageView) findViewById(R.id.iv_video_thumb);
@@ -458,12 +461,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		switch (msg.what) {
 		case MSG_AE_PLAY_STARTED:
 			Log.d(TAG, "MSG_AE_PLAY_STARTED");
-//			mCurrentPlayPosition = 0;
-//			mIsPlayFinished = false;
-//			if(!mIsPlaying){
-//				mVideoPlayIv.setVisibility(View.GONE);
-//				mIsPlaying = true;
-//			}
 			mPlayerState = PlayerState.PLAYING;
 			mVideoPlayIV.setVisibility(View.GONE);
             clearChunkFocus();
@@ -638,6 +635,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			} else {
 				playOrPause();
 			}
+            clearChunkFocus();
 		}
             break;
         case MSG_AE_BITMAP_READ_FAILED: {
@@ -829,14 +827,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         }
     }
 
-    //			if(mIsMute) {
-//				mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);
-//			} else {
-//				mAEVolumeSeekBar.setProgress(0);
-//			}
-
 	private void copyBgMusic(String[] musicFiles) throws IOException {
-		for(int i = 1; i < musicFiles.length; i++){
+		for(int i = 1; i < musicFiles.length; i++) {
 			String destPath = Environment.getExternalStorageDirectory() + "/" + musicFiles[i];
 			File file = new File(destPath);
 			if (file.exists())
@@ -936,6 +928,19 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		mNextTV.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+                if(getChannelDuration() < VideoEditConstant.MIN_VIDEO_DURATION) {
+                    String org = AfterEffectActivity.this.getString(R.string.str_video_export_min_limit);
+                    String minLimit = String.format(org, (int)VideoEditConstant.MIN_VIDEO_DURATION);
+                    Toast.makeText(AfterEffectActivity.this, minLimit, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if(getChannelDuration() > VideoEditConstant.MAX_VIDEO_DURATION) {
+                    String org = AfterEffectActivity.this.getString(R.string.str_video_export_max_limit);
+                    String maxLimit = String.format(org, (int)VideoEditConstant.MAX_VIDEO_DURATION);
+                    Toast.makeText(AfterEffectActivity.this, maxLimit, Toast.LENGTH_SHORT).show();
+                    return;
+                }
 				List<VideoEncoderCapability> capaList = mAfterEffect.getSuportedCapability();
 				if (capaList == null || capaList.size() == 0) {
 					Toast.makeText(AfterEffectActivity.this, "手机不支持合适的分辨率", Toast.LENGTH_SHORT).show();
@@ -1135,7 +1140,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 
 	@Override
 	protected void onDestroy() {
-		if(mAfterEffect==null){
+		if(mAfterEffect != null) {
+            mAfterEffect.playStop();
+            mPlayerState = PlayerState.STOPPED;
 			mAfterEffect.release();
 		}
 
@@ -1148,6 +1155,12 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         }
 		super.onDestroy();
 	}
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 
 	@Override
 	public void onGeneratedThumbs(AfterEffect ae, Chunk chunk) {
