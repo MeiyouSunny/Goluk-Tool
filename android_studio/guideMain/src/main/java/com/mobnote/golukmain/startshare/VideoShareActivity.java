@@ -115,7 +115,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         initData();
         interceptVideoName();// 拿到视频名称
         mUploadVideo = new UploadVideo(this, GolukApplication.getInstance(), videoName);
-
+        mUploadVideo.setListener(this);
         initView();
 
         setupView();
@@ -295,6 +295,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         }
         isSharing = true;
         this.mUploadVideo.setUploadInfo(mVideoPath, mVideoType, videoName);
+        mShareLoading.switchState(ShareLoading.STATE_UPLOAD);
     }
 
     private void refreshLocationUI() {
