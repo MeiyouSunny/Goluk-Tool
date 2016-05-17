@@ -461,12 +461,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		switch (msg.what) {
 		case MSG_AE_PLAY_STARTED:
 			Log.d(TAG, "MSG_AE_PLAY_STARTED");
-//			mCurrentPlayPosition = 0;
-//			mIsPlayFinished = false;
-//			if(!mIsPlaying){
-//				mVideoPlayIv.setVisibility(View.GONE);
-//				mIsPlaying = true;
-//			}
 			mPlayerState = PlayerState.PLAYING;
 			mVideoPlayIV.setVisibility(View.GONE);
             clearChunkFocus();
@@ -641,6 +635,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			} else {
 				playOrPause();
 			}
+            clearChunkFocus();
 		}
             break;
         case MSG_AE_BITMAP_READ_FAILED: {
