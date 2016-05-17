@@ -829,14 +829,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         }
     }
 
-    //			if(mIsMute) {
-//				mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);
-//			} else {
-//				mAEVolumeSeekBar.setProgress(0);
-//			}
-
 	private void copyBgMusic(String[] musicFiles) throws IOException {
-		for(int i = 1; i < musicFiles.length; i++){
+		for(int i = 1; i < musicFiles.length; i++) {
 			String destPath = Environment.getExternalStorageDirectory() + "/" + musicFiles[i];
 			File file = new File(destPath);
 			if (file.exists())
