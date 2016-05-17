@@ -157,6 +157,8 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	/** recommenduser */
 	public static final int PageType_RecommendUser = 73;
 
+	/** 活动排名列表 **/
+	public static  final int PageType_RankingList = 74;
 
 	/**
 	 * 
@@ -168,6 +170,8 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	public static final int PageType_GetVersion = 1;
 	/**查询IPC升级文件的存放位置**/
 	public static final int PageType_GetIPCFile = 2;
+
+
 	
 	
 

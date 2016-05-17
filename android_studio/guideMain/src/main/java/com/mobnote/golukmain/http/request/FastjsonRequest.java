@@ -1,7 +1,12 @@
 package com.mobnote.golukmain.http.request;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.content.Intent;
+
 import cn.com.tiros.debug.GolukDebugUtils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -11,6 +16,10 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.ParseError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.alibaba.fastjson.JSON;
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.UserLoginActivity;
+import com.mobnote.util.GolukUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
@@ -83,6 +92,13 @@ public class FastjsonRequest<T> extends Request<T> {
 		try {
 			String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
 			GolukDebugUtils.e("", "-------------parseNetworkResponse--------json: " + json);
+            JSONObject result = JSON.parseObject(json);
+            int code = result.getIntValue("code");
+            if(code == 10001 || code == 10002){//token过期
+//                GolukUtils.showToast(GolukApplication.getInstance().getContext(),GolukApplication.getInstance().getContext().getResources().getString(R.string.str_token_timeout_volley));
+//              Intent intent = new Intent(GolukApplication.getInstance().getContext(), UserLoginActivity.class);
+//              GolukApplication.getInstance().getContext().startActivity(intent);
+            }
 			return Response.success(JSON.parseObject(json, clazz), HttpHeaderParser.parseCacheHeaders(response));
 		} catch (UnsupportedEncodingException e) {
 			return Response.error(new ParseError(e));

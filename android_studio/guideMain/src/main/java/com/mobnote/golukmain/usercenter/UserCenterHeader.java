@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import cn.com.tiros.debug.GolukDebugUtils;
+
 public class UserCenterHeader implements OnClickListener {
 
 	private Context mContext;
@@ -69,13 +71,13 @@ public class UserCenterHeader implements OnClickListener {
 		mWonderfulLayout.setOnClickListener(this);
 		mRecommendLayout.setOnClickListener(this);
 		mHeadlinesLayout.setOnClickListener(this);
+		mImageHead.setOnClickListener(this);
 		
 		return view;
 	}
 
 	public void getHeaderData() {
 		if (null != mData) {
-			mImageHead.setDrawingCacheEnabled(true);
 			HomeUser user = mData.user;
 			if (null != user && !"".equals(user.customavatar)) {
 				// 使用网络地址
@@ -243,8 +245,27 @@ public class UserCenterHeader implements OnClickListener {
 			intentToCategory(UserVideoCategoryActivity.COLLECTION_RECOMMEND_VIDEO);
 		} else if (id == R.id.layout_usercenter_header_category_headlines) {
 			intentToCategory(UserVideoCategoryActivity.COLLECTION_HEADLINES_VIDEO);
+		} else if(id == R.id.iv_usercenter_header_head) {
+			showLargeHead();
 		} else {
 		}
+	}
+
+	private void showLargeHead() {
+		if (null == mData || null == mData.user || null == mData.user.customavatar || null == mData.user.avatar) {
+			return;
+		}
+		String largeHead = "";
+		Intent itLargeHead = new Intent(mContext, UserLargeHeadActivity.class);
+		if (!"".equals(mData.user.customavatar)) {
+			// 使用网络地址
+			largeHead = mData.user.customavatar;
+		} else {
+			largeHead = mData.user.avatar;
+		}
+		GolukDebugUtils.e("","UserLargeHeadActivity---------largeHead: "+largeHead);
+		itLargeHead.putExtra("headurl", largeHead);
+		mContext.startActivity(itLargeHead);
 	}
 
 	private void intentToCategory(String type) {

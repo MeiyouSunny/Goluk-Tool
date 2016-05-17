@@ -26,8 +26,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import de.greenrobot.event.EventBus;
 
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventDeleteVideo;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.util.ImageManager;
@@ -131,6 +134,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		mIsfrist = true;
 		httpPost(mActivityid);
 		mRTPullListView.firstFreshState();
+
+		EventBus.getDefault().register(this);
 	}
 
 	public static class NoVideoDataViewHolder {
@@ -140,10 +145,17 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		boolean bMeasureHeight;
 	}
 
+	public void onEventMainThread(EventDeleteVideo event) {
+		if (EventConfig.VIDEO_DELETE == event.getOpCode()) {
+			final String delVid = event.getVid(); // 已经删除的id
+			this.mClusterAdapter.deleteVideo(delVid);
+		}
+	}
+
 	/**
 	 * 获取网络数据
 	 * 
-	 * @param flag
+	 * @param activityid
 	 *            是否显示加载中对话框
 	 * @author xuhw
 	 * @date 2015年4月15日
@@ -755,6 +767,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 		mBaseHandler.removeMessages(ClOSE_ACTIVITY);
 		GlideUtils.clearMemory(this);
 		GolukApplication.getInstance().getVideoSquareManager().removeVideoSquareManagerListener(TAG);
+
+		EventBus.getDefault().unregister(this);
 		super.onDestroy();
 	}
 

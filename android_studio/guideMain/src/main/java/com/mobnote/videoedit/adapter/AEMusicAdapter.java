@@ -101,13 +101,82 @@ public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
 					mAEMusicIV.setImageDrawable(mActivity.getResources()
 							.getDrawable(R.drawable.no_music));
 				} else {
-					if (aeMusic.isSelected()) {
-						mAEMusicIV.setImageDrawable(mActivity.getResources()
-								.getDrawable(R.drawable.ic_ae_cd_selected));
-					} else {
-						mAEMusicIV.setImageDrawable(mActivity.getResources()
-								.getDrawable(R.drawable.ic_ae_cd_unselected));
-					}
+                    switch (position) {
+                        case 1:
+                            if (aeMusic.isSelected()) {
+                                mAEMusicIV.setImageDrawable(mActivity.getResources()
+                                        .getDrawable(R.drawable.music_selected_wave));
+                            } else {
+                                mAEMusicIV.setImageDrawable(mActivity.getResources()
+                                        .getDrawable(R.drawable.music_wave));
+                            }
+                            break;
+                        case 2:
+                            if (aeMusic.isSelected()) {
+                                mAEMusicIV.setImageDrawable(mActivity.getResources()
+                                        .getDrawable(R.drawable.music_selected_discover));
+                            } else {
+                                mAEMusicIV.setImageDrawable(mActivity.getResources()
+                                        .getDrawable(R.drawable.music_discover));
+                            }
+                            break;
+                        case 3:
+                            if (aeMusic.isSelected()) {
+                                mAEMusicIV.setImageDrawable(mActivity.getResources()
+                                        .getDrawable(R.drawable.music_selected_humor));
+                            } else {
+                                mAEMusicIV.setImageDrawable(mActivity.getResources()
+                                        .getDrawable(R.drawable.music_humor));
+                            }
+                            break;
+                        case 4:
+                            if (aeMusic.isSelected()) {
+                                mAEMusicIV.setImageDrawable(mActivity.getResources()
+                                        .getDrawable(R.drawable.music_selected_memory));
+                            } else {
+                                mAEMusicIV.setImageDrawable(mActivity.getResources()
+                                        .getDrawable(R.drawable.music_memory));
+                            }
+                            break;
+                        case 5:
+                            if (aeMusic.isSelected()) {
+                                mAEMusicIV.setImageDrawable(mActivity.getResources()
+                                        .getDrawable(R.drawable.music_selected_crowd));
+                            } else {
+                                mAEMusicIV.setImageDrawable(mActivity.getResources()
+                                        .getDrawable(R.drawable.music_crowd));
+                            }
+                            break;
+                        case 6:
+                            if (aeMusic.isSelected()) {
+                                mAEMusicIV.setImageDrawable(mActivity.getResources()
+                                        .getDrawable(R.drawable.music_selected_travel));
+                            } else {
+                                mAEMusicIV.setImageDrawable(mActivity.getResources()
+                                        .getDrawable(R.drawable.music_travel));
+                            }
+                            break;
+                        case 7:
+                            if (aeMusic.isSelected()) {
+                                mAEMusicIV.setImageDrawable(mActivity.getResources()
+                                        .getDrawable(R.drawable.music_selected_fresh));
+                            } else {
+                                mAEMusicIV.setImageDrawable(mActivity.getResources()
+                                        .getDrawable(R.drawable.music_fresh));
+                            }
+                            break;
+                        case 8:
+                            if (aeMusic.isSelected()) {
+                                mAEMusicIV.setImageDrawable(mActivity.getResources()
+                                        .getDrawable(R.drawable.music_selected_wild));
+                            } else {
+                                mAEMusicIV.setImageDrawable(mActivity.getResources()
+                                        .getDrawable(R.drawable.music_wild));
+                            }
+                            break;
+                        default:
+                            break;
+                    }
 				}
 
 				mItemView.setOnClickListener(new View.OnClickListener() {

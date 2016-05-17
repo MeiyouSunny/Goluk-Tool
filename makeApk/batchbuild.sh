@@ -13,39 +13,40 @@ cd ../
 #判断第一个参数 test等是否存在
 echo "拷贝gitversion和version"
 
-rm -rf $3/assets/serverflag
+project_source_path=android_studio/golukMobile/src/main
+rm -rf ${project_source_path}/assets/serverflag
 
 if [ -n "$1" ];
 then
-	echo $1 >> $3/assets/serverflag
+	echo $1 >> ${project_source_path}/assets/serverflag
 	if [ $1 = "dev" ];
 	then
 		echo "build dev"
-		cp -f   version_test/version  $3/assets/version
+		cp -f   version_test/version  ${project_source_path}/assets/version
 	elif [ $1 = "test" ];
 	then
 		echo "build test"
-		cp -f   version_test/version  $3/assets/version
+		cp -f   version_test/version  ${project_source_path}/assets/version
 	elif [ $1 = "nvd" ];
 	then
 		echo "build nvd"
-		cp -f 	version_nvd/version $3/assets/version
+		cp -f 	version_nvd/version ${project_source_path}/assets/version
 	elif [ $1 = "txy" ];
 	then
 		echo "build txy"
-		cp -f 	version_nvd/version $3/assets/version
+		cp -f 	version_nvd/version ${project_source_path}/assets/version
 	else
 		echo "$1 error"
 	fi
 else
 	echo "build test"
-	echo "test" >> $3/assets/serverflag
-	cp -f   version_test/version  $3/assets/version
+	echo "test" >> ${project_source_path}/assets/serverflag
+	cp -f   version_test/version  ${project_source_path}/assets/version
 fi
 
 	echo "拷贝so文件到工程目录下"
-	mkdir -p $3/libs/armeabi/
-	cp -f tiros-module4x/libs/armeabi/* $3/libs/armeabi/
+	mkdir -p ${project_source_path}/jniLibs/armeabi/
+	cp -f tiros-module4x/libs/armeabi/* ${project_source_path}/jniLibs/armeabi/
 
 
 echo "构建apk包"

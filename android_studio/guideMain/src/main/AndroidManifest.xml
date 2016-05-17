@@ -4,10 +4,16 @@
 
     <uses-sdk android:minSdkVersion="14" />
 
+    <android:uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:label="@string/app_name"
-        android:largeHeap="true" >
-        </application>
+        android:largeHeap="true">
+        <activity android:name=".cluster.RankingActivity"></activity>
+    </application>
+
 </manifest>

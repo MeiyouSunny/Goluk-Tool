@@ -17,6 +17,7 @@ import com.mobnote.view.SlideShowView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.util.Log;
@@ -32,6 +33,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import cn.com.tiros.debug.GolukDebugUtils;
 
 
 public class WonderfulSelectedAdapter extends BaseAdapter {
@@ -257,6 +260,9 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 					final BannerTextBody body0 = bannerTextList.get(0);
 					if(null != body0) {
 						bannerHolder.mTextBanner1.setText(body0.getTitle());
+						if (null != body0.getColor() && body0.getColor().startsWith("#")) {
+							bannerHolder.mTextBanner1.setTextColor(Color.parseColor(body0.getColor()));
+						}
 						bannerHolder.mTextBanner1.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View v) {
@@ -268,6 +274,9 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 					final BannerTextBody body1 = bannerTextList.get(1);
 					if(null != body1) {
 						bannerHolder.mTextBanner2.setText(body1.getTitle());
+						if(null != body1.getColor() && body1.getColor().startsWith("#")) {
+							bannerHolder.mTextBanner2.setTextColor(Color.parseColor(body1.getColor()));
+						}
 						bannerHolder.mTextBanner2.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View v) {
@@ -347,7 +356,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 
 		if (PURE_PIC.equals(type)) {
 			// do nothing
-			Log.d(TAG, "pure picture clicked");
+			GolukDebugUtils.d(TAG, "pure picture clicked");
 		} else if (VIDEO_DETAIL.equals(type)) {
 			// launch video detail
 			String accessId = body.getAccess();
