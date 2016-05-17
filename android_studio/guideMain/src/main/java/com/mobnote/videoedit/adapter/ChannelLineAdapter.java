@@ -319,6 +319,7 @@ public class ChannelLineAdapter extends
 						}
 					}
                     mAEActivity.moveChunk2Gate(mEditIndex);
+                    mAEActivity.setEditChunkVolume();
 					}
 				});
 

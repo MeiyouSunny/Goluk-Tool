@@ -1052,4 +1052,6 @@
     <string name="str_video_music_Travel">旅行</string>
     <string name="str_video_music_Fresh">新鲜</string>
     <string name="str_video_music_Wild">撒野</string>
+    <string name="str_video_export_succeed">导出成功</string>
+    <string name="str_video_export_failed">导出失败</string>
 </resources>
