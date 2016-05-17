@@ -11,7 +11,7 @@ gradle clean
 echo "调用gradle打包"
 #export ANT_OPTS="-javaagent:/home/builder/class.rewriter.jar"
 
-gradle assembleInternalRelease
+gradle assembleInternal
 
 echo "拷贝APK文件"
 cp golukMobile/build/outputs/apk/*-release.apk  ../AndroidCDC/$1
