@@ -2026,9 +2026,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				+ "-----param1：" + param1 + "------param2：" + param2);
 		closeLoading();
 		if (RESULE_SUCESS == param1) {
-			if (!mSaveLastResolution.equals(mWonderfulVideoResolution)) {
-				showRebootDialog();
-			}
+//			if (!mSaveLastResolution.equals(mWonderfulVideoResolution)) {
+//				showRebootDialog();
+//			}
 			GolukApplication.getInstance().getIPCControlManager().getVideoResolution();
 		}
 	}

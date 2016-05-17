@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_dialog_bg"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/ll_ae_video_export_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv_ae_video_export_title"
+            android:layout_width="fill_parent"
+            android:layout_height="43.3dp"
+            android:gravity="center"
+            android:text="选择导出大小"
+            android:textColor="#1163a2"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#cccccc" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_ae_video_export_dialog_1080p"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv_ae_video_export_1080p"
+            android:layout_width="match_parent"
+            android:layout_height="43.3dp"
+            android:gravity="center"
+            android:text="1080P"
+            android:textColor="#1163a2"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#cccccc" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_ae_video_export_dialog_hd720p"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv_ae_video_export_hd720p"
+            android:layout_width="match_parent"
+            android:layout_height="43.3dp"
+            android:gravity="center"
+            android:text="HD720P"
+            android:textColor="#1163a2"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#cccccc" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_ae_video_export_dialog_480p"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv_ae_video_export_480p"
+            android:layout_width="match_parent"
+            android:layout_height="43.3dp"
+            android:gravity="center"
+            android:text="中 480P"
+            android:textColor="#1163a2"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#cccccc" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_ae_video_export_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="43.3dp"
+        android:gravity="center"
+        android:text="取消"
+        android:textColor="#1163a2"
+        android:textSize="16sp" />
+
+</LinearLayout>

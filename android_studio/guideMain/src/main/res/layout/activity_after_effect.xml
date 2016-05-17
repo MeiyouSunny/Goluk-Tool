@@ -11,7 +11,7 @@
         android:layout_height="46dp">
 
         <ImageButton
-            android:id="@+id/ae_imagebutton_back"
+            android:id="@+id/ib_ae_imagebutton_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -106,19 +106,21 @@
                 android:id="@+id/tv_ae_volume_percent"
                 android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
-                android:layout_width="wrap_content"
+                android:layout_width="48sp"
                 android:layout_height="wrap_content"
+                android:maxLength="4"
                 android:textSize="18sp"
                 android:textColor="#ffffff"
                 android:text="100%"/>
-            <SeekBar 
+            <SeekBar
                 android:id="@+id/seekbar_ae_volume"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:thumbOffset="0dp"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/iv_ae_volume_setting"
                 android:layout_toStartOf="@id/tv_ae_volume_percent"
-                android:progressDrawable="@drawable/player_seekbar_style"  
+                android:progressDrawable="@drawable/ae_player_seekbar_style"
                 android:thumb="@drawable/ae_seekbar_thumb"/>
        </RelativeLayout>
 
@@ -243,6 +245,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/fl_video_sur_layout"
+        android:id="@+id/rl_ae_time_line_parent_wrapper"
         android:layout_marginBottom="143dp" >
 
         <LinearLayout

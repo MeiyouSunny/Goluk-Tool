@@ -178,7 +178,6 @@
         <activity
             android:name="com.mobnote.videoedit.AfterEffectActivity"
             android:hardwareAccelerated="true"
-            android:theme="@android:style/Theme.NoTitleBar"
             android:screenOrientation="portrait">
         </activity>
         <activity
@@ -578,6 +577,11 @@
         </activity>
         <activity
             android:name="com.mobnote.golukmain.search.SearchUserAcivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.mobnote.golukmain.startshare.VideoShareActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>

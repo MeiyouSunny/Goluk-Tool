@@ -30,6 +30,7 @@ import com.mobnote.golukmain.following.FollowingListActivity;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.startshare.VideoEditActivity;
+import com.mobnote.golukmain.startshare.VideoShareActivity;
 import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
 import com.mobnote.golukmain.usercenter.UCUserInfo;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
@@ -1070,7 +1071,7 @@ public class GolukUtils {
 
 	public static void startVideoEditActivity(Context context, int type,
 			String path) {
-		Intent intent = new Intent(context, VideoEditActivity.class);
+		Intent intent = new Intent(context, VideoShareActivity.class);
 
 		int tempType = 2;
 		if (type == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {

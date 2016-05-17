@@ -1042,4 +1042,14 @@
      <string name="str_frist_refresh_begen_txt">今日精选有 </string>
      <string name="str_frist_refresh_end_txt"> 条新视频</string>
      <string name="str_more_refresh_begen_txt">又发现了 </string>
+
+    <string name="str_video_music_none">无</string>
+    <string name="str_video_music_wave">潮玩</string>
+    <string name="str_video_music_discover">发现</string>
+    <string name="str_video_music_Humor">幽默</string>
+    <string name="str_video_music_Memory">回忆</string>
+    <string name="str_video_music_Crowd">街头</string>
+    <string name="str_video_music_Travel">旅行</string>
+    <string name="str_video_music_Fresh">新鲜</string>
+    <string name="str_video_music_Wild">撒野</string>
 </resources>

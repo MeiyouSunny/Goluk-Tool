@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import android.graphics.Bitmap;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -107,6 +108,17 @@ public class VideoEditUtils {
 
 		return false;
 	}
+
+    public static boolean judgeChunkOverlap(LinearLayoutManager manager, int gateX, int chunkIndex) {
+        View view = manager.findViewByPosition(chunkIndex);
+        int viewWidth = view.getWidth();
+        int viewX = getViewXLocation(view);
+        if(gateX >= viewX && gateX <= viewX + viewWidth) {
+            return true;
+        }
+
+        return false;
+    }
 
 	public static int getTransitionFromChunk(List<ProjectItemBean> list, int chunkIndex) {
 		if(null == list || list.size() == 0) {

@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,14 +26,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -43,6 +45,8 @@ import android.widget.Toast;
 
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.videoedit.adapter.AEMusicAdapter;
 import com.mobnote.videoedit.adapter.ChannelLineAdapter;
 import com.mobnote.videoedit.bean.ChunkBean;
@@ -54,6 +58,7 @@ import com.mobnote.videoedit.bean.TransitionBean;
 import com.mobnote.videoedit.constant.VideoEditConstant;
 import com.mobnote.videoedit.utils.DeviceUtil;
 import com.mobnote.videoedit.utils.VideoEditUtils;
+import com.mobnote.videoedit.view.VideoEditExportDialog;
 
 import cn.npnt.ae.AfterEffect;
 import cn.npnt.ae.AfterEffectListener;
@@ -64,6 +69,8 @@ import cn.npnt.ae.exceptions.InvalidVideoSourceException;
 import cn.npnt.ae.model.Chunk;
 import cn.npnt.ae.model.Project;
 import cn.npnt.ae.model.Transition;
+import com.mobnote.application.GolukApplication;
+import cn.npnt.ae.model.VideoEncoderCapability;
 
 public class AfterEffectActivity extends BaseActivity implements AfterEffectListener, View.OnClickListener {
 	RecyclerView mAERecyclerView;
@@ -79,8 +86,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	int mTransitionWidth;
 	List<ProjectItemBean> mProjectItemList;
 	Handler mAfterEffecthandler;
-	private ChannelLineAdapter mAdapter;
+	private ChannelLineAdapter mChannelLineAdapter;
 	private FrameLayout mSurfaceLayout;
+	private ImageButton mBackBTN;
 
 	ImageView mVideoThumeIv;
 	ImageView mVideoPlayIV;
@@ -96,7 +104,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	LinearLayout mAEDeleteLayout;
 	LinearLayout mAECutLayout;
 	LinearLayout mAEVolumeLayout;
-	int mTimeLineX;
 	int mDummyHeaderWidth;
 	private TextView mNextTV;
 
@@ -106,12 +113,15 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	private int mCurrVolumeProgress;
 
 	private final static String TAG = "AfterEffectActivity";
-	private float mCurrentPlayPosition = 0f;
-	private int mCurrentPointedIndex;
+//	private float mCurrentPlayPosition = 0f;
+	private int mCurrentPointedItemIndex;
 	float mPlayingChunkPosition = 0f;
 
 	private View mTimeLineGateV;
 	private int mGateLocationX;
+    private CustomLoadingDialog mFullLoadingDialog;
+    private int mTailWidth;
+    private View mTimeLineWrapperRL;
 
 //	String mVideoPath1 = VideoEditConstant.VIDEO_PATH;
 	String mVideoPath;// = VideoEditConstant.VIDEO_PATH_1;
@@ -132,6 +142,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	public final static int MSG_AE_PLAY_PAUSED = 1013;
 	public final static int MSG_AE_PLAY_RESUMED = 1014;
 	public final static int MSG_AE_CHUNK_PLAY_END = 1015;
+    public final static int MSG_AE_BITMAP_READ_FAILED = 1016;
 
 //	private boolean mIsPlaying;
 //	private boolean mIsPlayFinished;
@@ -156,16 +167,39 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		"music/07-fresh-48khz-128kbps-final.mp3",
 		"music/08-crual-48khz-128kbps-final.mp3"};
 
-	final String[] mMusicNames = {
-			"none",
-			"fasion",
-			"discover",
-			"default",
-			"memory",
-			"street",
-			"travel",
-			"fresh",
-			"crual"};
+//	final String[] mMusicNames = {
+//			"none",
+//			"fasion",
+//			"discover",
+//			"default",
+//			"memory",
+//			"street",
+//			"travel",
+//			"fresh",
+//			"crual"};
+    String[] mMusicNames;
+
+    public int getTailWidth() {
+        return mTailWidth;
+    }
+
+    public void moveChunk2Gate(final int index) {
+        ProjectItemBean bean = mProjectItemList.get(index);
+        if(!(bean instanceof ChunkBean)) {
+            return;
+        }
+
+        if(VideoEditUtils.judgeChunkOverlap(mAELayoutManager, mGateLocationX, index)) {
+            return;
+        }
+
+        mAERecyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                mAELayoutManager.scrollToPositionWithOffset(index, mDummyHeaderWidth);
+            }
+        });
+    }
 
 	public void addChunk(String videoPath) {
 		// always add from end
@@ -200,26 +234,33 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		}
 	}
 
-	/**
-	 * 
-	 * @param chunkIndex
-	 * @param position 基于当前chunk的拆分的位置。单位秒。
-	 */
 	public void splitChunk() {
 		if(mProjectItemList == null || mProjectItemList.size() <= 3) {
 			return ;
 		}
 
-		ProjectItemBean bean = mProjectItemList.get(mCurrentPointedIndex);
+        int focusIndex = mChannelLineAdapter.getEditIndex();
+        if(focusIndex == -1) {
+            Toast.makeText(this, "无选中条目", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(!VideoEditUtils.judgeChunkOverlap(mAELayoutManager, mGateLocationX, mChannelLineAdapter.getEditIndex())) {
+            Toast.makeText(this, "只能拆分选中条目", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+		ProjectItemBean bean = mProjectItemList.get(mCurrentPointedItemIndex);
 		if(!(bean instanceof ChunkBean)) {
+            Toast.makeText(this, "此条目不能拆分", Toast.LENGTH_SHORT).show();
 			return;
 		}
 
-		View chunkView = mAELayoutManager.findViewByPosition(mCurrentPointedIndex);
+		View chunkView = mAELayoutManager.findViewByPosition(mCurrentPointedItemIndex);
 		float width = chunkView.getWidth();
 		float pX = VideoEditUtils.getViewXLocation(chunkView);
 
-		int chunkIndex = VideoEditUtils.mapI2CIndex(mCurrentPointedIndex);
+		int chunkIndex = VideoEditUtils.mapI2CIndex(mCurrentPointedItemIndex);
 		float position = (mGateLocationX - pX) / width * ((ChunkBean)bean).chunk.getDuration();
 		if(position == 0f) {
 			return;
@@ -270,7 +311,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			transitionBean.transiton = transtion;
 			transitionBean.ct_pair_tag = (itemIndex + 2) + "chunkIndex";
 			mProjectItemList.add(itemIndex + 3, transitionBean);
-			mAdapter.setEditIndex(itemIndex + 2);
+			mChannelLineAdapter.setEditIndex(itemIndex + 2);
 
 			VideoEditUtils.refreshCTTag(mProjectItemList);
 		} catch(EffectRuntimeException e) {
@@ -280,10 +321,10 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			e.printStackTrace();
 			return;
 		}
-		mAdapter.notifyDataSetChanged();
+		mChannelLineAdapter.notifyDataSetChanged();
 	}
 
-	private void playOrPause() {
+	public void playOrPause() {
 		if(mPlayerState == PlayerState.PLAYING) {
 			mVideoPlayIV.setVisibility(View.VISIBLE);
 			mAfterEffect.playPause();
@@ -358,7 +399,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		});
 
 		mAfterEffect = new AfterEffect(this, mGLSurfaceView, this, width, height);
-		addTail("crackerli", "2016-09-09");
+
+		addTail();
 		mProject = mAfterEffect.getProject();
 
 		mAfterEffecthandler = new Handler() {
@@ -380,8 +422,18 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		addChunk(mVideoPath);
 	}
 
-	private void addTail(String nickName, String date) {
+	private void addTail() {
 		InputStream istr = null;
+		GolukApplication mApp = GolukApplication.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String date = sdf.format(new java.util.Date());
+		String nickName = null;
+		if(mApp.isUserLoginSucess) {
+			UserInfo userInfo = mApp.getMyInfo();
+			nickName = userInfo.nickname;
+		} else {
+			nickName = getString(R.string.str_default_video_edit_user_name);
+		}
 
 		try {
 			istr = getAssets().open("tailer.png");
@@ -403,8 +455,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	private void handlerAECallBack(Message msg) {
 		switch (msg.what) {
 		case MSG_AE_PLAY_STARTED:
-			Log.d("CK1", "MSG_AE_PLAY_STARTED");
-			mCurrentPlayPosition = 0;
+			Log.d(TAG, "MSG_AE_PLAY_STARTED");
+//			mCurrentPlayPosition = 0;
 //			mIsPlayFinished = false;
 //			if(!mIsPlaying){
 //				mVideoPlayIv.setVisibility(View.GONE);
@@ -412,6 +464,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 //			}
 			mPlayerState = PlayerState.PLAYING;
 			mVideoPlayIV.setVisibility(View.GONE);
+            clearChunkFocus();
 			break;
 		case MSG_AE_PLAY_PROGRESS:
 		{
@@ -422,15 +475,22 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			AfterEffect afterEffect = playBean.effect;
 			final int chunkIndex = playBean.chunkIndex;
 
-			if(chunkIndex == -1) {
-				return;
-			}
-			Chunk chunk = afterEffect.getMainChunks().get(chunkIndex);
+            if(chunkIndex == -1) {
+                final int tailOffset = (int)(chunkPosition / VideoEditConstant.VIDEO_TAIL_TIME_DURATION * mTailWidth);
+                mAERecyclerView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAELayoutManager.scrollToPositionWithOffset(
+                                mProjectItemList.size() - 2, -tailOffset + mDummyHeaderWidth);
+                    }
+                });
+                return;
+            }
+            Chunk chunk = afterEffect.getMainChunks().get(chunkIndex);
 
-//			Log.d("CK1", "MSG_AE_PLAY_PROGRESS " + currentChunkPosition + "/" + chunkPosition + "/" + currentPlayPosition);
-			Log.d("CK1", "MSG_AE_PLAY_PROGRESS " + currentPos + "/" + totalSec + ","
-						+ chunkIndex + "-" + chunkPosition + ", chunk duration: " +
-						chunk.getDuration() + ", mPlayingChunkPosition=" + mPlayingChunkPosition);
+            Log.d(TAG, "MSG_AE_PLAY_PROGRESS " + currentPos + "/" + totalSec + ","
+                + chunkIndex + "-" + chunkPosition + ", chunk duration: " +
+                chunk.getDuration() + ", mPlayingChunkPosition=" + mPlayingChunkPosition);
 			int chunkWidth = VideoEditUtils.ChunkTime2Width(chunk);
 //			float chunkOffset = chunkPosition - mPlayingChunkPosition;
 			final int moveOffset = (int)(chunkPosition / chunk.getDuration() * chunkWidth);
@@ -451,7 +511,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 				@Override
 				public void run() {
 					mAELayoutManager.scrollToPositionWithOffset(
-							mProjectItemList.size() - 2, mDummyHeaderWidth);
+							mProjectItemList.size() - 1, mDummyHeaderWidth);
 				}
 			});
 			break;
@@ -470,10 +530,20 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			Log.d(TAG, "MSG_AE_EXPORT_PROGRESS: " + msg.arg1);
 			break;
 		case MSG_AE_EXPORT_FINISHED:
-			Log.d(TAG, "MSG_AE_EXPORT_FINISHED");
-			break;
-		case MSG_AE_EXPORT_FAILED:
-			break;
+            Log.d(TAG, "MSG_AE_EXPORT_FINISHED");
+            String path = (String)msg.obj;
+            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            intent.setData(Uri.parse("file://" + path));
+            sendBroadcast(intent);
+            if(null != mFullLoadingDialog) {
+                mFullLoadingDialog.close();
+            }
+            break;
+        case MSG_AE_EXPORT_FAILED:
+            if(null != mFullLoadingDialog) {
+                mFullLoadingDialog.close();
+            }
+            break;
 		case MSG_AE_THUMB_GENERATED: {
 			 Chunk chunkThumb = (Chunk) msg.obj;
 			// if (this.chunkThumbList == null)
@@ -490,6 +560,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 				mChunksTotalTime += chunk.getDuration();
 				mAfterEffect.generateThumbAsyn(chunk, VideoEditConstant.BITMAP_TIME_INTERVAL, mImageHeight);
 			}
+
 			break;
 		}
 
@@ -510,12 +581,14 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		{
 			mVideoPlayIV.setVisibility(View.GONE);
 			mPlayerState = PlayerState.PLAYING;
+            clearChunkFocus();
 		}
 			break;
 
 		case MSG_AE_BITMAP_READ_OUT: {
 			Chunk chunk = (Chunk) msg.obj;
-
+//            mTailWidth = mAfterEffect.getTailerThumbWidth();
+            Log.d(TAG, "tail width from sdk: " + mTailWidth);
 			// Get to insert index
 			ChunkBean chunkBean = new ChunkBean();
 			chunkBean.chunk = chunk;
@@ -539,8 +612,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			mProjectItemList.add(tInsertIndex, transitionBean);
 //			}
 
-			mAdapter.setData(mProjectItemList);
-			mAdapter.notifyDataSetChanged();
+			mChannelLineAdapter.setData(mProjectItemList);
+			mChannelLineAdapter.notifyDataSetChanged();
 			final int addIndex = cInsertIndex;
 			if(mPlayerState == PlayerState.PAUSED) {
 				seekWith(VideoEditUtils.mapI2CIndex(VideoEditUtils.mapI2CIndex(addIndex)));
@@ -555,9 +628,12 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			} else {
 				playOrPause();
 			}
-			break;
 		}
-
+            break;
+        case MSG_AE_BITMAP_READ_FAILED: {
+            Log.d(TAG, "MSG_AE_BITMAP_READ_FAILED");
+        }
+            break;
 		case MSG_AE_CHUNK_PLAY_END:
 		{
 			ChunkPlayBean playBean = (ChunkPlayBean)msg.obj;
@@ -569,7 +645,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			Chunk chunk = mAfterEffect.getMainChunks().get(chunkIndex);
 
 //			Log.d("CK1", "MSG_AE_PLAY_PROGRESS " + currentChunkPosition + "/" + chunkPosition + "/" + currentPlayPosition);
-			Log.d("CK2", "MSG_AE_PLAY_PROGRESS " + currentPos + "/" + totalSec + "," + chunkIndex + "-" + chunkPosition);
+			Log.d(TAG, "MSG_AE_PLAY_PROGRESS " + currentPos + "/" + totalSec + "," + chunkIndex + "-" + chunkPosition);
 			int chunkWidth = VideoEditUtils.ChunkTime2Width(chunk);
 		}
 			break;
@@ -591,6 +667,22 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	}
 
 	private void initController() {
+        mMusicNames = new String[9];
+        mMusicNames[0] = getString(R.string.str_video_music_none);
+        mMusicNames[1] = getString(R.string.str_video_music_wave);
+        mMusicNames[2] = getString(R.string.str_video_music_discover);
+        mMusicNames[3] = getString(R.string.str_video_music_Humor);
+        mMusicNames[4] = getString(R.string.str_video_music_Memory);
+        mMusicNames[5] = getString(R.string.str_video_music_Crowd);
+        mMusicNames[6] = getString(R.string.str_video_music_Travel);
+        mMusicNames[7] = getString(R.string.str_video_music_Fresh);
+        mMusicNames[8] = getString(R.string.str_video_music_Wild);
+
+        try {
+            copyBgMusic(mMusicPaths);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 		mAEEditController = (LinearLayout) findViewById(R.id.ll_video_edit_controller);
 		mAEVolumeSettingLayout = (RelativeLayout) findViewById(R.id.rl_ae_volume_setting);
 		mAEVolumeSettingIv = (ImageView) findViewById(R.id.iv_ae_volume_setting);
@@ -645,21 +737,15 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 					mAEVolumeSettingIv.setImageDrawable(
 							AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume_closed));
 					mIsMute = true;
-					mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(mCurrentPointedIndex), 0.0f);
+					mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(mCurrentPointedItemIndex), 0.0f);
 				} else {
 					mAEVolumeSettingIv.setImageDrawable(
 							AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume));
 					mIsMute = false;
-					mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(mCurrentPointedIndex), (float)(progress * 5) / 100f);
+					mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(mCurrentPointedItemIndex), (float)(progress * 5) / 100f);
 				}
 			}
 		});
-
-		try {
-			copyBgMusic(mMusicPaths);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void copyBgMusic(String[] musicFiles) throws IOException {
@@ -686,19 +772,40 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	}
 
 	// Seek to chunk with specified offset
-	private void seekWith(int chunkIndex, int chunkWidth, float delta) {
+	public void seekWith(int chunkIndex, int chunkWidth, float delta) {
 		Chunk chunk = mAfterEffect.getMainChunks().get(chunkIndex);
 		mAfterEffect.seekTo(chunkIndex, delta / chunkWidth * chunk.getDuration());
 	}
 
 	// Seek to chunk with 0 offset
-	private void seekWith(int chunkIndex) {
+	public void seekWith(int chunkIndex) {
 		mAfterEffect.seekTo(chunkIndex);
 	}
+
+    private VideoEditExportDialog mExportDialog;
+
+    private void clearChunkFocus() {
+        int preFocusIdx = mChannelLineAdapter.getEditIndex();
+        // no focus before
+        if(-1 == preFocusIdx) {
+            return;
+        }
+        ProjectItemBean bean = mProjectItemList.get(preFocusIdx);
+        if(!(bean instanceof ChunkBean)) {
+            // something wrong
+            return;
+        }
+        mChannelLineAdapter.setEditIndex(-1);
+        ChunkBean chunkBean = (ChunkBean)bean;
+        chunkBean.isEditState = false;
+        mChannelLineAdapter.notifyItemChanged(preFocusIdx);
+        showMusicController();
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_after_effect);
 		mPlayerState = PlayerState.INITED;
 		mVideoPath = getIntent().getStringExtra("vidPath");
@@ -714,15 +821,58 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		DummyFooterBean footerBean = new DummyFooterBean();
 		footerBean.index_tag = VideoEditUtils.generateIndexTag();
 		mProjectItemList.add(footerBean);
+		mBackBTN = (ImageButton)findViewById(R.id.ib_ae_imagebutton_back);
+		mBackBTN.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				AfterEffectActivity.this.finish();
+			}
+		});
 
 		mAELayoutManager = new LinearLayoutManager(this);
 		mAELayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mAERecyclerView = (RecyclerView) findViewById(R.id.rv_video_edit_pic_list);
+		mExportDialog = new VideoEditExportDialog(this);
+		Window dialogWindow = mExportDialog.getWindow();
+		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+		dialogWindow.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+        mFullLoadingDialog = new CustomLoadingDialog(this, "正在导出...");
+        mTimeLineWrapperRL = findViewById(R.id.rl_ae_time_line_parent_wrapper);
+        mTimeLineWrapperRL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearChunkFocus();
+            }
+        });
+
 		mNextTV = (TextView)findViewById(R.id.tv_ae_next_button);
 		mNextTV.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				exportAfterEffectVideo();
+				List<VideoEncoderCapability> capaList = mAfterEffect.getSuportedCapability();
+				if (capaList == null || capaList.size() == 0) {
+					Toast.makeText(AfterEffectActivity.this, "手机不支持合适的分辨率", Toast.LENGTH_SHORT).show();
+					return;
+				}
+
+				VideoEncoderCapability vc = capaList.get(capaList.size() - 1);
+				int width = vc.getWidth();
+				int height = vc.getHeight();
+				float fps = vc.getFps();
+				int bitrate = vc.getBitrate();
+				if(width == 1920 && height == 1080) {
+					mExportDialog.setQualityVisibility(true, true, true);
+				}
+
+				if(width == 1280 && height == 720) {
+					mExportDialog.setQualityVisibility(true, true, false);
+				}
+
+				if(width == 848 && height == 480) {
+					mExportDialog.setQualityVisibility(true, false, false);
+				}
+
+				mExportDialog.show();
 			}
 		});
 
@@ -743,43 +893,46 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 						Log.d(TAG, "Base UI data: mGateLocationX=" + mGateLocationX);
 					}
 				});
-		mTransitionWidth = DeviceUtil.dp2px(this, VideoEditConstant.TRANSITION_COMMON_WIDTH);
+        mTransitionWidth = DeviceUtil.dp2px(this, VideoEditConstant.TRANSITION_COMMON_WIDTH);
+        mTailWidth = DeviceUtil.dp2px(this, VideoEditConstant.VIDEO_TAIL_WIDTH);
+//        mAERecyclerView.setOnTouchListener(new OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                Log.d("CK1", "@@@@@@@@@@@@@@@");
+//                if(event.getAction() == MotionEvent.ACTION_MOVE) {
+//                    clearChunkFocus();
+//                }
+//                return false;
+//            }
+//        });
+
 		mAERecyclerView.addOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-				Log.d(TAG, "time line scrolled: dx=" + dx + ", dy=" + dy);
+//				Log.d(TAG, "time line scrolled: dx=" + dx + ", dy=" + dy);
 
+//                clearChunkFocus();
 				int firstVisibleIndex = mAELayoutManager.findFirstVisibleItemPosition();
 				int lastVisibleIndex = mAELayoutManager.findLastVisibleItemPosition();
-//				Log.d(TAG, "first visible index=" + firstVisibleIndex + ", lastVisibleIndex=" + lastVisibleIndex);
 				for(int i = firstVisibleIndex; i <= lastVisibleIndex; i++) {
 					View view = mAELayoutManager.findViewByPosition(i);
 
-//					if(view.getId() == R.id.ll_ae_data_transition) {
-//						int pX = VideoEditUtils.getViewXLocation(view);
-//						Log.d(TAG, "Transition scrolled to: pX=" + pX);
-//
-//						if(VideoEditUtils.judgeGateOverlap(mGateLocationX, pX, mTransitionWidth)) {
-//							// Skip seek player
-//						}
-//					}
-
+                    mCurrentPointedItemIndex = i;
 					if(view.getId() == R.id.fl_ae_data_chunk) {
 						int pX = VideoEditUtils.getViewXLocation(view);
 						if(VideoEditUtils.judgeChunkOverlap(mGateLocationX, pX, view.getWidth())) {
-							mCurrentPointedIndex = i;
 							if(mPlayerState == PlayerState.PAUSED) {
 								seekWith(VideoEditUtils.mapI2CIndex(i), view.getWidth(), mGateLocationX - pX);
 							}
 							break;
 						}
-					}
+                    }
 				}
 			}
 		});
 		initPlayer();
-		mAdapter = new ChannelLineAdapter(this, mAERecyclerView, mProjectItemList, mAfterEffect);
-		mAERecyclerView.setAdapter(mAdapter);
+		mChannelLineAdapter = new ChannelLineAdapter(this, mAERecyclerView, mProjectItemList, mAfterEffect);
+		mAERecyclerView.setAdapter(mChannelLineAdapter);
 		mAERecyclerView.setLayoutManager(mAELayoutManager);
 		mAERecyclerView.setItemAnimator(new DefaultItemAnimator());
 
@@ -798,14 +951,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		return mAfterEffect.getDuration();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		//getMenuInflater().inflate(R.menu.example, menu);
-		return true;
-	}
-
-	private void exportAfterEffectVideo() {
+	public void exportAfterEffectVideo(int exportWidth, int exportHeight) {
 		float duration= mAfterEffect.getDuration();
 		if(duration < VideoEditConstant.MIN_VIDEO_DURATION || duration > VideoEditConstant.MAX_VIDEO_DURATION) {
 			Toast.makeText(this, "can not export length: " + duration, Toast.LENGTH_SHORT).show();
@@ -832,48 +978,17 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		String sSecond = (second < 10) ? "0" + second : second + "";
 		fileName = "MOV" + sYear + sMonth + sDay + sHour + sMinute + sSecond + (int)duration;
 		destPath = destPath + "/" + fileName + ".mp4";
+        mFullLoadingDialog.show();
 		try {
 			mAfterEffect.export(destPath,
 //					VideoEditConstant.DEFAULT_EXPORT_WIDTH,
 //					VideoEditConstant.DEFAULT_EXPORT_HEIGHT,
-					480,270,
+					exportWidth, exportHeight,
 					(int) VideoEditConstant.DEFAULT_FPS,
 					VideoEditConstant.DEFAULT_EXPORT_BITRATE);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-/*		case R.id.action_layout_grid:
-			item.setChecked(true);
-			playOrPause();
-			break;
-		case R.id.action_layout_linear:
-			item.setChecked(true);
-			pause();
-			break;
-		case R.id.action_layout_export:
-			item.setChecked(true);
-			// VideoUtil.saveVideoOpenDialog(handler, progressDialog);
-			exportAfterEffectVideo();
-			break;
-		case R.id.action_layout_tail:
-			addTail("crackerli", "2016-09-09");
-			break;
-		case R.id.action_layout_music:
-			try {
-				mAfterEffect.editBackgroundMusic(mMusicPath);
-			} catch (InvalidVideoSourceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			item.setChecked(true);
-			break;*/
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -932,12 +1047,20 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_EXPORT_FAILED, afterEffcet);
 		mAfterEffecthandler.sendMessage(msg);
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		if(mAfterEffect==null){
 			mAfterEffect.release();
 		}
+
+		if(null != mExportDialog && mExportDialog.isShowing()) {
+			mExportDialog.dismiss();
+		}
+
+        if(null != mFullLoadingDialog && mFullLoadingDialog.isShowing()) {
+            mFullLoadingDialog.close();
+        }
 		super.onDestroy();
 	}
 
@@ -947,6 +1070,13 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_BITMAP_READ_OUT, chunk);
 		mAfterEffecthandler.sendMessage(msg);
 	}
+
+    @Override
+    public void onGeneratedThumbsFailed(AfterEffect ae, Chunk chunk) {
+        // TODO Auto-generated method stub
+        Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_BITMAP_READ_FAILED, chunk);
+        mAfterEffecthandler.sendMessage(msg);
+    }
 
 	@Override
 	public void onChunkAddedFinished(AfterEffect self, Project project,
@@ -1008,8 +1138,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		} else if(vId == R.id.ll_ae_split) {
 			splitChunk();
 		} else if(vId == R.id.ll_ae_delete) {
-			VideoEditUtils.removeChunk(mAfterEffect, mProjectItemList, mAdapter.getEditIndex());
-			mAdapter.notifyDataSetChanged();
+			VideoEditUtils.removeChunk(mAfterEffect, mProjectItemList, mChannelLineAdapter.getEditIndex());
+			mChannelLineAdapter.notifyDataSetChanged();
 		} else if(vId == R.id.iv_ae_volume_setting) {
 			if(mIsMute) {
 				mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);
@@ -1044,7 +1174,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			Bundle b = data.getExtras(); // data为B中回传的Intent
 			String vidPath = b.getString("vidPath");// str即为回传的值
 			if (vidPath != null) {
-				mAdapter.addChunk(vidPath);
+				mChannelLineAdapter.addChunk(vidPath);
 			}
 		}
 	}
@@ -1069,4 +1199,5 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_CHUNK_PLAY_END, 0, 0, bean);
 		mAfterEffecthandler.sendMessage(msg);
 	}
+
 }

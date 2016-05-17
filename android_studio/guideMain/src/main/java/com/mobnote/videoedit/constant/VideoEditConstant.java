@@ -28,4 +28,18 @@ public class VideoEditConstant {
 
 	public static final float MIN_VIDEO_DURATION = 10f;
 	public static final float MAX_VIDEO_DURATION = 90f;
+
+	public static final int EXPORT_1080P_WIDTH = 1920;
+	public static final int EXPORT_1080P_HEIGHT = 1080;
+
+	public static final int EXPORT_HD720P_WIDTH = 1280;
+	public static final int EXPORT_HD720P_HEIGHT = 720;
+
+	public static final int EXPORT_480P_WIDTH = 848;
+	public static final int EXPORT_480P_HEIGHT = 480;
+
+    public static final float VIDEO_TAIL_TIME_DURATION = 2.6f;
+
+    // dp
+    public static final int VIDEO_TAIL_WIDTH = 80;
 }

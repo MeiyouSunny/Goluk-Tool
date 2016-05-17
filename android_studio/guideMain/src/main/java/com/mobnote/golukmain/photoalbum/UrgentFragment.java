@@ -229,7 +229,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 		}
 
 		if (isshow) {
-			GolukUtils.showToast(getActivity(), getActivity().getString(R.string.str_synchronous_video_to_local));
+			GolukUtils.showToast(getActivity(), getActivity().getString(R.string.str_synchronous_video_loaded));
 		}
 
 	}
