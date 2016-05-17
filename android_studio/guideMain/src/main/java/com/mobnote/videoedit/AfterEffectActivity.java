@@ -1129,7 +1129,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 
 	@Override
 	protected void onDestroy() {
-		if(mAfterEffect==null){
+		if(mAfterEffect != null) {
+            mAfterEffect.playStop();
+            mPlayerState = PlayerState.STOPPED;
 			mAfterEffect.release();
 		}
 
@@ -1142,6 +1144,12 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         }
 		super.onDestroy();
 	}
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 
 	@Override
 	public void onGeneratedThumbs(AfterEffect ae, Chunk chunk) {
