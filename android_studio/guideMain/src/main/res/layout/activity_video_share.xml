@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/rl_videoshare_root"
     android:background="#F2F4F5" >
 
     <!-- title -->
@@ -65,10 +66,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:maxLength="18"
-                    android:text="#随手拍"
                     android:gravity="center"
                     android:background="@drawable/btn_shareselecttype_open"
-                    android:textColor="#808080"
+                    android:textColor="#0080ff"
                     android:textSize="12sp" />
 
                 <LinearLayout
@@ -148,6 +148,7 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/ll_share_now"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="#0080ff"

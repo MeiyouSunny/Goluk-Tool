@@ -1078,4 +1078,6 @@
     <string name="str_video_music_Travel">Travel</string>
     <string name="str_video_music_Fresh">Fresh</string>
     <string name="str_video_music_Wild">Wild</string>
+
+    <string name="str_sharetype">选择类型</string>
 </resources>

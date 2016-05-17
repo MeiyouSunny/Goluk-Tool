@@ -29,7 +29,7 @@ public class SharePlatformAdapter extends RecyclerView.Adapter{
     public SharePlatformAdapter(Context context){
 
         this.mContext = context;
-        mCurrSelectedPlatform = SharePlatformBean.SHARE_PLATFORM_WEXIN_CIRCLE;
+        mCurrSelectedPlatform = SharePlatformBean.SHARE_PLATFORM_NULL;
         fillList();
     }
 

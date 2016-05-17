@@ -327,6 +327,10 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name="com.mobnote.golukmain.startshare.ShareTypeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <activity
             android:name="com.mobnote.golukmain.promotion.PromotionActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
