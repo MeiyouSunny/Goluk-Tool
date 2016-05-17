@@ -31,11 +31,13 @@ public class RankingBeanRequest extends GolukFastjsonRequest<RankingListBean> {
 	public void get(String activityId,String operation,String timestamp,String pagesize) {
 		HashMap<String, String> headers = (HashMap<String, String>) getHeader();
 		headers.put("activityid", activityId);
-		String uid = GolukApplication.getInstance().getMyInfo().uid;
-		if (TextUtils.isEmpty(uid)) {
-			headers.put("uid", "");
-		} else {
-			headers.put("uid", uid);
+		if(GolukApplication.getInstance().getMyInfo() != null){
+			String uid = GolukApplication.getInstance().getMyInfo().uid;
+			if (TextUtils.isEmpty(uid)) {
+				headers.put("uid", "");
+			} else {
+				headers.put("uid", uid);
+			}
 		}
 		headers.put("mobileid", "" + Tapi.getMobileId());
 		headers.put("operation",operation);
