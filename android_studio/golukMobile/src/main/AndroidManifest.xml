@@ -178,7 +178,6 @@
         <activity
             android:name="com.mobnote.videoedit.AfterEffectActivity"
             android:hardwareAccelerated="true"
-            android:theme="@android:style/Theme.NoTitleBar"
             android:screenOrientation="portrait">
         </activity>
         <activity
@@ -582,6 +581,11 @@
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
+            android:name="com.mobnote.golukmain.startshare.VideoShareActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+        <activity
             android:name="com.mobnote.golukmain.praised.MyPraisedActivity"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
@@ -593,6 +597,13 @@
             android:hardwareAccelerated="true"
             
             android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+
+        <activity
+            android:name="com.mobnote.golukmain.usercenter.UserLargeHeadActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:hardwareAccelerated="true" >
+
         </activity>
 
         <!-- facebook 相关 -->
@@ -617,6 +628,11 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <meta-data
+            android:value="7e0f2b2b09084a53b811aad948bd4169" android:name = "ZHUGE_APPKEY"/>
+        <meta-data
+            android:value="wandoujia" android:name = "ZHUGE_CHANNEL"/>
     </application>
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />

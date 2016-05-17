@@ -222,7 +222,8 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,I
 				
 				try {
 					
-					this.saveBitmap(SettingImageView.toRoundBitmap(bitmap));
+//					this.saveBitmap(SettingImageView.toRoundBitmap(bitmap));
+					this.saveBitmap(bitmap);
 					isSave = true;
 					if (mCustomProgressDialog != null) {
 							mCustomProgressDialog.show();

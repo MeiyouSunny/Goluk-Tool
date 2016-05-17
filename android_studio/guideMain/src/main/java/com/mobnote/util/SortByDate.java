@@ -24,7 +24,7 @@ public class SortByDate implements Comparator<String> {
 				date2 = videoFileInfoBean.timestamp;
 			}
 		}
-		
+
 		if (TextUtils.isEmpty(date1)) {
 			date1 = getDateFromName(s1);
 		}

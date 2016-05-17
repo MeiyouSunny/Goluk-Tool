@@ -19,15 +19,16 @@ import android.widget.TextView;
 
 import com.mobnote.golukmain.R;
 import com.mobnote.videoedit.bean.AEMusic;
+import com.mobnote.videoedit.AfterEffectActivity;
 
 public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
 	int mCurrSelectedIndex = -1;
-	Context mContext;
+	AfterEffectActivity mActivity;
 	List<AEMusic> mAEMusicList;
 	AfterEffect mAfterEffect;
 
-	public AEMusicAdapter(Context cxt, AfterEffect effect) {
-		this.mContext = cxt;
+	public AEMusicAdapter(AfterEffectActivity act, AfterEffect effect) {
+		this.mActivity = act;
 		mCurrSelectedIndex = 0;
 		mAfterEffect = effect;
 //		fillupMusicList();
@@ -80,10 +81,8 @@ public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
 			super(itemView);
 			// TODO Auto-generated constructor stub
 			this.mItemView = itemView;
-			mAEMusicIV = (ImageView) itemView
-					.findViewById(R.id.iv_ae_music_item);
-			mAEMusicTv = (TextView) itemView
-					.findViewById(R.id.tv_ae_music_item);
+			mAEMusicIV = (ImageView)itemView.findViewById(R.id.iv_ae_music_item);
+			mAEMusicTv = (TextView)itemView.findViewById(R.id.tv_ae_music_item);
 		}
 
 		public void bindView(final int position) {
@@ -99,14 +98,14 @@ public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
 				mAEMusicTv.setText(aeMusic.getMusicName());
 
 				if (position == 0) {
-					mAEMusicIV.setImageDrawable(mContext.getResources()
+					mAEMusicIV.setImageDrawable(mActivity.getResources()
 							.getDrawable(R.drawable.no_music));
 				} else {
 					if (aeMusic.isSelected()) {
-						mAEMusicIV.setImageDrawable(mContext.getResources()
+						mAEMusicIV.setImageDrawable(mActivity.getResources()
 								.getDrawable(R.drawable.ic_ae_cd_selected));
 					} else {
-						mAEMusicIV.setImageDrawable(mContext.getResources()
+						mAEMusicIV.setImageDrawable(mActivity.getResources()
 								.getDrawable(R.drawable.ic_ae_cd_unselected));
 					}
 				}
@@ -114,32 +113,31 @@ public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
 				mItemView.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						if (mCurrSelectedIndex != position) {
-							AEMusic preSeletedMusic = mAEMusicList
-									.get(mCurrSelectedIndex);
-							preSeletedMusic.setSelected(false);
-							mAEMusicList.set(mCurrSelectedIndex,
-									preSeletedMusic);
-							notifyItemChanged(mCurrSelectedIndex);
+					// TODO Auto-generated method stub
+					if (mCurrSelectedIndex != position) {
+						AEMusic preSeletedMusic = mAEMusicList.get(mCurrSelectedIndex);
+						preSeletedMusic.setSelected(false);
+						mAEMusicList.set(mCurrSelectedIndex, preSeletedMusic);
+						notifyItemChanged(mCurrSelectedIndex);
 
-							AEMusic newSelectedMusic = mAEMusicList
-									.get(position);
-							newSelectedMusic.setSelected(true);
-							mAEMusicList.set(position, newSelectedMusic);
-							notifyItemChanged(position);
-							mCurrSelectedIndex = position;
-							String destPath = null;
-							if(0 != mCurrSelectedIndex) {
-								destPath = mAEMusicList.get(mCurrSelectedIndex).getMusicPath();
-							}
-
-							try {
-								mAfterEffect.editBackgroundMusic(destPath);
-							} catch (InvalidVideoSourceException e) {
-								e.printStackTrace();
-							}
+						AEMusic newSelectedMusic = mAEMusicList.get(position);
+						newSelectedMusic.setSelected(true);
+						mAEMusicList.set(position, newSelectedMusic);
+						notifyItemChanged(position);
+						mCurrSelectedIndex = position;
+						String destPath = null;
+						if(0 != mCurrSelectedIndex) {
+							destPath = mAEMusicList.get(mCurrSelectedIndex).getMusicPath();
 						}
+
+						try {
+							mAfterEffect.editBackgroundMusic(destPath);
+							mActivity.seekWith(0);
+                            mAfterEffect.play();
+						} catch (InvalidVideoSourceException e) {
+							e.printStackTrace();
+						}
+					}
 					}
 				});
 			}

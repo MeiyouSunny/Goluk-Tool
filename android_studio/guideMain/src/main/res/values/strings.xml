@@ -1067,4 +1067,19 @@
     <string name="str_video_edit_next">下一步</string>
     <string name="str_token_timeout_volley">Please log off and log in again</string>
     <string name="str_cluster_ranking_title">Activity ranking</string>
+    <string name="str_edit_short_video">编辑短片</string>
+    <string name="str_synchronous_video_loaded">该视频已保存到手机相册，请勿重复操作</string>
+    <string name="str_default_video_edit_user_name">无名极友</string>
+
+    <string name="str_video_music_none">None</string>
+    <string name="str_video_music_wave">Wave</string>
+    <string name="str_video_music_discover">Discover</string>
+    <string name="str_video_music_Humor">Humor</string>
+    <string name="str_video_music_Memory">Memory</string>
+    <string name="str_video_music_Crowd">Crowd</string>
+    <string name="str_video_music_Travel">Travel</string>
+    <string name="str_video_music_Fresh">Fresh</string>
+    <string name="str_video_music_Wild">Wild</string>
+    <string name="str_video_export_succeed">Export succeeded</string>
+    <string name="str_video_export_failed">Export failed</string>
 </resources>

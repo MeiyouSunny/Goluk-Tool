@@ -41,9 +41,6 @@ echo "开始构建android脚本"
 	name=$apkName-"`date +%Y%m%d%H%M`".tar.gz
 	cp $buildpath/$apkName.tar.gz /home/ftp-dir/compileDir/$name 2>>$logpath
 
-	echo "发送邮件通知"
- 
-	./sendmail.sh sendmail android $buildpath/$apkName.tar.gz ftp://anonymous@ftp.lbs8.com/compileDir/$name $logpath CDC $5
 
 	echo "退出到根目录并删除临时文件"
 

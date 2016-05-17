@@ -6,7 +6,6 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import cn.npnt.ae.AfterEffect;
 import cn.npnt.ae.model.Chunk;
 import cn.npnt.ae.model.ChunkThumbs;
@@ -53,7 +52,7 @@ public class ChannelLineAdapter extends
 	private int mFooterWidth;
 	RecyclerView mRecyclerView;
 
-	private AfterEffectActivity mAeActivity;
+	private AfterEffectActivity mAEActivity;
 
 	int mEditIndex = -1;
 	AfterEffect mAfterEffect;
@@ -79,7 +78,7 @@ public class ChannelLineAdapter extends
 		super(recyclerView);
 		this.mDataList = dataList;
 		this.mContext = cxt;
-		this.mAeActivity = (AfterEffectActivity) cxt;
+		this.mAEActivity = (AfterEffectActivity) cxt;
 		mRecyclerView = recyclerView;
 		mAfterEffect = ae;
 		mFooterWidth = DeviceUtil.getScreenWidthSize(mContext) - DeviceUtil.dp2px(mContext, 65);
@@ -125,7 +124,7 @@ public class ChannelLineAdapter extends
 			return new FooterViewHolder(this, view, mFooterWidth);
 		}else if(VIEW_TYPE_CHUNK_TAIL == viewType) {
 			View view = inflater.inflate(R.layout.ae_data_item_tail_layout, viewGroup, false);
-			return new ChunkTailViewHolder(this, view);
+			return new ChunkTailViewHolder(this, view, mAEActivity.getTailWidth());
 		}else if(VIEW_TYPE_TRANSITION == viewType) {
 			View view = inflater.inflate(R.layout.ae_data_item_transition_layout, viewGroup, false);
 			return new TransitionViewHolder(this, view);
@@ -182,13 +181,13 @@ public class ChannelLineAdapter extends
 		}
 	}
 
-
-	static class ChunkTailViewHolder extends ProjectItemViewHolder {
-		public ChunkTailViewHolder(DragSortAdapter<?> dragSortAdapter, View itemView) {
-			super(dragSortAdapter, itemView);
-			// TODO Auto-generated constructor stub
-		}
-	}
+    static class ChunkTailViewHolder extends ProjectItemViewHolder {
+        LinearLayout nTailLL;
+        public ChunkTailViewHolder(DragSortAdapter<?> dragSortAdapter, View itemView, int tailWidth) {
+            super(dragSortAdapter, itemView);
+            nTailLL = (LinearLayout)itemView.findViewById(R.id.ll_ae_data_tail);
+        }
+    }
 
 	static class FooterViewHolder extends ProjectItemViewHolder {
 		ImageView nAddChunkIV;
@@ -294,31 +293,33 @@ public class ChannelLineAdapter extends
 				viewHolder.nChunkContainerLL.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if(-1 == mEditIndex) { // no selection before
-							mEditIndex = position;
-							chunkBean.isEditState = true;
-							notifyItemChanged(mEditIndex);
-							mAeActivity.showEditController();
+					if(-1 == mEditIndex) { // no selection before
+						mEditIndex = position;
+						chunkBean.isEditState = true;
+						notifyItemChanged(mEditIndex);
+						mAEActivity.showEditController();
+					} else {
+						if(mEditIndex == position) { // tap same item to cancel selection
+//								chunkBean.isEditState = false;
+//								mEditIndex = -1;
+//								notifyItemChanged(position);
+//								mAEActivity.showMusicController();
 						} else {
-							if(mEditIndex == position) { // tap same item to cancel selection
-								chunkBean.isEditState = false;
-								mEditIndex = -1;
-								notifyItemChanged(position);
-								mAeActivity.showMusicController();
-							} else {
-								ProjectItemBean bean = mDataList.get(mEditIndex);
-								if(bean instanceof ChunkBean) {
-									ChunkBean preBean = (ChunkBean)bean;
-									preBean.isEditState = !preBean.isEditState;
-								}
-								notifyItemChanged(mEditIndex);
-								chunkBean.isEditState = !chunkBean.isEditState;
-
-								notifyItemChanged(position);
-								mEditIndex = position;
-								mAeActivity.showEditController();
+							ProjectItemBean bean = mDataList.get(mEditIndex);
+							if(bean instanceof ChunkBean) {
+								ChunkBean preBean = (ChunkBean)bean;
+								preBean.isEditState = !preBean.isEditState;
 							}
+							notifyItemChanged(mEditIndex);
+							chunkBean.isEditState = !chunkBean.isEditState;
+
+							notifyItemChanged(position);
+							mEditIndex = position;
+							mAEActivity.showEditController();
 						}
+					}
+                    mAEActivity.moveChunk2Gate(mEditIndex);
+                    mAEActivity.setEditChunkVolume();
 					}
 				});
 
@@ -363,7 +364,7 @@ public class ChannelLineAdapter extends
 			viewHolder.nAddChunkIV.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					mAeActivity.goToChooseVideo();
+					mAEActivity.goToChooseVideo();
 				}
 			});
 
@@ -378,7 +379,13 @@ public class ChannelLineAdapter extends
 			float duration = ((AfterEffectActivity)mContext).getChannelDuration();
 			int trimDuration = (int)(duration * 10);
 			viewHolder.nChannelTimeIV.setText("" + (float)trimDuration / 10 + "s");
-		}
+		} else if(holder instanceof ChunkTailViewHolder) {
+//            ChunkTailViewHolder viewHolder = (ChunkTailViewHolder)holder;
+//            ViewGroup.LayoutParams lp = viewHolder.nTailLL.getLayoutParams();
+//            lp.width = (int)(VideoEditConstant.VIDEO_TAIL_TIME_DURATION /
+//                    VideoEditConstant.BITMAP_TIME_INTERVAL * mAEActivity.getTailWidth());
+//            viewHolder.nTailLL.setLayoutParams(lp);
+        }
 	}
 
 	@Override

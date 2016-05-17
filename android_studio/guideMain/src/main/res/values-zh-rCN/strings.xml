@@ -1044,4 +1044,15 @@
      <string name="str_more_refresh_begen_txt">又发现了 </string>
     <string name="str_token_timeout_volley">用户信息已过期，请注销重新登录</string>
     <string name="str_cluster_ranking_title">活动总排名</string>
+    <string name="str_video_music_none">无</string>
+    <string name="str_video_music_wave">潮玩</string>
+    <string name="str_video_music_discover">发现</string>
+    <string name="str_video_music_Humor">幽默</string>
+    <string name="str_video_music_Memory">回忆</string>
+    <string name="str_video_music_Crowd">街头</string>
+    <string name="str_video_music_Travel">旅行</string>
+    <string name="str_video_music_Fresh">新鲜</string>
+    <string name="str_video_music_Wild">撒野</string>
+    <string name="str_video_export_succeed">导出成功</string>
+    <string name="str_video_export_failed">导出失败</string>
 </resources>
