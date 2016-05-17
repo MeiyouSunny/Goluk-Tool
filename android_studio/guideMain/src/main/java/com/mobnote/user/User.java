@@ -79,33 +79,43 @@ public class User implements IRequestResultListener{
 	 */
 	public void initAutoLogin(){
 		GolukDebugUtils.i("lily", "-----initAtuoLogin ---------");
-		//网络判断
-		if(!UserUtils.isNetDeviceAvailable(mContext)){
-//			console.toast("网络链接异常，检查网络后重新自动登录", mContext);
-			StatusChange(3);//自动登录失败
+		String userinfo = SharedPrefUtil.getUserPwd();
+		if(userinfo!= null && !"".equals(userinfo)){
+			StatusChange(2);
+			mApp.loginoutStatus = false;
+			mApp.isUserLoginSucess = true;
+			mApp.showContinuteLive();
 		}else{
-			//判断是否已经登录了
-			if(isFirstLogin){
-				//是第一次登录
-				return;
-			}else{//不是第一次登录
-				String userinfo = SharedPrefUtil.getUserPwd(); 
-				GolukDebugUtils.i("lily", "-----initAtuoLogin --------- userinfo " + userinfo);
-				if(userinfo == null || "".equals(userinfo)){
-					StatusChange(3);//自动登录失败
-				}else{
-					com.alibaba.fastjson.JSONObject user = com.alibaba.fastjson.JSONObject.parseObject(userinfo);
-					String pwd = user.getString("pwd");
-					if(pwd == null || "".equals(pwd)){
-						pwd = GolukConfig.OTHER_PASSWORD;
-					}
-					GolukDebugUtils.i("zh", "zh-----initAtuoLogin --------- userinfo " + userinfo + "pwd = " + pwd);
-					userloginBean.get(user.getString("phone"), MD5.hexdigest(pwd),user.getString("uid"));
-					
-					StatusChange(1);//自动登录中
-				}
-			}
+			StatusChange(3);
 		}
+
+//		//网络判断
+//		if(!UserUtils.isNetDeviceAvailable(mContext)){
+////			console.toast("网络链接异常，检查网络后重新自动登录", mContext);
+//			StatusChange(3);//自动登录失败
+//		}else{
+//			//判断是否已经登录了
+//			if(isFirstLogin){
+//				//是第一次登录
+//				return;
+//			}else{//不是第一次登录
+//				String userinfo = SharedPrefUtil.getUserPwd();
+//				GolukDebugUtils.i("lily", "-----initAtuoLogin --------- userinfo " + userinfo);
+//				if(userinfo == null || "".equals(userinfo)){
+//					StatusChange(3);//自动登录失败
+//				}else{
+//					com.alibaba.fastjson.JSONObject user = com.alibaba.fastjson.JSONObject.parseObject(userinfo);
+//					String pwd = user.getString("pwd");
+//					if(pwd == null || "".equals(pwd)){
+//						pwd = GolukConfig.OTHER_PASSWORD;
+//					}
+//					GolukDebugUtils.i("zh", "zh-----initAtuoLogin --------- userinfo " + userinfo + "pwd = " + pwd);
+//					userloginBean.get(user.getString("phone"), MD5.hexdigest(pwd),user.getString("uid"));
+//
+//					StatusChange(1);//自动登录中
+//				}
+//			}
+//		}
 	}
 	
 	public void StatusChange(int aStatus)

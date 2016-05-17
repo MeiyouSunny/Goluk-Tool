@@ -1042,4 +1042,6 @@
      <string name="str_frist_refresh_begen_txt">今日精选有 </string>
      <string name="str_frist_refresh_end_txt"> 条新视频</string>
      <string name="str_more_refresh_begen_txt">又发现了 </string>
+    <string name="str_token_timeout_volley">用户信息已过期，请注销重新登录</string>
+    <string name="str_cluster_ranking_title">活动总排名</string>
 </resources>

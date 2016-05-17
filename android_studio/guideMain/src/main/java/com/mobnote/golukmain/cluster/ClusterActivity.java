@@ -143,7 +143,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 	/**
 	 * 获取网络数据
 	 * 
-	 * @param flag
+	 * @param activityid
 	 *            是否显示加载中对话框
 	 * @author xuhw
 	 * @date 2015年4月15日

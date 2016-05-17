@@ -59,4 +59,8 @@ public class ActivityBean {
 	/** 投票id */
 	@JSONField(name = "voteid")
 	public String voteid;
+
+	/** 1:开启，0：关闭 */
+	@JSONField(name = "isopen")
+	public  String isopen;
 }
