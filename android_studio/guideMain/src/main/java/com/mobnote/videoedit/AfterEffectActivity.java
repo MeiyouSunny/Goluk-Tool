@@ -98,14 +98,18 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	TextView mAEVolumePercentTv;
 	SeekBar mAEVolumeSeekBar;
 
-	LinearLayout mAEEditController;
-	LinearLayout mAESplitAndDeleteLayout;
-	LinearLayout mAESplitLayout;
-	LinearLayout mAEDeleteLayout;
-	LinearLayout mAECutLayout;
-	LinearLayout mAEVolumeLayout;
-	int mDummyHeaderWidth;
-	private TextView mNextTV;
+    LinearLayout mAEEditController;
+    LinearLayout mAESplitAndDeleteLayout;
+    LinearLayout mAESplitLayout;
+    LinearLayout mAEDeleteLayout;
+    LinearLayout mAECutLayout;
+    LinearLayout mAEVolumeLayout;
+    ImageView mAECutIV;
+    TextView mAECutTV;
+    ImageView mAEVolumeIV;
+    TextView mAEVolumeTV;
+    int mDummyHeaderWidth;
+    private TextView mNextTV;
 
 	/** 是否为静音 */
 //	private boolean mIsMute;
@@ -201,22 +205,26 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         });
     }
 
-	public void addChunk(String videoPath) {
-		// always add from end
-		int addFlag = -1;
-		// if no chunk added, then the init data would be header, footer, tail
+    public void addChunk(String videoPath) {
+        // always add from end
+        int addFlag = -1;
+        // if no chunk added, then the init data would be header, footer, tail
 //		if(mProjectItemList == null || mProjectItemList.size() <= 3) {
 //			addFlag = 0;
 //		}
 
-		if (mVideoPath != null) {
-			try {
-				mAfterEffect.editAddChunk(videoPath, addFlag);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+        if (mVideoPath != null) {
+            mFullLoadingDialog.show();
+            try {
+                mAfterEffect.editAddChunk(videoPath, addFlag);
+            } catch (Exception e) {
+                if(null != mFullLoadingDialog && mFullLoadingDialog.isShowing()) {
+                    mFullLoadingDialog.close();
+                }
+                e.printStackTrace();
+            }
+        }
+    }
 
 	/**
 	 * 删除某个chunk片段
@@ -527,6 +535,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			break;
 		case MSG_AE_EXPORT_PROGRESS:
 			Log.d(TAG, "MSG_AE_EXPORT_PROGRESS: " + msg.arg1);
+            String org = getString(R.string.str_video_export_progress);
+            String formattedOrg = String.format(org, msg.arg1);
+            mFullLoadingDialog.setTextTitle(formattedOrg);
 			break;
 		case MSG_AE_EXPORT_FINISHED:
             Log.d(TAG, "MSG_AE_EXPORT_FINISHED");
@@ -621,6 +632,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 
 			mChannelLineAdapter.setData(mProjectItemList);
 			mChannelLineAdapter.notifyDataSetChanged();
+            if(null != mFullLoadingDialog && mFullLoadingDialog.isShowing()) {
+                mFullLoadingDialog.close();
+            }
 			final int addIndex = cInsertIndex;
 			if(mPlayerState == PlayerState.PAUSED) {
 				seekWith(VideoEditUtils.mapI2CIndex(VideoEditUtils.mapI2CIndex(addIndex)));
@@ -757,7 +771,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 					mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(index), 0.0f);
 				} else {
 					mAEVolumeSettingIv.setImageDrawable(
-							AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume));
+							AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume_checked));
 //					mIsMute = false;
 					mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(index), progress / 100f);
 				}
@@ -799,7 +813,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                         getResources().getDrawable(R.drawable.ic_ae_volume_closed));
             } else {
                 mAEVolumeSettingIv.setImageDrawable(
-                        getResources().getDrawable(R.drawable.ic_ae_volume));
+                        getResources().getDrawable(R.drawable.ic_ae_volume_checked));
             }
         }
     }
@@ -817,7 +831,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             if(chunkBean.curVolume == 0) {
                 chunkBean.curVolume = 100;
                 mAEVolumeSettingIv.setImageDrawable(
-                        getResources().getDrawable(R.drawable.ic_ae_volume));
+                        getResources().getDrawable(R.drawable.ic_ae_volume_checked));
             } else {
                 chunkBean.curVolume = 0;
                 mAEVolumeSettingIv.setImageDrawable(
@@ -912,10 +926,17 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		mAELayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mAERecyclerView = (RecyclerView) findViewById(R.id.rv_video_edit_pic_list);
 		mExportDialog = new VideoEditExportDialog(this);
+
+        mAECutIV = (ImageView)findViewById(R.id.iv_ae_cut);
+        mAECutTV = (TextView)findViewById(R.id.tv_ae_cut);
+        mAEVolumeIV = (ImageView)findViewById(R.id.iv_ae_volume);
+        mAEVolumeTV = (TextView)findViewById(R.id.tv_ae_volume);
 		Window dialogWindow = mExportDialog.getWindow();
 		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
 		dialogWindow.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-        mFullLoadingDialog = new CustomLoadingDialog(this, "正在导出...");
+
+        mFullLoadingDialog = new CustomLoadingDialog(this, "");
+        mFullLoadingDialog.setCancel(false);
         mTimeLineWrapperRL = findViewById(R.id.rl_ae_time_line_parent_wrapper);
         mTimeLineWrapperRL.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1219,16 +1240,24 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 //			mVideoPlayIv.setVisibility(View.GONE);
 //			mVideoThumeIv.setVisibility(View.GONE);	
 		} else if (vId == R.id.ll_ae_volume) {
-			mAEVolumeLayout.setBackgroundColor(AfterEffectActivity.this.getResources().getColor(R.color.ae_controller_pressed));
+			mAEVolumeLayout.setBackgroundColor(getResources().getColor(R.color.ae_controller_pressed));
 			mAECutLayout.setBackgroundResource(R.drawable.ae_controller_bg);
-			//(AfterEffectActivity.this.getResources().getColor(R.color.ae_controller_normal));
+            mAEVolumeIV.setImageResource(R.drawable.ic_ae_volume_checked);
+            mAEVolumeTV.setTextColor(getResources().getColor(R.color.white));
 
+            mAECutIV.setImageResource(R.drawable.ic_ae_cut_unchecked);
+            mAECutTV.setTextColor(getResources().getColor(R.color.color_ae_function_pressed));
 			mAESplitAndDeleteLayout.setVisibility(View.GONE);
 			mAEVolumeSettingLayout.setVisibility(View.VISIBLE);
 		} else if(vId == R.id.ll_ae_cut) {
 			mAEVolumeLayout.setBackgroundResource(R.drawable.ae_controller_bg);
-			mAECutLayout.setBackgroundColor(AfterEffectActivity.this.getResources().getColor(R.color.ae_controller_pressed));
+			mAECutLayout.setBackgroundColor(getResources().getColor(R.color.ae_controller_pressed));
 
+            mAEVolumeIV.setImageResource(R.drawable.ic_ae_volume_unchecked);
+            mAEVolumeTV.setTextColor(getResources().getColor(R.color.color_ae_function_pressed));
+
+            mAECutIV.setImageResource(R.drawable.ic_ae_cut_checked);
+            mAECutTV.setTextColor(getResources().getColor(R.color.white));
 			if(mAEVolumeSettingLayout.getVisibility() == View.VISIBLE) {
 				mAEVolumeSettingLayout.setVisibility(View.GONE);
 				mAESplitAndDeleteLayout.setVisibility(View.VISIBLE);
@@ -1236,8 +1265,14 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		} else if(vId == R.id.ll_ae_split) {
 			splitChunk();
 		} else if(vId == R.id.ll_ae_delete) {
-			VideoEditUtils.removeChunk(mAfterEffect, mProjectItemList, mChannelLineAdapter.getEditIndex());
-			mChannelLineAdapter.notifyDataSetChanged();
+            int index = mChannelLineAdapter.getEditIndex();
+            if(index != -1) {
+                VideoEditUtils.removeChunk(mAfterEffect, mProjectItemList, index);
+                mChannelLineAdapter.setEditIndex(-1);
+                mChannelLineAdapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(this, getString(R.string.str_ae_select_chunk_to_remove), Toast.LENGTH_SHORT).show();
+            }
 		} else if(vId == R.id.iv_ae_volume_setting) {
 //			if(mIsMute) {
 //				mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);

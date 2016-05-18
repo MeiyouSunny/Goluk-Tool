@@ -1058,4 +1058,14 @@
     <string name="str_cluster_ranking_txt">活动总排名</string>
     <string name="str_video_export_min_limit">导出视频长度不能小于%1$d秒</string>
     <string name="str_video_export_max_limit">导出视频长度不能大于%1$d秒</string>
+    <string name="str_video_export_progress">正在导出 %1$d%%</string>
+
+    <string name="str_ae_split">拆分</string>
+    <string name="str_ae_delete">删除</string>
+    <string name="str_ae_cut">裁剪</string>
+    <string name="str_ae_volume">音量</string>
+
+    <string name="str_ae_next">下一步</string>
+    <string name="str_ae_title">视频制作</string>
+    <string name="str_ae_select_chunk_to_remove">请选择要删除的条目</string>
 </resources>
