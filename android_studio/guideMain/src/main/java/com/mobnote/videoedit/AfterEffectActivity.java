@@ -201,22 +201,26 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         });
     }
 
-	public void addChunk(String videoPath) {
-		// always add from end
-		int addFlag = -1;
-		// if no chunk added, then the init data would be header, footer, tail
+    public void addChunk(String videoPath) {
+        // always add from end
+        int addFlag = -1;
+        // if no chunk added, then the init data would be header, footer, tail
 //		if(mProjectItemList == null || mProjectItemList.size() <= 3) {
 //			addFlag = 0;
 //		}
 
-		if (mVideoPath != null) {
-			try {
-				mAfterEffect.editAddChunk(videoPath, addFlag);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+        if (mVideoPath != null) {
+            mFullLoadingDialog.show();
+            try {
+                mAfterEffect.editAddChunk(videoPath, addFlag);
+            } catch (Exception e) {
+                if(null != mFullLoadingDialog && mFullLoadingDialog.isShowing()) {
+                    mFullLoadingDialog.close();
+                }
+                e.printStackTrace();
+            }
+        }
+    }
 
 	/**
 	 * 删除某个chunk片段
@@ -624,6 +628,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 
 			mChannelLineAdapter.setData(mProjectItemList);
 			mChannelLineAdapter.notifyDataSetChanged();
+            if(null != mFullLoadingDialog && mFullLoadingDialog.isShowing()) {
+                mFullLoadingDialog.close();
+            }
 			final int addIndex = cInsertIndex;
 			if(mPlayerState == PlayerState.PAUSED) {
 				seekWith(VideoEditUtils.mapI2CIndex(VideoEditUtils.mapI2CIndex(addIndex)));
@@ -918,9 +925,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		Window dialogWindow = mExportDialog.getWindow();
 		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
 		dialogWindow.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-        String org = getString(R.string.str_video_export_progress);
-        String formattedOrg = String.format(org, 0);
-        mFullLoadingDialog = new CustomLoadingDialog(this, formattedOrg);
+//        String org = getString(R.string.str_video_export_progress);
+//        String formattedOrg = String.format(org, 0);
+        mFullLoadingDialog = new CustomLoadingDialog(this, "");
         mFullLoadingDialog.setCancel(false);
         mTimeLineWrapperRL = findViewById(R.id.rl_ae_time_line_parent_wrapper);
         mTimeLineWrapperRL.setOnClickListener(new View.OnClickListener() {
