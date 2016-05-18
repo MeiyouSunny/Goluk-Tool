@@ -19,6 +19,8 @@ public class CustomLoadingDialog {
 	String textTitle;
 	AnimationDrawable ad;
 	ForbidBack forbidInterface;
+    ImageView mLoadingImageIV;
+    TextView mLoadingTextTV;
 
 	public CustomLoadingDialog(Context context, String txt) {
 		customDialog = new AlertDialog.Builder(context, R.style.CustomDialog).create();
@@ -46,22 +48,23 @@ public class CustomLoadingDialog {
 		}
 	}
 
+    public void setTextTitle(String title) {
+        mLoadingTextTV.setText(title);
+    }
+
 	public void show() {
 		customDialog.setOnShowListener(new OnShowListener() {
-
 			@Override
 			public void onShow(DialogInterface arg0) {
-				ImageView image = (ImageView) customDialog.getWindow().findViewById(R.id.loading_img);
-				TextView txt = (TextView) customDialog.getWindow().findViewById(R.id.loading_text);
+                mLoadingImageIV = (ImageView) customDialog.getWindow().findViewById(R.id.loading_img);
+                mLoadingTextTV = (TextView) customDialog.getWindow().findViewById(R.id.loading_text);
 				if (textTitle != null && !"".equals(textTitle)) {
-					txt.setText(textTitle);
+                    mLoadingTextTV.setText(textTitle);
 				}
-				ad = (AnimationDrawable) image.getBackground();
+				ad = (AnimationDrawable) mLoadingImageIV.getBackground();
 
 				if (ad != null) {
-
 					ad.start();
-
 				}
 			}
 		});

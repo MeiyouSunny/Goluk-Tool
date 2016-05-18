@@ -527,6 +527,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 			break;
 		case MSG_AE_EXPORT_PROGRESS:
 			Log.d(TAG, "MSG_AE_EXPORT_PROGRESS: " + msg.arg1);
+            String org = getString(R.string.str_video_export_progress);
+            String formattedOrg = String.format(org, msg.arg1);
+            mFullLoadingDialog.setTextTitle(formattedOrg);
 			break;
 		case MSG_AE_EXPORT_FINISHED:
             Log.d(TAG, "MSG_AE_EXPORT_FINISHED");
@@ -915,7 +918,10 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		Window dialogWindow = mExportDialog.getWindow();
 		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
 		dialogWindow.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-        mFullLoadingDialog = new CustomLoadingDialog(this, "正在导出...");
+        String org = getString(R.string.str_video_export_progress);
+        String formattedOrg = String.format(org, 0);
+        mFullLoadingDialog = new CustomLoadingDialog(this, formattedOrg);
+        mFullLoadingDialog.setCancel(false);
         mTimeLineWrapperRL = findViewById(R.id.rl_ae_time_line_parent_wrapper);
         mTimeLineWrapperRL.setOnClickListener(new View.OnClickListener() {
             @Override
