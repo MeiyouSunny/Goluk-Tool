@@ -152,7 +152,7 @@
                     android:textColor="#ffffff"
                     android:textSize="14sp"
                     android:layout_marginTop="8dp"
-                    android:text="@string/ae_split"/>
+                    android:text="@string/str_ae_split"/>
             </LinearLayout>
 
             <LinearLayout
@@ -177,7 +177,7 @@
                     android:textColor="#ffffff"
                     android:textSize="14sp"
                     android:layout_marginTop="8dp"
-                    android:text="@string/ae_delete"/>
+                    android:text="@string/str_ae_delete"/>
             </LinearLayout>
             
         </LinearLayout>
@@ -212,7 +212,7 @@
                     android:textColor="#ffffff"
                     android:textSize="12sp"
                     android:layout_marginTop="13dp"
-                    android:text="@string/ae_cut"/>
+                    android:text="@string/str_ae_cut"/>
             </LinearLayout>
 
             <LinearLayout
@@ -236,7 +236,7 @@
                     android:textColor="#ffffff"
                     android:textSize="12sp"
                     android:layout_marginTop="13dp"
-                    android:text="@string/ae_volume"/>
+                    android:text="@string/str_ae_volume"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

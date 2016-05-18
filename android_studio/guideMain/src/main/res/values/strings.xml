@@ -1091,4 +1091,10 @@
     <string name="str_video_export_min_limit">Can not export video with length less than %1$ds</string>
     <string name="str_video_export_max_limit">Can not export video with length more than %1$ds</string>
     <string name="str_video_export_progress">Exporting %1$d%%</string>
+    <string name="str_ae_split">Split</string>
+    <string name="str_ae_delete">Delete</string>
+    <string name="str_ae_cut">Cut</string>
+    <string name="str_ae_volume">Volume</string>
+    <string name="str_ae_next">Next</string>
+    <string name="str_ae_title">Video Edit</string>
 </resources>
