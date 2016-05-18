@@ -110,6 +110,12 @@ public class VideoEditUtils {
 	}
 
     public static boolean judgeChunkOverlap(LinearLayoutManager manager, int gateX, int chunkIndex) {
+        // First judge whether chunk visible
+        int firstVisibleItem = manager.findFirstVisibleItemPosition();
+        int lastVisibleItem = manager.findLastVisibleItemPosition();
+        if(chunkIndex < firstVisibleItem || chunkIndex > lastVisibleItem) {
+            return false;
+        }
         View view = manager.findViewByPosition(chunkIndex);
         int viewWidth = view.getWidth();
         int viewX = getViewXLocation(view);
