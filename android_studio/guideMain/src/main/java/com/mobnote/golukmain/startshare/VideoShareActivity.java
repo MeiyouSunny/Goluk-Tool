@@ -18,6 +18,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventSharetypeSelected;
 import com.mobnote.golukmain.BaseActivity;
@@ -36,20 +37,26 @@ import com.mobnote.golukmain.startshare.bean.ShareDataBean;
 import com.mobnote.golukmain.startshare.bean.ShareDataFullBean;
 import com.mobnote.golukmain.startshare.bean.ShareTypeBean;
 import com.mobnote.golukmain.thirdshare.SharePlatformAdapter;
+import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.thirdshare.ThirdShareBean;
+import com.mobnote.golukmain.thirdshare.ThirdShareTool;
+import com.mobnote.golukmain.thirdshare.bean.SharePlatformBean;
 import com.mobnote.map.LngLat;
 import com.mobnote.user.UserUtils;
+import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
-import com.rd.car.editor.FilterPlaybackView;
+import com.mobnote.util.glideblur.BlurTransformation;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import cn.com.mobnote.eventbus.EventShortLocationFinish;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
+import io.vov.vitamio.utils.Log;
 
 /**
  * Created by wangli on 2016/5/10.
@@ -80,6 +87,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     private TextView mShareTypeTv;
     private TextView mJoinActivityTV;
 
+    private ImageView mVideoThumbIv;
     private PromotionSelectItem mSelectedPromotionItem;
     private int mSelectedShareType;
     private String mSelectedShareString;
@@ -105,6 +113,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     boolean isSharing;
     private Thread mProgressThread = null;
 
+    private ThirdShareTool mThirdShareTool;
     GolukVideoInfoDbManager mGolukVideoInfoDbManager = GolukVideoInfoDbManager.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +133,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     private void initData(){
 
         mVideoPath = getIntent().getStringExtra("vidPath");
+        videoName = getIntent().getStringExtra("filename");
         mVideoType = getIntent().getIntExtra("vidType",1);
 
         mSelectedShareType = ShareTypeBean.SHARE_TYPE_SSP;
@@ -199,6 +209,18 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     }
 
     private void setupView() {
+
+        String filename = videoName;
+        if(!TextUtils.isEmpty(filename)){
+            filename = filename.replace(".mp4", ".jpg");
+            String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+            GlideUtils.loadImage(this, mVideoThumbIv, filePath + File.separator + filename, R.drawable.album_default_img);
+
+            Glide.with(this).load(filePath + File.separator + filename)
+                    .bitmapTransform(new BlurTransformation(VideoShareActivity.this, 25))
+                    .into((ImageView) findViewById(R.id.iv_videoshare_blur));
+        }
+
         mShareLoading = new ShareLoading(this, mRootLayout);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,SHARE_PLATFORM_COLUMN_NUMBERS);
         mRcShareList.setLayoutManager(gridLayoutManager);
@@ -241,6 +263,8 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         mJoinActivityTV = (TextView) findViewById(R.id.tv_share_joniActivity);
         mShareTypeTv = (TextView) findViewById(R.id.tv_share_videoType);
         mShareLL = (LinearLayout) findViewById(R.id.ll_share_now);
+        mVideoThumbIv = (ImageView) findViewById(R.id.iv_videoshare_videothumb);
+
     }
 
     @Override
@@ -295,6 +319,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         }
         isSharing = true;
         this.mUploadVideo.setUploadInfo(mVideoPath, mVideoType, videoName);
+        mShareLoading.showLoadingLayout();
         mShareLoading.switchState(ShareLoading.STATE_UPLOAD);
     }
 
@@ -391,9 +416,14 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
                 if (null != obj && null != mShareLoading) {
                     final int process = (Integer) obj;
                     mShareLoading.setProcess(process);
+                    Log.i("process","process: " + process);
                 }
                 break;
         }
+    }
+
+    public void shareCallBack(boolean isSucess) {
+        toInitState();
     }
 
     // 请求分享信息
@@ -464,7 +494,6 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
                             list.add(promotionSelectItem);
                         }
                     }
-
                 }
                 break;
             case IPageNotifyFn.PageType_Share:
@@ -482,7 +511,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         GolukUtils.showToast(this, this.getString(R.string.str_get_share_address_fail));
         toInitState();
     }
-    // 当分享成功，失败　或某一环节出现失败后，还原到原始状态，再进行分享
+    // 当分享成功，失败或某一环节出现失败后，还原到原始状态，再进行分享
     private void toInitState() {
         isSharing = false;
         if (isExit) {
@@ -520,7 +549,33 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         bean.videoId = this.mUploadVideo.getVideoId();
         bean.mShareType = "1";
         bean.filePath = mVideoPath;
-        //mShareDealTool.toShare(bean);
+        mThirdShareTool = new ThirdShareTool(this,new SharePlatformUtil(this),bean.surl,bean.curl,bean.db,bean.tl,
+                bean.bitmap,bean.realDesc,bean.videoId,bean.mShareType,bean.filePath);
+
+        if(mSharePlatformAdapter != null && mSharePlatformAdapter.mCurrSelectedPlatform != SharePlatformBean.SHARE_PLATFORM_NULL){
+            if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_WEXIN_CIRCLE){
+                mThirdShareTool.click_wechat_circle();
+            }else if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_WEXIN){
+                mThirdShareTool.click_wechat();
+            }else if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_WEIBO_SINA){
+                mThirdShareTool.click_sina();
+            }else if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_QQ_ZONE){
+                mThirdShareTool.click_qqZone();
+            }else if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_QQ){
+                mThirdShareTool.click_QQ();
+            }else if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_FACEBOOK){
+                mThirdShareTool.click_facebook();
+            }else if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_TWITTER){
+                mThirdShareTool.click_twitter();
+            }else if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_INSTAGRAM){
+                mThirdShareTool.click_instagram(bean.filePath);
+            }else if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_WHATSAPP){
+                mThirdShareTool.click_whatsapp();
+            }else if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_LINE){
+                mThirdShareTool.click_line();
+            }
+        }
+
     }
     private class SpacesItemDecoration extends RecyclerView.ItemDecoration {
 
@@ -570,7 +625,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
         @Override
         public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-            c.drawColor(Color.parseColor("#404246"));
+            c.drawColor(Color.parseColor("#242629"));
             c.save();
             super.onDraw(c, parent, state);
         }

@@ -24,7 +24,7 @@ public class SharePlatformAdapter extends RecyclerView.Adapter{
     Context mContext;
     List<SharePlatformBean> mSharePlatformBeanList;
     /** 当前选中的平台 */
-    int mCurrSelectedPlatform;
+    public int mCurrSelectedPlatform;
 
     public SharePlatformAdapter(Context context){
 
@@ -126,77 +126,77 @@ public class SharePlatformAdapter extends RecyclerView.Adapter{
                     if(mCurrSelectedPlatform == tempBean.getPlatformType()){
                         tvPlatformName.setTextColor(Color.WHITE);
                     }else{
-                        tvPlatformName.setTextColor(Color.parseColor("#999999"));
+                        tvPlatformName.setTextColor(Color.parseColor("#7a7f85"));
                     }
                     if(tempBean.getPlatformType() == SharePlatformBean.SHARE_PLATFORM_FACEBOOK){
                         tvPlatformName.setText(R.string.str_facebook);
                         if(mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_FACEBOOK){
-                            ivPlatformIcon.setImageResource(R.drawable.share_facebook_friend_icon);
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_facebook_click);
                         }else{
-                            ivPlatformIcon.setImageResource(R.drawable.share_facebook_friend_icon);
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_facebook);
                         }
                     }else if(tempBean.getPlatformType() == SharePlatformBean.SHARE_PLATFORM_INSTAGRAM){
                         tvPlatformName.setText(R.string.str_instagram);
                         if(mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_INSTAGRAM){
-                            ivPlatformIcon.setImageResource(R.drawable.share_instagram_friend_icon);
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_instagram_click);
                         }else{
-                            ivPlatformIcon.setImageResource(R.drawable.share_instagram_friend_icon);
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_instagram);
                         }
                     }else if(tempBean.getPlatformType() == SharePlatformBean.SHARE_PLATFORM_LINE){
                         tvPlatformName.setText(R.string.str_line);
                         if(mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_LINE){
-                            ivPlatformIcon.setImageResource(R.drawable.share_line_friend_icon);
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_line_click);
                         }else{
-                            ivPlatformIcon.setImageResource(R.drawable.share_line_friend_icon);
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_line);
                         }
                     }else if(tempBean.getPlatformType() == SharePlatformBean.SHARE_PLATFORM_TWITTER){
                         tvPlatformName.setText(R.string.str_twitter);
                         if(mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_TWITTER){
-                            ivPlatformIcon.setImageResource(R.drawable.share_twitter_friend_icon);
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_twitter_click);
                         }else{
-                            ivPlatformIcon.setImageResource(R.drawable.share_twitter_friend_icon);
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_twitter);
                         }
                     }else if(tempBean.getPlatformType() == SharePlatformBean.SHARE_PLATFORM_WHATSAPP){
                         tvPlatformName.setText(R.string.str_whatsapp);
-                        if(mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_TWITTER){
-                            ivPlatformIcon.setImageResource(R.drawable.share_whatsapp_friend_icon);
+                        if(mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_WHATSAPP){
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_whatsapp_click);
                         }else{
-                            ivPlatformIcon.setImageResource(R.drawable.share_whatsapp_friend_icon);
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_whatsapp);
                         }
                     }else if(tempBean.getPlatformType() == SharePlatformBean.SHARE_PLATFORM_QQ){
                         tvPlatformName.setText(R.string.str_qq_friends);
-                        if(mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_TWITTER){
-                            ivPlatformIcon.setImageResource(R.drawable.share_qq_friend_icon);
+                        if(mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_QQ){
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_qq_click);
                         }else{
-                            ivPlatformIcon.setImageResource(R.drawable.share_qq_friend_icon);
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_qq);
                         }
                     }else if(tempBean.getPlatformType() == SharePlatformBean.SHARE_PLATFORM_QQ_ZONE){
                         tvPlatformName.setText(R.string.str_qzone);
-                        if(mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_TWITTER){
-                            ivPlatformIcon.setImageResource(R.drawable.share_qq_zone_icon);
+                        if(mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_QQ_ZONE){
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_qzone_click);
                         }else{
-                            ivPlatformIcon.setImageResource(R.drawable.share_qq_zone_icon);
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_qzone);
                         }
                     }else if(tempBean.getPlatformType() == SharePlatformBean.SHARE_PLATFORM_WEXIN){
                         tvPlatformName.setText(R.string.str_weixin_friends);
-                        if(mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_TWITTER){
-                            ivPlatformIcon.setImageResource(R.drawable.share_wechat_icon);
+                        if(mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_WEXIN){
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_wechat_click);
                         }else{
-                            ivPlatformIcon.setImageResource(R.drawable.share_wechat_icon);
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_wechat);
                         }
                     }else if(tempBean.getPlatformType() == SharePlatformBean.SHARE_PLATFORM_WEXIN_CIRCLE){
                         tvPlatformName.setText(R.string.str_circle_of_friends);
-                        if(mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_TWITTER){
-                            ivPlatformIcon.setImageResource(R.drawable.share_wechat_friend_icon);
+                        if(mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_WEXIN_CIRCLE){
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_moments_click);
                         }else{
-                            ivPlatformIcon.setImageResource(R.drawable.share_wechat_friend_icon);
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_moments);
                         }
                     }else if(tempBean.getPlatformType() == SharePlatformBean.SHARE_PLATFORM_WEIBO_SINA){
                         tvPlatformName.setText(R.string.str_weibo);
-                        if(mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_TWITTER){
-                            ivPlatformIcon.setImageResource(R.drawable.share_weibo_icon);
+                        if(mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_WEIBO_SINA){
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_weibo_click);
                         }else{
-                            ivPlatformIcon.setImageResource(R.drawable.share_weibo_icon);
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_weibo);
                         }
                     }else {
                         tvPlatformName.setVisibility(View.VISIBLE);

@@ -354,7 +354,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			// 返回
 			exit();
 		} else if (id == R.id.tv_share_video_rightnow) {
-            GolukUtils.startVideoEditActivity(this,mType,mPath);
+            GolukUtils.startVideoEditActivity(this,mType,mPath,mFileName);
 		}else if (id == R.id.back_btn) {
 
 			click_back();
