@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 public class PromotionActivity extends BaseActivity implements OnClickListener, IRequestResultListener, OnItemClickListener, ForbidBack{
 	// title
@@ -128,12 +129,12 @@ public class PromotionActivity extends BaseActivity implements OnClickListener, 
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		// TODO Auto-generated method stub
 		if (mPromotionDataAdapter.isEnabled(position)) {
-			Intent intent = new Intent();
 			PromotionSelectItem item = (PromotionSelectItem) mPromotionDataAdapter.getItem(position);
 			if (mSelectedId == null || !item.activityid.equalsIgnoreCase(mSelectedId)) {
+				Intent intent = new Intent();
 				intent.putExtra(PROMOTION_SELECTED_ITEM, item);
+				EventBus.getDefault().post(item);
 			}
-			setResult(RESULT_OK, intent);
 			finish();
 		}
 	}

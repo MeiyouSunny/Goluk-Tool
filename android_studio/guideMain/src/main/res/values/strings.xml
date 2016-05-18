@@ -1080,9 +1080,15 @@
     <string name="str_video_music_Travel">Travel</string>
     <string name="str_video_music_Fresh">Fresh</string>
     <string name="str_video_music_Wild">Wild</string>
+
+
+    <string name="str_sharetype">选择类型</string>
+
     <string name="str_video_export_succeed">Export succeeded</string>
     <string name="str_video_export_failed">Export failed</string>
+
     <string name="str_cluster_ranking_txt">Total ranking</string>
     <string name="str_video_export_min_limit">Can not export video with length less than %1$ds</string>
     <string name="str_video_export_max_limit">Can not export video with length more than %1$ds</string>
+    <string name="str_video_export_progress">Exporting %1$d%%</string>
 </resources>

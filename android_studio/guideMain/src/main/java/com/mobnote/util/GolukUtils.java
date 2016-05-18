@@ -1069,29 +1069,16 @@ public class GolukUtils {
 		context.startActivity(intent);
 	}
 
-	public static void startVideoEditActivity(Context context, int type,
-			String path) {
+	public static void startVideoEditActivity(Context context, int type, String path) {
 		Intent intent = new Intent(context, VideoShareActivity.class);
-
-		int tempType = 2;
-		if (type == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
-			tempType = 3;
-		}
-
-		intent.putExtra("type", tempType);
-		intent.putExtra("cn.com.mobnote.video.path", path);
+		intent.putExtra("vidType", type);
+		intent.putExtra("vidPath", path);
 		context.startActivity(intent);
 	}
 
 	public static void startAEActivity(Context context,int type,String path){
 		Intent intent = new Intent(context, AfterEffectActivity.class);
-
-		int tempType = 2;
-		if (type == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
-			tempType = 3;
-		}
-
-		intent.putExtra("type", tempType);
+		intent.putExtra("vidType", type);
 		intent.putExtra("vidPath", path);
 		context.startActivity(intent);
 	}
