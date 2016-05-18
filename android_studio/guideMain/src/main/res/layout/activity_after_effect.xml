@@ -101,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_ae_volume"/>
+                android:src="@drawable/ic_ae_volume_unchecked"/>
             <TextView 
                 android:id="@+id/tv_ae_volume_percent"
                 android:layout_centerVertical="true"
@@ -201,12 +201,14 @@
                 android:orientation="vertical" >
 
                 <ImageView
+                    android:id="@+id/iv_ae_cut"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_ae_cut"/>
+                    android:src="@drawable/ic_ae_cut_checked"/>
 
-                <TextView 
+                <TextView
+                    android:id="@+id/tv_ae_cut"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#ffffff"
@@ -225,15 +227,17 @@
                 android:orientation="vertical" >
 
                 <ImageView
+                    android:id="@+id/iv_ae_volume"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_ae_volume"/>
+                    android:src="@drawable/ic_ae_volume_unchecked"/>
 
-                <TextView 
+                <TextView
+                    android:id="@+id/tv_ae_volume"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/color_ae_function_pressed"
                     android:textSize="12sp"
                     android:layout_marginTop="13dp"
                     android:text="@string/str_ae_volume"/>
