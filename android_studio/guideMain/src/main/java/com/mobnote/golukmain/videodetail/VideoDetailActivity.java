@@ -179,9 +179,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.comment);
-		
-		
-
 		activityRootView = findViewById(R.id.all_layout);
 		screenHeight = getWindowManager().getDefaultDisplay().getHeight();
 		keyHeight = screenHeight / 3;

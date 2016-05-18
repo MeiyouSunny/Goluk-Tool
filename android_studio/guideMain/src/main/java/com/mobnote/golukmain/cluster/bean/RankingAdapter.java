@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Created by hanzheng on 2016/5/13.
  */
-public class RankingAdapter extends BaseAdapter {
+public class RankingAdapter extends BaseAdapter{
     private Context mContext;
 
     public List<RankingListVideo> mRandkingList;
@@ -78,16 +78,33 @@ public class RankingAdapter extends BaseAdapter {
             holderView.userHead = (ImageView) convertView.findViewById(R.id.user_head);
             holderView.userIntroductionTxt = (TextView) convertView.findViewById(R.id.user_introduction_text);
             holderView.userNameText = (TextView) convertView.findViewById(R.id.user_name_text);
+            holderView.imgLayout = (RelativeLayout) convertView.findViewById(R.id.img_layout);
+            holderView.userinfoLayout = (RelativeLayout) convertView.findViewById(R.id.userinfo_layout);
             convertView.setTag(holderView);
         } else {
             holderView = (HolderView) convertView.getTag();
         }
 
+        holderView.imgLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext,VideoDetailActivity.class);
+                intent.putExtra("videoid",video.videoid);
+                mContext.startActivity(intent);
+            }
+        });
+        holderView.userinfoLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext,VideoDetailActivity.class);
+                intent.putExtra("videoid",video.videoid);
+                mContext.startActivity(intent);
+            }
+        });
         GlideUtils.loadImage(mContext,holderView.videoImg,video.pictureurl,-1);
         holderView.numberIndex.setText(position + 1 + "");
         holderView.popularity.setText("人气值:" + video.rank);
         holderView.userNameText.setText(video.user.nickname);
-
         if(position == 0){
             holderView.numberImg.setImageResource(R.drawable.icon__one);
             holderView.numberIndex.setTextSize(20);
@@ -139,6 +156,7 @@ public class RankingAdapter extends BaseAdapter {
                     R.drawable.usercenter_head_default);
         }
     }
+
     public class HolderView{
         private ImageView videoImg;
         private ImageView numberImg;
@@ -148,5 +166,7 @@ public class RankingAdapter extends BaseAdapter {
         private ImageView userAuthentication;
         private TextView userNameText;
         private TextView userIntroductionTxt;
+        private RelativeLayout imgLayout;
+        private RelativeLayout userinfoLayout;
     }
 }
