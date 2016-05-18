@@ -1265,8 +1265,14 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		} else if(vId == R.id.ll_ae_split) {
 			splitChunk();
 		} else if(vId == R.id.ll_ae_delete) {
-			VideoEditUtils.removeChunk(mAfterEffect, mProjectItemList, mChannelLineAdapter.getEditIndex());
-			mChannelLineAdapter.notifyDataSetChanged();
+            int index = mChannelLineAdapter.getEditIndex();
+            if(index != -1) {
+                VideoEditUtils.removeChunk(mAfterEffect, mProjectItemList, index);
+                mChannelLineAdapter.setEditIndex(-1);
+                mChannelLineAdapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(this, getString(R.string.str_ae_select_chunk_to_remove), Toast.LENGTH_SHORT).show();
+            }
 		} else if(vId == R.id.iv_ae_volume_setting) {
 //			if(mIsMute) {
 //				mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);

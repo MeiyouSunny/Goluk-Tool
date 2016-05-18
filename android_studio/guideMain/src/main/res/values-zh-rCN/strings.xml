@@ -1067,4 +1067,5 @@
 
     <string name="str_ae_next">下一步</string>
     <string name="str_ae_title">视频制作</string>
+    <string name="str_ae_select_chunk_to_remove">请选择要删除的条目</string>
 </resources>
