@@ -375,6 +375,15 @@ public class ThirdShareTool extends AbsThirdShare{
         }
     }
 
+    /**
+     * 接受第三方界面分享的返回结果, (参数同Activity中的onActivityResult方法参数一样)
+     *
+     * @author jyf
+     */
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        sharePlatform.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void doSinaShare(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
         if (null == sharePlatform) {
             return;

@@ -8,19 +8,24 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventSharetypeSelected;
+import com.mobnote.eventbus.SharePlatformSelectedEvent;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
@@ -64,6 +69,7 @@ import io.vov.vitamio.utils.Log;
 public class VideoShareActivity extends BaseActivity implements View.OnClickListener , IDialogDealFn , IUploadVideoFn ,IRequestResultListener {
 
     private final int SHARE_PLATFORM_COLUMN_NUMBERS = 3;
+    private int mCurrSelectedSharePlatform;
     private RecyclerView mRcShareList;
     private SharePlatformAdapter mSharePlatformAdapter;
     private LinearLayout mLocationLayout;
@@ -87,6 +93,8 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     private TextView mShareTypeTv;
     private TextView mJoinActivityTV;
 
+    private EditText mShareDiscribleEt;
+    private String mShareDiscrible;
     private ImageView mBackIv;
     private ImageView mVideoThumbIv;
     private PromotionSelectItem mSelectedPromotionItem;
@@ -111,6 +119,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     private ShareLoading mShareLoading = null;
 
     LinearLayout mShareLL;
+    TextView mShareTv;
     boolean isSharing;
     private Thread mProgressThread = null;
 
@@ -136,6 +145,8 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         mVideoPath = getIntent().getStringExtra("vidPath");
         videoName = getIntent().getStringExtra("filename");
         mVideoType = getIntent().getIntExtra("vidType",1);
+
+        mCurrSelectedSharePlatform = SharePlatformBean.SHARE_PLATFORM_NULL;
 
         mSelectedShareType = ShareTypeBean.SHARE_TYPE_SSP;
         mSelectedShareString = "# " + getResources().getString(R.string.share_str_type_ssp);
@@ -169,6 +180,51 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             mJoinActivityTV.setTextColor(Color.parseColor("#0080ff"));
         }
     }
+
+    public void onEventMainThread(SharePlatformSelectedEvent event){
+        if(event != null){
+            this.mCurrSelectedSharePlatform = event.getSharePlatform();
+            if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_NULL){
+                mShareTv.setText(getString(R.string.share_to_jishe));
+            }else{
+                mShareTv.setText(getString(R.string.share_btn_text));
+            }
+        }
+    }
+
+    TextWatcher mTextWatcher = new TextWatcher() {
+        private CharSequence temp;
+        private int editStart ;
+        private int editEnd ;
+        @Override
+        public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3) {
+            temp = s;
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int arg1, int arg2, int arg3) {
+            if(s == null){
+                mShareDiscrible = null;
+            }else{
+                mShareDiscrible = s.toString().trim();
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            editStart = mShareDiscribleEt.getSelectionStart();
+            editEnd = mShareDiscribleEt.getSelectionEnd();
+            if (temp.length() > 50) {
+                Toast.makeText(VideoShareActivity.this,
+                        VideoShareActivity.this.getString(R.string.str_content_out), Toast.LENGTH_SHORT)
+                        .show();
+                s.delete(editStart-1, editEnd);
+                int tempSelection = editStart;
+                mShareDiscribleEt.setText(s);
+                mShareDiscribleEt.setSelection(tempSelection);
+            }
+        }
+    };
 
     /**
      * 得到视频名称
@@ -234,6 +290,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         mShareLL.setOnClickListener(this);
         mShareTypeTv.setOnClickListener(this);
         mBackIv.setOnClickListener(this);
+        mShareDiscribleEt.addTextChangedListener(mTextWatcher);
 
         mShareTypeTv.setText(mSelectedShareString);
         mShareTypeTv.setText(mSelectedShareString);
@@ -258,6 +315,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
     private void initView(){
         mBackIv = (ImageView) findViewById(R.id.iv_videoshare_back);
+        mShareDiscribleEt = (EditText) findViewById(R.id.et_share_discrible);
         mRootLayout = (RelativeLayout) findViewById(R.id.rl_videoshare_root);
         mLocationIv = (ImageView) findViewById(R.id.iv_share_location);
         mLocationTv = (TextView) findViewById(R.id.tv_share_location);
@@ -267,6 +325,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         mShareTypeTv = (TextView) findViewById(R.id.tv_share_videoType);
         mShareLL = (LinearLayout) findViewById(R.id.ll_share_now);
         mVideoThumbIv = (ImageView) findViewById(R.id.iv_videoshare_videothumb);
+        mShareTv = (TextView) findViewById(R.id.tv_share);
 
     }
 
@@ -400,6 +459,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         } else if (2 == event) {
             // 删除定位
             mLocationState = LOCATION_STATE_FORBID;
+            mLocationAddress = null;
             refreshLocationUI();
         }
     }
@@ -428,6 +488,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     }
 
     public void shareCallBack(boolean isSucess) {
+
         toInitState();
     }
 
@@ -438,9 +499,9 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         final String t_signTime = this.mUploadVideo.getSignTime();
         final String t_type = String.valueOf(mVideoType);
         final String selectTypeJson = JsonUtil.createShareType(String.valueOf(mSelectedShareType));
-        final String desc = "这是测试用的分享内容";
+        final String desc = (TextUtils.isEmpty(mShareDiscrible) ? this.getString(R.string.default_comment) : mShareDiscrible);
         final String isSeque = "1";
-        final String t_location = mLocationAddress;
+        final String t_location = (TextUtils.isEmpty(mLocationAddress) ? "0" : mLocationAddress);
         PromotionSelectItem item = mSelectedPromotionItem;
         String channelid = "";
         String activityid = "";
@@ -531,6 +592,11 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
      * 本地视频分享回调
      */
     public void videoShareCallBack(ShareDataBean shareData) {
+        if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_NULL){
+            GolukUtils.showToast(this, this.getString(R.string.str_share_success));
+            toInitState();
+            return;
+        }
         if (mShareLoading == null || mUploadVideo == null) {
             return;
         }
@@ -541,7 +607,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         }
 
         final String title = this.getString(R.string.str_video_edit_share_title);
-        final String describe = "这是测试分享内容";
+        final String describe = mShareDiscrible;
         final String sinaTxt = this.getString(R.string.str_share_board_real_desc);
 
         ThirdShareBean bean = new ThirdShareBean();
@@ -633,6 +699,14 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             c.drawColor(Color.parseColor("#242629"));
             c.save();
             super.onDraw(c, parent, state);
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (this.mThirdShareTool != null) {
+            this.mThirdShareTool.onActivityResult(requestCode, resultCode, data);
         }
     }
 }

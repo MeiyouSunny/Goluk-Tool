@@ -95,13 +95,13 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/et_share_content"
+                android:id="@+id/et_share_discrible"
                 android:layout_width="match_parent"
                 android:layout_height="106dp"
                 android:background="#ffffff"
                 android:gravity="top"
-                android:hint="你的视频需要一个漂亮的描述"
-                android:lines="8"
+                android:paddingTop="5dp"
+                android:hint="@string/share_hint"
                 android:paddingLeft="11dp"
                 android:textColor="#c0c0c0"
                 android:textSize="12sp" />
@@ -109,7 +109,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/et_share_content"
+                android:layout_alignBottom="@+id/et_share_discrible"
                 android:layout_marginBottom="8dp"
                 android:gravity="bottom"
                 android:orientation="horizontal">
@@ -148,7 +148,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/icon__"
                         android:gravity="center"
-                        android:text="参加活动"
+                        android:text="@string/join_activity"
                         android:textColor="#818385"
                         android:textSize="11sp" />
                 </LinearLayout>
@@ -217,7 +217,7 @@
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:gravity="center"
-            android:text="@string/sre_to_jishe"
+            android:text="@string/share_to_jishe"
             android:textColor="#ffffff"
             android:textSize="16sp" />
 

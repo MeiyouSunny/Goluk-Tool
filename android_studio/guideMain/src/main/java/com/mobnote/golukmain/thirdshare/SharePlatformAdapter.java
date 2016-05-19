@@ -10,11 +10,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.SharePlatformSelectedEvent;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.thirdshare.bean.SharePlatformBean;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by leege100 on 16/5/13.
@@ -102,6 +105,7 @@ public class SharePlatformAdapter extends RecyclerView.Adapter{
                         mCurrSelectedPlatform = SharePlatformBean.SHARE_PLATFORM_NULL;
                     }
                     SharePlatformAdapter.this.notifyDataSetChanged();
+                    EventBus.getDefault().post(new SharePlatformSelectedEvent(mCurrSelectedPlatform));
                 }
             }
         }
