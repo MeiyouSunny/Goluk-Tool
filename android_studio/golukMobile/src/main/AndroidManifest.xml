@@ -589,7 +589,7 @@
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustResize">
+            android:windowSoftInputMode="adjustPan|stateHidden">
         </activity>
         <activity
             android:name="com.mobnote.golukmain.praised.MyPraisedActivity"

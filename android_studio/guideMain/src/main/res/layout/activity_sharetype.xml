@@ -2,20 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f0242629"
     android:orientation="vertical" >
     <!-- title -->
     <RelativeLayout
         android:id="@+id/rl_sharetype_title"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
-        android:background="@color/bg" >
+        android:layout_height="46dp" >
 
         <ImageButton
             android:id="@+id/ib_sharetype_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:background="@drawable/cross_screen_arrow_icon1" />
+            android:background="@drawable/cross_screen_arrow_icon" />
 
         <TextView
             android:id="@+id/tv_sharetype_title"
@@ -31,12 +31,12 @@
         android:id="@+id/lv_sharetype_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="23dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:divider="#00000000"
         android:listSelector="#00000000"
-        android:dividerHeight="9dp"
+        android:dividerHeight="13dp"
         android:scrollbars="none">
     </ListView>
 </LinearLayout>

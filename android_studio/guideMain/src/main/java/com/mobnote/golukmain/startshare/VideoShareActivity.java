@@ -87,6 +87,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     private TextView mShareTypeTv;
     private TextView mJoinActivityTV;
 
+    private ImageView mBackIv;
     private ImageView mVideoThumbIv;
     private PromotionSelectItem mSelectedPromotionItem;
     private int mSelectedShareType;
@@ -217,7 +218,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             GlideUtils.loadImage(this, mVideoThumbIv, filePath + File.separator + filename, R.drawable.album_default_img);
 
             Glide.with(this).load(filePath + File.separator + filename)
-                    .bitmapTransform(new BlurTransformation(VideoShareActivity.this, 25))
+                    .bitmapTransform(new BlurTransformation(VideoShareActivity.this, 50))
                     .into((ImageView) findViewById(R.id.iv_videoshare_blur));
         }
 
@@ -232,6 +233,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         mJoinActivityTV.setOnClickListener(this);
         mShareLL.setOnClickListener(this);
         mShareTypeTv.setOnClickListener(this);
+        mBackIv.setOnClickListener(this);
 
         mShareTypeTv.setText(mSelectedShareString);
         mShareTypeTv.setText(mSelectedShareString);
@@ -255,6 +257,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     }
 
     private void initView(){
+        mBackIv = (ImageView) findViewById(R.id.iv_videoshare_back);
         mRootLayout = (RelativeLayout) findViewById(R.id.rl_videoshare_root);
         mLocationIv = (ImageView) findViewById(R.id.iv_share_location);
         mLocationTv = (TextView) findViewById(R.id.tv_share_location);
@@ -270,7 +273,9 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         int vId = view.getId();
-        if(vId == R.id.ll_share_location){
+        if(vId == R.id.iv_videoshare_back){
+            exit();
+        }else if(vId == R.id.ll_share_location){
             click_location();
         }else if(vId == R.id.tv_share_videoType){
             Intent intent = new Intent (VideoShareActivity.this, ShareTypeActivity.class);
