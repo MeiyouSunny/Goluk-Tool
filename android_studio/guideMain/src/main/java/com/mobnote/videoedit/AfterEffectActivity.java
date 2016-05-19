@@ -239,21 +239,22 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         }
     }
 
-	/**
-	 * 删除某个chunk片段
-	 * @param chunkIndex
-	 */
-	public void removeChunk(int chunkIndex) {
-		if(mProjectItemList == null || mProjectItemList.size() <= 3) {
-			return ;
-		}
+    /**
+     * 删除某个chunk片段
+     *
+     * @param chunkIndex
+     */
+    public void removeChunk(int chunkIndex) {
+        if (mProjectItemList == null || mProjectItemList.size() <= 3) {
+            return;
+        }
 
-		try {
-			mAfterEffect.editRemoveChunk(chunkIndex);
-		} catch(EffectRuntimeException e) {
-			return;
-		}
-	}
+        try {
+            mAfterEffect.editRemoveChunk(chunkIndex);
+        } catch (EffectRuntimeException e) {
+            return;
+        }
+    }
 
 	public void splitChunk() {
 		if(mProjectItemList == null || mProjectItemList.size() <= 3) {
@@ -262,18 +263,18 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 
         int focusIndex = mChannelLineAdapter.getEditIndex();
         if(focusIndex == -1) {
-            Toast.makeText(this, "无选中条目", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.str_ae_no_chunk_selected), Toast.LENGTH_SHORT).show();
             return;
         }
 
         if(!VideoEditUtils.judgeChunkOverlap(mAELayoutManager, mGateLocationX, mChannelLineAdapter.getEditIndex())) {
-            Toast.makeText(this, "只能拆分选中条目", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.str_ae_only_selected_can_split), Toast.LENGTH_SHORT).show();
             return;
         }
 
 		ProjectItemBean bean = mProjectItemList.get(mCurrentPointedItemIndex);
 		if(!(bean instanceof ChunkBean)) {
-            Toast.makeText(this, "此条目不能拆分", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.str_ae_selected_chunk_can_not_split), Toast.LENGTH_SHORT).show();
 			return;
 		}
 
@@ -347,47 +348,32 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		mChannelLineAdapter.notifyDataSetChanged();
 	}
 
-	public void playOrPause() {
-		if(mPlayerState == PlayerState.PLAYING) {
-			mVideoPlayIV.setVisibility(View.VISIBLE);
-			mAfterEffect.playPause();
-		} else if(mPlayerState == PlayerState.PAUSED) {
-			mVideoPlayIV.setVisibility(View.GONE);
-			mAfterEffect.playResume();
-		} else {
-			if(mVideoThumeIv.getVisibility() == View.VISIBLE) {
-				mVideoThumeIv.setVisibility(View.GONE);
-			}
+    public void playOrPause() {
+        Log.d("CK1", "#########################, playerState=" + mPlayerState);
+        if (mPlayerState == PlayerState.PLAYING) {
+            mVideoPlayIV.setVisibility(View.VISIBLE);
+            mAfterEffect.playPause();
+        } else if (mPlayerState == PlayerState.PAUSED) {
+            mVideoPlayIV.setVisibility(View.GONE);
+            mAfterEffect.playResume();
+        } else {
+            if (mVideoThumeIv.getVisibility() == View.VISIBLE) {
+                mVideoThumeIv.setVisibility(View.GONE);
+            }
 
-			if(mVideoPlayIV.getVisibility() == View.VISIBLE) {
-				mVideoPlayIV.setVisibility(View.GONE);
-			}
+            if (mVideoPlayIV.getVisibility() == View.VISIBLE) {
+                mVideoPlayIV.setVisibility(View.GONE);
+            }
 
-			//如果当前是播放完成状态，则重置数据
-//			if(mPlayerState == PlayerState.STOPPED) {
-//				mAERecyclerView.smoothScrollToPosition(0);
-//				mCurrentPlayPosition = 0f;
-//			}
-
-			//当前播放进度大于0，则从当前位置开始播放，否则从头开始播放
-			try {
-				mAfterEffect.play();
-			} catch (InvalidVideoSourceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-//
-//			if(mCurrentPlayPosition > 0f) {
-//				mAfterEffect.playResume();
-//			} else {
-//				try {
-//					mAfterEffect.play();
-//				} catch (InvalidVideoSourceException e) {
-//					e.printStackTrace();
-//				}
-//			}
-		}
-	}
+            //当前播放进度大于0，则从当前位置开始播放，否则从头开始播放
+            try {
+                mAfterEffect.play();
+            } catch (InvalidVideoSourceException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
 
     public void pause() {
         if(mPlayerState == PlayerState.PLAYING) {
@@ -908,45 +894,45 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         showMusicController();
     }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_after_effect);
-		mPlayerState = PlayerState.INITED;
-		mVideoPath = getIntent().getStringExtra("vidPath");
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_after_effect);
+        mPlayerState = PlayerState.INITED;
+        mVideoPath = getIntent().getStringExtra("vidPath");
 
-		// default tail and footer
-		mProjectItemList = new ArrayList<ProjectItemBean>();
-		DummyHeaderBean headerBean = new DummyHeaderBean();
-		headerBean.index_tag = VideoEditUtils.generateIndexTag();
-		mProjectItemList.add(headerBean);
-		TailBean tailBean = new TailBean();
-		tailBean.index_tag = VideoEditUtils.generateIndexTag();
-		mProjectItemList.add(tailBean);
-		DummyFooterBean footerBean = new DummyFooterBean();
-		footerBean.index_tag = VideoEditUtils.generateIndexTag();
-		mProjectItemList.add(footerBean);
-		mBackBTN = (ImageButton)findViewById(R.id.ib_ae_imagebutton_back);
-		mBackBTN.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				AfterEffectActivity.this.finish();
-			}
-		});
+        // default tail and footer
+        mProjectItemList = new ArrayList<ProjectItemBean>();
+        DummyHeaderBean headerBean = new DummyHeaderBean();
+        headerBean.index_tag = VideoEditUtils.generateIndexTag();
+        mProjectItemList.add(headerBean);
+        TailBean tailBean = new TailBean();
+        tailBean.index_tag = VideoEditUtils.generateIndexTag();
+        mProjectItemList.add(tailBean);
+        DummyFooterBean footerBean = new DummyFooterBean();
+        footerBean.index_tag = VideoEditUtils.generateIndexTag();
+        mProjectItemList.add(footerBean);
+        mBackBTN = (ImageButton) findViewById(R.id.ib_ae_imagebutton_back);
+        mBackBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AfterEffectActivity.this.finish();
+            }
+        });
 
-		mAELayoutManager = new LinearLayoutManager(this);
-		mAELayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-		mAERecyclerView = (RecyclerView) findViewById(R.id.rv_video_edit_pic_list);
-		mExportDialog = new VideoEditExportDialog(this);
+        mAELayoutManager = new LinearLayoutManager(this);
+        mAELayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mAERecyclerView = (RecyclerView) findViewById(R.id.rv_video_edit_pic_list);
+        mExportDialog = new VideoEditExportDialog(this);
 
-        mAECutIV = (ImageView)findViewById(R.id.iv_ae_cut);
-        mAECutTV = (TextView)findViewById(R.id.tv_ae_cut);
-        mAEVolumeIV = (ImageView)findViewById(R.id.iv_ae_volume);
-        mAEVolumeTV = (TextView)findViewById(R.id.tv_ae_volume);
-		Window dialogWindow = mExportDialog.getWindow();
-		WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-		dialogWindow.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+        mAECutIV = (ImageView) findViewById(R.id.iv_ae_cut);
+        mAECutTV = (TextView) findViewById(R.id.tv_ae_cut);
+        mAEVolumeIV = (ImageView) findViewById(R.id.iv_ae_volume);
+        mAEVolumeTV = (TextView) findViewById(R.id.tv_ae_volume);
+        Window dialogWindow = mExportDialog.getWindow();
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        dialogWindow.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
 
         mFullLoadingDialog = new CustomLoadingDialog(this, "");
         mFullLoadingDialog.setCancel(false);
@@ -958,73 +944,72 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             }
         });
 
-		mNextTV = (TextView)findViewById(R.id.tv_ae_next_button);
-		mNextTV.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-                if(getChannelDuration() < VideoEditConstant.MIN_VIDEO_DURATION) {
+        mNextTV = (TextView) findViewById(R.id.tv_ae_next_button);
+        mNextTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getChannelDuration() < VideoEditConstant.MIN_VIDEO_DURATION) {
                     String org = AfterEffectActivity.this.getString(R.string.str_video_export_min_limit);
-                    String minLimit = String.format(org, (int)VideoEditConstant.MIN_VIDEO_DURATION);
+                    String minLimit = String.format(org, (int) VideoEditConstant.MIN_VIDEO_DURATION);
                     Toast.makeText(AfterEffectActivity.this, minLimit, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if(getChannelDuration() > VideoEditConstant.MAX_VIDEO_DURATION) {
+                if (getChannelDuration() > VideoEditConstant.MAX_VIDEO_DURATION) {
                     String org = AfterEffectActivity.this.getString(R.string.str_video_export_max_limit);
-                    String maxLimit = String.format(org, (int)VideoEditConstant.MAX_VIDEO_DURATION);
+                    String maxLimit = String.format(org, (int) VideoEditConstant.MAX_VIDEO_DURATION);
                     Toast.makeText(AfterEffectActivity.this, maxLimit, Toast.LENGTH_SHORT).show();
                     return;
                 }
-				List<VideoEncoderCapability> capaList = mAfterEffect.getSuportedCapability();
-				if (capaList == null || capaList.size() == 0) {
-					Toast.makeText(AfterEffectActivity.this, "手机不支持合适的分辨率", Toast.LENGTH_SHORT).show();
-					return;
-				}
+                List<VideoEncoderCapability> capaList = mAfterEffect.getSuportedCapability();
+                if (capaList == null || capaList.size() == 0) {
+                    Toast.makeText(AfterEffectActivity.this, "手机不支持合适的分辨率", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-				VideoEncoderCapability vc = capaList.get(capaList.size() - 1);
-				int width = vc.getWidth();
-				int height = vc.getHeight();
-				float fps = vc.getFps();
-				int bitrate = vc.getBitrate();
-				if(width == 1920 && height == 1080) {
-					mExportDialog.setQualityVisibility(true, true, true);
-				}
+                VideoEncoderCapability vc = capaList.get(capaList.size() - 1);
+                int width = vc.getWidth();
+                int height = vc.getHeight();
+                float fps = vc.getFps();
+                int bitrate = vc.getBitrate();
+                if (width == 1920 && height == 1080) {
+                    mExportDialog.setQualityVisibility(true, true, true);
+                }
 
-				if(width == 1280 && height == 720) {
-					mExportDialog.setQualityVisibility(true, true, false);
-				}
+                if (width == 1280 && height == 720) {
+                    mExportDialog.setQualityVisibility(true, true, false);
+                }
 
-				if(width == 848 && height == 480) {
-					mExportDialog.setQualityVisibility(true, false, false);
-				}
+                if (width == 848 && height == 480) {
+                    mExportDialog.setQualityVisibility(true, false, false);
+                }
 
-				mExportDialog.show();
-			}
-		});
+                mExportDialog.show();
+            }
+        });
 
-		mImageHeight = DeviceUtil.dp2px(this, VideoEditConstant.BITMAP_COMMON_HEIGHT);
-		mImageWidth = mImageHeight;
-		mDummyHeaderWidth = DeviceUtil.dp2px(this, VideoEditConstant.DUMMY_HEADER_WIDTH);
-		mTimeLineGateV = findViewById(R.id.v_time_line_gate);
-		mTimeLineGateV.getViewTreeObserver().addOnGlobalLayoutListener(
-				new OnGlobalLayoutListener() {
-					public void onGlobalLayout() {
-//						mTimeLineGateV.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        mImageHeight = DeviceUtil.dp2px(this, VideoEditConstant.BITMAP_COMMON_HEIGHT);
+        mImageWidth = mImageHeight;
+        mDummyHeaderWidth = DeviceUtil.dp2px(this, VideoEditConstant.DUMMY_HEADER_WIDTH);
+        mTimeLineGateV = findViewById(R.id.v_time_line_gate);
+        mTimeLineGateV.getViewTreeObserver().addOnGlobalLayoutListener(
+                new OnGlobalLayoutListener() {
+                    public void onGlobalLayout() {
+//                        mTimeLineGateV.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-						int[] locations = new int[2];
-						mTimeLineGateV.getLocationOnScreen(locations);
-						int x = locations[0];
-						int y = locations[1];
-						mGateLocationX = x;
-						Log.d(TAG, "Base UI data: mGateLocationX=" + mGateLocationX);
-					}
-				});
+                        int[] locations = new int[2];
+                        mTimeLineGateV.getLocationOnScreen(locations);
+                        int x = locations[0];
+                        int y = locations[1];
+                        mGateLocationX = x;
+                        Log.d(TAG, "Base UI data: mGateLocationX=" + mGateLocationX);
+                    }
+                });
         mTransitionWidth = DeviceUtil.dp2px(this, VideoEditConstant.TRANSITION_COMMON_WIDTH);
         mTailWidth = DeviceUtil.dp2px(this, VideoEditConstant.VIDEO_TAIL_WIDTH);
 //        mAERecyclerView.setOnTouchListener(new OnTouchListener() {
 //            @Override
 //            public boolean onTouch(View v, MotionEvent event) {
-//                Log.d("CK1", "@@@@@@@@@@@@@@@");
 //                if(event.getAction() == MotionEvent.ACTION_MOVE) {
 //                    clearChunkFocus();
 //                }
@@ -1032,163 +1017,163 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 //            }
 //        });
 
-		mAERecyclerView.addOnScrollListener(new OnScrollListener() {
-			@Override
-			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        mAERecyclerView.addOnScrollListener(new OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 //				Log.d(TAG, "time line scrolled: dx=" + dx + ", dy=" + dy);
 
 //                clearChunkFocus();
-				int firstVisibleIndex = mAELayoutManager.findFirstVisibleItemPosition();
-				int lastVisibleIndex = mAELayoutManager.findLastVisibleItemPosition();
-				for(int i = firstVisibleIndex; i <= lastVisibleIndex; i++) {
-					View view = mAELayoutManager.findViewByPosition(i);
+                int firstVisibleIndex = mAELayoutManager.findFirstVisibleItemPosition();
+                int lastVisibleIndex = mAELayoutManager.findLastVisibleItemPosition();
+                for (int i = firstVisibleIndex; i <= lastVisibleIndex; i++) {
+                    View view = mAELayoutManager.findViewByPosition(i);
 
                     mCurrentPointedItemIndex = i;
-					if(view.getId() == R.id.fl_ae_data_chunk) {
-						int pX = VideoEditUtils.getViewXLocation(view);
-						if(VideoEditUtils.judgeChunkOverlap(mGateLocationX, pX, view.getWidth())) {
-							if(mPlayerState == PlayerState.PAUSED) {
-								seekWith(VideoEditUtils.mapI2CIndex(i), view.getWidth(), mGateLocationX - pX);
-							}
-							break;
-						}
+                    if (view.getId() == R.id.fl_ae_data_chunk) {
+                        int pX = VideoEditUtils.getViewXLocation(view);
+                        if (VideoEditUtils.judgeChunkOverlap(mGateLocationX, pX, view.getWidth())) {
+                            if (mPlayerState == PlayerState.PAUSED) {
+                                seekWith(VideoEditUtils.mapI2CIndex(i), view.getWidth(), mGateLocationX - pX);
+                            }
+                            break;
+                        }
                     }
-				}
-			}
-		});
-		initPlayer();
-		mChannelLineAdapter = new ChannelLineAdapter(this, mAERecyclerView, mProjectItemList, mAfterEffect);
-		mAERecyclerView.setAdapter(mChannelLineAdapter);
-		mAERecyclerView.setLayoutManager(mAELayoutManager);
-		mAERecyclerView.setItemAnimator(new DefaultItemAnimator());
+                }
+            }
+        });
+        initPlayer();
+        mChannelLineAdapter = new ChannelLineAdapter(this, mAERecyclerView, mProjectItemList, mAfterEffect);
+        mAERecyclerView.setAdapter(mChannelLineAdapter);
+        mAERecyclerView.setLayoutManager(mAELayoutManager);
+        mAERecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-		initController();
+        initController();
 
-		mAERecyclerView.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				mAfterEffect.playPause();
-				return false;
-			}
-		});
-	}
+        mAERecyclerView.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mAfterEffect.playPause();
+                return false;
+            }
+        });
+    }
 
 	public float getChannelDuration() {
 		return mAfterEffect.getDuration();
 	}
 
-	public void exportAfterEffectVideo(int exportWidth, int exportHeight) {
-		float duration= mAfterEffect.getDuration();
-		if(duration < VideoEditConstant.MIN_VIDEO_DURATION || duration > VideoEditConstant.MAX_VIDEO_DURATION) {
-			Toast.makeText(this, "can not export length: " + duration, Toast.LENGTH_SHORT).show();
-			return;
-		}
-		String destPath = Environment.getExternalStorageDirectory() + VideoEditConstant.EXPORT_FOLDER_NAME;
-		File dir = new File(destPath);
-		if (!dir.exists()) {
-			dir.mkdir();
-		}
-		String fileName = null;
+    public void exportAfterEffectVideo(int exportWidth, int exportHeight, int bitRate, int fps) {
+        float duration = mAfterEffect.getDuration();
+        if (duration < VideoEditConstant.MIN_VIDEO_DURATION || duration > VideoEditConstant.MAX_VIDEO_DURATION) {
+            Toast.makeText(this, "can not export length: " + duration, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String destPath = Environment.getExternalStorageDirectory() + VideoEditConstant.EXPORT_FOLDER_NAME;
+        File dir = new File(destPath);
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+        String fileName = null;
 
-		Calendar c = Calendar.getInstance();
-		String sYear = c.get(Calendar.YEAR) + "";
-		int month = c.get(Calendar.MONTH) + 1;
-		String sMonth = (month < 10) ? "0" + month : month + "";
-		int day = c.get(Calendar.DAY_OF_MONTH);
-		String sDay = (day < 10) ? "0" + day : day + "";
-		int hour = c.get(Calendar.HOUR_OF_DAY);
-		String sHour = (hour < 10) ? "0" + hour : hour + "";
-		int minute = c.get(Calendar.MINUTE);
-		String sMinute = (minute < 10) ? "0" + minute : minute + "";
-		int second = c.get(Calendar.SECOND);
-		String sSecond = (second < 10) ? "0" + second : second + "";
-		fileName = "MOV" + sYear + sMonth + sDay + sHour + sMinute + sSecond + (int)duration;
-		destPath = destPath + "/" + fileName + ".mp4";
+        Calendar c = Calendar.getInstance();
+        String sYear = c.get(Calendar.YEAR) + "";
+        int month = c.get(Calendar.MONTH) + 1;
+        String sMonth = (month < 10) ? "0" + month : month + "";
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        String sDay = (day < 10) ? "0" + day : day + "";
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        String sHour = (hour < 10) ? "0" + hour : hour + "";
+        int minute = c.get(Calendar.MINUTE);
+        String sMinute = (minute < 10) ? "0" + minute : minute + "";
+        int second = c.get(Calendar.SECOND);
+        String sSecond = (second < 10) ? "0" + second : second + "";
+        fileName = "MOV" + sYear + sMonth + sDay + sHour + sMinute + sSecond + (int) duration;
+        destPath = destPath + "/" + fileName + ".mp4";
         mFullLoadingDialog.show();
-		try {
-			mAfterEffect.export(destPath,
-					exportWidth, exportHeight,
-					(int) VideoEditConstant.DEFAULT_FPS,
-					VideoEditConstant.DEFAULT_EXPORT_BITRATE);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        try {
+            mAfterEffect.export(destPath,
+                    exportWidth, exportHeight,
+                    fps,
+                    bitRate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public void onStartToPlay(AfterEffect afterEffcet) {
-		Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_PLAY_STARTED, afterEffcet);
-		mAfterEffecthandler.sendMessage(msg);
-	}
+    @Override
+    public void onStartToPlay(AfterEffect afterEffcet) {
+        Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_PLAY_STARTED, afterEffcet);
+        mAfterEffecthandler.sendMessage(msg);
+    }
 
-	static class ChunkPlayBean {
-		int chunkIndex;
-		float position;
-		AfterEffect effect;
-		float currentSec;
-		float totalSec;
-	}
+    static class ChunkPlayBean {
+        int chunkIndex;
+        float position;
+        AfterEffect effect;
+        float currentSec;
+        float totalSec;
+    }
 
-	@Override
-	public void onPlaying(AfterEffect afterEffcet, float currentSec, float totalSec, int chunkIndex, float position) {
-		ChunkPlayBean bean = new ChunkPlayBean();
-		bean.chunkIndex = chunkIndex;
-		bean.position = position;
-		bean.effect = afterEffcet;
-		bean.currentSec = currentSec;
-		bean.totalSec = totalSec;
+    @Override
+    public void onPlaying(AfterEffect afterEffcet, float currentSec, float totalSec, int chunkIndex, float position) {
+        ChunkPlayBean bean = new ChunkPlayBean();
+        bean.chunkIndex = chunkIndex;
+        bean.position = position;
+        bean.effect = afterEffcet;
+        bean.currentSec = currentSec;
+        bean.totalSec = totalSec;
 
-		Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_PLAY_PROGRESS, 0, 0, bean);
-		mAfterEffecthandler.sendMessage(msg);
-	}
+        Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_PLAY_PROGRESS, 0, 0, bean);
+        mAfterEffecthandler.sendMessage(msg);
+    }
 
-	@Override
-	public void onPlayFinished(AfterEffect afterEffcet) {
-		Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_PLAY_FINISHED, afterEffcet);
-		mAfterEffecthandler.sendMessage(msg);
-	}
+    @Override
+    public void onPlayFinished(AfterEffect afterEffcet) {
+        Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_PLAY_FINISHED, afterEffcet);
+        mAfterEffecthandler.sendMessage(msg);
+    }
 
-	@Override
-	public void onPlayingFailed(AfterEffect afterEffcet, EffectException e) {
-		Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_PLAY_FAILED, afterEffcet);
-		mAfterEffecthandler.sendMessage(msg);
-	}
+    @Override
+    public void onPlayingFailed(AfterEffect afterEffcet, EffectException e) {
+        Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_PLAY_FAILED, afterEffcet);
+        mAfterEffecthandler.sendMessage(msg);
+    }
 
-	@Override
-	public void onStartToExport(AfterEffect afterEffcet) {
-		Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_EXPORT_STARTED, afterEffcet);
-		mAfterEffecthandler.sendMessage(msg);
-	}
+    @Override
+    public void onStartToExport(AfterEffect afterEffcet) {
+        Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_EXPORT_STARTED, afterEffcet);
+        mAfterEffecthandler.sendMessage(msg);
+    }
 
-	@Override
-	public void onExporting(AfterEffect afterEffcet, float rate) {
-		Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_EXPORT_PROGRESS, (int) (rate * 100), 0, afterEffcet);
-		mAfterEffecthandler.sendMessage(msg);
-	}
+    @Override
+    public void onExporting(AfterEffect afterEffcet, float rate) {
+        Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_EXPORT_PROGRESS, (int) (rate * 100), 0, afterEffcet);
+        mAfterEffecthandler.sendMessage(msg);
+    }
 
-	@Override
-	public void onExportFailed(AfterEffect afterEffcet, EffectException e) {
-		Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_EXPORT_FAILED, afterEffcet);
-		mAfterEffecthandler.sendMessage(msg);
-	}
+    @Override
+    public void onExportFailed(AfterEffect afterEffcet, EffectException e) {
+        Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_EXPORT_FAILED, afterEffcet);
+        mAfterEffecthandler.sendMessage(msg);
+    }
 
-	@Override
-	protected void onDestroy() {
-		if(mAfterEffect != null) {
+    @Override
+    protected void onDestroy() {
+        if (mAfterEffect != null) {
             mAfterEffect.playStop();
             mPlayerState = PlayerState.STOPPED;
-			mAfterEffect.release();
-		}
+            mAfterEffect.release();
+        }
 
-		if(null != mExportDialog && mExportDialog.isShowing()) {
-			mExportDialog.dismiss();
-		}
+        if (null != mExportDialog && mExportDialog.isShowing()) {
+            mExportDialog.dismiss();
+        }
 
-        if(null != mFullLoadingDialog && mFullLoadingDialog.isShowing()) {
+        if (null != mFullLoadingDialog && mFullLoadingDialog.isShowing()) {
             mFullLoadingDialog.close();
         }
-		super.onDestroy();
-	}
+        super.onDestroy();
+    }
 
     @Override
     public void onBackPressed() {
@@ -1196,12 +1181,12 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         finish();
     }
 
-	@Override
-	public void onGeneratedThumbs(AfterEffect ae, Chunk chunk) {
-		// TODO Auto-generated method stub
-		Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_BITMAP_READ_OUT, chunk);
-		mAfterEffecthandler.sendMessage(msg);
-	}
+    @Override
+    public void onGeneratedThumbs(AfterEffect ae, Chunk chunk) {
+        // TODO Auto-generated method stub
+        Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_BITMAP_READ_OUT, chunk);
+        mAfterEffecthandler.sendMessage(msg);
+    }
 
     @Override
     public void onGeneratedThumbsFailed(AfterEffect ae, Chunk chunk) {
@@ -1210,38 +1195,38 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         mAfterEffecthandler.sendMessage(msg);
     }
 
-	@Override
-	public void onChunkAddedFinished(AfterEffect self, Project project,
-			Chunk chunk) {
-		// TODO Auto-generated method stub
-		Log.d(TAG, "onChunkAddedFinished");
-		Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_CHUNK_ADD_FINISHED, chunk);
-		mAfterEffecthandler.sendMessage(msg);
-	}
+    @Override
+    public void onChunkAddedFinished(AfterEffect self, Project project,
+                                     Chunk chunk) {
+        // TODO Auto-generated method stub
+        Log.d(TAG, "onChunkAddedFinished");
+        Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_CHUNK_ADD_FINISHED, chunk);
+        mAfterEffecthandler.sendMessage(msg);
+    }
 
-	@Override
-	public void onChunkAddedFailed(AfterEffect self, Project project,
-			String filePath) {
-		// TODO Auto-generated method stub
-	}
+    @Override
+    public void onChunkAddedFailed(AfterEffect self, Project project,
+                                   String filePath) {
+        // TODO Auto-generated method stub
+    }
 
-	@Override
-	public void onPause() {
-		super.onPause();
-		mAfterEffect.onActivityPause();
+    @Override
+    public void onPause() {
+        super.onPause();
+        mAfterEffect.onActivityPause();
 //		mVideoPlayIV.setVisibility(View.VISIBLE);
 //		mIsPlaying = false;
 //		mPlayerState = PlayerState.PAUSED;
-	}
+    }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		mAfterEffect.onActivityResume();
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAfterEffect.onActivityResume();
 //		mVideoPlayIV.setVisibility(View.VISIBLE);
 //		mIsPlaying = false;
 //		mPlayerState = PlayerState.PLAYING;
-	}
+    }
 
 	@Override
 	public void onClick(View v) {
