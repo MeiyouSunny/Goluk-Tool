@@ -171,17 +171,30 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		"music/07-fresh-48khz-128kbps-final.mp3",
 		"music/08-crual-48khz-128kbps-final.mp3"};
 
-//	final String[] mMusicNames = {
-//			"none",
-//			"fasion",
-//			"discover",
-//			"default",
-//			"memory",
-//			"street",
-//			"travel",
-//			"fresh",
-//			"crual"};
     String[] mMusicNames;
+    final int[] mMusicCoversNormal = {
+            R.drawable.no_music,
+            R.drawable.music_wave,
+            R.drawable.music_discover,
+            R.drawable.music_humor,
+            R.drawable.music_memory,
+            R.drawable.music_crowd,
+            R.drawable.music_travel,
+            R.drawable.music_fresh,
+            R.drawable.music_wild
+    };
+
+    final int[] mMusicCoversSelected = {
+            R.drawable.ic_ae_cd_selected,
+            R.drawable.music_selected_wave,
+            R.drawable.music_selected_discover,
+            R.drawable.music_selected_humor,
+            R.drawable.music_selected_memory,
+            R.drawable.music_selected_crowd,
+            R.drawable.music_selected_travel,
+            R.drawable.music_selected_fresh,
+            R.drawable.music_selected_wild
+    };
 
     public int getTailWidth() {
         return mTailWidth;
@@ -728,7 +741,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		mAEMusicLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		mAEMusicRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_ae_music);
 		AEMusicAdapter mAEMusicAdapter = new AEMusicAdapter(this, mAfterEffect);
-		mAEMusicAdapter.fillupMusicList(mMusicPaths, mMusicNames);
+		mAEMusicAdapter.fillupMusicList(mMusicPaths, mMusicNames, mMusicCoversNormal, mMusicCoversSelected);
 		mAEMusicRecyclerView.setAdapter(mAEMusicAdapter);
 		mAEMusicRecyclerView.setLayoutManager(mAEMusicLayoutManager);
 
