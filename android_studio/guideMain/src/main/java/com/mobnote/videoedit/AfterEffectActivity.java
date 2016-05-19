@@ -1228,59 +1228,60 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 //		mPlayerState = PlayerState.PLAYING;
     }
 
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		int vId = v.getId();
-		if(vId == R.id.iv_video_play) {
-			playOrPause();
-		} else if (vId == R.id.iv_video_thumb) {
+    @Override
+    public void onClick(View v) {
+        // TODO Auto-generated method stub
+        int vId = v.getId();
+        if (vId == R.id.iv_video_play) {
+            playOrPause();
+        } else if (vId == R.id.iv_video_thumb) {
 //			mVideoPlayIv.setVisibility(View.GONE);
 //			mVideoThumeIv.setVisibility(View.GONE);	
-		} else if (vId == R.id.ll_ae_volume) {
-			mAEVolumeLayout.setBackgroundColor(getResources().getColor(R.color.ae_controller_pressed));
-			mAECutLayout.setBackgroundResource(R.drawable.ae_controller_bg);
+        } else if (vId == R.id.ll_ae_volume) {
+            mAEVolumeLayout.setBackgroundColor(getResources().getColor(R.color.ae_controller_pressed));
+            mAECutLayout.setBackgroundResource(R.drawable.ae_controller_bg);
             mAEVolumeIV.setImageResource(R.drawable.ic_ae_volume_checked);
             mAEVolumeTV.setTextColor(getResources().getColor(R.color.white));
 
             mAECutIV.setImageResource(R.drawable.ic_ae_cut_unchecked);
             mAECutTV.setTextColor(getResources().getColor(R.color.color_ae_function_pressed));
-			mAESplitAndDeleteLayout.setVisibility(View.GONE);
-			mAEVolumeSettingLayout.setVisibility(View.VISIBLE);
-		} else if(vId == R.id.ll_ae_cut) {
-			mAEVolumeLayout.setBackgroundResource(R.drawable.ae_controller_bg);
-			mAECutLayout.setBackgroundColor(getResources().getColor(R.color.ae_controller_pressed));
+            mAESplitAndDeleteLayout.setVisibility(View.GONE);
+            mAEVolumeSettingLayout.setVisibility(View.VISIBLE);
+        } else if (vId == R.id.ll_ae_cut) {
+            mAEVolumeLayout.setBackgroundResource(R.drawable.ae_controller_bg);
+            mAECutLayout.setBackgroundColor(getResources().getColor(R.color.ae_controller_pressed));
 
             mAEVolumeIV.setImageResource(R.drawable.ic_ae_volume_unchecked);
             mAEVolumeTV.setTextColor(getResources().getColor(R.color.color_ae_function_pressed));
 
             mAECutIV.setImageResource(R.drawable.ic_ae_cut_checked);
             mAECutTV.setTextColor(getResources().getColor(R.color.white));
-			if(mAEVolumeSettingLayout.getVisibility() == View.VISIBLE) {
-				mAEVolumeSettingLayout.setVisibility(View.GONE);
-				mAESplitAndDeleteLayout.setVisibility(View.VISIBLE);
-			}
-		} else if(vId == R.id.ll_ae_split) {
-			splitChunk();
-		} else if(vId == R.id.ll_ae_delete) {
+            if (mAEVolumeSettingLayout.getVisibility() == View.VISIBLE) {
+                mAEVolumeSettingLayout.setVisibility(View.GONE);
+                mAESplitAndDeleteLayout.setVisibility(View.VISIBLE);
+            }
+        } else if (vId == R.id.ll_ae_split) {
+            splitChunk();
+        } else if (vId == R.id.ll_ae_delete) {
             int index = mChannelLineAdapter.getEditIndex();
             if(index != -1) {
                 VideoEditUtils.removeChunk(mAfterEffect, mProjectItemList, index);
-                mChannelLineAdapter.setEditIndex(-1);
+//                mChannelLineAdapter.setEditIndex(-1);
+                clearEditController();
                 mChannelLineAdapter.notifyDataSetChanged();
             } else {
                 Toast.makeText(this, getString(R.string.str_ae_select_chunk_to_remove), Toast.LENGTH_SHORT).show();
             }
-		} else if(vId == R.id.iv_ae_volume_setting) {
-//			if(mIsMute) {
-//				mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);
-//			} else {
-//				mAEVolumeSeekBar.setProgress(0);
-//			}
+        } else if (vId == R.id.iv_ae_volume_setting) {
  //           setEditChunkVolume();
             muteEditChunkVolume();
-		}
-	}
+        }
+    }
+
+    public void clearEditController() {
+        mChannelLineAdapter.setEditIndex(-1);
+        showMusicController();
+    }
 
 	@Override
 	public void onPlayPaused(AfterEffect afterEffect) {
