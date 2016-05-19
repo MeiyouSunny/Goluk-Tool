@@ -97,7 +97,6 @@ public class ThirdShareTool extends AbsThirdShare{
         @Override
         public void onResult(SHARE_MEDIA platform) {
             mHander.sendEmptyMessage(100);
-            GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----umShareListener----onResult");
         }
 
         @Override
@@ -107,14 +106,12 @@ public class ThirdShareTool extends AbsThirdShare{
             if (null != t) {
                 error = t.toString();
             }
-            GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----umShareListener----onError: " + error);
         }
 
         @Override
         public void onCancel(SHARE_MEDIA platform) {
             mHander.sendEmptyMessage(102);
 
-            GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----umShareListener----onCancel");
         }
     };
 
@@ -165,11 +162,9 @@ public class ThirdShareTool extends AbsThirdShare{
             notifyShareState(false);
             return;
         }
-        GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----click_twitter----0 ");
         if (!isCanClick()) {
             return;
         }
-        GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----click_twitter----1 ");
         final ShareContent sc = getShareContent(TYPE_TWITTER);
         if (null == sc) {
             setCanJump();
@@ -178,7 +173,6 @@ public class ThirdShareTool extends AbsThirdShare{
         final String shareTxt = sc.mText + "   " + sc.mTargetUrl;
         new ShareAction(mActivity).setPlatform(SHARE_MEDIA.TWITTER).setCallback(umShareListener).withText(shareTxt)
                 .withTitle(sc.mTitle).share();
-        GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----click_twitter----3 ");
         mCurrentShareType = TYPE_TWITTER;
         shareUp();// 上报分享统计
     }
@@ -192,8 +186,6 @@ public class ThirdShareTool extends AbsThirdShare{
             mediaPath = videoPath;
         }
 
-        GolukDebugUtils.e("", "instagram----goluk----AbroadThirdShare----type----" + mShareType + "videoPath + "
-                + mediaPath);
         Intent share = new Intent(Intent.ACTION_SEND);
         boolean flog = AppInstallationUtil.isAppInstalled(mActivity, GolukConfig.INSTAGRAM_PACKAGE);
 
@@ -338,14 +330,12 @@ public class ThirdShareTool extends AbsThirdShare{
         if (TextUtils.isEmpty(sc.mText)) {
             sc.mText = mActivity.getResources().getString(R.string.app_name);
         }
-        new ShareAction(mActivity).setPlatform(SHARE_MEDIA.QZONE).setCallback(umShareListener).setShareContent(sc)
-                .share();
+        new ShareAction(mActivity).setPlatform(SHARE_MEDIA.QZONE).setCallback(umShareListener).setShareContent(sc).share();
         mCurrentShareType = TYPE_QQ_ZONE;
         this.shareUp();// 上报分享统计
     }
 
     public void click_sina() {
-        GolukDebugUtils.e("", "sina-------click----11111");
         if (TextUtils.isEmpty(mImageUrl)) {
             Glide.with(mActivity).load(R.drawable.ic_launcher).asBitmap().into(new SimpleTarget<Bitmap>(50, 50) {
                 @Override
@@ -396,9 +386,7 @@ public class ThirdShareTool extends AbsThirdShare{
             ((BaseActivity) mActivity).setJumpToNext();
         }
 
-        GolukDebugUtils.e("", "sina-------click----2222");
         if (!sharePlatform.isSinaWBValid()) {
-            GolukDebugUtils.e("", "sina-------click----3333");
             // 去授权
             sharePlatform.mSinaWBUtils.authorize();
             return;
@@ -412,24 +400,15 @@ public class ThirdShareTool extends AbsThirdShare{
         final String dataUrl = shareurl;
         final String actionUrl = shareurl + "&type=" + TYPE_WEIBO_XINLANG;
         final Bitmap t_bitmap = arg0;
-        GolukDebugUtils.e("", "sina-------click----44444" + actionUrl);
         if (sharePlatform.mSinaWBUtils.isInstallClient()) {
-            GolukDebugUtils.e("", "sina-------click----55555");
             final int supportApi = sharePlatform.mSinaWBUtils.getSupportAPI();
-            GolukDebugUtils.e("", "sina-------click----6666:  " + supportApi);
             if (supportApi >= SUPPORT_MUTI_MSG) {
-                GolukDebugUtils.e("", "sina-------click----77777:  ");
-                sharePlatform.mSinaWBUtils.sendMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl, t_bitmap,
-                        true);
+                sharePlatform.mSinaWBUtils.sendMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl, t_bitmap, true);
             } else {
-                GolukDebugUtils.e("", "sina-------click----88888:  ");
-                sharePlatform.mSinaWBUtils.sendSingleMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl,
-                        t_bitmap);
+                sharePlatform.mSinaWBUtils.sendSingleMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl, t_bitmap);
             }
         } else {
-            sharePlatform.mSinaWBUtils.sendMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl, t_bitmap,
-                    false);
-            GolukDebugUtils.e("", "sina-------click----999999:  ");
+            sharePlatform.mSinaWBUtils.sendMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl, t_bitmap, false);
         }
     }
 }

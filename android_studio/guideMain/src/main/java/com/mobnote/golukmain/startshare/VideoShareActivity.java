@@ -489,6 +489,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
     public void shareCallBack(boolean isSucess) {
 
+        Toast.makeText(this, getString(R.string.str_share_success), Toast.LENGTH_SHORT).show();
         toInitState();
     }
 
@@ -563,20 +564,17 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
                 }
                 break;
             case IPageNotifyFn.PageType_Share:
+                toInitState();
                 ShareDataFullBean shareDataFull = (ShareDataFullBean) result;
                 if (shareDataFull != null && shareDataFull.success) {
                     videoShareCallBack(shareDataFull.data);
                 } else {
-                    getShareFailed();
+                    GolukUtils.showToast(this, this.getString(R.string.str_get_share_address_fail));
                 }
                 break;
         }
     }
 
-    private void getShareFailed() {
-        GolukUtils.showToast(this, this.getString(R.string.str_get_share_address_fail));
-        toInitState();
-    }
     // 当分享成功，失败或某一环节出现失败后，还原到原始状态，再进行分享
     private void toInitState() {
         isSharing = false;
@@ -594,7 +592,6 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     public void videoShareCallBack(ShareDataBean shareData) {
         if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_NULL){
             GolukUtils.showToast(this, this.getString(R.string.str_share_success));
-            toInitState();
             return;
         }
         if (mShareLoading == null || mUploadVideo == null) {
@@ -602,7 +599,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         }
         mShareLoading.switchState(ShareLoading.STATE_SHAREING);
         if (shareData == null) {
-            getShareFailed();
+            GolukUtils.showToast(this, this.getString(R.string.str_get_share_address_fail));
             return;
         }
 
@@ -705,6 +702,9 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        /**
+         * 友盟分享后的回调
+         */
         if (this.mThirdShareTool != null) {
             this.mThirdShareTool.onActivityResult(requestCode, resultCode, data);
         }
