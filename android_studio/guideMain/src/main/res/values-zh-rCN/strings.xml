@@ -1068,4 +1068,7 @@
     <string name="str_ae_next">下一步</string>
     <string name="str_ae_title">视频制作</string>
     <string name="str_ae_select_chunk_to_remove">请选择要删除的条目</string>
+    <string name="str_ae_no_chunk_selected">无选中条目</string>
+    <string name="str_ae_only_selected_can_split">只能拆分选中条目</string>
+    <string name="str_ae_selected_chunk_can_not_split">此条目不能拆分</string>
 </resources>

@@ -67,13 +67,16 @@ public class VideoEditExportDialog extends Dialog implements android.view.View.O
         int id = v.getId();
         if (id == R.id.ll_ae_video_export_dialog_1080p) {
             mAEActivity.pause();
-            mAEActivity.exportAfterEffectVideo(VideoEditConstant.EXPORT_1080P_WIDTH, VideoEditConstant.EXPORT_1080P_HEIGHT);
+            mAEActivity.exportAfterEffectVideo(VideoEditConstant.EXPORT_1080P_WIDTH, VideoEditConstant.EXPORT_1080P_HEIGHT,
+                    VideoEditConstant.BITRATE_10M, VideoEditConstant.FPS_30);
         } else if (id == R.id.ll_ae_video_export_dialog_hd720p) {
             mAEActivity.pause();
-            mAEActivity.exportAfterEffectVideo(VideoEditConstant.EXPORT_HD720P_WIDTH, VideoEditConstant.EXPORT_HD720P_HEIGHT);
+            mAEActivity.exportAfterEffectVideo(VideoEditConstant.EXPORT_HD720P_WIDTH, VideoEditConstant.EXPORT_HD720P_HEIGHT,
+                    VideoEditConstant.BITRATE_4M, VideoEditConstant.FPS_30);
         } else if (id == R.id.ll_ae_video_export_dialog_480p) {
             mAEActivity.pause();
-            mAEActivity.exportAfterEffectVideo(VideoEditConstant.EXPORT_480P_WIDTH, VideoEditConstant.EXPORT_480P_HEIGHT);
+            mAEActivity.exportAfterEffectVideo(VideoEditConstant.EXPORT_480P_WIDTH, VideoEditConstant.EXPORT_480P_HEIGHT,
+                    VideoEditConstant.BITRATE_2M, VideoEditConstant.FPS_25);
         } else if (id == R.id.tv_ae_video_export_cancel) {
 //            dismiss();
         }
