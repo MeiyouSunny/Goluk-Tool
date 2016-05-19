@@ -1,6 +1,8 @@
 package com.mobnote.golukmain.photoalbum;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,6 +15,9 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -21,6 +26,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.renderscript.RSRuntimeException;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -42,6 +48,8 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.mobnote.application.GolukApplication;
@@ -64,11 +72,20 @@ import com.mobnote.golukmain.player.factory.GolukPlayer.OnErrorListener;
 import com.mobnote.golukmain.player.factory.GolukPlayer.OnPreparedListener;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.glideblur.FastBlur;
+import com.mobnote.util.glideblur.RSBlur;
 
+import cn.npnt.ae.AfterEffect;
+import cn.npnt.ae.AfterEffectListener;
+import cn.npnt.ae.SimpleExporter;
+import cn.npnt.ae.core.MediaUtils;
+import cn.npnt.ae.exceptions.EffectException;
+import cn.npnt.ae.model.VideoEncoderCapability;
+import cn.npnt.ae.model.VideoFile;
 import de.greenrobot.event.EventBus;
 
 public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, OnPreparedListener, OnErrorListener,
-		OnCompletionListener, IOrientationFn {
+		OnCompletionListener, IOrientationFn ,AfterEffectListener.SimpleExporterListener {
 	private static final String TAG = "PhotoAlbumPlayer";
 
 	public static final String VIDEO_FROM = "video_from";
@@ -304,6 +321,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         mBtnDelete.setOnClickListener(this);
         mTvStartVideoEdit.setOnClickListener(this);
         mTvShareRightnow.setOnClickListener(this);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            mTvShareRightnow.setVisibility(View.VISIBLE);
+        }else{
+            mTvShareRightnow.setVisibility(View.GONE);
+        }
 
         if (mVideoFrom.equals("local")) {
 			if (mType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG || mType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
@@ -354,7 +376,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			// 返回
 			exit();
 		} else if (id == R.id.tv_share_video_rightnow) {
-            GolukUtils.startVideoEditActivity(this,mType,mPath,mFileName);
+            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
+                GolukUtils.startVideoEditActivity(this,mType,mPath,mFileName);
+            }else {
+                doSimpleExport(mPath,mHP);
+            }
 		}else if (id == R.id.back_btn) {
 
 			click_back();
@@ -393,7 +419,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		}
 	}
 
-	private int getType() {
+    private int getType() {
 		int tempType = 0;
 		if ("local".equals(mVideoFrom)) {
 			tempType = PhotoAlbumConfig.PHOTO_BUM_LOCAL;
@@ -766,38 +792,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 				float deltaX = x - mLastMotionX;
 				float deltaY = y - mLastMotionY;
 				float absDeltaX = Math.abs(deltaX);
-				float absDeltaY = Math.abs(deltaY);
-				// // 声音调节标识
-				// boolean isAdjustAudio = false;
-				// if (absDeltaX > threshold && absDeltaY > threshold) {
-				// if (absDeltaX < absDeltaY) {
-				// isAdjustAudio = true;
-				// } else {
-				// isAdjustAudio = false;
-				// }
-				// } else if (absDeltaX < threshold && absDeltaY > threshold) {
-				// isAdjustAudio = true;
-				// } else if (absDeltaX > threshold && absDeltaY < threshold) {
-				// isAdjustAudio = false;
-				// } else {
-				// return true;
-				// }
-				// if (isAdjustAudio) {
-				// if (x < width / 2) {
-				// if (deltaY > 0) {
-				// lightDown(absDeltaY);
-				// } else if (deltaY < 0) {
-				// lightUp(absDeltaY);
-				// }
-				// } else {
-				// if (deltaY > 0) {
-				// volumeDown(absDeltaY);
-				// } else if (deltaY < 0) {
-				// volumeUp(absDeltaY);
-				// }
-				// }
-				//
-				// } else {
+
 				if (deltaX > 0) {
 					forward(absDeltaX);
 				} else if (deltaX < 0) {
@@ -853,7 +848,131 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		}
 	}
 
-	private class AnimationImp implements AnimationListener {
+    @Override
+    public void onStartToExport(SimpleExporter mSimpleExporter) {
+
+        Log.i("msg","视频导出:开始");
+    }
+
+    @Override
+    public void onExporting(SimpleExporter mSimpleExporter, float v) {
+
+        Log.i("msg","视频导出:导出 中+ " + String.valueOf(v));
+    }
+
+    @Override
+    public void onExportFinished(SimpleExporter mSimpleExporter, String path) {
+        Log.i("msg","视频导出:完成 Path:" + path);
+        GolukUtils.startVideoEditActivity(this,mType,path,mFileName);
+    }
+
+    @Override
+    public void onExportFailed(SimpleExporter mSimpleExporter, EffectException e) {
+
+        Log.i("msg","视频导出:失败");
+    }
+
+    SimpleExporter mSimpleExporter;
+    /**
+     * @param srcPath
+     * @param qualityStr
+     *
+     */
+    private void doSimpleExport(String srcPath, String qualityStr) {
+        if(TextUtils.isEmpty(qualityStr)){
+            return;
+        }
+        int quality = 0;//0,1,2 分别代表低(480P)，中(720P)，高(1080P)。
+        // 初始化，读取gl脚本需要
+        MediaUtils.getInstance(this);
+        if (mSimpleExporter == null)
+            mSimpleExporter = new SimpleExporter(this, this);
+
+        try {
+            mSimpleExporter.setSourceVideoPath(srcPath);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+            Toast.makeText(this," \"视频源文件加载失败\" + e1.getMessage()",Toast.LENGTH_SHORT);
+            return;
+        }
+        VideoFile videoFileInfo = mSimpleExporter.getVideoFileInfo();
+
+        List<VideoEncoderCapability> capaList = AfterEffect.getSuportedCapability(videoFileInfo.getWidth());
+        if (capaList == null || capaList.size() == 0) {
+            Toast.makeText(this,"手机不支持合适的分辨率",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        VideoEncoderCapability vc = null;
+        if (quality < capaList.size()) {
+            vc = capaList.get(quality);
+        } else {
+            vc = capaList.get(capaList.size() - 1);
+        }
+
+        int width = vc.getWidth();
+        int height = vc.getHeight();
+        float fps = vc.getFps();
+        int bitrate = vc.getBitrate();
+        String destPath = getExportFilePath();
+
+        addTailerMask(mSimpleExporter);
+
+        Log.i("destPath", "export to:" + destPath);
+        mSimpleExporter.export(destPath, width, height, (int) fps, (int) bitrate);
+
+    }
+    private String getExportFilePath() {
+        String destPath = Environment.getExternalStorageDirectory() + "/Movies/export";//
+
+        File dir = new File(destPath);
+        int index = 0;
+        if (!dir.exists()) {
+            dir.mkdir();
+        } else {
+            for (String fn : dir.list()) {
+                if (!fn.endsWith(".mp4")) {
+                    continue;
+                }
+                try {
+                    String name = fn.substring(0, fn.length() - 4);
+                    if (name.length() != 2)
+                        continue;
+                    int i = Integer.valueOf(name);
+                    index = Math.max(i, index);
+                } catch (Exception e) {
+
+                }
+
+            }
+            index++;
+        }
+
+        String fileName = String.format("%02d", index);
+        destPath = destPath + "/" + fileName + ".mp4";
+        return destPath;
+    }
+
+    private void addTailerMask(SimpleExporter mSimpleExporter) {
+        InputStream istr = null;
+        try {
+            istr = getAssets().open("tailer.png");
+            Bitmap bitmap = BitmapFactory.decodeStream(istr);
+            Typeface font = Typeface.createFromAsset(this.getAssets(), "PingFang Regular.ttf");
+            Bitmap tailerBitmap = mSimpleExporter.createTailer(bitmap, "GOLUK", "2016-09-09", font);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (istr != null)
+                try {
+                    istr.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
+    }
+
+    private class AnimationImp implements AnimationListener {
 
 		@Override
 		public void onAnimationEnd(Animation animation) {

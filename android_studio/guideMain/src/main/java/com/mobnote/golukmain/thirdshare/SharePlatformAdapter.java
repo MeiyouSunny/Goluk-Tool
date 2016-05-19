@@ -13,6 +13,7 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.SharePlatformSelectedEvent;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.thirdshare.bean.SharePlatformBean;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +29,13 @@ public class SharePlatformAdapter extends RecyclerView.Adapter{
     List<SharePlatformBean> mSharePlatformBeanList;
     /** 当前选中的平台 */
     public int mCurrSelectedPlatform;
+    SharePlatformUtil mSharePlatform;
 
     public SharePlatformAdapter(Context context){
 
         this.mContext = context;
         mCurrSelectedPlatform = SharePlatformBean.SHARE_PLATFORM_NULL;
+        mSharePlatform = new SharePlatformUtil(mContext);
         fillList();
     }
 
@@ -56,36 +59,56 @@ public class SharePlatformAdapter extends RecyclerView.Adapter{
         return mSharePlatformBeanList != null ? mSharePlatformBeanList.size() : 0;
     }
     private void fillList(){
+
         mSharePlatformBeanList = new ArrayList<SharePlatformBean>();
         if(GolukApplication.getInstance().isInteral()){
             //国内版，国内平台显示在前面，国外平台在后面
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_WEXIN_CIRCLE));
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_WEXIN));
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_WEIBO_SINA));
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_QQ));
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_QQ_ZONE));
-
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_FACEBOOK));
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_TWITTER));
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_INSTAGRAM));
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_WHATSAPP));
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_LINE));
+            addInternalSharePlatform();
+            addInternationalSharePlatform();
         }else{
             //国外版，则国外平台显示在前，国内的在后
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_FACEBOOK));
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_TWITTER));
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_INSTAGRAM));
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_WHATSAPP));
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_LINE));
-
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_WEXIN_CIRCLE));
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_WEXIN));
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_WEIBO_SINA));
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_QQ));
-            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_QQ_ZONE));
+            addInternationalSharePlatform();
+            addInternalSharePlatform();
         }
     }
 
+    private void addInternalSharePlatform(){
+        if(mSharePlatform.isInstallPlatform(SHARE_MEDIA.WEIXIN_CIRCLE)){
+            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_WEXIN_CIRCLE));
+        }
+        if(mSharePlatform.isInstallPlatform(SHARE_MEDIA.WEIXIN)){
+            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_WEXIN));
+        }
+        if(mSharePlatform.isInstallPlatform(SHARE_MEDIA.SINA)){
+            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_WEIBO_SINA));
+        }
+        if(mSharePlatform.isInstallPlatform(SHARE_MEDIA.QQ)){
+            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_QQ));
+        }
+        if(mSharePlatform.isInstallPlatform(SHARE_MEDIA.QZONE)){
+            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_QQ_ZONE));
+        }
+
+    }
+
+    private void addInternationalSharePlatform(){
+        if(mSharePlatform.isInstallPlatform(SHARE_MEDIA.FACEBOOK)){
+            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_FACEBOOK));
+        }
+        if(mSharePlatform.isInstallPlatform(SHARE_MEDIA.TWITTER)){
+            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_TWITTER));
+        }
+        if(mSharePlatform.isInstallPlatform(SHARE_MEDIA.INSTAGRAM)){
+            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_INSTAGRAM));
+        }
+        if(mSharePlatform.isInstallPlatform(SHARE_MEDIA.WHATSAPP)){
+            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_WHATSAPP));
+        }
+        if(mSharePlatform.isInstallPlatform(SHARE_MEDIA.LINE)){
+            mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_LINE));
+        }
+
+    }
     private class SharePlatformOnClickListener implements View.OnClickListener{
 
         private int position;

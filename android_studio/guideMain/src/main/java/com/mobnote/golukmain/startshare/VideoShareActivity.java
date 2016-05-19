@@ -1,11 +1,14 @@
 package com.mobnote.golukmain.startshare;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -35,7 +38,9 @@ import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.newest.IDialogDealFn;
 import com.mobnote.golukmain.promotion.PromotionActivity;
+import com.mobnote.golukmain.promotion.PromotionData;
 import com.mobnote.golukmain.promotion.PromotionItem;
+import com.mobnote.golukmain.promotion.PromotionListRequest;
 import com.mobnote.golukmain.promotion.PromotionModel;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.startshare.bean.ShareDataBean;
@@ -54,7 +59,11 @@ import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.glideblur.BlurTransformation;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import cn.com.mobnote.eventbus.EventShortLocationFinish;
@@ -138,6 +147,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         initView();
 
         setupView();
+        loadPromotionData();
     }
 
     private void initData(){
@@ -190,6 +200,11 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
                 mShareTv.setText(getString(R.string.share_btn_text));
             }
         }
+    }
+
+    private void loadPromotionData() {
+        PromotionListRequest request = new PromotionListRequest(IPageNotifyFn.PageType_GetPromotion, this);
+        request.get();
     }
 
     TextWatcher mTextWatcher = new TextWatcher() {
@@ -272,11 +287,19 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             filename = filename.replace(".mp4", ".jpg");
             String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
             GlideUtils.loadImage(this, mVideoThumbIv, filePath + File.separator + filename, R.drawable.album_default_img);
-
             Glide.with(this).load(filePath + File.separator + filename)
                     .bitmapTransform(new BlurTransformation(VideoShareActivity.this, 50))
                     .into((ImageView) findViewById(R.id.iv_videoshare_blur));
         }
+
+//        Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
+//        if(bitmap != null){
+//            Glide.with(this).load(bitmap)
+//                    .into(mVideoThumbIv);
+//            Glide.with(this).load(bitmap)
+//                    .bitmapTransform(new BlurTransformation(VideoShareActivity.this, 50))
+//                    .into((ImageView) findViewById(R.id.iv_videoshare_blur));
+//        }
 
         mShareLoading = new ShareLoading(this, mRootLayout);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,SHARE_PLATFORM_COLUMN_NUMBERS);
@@ -544,6 +567,48 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             tmpThread.interrupt();
         }
     }
+
+//    public void setPromotionList(ArrayList<PromotionData> list, ArrayList<PromotionSelectItem> recommendList) {
+//        if (list == null) {
+//            return;
+//        }
+//        mPromotionList = list;
+//        mRecommendActivities = recommendList;
+//        refreshPromotionUI();
+//        if (mPromotionList.size() > 0) {
+//            showNewFlag();
+//        }
+//    }
+
+//    private void showNewFlag() {
+//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//        ObjectOutput out = null;
+//        String md5 = "";
+//        try {
+//            out = new ObjectOutputStream(bos);
+//            out.writeObject(mPromotionList);
+//            byte[] content = bos.toByteArray();
+//            md5 = GolukUtils.compute32(content);
+//        } catch (IOException ex) {
+//
+//        } finally {
+//            try {
+//                if (out != null) {
+//                    out.close();
+//                }
+//                bos.close();
+//            } catch (IOException ex) {
+//                // ignore close exception
+//            }
+//        }
+//
+//        String mMd5String = GolukFileUtils.loadString(GolukFileUtils.PROMOTION_LIST_STRING, "");
+//        if (TextUtils.isEmpty(mMd5String) || !mMd5String.equalsIgnoreCase(md5)) {
+//            bShowNew = true;
+//            mNewFlagTextView.setVisibility(View.VISIBLE);
+//            mMd5String = md5;
+//        }
+//    }
 
     @Override
     public void onLoadComplete(int requestType, Object result) {
