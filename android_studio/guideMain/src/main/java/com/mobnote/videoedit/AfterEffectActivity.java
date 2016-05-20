@@ -1271,6 +1271,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 //                mChannelLineAdapter.setEditIndex(-1);
                 clearEditController();
                 mChannelLineAdapter.notifyDataSetChanged();
+                if(mProjectItemList == null || mProjectItemList.size() <= 3) {
+                    finish();
+                }
             } else {
                 Toast.makeText(this, getString(R.string.str_ae_select_chunk_to_remove), Toast.LENGTH_SHORT).show();
             }
