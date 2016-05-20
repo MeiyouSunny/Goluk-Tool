@@ -1069,10 +1069,11 @@ public class GolukUtils {
 		context.startActivity(intent);
 	}
 
-	public static void startVideoEditActivity(Context context, int type, String path) {
+	public static void startVideoEditActivity(Context context, int type, String path,String filename) {
 		Intent intent = new Intent(context, VideoShareActivity.class);
 		intent.putExtra("vidType", type);
 		intent.putExtra("vidPath", path);
+		intent.putExtra("filename", filename);
 		context.startActivity(intent);
 	}
 

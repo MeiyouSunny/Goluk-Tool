@@ -4,6 +4,7 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.startshare.VideoEditActivity;
+import com.mobnote.golukmain.startshare.VideoShareActivity;
 import com.mobnote.util.GolukUtils;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.ShareContent;
@@ -141,6 +142,8 @@ public abstract class AbsThirdShare implements IThirdShareFn {
 
 		if (mActivity instanceof VideoEditActivity) {
 			((VideoEditActivity) mActivity).shareCallBack(isSucess);
+		}else if(mActivity instanceof VideoShareActivity){
+			((VideoShareActivity) mActivity).shareCallBack(isSucess);
 		}
 	}
 

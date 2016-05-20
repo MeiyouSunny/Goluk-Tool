@@ -586,8 +586,10 @@
         </activity>
         <activity
             android:name="com.mobnote.golukmain.startshare.VideoShareActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateHidden">
         </activity>
         <activity
             android:name="com.mobnote.golukmain.praised.MyPraisedActivity"

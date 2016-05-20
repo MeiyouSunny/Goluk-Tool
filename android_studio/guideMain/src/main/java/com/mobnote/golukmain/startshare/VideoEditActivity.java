@@ -132,8 +132,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		if (savedInstanceState == null) {
 			getIntentData();
 		} else {
-			mFilePath = savedInstanceState.getString("cn.com.mobnote.video.path");
-			mCurrentVideoType = savedInstanceState.getInt("type", 2);
+			mFilePath = savedInstanceState.getString("vidPath");
+			mCurrentVideoType = savedInstanceState.getInt("vidType", 2);
 			mPromotionSelectItem = (PromotionSelectItem) savedInstanceState
 					.getSerializable(FragmentAlbum.ACTIVITY_INFO);
 		}
@@ -194,8 +194,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 
 	private void getIntentData() {
 		Intent intent = getIntent();
-		mFilePath = intent.getStringExtra("cn.com.mobnote.video.path");
-		mCurrentVideoType = intent.getIntExtra("type", 2);
+		mFilePath = intent.getStringExtra("vidPath");
+		mCurrentVideoType = intent.getIntExtra("vidType", 2);
 		mPromotionSelectItem = (PromotionSelectItem) intent.getSerializableExtra(FragmentAlbum.ACTIVITY_INFO);
 	}
 
@@ -204,8 +204,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		if (mPromotionSelectItem != null) {
 			outState.putSerializable(FragmentAlbum.ACTIVITY_INFO, mPromotionSelectItem);
 		}
-		outState.putString("cn.com.mobnote.video.path", mFilePath);
-		outState.putInt("type", mCurrentVideoType);
+		outState.putString("vidPath", mFilePath);
+		outState.putInt("vidType", mCurrentVideoType);
 		super.onSaveInstanceState(outState);
 	}
 

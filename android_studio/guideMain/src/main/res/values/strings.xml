@@ -1083,6 +1083,9 @@
 
 
     <string name="str_sharetype">选择类型</string>
+    <string name="share_to_jishe">分享到极社</string>
+    <string name="share_hint">你的视频需要一个漂亮的描述</string>
+    <string name="join_activity">参加活动</string>
 
     <string name="str_video_export_succeed">Export succeeded</string>
     <string name="str_video_export_failed">Export failed</string>
@@ -1091,4 +1094,17 @@
     <string name="str_video_export_min_limit">Can not export video with length less than %1$ds</string>
     <string name="str_video_export_max_limit">Can not export video with length more than %1$ds</string>
     <string name="str_video_export_progress">Exporting %1$d%%</string>
+    <string name="str_ae_split">Split</string>
+    <string name="str_ae_delete">Delete</string>
+    <string name="str_ae_cut">Cut</string>
+    <string name="str_ae_volume">Volume</string>
+    <string name="str_ae_next">Next</string>
+    <string name="str_ae_title">Video Edit</string>
+    <string name="str_ae_select_chunk_to_remove">Please choose item to delete</string>
+
+    <string name="str_ae_no_chunk_selected">No item selected</string>
+    <string name="str_ae_only_selected_can_split">Only selected item can be splitted</string>
+    <string name="str_ae_selected_chunk_can_not_split">This item can not be splitted</string>
+    <string name="str_ae_add_chunk_failed">Add video failed</string>
+    <string name="str_ae_can_not_split_from">Can not split length with %1$ss</string>
 </resources>

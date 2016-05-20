@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 17
+    compileSdkVersion 21
     buildToolsVersion "23.0.3"
 
     defaultConfig {
@@ -26,7 +26,7 @@ dependencies {
     compile project(':emojicon')
     compile project(':commonGoluk')
     compile project(':initActivity')
-    compile 'com.android.support:support-v4:18.0.0'
+    compile 'com.android.support:support-v4:21.0.0'
     compile files('libs/bolts-android-1.1.4.jar')
     compile files('libs/bugly_1.2.7_release.jar')
     compile files('libs/com.rd.car.player.jar')
