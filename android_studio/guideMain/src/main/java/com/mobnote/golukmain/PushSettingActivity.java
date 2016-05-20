@@ -1,16 +1,19 @@
 package com.mobnote.golukmain;
 
+import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.bean.GetPushSettingRequest;
 import com.mobnote.golukmain.bean.PushMsgSettingBean;
 import com.mobnote.golukmain.bean.SetPushSettingRequest;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
 import com.mobnote.golukmain.xdpush.SettingBean;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -185,6 +188,16 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 
 	}
 
+	public void startUserLogin(){
+		Intent loginIntent = null;
+		if(GolukApplication.getInstance().isInteral() == false){
+			loginIntent = new Intent(this, InternationUserLoginActivity.class);
+		}else{
+			loginIntent = new Intent(this, UserLoginActivity.class);
+		}
+		startActivity(loginIntent);
+	}
+
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		if(requestType == IPageNotifyFn.PageType_GetPushCfg){
@@ -192,6 +205,12 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 			PushMsgSettingBean psb = (PushMsgSettingBean) result;
 			if(psb != null){
 //				SettingBean bean = JsonUtil.parsePushSettingJson((String) param2);
+				if (psb != null && psb.data!=null ){
+					if("10001".equals(psb.data.result) || "10002".equals(psb.data.result)){
+						startUserLogin();
+						return;
+					}
+				}
 				if (null == psb || !psb.success || !"0".equals(psb.data.result)) {
 					GolukUtils.showToast(this, this.getResources().getString(R.string.str_getwificfg_fail));
 					return;

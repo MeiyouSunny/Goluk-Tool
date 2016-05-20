@@ -7,6 +7,7 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.userlogin.UpDescResult;
 import com.mobnote.golukmain.userlogin.UpNameResult;
 import com.mobnote.golukmain.userlogin.UpdUserDescBeanRequest;
@@ -209,6 +210,16 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 		}
 	}
 
+	public void startUserLogin(){
+		Intent loginIntent = null;
+		if(GolukApplication.getInstance().isInteral() == false){
+			loginIntent = new Intent(this, InternationUserLoginActivity.class);
+		}else{
+			loginIntent = new Intent(this, UserLoginActivity.class);
+		}
+		startActivity(loginIntent);
+	}
+
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 
@@ -218,7 +229,14 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 			if (mCustomProgressDialog.isShowing()) {
 				mCustomProgressDialog.close();
 			}
-			
+
+			if(upnameresult != null && upnameresult.data != null){
+				if ("10001".equals(upnameresult.data.result) || "10002".equals(upnameresult.data.result)){
+					startUserLogin();
+					return;
+				}
+			}
+
 			if (upnameresult.success) {
 				GolukApplication.getInstance().setMyinfo("", "", mSignNewText,null);
 				Intent it = new Intent(UserPersonalSignActivity.this, UserPersonalInfoActivity.class);

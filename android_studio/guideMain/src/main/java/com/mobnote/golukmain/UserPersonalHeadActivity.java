@@ -7,6 +7,7 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.userlogin.UpHeadData;
 import com.mobnote.golukmain.userlogin.UpHeadResult;
 import com.mobnote.golukmain.userlogin.UpdUserDescBeanRequest;
@@ -328,12 +329,28 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 //		}
 //	}
 
+	public void startUserLogin(){
+		Intent loginIntent = null;
+		if(GolukApplication.getInstance().isInteral() == false){
+			loginIntent = new Intent(this, InternationUserLoginActivity.class);
+		}else{
+			loginIntent = new Intent(this, UserLoginActivity.class);
+		}
+		startActivity(loginIntent);
+	}
+
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		if(IPageNotifyFn.PageType_ModifyHeadPic == requestType){
 			closeLoadDialog();
 			UpHeadResult headResult = (UpHeadResult) result;
 
+			if(headResult != null && headResult.data != null){
+				if ("10001".equals(headResult.data.result) || "10002".equals(headResult.data.result)){
+					startUserLogin();
+					return;
+				}
+			}
 			if (headResult != null && headResult.success) {
 				UpHeadData data = headResult.data;
 				String rst = data.result;

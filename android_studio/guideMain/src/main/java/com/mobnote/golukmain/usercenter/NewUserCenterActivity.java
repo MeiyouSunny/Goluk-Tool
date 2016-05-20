@@ -30,9 +30,11 @@ import com.mobnote.eventbus.EventDeleteVideo;
 import com.mobnote.eventbus.EventRefreshUserInfo;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.UserLoginActivity;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.thirdshare.ProxyThirdShare;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
@@ -200,6 +202,16 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 		mCurrentOperator = operation;
 	}
 
+	public void startUserLogin(){
+		Intent loginIntent = null;
+		if(GolukApplication.getInstance().isInteral() == false){
+			loginIntent = new Intent(this, InternationUserLoginActivity.class);
+		}else{
+			loginIntent = new Intent(this, UserLoginActivity.class);
+		}
+		startActivity(loginIntent);
+	}
+
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		mGridView.onRefreshComplete();
@@ -210,6 +222,15 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 				return;
 			}
 			mHomeJson = (HomeJson) result;
+			if(mHomeJson != null){
+				//token过期
+				if("10001".equals(mHomeJson.code) || "10002".equals(mHomeJson.code)){
+					mRefreshLayout.setVisibility(View.VISIBLE);
+					mGridView.setVisibility(View.GONE);
+					startUserLogin();
+					return;
+				}
+			}
 			if (null != mHomeJson && null != mHomeJson.data && null != mHomeJson.data.user
 					&& null != mHomeJson.data.videolist) {
 				mGridView.setVisibility(View.VISIBLE);
@@ -269,6 +290,14 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			}
 		} else if (requestType == IPageNotifyFn.PageType_HomeAttention) {
 			AttentionJson attention = (AttentionJson) result;
+
+			if(attention != null){
+				//token过期
+				if(10001 ==attention.code || 10002 == attention.code){
+					startUserLogin();
+					return;
+				}
+			}
 			if (null != attention && 0 == attention.code && null != attention.data && null != mHeader
 					&& null != mHomeJson && null != mHomeJson.data && null != mHomeJson.data.user) {
 				// 0：未关注；1：关注；2：互相关注
