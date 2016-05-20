@@ -1105,4 +1105,6 @@
     <string name="str_ae_no_chunk_selected">No item selected</string>
     <string name="str_ae_only_selected_can_split">Only selected item can be splitted</string>
     <string name="str_ae_selected_chunk_can_not_split">This item can not be splitted</string>
+    <string name="str_ae_add_chunk_failed">Add video failed</string>
+    <string name="str_ae_can_not_split_from">Can not split length with %1$ss</string>
 </resources>

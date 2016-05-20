@@ -74,7 +74,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 	private String mCurMotion = REFRESH_NORMAL;
 	private TextView mRetryClickIV;
 	private CustomLoadingDialog mLoadingDialog;
-	private final static String PROTOCOL = "200";
+	private final static String PROTOCOL = "100";
 	private SharePlatformUtil mSharePlatform = null;
 	private int mCurrentIndex;
 	protected final static String FOLLOWD_EMPTY = "FOLLOWED_EMPTY";
@@ -341,6 +341,16 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 		}
 	}
 
+	public void startUserLogin(){
+		Intent loginIntent = null;
+		if(GolukApplication.getInstance().isInteral() == false){
+			loginIntent = new Intent(getActivity(), InternationUserLoginActivity.class);
+		}else{
+			loginIntent = new Intent(getActivity(), UserLoginActivity.class);
+		}
+		startActivity(loginIntent);
+	}
+
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		// TODO Auto-generated method stub
@@ -351,6 +361,13 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 
 		if(requestType == IPageNotifyFn.PageType_FollowedContent) {
 			FollowedRetBean bean = (FollowedRetBean)result;
+			if(bean.data != null){
+				if("10001".equals(bean.data.result) || "10002".equals(bean.data.result)){
+					setEmptyView();
+					startUserLogin();
+					return;
+				}
+			}
 			if(null == bean) {
 				Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 				if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
@@ -473,6 +490,11 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 			FollowRetBean bean = (FollowRetBean)result;
 			if(null != bean) {
 				if(bean.code != 0) {
+						//token过期
+						if(10001 == bean.code|| 10002 == bean.code){
+							startUserLogin();
+							return;
+						}
 					Toast.makeText(getActivity(), bean.msg, Toast.LENGTH_SHORT).show();
 					return;
 				}
@@ -490,6 +512,11 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 		} else if(requestType == IPageNotifyFn.PageType_FollowAll) {
 			FollowAllRetBean bean = (FollowAllRetBean)result;
 			if(null != bean) {
+				//token过期
+				if(10001 == bean.code|| 10002 == bean.code){
+					startUserLogin();
+					return;
+				}
 				if(bean.code == 0) {
 					sendFollowedContentRequest(REFRESH_NORMAL, "");
 				} else {

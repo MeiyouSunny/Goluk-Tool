@@ -707,6 +707,14 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		case IPageNotifyFn.PageType_AddComment:
 			LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
 			CommentAddResultBean addResultBean = (CommentAddResultBean) result;
+
+			if(addResultBean != null && addResultBean.data != null){
+				if("10001".equals(addResultBean.data.result)||"10002".equals(addResultBean.data.result)){
+					startUserLogin();
+					return;
+				}
+			}
+
 			if (null != addResultBean && addResultBean.success) {
 				CommentAddBean addBean = addResultBean.data;
 				if (addBean == null) {
@@ -767,6 +775,14 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		case IPageNotifyFn.PageType_DelComment:
 			LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
 			CommentDelResultBean DelResultBean = (CommentDelResultBean) result;
+
+			if(DelResultBean != null && DelResultBean.data != null){
+				if("10001".equals(DelResultBean.data.result)||"10002".equals(DelResultBean.data.result)){
+					startUserLogin();
+					return;
+				}
+			}
+
 			if (null != DelResultBean && DelResultBean.success) {
 
 				mAdapter.deleteData(mWillDelBean);
@@ -794,6 +810,16 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 				return false;
 			}
 		});
+	}
+
+	public void startUserLogin(){
+		Intent loginIntent = null;
+		if(GolukApplication.getInstance().isInteral() == false){
+			loginIntent = new Intent(this, InternationUserLoginActivity.class);
+		}else{
+			loginIntent = new Intent(this, UserLoginActivity.class);
+		}
+		startActivity(loginIntent);
 	}
 
 	private boolean isCanShowSoft() {

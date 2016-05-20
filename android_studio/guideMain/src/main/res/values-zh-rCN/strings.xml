@@ -1071,4 +1071,6 @@
     <string name="str_ae_no_chunk_selected">无选中条目</string>
     <string name="str_ae_only_selected_can_split">只能拆分选中条目</string>
     <string name="str_ae_selected_chunk_can_not_split">此条目不能拆分</string>
+    <string name="str_ae_add_chunk_failed">添加视频失败</string>
+    <string name="str_ae_can_not_split_from">不能拆分长度%1$s秒</string>
 </resources>

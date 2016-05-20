@@ -81,7 +81,7 @@ public class RankingActivity extends BaseActivity implements IRequestResultListe
             public void onRefresh() {
                 // 下拉刷新个人中心所有数据
                 mRequestType = 0;
-                getRankingData("1",mTimestamp);// 请求数据
+                getRankingData("0",mTimestamp);// 请求数据
             }
         });
 

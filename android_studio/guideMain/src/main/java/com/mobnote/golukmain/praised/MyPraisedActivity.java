@@ -10,13 +10,16 @@ import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventPraiseStatusChanged;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.UserLoginActivity;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.praised.MyPraisedListRequest;
 import com.mobnote.golukmain.praised.bean.MyPraisedListBean;
 import com.mobnote.golukmain.praised.bean.MyPraisedVideoBean;
 import com.mobnote.util.GolukUtils;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -160,6 +163,16 @@ public class MyPraisedActivity extends BaseActivity implements IRequestResultLis
 		super.onDestroy();
 	};
 
+	public void startUserLogin(){
+		Intent loginIntent = null;
+		if(GolukApplication.getInstance().isInteral() == false){
+			loginIntent = new Intent(this, InternationUserLoginActivity.class);
+		}else{
+			loginIntent = new Intent(this, UserLoginActivity.class);
+		}
+		startActivity(loginIntent);
+	}
+
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		// TODO Auto-generated method stub
@@ -177,6 +190,15 @@ public class MyPraisedActivity extends BaseActivity implements IRequestResultLis
 				}
 				return;
 			}
+
+			if(bean != null && bean.data != null){
+				if ("10001".equals(bean.data.result) || "10002".equals(bean.data.result)){
+					setEmptyView();
+					startUserLogin();
+					return;
+				}
+			}
+
 			if(!bean.success) {
 				if(!TextUtils.isEmpty(bean.msg)) {
 					Toast.makeText(this, bean.msg, Toast.LENGTH_SHORT).show();

@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -256,10 +257,10 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         }
     }
 
-	public void splitChunk() {
-		if(mProjectItemList == null || mProjectItemList.size() <= 3) {
-			return ;
-		}
+    public void splitChunk() {
+        if (mProjectItemList == null || mProjectItemList.size() <= 3) {
+            return;
+        }
 
         int focusIndex = mChannelLineAdapter.getEditIndex();
         if(focusIndex == -1) {
@@ -272,26 +273,33 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             return;
         }
 
-		ProjectItemBean bean = mProjectItemList.get(mCurrentPointedItemIndex);
-		if(!(bean instanceof ChunkBean)) {
+        ProjectItemBean bean = mProjectItemList.get(mCurrentPointedItemIndex);
+        if (!(bean instanceof ChunkBean)) {
             Toast.makeText(this, getString(R.string.str_ae_selected_chunk_can_not_split), Toast.LENGTH_SHORT).show();
-			return;
-		}
+            return;
+        }
 
-		View chunkView = mAELayoutManager.findViewByPosition(mCurrentPointedItemIndex);
-		float width = chunkView.getWidth();
-		float pX = VideoEditUtils.getViewXLocation(chunkView);
+        View chunkView = mAELayoutManager.findViewByPosition(mCurrentPointedItemIndex);
+        float width = chunkView.getWidth();
+        float pX = VideoEditUtils.getViewXLocation(chunkView);
 
-		int chunkIndex = VideoEditUtils.mapI2CIndex(mCurrentPointedItemIndex);
-		float position = (mGateLocationX - pX) / width * ((ChunkBean)bean).chunk.getDuration();
-		if(position == 0f) {
-			return;
-		}
+        int chunkIndex = VideoEditUtils.mapI2CIndex(mCurrentPointedItemIndex);
+        float position = (mGateLocationX - pX) / width * ((ChunkBean) bean).chunk.getDuration();
+        if (position == 0f) {
+            String org = getString(R.string.str_ae_can_not_split_from);
+            String formattedOrg = String.format(org, 0);
+            Toast.makeText(this, formattedOrg, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-		if(!mAfterEffect.canSplit(chunkIndex, position)) {
-			Toast.makeText(this, position + "长度不能拆分", Toast.LENGTH_SHORT).show();
-			return;
-		}
+        if(!mAfterEffect.canSplit(chunkIndex, position)) {
+            DecimalFormat f_num = new DecimalFormat("##0.00");
+            String ret = f_num.format(position);
+            String org = getString(R.string.str_ae_can_not_split_from);
+            String formattedOrg = String.format(org, ret);
+            Toast.makeText(this, formattedOrg, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
 		try {
 			float realPosition = mAfterEffect.editSplitChunk(chunkIndex, position);
@@ -434,52 +442,51 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 		addChunk(mVideoPath);
 	}
 
-	private void addTail() {
-		InputStream istr = null;
-		GolukApplication mApp = GolukApplication.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String date = sdf.format(new java.util.Date());
-		String nickName = null;
-		if(mApp.isUserLoginSucess) {
-			UserInfo userInfo = mApp.getMyInfo();
-			nickName = userInfo.nickname;
-		} else {
-			nickName = getString(R.string.str_default_video_edit_user_name);
-		}
+    private void addTail() {
+        InputStream istr = null;
+        GolukApplication mApp = GolukApplication.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String date = sdf.format(new java.util.Date());
+        String nickName = null;
+        if (mApp.isUserLoginSucess) {
+            UserInfo userInfo = mApp.getMyInfo();
+            nickName = userInfo.nickname;
+        } else {
+            nickName = getString(R.string.str_default_video_edit_user_name);
+        }
 
-		try {
-			istr = getAssets().open("tailer.png");
-			Bitmap bitmap = BitmapFactory.decodeStream(istr);
-			Typeface font = Typeface.createFromAsset(this.getAssets(), "PingFang Regular.ttf");
-			Bitmap tailerBitmap = mAfterEffect.createTailer(bitmap, nickName, date, font);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (istr != null)
-				try {
-					istr.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-		}
-	}
+        try {
+            istr = getAssets().open("tailer.png");
+            Bitmap bitmap = BitmapFactory.decodeStream(istr);
+            Typeface font = Typeface.createFromAsset(this.getAssets(), "PingFang Regular.ttf");
+            Bitmap tailerBitmap = mAfterEffect.createTailer(bitmap, nickName, date, font);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (istr != null)
+                try {
+                    istr.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
+    }
 
-	private void handlerAECallBack(Message msg) {
-		switch (msg.what) {
-		case MSG_AE_PLAY_STARTED:
-			Log.d(TAG, "MSG_AE_PLAY_STARTED");
-			mPlayerState = PlayerState.PLAYING;
-			mVideoPlayIV.setVisibility(View.GONE);
+    private void handlerAECallBack(Message msg) {
+        switch (msg.what) {
+        case MSG_AE_PLAY_STARTED:
+            Log.d(TAG, "MSG_AE_PLAY_STARTED");
+            mPlayerState = PlayerState.PLAYING;
+            mVideoPlayIV.setVisibility(View.GONE);
             clearChunkFocus();
-			break;
-		case MSG_AE_PLAY_PROGRESS:
-		{
-			ChunkPlayBean playBean = (ChunkPlayBean)msg.obj;
-			float currentPos = playBean.currentSec;
-			float totalSec = playBean.totalSec;
-			float chunkPosition = playBean.position;
-			AfterEffect afterEffect = playBean.effect;
-			final int chunkIndex = playBean.chunkIndex;
+            break;
+        case MSG_AE_PLAY_PROGRESS: {
+            ChunkPlayBean playBean = (ChunkPlayBean) msg.obj;
+            float currentPos = playBean.currentSec;
+            float totalSec = playBean.totalSec;
+            float chunkPosition = playBean.position;
+            AfterEffect afterEffect = playBean.effect;
+            final int chunkIndex = playBean.chunkIndex;
 
             if(chunkIndex == -1) {
                 final int tailOffset = (int)(chunkPosition / VideoEditConstant.VIDEO_TAIL_TIME_DURATION * mTailWidth);
@@ -496,49 +503,48 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 
             Log.d(TAG, "MSG_AE_PLAY_PROGRESS " + currentPos + "/" + totalSec + ","
                 + chunkIndex + "-" + chunkPosition + ", chunk duration: " +
-                chunk.getDuration() + ", mPlayingChunkPosition=" + mPlayingChunkPosition);
-			int chunkWidth = VideoEditUtils.ChunkTime2Width(chunk);
+            chunk.getDuration() + ", mPlayingChunkPosition=" + mPlayingChunkPosition);
+            int chunkWidth = VideoEditUtils.ChunkTime2Width(chunk);
 //			float chunkOffset = chunkPosition - mPlayingChunkPosition;
-			final int moveOffset = (int)(chunkPosition / chunk.getDuration() * chunkWidth);
-			mAERecyclerView.post(new Runnable() {
-				@Override
-				public void run() {
-					mAELayoutManager.scrollToPositionWithOffset(
-							VideoEditUtils.mapC2IIndex(chunkIndex), -moveOffset + mDummyHeaderWidth);
-				}
-			});
-		}
-			break;
-		case MSG_AE_PLAY_FINISHED:
-			Log.d(TAG, "MSG_AE_PLAY_FINISHED");
-			mVideoPlayIV.setVisibility(View.VISIBLE);
-			mPlayerState = PlayerState.STOPPED;
-			mAERecyclerView.post(new Runnable() {
-				@Override
-				public void run() {
-					mAELayoutManager.scrollToPositionWithOffset(
-							mProjectItemList.size() - 1, mDummyHeaderWidth);
-				}
-			});
-			break;
-		case MSG_AE_PLAY_FAILED:
-		{
-			Log.d(TAG, "MSG_AE_PLAY_FAILED");
-			float currentPos = -1;
-			mVideoPlayIV.setVisibility(View.VISIBLE);
-			mPlayerState = PlayerState.ERROR;
-		}
-			break;
-		case MSG_AE_EXPORT_STARTED:
-			Log.d(TAG, "MSG_AE_EXPORT_STARTED");
-			break;
-		case MSG_AE_EXPORT_PROGRESS:
-			Log.d(TAG, "MSG_AE_EXPORT_PROGRESS: " + msg.arg1);
+            final int moveOffset = (int) (chunkPosition / chunk.getDuration() * chunkWidth);
+            mAERecyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mAELayoutManager.scrollToPositionWithOffset(
+                            VideoEditUtils.mapC2IIndex(chunkIndex), -moveOffset + mDummyHeaderWidth);
+                }
+            });
+        }
+            break;
+        case MSG_AE_PLAY_FINISHED:
+            Log.d(TAG, "MSG_AE_PLAY_FINISHED");
+            mVideoPlayIV.setVisibility(View.VISIBLE);
+            mPlayerState = PlayerState.STOPPED;
+            mAERecyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                mAELayoutManager.scrollToPositionWithOffset(
+                        mProjectItemList.size() - 1, mDummyHeaderWidth);
+                }
+            });
+            break;
+        case MSG_AE_PLAY_FAILED: {
+            Log.d(TAG, "MSG_AE_PLAY_FAILED");
+            float currentPos = -1;
+            mVideoPlayIV.setVisibility(View.VISIBLE);
+            mPlayerState = PlayerState.ERROR;
+        }
+            break;
+        case MSG_AE_EXPORT_STARTED:
+            Log.d(TAG, "MSG_AE_EXPORT_STARTED");
+            break;
+        case MSG_AE_EXPORT_PROGRESS:
+            Log.d(TAG, "MSG_AE_EXPORT_PROGRESS: " + msg.arg1);
             String org = getString(R.string.str_video_export_progress);
             String formattedOrg = String.format(org, msg.arg1);
             mFullLoadingDialog.setTextTitle(formattedOrg);
-			break;
-		case MSG_AE_EXPORT_FINISHED:
+            break;
+        case MSG_AE_EXPORT_FINISHED:
             Log.d(TAG, "MSG_AE_EXPORT_FINISHED");
             ExportRet retBean = (ExportRet)msg.obj;
 //            String path = (String)msg.obj;
@@ -560,46 +566,45 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             }
             Toast.makeText(this, getString(R.string.str_video_export_failed), Toast.LENGTH_SHORT).show();
             break;
-		case MSG_AE_THUMB_GENERATED: {
-			 Chunk chunkThumb = (Chunk) msg.obj;
-			// if (this.chunkThumbList == null)
-			// chunkThumbList = new ArrayList<ChunkThumbs>();
-			// chunkThumbList.add(chunkThumbList.size(), chunkThumb);
-//			addChildLayoutForLayout();
-			// add all get bitmaps to
-			break;
-		}
-		case MSG_AE_CHUNK_ADD_FINISHED: {
-			Chunk chunk = (Chunk)msg.obj;
-			if(chunk != null) {
-				Log.d(TAG, "chunk added:" + chunk.prettyString());
-				mChunksTotalTime += chunk.getDuration();
-				mAfterEffect.generateThumbAsyn(chunk, VideoEditConstant.BITMAP_TIME_INTERVAL, mImageHeight);
-			}
+        case MSG_AE_THUMB_GENERATED: {
+            Chunk chunkThumb = (Chunk) msg.obj;
+            // if (this.chunkThumbList == null)
+            // chunkThumbList = new ArrayList<ChunkThumbs>();
+            // chunkThumbList.add(chunkThumbList.size(), chunkThumb);
+                // add all get bitmaps to
+            break;
+        }
+        case MSG_AE_CHUNK_ADD_FINISHED: {
+            Chunk chunk = (Chunk) msg.obj;
+            if (chunk != null) {
+                Log.d(TAG, "chunk added:" + chunk.prettyString());
+                mChunksTotalTime += chunk.getDuration();
+                mAfterEffect.generateThumbAsyn(chunk, VideoEditConstant.BITMAP_TIME_INTERVAL, mImageHeight);
+            }
 
-			break;
-		}
+            break;
+        }
 
-		case MSG_AE_CHUNK_ADD_FAILED: {
-			String filePath = (String)msg.obj;
-			Log.d(TAG, "chunk added fialed:" + filePath);
-			break;
-		}
+        case MSG_AE_CHUNK_ADD_FAILED: {
+            String filePath = (String) msg.obj;
+            Log.d(TAG, "chunk added fialed:" + filePath);
+            Toast.makeText(this, getString(R.string.str_ae_add_chunk_failed), Toast.LENGTH_SHORT).show();
+            break;
+        }
 
-		case MSG_AE_PLAY_PAUSED:
-		{
-			mVideoPlayIV.setVisibility(View.VISIBLE);
-			mPlayerState = PlayerState.PAUSED;
-		}
-			break;
+        case MSG_AE_PLAY_PAUSED: {
+            mVideoPlayIV.setVisibility(View.VISIBLE);
+            mPlayerState = PlayerState.PAUSED;
+        }
+            break;
 
-		case MSG_AE_PLAY_RESUMED:
-		{
-			mVideoPlayIV.setVisibility(View.GONE);
-			mPlayerState = PlayerState.PLAYING;
+        case MSG_AE_PLAY_RESUMED:
+        {
+            mVideoPlayIV.setVisibility(View.GONE);
+            mPlayerState = PlayerState.PLAYING;
             clearChunkFocus();
-		}
-			break;
+        }
+            break;
 
 		case MSG_AE_BITMAP_READ_OUT: {
 			Chunk chunk = (Chunk) msg.obj;
@@ -655,37 +660,34 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             Log.d(TAG, "MSG_AE_BITMAP_READ_FAILED");
         }
             break;
-		case MSG_AE_CHUNK_PLAY_END:
-		{
-			ChunkPlayBean playBean = (ChunkPlayBean)msg.obj;
-			float currentPos = playBean.currentSec;
-			float totalSec = playBean.totalSec;
-			float chunkPosition = playBean.position;
-//			AfterEffect afterEffect = playBean.effect;
-			int chunkIndex = playBean.chunkIndex;
-			Chunk chunk = mAfterEffect.getMainChunks().get(chunkIndex);
+        case MSG_AE_CHUNK_PLAY_END: {
+            ChunkPlayBean playBean = (ChunkPlayBean) msg.obj;
+            float currentPos = playBean.currentSec;
+            float totalSec = playBean.totalSec;
+            float chunkPosition = playBean.position;
+            int chunkIndex = playBean.chunkIndex;
+            Chunk chunk = mAfterEffect.getMainChunks().get(chunkIndex);
 
-//			Log.d("CK1", "MSG_AE_PLAY_PROGRESS " + currentChunkPosition + "/" + chunkPosition + "/" + currentPlayPosition);
-			Log.d(TAG, "MSG_AE_PLAY_PROGRESS " + currentPos + "/" + totalSec + "," + chunkIndex + "-" + chunkPosition);
-			int chunkWidth = VideoEditUtils.ChunkTime2Width(chunk);
-		}
-			break;
+            Log.d(TAG, "MSG_AE_PLAY_PROGRESS " + currentPos + "/" + totalSec + "," + chunkIndex + "-" + chunkPosition);
+            int chunkWidth = VideoEditUtils.ChunkTime2Width(chunk);
+        }
+            break;
 
-		default:
-			Log.d(TAG, "unknown operation happened");
-			break;
-		}
-	}
+        default:
+            Log.d(TAG, "unknown operation happened");
+            break;
+        }
+    }
 
-	public void showEditController() {
-		mAEEditController.setVisibility(View.VISIBLE);
-		mAEMusicRecyclerView.setVisibility(View.GONE);
-	}
+    public void showEditController() {
+        mAEEditController.setVisibility(View.VISIBLE);
+        mAEMusicRecyclerView.setVisibility(View.GONE);
+    }
 
-	public void showMusicController() {
-		mAEEditController.setVisibility(View.GONE);
-		mAEMusicRecyclerView.setVisibility(View.VISIBLE);
-	}
+    public void showMusicController() {
+        mAEEditController.setVisibility(View.GONE);
+        mAEMusicRecyclerView.setVisibility(View.VISIBLE);
+    }
 
 	private void initController() {
         mMusicNames = new String[9];
@@ -1269,6 +1271,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 //                mChannelLineAdapter.setEditIndex(-1);
                 clearEditController();
                 mChannelLineAdapter.notifyDataSetChanged();
+                if(mProjectItemList == null || mProjectItemList.size() <= 3) {
+                    finish();
+                }
             } else {
                 Toast.makeText(this, getString(R.string.str_ae_select_chunk_to_remove), Toast.LENGTH_SHORT).show();
             }

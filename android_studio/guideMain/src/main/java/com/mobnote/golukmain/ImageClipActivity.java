@@ -16,6 +16,7 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.http.UrlHostManager;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.userlogin.UpHeadData;
 import com.mobnote.golukmain.userlogin.UpHeadResult;
 import com.mobnote.golukmain.userlogin.UpdUserHeadBeanRequest;
@@ -402,6 +403,16 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,I
 		super.onResume();
 	}
 
+	public void startUserLogin(){
+		Intent loginIntent = null;
+		if(GolukApplication.getInstance().isInteral() == false){
+			loginIntent = new Intent(this, InternationUserLoginActivity.class);
+		}else{
+			loginIntent = new Intent(this, UserLoginActivity.class);
+		}
+		startActivity(loginIntent);
+	}
+
 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
@@ -413,6 +424,13 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,I
 			}
 			
 			UpHeadResult headResult = (UpHeadResult) result;
+
+			if(headResult != null && headResult.data != null){
+				if ("10001".equals(headResult.data.result) || "10002".equals(headResult.data.result)){
+					startUserLogin();
+					return;
+				}
+			}
 
 			if (headResult.success) {
 				UpHeadData data = headResult.data;

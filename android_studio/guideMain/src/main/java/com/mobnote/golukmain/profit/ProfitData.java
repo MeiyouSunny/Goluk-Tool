@@ -4,6 +4,10 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 public class ProfitData {
 
+	/**标识**/
+	@JSONField(name="result")
+	public String result;
+
 	/**上一次收入金币**/
 	@JSONField(name="lgold")
 	public String lgold;

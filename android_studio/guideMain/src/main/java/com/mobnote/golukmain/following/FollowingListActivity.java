@@ -3,6 +3,7 @@ package com.mobnote.golukmain.following;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -23,6 +24,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.UserLoginActivity;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
@@ -30,6 +32,7 @@ import com.mobnote.golukmain.follow.FollowRequest;
 import com.mobnote.golukmain.follow.bean.FollowRetBean;
 import com.mobnote.golukmain.following.bean.FollowingRetBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.userbase.bean.SimpleUserItemBean;
 import com.mobnote.util.GolukUtils;
 
@@ -282,7 +285,15 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 			
 			mFollowinglistPtrList.onRefreshComplete();
 			FollowingRetBean bean = (FollowingRetBean)result;
-			
+
+			if(bean != null){
+				//token过期
+				if(10001 == bean.code|| 10002 == bean.code){
+					startUserLogin();
+					return;
+				}
+			}
+
 			if(null == bean) {
 				Toast.makeText(FollowingListActivity.this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 				if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
@@ -330,7 +341,11 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 			
 			FollowRetBean bean = (FollowRetBean)result;
 			if(null != bean) {
-				
+				//token过期
+				if(10001 == bean.code|| 10002 == bean.code){
+					startUserLogin();
+					return;
+				}
 				if(bean.code != 0) {
 					Toast.makeText(FollowingListActivity.this, bean.msg, Toast.LENGTH_SHORT).show();
 					return;
@@ -382,6 +397,16 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 			}
 
 		} 
+	}
+
+	public void startUserLogin(){
+		Intent loginIntent = null;
+		if(GolukApplication.getInstance().isInteral() == false){
+			loginIntent = new Intent(this, InternationUserLoginActivity.class);
+		}else{
+			loginIntent = new Intent(this, UserLoginActivity.class);
+		}
+		startActivity(loginIntent);
 	}
 	
 	private int findLinkUserItem(String linkuid) {
