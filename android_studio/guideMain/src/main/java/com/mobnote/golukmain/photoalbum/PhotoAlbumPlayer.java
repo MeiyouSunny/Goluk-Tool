@@ -1,13 +1,5 @@
 package com.mobnote.golukmain.photoalbum;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,7 +18,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.renderscript.RSRuntimeException;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -50,9 +41,8 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import cn.com.tiros.debug.GolukDebugUtils;
-
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventAddTailer;
 import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import com.mobnote.eventbus.EventDownloadIpcVid;
 import com.mobnote.golukmain.BaseActivity;
@@ -72,20 +62,25 @@ import com.mobnote.golukmain.player.factory.GolukPlayer.OnErrorListener;
 import com.mobnote.golukmain.player.factory.GolukPlayer.OnPreparedListener;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
-import com.mobnote.util.glideblur.FastBlur;
-import com.mobnote.util.glideblur.RSBlur;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import cn.com.tiros.debug.GolukDebugUtils;
 import cn.npnt.ae.AfterEffect;
-import cn.npnt.ae.AfterEffectListener;
 import cn.npnt.ae.SimpleExporter;
 import cn.npnt.ae.core.MediaUtils;
-import cn.npnt.ae.exceptions.EffectException;
 import cn.npnt.ae.model.VideoEncoderCapability;
 import cn.npnt.ae.model.VideoFile;
 import de.greenrobot.event.EventBus;
 
 public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, OnPreparedListener, OnErrorListener,
-		OnCompletionListener, IOrientationFn ,AfterEffectListener.SimpleExporterListener {
+		OnCompletionListener, IOrientationFn{
 	private static final String TAG = "PhotoAlbumPlayer";
 
 	public static final String VIDEO_FROM = "video_from";
@@ -138,6 +133,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	private static final int HIDE_TIME = 3000;
 	private boolean mDragging;
 	private OrientationManager mOrignManager = null;
+    private AddTailerDialogFragment mAddTailerDialog;
 
 	private final Runnable mPlayingChecker = new Runnable() {
 		@Override
@@ -172,6 +168,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_photoalbum_player);
+        EventBus.getDefault().register(this);
 		mApp = (GolukApplication) getApplication();
 		if (savedInstanceState == null) {
 			Intent intent = getIntent();
@@ -194,11 +191,26 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			mPlayTime = savedInstanceState.getInt("playtime");
 		}
 		threshold = DensityUtil.dip2px(this, 18);
+        mAddTailerDialog = new AddTailerDialogFragment();
 		initView();
 
 		setOrientation(true);
 		mOrignManager = new OrientationManager(this, this);
 	}
+
+    public void onEventMainThread(EventAddTailer event){
+        if(event != null){
+            if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_EXPORTING){
+
+            }else if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_FINISH){
+                GolukUtils.startVideoEditActivity(this,mType,event.getExprotPath(),mFileName);
+                if(mAddTailerDialog != null && mAddTailerDialog.isVisible()){
+                    mAddTailerDialog.dismiss();
+                }
+            }else if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_FAILED){
+            }
+        }
+    }
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
@@ -250,6 +262,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
 	@Override
 	protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
 		mVideoView.stopPlayback();
 		GolukDebugUtils.e("", "jyf----VideoPlayerActivity--------onDestroy----");
 		if (mHandler != null) {
@@ -322,9 +335,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         mTvStartVideoEdit.setOnClickListener(this);
         mTvShareRightnow.setOnClickListener(this);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
-            mTvShareRightnow.setVisibility(View.VISIBLE);
+            mTvStartVideoEdit.setVisibility(View.VISIBLE);
         }else{
-            mTvShareRightnow.setVisibility(View.GONE);
+            mTvStartVideoEdit.setVisibility(View.GONE);
         }
 
         if (mVideoFrom.equals("local")) {
@@ -364,6 +377,14 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		mOrignManager.clearListener();
 	}
 
+    private void pauseVideo(){
+        if (mVideoView.isPlaying() && mVideoView.canPause()) {
+            mVideoView.pause();
+            mPlayImageView.setImageResource(R.drawable.player_play_btn);
+            mBtnVtPlay.setBackgroundResource(R.drawable.btn_vt_play);
+        }
+    }
+
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
@@ -371,11 +392,13 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			return;
 		}
         if (id == R.id.tv_start_videoedit){
+            pauseVideo();
             GolukUtils.startAEActivity(this,mType,mPath);
         }else if (id == R.id.imagebutton_back) {
 			// 返回
 			exit();
 		} else if (id == R.id.tv_share_video_rightnow) {
+            pauseVideo();
             if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
                 GolukUtils.startVideoEditActivity(this,mType,mPath,mFileName);
             }else {
@@ -386,9 +409,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			click_back();
 		} else if (id == R.id.play_btn || id == R.id.btn_vt_play) {
 			if (mVideoView.isPlaying() && mVideoView.canPause()) {
-				mVideoView.pause();
-				mPlayImageView.setImageResource(R.drawable.player_play_btn);
-				mBtnVtPlay.setBackgroundResource(R.drawable.btn_vt_play);
+                pauseVideo();
 			} else {
 				mVideoView.start();
 				mPlayImageView.setImageResource(R.drawable.player_pause_btn);
@@ -848,30 +869,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		}
 	}
 
-    @Override
-    public void onStartToExport(SimpleExporter mSimpleExporter) {
-
-        Log.i("msg","视频导出:开始");
-    }
-
-    @Override
-    public void onExporting(SimpleExporter mSimpleExporter, float v) {
-
-        Log.i("msg","视频导出:导出 中+ " + String.valueOf(v));
-    }
-
-    @Override
-    public void onExportFinished(SimpleExporter mSimpleExporter, String path) {
-        Log.i("msg","视频导出:完成 Path:" + path);
-        GolukUtils.startVideoEditActivity(this,mType,path,mFileName);
-    }
-
-    @Override
-    public void onExportFailed(SimpleExporter mSimpleExporter, EffectException e) {
-
-        Log.i("msg","视频导出:失败");
-    }
-
     SimpleExporter mSimpleExporter;
     /**
      * @param srcPath
@@ -882,11 +879,15 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         if(TextUtils.isEmpty(qualityStr)){
             return;
         }
+
+        mAddTailerDialog.setCancelable(false);
+        mAddTailerDialog.show(getSupportFragmentManager(), "dialog_fragment");
+
         int quality = 0;//0,1,2 分别代表低(480P)，中(720P)，高(1080P)。
         // 初始化，读取gl脚本需要
         MediaUtils.getInstance(this);
         if (mSimpleExporter == null)
-            mSimpleExporter = new SimpleExporter(this, this);
+            mSimpleExporter = new SimpleExporter(this, mAddTailerDialog);
 
         try {
             mSimpleExporter.setSourceVideoPath(srcPath);

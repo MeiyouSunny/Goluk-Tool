@@ -17,6 +17,10 @@
         <item name="android:textColor">#0080ff</item>
     </style>
 
+    <style name="Dialog_No_Border">
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowBackground">@color/dialog_bg</item>
+    </style>
     <!-- 行车记录仪自定义对话框 -->
     <style name="CustomDialog" parent="@android:style/Theme.Translucent">
         <item name="android:windowBackground">@color/dialog_bg</item>

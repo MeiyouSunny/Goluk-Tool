@@ -1,0 +1,104 @@
+package com.mobnote.golukmain.photoalbum;
+
+
+import android.app.Dialog;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.TextView;
+
+import com.mobnote.eventbus.EventAddTailer;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.videosuqare.RingView;
+
+import cn.npnt.ae.AfterEffectListener.SimpleExporterListener;
+import cn.npnt.ae.SimpleExporter;
+import cn.npnt.ae.exceptions.EffectException;
+import de.greenrobot.event.EventBus;
+
+/**
+ * Created by leege100 on 16/5/20.
+ */
+public class AddTailerDialogFragment extends DialogFragment implements SimpleExporterListener{
+    RingView mAddTailerRingview;
+    TextView mAddTailerProgressTv;
+    View mRootView;
+    Dialog mDialog;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Dialog_No_Border);
+        EventBus.getDefault().register(this);
+
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
+        mRootView = inflater.inflate(R.layout.dialog_add_tailer, container, false);
+        mAddTailerRingview = (RingView) mRootView.findViewById(R.id.ringview_addtailer_loading);
+        mAddTailerProgressTv = (TextView) mRootView.findViewById(R.id.tv_addtailer_loadingprogress);
+        return mRootView;
+    }
+
+    public void onEventMainThread(EventAddTailer event){
+        if(event != null){
+            if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_EXPORTING){
+                int process = (int) (event.getExportProcess() * 100);
+                mAddTailerRingview.setProcess(process);
+                Log.i("msg","视频导出:导出eventBus+ " + String.valueOf(event.getExportProcess()));
+                this.mAddTailerProgressTv.setText("完成进度：" + process + "%");
+            }else if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_FINISH){
+                mAddTailerRingview.setProcess(100);
+                this.mAddTailerProgressTv.setText("导出完成");
+                if(mDialog != null && mDialog.isShowing()){
+                    mDialog.dismiss();
+                }
+            }else if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_FAILED){
+                this.mAddTailerProgressTv.setText("导出失败");
+            }
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onStartToExport(SimpleExporter mSimpleExporter) {
+
+        Log.i("msg","视频导出:开始");
+        EventBus.getDefault().post(new EventAddTailer(EventAddTailer.EXPORT_STATUS_START,0,null));
+    }
+
+    @Override
+    public void onExporting(SimpleExporter mSimpleExporter, float v) {
+
+        Log.i("msg","视频导出:导出 中+ " + String.valueOf(v));
+        EventBus.getDefault().post(new EventAddTailer(EventAddTailer.EXPORT_STATUS_EXPORTING,v,null));
+    }
+
+    @Override
+    public void onExportFinished(SimpleExporter mSimpleExporter, String path) {
+
+        Log.i("msg","视频导出:完成 Path:" + path);
+        EventBus.getDefault().post(new EventAddTailer(EventAddTailer.EXPORT_STATUS_FINISH,0,path));
+    }
+
+    @Override
+    public void onExportFailed(SimpleExporter mSimpleExporter, EffectException e) {
+
+        Log.i("msg","视频导出:失败");
+        EventBus.getDefault().post(new EventAddTailer(EventAddTailer.EXPORT_STATUS_FAILED,0,null));
+    }
+}

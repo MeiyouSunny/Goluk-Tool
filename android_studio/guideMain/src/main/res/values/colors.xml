@@ -55,6 +55,7 @@
     <color name="user_personal_edit_head_text">#292929</color>
     <color name="user_personal_edit_head_title_bg">#E7E7E7</color>
     <color name="dialog_bg">#00000000</color>
+    <color name="dialog_bg_01">#d0ffffff</color>
     <color name="setting_text_color_nor">#333333</color>
     <color name="setting_text_color_sel">#3b97f5</color>
     <color name="user_identify_count_color">#0080ff</color>

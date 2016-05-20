@@ -37,6 +37,7 @@ import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.newest.IDialogDealFn;
+import com.mobnote.golukmain.player.MovieActivity;
 import com.mobnote.golukmain.promotion.PromotionActivity;
 import com.mobnote.golukmain.promotion.PromotionData;
 import com.mobnote.golukmain.promotion.PromotionItem;
@@ -134,6 +135,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
     private ThirdShareTool mThirdShareTool;
     GolukVideoInfoDbManager mGolukVideoInfoDbManager = GolukVideoInfoDbManager.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,6 +150,23 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
         setupView();
         loadPromotionData();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     private void initData(){
@@ -313,27 +332,11 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         mShareLL.setOnClickListener(this);
         mShareTypeTv.setOnClickListener(this);
         mBackIv.setOnClickListener(this);
+        mVideoThumbIv.setOnClickListener(this);
         mShareDiscribleEt.addTextChangedListener(mTextWatcher);
 
         mShareTypeTv.setText(mSelectedShareString);
         mShareTypeTv.setText(mSelectedShareString);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
     }
 
     private void initView(){
@@ -376,6 +379,12 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             VideoShareActivity.this.startActivity(intent);
         }else if(vId == R.id.ll_share_now){
             startShare();
+        }else if(vId == R.id.iv_videoshare_videothumb){
+            Intent intent = new Intent(VideoShareActivity.this, MovieActivity.class);
+            intent.putExtra("from", "local");
+            intent.putExtra("image", "");
+            intent.putExtra("path", mVideoPath);
+            VideoShareActivity.this.startActivity(intent);
         }
     }
 
