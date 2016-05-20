@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -256,10 +257,10 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         }
     }
 
-	public void splitChunk() {
-		if(mProjectItemList == null || mProjectItemList.size() <= 3) {
-			return ;
-		}
+    public void splitChunk() {
+        if (mProjectItemList == null || mProjectItemList.size() <= 3) {
+            return;
+        }
 
         int focusIndex = mChannelLineAdapter.getEditIndex();
         if(focusIndex == -1) {
@@ -272,26 +273,33 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             return;
         }
 
-		ProjectItemBean bean = mProjectItemList.get(mCurrentPointedItemIndex);
-		if(!(bean instanceof ChunkBean)) {
+        ProjectItemBean bean = mProjectItemList.get(mCurrentPointedItemIndex);
+        if (!(bean instanceof ChunkBean)) {
             Toast.makeText(this, getString(R.string.str_ae_selected_chunk_can_not_split), Toast.LENGTH_SHORT).show();
-			return;
-		}
+            return;
+        }
 
-		View chunkView = mAELayoutManager.findViewByPosition(mCurrentPointedItemIndex);
-		float width = chunkView.getWidth();
-		float pX = VideoEditUtils.getViewXLocation(chunkView);
+        View chunkView = mAELayoutManager.findViewByPosition(mCurrentPointedItemIndex);
+        float width = chunkView.getWidth();
+        float pX = VideoEditUtils.getViewXLocation(chunkView);
 
-		int chunkIndex = VideoEditUtils.mapI2CIndex(mCurrentPointedItemIndex);
-		float position = (mGateLocationX - pX) / width * ((ChunkBean)bean).chunk.getDuration();
-		if(position == 0f) {
-			return;
-		}
+        int chunkIndex = VideoEditUtils.mapI2CIndex(mCurrentPointedItemIndex);
+        float position = (mGateLocationX - pX) / width * ((ChunkBean) bean).chunk.getDuration();
+        if (position == 0f) {
+            String org = getString(R.string.str_ae_can_not_split_from);
+            String formattedOrg = String.format(org, 0);
+            Toast.makeText(this, formattedOrg, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-		if(!mAfterEffect.canSplit(chunkIndex, position)) {
-			Toast.makeText(this, position + "长度不能拆分", Toast.LENGTH_SHORT).show();
-			return;
-		}
+        if(!mAfterEffect.canSplit(chunkIndex, position)) {
+            DecimalFormat f_num = new DecimalFormat("##0.00");
+            String ret = f_num.format(position);
+            String org = getString(R.string.str_ae_can_not_split_from);
+            String formattedOrg = String.format(org, ret);
+            Toast.makeText(this, formattedOrg, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
 		try {
 			float realPosition = mAfterEffect.editSplitChunk(chunkIndex, position);
