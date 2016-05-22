@@ -13,6 +13,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -25,13 +26,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventShareCompleted;
 import com.mobnote.eventbus.EventSharetypeSelected;
 import com.mobnote.eventbus.SharePlatformSelectedEvent;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
-import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.newest.IDialogDealFn;
@@ -63,7 +63,6 @@ import java.util.Calendar;
 
 import cn.com.mobnote.eventbus.EventShortLocationFinish;
 import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 import io.vov.vitamio.utils.Log;
 
@@ -119,7 +118,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     private String videoName = "";
     private UploadVideo mUploadVideo = null;
     private boolean mIsT1Video = false;
-    private boolean isExit = false;
+    private boolean isExiting = false;
     private ShareLoading mShareLoading = null;
 
     LinearLayout mShareLL;
@@ -136,13 +135,12 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         setContentView(R.layout.activity_video_share);
         EventBus.getDefault().register(this);
 
-        initData();
-        interceptVideoName();// 拿到视频名称
-        mUploadVideo = new UploadVideo(this, GolukApplication.getInstance(), videoName);
-        mUploadVideo.setListener(this);
+        initData(savedInstanceState);
+
         initView();
 
         setupView();
+
         loadPromotionData();
     }
 
@@ -163,16 +161,34 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         super.onDestroy();
     }
 
-    private void initData(){
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+//        if (mPromotionSelectItem != null) {
+//            outState.putSerializable(FragmentAlbum.ACTIVITY_INFO, mPromotionSelectItem);
+//        }
+        outState.putString("vidPath", mVideoPath);
+        outState.putInt("vidType", mVideoType);
+        outState.putString("filename",videoName);
+        super.onSaveInstanceState(outState);
+    }
+    private void initData(Bundle savedInstanceState){
 
-        mVideoPath = getIntent().getStringExtra("vidPath");
-        videoName = getIntent().getStringExtra("filename");
-        mVideoType = getIntent().getIntExtra("vidType",1);
+        if (savedInstanceState == null) {
+            mVideoPath = getIntent().getStringExtra("vidPath");
+            videoName = getIntent().getStringExtra("filename");
+            mVideoType = getIntent().getIntExtra("vidType",1);
+        } else {
+            mVideoPath = savedInstanceState.getString("vidPath");
+            mVideoType = savedInstanceState.getInt("vidType", 2);
+            videoName = savedInstanceState.getString("filename");
+        }
 
         mCurrSelectedSharePlatform = SharePlatformBean.SHARE_PLATFORM_NULL;
 
         mSelectedShareType = ShareTypeBean.SHARE_TYPE_SSP;
         mSelectedShareString = "# " + getResources().getString(R.string.share_str_type_ssp);
+
+        getVideoCreateTime();
     }
 
     public void onEventMainThread(EventShortLocationFinish event) {
@@ -192,6 +208,18 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             this.mSelectedShareType = event.getShareType();
             this.mSelectedShareString = "# " + event.getShareName();
             mShareTypeTv.setText(mSelectedShareString);
+        }
+    }
+
+    public void onEventMainThread(EventShareCompleted event){
+        if(event != null){
+            Toast.makeText(this, getString(R.string.str_share_success), Toast.LENGTH_SHORT).show();
+            toInitState();
+            File file = new File(mVideoPath);
+            if(file.exists()){
+                file.delete();
+            }
+            exit();
         }
     }
 
@@ -244,8 +272,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             editEnd = mShareDiscribleEt.getSelectionEnd();
             if (temp.length() > 50) {
                 Toast.makeText(VideoShareActivity.this,
-                        VideoShareActivity.this.getString(R.string.str_content_out), Toast.LENGTH_SHORT)
-                        .show();
+                        VideoShareActivity.this.getString(R.string.str_content_out), Toast.LENGTH_SHORT).show();
                 s.delete(editStart-1, editEnd);
                 int tempSelection = editStart;
                 mShareDiscribleEt.setText(s);
@@ -255,42 +282,9 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     };
 
     /**
-     * 得到视频名称
+     * 获取视频创建时间
      */
-    private void interceptVideoName() {
-//        if (mVideoPath != null && !"".equals(mVideoPath)) {
-//            String[] strs = mVideoPath.split("/");
-//            videoName = strs[strs.length - 1];
-//            if (mGolukVideoInfoDbManager != null) {
-//                VideoFileInfoBean videoFileInfoBean = mGolukVideoInfoDbManager.selectSingleData(videoName);
-//                if (videoFileInfoBean != null) {
-//                    videoCreateTime = videoFileInfoBean.timestamp + "000";
-//                    videoFrom = videoFileInfoBean.devicename;
-//                    if (IPCControlManager.T1_SIGN.equalsIgnoreCase(videoFrom)) {
-//                        mIsT1Video = true;
-//                    }
-//                }
-//            }
-//            videoName = videoName.replace("mp4", "jpg");
-//            // 分享时间
-//            GolukDebugUtils.e("", "----------------------------VideoEditActivity-----videoName：" + videoName);
-//            if (TextUtils.isEmpty(videoCreateTime)) {
-//                if (videoName.contains("_")) {
-//                    String[] videoTimeArray = videoName.split("_");
-//                    if (videoTimeArray.length == 3) {
-//                        videoCreateTime = "20" + videoTimeArray[1] + "000";
-//                    } else if (videoTimeArray.length == 7) {
-//                        videoCreateTime = videoTimeArray[2] + "000";
-//                        mIsT1Video = true;
-//                    } else if (videoTimeArray.length == 8) {
-//                        videoCreateTime = videoTimeArray[1] + "000";
-//                        mIsT1Video = true;
-//                    }
-//                } else {
-//                    videoCreateTime = "";
-//                }
-//            }
-//        }
+    private void getVideoCreateTime(){
         File f = new File(mVideoPath);
         if(f!=null){
             Calendar cal = Calendar.getInstance();
@@ -299,7 +293,6 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             cal.setTimeInMillis(time);
             videoCreateTime = formatter.format(cal.getTime());
         }
-
     }
 
     private void setupView() {
@@ -311,6 +304,9 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
                 .load( Uri.fromFile( new File( mVideoPath ) ) )
                 .bitmapTransform(new BlurTransformation(VideoShareActivity.this, 50))
                 .into( (ImageView) findViewById(R.id.iv_videoshare_blur));
+
+        mUploadVideo = new UploadVideo(this, GolukApplication.getInstance(), videoName);
+        mUploadVideo.setListener(this);
 
         mShareLoading = new ShareLoading(this, mRootLayout);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,SHARE_PLATFORM_COLUMN_NUMBERS);
@@ -490,7 +486,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void CallBack_UploadVideo(int event, Object obj) {
-        if (isExit) {
+        if (isExiting) {
             return;
         }
         switch (event) {
@@ -513,8 +509,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
     public void shareCallBack(boolean isSucess) {
 
-        Toast.makeText(this, getString(R.string.str_share_success), Toast.LENGTH_SHORT).show();
-        toInitState();
+        EventBus.getDefault().post(new EventShareCompleted());
     }
 
     // 请求分享信息
@@ -542,11 +537,10 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
                 activityname, t_location, videoFrom);
     }
     private void exit() {
-        if (isExit) {
+        if (isExiting) {
             return;
         }
-        isExit = true;
-        //isBack = true;
+        isExiting = true;
         mBaseHandler.removeCallbacksAndMessages(null);
         stopProgressThread();
 
@@ -644,7 +638,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     // 当分享成功，失败或某一环节出现失败后，还原到原始状态，再进行分享
     private void toInitState() {
         isSharing = false;
-        if (isExit) {
+        if (isExiting) {
             return;
         }
         if (null != mShareLoading) {
@@ -657,7 +651,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
      */
     public void videoShareCallBack(ShareDataBean shareData) {
         if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_NULL){
-            GolukUtils.showToast(this, this.getString(R.string.str_share_success));
+            EventBus.getDefault().post(new EventShareCompleted());
             return;
         }
         if (mShareLoading == null || mUploadVideo == null) {
@@ -774,5 +768,13 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         if (this.mThirdShareTool != null) {
             this.mThirdShareTool.onActivityResult(requestCode, resultCode, data);
         }
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            exit();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

@@ -45,6 +45,7 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventAddTailer;
 import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import com.mobnote.eventbus.EventDownloadIpcVid;
+import com.mobnote.eventbus.EventShareCompleted;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
@@ -167,37 +168,50 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_photoalbum_player);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_photoalbum_player);
         EventBus.getDefault().register(this);
-		mApp = (GolukApplication) getApplication();
-		if (savedInstanceState == null) {
-			Intent intent = getIntent();
-			mDate = intent.getStringExtra(DATE);
-			mHP = intent.getStringExtra(HP);
-			mPath = intent.getStringExtra(PATH);
-			Log.i("path", "path:" + mPath);
-			mVideoFrom = intent.getStringExtra(VIDEO_FROM);
-			mSize = intent.getStringExtra(SIZE);
-			mFileName = intent.getStringExtra(FILENAME);
-			mType = intent.getIntExtra(TYPE, 0);
-		} else {
-			mDate = savedInstanceState.getString(DATE);
-			mHP = savedInstanceState.getString(HP);
-			mPath = savedInstanceState.getString(PATH);
-			mVideoFrom = savedInstanceState.getString(VIDEO_FROM);
-			mSize = savedInstanceState.getString(SIZE);
-			mFileName = savedInstanceState.getString(FILENAME);
-			mType = savedInstanceState.getInt(TYPE);
-			mPlayTime = savedInstanceState.getInt("playtime");
-		}
-		threshold = DensityUtil.dip2px(this, 18);
-        mAddTailerDialog = new AddTailerDialogFragment();
-		initView();
 
-		setOrientation(true);
-		mOrignManager = new OrientationManager(this, this);
+        initData(savedInstanceState);
+
+        initView();
+
+        setOrientation(true);
+
 	}
+
+    private void initData(Bundle savedInstanceState){
+        mApp = (GolukApplication) getApplication();
+        if (savedInstanceState == null) {
+            Intent intent = getIntent();
+            mDate = intent.getStringExtra(DATE);
+            mHP = intent.getStringExtra(HP);
+            mPath = intent.getStringExtra(PATH);
+            Log.i("path", "path:" + mPath);
+            mVideoFrom = intent.getStringExtra(VIDEO_FROM);
+            mSize = intent.getStringExtra(SIZE);
+            mFileName = intent.getStringExtra(FILENAME);
+            mType = intent.getIntExtra(TYPE, 0);
+        } else {
+            mDate = savedInstanceState.getString(DATE);
+            mHP = savedInstanceState.getString(HP);
+            mPath = savedInstanceState.getString(PATH);
+            mVideoFrom = savedInstanceState.getString(VIDEO_FROM);
+            mSize = savedInstanceState.getString(SIZE);
+            mFileName = savedInstanceState.getString(FILENAME);
+            mType = savedInstanceState.getInt(TYPE);
+            mPlayTime = savedInstanceState.getInt("playtime");
+        }
+        threshold = DensityUtil.dip2px(this, 18);
+        mOrignManager = new OrientationManager(this, this);
+    }
+
+    public void onEventMainThread(EventShareCompleted event){
+        if(event != null){
+            Toast.makeText(this, getString(R.string.str_share_success), Toast.LENGTH_SHORT).show();
+            exit();
+        }
+    }
 
     public void onEventMainThread(EventAddTailer event){
         if(event != null){
@@ -512,7 +526,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         }else{
             return true;
         }
-
 
     }
 
@@ -881,6 +894,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             return;
         }
 
+        if(mAddTailerDialog == null){
+            mAddTailerDialog = new AddTailerDialogFragment();
+        }
         mAddTailerDialog.setCancelable(false);
         mAddTailerDialog.show(getSupportFragmentManager(), "dialog_fragment");
 
@@ -1122,21 +1138,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		} else {
 			this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
 		}
-
-		setFullScreen(false, true);
-	}
-
-	// 开始全屏
-	private void click_btnFullScreen() {
-		if (!isCanRotate) {
-			return;
-		}
-		lockRotate();
-		this.mClick = true;
-		mIsLand = true;
-		mClickLand = false;
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 		setFullScreen(false, true);
 	}
