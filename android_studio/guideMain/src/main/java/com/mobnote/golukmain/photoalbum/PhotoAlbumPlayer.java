@@ -961,7 +961,12 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             istr = getAssets().open("tailer.png");
             Bitmap bitmap = BitmapFactory.decodeStream(istr);
             Typeface font = Typeface.createFromAsset(this.getAssets(), "PingFang Regular.ttf");
-            Bitmap tailerBitmap = mSimpleExporter.createTailer(bitmap, "GOLUK", "2016-09-09", font);
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String currDate = df.format(new Date());
+            if(currDate == null){
+                currDate = "";
+			}
+            Bitmap tailerBitmap = mSimpleExporter.createTailer(bitmap, getText(R.string.str_default_video_edit_user_name).toString(), currDate, font);
 
         } catch (IOException e) {
             e.printStackTrace();
