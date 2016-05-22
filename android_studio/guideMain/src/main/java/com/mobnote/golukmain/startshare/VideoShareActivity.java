@@ -6,7 +6,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.widget.GridLayoutManager;
@@ -301,24 +303,13 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
     private void setupView() {
 
-        String filename = videoName;
-        if(!TextUtils.isEmpty(filename)){
-            filename = filename.replace(".mp4", ".jpg");
-            String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
-            GlideUtils.loadImage(this, mVideoThumbIv, filePath + File.separator + filename, R.drawable.album_default_img);
-            Glide.with(this).load(filePath + File.separator + filename)
-                    .bitmapTransform(new BlurTransformation(VideoShareActivity.this, 50))
-                    .into((ImageView) findViewById(R.id.iv_videoshare_blur));
-        }
-
-//        Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(mVideoPath, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
-//        if(bitmap != null){
-//            Glide.with(this).load(bitmap)
-//                    .into(mVideoThumbIv);
-//            Glide.with(this).load(bitmap)
-//                    .bitmapTransform(new BlurTransformation(VideoShareActivity.this, 50))
-//                    .into((ImageView) findViewById(R.id.iv_videoshare_blur));
-//        }
+        Glide.with( this )
+                .load( Uri.fromFile( new File( mVideoPath ) ) )
+                .into( mVideoThumbIv );
+        Glide.with( this )
+                .load( Uri.fromFile( new File( mVideoPath ) ) )
+                .bitmapTransform(new BlurTransformation(VideoShareActivity.this, 50))
+                .into( (ImageView) findViewById(R.id.iv_videoshare_blur));
 
         mShareLoading = new ShareLoading(this, mRootLayout);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,SHARE_PLATFORM_COLUMN_NUMBERS);
