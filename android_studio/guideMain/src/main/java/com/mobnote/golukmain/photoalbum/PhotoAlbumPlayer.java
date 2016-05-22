@@ -135,6 +135,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	private OrientationManager mOrignManager = null;
     private AddTailerDialogFragment mAddTailerDialog;
 
+	private String mExportedFilename;
 	private final Runnable mPlayingChecker = new Runnable() {
 		@Override
 		public void run() {
@@ -203,7 +204,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_EXPORTING){
 
             }else if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_FINISH){
-                GolukUtils.startVideoEditActivity(this,mType,event.getExprotPath(),mFileName);
+                GolukUtils.startVideoEditActivity(this,mType,event.getExprotPath(),mExportedFilename);
                 if(mAddTailerDialog != null && mAddTailerDialog.isVisible()){
                     mAddTailerDialog.dismiss();
                 }
@@ -949,6 +950,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         }
 
         String fileName = String.format("%02d", index);
+		mExportedFilename = fileName + ".mp4";
         destPath = destPath + "/" + fileName + ".mp4";
         return destPath;
     }

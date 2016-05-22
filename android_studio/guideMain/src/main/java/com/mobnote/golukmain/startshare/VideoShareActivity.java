@@ -1,16 +1,12 @@
 package com.mobnote.golukmain.startshare;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.MediaMetadataRetriever;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -41,7 +37,6 @@ import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.newest.IDialogDealFn;
 import com.mobnote.golukmain.player.MovieActivity;
 import com.mobnote.golukmain.promotion.PromotionActivity;
-import com.mobnote.golukmain.promotion.PromotionData;
 import com.mobnote.golukmain.promotion.PromotionItem;
 import com.mobnote.golukmain.promotion.PromotionListRequest;
 import com.mobnote.golukmain.promotion.PromotionModel;
@@ -56,18 +51,15 @@ import com.mobnote.golukmain.thirdshare.ThirdShareTool;
 import com.mobnote.golukmain.thirdshare.bean.SharePlatformBean;
 import com.mobnote.map.LngLat;
 import com.mobnote.user.UserUtils;
-import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.glideblur.BlurTransformation;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import cn.com.mobnote.eventbus.EventShortLocationFinish;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -266,39 +258,48 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
      * 得到视频名称
      */
     private void interceptVideoName() {
-        if (mVideoPath != null && !"".equals(mVideoPath)) {
-            String[] strs = mVideoPath.split("/");
-            videoName = strs[strs.length - 1];
-            if (mGolukVideoInfoDbManager != null) {
-                VideoFileInfoBean videoFileInfoBean = mGolukVideoInfoDbManager.selectSingleData(videoName);
-                if (videoFileInfoBean != null) {
-                    videoCreateTime = videoFileInfoBean.timestamp + "000";
-                    videoFrom = videoFileInfoBean.devicename;
-                    if (IPCControlManager.T1_SIGN.equalsIgnoreCase(videoFrom)) {
-                        mIsT1Video = true;
-                    }
-                }
-            }
-            videoName = videoName.replace("mp4", "jpg");
-            // 分享时间
-            GolukDebugUtils.e("", "----------------------------VideoEditActivity-----videoName：" + videoName);
-            if (TextUtils.isEmpty(videoCreateTime)) {
-                if (videoName.contains("_")) {
-                    String[] videoTimeArray = videoName.split("_");
-                    if (videoTimeArray.length == 3) {
-                        videoCreateTime = "20" + videoTimeArray[1] + "000";
-                    } else if (videoTimeArray.length == 7) {
-                        videoCreateTime = videoTimeArray[2] + "000";
-                        mIsT1Video = true;
-                    } else if (videoTimeArray.length == 8) {
-                        videoCreateTime = videoTimeArray[1] + "000";
-                        mIsT1Video = true;
-                    }
-                } else {
-                    videoCreateTime = "";
-                }
-            }
+//        if (mVideoPath != null && !"".equals(mVideoPath)) {
+//            String[] strs = mVideoPath.split("/");
+//            videoName = strs[strs.length - 1];
+//            if (mGolukVideoInfoDbManager != null) {
+//                VideoFileInfoBean videoFileInfoBean = mGolukVideoInfoDbManager.selectSingleData(videoName);
+//                if (videoFileInfoBean != null) {
+//                    videoCreateTime = videoFileInfoBean.timestamp + "000";
+//                    videoFrom = videoFileInfoBean.devicename;
+//                    if (IPCControlManager.T1_SIGN.equalsIgnoreCase(videoFrom)) {
+//                        mIsT1Video = true;
+//                    }
+//                }
+//            }
+//            videoName = videoName.replace("mp4", "jpg");
+//            // 分享时间
+//            GolukDebugUtils.e("", "----------------------------VideoEditActivity-----videoName：" + videoName);
+//            if (TextUtils.isEmpty(videoCreateTime)) {
+//                if (videoName.contains("_")) {
+//                    String[] videoTimeArray = videoName.split("_");
+//                    if (videoTimeArray.length == 3) {
+//                        videoCreateTime = "20" + videoTimeArray[1] + "000";
+//                    } else if (videoTimeArray.length == 7) {
+//                        videoCreateTime = videoTimeArray[2] + "000";
+//                        mIsT1Video = true;
+//                    } else if (videoTimeArray.length == 8) {
+//                        videoCreateTime = videoTimeArray[1] + "000";
+//                        mIsT1Video = true;
+//                    }
+//                } else {
+//                    videoCreateTime = "";
+//                }
+//            }
+//        }
+        File f = new File(mVideoPath);
+        if(f!=null){
+            Calendar cal = Calendar.getInstance();
+            long time = f.lastModified();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+            cal.setTimeInMillis(time);
+            videoCreateTime = formatter.format(cal.getTime());
         }
+
     }
 
     private void setupView() {
