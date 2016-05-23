@@ -163,14 +163,14 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	private PlayerState mPlayerState;
 	final String[] mMusicPaths = {
 		"none",
-		"music/01-fasion-48khz-128kbps-final.mp3",
-		"music/02-discover-48khz-128kbps-final.mp3",
-		"music/03-no_effect-48khz-128kbps-final.mp3",
-		"music/04-memory-48khz-128kbps-final.mp3",
-		"music/05-street-48khz-128kbps-final.mp3",
-		"music/06-travel-48khz-128kbps-final.mp3",
-		"music/07-fresh-48khz-128kbps-final.mp3",
-		"music/08-crual-48khz-128kbps-final.mp3"};
+		"goluk_music/01-fasion-48khz-128kbps-final.mp3",
+		"goluk_music/02-discover-48khz-128kbps-final.mp3",
+		"goluk_music/03-no_effect-48khz-128kbps-final.mp3",
+		"goluk_music/04-memory-48khz-128kbps-final.mp3",
+		"goluk_music/05-street-48khz-128kbps-final.mp3",
+		"goluk_music/06-travel-48khz-128kbps-final.mp3",
+		"goluk_music/07-fresh-48khz-128kbps-final.mp3",
+		"goluk_music/08-crual-48khz-128kbps-final.mp3"};
 
     String[] mMusicNames;
     final int[] mMusicCoversNormal = {
@@ -842,28 +842,37 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         }
     }
 
-	private void copyBgMusic(String[] musicFiles) throws IOException {
-		for(int i = 1; i < musicFiles.length; i++) {
-			String destPath = Environment.getExternalStorageDirectory() + "/" + musicFiles[i];
-			File file = new File(destPath);
-			if (file.exists())
-				continue;
+    private void copyBgMusic(String[] musicFiles) throws IOException {
+        // First, make dir music if it not exist
+        String dirPath = Environment.getExternalStorageDirectory() + "/" + "goluk_music";
 
-			InputStream myInput;
-			OutputStream myOutput = new FileOutputStream(destPath);
-			myInput = this.getAssets().open(musicFiles[i]);
-			byte[] buffer = new byte[1024];
-			int length = myInput.read(buffer);
-			while (length > 0) {
-				myOutput.write(buffer, 0, length);
-				length = myInput.read(buffer);
-			}
+        File dir = new File(dirPath);
+        if (!dir.exists()) {
+           boolean  b = dir.mkdir();
+        } else {
+            Log.d(TAG, "create music store path failed");
+        }
+        for (int i = 1; i < musicFiles.length; i++) {
+            String destPath = Environment.getExternalStorageDirectory() + "/" + musicFiles[i];
+            File file = new File(destPath);
+            if (file.exists())
+                continue;
 
-			myOutput.flush();
-			myInput.close();
-			myOutput.close();
-		}
-	}
+            InputStream myInput;
+            OutputStream myOutput = new FileOutputStream(destPath);
+            myInput = this.getAssets().open(musicFiles[i]);
+            byte[] buffer = new byte[1024];
+            int length = myInput.read(buffer);
+            while (length > 0) {
+                myOutput.write(buffer, 0, length);
+                length = myInput.read(buffer);
+            }
+
+            myOutput.flush();
+            myInput.close();
+            myOutput.close();
+        }
+    }
 
 	// Seek to chunk with specified offset
 	public void seekWith(int chunkIndex, int chunkWidth, float delta) {
