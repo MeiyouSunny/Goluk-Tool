@@ -1193,4 +1193,14 @@ public class GolukUtils {
 			main.setTabHostVisibility(visible);
 		}
 	}
+
+	public static void startUserLogin(Context context){
+		Intent loginIntent = null;
+		if(GolukApplication.getInstance().isInteral() == false){
+			loginIntent = new Intent(context, InternationUserLoginActivity.class);
+		}else{
+			loginIntent = new Intent(context, UserLoginActivity.class);
+		}
+		context.startActivity(loginIntent);
+	}
 }
