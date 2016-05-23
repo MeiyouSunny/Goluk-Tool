@@ -100,6 +100,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     private PromotionSelectItem mSelectedPromotionItem;
     private int mSelectedShareType;
     private String mSelectedShareString;
+    private boolean isAEVideo;//是否是后经过后处理的视频
 
     PopupWindow mPopupWindow;
     boolean isPopup;
@@ -166,6 +167,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         outState.putString("vidPath", mVideoPath);
         outState.putInt("vidType", mVideoType);
         outState.putString("filename",videoName);
+        outState.putBoolean("isAEVideo",isAEVideo);
         super.onSaveInstanceState(outState);
     }
     private void initData(Bundle savedInstanceState){
@@ -174,10 +176,12 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             mVideoPath = getIntent().getStringExtra("vidPath");
             videoName = getIntent().getStringExtra("filename");
             mVideoType = getIntent().getIntExtra("vidType",1);
+            isAEVideo = getIntent().getBooleanExtra("isAEVideo",false);
         } else {
             mVideoPath = savedInstanceState.getString("vidPath");
             mVideoType = savedInstanceState.getInt("vidType", 2);
             videoName = savedInstanceState.getString("filename");
+            isAEVideo = savedInstanceState.getBoolean("isAEVideo");
         }
 
         mCurrSelectedSharePlatform = SharePlatformBean.SHARE_PLATFORM_NULL;
@@ -541,9 +545,12 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             return;
         }
         isExiting = true;
-        File file = new File(mVideoPath);
-        if(file.exists()){
-            file.delete();
+        //如果分享的视频未经过视频后处理过程，仅仅是加片尾的视频，则在退出时删除
+        if(!isAEVideo){
+            File file = new File(mVideoPath);
+            if(file.exists()){
+                file.delete();
+            }
         }
 
         mBaseHandler.removeCallbacksAndMessages(null);

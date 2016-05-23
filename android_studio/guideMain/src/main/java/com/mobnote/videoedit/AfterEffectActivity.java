@@ -48,6 +48,8 @@ import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.live.UserInfo;
+import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
+import com.mobnote.util.GolukUtils;
 import com.mobnote.videoedit.adapter.AEMusicAdapter;
 import com.mobnote.videoedit.adapter.ChannelLineAdapter;
 import com.mobnote.videoedit.bean.ChunkBean;
@@ -556,6 +558,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                 intent.setData(Uri.parse("file://" + retBean.path));
                 sendBroadcast(intent);
                 Toast.makeText(this, getString(R.string.str_video_export_succeed), Toast.LENGTH_SHORT).show();
+                GolukUtils.startVideoShareActivity(AfterEffectActivity.this, PhotoAlbumConfig.PHOTO_BUM_IPC_WND,retBean.path,retBean.path,true);
             } else {
                 Toast.makeText(this, getString(R.string.str_video_export_failed), Toast.LENGTH_SHORT).show();
             }

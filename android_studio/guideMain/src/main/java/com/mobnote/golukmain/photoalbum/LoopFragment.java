@@ -417,14 +417,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 	private void gotoVideoPlayPage(int from, String path, String createTime, String videoHP, String size) {
 		if (!isShowPlayer) {
 			isShowPlayer = true;
-			Intent intent = new Intent(getActivity(), PhotoAlbumPlayer.class);
-			intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, "ipc");
-			intent.putExtra(PhotoAlbumPlayer.FILENAME, path);
-			intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
-			intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
-			intent.putExtra(PhotoAlbumPlayer.TYPE, PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP);
-			intent.putExtra(PhotoAlbumPlayer.SIZE, size);
-			getActivity().startActivity(intent);
+			GolukUtils.startPhotoAlbumPlayerActivity(LoopFragment.this.getContext(),PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP,"ipc",path,createTime,videoHP,size);
 		}
 	}
 

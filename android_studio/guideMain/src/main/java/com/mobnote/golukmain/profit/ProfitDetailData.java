@@ -9,5 +9,9 @@ public class ProfitDetailData {
 	/**数组列表**/
 	@JSONField(name="incomelist")
 	public List<ProfitDetailResult> incomelist;
+
+	/**数组列表**/
+	@JSONField(name="result")
+	public String result;
 	
 }

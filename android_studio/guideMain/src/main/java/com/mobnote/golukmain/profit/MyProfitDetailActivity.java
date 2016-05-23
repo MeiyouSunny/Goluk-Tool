@@ -219,6 +219,15 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		closeLoadingDialog();
 		if (requestType == IPageNotifyFn.PageType_ProfitDetail) {
 			detailInfo = (ProfitDetailInfo) result;
+			if(detailInfo.data != null){
+				if("10001".equals(detailInfo.data.result) || "10002".equals(detailInfo.data.result)){
+					mImageRefresh.setVisibility(View.GONE);
+					mRTPullListView.setVisibility(View.GONE);
+					mTextNoData.setVisibility(View.VISIBLE);
+					GolukUtils.startUserLogin(this);
+					return;
+				}
+			}
 			if (null != detailInfo && detailInfo.success && null != detailInfo.data && null != detailInfo.data.incomelist) {
 				int size = detailInfo.data.incomelist.size();
 				if (size <= 0 && !mCurrentOperator.equals(OPERATOR_UP)) {

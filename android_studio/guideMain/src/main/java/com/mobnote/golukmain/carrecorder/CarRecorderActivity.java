@@ -61,6 +61,7 @@ import com.mobnote.golukmain.UserLoginActivity;
 import com.mobnote.golukmain.carrecorder.IpcDataParser.TriggerRecord;
 import com.mobnote.golukmain.carrecorder.entity.VideoConfigState;
 import com.mobnote.golukmain.carrecorder.entity.VideoFileInfo;
+import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.carrecorder.entity.VideoShareInfo;
 import com.mobnote.golukmain.carrecorder.settings.SettingsActivity;
 import com.mobnote.golukmain.carrecorder.settings.TSettingsActivity;
@@ -82,6 +83,7 @@ import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
 import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
 import com.mobnote.golukmain.photoalbum.FragmentAlbum;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
+import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
 import com.mobnote.golukmain.startshare.VideoEditActivity;
 import com.mobnote.golukmain.startshare.VideoShareActivity;
@@ -90,6 +92,7 @@ import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
 import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.GolukVideoUtils;
 import com.mobnote.util.SortByDate;
 import com.mobnote.wifibind.WifiRsBean;
 import com.rd.car.CarRecorderManager;
@@ -478,21 +481,22 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private void open_shareVideo(String vname) {
 		// // 跳转到wifi连接首页
 		String path = Environment.getExternalStorageDirectory().getPath();
-		int type = 2;
+		int type;
 		if (vname.indexOf("URG") >= 0) {
 			path = path + "/goluk/video/urgent/" + vname;
-			type = 3;
+			type = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
 		} else {
+			type = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
 			path = path + "/goluk/video/wonderful/" + vname;
 		}
-		GolukDebugUtils.e("xuhw", "YYY====mShareBtn===path=" + path);
 
 		SettingUtils.getInstance().putBoolean("Local_" + vname, false);
 
-		Intent i = new Intent(CarRecorderActivity.this, PhotoAlbumPlayer.class);
-		i.putExtra("cn.com.mobnote.video.path", path);
-		i.putExtra("type", type);
-		startActivity(i);
+		VideoInfo mVideoInfo = GolukVideoUtils.getVideoInfo(vname);
+		if(mVideoInfo != null){
+			GolukUtils.startPhotoAlbumPlayerActivity(this,type,"local",mVideoInfo.videoPath,
+					mVideoInfo.videoCreateDate,mVideoInfo.videoHP,mVideoInfo.videoSize);
+		}
 		overridePendingTransition(R.anim.shortshare_start, 0);
 
 	}
