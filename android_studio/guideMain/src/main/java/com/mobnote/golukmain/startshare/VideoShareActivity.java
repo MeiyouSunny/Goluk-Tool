@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,9 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -51,7 +48,6 @@ import com.mobnote.golukmain.thirdshare.ThirdShareTool;
 import com.mobnote.golukmain.thirdshare.bean.SharePlatformBean;
 import com.mobnote.map.LngLat;
 import com.mobnote.user.UserUtils;
-import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.glideblur.BlurTransformation;
@@ -215,10 +211,6 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         if(event != null){
             Toast.makeText(this, getString(R.string.str_share_success), Toast.LENGTH_SHORT).show();
             toInitState();
-            File file = new File(mVideoPath);
-            if(file.exists()){
-                file.delete();
-            }
             exit();
         }
     }
@@ -441,33 +433,33 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         mStartShareDialog.show();
     }
 
-    public void showPopup() {
-        View contentView = this.getLayoutInflater().inflate(R.layout.promotion_popup_hint, null);
-
-        contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        int popWidth = contentView.getMeasuredWidth();
-        int popHeight = contentView.getMeasuredHeight();
-        mPopupWindow = new PopupWindow(contentView, popWidth, popHeight);
-        contentView.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // TODO Auto-generated method stub
-                mPopupWindow.dismiss();
-                return false;
-            }
-        });
-
-        mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
-
-        int[] location = new int[2];
-        mLocationTv.getLocationOnScreen(location);
-
-        mPopupWindow.showAtLocation(mLocationTv, Gravity.NO_GRAVITY, location[0], location[1] - popHeight);
-        isPopup = false;
-        GolukFileUtils.saveBoolean(GolukFileUtils.SHOW_PROMOTION_POPUP_FLAG, false);
-    }
+//    public void showPopup() {
+//        View contentView = this.getLayoutInflater().inflate(R.layout.promotion_popup_hint, null);
+//
+//        contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+//        int popWidth = contentView.getMeasuredWidth();
+//        int popHeight = contentView.getMeasuredHeight();
+//        mPopupWindow = new PopupWindow(contentView, popWidth, popHeight);
+//        contentView.setOnTouchListener(new View.OnTouchListener() {
+//
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                // TODO Auto-generated method stub
+//                mPopupWindow.dismiss();
+//                return false;
+//            }
+//        });
+//
+//        mPopupWindow.setOutsideTouchable(true);
+//        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+//
+//        int[] location = new int[2];
+//        mLocationTv.getLocationOnScreen(location);
+//
+//        mPopupWindow.showAtLocation(mLocationTv, Gravity.NO_GRAVITY, location[0], location[1] - popHeight);
+//        isPopup = false;
+//        GolukFileUtils.saveBoolean(GolukFileUtils.SHOW_PROMOTION_POPUP_FLAG, false);
+//    }
 
     @Override
     public void CallBack_Del(int event, Object data) {
@@ -541,6 +533,11 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             return;
         }
         isExiting = true;
+        File file = new File(mVideoPath);
+        if(file.exists()){
+            file.delete();
+        }
+
         mBaseHandler.removeCallbacksAndMessages(null);
         stopProgressThread();
 
