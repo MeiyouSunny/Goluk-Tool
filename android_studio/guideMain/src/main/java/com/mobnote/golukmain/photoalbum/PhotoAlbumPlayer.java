@@ -69,6 +69,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -136,6 +137,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	private OrientationManager mOrignManager = null;
     private AddTailerDialogFragment mAddTailerDialog;
 
+    private boolean isExporting;
 	private String mExportedFilename;
 	private final Runnable mPlayingChecker = new Runnable() {
 		@Override
@@ -222,7 +224,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 if(mAddTailerDialog != null && mAddTailerDialog.isVisible()){
                     mAddTailerDialog.dismiss();
                 }
+                isExporting = false;
             }else if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_FAILED){
+                isExporting = false;
             }
         }
     }
@@ -890,10 +894,13 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
      *
      */
     private void doSimpleExport(String srcPath, String qualityStr) {
+        if(isExporting){
+            return;
+        }
         if(TextUtils.isEmpty(qualityStr)){
             return;
         }
-
+        isExporting = true;
         if(mAddTailerDialog == null){
             mAddTailerDialog = new AddTailerDialogFragment();
         }
@@ -911,6 +918,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         } catch (Exception e1) {
             e1.printStackTrace();
             Toast.makeText(this," \"视频源文件加载失败\" + e1.getMessage()",Toast.LENGTH_SHORT);
+            isExporting = false;
             return;
         }
         VideoFile videoFileInfo = mSimpleExporter.getVideoFileInfo();
@@ -918,6 +926,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         List<VideoEncoderCapability> capaList = AfterEffect.getSuportedCapability(videoFileInfo.getWidth());
         if (capaList == null || capaList.size() == 0) {
             Toast.makeText(this,"手机不支持合适的分辨率",Toast.LENGTH_SHORT).show();
+            isExporting = false;
             return;
         }
         VideoEncoderCapability vc = null;
@@ -940,34 +949,20 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
     }
     private String getExportFilePath() {
-        String destPath = Environment.getExternalStorageDirectory() + "/Movies/export";//
+        String destPath = Environment.getExternalStorageDirectory() + "/goluk/export";//
 
         File dir = new File(destPath);
-        int index = 0;
         if (!dir.exists()) {
             dir.mkdir();
-        } else {
-            for (String fn : dir.list()) {
-                if (!fn.endsWith(".mp4")) {
-                    continue;
-                }
-                try {
-                    String name = fn.substring(0, fn.length() - 4);
-                    if (name.length() != 2)
-                        continue;
-                    int i = Integer.valueOf(name);
-                    index = Math.max(i, index);
-                } catch (Exception e) {
-
-                }
-
-            }
-            index++;
+        }
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        String currTime = df.format(new Date());
+        if(currTime == null){
+            currTime = "";
         }
 
-        String fileName = String.format("%02d", index);
-		mExportedFilename = fileName + ".mp4";
-        destPath = destPath + "/" + fileName + ".mp4";
+		mExportedFilename = "vid" + currTime + ".mp4";
+        destPath = destPath + "/" + "vid" + currTime + ".mp4";
         return destPath;
     }
 
