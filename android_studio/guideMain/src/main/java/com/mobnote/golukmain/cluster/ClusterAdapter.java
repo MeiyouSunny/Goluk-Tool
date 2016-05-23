@@ -262,9 +262,13 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 				holder.rankingBtn.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Intent intent = new Intent(mContext,RankingActivity.class);
-						intent.putExtra("activityid",mHeadData.activityid);
-						mContext.startActivity(intent);
+						if(UserUtils.isNetDeviceAvailable(mContext)) {
+							Intent intent = new Intent(mContext, RankingActivity.class);
+							intent.putExtra("activityid", mHeadData.activityid);
+							mContext.startActivity(intent);
+						}else{
+							GolukUtils.showToast(mContext,mContext.getResources().getString(R.string.network_error));
+						}
 					}
 				});
 				holder.headImg.setOnClickListener(new OnClickListener() {
