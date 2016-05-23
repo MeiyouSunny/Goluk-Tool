@@ -1,11 +1,6 @@
 package com.mobnote.golukmain.photoalbum;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,13 +11,11 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout;
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.tiros.debug.GolukDebugUtils;
+import android.widget.TextView;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.mobnote.application.GolukApplication;
@@ -36,6 +29,12 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.util.GolukUtils;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 public class LocalFragment extends Fragment {
@@ -354,17 +353,7 @@ public class LocalFragment extends Fragment {
 
 			if (!"0".equals(mFragmentAlbum.mPlatform)) {
 				if (type != 3) {// 不是循环视频
-					Intent intent = new Intent(getActivity(), PhotoAlbumPlayer.class);
-
-					int tempType = 2;
-					if (type == 1) {
-						tempType = 2;
-					} else if (type == 2) {
-						tempType = 3;
-					}
-					intent.putExtra("type", tempType);
-					intent.putExtra("cn.com.mobnote.video.path", path);
-					getActivity().startActivity(intent);
+                    GolukUtils.startPhotoAlbumPlayerActivity(getActivity(),type,"local",path, createTime,videoHP,size);
 					return;
 				}
 			}

@@ -1074,7 +1074,7 @@ public class GolukUtils {
                                                      String videoHP,String size) {
         Intent intent = new Intent(context, PhotoAlbumPlayer.class);
         intent.putExtra(PhotoAlbumPlayer.TYPE, type);
-        intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, "local");
+        intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, vidFrom);
         intent.putExtra(PhotoAlbumPlayer.PATH, path);
         intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
         intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
