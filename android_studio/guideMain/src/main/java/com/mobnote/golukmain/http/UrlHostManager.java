@@ -12,21 +12,21 @@ public  class UrlHostManager {
 	public static final String USER_CENTER_PATH = "/cdcRegister/modifyUserInfo.htm";
 	public static final String UPLOAD_IMAG_PATH = "/fileService/HeadUploadServlet";
 	// 国内版域名
-	public static final String ONLINE_HOST = "http://s.goluk.cn";
+	public static final String ONLINE_HOST = "https://s.goluk.cn";
 	// 腾讯云域名
-	public static final String QCLOUD_HOST = "http://q.goluk.cn";
+	public static final String QCLOUD_HOST = "https://q.goluk.cn";
 	// 测试服务器
-	public static final String TEST_HOST = "http://server.goluk.cn";
+	public static final String TEST_HOST = "https://server.goluk.cn";
 	// 开发服务器域名
-	public static final String DEV_HOST = "http://svr.goluk.cn";
+	public static final String DEV_HOST = "https://svr.goluk.cn";
 	// 国际版域名
-	public static final String INTERNATIIONAL_HOST = "http://iserver.goluk.cn";
+	public static final String INTERNATIIONAL_HOST = "https://iserver.goluk.cn";
 
-	public static final String ONLINE_WEBHOST = "http://surl.goluk.cn";
-	public static final String TEST_WEBHOST = "http://surl3.goluk.cn";
-	public static final String DEV_WEBHOST = "http://surl2.goluk.cn";
-	public static final String QCLOUD_WEBHOST = "http://qsurl.goluk.cn";
-	public static final String INTERNATION_WEBHOST = "http://isurl.goluk.cn";
+	public static final String ONLINE_WEBHOST = "https://surl.goluk.cn";
+	public static final String TEST_WEBHOST = "https://surl3.goluk.cn";
+	public static final String DEV_WEBHOST = "https://surl2.goluk.cn";
+	public static final String QCLOUD_WEBHOST = "https://qsurl.goluk.cn";
+	public static final String INTERNATION_WEBHOST = "https://isurl.goluk.cn";
 	private String mHost = "";
 	private static String mWebPageHost = "";
 
