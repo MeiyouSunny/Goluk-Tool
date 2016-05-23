@@ -354,7 +354,7 @@ public class LocalFragment extends Fragment {
 
 			if (!"0".equals(mFragmentAlbum.mPlatform)) {
 				if (type != 3) {// 不是循环视频
-					Intent intent = new Intent(getActivity(), VideoEditActivity.class);
+					Intent intent = new Intent(getActivity(), PhotoAlbumPlayer.class);
 
 					int tempType = 2;
 					if (type == 1) {

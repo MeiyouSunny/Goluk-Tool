@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventGetShareSignTokenInvalid;
 import com.mobnote.eventbus.EventShareCompleted;
 import com.mobnote.eventbus.EventSharetypeSelected;
 import com.mobnote.eventbus.SharePlatformSelectedEvent;
@@ -204,6 +205,13 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             this.mSelectedShareType = event.getShareType();
             this.mSelectedShareString = "# " + event.getShareName();
             mShareTypeTv.setText(mSelectedShareString);
+        }
+    }
+
+    public void onEventMainThread(EventGetShareSignTokenInvalid event){
+        if(event != null){
+            toInitState();
+            GolukUtils.startLoginActivity(this);
         }
     }
 
@@ -623,6 +631,12 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             case IPageNotifyFn.PageType_Share:
                 toInitState();
                 ShareDataFullBean shareDataFull = (ShareDataFullBean) result;
+                if(shareDataFull != null && shareDataFull.data != null){
+                    if ("10001".equals(shareDataFull.data.result) || "10002".equals(shareDataFull.data.result)){
+                        GolukUtils.startLoginActivity(VideoShareActivity.this);
+                        return;
+                    }
+                }
                 if (shareDataFull != null && shareDataFull.success) {
                     videoShareCallBack(shareDataFull.data);
                 } else {

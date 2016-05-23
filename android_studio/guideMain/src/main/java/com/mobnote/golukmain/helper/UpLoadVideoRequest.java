@@ -6,10 +6,13 @@ import java.util.Map;
 
 import android.os.Message;
 
+import com.mobnote.eventbus.EventGetShareSignTokenInvalid;
 import com.mobnote.golukmain.helper.bean.SignBean;
 import com.mobnote.golukmain.helper.bean.SignDataBean;
 import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.startshare.VideoShareActivity;
+import com.mobnote.util.GolukUtils;
 import com.tencent.upload.task.IUploadTaskListener;
 import com.tencent.upload.task.VideoAttr;
 import com.tencent.upload.task.ITask.TaskState;
@@ -19,6 +22,7 @@ import com.tencent.upload.task.impl.VideoUploadTask;
 
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultListener {
 
@@ -62,6 +66,12 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 		// TODO Auto-generated method stub
 		if (requestType == IPageNotifyFn.PageType_UploadVideo) {
 			SignBean signBean = (SignBean) result;
+			if(signBean != null && signBean.data != null){
+				if ("10001".equals(signBean.data.result) || "10002".equals(signBean.data.result)){
+					EventBus.getDefault().post(new EventGetShareSignTokenInvalid());
+					return;
+				}
+			}
 			if (signBean != null && signBean.success && signBean.data != null) {
 				mSignDataBean = signBean.data;
 				if (!uploadPhotoToCloud()) {

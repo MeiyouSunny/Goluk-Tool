@@ -3,6 +3,8 @@ package com.mobnote.golukmain.helper.bean;
 import com.alibaba.fastjson.annotation.JSONField;
 
 public class SignDataBean {
+	@JSONField(name="result")
+	public String result;
 	@JSONField(name="videoid")
 	public String videoid;
 	@JSONField(name="videosign")
