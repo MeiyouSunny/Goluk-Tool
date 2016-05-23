@@ -48,4 +48,6 @@ public class VideoEditConstant {
     public static final int VIDEO_TAIL_WIDTH = 80;
 
     public static final int VIDEO_VOLUME_MAX = 300;
+
+    public static final int VIDEO_EDIT_ADD_REQ_CODE = 1021;
 }

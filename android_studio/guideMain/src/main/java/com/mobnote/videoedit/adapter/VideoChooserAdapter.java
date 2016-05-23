@@ -24,7 +24,7 @@ public class VideoChooserAdapter extends BaseAdapter{
     LinearLayout.LayoutParams params;
 
     private final String filePath = Environment.getExternalStorageDirectory() + File.separator + "goluk" + File.separator
-			+ "goluk_carrecorder" + File.separator + "image";
+            + "goluk_carrecorder" + File.separator + "image";
 
     public VideoChooserAdapter(Context context, List<String> mVideoPathList) {
         mFileNameList = mVideoPathList;
@@ -67,8 +67,7 @@ public class VideoChooserAdapter extends BaseAdapter{
         return convertView;
     }
 
-    class ItemViewTag  
-    {  
+    class ItemViewTag {
         protected ImageView mVidThumbIv;
 
         public ItemViewTag(ImageView iv )
