@@ -82,6 +82,7 @@ import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
 import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
 import com.mobnote.golukmain.photoalbum.FragmentAlbum;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
+import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
 import com.mobnote.golukmain.startshare.VideoEditActivity;
 import com.mobnote.golukmain.startshare.VideoShareActivity;
@@ -489,6 +490,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 		SettingUtils.getInstance().putBoolean("Local_" + vname, false);
 
+		//GolukUtils.startPhotoAlbumPlayerActivity(CarRecorderActivity.this, PhotoAlbumConfig.PHOTO_BUM_IPC_WND,"ipc",path,createTime,videoHP,size);
 		Intent i = new Intent(CarRecorderActivity.this, PhotoAlbumPlayer.class);
 		i.putExtra("cn.com.mobnote.video.path", path);
 		i.putExtra("type", type);

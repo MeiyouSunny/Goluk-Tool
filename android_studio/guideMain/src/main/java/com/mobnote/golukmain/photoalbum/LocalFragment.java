@@ -34,7 +34,7 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
-import com.mobnote.golukmain.startshare.VideoEditActivity;
+import com.mobnote.util.GolukUtils;
 
 import de.greenrobot.event.EventBus;
 
@@ -369,14 +369,7 @@ public class LocalFragment extends Fragment {
 				}
 			}
 
-			Intent intent = new Intent(getActivity(), PhotoAlbumPlayer.class);
-			intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, "local");
-			intent.putExtra(PhotoAlbumPlayer.PATH, path);
-			intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
-			intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
-			intent.putExtra(PhotoAlbumPlayer.SIZE, size);
-			intent.putExtra(PhotoAlbumPlayer.TYPE, type);
-			getActivity().startActivity(intent);
+            GolukUtils.startPhotoAlbumPlayerActivity(LocalFragment.this.getContext(),type,"local",path,createTime,videoHP,size);
 		}
 	}
 

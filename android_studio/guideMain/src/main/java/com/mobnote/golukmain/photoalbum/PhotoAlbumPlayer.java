@@ -69,7 +69,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -220,7 +219,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_EXPORTING){
 
             }else if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_FINISH){
-                GolukUtils.startVideoEditActivity(this,mType,event.getExprotPath(),mExportedFilename);
+                GolukUtils.startVideoShareActivity(this,mType,event.getExprotPath(),mExportedFilename,false);
                 if(mAddTailerDialog != null && mAddTailerDialog.isVisible()){
                     mAddTailerDialog.dismiss();
                 }
@@ -419,7 +418,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		} else if (id == R.id.tv_share_video_rightnow) {
             pauseVideo();
             if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
-                GolukUtils.startVideoEditActivity(this,mType,mPath,mFileName);
+                GolukUtils.startVideoShareActivity(this,mType,mPath,mFileName,false);
             }else {
                 doSimpleExport(mPath,mHP);
             }
