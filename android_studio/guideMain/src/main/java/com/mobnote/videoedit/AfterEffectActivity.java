@@ -1308,11 +1308,11 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 	public void goToChooseVideo() {
 		Intent videoChooseIntent = new Intent();
 		videoChooseIntent.setClass(this, VideoChooserActivity.class);
-		startActivityForResult(videoChooseIntent, 0);
+		startActivityForResult(videoChooseIntent, VideoEditConstant.VIDEO_EDIT_ADD_REQ_CODE);
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == RESULT_OK) {
+		if (resultCode == RESULT_OK && requestCode == VideoEditConstant.VIDEO_EDIT_ADD_REQ_CODE) {
 			Bundle b = data.getExtras(); // data为B中回传的Intent
 			String vidPath = b.getString("vidPath");// str即为回传的值
 			if (vidPath != null) {
