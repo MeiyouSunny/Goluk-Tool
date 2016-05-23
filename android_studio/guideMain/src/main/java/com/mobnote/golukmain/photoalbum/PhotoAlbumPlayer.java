@@ -122,7 +122,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	private Button mBtnDownload;
 
     private TextView mTvShareRightnow;
-    private TextView mTvStartVideoEdit;
+    private LinearLayout mStartVideoeditLl;
 
 	/** 加载中布局 */
 	private LinearLayout mLoadingLayout = null;
@@ -345,17 +345,17 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		}
 		mBtnDownload = (Button) findViewById(R.id.btn_download);
 		mBtnDelete = (Button) findViewById(R.id.btn_delete);
-        mTvStartVideoEdit = (TextView) findViewById(R.id.tv_start_videoedit);
+        mStartVideoeditLl = (LinearLayout) findViewById(R.id.ll_start_videoedit);
         mTvShareRightnow = (TextView) findViewById(R.id.tv_share_video_rightnow);
 
         mBtnDownload.setOnClickListener(this);
         mBtnDelete.setOnClickListener(this);
-        mTvStartVideoEdit.setOnClickListener(this);
+        mStartVideoeditLl.setOnClickListener(this);
         mTvShareRightnow.setOnClickListener(this);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
-            mTvStartVideoEdit.setVisibility(View.VISIBLE);
+            mStartVideoeditLl.setVisibility(View.VISIBLE);
         }else{
-            mTvStartVideoEdit.setVisibility(View.GONE);
+            mStartVideoeditLl.setVisibility(View.GONE);
         }
 
         if (mVideoFrom.equals("local")) {
@@ -385,7 +385,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		mHandler.postDelayed(mPlayingChecker, 250);
 
         if (!mVideoFrom.equals("local")) {
-            mTvStartVideoEdit.setVisibility(View.GONE);
+            mStartVideoeditLl.setVisibility(View.GONE);
             mTvShareRightnow.setVisibility(View.GONE);
         }
 	}
@@ -409,7 +409,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		if (GolukUtils.isFastDoubleClick()) {
 			return;
 		}
-        if (id == R.id.tv_start_videoedit){
+        if (id == R.id.ll_start_videoedit){
             pauseVideo();
             GolukUtils.startAEActivity(this,mType,mPath);
         }else if (id == R.id.imagebutton_back) {
@@ -498,7 +498,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 					LayoutParams.WRAP_CONTENT);
 			norParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 			norParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            mTvStartVideoEdit.setVisibility(View.GONE);
+            mStartVideoeditLl.setVisibility(View.GONE);
 			mVideoView.setOnTouchListener(mTouchListener);
 
 		} else {
@@ -516,7 +516,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			lp.leftMargin = 0;
 			lp.addRule(RelativeLayout.BELOW, R.id.RelativeLayout_videoinfo);
 			mVideoViewLayout.setLayoutParams(lp);
-            mTvStartVideoEdit.setVisibility(View.VISIBLE);
+            mStartVideoeditLl.setVisibility(View.VISIBLE);
 
 		}
 		mIsFullScreen = bFull;
