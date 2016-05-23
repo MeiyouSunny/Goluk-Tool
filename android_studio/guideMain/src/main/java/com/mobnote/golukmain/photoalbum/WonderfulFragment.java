@@ -442,27 +442,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	private void gotoVideoPlayPage(int from, String path, String createTime, String videoHP, String size) {
 		if (!isShowPlayer) {
 			isShowPlayer = true;
-			// if (null == VitamioPlayerActivity.mHandler) {
-			// Intent intent = null;
-			// if (1 == from) {
-			// intent = new
-			// Intent(this.getContext(),VitamioPlayerActivity.class);
-			// } else {
-			// intent = new Intent(this.getContext(),VideoPlayerActivity.class);
-			// }
-			// intent.putExtra("from", "ipc");
-			// intent.putExtra("type", IPCManagerFn.TYPE_SHORTCUT);
-			// intent.putExtra("filename", path);
-			// this.getContext().startActivity(intent);
-
-			Intent intent = new Intent(getActivity(), PhotoAlbumPlayer.class);
-			intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, "ipc");
-			intent.putExtra(PhotoAlbumPlayer.FILENAME, path);
-			intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
-			intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
-			intent.putExtra(PhotoAlbumPlayer.TYPE, PhotoAlbumConfig.PHOTO_BUM_IPC_WND);
-			intent.putExtra(PhotoAlbumPlayer.SIZE, size);
-			getActivity().startActivity(intent);
+			GolukUtils.startPhotoAlbumPlayerActivity(WonderfulFragment.this.getContext(),PhotoAlbumConfig.PHOTO_BUM_IPC_WND,"ipc",path,createTime,videoHP,size);
 		}
 	}
 

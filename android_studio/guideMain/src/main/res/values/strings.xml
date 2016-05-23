@@ -1107,4 +1107,5 @@
     <string name="str_ae_selected_chunk_can_not_split">This item can not be splitted</string>
     <string name="str_ae_add_chunk_failed">Add video failed</string>
     <string name="str_ae_can_not_split_from">Can not split length with %1$ss</string>
+    <string name="str_ae_add_video_title">Add Video</string>
 </resources>

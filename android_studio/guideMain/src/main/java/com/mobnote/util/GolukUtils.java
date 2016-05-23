@@ -29,6 +29,7 @@ import com.mobnote.golukmain.fan.FanListActivity;
 import com.mobnote.golukmain.following.FollowingListActivity;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
+import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
 import com.mobnote.golukmain.startshare.VideoEditActivity;
 import com.mobnote.golukmain.startshare.VideoShareActivity;
 import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
@@ -1069,19 +1070,24 @@ public class GolukUtils {
 		context.startActivity(intent);
 	}
 
-	public static void startPhotoAlbumPlayerActivity(Context context, int type, String path,String filename) {
-		Intent intent = new Intent(context, VideoShareActivity.class);
-		intent.putExtra("vidType", type);
-		intent.putExtra("vidPath", path);
-		intent.putExtra("filename", filename);
+	public static void startPhotoAlbumPlayerActivity(Context context,int type , String vidFrom ,String path ,String createTime,
+                                                     String videoHP,String size) {
+        Intent intent = new Intent(context, PhotoAlbumPlayer.class);
+        intent.putExtra(PhotoAlbumPlayer.TYPE, type);
+        intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, "local");
+        intent.putExtra(PhotoAlbumPlayer.PATH, path);
+        intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
+        intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
+        intent.putExtra(PhotoAlbumPlayer.SIZE, size);
 		context.startActivity(intent);
 	}
 
-	public static void startVideoEditActivity(Context context, int type, String path,String filename) {
+	public static void startVideoShareActivity(Context context, int type, String path, String filename,boolean isAEVideo) {
 		Intent intent = new Intent(context, VideoShareActivity.class);
 		intent.putExtra("vidType", type);
 		intent.putExtra("vidPath", path);
 		intent.putExtra("filename", filename);
+        intent.putExtra("isAEVideo",isAEVideo);
 		context.startActivity(intent);
 	}
 
