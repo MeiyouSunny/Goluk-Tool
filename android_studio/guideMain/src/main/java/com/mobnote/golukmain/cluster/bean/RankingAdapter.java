@@ -22,6 +22,7 @@ import com.mobnote.golukmain.special.SpecialListActivity;
 import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
 import com.mobnote.golukmain.usercenter.UCUserInfo;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
+import com.mobnote.user.UserUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
@@ -88,17 +89,26 @@ public class RankingAdapter extends BaseAdapter{
         holderView.imgLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext,VideoDetailActivity.class);
-                intent.putExtra("videoid",video.videoid);
-                mContext.startActivity(intent);
+                if(UserUtils.isNetDeviceAvailable(mContext)){
+                    Intent intent = new Intent(mContext,VideoDetailActivity.class);
+                    intent.putExtra("videoid",video.videoid);
+                    mContext.startActivity(intent);
+                }else{
+                    GolukUtils.showToast(mContext,mContext.getResources().getString(R.string.network_error));
+                }
+
             }
         });
         holderView.userinfoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext,VideoDetailActivity.class);
-                intent.putExtra("videoid",video.videoid);
-                mContext.startActivity(intent);
+                if(UserUtils.isNetDeviceAvailable(mContext)) {
+                    Intent intent = new Intent(mContext, VideoDetailActivity.class);
+                    intent.putExtra("videoid", video.videoid);
+                    mContext.startActivity(intent);
+                }else{
+                    GolukUtils.showToast(mContext,mContext.getResources().getString(R.string.network_error));
+                }
             }
         });
         GlideUtils.loadImage(mContext,holderView.videoImg,video.pictureurl,-1);
