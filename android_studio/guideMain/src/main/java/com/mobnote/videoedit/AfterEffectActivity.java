@@ -265,12 +265,12 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         }
 
         int focusIndex = mChannelLineAdapter.getEditIndex();
-        if(focusIndex == -1) {
+        if (focusIndex == -1) {
             Toast.makeText(this, getString(R.string.str_ae_no_chunk_selected), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if(!VideoEditUtils.judgeChunkOverlap(mAELayoutManager, mGateLocationX, mChannelLineAdapter.getEditIndex())) {
+        if (!VideoEditUtils.judgeChunkOverlap(mAELayoutManager, mGateLocationX, mChannelLineAdapter.getEditIndex())) {
             Toast.makeText(this, getString(R.string.str_ae_only_selected_can_split), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -294,7 +294,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             return;
         }
 
-        if(!mAfterEffect.canSplit(chunkIndex, position)) {
+        if (!mAfterEffect.canSplit(chunkIndex, position)) {
             DecimalFormat f_num = new DecimalFormat("##0.00");
             String ret = f_num.format(position);
             String org = getString(R.string.str_ae_can_not_split_from);
@@ -303,60 +303,60 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             return;
         }
 
-		try {
-			float realPosition = mAfterEffect.editSplitChunk(chunkIndex, position);
+        try {
+            float realPosition = mAfterEffect.editSplitChunk(chunkIndex, position);
 
-			int itemIndex = VideoEditUtils.mapC2IIndex(chunkIndex);
-			List<Chunk> mainChunks = mAfterEffect.getMainChunks();
+            int itemIndex = VideoEditUtils.mapC2IIndex(chunkIndex);
+            List<Chunk> mainChunks = mAfterEffect.getMainChunks();
 
-			Chunk first = mainChunks.get(chunkIndex);
-			Chunk second = mainChunks.get(chunkIndex + 1);
+            Chunk first = mainChunks.get(chunkIndex);
+            Chunk second = mainChunks.get(chunkIndex + 1);
 
-			// Get to insert index
-			ChunkBean chunkBean1 = new ChunkBean();
-			chunkBean1.chunk = first;
-			chunkBean1.index_tag = VideoEditUtils.generateIndexTag();
-			chunkBean1.width = VideoEditUtils.ChunkTime2Width(first);
-			chunkBean1.isEditState = false;
-            chunkBean1.curVolume = (int)(first.getVolume() * 100);
+            // Get to insert index
+            ChunkBean chunkBean1 = new ChunkBean();
+            chunkBean1.chunk = first;
+            chunkBean1.index_tag = VideoEditUtils.generateIndexTag();
+            chunkBean1.width = VideoEditUtils.ChunkTime2Width(first);
+            chunkBean1.isEditState = false;
+            chunkBean1.curVolume = (int) (first.getVolume() * 100);
 
-			chunkBean1.ct_pair_tag = itemIndex + "chunkIndex";
-			mProjectItemList.set(itemIndex, chunkBean1);
+            chunkBean1.ct_pair_tag = itemIndex + "chunkIndex";
+            mProjectItemList.set(itemIndex, chunkBean1);
 
-			// ignore transition, the same since now
+            // ignore transition, the same since now
 
-			// insert second chunk
-			ChunkBean chunkBean2 = new ChunkBean();
-			chunkBean2.chunk = second;
-			chunkBean2.index_tag = VideoEditUtils.generateIndexTag();
-			chunkBean2.width = VideoEditUtils.ChunkTime2Width(second);
-			chunkBean2.isEditState = true;
-            chunkBean2.curVolume = (int)(second.getVolume() * 100);
+            // insert second chunk
+            ChunkBean chunkBean2 = new ChunkBean();
+            chunkBean2.chunk = second;
+            chunkBean2.index_tag = VideoEditUtils.generateIndexTag();
+            chunkBean2.width = VideoEditUtils.ChunkTime2Width(second);
+            chunkBean2.isEditState = true;
+            chunkBean2.curVolume = (int) (second.getVolume() * 100);
 
 //			int cInsertIndex = mProjectItemList.size() - 2;
-			chunkBean2.ct_pair_tag = (itemIndex + 2) + "chunkIndex";
-			mProjectItemList.add(itemIndex + 2, chunkBean2);
+            chunkBean2.ct_pair_tag = (itemIndex + 2) + "chunkIndex";
+            mProjectItemList.add(itemIndex + 2, chunkBean2);
 
-			// truncate to the end
-			Transition transtion = mAfterEffect.getTransition(chunkIndex + 1, true);
+            // truncate to the end
+            Transition transtion = mAfterEffect.getTransition(chunkIndex + 1, true);
 //			if(transtion != null) {
-			TransitionBean transitionBean = new TransitionBean();
-			transitionBean.index_tag = VideoEditUtils.generateIndexTag();
-			transitionBean.transiton = transtion;
-			transitionBean.ct_pair_tag = (itemIndex + 2) + "chunkIndex";
-			mProjectItemList.add(itemIndex + 3, transitionBean);
-			mChannelLineAdapter.setEditIndex(itemIndex + 2);
+            TransitionBean transitionBean = new TransitionBean();
+            transitionBean.index_tag = VideoEditUtils.generateIndexTag();
+            transitionBean.transiton = transtion;
+            transitionBean.ct_pair_tag = (itemIndex + 2) + "chunkIndex";
+            mProjectItemList.add(itemIndex + 3, transitionBean);
+            mChannelLineAdapter.setEditIndex(itemIndex + 2);
 
-			VideoEditUtils.refreshCTTag(mProjectItemList);
-		} catch(EffectRuntimeException e) {
-			e.printStackTrace();
-			return;
-		} catch(InvalidLengthException e) {
-			e.printStackTrace();
-			return;
-		}
-		mChannelLineAdapter.notifyDataSetChanged();
-	}
+            VideoEditUtils.refreshCTTag(mProjectItemList);
+        } catch (EffectRuntimeException e) {
+            e.printStackTrace();
+            return;
+        } catch (InvalidLengthException e) {
+            e.printStackTrace();
+            return;
+        }
+        mChannelLineAdapter.notifyDataSetChanged();
+    }
 
     public void playOrPause() {
         Log.d("CK1", "#########################, playerState=" + mPlayerState);
@@ -558,7 +558,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                 intent.setData(Uri.parse("file://" + retBean.path));
                 sendBroadcast(intent);
                 Toast.makeText(this, getString(R.string.str_video_export_succeed), Toast.LENGTH_SHORT).show();
-                GolukUtils.startVideoShareActivity(AfterEffectActivity.this, PhotoAlbumConfig.PHOTO_BUM_IPC_WND,retBean.path,retBean.path,true);
+                GolukUtils.startVideoShareActivity(AfterEffectActivity.this, PhotoAlbumConfig.PHOTO_BUM_IPC_WND, retBean.path, retBean.path, true);
+                finish();
             } else {
                 Toast.makeText(this, getString(R.string.str_video_export_failed), Toast.LENGTH_SHORT).show();
             }
@@ -692,7 +693,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         mAEMusicRecyclerView.setVisibility(View.VISIBLE);
     }
 
-	private void initController() {
+    private void initController() {
         mMusicNames = new String[9];
         mMusicNames[0] = getString(R.string.str_video_music_none);
         mMusicNames[1] = getString(R.string.str_video_music_wave);
@@ -877,16 +878,16 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         }
     }
 
-	// Seek to chunk with specified offset
-	public void seekWith(int chunkIndex, int chunkWidth, float delta) {
-		Chunk chunk = mAfterEffect.getMainChunks().get(chunkIndex);
-		mAfterEffect.seekTo(chunkIndex, delta / chunkWidth * chunk.getDuration());
-	}
+    // Seek to chunk with specified offset
+    public void seekWith(int chunkIndex, int chunkWidth, float delta) {
+        Chunk chunk = mAfterEffect.getMainChunks().get(chunkIndex);
+        mAfterEffect.seekTo(chunkIndex, delta / chunkWidth * chunk.getDuration());
+    }
 
-	// Seek to chunk with 0 offset
-	public void seekWith(int chunkIndex) {
-		mAfterEffect.seekTo(chunkIndex);
-	}
+    // Seek to chunk with 0 offset
+    public void seekWith(int chunkIndex) {
+        mAfterEffect.seekTo(chunkIndex);
+    }
 
     private VideoEditExportDialog mExportDialog;
 
@@ -977,8 +978,24 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                 }
                 List<VideoEncoderCapability> capaList = mAfterEffect.getSuportedCapability();
                 if (capaList == null || capaList.size() == 0) {
-                    Toast.makeText(AfterEffectActivity.this, "手机不支持合适的分辨率", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AfterEffectActivity.this,
+                            AfterEffectActivity.this.getString(R.string.str_ae_no_export_size_supported),
+                            Toast.LENGTH_SHORT).show();
                     return;
+                }
+                // If only 480p, export it directly
+                if(capaList.size() == 1) {
+                    VideoEncoderCapability vc = capaList.get(0);
+                    int tempW = vc.getWidth();
+                    int tempH = vc.getHeight();
+                    float tempF = vc.getFps();
+                    int tempB = vc.getBitrate();
+                    if(tempW == 848 && tempH == 480) {
+                        exportAfterEffectVideo(VideoEditConstant.EXPORT_480P_WIDTH, VideoEditConstant.EXPORT_480P_HEIGHT,
+                                VideoEditConstant.BITRATE_2M, VideoEditConstant.FPS_25);
+                        pause();
+                        return;
+                    }
                 }
 
                 VideoEncoderCapability vc = capaList.get(capaList.size() - 1);
@@ -1072,9 +1089,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         });
     }
 
-	public float getChannelDuration() {
-		return mAfterEffect.getDuration();
-	}
+    public float getChannelDuration() {
+        return mAfterEffect.getDuration();
+    }
 
     public void exportAfterEffectVideo(int exportWidth, int exportHeight, int bitRate, int fps) {
         float duration = mAfterEffect.getDuration();
@@ -1244,7 +1261,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 
     @Override
     public void onClick(View v) {
-        // TODO Auto-generated method stub
         int vId = v.getId();
         if (vId == R.id.iv_video_play) {
             playOrPause();
@@ -1300,35 +1316,35 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         showMusicController();
     }
 
-	@Override
-	public void onPlayPaused(AfterEffect afterEffect) {
-		// TODO Auto-generated method stub
-		Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_PLAY_PAUSED, afterEffect);
-		mAfterEffecthandler.sendMessage(msg);
-	}
+    @Override
+    public void onPlayPaused(AfterEffect afterEffect) {
+        // TODO Auto-generated method stub
+        Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_PLAY_PAUSED, afterEffect);
+        mAfterEffecthandler.sendMessage(msg);
+    }
 
-	@Override
-	public void onPlayResume(AfterEffect afterEffect) {
-		// TODO Auto-generated method stub
-		Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_PLAY_RESUMED, afterEffect);
-		mAfterEffecthandler.sendMessage(msg);
-	}
+    @Override
+    public void onPlayResume(AfterEffect afterEffect) {
+        // TODO Auto-generated method stub
+        Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_PLAY_RESUMED, afterEffect);
+        mAfterEffecthandler.sendMessage(msg);
+    }
 
-	public void goToChooseVideo() {
-		Intent videoChooseIntent = new Intent();
-		videoChooseIntent.setClass(this, VideoChooserActivity.class);
-		startActivityForResult(videoChooseIntent, VideoEditConstant.VIDEO_EDIT_ADD_REQ_CODE);
-	}
+    public void goToChooseVideo() {
+        Intent videoChooseIntent = new Intent();
+        videoChooseIntent.setClass(this, VideoChooserActivity.class);
+        startActivityForResult(videoChooseIntent, VideoEditConstant.VIDEO_EDIT_ADD_REQ_CODE);
+    }
 
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == RESULT_OK && requestCode == VideoEditConstant.VIDEO_EDIT_ADD_REQ_CODE) {
-			Bundle b = data.getExtras(); // data为B中回传的Intent
-			String vidPath = b.getString("vidPath");// str即为回传的值
-			if (vidPath != null) {
-				mChannelLineAdapter.addChunk(vidPath);
-			}
-		}
-	}
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == VideoEditConstant.VIDEO_EDIT_ADD_REQ_CODE) {
+            Bundle b = data.getExtras(); // data为B中回传的Intent
+            String vidPath = b.getString("vidPath");// str即为回传的值
+            if (vidPath != null) {
+                mChannelLineAdapter.addChunk(vidPath);
+            }
+        }
+    }
 
     static class ExportRet {
         String path;
@@ -1346,18 +1362,17 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         mAfterEffecthandler.sendMessage(msg);
     }
 
-	@Override
-	public void onplayingChunkEnd(float currentSec, float totalSec,
-			int chunkIndex, float currentChunkSec) {
-		ChunkPlayBean bean = new ChunkPlayBean();
-		bean.chunkIndex = chunkIndex;
-		bean.position = currentChunkSec;
-//		bean.effect = afterEffcet;
-		bean.currentSec = currentSec;
-		bean.totalSec = totalSec;
+    @Override
+    public void onplayingChunkEnd(float currentSec, float totalSec,
+                                  int chunkIndex, float currentChunkSec) {
+        ChunkPlayBean bean = new ChunkPlayBean();
+        bean.chunkIndex = chunkIndex;
+        bean.position = currentChunkSec;
+        bean.currentSec = currentSec;
+        bean.totalSec = totalSec;
 
-		Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_CHUNK_PLAY_END, 0, 0, bean);
-		mAfterEffecthandler.sendMessage(msg);
-	}
+        Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_CHUNK_PLAY_END, 0, 0, bean);
+        mAfterEffecthandler.sendMessage(msg);
+    }
 
 }
