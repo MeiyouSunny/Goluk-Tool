@@ -145,7 +145,7 @@ public class RankingActivity extends BaseActivity implements IRequestResultListe
             mRTPullListView.removeFooterView(1);
             mRTPullListView.removeFooterView(2);
             RankingListBean rlb = (RankingListBean) result;
-            if(rlb.success){
+            if(rlb!= null && rlb.success){
                 if (mRequestType == 0){//下拉和首次
                     if(rlb.data.videolist != null  && rlb.data.videolist.size() > 0){
                         if(mRandkingList !=null && mRandkingList.size() > 0){
@@ -197,7 +197,7 @@ public class RankingActivity extends BaseActivity implements IRequestResultListe
                 }
             }else{
                 updateViewData(false,0);
-                GolukUtils.showToast(this,this.getResources().getString(R.string.request_data_error));
+                GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
             }
         }
     }
