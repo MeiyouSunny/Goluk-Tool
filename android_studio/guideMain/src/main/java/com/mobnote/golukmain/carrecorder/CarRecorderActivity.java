@@ -495,7 +495,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		VideoInfo mVideoInfo = GolukVideoUtils.getVideoInfo(vname);
 		if(mVideoInfo != null){
 			GolukUtils.startPhotoAlbumPlayerActivity(this,type,"local",mVideoInfo.videoPath,
-					mVideoInfo.videoCreateDate,mVideoInfo.videoHP,mVideoInfo.videoSize);
+                    mVideoInfo.filename,mVideoInfo.videoCreateDate,mVideoInfo.videoHP,mVideoInfo.videoSize);
 		}
 		overridePendingTransition(R.anim.shortshare_start, 0);
 

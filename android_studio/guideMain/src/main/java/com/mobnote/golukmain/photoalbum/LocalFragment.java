@@ -217,7 +217,7 @@ public class LocalFragment extends Fragment {
 							// 点击列表左边项,跳转到视频播放页面
 
 							VideoInfo info1 = d.getVideoInfo1();
-							gotoVideoPlayPage(getVideoType(info1.filename), info1.videoPath, info1.videoCreateDate,
+							gotoVideoPlayPage(getVideoType(info1.filename), info1.videoPath, info1.filename,info1.videoCreateDate,
 									info1.videoHP, info1.videoSize);
 							String filename = d.getVideoInfo1().filename;
 							updateNewState(filename);
@@ -232,7 +232,7 @@ public class LocalFragment extends Fragment {
 								return;
 							// --------------------------------------------------以此标记
 							// type 零时给 1 等主题逻辑调试通了 再去更具文件名称取类型
-							gotoVideoPlayPage(getVideoType(info2.filename), info2.videoPath, info2.videoCreateDate, info2.videoHP, info2.videoSize);
+							gotoVideoPlayPage(getVideoType(info2.filename), info2.videoPath, info2.filename,info2.videoCreateDate, info2.videoHP, info2.videoSize);
 							String filename = info2.filename;
 							updateNewState(filename);
 
@@ -348,17 +348,17 @@ public class LocalFragment extends Fragment {
 	 * 
 	 * @param path
 	 */
-	private void gotoVideoPlayPage(int type, String path, String createTime, String videoHP, String size) {
+	private void gotoVideoPlayPage(int type, String path, String filename,String createTime, String videoHP, String size) {
 		if (!TextUtils.isEmpty(path)) {
 
 			if (!"0".equals(mFragmentAlbum.mPlatform)) {
 				if (type != 3) {// 不是循环视频
-                    GolukUtils.startPhotoAlbumPlayerActivity(getActivity(),type,"local",path, createTime,videoHP,size);
+                    GolukUtils.startPhotoAlbumPlayerActivity(getActivity(),type,"local",path,filename, createTime,videoHP,size);
 					return;
 				}
 			}
 
-            GolukUtils.startPhotoAlbumPlayerActivity(LocalFragment.this.getContext(),type,"local",path,createTime,videoHP,size);
+            GolukUtils.startPhotoAlbumPlayerActivity(LocalFragment.this.getContext(),type,"local",path,filename,createTime,videoHP,size);
 		}
 	}
 

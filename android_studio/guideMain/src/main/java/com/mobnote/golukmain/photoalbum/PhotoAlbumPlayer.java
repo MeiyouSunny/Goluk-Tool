@@ -352,6 +352,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			title.setText(mDate);
 		}
 		mBtnDownload = (Button) findViewById(R.id.btn_download);
+        if(!TextUtils.isEmpty(mVideoFrom) && "local".equals(mVideoFrom)){
+            mBtnDownload.setVisibility(View.GONE);
+        }
 		mBtnDelete = (Button) findViewById(R.id.btn_delete);
         mStartVideoeditLl = (LinearLayout) findViewById(R.id.ll_start_videoedit);
         mTvShareRightnow = (TextView) findViewById(R.id.tv_share_video_rightnow);
@@ -907,6 +910,16 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         if(TextUtils.isEmpty(qualityStr)){
             return;
         }
+        int quality = 0;//0,1,2 分别代表低(480P)，中(720P)，高(1080P)。
+        if(!TextUtils.isEmpty(mHP)){
+            if("480p".equals(mHP)){
+                quality = 0;
+            }else if("720p".equals(mHP)){
+                quality = 1;
+            }else if("1080p".equals(mHP)){
+                quality = 2;
+            }
+        }
         isExporting = true;
         if(mAddTailerDialog == null){
             mAddTailerDialog = new AddTailerDialogFragment();
@@ -914,7 +927,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         mAddTailerDialog.setCancelable(false);
         mAddTailerDialog.show(getSupportFragmentManager(), "dialog_fragment");
 
-        int quality = 0;//0,1,2 分别代表低(480P)，中(720P)，高(1080P)。
         // 初始化，读取gl脚本需要
         MediaUtils.getInstance(this);
         if (mSimpleExporter == null)

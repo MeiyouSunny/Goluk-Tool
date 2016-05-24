@@ -1070,12 +1070,13 @@ public class GolukUtils {
 		context.startActivity(intent);
 	}
 
-	public static void startPhotoAlbumPlayerActivity(Context context,int type , String vidFrom ,String path ,String createTime,
+	public static void startPhotoAlbumPlayerActivity(Context context,int type , String vidFrom ,String path ,String filename,String createTime,
                                                      String videoHP,String size) {
         Intent intent = new Intent(context, PhotoAlbumPlayer.class);
         intent.putExtra(PhotoAlbumPlayer.TYPE, type);
         intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, vidFrom);
         intent.putExtra(PhotoAlbumPlayer.PATH, path);
+        intent.putExtra(PhotoAlbumPlayer.FILENAME, filename);
         intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
         intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
         intent.putExtra(PhotoAlbumPlayer.SIZE, size);
