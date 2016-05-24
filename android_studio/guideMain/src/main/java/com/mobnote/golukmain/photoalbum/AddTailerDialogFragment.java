@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mobnote.eventbus.EventAddTailer;
 import com.mobnote.golukmain.R;
@@ -55,15 +56,17 @@ public class AddTailerDialogFragment extends DialogFragment implements SimpleExp
                 int process = (int) (event.getExportProcess() * 100);
                 mAddTailerRingview.setProcess(process);
                 Log.i("msg","视频导出:导出eventBus+ " + String.valueOf(event.getExportProcess()));
-                this.mAddTailerProgressTv.setText("完成进度：" + process + "%");
+
+                String org = getString(R.string.str_video_export_progress);
+                String formattedOrg = String.format(org, process);
+                this.mAddTailerProgressTv.setText(formattedOrg);
             }else if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_FINISH){
                 mAddTailerRingview.setProcess(100);
-                this.mAddTailerProgressTv.setText("导出完成");
+                this.mAddTailerProgressTv.setText(getString(R.string.str_video_export_succeed));
                 if(mDialog != null && mDialog.isShowing()){
                     mDialog.dismiss();
                 }
             }else if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_FAILED){
-                this.mAddTailerProgressTv.setText("导出失败");
             }
         }
     }

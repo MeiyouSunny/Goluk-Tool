@@ -1,11 +1,6 @@
 package com.mobnote.golukmain.photoalbum;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,13 +11,11 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout;
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.tiros.debug.GolukDebugUtils;
+import android.widget.TextView;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.mobnote.application.GolukApplication;
@@ -36,6 +29,12 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.util.GolukUtils;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 public class LocalFragment extends Fragment {
@@ -218,7 +217,7 @@ public class LocalFragment extends Fragment {
 							// 点击列表左边项,跳转到视频播放页面
 
 							VideoInfo info1 = d.getVideoInfo1();
-							gotoVideoPlayPage(getVideoType(info1.filename), info1.videoPath, info1.videoCreateDate,
+							gotoVideoPlayPage(getVideoType(info1.filename), info1.videoPath, info1.filename,info1.videoCreateDate,
 									info1.videoHP, info1.videoSize);
 							String filename = d.getVideoInfo1().filename;
 							updateNewState(filename);
@@ -233,7 +232,7 @@ public class LocalFragment extends Fragment {
 								return;
 							// --------------------------------------------------以此标记
 							// type 零时给 1 等主题逻辑调试通了 再去更具文件名称取类型
-							gotoVideoPlayPage(getVideoType(info2.filename), info2.videoPath, info2.videoCreateDate, info2.videoHP, info2.videoSize);
+							gotoVideoPlayPage(getVideoType(info2.filename), info2.videoPath, info2.filename,info2.videoCreateDate, info2.videoHP, info2.videoSize);
 							String filename = info2.filename;
 							updateNewState(filename);
 
@@ -349,27 +348,17 @@ public class LocalFragment extends Fragment {
 	 * 
 	 * @param path
 	 */
-	private void gotoVideoPlayPage(int type, String path, String createTime, String videoHP, String size) {
+	private void gotoVideoPlayPage(int type, String path, String filename,String createTime, String videoHP, String size) {
 		if (!TextUtils.isEmpty(path)) {
 
 			if (!"0".equals(mFragmentAlbum.mPlatform)) {
 				if (type != 3) {// 不是循环视频
-					Intent intent = new Intent(getActivity(), PhotoAlbumPlayer.class);
-
-					int tempType = 2;
-					if (type == 1) {
-						tempType = 2;
-					} else if (type == 2) {
-						tempType = 3;
-					}
-					intent.putExtra("type", tempType);
-					intent.putExtra("cn.com.mobnote.video.path", path);
-					getActivity().startActivity(intent);
+                    GolukUtils.startPhotoAlbumPlayerActivity(getActivity(),type,"local",path,filename, createTime,videoHP,size);
 					return;
 				}
 			}
 
-            GolukUtils.startPhotoAlbumPlayerActivity(LocalFragment.this.getContext(),type,"local",path,createTime,videoHP,size);
+            GolukUtils.startPhotoAlbumPlayerActivity(LocalFragment.this.getContext(),type,"local",path,filename,createTime,videoHP,size);
 		}
 	}
 

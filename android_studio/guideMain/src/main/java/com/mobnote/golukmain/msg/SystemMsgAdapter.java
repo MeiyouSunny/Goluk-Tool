@@ -53,7 +53,8 @@ public class SystemMsgAdapter extends BaseAdapter {
 	private final static int msgTypePoll = 206;
 	/** 精选 **/
 	private final static int msgTypeSelect = 207;
-
+    /** G币奖励 **/
+    private final static int msgTypeGReward = 208;
 	/** 失败 **/
 	private final static String resultFial = "0";
 
@@ -162,7 +163,12 @@ public class SystemMsgAdapter extends BaseAdapter {
 				txt = mContext.getResources().getString(R.string.msg_system_poll_txt);
 			} else if (mmbTxt.type == msgTypeSelect) {// 精选
 				txt = mContext.getResources().getString(R.string.msg_system_select_txt);
-			}
+			} if (mmbTxt.type == msgTypeGReward) {// 系统获奖或者人工获奖
+
+                txt = mContext.getResources().getString(R.string.msg_system_reward_txt_began)
+                        + mmbTxt.content.reward.count
+                        + mContext.getResources().getString(R.string.msg_system_reward_txt_end);
+        }
 
 			txtHolder.msgTime.setText(GolukUtils.getCommentShowFormatTime(mContext, time));
 			txtHolder.msgTxt.setText(txt);
@@ -207,7 +213,10 @@ public class SystemMsgAdapter extends BaseAdapter {
 							intent.putExtra(GolukConfig.H5_URL, url);
 							intent.putExtra(GolukConfig.NEED_H5_TITLE, mContext.getString(R.string.str_activity_rule));
 							mContext.startActivity(intent);
-						}
+						} else if(mmbTxt.type == msgTypeGReward){
+                            Intent intent = new Intent(mContext,MyProfitActivity.class);
+                            mContext.startActivity(intent);
+                        }
 
 					} else {
 						GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.user_net_unavailable));

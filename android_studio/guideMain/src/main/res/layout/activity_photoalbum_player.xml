@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:background="@drawable/cross_screen_arrow_icon1"
+            android:background="@drawable/cross_screen_arrow_icon"
             android:contentDescription="@string/imgdes" />
 
         <LinearLayout
@@ -30,7 +30,7 @@
                 android:gravity="center"
                 android:text="@string/str_adas_config"
                 android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
             <TextView
                 android:id="@+id/textview_title_time"
                 android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
                 android:gravity="center"
                 android:text="@string/str_adas_config"
                 android:textColor="@color/white"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
         </LinearLayout>
 
         <TextView
@@ -61,15 +61,13 @@
         android:layout_below="@+id/relativelayout_title"
         android:paddingBottom="8dp">
 
-        <TextView
-            android:id="@+id/tv_hp"
+        <ImageView
+            android:id="@+id/iv_hp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="8dp"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:layout_marginLeft="8dp" />
 
         <TextView
             android:id="@+id/tv_size"
@@ -224,7 +222,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/rv_video_player"
-        android:layout_marginTop="60dp">
+        android:layout_marginTop="30dp">
 
         <TextView
             android:id="@+id/vt_play_time"
@@ -272,7 +270,7 @@
         android:layout_below="@+id/rl_vt_seek"
         android:layout_marginLeft="51dp"
         android:layout_marginRight="51dp"
-        android:layout_marginTop="66dp">
+        android:layout_marginTop="40dp">
 
         <Button
             android:id="@+id/btn_download"
@@ -299,14 +297,27 @@
             android:background="@drawable/btn_vt_pause" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tv_start_videoedit"
+    <LinearLayout
+        android:id="@+id/ll_start_videoedit"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="46dp"
+        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:background="#ffffff"
-        android:gravity="center"
-        android:text="@string/str_edit_short_video"
-        android:textColor="#000000"
-        android:textSize="16sp" />
+        android:background="#0080ff"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_edit"/>
+        <TextView
+            android:id="@+id/tv_start_videoedit"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="@string/str_edit_short_video"
+            android:textColor="#ffffff"
+            android:textSize="15sp" />
+    </LinearLayout>
+
 </RelativeLayout>

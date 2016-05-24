@@ -20,7 +20,6 @@
         android:layout_marginTop="5dp"
         android:gravity="center"
         android:textSize="15sp"
-        android:text="正在生成视频，请稍后..."
         android:layout_marginBottom="15dp"
         android:textColor="#ffffff"/>
 </LinearLayout>

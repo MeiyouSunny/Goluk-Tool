@@ -1086,6 +1086,8 @@
     <string name="share_to_jishe">分享到极社</string>
     <string name="share_hint">你的视频需要一个漂亮的描述</string>
     <string name="join_activity">参加活动</string>
+    <string name="load_video_fail">视频源文件加载失败</string>
+    <string name="not_supported_resolution">手机不支持合适的分辨率</string>
 
     <string name="str_video_export_succeed">Export succeeded</string>
     <string name="str_video_export_failed">Export failed</string>
@@ -1109,4 +1111,5 @@
     <string name="str_ae_can_not_split_from">Can not split length with %1$ss</string>
     <string name="str_ae_add_video_title">Add Video</string>
     <string name="str_cluster_ranking_count_txt">Popularity</string>
+    <string name="str_ae_no_export_size_supported">No supported size can be exported</string>
 </resources>

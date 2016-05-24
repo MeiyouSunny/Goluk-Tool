@@ -380,7 +380,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 							// 点击列表左边项,跳转到视频播放页面
 							VideoInfo info1 = d.getVideoInfo1();
 							gotoVideoPlayPage(PhotoAlbumConfig.PHOTO_BUM_IPC_WND, info1.videoPath,
-									info1.videoCreateDate, info1.videoHP, info1.videoSize);
+									info1.filename,info1.videoCreateDate, info1.videoHP, info1.videoSize);
 							String filename = d.getVideoInfo1().filename;
 							updateNewState(filename);
 
@@ -392,7 +392,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 							if (null == info2)
 								return;
 							gotoVideoPlayPage(PhotoAlbumConfig.PHOTO_BUM_IPC_WND, info2.videoPath, 
-									info2.videoCreateDate, info2.videoHP, info2.videoSize);
+									info2.filename,info2.videoCreateDate, info2.videoHP, info2.videoSize);
 							String filename = info2.filename;
 							updateNewState(filename);
 
@@ -439,10 +439,11 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 	 * 
 	 * @param path
 	 */
-	private void gotoVideoPlayPage(int from, String path, String createTime, String videoHP, String size) {
+	private void gotoVideoPlayPage(int from, String path, String filename,String createTime, String videoHP, String size) {
 		if (!isShowPlayer) {
 			isShowPlayer = true;
-			GolukUtils.startPhotoAlbumPlayerActivity(WonderfulFragment.this.getContext(),PhotoAlbumConfig.PHOTO_BUM_IPC_WND,"ipc",path,createTime,videoHP,size);
+			GolukUtils.startPhotoAlbumPlayerActivity(WonderfulFragment.this.getContext(),PhotoAlbumConfig.PHOTO_BUM_IPC_WND,"ipc",path,
+                    filename,createTime,videoHP,size);
 		}
 	}
 

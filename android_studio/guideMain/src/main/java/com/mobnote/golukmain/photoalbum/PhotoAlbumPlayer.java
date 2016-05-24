@@ -122,7 +122,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	private Button mBtnDownload;
 
     private TextView mTvShareRightnow;
-    private TextView mTvStartVideoEdit;
+    private LinearLayout mStartVideoeditLl;
 
 	/** 加载中布局 */
 	private LinearLayout mLoadingLayout = null;
@@ -225,6 +225,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 }
                 isExporting = false;
             }else if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_FAILED){
+                //分享失败，则直接分享原视频
+                GolukUtils.startVideoShareActivity(this,mType,mPath,mFileName,false);
+                if(mAddTailerDialog != null && mAddTailerDialog.isVisible()){
+                    mAddTailerDialog.dismiss();
+                }
                 isExporting = false;
             }
         }
@@ -331,8 +336,16 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		}
 
 		if (mHP != null) {
-			TextView tvHP = (TextView) findViewById(R.id.tv_hp);
-			tvHP.setText(mHP);
+			ImageView ivHP = (ImageView) findViewById(R.id.iv_hp);
+            if(!TextUtils.isEmpty(mHP)){
+                if("480p".equals(mHP)){
+                    ivHP.setImageResource(R.drawable.icon_480p);
+                }else if("720p".equals(mHP)){
+                    ivHP.setImageResource(R.drawable.icon_720p);
+                }else if("1080p".equals(mHP)){
+                    ivHP.setImageResource(R.drawable.icon_1080p);
+                }
+            }
 		}
 
 		if (mDate != null) {
@@ -344,18 +357,21 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			title.setText(mDate);
 		}
 		mBtnDownload = (Button) findViewById(R.id.btn_download);
+        if(!TextUtils.isEmpty(mVideoFrom) && "local".equals(mVideoFrom)){
+            mBtnDownload.setVisibility(View.GONE);
+        }
 		mBtnDelete = (Button) findViewById(R.id.btn_delete);
-        mTvStartVideoEdit = (TextView) findViewById(R.id.tv_start_videoedit);
+        mStartVideoeditLl = (LinearLayout) findViewById(R.id.ll_start_videoedit);
         mTvShareRightnow = (TextView) findViewById(R.id.tv_share_video_rightnow);
 
         mBtnDownload.setOnClickListener(this);
         mBtnDelete.setOnClickListener(this);
-        mTvStartVideoEdit.setOnClickListener(this);
+        mStartVideoeditLl.setOnClickListener(this);
         mTvShareRightnow.setOnClickListener(this);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
-            mTvStartVideoEdit.setVisibility(View.VISIBLE);
+            mStartVideoeditLl.setVisibility(View.VISIBLE);
         }else{
-            mTvStartVideoEdit.setVisibility(View.GONE);
+            mStartVideoeditLl.setVisibility(View.GONE);
         }
 
         if (mVideoFrom.equals("local")) {
@@ -385,7 +401,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		mHandler.postDelayed(mPlayingChecker, 250);
 
         if (!mVideoFrom.equals("local")) {
-            mTvStartVideoEdit.setVisibility(View.GONE);
+            mStartVideoeditLl.setVisibility(View.GONE);
             mTvShareRightnow.setVisibility(View.GONE);
         }
 	}
@@ -409,7 +425,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		if (GolukUtils.isFastDoubleClick()) {
 			return;
 		}
-        if (id == R.id.tv_start_videoedit){
+        if (id == R.id.ll_start_videoedit){
             pauseVideo();
             GolukUtils.startAEActivity(this,mType,mPath);
         }else if (id == R.id.imagebutton_back) {
@@ -498,7 +514,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 					LayoutParams.WRAP_CONTENT);
 			norParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 			norParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            mTvStartVideoEdit.setVisibility(View.GONE);
+            mStartVideoeditLl.setVisibility(View.GONE);
 			mVideoView.setOnTouchListener(mTouchListener);
 
 		} else {
@@ -516,7 +532,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			lp.leftMargin = 0;
 			lp.addRule(RelativeLayout.BELOW, R.id.RelativeLayout_videoinfo);
 			mVideoViewLayout.setLayoutParams(lp);
-            mTvStartVideoEdit.setVisibility(View.VISIBLE);
+            mStartVideoeditLl.setVisibility(View.VISIBLE);
 
 		}
 		mIsFullScreen = bFull;
@@ -899,6 +915,16 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         if(TextUtils.isEmpty(qualityStr)){
             return;
         }
+        int quality = 0;//0,1,2 分别代表低(480P)，中(720P)，高(1080P)。
+        if(!TextUtils.isEmpty(mHP)){
+            if("480p".equals(mHP)){
+                quality = 0;
+            }else if("720p".equals(mHP)){
+                quality = 1;
+            }else if("1080p".equals(mHP)){
+                quality = 2;
+            }
+        }
         isExporting = true;
         if(mAddTailerDialog == null){
             mAddTailerDialog = new AddTailerDialogFragment();
@@ -906,7 +932,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         mAddTailerDialog.setCancelable(false);
         mAddTailerDialog.show(getSupportFragmentManager(), "dialog_fragment");
 
-        int quality = 0;//0,1,2 分别代表低(480P)，中(720P)，高(1080P)。
         // 初始化，读取gl脚本需要
         MediaUtils.getInstance(this);
         if (mSimpleExporter == null)
@@ -916,7 +941,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             mSimpleExporter.setSourceVideoPath(srcPath);
         } catch (Exception e1) {
             e1.printStackTrace();
-            Toast.makeText(this," \"视频源文件加载失败\" + e1.getMessage()",Toast.LENGTH_SHORT);
+            Toast.makeText(this,getString(R.string.load_video_fail),Toast.LENGTH_SHORT);
             isExporting = false;
             return;
         }
@@ -924,7 +949,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
         List<VideoEncoderCapability> capaList = AfterEffect.getSuportedCapability(videoFileInfo.getWidth());
         if (capaList == null || capaList.size() == 0) {
-            Toast.makeText(this,"手机不支持合适的分辨率",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,getString(R.string.not_supported_resolution),Toast.LENGTH_SHORT).show();
             isExporting = false;
             return;
         }
