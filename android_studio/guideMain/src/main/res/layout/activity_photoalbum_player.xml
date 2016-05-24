@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:background="@drawable/cross_screen_arrow_icon1"
+            android:background="@drawable/cross_screen_arrow_icon"
             android:contentDescription="@string/imgdes" />
 
         <LinearLayout
@@ -61,15 +61,13 @@
         android:layout_below="@+id/relativelayout_title"
         android:paddingBottom="8dp">
 
-        <TextView
-            android:id="@+id/tv_hp"
+        <ImageView
+            android:id="@+id/iv_hp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="8dp"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:layout_marginLeft="8dp" />
 
         <TextView
             android:id="@+id/tv_size"
@@ -224,7 +222,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/rv_video_player"
-        android:layout_marginTop="60dp">
+        android:layout_marginTop="30dp">
 
         <TextView
             android:id="@+id/vt_play_time"
@@ -272,7 +270,7 @@
         android:layout_below="@+id/rl_vt_seek"
         android:layout_marginLeft="51dp"
         android:layout_marginRight="51dp"
-        android:layout_marginTop="25dp">
+        android:layout_marginTop="40dp">
 
         <Button
             android:id="@+id/btn_download"

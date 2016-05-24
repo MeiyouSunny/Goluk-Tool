@@ -331,8 +331,16 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		}
 
 		if (mHP != null) {
-			TextView tvHP = (TextView) findViewById(R.id.tv_hp);
-			tvHP.setText(mHP);
+			ImageView ivHP = (ImageView) findViewById(R.id.iv_hp);
+            if(!TextUtils.isEmpty(mHP)){
+                if("480p".equals(mHP)){
+                    ivHP.setImageResource(R.drawable.icon_480p);
+                }else if("720p".equals(mHP)){
+                    ivHP.setImageResource(R.drawable.icon_720p);
+                }else if("1080p".equals(mHP)){
+                    ivHP.setImageResource(R.drawable.icon_1080p);
+                }
+            }
 		}
 
 		if (mDate != null) {
