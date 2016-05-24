@@ -207,7 +207,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 				new FollowRequest(IPageNotifyFn.PageType_Follow, this);
 		if(null != mApp && mApp.isUserLoginSucess) {
 			if(!TextUtils.isEmpty(mApp.mCurrentUId)) {
-				request.get(PROTOCOL, linkuid, type, mApp.mCurrentUId);
+				request.get("200", linkuid, type, mApp.mCurrentUId);
 			}
 		}
 	}
@@ -494,8 +494,15 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 						if(10001 == bean.code|| 10002 == bean.code){
 							startUserLogin();
 							return;
+						}else if(bean.code == 12011){
+							Toast.makeText(FragmentFollowed.this.getContext(), getString(R.string.follow_operation_limit_total), Toast.LENGTH_SHORT).show();
+							return;
+						}else if(bean.code == 12016){
+							Toast.makeText(FragmentFollowed.this.getContext(), getString(R.string.follow_operation_limit_day), Toast.LENGTH_SHORT).show();
+							return;
+						}else{
+							Toast.makeText(getActivity(), bean.msg, Toast.LENGTH_SHORT).show();
 						}
-					Toast.makeText(getActivity(), bean.msg, Toast.LENGTH_SHORT).show();
 					return;
 				}
 				// User link uid to find the changed recommend user item status
