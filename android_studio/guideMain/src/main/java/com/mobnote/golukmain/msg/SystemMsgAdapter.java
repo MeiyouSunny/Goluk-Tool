@@ -21,6 +21,7 @@ import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -163,12 +164,12 @@ public class SystemMsgAdapter extends BaseAdapter {
 				txt = mContext.getResources().getString(R.string.msg_system_poll_txt);
 			} else if (mmbTxt.type == msgTypeSelect) {// 精选
 				txt = mContext.getResources().getString(R.string.msg_system_select_txt);
-			} if (mmbTxt.type == msgTypeGReward) {// 系统获奖或者人工获奖
+			} else if (mmbTxt.type == msgTypeGReward) {// 系统获奖或者人工获奖
 
                 txt = mContext.getResources().getString(R.string.msg_system_reward_txt_began)
                         + mmbTxt.content.reward.count
                         + mContext.getResources().getString(R.string.msg_system_reward_txt_end);
-        }
+            }
 
 			txtHolder.msgTime.setText(GolukUtils.getCommentShowFormatTime(mContext, time));
 			txtHolder.msgTxt.setText(txt);
@@ -247,8 +248,10 @@ public class SystemMsgAdapter extends BaseAdapter {
 			String imgPath = "";
 			String imgTxt = "";
 
-			if (mmbImg.type == msgTypeRewardsystem || mmbImg.type == msgTypeRewardmanual) {// 系统获奖或者人工获奖
-				imgReason = mmbImg.content.reward.reason;
+			if (mmbImg.type == msgTypeRewardsystem || mmbImg.type == msgTypeRewardmanual ) {// 系统获奖或者人工获奖
+
+                imgReason = mmbImg.content.reward.reason;
+
 				imgTxt = mContext.getResources().getString(R.string.msg_system_reward_txt_began)
 						+ mmbImg.content.reward.count
 						+ mContext.getResources().getString(R.string.msg_system_reward_txt_end);
@@ -268,7 +271,29 @@ public class SystemMsgAdapter extends BaseAdapter {
 
 					}
 				});
-			} else if (mmbImg.type == msgTypeRecommend) {// 推荐
+			} else if(mmbImg.type == msgTypeGReward){
+                imgReason = mmbImg.content.gaward.reason;
+
+                imgTxt = mContext.getResources().getString(R.string.msg_system_reward_txt_began)
+                        + mmbImg.content.gaward.count
+                        + mContext.getResources().getString(R.string.msg_system_reward_txt_end);
+                imgPath = mmbImg.content.picture;
+                imageHolder.msgMyincome.setVisibility(View.VISIBLE);
+                imageHolder.msgMyincome.setOnClickListener(new OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        if (GolukUtils.isNetworkConnected(mContext)) {
+                            Intent intent = new Intent(mContext, MyProfitActivity.class);
+                            mContext.startActivity(intent);
+                        } else {
+                            GolukUtils.showToast(mContext,
+                                    mContext.getResources().getString(R.string.user_net_unavailable));
+                        }
+
+                    }
+                });
+            }else if (mmbImg.type == msgTypeRecommend) {// 推荐
 				imgPath = mmbImg.content.picture;
 				imgTxt = mContext.getResources().getString(R.string.msg_system_recommend_title);
 				imgReason = mmbImg.content.recommend.reason;

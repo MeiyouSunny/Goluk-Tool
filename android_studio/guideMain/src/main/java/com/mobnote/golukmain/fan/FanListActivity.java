@@ -330,14 +330,24 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 			mCurMotion = REFRESH_NORMAL;
 		}else if(requestType == IPageNotifyFn.PageType_Follow) {//关注
 
+			if(null!=mLoadingDialog&&mLoadingDialog.isShowing()){
+				mLoadingDialog.close();
+			}
 			FollowRetBean bean = (FollowRetBean)result;
 			if(null != bean) {
 
 				if(bean.code != 0) {
-					Toast.makeText(FanListActivity.this, bean.msg, Toast.LENGTH_SHORT).show();
+                    if(10001 ==bean.code || 10002 == bean.code){
+                        GolukUtils.startLoginActivity(FanListActivity.this);
+                    }else if(bean.code == 12011){
+                        Toast.makeText(FanListActivity.this, getString(R.string.follow_operation_limit_total), Toast.LENGTH_SHORT).show();
+                    }else if(bean.code == 12016){
+                        Toast.makeText(FanListActivity.this, getString(R.string.follow_operation_limit_day), Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(FanListActivity.this, bean.msg, Toast.LENGTH_SHORT).show();
+                    }
 					return;
 				}
-
 				if(bean.data == null){
 					return;
 				}
@@ -376,10 +386,6 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 				// Toast for operation failed
 				Toast.makeText(FanListActivity.this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 
-			}
-
-			if(null!=mLoadingDialog&&mLoadingDialog.isShowing()){
-				mLoadingDialog.close();
 			}
 
 		} 

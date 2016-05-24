@@ -226,6 +226,13 @@ public class MsgCenterCommentActivity extends BaseActivity implements OnClickLis
 	public void onLoadComplete(int requestType, Object result) {
 		if (requestType == IPageNotifyFn.PageType_MsgComment) {
 			mMessageBean = (MessageBean) result;
+			closeLoadingDialog();
+			if(mMessageBean != null && mMessageBean.data != null){
+				if ("10001".equals(mMessageBean.data.result) || "10002".equals(mMessageBean.data.result)){
+					GolukUtils.startLoginActivity(MsgCenterCommentActivity.this);
+					return;
+				}
+			}
 			if (null != mMessageBean && mMessageBean.success && null != mMessageBean.data
 					&& null != mMessageBean.data.messages) {
 				MessageManager.getMessageManager().setCommentCount(0);

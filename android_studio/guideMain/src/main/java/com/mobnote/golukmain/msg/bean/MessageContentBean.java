@@ -4,6 +4,9 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 public class MessageContentBean {
 
+	/** g币 **/
+	@JSONField(name="gaward")
+	public MesaageGawardBean gaward;
 	/**跳转内容类型   **/
 	@JSONField(name="type")
 	public String type;

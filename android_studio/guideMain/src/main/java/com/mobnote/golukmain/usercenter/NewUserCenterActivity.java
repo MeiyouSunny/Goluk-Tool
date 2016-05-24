@@ -17,6 +17,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -295,6 +297,12 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 				//token过期
 				if(10001 ==attention.code || 10002 == attention.code){
 					startUserLogin();
+					return;
+				}else if(attention.code == 12011){
+					Toast.makeText(NewUserCenterActivity.this, getString(R.string.follow_operation_limit_total), Toast.LENGTH_SHORT).show();
+					return;
+				}else if(attention.code == 12016){
+					Toast.makeText(NewUserCenterActivity.this, getString(R.string.follow_operation_limit_day), Toast.LENGTH_SHORT).show();
 					return;
 				}
 			}

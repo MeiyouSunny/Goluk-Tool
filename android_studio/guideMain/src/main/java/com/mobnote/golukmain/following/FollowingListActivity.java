@@ -341,13 +341,17 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 			
 			FollowRetBean bean = (FollowRetBean)result;
 			if(null != bean) {
-				//token过期
-				if(10001 == bean.code|| 10002 == bean.code){
-					startUserLogin();
-					return;
-				}
 				if(bean.code != 0) {
-					Toast.makeText(FollowingListActivity.this, bean.msg, Toast.LENGTH_SHORT).show();
+					//token过期
+					if(10001 == bean.code|| 10002 == bean.code){
+						startUserLogin();
+					}else if(bean.code == 12011){
+						Toast.makeText(FollowingListActivity.this, getString(R.string.follow_operation_limit_total), Toast.LENGTH_SHORT).show();
+					}else if(bean.code == 12016){
+						Toast.makeText(FollowingListActivity.this, getString(R.string.follow_operation_limit_day), Toast.LENGTH_SHORT).show();
+					}else{
+						Toast.makeText(FollowingListActivity.this, bean.msg, Toast.LENGTH_SHORT).show();
+					}
 					return;
 				}
 

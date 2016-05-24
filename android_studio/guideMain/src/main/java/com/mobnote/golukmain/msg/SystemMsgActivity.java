@@ -195,6 +195,12 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
 		if(requestType == IPageNotifyFn.PageType_SystemMsgMain){
 			MessageBean mb = (MessageBean) result;
 			closeProgressDialog();
+			if(mb != null && mb.data != null){
+				if ("10001".equals(mb.data.result) || "10002".equals(mb.data.result)){
+					GolukUtils.startLoginActivity(SystemMsgActivity.this);
+					return;
+				}
+			}
 			mRTPullListView.removeFooterView(1);
 			mRTPullListView.removeFooterView(2);
 			if(mb != null){

@@ -459,7 +459,15 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 			if(null != bean) {
 
 				if(bean.code != 0) {
-					Toast.makeText(SearchUserAcivity.this, bean.msg, Toast.LENGTH_SHORT).show();
+					if(10001 == bean.code|| 10002 == bean.code){
+						GolukUtils.startLoginActivity(SearchUserAcivity.this);
+					}else if(bean.code == 12011){
+						Toast.makeText(SearchUserAcivity.this, getString(R.string.follow_operation_limit_total), Toast.LENGTH_SHORT).show();
+					}else if(bean.code == 12016){
+						Toast.makeText(SearchUserAcivity.this, getString(R.string.follow_operation_limit_day), Toast.LENGTH_SHORT).show();
+					}else{
+						Toast.makeText(SearchUserAcivity.this, bean.msg, Toast.LENGTH_SHORT).show();
+					}
 					return;
 				}
 

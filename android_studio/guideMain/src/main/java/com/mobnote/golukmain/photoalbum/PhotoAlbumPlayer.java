@@ -400,10 +400,17 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		showLoading();
 		mHandler.postDelayed(mPlayingChecker, 250);
 
-        if (!mVideoFrom.equals("local")) {
+        if (mVideoFrom.equals("local")) {
+            /** 如果是本地循环视频，不显示分享按钮，但要显示编辑按钮 */
+            if(!TextUtils.isEmpty(mFileName) && mFileName.startsWith("NRM")){
+                mTvShareRightnow.setVisibility(View.GONE);
+                mStartVideoeditLl.setVisibility(View.VISIBLE);
+            }
+        }else {
             mStartVideoeditLl.setVisibility(View.GONE);
             mTvShareRightnow.setVisibility(View.GONE);
         }
+
 	}
 
 	private void exit() {
@@ -532,7 +539,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			lp.leftMargin = 0;
 			lp.addRule(RelativeLayout.BELOW, R.id.RelativeLayout_videoinfo);
 			mVideoViewLayout.setLayoutParams(lp);
-            mStartVideoeditLl.setVisibility(View.VISIBLE);
+            if(!mVideoFrom.equals("local")){
+                mStartVideoeditLl.setVisibility(View.GONE);
+            }else{
+                mStartVideoeditLl.setVisibility(View.VISIBLE);
+            }
 
 		}
 		mIsFullScreen = bFull;
