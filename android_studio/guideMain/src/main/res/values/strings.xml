@@ -1110,5 +1110,6 @@
     <string name="str_ae_add_chunk_failed">Add video failed</string>
     <string name="str_ae_can_not_split_from">Can not split length with %1$ss</string>
     <string name="str_ae_add_video_title">Add Video</string>
+    <string name="str_cluster_ranking_count_txt">Popularity</string>
     <string name="str_ae_no_export_size_supported">No supported size can be exported</string>
 </resources>
