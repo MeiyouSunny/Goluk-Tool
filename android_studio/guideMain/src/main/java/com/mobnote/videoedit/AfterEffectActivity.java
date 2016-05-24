@@ -76,30 +76,30 @@ import com.mobnote.application.GolukApplication;
 import cn.npnt.ae.model.VideoEncoderCapability;
 
 public class AfterEffectActivity extends BaseActivity implements AfterEffectListener, View.OnClickListener {
-	RecyclerView mAERecyclerView;
-	LinearLayoutManager mAELayoutManager;
-	RecyclerView mAEMusicRecyclerView;
-	LinearLayoutManager mAEMusicLayoutManager;
+    RecyclerView mAERecyclerView;
+    LinearLayoutManager mAELayoutManager;
+    RecyclerView mAEMusicRecyclerView;
+    LinearLayoutManager mAEMusicLayoutManager;
 
-	private GLSurfaceView mGLSurfaceView;
-	AfterEffect mAfterEffect;
-	Project mProject;
-	int mImageHeight;
-	int mImageWidth;
-	int mTransitionWidth;
-	List<ProjectItemBean> mProjectItemList;
-	Handler mAfterEffecthandler;
-	private ChannelLineAdapter mChannelLineAdapter;
-	private FrameLayout mSurfaceLayout;
-	private ImageButton mBackBTN;
+    private GLSurfaceView mGLSurfaceView;
+    AfterEffect mAfterEffect;
+    Project mProject;
+    int mImageHeight;
+    int mImageWidth;
+    int mTransitionWidth;
+    List<ProjectItemBean> mProjectItemList;
+    Handler mAfterEffecthandler;
+    private ChannelLineAdapter mChannelLineAdapter;
+    private FrameLayout mSurfaceLayout;
+    private ImageButton mBackBTN;
 
-	ImageView mVideoThumeIv;
-	ImageView mVideoPlayIV;
-	float mChunksTotalTime;
-	RelativeLayout mAEVolumeSettingLayout;
-	ImageView mAEVolumeSettingIv;
-	TextView mAEVolumePercentTv;
-	SeekBar mAEVolumeSeekBar;
+    ImageView mVideoThumeIv;
+    ImageView mVideoPlayIV;
+    float mChunksTotalTime;
+    RelativeLayout mAEVolumeSettingLayout;
+    ImageView mAEVolumeSettingIv;
+    TextView mAEVolumePercentTv;
+    SeekBar mAEVolumeSeekBar;
 
     LinearLayout mAEEditController;
     LinearLayout mAESplitAndDeleteLayout;
@@ -114,65 +114,65 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     int mDummyHeaderWidth;
     private TextView mNextTV;
 
-	/** 是否为静音 */
+    /** 是否为静音 */
 //	private boolean mIsMute;
-	/** 当前音量 */
+    /** 当前音量 */
 //	private int mCurrVolumeProgress;
 
-	private final static String TAG = "AfterEffectActivity";
+    private final static String TAG = "AfterEffectActivity";
 //	private float mCurrentPlayPosition = 0f;
-	private int mCurrentPointedItemIndex;
-	float mPlayingChunkPosition = 0f;
+    private int mCurrentPointedItemIndex;
+    float mPlayingChunkPosition = 0f;
 
-	private View mTimeLineGateV;
-	private int mGateLocationX;
+    private View mTimeLineGateV;
+    private int mGateLocationX;
     private CustomLoadingDialog mFullLoadingDialog;
     private int mTailWidth;
     private View mTimeLineWrapperRL;
 
 //	String mVideoPath1 = VideoEditConstant.VIDEO_PATH;
-	String mVideoPath;// = VideoEditConstant.VIDEO_PATH_1;
+    String mVideoPath;// = VideoEditConstant.VIDEO_PATH_1;
 //	String mMusicPath = VideoEditConstant.MUSIC_PATH;
 
-	public final static int MSG_AE_PLAY_STARTED = 1001;
-	public final static int MSG_AE_PLAY_PROGRESS = 1002;
-	public final static int MSG_AE_PLAY_FINISHED = 1003;
-	public final static int MSG_AE_PLAY_FAILED = 1004;
-	public final static int MSG_AE_EXPORT_STARTED = 1005;
-	public final static int MSG_AE_EXPORT_PROGRESS = 1006;
-	public final static int MSG_AE_EXPORT_FINISHED = 1007;
-	public final static int MSG_AE_EXPORT_FAILED = 1008;
-	public final static int MSG_AE_THUMB_GENERATED = 1009;
-	public final static int MSG_AE_CHUNK_ADD_FINISHED = 1010;
-	public final static int MSG_AE_CHUNK_ADD_FAILED = 1011;
-	public final static int MSG_AE_BITMAP_READ_OUT = 1012;
-	public final static int MSG_AE_PLAY_PAUSED = 1013;
-	public final static int MSG_AE_PLAY_RESUMED = 1014;
-	public final static int MSG_AE_CHUNK_PLAY_END = 1015;
+    public final static int MSG_AE_PLAY_STARTED = 1001;
+    public final static int MSG_AE_PLAY_PROGRESS = 1002;
+    public final static int MSG_AE_PLAY_FINISHED = 1003;
+    public final static int MSG_AE_PLAY_FAILED = 1004;
+    public final static int MSG_AE_EXPORT_STARTED = 1005;
+    public final static int MSG_AE_EXPORT_PROGRESS = 1006;
+    public final static int MSG_AE_EXPORT_FINISHED = 1007;
+    public final static int MSG_AE_EXPORT_FAILED = 1008;
+    public final static int MSG_AE_THUMB_GENERATED = 1009;
+    public final static int MSG_AE_CHUNK_ADD_FINISHED = 1010;
+    public final static int MSG_AE_CHUNK_ADD_FAILED = 1011;
+    public final static int MSG_AE_BITMAP_READ_OUT = 1012;
+    public final static int MSG_AE_PLAY_PAUSED = 1013;
+    public final static int MSG_AE_PLAY_RESUMED = 1014;
+    public final static int MSG_AE_CHUNK_PLAY_END = 1015;
     public final static int MSG_AE_BITMAP_READ_FAILED = 1016;
 
 //	private boolean mIsPlaying;
 //	private boolean mIsPlayFinished;
-	enum PlayerState {
-		INITED,
-		STOPPED,
-		PLAYING,
-		PAUSED,
-		RELEASED,
-		ERROR
-	}
+    enum PlayerState {
+        INITED,
+        STOPPED,
+        PLAYING,
+        PAUSED,
+        RELEASED,
+        ERROR
+    }
 
-	private PlayerState mPlayerState;
-	final String[] mMusicPaths = {
-		"none",
-		"goluk_music/01-fasion-48khz-128kbps-final.mp3",
-		"goluk_music/02-discover-48khz-128kbps-final.mp3",
-		"goluk_music/03-no_effect-48khz-128kbps-final.mp3",
-		"goluk_music/04-memory-48khz-128kbps-final.mp3",
-		"goluk_music/05-street-48khz-128kbps-final.mp3",
-		"goluk_music/06-travel-48khz-128kbps-final.mp3",
-		"goluk_music/07-fresh-48khz-128kbps-final.mp3",
-		"goluk_music/08-crual-48khz-128kbps-final.mp3"};
+    private PlayerState mPlayerState;
+    final String[] mMusicPaths = {
+            "none",
+            "goluk_music/01-fasion-48khz-128kbps-final.mp3",
+            "goluk_music/02-discover-48khz-128kbps-final.mp3",
+            "goluk_music/03-no_effect-48khz-128kbps-final.mp3",
+            "goluk_music/04-memory-48khz-128kbps-final.mp3",
+            "goluk_music/05-street-48khz-128kbps-final.mp3",
+            "goluk_music/06-travel-48khz-128kbps-final.mp3",
+            "goluk_music/07-fresh-48khz-128kbps-final.mp3",
+            "goluk_music/08-crual-48khz-128kbps-final.mp3"};
 
     String[] mMusicNames;
     final int[] mMusicCoversNormal = {
@@ -359,7 +359,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     }
 
     public void playOrPause() {
-        Log.d("CK1", "#########################, playerState=" + mPlayerState);
         if (mPlayerState == PlayerState.PLAYING) {
             mVideoPlayIV.setVisibility(View.VISIBLE);
             mAfterEffect.playPause();
@@ -1063,7 +1062,10 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                     if (view.getId() == R.id.fl_ae_data_chunk) {
                         int pX = VideoEditUtils.getViewXLocation(view);
                         if (VideoEditUtils.judgeChunkOverlap(mGateLocationX, pX, view.getWidth())) {
-                            if (mPlayerState == PlayerState.PAUSED) {
+                            if (mPlayerState == PlayerState.PAUSED || mPlayerState == PlayerState.STOPPED) {
+                                if(mPlayerState == PlayerState.STOPPED) {
+                                    mPlayerState = PlayerState.PAUSED;
+                                }
                                 seekWith(VideoEditUtils.mapI2CIndex(i), view.getWidth(), mGateLocationX - pX);
                             }
                             break;
@@ -1192,7 +1194,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     protected void onDestroy() {
         if (mAfterEffect != null) {
             mAfterEffect.playStop();
-            mPlayerState = PlayerState.STOPPED;
+            mPlayerState = PlayerState.RELEASED;
             mAfterEffect.release();
         }
 
