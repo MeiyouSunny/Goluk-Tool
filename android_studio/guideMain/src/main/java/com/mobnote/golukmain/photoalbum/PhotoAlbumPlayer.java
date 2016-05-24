@@ -539,7 +539,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			lp.leftMargin = 0;
 			lp.addRule(RelativeLayout.BELOW, R.id.RelativeLayout_videoinfo);
 			mVideoViewLayout.setLayoutParams(lp);
-            mStartVideoeditLl.setVisibility(View.VISIBLE);
+            if(!mVideoFrom.equals("local")){
+                mStartVideoeditLl.setVisibility(View.GONE);
+            }else{
+                mStartVideoeditLl.setVisibility(View.VISIBLE);
+            }
 
 		}
 		mIsFullScreen = bFull;
