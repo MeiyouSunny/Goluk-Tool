@@ -91,7 +91,7 @@ public class RankingAdapter extends BaseAdapter{
             public void onClick(View v) {
                 if(UserUtils.isNetDeviceAvailable(mContext)){
                     Intent intent = new Intent(mContext,VideoDetailActivity.class);
-                    intent.putExtra("videoid",video.videoid);
+                    intent.putExtra("videoid",video.video.videoid);
                     mContext.startActivity(intent);
                 }else{
                     GolukUtils.showToast(mContext,mContext.getResources().getString(R.string.network_error));
@@ -104,16 +104,16 @@ public class RankingAdapter extends BaseAdapter{
             public void onClick(View v) {
                 if(UserUtils.isNetDeviceAvailable(mContext)) {
                     Intent intent = new Intent(mContext, VideoDetailActivity.class);
-                    intent.putExtra("videoid", video.videoid);
+                    intent.putExtra("videoid", video.video.videoid);
                     mContext.startActivity(intent);
                 }else{
                     GolukUtils.showToast(mContext,mContext.getResources().getString(R.string.network_error));
                 }
             }
         });
-        GlideUtils.loadImage(mContext,holderView.videoImg,video.pictureurl,-1);
+        GlideUtils.loadImage(mContext,holderView.videoImg,video.video.pictureurl,-1);
         holderView.numberIndex.setText(position + 1 + "");
-        holderView.popularity.setText("人气值:" + video.rank);
+        holderView.popularity.setText(mContext.getResources().getString(R.string.str_cluster_ranking_count_txt) + ":" + video.video.rank);
         holderView.userNameText.setText(video.user.nickname);
         if(position == 0){
             holderView.numberImg.setImageResource(R.drawable.icon__one);

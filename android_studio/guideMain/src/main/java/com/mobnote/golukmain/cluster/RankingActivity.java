@@ -154,7 +154,7 @@ public class RankingActivity extends BaseActivity implements IRequestResultListe
                         mRandkingList = rlb.data.videolist;
                         mRrankingAdapter.setData(mRandkingList);
                         updateViewData(true, 0);
-                        mTimestamp = mRandkingList.get(mRandkingList.size() - 1).addtime;
+                        mTimestamp = mRandkingList.get(mRandkingList.size() - 1).video.addtime;
 
                         if(rlb.data.videolist.size() < 20){
                             mIsHaveData = false;

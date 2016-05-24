@@ -1074,4 +1074,5 @@
     <string name="str_ae_add_chunk_failed">添加视频失败</string>
     <string name="str_ae_can_not_split_from">不能拆分长度%1$s秒</string>
     <string name="str_ae_add_video_title">添加视频</string>
+    <string name="str_cluster_ranking_count_txt">人气值</string>
 </resources>
