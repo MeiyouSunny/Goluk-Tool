@@ -64,6 +64,8 @@ import android.text.format.Time;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.Toast;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -1217,5 +1219,14 @@ public class GolukUtils {
 			loginIntent = new Intent(context, UserLoginActivity.class);
 		}
 		context.startActivity(loginIntent);
+	}
+
+	public static void startH5(Context context, WebView webview,String url){
+		//test Url http://surl3.goluk.cn/activity/src/html/ad_beta.html
+		//WebView加载web资源
+		webview.getSettings().setJavaScriptEnabled(true);
+		webview.setWebChromeClient(new WebChromeClient());
+		webview.loadUrl(url);
+		webview.addJavascriptInterface(new JavaScriptInterface(context),"mobile");
 	}
 }
