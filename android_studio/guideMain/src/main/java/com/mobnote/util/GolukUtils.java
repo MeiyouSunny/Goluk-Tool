@@ -74,7 +74,7 @@ public class GolukUtils {
 	public static final String GOLUK_APP_VERSION = "1";
 
 	/** Goluk绑定连接出现问题URL */
-	public static final String URL_BIND_CONN_PROBLEM = "http://surl.goluk.cn/faq/link.html";
+	public static final String URL_BIND_CONN_PROBLEM = "https://surl.goluk.cn/faq/link.html";
 
 	public static float mDensity = 1.0f;
 

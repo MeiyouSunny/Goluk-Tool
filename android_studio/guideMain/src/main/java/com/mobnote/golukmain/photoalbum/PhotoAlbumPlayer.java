@@ -225,6 +225,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 }
                 isExporting = false;
             }else if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_FAILED){
+                //分享失败，则直接分享原视频
+                GolukUtils.startVideoShareActivity(this,mType,mPath,mFileName,false);
+                if(mAddTailerDialog != null && mAddTailerDialog.isVisible()){
+                    mAddTailerDialog.dismiss();
+                }
                 isExporting = false;
             }
         }
@@ -936,7 +941,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             mSimpleExporter.setSourceVideoPath(srcPath);
         } catch (Exception e1) {
             e1.printStackTrace();
-            Toast.makeText(this," \"视频源文件加载失败\" + e1.getMessage()",Toast.LENGTH_SHORT);
+            Toast.makeText(this,getString(R.string.load_video_fail),Toast.LENGTH_SHORT);
             isExporting = false;
             return;
         }
@@ -944,7 +949,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
         List<VideoEncoderCapability> capaList = AfterEffect.getSuportedCapability(videoFileInfo.getWidth());
         if (capaList == null || capaList.size() == 0) {
-            Toast.makeText(this,"手机不支持合适的分辨率",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,getString(R.string.not_supported_resolution),Toast.LENGTH_SHORT).show();
             isExporting = false;
             return;
         }
