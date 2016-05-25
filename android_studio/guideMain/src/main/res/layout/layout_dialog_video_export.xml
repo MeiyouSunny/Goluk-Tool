@@ -16,7 +16,7 @@
             android:layout_width="fill_parent"
             android:layout_height="43.3dp"
             android:gravity="center"
-            android:text="选择导出大小"
+            android:text="@string/str_ae_export_dialog_title"
             android:textColor="#1163a2"
             android:textSize="16sp" />
 
@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="43.3dp"
             android:gravity="center"
-            android:text="1080P"
+            android:text="@string/str_ae_export_dialog_1080p"
             android:textColor="#1163a2"
             android:textSize="16sp" />
 
@@ -58,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="43.3dp"
             android:gravity="center"
-            android:text="HD720P"
+            android:text="@string/str_ae_export_dialog_720p"
             android:textColor="#1163a2"
             android:textSize="16sp" />
 
@@ -79,7 +79,7 @@
             android:layout_width="match_parent"
             android:layout_height="43.3dp"
             android:gravity="center"
-            android:text="中 480P"
+            android:text="@string/str_ae_export_dialog_480p"
             android:textColor="#1163a2"
             android:textSize="16sp" />
 
@@ -94,7 +94,7 @@
         android:layout_width="match_parent"
         android:layout_height="43.3dp"
         android:gravity="center"
-        android:text="取消"
+        android:text="@string/str_ae_export_dialog_cancel"
         android:textColor="#1163a2"
         android:textSize="16sp" />
 
