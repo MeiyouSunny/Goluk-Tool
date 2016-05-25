@@ -363,11 +363,8 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 
 			@Override
 			public void onClick(View arg0) {
-//				Intent it = new Intent(mContext, UserCenterActivity.class);
-				Intent it = new Intent(mContext, NewUserCenterActivity.class);
-
 				VideoUserInfo videoUser = videoAllData.avideo.user;
-				GolukUtils.startUserCenterActivity(mContext,videoUser.uid);
+				GolukUtils.startUserCenterActivity(mContext, videoUser.uid);
 			}
 		});
 	}
