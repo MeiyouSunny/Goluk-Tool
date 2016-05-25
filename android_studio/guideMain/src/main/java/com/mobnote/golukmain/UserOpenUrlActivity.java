@@ -89,6 +89,9 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		mBackBtn = (ImageButton) findViewById(R.id.back_btn);
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
 		mWebView = (MyProgressWebView) findViewById(R.id.my_webview);
+        String currUa = mWebView.getSettings().getUserAgentString();
+        mWebView.getSettings().setUserAgentString(currUa + "/ goluk /"+ "golukAndroid /");
+
 		mTextRight = (TextView) findViewById(R.id.user_title_right);
 		if (GolukConfig.NEED_SHARE.equals(webType)) {
 			mNeedShare = true;
