@@ -599,20 +599,7 @@ public class NewestAdapter extends BaseAdapter {
 	}
 
 	public void startUserCenter(VideoSquareInfo videoSquareInfo) {
-		UCUserInfo user = new UCUserInfo();
-		user.uid = videoSquareInfo.mUserEntity.uid;
-		user.nickname = videoSquareInfo.mUserEntity.nickname;
-		user.headportrait = videoSquareInfo.mUserEntity.headportrait;
-		user.introduce = "";
-		user.sex = videoSquareInfo.mUserEntity.sex;
-		user.customavatar = videoSquareInfo.mUserEntity.mCustomAvatar;
-		user.praisemenumber = "0";
-		user.sharevideonumber = "0";
-		// Intent i = new Intent(mContext, UserCenterActivity.class);
-		Intent i = new Intent(mContext, NewUserCenterActivity.class);
-		i.putExtra("userinfo", user);
-		i.putExtra("type", 0);
-		mContext.startActivity(i);
+		GolukUtils.startUserCenterActivity(mContext, videoSquareInfo.mUserEntity.uid);
 	}
 
 	public void setCategoryListView(CategoryListView view) {
