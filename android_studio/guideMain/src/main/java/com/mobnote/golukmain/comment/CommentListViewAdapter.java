@@ -157,22 +157,7 @@ public class CommentListViewAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View arg0) {
-//				Intent it = new Intent(mContext, UserCenterActivity.class);
-				Intent it = new Intent(mContext, NewUserCenterActivity.class);
-
-				UCUserInfo user = new UCUserInfo();
-				user.uid = temp.mUserId;
-				user.nickname = temp.mUserName;
-				user.headportrait = temp.mUserHead;
-				user.introduce = "";
-				user.sex = "";
-				user.customavatar = temp.customavatar;
-				user.praisemenumber = "0";
-				user.sharevideonumber = "0";
-
-				it.putExtra("userinfo", user);
-				it.putExtra("type", 0);
-				mContext.startActivity(it);
+				GolukUtils.startUserCenterActivity(mContext,temp.mUserId);
 			}
 		});
 		return converView;

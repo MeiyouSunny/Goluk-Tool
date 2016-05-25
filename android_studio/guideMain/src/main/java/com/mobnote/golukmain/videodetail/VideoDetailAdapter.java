@@ -199,25 +199,8 @@ public class VideoDetailAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View arg0) {
-//				Intent it = new Intent(mContext, UserCenterActivity.class);
-				Intent it = new Intent(mContext, NewUserCenterActivity.class);
-
 				CommentBean bean = mDataList.get(index);
-				UCUserInfo user = new UCUserInfo();
-				user.uid = bean.mUserId;
-				user.nickname = bean.mUserName;
-				user.headportrait = bean.mUserHead;
-				user.introduce = "";
-				user.sex = "";
-				user.customavatar = bean.customavatar;
-				user.praisemenumber = "0";
-				user.sharevideonumber = "0";
-
-				GolukDebugUtils.e("", "-------user.nickname-----" + bean.mUserName);
-
-				it.putExtra("userinfo", user);
-				it.putExtra("type", 0);
-				mContext.startActivity(it);
+				GolukUtils.startUserCenterActivity(mContext,bean.mUserId);
 			}
 		});
 

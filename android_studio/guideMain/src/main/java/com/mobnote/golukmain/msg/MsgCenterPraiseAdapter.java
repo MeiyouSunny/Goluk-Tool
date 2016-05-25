@@ -164,23 +164,8 @@ public class MsgCenterPraiseAdapter extends BaseAdapter {
 		}
 		if (id == R.id.iv_listview_item_praise_head || id == R.id.tv_listview_item_praise_name) {
 			if (null != bean && null != bean.sender) {
-//				Intent it = new Intent(mContext, UserCenterActivity.class);
-				Intent it = new Intent(mContext, NewUserCenterActivity.class);
-
 				MessageSenderBean sender = bean.sender;
-				UCUserInfo user = new UCUserInfo();
-				user.uid = sender.uid;
-				user.nickname = sender.name;
-				user.headportrait = sender.avatar;
-				user.introduce = "";
-				user.sex = "";
-				user.customavatar = sender.customavatar;
-				user.praisemenumber = "0";
-				user.sharevideonumber = "0";
-
-				it.putExtra("userinfo", user);
-				it.putExtra("type", 0);
-				mContext.startActivity(it);
+				GolukUtils.startUserCenterActivity(mContext,sender.uid);
 			}
 		} else {
 			if (null != bean && null != bean.content) {

@@ -17,7 +17,7 @@ public class ExternalStartActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		GolukDebugUtils.e("", "start App: ExternalStartActivity:------------: taskid: " + this.getTaskId());
-		
+
 		getWebStartData();
 		startApp();
 		finish();

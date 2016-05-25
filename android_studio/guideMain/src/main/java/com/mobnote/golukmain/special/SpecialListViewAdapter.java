@@ -12,6 +12,7 @@ import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
 import com.mobnote.golukmain.usercenter.UCUserInfo;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.util.GlideUtils;
+import com.mobnote.util.GolukUtils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -139,20 +140,7 @@ public class SpecialListViewAdapter extends BaseAdapter {
 
 	private void startUserCenter(SpecialInfo specialInfo) {
 		// 跳转当前点赞人的个人中心
-		UCUserInfo user = new UCUserInfo();
-		user.uid = specialInfo.uid;
-		user.nickname = specialInfo.author;
-		user.headportrait = specialInfo.headportrait;
-		user.introduce = "";
-		user.sex = specialInfo.sex;
-		user.customavatar = specialInfo.customavatar;
-		user.praisemenumber = "0";
-		user.sharevideonumber = "0";
-//		Intent i = new Intent(mContext, UserCenterActivity.class);
-		Intent i = new Intent(mContext, NewUserCenterActivity.class);
-		i.putExtra("userinfo", user);
-		i.putExtra("type", 0);
-		mContext.startActivity(i);
+		GolukUtils.startUserCenterActivity(mContext,specialInfo.uid);
 	}
 
 	private void startVideoDetailActivity(SpecialInfo specialInfo) {

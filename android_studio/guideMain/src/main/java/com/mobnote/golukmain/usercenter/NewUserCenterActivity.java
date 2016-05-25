@@ -73,7 +73,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	/** header **/
 	private UserCenterHeader mHeader = null;
 	/** 用户 **/
-	private UCUserInfo mUserInfo = null;
+	private String  mUserId = null;
 	private CustomLoadingDialog mLoadinDialog = null;
 	/****/
 	private HomeJson mHomeJson = null;
@@ -97,7 +97,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 		mCurrentUid = GolukApplication.getInstance().mCurrentUId;
 
 		Intent it = getIntent();
-		mUserInfo = (UCUserInfo) it.getSerializableExtra("userinfo");
+		mUserId = it.getStringExtra("userId");
 
 		initView();
 
@@ -148,7 +148,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 				pullToRefreshBase.getLoadingLayoutProxy(true, false).setLastUpdatedLabel(
 						getResources().getString(R.string.updating)
 								+ GolukUtils.getCurrentFormatTime(NewUserCenterActivity.this));
-				httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_DOWN, "");
+				httpRequestData(mUserId, mCurrentUid, OPERATOR_DOWN, "");
 			}
 
 			@Override
@@ -157,12 +157,12 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 				mIsFirst = false;
 				pullToRefreshBase.getLoadingLayoutProxy(false, true).setLastUpdatedLabel(
 						getResources().getString(R.string.goluk_pull_to_refresh_footer_pull_label));
-				httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_UP, mLastIndex);
+				httpRequestData(mUserId, mCurrentUid, OPERATOR_UP, mLastIndex);
 			}
 
 		});
 
-		httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_FIRST, "");
+		httpRequestData(mUserId, mCurrentUid, OPERATOR_FIRST, "");
 		mIsFirst = true;
 
 	}
@@ -173,10 +173,10 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 		}
 		switch (event.getOpCode()) {
 		case EventConfig.REFRESH_USER_INFO:
-			if (mUserInfo != null) {
+			if (mUserId != null) {
 				if (testUser()) {
 					mIsFirst = false;
-					httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_FIRST, "");
+					httpRequestData(mUserId, mCurrentUid, OPERATOR_FIRST, "");
 				}
 			}
 			break;
@@ -376,7 +376,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			mMoreDialog = new UserMoreDialog(this);
 			mMoreDialog.show();
 		} else if (id == R.id.ry_usercenter_refresh) {
-			httpRequestData(mUserInfo.uid, mCurrentUid, OPERATOR_FIRST, "");
+			httpRequestData(mUserId, mCurrentUid, OPERATOR_FIRST, "");
 		} else {
 		}
 	}
@@ -401,7 +401,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 		UserInfo info = mBaseApp.getMyInfo();
 		try {
 
-			if (info != null && info.uid.equals(mUserInfo.uid)) {
+			if (info != null && info.uid.equals(mUserId)) {
 				return true;
 			} else {
 				return false;

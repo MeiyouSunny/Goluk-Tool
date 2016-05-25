@@ -368,7 +368,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
 			ma.mApp.mUser.setUserInterface(null);
 		} else if (id == R.id.user_share) {
 			if(isLoginInfoValid()){
-				GolukUtils.startUserCenterActivity(getActivity(), userUId, userName, userHead, customavatar, userSex, userDesc);
+				GolukUtils.startUserCenterActivity(getActivity(), userUId);
 			}else{
 				clickToLogin(TYPE_SHARE_PRAISE);
 			}
@@ -388,8 +388,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
 			}
 		} else if (id == R.id.user_center_item) {
 			if (isLoginInfoValid()) {
-				GolukUtils.startUserCenterActivity(getActivity(), userUId,
-						userName, userHead, customavatar, userSex, userDesc);
+				GolukUtils.startUserCenterActivity(getActivity(), userUId);
 			} else {
 				clickToLogin(TYPE_USER);
 			}

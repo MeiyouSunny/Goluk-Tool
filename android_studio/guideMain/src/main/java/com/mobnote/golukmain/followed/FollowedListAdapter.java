@@ -335,18 +335,14 @@ public class FollowedListAdapter extends BaseAdapter {
 		holderRec.nItemUserAvatarIV.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				GolukUtils.startUserCenterActivity(mFragment.getActivity(), finalUserBean.uid,
-						finalUserBean.nickname, finalUserBean.avatar,
-						finalUserBean.customavatar, finalUserBean.sex, finalUserBean.introduction);
+				GolukUtils.startUserCenterActivity(mFragment.getActivity(), finalUserBean.uid);
 			}
 		});
 
 		holderRec.nItemNameTV.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				GolukUtils.startUserCenterActivity(mFragment.getActivity(), finalUserBean.uid,
-						finalUserBean.nickname, finalUserBean.avatar,
-						finalUserBean.customavatar, finalUserBean.sex, finalUserBean.introduction);
+				GolukUtils.startUserCenterActivity(mFragment.getActivity(), finalUserBean.uid);
 			}
 		});
 
@@ -720,10 +716,7 @@ public class FollowedListAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				if(null != vsInfo && null != vsInfo.user) {
-					GolukUtils.startUserCenterActivity(mFragment.getActivity(),
-						vsInfo.user.uid, vsInfo.user.nickname,
-						vsInfo.user.headportrait, vsInfo.user.customavatar,
-						vsInfo.user.sex, "");
+					GolukUtils.startUserCenterActivity(mFragment.getActivity(), vsInfo.user.uid);
 				}
 			}
 		});

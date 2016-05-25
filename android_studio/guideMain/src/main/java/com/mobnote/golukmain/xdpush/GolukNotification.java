@@ -526,28 +526,7 @@ public class GolukNotification {
 						context.startActivity(intent);
 					} else if (HOME_PAGE.equals(msgBean.tarkey)) {
 						Context context = GolukApplication.getInstance().getContext();
-						// intent = new Intent(context,
-						// VideoDetailActivity.class);
-						// intent.putExtra(VideoDetailActivity.VIDEO_ID,
-						// vidArray[0]);
-						// intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT,
-						// true);
-						// context.startActivity(intent);
-						UCUserInfo user = new UCUserInfo();
-						user.uid = vidArray[0];
-						user.nickname = "";
-						user.headportrait = "";// clusterInfo.mUserEntity.headportrait;
-						user.introduce = "";
-						user.sex = "";// clusterInfo.mUserEntity.sex;
-						user.customavatar = "";// clusterInfo.mUserEntity.mCustomAvatar;
-						user.praisemenumber = "0";
-						user.sharevideonumber = "0";
-						// Intent i = new Intent(context,
-						// UserCenterActivity.class);
-						Intent i = new Intent(context, NewUserCenterActivity.class);
-						i.putExtra("userinfo", user);
-						i.putExtra("type", 0);
-						context.startActivity(i);
+						GolukUtils.startUserCenterActivity(context,vidArray[0]);
 					}
 				} else {
 					// do nothing

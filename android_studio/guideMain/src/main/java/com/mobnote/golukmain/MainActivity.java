@@ -427,18 +427,22 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 		String title = mStartAppBean.title;
 		String id = mStartAppBean.id;
 
-		if ("1".equals(type)) {
-			// 单视频
+		if ("1".equals(type)) {// 单视频
 			Intent intent = new Intent(this, VideoDetailActivity.class);
 			intent.putExtra(VideoDetailActivity.VIDEO_ID, id);
 			intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
 			startActivity(intent);
-		} else if ("2".equals(type)) {
-			// 专题
+		} else if ("2".equals(type)) {// 专题
 			Intent intent = new Intent(this, SpecialListActivity.class);
 			intent.putExtra("ztid", id);
 			intent.putExtra("title", title);
 			startActivity(intent);
+		} else if("3".equals(type)){//活动聚合页面
+
+		} else if("4".equals(type)){//个人主页
+
+		} else if("5".equals(type)){//投票网页
+
 		}
 
 		mStartAppBean = null;

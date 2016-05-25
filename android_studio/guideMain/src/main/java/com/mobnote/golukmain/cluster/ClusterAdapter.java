@@ -933,20 +933,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 	
 	public void startUserCenter(VideoSquareInfo clusterInfo){
 		// 跳转当前点赞人的个人中心
-		UCUserInfo user = new UCUserInfo();
-		user.uid = clusterInfo.mUserEntity.uid;
-		user.nickname = clusterInfo.mUserEntity.nickname;
-		user.headportrait = clusterInfo.mUserEntity.headportrait;
-		user.introduce = "";
-		user.sex = clusterInfo.mUserEntity.sex;
-		user.customavatar = clusterInfo.mUserEntity.mCustomAvatar;
-		user.praisemenumber = "0";
-		user.sharevideonumber = "0";
-//		Intent i = new Intent(mContext, UserCenterActivity.class);
-		Intent i = new Intent(mContext, NewUserCenterActivity.class);
-		i.putExtra("userinfo", user);
-		i.putExtra("type", 0);
-		mContext.startActivity(i);
+		GolukUtils.startUserCenterActivity(mContext,clusterInfo.mUserEntity.uid);
 	}
 
 	@Override

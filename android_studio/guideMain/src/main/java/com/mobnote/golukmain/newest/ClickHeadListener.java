@@ -35,25 +35,9 @@ public class ClickHeadListener implements OnClickListener {
 			((BaseActivity) mContext).setJumpToNext();
 		}
 
-//		Intent intent = new Intent(mContext, UserCenterActivity.class);
-		Intent intent = new Intent(mContext, NewUserCenterActivity.class);
-		intent.putExtra("userinfo", getUserInfo());
-		mContext.startActivity(intent);
-	}
-
-	public UCUserInfo getUserInfo() {
 		if (null == mVideoSquareInfo) {
-			return null;
+			return;
 		}
-		UCUserInfo userInfo = new UCUserInfo();
-		userInfo.uid = mVideoSquareInfo.mUserEntity.uid;
-		userInfo.nickname = mVideoSquareInfo.mUserEntity.nickname;
-		userInfo.headportrait = mVideoSquareInfo.mUserEntity.headportrait;
-		userInfo.introduce = "";
-		userInfo.sex = mVideoSquareInfo.mUserEntity.sex;
-		userInfo.customavatar = mVideoSquareInfo.mUserEntity.mCustomAvatar;
-
-		return userInfo;
+		GolukUtils.startUserCenterActivity(mContext,mVideoSquareInfo.mUserEntity.uid);
 	}
-
 }

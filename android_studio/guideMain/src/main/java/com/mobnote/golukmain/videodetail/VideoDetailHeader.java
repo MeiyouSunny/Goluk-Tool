@@ -367,21 +367,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 				Intent it = new Intent(mContext, NewUserCenterActivity.class);
 
 				VideoUserInfo videoUser = videoAllData.avideo.user;
-				UCUserInfo user = new UCUserInfo();
-				user.uid = videoUser.uid;
-				user.nickname = videoUser.nickname;
-				user.headportrait = videoUser.headportrait;
-				user.introduce = "";
-				user.sex = "";
-				user.customavatar = videoUser.customavatar;
-				user.praisemenumber = "0";
-				user.sharevideonumber = "0";
-
-				GolukDebugUtils.e("", "-------user.nickname-----" + videoUser.nickname);
-
-				it.putExtra("userinfo", user);
-				it.putExtra("type", 0);
-				mContext.startActivity(it);
+				GolukUtils.startUserCenterActivity(mContext,videoUser.uid);
 			}
 		});
 	}

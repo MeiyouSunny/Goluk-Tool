@@ -178,13 +178,7 @@ public class SystemMsgAdapter extends BaseAdapter {
 				public void onClick(View arg0) {
 					if (GolukUtils.isNetworkConnected(mContext)) {
 						if (mmbTxt.type == msgTypeCertificate) {// 认证消息跳转到个人中心
-							UCUserInfo user = new UCUserInfo();
-							user.uid = mmbTxt.receiver.uid;
-//							Intent i = new Intent(mContext, UserCenterActivity.class);
-							Intent i = new Intent(mContext, NewUserCenterActivity.class);
-							i.putExtra("userinfo", user);
-							i.putExtra("type", 0);
-							mContext.startActivity(i);
+                            GolukUtils.startUserCenterActivity(mContext,mmbTxt.receiver.uid);
 						} else if (mmbTxt.type == msgTypeSelect) {// 跳转到专题页
 							if (sSpecialType.equals(mmbTxt.content.type)) {//专题
 								String specialid = mmbTxt.content.access;

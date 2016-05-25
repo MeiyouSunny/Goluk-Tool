@@ -195,20 +195,7 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 					intent.putExtra("ztid", accessId);
 					mContext.startActivity(intent);
 				}else if(HOME_PAGE.equals(type)) {
-					UCUserInfo user = new UCUserInfo();
-					user.uid = accessId;
-					user.nickname = "";
-					user.headportrait = "";//clusterInfo.mUserEntity.headportrait;
-					user.introduce = "";
-					user.sex = "";//clusterInfo.mUserEntity.sex;
-					user.customavatar = "";//clusterInfo.mUserEntity.mCustomAvatar;
-					user.praisemenumber = "0";
-					user.sharevideonumber = "0";
-//					intent = new Intent(mContext, UserCenterActivity.class);
-					intent = new Intent(mContext, NewUserCenterActivity.class);
-					intent.putExtra("userinfo", user);
-					intent.putExtra("type", 0);
-					mContext.startActivity(intent);
+					GolukUtils.startUserCenterActivity(mContext,accessId);
 				}
 			}
 		});

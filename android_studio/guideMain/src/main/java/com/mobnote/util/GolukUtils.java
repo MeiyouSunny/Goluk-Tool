@@ -998,31 +998,6 @@ public class GolukUtils {
 		return realZone;
 	}
 
-	public static void startUserCenterActivity(Context context, String uid,
-			String nickname, String avatar, String customAvatar, String sex,
-			String introduction) {
-
-		if (!isNetworkConnected(context)) {
-			Toast.makeText(context, context.getString(R.string.network_error),
-					Toast.LENGTH_SHORT).show();
-			return;
-		}
-
-		UCUserInfo user = new UCUserInfo();
-		user.uid = uid;
-		user.nickname = nickname;
-		user.headportrait = avatar;
-		user.introduce = introduction;
-		user.sex = sex;
-		user.customavatar = customAvatar;
-		user.praisemenumber = "0";
-		user.sharevideonumber = "0";
-		Intent i = new Intent(context, NewUserCenterActivity.class);
-		i.putExtra("userinfo", user);
-		i.putExtra("type", 0);
-		context.startActivity(i);
-	}
-
 	public static void startVideoDetailActivity(Context context, String videoId) {
 		Intent intent = null;
 		intent = new Intent(context, VideoDetailActivity.class);
@@ -1084,6 +1059,12 @@ public class GolukUtils {
         intent.putExtra(PhotoAlbumPlayer.SIZE, size);
 		context.startActivity(intent);
 	}
+
+    public static void startUserCenterActivity(Context context,String userId) {
+        Intent intent = new Intent(context, NewUserCenterActivity.class);
+        intent.putExtra("userId", userId);
+        context.startActivity(intent);
+    }
 
 	public static void startVideoShareActivity(Context context, int type, String path, String filename,boolean isAEVideo) {
 		Intent intent = new Intent(context, VideoShareActivity.class);

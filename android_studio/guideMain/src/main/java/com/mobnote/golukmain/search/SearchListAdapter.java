@@ -250,13 +250,7 @@ public class SearchListAdapter extends BaseAdapter{
 				@Override
 				public void onClick(View v) {
 					SimpleUserItemBean tempFollowingItemBean = mResultList.get(position).getUserItemBean();
-					GolukUtils.startUserCenterActivity(mSearchActivity, 
-							tempFollowingItemBean.uid, 
-							tempFollowingItemBean.nickname,
-							tempFollowingItemBean.avatar, 
-							tempFollowingItemBean.customavatar,
-							tempFollowingItemBean.sex, 
-							tempFollowingItemBean.introduction);
+					GolukUtils.startUserCenterActivity(mSearchActivity, tempFollowingItemBean.uid);
 				}
 			});
 
@@ -266,13 +260,7 @@ public class SearchListAdapter extends BaseAdapter{
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					SimpleUserItemBean tempFollowingItemBean = mResultList.get(position).getUserItemBean();
-					GolukUtils.startUserCenterActivity(mSearchActivity, 
-							tempFollowingItemBean.uid, 
-							tempFollowingItemBean.nickname,
-							tempFollowingItemBean.avatar, 
-							tempFollowingItemBean.customavatar,
-							tempFollowingItemBean.sex, 
-							tempFollowingItemBean.introduction);
+					GolukUtils.startUserCenterActivity(mSearchActivity, tempFollowingItemBean.uid);
 				}
 			});
 
@@ -282,13 +270,7 @@ public class SearchListAdapter extends BaseAdapter{
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					SimpleUserItemBean tempFollowingItemBean = mResultList.get(position).getUserItemBean();
-					GolukUtils.startUserCenterActivity(mSearchActivity, 
-							tempFollowingItemBean.uid, 
-							tempFollowingItemBean.nickname,
-							tempFollowingItemBean.avatar, 
-							tempFollowingItemBean.customavatar,
-							tempFollowingItemBean.sex, 
-							tempFollowingItemBean.introduction);
+					GolukUtils.startUserCenterActivity(mSearchActivity, tempFollowingItemBean.uid);
 				}
 			});
 

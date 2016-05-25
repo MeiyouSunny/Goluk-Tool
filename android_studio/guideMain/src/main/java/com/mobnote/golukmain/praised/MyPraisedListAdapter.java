@@ -139,21 +139,7 @@ public class MyPraisedListAdapter extends BaseAdapter {
 
 		@Override
 		public void onClick(View widget) {
-//			Intent intent = new Intent(mContext, UserCenterActivity.class);
-			Intent intent = new Intent(mContext, NewUserCenterActivity.class);
-			UCUserInfo user = new UCUserInfo();
-			user.uid = nPraisedBean.uid;
-			user.nickname = nPraisedBean.nickname;
-			user.headportrait = "";
-			user.introduce = "";
-			user.sex = "";
-			user.customavatar = "";
-			user.praisemenumber = "0";
-			user.sharevideonumber = "0";
-
-			intent.putExtra("userinfo", user);
-			intent.putExtra("type", 0);
-			mContext.startActivity(intent);
+			GolukUtils.startUserCenterActivity(mContext,nPraisedBean.uid);
 		}
 	}
 
