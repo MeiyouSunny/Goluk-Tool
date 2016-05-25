@@ -22,5 +22,7 @@ public class StartAppBean implements Serializable {
 	public String id;
 	/** title */
 	public String title;
+	/** 投票url */
+	public String voteUrl;
 
 }
