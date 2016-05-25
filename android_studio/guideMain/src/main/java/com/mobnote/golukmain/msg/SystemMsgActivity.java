@@ -195,19 +195,21 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
 		if(requestType == IPageNotifyFn.PageType_SystemMsgMain){
 			MessageBean mb = (MessageBean) result;
 			closeProgressDialog();
+            mRTPullListView.removeFooterView(1);
+            mRTPullListView.removeFooterView(2);
 			if(mb != null && mb.data != null){
 				if ("10001".equals(mb.data.result) || "10002".equals(mb.data.result)){
+                    mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime(this));
+                    GolukUtils.showToast(this, this.getResources().getString(R.string.invalid_token));
 					GolukUtils.startLoginActivity(SystemMsgActivity.this);
-					return;
+                    return;
 				}
 			}
-			mRTPullListView.removeFooterView(1);
-			mRTPullListView.removeFooterView(2);
 			if(mb != null){
 				if(mb.success){//返回数据正常
 					MessageManager.getMessageManager().setSystemMessageCount(0);
 					List<MessageMsgsBean> list = mb.data.messages;
-					
+
 					if(list != null && list.size() >= 20){
 						mIsHaveData = true;
 						mTimestamp = list.get(list.size() - 1).content.time;
@@ -257,7 +259,7 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
 			}else{//数据返回异常
 				mEmptyImg.setVisibility(View.VISIBLE);
 				mEmptyImg.setImageResource(R.drawable.mine_qitadifang);
-				mEmptyTxt.setText(this.getResources().getString(R.string.msg_system_connect_error));
+				mEmptyTxt.setText(this.getResources().getString(R.string.invalid_token));
 				this.fristLoadDataError();
 			}
 		}

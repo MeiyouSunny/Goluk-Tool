@@ -1090,6 +1090,7 @@
     <string name="not_supported_resolution">手机不支持合适的分辨率</string>
     <string name="follow_operation_limit_total">您已经到达关注的最大上限了</string>
     <string name="follow_operation_limit_day">您已经到达今天关注上限了</string>
+    <string name="invalid_token">登录过期，请重新登录</string>
 
     <string name="str_video_export_succeed">Export succeeded</string>
     <string name="str_video_export_failed">Export failed</string>

@@ -229,8 +229,14 @@ public class MsgCenterCommentActivity extends BaseActivity implements OnClickLis
 			closeLoadingDialog();
 			if(mMessageBean != null && mMessageBean.data != null){
 				if ("10001".equals(mMessageBean.data.result) || "10002".equals(mMessageBean.data.result)){
+                    if (mCurrentOperator == OPERATOR_UP) {
+                        this.removeFoot(1);
+                    } else {
+                        mRTPullListView.onRefreshComplete(GolukUtils.getCurrentCommentTime());
+                    }
+                    GolukUtils.showToast(this, this.getResources().getString(R.string.invalid_token));
 					GolukUtils.startLoginActivity(MsgCenterCommentActivity.this);
-					return;
+                    return;
 				}
 			}
 			if (null != mMessageBean && mMessageBean.success && null != mMessageBean.data
@@ -271,7 +277,7 @@ public class MsgCenterCommentActivity extends BaseActivity implements OnClickLis
 		mRTPullListView.setVisibility(View.GONE);
 		mNoCommentText.setVisibility(View.GONE);
 		mRefreshLayout.setVisibility(View.VISIBLE);
-		GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
+		GolukUtils.showToast(this, this.getResources().getString(R.string.invalid_token));
 	}
 
 	CustomLoadingDialog loadingDialog = null;
