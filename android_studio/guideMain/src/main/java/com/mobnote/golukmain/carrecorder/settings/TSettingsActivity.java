@@ -737,7 +737,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		if (RESULE_SUCESS == param1) {
 			try {
 				JSONObject obj = new JSONObject((String) param2);
-				String needReboot = obj.getString("need_reboot");
+				String needReboot = obj.optString("need_reboot");
 				if (needReboot.equals("true") && !mSaveLastResolution.equals(mWonderfulVideoResolution)) {
 					showRebootDialog();
 				}
