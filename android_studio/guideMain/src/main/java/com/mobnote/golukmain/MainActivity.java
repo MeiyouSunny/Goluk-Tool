@@ -14,6 +14,7 @@ import android.media.SoundPool;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -65,6 +66,7 @@ import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.util.GFileUtils;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
+import com.mobnote.golukmain.cluster.ClusterActivity;
 import com.mobnote.golukmain.comment.CommentTimerManager;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.golukmain.followed.FragmentFollowed;
@@ -95,6 +97,7 @@ import com.mobnote.golukmobile.GuideActivity;
 import com.mobnote.manager.MessageManager;
 import com.mobnote.receiver.NetworkStateReceiver;
 import com.mobnote.util.CrashReportUtil;
+import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.SharedPrefUtil;
@@ -426,6 +429,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 		String type = mStartAppBean.type;
 		String title = mStartAppBean.title;
 		String id = mStartAppBean.id;
+        String voteUrl = mStartAppBean.voteUrl;
 
 		if ("1".equals(type)) {// 单视频
 			Intent intent = new Intent(this, VideoDetailActivity.class);
@@ -438,11 +442,21 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 			intent.putExtra("title", title);
 			startActivity(intent);
 		} else if("3".equals(type)){//活动聚合页面
-
+            Intent intent = new Intent(this, SpecialListActivity.class);
+            intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, id);
+            intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, title);
+            startActivity(intent);
 		} else if("4".equals(type)){//个人主页
-
+            GolukUtils.startUserCenterActivity(this,id);
 		} else if("5".equals(type)){//投票网页
-
+            Intent intent = new Intent(this, UserOpenUrlActivity.class);
+            intent.putExtra(GolukConfig.WEB_TYPE, GolukConfig.NEED_SHARE);
+            intent.putExtra(GolukConfig.H5_URL, voteUrl);
+            intent.putExtra(GolukConfig.URL_OPEN_PATH, "text_banner");
+            if(!TextUtils.isEmpty(title)){
+                intent.putExtra(GolukConfig.NEED_H5_TITLE, title);
+            }
+            startActivity(intent);
 		}
 
 		mStartAppBean = null;

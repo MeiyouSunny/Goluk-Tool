@@ -7,6 +7,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class ExternalStartActivity extends Activity {
@@ -42,11 +48,20 @@ public class ExternalStartActivity extends Activity {
 			String vid = uri.getQueryParameter("id");
 			String title = uri.getQueryParameter("title");
 			String type = uri.getQueryParameter("type");
+			String voteUrl = uri.getQueryParameter("voteUrl");
+            if(!TextUtils.isEmpty(voteUrl)){
+                try {
+                    voteUrl = URLDecoder.decode(voteUrl,"UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
 			mStartAppBean = new StartAppBean();
 			mStartAppBean.uri = uri.toString();
 			mStartAppBean.dataStr = dataStr;
 			mStartAppBean.host = host;
 			mStartAppBean.path = path;
+			mStartAppBean.voteUrl = voteUrl;
 
 			mStartAppBean.type = type;
 			mStartAppBean.id = vid;
