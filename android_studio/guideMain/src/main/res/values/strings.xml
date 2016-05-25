@@ -1115,4 +1115,9 @@
     <string name="str_ae_add_video_title">Add Video</string>
     <string name="str_cluster_ranking_count_txt">Popularity</string>
     <string name="str_ae_no_export_size_supported">No supported size can be exported</string>
+    <string name="str_ae_export_dialog_title">Choose export size</string>
+    <string name="str_ae_export_dialog_cancel">Cancel</string>
+    <string name="str_ae_export_dialog_480p">Middle 480P</string>
+    <string name="str_ae_export_dialog_720p">HD720P</string>
+    <string name="str_ae_export_dialog_1080p">FULL HD 1080P</string>
 </resources>

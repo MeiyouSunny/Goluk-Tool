@@ -1076,4 +1076,10 @@
     <string name="str_ae_add_video_title">添加视频</string>
     <string name="str_cluster_ranking_count_txt">人气值</string>
     <string name="str_ae_no_export_size_supported">没有合适的视频能被导出</string>
+
+    <string name="str_ae_export_dialog_title">选择导出大小</string>
+    <string name="str_ae_export_dialog_cancel">取消</string>
+    <string name="str_ae_export_dialog_480p">中 480P</string>
+    <string name="str_ae_export_dialog_720p">HD720P</string>
+    <string name="str_ae_export_dialog_1080p">FULL HD 1080P</string>
 </resources>
