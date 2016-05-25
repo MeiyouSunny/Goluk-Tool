@@ -27,6 +27,7 @@ dependencies {
     compile project(':commonGoluk')
     compile project(':initActivity')
     compile 'com.android.support:support-v4:21.0.0'
+    compile files('libs/mid-sdk-2.20.jar')
     compile files('libs/bolts-android-1.1.4.jar')
     compile files('libs/bugly_1.2.7_release.jar')
     compile files('libs/com.rd.car.player.jar')

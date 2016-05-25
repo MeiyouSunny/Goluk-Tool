@@ -1084,7 +1084,7 @@
 
     <string name="str_sharetype">选择类型</string>
     <string name="share_to_jishe">分享到极社</string>
-    <string name="share_hint">你的视频需要一个漂亮的描述</string>
+    <string name="share_hint">为你的视频写下一段漂亮的描述...</string>
     <string name="join_activity">参加活动</string>
     <string name="load_video_fail">视频源文件加载失败</string>
     <string name="not_supported_resolution">手机不支持合适的分辨率</string>
