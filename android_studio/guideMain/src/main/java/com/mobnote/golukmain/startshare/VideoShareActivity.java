@@ -35,6 +35,7 @@ import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.newest.IDialogDealFn;
 import com.mobnote.golukmain.player.MovieActivity;
 import com.mobnote.golukmain.promotion.PromotionActivity;
+import com.mobnote.golukmain.promotion.PromotionData;
 import com.mobnote.golukmain.promotion.PromotionItem;
 import com.mobnote.golukmain.promotion.PromotionListRequest;
 import com.mobnote.golukmain.promotion.PromotionModel;
@@ -49,14 +50,20 @@ import com.mobnote.golukmain.thirdshare.ThirdShareTool;
 import com.mobnote.golukmain.thirdshare.bean.SharePlatformBean;
 import com.mobnote.map.LngLat;
 import com.mobnote.user.UserUtils;
+import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.glideblur.BlurTransformation;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import cn.com.mobnote.eventbus.EventShortLocationFinish;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -126,6 +133,9 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
     private ThirdShareTool mThirdShareTool;
     GolukVideoInfoDbManager mGolukVideoInfoDbManager = GolukVideoInfoDbManager.getInstance();
+    private List<PromotionData> mPromotionList;
+    private boolean isShowNew;
+    private TextView mNewActivityTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +155,18 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mNewActivityTv != null){
+            if(isShowNew){
+                mNewActivityTv.setVisibility(View.VISIBLE);
+            }else{
+                mNewActivityTv.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override
@@ -344,6 +366,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         mShareLL = (LinearLayout) findViewById(R.id.ll_share_now);
         mVideoThumbIv = (ImageView) findViewById(R.id.iv_videoshare_videothumb);
         mShareTv = (TextView) findViewById(R.id.tv_share);
+        mNewActivityTv = (TextView) findViewById(R.id.tv_share_newActivity);
 
     }
 
@@ -359,11 +382,11 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             intent.putExtra(ShareTypeActivity.SHARE_TYPE_KEY,mSelectedShareType);
             VideoShareActivity.this.startActivity(intent);
         }else if(vId == R.id.tv_share_joniActivity){
+            isShowNew = false;
             if (!UserUtils.isNetDeviceAvailable(VideoShareActivity.this)) {
                 GolukUtils.showToast(VideoShareActivity.this, VideoShareActivity.this.getResources().getString(R.string.user_net_unavailable));
                 return;
             }
-
             Intent intent = new Intent(VideoShareActivity.this, PromotionActivity.class);
             if (mSelectedPromotionItem != null) {
                 intent.putExtra(PromotionActivity.PROMOTION_SELECTED_ITEM, mSelectedPromotionItem.activityid);
@@ -576,47 +599,34 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-//    public void setPromotionList(ArrayList<PromotionData> list, ArrayList<PromotionSelectItem> recommendList) {
-//        if (list == null) {
-//            return;
-//        }
-//        mPromotionList = list;
-//        mRecommendActivities = recommendList;
-//        refreshPromotionUI();
-//        if (mPromotionList.size() > 0) {
-//            showNewFlag();
-//        }
-//    }
+    private void checkNewActivity() {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutput out = null;
+        String preMd5String = GolukFileUtils.loadString(GolukFileUtils.PROMOTION_LIST_STRING, "");
+        String newMd5String = "";
+        try {
+            out = new ObjectOutputStream(bos);
+            out.writeObject(mPromotionList);
+            byte[] content = bos.toByteArray();
+            newMd5String = GolukUtils.compute32(content);
+            GolukFileUtils.saveString(GolukFileUtils.PROMOTION_LIST_STRING, newMd5String);
+        } catch (IOException ex) {
 
-//    private void showNewFlag() {
-//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//        ObjectOutput out = null;
-//        String md5 = "";
-//        try {
-//            out = new ObjectOutputStream(bos);
-//            out.writeObject(mPromotionList);
-//            byte[] content = bos.toByteArray();
-//            md5 = GolukUtils.compute32(content);
-//        } catch (IOException ex) {
-//
-//        } finally {
-//            try {
-//                if (out != null) {
-//                    out.close();
-//                }
-//                bos.close();
-//            } catch (IOException ex) {
-//                // ignore close exception
-//            }
-//        }
-//
-//        String mMd5String = GolukFileUtils.loadString(GolukFileUtils.PROMOTION_LIST_STRING, "");
-//        if (TextUtils.isEmpty(mMd5String) || !mMd5String.equalsIgnoreCase(md5)) {
-//            bShowNew = true;
-//            mNewFlagTextView.setVisibility(View.VISIBLE);
-//            mMd5String = md5;
-//        }
-//    }
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+                bos.close();
+            } catch (IOException ex) {
+                // ignore close exception
+            }
+        }
+        if (TextUtils.isEmpty(preMd5String) || !preMd5String.equalsIgnoreCase(newMd5String)) {
+            isShowNew = true;
+            mNewActivityTv.setVisibility(View.VISIBLE);
+        }
+    }
 
     @Override
     public void onLoadComplete(int requestType, Object result) {
@@ -633,6 +643,10 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
                             promotionSelectItem.activitytitle = item.name;
                             list.add(promotionSelectItem);
                         }
+                    }
+                    mPromotionList = data.data.PromotionList;
+                    if(mPromotionList != null && mPromotionList.size() > 0) {
+                        checkNewActivity();
                     }
                 }
                 break;
