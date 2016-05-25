@@ -495,7 +495,8 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         }
         switch (event) {
             case EVENT_EXIT:
-                exit();
+
+                toInitState();
                 break;
             case EVENT_UPLOAD_SUCESS:
                 // 文件上传成功，请求分享连接
@@ -511,9 +512,9 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    public void shareCallBack(boolean isSucess) {
+    public void shareCallBack(boolean isSuccess) {
 
-        EventBus.getDefault().post(new EventShareCompleted());
+        EventBus.getDefault().post(new EventShareCompleted(isSuccess));
     }
 
     // 请求分享信息
@@ -669,7 +670,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
      */
     public void videoShareCallBack(ShareDataBean shareData) {
         if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_NULL){
-            EventBus.getDefault().post(new EventShareCompleted());
+            EventBus.getDefault().post(new EventShareCompleted(true));
             return;
         }
         if (mShareLoading == null || mUploadVideo == null) {
