@@ -391,57 +391,57 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         }
     }
 
-	private void initPlayer() {
-		mVideoThumeIv = (ImageView) findViewById(R.id.iv_video_thumb);
-		mVideoPlayIV = (ImageView) findViewById(R.id.iv_video_play);
+    private void initPlayer() {
+        mVideoThumeIv = (ImageView) findViewById(R.id.iv_video_thumb);
+        mVideoPlayIV = (ImageView) findViewById(R.id.iv_video_play);
 
-		mVideoThumeIv.setOnClickListener(this);
-		mVideoPlayIV.setOnClickListener(this);
+        mVideoThumeIv.setOnClickListener(this);
+        mVideoPlayIV.setOnClickListener(this);
 
-		mSurfaceLayout = (FrameLayout)findViewById(R.id.fl_video_sur_layout);
-		mGLSurfaceView = new GLSurfaceView(this);
-		mSurfaceLayout.addView(mGLSurfaceView, 0);
-		mGLSurfaceView.setEGLContextClientVersion(2);
-		mGLSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
-		mGLSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
+        mSurfaceLayout = (FrameLayout) findViewById(R.id.fl_video_sur_layout);
+        mGLSurfaceView = new GLSurfaceView(this);
+        mSurfaceLayout.addView(mGLSurfaceView, 0);
+        mGLSurfaceView.setEGLContextClientVersion(2);
+        mGLSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+        mGLSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
 
-		int screenWidthSize = DeviceUtil.getScreenWidthSize(this);
-		int width = screenWidthSize;
-		int height = width / 16 * 9;
-		LayoutParams params = mSurfaceLayout.getLayoutParams();
-		params.height = height;
+        int screenWidthSize = DeviceUtil.getScreenWidthSize(this);
+        int width = screenWidthSize;
+        int height = width / 16 * 9;
+        LayoutParams params = mSurfaceLayout.getLayoutParams();
+        params.height = height;
 
-		mGLSurfaceView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				playOrPause();
-			}
-		});
+        mGLSurfaceView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                playOrPause();
+            }
+        });
 
-		mAfterEffect = new AfterEffect(this, mGLSurfaceView, this, width, height);
+        mAfterEffect = new AfterEffect(this, mGLSurfaceView, this, width, height);
 
-		addTail();
-		mProject = mAfterEffect.getProject();
+        addTail();
+        mProject = mAfterEffect.getProject();
 
-		mAfterEffecthandler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-				super.handleMessage(msg);
-				switch (msg.what) {
+        mAfterEffecthandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
 
-				default: {
-					if (msg.what >= 1000 && msg.what < 2000) {
-						handlerAECallBack(msg);
-					}
-					break;
-				}
-				}
-			}
-		};
+                    default: {
+                        if (msg.what >= 1000 && msg.what < 2000) {
+                            handlerAECallBack(msg);
+                        }
+                        break;
+                    }
+                }
+            }
+        };
 
-		addChunk(mVideoPath);
-	}
+        addChunk(mVideoPath);
+    }
 
     private void addTail() {
         InputStream istr = null;
@@ -609,55 +609,55 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         }
             break;
 
-		case MSG_AE_BITMAP_READ_OUT: {
-			Chunk chunk = (Chunk) msg.obj;
+        case MSG_AE_BITMAP_READ_OUT: {
+            Chunk chunk = (Chunk) msg.obj;
 //            mTailWidth = mAfterEffect.getTailerThumbWidth();
             Log.d(TAG, "tail width from sdk: " + mTailWidth);
-			// Get to insert index
-			ChunkBean chunkBean = new ChunkBean();
-			chunkBean.chunk = chunk;
-			chunkBean.index_tag = VideoEditUtils.generateIndexTag();
-			chunkBean.width = VideoEditUtils.ChunkTime2Width(chunk);
-			chunkBean.isEditState = false;
+            // Get to insert index
+            ChunkBean chunkBean = new ChunkBean();
+            chunkBean.chunk = chunk;
+            chunkBean.index_tag = VideoEditUtils.generateIndexTag();
+            chunkBean.width = VideoEditUtils.ChunkTime2Width(chunk);
+            chunkBean.isEditState = false;
             chunkBean.curVolume = 100;
 
-			int cInsertIndex = mProjectItemList.size() - 2;
-			chunkBean.ct_pair_tag = cInsertIndex + "chunkIndex";
-			mProjectItemList.add(cInsertIndex, chunkBean);
+            int cInsertIndex = mProjectItemList.size() - 2;
+            chunkBean.ct_pair_tag = cInsertIndex + "chunkIndex";
+            mProjectItemList.add(cInsertIndex, chunkBean);
 
-			// truncate to the end
-			Transition transtion = mAfterEffect.getTransition(
-					VideoEditUtils.mapI2CIndex(cInsertIndex), true);
+            // truncate to the end
+            Transition transtion = mAfterEffect.getTransition(
+                    VideoEditUtils.mapI2CIndex(cInsertIndex), true);
 //			if(transtion != null) {
-			TransitionBean transitionBean = new TransitionBean();
-			transitionBean.index_tag = VideoEditUtils.generateIndexTag();
-			transitionBean.transiton = transtion;
-			int tInsertIndex = mProjectItemList.size() - 2;
-			transitionBean.ct_pair_tag = cInsertIndex + "chunkIndex";
-			mProjectItemList.add(tInsertIndex, transitionBean);
+            TransitionBean transitionBean = new TransitionBean();
+            transitionBean.index_tag = VideoEditUtils.generateIndexTag();
+            transitionBean.transiton = transtion;
+            int tInsertIndex = mProjectItemList.size() - 2;
+            transitionBean.ct_pair_tag = cInsertIndex + "chunkIndex";
+            mProjectItemList.add(tInsertIndex, transitionBean);
 //			}
 
-			mChannelLineAdapter.setData(mProjectItemList);
-			mChannelLineAdapter.notifyDataSetChanged();
-            if(null != mFullLoadingDialog && mFullLoadingDialog.isShowing()) {
+            mChannelLineAdapter.setData(mProjectItemList);
+            mChannelLineAdapter.notifyDataSetChanged();
+            if (null != mFullLoadingDialog && mFullLoadingDialog.isShowing()) {
                 mFullLoadingDialog.close();
             }
-			final int addIndex = cInsertIndex;
-			if(mPlayerState == PlayerState.PAUSED) {
-				seekWith(VideoEditUtils.mapI2CIndex(VideoEditUtils.mapI2CIndex(addIndex)));
-				mAERecyclerView.post(new Runnable() {
-					@Override
-					public void run() {
-						mAELayoutManager.scrollToPositionWithOffset(
-								addIndex, mDummyHeaderWidth);
+            final int addIndex = cInsertIndex;
+            if (mPlayerState == PlayerState.PAUSED) {
+                seekWith(VideoEditUtils.mapI2CIndex(VideoEditUtils.mapI2CIndex(addIndex)));
+                mAERecyclerView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                        mAELayoutManager.scrollToPositionWithOffset(
+                                addIndex, mDummyHeaderWidth);
 //						playOrPause();
-					}
-				});
-			} else {
-				playOrPause();
-			}
+                    }
+                    });
+            } else {
+                playOrPause();
+            }
             clearChunkFocus();
-		}
+        }
             break;
         case MSG_AE_BITMAP_READ_FAILED: {
             Log.d(TAG, "MSG_AE_BITMAP_READ_FAILED");
@@ -716,72 +716,72 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         };
         copyMusicThread.start();
 
-		mAEEditController = (LinearLayout) findViewById(R.id.ll_video_edit_controller);
-		mAEVolumeSettingLayout = (RelativeLayout) findViewById(R.id.rl_ae_volume_setting);
-		mAEVolumeSettingIv = (ImageView) findViewById(R.id.iv_ae_volume_setting);
-		mAEVolumePercentTv = (TextView) findViewById(R.id.tv_ae_volume_percent);
-		mAEVolumeSeekBar = (SeekBar) findViewById(R.id.seekbar_ae_volume);
+        mAEEditController = (LinearLayout) findViewById(R.id.ll_video_edit_controller);
+        mAEVolumeSettingLayout = (RelativeLayout) findViewById(R.id.rl_ae_volume_setting);
+        mAEVolumeSettingIv = (ImageView) findViewById(R.id.iv_ae_volume_setting);
+        mAEVolumePercentTv = (TextView) findViewById(R.id.tv_ae_volume_percent);
+        mAEVolumeSeekBar = (SeekBar) findViewById(R.id.seekbar_ae_volume);
 
-		mAESplitAndDeleteLayout = (LinearLayout) findViewById(R.id.ll_ae_split_and_delete);
-		mAESplitLayout = (LinearLayout) findViewById(R.id.ll_ae_split);
-		mAEDeleteLayout = (LinearLayout) findViewById(R.id.ll_ae_delete);
-		mAECutLayout = (LinearLayout) findViewById(R.id.ll_ae_cut);
-		mAEVolumeLayout = (LinearLayout) findViewById(R.id.ll_ae_volume);
+        mAESplitAndDeleteLayout = (LinearLayout) findViewById(R.id.ll_ae_split_and_delete);
+        mAESplitLayout = (LinearLayout) findViewById(R.id.ll_ae_split);
+        mAEDeleteLayout = (LinearLayout) findViewById(R.id.ll_ae_delete);
+        mAECutLayout = (LinearLayout) findViewById(R.id.ll_ae_cut);
+        mAEVolumeLayout = (LinearLayout) findViewById(R.id.ll_ae_volume);
 
-		mAEMusicLayoutManager = new LinearLayoutManager(this);
-		mAEMusicLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-		mAEMusicRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_ae_music);
-		AEMusicAdapter mAEMusicAdapter = new AEMusicAdapter(this, mAfterEffect);
-		mAEMusicAdapter.fillupMusicList(mMusicPaths, mMusicNames, mMusicCoversNormal, mMusicCoversSelected);
-		mAEMusicRecyclerView.setAdapter(mAEMusicAdapter);
-		mAEMusicRecyclerView.setLayoutManager(mAEMusicLayoutManager);
+        mAEMusicLayoutManager = new LinearLayoutManager(this);
+        mAEMusicLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mAEMusicRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_ae_music);
+        AEMusicAdapter mAEMusicAdapter = new AEMusicAdapter(this, mAfterEffect);
+        mAEMusicAdapter.fillupMusicList(mMusicPaths, mMusicNames, mMusicCoversNormal, mMusicCoversSelected);
+        mAEMusicRecyclerView.setAdapter(mAEMusicAdapter);
+        mAEMusicRecyclerView.setLayoutManager(mAEMusicLayoutManager);
 
-		mAEVolumeSettingIv.setOnClickListener(this);
-		mAESplitLayout.setOnClickListener(this);
-		mAEDeleteLayout.setOnClickListener(this);
-		mAECutLayout.setOnClickListener(this);
-		mAEVolumeLayout.setOnClickListener(this);
+        mAEVolumeSettingIv.setOnClickListener(this);
+        mAESplitLayout.setOnClickListener(this);
+        mAEDeleteLayout.setOnClickListener(this);
+        mAECutLayout.setOnClickListener(this);
+        mAEVolumeLayout.setOnClickListener(this);
 
-		mAEVolumeSeekBar.setMax(VideoEditConstant.VIDEO_VOLUME_MAX);
+        mAEVolumeSeekBar.setMax(VideoEditConstant.VIDEO_VOLUME_MAX);
 //		mCurrVolumeProgress = 100;
 //		mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);
         mAEVolumeSeekBar.setProgress(100);
 
-		mAEVolumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
+        mAEVolumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
 
-			}
+            }
 
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
-			}
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
 
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 int index = mChannelLineAdapter.getEditIndex();
-				if(fromUser) {
+                if (fromUser) {
 //					mCurrVolumeProgress = progress;
                     recordEditChunkVolume(progress);
-				}
-				mAEVolumePercentTv.setText(progress + "%");
+                }
+                mAEVolumePercentTv.setText(progress + "%");
 
-				if(progress == 0) {
-					mAEVolumeSettingIv.setImageDrawable(
-							AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume_closed));
+                if (progress == 0) {
+                    mAEVolumeSettingIv.setImageDrawable(
+                            AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume_closed));
 //					mIsMute = true;
-					mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(index), 0.0f);
-				} else {
-					mAEVolumeSettingIv.setImageDrawable(
-							AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume_checked));
+                    mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(index), 0.0f);
+                } else {
+                    mAEVolumeSettingIv.setImageDrawable(
+                            AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume_checked));
 //					mIsMute = false;
-					mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(index), progress / 100f);
-				}
-			}
-		});
-	}
+                    mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(index), progress / 100f);
+                }
+            }
+        });
+    }
 
     public void recordEditChunkVolume(int volume) {
         int index = mChannelLineAdapter.getEditIndex();
