@@ -12,4 +12,13 @@ public class IPCFileUtils {
     public static int getFileSize(String fileName) {
         return 0;
     }
+
+    /**
+     * Get remote file url
+     * @param fileName
+     * @return file url
+     */
+    public static String getRemoteFileUrl(String fileName){
+        return null;
+    }
 }
