@@ -1,6 +1,8 @@
 package com.mobnote.golukmain.profit;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
@@ -10,10 +12,12 @@ import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.golukmain.videosuqare.RTPullListView;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
+import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -213,6 +217,14 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		} else {
 		}
 	}
+
+	TimerTask task = new TimerTask(){
+
+		public void run(){
+			MyProfitDetailActivity.this.finish();
+		}
+
+	};
 	
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
@@ -225,6 +237,8 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 					mRTPullListView.setVisibility(View.GONE);
 					mTextNoData.setVisibility(View.VISIBLE);
 					GolukUtils.startUserLogin(this);
+					Timer timer = new Timer();
+					timer.schedule(task, GolukConfig.CLOSE_ACTIVITY_TIMER);
 					return;
 				}
 			}

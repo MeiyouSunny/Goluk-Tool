@@ -11,6 +11,7 @@ import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.user.UserUtils;
+import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
 
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -31,6 +32,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 我的收益
@@ -222,6 +226,14 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener, O
 		return false;
 	}
 
+	TimerTask task = new TimerTask(){
+
+		public void run(){
+			MyProfitActivity.this.finish();
+		}
+
+	};
+
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		closeLoadingDialog();
@@ -258,23 +270,15 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener, O
 					if("10001".equals(profitInfo.data.result) || "10002".equals(profitInfo.data.result)){
 						mImageRefresh.setVisibility(View.VISIBLE);
 						mIsDataBack = true;
-						startUserLogin();
+						GolukUtils.startUserLogin(this);
+						Timer timer = new Timer();
+						timer.schedule(task, GolukConfig.CLOSE_ACTIVITY_TIMER);
 						return;
 					}
 				}
 				unusual();
 			}
 		}
-	}
-
-	public void startUserLogin(){
-		Intent loginIntent = null;
-		if(GolukApplication.getInstance().isInteral() == false){
-			loginIntent = new Intent(this, InternationUserLoginActivity.class);
-		}else{
-			loginIntent = new Intent(this, UserLoginActivity.class);
-		}
-		startActivity(loginIntent);
 	}
 
 	// 显示loading

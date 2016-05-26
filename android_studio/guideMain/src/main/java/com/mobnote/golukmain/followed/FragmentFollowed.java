@@ -363,8 +363,10 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 			FollowedRetBean bean = (FollowedRetBean)result;
 			if(bean.data != null){
 				if("10001".equals(bean.data.result) || "10002".equals(bean.data.result)){
-					setEmptyView();
-					startUserLogin();
+					mLoginRL.setVisibility(View.GONE);
+					mListView.setVisibility(View.VISIBLE);
+					sendFollowedContentRequest(REFRESH_NORMAL, mTimeStamp);
+//					startUserLogin();
 					return;
 				}
 			}

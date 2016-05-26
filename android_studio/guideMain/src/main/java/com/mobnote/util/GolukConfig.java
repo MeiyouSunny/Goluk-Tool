@@ -50,4 +50,7 @@ public class GolukConfig {
 	/**第三方登陆默认密码**/
 	public final static String OTHER_PASSWORD = "lovegoluk@2016";
 
+	/**跳转登陆时的timer**/
+	public final static int CLOSE_ACTIVITY_TIMER = 300;
+
 }
