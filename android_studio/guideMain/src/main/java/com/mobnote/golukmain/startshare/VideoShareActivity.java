@@ -430,6 +430,9 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         }
         isSharing = true;
         this.mUploadVideo.setUploadInfo(mVideoPath, mVideoType, videoName);
+        if(null == mShareLoading){
+            mShareLoading = new ShareLoading(this, mRootLayout);
+        }
         mShareLoading.showLoadingLayout();
         mShareLoading.switchState(ShareLoading.STATE_UPLOAD);
     }
@@ -677,6 +680,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         if (null != mShareLoading) {
             mShareLoading.hide();
             mShareLoading.switchState(ShareLoading.STATE_NONE);
+            mShareLoading = null;
         }
     }
     /**
