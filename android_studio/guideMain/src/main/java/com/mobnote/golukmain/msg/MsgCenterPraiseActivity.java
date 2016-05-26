@@ -1,6 +1,8 @@
 package com.mobnote.golukmain.msg;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.BaseActivity;
@@ -14,6 +16,7 @@ import com.mobnote.golukmain.videosuqare.RTPullListView;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
 import com.mobnote.manager.MessageManager;
+import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
 
 import android.os.Bundle;
@@ -113,10 +116,34 @@ public class MsgCenterPraiseActivity extends BaseActivity implements OnClickList
 		}
 	}
 
+	TimerTask task = new TimerTask(){
+
+		public void run(){
+			MsgCenterPraiseActivity.this.finish();
+		}
+
+	};
+
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		if (requestType == IPageNotifyFn.PageType_MsgPraise) {
 			mMessageBean = (MessageBean) result;
+
+			if(mMessageBean != null && mMessageBean.data != null){
+				if ("10001".equals(mMessageBean.data.result) || "10002".equals(mMessageBean.data.result)){
+					mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime(this));
+					mRTPullListView.setVisibility(View.GONE);
+					nNoPraiseText.setVisibility(View.GONE);
+					mRefreshLayout.setVisibility(View.VISIBLE);
+					GolukUtils.showToast(this, this.getResources().getString(R.string.invalid_token));
+					GolukUtils.startUserLogin(this);
+					Timer timer = new Timer();
+					timer.schedule(task, GolukConfig.CLOSE_ACTIVITY_TIMER);
+					return;
+				}
+			}
+
+
 			if (null != mMessageBean && mMessageBean.success && null != mMessageBean.data
 					&& null != mMessageBean.data.messages) {
 				MessageManager.getMessageManager().setPraiseCount(0);
