@@ -2,6 +2,8 @@ package com.mobnote.golukmain.msg;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.BaseActivity;
@@ -14,6 +16,7 @@ import com.mobnote.golukmain.msg.bean.SystemMsgBenRequest;
 import com.mobnote.golukmain.videosuqare.RTPullListView;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
 import com.mobnote.manager.MessageManager;
+import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
 
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -189,6 +192,14 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
 			}
 		}
 	}
+
+	TimerTask task = new TimerTask(){
+
+		public void run(){
+			SystemMsgActivity.this.finish();
+		}
+
+	};
 	
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
@@ -201,7 +212,9 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
 				if ("10001".equals(mb.data.result) || "10002".equals(mb.data.result)){
                     mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime(this));
                     GolukUtils.showToast(this, this.getResources().getString(R.string.invalid_token));
-					GolukUtils.startLoginActivity(SystemMsgActivity.this);
+					GolukUtils.startUserLogin(this);
+					Timer timer = new Timer();
+					timer.schedule(task, GolukConfig.CLOSE_ACTIVITY_TIMER);
                     return;
 				}
 			}

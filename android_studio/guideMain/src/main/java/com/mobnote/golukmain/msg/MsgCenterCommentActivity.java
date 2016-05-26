@@ -1,6 +1,8 @@
 package com.mobnote.golukmain.msg;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.BaseActivity;
@@ -14,6 +16,7 @@ import com.mobnote.golukmain.videosuqare.RTPullListView;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
 import com.mobnote.manager.MessageManager;
+import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
 
 import android.os.Bundle;
@@ -222,6 +225,14 @@ public class MsgCenterCommentActivity extends BaseActivity implements OnClickLis
 		finish();
 	}
 
+	TimerTask task = new TimerTask(){
+
+		public void run(){
+			MsgCenterCommentActivity.this.finish();
+		}
+
+	};
+
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		if (requestType == IPageNotifyFn.PageType_MsgComment) {
@@ -235,7 +246,9 @@ public class MsgCenterCommentActivity extends BaseActivity implements OnClickLis
                         mRTPullListView.onRefreshComplete(GolukUtils.getCurrentCommentTime());
                     }
                     GolukUtils.showToast(this, this.getResources().getString(R.string.invalid_token));
-					GolukUtils.startLoginActivity(MsgCenterCommentActivity.this);
+					GolukUtils.startUserLogin(this);
+					Timer timer = new Timer();
+					timer.schedule(task, GolukConfig.CLOSE_ACTIVITY_TIMER);
                     return;
 				}
 			}
