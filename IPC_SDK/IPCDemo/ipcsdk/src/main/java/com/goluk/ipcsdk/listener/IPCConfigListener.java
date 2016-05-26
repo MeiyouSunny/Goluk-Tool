@@ -10,11 +10,11 @@ public interface IPCConfigListener {
      *
      * @param success
      */
-    public void enableAudeoRecordCallback(boolean success);
+    public void callback_enableAudeoRecord(boolean success);
 
     /**
      *
      * @param success
      */
-    public void setTimeCallback(boolean success);
+    public void callback_setTime(boolean success);
 }
