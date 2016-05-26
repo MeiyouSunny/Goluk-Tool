@@ -1268,7 +1268,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             playOrPause();
         } else if (vId == R.id.iv_video_thumb) {
 //			mVideoPlayIv.setVisibility(View.GONE);
-//			mVideoThumeIv.setVisibility(View.GONE);	
+//			mVideoThumeIv.setVisibility(View.GONE);
         } else if (vId == R.id.ll_ae_volume) {
             mAEVolumeLayout.setBackgroundColor(getResources().getColor(R.color.ae_controller_pressed));
             mAECutLayout.setBackgroundResource(R.drawable.ae_controller_bg);
@@ -1297,12 +1297,20 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         } else if (vId == R.id.ll_ae_delete) {
             int index = mChannelLineAdapter.getEditIndex();
             if(index != -1) {
+                boolean overlap = VideoEditUtils.judgeChunkOverlap(mAELayoutManager, mGateLocationX, index);
                 VideoEditUtils.removeChunk(mAfterEffect, mProjectItemList, index);
 //                mChannelLineAdapter.setEditIndex(-1);
                 clearEditController();
                 mChannelLineAdapter.notifyDataSetChanged();
                 if(mProjectItemList == null || mProjectItemList.size() <= 3) {
                     finish();
+                } else {
+                    if(overlap) {
+                        // Need additional seek to neighbour chunk
+//                        seekWith(VideoEditUtils.mapI2CIndex(index));
+                        mAELayoutManager.scrollToPositionWithOffset(index, mDummyHeaderWidth);
+                        seekWith(VideoEditUtils.mapI2CIndex(index));
+                    }
                 }
             } else {
                 Toast.makeText(this, getString(R.string.str_ae_select_chunk_to_remove), Toast.LENGTH_SHORT).show();
