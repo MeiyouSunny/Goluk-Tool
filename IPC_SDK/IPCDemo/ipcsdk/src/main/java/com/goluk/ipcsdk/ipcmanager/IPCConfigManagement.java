@@ -3,13 +3,14 @@ package com.goluk.ipcsdk.ipcmanager;
 /**
  * Created by leege100 on 16/5/26.
  */
-public class IPCSettingsUtils {
+public class IPCConfigManagement {
+
     /**
      * enable audio record
      * @param isEnable
      * @return
      */
-    public static boolean enableAudioRecord(boolean isEnable){
+    public boolean enableAudioRecord(boolean isEnable){
         return false;
     }
 
@@ -18,7 +19,7 @@ public class IPCSettingsUtils {
      * @param timeStamp timestamp in seconds
      * @return
      */
-    public static boolean setTime(long timeStamp){
+    public boolean setTime(long timeStamp){
         return false;
     }
 }
