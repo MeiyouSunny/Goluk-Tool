@@ -36,9 +36,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.mobnote.application.GolukApplication;
@@ -81,10 +79,8 @@ import com.mobnote.golukmain.videoshare.bean.VideoShareRetBean;
 import com.mobnote.golukmain.videosuqare.RTPullListView;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
-import com.mobnote.golukmain.videosuqare.VideoSquareManager;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
-import com.mobnote.util.JsonUtil;
 import com.rockerhieu.emojicon.EmojiconGridFragment;
 import com.rockerhieu.emojicon.EmojiconsFragment;
 import com.rockerhieu.emojicon.emoji.Emojicon;
@@ -99,7 +95,7 @@ import de.greenrobot.event.EventBus;
  */
 public class VideoDetailActivity extends BaseActivity implements OnClickListener, OnRefreshListener,
 		OnRTScrollListener, ICommentFn, TextWatcher, ILiveDialogManagerFn, OnItemClickListener, IRequestResultListener,
-		VideoSuqareManagerFn, EmojiconGridFragment.OnEmojiconClickedListener,
+		EmojiconGridFragment.OnEmojiconClickedListener,
 		EmojiconsFragment.OnEmojiconBackspaceClickedListener, OnLayoutChangeListener {
 
 	private static final String TAG = "VideoDetailActivity";
@@ -213,23 +209,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		sharePlatform = new SharePlatformUtil(this);
 		historyDate = GolukUtils.getCurrentFormatTime(this);
 		initListener();
-		addCallBackListener();
 		getDetailData();
 		init();
 		observeSoftKeyboard();
-	}
-
-	private void addCallBackListener() {
-		// 添加对话框监听
-		LiveDialogManager.getManagerInstance().setDialogManageFn(this);
-		// 添加 视频广场操作监听
-		VideoSquareManager mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
-		if (null != mVideoSquareManager) {
-			if (mVideoSquareManager.checkVideoSquareManagerListener(TAG)) {
-				mVideoSquareManager.removeVideoSquareManagerListener(TAG);
-			}
-			mVideoSquareManager.addVideoSquareManagerListener(TAG, this);
-		}
 	}
 
 	@Override
@@ -802,8 +784,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		} else if (LiveDialogManager.DIALOG_TYPE_DEL_VIDEO == dialogType) {
 			// 取消删除
 			LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
-			mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square, VSquare_Req_MainPage_DeleteVideo,
-					JsonUtil.getCancelJson());
 		}
 	}
 
@@ -929,12 +909,13 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 	private void deleteVideo() {
 		if (null == mVideoJson || mVideoJson.success == false || null == mVideoJson.data
 				|| null == mVideoJson.data.avideo || null == mVideoJson.data.avideo.video
-				|| null == mVideoJson.data.avideo.video.videoid) {
+				|| null == mVideoJson.data.avideo.video.videoid || null == mVideoJson.data.avideo.user
+				|| null == mVideoJson.data.avideo.user.uid) {
 			return;
 		}
-		boolean isSucess = mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
-				VSquare_Req_MainPage_DeleteVideo, JsonUtil.getDelRequestJson(mVideoJson.data.avideo.video.videoid));
-		if (isSucess) {
+		DeleteVideoRequest request = new DeleteVideoRequest(IPageNotifyFn.PageType_DeleteVideo, this);
+		boolean isSuccess = request.get(mVideoJson.data.avideo.video.videoid, mVideoJson.data.avideo.user.uid);
+		if (isSuccess) {
 			LiveDialogManager.getManagerInstance()
 					.showCommProgressDialog(this, LiveDialogManager.DIALOG_TYPE_DEL_VIDEO, "",
 							getString(R.string.str_delete_ongoing_with_omit), true);
@@ -1332,6 +1313,38 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			break;
 		case IPageNotifyFn.PageType_VideoClick:
 			break;
+
+		case IPageNotifyFn.PageType_DeleteVideo:
+			LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
+			DeleteJson deleteVideo = (DeleteJson) result;
+			if(null != deleteVideo && null != deleteVideo.data) {
+				String resultCode = deleteVideo.data.result;
+				if ("10001".equals(resultCode) || "10002".equals(resultCode)) {
+					startUserLogin();
+					return;
+				}
+				if ("0".equals(resultCode) && deleteVideo.success) {
+					GolukUtils.showToast(this, this.getString(R.string.str_delete_success));
+					// 通知其它界面，数据更新
+					String vid = "";
+					if (null == mVideoJson || mVideoJson.success == false || null == mVideoJson.data
+							|| null == mVideoJson.data.avideo || null == mVideoJson.data.avideo.video
+							|| null == mVideoJson.data.avideo.video.videoid) {
+
+					} else {
+						vid = mVideoJson.data.avideo.video.videoid;
+					}
+					EventBus.getDefault().post(new EventDeleteVideo(EventConfig.VIDEO_DELETE, vid));
+					exit();
+					finish();
+				} else {
+					GolukUtils.showToast(this, this.getString(R.string.str_delete_video_fail));
+				}
+
+			} else {
+				GolukUtils.showToast(this, this.getString(R.string.str_delete_video_fail));
+			}
+			break;
 		default:
 			break;
 		}
@@ -1370,45 +1383,6 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 						deleteVideo();
 					}
 				}).setNegativeButton(this.getString(R.string.user_cancle), null).create().show();
-	}
-
-	/**
-	 * 删除视频回调
-	 * 
-	 * @author jyf
-	 */
-	private void callBack_DelVideo(int msg, int param1, Object param2) {
-		LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
-		if (RESULE_SUCESS != msg) {
-			GolukUtils.showToast(this, this.getString(R.string.str_delete_video_fail));
-			return;
-		}
-		String result = JsonUtil.parseDelVideo(param2);
-		if (!"0".equals(result)) {
-			GolukUtils.showToast(this, this.getString(R.string.str_delete_video_fail));
-			return;
-		}
-		GolukUtils.showToast(this, this.getString(R.string.str_delete_success));
-
-		// 通知其它界面，数据更新
-		String vid = "";
-		if (null == mVideoJson || mVideoJson.success == false || null == mVideoJson.data
-				|| null == mVideoJson.data.avideo || null == mVideoJson.data.avideo.video
-				|| null == mVideoJson.data.avideo.video.videoid) {
-
-		} else {
-			vid = mVideoJson.data.avideo.video.videoid;
-		}
-		EventBus.getDefault().post(new EventDeleteVideo(EventConfig.VIDEO_DELETE, vid));
-		exit();
-		finish();
-	}
-
-	@Override
-	public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-		if (VSquare_Req_MainPage_DeleteVideo == event) {
-			callBack_DelVideo(msg, param1, param2);
-		}
 	}
 
 	@Override

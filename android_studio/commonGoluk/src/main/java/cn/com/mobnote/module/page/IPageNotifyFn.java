@@ -160,6 +160,9 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	/** 活动排名列表 **/
 	public static  final int PageType_RankingList = 74;
 
+	/** 删除视频 **/
+	public static final int PageType_DeleteVideo = 75;
+
 	/**
 	 * 
 	 * 以下为同步获取信息标识
