@@ -1,29 +1,85 @@
-##Goluk Doc##
+# Android RtspPlayerView Integration Guide
+ 
+####Functions:
 
-###video preview###
+`void setDataSource(String urlString);`  
 
-实时预览视频采用播放器:RtspPlayerView  
-####RtspPlyerView:
+		Discussion
+		set player`s data source
+		@param urlString The RTSP URL String , you can get the url by [PICUtils.getRtmpPreviewUrl()].
+		  
+`start();`
 
-- **setDataSource(String url);** *//设置播放源,获取播放源参见PICUtils.getRtmpPreviewUrl()方法*
-- **start();** *//开始播放*
-- **stopPlayback();** *//停止播放* 
-- **setPlayerListener(new RtspPlayerLisener());** *//添加播放监听*
-- **isPlaying();** *//判断当前是否正在播放*
-- **cleanUp();** *清空播放器，在onDestroy()里调用*  
+		Discussion
+	 	start to play video
+`pause();`
+
+		Discussion
+		pause
+`canPause();` 
+
+		Discussion
+		canPause
+`stopPlayback();`
+
+		Discussion
+		stop play
+`setPlayerListener(new RtspPlayerLisener());`
+		
+		Discussion
+		add player callback
+`isPlaying();`
+
+		Discussion
+		isplaying
+`cleanUp();`
+
+		Discussion
+		clean play sources，should call in method [onDestroy()] 
+`setAudioMute(boolean isMute);`
+
+		Discussion
+		set audio mute
 
 ####RtspPlayerLisener: 
-- **onPlayerPrepared(RtspPlayerView var1);**  
-- **onPlayerBegin(RtspPlayerView var1);**
-- **onPlayerError(RtspPlayerView var1, int var2, int var3, String var4);**  
-- **onPlayBuffering(RtspPlayerView var1, boolean var2);**
-- **onPlayerCompletion(RtspPlayerView var1);**  
-- **onGetCurrentPosition(RtspPlayerView var1, int var2);**  
+- onPlayerPrepared(RtspPlayerView var1);  
+- onPlayerBegin(RtspPlayerView var1);
+- onPlayerError(RtspPlayerView var1, int var2, int var3, String var4); 
+- onPlayBuffering(RtspPlayerView var1, boolean var2);
+- onPlayerCompletion(RtspPlayerView var1);
+- onGetCurrentPosition(RtspPlayerView var1, int var2);
 
-####example:  
-<pre>
-RtspPlyerView mRtspplayer = findViewById(R.id.restplayer);
-mRtspplayer.setDataSource(PICUtils.getRtmpPreviewUrl());
-mRtspplayer.setPlayerListener(mPlayerListener);
-mRtspplayer.start();
-</pre>
+####Example:  
+
+**1. Init the RTSP Player**
+
+```
+	mRtspplayer = (RtspPlyerView) findViewById(R.id.restplayer);
+	mRtspPlayerView.setZOrderMediaOverlay(true);
+	mRtspPlayerView.setBufferTime(1000);
+	mRtspPlayerView.setConnectionTimeout(30000);
+	mRtspplayer.setDataSource(PICUtils.getRtmpPreviewUrl());
+	mRtspplayer.setPlayerListener(mPlayerListener);
+```
+**2. Play video**
+
+```
+	mRtspplayer.start();
+```
+**3. Set mute**
+
+```
+	mRtspPlayerView.setAudioMute(true);
+```
+**4. Stop play video**
+
+```
+	if (mRtspPlayerView.isPlaying()) {
+		mRtspPlayerView.stopPlayback();	
+	}
+```
+**5. Destroy**
+
+```
+	mRtspPlayerView.cleanUp();
+```
