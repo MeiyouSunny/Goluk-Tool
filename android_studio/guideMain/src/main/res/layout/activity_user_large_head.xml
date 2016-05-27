@@ -6,11 +6,9 @@
     android:layout_height="match_parent"
     tools:context="com.mobnote.golukmain.usercenter.UserLargeHeadActivity">
 
-    <com.mobnote.golukmain.usercenter.LargeHeadView
+    <uk.co.senab.photoview.PhotoView
         android:id="@+id/lv_usercenter_large_head_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:scaleType="matrix" />
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

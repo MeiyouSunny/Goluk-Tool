@@ -52,4 +52,8 @@ public class HomeUser {
 	@JSONField(name = "index")
 	public String index;
 
+	/** 自定义头像URL（原图） **/
+	@JSONField(name = "rawavatar")
+	public String rawavatar;
+
 }

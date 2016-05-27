@@ -252,14 +252,15 @@ public class UserCenterHeader implements OnClickListener {
 	}
 
 	private void showLargeHead() {
-		if (null == mData || null == mData.user || null == mData.user.customavatar || null == mData.user.avatar) {
+		if (null == mData || null == mData.user || null == mData.user.customavatar || null == mData.user.avatar
+				|| null == mData.user.rawavatar) {
 			return;
 		}
 		String largeHead = "";
 		Intent itLargeHead = new Intent(mContext, UserLargeHeadActivity.class);
-		if (!"".equals(mData.user.customavatar)) {
+		if (!"".equals(mData.user.customavatar) && !"".equals(mData.user.rawavatar)) {
 			// 使用网络地址
-			largeHead = mData.user.customavatar;
+			largeHead = mData.user.rawavatar;
 		} else {
 			largeHead = mData.user.avatar;
 		}
