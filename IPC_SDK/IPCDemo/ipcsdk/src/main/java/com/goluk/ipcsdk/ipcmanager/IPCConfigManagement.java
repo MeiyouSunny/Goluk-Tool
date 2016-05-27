@@ -6,7 +6,8 @@ package com.goluk.ipcsdk.ipcmanager;
 public class IPCConfigManagement {
 
     /**
-     * enable audio record
+     * enable/disable audio record
+     * @see com.goluk.ipcsdk.listener.IPCConfigListener
      * @param isEnable
      * @return
      */
@@ -15,7 +16,8 @@ public class IPCConfigManagement {
     }
 
     /**
-     * setting goluk carrecorder time
+     * update goluk carrecorder time
+     * @see com.goluk.ipcsdk.listener.IPCConfigListener
      * @param timeStamp timestamp in seconds
      * @return
      */
