@@ -6,7 +6,7 @@ package com.goluk.ipcsdk.ipcmanager;
 public class IPCFileSearchModule {
 
     /**
-     * 多个文件查询列表
+     * find file list
      *
      * @param filetype   1:循环影像 2:紧急视频 4:精彩视频
      * @param limitCount 最多查询条数
@@ -26,7 +26,7 @@ public class IPCFileSearchModule {
 
 
     /**
-     * 查询录制存储状态
+     * find SD status
      *
      * @author xuhw
      * @date 2015年4月2日
@@ -38,7 +38,7 @@ public class IPCFileSearchModule {
 
 
     /**
-     * 单个文件查询
+     * find single file
      *
      * @param filename 要查询的文件名
      * @return true:命令发送成功 false:失败
@@ -52,7 +52,7 @@ public class IPCFileSearchModule {
     }
 
     /**
-     * 下载文件
+     * dounload file
      *
      * @param filename 文件名称
      * @param tag      唯一标识
@@ -74,7 +74,7 @@ public class IPCFileSearchModule {
 
 
     /**
-     * 停止IPC下载所有任务
+     * stop download file
      *
      * @return
      * @author xuhw
