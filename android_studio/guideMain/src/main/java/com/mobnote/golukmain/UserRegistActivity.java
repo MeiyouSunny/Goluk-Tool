@@ -5,6 +5,7 @@ import com.mobnote.eventbus.EventBindPhoneNum;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.user.UserIdentifyInterface;
+import com.mobnote.user.UserProtocolClickableSpan;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 
@@ -17,7 +18,11 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -63,6 +68,8 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	private Editor mEditor = null;
 	/** 注册成功跳转页面的判断标志 */
 	private String registOk = null;
+
+	private TextView mHintText = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +119,7 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		mEditTextPhone = (EditText) findViewById(R.id.user_regist_phonenumber);
 		mEditTextPwd = (EditText) findViewById(R.id.user_regist_pwd);
 		mBtnRegist = (Button) findViewById(R.id.user_regist_btn);
+		mHintText = (TextView) findViewById(R.id.user_regist_hint);
 
 		/**
 		 * 监听绑定
@@ -132,10 +140,24 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		}
 	}
 
+	private void showHintText(TextView hintText) {
+		String allText = this.getString(R.string.str_user_regist_below_hint);
+		SpannableString spannableString = new SpannableString(allText);
+		ClickableSpan clickableSpan = new UserProtocolClickableSpan(this);
+		spannableString.setSpan(clickableSpan, 8, 12, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+		ClickableSpan clickableSpan2 = new UserProtocolClickableSpan(this);
+		spannableString.setSpan(clickableSpan2, 13, allText.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+		hintText.setText(spannableString);
+		hintText.setMovementMethod(LinkMovementMethod.getInstance());
+	}
+
 	/**
 	 * 手机号码获取
 	 */
 	public void getInfo() {
+
+		showHintText(mHintText);
+
 		Intent itLoginPhone = getIntent();
 		if (null != itLoginPhone.getStringExtra("intentLogin")) {
 			String number = itLoginPhone.getStringExtra("intentLogin").toString();
