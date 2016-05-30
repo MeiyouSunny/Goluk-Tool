@@ -5,16 +5,16 @@ package com.goluk.ipcsdk.bean;
  */
 public class DownloadInfo {
     /**
-     * 文件名称
+     * file name
      */
     public String filename;
     /**
-     * 文件大小
+     * file size
      */
     public int filesize;
 
     /**
-     * 文件下载大小
+     * the received file size
      */
     public int filerecvsize;
 }

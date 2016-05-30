@@ -1,13 +1,15 @@
-package com.goluk.ipcsdk.ipcmanager;
+package com.goluk.ipcsdk.ipcCommond;
+
+import com.goluk.ipcsdk.listener.IPCFileListener;
 
 /**
  * Created by zenghao on 2016/5/26.
  */
-public class IPCFileSearchModule {
+public class IPCFileCommand {
 
     /**
      * find file list
-     * @see com.goluk.ipcsdk.listener.IPCFileManagerListener
+     * @see IPCFileListener
      * @param filetype   1:loop video 2:urgent video 4:wonderful video
      * @param limitCount
      * @param timestart  0:all
@@ -27,7 +29,7 @@ public class IPCFileSearchModule {
 
     /**
      * find SD status
-     * @see com.goluk.ipcsdk.listener.IPCFileManagerListener
+     * @see IPCFileListener
      * @author zenghao
      * @date 2015年4月2日
      */
@@ -39,7 +41,7 @@ public class IPCFileSearchModule {
 
     /**
      * find single file
-     * @see com.goluk.ipcsdk.listener.IPCFileManagerListener
+     * @see IPCFileListener
      * @param filename
      * @return true:send success false:fail
      * @author xuhw
@@ -53,7 +55,7 @@ public class IPCFileSearchModule {
 
     /**
      * dounload video file
-     * @see com.goluk.ipcsdk.listener.IPCFileManagerListener
+     * @see IPCFileListener
      * @param filename
      * @param tag
      * @param savepath
@@ -75,7 +77,7 @@ public class IPCFileSearchModule {
 
     /**
      * stop download video file
-     * @see com.goluk.ipcsdk.listener.IPCFileManagerListener
+     * @see IPCFileListener
      * @return true:send success false:fail
      * @author zenghao
      * @date 2015年5月19日

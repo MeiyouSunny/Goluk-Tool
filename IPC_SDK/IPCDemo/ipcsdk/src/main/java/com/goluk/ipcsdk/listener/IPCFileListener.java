@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Created by hanzheng on 2016/5/27.
  */
-public interface IPCFileManagerListener {
+public interface IPCFileListener {
 
     /**
      * @param fileList

@@ -1,9 +1,9 @@
-package com.goluk.ipcsdk.ipcmanager;
+package com.goluk.ipcsdk.ipcCommond;
 
 /**
  * Created by leege100 on 16/5/26.
  */
-public class IPCConfigManagement {
+public class IPCConfigCommand {
 
     /**
      * enable/disable audio record
