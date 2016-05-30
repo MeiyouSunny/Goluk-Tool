@@ -43,6 +43,8 @@ public class UserVersionActivity extends BaseActivity implements OnClickListener
 	private RelativeLayout mOpinionLayout = null;
 	/**固件版本**/
 	private String vIpc = null;
+	/**用户协议和隐私条款**/
+	private RelativeLayout mProtocolLayout = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,7 @@ public class UserVersionActivity extends BaseActivity implements OnClickListener
 		mAppUpdateLayout = (RelativeLayout) findViewById(R.id.app_update_item);
 		mWelcomeLayout = (RelativeLayout) findViewById(R.id.welcome_item);
 		mOpinionLayout = (RelativeLayout) findViewById(R.id.opinion_item);
+		mProtocolLayout = (RelativeLayout) findViewById(R.id.ry_protocol_item);
 
 		mTextTitle.setText(this.getResources().getString(R.string.my_question_title_text));
 		// 监听
@@ -86,6 +89,7 @@ public class UserVersionActivity extends BaseActivity implements OnClickListener
 		mAppUpdateLayout.setOnClickListener(this);
 		mWelcomeLayout.setOnClickListener(this);
 		mOpinionLayout.setOnClickListener(this);
+		mProtocolLayout.setOnClickListener(this);
 	}
 
 	@Override
@@ -105,6 +109,10 @@ public class UserVersionActivity extends BaseActivity implements OnClickListener
 		} else if (id == R.id.opinion_item) {
 			Intent itOpinion = new Intent(UserVersionActivity.this,UserOpinionActivity.class);
 			startActivity(itOpinion);
+		} else if (id == R.id.ry_protocol_item) {
+			Intent itProtocol = new Intent(this, UserOpenUrlActivity.class);
+			itProtocol.putExtra(UserOpenUrlActivity.FROM_TAG, "protocol");
+			startActivity(itProtocol);
 		} else {
 		}
 	}
