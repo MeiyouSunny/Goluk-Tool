@@ -3,7 +3,7 @@ package com.goluk.ipcsdk.bean;
 /**
  * Created by hanzheng on 2016/5/27.
  */
-public class VideoFileInfo {
+public class FileInfo {
     /** 文件唯一标识 */
     public int id;
     /**开始录制时间**/

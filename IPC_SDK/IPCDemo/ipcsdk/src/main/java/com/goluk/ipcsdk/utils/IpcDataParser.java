@@ -107,9 +107,9 @@ public class IpcDataParser {
 	 * @date Mar 10, 2015
 	 *//*
 
-	public static ArrayList<VideoFileInfo> parseMoreFile(String json) {
+	public static ArrayList<FileInfo> parseMoreFile(String json) {
 
-		ArrayList<VideoFileInfo> list = new ArrayList<VideoFileInfo>();
+		ArrayList<FileInfo> list = new ArrayList<FileInfo>();
 		try {
 			JSONObject obj = new JSONObject(json);
 			
@@ -117,7 +117,7 @@ public class IpcDataParser {
 			int length = array.length();
 			for (int i = length-1; i >= 0; i--) {
 				JSONObject itemObj = array.getJSONObject(i);
-				VideoFileInfo info = parseSingleFileResult(itemObj.toString());
+				FileInfo info = parseSingleFileResult(itemObj.toString());
 				if(null != info){
 					list.add(info);
 				}
@@ -152,7 +152,7 @@ public class IpcDataParser {
 			
 			for (int i = length-1; i >= 0; i--) {
 				JSONObject itemObj = array.getJSONObject(i);
-				VideoFileInfo info = parseSingleFileResult(itemObj.toString());
+				FileInfo info = parseSingleFileResult(itemObj.toString());
 				if(null != info){
 					VideoInfo mVideoInfo = VideoDataManagerUtils.getVideoInfo(info);
 //					if (files == null) {
@@ -207,7 +207,7 @@ public class IpcDataParser {
 		return total;
 	}
 
-	public static VideoFileInfo parseSingleFileResult(String json) {
+	public static FileInfo parseSingleFileResult(String json) {
 
 		try {
 			JSONObject obj = new JSONObject(json);
@@ -222,7 +222,7 @@ public class IpcDataParser {
 			int withSnapshot = obj.getInt("withSnapshot");
 			int withGps = obj.getInt("withGps");
 			String timeStamp = obj.optString("timestamp");
-			VideoFileInfo fileInfo = new VideoFileInfo();
+			FileInfo fileInfo = new FileInfo();
 			fileInfo.id = id;
 			fileInfo.period = period;
 			fileInfo.time = time;

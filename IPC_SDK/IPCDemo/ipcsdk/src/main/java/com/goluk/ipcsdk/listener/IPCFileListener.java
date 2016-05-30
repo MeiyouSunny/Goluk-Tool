@@ -2,7 +2,7 @@ package com.goluk.ipcsdk.listener;
 
 import com.goluk.ipcsdk.bean.DownloadInfo;
 import com.goluk.ipcsdk.bean.RecordStorgeState;
-import com.goluk.ipcsdk.bean.VideoFileInfo;
+import com.goluk.ipcsdk.bean.FileInfo;
 import com.goluk.ipcsdk.bean.VideoInfo;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public interface IPCFileListener {
      *
      * @param fileInfo
      */
-    public void callback_find_single_file(VideoFileInfo fileInfo);
+    public void callback_find_single_file(FileInfo fileInfo);
 
     /**
      *
