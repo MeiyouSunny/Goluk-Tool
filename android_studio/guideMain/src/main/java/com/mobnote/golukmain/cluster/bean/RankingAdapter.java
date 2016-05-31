@@ -137,14 +137,14 @@ public class RankingAdapter extends BaseAdapter{
             showHead(holderView.userHead, video.user.avatar);
         }
 
-        if (null != video.user.certification) {
+        if (null != video.user.certificate) {
             holderView.userAuthentication.setVisibility(View.VISIBLE);
-            if ("1".equals(video.user.certification.isorgcertificated)) {
+            if ("1".equals(video.user.certificate.isorgcertificated)) {
                 holderView.userAuthentication.setImageResource(R.drawable.authentication_bluev_icon);
-            } else if ("1".equals(video.user.certification.isusercertificated)) {
+            } else if ("1".equals(video.user.certificate.isusercertificated)) {
                 holderView.userAuthentication
                         .setImageResource(R.drawable.authentication_yellowv_icon);
-            } else if ("1".equals(video.user.certification.isstar)) {
+            } else if ("1".equals(video.user.certificate.isstar)) {
                 holderView.userAuthentication.setImageResource(R.drawable.authentication_star_icon);
             } else {
                 holderView.userAuthentication.setVisibility(View.GONE);
