@@ -227,6 +227,13 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					String url = itIndexMore.getStringExtra("withdraw_url");
 					final String withDrawUrl = url + getCommParams2();
 					mWebView.loadUrl(withDrawUrl);
+				} else if(from_tag.equals("protocol")) {
+					String url = "http://www.goluk.com/legal_cn.html";
+					mTextTitle.setText(this.getString(R.string.str_user_protocol_and_privacy));
+					if (mErrorState) {
+						return;
+					}
+					mWebView.loadUrl(url);
 				}
 			} else {
 				String title = itIndexMore.getStringExtra(GolukConfig.NEED_H5_TITLE);

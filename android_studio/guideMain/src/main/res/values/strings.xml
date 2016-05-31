@@ -262,7 +262,9 @@
     <string name="user_login_password_show_error">Password format is incorrect. Please enter 6-16 digits / alphabets. Case sensitive</string>
     <string name="user_login_password_limit_top_hint">You have entered the wrong password 5 times and reached the incorrect log-in limit. This account will be locked for 2 hours. Please reset your password and try again</string>
     <string name="user_regist_phone_hint">Enter the phone number</string>
-    <string name="user_regist_below_hint">Please be assured that we will not use your mobile phone number for other purposes</string>
+    <string name="user_reset_below_hint">Please be assured that we will not use your mobile phone number for other purposes</string>
+    <string name="str_user_regist_below_hint">注册即代表你同意用户协议和隐私条款</string>
+    <string name="str_user_protocol_and_privacy">用户协议和隐私条款</string>
     <string name="user_identify_code">Enter the 6-digit verification code</string>
     <string name="user_identify_count">Resend</string>
     <string name="user_dialog_hint_title">Tips</string>
