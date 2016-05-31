@@ -42,8 +42,7 @@
             android:layout_marginTop="7dp"
             android:layout_marginRight="7dp"
             android:textColor="#ffffff"
-            android:layout_alignParentRight="true"
-            android:text="人气值:13098"/>
+            android:layout_alignParentRight="true" />
 
     </RelativeLayout>
 
@@ -70,8 +69,8 @@
 
         <ImageView
             android:id="@+id/im_user_head_authentication"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
             android:layout_alignBottom="@id/user_head"
             android:layout_alignRight="@id/user_head"
             android:contentDescription="@string/imgdes"
@@ -85,7 +84,6 @@
             android:layout_marginLeft="7dp"
             android:layout_marginTop="19dp"
             android:textSize="14sp"
-            android:text="二狗子"
             android:layout_toRightOf="@+id/user_head" />
 
         <TextView
@@ -98,8 +96,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="#666666"
-            android:textSize="12sp"
-            android:text="总有刁民想害朕"/>
+            android:textSize="12sp" />
 
     </RelativeLayout>
 

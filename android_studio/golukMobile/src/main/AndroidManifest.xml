@@ -639,10 +639,6 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <meta-data
-            android:value="7e0f2b2b09084a53b811aad948bd4169" android:name = "ZHUGE_APPKEY"/>
-        <meta-data
-            android:value="wandoujia" android:name = "ZHUGE_CHANNEL"/>
     </application>
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />

@@ -28,6 +28,6 @@ public class RankingListUser {
 	public String introduction;
 
 	/**返回调试信息**/
-	@JSONField(name="certification")
-	public RankingListCertification certification;
+	@JSONField(name="certificate")
+	public RankingListCertification certificate;
 }

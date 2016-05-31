@@ -368,9 +368,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         mBtnDelete.setOnClickListener(this);
         mStartVideoeditLl.setOnClickListener(this);
         mTvShareRightnow.setOnClickListener(this);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+        if(videoEditSupport()) {
             mStartVideoeditLl.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             mStartVideoeditLl.setVisibility(View.GONE);
         }
 
@@ -413,6 +413,19 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
 	}
 
+    private boolean videoEditSupport() {
+        // judge android os
+        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            return false;
+        }
+
+        // forbid some manufacturers, now htc
+        if(android.os.Build.MANUFACTURER.toLowerCase().contains("htc")) {
+            return false;
+        }
+        return true;
+    }
+
 	private void exit() {
 		finish();
 		mOrignManager.clearListener();
@@ -440,10 +453,10 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			exit();
 		} else if (id == R.id.tv_share_video_rightnow) {
             pauseVideo();
-            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
-                GolukUtils.startVideoShareActivity(this,mType,mPath,mFileName,false);
-            }else {
+            if(videoEditSupport()) {
                 doSimpleExport(mPath,mHP);
+            } else {
+                GolukUtils.startVideoShareActivity(this,mType,mPath,mFileName,false);
             }
 		}else if (id == R.id.back_btn) {
 

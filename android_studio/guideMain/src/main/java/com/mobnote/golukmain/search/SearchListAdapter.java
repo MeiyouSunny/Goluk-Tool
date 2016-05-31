@@ -249,6 +249,7 @@ public class SearchListAdapter extends BaseAdapter{
 			tvUserlistNickname.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					UserUtils.hideSoftMethod(mSearchActivity);
 					SimpleUserItemBean tempFollowingItemBean = mResultList.get(position).getUserItemBean();
 					GolukUtils.startUserCenterActivity(mSearchActivity, tempFollowingItemBean.uid);
 				}
@@ -259,6 +260,7 @@ public class SearchListAdapter extends BaseAdapter{
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
+					UserUtils.hideSoftMethod(mSearchActivity);
 					SimpleUserItemBean tempFollowingItemBean = mResultList.get(position).getUserItemBean();
 					GolukUtils.startUserCenterActivity(mSearchActivity, tempFollowingItemBean.uid);
 				}
@@ -269,6 +271,7 @@ public class SearchListAdapter extends BaseAdapter{
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
+					UserUtils.hideSoftMethod(mSearchActivity);
 					SimpleUserItemBean tempFollowingItemBean = mResultList.get(position).getUserItemBean();
 					GolukUtils.startUserCenterActivity(mSearchActivity, tempFollowingItemBean.uid);
 				}

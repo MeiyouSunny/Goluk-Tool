@@ -150,6 +150,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     public final static int MSG_AE_PLAY_RESUMED = 1014;
     public final static int MSG_AE_CHUNK_PLAY_END = 1015;
     public final static int MSG_AE_BITMAP_READ_FAILED = 1016;
+    public final static int MSG_AE_MUSIC_START = 1017;
+    public final static int MSG_AE_MUSIC_FAILED = 1018;
+    public final static int MSG_AE_MUSIC_STARTED = 1019;
 
 //	private boolean mIsPlaying;
 //	private boolean mIsPlayFinished;
@@ -359,6 +362,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     }
 
     public void playOrPause() {
+        Log.d("CK1", "~~~~~~~~~~~~~~~~~~~~~, mPlayerState=" + mPlayerState);
         if (mPlayerState == PlayerState.PLAYING) {
             mVideoPlayIV.setVisibility(View.VISIBLE);
             mAfterEffect.playPause();
@@ -675,7 +679,25 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             int chunkWidth = VideoEditUtils.ChunkTime2Width(chunk);
         }
             break;
-
+        case MSG_AE_MUSIC_START: {
+            if(null != mFullLoadingDialog) {
+                mFullLoadingDialog.setTextTitle("Please wait...");
+                mFullLoadingDialog.show();
+            }
+        }
+            break;
+        case MSG_AE_MUSIC_FAILED: {
+            if (null != mFullLoadingDialog && mFullLoadingDialog.isShowing()) {
+                mFullLoadingDialog.close();
+            }
+        }
+            break;
+        case MSG_AE_MUSIC_STARTED: {
+            if (null != mFullLoadingDialog && mFullLoadingDialog.isShowing()) {
+                mFullLoadingDialog.close();
+            }
+        }
+            break;
         default:
             Log.d(TAG, "unknown operation happened");
             break;
@@ -1383,4 +1405,21 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         mAfterEffecthandler.sendMessage(msg);
     }
 
+    @Override
+    public void onReplayWithMusicStrarting(AfterEffect afterEffect) {
+        Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_MUSIC_START);
+        mAfterEffecthandler.sendMessage(msg);
+    }
+
+    @Override
+    public void onReplayWithMusicStrarted(AfterEffect afterEffect) {
+        Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_MUSIC_STARTED);
+        mAfterEffecthandler.sendMessage(msg);
+    }
+
+    @Override
+    public void onReplayWithMusicFailed(AfterEffect afterEffect) {
+        Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_MUSIC_FAILED);
+        mAfterEffecthandler.sendMessage(msg);
+    }
 }

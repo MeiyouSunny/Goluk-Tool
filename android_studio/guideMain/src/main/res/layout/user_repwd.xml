@@ -89,8 +89,10 @@
                 android:text="@string/user_reset_below_hint"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="10dp"
-                android:textSize="12sp"
-               android:textColor="@color/black" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:textSize="10sp"
+               android:textColor="#666666" />
 
             <Button
                 android:layout_width="316dp"

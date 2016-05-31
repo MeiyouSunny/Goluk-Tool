@@ -45,6 +45,7 @@ import com.mobnote.golukmain.recommend.bean.RecommendRetBean;
 import com.mobnote.golukmain.search.bean.SearchListBean;
 import com.mobnote.golukmain.search.bean.SearchRetBean;
 import com.mobnote.golukmain.userbase.bean.SimpleUserItemBean;
+import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 
 public class SearchUserAcivity extends BaseActivity implements IRequestResultListener, OnClickListener{
@@ -245,7 +246,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 			Toast.makeText(SearchUserAcivity.this,getResources().getString(R.string.str_search_supported_words), Toast.LENGTH_SHORT).show();
 		}else{
 			sendSearchUserRequest(REFRESH_NORMAL,searchContent);
-			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);  
+			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(mSearchContentEt.getWindowToken(), 0);
 		}
 	}
@@ -298,6 +299,9 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 	}
 
 	protected void follow(final String linkuid,final String type){
+
+		//隐藏键盘
+		UserUtils.hideSoftMethod(this);
 
 		if(!GolukUtils.isNetworkConnected(this)) {
 			Toast.makeText(this,getString(R.string.network_error),
@@ -517,16 +521,16 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 		} 
 	}
 
-	@Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            View v = getCurrentFocus();
-            if (isShouldHideKeyboard(v, ev)) {
-                hideKeyboard(v.getWindowToken());
-            }
-        }
-        return super.dispatchTouchEvent(ev);
-    }
+//	@Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+//            View v = getCurrentFocus();
+//            if (isShouldHideKeyboard(v, ev)) {
+//                hideKeyboard(v.getWindowToken());
+//            }
+//        }
+//        return super.dispatchTouchEvent(ev);
+//    }
 
     /**
      * 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘，因为当用户点击EditText时则不能隐藏
