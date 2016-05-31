@@ -1,9 +1,19 @@
 package com.goluk.ipcsdk.ipcCommond;
 
+import com.goluk.ipcsdk.listener.IPCConfigListener;
+
 /**
  * Created by leege100 on 16/5/26.
  */
 public class IPCConfigCommand {
+
+    /**
+     *
+     * @param listener
+     */
+    public IPCConfigCommand(IPCConfigListener listener){
+
+    }
 
     /**
      * enable/disable audio record
