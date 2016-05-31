@@ -4,6 +4,9 @@ import cn.com.mobnote.logic.IGolukCommFn;
 
 public interface IPCManagerFn extends IGolukCommFn {
 
+
+	public static final int WIFI_CONNECT_SUUCESS = 3;
+
 	// VDCP 控制IPC
 	// VDTP　文件下载
 

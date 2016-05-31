@@ -13,10 +13,11 @@ import android.util.Log;
 
 import com.goluk.ipcsdk.utils.IPCConnectState;
 
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+
 public class NetworkStateReceiver extends BroadcastReceiver {
 	// private static int lastType = -1;
 	private final static String TAG = "NetworkStateReceiver";
-
 	private Handler mHandler = new Handler();
 
 	@Override
