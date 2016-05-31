@@ -35,7 +35,7 @@ public class UserProtocolClickableSpan extends ClickableSpan {
     @Override
     public void updateDrawState(TextPaint ds) {
         super.updateDrawState(ds);
-        ds.setColor(Color.rgb(0, 128, 255));
+        ds.setColor(Color.parseColor("#0080ff"));
         ds.setUnderlineText(false);
     }
 }
