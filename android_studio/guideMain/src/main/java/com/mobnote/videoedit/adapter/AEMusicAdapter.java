@@ -118,9 +118,7 @@ public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
                             }
 
                             try {
-                                mAfterEffect.editBackgroundMusic(destPath);
-//                                mActivity.seekWith(0);
-                                mAfterEffect.play();
+                                mAfterEffect.replayWithMusic(destPath);
                             } catch (InvalidVideoSourceException e) {
                                 e.printStackTrace();
                             }
