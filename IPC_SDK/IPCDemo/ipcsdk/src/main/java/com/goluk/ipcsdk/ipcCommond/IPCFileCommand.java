@@ -8,6 +8,14 @@ import com.goluk.ipcsdk.listener.IPCFileListener;
 public class IPCFileCommand {
 
     /**
+     *
+     * @param listener
+     */
+    public IPCFileCommand(IPCFileListener listener){
+
+    }
+
+    /**
      * find file list
      * @see IPCFileListener
      * @param filetype   1:loop video 2:urgent video 4:wonderful video
