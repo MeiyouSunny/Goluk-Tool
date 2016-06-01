@@ -126,7 +126,17 @@ public class GolukIPCSdk implements IPCManagerFn{
         if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
             IPC_VDCP_Connect_CallBack(msg, param1, param2);
         }else if (ENetTransEvent_IPC_VDCP_CommandResp == event) {
-            IPC_VDC_CommandResp_CallBack(event, msg, param1, param2);
+            if(msg ==  IPC_VDCP_Msg_Init){
+                IPC_VDC_CommandResp_CallBack(event, msg, param1, param2);
+            }else if (msg == IPC_VDCP_Msg_GetTime) {
+                //ipcCallBack_GetTime(param1, param2);
+            } else if (msg == IPC_VDCP_Msg_SetTime) {
+                //ipcCallBack_SetTime(param1, param2);
+            }else if (IPC_VDCP_Msg_SetRecAudioCfg == msg) {
+                //callback_setVoiceRecord(event, msg, param1, param2);
+            }else if (IPC_VDCP_Msg_GetRecAudioCfg == msg) {//声音录制
+                //callback_getVoiceRecord(event, msg, param1, param2);
+            }
         }
     }
 }
