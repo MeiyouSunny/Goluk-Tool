@@ -209,8 +209,7 @@ public class SystemMsgAdapter extends BaseAdapter {
 							intent.putExtra(GolukConfig.NEED_H5_TITLE, mContext.getString(R.string.str_activity_rule));
 							mContext.startActivity(intent);
 						} else if(mmbTxt.type == msgTypeGReward){
-                            Intent intent = new Intent(mContext,MyProfitActivity.class);
-                            mContext.startActivity(intent);
+							//中奖消息点击不跳转
                         }
 
 					} else {
@@ -265,28 +264,13 @@ public class SystemMsgAdapter extends BaseAdapter {
 
 					}
 				});
-			} else if(mmbImg.type == msgTypeGReward){
-                imgReason = mmbImg.content.gaward.reason;
+			} else if (mmbImg.type == msgTypeGReward) {//G币奖励和中奖
+				imgReason = mContext.getString(R.string.str_sys_msg_gaward_text)
+						+ mmbImg.content.gaward.reason + mmbImg.content.gaward.name;
+				imgTxt = "";
+				imgPath = mmbImg.content.picture;
+				imageHolder.msgMyincome.setVisibility(View.GONE);
 
-                imgTxt = mContext.getResources().getString(R.string.msg_system_reward_txt_began)
-                        + mmbImg.content.gaward.count
-                        + mContext.getResources().getString(R.string.msg_system_reward_txt_end);
-                imgPath = mmbImg.content.picture;
-                imageHolder.msgMyincome.setVisibility(View.VISIBLE);
-                imageHolder.msgMyincome.setOnClickListener(new OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) {
-                        if (GolukUtils.isNetworkConnected(mContext)) {
-                            Intent intent = new Intent(mContext, MyProfitActivity.class);
-                            mContext.startActivity(intent);
-                        } else {
-                            GolukUtils.showToast(mContext,
-                                    mContext.getResources().getString(R.string.user_net_unavailable));
-                        }
-
-                    }
-                });
             }else if (mmbImg.type == msgTypeRecommend) {// 推荐
 				imgPath = mmbImg.content.picture;
 				imgTxt = mContext.getResources().getString(R.string.msg_system_recommend_title);
@@ -314,8 +298,12 @@ public class SystemMsgAdapter extends BaseAdapter {
 			GlideUtils.loadImage(mContext, imageHolder.msgImage, imgPath, 0);
 			imageHolder.msgTime.setText(GolukUtils.getCommentShowFormatTime(mContext, imgTime));
 			imageHolder.msgTxt.setText(imgTxt);
-			imageHolder.msgReasonTxt.setText(mContext.getResources().getString(R.string.msg_system_reason_began)
-					+ imgReason);
+			if (mmbImg.type == msgTypeGReward) {//G币奖励和中奖
+				imageHolder.msgReasonTxt.setText(imgReason);
+			} else {
+				imageHolder.msgReasonTxt.setText(mContext.getResources().getString(R.string.msg_system_reason_began)
+						+ imgReason);
+			}
 			break;
 		default:
 			break;

@@ -909,7 +909,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 
     private VideoEditExportDialog mExportDialog;
 
-    private void clearChunkFocus() {
+    private void clearChunkFocusEx() {
         int preFocusIdx = mChannelLineAdapter.getEditIndex();
         // no focus before
         if(-1 == preFocusIdx) {
@@ -924,6 +924,22 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         ChunkBean chunkBean = (ChunkBean)bean;
         chunkBean.isEditState = false;
         mChannelLineAdapter.notifyItemChanged(preFocusIdx);
+        showMusicController();
+    }
+
+    private void clearChunkFocus() {
+        if(mProjectItemList == null || mProjectItemList.size() == 0) {
+            return;
+        }
+
+        for(ProjectItemBean bean : mProjectItemList) {
+            if(bean instanceof ChunkBean) {
+                ChunkBean chunkBean = (ChunkBean)bean;
+                chunkBean.isEditState = false;
+            }
+        }
+        mChannelLineAdapter.setEditIndex(-1);
+        mChannelLineAdapter.notifyDataSetChanged();
         showMusicController();
     }
 
