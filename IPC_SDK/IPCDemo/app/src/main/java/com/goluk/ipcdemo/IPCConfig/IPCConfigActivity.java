@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.goluk.ipcdemo.R;
+import com.goluk.ipcsdk.listener.IPCConfigListener;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
 
 import org.json.JSONObject;
@@ -17,7 +18,7 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 /**
  * Created by leege100 on 16/5/31.
  */
-public class IPCConfigActivity extends Activity implements View.OnClickListener{
+public class IPCConfigActivity extends Activity implements View.OnClickListener,IPCConfigListener{
     Button mSetAudioRecordCfgBt;
     Button mgetAudioRecordCfgBt;
     Button mInitSdkBt;
@@ -28,6 +29,11 @@ public class IPCConfigActivity extends Activity implements View.OnClickListener{
         initView();
         setupView();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     private void setupView() {
@@ -72,5 +78,15 @@ public class IPCConfigActivity extends Activity implements View.OnClickListener{
             default:
                 break;
         }
+    }
+
+    @Override
+    public void callback_enableAudeoRecord(boolean success) {
+
+    }
+
+    @Override
+    public void callback_setTime(boolean success) {
+
     }
 }
