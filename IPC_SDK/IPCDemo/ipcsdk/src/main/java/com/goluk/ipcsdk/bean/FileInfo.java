@@ -4,24 +4,24 @@ package com.goluk.ipcsdk.bean;
  * Created by hanzheng on 2016/5/27.
  */
 public class FileInfo {
-    /** 文件唯一标识 */
+    /** File-only mark */
     public int id;
-    /**开始录制时间**/
+    /**Time when recording starts**/
     public String timestamp;
-    /** 视频文件录制起始时间（秒） */
+    /** Video recording starting time (sec) */
     public long time;
-    /** 时长(秒) */
+    /** Video length (sec)*/
     public int period;
-    /** 起因事件类型 */
+    /** Opening event type */
     public int type;
-    /** 字长(MB) */
+    /** Word length (MB) */
     public double size;
-    /** 文件名 */
+    /** File name */
     public String location;
-    /** 分辨率 1080p 720p */
+    /** Definition 1080p 720p */
     public String resolution;
-    /** 是否具有录像截图文件。是(1) | 否(0) */
+    /** Does this contain screen captures from videos? Yes (1) | No (0) */
     public int withSnapshot;
-    /** 是否具有gps文件。是(1) | 否(0) */
+    /** Does this contain GPS files? Yes (1) | No (0) */
     public int withGps;
 }

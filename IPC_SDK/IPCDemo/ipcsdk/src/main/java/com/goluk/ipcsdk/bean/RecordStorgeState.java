@@ -4,30 +4,30 @@ package com.goluk.ipcsdk.bean;
  * Created by zenghao on 2016/5/27.
  */
 public class RecordStorgeState {
-    /** SD卡是否在位:YES(1)|NO(0)。仅当SD卡在位时，下列字段才有意义。 */
+    /** Is the SD card in place? Yes(1)|NO(0). The following section only applies when the SD card is in its place. */
     public int SDCardActive;
-    /** SD卡剩余容量太小，不能继续录制(1) | SD卡容量正常(0) */
+    /** Not enough space remaining in SD card. Unable to continue recording (1) | SD card memory space is normal (0) */
     public int isSpaceTooSmall;
-    /** SD卡总容量，单位为MB */
+    /** Capacity of SD card (MB) */
     public double totalSdSize;
-    /** 用户自有文件大小，单位为MB */
+    /** Size of user's files (MB) */
     public double userFilesSize;
-    /** SD卡剩余容量，单位为MB */
+    /** Space remaining in SD card (MB) */
     public double leftSize;
-    /** 行驶录像配额上限，单位为MB */
+    /** Max limit for dashcam recordings (MB) */
     public double normalRecQuota;
-    /** 当前行驶录像总容量，单位为MB */
+    /** Current size of dashcam recordings (MB) */
     public double normalRecSize;
-    /** 紧急录像配额上限，单位为MB */
+    /** Max limit for emergency recordings (MB) */
     public double urgentRecQuota;
-    /** 当前紧急录像总容量，单位为MB */
+    /** Current size of emergency recordings (MB) */
     public double urgentRecSize;
-    /** 精彩录像配额上限，单位为MB */
+    /** Max limit for epic recordings (MB) */
     public double wonderfulRecQuota;
-    /** 当前精彩录像总容量，单位为MB */
+    /** Current size of epic recordings (MB) */
     public double wonderfulRecSize;
-    /** 抓图配额上限，单位为MB */
+    /** Max limit for screen captures (MB) */
     public double picQuota;
-    /** 当前抓图总容量，单位为MB */
+    /** Current size of screen captures (MB) */
     public double picSize;
 }
