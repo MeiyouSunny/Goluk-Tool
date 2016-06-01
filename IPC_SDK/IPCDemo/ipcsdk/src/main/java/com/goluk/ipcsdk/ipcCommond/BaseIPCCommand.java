@@ -1,4 +1,4 @@
-package com.goluk.ipcsdk.bean;
+package com.goluk.ipcsdk.ipcCommond;
 
 import android.content.Context;
 

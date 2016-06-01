@@ -2,7 +2,6 @@ package com.goluk.ipcsdk.ipcCommond;
 
 import android.content.Context;
 
-import com.goluk.ipcsdk.bean.BaseIPCCommand;
 import com.goluk.ipcsdk.listener.IPCConfigListener;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
 

@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_marginLeft="18dp"
+    android:layout_marginRight="18dp"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
     <Button
-        android:id="@+id/bt_InitSdk"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:text="InitSdk"/>
-    <Button
         android:id="@+id/bt_setAudioRecordCfg"
-        android:layout_width="wrap_content"
+        android:layout_marginTop="18dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAllCaps="false"
         android:text="setAudioRecordCfg"/>
     <Button
         android:id="@+id/bt_getAudioRecordCfg"
-        android:layout_width="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAllCaps="false"
         android:text="getAudioRecordCfg"/>
