@@ -20,8 +20,11 @@ public class IPCManagerAdapter {
 	}
 
 	public static void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-		Log.i("ipc_callback","GolukIPCSdk");
-		Log.i("ipc_callback",msg + " " + param2);
+		if(param2 != null){
+			Log.i("ipc_callback", "event: " + event + " msg: " + msg + " param1: " + param1 + " param2: " + param2.toString());
+		}else{
+			Log.i("ipc_callback", "event: " + event + " msg: " + msg + " param1: " + param1 + " param2: null");
+		}
 		if (null == fn) {
 			return;
 		}

@@ -2,8 +2,6 @@ package com.goluk.ipcdemo.application;
 
 import android.app.Application;
 
-import com.goluk.ipcsdk.main.GolukIPCSdk;
-
 import cn.com.tiros.api.Const;
 
 /**
@@ -18,7 +16,6 @@ public class IPCApplication extends Application{
         super.onCreate();
 
         Const.setAppContext(this);
-        GolukIPCSdk.getInstance().initSDK();
         instance = this;
     }
 

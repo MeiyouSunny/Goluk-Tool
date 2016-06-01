@@ -20,6 +20,7 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 public class IPCConfigActivity extends Activity implements View.OnClickListener{
     Button mSetAudioRecordCfgBt;
     Button mgetAudioRecordCfgBt;
+    Button mInitSdkBt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,17 +33,23 @@ public class IPCConfigActivity extends Activity implements View.OnClickListener{
     private void setupView() {
         mSetAudioRecordCfgBt.setOnClickListener(this);
         mgetAudioRecordCfgBt.setOnClickListener(this);
+        mInitSdkBt.setOnClickListener(this);
     }
 
     private void initView() {
         mSetAudioRecordCfgBt = (Button) findViewById(R.id.bt_setAudioRecordCfg);
         mgetAudioRecordCfgBt = (Button) findViewById(R.id.bt_getAudioRecordCfg);
+        mInitSdkBt = (Button) findViewById(R.id.bt_InitSdk);
     }
 
     @Override
     public void onClick(View v) {
         String params;
         switch (v.getId()){
+            case R.id.bt_InitSdk:
+                boolean isSuccess = GolukIPCSdk.getInstance().initSDK();
+                Log.i("return",isSuccess + "");
+                break;
             case R.id.bt_getAudioRecordCfg:
                 boolean returnA = GolukIPCSdk.getInstance().mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
                         IPCManagerFn.IPC_VDCPCmd_GetRecAudioCfg, "");
