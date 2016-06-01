@@ -1085,4 +1085,6 @@
     <string name="str_ae_export_dialog_720p">HD720P</string>
     <string name="str_ae_export_dialog_1080p">FULL HD 1080P</string>
     <string name="str_default_video_edit_user_name">无名极友</string>
+
+    <string name="str_sys_msg_gaward_text">恭喜您，抽中了</string>
 </resources>
