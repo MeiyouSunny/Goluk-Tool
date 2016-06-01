@@ -58,6 +58,33 @@ public class ChannelLineAdapter extends
 	AfterEffect mAfterEffect;
 
 //	String mVideoPath = VideoEditConstant.VIDEO_PATH_1;
+    private void refreshListFocusStatus(int index) {
+        if(null == mDataList || mDataList.size() == 0) {
+            return;
+        }
+
+        if(-1 == index) {
+            for(ProjectItemBean bean : mDataList) {
+                if(bean instanceof ChunkBean) {
+                    ChunkBean chunkBean = (ChunkBean)bean;
+                    chunkBean.isEditState = false;
+                }
+            }
+        } else {
+            int size = mDataList.size();
+            for(int i = 0; i < size; i++) {
+                ProjectItemBean bean = mDataList.get(i);
+                if(bean instanceof ChunkBean) {
+                    ChunkBean chunkBean = (ChunkBean)bean;
+                    if(i == index) {
+                        chunkBean.isEditState = true;
+                    } else {
+                        chunkBean.isEditState = false;
+                    }
+                }
+            }
+        }
+    }
 
 	public int getEditIndex() {
 		return mEditIndex;
@@ -286,42 +313,45 @@ public class ChannelLineAdapter extends
 					viewHolder.nChunkDurationTV.setVisibility(View.GONE);
 				}
 
-				int duration = (int)(chunk.getDuration() * 10);
-				viewHolder.nChunkDurationTV.setText("" + (float)duration / 10 + "\'\'");
+                int duration = (int)(chunk.getDuration() * 10);
+                viewHolder.nChunkDurationTV.setText("" + (float)duration / 10 + "\'\'");
 
-				// Chunk click edit, mutual click
-				viewHolder.nChunkContainerLL.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-					if(-1 == mEditIndex) { // no selection before
-						mEditIndex = position;
-						chunkBean.isEditState = true;
-						notifyItemChanged(mEditIndex);
-						mAEActivity.showEditController();
-					} else {
-						if(mEditIndex == position) { // tap same item to cancel selection
+                // Chunk click edit, mutual click
+                viewHolder.nChunkContainerLL.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(-1 == mEditIndex) { // no selection before
+                            mEditIndex = position;
+//						chunkBean.isEditState = true;
+                            refreshListFocusStatus(mEditIndex);
+//						notifyItemChanged(mEditIndex);
+                            mAEActivity.showEditController();
+                        } else {
+                            if(mEditIndex == position) { // tap same item to cancel selection
 //								chunkBean.isEditState = false;
 //								mEditIndex = -1;
 //								notifyItemChanged(position);
 //								mAEActivity.showMusicController();
-						} else {
-							ProjectItemBean bean = mDataList.get(mEditIndex);
-							if(bean instanceof ChunkBean) {
-								ChunkBean preBean = (ChunkBean)bean;
-								preBean.isEditState = !preBean.isEditState;
-							}
-							notifyItemChanged(mEditIndex);
-							chunkBean.isEditState = !chunkBean.isEditState;
+                            } else {
+                                ProjectItemBean bean = mDataList.get(mEditIndex);
+//							if(bean instanceof ChunkBean) {
+//								ChunkBean preBean = (ChunkBean)bean;
+//								preBean.isEditState = !preBean.isEditState;
+//							}
+//							notifyItemChanged(mEditIndex);
+///							chunkBean.isEditState = !chunkBean.isEditState;
 
-							notifyItemChanged(position);
-							mEditIndex = position;
-							mAEActivity.showEditController();
-						}
-					}
-                    mAEActivity.moveChunk2Gate(mEditIndex);
-                    mAEActivity.setEditChunkVolume();
-					}
-				});
+//							notifyItemChanged(position);
+                                mEditIndex = position;
+                                refreshListFocusStatus(mEditIndex);
+                                mAEActivity.showEditController();
+                            }
+                        }
+                        notifyDataSetChanged();
+                        mAEActivity.moveChunk2Gate(mEditIndex);
+                        mAEActivity.setEditChunkVolume();
+                    }
+                });
 
 				viewHolder.nChunkContainerLL.setOnLongClickListener(new OnLongClickListener() {
 					@Override
