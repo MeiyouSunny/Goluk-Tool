@@ -362,7 +362,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     }
 
     public void playOrPause() {
-        Log.d("CK1", "~~~~~~~~~~~~~~~~~~~~~, mPlayerState=" + mPlayerState);
         if (mPlayerState == PlayerState.PLAYING) {
             mVideoPlayIV.setVisibility(View.VISIBLE);
             mAfterEffect.playPause();
