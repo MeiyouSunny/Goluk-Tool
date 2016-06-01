@@ -6,32 +6,32 @@ import android.graphics.Bitmap;
  * Created by zenghao on 2016/5/27.
  */
 public class VideoInfo {
-    /** 视频唯一标识 */
+    /** Video-only mark */
     public long id;
-    /** 视频截图 */
+    /** Screen capture from video */
     public int videoImg;
-    /** 视频截图 */
+    /** Screen capture from video */
     public Bitmap videoBitmap;
-    /** 文件创建时间 */
+    /** Time created */
     public String videoCreateDate = null;
-    /** 视频大小 */
+    /** Video size */
     public String videoSize;
-    /** 当前选择中状态 */
+    /** Currently in selection mode */
     public boolean isSelect;
-    /** 视频播放路径 */
+    /** Video playing method */
     public String videoPath;
-    /** 视频时长 */
+    /** Video length */
     public String countTime = null;
-    /** 分辨率 1080p 720p 480p*/
+    /** Definition: 1080p 720p 480p*/
     public String videoHP;
-    /** 释放标识 */
+    /** Release mark */
     public boolean isRecycle = false;
-    /** 视频文件录制起始时间（秒） */
+    /** Video recording starting time (sec) */
     public long time;
-    /** 视频文件名称 */
+    /** Video name */
     public String filename;
-    /** 是否要显示new图标 */
+    /** Would you like to display the new icon? */
     public boolean isNew = false;
-//	/** 是否已同步 **/
+//	/** Sync complete? **/
 //	public boolean isAsync;
 }
