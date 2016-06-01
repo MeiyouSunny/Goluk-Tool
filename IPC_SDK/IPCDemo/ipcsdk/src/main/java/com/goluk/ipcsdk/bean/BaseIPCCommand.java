@@ -10,17 +10,17 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
  * Created by leege100 on 16/6/1.
  */
 public abstract class BaseIPCCommand implements IPCManagerFn{
-    Context context;
+    Context mContext;
     protected BaseIPCCommand(Context cxt){
-        this.context = cxt;
+        this.mContext = cxt;
         GolukIPCSdk.getInstance().registerCommand(this);
     }
 
     public Context getContext() {
-        return context;
+        return mContext;
     }
 
     public void setContext(Context context) {
-        this.context = context;
+        this.mContext = context;
     }
 }

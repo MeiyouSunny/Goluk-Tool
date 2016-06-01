@@ -1,6 +1,6 @@
 package com.goluk.ipcsdk.main;
 
-import android.util.Log;
+import android.content.Context;
 
 import com.goluk.ipcsdk.bean.BaseIPCCommand;
 
@@ -13,6 +13,7 @@ import java.util.List;
 import cn.com.mobnote.logic.GolukLogic;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.api.Const;
 
 /**
  * Created by leege100 on 16/5/30.
@@ -26,7 +27,6 @@ public class GolukIPCSdk implements IPCManagerFn{
     private static GolukIPCSdk instance;
 
     private GolukIPCSdk(){
-        Log.i("GolukIPCSdk","loadLib");
         System.loadLibrary("golukmobile");
     }
 
@@ -41,10 +41,8 @@ public class GolukIPCSdk implements IPCManagerFn{
         this.mIpcManagerListener.add(command);
     }
 
-//    public void unRegisterCommand(Context from) {
-//        this.mIpcManagerListener.remove(from);
-//    }
-    public boolean initSDK(){
+    public boolean initSDK(Context cxt){
+        Const.setAppContext(cxt);
         if(mIpcManagerListener == null){
             mIpcManagerListener = new ArrayList<BaseIPCCommand>();
         }
@@ -52,32 +50,31 @@ public class GolukIPCSdk implements IPCManagerFn{
             return true;
         }
 
-        // 实例化JIN接口,请求网络数据
         mGoluk = new GolukLogic();
         setIpcMode(2);
-        setIPCWifiState(true,"192.168.62.1");
 
-        int result = mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_IPCManager, this);
-        Log.i("registerResult",result + "");
+        mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_IPCManager, this);
+
         return true;
     }
 
-    public boolean setIPCWifiState(boolean isConnect,String ip) {
+    /**
+     * connect the IPC
+     * @return
+     */
+    public boolean connectIPC() {
 
-        int state = isConnect ? 1 : 0;
         String json = "";
         JSONObject obj = new JSONObject();
         try {
-            obj.put("state", state);
-            obj.put("domain", ip);
+            obj.put("state", 1);
+            obj.put("domain", "192.168.62.1");
             json = obj.toString();
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        boolean isSucess = mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
-                IPC_CommCmd_WifiChanged, json);
-        return isSucess;
+        return mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_WifiChanged, json);
     }
 
     /**
