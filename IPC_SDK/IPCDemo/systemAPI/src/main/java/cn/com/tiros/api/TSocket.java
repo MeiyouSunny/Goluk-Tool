@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 public class TSocket {
 	
@@ -201,9 +202,11 @@ public class TSocket {
 	 *      1.STREAM������Ч <br>
 	 */
 	public void sys_sktconnect(final String addr, final int port) {
+		Log.e("", "sys_sktconnect--------------addr:" + addr + ",port=" + port);
 		if(mSocketType != SYS_STREAM){
 			return;
 		}
+		Log.e("", "sys_sktconnect--------------1");
 		mSendingOrReceiving = true;
 		mIsShutDown = false;
 		
@@ -213,24 +216,31 @@ public class TSocket {
 			@Override
 			public void run() {
 				try {
+					Log.e("", "sys_sktconnect--------------2");
 					if (mTcpSocket != null && !mTcpSocket.isConnected()) {
+						Log.e("", "sys_sktconnect--------------3");
 						mTcpSocket.connect(mTcpAddress, 10000);
 					}
+					Log.e("", "sys_sktconnect--------------4");
 				} catch (Exception e) {
+					e.printStackTrace();
 					mSendingOrReceiving = false;
+					Log.e("", "sys_sktconnect--------------5");
 					mHandler.sendEmptyMessage(5);
 					return;
 				}
 				mHandler.sendEmptyMessage(1);
-
+				Log.e("", "sys_sktconnect--------------6");
 				try {
 					if (mTcpSocket != null){
 						mInputStream = mTcpSocket.getInputStream();
 					}
 				} catch (IOException e) {
+					Log.e("", "sys_sktconnect--------------7");
 					mHandler.sendEmptyMessage(6);
 					return;
 				}
+				Log.e("", "sys_sktconnect--------------8");
 				while (mSendingOrReceiving) {
 					try {
 						synchronized (mRecvNotifyLock) {
@@ -247,12 +257,14 @@ public class TSocket {
 								}
 								else
 								{
+									Log.e("", "sys_sktconnect--------------err----1");
 									mHandler.sendEmptyMessage(6);
 									mSendingOrReceiving = false;
 								}
 							}
 						}
 					} catch (IOException e) {
+						Log.e("", "sys_sktconnect--------------err----2");
 						mHandler.sendEmptyMessage(6);
 						mSendingOrReceiving = false;
 						return;

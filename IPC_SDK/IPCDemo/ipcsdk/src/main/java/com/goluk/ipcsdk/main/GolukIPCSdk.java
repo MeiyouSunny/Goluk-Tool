@@ -41,8 +41,8 @@ public class GolukIPCSdk implements IPCManagerFn{
 
         // 实例化JIN接口,请求网络数据
         mGoluk = new GolukLogic();
-        setIPCWifiState(true,"192.168.62.1");
         setIpcMode(2);
+        setIPCWifiState(true,"192.168.62.1");
 
         int result = mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_IPCManager, this);
         Log.i("registerResult",result + "");
@@ -124,6 +124,7 @@ public class GolukIPCSdk implements IPCManagerFn{
     @Override
     public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
         if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
+            Log.i("zh","zh callback : " + msg + "----param1" + param1 + "---param2 " + param2);
             IPC_VDCP_Connect_CallBack(msg, param1, param2);
         }else if (ENetTransEvent_IPC_VDCP_CommandResp == event) {
             IPC_VDC_CommandResp_CallBack(event, msg, param1, param2);
