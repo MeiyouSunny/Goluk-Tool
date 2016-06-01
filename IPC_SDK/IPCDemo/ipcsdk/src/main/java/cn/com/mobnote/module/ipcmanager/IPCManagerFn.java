@@ -24,17 +24,17 @@ public interface IPCManagerFn extends IGolukCommFn {
 //	 * 网络传输事件声明
 //	 * */
 //
-//	/** IPC控制连接状态 */
-//	public static final int ENetTransEvent_IPC_VDCP_ConnectState = 0;
-//	/** IPC控制命令应答 */
-//	public static final int ENetTransEvent_IPC_VDCP_CommandResp = 1;
-//	/** IPC下载连接状态 */
-//	public static final int ENetTransEvent_IPC_VDTP_ConnectState = 2;
-//	/** IPC下载结果应答 */
-//	public static final int ENetTransEvent_IPC_VDTP_Resp = 3;
-//
-//	public static final int ENetTransEvent_IPC_UpGrade_Resp = 4;
-//	/** Mobnote连接状态 */
+	/** IPC控制连接状态 */
+	public static final int ENetTransEvent_IPC_VDCP_ConnectState = 0;
+	/** IPC控制命令应答 */
+	public static final int ENetTransEvent_IPC_VDCP_CommandResp = 1;
+	/** IPC下载连接状态 */
+	public static final int ENetTransEvent_IPC_VDTP_ConnectState = 2;
+	/** IPC下载结果应答 */
+	public static final int ENetTransEvent_IPC_VDTP_Resp = 3;
+
+	public static final int ENetTransEvent_IPC_UpGrade_Resp = 4;
+	/** Mobnote连接状态 */
 //	public static final int ENetTransEvent_Mobnote_ConnectState = 5;
 //	/** Mobnote结构应答 */
 //	public static final int ENetTransEvent_Mobnote_Resp = 6;
@@ -44,14 +44,14 @@ public interface IPCManagerFn extends IGolukCommFn {
 //	 * 服务器连接状态事件下消息ID
 //	 * */
 //
-//	/** 空闲 */
-//	public static final int ConnectionStateMsg_Idle = 0;
-//	/** 连接中 */
-//	public static final int ConnectionStateMsg_Connecting = 1;
-//	/** 连接成功 */
-//	public static final int ConnectionStateMsg_Connected = 2;
-//	/** 连接断开 */
-//	public static final int ConnectionStateMsg_DisConnected = 3;
+	/** 空闲 */
+	public static final int ConnectionStateMsg_Idle = 0;
+	/** 连接中 */
+	public static final int ConnectionStateMsg_Connecting = 1;
+	/** 连接成功 */
+	public static final int ConnectionStateMsg_Connected = 2;
+	/** 连接断开 */
+	public static final int ConnectionStateMsg_DisConnected = 3;
 //
 //	/**
 //	 *
@@ -66,8 +66,8 @@ public interface IPCManagerFn extends IGolukCommFn {
 //	 * 服务器IPC_VDCP消息ID
 //	 * */
 //
-//	/** 初始化消息 */
-//	public static final int IPC_VDCP_Msg_Init = 0;
+	/** 初始化消息 */
+	public static final int IPC_VDCP_Msg_Init = 0;
 //	/** 多文件目录查询 */
 //	public static final int IPC_VDCP_Msg_Query = 1000;
 //	/** 单文件查询 */
