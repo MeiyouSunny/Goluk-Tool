@@ -2,8 +2,13 @@ package com.goluk.ipcsdk.main;
 
 import android.util.Log;
 
+import com.goluk.ipcsdk.bean.BaseIPCCommand;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.com.mobnote.logic.GolukLogic;
 import cn.com.mobnote.logic.GolukModule;
@@ -14,11 +19,9 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
  */
 public class GolukIPCSdk implements IPCManagerFn{
 
-    public static final String G1_SIGN = "G1";
-    public static final String G2_SIGN = "G2";
-    public static final String T1_SIGN = "T1";
-    public static final String T1s_SIGN = "T1S";
     public GolukLogic mGoluk = null;
+    /** IPC回调监听列表 */
+    private List<BaseIPCCommand> mIpcManagerListener = null;
 
     private static GolukIPCSdk instance;
 
@@ -34,7 +37,17 @@ public class GolukIPCSdk implements IPCManagerFn{
         return instance;
     }
 
+    public void registerCommand(BaseIPCCommand command) {
+        this.mIpcManagerListener.add(command);
+    }
+
+//    public void unRegisterCommand(Context from) {
+//        this.mIpcManagerListener.remove(from);
+//    }
     public boolean initSDK(){
+        if(mIpcManagerListener == null){
+            mIpcManagerListener = new ArrayList<BaseIPCCommand>();
+        }
         if (null != mGoluk) {
             return true;
         }
@@ -123,11 +136,30 @@ public class GolukIPCSdk implements IPCManagerFn{
 
     @Override
     public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-        if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
-            Log.i("zh","zh callback : " + msg + "----param1" + param1 + "---param2 " + param2);
-            IPC_VDCP_Connect_CallBack(msg, param1, param2);
-        }else if (ENetTransEvent_IPC_VDCP_CommandResp == event) {
-            IPC_VDC_CommandResp_CallBack(event, msg, param1, param2);
+//        if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
+//            Log.i("zh","zh callback : " + msg + "----param1" + param1 + "---param2 " + param2);
+//            IPC_VDCP_Connect_CallBack(msg, param1, param2);
+//        }else if (ENetTransEvent_IPC_VDCP_CommandResp == event) {
+//            if(msg ==  IPC_VDCP_Msg_Init){
+//                IPC_VDC_CommandResp_CallBack(event, msg, param1, param2);
+//            }else if (msg == IPC_VDCP_Msg_GetTime) {
+//                //ipcCallBack_GetTime(param1, param2);
+//            } else if (msg == IPC_VDCP_Msg_SetTime) {
+//                //ipcCallBack_SetTime(param1, param2);
+//            }else if (IPC_VDCP_Msg_SetRecAudioCfg == msg) {
+//                //callback_setVoiceRecord(event, msg, param1, param2);
+//            }else if (IPC_VDCP_Msg_GetRecAudioCfg == msg) {//声音录制
+//                //callback_getVoiceRecord(event, msg, param1, param2);
+//            }
+//        }
+        if(mIpcManagerListener != null){
+            for(BaseIPCCommand command:mIpcManagerListener){
+                if(command == null || command.getContext() == null){
+                    mIpcManagerListener.remove(command);
+                }else{
+                    command.IPCManage_CallBack(event, msg, param1, param2);
+                }
+            }
         }
     }
 }

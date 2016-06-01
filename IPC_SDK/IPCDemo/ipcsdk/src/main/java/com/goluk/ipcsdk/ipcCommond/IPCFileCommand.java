@@ -1,7 +1,7 @@
 package com.goluk.ipcsdk.ipcCommond;
-
 import android.util.Log;
-
+import android.content.Context;
+import com.goluk.ipcsdk.bean.BaseIPCCommand;
 import com.goluk.ipcsdk.listener.IPCFileListener;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
 import com.goluk.ipcsdk.utils.IpcDataParser;
@@ -12,13 +12,14 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 /**
  * Created by zenghao on 2016/5/26.
  */
-public class IPCFileCommand {
+public class IPCFileCommand extends BaseIPCCommand{
 
     /**
      *
      * @param listener
      */
-    public IPCFileCommand(IPCFileListener listener){
+    public IPCFileCommand(IPCFileListener listener,Context cxt){
+        super(cxt);
 
     }
 
@@ -98,4 +99,8 @@ public class IPCFileCommand {
                 IPCManagerFn.IPC_VDTPCmd_StopDownloadFile, "");
     }
 
+    @Override
+    public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+
+    }
 }

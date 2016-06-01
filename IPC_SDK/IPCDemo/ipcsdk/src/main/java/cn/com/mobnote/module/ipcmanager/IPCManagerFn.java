@@ -90,10 +90,10 @@ public interface IPCManagerFn extends IGolukCommFn {
 //	public static final int IPC_VDCP_Msg_Restore = 1009;
 //	/** IPC格式化SD卡 */
 //	public static final int IPC_VDCP_Msg_FormatDisk = 1010;
-//	/** 设置IPC系统时间 */
-//	public static final int IPC_VDCP_Msg_SetTime = 1011;
-//	/** 获取IPC系统时间 */
-//	public static final int IPC_VDCP_Msg_GetTime = 1012;
+	/** 设置IPC系统时间 */
+	public static final int IPC_VDCP_Msg_SetTime = 1011;
+	/** 获取IPC系统时间 */
+	public static final int IPC_VDCP_Msg_GetTime = 1012;
 //	/** 设置IPC系统WIFI配置 */
 //	public static final int IPC_VDCP_Msg_SetWifiCfg = 1013;
 //	/** 获取IPC系统音视频编码配置 */
@@ -152,10 +152,10 @@ public interface IPCManagerFn extends IGolukCommFn {
 //	public static final int IPC_VDCP_Msg_GetISPMode = 1041;
 //	/** 设置isp模式 **/
 //	public static final int IPC_VDCP_Msg_SetISPMode = 1042;
-//	/** 获取IPC录制声音配置 **/
-//	public static final int IPC_VDCP_Msg_GetRecAudioCfg = 1043;
-//	/** 设置IPC录制声音 **/
-//	public static final int IPC_VDCP_Msg_SetRecAudioCfg = 1044;
+	/** 获取IPC录制声音配置 **/
+	public static final int IPC_VDCP_Msg_GetRecAudioCfg = 1043;
+	/** 设置IPC录制声音 **/
+	public static final int IPC_VDCP_Msg_SetRecAudioCfg = 1044;
 //	/** 获取抓图质量配置 **/
 //	public static final int IPC_VDCP_Msg_GetPicCfg = 1045;
 //	/** 设置抓图质量配置 **/
