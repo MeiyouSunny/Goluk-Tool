@@ -1,5 +1,7 @@
 package cn.com.mobnote.module.ipcmanager;
 
+import android.util.Log;
+
 public class IPCManagerAdapter {
 
 	/** 回调接口实例 */
@@ -18,6 +20,8 @@ public class IPCManagerAdapter {
 	}
 
 	public static void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+		Log.i("ipc_callback","GolukIPCSdk");
+		Log.i("ipc_callback",msg + " " + param2);
 		if (null == fn) {
 			return;
 		}

@@ -231,22 +231,22 @@ public interface IPCManagerFn extends IGolukCommFn {
 //	 * IPCMgr模式设置
 //	 * */
 //
-//	/** IPC直连，默认为直连 */
-//	public static final int IPCMgrMode_IPCDirect = 0;
+	/** IPC直连，默认为直连 */
+	public static final int IPCMgrMode_IPCDirect = 0;
 //	/** 与Mobnote中转连接 */
 //	public static final int IPCMgrMode_Mobnote = 1;
-//	/** T1模式 */
-//	public static final int IPCMgrMode_T1 = 2;
+	/** T1模式 */
+	public static final int IPCMgrMode_T1 = 2;
 //
 //	/**
 //	 *
 //	 * IPC中VDCP控制命令 主要用于控制IPC相关的各种命令
 //	 * */
 //
-//	/** wifi网络环境变更 */
-//	public static final int IPC_CommCmd_WifiChanged = 0;
-//	/** 设置IPC连接模式 */
-//	public static final int IPC_CommCmd_SetMode = 1;
+	/** wifi网络环境变更 */
+	public static final int IPC_CommCmd_WifiChanged = 0;
+	/** 设置IPC连接模式 */
+	public static final int IPC_CommCmd_SetMode = 1;
 //	/** 设置GPS信息 */
 //	public static final int IPC_CommCmd_SetGpsInfo = 2;
 //	/** 添加IPC下载任务 */
@@ -338,10 +338,10 @@ public interface IPCManagerFn extends IGolukCommFn {
 //	public static final int IPC_VDCPCmd_GetISPMode = 1041;
 //	/** 设置isp模式 **/
 //	public static final int IPC_VDCPCmd_SetISPMode = 1042;
-//	/** 获取IPC录制声音配置 **/
-//	public static final int IPC_VDCPCmd_GetRecAudioCfg = 1043;
-//	/** 设置IPC录制声音 **/
-//	public static final int IPC_VDCPCmd_SetRecAudioCfg = 1044;
+	/** 获取IPC录制声音配置 **/
+	public static final int IPC_VDCPCmd_GetRecAudioCfg = 1043;
+	/** 设置IPC录制声音 **/
+	public static final int IPC_VDCPCmd_SetRecAudioCfg = 1044;
 //	/** 获取抓图质量配置 **/
 //	public static final int IPC_VDCPCmd_GetPicCfg = 1045;
 //	/** 设置抓图质量配置 **/
