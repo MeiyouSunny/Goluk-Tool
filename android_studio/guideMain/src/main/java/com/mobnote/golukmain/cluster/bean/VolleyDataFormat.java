@@ -55,6 +55,7 @@ public class VolleyDataFormat {
 							lvd.talk = live.talk;
 							lvd.vtype = live.vtype;
 						}
+						mVideoEntity.category = video.category;
 						mVideoEntity.videoid = video.videoid;
 						mVideoEntity.type = video.type;
 						mVideoEntity.sharingtime = video.sharingtime;

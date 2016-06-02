@@ -12,7 +12,7 @@ public interface ZhugePlayVideoFn {
     /** 我的关注内容列表 **/
     public static final int ZHUGE_PLAY_VIDEO_PAGE_FOLLOWED = 3;
     /** 活动聚合页 **/
-    public static final int ZHUGE_PLAY_VIDEO_PAGE_ACTION = 4;
+    public static final int ZHUGE_PLAY_VIDEO_PAGE_CLUSTER = 4;
     /** 视频详情页 **/
     public static final int ZHUGE_PLAY_VIDEO_PAGE_VIDEODETAIL = 5;
 

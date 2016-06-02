@@ -19,6 +19,8 @@ import com.mobnote.golukmain.videosuqare.VideoCategoryActivity;
 import com.mobnote.golukmain.videosuqare.VideoEntity;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
 import com.mobnote.receiver.NetworkStateReceiver;
+import com.mobnote.util.ZhugeUtils;
+import com.zhuge.analysis.stat.ZhugeSDK;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,15 +32,19 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import org.json.JSONObject;
+
 public class ClickNewestListener implements OnClickListener {
 	private VideoSquareInfo mVideoSquareInfo;
 	private Context mContext;
 	private NewestListView mNewestListView = null;
+	private int mSource = 0;
 
-	public ClickNewestListener(Context context, VideoSquareInfo info, NewestListView listView) {
+	public ClickNewestListener(Context context, VideoSquareInfo info, NewestListView listView, int source) {
 		this.mVideoSquareInfo = info;
 		this.mContext = context;
 		mNewestListView = listView;
+		this.mSource = source;
 	}
 
 	@Override
@@ -65,6 +71,10 @@ public class ClickNewestListener implements OnClickListener {
 			}
 
 		} else {
+
+			//观看视频统计
+			playVideoStatistics();
+
 			Intent intent = new Intent(mContext, MovieActivity.class);
 			intent.putExtra("from", "suqare");
 			intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
@@ -184,6 +194,21 @@ public class ClickNewestListener implements OnClickListener {
 		List<VideoSquareInfo> list = new ArrayList<VideoSquareInfo>();
 		list.add(vsi);
 		GolukApplication.getInstance().getVideoSquareManager().clickNumberUpload(channel, list);
+	}
+
+	/**
+	 * 观看视频统计
+	 */
+	private void playVideoStatistics() {
+		if (null != mVideoSquareInfo && null != mVideoSquareInfo.mVideoEntity) {
+			String actionName = "";
+			if (null != mVideoSquareInfo.mVideoEntity.videoExtra && null != mVideoSquareInfo.mVideoEntity.videoExtra.topicname) {
+				actionName = mVideoSquareInfo.mVideoEntity.videoExtra.topicname;
+			}
+			JSONObject json = ZhugeUtils.eventPlayVideo(mContext, mVideoSquareInfo.mVideoEntity.videoid,
+					mVideoSquareInfo.mVideoEntity.describe, actionName, mVideoSquareInfo.mVideoEntity.category, mSource);
+			ZhugeSDK.getInstance().track(mContext, mContext.getString(R.string.str_zhuge_play_video_event), json);
+		}
 	}
 
 }

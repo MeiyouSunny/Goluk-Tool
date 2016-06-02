@@ -995,7 +995,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 				mHeader.setData(mVideoJson);
 				//观看视频统计
-				makeZhuge(mVideoJson);
+				playVideoStatistics(mVideoJson);
 
 				VideoAllData videoAllData = mVideoJson.data;
 				if (mVideoJson.data == null) {
@@ -1536,7 +1536,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		}
 	}
 
-	private void makeZhuge(VideoJson videoJson) {
+	private void playVideoStatistics(VideoJson videoJson) {
 		if (null != videoJson && null != videoJson.data && null != videoJson.data.avideo &&
 				null != videoJson.data.avideo.video) {
 			String actionName = "";

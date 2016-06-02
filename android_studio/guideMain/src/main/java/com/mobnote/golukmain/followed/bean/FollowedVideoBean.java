@@ -3,6 +3,10 @@ package com.mobnote.golukmain.followed.bean;
 import com.alibaba.fastjson.annotation.JSONField;
 
 public class FollowedVideoBean {
+
+	@JSONField(name="category")
+	public String category;
+
 	@JSONField(name="videoid")
 	public String videoid;
 	// 视频类型: 1.直播 2.点播

@@ -33,6 +33,7 @@ import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
 import com.mobnote.golukmain.usercenter.UCUserInfo;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
+import com.mobnote.golukmain.videosuqare.ZhugePlayVideoFn;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukConfig;
@@ -68,7 +69,7 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 
 @SuppressLint("InflateParams")
-public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IRequestResultListener {
+public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IRequestResultListener, ZhugePlayVideoFn {
 
 	public interface IClusterInterface {
 		// 刷新页面数据
@@ -693,7 +694,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 		// 评论监听
 		holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
 		// 播放区域监听
-		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo, null));
+		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo, null, ZHUGE_PLAY_VIDEO_PAGE_CLUSTER));
 		// 点赞
 		holder.praiseLayout.setOnClickListener(new ClusterPraiseListener(mContext, mVideoSquareInfo));
 		// 评论总数监听

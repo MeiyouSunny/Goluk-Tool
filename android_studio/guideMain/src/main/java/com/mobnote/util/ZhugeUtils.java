@@ -63,7 +63,7 @@ public class ZhugeUtils {
     private static String getAction(Context context, String actionName) {
         String str = "";
         if (null == actionName || "".equals(actionName)) {
-            str = context.getString(R.string.str_zhuge_have_not);
+            str = context.getString(R.string.str_zhge_play_video_no_participate);
         } else {
             str = actionName;
         }
@@ -113,13 +113,13 @@ public class ZhugeUtils {
                 str = context.getString(R.string.str_zhuge_play_video_page_followed);
                 return str;
             case 4:
-                str = context.getString(R.string.str_zhuge_play_video_action);
+                str = context.getString(R.string.str_zhuge_play_video_page_cluster);
                 return str;
             case 5:
                 str = context.getString(R.string.str_zhuge_play_video_page_videodetail);
                 return str;
             default:
-                return str;
+                return "";
         }
     }
 
