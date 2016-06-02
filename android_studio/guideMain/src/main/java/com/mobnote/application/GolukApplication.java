@@ -105,6 +105,7 @@ import com.rd.car.RecorderStateException;
 import de.greenrobot.event.EventBus;
 import android.support.multidex.MultiDexApplication;
 import com.mobnote.golukmain.userlogin.UserResult;
+import com.zhuge.analysis.stat.ZhugeSDK;
 
 public class GolukApplication extends MultiDexApplication implements IPageNotifyFn, IPCManagerFn, ITalkFn, ILocationFn {
 	/** JIN接口类 */
@@ -256,6 +257,10 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 			GolukUmConfig.UmInit();
 
 			GolukMobUtils.initMob(this);
+
+			//初始化诸葛io
+			ZhugeSDK.getInstance().init(getApplicationContext());
+			ZhugeSDK.getInstance().openDebug();
 		}
 
 		// TODO 此处不要做初始化相关的工作
@@ -371,6 +376,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 		if (null != mDownLoadFileList) {
 			mDownLoadFileList.clear();
 		}
+
+		ZhugeSDK.getInstance().flush(getApplicationContext());
+
 	}
 
 	/**

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<!-- ################### 播放极社视频 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_play_video_event">播放极社视频</string>
+    <!-- 属性 -->
+    <string name="str_zhuge_play_video_id">视频ID</string>
+    <string name="str_zhuge_play_video_desc">是否有人工描述</string>
+    <string name="str_zhuge_play_video_action">参加活动名称</string>
+    <string name="str_zhuge_play_video_type">类型</string>
+    <string name="str_zhuge_play_video_page">播放页面</string>
+    <!-- 参数 -->
+    <string name="str_zhuge_yes">是</string>
+    <string name="str_zhuge_no">否</string>
+    <string name="str_zhuge_have">有</string>
+    <string name="str_zhuge_have_not">无</string>
+    <string name="str_zhge_play_video_no_participate">未参加</string>
+    <string name="str_zhuge_video_type_bgt">曝光台</string>
+    <string name="str_zhuge_video_type_sgbl">事故爆料</string>
+    <string name="str_zhuge_video_type_mlfj">美丽风景</string>
+    <string name="str_zhuge_video_type_ssp">随手拍</string>
+    <string name="str_zhuge_play_video_page_newest">最新页</string>
+    <string name="str_zhuge_play_video_page_category">四大分类页</string>
+    <string name="str_zhuge_play_video_page_followed">我的关注内容列表</string>
+    <string name="str_zhuge_play_video_page_cluster">活动聚合页</string>
+    <string name="str_zhuge_play_video_page_videodetail">视频详情页</string>
+
+
+</resources>

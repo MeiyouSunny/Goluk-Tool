@@ -79,11 +79,14 @@ import com.mobnote.golukmain.videoshare.bean.VideoShareRetBean;
 import com.mobnote.golukmain.videosuqare.RTPullListView;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
+import com.mobnote.golukmain.videosuqare.ZhugePlayVideoFn;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 import com.rockerhieu.emojicon.EmojiconGridFragment;
 import com.rockerhieu.emojicon.EmojiconsFragment;
 import com.rockerhieu.emojicon.emoji.Emojicon;
+import com.zhuge.analysis.stat.ZhugeSDK;
 
 import de.greenrobot.event.EventBus;
 
@@ -96,7 +99,7 @@ import de.greenrobot.event.EventBus;
 public class VideoDetailActivity extends BaseActivity implements OnClickListener, OnRefreshListener,
 		OnRTScrollListener, ICommentFn, TextWatcher, ILiveDialogManagerFn, OnItemClickListener, IRequestResultListener,
 		EmojiconGridFragment.OnEmojiconClickedListener,
-		EmojiconsFragment.OnEmojiconBackspaceClickedListener, OnLayoutChangeListener {
+		EmojiconsFragment.OnEmojiconBackspaceClickedListener, OnLayoutChangeListener, ZhugePlayVideoFn {
 
 	private static final String TAG = "VideoDetailActivity";
 	private final static int DIALOG_TYPE_VIDEO_DELETED = 24;
@@ -991,6 +994,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 				updateRefreshTime();
 
 				mHeader.setData(mVideoJson);
+				//观看视频统计
+				makeZhuge(mVideoJson);
+
 				VideoAllData videoAllData = mVideoJson.data;
 				if (mVideoJson.data == null) {
 					mCurrentOperator = OPERATOR_NONE;
@@ -1529,4 +1535,18 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			}
 		}
 	}
+
+	private void makeZhuge(VideoJson videoJson) {
+		if (null != videoJson && null != videoJson.data && null != videoJson.data.avideo &&
+				null != videoJson.data.avideo.video) {
+			String actionName = "";
+			if (null != videoJson.data.avideo.video.recom && null != videoJson.data.avideo.video.recom.topicname) {
+				actionName = videoJson.data.avideo.video.recom.topicname;
+			}
+			JSONObject json = ZhugeUtils.eventPlayVideo(this, videoJson.data.avideo.video.videoid,
+					videoJson.data.avideo.video.describe, actionName, videoJson.data.avideo.video.category, ZHUGE_PLAY_VIDEO_PAGE_VIDEODETAIL);
+			ZhugeSDK.getInstance().track(this, this.getString(R.string.str_zhuge_play_video_event), json);
+		}
+	}
+
 }
