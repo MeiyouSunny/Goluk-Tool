@@ -142,7 +142,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 					if (!isUserDimiss) {
 						if (null != mContext && mContext instanceof AbstractLiveActivity) {
 
-							if (GolukApplication.getInstance().isInteral()) {
+							if (GolukApplication.getInstance().isMainland()) {
 								((BaidumapLiveActivity) mContext).exit();
 							} else {
 								((GooglemapLiveActivity) mContext).exit();

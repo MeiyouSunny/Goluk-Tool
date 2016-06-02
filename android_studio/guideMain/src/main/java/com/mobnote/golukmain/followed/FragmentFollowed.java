@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -49,7 +47,6 @@ import com.mobnote.golukmain.praise.bean.PraiseCancelResultBean;
 import com.mobnote.golukmain.praise.bean.PraiseCancelResultDataBean;
 import com.mobnote.golukmain.praise.bean.PraiseResultBean;
 import com.mobnote.golukmain.praise.bean.PraiseResultDataBean;
-import com.mobnote.golukmain.search.SearchUserAcivity;
 import com.mobnote.golukmain.thirdshare.ProxyThirdShare;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.thirdshare.ThirdShareBean;
@@ -106,7 +103,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 			@Override
 			public void onClick(View v) {
 				Intent intent = null;
-				if(GolukApplication.getInstance().isInteral() == false){
+				if(GolukApplication.getInstance().isMainland() == false){
 					intent = new Intent(FragmentFollowed.this.getActivity(), InternationUserLoginActivity.class);
 				}else{
 					intent = new Intent(FragmentFollowed.this.getActivity(), UserLoginActivity.class);
@@ -116,7 +113,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 				return;
 			}
 		});
-
+        GolukUtils.getAppVersionName(getActivity());
 		mRetryClickIV.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -343,7 +340,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 
 	public void startUserLogin(){
 		Intent loginIntent = null;
-		if(GolukApplication.getInstance().isInteral() == false){
+		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(getActivity(), InternationUserLoginActivity.class);
 		}else{
 			loginIntent = new Intent(getActivity(), UserLoginActivity.class);
@@ -361,15 +358,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 
 		if(requestType == IPageNotifyFn.PageType_FollowedContent) {
 			FollowedRetBean bean = (FollowedRetBean)result;
-			if(bean.data != null){
-				if("10001".equals(bean.data.result) || "10002".equals(bean.data.result)){
-					mLoginRL.setVisibility(View.GONE);
-					mListView.setVisibility(View.VISIBLE);
-					sendFollowedContentRequest(REFRESH_NORMAL, mTimeStamp);
-//					startUserLogin();
-					return;
-				}
-			}
+
 			if(null == bean) {
 				Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 				if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
@@ -377,6 +366,16 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 				}
 				return;
 			}
+
+            if(bean.data != null) {
+                if("10001".equals(bean.data.result) || "10002".equals(bean.data.result)){
+//                    mLoginRL.setVisibility(View.GONE);
+//                    mListView.setVisibility(View.VISIBLE);
+//                    sendFollowedContentRequest(REFRESH_NORMAL, mTimeStamp);
+startUserLogin();
+                    return;
+                }
+            }
 
 			if(!bean.success) {
 				if(!TextUtils.isEmpty(bean.msg)) {
@@ -492,19 +491,19 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 			FollowRetBean bean = (FollowRetBean)result;
 			if(null != bean) {
 				if(bean.code != 0) {
-						//token过期
-						if(10001 == bean.code|| 10002 == bean.code){
-							startUserLogin();
-							return;
-						}else if(bean.code == 12011){
-							Toast.makeText(FragmentFollowed.this.getContext(), getString(R.string.follow_operation_limit_total), Toast.LENGTH_SHORT).show();
-							return;
-						}else if(bean.code == 12016){
-							Toast.makeText(FragmentFollowed.this.getContext(), getString(R.string.follow_operation_limit_day), Toast.LENGTH_SHORT).show();
-							return;
-						}else{
-							Toast.makeText(getActivity(), bean.msg, Toast.LENGTH_SHORT).show();
-						}
+					//token过期
+					if(10001 == bean.code|| 10002 == bean.code){
+						startUserLogin();
+						return;
+					}else if(bean.code == 12011){
+						Toast.makeText(FragmentFollowed.this.getContext(), getString(R.string.follow_operation_limit_total), Toast.LENGTH_SHORT).show();
+						return;
+					}else if(bean.code == 12016){
+						Toast.makeText(FragmentFollowed.this.getContext(), getString(R.string.follow_operation_limit_day), Toast.LENGTH_SHORT).show();
+						return;
+					}else{
+						Toast.makeText(getActivity(), bean.msg, Toast.LENGTH_SHORT).show();
+					}
 					return;
 				}
 				// User link uid to find the changed recommend user item status

@@ -51,7 +51,6 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventBindFinish;
 import com.mobnote.eventbus.EventBindResult;
 import com.mobnote.eventbus.EventConfig;
-import com.mobnote.eventbus.EventDeleteVideo;
 import com.mobnote.eventbus.EventFollowPush;
 import com.mobnote.eventbus.EventMapQuery;
 import com.mobnote.eventbus.EventMessageUpdate;
@@ -61,7 +60,6 @@ import com.mobnote.eventbus.EventUserLoginRet;
 import com.mobnote.eventbus.EventWifiAuto;
 import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.eventbus.EventWifiState;
-import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.util.GFileUtils;
@@ -73,7 +71,6 @@ import com.mobnote.golukmain.followed.FragmentFollowed;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.GetBaiduAddress;
-import com.mobnote.golukmain.live.LiveActivity;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.live.GetBaiduAddress.IBaiduGeoCoderFn;
@@ -250,7 +247,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 			String start_have = itStart_have.getStringExtra("userstart").toString();
 			if ("start_have".equals(start_have)) {
 				Intent intent = null;
-				if (GolukApplication.getInstance().isInteral() == false) {
+				if (GolukApplication.getInstance().isMainland() == false) {
 					intent = new Intent(this, InternationUserLoginActivity.class);
 				} else {
 					intent = new Intent(this, UserLoginActivity.class);
@@ -970,7 +967,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 		if (dialogType == LiveDialogManager.DIALOG_TYPE_LOGIN) {
 			if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
 				Intent intent = null;
-				if (GolukApplication.getInstance().isInteral() == false) {
+				if (GolukApplication.getInstance().isMainland() == false) {
 					intent = new Intent(this, InternationUserLoginActivity.class);
 				} else {
 					intent = new Intent(this, UserLoginActivity.class);
@@ -982,7 +979,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 			if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
 				// 继续直播
 				Intent intent;
-				if (GolukApplication.getInstance().isInteral()) {
+				if (GolukApplication.getInstance().isMainland()) {
 					intent = new Intent(this, BaidumapLiveActivity.class);
 				} else {
 					intent = new Intent(this, GooglemapLiveActivity.class);
@@ -1016,7 +1013,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 		}
 
 		String address = "";
-		if (GolukApplication.getInstance().isInteral()) {
+		if (GolukApplication.getInstance().isMainland()) {
 			address = ((ReverseGeoCodeResult) obj).getAddress();// 国内
 		} else {
 			address = ((LocationAddressDetailBean) obj).detail;// 国际

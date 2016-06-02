@@ -25,7 +25,7 @@ public class DistinguishLocation {
 
 	public DistinguishLocation(Object obj) {
 		this.mObject = obj;
-		if (GolukApplication.getInstance().isInteral()) {
+		if (GolukApplication.getInstance().isMainland()) {
 			mLocal = new LocalAddress(mObject);
 			mCity = mLocal.getCity();
 			mDistrict = mLocal.getDistrict();

@@ -53,4 +53,8 @@ public class GolukConfig {
 	/**跳转登陆时的timer**/
 	public final static int CLOSE_ACTIVITY_TIMER = 300;
 
+    /** common server ret code */
+    public final static int SERVER_TOKEN_EXPIRED = 10001;
+    public final static int SERVER_TOKEN_INVALID = 10002;
+    public final static int SERVER_TOKEN_DEVICE_INVALID = 10003;
 }

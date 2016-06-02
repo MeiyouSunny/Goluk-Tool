@@ -5,7 +5,6 @@ import org.json.JSONObject;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventMessageUpdate;
-import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.ILive;
@@ -36,7 +35,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.pm.ActivityInfoCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -439,7 +437,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
 				// GolukUtils.showToast(this,
 				// this.getResources().getString(R.string.str_please_login));
 				Intent loginIntent = null;
-				if(GolukApplication.getInstance().isInteral() == false){
+				if(GolukApplication.getInstance().isMainland() == false){
 					loginIntent = new Intent(getActivity(), InternationUserLoginActivity.class);
 				}else{
 					loginIntent = new Intent(getActivity(), UserLoginActivity.class);
@@ -478,7 +476,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
 				Context.MODE_PRIVATE);
 		mEditor = mPreferences.edit();
 		Intent itNo = null;
-		if(GolukApplication.getInstance().isInteral() == false){
+		if(GolukApplication.getInstance().isMainland() == false){
 			itNo = new Intent(getActivity(), InternationUserLoginActivity.class);
 		}else{
 			 itNo = new Intent(getActivity(), UserLoginActivity.class);

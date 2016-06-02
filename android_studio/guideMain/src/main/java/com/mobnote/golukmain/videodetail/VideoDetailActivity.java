@@ -488,7 +488,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 		// 发评论／回复 前需要先判断用户是否登录
 		if (!mBaseApp.isUserLoginSucess) {
 			Intent intent = null;
-			if (GolukApplication.getInstance().isInteral() == false) {
+			if (GolukApplication.getInstance().isMainland() == false) {
 				intent = new Intent(this, InternationUserLoginActivity.class);
 			} else {
 				intent = new Intent(this, UserLoginActivity.class);
@@ -1365,7 +1365,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
 	public void startUserLogin(){
 		Intent loginIntent = null;
-		if(GolukApplication.getInstance().isInteral() == false){
+		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(this, InternationUserLoginActivity.class);
 		}else{
 			loginIntent = new Intent(this, UserLoginActivity.class);

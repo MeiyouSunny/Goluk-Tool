@@ -592,8 +592,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         }
 
         case MSG_AE_CHUNK_ADD_FAILED: {
-            String filePath = (String) msg.obj;
-            Log.d(TAG, "chunk added fialed:" + filePath);
             Toast.makeText(this, getString(R.string.str_ae_add_chunk_failed), Toast.LENGTH_SHORT).show();
             break;
         }
@@ -1088,25 +1086,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 //				Log.d(TAG, "time line scrolled: dx=" + dx + ", dy=" + dy);
 
 //                clearChunkFocus();
-                int firstVisibleIndex = mAELayoutManager.findFirstVisibleItemPosition();
-                int lastVisibleIndex = mAELayoutManager.findLastVisibleItemPosition();
-                for (int i = firstVisibleIndex; i <= lastVisibleIndex; i++) {
-                    View view = mAELayoutManager.findViewByPosition(i);
-
-                    mCurrentPointedItemIndex = i;
-                    if (view.getId() == R.id.fl_ae_data_chunk) {
-                        int pX = VideoEditUtils.getViewXLocation(view);
-                        if (VideoEditUtils.judgeChunkOverlap(mGateLocationX, pX, view.getWidth())) {
-                            if (mPlayerState == PlayerState.PAUSED || mPlayerState == PlayerState.STOPPED) {
-                                if(mPlayerState == PlayerState.STOPPED) {
-                                    mPlayerState = PlayerState.PAUSED;
-                                }
-                                seekWith(VideoEditUtils.mapI2CIndex(i), view.getWidth(), mGateLocationX - pX);
-                            }
-                            break;
-                        }
-                    }
-                }
+                seekAfterChunkMoved();
             }
         });
         initPlayer();
@@ -1124,6 +1104,28 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                 return false;
             }
         });
+    }
+
+    public void seekAfterChunkMoved() {
+        int firstVisibleIndex = mAELayoutManager.findFirstVisibleItemPosition();
+        int lastVisibleIndex = mAELayoutManager.findLastVisibleItemPosition();
+        for (int i = firstVisibleIndex; i <= lastVisibleIndex; i++) {
+            View view = mAELayoutManager.findViewByPosition(i);
+
+            mCurrentPointedItemIndex = i;
+            if (view.getId() == R.id.fl_ae_data_chunk) {
+                int pX = VideoEditUtils.getViewXLocation(view);
+                if (VideoEditUtils.judgeChunkOverlap(mGateLocationX, pX, view.getWidth())) {
+                    if (mPlayerState == PlayerState.PAUSED || mPlayerState == PlayerState.STOPPED) {
+                        if(mPlayerState == PlayerState.STOPPED) {
+                            mPlayerState = PlayerState.PAUSED;
+                        }
+                        seekWith(VideoEditUtils.mapI2CIndex(i), view.getWidth(), mGateLocationX - pX);
+                    }
+                    break;
+                }
+            }
+        }
     }
 
     public float getChannelDuration() {
@@ -1276,6 +1278,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     public void onChunkAddedFailed(AfterEffect self, Project project,
                                    String filePath) {
         // TODO Auto-generated method stub
+        Log.d(TAG, "onChunkAddedFinished");
+        Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_CHUNK_ADD_FAILED);
+        mAfterEffecthandler.sendMessage(msg);
     }
 
     @Override

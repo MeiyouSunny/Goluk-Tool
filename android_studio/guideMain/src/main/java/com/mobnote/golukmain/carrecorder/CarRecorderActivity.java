@@ -28,7 +28,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -48,7 +47,6 @@ import android.widget.TextView;
 import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.api.FileUtils;
-import cn.com.tiros.api.Image;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.mobnote.application.GolukApplication;
@@ -73,7 +71,6 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.GetBaiduAddress;
-import com.mobnote.golukmain.live.LiveActivity;
 import com.mobnote.golukmain.live.LiveSettingBean;
 import com.mobnote.golukmain.live.LiveSettingPopWindow;
 import com.mobnote.golukmain.live.LiveSettingPopWindow.IPopwindowFn;
@@ -81,12 +78,8 @@ import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
 import com.mobnote.golukmain.livevideo.BaidumapLiveActivity;
 import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
 import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
-import com.mobnote.golukmain.photoalbum.FragmentAlbum;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
-import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
-import com.mobnote.golukmain.startshare.VideoEditActivity;
-import com.mobnote.golukmain.startshare.VideoShareActivity;
 import com.mobnote.golukmain.videosuqare.RingView;
 import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
 import com.mobnote.util.GolukFastJsonUtil;
@@ -1031,7 +1024,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
 				if (mApp.isUserLoginSucess == false) {
 					Intent it = null;
-					if(GolukApplication.getInstance().isInteral()  == false){
+					if(GolukApplication.getInstance().isMainland()  == false){
 						it = new Intent(this, InternationUserLoginActivity.class);
 					}else{
 						it = new Intent(this, UserLoginActivity.class);
@@ -1127,7 +1120,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	private void toLive() {
 		
 		Intent intent;
-		if(GolukApplication.getInstance().isInteral()){
+		if(GolukApplication.getInstance().isMainland()){
 			intent = new Intent(this, BaidumapLiveActivity.class);
 		}else{
 			intent = new Intent(this, GooglemapLiveActivity.class);
