@@ -26,5 +26,16 @@
     <string name="str_zhuge_play_video_page_cluster">活动聚合页</string>
     <string name="str_zhuge_play_video_page_videodetail">视频详情页</string>
 
+<!-- ################### 相册页面访问 ###################### -->
+    <!--事件-->
+    <string name="str_zhuge_call_album_event">相册页面访问</string>
+    <!--属性-->
+    <string name="str_zhuge_call_album_source">访问来源</string>
+    <!--参数-->
+    <string name="str_zhuge_call_album_source_ipc">IPC</string>
+    <string name="str_zhuge_call_album_source_tabbar">Tabbar</string>
+    <string name="str_zhuge_call_album_source_cluster">活动聚合页</string>
+    <string name="str_zhuge_call_album_source_profit">我的收益</string>
+
 
 </resources>

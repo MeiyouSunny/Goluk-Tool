@@ -94,6 +94,7 @@ import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.GolukVideoUtils;
 import com.mobnote.util.SortByDate;
+import com.mobnote.util.ZhugeUtils;
 import com.mobnote.wifibind.WifiRsBean;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
@@ -1062,6 +1063,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				open_shareVideo(images[1].getName());
 			}
 		} else if (id == R.id.image3) {
+			//相册页面访问统计
+			ZhugeUtils.eventCallAlbum(this, this.getString(R.string.str_zhuge_call_album_source_ipc));
+
 			Intent photoalbum = new Intent(CarRecorderActivity.this, PhotoAlbumActivity.class);
 			photoalbum.putExtra("from", "cloud");
 			startActivity(photoalbum);

@@ -3,6 +3,7 @@ package com.mobnote.util;
 import android.content.Context;
 
 import com.mobnote.golukmain.R;
+import com.zhuge.analysis.stat.ZhugeSDK;
 
 import org.json.JSONObject;
 
@@ -34,6 +35,34 @@ public class ZhugeUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+//    public static JSONObject eventCallAlbum(Context context, int source) {
+//        try {
+//            JSONObject json = new JSONObject();
+//            json.put(context.getString(R.string.str_zhuge_call_album_source), getCallAlbumSource(context, source));
+//            return json;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+
+    /**
+     * 相册页面访问
+     * @param context
+     * @param source
+     * @return
+     */
+    public static void eventCallAlbum(Context context, String source) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_call_album_source), source);
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_call_album_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -122,5 +151,6 @@ public class ZhugeUtils {
                 return "";
         }
     }
+
 
 }

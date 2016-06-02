@@ -10,7 +10,7 @@ import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
 import com.mobnote.golukmain.usercenter.UCUserInfo;
 import com.mobnote.golukmain.videosuqare.CategoryListView;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
-import com.mobnote.golukmain.videosuqare.ZhugePlayVideoFn;
+import com.mobnote.golukmain.videosuqare.ZhugeParameterFn;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;

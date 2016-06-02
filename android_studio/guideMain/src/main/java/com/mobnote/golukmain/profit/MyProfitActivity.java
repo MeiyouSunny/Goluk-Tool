@@ -13,6 +13,7 @@ import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import android.annotation.SuppressLint;
@@ -155,6 +156,9 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener, O
 			itWeb.putExtra(UserOpenUrlActivity.FROM_TAG, "profitProblem");
 			startActivity(itWeb);
 		} else if (id == R.id.last_profit_no_hint) {
+			//我的收益相册页面访问统计
+			ZhugeUtils.eventCallAlbum(this, this.getString(R.string.str_zhuge_call_album_source_profit));
+
 			Intent photoalbum = new Intent(MyProfitActivity.this, PhotoAlbumActivity.class);
 			photoalbum.putExtra("from", "cloud");
 			startActivity(photoalbum);

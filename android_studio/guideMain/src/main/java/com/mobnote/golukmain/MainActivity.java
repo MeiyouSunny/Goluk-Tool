@@ -101,6 +101,7 @@ import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.SharedPrefUtil;
+import com.mobnote.util.ZhugeUtils;
 import com.mobnote.wifibind.WifiConnCallBack;
 import com.mobnote.wifibind.WifiConnectManager;
 import com.mobnote.wifibind.WifiRsBean;
@@ -360,6 +361,9 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 			public void onTabChanged(String tabId) {
 				if ("Follow".equals(tabId)) {
 					mFollowedVideoTipIV.setVisibility(View.GONE);
+				} else if ("Album".equals(tabId)) {
+					//tab访问相册统计
+					ZhugeUtils.eventCallAlbum(MainActivity.this, getString(R.string.str_zhuge_call_album_source_tabbar));
 				}
 			}
 		});

@@ -79,7 +79,7 @@ import com.mobnote.golukmain.videoshare.bean.VideoShareRetBean;
 import com.mobnote.golukmain.videosuqare.RTPullListView;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
-import com.mobnote.golukmain.videosuqare.ZhugePlayVideoFn;
+import com.mobnote.golukmain.videosuqare.ZhugeParameterFn;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
@@ -99,7 +99,7 @@ import de.greenrobot.event.EventBus;
 public class VideoDetailActivity extends BaseActivity implements OnClickListener, OnRefreshListener,
 		OnRTScrollListener, ICommentFn, TextWatcher, ILiveDialogManagerFn, OnItemClickListener, IRequestResultListener,
 		EmojiconGridFragment.OnEmojiconClickedListener,
-		EmojiconsFragment.OnEmojiconBackspaceClickedListener, OnLayoutChangeListener, ZhugePlayVideoFn {
+		EmojiconsFragment.OnEmojiconBackspaceClickedListener, OnLayoutChangeListener, ZhugeParameterFn {
 
 	private static final String TAG = "VideoDetailActivity";
 	private final static int DIALOG_TYPE_VIDEO_DELETED = 24;

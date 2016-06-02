@@ -47,7 +47,7 @@ import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 
 public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener, OnRTScrollListener, OnClickListener,
-		IClickShareView, IClickPraiseView, IRequestResultListener, ZhugePlayVideoFn {
+		IClickShareView, IClickPraiseView, IRequestResultListener, ZhugeParameterFn {
 
 	public static final String TAG = "CategoryListView";
 

@@ -3,7 +3,7 @@ package com.mobnote.golukmain.videosuqare;
 /**
  * Created by lily on 16-6-1.
  */
-public interface ZhugePlayVideoFn {
+public interface ZhugeParameterFn {
 
     /** 最新页面 **/
     public static final int ZHUGE_PLAY_VIDEO_PAGE_NEWEST = 1;

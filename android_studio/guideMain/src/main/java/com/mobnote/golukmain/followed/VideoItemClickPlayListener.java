@@ -12,7 +12,7 @@ import com.mobnote.golukmain.followed.bean.FollowedVideoObjectBean;
 import com.mobnote.golukmain.player.MovieActivity;
 import com.mobnote.golukmain.videosuqare.VideoEntity;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
-import com.mobnote.golukmain.videosuqare.ZhugePlayVideoFn;
+import com.mobnote.golukmain.videosuqare.ZhugeParameterFn;
 import com.mobnote.util.ZhugeUtils;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
@@ -28,7 +28,7 @@ import android.view.View.OnClickListener;
 
 import org.json.JSONObject;
 
-public class VideoItemClickPlayListener implements OnClickListener, ZhugePlayVideoFn {
+public class VideoItemClickPlayListener implements OnClickListener, ZhugeParameterFn {
 	private FollowedVideoObjectBean mVideoSquareInfo;
 	private Context mContext;
 
