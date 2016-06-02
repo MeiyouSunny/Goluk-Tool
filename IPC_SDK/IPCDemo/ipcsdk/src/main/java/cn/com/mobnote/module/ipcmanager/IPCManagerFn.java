@@ -10,7 +10,7 @@ public interface IPCManagerFn extends IGolukCommFn {
 	// VDCP 控制IPC
 	// VDTP　文件下载
 
-//	public static final int RESULE_SUCESS = 0;
+	public static final int RESULE_SUCESS = 0;
 //
 //	/** 循环影像 */
 //	public static final int TYPE_CIRCULATE = 1;

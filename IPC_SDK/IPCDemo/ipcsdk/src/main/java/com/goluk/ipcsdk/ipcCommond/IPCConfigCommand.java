@@ -32,7 +32,7 @@ public class IPCConfigCommand extends BaseIPCCommand{
      * @param isEnable
      * @return
      */
-    public boolean enableAudioRecord(boolean isEnable){
+    public boolean setAudioRecordCfg(boolean isEnable){
         String json = "";
         try {
             JSONObject obj = new JSONObject();
@@ -46,6 +46,14 @@ public class IPCConfigCommand extends BaseIPCCommand{
                 IPCManagerFn.IPC_VDCPCmd_SetRecAudioCfg, json);
     }
 
+    /**
+     *
+     * @return
+     */
+    public boolean getAudioRecordCfg(){
+        return GolukIPCSdk.getInstance().mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+                IPC_VDCPCmd_GetRecAudioCfg, "");
+    }
     /**
      * update goluk carrecorder time
      * @see com.goluk.ipcsdk.listener.IPCConfigListener
@@ -65,9 +73,23 @@ public class IPCConfigCommand extends BaseIPCCommand{
             }else if (msg == IPC_VDCP_Msg_GetTime) {
             } else if (msg == IPC_VDCP_Msg_SetTime) {
             }else if (IPC_VDCP_Msg_SetRecAudioCfg == msg) {
-                mIpcConfigListener.callback_setTime(true);
+                mIpcConfigListener.callback_setAudeoRecord(true);
             }else if (IPC_VDCP_Msg_GetRecAudioCfg == msg) {//声音录制
-                //callback_getVoiceRecord(event, msg, param1, param2);
+                if (RESULE_SUCESS == param1) {
+                    try {
+                        JSONObject obj = new JSONObject((String) param2);
+                        int mVoiceRecordState = Integer.parseInt(obj.optString("AudioEnable"));
+                        if(mVoiceRecordState == 1){
+                            mIpcConfigListener.callback_getAudeoRecord(true);
+                        }else if(mVoiceRecordState == 0){
+                            mIpcConfigListener.callback_getAudeoRecord(false);
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
             }
         }
     }
