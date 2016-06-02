@@ -37,5 +37,12 @@
     <string name="str_zhuge_call_album_source_cluster">活动聚合页</string>
     <string name="str_zhuge_call_album_source_profit">我的收益</string>
 
+<!-- ################### 即刻分享页面访问 ###################### -->
+    <!--事件-->
+    <string name="str_zhuge_share_event">即刻分享页面访问</string>
+    <!--参数-->
+    <string name="str_zhuge_share_video_edit">视频后处理</string>
+    <string name="str_zhuge_share_video_player">竖屏播放页</string>
+
 
 </resources>

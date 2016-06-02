@@ -37,18 +37,6 @@ public class ZhugeUtils {
         return null;
     }
 
-
-//    public static JSONObject eventCallAlbum(Context context, int source) {
-//        try {
-//            JSONObject json = new JSONObject();
-//            json.put(context.getString(R.string.str_zhuge_call_album_source), getCallAlbumSource(context, source));
-//            return json;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-
     /**
      * 相册页面访问
      * @param context
@@ -60,6 +48,21 @@ public class ZhugeUtils {
             JSONObject json = new JSONObject();
             json.put(context.getString(R.string.str_zhuge_call_album_source), source);
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_call_album_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 即刻分享页面访问
+     * @param context
+     * @param source
+     */
+    public static void eventShare(Context context, String source) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_call_album_source), source);
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_share_event), json);
         } catch (Exception e) {
             e.printStackTrace();
         }
