@@ -1,11 +1,14 @@
 package com.goluk.ipcsdk.main;
 
 import android.content.Context;
+import android.os.Environment;
 
 import com.goluk.ipcsdk.ipcCommond.BaseIPCCommand;
+import com.goluk.ipcsdk.utils.Utils;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +25,9 @@ public class GolukIPCSdk implements IPCManagerFn{
     public GolukLogic mGoluk = null;
     /** IPC回调监听列表 */
     private List<BaseIPCCommand> mIpcManagerListener = null;
+
+    /** 行车记录仪缓冲路径 */
+    private String carrecorderCachePath = "";
 
     private static GolukIPCSdk instance;
 
@@ -57,6 +63,28 @@ public class GolukIPCSdk implements IPCManagerFn{
         return true;
     }
 
+    /**
+     * 创建行车记录仪缓冲路径
+     *
+     * @author xuhw
+     * @date 2015年3月19日
+     */
+    private void initCachePath(String name) {
+        carrecorderCachePath = Environment.getExternalStorageDirectory() + File.separator + "g_video" + File.separator
+                + name;
+        Utils.makedir(carrecorderCachePath);
+    }
+
+    /**
+     * 获取行车记录仪缓冲路径
+     *
+     * @return
+     * @author xuhw
+     * @date 2015年3月19日
+     */
+    public String getCarrecorderCachePath() {
+        return this.carrecorderCachePath;
+    }
 
 
     /**
