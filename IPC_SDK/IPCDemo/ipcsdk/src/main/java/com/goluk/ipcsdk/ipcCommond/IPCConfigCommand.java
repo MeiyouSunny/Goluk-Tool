@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.goluk.ipcsdk.listener.IPCConfigListener;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
+import com.goluk.ipcsdk.utils.IpcDataParser;
 
 import org.json.JSONObject;
 
@@ -32,7 +33,7 @@ public class IPCConfigCommand extends BaseIPCCommand{
      * @param isEnable
      * @return
      */
-    public boolean enableAudioRecord(boolean isEnable){
+    public boolean setAudioRecordCfg(boolean isEnable){
         String json = "";
         try {
             JSONObject obj = new JSONObject();
@@ -47,27 +48,71 @@ public class IPCConfigCommand extends BaseIPCCommand{
     }
 
     /**
-     * update goluk carrecorder time
-     * @see com.goluk.ipcsdk.listener.IPCConfigListener
-     * @param timeStamp timestamp in seconds
+     *
      * @return
      */
-    public boolean setTime(long timeStamp){
+    public boolean getAudioRecordCfg(){
+        return GolukIPCSdk.getInstance().mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+                IPC_VDCPCmd_GetRecAudioCfg, "");
+    }
+    /**
+     * update goluk carrecorder time
+     * @see com.goluk.ipcsdk.listener.IPCConfigListener
+     * @param time timestamp in seconds
+     * @return
+     */
+    public boolean setTime(long time){
 
-        return false;
+        String json = "";
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("time", time);
+
+            json =  obj.toString();
+        } catch (Exception e) {
+        }
+        return GolukIPCSdk.getInstance().mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+                IPC_VDCPCmd_SetTime, json);
     }
 
+    public boolean getTime(){
+        return GolukIPCSdk.getInstance().mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+                IPC_VDCPCmd_GetTime, "");
+    }
     @Override
     public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
         if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
         }else if (ENetTransEvent_IPC_VDCP_CommandResp == event) {
             if(msg ==  IPC_VDCP_Msg_Init){
             }else if (msg == IPC_VDCP_Msg_GetTime) {
+                if (param1 == RESULE_SUCESS) {
+                    long time = IpcDataParser.parseIPCTime((String) param2) * 1000;
+                    mIpcConfigListener.callback_getTime(time);
+                }
             } else if (msg == IPC_VDCP_Msg_SetTime) {
+                if (param1 == RESULE_SUCESS) {
+                    mIpcConfigListener.callback_setTime(true);
+                }else{
+                    mIpcConfigListener.callback_setTime(false);
+                }
             }else if (IPC_VDCP_Msg_SetRecAudioCfg == msg) {
-                mIpcConfigListener.callback_setTime(true);
+                mIpcConfigListener.callback_setAudeoRecord(true);
             }else if (IPC_VDCP_Msg_GetRecAudioCfg == msg) {//声音录制
-                //callback_getVoiceRecord(event, msg, param1, param2);
+                if (RESULE_SUCESS == param1) {
+                    try {
+                        JSONObject obj = new JSONObject((String) param2);
+                        int mVoiceRecordState = Integer.parseInt(obj.optString("AudioEnable"));
+                        if(mVoiceRecordState == 1){
+                            mIpcConfigListener.callback_getAudeoRecord(true);
+                        }else if(mVoiceRecordState == 0){
+                            mIpcConfigListener.callback_getAudeoRecord(false);
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
             }
         }
     }

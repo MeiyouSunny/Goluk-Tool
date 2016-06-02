@@ -104,7 +104,7 @@ public class MainActivity extends Activity implements View.OnClickListener, IPCC
                 mIPCFileCommand.querySingleFile("WND_event_20160602151234_1_TX_3_0030.mp4");
                 break;
             case R.id.btDownLoadFile:
-                mIPCFileCommand.downloadFile()
+                //mIPCFileCommand.downloadFile();
                 break;
             default:
                 break;
@@ -149,5 +149,6 @@ public class MainActivity extends Activity implements View.OnClickListener, IPCC
         if(downloadinfo != null){
             Toast.makeText(this, "callback_find_single_file success", Toast.LENGTH_SHORT).show();
         }
+        Toast.makeText(this, "IPC Init Success", Toast.LENGTH_SHORT).show();
     }
 }

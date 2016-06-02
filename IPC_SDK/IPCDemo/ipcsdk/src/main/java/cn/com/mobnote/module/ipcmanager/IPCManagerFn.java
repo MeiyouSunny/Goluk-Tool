@@ -10,7 +10,7 @@ public interface IPCManagerFn extends IGolukCommFn {
 	// VDCP 控制IPC
 	// VDTP　文件下载
 
-//	public static final int RESULE_SUCESS = 0;
+	public static final int RESULE_SUCESS = 0;
 //
 //	/** 循环影像 */
 //	public static final int TYPE_CIRCULATE = 1;
@@ -276,10 +276,10 @@ public interface IPCManagerFn extends IGolukCommFn {
 //	public static final int IPC_VDCPCmd_Restore = 1009;
 //	/** IPC格式化SD卡 */
 //	public static final int IPC_VDCPCmd_FormatDisk = 1010;
-//	/** 设置IPC系统时间 */
-//	public static final int IPC_VDCPCmd_SetTime = 1011;
-//	/** 获取IPC系统时间 */
-//	public static final int IPC_VDCPCmd_GetTime = 1012;
+	/** 设置IPC系统时间 */
+	public static final int IPC_VDCPCmd_SetTime = 1011;
+	/** 获取IPC系统时间 */
+	public static final int IPC_VDCPCmd_GetTime = 1012;
 //	/** 设置IPC系统WIFI配置 */
 //	public static final int IPC_VDCPCmd_SetWifiCfg = 1013;
 //	/** 获取IPC系统音视频编码配置 */

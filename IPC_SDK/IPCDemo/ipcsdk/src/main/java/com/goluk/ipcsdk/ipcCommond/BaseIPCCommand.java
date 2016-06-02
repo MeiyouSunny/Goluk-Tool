@@ -13,7 +13,7 @@ public abstract class BaseIPCCommand implements IPCManagerFn{
     Context mContext;
     protected BaseIPCCommand(Context cxt){
         this.mContext = cxt;
-        GolukIPCSdk.getInstance().registerCommand(this);
+        GolukIPCSdk.getInstance().addCommand(this);
     }
 
     public Context getContext() {

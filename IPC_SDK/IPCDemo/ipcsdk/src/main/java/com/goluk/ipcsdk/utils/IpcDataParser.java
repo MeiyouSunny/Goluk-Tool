@@ -537,15 +537,12 @@ public class IpcDataParser {
         return null;
     }
 */
-  /*  *//**
-     * 获取IPC系统时间
+
+    /**
      *
      * @param json
      * @return
-     * @author xuhw
-     * @date 2015年4月13日
-     *//*
-
+     */
     public static long parseIPCTime(String json) {
         long time = 0;
         try {
@@ -558,7 +555,7 @@ public class IpcDataParser {
         }
 
         return time;
-    }*/
+    }
 
   /*  *//**
      * 解析kit和紧急视频返回的数据
