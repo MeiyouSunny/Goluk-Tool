@@ -85,6 +85,6 @@ public class MainActivity extends Activity implements View.OnClickListener,IPCCo
 
     @Override
     public void callback_ConnIPC(boolean isSuccess) {
-        Toast.makeText(this, "IPC初始化成功", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "IPC Init Success", Toast.LENGTH_SHORT).show();
     }
 }

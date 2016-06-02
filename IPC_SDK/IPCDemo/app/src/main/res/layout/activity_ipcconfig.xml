@@ -21,7 +21,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="50dp"
         android:layout_marginLeft="18dp"
         android:layout_marginRight="18dp">
         <TextView
@@ -44,6 +44,35 @@
             toggle:offBorderColor="#dddddd"
             toggle:tb_borderWidth="1px"
             android:layout_height="30dp"/>
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1sp"
+        android:background="#808080"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp">
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="#333333"
+            android:text="CurrTime:"
+            android:layout_centerVertical="true"/>
+        <Button
+            android:id="@+id/bt_setTime"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pick Time"
+            android:textColor="#333333"
+            android:textAllCaps="false"
+            android:textSize="14sp"
+            android:layout_marginTop="6dp"/>
     </RelativeLayout>
     <View
         android:layout_width="match_parent"
