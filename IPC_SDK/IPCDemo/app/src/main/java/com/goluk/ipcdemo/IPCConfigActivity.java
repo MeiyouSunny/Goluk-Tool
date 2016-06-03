@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.goluk.ipcdemo.com.goluk.ipcdemo.widget.ToggleButton;
 import com.goluk.ipcsdk.ipcCommond.IPCConfigCommand;
 import com.goluk.ipcsdk.listener.IPCConfigListener;
+import com.goluk.ipcsdk.main.GolukIPCSdk;
 import com.jzxiang.pickerview.TimePickerDialog;
 import com.jzxiang.pickerview.data.Type;
 import com.jzxiang.pickerview.listener.OnDateSetListener;
@@ -46,7 +47,7 @@ public class IPCConfigActivity extends FragmentActivity implements View.OnClickL
 
     @Override
     protected void onDestroy() {
-        //GolukIPCSdk.getInstance().unregisterIPC(this);
+        GolukIPCSdk.getInstance().unregisterIPC(this);
         super.onDestroy();
     }
 

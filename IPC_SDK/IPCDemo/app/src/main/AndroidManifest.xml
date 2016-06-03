@@ -27,6 +27,7 @@
         </activity>
 
         <activity android:name=".IPCConfigActivity"></activity>
+        <activity android:name=".RealTimePlayActivity"></activity>
 
 
         <!-- 必须 录制主服务 -->

@@ -19,8 +19,4 @@ public abstract class BaseIPCCommand implements IPCManagerFn{
     public Context getContext() {
         return mContext;
     }
-
-    public void setContext(Context context) {
-        this.mContext = context;
-    }
 }
