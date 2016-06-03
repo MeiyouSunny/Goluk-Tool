@@ -98,7 +98,6 @@ public class IPCFileCommand extends BaseIPCCommand{
                 IPC_VDTPCmd_AddDownloadFile, json);
     }
 
-
     /**
      * stop download video file
      * @see IPCFileListener

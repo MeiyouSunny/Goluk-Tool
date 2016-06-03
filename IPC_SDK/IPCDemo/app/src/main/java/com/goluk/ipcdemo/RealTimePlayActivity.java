@@ -4,15 +4,21 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 
+import com.goluk.ipcsdk.main.GolukIPCSdk;
 import com.goluk.ipcsdk.utils.IPCFileUtils;
 import com.rd.car.player.RtspPlayerView;
 
 /**
  * Created by leege100 on 16/6/2.
  */
-public class RealTimePlayActivity extends FragmentActivity{
+public class RealTimePlayActivity extends FragmentActivity implements View.OnClickListener{
     private RtspPlayerView mRtmpPlayerView;
+    private Button mPlayBt;
+    private Button mStopBt;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,30 +28,62 @@ public class RealTimePlayActivity extends FragmentActivity{
         start();
     }
 
+    @Override
+    protected void onDestroy() {
+        GolukIPCSdk.getInstance().unregisterIPC(this);
+        super.onDestroy();
+    }
+
+    private void initView() {
+        mRtmpPlayerView = (RtspPlayerView) findViewById(R.id.mRtspPlayerView);
+        mPlayBt = (Button) findViewById(R.id.bt_play);
+        mStopBt = (Button) findViewById(R.id.bt_stop);
+    }
+
     private void setupView() {
         mRtmpPlayerView.setAudioMute(true);
         mRtmpPlayerView.setZOrderMediaOverlay(true);
         mRtmpPlayerView.setBufferTime(1000);
         mRtmpPlayerView.setConnectionTimeout(30000);
         mRtmpPlayerView.setVisibility(View.VISIBLE);
+        mRtmpPlayerView.setVisibility(View.VISIBLE);
 
-//        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mRtmpPlayerLayout.getLayoutParams();
-//        lp.width = screenWidth;
-//        lp.height = (int) (screenWidth / 1.7833);
-//        lp.leftMargin = 0;
-//        mRtmpPlayerLayout.setLayoutParams(lp);
+        WindowManager wm1 = this.getWindowManager();
+        int screenWidth = wm1.getDefaultDisplay().getWidth();
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mRtmpPlayerView.getLayoutParams();
+        lp.width = screenWidth;
+        lp.height = (int) (screenWidth / 1.7833);
+        lp.leftMargin = 0;
+        mRtmpPlayerView.setLayoutParams(lp);
+
+        mPlayBt.setOnClickListener(this);
+        mStopBt.setOnClickListener(this);
     }
 
     public void start() {
         if (null != mRtmpPlayerView) {
-            mRtmpPlayerView.setVisibility(View.VISIBLE);
             String url = IPCFileUtils.getRtmpPreviewUrl();
             mRtmpPlayerView.setDataSource(url);
             mRtmpPlayerView.start();
         }
     }
 
-    private void initView() {
-        mRtmpPlayerView = (RtspPlayerView) findViewById(R.id.mRtspPlayerView);
+    public void stop(){
+        if (null != mRtmpPlayerView && mRtmpPlayerView.isPlaying()) {
+            mRtmpPlayerView.stopPlayback();
+        }
+    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.bt_play:
+                start();
+                break;
+            case R.id.bt_stop:
+                stop();
+                break;
+            default:
+                break;
+        }
     }
 }

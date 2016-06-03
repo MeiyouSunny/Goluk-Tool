@@ -7,17 +7,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.goluk.ipcsdk.bean.DownloadInfo;
-import com.goluk.ipcsdk.bean.FileInfo;
-import com.goluk.ipcsdk.bean.RecordStorgeState;
-import com.goluk.ipcsdk.bean.VideoInfo;
 import com.goluk.ipcsdk.ipcCommond.IPCConnCommand;
-import com.goluk.ipcsdk.ipcCommond.IPCFileCommand;
 import com.goluk.ipcsdk.listener.IPCConnListener;
-import com.goluk.ipcsdk.listener.IPCFileListener;
+import com.goluk.ipcsdk.main.GolukIPCSdk;
 import com.goluk.ipcsdk.utils.IPCConnectState;
-
-import java.util.ArrayList;
 
 public class MainActivity extends Activity implements View.OnClickListener, IPCConnListener {
 
@@ -28,7 +21,6 @@ public class MainActivity extends Activity implements View.OnClickListener, IPCC
     private Button mRealtimePlayBt;
     IPCConnCommand mIPCConnCommand;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +29,12 @@ public class MainActivity extends Activity implements View.OnClickListener, IPCC
         initData();
         initListener();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        GolukIPCSdk.getInstance().unregisterIPC(this);
+        super.onDestroy();
     }
 
     private void initData() {
@@ -91,6 +89,9 @@ public class MainActivity extends Activity implements View.OnClickListener, IPCC
                 break;
             case R.id.btConnIPC:
                 startConnectIPC();
+                break;
+            case R.id.btRealtimePlay:
+                startRealtimePlay();
                 break;
             case R.id.btIPCConfig:
                 startIPCConfigActivity();

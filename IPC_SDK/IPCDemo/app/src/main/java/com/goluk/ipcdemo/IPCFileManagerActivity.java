@@ -1,12 +1,12 @@
 package com.goluk.ipcdemo;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.goluk.ipcsdk.bean.DownloadInfo;
 import com.goluk.ipcsdk.bean.FileInfo;
 import com.goluk.ipcsdk.bean.RecordStorgeState;
@@ -27,7 +27,10 @@ public class IPCFileManagerActivity extends FragmentActivity implements View.OnC
     private Button mGetSdStatus;
     private Button mFindSingleFile;
     private Button mDownloadFile;
+    private Button mStopDownLoad;
     IPCFileCommand mIPCFileCommand;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +47,12 @@ public class IPCFileManagerActivity extends FragmentActivity implements View.OnC
         mGetSdStatus.setOnClickListener(this);
         mFindSingleFile.setOnClickListener(this);
         mDownloadFile.setOnClickListener(this);
+        mStopDownLoad.setOnClickListener(this);
     }
 
     @Override
     protected void onDestroy() {
-        //GolukIPCSdk.getInstance().unregisterIPC(this);
+        GolukIPCSdk.getInstance().unregisterIPC(this);
         super.onDestroy();
     }
 
@@ -63,6 +67,7 @@ public class IPCFileManagerActivity extends FragmentActivity implements View.OnC
         mGetSdStatus = (Button) findViewById(R.id.btGetSdStatus);
         mFindSingleFile = (Button) findViewById(R.id.btFindSingleFile);
         mDownloadFile = (Button) findViewById(R.id.btDownLoadFile);
+        mStopDownLoad = (Button) findViewById(R.id.btStopDownLoad);
     }
 
     @Override
@@ -82,6 +87,13 @@ public class IPCFileManagerActivity extends FragmentActivity implements View.OnC
                 Boolean result = mIPCFileCommand.downloadFile("WND_event_20160602151234_1_TX_3_0030.mp4","videodownload",savePath,1464851530);
                 downLoadVideoThumbnail("WND_event_20160602151234_1_TX_3_0030.mp4",1464851530);
                 break;
+            case R.id.btStopDownLoad:
+                boolean data = mIPCFileCommand.stopDownloadFile();
+                if(data){
+                    Toast.makeText(this, "StopDownLoad SUCCESS", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this, "StopDownLoad FIAL", Toast.LENGTH_SHORT).show();
+                }
             default:
                 break;
         }
@@ -121,7 +133,7 @@ public class IPCFileManagerActivity extends FragmentActivity implements View.OnC
     @Override
     public void callback_download_file(DownloadInfo downloadinfo) {
         if(downloadinfo != null){
-            Log.e("","zh filesize: " + downloadinfo.filesize + "filerecvsize: " + downloadinfo.filerecvsize);
+            Log.e("","zh filesize: " + downloadinfo.filesize + "  filerecvsize: " + downloadinfo.filerecvsize + "  status:" + downloadinfo.status);
             if(downloadinfo.status == 0){
                 Toast.makeText(this, "callback_download_file success", Toast.LENGTH_SHORT).show();
             }
