@@ -2,14 +2,20 @@ package com.goluk.ipcsdk.utils;
 
 import android.text.TextUtils;
 
+import com.goluk.ipcsdk.bean.FileInfo;
+import com.goluk.ipcsdk.bean.RecordStorgeState;
+import com.goluk.ipcsdk.bean.VideoInfo;
+import com.goluk.ipcsdk.main.GolukIPCSdk;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.api.FileUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class IpcDataParser {
 
@@ -159,14 +165,14 @@ public class IpcDataParser {
 	}
 	
 /*
-*//**
+/**
 	 * 解析多个文件
 	 * 
 	 * @param json
 	 * @return
 	 * @author jiayf
 	 * @date Mar 10, 2015
-	 *//*
+	 */
     public static ArrayList<VideoInfo> parseVideoListData(String json) {
 //		String filePath = android.os.Environment.getExternalStorageDirectory().getPath() + "/goluk/video/";
 //		String[] videoPaths = { "", "loop/", "urgent/", "", "wonderful/" };
@@ -183,7 +189,7 @@ public class IpcDataParser {
                 JSONObject itemObj = array.getJSONObject(i);
                 FileInfo info = parseSingleFileResult(itemObj.toString());
                 if (null != info) {
-                    VideoInfo mVideoInfo = VideoDataManagerUtils.getVideoInfo(info);
+                    VideoInfo mVideoInfo = getVideoInfo(info);
 //					if (files == null) {
 //						int type = IpcDataParser.parseVideoFileType(mVideoInfo.filename);
 //						files = FileInfoManagerUtils.getFileNames(filePath + videoPaths[type], "(.+?mp4)");
@@ -199,7 +205,76 @@ public class IpcDataParser {
             return null;
         }
         return list;
-    }*/
+    }
+
+
+    /**
+     * IPC视频文件信息转列表显示视频信息
+     *
+     * @param mVideoFileInfo
+     *            IPC视频文件信息
+     * @return 列表显示视频信息
+     * @author xuhw
+     * @date 2015年3月25日
+     */
+    public static VideoInfo getVideoInfo(FileInfo mVideoFileInfo) {
+        VideoInfo info = new VideoInfo();
+        // 文件选择状态
+        info.isSelect = false;
+        info.id = mVideoFileInfo.id;
+        info.videoSize = Utils.getSizeShow(mVideoFileInfo.size);
+        info.countTime = Utils.minutesTimeToString(mVideoFileInfo.period);
+        info.videoHP = mVideoFileInfo.resolution;
+        if (TextUtils.isEmpty(mVideoFileInfo.timestamp)) {
+            info.videoCreateDate = Utils.getTimeStr(mVideoFileInfo.time * 1000);
+        } else {
+            info.videoCreateDate = countFileDateToString(mVideoFileInfo.timestamp);
+        }
+
+        info.videoPath = mVideoFileInfo.location;
+        info.filename = mVideoFileInfo.location;
+        info.time = mVideoFileInfo.time;
+//        info.isNew = SettingUtils.getInstance().getBoolean("Cloud_" + mVideoFileInfo.location, true);
+
+        String fileName = mVideoFileInfo.location;
+        fileName = fileName.replace(".mp4", ".jpg");
+        String filePath = GolukIPCSdk.getInstance().getCarrecorderCachePath() + File.separator + "image";
+        Utils.makedir(filePath);
+        File file = new File(filePath + File.separator + fileName);
+        if (file.exists()) {
+            // info.videoBitmap = ImageManager.getBitmapFromCache(filePath +
+            // File.separator + fileName, 194, 109);
+        } else {
+            if (1 == mVideoFileInfo.withSnapshot) {
+//                GolukIPCSdk.getInstance() .getInstance() .getIPCControlManager().downloadFile(fileName, "IPC_IMAGE" + mVideoFileInfo.id, FileUtils.javaToLibPath(filePath),mVideoFileInfo.time);
+                GolukDebugUtils.e("xuhw", "TTT====111111=====filename=" + fileName + "===tag=" + mVideoFileInfo.id);
+            }
+        }
+
+        return info;
+    }
+
+    /**
+     * 根据文件名计算日期
+     * @param name
+     * @return
+     */
+    public static String countFileDateToString(String date) {
+
+        String dateString = "";
+        try {
+            String year = date.substring(0, 4);
+            String mouth = date.substring(4, 6);
+            String day = date.substring(6, 8);
+            String hour = date.substring(8, 10);
+            String minute = date.substring(10, 12);
+            String second = date.substring(12, 14);
+            dateString = year + "-" + mouth + "-" + day + " " + hour + ":" + minute + ":" + second;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dateString;
+    }
 
     public static String getIpcQueryListReqTag(String data) {
         String tag = "";
@@ -236,7 +311,7 @@ public class IpcDataParser {
         return total;
     }
 
-  /*  public static FileInfo parseSingleFileResult(String json) {
+  public static FileInfo parseSingleFileResult(String json) {
 
         try {
             JSONObject obj = new JSONObject(json);
@@ -269,7 +344,7 @@ public class IpcDataParser {
         }
         return null;
 
-    }*/
+    }
 
 
    /* *//**
@@ -310,15 +385,15 @@ public class IpcDataParser {
         return null;
     }*/
 
-/*
-    *//**
+
+    /**
      * 解析录制存储状态json
      *
      * @param json
      * @return
      * @author xuhw
      * @date 2015年4月7日
-     *//*
+     */
 
     public static RecordStorgeState parseRecordStorageStatus(String json) {
         try {
@@ -358,7 +433,7 @@ public class IpcDataParser {
         }
 
         return null;
-    }*/
+    }
 
    /* *//**
      * 解析视频配置信息json

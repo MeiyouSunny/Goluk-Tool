@@ -1,7 +1,6 @@
 package com.mobnote.golukmain;
 
 import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.bean.GetPushSettingRequest;
 import com.mobnote.golukmain.bean.PushMsgSettingBean;
 import com.mobnote.golukmain.bean.SetPushSettingRequest;
@@ -190,7 +189,7 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 
 	public void startUserLogin(){
 		Intent loginIntent = null;
-		if(GolukApplication.getInstance().isInteral() == false){
+		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(this, InternationUserLoginActivity.class);
 		}else{
 			loginIntent = new Intent(this, UserLoginActivity.class);

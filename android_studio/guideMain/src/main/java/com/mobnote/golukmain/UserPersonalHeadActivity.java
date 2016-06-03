@@ -4,18 +4,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.userlogin.UpHeadData;
 import com.mobnote.golukmain.userlogin.UpHeadResult;
-import com.mobnote.golukmain.userlogin.UpdUserDescBeanRequest;
 import com.mobnote.golukmain.userlogin.UpdUserHeadBeanRequest;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 
-import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -331,7 +328,7 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 
 	public void startUserLogin(){
 		Intent loginIntent = null;
-		if(GolukApplication.getInstance().isInteral() == false){
+		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(this, InternationUserLoginActivity.class);
 		}else{
 			loginIntent = new Intent(this, UserLoginActivity.class);

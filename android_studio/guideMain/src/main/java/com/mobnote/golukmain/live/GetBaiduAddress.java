@@ -30,7 +30,7 @@ public class GetBaiduAddress implements OnGetGeoCoderResultListener {
 	private static final int UPDATE = 1;
 	
 	private GetBaiduAddress() {
-		if (GolukApplication.getInstance().isInteral()) {
+		if (GolukApplication.getInstance().isMainland()) {
 			// 初始化搜索模块，注册事件监听
 			mSearch = GeoCoder.newInstance();
 			mSearch.setOnGetGeoCodeResultListener(this);
@@ -56,7 +56,7 @@ public class GetBaiduAddress implements OnGetGeoCoderResultListener {
 		GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----searchAddress----22222  : ");
 		mHandler.removeMessages(UPDATE);
 		Message msg = mHandler.obtainMessage(UPDATE);
-		if (GolukApplication.getInstance().isInteral()) {
+		if (GolukApplication.getInstance().isMainland()) {
 			msg.obj = new LatLng(lat, lon);
 		} else {
 			msg.obj = new Position(lat, lon);
@@ -75,7 +75,7 @@ public class GetBaiduAddress implements OnGetGeoCoderResultListener {
 			case UPDATE:
 				removeMessages(UPDATE);
 				if (isNetworkConnected(GolukApplication.getInstance())) {
-					if (GolukApplication.getInstance().isInteral()) {
+					if (GolukApplication.getInstance().isMainland()) {
 						LatLng p = (LatLng) msg.obj;
 						// 反Geo搜索
 						mSearch.reverseGeoCode(new ReverseGeoCodeOption().location(p));

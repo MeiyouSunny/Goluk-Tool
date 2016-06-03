@@ -3,7 +3,6 @@ package com.mobnote.golukmain;
 import com.alibaba.fastjson.JSON;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventBindPhoneNum;
-import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.base.CarRecordBaseActivity;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.http.IRequestResultListener;
@@ -261,7 +260,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 					dialog.show();
 					return;
 				}
-				if(GolukApplication.getInstance().isInteral()  == false){
+				if(GolukApplication.getInstance().isMainland()  == false){
 					initIntent(InternationUserLoginActivity.class);
 				}else{
 					initIntent(UserLoginActivity.class);

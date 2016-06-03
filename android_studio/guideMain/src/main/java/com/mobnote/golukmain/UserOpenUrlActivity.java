@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
@@ -328,7 +326,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 				String urlOpenPath = mUrlOpenPath;
 
 				if (TextUtils.isEmpty(coverurl)) {
-					if (GolukApplication.getInstance().isInteral()) {
+					if (GolukApplication.getInstance().isMainland()) {
 						coverurl = "http://pic.goluk.cn/ios_icon512.png";
 					} else {
 						coverurl = "http://i.pic.goluk.cn/ios_icon512.png";
