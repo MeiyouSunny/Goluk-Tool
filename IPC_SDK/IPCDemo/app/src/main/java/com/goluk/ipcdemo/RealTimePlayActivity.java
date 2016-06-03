@@ -8,7 +8,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
-import com.goluk.ipcsdk.main.GolukIPCSdk;
 import com.goluk.ipcsdk.utils.IPCFileUtils;
 import com.rd.car.player.RtspPlayerView;
 
@@ -30,7 +29,10 @@ public class RealTimePlayActivity extends FragmentActivity implements View.OnCli
 
     @Override
     protected void onDestroy() {
-        GolukIPCSdk.getInstance().unregisterIPC(this);
+        if(mRtmpPlayerView != null){
+            mRtmpPlayerView.cleanUp();
+            mRtmpPlayerView = null;
+        }
         super.onDestroy();
     }
 
