@@ -1076,6 +1076,8 @@ public class GolukUtils {
 	}
 
 	public static void startAEActivity(Context context,int type,String path){
+		//视频后处理页面访问统计
+		ZhugeUtils.eventVideoEdit(context);
 		Intent intent = new Intent(context, AfterEffectActivity.class);
 		intent.putExtra("vidType", type);
 		intent.putExtra("vidPath", path);

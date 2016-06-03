@@ -1,7 +1,11 @@
 package com.mobnote.util;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.telephony.TelephonyManager;
 
+import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
@@ -82,6 +86,58 @@ public class ZhugeUtils {
      */
     public static void eventIpc(Context context) {
         ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_ipc_event));
+    }
+
+    /**
+     * 导出后处理视频
+     * @param context
+     * @param videoLength 视频时长
+     * @param musicType 音乐类型
+     * @param resolution 导出分辨率
+     */
+    public static void eventAfterEffect(Context context, String videoLength, String musicType, String resolution) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_after_effect_video_duration), videoLength);
+            json.put(context.getString(R.string.str_zhuge_after_effect_music_type), musicType);
+            json.put(context.getString(R.string.str_zhuge_after_effect_resolution), resolution);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_after_effect_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     * @param context
+     * @param videoType 视频类型
+     * @param videoQuality 分享视频质量
+     * @param connectIPC 分享时是否链接记录仪
+     * @param videoLength 视频时长范围
+     * @param desc 是否有人工描述
+     * @param channel 分享渠道
+     * @param action 参加活动
+     * @param state 上传状态
+     */
+    public static void eventShareVideo(Context context, String videoType, String videoQuality, String connectIPC,
+                   String videoLength, String desc, String channel, String action, String state){
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_share_video_type), videoType);
+            json.put(context.getString(R.string.str_zhuge_share_video_quality), videoQuality);
+            json.put(context.getString(R.string.str_zhuge_share_video_network), getNetworkType(context));
+            json.put(context.getString(R.string.str_zhuge_share_video_connect_ipc), connectIPC);
+            json.put(context.getString(R.string.str_zhuge_share_video_length), videoLength);
+            json.put(context.getString(R.string.str_zhuge_share_video_desc), desc);
+            json.put(context.getString(R.string.str_zhuge_share_video_channel), channel);
+            json.put(context.getString(R.string.str_zhuge_share_video_action), action);
+            json.put(context.getString(R.string.str_zhuge_share_video_state), state);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_share_video_event), json);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -169,6 +225,80 @@ public class ZhugeUtils {
             default:
                 return "";
         }
+    }
+
+    /**
+     * 当前网络环境
+     * @param context
+     * @return
+     */
+    private static String getNetworkType(Context context) {
+        //获取系统网络服务
+        ConnectivityManager connectivityManager;
+        connectivityManager = (ConnectivityManager) GolukApplication.getInstance().getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        //没网
+        if (null == connectivityManager) {
+            return context.getString(R.string.str_zhuge_share_video_network_other);
+        }
+        //获取当前网络类型
+        NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
+        if (null == activeNetInfo || !activeNetInfo.isAvailable()) {
+            return context.getString(R.string.str_zhuge_share_video_network_other);
+        }
+        //判断是不是WIFI连接
+        NetworkInfo wifiNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (null == wifiNetInfo) {
+            return context.getString(R.string.str_zhuge_share_video_network_other);
+        }
+        NetworkInfo.State state = wifiNetInfo.getState();
+        if (null == state) {
+            return context.getString(R.string.str_zhuge_share_video_network_other);
+        }
+        if (state == NetworkInfo.State.CONNECTED || state == NetworkInfo.State.CONNECTING) {
+            return context.getString(R.string.str_zhuge_share_video_network_wifi);
+        }
+        //判断手机网络类型
+        NetworkInfo mobileNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if (null == mobileNetInfo) {
+            return context.getString(R.string.str_zhuge_share_video_network_other);
+        }
+        NetworkInfo.State mobileState = mobileNetInfo.getState();
+        String subName = mobileNetInfo.getSubtypeName();
+        if (null == mobileNetInfo) {
+            return context.getString(R.string.str_zhuge_share_video_network_other);
+        }
+        if (mobileState == NetworkInfo.State.CONNECTED || mobileState == NetworkInfo.State.CONNECTING) {
+            switch (activeNetInfo.getSubtype()) {
+                //如果是2g类型
+                case TelephonyManager.NETWORK_TYPE_GPRS: // 联通2g
+                case TelephonyManager.NETWORK_TYPE_CDMA: // 电信2g
+                case TelephonyManager.NETWORK_TYPE_EDGE: // 移动2g
+                case TelephonyManager.NETWORK_TYPE_1xRTT:
+                case TelephonyManager.NETWORK_TYPE_IDEN:
+                    return context.getString(R.string.str_zhuge_share_video_network_other);
+                //如果是3g类型
+                case TelephonyManager.NETWORK_TYPE_EVDO_A: // 电信3g
+                case TelephonyManager.NETWORK_TYPE_UMTS:
+                case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                case TelephonyManager.NETWORK_TYPE_HSDPA:
+                case TelephonyManager.NETWORK_TYPE_HSUPA:
+                case TelephonyManager.NETWORK_TYPE_HSPA:
+                case TelephonyManager.NETWORK_TYPE_EVDO_B:
+                case TelephonyManager.NETWORK_TYPE_EHRPD:
+                case TelephonyManager.NETWORK_TYPE_HSPAP:
+                    return context.getString(R.string.str_zhuge_share_video_network_3g);
+                //如果是4g类型
+                case TelephonyManager.NETWORK_TYPE_LTE:
+                    return context.getString(R.string.str_zhuge_share_video_network_4g);
+                default:
+                    if (subName.equalsIgnoreCase("TD-SCDMA") || subName.equalsIgnoreCase("WCDMA") || subName.equalsIgnoreCase("CDMA2000")) {
+                        return context.getString(R.string.str_zhuge_share_video_network_3g);
+                    } else {
+                        return context.getString(R.string.str_zhuge_share_video_network_other);
+                    }
+            }
+        }
+        return context.getString(R.string.str_zhuge_share_video_network_other);
     }
 
 

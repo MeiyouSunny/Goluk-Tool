@@ -455,10 +455,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		}
         if (id == R.id.ll_start_videoedit){
             pauseVideo();
-
-			//视频后处理页面访问统计
-			ZhugeUtils.eventVideoEdit(this);
-
             GolukUtils.startAEActivity(this,mType,mPath);
         }else if (id == R.id.imagebutton_back) {
 			// 返回
