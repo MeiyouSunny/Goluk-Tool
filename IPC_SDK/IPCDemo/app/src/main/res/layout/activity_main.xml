@@ -50,34 +50,5 @@
         android:layout_marginRight="18dp"
         android:text="IPCFileManage"/>
 
-    <Button
-        android:layout_marginTop="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:id="@+id/btQueryFileList"
-        android:text="QueryFileList"/>
-
-    <Button
-        android:id="@+id/btGetSdStatus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:text="GetSDStatus"/>
-
-    <Button
-        android:id="@+id/btFindSingleFile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:text="FindSingleFile"/>
-
-    <Button
-        android:id="@+id/btDownLoadFile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:text="DownLoadFile"/>
-
 
 </LinearLayout>

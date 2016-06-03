@@ -1,6 +1,7 @@
 package com.goluk.ipcsdk.ipcCommond;
 import android.util.Log;
 import android.content.Context;
+import android.widget.Toast;
 
 import com.goluk.ipcsdk.bean.DownloadInfo;
 import com.goluk.ipcsdk.bean.FileInfo;
@@ -125,7 +126,7 @@ public class IPCFileCommand extends BaseIPCCommand{
                 FileInfo fileInfo = IpcDataParser.parseSingleFileResult((String) param2);
                 ipcFileListener.callback_find_single_file(fileInfo);
                 break;
-            case IPC_VDTPCmd_AddDownloadFile:
+            case IPC_VDTP_Msg_File:
                 try {
                     DownloadInfo downloadInfo = null;
                     JSONObject json = new JSONObject((String) param2);
@@ -134,6 +135,7 @@ public class IPCFileCommand extends BaseIPCCommand{
                         downloadInfo.filename = json.optString("filename");
                         downloadInfo.filesize = json.optInt("filesize");
                         downloadInfo.filerecvsize = json.optInt("filerecvsize");
+                        downloadInfo.status = param1;
                     }
                     ipcFileListener.callback_download_file(downloadInfo);
                 } catch (JSONException e) {

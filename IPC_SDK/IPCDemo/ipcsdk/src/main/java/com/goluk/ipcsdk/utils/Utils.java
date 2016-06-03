@@ -3,6 +3,8 @@ package com.goluk.ipcsdk.utils;
 import java.io.File;
 import java.text.SimpleDateFormat;
 
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+
 public class Utils {
 
 	/**
@@ -90,6 +92,16 @@ public class Utils {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String result = sdf.format(new Long(time));
 		return result;
+	}
+
+	public static String getSavePath(int type) {
+		if (IPCManagerFn.TYPE_SHORTCUT == type) {
+			return IPCManagerFn.VIDEO_SAVEPATH + "wonderful/";
+		} else if (IPCManagerFn.TYPE_URGENT == type) {
+			return IPCManagerFn.VIDEO_SAVEPATH + "urgent/";
+		} else {
+			return IPCManagerFn.VIDEO_SAVEPATH + "loop/";
+		}
 	}
 
 	/**
