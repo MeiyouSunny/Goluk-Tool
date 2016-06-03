@@ -53,10 +53,10 @@
 
 <!-- ################### 相册竖屏播放页面访问 ###################### -->
     <!--事件-->
-    <string name="str_zhuge_video_player_event">相册竖屏播放页面访问</string>
+    <string name="str_zhuge_album_player_event">相册竖屏播放页面访问</string>
     <!--属性-->
-    <string name="str_zhuge_video_player_album_tag">相册标签</string>
-    <string name="str_zhuge_video_player_type">类型</string>
+    <string name="str_zhuge_album_player_tag">相册标签</string>
+    <string name="str_zhuge_album_player_type">类型</string>
 
     <!--参数-->
     <string name="str_zhuge_video_player_local">本地</string>

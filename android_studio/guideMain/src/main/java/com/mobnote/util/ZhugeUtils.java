@@ -43,6 +43,7 @@ public class ZhugeUtils {
 
     /**
      * 相册页面访问
+     *
      * @param context
      * @param source
      * @return
@@ -59,6 +60,7 @@ public class ZhugeUtils {
 
     /**
      * 即刻分享页面访问
+     *
      * @param context
      * @param source
      */
@@ -74,6 +76,7 @@ public class ZhugeUtils {
 
     /**
      * 视频后处理页面访问
+     *
      * @param context
      */
     public static void eventVideoEdit(Context context) {
@@ -82,6 +85,7 @@ public class ZhugeUtils {
 
     /**
      * IPC页面访问
+     *
      * @param context
      */
     public static void eventIpc(Context context) {
@@ -90,10 +94,11 @@ public class ZhugeUtils {
 
     /**
      * 导出后处理视频
+     *
      * @param context
      * @param videoLength 视频时长
-     * @param musicType 音乐类型
-     * @param resolution 导出分辨率
+     * @param musicType   音乐类型
+     * @param resolution  导出分辨率
      */
     public static void eventAfterEffect(Context context, String videoLength, String musicType, String resolution) {
         try {
@@ -109,33 +114,53 @@ public class ZhugeUtils {
     }
 
     /**
+     * 上传分享视频
      *
      * @param context
-     * @param videoType 视频类型
+     * @param videoType    视频类型
      * @param videoQuality 分享视频质量
-     * @param connectIPC 分享时是否链接记录仪
-     * @param videoLength 视频时长范围
-     * @param desc 是否有人工描述
-     * @param channel 分享渠道
-     * @param action 参加活动
-     * @param state 上传状态
+     * @param connectIPC   分享时是否链接记录仪
+     * @param videoLength  视频时长范围
+     * @param desc         是否有人工描述
+     * @param channel      分享渠道
+     * @param action       参加活动
+     * @param state        上传状态
      */
     public static void eventShareVideo(Context context, String videoType, String videoQuality, String connectIPC,
-                   String videoLength, String desc, String channel, String action, String state){
+                                       String videoLength, String desc, String channel, String action, String state) {
         try {
             JSONObject json = new JSONObject();
-            json.put(context.getString(R.string.str_zhuge_share_video_type), videoType);
+            json.put(context.getString(R.string.str_zhuge_share_video_type), getVideoType(context, videoType));
             json.put(context.getString(R.string.str_zhuge_share_video_quality), videoQuality);
             json.put(context.getString(R.string.str_zhuge_share_video_network), getNetworkType(context));
             json.put(context.getString(R.string.str_zhuge_share_video_connect_ipc), connectIPC);
             json.put(context.getString(R.string.str_zhuge_share_video_length), videoLength);
-            json.put(context.getString(R.string.str_zhuge_share_video_desc), desc);
+            json.put(context.getString(R.string.str_zhuge_share_video_desc), getYesOrNo(context, desc));
             json.put(context.getString(R.string.str_zhuge_share_video_channel), channel);
-            json.put(context.getString(R.string.str_zhuge_share_video_action), action);
+            json.put(context.getString(R.string.str_zhuge_share_video_action), getAction(context, action));
             json.put(context.getString(R.string.str_zhuge_share_video_state), state);
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_share_video_event), json);
-        }catch (Exception e){
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 相册竖屏播放页面访问
+     *
+     * @param context
+     * @param tag     相册标签
+     * @param type    类型
+     */
+    public static void eventAlbumPlayer(Context context, String tag, String type) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_album_player_tag), tag);
+            json.put(context.getString(R.string.str_zhuge_album_player_type), type);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_album_player_event), json);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -229,6 +254,7 @@ public class ZhugeUtils {
 
     /**
      * 当前网络环境
+     *
      * @param context
      * @return
      */
