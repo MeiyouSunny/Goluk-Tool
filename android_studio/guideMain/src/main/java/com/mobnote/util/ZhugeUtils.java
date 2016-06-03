@@ -69,6 +69,22 @@ public class ZhugeUtils {
     }
 
     /**
+     * 视频后处理页面访问
+     * @param context
+     */
+    public static void eventVideoEdit(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_video_edit_event));
+    }
+
+    /**
+     * IPC页面访问
+     * @param context
+     */
+    public static void eventIpc(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_ipc_event));
+    }
+
+    /**
      * 是或否
      *
      * @param context

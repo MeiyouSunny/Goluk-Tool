@@ -44,5 +44,32 @@
     <string name="str_zhuge_share_video_edit">视频后处理</string>
     <string name="str_zhuge_share_video_player">竖屏播放页</string>
 
+<!-- ################### 视频后处理页面访问 ###################### -->
+    <!--事件-->
+    <string name="str_zhuge_video_edit_event">视频后处理页面访问</string>
+<!-- ################### IPC页面访问 ###################### -->
+    <!--事件-->
+    <string name="str_zhuge_ipc_event">IPC页面访问</string>
+
+<!-- ################### 相册竖屏播放页面访问 ###################### -->
+    <!--事件-->
+    <string name="str_zhuge_video_player_event">相册竖屏播放页面访问</string>
+    <!--属性-->
+    <string name="str_zhuge_video_player_album_tag">相册标签</string>
+    <string name="str_zhuge_video_player_type">类型</string>
+
+    <!--参数-->
+    <string name="str_zhuge_video_player_local">本地</string>
+    <string name="str_zhuge_video_player_wonderful">精彩</string>
+    <string name="str_zhuge_video_player_urgent">紧急</string>
+    <string name="str_zhuge_video_player_recycle">循环</string>
+
+<!-- ################### 导出后处理视频 ###################### -->
+    <!--事件-->
+    
+    <!--属性-->
+    <!--参数-->
+
+
 
 </resources>

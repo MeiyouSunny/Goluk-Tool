@@ -19,6 +19,7 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import com.mobnote.golukmain.wifibind.WiFiLinkCompleteActivity;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -200,6 +201,9 @@ public class AdasSeletedVehicleTypeActivity extends BaseActivity implements OnCl
 				mCustomDialog.setLeftButton(this.getResources().getString(R.string.str_button_ok), new OnLeftClickListener() {
 					@Override
 					public void onClickListener() {
+						//IPC页面访问统计
+						ZhugeUtils.eventIpc(AdasSeletedVehicleTypeActivity.this);
+
 						Intent it = new Intent(AdasSeletedVehicleTypeActivity.this, CarRecorderActivity.class);
 						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

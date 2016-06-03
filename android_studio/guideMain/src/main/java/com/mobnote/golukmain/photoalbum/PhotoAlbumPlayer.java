@@ -220,6 +220,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_EXPORTING){
 
             }else if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_FINISH){
+
 				//竖屏播放页访问即刻分享页面统计
 				ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
 
@@ -454,6 +455,10 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		}
         if (id == R.id.ll_start_videoedit){
             pauseVideo();
+
+			//视频后处理页面访问统计
+			ZhugeUtils.eventVideoEdit(this);
+
             GolukUtils.startAEActivity(this,mType,mPath);
         }else if (id == R.id.imagebutton_back) {
 			// 返回
@@ -463,8 +468,10 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             if(videoEditSupport()) {
                 doSimpleExport(mPath,mHP);
             } else {
+
 				//竖屏播放页访问即刻分享页面统计
 				ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
+
 				GolukUtils.startVideoShareActivity(this,mType,mPath,mFileName,false);
             }
 		}else if (id == R.id.back_btn) {
