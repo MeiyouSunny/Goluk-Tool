@@ -39,7 +39,7 @@
         android:textAllCaps="false"
         android:layout_marginLeft="18dp"
         android:layout_marginRight="18dp"
-        android:text="Realtime"/>
+        android:text="Realtime Play"/>
     <Button
         android:id="@+id/btIPCConfig"
         android:layout_marginTop="8dp"
