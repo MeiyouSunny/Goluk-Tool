@@ -5,7 +5,7 @@
     android:orientation="vertical">
     <TextView
         android:text="Goluk Demo"
-        android:background="#303030"
+        android:background="#353535"
         android:textSize="16sp"
         android:gravity="center"
         android:textColor="#ffffff"
@@ -39,7 +39,7 @@
         android:textAllCaps="false"
         android:layout_marginLeft="18dp"
         android:layout_marginRight="18dp"
-        android:text="Realtime Play"/>
+        android:text="Realtime"/>
     <Button
         android:id="@+id/btIPCConfig"
         android:layout_marginTop="8dp"

@@ -6,7 +6,7 @@
     android:background="#ffffff">
     <TextView
         android:text="Realtime Play"
-        android:background="#303030"
+        android:background="#353535"
         android:textSize="16sp"
         android:gravity="center"
         android:textColor="#ffffff"

@@ -15,16 +15,20 @@ public class IPCApplication extends Application{
     public void onCreate() {
         super.onCreate();
 
-//        System.loadLibrary("RtmpPlayer");
-//        System.loadLibrary("LiveCarRecorder");
+
+        System.loadLibrary("RtmpPlayer");
+        System.loadLibrary("LiveCarRecorder");
 //        System.loadLibrary("airtalkee");
-//        System.loadLibrary("CarRecorderKernel");
+        System.loadLibrary("CarRecorderKernel");
 //        System.loadLibrary("networkbase");
 //        System.loadLibrary("tpnsSecurity");
 //        System.loadLibrary("tpnsWatchdog");
 //        System.loadLibrary("uploadnetwork");
         instance = this;
         GolukIPCSdk.getInstance().initSDK(this);
+
+
+//        System.loadLibrary("vinit");
     }
 
     public static IPCApplication getInstance(){
