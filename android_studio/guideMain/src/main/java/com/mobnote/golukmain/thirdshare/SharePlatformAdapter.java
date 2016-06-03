@@ -86,7 +86,7 @@ public class SharePlatformAdapter extends RecyclerView.Adapter{
         if(mSharePlatform.isInstallPlatform(SHARE_MEDIA.QQ)){
             mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_QQ));
         }
-        if(mSharePlatform.isInstallPlatform(SHARE_MEDIA.QZONE)){
+        if(mSharePlatform.isInstallPlatform(SHARE_MEDIA.QQ)){
             mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_QQ_ZONE));
         }
 
