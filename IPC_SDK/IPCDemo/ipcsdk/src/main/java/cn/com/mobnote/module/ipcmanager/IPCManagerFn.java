@@ -11,13 +11,15 @@ public interface IPCManagerFn extends IGolukCommFn {
 	// VDTP　文件下载
 
 	public static final int RESULE_SUCESS = 0;
-//
-//	/** 循环影像 */
-//	public static final int TYPE_CIRCULATE = 1;
-//	/** 紧急录像　 */
-//	public static final int TYPE_URGENT = 2;
-//	/** 精彩视频 */
-//	public static final int TYPE_SHORTCUT = 4;
+
+	/** 循环影像 */
+	public static final int TYPE_CIRCULATE = 1;
+	/** 紧急录像　 */
+	public static final int TYPE_URGENT = 2;
+	/** 精彩视频 */
+	public static final int TYPE_SHORTCUT = 4;
+
+	public static final String VIDEO_SAVEPATH = "fs1:/video/";
 //
 //	/**
 //	 *
@@ -59,7 +61,7 @@ public interface IPCManagerFn extends IGolukCommFn {
 //	 * */
 //
 //	/** 文件传输消息 */
-//	public static final int IPC_VDTP_Msg_File = 0;
+	public static final int IPC_VDTP_Msg_File = 0;
 //
 //	/**
 //	 *
