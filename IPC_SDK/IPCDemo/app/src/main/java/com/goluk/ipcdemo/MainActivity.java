@@ -24,10 +24,14 @@ public class MainActivity extends Activity implements View.OnClickListener, IPCC
     private Button mConnWifiBt;
     private Button mConnIPCBt;
     private Button mIPCConfigBt;
+
+    private Button mRealtimePlayBt;
+
     private Button mQueryFileList;
     private Button mGetSdStatus;
     private Button mFindSingleFile;
     private Button mDownloadFile;
+
     IPCConnCommand mIPCConnCommand;
     IPCFileCommand mIPCFileCommand;
 
@@ -51,20 +55,28 @@ public class MainActivity extends Activity implements View.OnClickListener, IPCC
         mConnWifiBt = (Button) findViewById(R.id.btConnWifi);
         mConnIPCBt = (Button) findViewById(R.id.btConnIPC);
         mIPCConfigBt = (Button) findViewById(R.id.btIPCConfig);
+
+        mRealtimePlayBt = (Button) findViewById(R.id.btRealtimePlay);
+
         mQueryFileList = (Button) findViewById(R.id.btQueryFileList);
         mGetSdStatus = (Button) findViewById(R.id.btGetSdStatus);
         mFindSingleFile = (Button) findViewById(R.id.btFindSingleFile);
         mDownloadFile = (Button) findViewById(R.id.btDownLoadFile);
+
     }
 
     private void initListener() {
         mConnWifiBt.setOnClickListener(this);
         mConnIPCBt.setOnClickListener(this);
         mIPCConfigBt.setOnClickListener(this);
+
+        mRealtimePlayBt.setOnClickListener(this);
+
         mQueryFileList.setOnClickListener(this);
         mGetSdStatus.setOnClickListener(this);
         mFindSingleFile.setOnClickListener(this);
         mDownloadFile.setOnClickListener(this);
+
     }
 
     private void startWifiCommond() {
@@ -78,7 +90,14 @@ public class MainActivity extends Activity implements View.OnClickListener, IPCC
         this.startActivity(intent);
     }
 
+    private void startRealtimePlay(){
+        Intent intent = new Intent(this,RealTimePlayActivity.class);
+        this.startActivity(intent);
+    }
+
+
     private void startConnectIPC() {
+
         mIPCConnCommand.connectIPC();
     }
 
@@ -94,6 +113,10 @@ public class MainActivity extends Activity implements View.OnClickListener, IPCC
             case R.id.btIPCConfig:
                 startIPCConfigActivity();
                 break;
+
+            case R.id.btRealtimePlay:
+                startRealtimePlay();
+
             case R.id.btQueryFileList:
                 boolean flog = mIPCFileCommand.queryFileListInfo(4, 20, 0, 2147483647, "1");
                 break;
@@ -105,6 +128,7 @@ public class MainActivity extends Activity implements View.OnClickListener, IPCC
                 break;
             case R.id.btDownLoadFile:
                 //mIPCFileCommand.downloadFile();
+
                 break;
             default:
                 break;
