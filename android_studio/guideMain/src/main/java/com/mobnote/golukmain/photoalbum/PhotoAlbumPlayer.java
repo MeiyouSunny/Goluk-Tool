@@ -420,9 +420,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         }
 
         // forbid some manufacturers, now htc
-        if(android.os.Build.MANUFACTURER.toLowerCase().contains("htc")) {
-            return false;
-        }
+//        if(android.os.Build.MANUFACTURER.toLowerCase().contains("htc")) {
+//            return false;
+//        }
         return true;
     }
 

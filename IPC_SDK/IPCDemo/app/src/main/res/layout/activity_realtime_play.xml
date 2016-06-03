@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff">
+    <TextView
+        android:text="Realtime Play"
+        android:background="#353535"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"></TextView>
+    <RelativeLayout
+        android:id="@+id/vLayout"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:background="#a0a0a0">
+
+        <com.rd.car.player.RtspPlayerView
+            android:id="@+id/mRtspPlayerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+</LinearLayout>

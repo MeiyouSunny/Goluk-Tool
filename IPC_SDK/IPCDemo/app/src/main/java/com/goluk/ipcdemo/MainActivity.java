@@ -25,7 +25,7 @@ public class MainActivity extends Activity implements View.OnClickListener, IPCC
     private Button mConnIPCBt;
     private Button mIPCConfigBt;
     private Button mIPCFileManageBt;
-
+    private Button mRealtimePlayBt;
     IPCConnCommand mIPCConnCommand;
 
 
@@ -48,6 +48,8 @@ public class MainActivity extends Activity implements View.OnClickListener, IPCC
         mConnIPCBt = (Button) findViewById(R.id.btConnIPC);
         mIPCConfigBt = (Button) findViewById(R.id.btIPCConfig);
         mIPCFileManageBt = (Button) findViewById(R.id.btIPCFileManage);
+        mRealtimePlayBt = (Button) findViewById(R.id.btRealtimePlay);
+
     }
 
     private void initListener() {
@@ -55,6 +57,8 @@ public class MainActivity extends Activity implements View.OnClickListener, IPCC
         mConnIPCBt.setOnClickListener(this);
         mIPCConfigBt.setOnClickListener(this);
         mIPCFileManageBt.setOnClickListener(this);
+
+        mRealtimePlayBt.setOnClickListener(this);
     }
 
     private void startWifiCommond() {
@@ -68,7 +72,14 @@ public class MainActivity extends Activity implements View.OnClickListener, IPCC
         this.startActivity(intent);
     }
 
+    private void startRealtimePlay(){
+        Intent intent = new Intent(this,RealTimePlayActivity.class);
+        this.startActivity(intent);
+    }
+
+
     private void startConnectIPC() {
+
         mIPCConnCommand.connectIPC();
     }
 

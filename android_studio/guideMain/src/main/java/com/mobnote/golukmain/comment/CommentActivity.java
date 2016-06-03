@@ -295,7 +295,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 		// 发评论前需要先判断用户是否登录
 		if (!mApp.isUserLoginSucess) {
 			Intent intent = null;
-			if (GolukApplication.getInstance().isInteral() == false) {
+			if (GolukApplication.getInstance().isMainland() == false) {
 				intent = new Intent(this, InternationUserLoginActivity.class);
 			} else {
 				intent = new Intent(this, UserLoginActivity.class);
@@ -814,7 +814,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 
 	public void startUserLogin(){
 		Intent loginIntent = null;
-		if(GolukApplication.getInstance().isInteral() == false){
+		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(this, InternationUserLoginActivity.class);
 		}else{
 			loginIntent = new Intent(this, UserLoginActivity.class);

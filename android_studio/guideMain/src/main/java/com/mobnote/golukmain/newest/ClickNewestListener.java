@@ -8,17 +8,14 @@ import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
-import com.mobnote.golukmain.live.LiveActivity;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
 import com.mobnote.golukmain.livevideo.BaidumapLiveActivity;
 import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
 import com.mobnote.golukmain.player.MovieActivity;
-import com.mobnote.golukmain.player.VideoPlayerActivity;
 import com.mobnote.golukmain.videosuqare.VideoCategoryActivity;
 import com.mobnote.golukmain.videosuqare.VideoEntity;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
-import com.mobnote.receiver.NetworkStateReceiver;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -148,7 +145,7 @@ public class ClickNewestListener implements OnClickListener {
 		user.customavatar = mVideoSquareInfo.mUserEntity.mCustomAvatar;
 		user.mUserLabel = mVideoSquareInfo.mUserEntity.label;
 		Intent intent;
-		if(GolukApplication.getInstance().isInteral()){
+		if(GolukApplication.getInstance().isMainland()){
 			intent = new Intent(mContext, BaidumapLiveActivity.class);
 		}else{
 			intent = new Intent(mContext, GooglemapLiveActivity.class);

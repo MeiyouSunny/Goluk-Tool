@@ -10,7 +10,7 @@ public class ProxyThirdShare implements IThirdShareFn {
 	private IThirdShareFn mThirdShare = null;
 
 	public ProxyThirdShare(Activity activity, SharePlatformUtil spf, ThirdShareBean bean) {
-		if (GolukApplication.getInstance().isInteral()) {
+		if (GolukApplication.getInstance().isMainland()) {
 			mThirdShare = new ChinaThirdShare(activity, spf, bean.surl, bean.curl, bean.db, bean.tl, bean.bitmap,
 					bean.realDesc, bean.videoId, bean.mShareType,bean.filePath);
 		} else {

@@ -139,7 +139,7 @@ public class BaseActivity extends FragmentActivity {
 	 */
 	public void toLoginBack() {
 		Intent intent = null;
-		if (GolukApplication.getInstance().isInteral() == false) {
+		if (GolukApplication.getInstance().isMainland() == false) {
 			intent = new Intent(this, InternationUserLoginActivity.class);
 		} else {
 			intent = new Intent(this, UserLoginActivity.class);
@@ -171,7 +171,7 @@ public class BaseActivity extends FragmentActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (!mBaseApp.isInteral()) {
+		if (!mBaseApp.isMainland()) {
 			if(FacebookSdk.isInitialized() == false){
 				return;
 			}

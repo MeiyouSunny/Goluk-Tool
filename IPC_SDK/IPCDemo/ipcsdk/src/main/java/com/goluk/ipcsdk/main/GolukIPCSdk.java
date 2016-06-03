@@ -46,15 +46,15 @@ public class GolukIPCSdk implements IPCManagerFn{
         this.mIpcManagerListener.add(command);
     }
 
-//    public void unregisterIPC(Context context){
-//        if(mIpcManagerListener != null){
-//            for(BaseIPCCommand command:mIpcManagerListener){
-//                if(command == null || command.getContext() == context){
-//                    mIpcManagerListener.remove(command);
-//                }
-//            }
-//        }
-//    }
+    public void unregisterIPC(Context context){
+        if(mIpcManagerListener != null){
+            for(BaseIPCCommand command:mIpcManagerListener){
+                if(command == null || command.getContext() == context){
+                    mIpcManagerListener.remove(command);
+                }
+            }
+        }
+    }
     public boolean initSDK(Context cxt){
         Const.setAppContext(cxt);
         if(mIpcManagerListener == null){
@@ -130,9 +130,6 @@ public class GolukIPCSdk implements IPCManagerFn{
                 }else{
                     command.IPCManage_CallBack(event, msg, param1, param2);
                 }
-//                if(command == null ){
-//                    command.IPCManage_CallBack(event, msg, param1, param2);
-//                }
             }
         }
     }

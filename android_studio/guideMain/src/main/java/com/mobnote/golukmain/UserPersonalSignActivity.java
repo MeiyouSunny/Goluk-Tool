@@ -4,20 +4,16 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.userlogin.UpDescResult;
-import com.mobnote.golukmain.userlogin.UpNameResult;
 import com.mobnote.golukmain.userlogin.UpdUserDescBeanRequest;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
-import com.mobnote.util.JsonUtil;
 
-import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.tiros.debug.GolukDebugUtils;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -212,7 +208,7 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 
 	public void startUserLogin(){
 		Intent loginIntent = null;
-		if(GolukApplication.getInstance().isInteral() == false){
+		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(this, InternationUserLoginActivity.class);
 		}else{
 			loginIntent = new Intent(this, UserLoginActivity.class);

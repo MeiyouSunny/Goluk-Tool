@@ -2,8 +2,6 @@ package com.mobnote.golukmain.usercenter;
 
 import java.util.List;
 
-import org.json.JSONObject;
-
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -19,7 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -206,7 +203,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 
 	public void startUserLogin(){
 		Intent loginIntent = null;
-		if(GolukApplication.getInstance().isInteral() == false){
+		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(this, InternationUserLoginActivity.class);
 		}else{
 			loginIntent = new Intent(this, UserLoginActivity.class);

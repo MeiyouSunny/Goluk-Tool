@@ -10,20 +10,18 @@ import android.widget.Toast;
 import com.goluk.ipcdemo.com.goluk.ipcdemo.widget.ToggleButton;
 import com.goluk.ipcsdk.ipcCommond.IPCConfigCommand;
 import com.goluk.ipcsdk.listener.IPCConfigListener;
-import com.jzxiang.pickerview.TimePickerDialog;
-import com.jzxiang.pickerview.data.Type;
-import com.jzxiang.pickerview.listener.OnDateSetListener;
+import com.goluk.ipcsdk.main.GolukIPCSdk;
 
 import java.util.Calendar;
 
 /**
  * Created by leege100 on 16/5/31.
  */
-public class IPCConfigActivity extends FragmentActivity implements View.OnClickListener,IPCConfigListener,OnDateSetListener {
+public class IPCConfigActivity extends FragmentActivity implements View.OnClickListener,IPCConfigListener {
 
     ToggleButton mAudioRecordTb;
     IPCConfigCommand mIPCConfigCommand;
-    TimePickerDialog mTimeDialog;
+//    TimePickerDialog mTimeDialog;
     Button mSetTimeBt;
     TextView mTimeTv;
     @Override
@@ -46,25 +44,25 @@ public class IPCConfigActivity extends FragmentActivity implements View.OnClickL
 
     @Override
     protected void onDestroy() {
-        //GolukIPCSdk.getInstance().unregisterIPC(this);
+        GolukIPCSdk.getInstance().unregisterIPC(this);
         super.onDestroy();
     }
 
     private void initTimePicker(){
-        if(mTimeDialog == null){
-            mTimeDialog = new TimePickerDialog.Builder()
-                    .setCallBack(this)
-                    .setCancelStringId("Cancel")
-                    .setSureStringId("Confirm")
-                    .setTitleStringId("Pick Time")
-                    .setCyclic(false)
-                    .setMinMillseconds(0)
-                    .setSelectorMillseconds(System.currentTimeMillis())
-                    .setThemeColor(getResources().getColor(R.color.timepicker_dialog_bg))
-                    .setType(Type.ALL)
-                    .setWheelItemTextSize(15)
-                    .build();
-        }
+//        if(mTimeDialog == null){
+//            mTimeDialog = new TimePickerDialog.Builder()
+//                    .setCallBack(this)
+//                    .setCancelStringId("Cancel")
+//                    .setSureStringId("Confirm")
+//                    .setTitleStringId("Pick Time")
+//                    .setCyclic(false)
+//                    .setMinMillseconds(0)
+//                    .setSelectorMillseconds(System.currentTimeMillis())
+//                    .setThemeColor(getResources().getColor(R.color.timepicker_dialog_bg))
+//                    .setType(Type.ALL)
+//                    .setWheelItemTextSize(15)
+//                    .build();
+//        }
 
     }
 
@@ -102,7 +100,7 @@ public class IPCConfigActivity extends FragmentActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.bt_setTime:
-                mTimeDialog.show(getSupportFragmentManager(),"");
+//                mTimeDialog.show(getSupportFragmentManager(),"");
                 break;
             default:
                 break;
@@ -154,8 +152,8 @@ public class IPCConfigActivity extends FragmentActivity implements View.OnClickL
         }
     }
 
-    @Override
-    public void onDateSet(TimePickerDialog timePickerView, long millseconds) {
-        mIPCConfigCommand.setTime(millseconds/1000);
-    }
+//    @Override
+//    public void onDateSet(TimePickerDialog timePickerView, long millseconds) {
+//        mIPCConfigCommand.setTime(millseconds/1000);
+//    }
 }
