@@ -10,7 +10,7 @@ public interface IPCManagerFn extends IGolukCommFn {
 	// VDCP 控制IPC
 	// VDTP　文件下载
 
-//	public static final int RESULE_SUCESS = 0;
+	public static final int RESULE_SUCESS = 0;
 //
 //	/** 循环影像 */
 //	public static final int TYPE_CIRCULATE = 1;
@@ -250,22 +250,22 @@ public interface IPCManagerFn extends IGolukCommFn {
 //	/** 设置GPS信息 */
 //	public static final int IPC_CommCmd_SetGpsInfo = 2;
 //	/** 添加IPC下载任务 */
-//	public static final int IPC_VDTPCmd_AddDownloadFile = 3;
-//	/** 停止IPC下载所有任务 */
-//	public static final int IPC_VDTPCmd_StopDownloadFile = 4;
+	public static final int IPC_VDTPCmd_AddDownloadFile = 3;
+	/** 停止IPC下载所有任务 */
+	public static final int IPC_VDTPCmd_StopDownloadFile = 4;
 //
-//	/** 多文件目录查询 */
-//	public static final int IPC_VDCPCmd_Query = 1000;
-//	/** 单文件查询 */
-//	public static final int IPC_VDCPCmd_SingleQuery = 1001;
+	/** 多文件目录查询 */
+	public static final int IPC_VDCPCmd_Query = 1000;
+	/** 单文件查询 */
+	public static final int IPC_VDCPCmd_SingleQuery = 1001;
 //	/** 删除文件 */
 //	public static final int IPC_VDCPCmd_Erase = 1002;
 //	/** 请求紧急、精彩视频录制 */
 //	public static final int IPC_VDCPCmd_TriggerRecord = 1003;
 //	/** 实时抓图 */
 //	public static final int IPC_VDCPCmd_SnapPic = 1004;
-//	/** 查询录制存储状态 */
-//	public static final int IPC_VDCPCmd_RecPicUsage = 1005;
+	/** 查询录制存储状态 */
+	public static final int IPC_VDCPCmd_RecPicUsage = 1005;
 //	/** 查询设备状态 */
 //	public static final int IPC_VDCPCmd_DeviceStatus = 1006;
 //	/** 获取IPC系统标识 */
@@ -276,10 +276,10 @@ public interface IPCManagerFn extends IGolukCommFn {
 //	public static final int IPC_VDCPCmd_Restore = 1009;
 //	/** IPC格式化SD卡 */
 //	public static final int IPC_VDCPCmd_FormatDisk = 1010;
-//	/** 设置IPC系统时间 */
-//	public static final int IPC_VDCPCmd_SetTime = 1011;
-//	/** 获取IPC系统时间 */
-//	public static final int IPC_VDCPCmd_GetTime = 1012;
+	/** 设置IPC系统时间 */
+	public static final int IPC_VDCPCmd_SetTime = 1011;
+	/** 获取IPC系统时间 */
+	public static final int IPC_VDCPCmd_GetTime = 1012;
 //	/** 设置IPC系统WIFI配置 */
 //	public static final int IPC_VDCPCmd_SetWifiCfg = 1013;
 //	/** 获取IPC系统音视频编码配置 */

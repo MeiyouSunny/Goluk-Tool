@@ -1,1 +1,1 @@
-include ':app', ':ipcsdk', ':systemAPI'
+include ':app', ':ipcsdk', ':systemAPI', ':TimePickerDialog'

@@ -9,6 +9,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.map.LngLat;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.api.Tapi;
@@ -20,48 +23,50 @@ public class JavaScriptInterface {
     /*
          * 绑定的object对象
          * */
-    private Context context;
+    private Context mContext;
 
     public JavaScriptInterface(Context context) {
-        this.context = context;
+        this.mContext = context;
     }
 
     @JavascriptInterface
-    public String getData() {
+    public String getAppCommonData() {
         JSONObject result = new JSONObject();
         GolukApplication app = GolukApplication.getInstance();
-        if (app.mGoluk != null) {
-            String verName = app.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
-                    IPageNotifyFn.PageType_GetVersion, "fs6:/version");
-            result.put("commappversion", verName);
-        } else {
-            result.put("commappversion", "");
-        }
+        result.put("commversion", GolukUtils.getCommversion());
+        result.put("commmid", "" + Tapi.getMobileId());
+        result.put("commipcversion", SharedPrefUtil.getIPCVersion());
         if (app.mIPCControlManager != null) {
-            result.put("commhdtype",app.mIPCControlManager.mProduceName);
+            result.put("commhdtype", app.mIPCControlManager.mProduceName);
         } else {
             result.put("commhdtype", "");
         }
-        result.put("commipcversion", SharedPrefUtil.getIPCVersion());
         result.put("commdevmodel", android.os.Build.MODEL);
-        result.put("commlat", "" + LngLat.lat);
-        result.put("commlon", "" + LngLat.lng);
-        result.put("commmid", "" + Tapi.getMobileId());
         result.put("commostag", "android");
         result.put("commosversion", android.os.Build.VERSION.RELEASE);
-        result.put("commticket", SharedPrefUtil.getUserToken());
+        result.put("commsysversion", android.os.Build.VERSION.RELEASE);
+        result.put("commappversion", GolukUtils.getAppVersionName(mContext));
+        if(GolukUtils.checkWifiStatus(mContext)) {
+            result.put("commwifi", "1");
+        } else {
+            result.put("commwifi", "0");
+        }
+
         String uid = GolukApplication.getInstance().mCurrentUId;
         if (TextUtils.isEmpty(uid)) {
             result.put("commuid", "");
         } else {
             result.put("commuid", uid);
         }
-        if(app.getMyInfo() != null){
-            result.put("uid",app.getMyInfo().uid);
-        }
-        result.put("commversion", GolukUtils.getCommversion());
+
+        result.put("commlat", "" + LngLat.lat);
+        result.put("commlon", "" + LngLat.lng);
         result.put("commlocale", GolukUtils.getLanguageAndCountry());
-        result.put("",context);
+        result.put("commticket", SharedPrefUtil.getUserToken());
+        String timeStamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date(
+                System.currentTimeMillis()));
+        result.put("commtimestamp", timeStamp);
+
         return result.toString();
     }
 

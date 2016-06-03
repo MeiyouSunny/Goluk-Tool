@@ -62,7 +62,7 @@ public class SharePlatformAdapter extends RecyclerView.Adapter{
     private void fillList(){
 
         mSharePlatformBeanList = new ArrayList<SharePlatformBean>();
-        if(GolukApplication.getInstance().isInteral()){
+        if(GolukApplication.getInstance().isMainland()){
             //国内版，国内平台显示在前面，国外平台在后面
             addInternalSharePlatform();
             addInternationalSharePlatform();

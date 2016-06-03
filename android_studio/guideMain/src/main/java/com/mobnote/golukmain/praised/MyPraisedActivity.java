@@ -14,7 +14,6 @@ import com.mobnote.golukmain.UserLoginActivity;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
-import com.mobnote.golukmain.praised.MyPraisedListRequest;
 import com.mobnote.golukmain.praised.bean.MyPraisedListBean;
 import com.mobnote.golukmain.praised.bean.MyPraisedVideoBean;
 import com.mobnote.util.GolukUtils;
@@ -165,7 +164,7 @@ public class MyPraisedActivity extends BaseActivity implements IRequestResultLis
 
 	public void startUserLogin(){
 		Intent loginIntent = null;
-		if(GolukApplication.getInstance().isInteral() == false){
+		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(this, InternationUserLoginActivity.class);
 		}else{
 			loginIntent = new Intent(this, UserLoginActivity.class);

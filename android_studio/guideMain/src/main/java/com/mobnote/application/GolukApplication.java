@@ -13,7 +13,6 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -43,14 +42,10 @@ import com.mobnote.eventbus.EventIpcConnState;
 import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.eventbus.EventPhotoUpdateLoginState;
 import com.mobnote.eventbus.EventUserLoginRet;
-import com.mobnote.golukmain.ImageClipActivity;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.PushSettingActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpinionActivity;
-import com.mobnote.golukmain.UserPersonalHeadActivity;
-import com.mobnote.golukmain.UserPersonalNameActivity;
-import com.mobnote.golukmain.UserPersonalSignActivity;
 import com.mobnote.golukmain.UserSetupActivity;
 import com.mobnote.golukmain.UserSetupChangeWifiActivity;
 import com.mobnote.golukmain.adas.AdasConfigParamterBean;
@@ -242,7 +237,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		BaiduLocation.mServerFlag = isInteral();
+		BaiduLocation.mServerFlag = isMainland();
 		System.loadLibrary("golukmobile");
 
 		instance = this;
@@ -547,7 +542,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 	/**
 	 * 是否是国内版
 	 */
-	public boolean isInteral() {
+	public boolean isMainland() {
 		if (null != this.getPackageName() && "cn.com.mobnote.golukmobile".equals(this.getPackageName())) {
 			return true;
 		} else {
@@ -2003,7 +1998,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 		// 跳转看他人界面
 
 		Intent intent;
-		if (isInteral()) {
+		if (isMainland()) {
 			intent = new Intent(mContext, BaidumapLiveActivity.class);
 		} else {
 			intent = new Intent(mContext, GooglemapLiveActivity.class);

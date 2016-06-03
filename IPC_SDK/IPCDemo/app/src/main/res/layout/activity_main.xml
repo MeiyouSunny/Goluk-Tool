@@ -1,18 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.goluk.ipcdemo.MainActivity">
+    android:orientation="vertical">
+    <TextView
+        android:text="Goluk Demo"
+        android:background="#353535"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"></TextView>
 
     <Button
-        android:id="@+id/conn_wifi"
-        android:layout_width="wrap_content"
+        android:id="@+id/btConnWifi"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:textAllCaps="false"
         android:text="connectWIFI"/>
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/btConnIPC"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:text="Connect IPC"/>
+    <Button
+        android:id="@+id/btRealtimePlay"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:text="Realtime"/>
+    <Button
+        android:id="@+id/btIPCConfig"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:text="Dashcam Settings"/>
+    <Button
+        android:id="@+id/btIPCFileManage"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:text="IPCFileManage"/>
+
+    <Button
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:id="@+id/btQueryFileList"
+        android:text="QueryFileList"/>
+
+    <Button
+        android:id="@+id/btGetSdStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="GetSDStatus"/>
+
+    <Button
+        android:id="@+id/btFindSingleFile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="FindSingleFile"/>
+
+    <Button
+        android:id="@+id/btDownLoadFile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="DownLoadFile"/>
+
+
+</LinearLayout>

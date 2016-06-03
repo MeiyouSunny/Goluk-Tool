@@ -6,8 +6,6 @@ import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserStartActivity;
-import com.mobnote.golukmain.wifidatacenter.JsonWifiBindManager;
-import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.xdpush.GolukNotification;
 import com.mobnote.golukmain.xdpush.StartAppBean;
 import com.mobnote.guide.GolukGuideManage;
@@ -17,7 +15,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Window;
@@ -67,9 +64,9 @@ public class GuideActivity extends BaseActivity {
 		if (isExit) {
 			return;
 		}
-//		BaiduLocation.mServerFlag = GolukApplication.getInstance().isInteral();
-		GolukDebugUtils.e("", "-------------GuideActivity-------------isInteral: "
-				+ GolukApplication.getInstance().isInteral() + "--------------BaiduLocation.mServerFlag: "
+//		BaiduLocation.mServerFlag = GolukApplication.getInstance().isMainland();
+		GolukDebugUtils.e("", "-------------GuideActivity-------------isMainland: "
+				+ GolukApplication.getInstance().isMainland() + "--------------BaiduLocation.mServerFlag: "
 				+ BaiduLocation.mServerFlag);
 		((GolukApplication) this.getApplication()).initLogic();
 		// 注册信鸽的推送

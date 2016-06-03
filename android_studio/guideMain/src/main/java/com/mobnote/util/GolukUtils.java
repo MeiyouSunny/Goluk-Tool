@@ -960,11 +960,11 @@ public class GolukUtils {
 	/**
 	 * 判断时国际版还是国内版
 	 *
-	 * 国内０　　国际１ 默认为国际
+	 * 国内０ 国际１ 默认为国际
 	 *
 	 * @return
 	 */
-	public static String getCommversion() {
+	public static String getCommversionX() {
 		String commversion = "1";
 		if (!"zh".equals(getLanguage())) {
 			commversion = "1";
@@ -973,6 +973,23 @@ public class GolukUtils {
 		}
 		return commversion;
 	}
+
+    /**
+     * 判断时国际版还是国内版
+     * <p/>
+     * 国内０ 国际１ 默认为国际
+     *
+     * @return
+     */
+    public static String getCommversion() {
+        String commversion = "0";
+        if (GolukApplication.getInstance().isMainland()) {
+            commversion = "0";
+        } else {
+            commversion = "1";
+        }
+        return commversion;
+    }
 
 	/**
 	 * 获取语言与国家
@@ -1039,7 +1056,7 @@ public class GolukUtils {
 	 */
 	public static void startLoginActivity(Context context){
 		Intent intent = new Intent();
-		if(GolukApplication.getInstance().isInteral()){
+		if(GolukApplication.getInstance().isMainland()){
 			intent.setClass(context, UserLoginActivity.class);
 		}else{
 			intent.setClass(context, InternationUserLoginActivity.class);
@@ -1196,7 +1213,7 @@ public class GolukUtils {
 
 	public static void startUserLogin(Context context){
 		Intent loginIntent = null;
-		if(GolukApplication.getInstance().isInteral() == false){
+		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(context, InternationUserLoginActivity.class);
 		}else{
 			loginIntent = new Intent(context, UserLoginActivity.class);
@@ -1212,4 +1229,46 @@ public class GolukUtils {
 		webview.loadUrl(url);
 		webview.addJavascriptInterface(new JavaScriptInterface(context),"mobile");
 	}
+
+    /**
+     * 返回当前程序版本名称
+     */
+    public static String getAppVersionName(Context context) {
+        String versionName = "";
+        try {
+            // Get the package info
+            PackageManager pm = context.getPackageManager();
+            PackageInfo pi = pm.getPackageInfo(GolukApplication.getInstance().getPackageName(), 0);
+            versionName = pi.versionName;
+            if (TextUtils.isEmpty(versionName)) {
+                return "";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        return versionName;
+    }
+
+    /**
+     * Check wifi connect or not
+     */
+    public static boolean checkWifiStatus(Context context) {
+        boolean isWifiConnect = true;
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        //check the networkInfos numbers
+        NetworkInfo[] networkInfos = cm.getAllNetworkInfo();
+        for (int i = 0; i < networkInfos.length; i++) {
+            if (networkInfos[i].getState() == NetworkInfo.State.CONNECTED) {
+                if (networkInfos[i].getType() == cm.TYPE_MOBILE) {
+                    isWifiConnect = false;
+                }
+                if (networkInfos[i].getType() == cm.TYPE_WIFI) {
+                    isWifiConnect = true;
+                }
+            }
+        }
+        return isWifiConnect;
+    }
 }

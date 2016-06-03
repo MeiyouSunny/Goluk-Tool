@@ -6,7 +6,6 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -117,7 +116,7 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 			if (!app.isUserLoginSucess) {
 //					GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
 				Intent intent = null;
-				if(GolukApplication.getInstance().isInteral() == false){
+				if(GolukApplication.getInstance().isMainland() == false){
 					intent = new Intent(this, InternationUserLoginActivity.class);
 				}else{
 					intent = new Intent(this, UserLoginActivity.class);
@@ -137,7 +136,7 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 			if (!app.isUserLoginSucess) {
 //					GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
 				Intent intent = null;
-				if(GolukApplication.getInstance().isInteral() == false){
+				if(GolukApplication.getInstance().isMainland() == false){
 					intent = new Intent(this, InternationUserLoginActivity.class);
 				}else{
 					intent = new Intent(this, UserLoginActivity.class);
@@ -156,7 +155,7 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 			if (!app.isUserLoginSucess) {
 //					GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
 				Intent intent = null;
-				if(GolukApplication.getInstance().isInteral() == false){
+				if(GolukApplication.getInstance().isMainland() == false){
 					intent = new Intent(this, InternationUserLoginActivity.class);
 				}else{
 					intent = new Intent(this, UserLoginActivity.class);
@@ -264,7 +263,7 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 		if (!app.isUserLoginSucess) {
 //			GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
 			Intent intent = null;
-			if(GolukApplication.getInstance().isInteral() == false){
+			if(GolukApplication.getInstance().isMainland() == false){
 				intent = new Intent(this, InternationUserLoginActivity.class);
 			}else{
 				intent = new Intent(this, UserLoginActivity.class);

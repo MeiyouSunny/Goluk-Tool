@@ -405,7 +405,7 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 
 	public void startUserLogin(){
 		Intent loginIntent = null;
-		if(GolukApplication.getInstance().isInteral() == false){
+		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(this, InternationUserLoginActivity.class);
 		}else{
 			loginIntent = new Intent(this, UserLoginActivity.class);
