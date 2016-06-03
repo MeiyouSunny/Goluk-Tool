@@ -124,10 +124,9 @@ public class ZhugeUtils {
      * @param desc         是否有人工描述
      * @param channel      分享渠道
      * @param action       参加活动
-     * @param state        上传状态
      */
     public static void eventShareVideo(Context context, String videoType, String videoQuality, String connectIPC,
-                                       String videoLength, String desc, String channel, String action, String state) {
+                                       String videoLength, String desc, String channel, String action) {
         try {
             JSONObject json = new JSONObject();
             json.put(context.getString(R.string.str_zhuge_share_video_type), getVideoType(context, videoType));
@@ -138,7 +137,6 @@ public class ZhugeUtils {
             json.put(context.getString(R.string.str_zhuge_share_video_desc), getYesOrNo(context, desc));
             json.put(context.getString(R.string.str_zhuge_share_video_channel), channel);
             json.put(context.getString(R.string.str_zhuge_share_video_action), getAction(context, action));
-            json.put(context.getString(R.string.str_zhuge_share_video_state), state);
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_share_video_event), json);
         } catch (Exception e) {

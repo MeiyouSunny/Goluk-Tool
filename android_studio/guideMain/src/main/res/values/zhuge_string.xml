@@ -120,4 +120,36 @@
     <string name="str_zhuge_share_video_state_success">成功</string>
 
 
+<!-- ################### IPC发起直播 ###################### -->
+    <!--事件-->
+    <string name="str_zhuge_live_event">IPC发起直播</string>
+    <!--属性-->
+    <string name="str_zhuge_live_length">时长</string>
+    <string name="str_zhuge_live_state">发起状态</string>
+    <string name="str_zhuge_live_voice">直播声音</string>
+    <!--参数-->
+    <string name="str_zhuge_live_length1">60分以下</string>
+    <string name="str_zhuge_live_length2">60-120分钟</string>
+    <string name="str_zhuge_live_length3">120分钟以上</string>
+    <string name="str_zhuge_live_voice_open">开启</string>
+    <string name="str_zhuge_live_voice_close">关闭</string>
+
+<!-- ################### 关闭直播 ###################### -->
+    <!--事件-->
+    <string name="str_zhuge_close_live_event">关闭直播</string>
+    <!--属性-->
+    <string name="str_zhuge_close_live_type">关闭类型</string>
+    <string name="str_zhuge_close_live_time">已直播时间</string>
+    <!--参数-->
+    <string name="str_zhuge_close_live_timeup">时间到</string>
+    <string name="str_zhuge_close_live_hand">人为关闭</string>
+    <string name="str_zhuge_close_live_lenght1">0-5分钟</string>
+    <string name="str_zhuge_close_live_lenght2">5-10分钟</string>
+    <string name="str_zhuge_close_live_lenght3">10-30分钟</string>
+    <string name="str_zhuge_close_live_lenght4">30-60分钟</string>
+    <string name="str_zhuge_close_live_lenght5">60-120分钟</string>
+    <string name="str_zhuge_close_live_lenght6">120分钟以上</string>
+
+
+
 </resources>
