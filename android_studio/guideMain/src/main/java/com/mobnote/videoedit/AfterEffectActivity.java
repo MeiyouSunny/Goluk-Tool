@@ -50,6 +50,7 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 import com.mobnote.videoedit.adapter.AEMusicAdapter;
 import com.mobnote.videoedit.adapter.ChannelLineAdapter;
 import com.mobnote.videoedit.bean.ChunkBean;
@@ -560,6 +561,10 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                 intent.setData(Uri.parse("file://" + retBean.path));
                 sendBroadcast(intent);
                 Toast.makeText(this, getString(R.string.str_video_export_succeed), Toast.LENGTH_SHORT).show();
+
+                //视频后处理页面访问即刻分享页面统计
+                ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_edit));
+
                 GolukUtils.startVideoShareActivity(AfterEffectActivity.this, PhotoAlbumConfig.PHOTO_BUM_IPC_WND, retBean.path, retBean.path, true);
                 finish();
             } else {
@@ -596,6 +601,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                 mFullLoadingDialog.close();
             }
             Toast.makeText(this, getString(R.string.str_ae_add_chunk_failed), Toast.LENGTH_SHORT).show();
+            if(mProjectItemList == null || mProjectItemList.size() <= 3) {
+                finish();
+            }
             break;
         }
 

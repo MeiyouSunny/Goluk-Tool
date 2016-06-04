@@ -174,6 +174,7 @@ public class JsonParserUtils {
 						lvd.talk = live.optString("talk");
 						lvd.vtype = live.optString("vtype");
 					}
+					mVideoEntity.category = video.optString("category");
 					mVideoEntity.videoid = video.optString("videoid");
 					mVideoEntity.type = video.optString("type");
 					mVideoEntity.sharingtime = video.optString("sharingtime");

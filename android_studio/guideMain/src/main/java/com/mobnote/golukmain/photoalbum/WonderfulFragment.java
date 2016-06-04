@@ -45,6 +45,7 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import de.greenrobot.event.EventBus;
 
@@ -412,6 +413,9 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
 					if (!"0".equals(getFragmentAlbum().mPlatform)) {
 						getActivity().finish();
 					} else {
+						//IPC页面访问统计
+						ZhugeUtils.eventIpc(getActivity());
+
 						Intent intent = new Intent(getActivity(), CarRecorderActivity.class);
 						startActivity(intent);
 					}

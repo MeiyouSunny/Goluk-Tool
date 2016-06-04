@@ -30,9 +30,11 @@ public class GolukIPCSdk implements IPCManagerFn{
     private String carrecorderCachePath = "";
 
     private static GolukIPCSdk instance;
+    private String mAppId;
 
     private GolukIPCSdk(){
         System.loadLibrary("golukmobile");
+        System.loadLibrary("LiveCarRecorder");
     }
 
     public static GolukIPCSdk getInstance(){
@@ -55,21 +57,20 @@ public class GolukIPCSdk implements IPCManagerFn{
             }
         }
     }
-    public boolean initSDK(Context cxt){
+
+    public void initSDK(Context cxt,String appId){
+        if (null != mGoluk) {
+            return ;
+        }
+        this.mAppId = appId;
         Const.setAppContext(cxt);
         if(mIpcManagerListener == null){
             mIpcManagerListener = new ArrayList<BaseIPCCommand>();
         }
-        if (null != mGoluk) {
-            return true;
-        }
-
         mGoluk = new GolukLogic();
         setIpcMode(2);
 
         mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_IPCManager, this);
-
-        return true;
     }
 
     /**
@@ -117,7 +118,6 @@ public class GolukIPCSdk implements IPCManagerFn{
             e.printStackTrace();
         }
         mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_SetMode, json);
-
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.goluk.ipcsdk.bean.DownloadInfo;
 import com.goluk.ipcsdk.bean.FileInfo;
 import com.goluk.ipcsdk.bean.RecordStorgeState;
@@ -53,7 +54,7 @@ public class IPCFileManagerActivity extends FragmentActivity implements View.OnC
 
     @Override
     protected void onDestroy() {
-        //GolukIPCSdk.getInstance().unregisterIPC(this);
+        GolukIPCSdk.getInstance().unregisterIPC(this);
         super.onDestroy();
     }
 

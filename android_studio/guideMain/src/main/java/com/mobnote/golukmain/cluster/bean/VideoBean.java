@@ -3,6 +3,10 @@ package com.mobnote.golukmain.cluster.bean;
 import com.alibaba.fastjson.annotation.JSONField;
 
 public class VideoBean {
+
+	/**视频类型**/
+	@JSONField(name="category")
+	public String category;
 	
 	/**视频唯一id**/
 	@JSONField(name="videoid")

@@ -65,5 +65,6 @@ dependencies {
     compile files('libs/after-effect.jar')
     compile 'com.android.support:multidex:1.0.1'
     compile files('libs/photoview-library-1.2.2.jar')
+    compile files('libs/Zhuge_SDK_v2.3.0.jar')
 }
 

@@ -30,6 +30,7 @@ import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
 import com.mobnote.golukmain.videosuqare.VideoSquareManager;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
+import com.mobnote.golukmain.videosuqare.ZhugeParameterFn;
 import com.mobnote.util.GolukUtils;
 
 import android.annotation.SuppressLint;
@@ -48,7 +49,7 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
-public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IClickPraiseView, IRequestResultListener {
+public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IClickPraiseView, IRequestResultListener, ZhugeParameterFn {
 	private RelativeLayout mRootLayout = null;
 	private Context mContext = null;
 	private RTPullListView mRTPullListView = null;
@@ -202,7 +203,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 
 	private void setListAdapter() {
 		if (null == mNewestAdapter) {
-			mNewestAdapter = new NewestAdapter(mContext);
+			mNewestAdapter = new NewestAdapter(mContext, ZHUGE_PLAY_VIDEO_PAGE_NEWEST);
 			mNewestAdapter.setNewestLiseView(this);
 		}
 

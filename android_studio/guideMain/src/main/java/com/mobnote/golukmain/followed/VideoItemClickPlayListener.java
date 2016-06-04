@@ -12,6 +12,9 @@ import com.mobnote.golukmain.followed.bean.FollowedVideoObjectBean;
 import com.mobnote.golukmain.player.MovieActivity;
 import com.mobnote.golukmain.videosuqare.VideoEntity;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
+import com.mobnote.golukmain.videosuqare.ZhugeParameterFn;
+import com.mobnote.util.ZhugeUtils;
+import com.zhuge.analysis.stat.ZhugeSDK;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,7 +26,9 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-public class VideoItemClickPlayListener implements OnClickListener {
+import org.json.JSONObject;
+
+public class VideoItemClickPlayListener implements OnClickListener, ZhugeParameterFn {
 	private FollowedVideoObjectBean mVideoSquareInfo;
 	private Context mContext;
 
@@ -40,6 +45,9 @@ public class VideoItemClickPlayListener implements OnClickListener {
 				return;
 			}
 		}
+
+		//观看视频统计
+		playVideoStatistics();
 
 		Intent intent = new Intent(mContext, MovieActivity.class);
 		intent.putExtra("from", "suqare");
@@ -86,6 +94,21 @@ public class VideoItemClickPlayListener implements OnClickListener {
 		List<VideoSquareInfo> list = new ArrayList<VideoSquareInfo>();
 		list.add(vsi);
 		GolukApplication.getInstance().getVideoSquareManager().clickNumberUpload(channel, list);
+	}
+
+	/**
+	 * 我的关注内容列表观看视频统计
+	 */
+	private void playVideoStatistics() {
+		if (null != mVideoSquareInfo && null != mVideoSquareInfo.video) {
+			String actionName = "";
+			if (null != mVideoSquareInfo.video.gen && null != mVideoSquareInfo.video.gen.topicname) {
+				actionName = mVideoSquareInfo.video.gen.topicname;
+			}
+			JSONObject json = ZhugeUtils.eventPlayVideo(mContext, mVideoSquareInfo.video.videoid,
+					mVideoSquareInfo.video.describe, actionName, mVideoSquareInfo.video.category, ZHUGE_PLAY_VIDEO_PAGE_FOLLOWED);
+			ZhugeSDK.getInstance().track(mContext, mContext.getString(R.string.str_zhuge_play_video_event), json);
+		}
 	}
 
 }

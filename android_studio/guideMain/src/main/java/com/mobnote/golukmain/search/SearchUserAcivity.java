@@ -47,6 +47,7 @@ import com.mobnote.golukmain.search.bean.SearchRetBean;
 import com.mobnote.golukmain.userbase.bean.SimpleUserItemBean;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 public class SearchUserAcivity extends BaseActivity implements IRequestResultListener, OnClickListener{
 
@@ -77,6 +78,9 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 	private boolean hasSearched;
 
 	private final int requestOffset = 20;
+
+	/**关注来源**/
+	private String mFollowFrom = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -393,6 +397,9 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 					if(recommendBeanList == null || recommendBeanList.size() == 0){
 
 					}else{
+						//没有搜索到用户时，显示推荐用户
+						mFollowFrom = this.getString(R.string.str_zhuge_followed_from_search_recommed);
+
 						mUserList.add(new SearchListBean(1, null));
 						mUserList.add(new SearchListBean(2, null));
 						for(SimpleUserItemBean userBean:recommendBeanList){
@@ -404,6 +411,9 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 					return;
 				}
 			}else{
+				//搜索到用户时，显示搜索用户
+				mFollowFrom = this.getString(R.string.str_zhuge_followed_from_search_list);
+
 				if(REFRESH_PULL_UP.equals(mCurMotion)) {
 					for(SimpleUserItemBean userBean:followingBeanList){
 						mUserList.add(new SearchListBean(3, userBean));
@@ -448,6 +458,9 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 			if(null == followingBeanList || followingBeanList.size() == 0) {
 				return;
 			}else{
+				//搜索页显示推荐用户
+				mFollowFrom = this.getString(R.string.str_zhuge_followed_from_search_recommed);
+
 				mUserList.clear();
 				mUserList.add(new SearchListBean(2,null));
 				for(SimpleUserItemBean userBean:followingBeanList){
@@ -504,9 +517,13 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 							||bean.data.link == FollowingConfig.LINK_TYPE_UNLINK){
 						Toast.makeText(SearchUserAcivity.this,
 								getResources().getString(R.string.str_usercenter_attention_cancle_ok),Toast.LENGTH_SHORT).show();
-					}else if(bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER){
+					}else if(bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER
+							|| bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_ONLY){
 						Toast.makeText(SearchUserAcivity.this,
 								getResources().getString(R.string.str_usercenter_attention_ok),Toast.LENGTH_SHORT).show();
+
+						//搜索页关注用户统计
+						ZhugeUtils.eventFollowed(this, mFollowFrom);
 					}
 				}
 			} else {

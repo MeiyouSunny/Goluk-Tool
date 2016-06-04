@@ -45,6 +45,7 @@ import com.mobnote.golukmain.usercenter.bean.ShareJson;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import de.greenrobot.event.EventBus;
 
@@ -309,12 +310,13 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 				if (0 == attention.data.link) {
 					GolukUtils.showToast(this, this.getString(R.string.str_usercenter_attention_cancle_ok));
 					mHomeJson.data.user.fans -= 1;
-				} else if (1 == attention.data.link) {
+				} else if (1 == attention.data.link || 2 == attention.data.link) {
 					GolukUtils.showToast(this, this.getString(R.string.str_usercenter_attention_ok));
 					mHomeJson.data.user.fans += 1;
-				} else if (2 == attention.data.link) {
-					GolukUtils.showToast(this, this.getString(R.string.str_usercenter_attention_ok));
-					mHomeJson.data.user.fans += 1;
+
+					//个人主页关注统计
+					ZhugeUtils.eventFollowed(this, this.getString(R.string.str_zhuge_followed_from_usercenter));
+
 				} else {
 					GolukUtils.showToast(this, this.getString(R.string.str_usercenter_attention_cancle_ok));
 					mHomeJson.data.user.fans -= 1;

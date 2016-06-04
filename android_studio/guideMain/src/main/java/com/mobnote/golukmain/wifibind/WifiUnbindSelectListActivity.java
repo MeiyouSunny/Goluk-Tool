@@ -19,6 +19,7 @@ import com.mobnote.golukmain.wifibind.WifiUnbindSelectListAdapter.HeadViewHodler
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -195,6 +196,9 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
 			@Override
 			public void onClick(View view) {
 				if (mApp.isIpcLoginSuccess) {
+					//IPC页面访问统计
+					ZhugeUtils.eventIpc(WifiUnbindSelectListActivity.this);
+
 					Intent intent = new Intent(WifiUnbindSelectListActivity.this, CarRecorderActivity.class);
 					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

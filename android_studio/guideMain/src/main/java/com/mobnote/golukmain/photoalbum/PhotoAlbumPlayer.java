@@ -63,6 +63,7 @@ import com.mobnote.golukmain.player.factory.GolukPlayer.OnErrorListener;
 import com.mobnote.golukmain.player.factory.GolukPlayer.OnPreparedListener;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -219,12 +220,19 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_EXPORTING){
 
             }else if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_FINISH){
+
+				//竖屏播放页访问即刻分享页面统计
+				ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
+
                 GolukUtils.startVideoShareActivity(this,mType,event.getExprotPath(),mExportedFilename,false);
                 if(mAddTailerDialog != null && mAddTailerDialog.isVisible()){
                     mAddTailerDialog.dismiss();
                 }
                 isExporting = false;
             }else if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_FAILED){
+				//竖屏播放页访问即刻分享页面统计
+				ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
+
                 //分享失败，则直接分享原视频
                 GolukUtils.startVideoShareActivity(this,mType,mPath,mFileName,false);
                 if(mAddTailerDialog != null && mAddTailerDialog.isVisible()){
@@ -456,7 +464,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             if(videoEditSupport()) {
                 doSimpleExport(mPath,mHP);
             } else {
-                GolukUtils.startVideoShareActivity(this,mType,mPath,mFileName,false);
+
+				//竖屏播放页访问即刻分享页面统计
+				ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
+
+				GolukUtils.startVideoShareActivity(this,mType,mPath,mFileName,false);
             }
 		}else if (id == R.id.back_btn) {
 
