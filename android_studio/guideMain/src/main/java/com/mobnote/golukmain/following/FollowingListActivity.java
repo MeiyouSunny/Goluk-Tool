@@ -35,6 +35,7 @@ import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.userbase.bean.SimpleUserItemBean;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 /**
  * 关注的用户列表
@@ -384,9 +385,13 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 							||bean.data.link == FollowingConfig.LINK_TYPE_UNLINK){
 						Toast.makeText(FollowingListActivity.this,
 								getResources().getString(R.string.str_usercenter_attention_cancle_ok),Toast.LENGTH_SHORT).show();
-					}else if(bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER){
+					}else if(bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER
+							|| bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_ONLY){
 						Toast.makeText(FollowingListActivity.this,
 								getResources().getString(R.string.str_usercenter_attention_ok),Toast.LENGTH_SHORT).show();
+
+						//关注人列表统计
+						ZhugeUtils.eventFollowed(this, this.getString(R.string.str_zhuge_followed_from_list));
 					}
 
 				}
