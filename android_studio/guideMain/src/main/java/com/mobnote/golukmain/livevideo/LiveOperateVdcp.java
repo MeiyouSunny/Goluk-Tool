@@ -166,4 +166,9 @@ public class LiveOperateVdcp implements ILiveOperateFn {
 		return isSuccessed;
 	}
 
+	@Override
+	public int getZhugeErrorCode() {
+		return 0;
+	}
+
 }

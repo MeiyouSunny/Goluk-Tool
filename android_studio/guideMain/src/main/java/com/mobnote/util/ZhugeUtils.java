@@ -16,6 +16,17 @@ import org.json.JSONObject;
  */
 public class ZhugeUtils {
 
+    /** 5分钟 **/
+    private static final int MINS_5 = 300;
+    /** 10分钟 **/
+    private static final int MINS_10 = 600;
+    /** 30分钟 **/
+    private static final int MINS_30 = 1800;
+    /** 60分钟 **/
+    private static final int MINS_60 = 3600;
+    /** 120分钟 **/
+    private static final int MINS_120 = 7200;
+
     /**
      * 播放视频
      *
@@ -158,6 +169,60 @@ public class ZhugeUtils {
             json.put(context.getString(R.string.str_zhuge_album_player_type), type);
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_album_player_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 发起直播
+     * @param context
+     * @param time　时长
+     * @param state　发起状态
+     * @param voice　直播声音
+     */
+    public static void eventOpenLive(Context context, int time, String state, boolean voice) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_live_time), getOpenLiveTime(context, time));
+            json.put(context.getString(R.string.str_zhuge_live_state), state);
+            json.put(context.getString(R.string.str_zhuge_live_voice), getLiveVoice(context, voice));
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_live_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 关闭直播
+     * @param context
+     * @param closeType 关闭类型
+     * @param time 已直播时间
+     */
+    public static void eventCloseLive(Context context, String closeType, int time) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_close_live_type), closeType);
+            json.put(context.getString(R.string.str_zhuge_close_live_time), getCloseLiveTime(context, time));
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_close_live_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 关注用户
+     * @param context
+     * @param from　关注来源
+     */
+    public static void eventFollowed(Context context, String from) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_followed_from), from);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_followed_event), json);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -323,6 +388,66 @@ public class ZhugeUtils {
             }
         }
         return context.getString(R.string.str_zhuge_share_video_network_other);
+    }
+
+    /**
+     * 开启直播时长
+     * @param context
+     * @param time
+     * @return
+     */
+    private static String getOpenLiveTime(Context context, int time) {
+        if (time < MINS_60 && time >= 0) {
+            return context.getString(R.string.str_zhuge_live_time1);
+        }
+        if (time >= MINS_60 && time < MINS_120) {
+            return context.getString(R.string.str_zhuge_live_time2);
+        }
+        if (time > MINS_120) {
+            return context.getString(R.string.str_zhuge_live_time3);
+        }
+        return "";
+    }
+
+    /**
+     * 关闭直播时已直播时间
+     * @param context
+     * @param time
+     * @return
+     */
+    private static String getCloseLiveTime(Context context, int time) {
+        if (time >= 0 && time <= MINS_5) {
+            return context.getString(R.string.str_zhuge_close_live_time1);
+        }
+        if (time > MINS_5 && time <= MINS_10) {
+            return context.getString(R.string.str_zhuge_close_live_time2);
+        }
+        if (time > MINS_10 && time <= MINS_30) {
+            return context.getString(R.string.str_zhuge_close_live_time3);
+        }
+        if (time > MINS_30 && time <= MINS_60) {
+            return context.getString(R.string.str_zhuge_close_live_time4);
+        }
+        if (time > MINS_60 && time <= MINS_120) {
+            return context.getString(R.string.str_zhuge_close_live_time5);
+        }
+        if (time > MINS_120) {
+            return context.getString(R.string.str_zhuge_close_live_time6);
+        }
+        return "";
+    }
+
+    /**
+     * 获取直播声音
+     * @param context
+     * @param voice
+     * @return
+     */
+    private static String getLiveVoice(Context context, boolean voice) {
+        if (voice) {
+            return context.getString(R.string.str_zhuge_live_voice_open);
+        }
+        return context.getString(R.string.str_zhuge_live_voice_close);
     }
 
 

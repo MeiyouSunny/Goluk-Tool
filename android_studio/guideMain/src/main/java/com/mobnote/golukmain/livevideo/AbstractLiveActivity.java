@@ -67,6 +67,7 @@ import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.SharedPrefUtil;
+import com.mobnote.util.ZhugeUtils;
 import com.rd.car.player.RtmpPlayerView;
 
 import de.greenrobot.event.EventBus;
@@ -168,6 +169,9 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 	protected IMapTools mMapTools;
 	private ILiveOperateFn mLiveOperator = null;
 	private boolean isSetAudioMute = false;
+
+	//诸葛统计中记录直播剩余时间
+	private int mRemainLiveTime = 0;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -511,7 +515,13 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 		}
 		final int what = msg.what;
 		switch (what) {
+			//TODO 发起直播失败
 		case MSG_H_UPLOAD_TIMEOUT:
+			if(null != mSettingData) {
+				//IPC发起直播失败
+				ZhugeUtils.eventOpenLive(this, mSettingData.duration,
+						mLiveOperator.getZhugeErrorCode() + "", mSettingData.isCanVoice);
+			}
 			// 上传视频超时，提示用户上传失败，退出程序
 			isLiveUploadTimeOut = true;
 			mLiveManager.cancelTimer();
@@ -589,7 +599,13 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 
 	boolean isStartTimer = false;
 
+	//TODO 发起直播上报成功
 	private void uploadLiveSuccess() {
+		if(null != mSettingData) {
+			//IPC发起直播成功
+			ZhugeUtils.eventOpenLive(this, mSettingData.duration,
+					this.getString(R.string.str_zhuge_share_video_state_success), mSettingData.isCanVoice);
+		}
 		// 正常发起直播 ，开始计时
 		if (!isStartTimer) {
 			isStartTimer = true;
@@ -1401,6 +1417,12 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 			break;
 		case LiveDialogManager.DIALOG_TYPE_LIVEBACK:
 			if (LiveDialogManager.FUNCTION_DIALOG_OK == function) {
+				//TODO 用户手动退出
+				//用户手动退出直播统计
+				if(null != mSettingData) {
+					int remianTime = mSettingData.duration - mRemainLiveTime;
+					ZhugeUtils.eventCloseLive(this, this.getString(R.string.str_zhuge_close_live_hand), remianTime);
+				}
 				// 按了退出按钮
 				exit();
 			}
@@ -1420,6 +1442,12 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 				}
 			} else if (LiveDialogManager.FUNCTION_DIALOG_CANCEL == function) {
 				// Cancel
+				//TODO 异常退出
+				//异常退出直播统计
+				if(null != mSettingData) {
+					int remianTime = mSettingData.duration - mRemainLiveTime;
+					ZhugeUtils.eventCloseLive(this, mLiveOperator.getZhugeErrorCode() + "", remianTime);
+				}
 				exit();
 			}
 			break;
@@ -1476,12 +1504,18 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 		}
 	}
 
+	//TODO 直播正常结束
 	// timer回调操作
 	@Override
 	public void CallBack_timer(int function, int result, int current) {
 		if (isShareLive) {
 			if (10 == function) {
 				if (TimerManager.RESULT_FINISH == result) {
+					//直播正常结束统计
+					if(null != mSettingData) {
+						int remianTime = mSettingData.duration - mRemainLiveTime;
+						ZhugeUtils.eventCloseLive(this, this.getString(R.string.str_zhuge_close_live_timeup), remianTime);
+					}
 					// 计时器完成
 					liveEnd();
 					if (!isAlreadExit) {
@@ -1493,6 +1527,9 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 
 				// 直播功能
 				updateCountDown(GolukUtils.secondToString(current));
+				//TODO 定义一个全局变量保存直播剩余时间
+				mRemainLiveTime = current;
+
 			}
 		} else {
 			// 看别人直播
