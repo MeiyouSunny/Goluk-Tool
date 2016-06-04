@@ -25,6 +25,8 @@
     <string name="str_zhuge_play_video_page_followed">我的关注内容列表</string>
     <string name="str_zhuge_play_video_page_cluster">活动聚合页</string>
     <string name="str_zhuge_play_video_page_videodetail">视频详情页</string>
+    <string name="str_zhuge_play_video_default_desc1">啥也不想说，快看视频吧</string>
+    <string name="str_zhuge_play_video_default_desc2">啥也不想说，快看视频吧...</string>
 
 <!-- ################### 相册页面访问 ###################### -->
     <!--事件-->
@@ -164,6 +166,27 @@
     <string name="str_zhuge_followed_from_search_list">搜索数据列表</string>
     <string name="str_zhuge_followed_from_followed_recommed">关注页推荐</string>
     <string name="str_zhuge_followed_from_search_recommed">搜索页推荐</string>
+
+
+<!-- ################### 用户统计 ###################### -->
+    <!-- 属性 -->
+    <string name="str_zhuge_user_id">用户ID</string>
+    <string name="str_zhuge_user_nickname">用户昵称</string>
+    <string name="str_zhuge_user_login_style">登陆方式</string>
+    <string name="str_zhuge_user_desc">是否默认个性签名</string>
+    <string name="str_zhuge_user_type">用户类型</string>
+    <string name="str_zhuge_user_sharevideo_number">上传视频数</string>
+    <string name="str_zhuge_user_followed_number">关注好友数</string>
+    <string name="str_zhuge_user_fans_number">粉丝数</string>
+    <!-- 参数 -->
+    <string name="str_zhuge_user_login_style_weixin">微信用户</string>
+    <string name="str_zhuge_user_login_style_goluk">极路客用户</string>
+    <string name="str_zhuge_user_type_g1">G1</string>
+    <string name="str_zhuge_user_type_g2">G2</string>
+    <string name="str_zhuge_user_type_t1">T1</string>
+    <string name="str_zhuge_user_type_t1s">T1s</string>
+    <string name="str_zhuge_user_type_t2">T2</string>
+    <string name="str_zhuge_user_type_no_ipc">无设备</string>
 
 
 

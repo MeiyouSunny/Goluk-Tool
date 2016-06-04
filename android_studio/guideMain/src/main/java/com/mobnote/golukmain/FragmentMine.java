@@ -22,6 +22,7 @@ import com.mobnote.manager.MessageManager;
 import com.mobnote.user.UserInterface;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -760,6 +761,15 @@ public class FragmentMine extends Fragment implements OnClickListener,
 						}
 					} else {
 						mImageAuthentication.setVisibility(View.GONE);
+					}
+
+					//用户属性统计
+					if (null != mUserinfohomeRetBean && null != mUserinfohomeRetBean.data
+							&& null != mUserinfohomeRetBean.data.user) {
+						ZhugeUtils.userInfoAnalyze(getActivity(), mUserinfohomeRetBean.data.user.uid,
+								mUserinfohomeRetBean.data.user.nickname, mUserinfohomeRetBean.data.user.introduce,
+								mUserinfohomeRetBean.data.sharevideonumber, mUserinfohomeRetBean.data.followingnumber,
+								mUserinfohomeRetBean.data.fansnumber);
 					}
 				}
 			}
