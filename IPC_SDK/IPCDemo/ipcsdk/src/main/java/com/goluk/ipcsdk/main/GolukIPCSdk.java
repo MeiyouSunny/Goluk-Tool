@@ -35,6 +35,7 @@ public class GolukIPCSdk implements IPCManagerFn{
     private GolukIPCSdk(){
         System.loadLibrary("golukmobile");
         System.loadLibrary("LiveCarRecorder");
+        initCachePath();
     }
 
     public static GolukIPCSdk getInstance(){
@@ -79,9 +80,9 @@ public class GolukIPCSdk implements IPCManagerFn{
      * @author xuhw
      * @date 2015年3月19日
      */
-    private void initCachePath(String name) {
+    private void initCachePath() {
         carrecorderCachePath = Environment.getExternalStorageDirectory() + File.separator + "g_video" + File.separator
-                + name;
+                + "goluk_cache";
         Utils.makedir(carrecorderCachePath);
     }
 
