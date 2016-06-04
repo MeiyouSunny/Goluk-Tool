@@ -34,6 +34,9 @@ public class IPCConfigCommand extends BaseIPCCommand{
      * @return
      */
     public boolean setAudioRecordCfg(boolean isEnable){
+        if(!GolukIPCSdk.getInstance().isSdkValid()){
+            return false;
+        }
         String json = "";
         try {
             JSONObject obj = new JSONObject();
@@ -52,6 +55,9 @@ public class IPCConfigCommand extends BaseIPCCommand{
      * @return
      */
     public boolean getAudioRecordCfg(){
+        if(!GolukIPCSdk.getInstance().isSdkValid()){
+            return false;
+        }
         return GolukIPCSdk.getInstance().mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
                 IPC_VDCPCmd_GetRecAudioCfg, "");
     }
@@ -63,6 +69,9 @@ public class IPCConfigCommand extends BaseIPCCommand{
      */
     public boolean setTime(long time){
 
+        if(!GolukIPCSdk.getInstance().isSdkValid()){
+            return false;
+        }
         String json = "";
         try {
             JSONObject obj = new JSONObject();
@@ -76,6 +85,9 @@ public class IPCConfigCommand extends BaseIPCCommand{
     }
 
     public boolean getTime(){
+        if(!GolukIPCSdk.getInstance().isSdkValid()){
+            return false;
+        }
         return GolukIPCSdk.getInstance().mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
                 IPC_VDCPCmd_GetTime, "");
     }
