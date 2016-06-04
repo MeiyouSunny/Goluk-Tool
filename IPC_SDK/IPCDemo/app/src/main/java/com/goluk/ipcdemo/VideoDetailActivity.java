@@ -47,6 +47,12 @@ public class VideoDetailActivity extends Activity implements View.OnClickListene
 
     }
 
+    @Override
+    protected void onDestroy() {
+        GolukIPCSdk.getInstance().unregisterIPC(this);
+        super.onDestroy();
+    }
+
     public String getSavepath(String filename){
         int type = Utils.parseVideoFileType(filename);
         return Utils.getSavePath(type);

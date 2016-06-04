@@ -13,6 +13,7 @@ import com.goluk.ipcsdk.bean.RecordStorgeState;
 import com.goluk.ipcsdk.bean.VideoInfo;
 import com.goluk.ipcsdk.ipcCommond.IPCFileCommand;
 import com.goluk.ipcsdk.listener.IPCFileListener;
+import com.goluk.ipcsdk.main.GolukIPCSdk;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,12 @@ public class VideoListActivity extends Activity implements IPCFileListener,View.
         setContentView(R.layout.activity_video_list);
         initView();
         initData();
+    }
+
+    @Override
+    protected void onDestroy() {
+        GolukIPCSdk.getInstance().unregisterIPC(this);
+        super.onDestroy();
     }
 
     private void initView(){
