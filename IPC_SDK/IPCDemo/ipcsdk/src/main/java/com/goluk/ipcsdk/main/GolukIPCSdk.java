@@ -259,8 +259,10 @@ public class GolukIPCSdk implements IPCManagerFn {
         protected void onPostExecute(String result) {
             // TODO Auto-generated method stub
             if(TextUtils.isEmpty(result)){
-                mIPCListener.initCallback(isAppAuthValid(),result);
-                mIPCListener = null;
+                if(mIPCListener != null){
+                    mIPCListener.initCallback(isAppAuthValid(),result);
+                    mIPCListener = null;
+                }
                 return;
             }
 
