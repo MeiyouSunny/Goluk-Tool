@@ -63,6 +63,9 @@ public class GolukIPCSdk implements IPCManagerFn {
 
     private boolean isIPCLogicInited;
     public static Context mAPPContext;
+    /** T1设备视频预览地址 */
+    private final String T1_URL_PRE = "rtsp://";
+    private final String T1_URL_END = "/stream1";
 
     private GolukIPCSdk() {
         System.loadLibrary("golukmobile");
@@ -76,11 +79,21 @@ public class GolukIPCSdk implements IPCManagerFn {
         return instance;
     }
 
-    public void addCommand(BaseIPCCommand command) {
-        this.mIpcManagerListener.add(command);
+    public boolean isSdkValid(){
+        if(isIPCLogicInited && isAppAuthValid()){
+            return true;
+        }else{
+            return false;
+        }
     }
 
-    public void unregisterIPC(Context context) {
+    public void addCommand(BaseIPCCommand command) {
+        if(isSdkValid()){
+            this.mIpcManagerListener.add(command);
+        }
+    }
+
+    synchronized public void unregisterIPC(Context context) {
         if (mIpcManagerListener != null) {
             for (BaseIPCCommand command : mIpcManagerListener) {
                 if (command == null || command.getContext() == context) {
@@ -109,8 +122,8 @@ public class GolukIPCSdk implements IPCManagerFn {
 
         SharedPreferences sharedPreferences = mAPPContext.getSharedPreferences("golukIPCSdk", Context.MODE_PRIVATE);
 
-        String startTime = sharedPreferences.getString("startTime","0");
-        String endTime = sharedPreferences.getString("endTime","0");
+        String startTime = sharedPreferences.getString("startTime","");
+        String endTime = sharedPreferences.getString("endTime","");
         if(!TextUtils.isEmpty(startTime) && !TextUtils.isEmpty(endTime)){
             Date startDate = getDate(startTime);
             Date endDate = getDate(endTime);
@@ -121,6 +134,17 @@ public class GolukIPCSdk implements IPCManagerFn {
         }
 
         return false;
+    }
+
+    /**
+     * get rtmp video preview url
+     * @return the rtmp url
+     */
+    public String getRtmpPreviewUrl(){
+        if(isSdkValid()){
+            return T1_URL_PRE + "192.168.62.1" + T1_URL_END;
+        }
+        return null;
     }
 
     private Date getDate(String dateStr){

@@ -3,12 +3,13 @@ package com.goluk.ipcdemo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
-import com.goluk.ipcsdk.utils.IPCFileUtils;
+import com.goluk.ipcsdk.main.GolukIPCSdk;
 import com.rd.car.player.RtspPlayerView;
 
 /**
@@ -64,9 +65,11 @@ public class RealTimePlayActivity extends FragmentActivity implements View.OnCli
 
     public void start() {
         if (null != mRtmpPlayerView) {
-            String url = IPCFileUtils.getRtmpPreviewUrl();
-            mRtmpPlayerView.setDataSource(url);
-            mRtmpPlayerView.start();
+            String url = GolukIPCSdk.getInstance().getRtmpPreviewUrl();
+            if(!TextUtils.isEmpty(url)){
+                mRtmpPlayerView.setDataSource(url);
+                mRtmpPlayerView.start();
+            }
         }
     }
 

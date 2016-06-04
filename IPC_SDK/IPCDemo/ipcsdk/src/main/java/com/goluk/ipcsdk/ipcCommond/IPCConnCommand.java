@@ -27,6 +27,9 @@ public class IPCConnCommand extends BaseIPCCommand{
      */
     public boolean connectIPC() {
 
+        if(!GolukIPCSdk.getInstance().isSdkValid()){
+            return false;
+        }
         String json = "";
         JSONObject obj = new JSONObject();
         try {
