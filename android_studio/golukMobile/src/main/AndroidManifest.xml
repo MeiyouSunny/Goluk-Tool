@@ -424,6 +424,14 @@
             android:value="@integer/google_play_services_version" />
         -->
 
+        <!-- ###################添加Zhuge统计###################### -->
+        <meta-data
+            android:name="ZHUGE_APPKEY"
+            android:value="a8caee548a8e49598ea685cb1150d4e8" />
+        <meta-data
+            android:name="ZHUGE_CHANNEL"
+            android:value="wandoujia" />
+
         <activity
             android:name="com.umeng.socialize.view.ShareActivity"
             android:configChanges="orientation|keyboard"

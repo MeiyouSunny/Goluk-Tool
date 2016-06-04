@@ -31,8 +31,10 @@ import com.mobnote.golukmain.follow.bean.FollowRetBean;
 import com.mobnote.golukmain.following.FollowingConfig;
 import com.mobnote.golukmain.following.bean.FollowingRetBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.userbase.bean.SimpleUserItemBean;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 /**
  * 关注的用户列表
@@ -377,9 +379,20 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 							||bean.data.link == FollowingConfig.LINK_TYPE_UNLINK){
 						Toast.makeText(FanListActivity.this,
 								getResources().getString(R.string.str_usercenter_attention_cancle_ok),Toast.LENGTH_SHORT).show();
-					}else if(bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER){
+					}else if(bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER
+							||bean.data.link == FollowingConfig.LINK_TYPE_FOLLOW_ONLY){
 						Toast.makeText(FanListActivity.this,
 								getResources().getString(R.string.str_usercenter_attention_ok),Toast.LENGTH_SHORT).show();
+
+						//别人的粉丝列表 / 自己的粉丝列表　关注统计
+						String folowFrom = "";
+						if (testUser()) {
+							folowFrom = this.getString(R.string.str_zhuge_followed_from_my_fans_list);
+						} else {
+							folowFrom = this.getString(R.string.str_zhuge_followed_from_other_fans_list);
+						}
+						ZhugeUtils.eventFollowed(this, folowFrom);
+
 					}
 				}
 			} else {
@@ -405,5 +418,44 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 		}
 
 		return -1;
+	}
+
+	/**
+	 * 验证当前看的是自己的个人中心 还是别人的个人中心
+	 *
+	 * @return
+	 */
+	public boolean testUser() {
+		if (!isLoginSucess()) {
+			return false;
+		}
+		UserInfo info = mBaseApp.getMyInfo();
+		try {
+
+			if (info != null && info.uid.equals(mLinkuid)) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	private boolean isLoginSucess() {
+		if (mBaseApp.isUserLoginSucess) {
+			// 登录成功
+			return true;
+		}
+		if (mBaseApp.loginoutStatus) {
+			// 用户注销, 表示登录失败
+			return false;
+		}
+		if (mBaseApp.loginStatus == 1 || (mBaseApp.autoLoginStatus == 1 || mBaseApp.autoLoginStatus == 2)) {
+			return true;
+		}
+
+		return false;
 	}
 }

@@ -33,10 +33,12 @@ import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
 import com.mobnote.golukmain.usercenter.UCUserInfo;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
+import com.mobnote.golukmain.videosuqare.ZhugeParameterFn;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -68,7 +70,7 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 
 @SuppressLint("InflateParams")
-public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IRequestResultListener {
+public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IRequestResultListener, ZhugeParameterFn {
 
 	public interface IClusterInterface {
 		// 刷新页面数据
@@ -336,6 +338,10 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 					holder.partakeBtn.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View arg0) {
+
+							//聚合页面相册页面访问统计
+							ZhugeUtils.eventCallAlbum(mContext, mContext.getString(R.string.str_zhuge_call_album_source_cluster));
+
 							Intent photoalbum = new Intent(mContext,PhotoAlbumActivity.class);
 							photoalbum.putExtra("from", "cloud");
 							
@@ -693,7 +699,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 		// 评论监听
 		holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
 		// 播放区域监听
-		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo, null));
+		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo, null, ZHUGE_PLAY_VIDEO_PAGE_CLUSTER));
 		// 点赞
 		holder.praiseLayout.setOnClickListener(new ClusterPraiseListener(mContext, mVideoSquareInfo));
 		// 评论总数监听

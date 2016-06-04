@@ -6,6 +6,7 @@
 package com.mobnote.golukmain.carrecorder;
 
 
+import com.mobnote.util.ZhugeUtils;
 import com.rd.car.CarRecorderManager;
 
 import android.content.Context;
@@ -32,6 +33,9 @@ public class RecordingReceiver extends RecorderMsgReceiverBase {
      */
     @Override
     public void onRecordingNotifacationClick(Context context) {
+        //IPC页面访问统计
+        ZhugeUtils.eventIpc(context);
+
 	CarRecorderManager.stopBackgroudStatus();
 	Intent intent = new Intent(context, CarRecorderActivity.class);
 	intent.setAction("com.rd.car.demo.RESUME_FROM_BACK");

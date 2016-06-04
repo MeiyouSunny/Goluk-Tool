@@ -14,6 +14,8 @@ import com.mobnote.golukmain.newest.CommentDataInfo;
  * @author xuhw
  */
 public class VideoEntity {
+	/** 视频类型 */
+	public String category;
 	/** 视频唯一id */
 	public String videoid;
 	/** 视频类型：1.直播 2.点播 */

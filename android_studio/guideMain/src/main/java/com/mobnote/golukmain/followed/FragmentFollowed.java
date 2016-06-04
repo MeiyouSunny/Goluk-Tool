@@ -53,6 +53,7 @@ import com.mobnote.golukmain.thirdshare.ThirdShareBean;
 import com.mobnote.golukmain.videoshare.ShareVideoShortUrlRequest;
 import com.mobnote.golukmain.videoshare.bean.VideoShareRetBean;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import de.greenrobot.event.EventBus;
 
@@ -512,6 +513,9 @@ startUserLogin();
 					FollowedRecomUserBean userBean = (FollowedRecomUserBean)mFollowedList.get(i);
 					userBean.link = bean.data.link;
 					mAdapter.notifyDataSetChanged();
+
+					//关注页推荐——关注统计
+					ZhugeUtils.eventFollowed(getActivity(), getActivity().getString(R.string.str_zhuge_followed_from_followed_recommed));
 				}
 			} else {
 				// Toast for operation failed

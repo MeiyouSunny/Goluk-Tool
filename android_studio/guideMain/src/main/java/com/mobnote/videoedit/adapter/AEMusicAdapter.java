@@ -21,7 +21,7 @@ import com.mobnote.videoedit.bean.AEMusic;
 import com.mobnote.videoedit.AfterEffectActivity;
 
 public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
-    int mCurrSelectedIndex = -1;
+    int mCurrSelectedIndex = 0;
     AfterEffectActivity mActivity;
     List<AEMusic> mAEMusicList;
     AfterEffect mAfterEffect;
@@ -29,7 +29,7 @@ public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     public AEMusicAdapter(AfterEffectActivity act, AfterEffect effect) {
         this.mActivity = act;
-        mCurrSelectedIndex = -1;
+        mCurrSelectedIndex = 0;
         mAfterEffect = effect;
     }
 

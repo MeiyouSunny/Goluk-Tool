@@ -10,6 +10,7 @@ import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
 import com.mobnote.golukmain.usercenter.UCUserInfo;
 import com.mobnote.golukmain.videosuqare.CategoryListView;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
+import com.mobnote.golukmain.videosuqare.ZhugeParameterFn;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
@@ -46,9 +47,11 @@ public class NewestAdapter extends BaseAdapter {
 	private RelativeLayout mHeadView;
 	private ViewHolder holder;
 	private final float widthHeight = 1.78f;
+	private int mPlayPage = 0;
 
-	public NewestAdapter(Context context) {
+	public NewestAdapter(Context context, int playPage) {
 		mContext = context;
+		this.mPlayPage = playPage;
 		mDataList = new ArrayList<VideoSquareInfo>();
 		width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 		density = SoundUtils.getInstance().getDisplayMetrics().density;
@@ -212,7 +215,7 @@ public class NewestAdapter extends BaseAdapter {
 		// 评论监听
 		holder.commentText.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
 		// 播放区域监听
-		holder.videoImg.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo, mNewestListView));
+		holder.videoImg.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo, mNewestListView, mPlayPage));
 		holder.headimg.setOnClickListener(new ClickHeadListener(mContext, mVideoSquareInfo));
 		// 点赞
 		ClickPraiseListener tempPraiseListener = new ClickPraiseListener(mContext, mVideoSquareInfo, mNewestListView);

@@ -2,22 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.goluk.ipcdemo">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="com.goluk.ipcdemo.application.IPCApplication"
+        android:name=".application.IPCApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,13 +24,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".IPCConfigActivity"></activity>
-        <activity android:name=".IPCFileManagerActivity"></activity>
-        <activity android:name=".RealTimePlayActivity"></activity>
+        <activity android:name=".IPCConfigActivity" />
+        <activity android:name=".IPCFileManagerActivity" />
+        <activity android:name=".RealTimePlayActivity" />
+        <activity android:name=".VideoListActivity" />
 
         <!-- 必须 录制主服务 -->
         <service android:name="com.rd.car.CarRecorderService" />
+
         <receiver android:name="com.goluk.ipcsdk.receiver.NetworkStateReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -39,6 +39,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".VideoDetailActivity"></activity>
     </application>
 
 </manifest>

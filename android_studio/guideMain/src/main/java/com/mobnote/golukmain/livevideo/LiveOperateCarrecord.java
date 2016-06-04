@@ -21,6 +21,7 @@ public class LiveOperateCarrecord implements ILiveOperateFn {
 	private boolean isSucessBind = false;
 	private ILiveFnAdapter mListener = null;
 	private boolean isStart = false;
+	private int mZhugeErrorCode = 0;
 
 	public LiveOperateCarrecord(Context context, ILiveFnAdapter listener) {
 		mContext = context;
@@ -108,6 +109,8 @@ public class LiveOperateCarrecord implements ILiveOperateFn {
 				isStart = true;
 				sendResult(ILiveFnAdapter.STATE_SUCCESS);
 			} else {
+				//TODO 异常退出时记录错误码
+				mZhugeErrorCode = nResult;
 				// 视频录制上传失败
 				// liveUploadVideoFailed();
 				isStart = false;
@@ -120,6 +123,8 @@ public class LiveOperateCarrecord implements ILiveOperateFn {
 			isStart = false;
 			sendResult(ILiveFnAdapter.STATE_FAILED);
 			// liveUploadVideoFailed();
+			//TODO 异常退出时记录错误码
+			mZhugeErrorCode = nResult;
 		}
 	};
 
@@ -135,6 +140,12 @@ public class LiveOperateCarrecord implements ILiveOperateFn {
 	public boolean liveState() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public int getZhugeErrorCode() {
+		//直播异常退出时错误码
+		return mZhugeErrorCode;
 	}
 
 }

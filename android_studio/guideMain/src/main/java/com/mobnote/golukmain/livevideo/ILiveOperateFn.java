@@ -14,4 +14,6 @@ public interface ILiveOperateFn {
 	
 	public boolean liveState();
 
+	public int getZhugeErrorCode();
+
 }

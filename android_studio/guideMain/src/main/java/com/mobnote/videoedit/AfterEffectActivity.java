@@ -50,6 +50,7 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 import com.mobnote.videoedit.adapter.AEMusicAdapter;
 import com.mobnote.videoedit.adapter.ChannelLineAdapter;
 import com.mobnote.videoedit.bean.ChunkBean;
@@ -113,6 +114,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     TextView mAEVolumeTV;
     int mDummyHeaderWidth;
     private TextView mNextTV;
+    AEMusicAdapter mAEMusicAdapter;
+    private String mExportQuality;
 
     /** 是否为静音 */
 //	private boolean mIsMute;
@@ -560,6 +563,26 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                 intent.setData(Uri.parse("file://" + retBean.path));
                 sendBroadcast(intent);
                 Toast.makeText(this, getString(R.string.str_video_export_succeed), Toast.LENGTH_SHORT).show();
+
+                {
+                    // After Effect export data collection
+                    float duration = getChannelDuration();
+                    String durationStr = "unsupported length";
+                    if(duration >= 10f && duration <= 13f) {
+                        durationStr = "10~13S";
+                    } else if(duration >= 14f && duration <= 30f) {
+                        durationStr = "14~30S";
+                    } else if(duration >= 30f && duration <= 60f) {
+                        durationStr = "30~60S";
+                    } else if(duration >= 60f && duration <= 90f) {
+                        durationStr = "60~90S";
+                    }
+                    int musicIndex = mAEMusicAdapter.getSelectedIndex();
+                    String musicName = mMusicNames[musicIndex];
+
+                    ZhugeUtils.eventVideoExport(this, durationStr, musicName, mExportQuality);
+                }
+
                 GolukUtils.startVideoShareActivity(AfterEffectActivity.this, PhotoAlbumConfig.PHOTO_BUM_IPC_WND, retBean.path, retBean.path, true);
                 finish();
             } else {
@@ -596,6 +619,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                 mFullLoadingDialog.close();
             }
             Toast.makeText(this, getString(R.string.str_ae_add_chunk_failed), Toast.LENGTH_SHORT).show();
+            if(mProjectItemList == null || mProjectItemList.size() <= 3) {
+                finish();
+            }
             break;
         }
 
@@ -753,7 +779,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         mAEMusicLayoutManager = new LinearLayoutManager(this);
         mAEMusicLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mAEMusicRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_ae_music);
-        AEMusicAdapter mAEMusicAdapter = new AEMusicAdapter(this, mAfterEffect);
+        mAEMusicAdapter = new AEMusicAdapter(this, mAfterEffect);
         mAEMusicAdapter.fillupMusicList(mMusicPaths, mMusicNames, mMusicCoversNormal, mMusicCoversSelected);
         mAEMusicRecyclerView.setAdapter(mAEMusicAdapter);
         mAEMusicRecyclerView.setLayoutManager(mAEMusicLayoutManager);
@@ -1162,6 +1188,19 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         String sSecond = (second < 10) ? "0" + second : second + "";
         fileName = "MOV" + sYear + sMonth + sDay + sHour + sMinute + sSecond + (int) duration;
         destPath = destPath + "/" + fileName + ".mp4";
+
+        if (exportWidth == 1920 && exportHeight == 1080) {
+            mExportQuality = "1080P";
+        }
+
+        if (exportWidth == 1280 && exportHeight == 720) {
+            mExportQuality = "720P";
+        }
+
+        if (exportWidth == 848 && exportHeight == 480) {
+            mExportQuality = "480P";
+        }
+
         mFullLoadingDialog.show();
         try {
             mAfterEffect.export(destPath,

@@ -47,7 +47,7 @@ import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 
 public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener, OnRTScrollListener, OnClickListener,
-		IClickShareView, IClickPraiseView, IRequestResultListener {
+		IClickShareView, IClickPraiseView, IRequestResultListener, ZhugeParameterFn {
 
 	public static final String TAG = "CategoryListView";
 
@@ -204,7 +204,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 		noDataView.setOnClickListener(this);
 
 		if (null == mCategoryAdapter) {
-			mCategoryAdapter = new NewestAdapter(mContext);
+			mCategoryAdapter = new NewestAdapter(mContext, ZHUGE_PLAY_VIDEO_PAGE_CATEGORY);
 			mCategoryAdapter.setCategoryListView(this);
 		}
 		mRTPullListView.setAdapter(mCategoryAdapter);
