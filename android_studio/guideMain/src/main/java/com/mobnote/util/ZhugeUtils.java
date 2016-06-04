@@ -111,7 +111,7 @@ public class ZhugeUtils {
      * @param musicType   音乐类型
      * @param resolution  导出分辨率
      */
-    public static void eventAfterEffect(Context context, String videoLength, String musicType, String resolution) {
+    public static void eventVideoExport(Context context, String videoLength, String musicType, String resolution) {
         try {
             JSONObject json = new JSONObject();
             json.put(context.getString(R.string.str_zhuge_after_effect_video_duration), videoLength);
