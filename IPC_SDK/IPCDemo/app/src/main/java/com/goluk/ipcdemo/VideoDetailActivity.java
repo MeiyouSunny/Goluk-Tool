@@ -20,6 +20,7 @@ import com.goluk.ipcsdk.utils.Utils;
 import java.io.File;
 import java.util.ArrayList;
 
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.api.FileUtils;
 
 public class VideoDetailActivity extends Activity implements View.OnClickListener,IPCFileListener {
@@ -87,9 +88,16 @@ public class VideoDetailActivity extends Activity implements View.OnClickListene
             Log.e("","zh filesize: " + downloadinfo.filesize + "  filerecvsize: " + downloadinfo.filerecvsize + "  status:" + downloadinfo.status);
             if(downloadinfo.status == 0){
                 if (downloadinfo.filename.contains(".jpg")||downloadinfo.filename.contains(".png")){
-                    Toast.makeText(this, "image download success", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "/sdcard/goluk/video/"+downloadinfo.filename+" download success", Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(this, "video download success", Toast.LENGTH_SHORT).show();
+                    if(Utils.parseVideoFileType(filename) == IPCManagerFn.TYPE_SHORTCUT){
+                        Toast.makeText(this, "/sdcard/goluk/video/wonderful/"+ downloadinfo.filename+ " download success", Toast.LENGTH_SHORT).show();
+                    }else if(Utils.parseVideoFileType(filename) == IPCManagerFn.TYPE_URGENT){
+                        Toast.makeText(this, "/sdcard/goluk/video/urgent/"+ downloadinfo.filename+ " download success", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(this, "/sdcard/goluk/video/loop/"+ downloadinfo.filename+ " download success", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
 
             }

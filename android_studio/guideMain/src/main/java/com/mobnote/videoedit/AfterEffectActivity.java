@@ -311,6 +311,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 
         try {
             float realPosition = mAfterEffect.editSplitChunk(chunkIndex, position);
+            ZhugeUtils.eventChunkSplit(this);
 
             int itemIndex = VideoEditUtils.mapC2IIndex(chunkIndex);
             List<Chunk> mainChunks = mAfterEffect.getMainChunks();
@@ -568,13 +569,13 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                     // After Effect export data collection
                     float duration = getChannelDuration();
                     String durationStr = "unsupported length";
-                    if(duration >= 10f && duration <= 13f) {
+                    if(duration >= 10f && duration < 14f) {
                         durationStr = "10~13S";
                     } else if(duration >= 14f && duration <= 30f) {
                         durationStr = "14~30S";
-                    } else if(duration >= 30f && duration <= 60f) {
+                    } else if(duration > 30f && duration <= 60f) {
                         durationStr = "30~60S";
-                    } else if(duration >= 60f && duration <= 90f) {
+                    } else if(duration > 60f && duration <= 90f) {
                         durationStr = "60~90S";
                     }
                     int musicIndex = mAEMusicAdapter.getSelectedIndex();
@@ -1381,6 +1382,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             if(index != -1) {
                 boolean overlap = VideoEditUtils.judgeChunkOverlap(mAELayoutManager, mGateLocationX, index);
                 VideoEditUtils.removeChunk(mAfterEffect, mProjectItemList, index);
+                ZhugeUtils.eventChunkRemove(this);
 //                mChannelLineAdapter.setEditIndex(-1);
                 clearEditController();
                 mChannelLineAdapter.notifyDataSetChanged();
