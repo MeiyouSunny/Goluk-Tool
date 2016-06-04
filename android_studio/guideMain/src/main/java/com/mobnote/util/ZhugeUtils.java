@@ -125,6 +125,24 @@ public class ZhugeUtils {
     }
 
     /**
+     * 视频拆分
+     *
+     * @param context
+     */
+    public static void eventChunkSplit(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_ae_split));
+    }
+
+    /**
+     * 视频删除
+     *
+     * @param context
+     */
+    public static void eventChunkRemove(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_ae_delete));
+    }
+
+    /**
      * 上传分享视频
      *
      * @param context
