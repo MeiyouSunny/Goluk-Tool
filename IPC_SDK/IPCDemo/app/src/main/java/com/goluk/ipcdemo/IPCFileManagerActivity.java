@@ -1,6 +1,7 @@
 package com.goluk.ipcdemo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -74,7 +75,9 @@ public class IPCFileManagerActivity extends FragmentActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btQueryFileList:
-                boolean flog = mIPCFileCommand.queryFileListInfo(4, 20, 0, 2147483647, "1");
+                Intent intent = new Intent(this,VideoListActivity.class);
+                this.startActivity(intent);
+                //boolean flog = mIPCFileCommand.queryFileListInfo(4, 20, 0, 2147483647, "1");
                 break;
             case R.id.btGetSdStatus:
                 mIPCFileCommand.queryRecordStorageStatus();
@@ -112,7 +115,7 @@ public class IPCFileManagerActivity extends FragmentActivity implements View.OnC
     @Override
     public void callback_query_files(ArrayList<VideoInfo> fileList) {
         if(fileList != null){
-            Toast.makeText(this, "callback_query_files  success", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(this, "callback_query_files  success", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -135,7 +138,7 @@ public class IPCFileManagerActivity extends FragmentActivity implements View.OnC
         if(downloadinfo != null){
             Log.e("","zh filesize: " + downloadinfo.filesize + "  filerecvsize: " + downloadinfo.filerecvsize + "  status:" + downloadinfo.status);
             if(downloadinfo.status == 0){
-                Toast.makeText(this, "callback_download_file success", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(this, "callback_download_file success", Toast.LENGTH_SHORT).show();
             }
         }
     }
