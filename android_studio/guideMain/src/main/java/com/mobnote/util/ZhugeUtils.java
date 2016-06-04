@@ -28,6 +28,78 @@ public class ZhugeUtils {
     private static final int MINS_120 = 7200;
 
     /**
+     * 用户统计
+     * @param context
+     * @param uid 用户ID
+     * @param name 用户昵称
+     * @param desc 是否默认个性签名
+     * @param shareVideoNum 上传视频数
+     * @param followedNum 关注好友数
+     * @param fansNum 粉丝数
+     */
+    public static void userInfoAnalyze(Context context, String uid, String name, String desc,
+                                       String shareVideoNum, String followedNum, String fansNum) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_user_id), uid);
+            json.put(context.getString(R.string.str_zhuge_user_nickname), name);
+            json.put(context.getString(R.string.str_zhuge_user_login_style), getLoginStyle(context));
+            json.put(context.getString(R.string.str_zhuge_user_desc), getYesOrNo(false, context, desc));
+            json.put(context.getString(R.string.str_zhuge_user_type), getIpcModle(context));
+            json.put(context.getString(R.string.str_zhuge_user_sharevideo_number), shareVideoNum);
+            json.put(context.getString(R.string.str_zhuge_user_followed_number), followedNum);
+            json.put(context.getString(R.string.str_zhuge_user_fans_number), fansNum);
+
+            ZhugeSDK.getInstance().identify(context, uid, json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 登录方式　
+     * @param context
+     * @return  微信用户 / 极路客用户
+     */
+    private static String getLoginStyle(Context context) {
+        String str = GolukFileUtils.loadString(GolukFileUtils.LOGIN_PLATFORM, "");
+        if ("".equals(str)) {
+            return context.getString(R.string.str_zhuge_user_login_style_goluk);
+        } else if ("weixin".equals(str)) {
+            return context.getString(R.string.str_zhuge_user_login_style_goluk);
+        }
+        return str;
+    }
+
+    /**
+     * 用户类型
+     * @param context
+     * @return G1/G2/T1/T1S/T2/其它/无设备
+     */
+    private static String getIpcModle(Context context) {
+        String ipcModle = SharedPrefUtil.getIpcModel();
+        if ("".equals(ipcModle)) {
+            return context.getString(R.string.str_zhuge_user_type_no_ipc);
+        }
+        if (context.getString(R.string.str_zhuge_user_type_g1).equals(ipcModle)) {
+            return ipcModle;
+        }
+        if (context.getString(R.string.str_zhuge_user_type_g2).equals(ipcModle)) {
+            return ipcModle;
+        }
+        if (context.getString(R.string.str_zhuge_user_type_t1).equals(ipcModle)) {
+            return ipcModle;
+        }
+        if (context.getString(R.string.str_zhuge_user_type_t1s).equals(ipcModle) || "T1s".equals(ipcModle)) {
+            return ipcModle;
+        }
+        if (context.getString(R.string.str_zhuge_user_type_t2).equals(ipcModle)) {
+            return ipcModle;
+        }
+        return context.getString(R.string.str_zhuge_share_video_network_other);
+    }
+
+    /**
      * 播放视频
      *
      * @param context
@@ -41,7 +113,7 @@ public class ZhugeUtils {
         try {
             JSONObject json = new JSONObject();
             json.put(context.getString(R.string.str_zhuge_play_video_id), videoId);
-            json.put(context.getString(R.string.str_zhuge_play_video_desc), getYesOrNo(context, desc));
+            json.put(context.getString(R.string.str_zhuge_play_video_desc), getYesOrNo(true, context, desc));
             json.put(context.getString(R.string.str_zhuge_play_video_action), getAction(context, action));
             json.put(context.getString(R.string.str_zhuge_play_video_type), getVideoType(context, videoType));
             json.put(context.getString(R.string.str_zhuge_play_video_page), getPlayPage(context, playPage));
@@ -145,7 +217,7 @@ public class ZhugeUtils {
             json.put(context.getString(R.string.str_zhuge_share_video_network), getNetworkType(context));
             json.put(context.getString(R.string.str_zhuge_share_video_connect_ipc), connectIPC);
             json.put(context.getString(R.string.str_zhuge_share_video_length), videoLength);
-            json.put(context.getString(R.string.str_zhuge_share_video_desc), getYesOrNo(context, desc));
+            json.put(context.getString(R.string.str_zhuge_share_video_desc), getYesOrNo(true, context, desc));
             json.put(context.getString(R.string.str_zhuge_share_video_channel), channel);
             json.put(context.getString(R.string.str_zhuge_share_video_action), getAction(context, action));
 
@@ -232,15 +304,21 @@ public class ZhugeUtils {
      * 是或否
      *
      * @param context
+     * @param tag
      * @param desc
      * @return
      */
-    public static String getYesOrNo(Context context, String desc) {
+    public static String getYesOrNo(boolean tag, Context context, String desc) {
         String str = "";
         if (null == desc || "".equals(desc)) {
             str = context.getString(R.string.str_zhuge_no);
         } else {
-            str = context.getString(R.string.str_zhuge_yes);
+            if (tag && (desc.equals(context.getString(R.string.str_zhuge_play_video_default_desc1))
+                    || desc.equals(context.getString(R.string.str_zhuge_play_video_default_desc2)))) {
+                str = context.getString(R.string.str_zhuge_no);
+            } else {
+                str = context.getString(R.string.str_zhuge_yes);
+            }
         }
         return str;
     }
