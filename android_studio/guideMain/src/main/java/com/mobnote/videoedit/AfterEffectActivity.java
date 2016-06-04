@@ -601,6 +601,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                 mFullLoadingDialog.close();
             }
             Toast.makeText(this, getString(R.string.str_ae_add_chunk_failed), Toast.LENGTH_SHORT).show();
+            if(mProjectItemList == null || mProjectItemList.size() <= 3) {
+                finish();
+            }
             break;
         }
 
