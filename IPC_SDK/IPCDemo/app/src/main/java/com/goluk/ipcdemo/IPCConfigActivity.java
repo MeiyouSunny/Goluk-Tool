@@ -1,16 +1,22 @@
 package com.goluk.ipcdemo;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.goluk.ipcdemo.com.goluk.ipcdemo.widget.ToggleButton;
 import com.goluk.ipcsdk.ipcCommond.IPCConfigCommand;
 import com.goluk.ipcsdk.listener.IPCConfigListener;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
+
+import org.joda.time.DateTime;
 
 import java.util.Calendar;
 
@@ -21,9 +27,14 @@ public class IPCConfigActivity extends FragmentActivity implements View.OnClickL
 
     ToggleButton mAudioRecordTb;
     IPCConfigCommand mIPCConfigCommand;
-//    TimePickerDialog mTimeDialog;
+    TimePickerDialog mTimeDialog;
+    DatePickerDialog mDateDialog;
     Button mSetTimeBt;
     TextView mTimeTv;
+    private int mCurrSelectedYear;
+    private int mCurrSelectedMonth;
+    private int mCurrSelectedDay;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,20 +60,25 @@ public class IPCConfigActivity extends FragmentActivity implements View.OnClickL
     }
 
     private void initTimePicker(){
-//        if(mTimeDialog == null){
-//            mTimeDialog = new TimePickerDialog.Builder()
-//                    .setCallBack(this)
-//                    .setCancelStringId("Cancel")
-//                    .setSureStringId("Confirm")
-//                    .setTitleStringId("Pick Time")
-//                    .setCyclic(false)
-//                    .setMinMillseconds(0)
-//                    .setSelectorMillseconds(System.currentTimeMillis())
-//                    .setThemeColor(getResources().getColor(R.color.timepicker_dialog_bg))
-//                    .setType(Type.ALL)
-//                    .setWheelItemTextSize(15)
-//                    .build();
-//        }
+        if(mTimeDialog == null){
+            mTimeDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener(){
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                    DateTime dateTime = new DateTime(mCurrSelectedYear, mCurrSelectedMonth + 1, mCurrSelectedDay, hourOfDay, minute, 0, 0);
+                    mIPCConfigCommand.setTime(dateTime.getMillis()/1000);
+                }
+            },15,15,true);
+            mDateDialog = new DatePickerDialog(this,new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    mCurrSelectedYear = year;
+                    mCurrSelectedMonth = monthOfYear;
+                    mCurrSelectedDay = dayOfMonth;
+                    mTimeDialog.show();
+                }
+            },2016,Calendar.JUNE,10);
+        }
 
     }
 
@@ -100,7 +116,7 @@ public class IPCConfigActivity extends FragmentActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.bt_setTime:
-//                mTimeDialog.show(getSupportFragmentManager(),"");
+                mDateDialog.show();
                 break;
             default:
                 break;
@@ -136,24 +152,8 @@ public class IPCConfigActivity extends FragmentActivity implements View.OnClickL
 
     @Override
     public void callback_getTime(long time) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(time);
-
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-
-        if(minute < 10){
-            mTimeTv.setText(year + "-" + month + "-" + day + "  " + hour + ":0" + minute);
-        }else{
-            mTimeTv.setText(year + "-" + month + "-" + day + " " + hour + ":" + minute);
-        }
+        DateTime dateTime = new DateTime(time);
+        mTimeTv.setText(dateTime.toString("yyyy-MM-dd HH:mm:ss"));
     }
 
-//    @Override
-//    public void onDateSet(TimePickerDialog timePickerView, long millseconds) {
-//        mIPCConfigCommand.setTime(millseconds/1000);
-//    }
 }

@@ -597,6 +597,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         }
 
         case MSG_AE_CHUNK_ADD_FAILED: {
+            if (null != mFullLoadingDialog && mFullLoadingDialog.isShowing()) {
+                mFullLoadingDialog.close();
+            }
             Toast.makeText(this, getString(R.string.str_ae_add_chunk_failed), Toast.LENGTH_SHORT).show();
             break;
         }

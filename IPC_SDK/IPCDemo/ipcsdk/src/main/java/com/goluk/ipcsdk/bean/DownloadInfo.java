@@ -17,4 +17,9 @@ public class DownloadInfo {
      * the received file size
      */
     public int filerecvsize;
+
+    /**
+     * download status 0：download success  1：downloading
+     */
+    public int status;
 }

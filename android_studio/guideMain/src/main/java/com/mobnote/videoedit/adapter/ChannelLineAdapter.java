@@ -268,11 +268,18 @@ public class ChannelLineAdapter extends
 							ImageView imageView = new ImageView(mContext);
 							// Last, to calc bitmap width
 							if(i == bitmapCount - 1) {
-								float lastD = delta - (int)delta;
-								LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-									(int)(chunkThumbs.getThumbWidth() * lastD),
-									LayoutParams.MATCH_PARENT);
-								imageView.setLayoutParams(params);
+                                float lastD = delta - (int)delta;
+                                if(lastD == 0f) {// This which means the last should show one complete bitmap
+                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                                            (int)(chunkThumbs.getThumbWidth()),
+                                            LayoutParams.MATCH_PARENT);
+                                    imageView.setLayoutParams(params);
+                                } else {
+                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                                            (int) (chunkThumbs.getThumbWidth() * lastD),
+                                            LayoutParams.MATCH_PARENT);
+                                    imageView.setLayoutParams(params);
+                                }
 							} else {
 								LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 										chunkThumbs.getThumbWidth(),

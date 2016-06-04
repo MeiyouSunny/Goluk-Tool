@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:id="@+id/btQueryFileList"
+        android:text="QueryFileList"/>
+
+    <Button
+        android:id="@+id/btGetSdStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="GetSDStatus"/>
+
+    <Button
+        android:id="@+id/btFindSingleFile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="FindSingleFile"/>
+
+    <Button
+        android:id="@+id/btDownLoadFile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="DownLoadFile"/>
+
+    <Button
+        android:id="@+id/btStopDownLoad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="StopDownLoad"/>
+
+</LinearLayout>

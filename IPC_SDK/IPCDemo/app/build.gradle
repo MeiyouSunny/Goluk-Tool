@@ -22,7 +22,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-//    compile 'com.jzxiang.pickerview:TimePickerDialog:0.9.2'
+    compile 'joda-time:joda-time:2.9.4'
     compile project(':ipcsdk')
     compile files('libs/rebound-0.3.7.jar')
     compile files('libs/com.rd.car.player.jar')
