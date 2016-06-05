@@ -2,12 +2,6 @@ package cn.com.tiros.baidu;
 
 import cn.com.tiros.debug.GolukDebugUtils;
 import cn.com.tiros.location.PostMessageInterface;
-import cn.com.tiros.location.UseBaidu;
-import cn.com.tiros.location.UseGoogle;
-
-import com.baidu.location.LocationClient;
-
-import de.greenrobot.event.EventBus;
 
 public class BaiduLocation implements PostMessageInterface {
 
@@ -19,8 +13,8 @@ public class BaiduLocation implements PostMessageInterface {
 	/** 定位距离间隔 */
 	public static final int LOCATION_DISTANCE = 0;
 
-	public static UseBaidu mBaidu;
-	public static UseGoogle mGoogle;
+//	public static UseBaidu mBaidu;
+//	public static UseGoogle mGoogle;
 
 	/** 发送定位消息　 */
 	public static final int MSG_H_SENDLOCATION = 1;
@@ -28,9 +22,9 @@ public class BaiduLocation implements PostMessageInterface {
 	/** 是否正在定位中 */
 	private boolean mIsBusy;
 	/** 百度定位接口 */
-	private LocationClient mLocClient;
+//	private LocationClient mLocClient;
 	public static boolean mServerFlag;
-	
+
 	public BaiduLocation() {
 		initBDLocation();
 	}
@@ -53,15 +47,15 @@ public class BaiduLocation implements PostMessageInterface {
 	private void initBDLocation() {
 		GolukDebugUtils.e("", "-------initBDLocation-------------mServerFlag: " + mServerFlag);
 		if (mServerFlag) {
-			mBaidu = new UseBaidu();
+//			mBaidu = new UseBaidu();
 		} else {
-			mGoogle = new UseGoogle();
+//			mGoogle = new UseGoogle();
 		}
 	}
 
 	private void setLocationParam() {
 		if (mServerFlag) {
-			mBaidu.setBaiduLocationParam();
+//			mBaidu.setBaiduLocationParam();
 		} else {
 			// mGoogle.getLocationParam();
 		}
@@ -69,19 +63,19 @@ public class BaiduLocation implements PostMessageInterface {
 
 	private void startLocation() {
 		if (mServerFlag) {
-			mBaidu.startBaiduLocation();
-			mBaidu.setPostBaiduMessage(this);
+//			mBaidu.startBaiduLocation();
+//			mBaidu.setPostBaiduMessage(this);
 		} else {
-			mGoogle.startGoogleLocation();
-			mGoogle.setPostGoogleMessage(this);
+//			mGoogle.startGoogleLocation();
+//			mGoogle.setPostGoogleMessage(this);
 		}
 	}
 
 	private void stopLocation() {
 		if (mServerFlag) {
-			mBaidu.stopBaiduLocation();
+//			mBaidu.stopBaiduLocation();
 		} else {
-			mGoogle.stopGoogleLocation();
+//			mGoogle.stopGoogleLocation();
 		}
 	}
 
@@ -92,17 +86,17 @@ public class BaiduLocation implements PostMessageInterface {
 
 	public static void postLocationInfo(int locationType, double lat, double lon, float radius, float speed,
 			float direction, String address, String cityCode) {
-		EventBus.getDefault().post(
-				new cn.com.mobnote.eventbus.EventLocationFinish(LOCATION_FINISH, locationType, lat, lon, radius, speed,
-						direction, address, cityCode));
+//		EventBus.getDefault().post(
+//				new cn.com.mobnote.eventbus.EventLocationFinish(LOCATION_FINISH, locationType, lat, lon, radius, speed,
+//						direction, address, cityCode));
 	}
 
 	public static void postLocationInfo(String cityCode) {
-		EventBus.getDefault().post(new cn.com.mobnote.eventbus.EventLocationFinish(LOCATION_FINISH, cityCode));
+//		EventBus.getDefault().post(new cn.com.mobnote.eventbus.EventLocationFinish(LOCATION_FINISH, cityCode));
 	}
 
 	public static void postShortLocationAddress(String shortAddress){
-		EventBus.getDefault().post(new cn.com.mobnote.eventbus.EventShortLocationFinish(shortAddress));
+//		EventBus.getDefault().post(new cn.com.mobnote.eventbus.EventShortLocationFinish(shortAddress));
 	}
 
 	private int mTryCount = 0;
@@ -118,5 +112,5 @@ public class BaiduLocation implements PostMessageInterface {
 			info = null;
 		}
 	}
-	
+
 }
