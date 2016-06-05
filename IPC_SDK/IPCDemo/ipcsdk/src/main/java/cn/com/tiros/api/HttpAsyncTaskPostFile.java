@@ -1,5 +1,10 @@
 package cn.com.tiros.api;
 
+import android.os.AsyncTask;
+
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.conn.ConnectTimeoutException;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -14,15 +19,11 @@ import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.UUID;
 
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.conn.ConnectTimeoutException;
-
 import cn.com.tiros.debug.GolukDebugUtils;
-import android.os.AsyncTask;
 
 public class HttpAsyncTaskPostFile extends AsyncTask<Void, Integer, Boolean> implements IHttpFn {
 
@@ -109,7 +110,7 @@ public class HttpAsyncTaskPostFile extends AsyncTask<Void, Integer, Boolean> imp
 				Set<Entry<String, String>> set = mHeaders.entrySet();
 				Iterator<Entry<String, String>> iterator = set.iterator();
 				while (iterator.hasNext()) {
-					Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
+					Entry<String, String> entry = (Entry<String, String>) iterator.next();
 					String key = (String) entry.getKey();
 					String value = (String) entry.getValue();
 					mHttpUrlConn.addRequestProperty(key, value);
@@ -140,20 +141,20 @@ public class HttpAsyncTaskPostFile extends AsyncTask<Void, Integer, Boolean> imp
 
 			int count = 0;
 
-			StringBuffer sb = new StringBuffer();  
-            sb.append(PREFIX);  
-            sb.append(BOUNDARY);  
-            sb.append(LINE_END);  
-            /** 
-             * 这里重点注意： name里面的值为服务器端需要key 只有这个key 才可以得到对应的文件 
-             * filename是文件的名字，包含后缀名的 比如:abc.png 
-             */  
+			StringBuffer sb = new StringBuffer();
+            sb.append(PREFIX);
+            sb.append(BOUNDARY);
+            sb.append(LINE_END);
+            /**
+             * 这里重点注意： name里面的值为服务器端需要key 只有这个key 才可以得到对应的文件
+             * filename是文件的名字，包含后缀名的 比如:abc.png
+             */
 
-            sb.append("Content-Disposition: form-data; name=\"upgrade\"; filename=\""  
-                    + file.getName() + "\"" + LINE_END);  
-            sb.append("Content-Type: application/octet-stream; charset="  
-                    + CHARSET + LINE_END);  
-            sb.append(LINE_END);  
+            sb.append("Content-Disposition: form-data; name=\"upgrade\"; filename=\""
+                    + file.getName() + "\"" + LINE_END);
+            sb.append("Content-Type: application/octet-stream; charset="
+                    + CHARSET + LINE_END);
+            sb.append(LINE_END);
             dos.write(sb.toString().getBytes());
 			while (-1 != (len = fis.read(bytes))) {
 				dos.write(bytes, 0, len);
@@ -171,11 +172,11 @@ public class HttpAsyncTaskPostFile extends AsyncTask<Void, Integer, Boolean> imp
 				// 通知文件上传进度
 				sendProgress(M_EVT_HTTP_UPLOADFILE_PROGRESS);
 			}
-			dos.write(LINE_END.getBytes());  
-            byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END)  
-                    .getBytes();  
-            dos.write(end_data);  
-            dos.flush(); 
+			dos.write(LINE_END.getBytes());
+            byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END)
+                    .getBytes();
+            dos.write(end_data);
+            dos.flush();
 			fis.close();
 
 		} catch (ConnectTimeoutException e1) { // 链接超时
@@ -404,7 +405,7 @@ public class HttpAsyncTaskPostFile extends AsyncTask<Void, Integer, Boolean> imp
 		String sKey = null;
 		List<String> sValue = null;
 
-		for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+		for (Entry<String, List<String>> entry : headers.entrySet()) {
 			// 将名称转换为小写
 			String kk = entry.getKey();
 			if (null == kk) {

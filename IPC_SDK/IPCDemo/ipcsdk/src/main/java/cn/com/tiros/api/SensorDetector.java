@@ -1,8 +1,5 @@
 package cn.com.tiros.api;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -10,6 +7,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.FloatMath;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 2012-07-19 传感器实现

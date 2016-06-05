@@ -1,16 +1,11 @@
 package cn.com.tiros.api;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.Vector;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Proxy;
+import android.os.AsyncTask;
+import android.provider.Settings;
 
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
@@ -32,12 +27,18 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Proxy;
-import android.os.AsyncTask;
-import android.provider.Settings;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.Vector;
+
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class Http implements IHttpFn {
@@ -214,7 +215,7 @@ public class Http implements IHttpFn {
 		Iterator<Entry<String, String>> iterator = set.iterator();
 		while (iterator.hasNext()) {
 			@SuppressWarnings("rawtypes")
-			Map.Entry entry = (Map.Entry) iterator.next();
+			Entry entry = (Entry) iterator.next();
 			String key = (String) entry.getKey();
 			String value = (String) entry.getValue();
 			requestBase.setHeader(key, value);
@@ -268,7 +269,7 @@ public class Http implements IHttpFn {
 
 			while (iterator.hasNext()) {
 				@SuppressWarnings("rawtypes")
-				Map.Entry entry = (Map.Entry) iterator.next();
+				Entry entry = (Entry) iterator.next();
 				String key = (String) entry.getKey();
 				String value = (String) entry.getValue();
 				mHttpGet.setHeader(key, value);
@@ -320,7 +321,7 @@ public class Http implements IHttpFn {
 
 	/**
 	 * 传输文件
-	 * 
+	 *
 	 * @param uploadurl
 	 *            上传文件的服务器地址
 	 * @param filePath
@@ -461,7 +462,7 @@ public class Http implements IHttpFn {
 			Iterator<Entry<String, String>> iterator = set.iterator();
 			while (iterator.hasNext()) {
 				@SuppressWarnings("rawtypes")
-				Map.Entry entry = (Map.Entry) iterator.next();
+				Entry entry = (Entry) iterator.next();
 				String key = (String) entry.getKey();
 				String value = (String) entry.getValue();
 				post.setHeader(key, value);

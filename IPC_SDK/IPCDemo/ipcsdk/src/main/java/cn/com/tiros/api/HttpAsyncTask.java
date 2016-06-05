@@ -1,10 +1,7 @@
 package cn.com.tiros.api;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
+import android.os.AsyncTask;
+import android.text.TextUtils;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -13,8 +10,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ConnectTimeoutException;
 
-import android.os.AsyncTask;
-import android.text.TextUtils;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 
 public class HttpAsyncTask extends AsyncTask<Void, Integer, Boolean> implements IHttpFn {
 

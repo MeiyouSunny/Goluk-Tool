@@ -1,9 +1,9 @@
 package cn.com.tiros.api;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 
 public class Image {
 

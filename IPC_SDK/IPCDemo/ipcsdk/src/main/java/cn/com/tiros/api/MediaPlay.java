@@ -1,8 +1,5 @@
 package cn.com.tiros.api;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioFormat;
 import android.media.AudioManager;
@@ -11,6 +8,10 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 public class MediaPlay {
 

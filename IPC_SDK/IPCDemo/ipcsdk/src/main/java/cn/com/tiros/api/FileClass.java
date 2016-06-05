@@ -1,13 +1,14 @@
 package cn.com.tiros.api;
 
+import android.os.Environment;
+import android.os.StatFs;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 
-import android.os.Environment;
-import android.os.StatFs;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class FileClass {
