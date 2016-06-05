@@ -18,6 +18,4 @@ android {
 }
 
 dependencies {
-    compile files('libs/HciCloud_SDK_Java_3.0.jar')
-    compile files('libs/SpeechApi.jar')
 }
