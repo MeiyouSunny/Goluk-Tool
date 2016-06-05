@@ -141,6 +141,53 @@ public class GolukIPCSdk implements IPCManagerFn {
         return null;
     }
 
+    /**
+     * get remote video url
+     * @param fileName
+     * @return
+     */
+    public String getRemoteVideoUrl(String fileName){
+        if(TextUtils.isEmpty(fileName)){
+            return null;
+        }
+        String[] names = fileName.split("_");
+        if (names != null && names.length > 3) {
+            if (names[0].equals("NRM")) {
+                fileName = names[0] + "_" + names[1];
+            } else {
+                fileName = names[0] + "_" + names[2];
+            }
+            return "http://" + "192.168.62.1" + "/api/video?id=" + fileName;
+        }
+        return null;
+    }
+
+    /**
+     * get remote image url
+     * @param fileName
+     * @return
+     */
+    public String getRemoteImageUrl(String fileName){
+        if(TextUtils.isEmpty(fileName)){
+            return null;
+        }
+        String[] names = fileName.split("_");
+        if (names != null && names.length > 3) {
+            if (names[0].equals("NRM")) {
+                fileName = names[0] + "_" + names[1];
+            } else {
+                fileName = names[0] + "_" + names[2];
+            }
+            return "http://" + "192.168.62.1" + "/api/thumb?id=" + fileName;
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param dateStr
+     * @return
+     */
     private Date getDate(String dateStr){
         Date date = new Date();
         //注意format的格式要与日期String的格式相匹配

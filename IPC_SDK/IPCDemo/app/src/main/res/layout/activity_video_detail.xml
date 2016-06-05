@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,18 +7,29 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.goluk.ipcdemo.VideoDetailActivity">
+    tools:context="com.goluk.ipcdemo.VideoDetailActivity"
+    android:orientation="vertical">
 
-    <Button
-        android:id="@+id/download_img_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Download Image" />
+    <VideoView
+        android:id="@+id/videoviewPlayer"
+        android:layout_width="match_parent"
+        android:layout_height="180dp" />
 
-    <Button
-        android:id="@+id/download_video_btn"
-        android:layout_toRightOf="@+id/download_img_btn"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Download Video" />
-</RelativeLayout>
+        android:layout_marginTop="6dp">
+        <Button
+            android:id="@+id/download_img_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Download Image" />
+
+        <Button
+            android:id="@+id/download_video_btn"
+            android:layout_toRightOf="@+id/download_img_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Download Video" />
+    </RelativeLayout>
+</LinearLayout>

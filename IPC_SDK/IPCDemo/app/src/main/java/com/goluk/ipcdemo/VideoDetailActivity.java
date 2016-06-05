@@ -2,11 +2,13 @@ package com.goluk.ipcdemo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.goluk.ipcsdk.bean.DownloadInfo;
 import com.goluk.ipcsdk.bean.FileInfo;
@@ -26,6 +28,7 @@ import cn.com.tiros.api.FileUtils;
 public class VideoDetailActivity extends Activity implements View.OnClickListener,IPCFileListener {
     public Button downloadimg;
     public Button downloadvideo;
+    private VideoView mVideoviewPlayer;
     public IPCFileCommand mIPCFileCommand;
 
     private String filename;
@@ -41,10 +44,14 @@ public class VideoDetailActivity extends Activity implements View.OnClickListene
 
         downloadimg = (Button) findViewById(R.id.download_img_btn);
         downloadvideo = (Button) findViewById(R.id.download_video_btn);
+        mVideoviewPlayer = (VideoView) findViewById(R.id.videoviewPlayer);
         downloadvideo.setOnClickListener(this);
         downloadimg.setOnClickListener(this);
         mIPCFileCommand = new IPCFileCommand(this,this);
 
+        Uri uri = Uri.parse(GolukIPCSdk.getInstance().getRemoteVideoUrl(filename));
+        mVideoviewPlayer.setVideoURI(uri);
+        mVideoviewPlayer.start();
     }
 
     @Override
