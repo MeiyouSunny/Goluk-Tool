@@ -12,7 +12,7 @@ import com.goluk.ipcsdk.bean.DownloadInfo;
 import com.goluk.ipcsdk.bean.FileInfo;
 import com.goluk.ipcsdk.bean.RecordStorgeState;
 import com.goluk.ipcsdk.bean.VideoInfo;
-import com.goluk.ipcsdk.ipcCommond.IPCFileCommand;
+import com.goluk.ipcsdk.commond.IPCFileCommand;
 import com.goluk.ipcsdk.listener.IPCFileListener;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
 import com.goluk.ipcsdk.utils.Utils;

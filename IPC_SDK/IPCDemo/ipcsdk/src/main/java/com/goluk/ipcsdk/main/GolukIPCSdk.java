@@ -6,7 +6,8 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.text.TextUtils;
 
-import com.goluk.ipcsdk.ipcCommond.BaseIPCCommand;
+import com.goluk.ipcsdk.commond.BaseIPCCommand;
+import com.goluk.ipcsdk.listener.IPCInitListener;
 import com.goluk.ipcsdk.utils.Utils;
 
 import org.json.JSONException;
@@ -22,11 +23,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import cn.com.mobnote.logic.GolukLogic;
 import cn.com.mobnote.logic.GolukModule;
@@ -38,20 +39,12 @@ import cn.com.tiros.api.Const;
  */
 public class GolukIPCSdk implements IPCManagerFn {
 
-    public interface GolulIPCSdkListener{
-        /**
-         * the callback of initSDK
-         * @param isSuccess
-         * @param msg
-         */
-        public void initCallback(boolean isSuccess,String msg);
-    }
-    private GolulIPCSdkListener mIPCListener;
+    private IPCInitListener mIPCInitListener;
     public GolukLogic mGoluk = null;
     /**
      * IPC回调监听列表
      */
-    private List<BaseIPCCommand> mIpcManagerListener = null;
+    private List<BaseIPCCommand> mCommandList = null;
 
     /**
      * 行车记录仪缓冲路径
@@ -90,28 +83,28 @@ public class GolukIPCSdk implements IPCManagerFn {
 
     public void addCommand(BaseIPCCommand command) {
         if(isSdkValid()){
-            this.mIpcManagerListener.add(command);
+            this.mCommandList.add(command);
         }
     }
 
     synchronized public void unregisterIPC(Context context) {
-        if (mIpcManagerListener != null) {
-            for (BaseIPCCommand command : mIpcManagerListener) {
+        if (mCommandList != null) {
+            for (BaseIPCCommand command : mCommandList) {
                 if (command == null || command.getContext() == context) {
-                    mIpcManagerListener.remove(command);
+                    mCommandList.remove(command);
                 }
             }
         }
     }
 
-    public void initSDK(Context cxt, String appId,GolulIPCSdkListener listener) {
+    public void initSDK(Context cxt, String appId,IPCInitListener listener) {
 
         this.mAPPContext = cxt;
         this.mAppId = appId;
-        this.mIPCListener = listener;
+        this.mIPCInitListener = listener;
 
-        if (mIpcManagerListener == null) {
-            mIpcManagerListener = new ArrayList<BaseIPCCommand>();
+        if (mCommandList == null) {
+            mCommandList = new CopyOnWriteArrayList<BaseIPCCommand>();
         }
 
         initIPCLogic();
@@ -176,9 +169,9 @@ public class GolukIPCSdk implements IPCManagerFn {
 
         mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_IPCManager, this);
 
-        if(mIPCListener != null){
-            mIPCListener.initCallback(true,"success");
-            mIPCListener = null;
+        if(mIPCInitListener != null){
+            mIPCInitListener.initCallback(true,"success");
+            mIPCInitListener = null;
         }
         isIPCLogicInited = true;
     }
@@ -284,9 +277,9 @@ public class GolukIPCSdk implements IPCManagerFn {
         protected void onPostExecute(String result) {
             // TODO Auto-generated method stub
             if(TextUtils.isEmpty(result)){
-                if(mIPCListener != null){
-                    mIPCListener.initCallback(isAppAuthValid(),result);
-                    mIPCListener = null;
+                if(mIPCInitListener != null){
+                    mIPCInitListener.initCallback(isAppAuthValid(),result);
+                    mIPCInitListener = null;
                 }
                 return;
             }
@@ -336,10 +329,10 @@ public class GolukIPCSdk implements IPCManagerFn {
     @Override
     public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 
-        if (mIpcManagerListener != null) {
-            for (BaseIPCCommand command : mIpcManagerListener) {
+        if (mCommandList != null) {
+            for (BaseIPCCommand command : mCommandList) {
                 if (command == null || command.getContext() == null) {
-                    mIpcManagerListener.remove(command);
+                    mCommandList.remove(command);
                 } else {
                     command.IPCManage_CallBack(event, msg, param1, param2);
                 }

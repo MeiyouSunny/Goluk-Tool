@@ -1,6 +1,5 @@
 package com.goluk.ipcdemo;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -13,7 +12,7 @@ import com.goluk.ipcsdk.bean.DownloadInfo;
 import com.goluk.ipcsdk.bean.FileInfo;
 import com.goluk.ipcsdk.bean.RecordStorgeState;
 import com.goluk.ipcsdk.bean.VideoInfo;
-import com.goluk.ipcsdk.ipcCommond.IPCFileCommand;
+import com.goluk.ipcsdk.commond.IPCFileCommand;
 import com.goluk.ipcsdk.listener.IPCFileListener;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
 import com.goluk.ipcsdk.utils.Utils;

@@ -1,4 +1,4 @@
-package com.goluk.ipcsdk.ipcCommond;
+package com.goluk.ipcsdk.commond;
 import android.content.Context;
 import android.util.Log;
 
