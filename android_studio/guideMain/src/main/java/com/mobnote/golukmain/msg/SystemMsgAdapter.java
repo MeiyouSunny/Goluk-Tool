@@ -107,7 +107,7 @@ public class SystemMsgAdapter extends BaseAdapter {
 	public int getItemViewType(int position) {
 		MessageMsgsBean json = mMsgList.get(position);
 		if (msgTypeCertificate == json.type || msgTypeWithdraw == json.type || msgTypePoll == json.type
-				|| msgTypeSelect == json.type) {
+				|| msgTypeSelect == json.type || msgTypeGReward == json.type) {
 			return 0;
 		} else {
 			return 1;
@@ -164,11 +164,10 @@ public class SystemMsgAdapter extends BaseAdapter {
 				txt = mContext.getResources().getString(R.string.msg_system_poll_txt);
 			} else if (mmbTxt.type == msgTypeSelect) {// 精选
 				txt = mContext.getResources().getString(R.string.msg_system_select_txt);
-			} else if (mmbTxt.type == msgTypeGReward) {// 系统获奖或者人工获奖
+			} else if (mmbTxt.type == msgTypeGReward) {// G币奖励
 
-                txt = mContext.getResources().getString(R.string.msg_system_reward_txt_began)
-                        + mmbTxt.content.reward.count
-                        + mContext.getResources().getString(R.string.msg_system_reward_txt_end);
+				txt = mContext.getString(R.string.str_sys_msg_gaward_text)
+						+ mmbTxt.content.gaward.reason + mmbTxt.content.gaward.name;
             }
 
 			txtHolder.msgTime.setText(GolukUtils.getCommentShowFormatTime(mContext, time));
@@ -264,14 +263,7 @@ public class SystemMsgAdapter extends BaseAdapter {
 
 					}
 				});
-			} else if (mmbImg.type == msgTypeGReward) {//G币奖励和中奖
-				imgReason = mContext.getString(R.string.str_sys_msg_gaward_text)
-						+ mmbImg.content.gaward.reason + mmbImg.content.gaward.name;
-				imgTxt = "";
-				imgPath = mmbImg.content.picture;
-				imageHolder.msgMyincome.setVisibility(View.GONE);
-
-            }else if (mmbImg.type == msgTypeRecommend) {// 推荐
+			} else if (mmbImg.type == msgTypeRecommend) {// 推荐
 				imgPath = mmbImg.content.picture;
 				imgTxt = mContext.getResources().getString(R.string.msg_system_recommend_title);
 				imgReason = mmbImg.content.recommend.reason;
@@ -298,12 +290,8 @@ public class SystemMsgAdapter extends BaseAdapter {
 			GlideUtils.loadImage(mContext, imageHolder.msgImage, imgPath, 0);
 			imageHolder.msgTime.setText(GolukUtils.getCommentShowFormatTime(mContext, imgTime));
 			imageHolder.msgTxt.setText(imgTxt);
-			if (mmbImg.type == msgTypeGReward) {//G币奖励和中奖
-				imageHolder.msgReasonTxt.setText(imgReason);
-			} else {
-				imageHolder.msgReasonTxt.setText(mContext.getResources().getString(R.string.msg_system_reason_began)
-						+ imgReason);
-			}
+			imageHolder.msgReasonTxt.setText(mContext.getResources().getString(R.string.msg_system_reason_began)
+					+ imgReason);
 			break;
 		default:
 			break;

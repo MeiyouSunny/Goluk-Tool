@@ -231,19 +231,26 @@ public class ZhugeUtils {
     }
 
     /**
-     * 视频删除
+     * 视频添加
      *
      * @param context
      */
-//    public static void eventAddChunk(Context context, boolean ret) {
-//            String strRet = null;
-//            if(ret) {
-//                ret = context.getString();
-//            } else {
-//                ret = context.getString()
-//            }
-//        ZhugeSDK.getInstance().track(context, strRet);
-//    }
+    public static void eventAddChunk(Context context, boolean ret) {
+        try {
+            JSONObject json = new JSONObject();
+            if(ret) {
+                json.put(context.getString(R.string.str_zhuge_add_chunk_status),
+                        context.getString(R.string.str_zhuge_add_chunk_success));
+            } else {
+                json.put(context.getString(R.string.str_zhuge_add_chunk_status),
+                        context.getString(R.string.str_zhuge_add_chunk_fail));
+            }
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_add_chunk_tag), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 上传分享视频
