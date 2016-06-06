@@ -18,8 +18,9 @@ public class IPCConfigCommand extends BaseIPCCommand{
     private IPCConfigListener mIpcConfigListener;
 
     /**
-     *
+     * @see com.goluk.ipcsdk.listener.IPCConfigListener
      * @param listener
+     * @param cxt
      */
     public IPCConfigCommand(IPCConfigListener listener,Context cxt){
         super(cxt);
@@ -28,7 +29,6 @@ public class IPCConfigCommand extends BaseIPCCommand{
 
     /**
      * enable/disable audio record
-     * @see com.goluk.ipcsdk.listener.IPCConfigListener
      * @param isEnable
      * @return
      */
@@ -104,7 +104,7 @@ public class IPCConfigCommand extends BaseIPCCommand{
                 if (param1 == RESULE_SUCESS) {
                     mIpcConfigListener.callback_setTime(true);
                 }else{
-                    mIpcConfigListener.callback_setTime(false);
+                    mIpcConfigListener.callback_setTime(true);
                 }
             }else if (IPC_VDCP_Msg_SetRecAudioCfg == msg) {
                 mIpcConfigListener.callback_setAudeoRecord(true);

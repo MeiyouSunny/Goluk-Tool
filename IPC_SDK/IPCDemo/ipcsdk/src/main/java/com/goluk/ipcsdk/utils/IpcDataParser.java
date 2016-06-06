@@ -20,7 +20,7 @@ public class IPCDataParser {
 
     public static class TriggerRecord {
         /**
-         * 1:循环影像  2:紧急录像  4:精彩视频
+         * 1:循环影像  2:紧急录像
          */
 
         public int type;
@@ -38,7 +38,7 @@ public class IPCDataParser {
      * @param limitCount
      * @param timestart
      * @param timeend
-     * @param resform    0:自动查询  1：相册查询
+     * @param resForm    0:自动查询  1：相册查询
      * @return
      * @author jiayf
      * @date Mar 10, 2015
@@ -255,7 +255,7 @@ public class IPCDataParser {
 
     /**
      * 根据文件名计算日期
-     * @param name
+     * @param date
      * @return
      */
     public static String countFileDateToString(String date) {

@@ -25,8 +25,9 @@ public class IPCFileCommand extends BaseIPCCommand{
     private IPCFileListener ipcFileListener;
 
     /**
-     *
+     * @see IPCFileListener
      * @param listener
+     * @param cxt
      */
     public IPCFileCommand(IPCFileListener listener,Context cxt){
         super(cxt);

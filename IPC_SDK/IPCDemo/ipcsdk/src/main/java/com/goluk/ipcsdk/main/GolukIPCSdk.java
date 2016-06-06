@@ -127,7 +127,6 @@ public class GolukIPCSdk implements IPCManagerFn {
      */
     private Date getDate(String dateStr){
         Date date = new Date();
-        //注意format的格式要与日期String的格式相匹配
         DateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         try {
             date = sdf.parse(dateStr);

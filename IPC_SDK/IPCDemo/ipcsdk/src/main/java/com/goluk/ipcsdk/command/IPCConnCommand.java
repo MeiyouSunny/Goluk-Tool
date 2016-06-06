@@ -16,6 +16,12 @@ import cn.com.mobnote.logic.GolukModule;
 public class IPCConnCommand extends BaseIPCCommand{
 
     IPCConnListener mIPCConnListener;
+
+    /**
+     * @see IPCConnListener
+     * @param listener
+     * @param cxt
+     */
     public IPCConnCommand(IPCConnListener listener,Context cxt) {
         super(cxt);
         this.mIPCConnListener = listener;
