@@ -22,7 +22,7 @@ public class MessageCenterOfficialRequest extends GolukFastjsonRequest<MessageBe
 	}
 
 	public void get(String xieyi, String uid, String types, String operation, String timestamp) {
-		HashMap<String, String> headers = (HashMap<String, String>) getHeader();
+		HashMap<String, String> headers = (HashMap<String, String>) getParam();
 		headers.put("xieyi", xieyi);
 		headers.put("uid", uid);
 		headers.put("types", types);
