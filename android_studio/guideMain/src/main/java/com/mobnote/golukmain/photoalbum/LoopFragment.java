@@ -422,6 +422,9 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
 	private void gotoVideoPlayPage(int from, String path, String filename , String createTime, String videoHP, String size) {
 		if (!isShowPlayer) {
 			isShowPlayer = true;
+            ZhugeUtils.eventAlbumPlayer(getActivity(),
+                    getString(R.string.str_zhuge_video_player_recycle),
+                    getString(R.string.str_zhuge_video_player_recycle));
 			GolukUtils.startPhotoAlbumPlayerActivity(LoopFragment.this.getContext(),PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP,"ipc",path,filename,createTime,videoHP,size);
 		}
 	}
