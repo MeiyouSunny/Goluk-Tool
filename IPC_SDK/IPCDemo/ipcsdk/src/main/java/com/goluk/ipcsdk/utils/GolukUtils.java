@@ -1,11 +1,13 @@
 package com.goluk.ipcsdk.utils;
 
+import android.text.TextUtils;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 
-public class Utils {
+public class GolukUtils {
 
 	/**
 	 * 文件大小的转换
@@ -15,18 +17,6 @@ public class Utils {
 	 * @date 2015年3月25日
 	 */
 	public static String getSizeShow(double fileSize) {
-//		System.out.print("文件大小 : "+fileSize);
-//		float sizeM = (float)fileSize / 1024 / 1024;
-//		DecimalFormat df = new DecimalFormat("#.##");
-//		String sizeResult ="";
-//		if(fileSize > 1024){
-//			double size = fileSize/1024;
-//			sizeResult = size + "GB";
-//		}else{
-//			sizeResult = fileSize + "MB";
-//		}
-//		
-//		return sizeResult;
 		
 		String result="";
 		double totalsize=0;
@@ -135,4 +125,55 @@ public class Utils {
 		return type;
 	}
 
+	/**
+	 * get rtmp video preview url
+	 * @return the rtmp url
+	 */
+	public static String getRtmpPreviewUrl(){
+
+		return "rtsp://" + "192.168.62.1" + "/stream1";
+
+	}
+
+	/**
+	 * get remote video url
+	 * @param fileName
+	 * @return
+	 */
+	public static String getRemoteVideoUrl(String fileName){
+		if(TextUtils.isEmpty(fileName)){
+			return null;
+		}
+		String[] names = fileName.split("_");
+		if (names != null && names.length > 3) {
+			if (names[0].equals("NRM")) {
+				fileName = names[0] + "_" + names[1];
+			} else {
+				fileName = names[0] + "_" + names[2];
+			}
+			return "http://" + "192.168.62.1" + "/api/video?id=" + fileName;
+		}
+		return null;
+	}
+
+	/**
+	 * get remote image url
+	 * @param fileName
+	 * @return
+	 */
+	public static String getRemoteImageUrl(String fileName){
+		if(TextUtils.isEmpty(fileName)){
+			return null;
+		}
+		String[] names = fileName.split("_");
+		if (names != null && names.length > 3) {
+			if (names[0].equals("NRM")) {
+				fileName = names[0] + "_" + names[1];
+			} else {
+				fileName = names[0] + "_" + names[2];
+			}
+			return "http://" + "192.168.62.1" + "/api/thumb?id=" + fileName;
+		}
+		return null;
+	}
 }

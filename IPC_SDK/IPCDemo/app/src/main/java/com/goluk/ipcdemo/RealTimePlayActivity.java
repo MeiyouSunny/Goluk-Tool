@@ -9,7 +9,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
-import com.goluk.ipcsdk.main.GolukIPCSdk;
+import com.goluk.ipcsdk.utils.GolukUtils;
 import com.rd.car.player.RtspPlayerView;
 
 /**
@@ -65,7 +65,7 @@ public class RealTimePlayActivity extends FragmentActivity implements View.OnCli
 
     public void start() {
         if (null != mRtmpPlayerView) {
-            String url = GolukIPCSdk.getInstance().getRtmpPreviewUrl();
+            String url = GolukUtils.getRtmpPreviewUrl();
             if(!TextUtils.isEmpty(url)){
                 mRtmpPlayerView.setDataSource(url);
                 mRtmpPlayerView.start();

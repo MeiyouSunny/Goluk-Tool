@@ -15,7 +15,7 @@ import com.goluk.ipcsdk.bean.VideoInfo;
 import com.goluk.ipcsdk.commond.IPCFileCommand;
 import com.goluk.ipcsdk.listener.IPCFileListener;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
-import com.goluk.ipcsdk.utils.Utils;
+import com.goluk.ipcsdk.utils.GolukUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -86,7 +86,7 @@ public class IPCFileManagerActivity extends FragmentActivity implements View.OnC
                 mIPCFileCommand.querySingleFile("WND_event_20160602151234_1_TX_3_0030.mp4");
                 break;
             case R.id.btDownLoadFile:
-                String savePath = Utils.getSavePath(4);
+                String savePath = GolukUtils.getSavePath(4);
                 Boolean result = mIPCFileCommand.downloadFile("WND_event_20160602151234_1_TX_3_0030.mp4","videodownload",savePath,1464851530);
                 downLoadVideoThumbnail("WND_event_20160602151234_1_TX_3_0030.mp4",1464851530);
                 break;

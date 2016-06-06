@@ -8,7 +8,7 @@ import android.text.TextUtils;
 
 import com.goluk.ipcsdk.commond.BaseIPCCommand;
 import com.goluk.ipcsdk.listener.IPCInitListener;
-import com.goluk.ipcsdk.utils.Utils;
+import com.goluk.ipcsdk.utils.GolukUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,9 +56,6 @@ public class GolukIPCSdk implements IPCManagerFn {
 
     private boolean isIPCLogicInited;
     public static Context mAPPContext;
-    /** T1设备视频预览地址 */
-    private final String T1_URL_PRE = "rtsp://";
-    private final String T1_URL_END = "/stream1";
 
     private GolukIPCSdk() {
         System.loadLibrary("golukmobile");
@@ -131,59 +128,6 @@ public class GolukIPCSdk implements IPCManagerFn {
     }
 
     /**
-     * get rtmp video preview url
-     * @return the rtmp url
-     */
-    public String getRtmpPreviewUrl(){
-        if(isSdkValid()){
-            return T1_URL_PRE + "192.168.62.1" + T1_URL_END;
-        }
-        return null;
-    }
-
-    /**
-     * get remote video url
-     * @param fileName
-     * @return
-     */
-    public String getRemoteVideoUrl(String fileName){
-        if(TextUtils.isEmpty(fileName)){
-            return null;
-        }
-        String[] names = fileName.split("_");
-        if (names != null && names.length > 3) {
-            if (names[0].equals("NRM")) {
-                fileName = names[0] + "_" + names[1];
-            } else {
-                fileName = names[0] + "_" + names[2];
-            }
-            return "http://" + "192.168.62.1" + "/api/video?id=" + fileName;
-        }
-        return null;
-    }
-
-    /**
-     * get remote image url
-     * @param fileName
-     * @return
-     */
-    public String getRemoteImageUrl(String fileName){
-        if(TextUtils.isEmpty(fileName)){
-            return null;
-        }
-        String[] names = fileName.split("_");
-        if (names != null && names.length > 3) {
-            if (names[0].equals("NRM")) {
-                fileName = names[0] + "_" + names[1];
-            } else {
-                fileName = names[0] + "_" + names[2];
-            }
-            return "http://" + "192.168.62.1" + "/api/thumb?id=" + fileName;
-        }
-        return null;
-    }
-
-    /**
      *
      * @param dateStr
      * @return
@@ -232,7 +176,7 @@ public class GolukIPCSdk implements IPCManagerFn {
     private void initCachePath() {
         carrecorderCachePath = Environment.getExternalStorageDirectory() + File.separator + "g_video" + File.separator
                 + "goluk_cache";
-        Utils.makedir(carrecorderCachePath);
+        GolukUtils.makedir(carrecorderCachePath);
     }
 
     /**

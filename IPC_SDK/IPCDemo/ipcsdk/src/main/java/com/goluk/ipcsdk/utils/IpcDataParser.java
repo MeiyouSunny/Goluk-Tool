@@ -14,7 +14,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 
-import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class IpcDataParser {
@@ -222,11 +221,11 @@ public class IpcDataParser {
         // 文件选择状态
         info.isSelect = false;
         info.id = mVideoFileInfo.id;
-        info.videoSize = Utils.getSizeShow(mVideoFileInfo.size);
-        info.countTime = Utils.minutesTimeToString(mVideoFileInfo.period);
+        info.videoSize = GolukUtils.getSizeShow(mVideoFileInfo.size);
+        info.countTime = GolukUtils.minutesTimeToString(mVideoFileInfo.period);
         info.videoHP = mVideoFileInfo.resolution;
         if (TextUtils.isEmpty(mVideoFileInfo.timestamp)) {
-            info.videoCreateDate = Utils.getTimeStr(mVideoFileInfo.time * 1000);
+            info.videoCreateDate = GolukUtils.getTimeStr(mVideoFileInfo.time * 1000);
         } else {
             info.videoCreateDate = countFileDateToString(mVideoFileInfo.timestamp);
         }
@@ -239,7 +238,7 @@ public class IpcDataParser {
         String fileName = mVideoFileInfo.location;
         fileName = fileName.replace(".mp4", ".jpg");
         String filePath = GolukIPCSdk.getInstance().getCarrecorderCachePath() + File.separator + "image";
-        Utils.makedir(filePath);
+        GolukUtils.makedir(filePath);
         File file = new File(filePath + File.separator + fileName);
         if (file.exists()) {
             // info.videoBitmap = ImageManager.getBitmapFromCache(filePath +

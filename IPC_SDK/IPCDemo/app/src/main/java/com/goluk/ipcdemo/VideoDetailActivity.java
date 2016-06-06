@@ -17,7 +17,7 @@ import com.goluk.ipcsdk.bean.VideoInfo;
 import com.goluk.ipcsdk.commond.IPCFileCommand;
 import com.goluk.ipcsdk.listener.IPCFileListener;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
-import com.goluk.ipcsdk.utils.Utils;
+import com.goluk.ipcsdk.utils.GolukUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class VideoDetailActivity extends Activity implements View.OnClickListene
         downloadimg.setOnClickListener(this);
         mIPCFileCommand = new IPCFileCommand(this,this);
 
-        Uri uri = Uri.parse(GolukIPCSdk.getInstance().getRemoteVideoUrl(filename));
+        Uri uri = Uri.parse(GolukUtils.getRemoteVideoUrl(filename));
         mVideoviewPlayer.setVideoURI(uri);
         mVideoviewPlayer.start();
     }
@@ -61,8 +61,8 @@ public class VideoDetailActivity extends Activity implements View.OnClickListene
     }
 
     public String getSavepath(String filename){
-        int type = Utils.parseVideoFileType(filename);
-        return Utils.getSavePath(type);
+        int type = GolukUtils.parseVideoFileType(filename);
+        return GolukUtils.getSavePath(type);
     }
 
 
@@ -103,9 +103,9 @@ public class VideoDetailActivity extends Activity implements View.OnClickListene
                 if (downloadinfo.filename.contains(".jpg")||downloadinfo.filename.contains(".png")){
                     Toast.makeText(this, "/sdcard/goluk/video/"+downloadinfo.filename+" download success", Toast.LENGTH_SHORT).show();
                 }else{
-                    if(Utils.parseVideoFileType(filename) == IPCManagerFn.TYPE_SHORTCUT){
+                    if(GolukUtils.parseVideoFileType(filename) == IPCManagerFn.TYPE_SHORTCUT){
                         Toast.makeText(this, "/sdcard/goluk/video/wonderful/"+ downloadinfo.filename+ " download success", Toast.LENGTH_SHORT).show();
-                    }else if(Utils.parseVideoFileType(filename) == IPCManagerFn.TYPE_URGENT){
+                    }else if(GolukUtils.parseVideoFileType(filename) == IPCManagerFn.TYPE_URGENT){
                         Toast.makeText(this, "/sdcard/goluk/video/urgent/"+ downloadinfo.filename+ " download success", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(this, "/sdcard/goluk/video/loop/"+ downloadinfo.filename+ " download success", Toast.LENGTH_SHORT).show();
