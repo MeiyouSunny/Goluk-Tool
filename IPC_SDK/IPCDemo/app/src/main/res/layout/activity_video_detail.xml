@@ -23,6 +23,7 @@
             android:id="@+id/download_img_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="10sp"
             android:text="Download Image" />
 
         <Button
@@ -30,6 +31,29 @@
             android:layout_toRightOf="@+id/download_img_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="10sp"
             android:text="Download Video" />
+
+        <Button
+            android:id="@+id/stop_download_btn"
+            android:layout_toRightOf="@id/download_video_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:text="Stop Download"/>
     </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SD STATUS"/>
+        <EditText
+            android:id="@+id/sd_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </LinearLayout>
