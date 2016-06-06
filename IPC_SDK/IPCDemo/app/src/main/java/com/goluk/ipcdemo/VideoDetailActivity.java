@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -19,6 +20,8 @@ import com.goluk.ipcsdk.listener.IPCFileListener;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
 import com.goluk.ipcsdk.utils.GolukUtils;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -28,8 +31,10 @@ import cn.com.tiros.api.FileUtils;
 public class VideoDetailActivity extends Activity implements View.OnClickListener,IPCFileListener {
     public Button downloadimg;
     public Button downloadvideo;
+    public Button stopdownload;
     private VideoView mVideoviewPlayer;
     public IPCFileCommand mIPCFileCommand;
+    public EditText mSdStatus;
 
     private String filename;
     private long filetime;
@@ -45,9 +50,14 @@ public class VideoDetailActivity extends Activity implements View.OnClickListene
         downloadimg = (Button) findViewById(R.id.download_img_btn);
         downloadvideo = (Button) findViewById(R.id.download_video_btn);
         mVideoviewPlayer = (VideoView) findViewById(R.id.videoviewPlayer);
+        stopdownload = (Button) findViewById(R.id.stop_download_btn);
+        mSdStatus = (EditText) findViewById(R.id.sd_status);
         downloadvideo.setOnClickListener(this);
         downloadimg.setOnClickListener(this);
+        stopdownload.setOnClickListener(this);
         mIPCFileCommand = new IPCFileCommand(this,this);
+
+        mIPCFileCommand.queryRecordStorageStatus();
 
         Uri uri = Uri.parse(GolukUtils.getRemoteVideoUrl(filename));
         mVideoviewPlayer.setVideoURI(uri);
@@ -77,7 +87,15 @@ public class VideoDetailActivity extends Activity implements View.OnClickListene
             if (!file.exists()) {
                 mIPCFileCommand.downloadFile(imgFileName, "imgdownload", FileUtils.javaToLibPath(filePath), filetime);
             }
+        }else if(v.getId() == R.id.stop_download_btn){
+            boolean data = mIPCFileCommand.stopDownloadFile();
+            if(data){
+                Toast.makeText(this, "StopDownLoad SUCCESS", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(this, "StopDownLoad FIAL", Toast.LENGTH_SHORT).show();
+            }
         }
+
     }
 
     @Override
@@ -85,9 +103,23 @@ public class VideoDetailActivity extends Activity implements View.OnClickListene
 
     }
 
+    public String getStr(RecordStorageState recordStorgeState) {
+        return " SDCardActive:" + recordStorgeState.SDCardActive + " isSpaceTooSmall:" + recordStorgeState.isSpaceTooSmall + " totalSdSize:" + recordStorgeState.totalSdSize + " isSpaceTooSmall:" + recordStorgeState.userFilesSize + " userFilesSize:" + recordStorgeState.leftSize + " leftSize:" + recordStorgeState.isSpaceTooSmall + " normalRecQuota:" + recordStorgeState.normalRecQuota + " normalRecSize:" + recordStorgeState.normalRecSize
+                + " urgentRecQuota:" + recordStorgeState.urgentRecQuota
+                + " urgentRecSize:" + recordStorgeState.urgentRecSize
+                + " wonderfulRecQuota:" + recordStorgeState.wonderfulRecQuota
+                + " wonderfulRecSize:" + recordStorgeState.wonderfulRecSize
+                + " picQuota:" + recordStorgeState.picQuota
+                + " picSize:" + recordStorgeState.picSize;
+    }
+
     @Override
     public void callback_record_storage_status(RecordStorageState recordStorgeState) {
+        if(recordStorgeState != null){
 
+            mSdStatus.setText(getStr(recordStorgeState));
+            Toast.makeText(this, "callback_record_storage_status success", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

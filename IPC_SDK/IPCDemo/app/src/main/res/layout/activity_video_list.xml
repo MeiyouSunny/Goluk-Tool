@@ -15,7 +15,7 @@
             android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#FFFFFF"
+            android:background="#B0E0E6"
             android:text="UrgentlVideo"/>
         <Button
             android:id="@+id/loop_btn"
