@@ -65,6 +65,7 @@
     <string name="str_zhuge_video_player_wonderful">精彩</string>
     <string name="str_zhuge_video_player_urgent">紧急</string>
     <string name="str_zhuge_video_player_recycle">循环</string>
+    <string name="str_zhuge_video_player_ipc">IPC</string>
 
 <!-- ################### 导出后处理视频 ###################### -->
     <!--事件-->
