@@ -12,7 +12,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.goluk.ipcdemo.com.goluk.ipcdemo.widget.ToggleButton;
-import com.goluk.ipcsdk.commond.IPCConfigCommand;
+import com.goluk.ipcsdk.command.IPCConfigCommand;
 import com.goluk.ipcsdk.listener.IPCConfigListener;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
 

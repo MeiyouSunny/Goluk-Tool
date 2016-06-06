@@ -10,9 +10,9 @@ import android.widget.Toast;
 
 import com.goluk.ipcsdk.bean.DownloadInfo;
 import com.goluk.ipcsdk.bean.FileInfo;
-import com.goluk.ipcsdk.bean.RecordStorgeState;
+import com.goluk.ipcsdk.bean.RecordStorageState;
 import com.goluk.ipcsdk.bean.VideoInfo;
-import com.goluk.ipcsdk.commond.IPCFileCommand;
+import com.goluk.ipcsdk.command.IPCFileCommand;
 import com.goluk.ipcsdk.listener.IPCFileListener;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
 import com.goluk.ipcsdk.utils.GolukUtils;
@@ -120,7 +120,7 @@ public class IPCFileManagerActivity extends FragmentActivity implements View.OnC
     }
 
     @Override
-    public void callback_record_storage_status(RecordStorgeState recordStorgeState) {
+    public void callback_record_storage_status(RecordStorageState recordStorgeState) {
         if(recordStorgeState != null){
             Toast.makeText(this, "callback_record_storage_status success", Toast.LENGTH_SHORT).show();
         }
