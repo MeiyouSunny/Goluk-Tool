@@ -2,6 +2,8 @@ package com.goluk.ipcsdk.utils;
 
 import android.text.TextUtils;
 
+import com.goluk.ipcsdk.main.GolukIPCSdk;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 
@@ -130,7 +132,9 @@ public class GolukUtils {
 	 * @return the rtmp url
 	 */
 	public static String getRtmpPreviewUrl(){
-
+        if(!GolukIPCSdk.getInstance().isSdkValid()){
+            return null;
+        }
 		return "rtsp://" + "192.168.62.1" + "/stream1";
 
 	}
@@ -141,6 +145,9 @@ public class GolukUtils {
 	 * @return
 	 */
 	public static String getRemoteVideoUrl(String fileName){
+        if(!GolukIPCSdk.getInstance().isSdkValid()){
+            return null;
+        }
 		if(TextUtils.isEmpty(fileName)){
 			return null;
 		}
@@ -162,6 +169,9 @@ public class GolukUtils {
 	 * @return
 	 */
 	public static String getRemoteImageUrl(String fileName){
+        if(!GolukIPCSdk.getInstance().isSdkValid()){
+            return null;
+        }
 		if(TextUtils.isEmpty(fileName)){
 			return null;
 		}

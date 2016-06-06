@@ -41,14 +41,7 @@ public class GolukIPCSdk implements IPCManagerFn {
 
     private IPCInitListener mIPCInitListener;
     public GolukLogic mGoluk = null;
-    /**
-     * IPC回调监听列表
-     */
     private List<BaseIPCCommand> mCommandList = null;
-
-    /**
-     * 行车记录仪缓冲路径
-     */
     private String carrecorderCachePath = "";
 
     private static GolukIPCSdk instance;
@@ -297,7 +290,7 @@ public class GolukIPCSdk implements IPCManagerFn {
     }
 
     /**
-     * 设置IPC 连接模式
+     * set conn mode
      *
      * @param mode 0/1/2
      * @author jyf

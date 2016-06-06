@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.goluk.ipcsdk.commond.IPCConnCommand;
+import com.goluk.ipcsdk.command.IPCConnCommand;
 import com.goluk.ipcsdk.listener.IPCConnListener;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
 
