@@ -202,7 +202,15 @@ public class ZhugeUtils {
      * @param context
      */
     public static void eventChunkSplit(Context context) {
-        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_ae_split));
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_chunk_cut_video_type),
+                    context.getString(R.string.str_ae_split));
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_chunk_cut_video_tag), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -211,8 +219,31 @@ public class ZhugeUtils {
      * @param context
      */
     public static void eventChunkRemove(Context context) {
-        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_ae_delete));
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_chunk_cut_video_type),
+                    context.getString(R.string.str_ae_delete));
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_chunk_cut_video_tag), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+    /**
+     * 视频删除
+     *
+     * @param context
+     */
+//    public static void eventAddChunk(Context context, boolean ret) {
+//            String strRet = null;
+//            if(ret) {
+//                ret = context.getString();
+//            } else {
+//                ret = context.getString()
+//            }
+//        ZhugeSDK.getInstance().track(context, strRet);
+//    }
 
     /**
      * 上传分享视频
