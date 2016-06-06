@@ -28,6 +28,7 @@ import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -350,6 +351,25 @@ public class LocalFragment extends Fragment {
 	 */
 	private void gotoVideoPlayPage(int type, String path, String filename,String createTime, String videoHP, String size) {
 		if (!TextUtils.isEmpty(path)) {
+            switch (getVideoType(filename)) {
+                case 1:
+                    ZhugeUtils.eventAlbumPlayer(getActivity(),
+                            getString(R.string.str_zhuge_video_player_local),
+                            getString(R.string.str_zhuge_video_player_wonderful));
+                    break;
+                case 2:
+                    ZhugeUtils.eventAlbumPlayer(getActivity(),
+                            getString(R.string.str_zhuge_video_player_local),
+                            getString(R.string.str_zhuge_video_player_urgent));
+                    break;
+                case 3:
+                    ZhugeUtils.eventAlbumPlayer(getActivity(),
+                            getString(R.string.str_zhuge_video_player_local),
+                            getString(R.string.str_zhuge_video_player_recycle));
+                    break;
+                default:
+                    break;
+            }
 
 			if (!"0".equals(mFragmentAlbum.mPlatform)) {
 				if (type != 3) {// 不是循环视频
