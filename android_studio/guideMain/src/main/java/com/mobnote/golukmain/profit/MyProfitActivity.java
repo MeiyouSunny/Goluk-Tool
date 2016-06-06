@@ -270,8 +270,8 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener, O
 				mTextLeaveCount.setText(UserUtils.formatNumber(profitInfo.data.agold)
 						+ this.getResources().getString(R.string.str_profit_unit));
 			} else {
-				if(profitInfo.data != null){
-					if("10001".equals(profitInfo.data.result) || "10002".equals(profitInfo.data.result)){
+				if(null != profitInfo && profitInfo.data != null) {
+					if ("10001".equals(profitInfo.data.result) || "10002".equals(profitInfo.data.result)) {
 						mImageRefresh.setVisibility(View.VISIBLE);
 						mIsDataBack = true;
 						GolukUtils.startUserLogin(this);

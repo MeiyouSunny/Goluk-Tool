@@ -30,7 +30,7 @@ public class JavaScriptInterface {
     }
 
     @JavascriptInterface
-    public String getAppCommonData() {
+    public String getAppCommData() {
         JSONObject result = new JSONObject();
         GolukApplication app = GolukApplication.getInstance();
         result.put("commversion", GolukUtils.getCommversion());
