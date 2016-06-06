@@ -80,8 +80,6 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,I
 		saveHead = (Button) findViewById(R.id.saveBtn);
 		cancelBtn = (Button) findViewById(R.id.cancelBtn);
 		imageView = (ClipImageView) findViewById(R.id.src_pic);
-		
-		updUserHeadBeanRequest = new UpdUserHeadBeanRequest(IPageNotifyFn.PageType_ModifyHeadPic, this);
 
 		try {
 			String uriStr = getIntent().getStringExtra("imageuri");
@@ -199,6 +197,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,I
 	public void onClick(View view) {
 		int id = view.getId();
 		if (id == R.id.saveBtn) {
+			updUserHeadBeanRequest = new UpdUserHeadBeanRequest(IPageNotifyFn.PageType_ModifyHeadPic, this);
 			if (isSave) {
 				isSave = false;
 				
@@ -428,7 +427,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,I
 				}
 			}
 
-			if (headResult.success) {
+			if (headResult!=null && headResult.success) {
 				UpHeadData data = headResult.data;
 				String rst = data.result;
 				// 图片上传成功
