@@ -190,6 +190,7 @@
 
     <string name="str_zhuge_add_chunk_success">成功</string>
     <string name="str_zhuge_add_chunk_fail">失败</string>
+    <string name="str_zhuge_add_chunk_tag">视频后处理添加视频</string>
     <string name="str_zhuge_add_chunk_status">添加状态</string>
     <string name="str_zhuge_chunk_cut_video_type">裁剪类型</string>
     <string name="str_zhuge_chunk_cut_video_tag">裁剪视频</string>
