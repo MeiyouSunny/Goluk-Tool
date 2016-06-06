@@ -10,14 +10,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <Button
-            android:id="@+id/wonderful_btn"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:background="#B0E0E6"
-            android:text="WonderfulVideo"/>
-        <Button
             android:id="@+id/urgent_btn"
             android:layout_weight="1"
             android:textSize="12sp"

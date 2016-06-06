@@ -24,7 +24,6 @@ public class VideoListActivity extends Activity implements IPCFileListener,View.
 
     private VideoListAdapter vla= null;
 
-    private Button wonderfulBtn;
     private Button urgentBtn;
     private Button loopBtn;
 
@@ -46,10 +45,8 @@ public class VideoListActivity extends Activity implements IPCFileListener,View.
 
     private void initView(){
         mListView = (ListView) findViewById(R.id.video_list);
-        wonderfulBtn = (Button) findViewById(R.id.wonderful_btn);
         urgentBtn = (Button) findViewById(R.id.urgent_btn);
         loopBtn = (Button) findViewById(R.id.loop_btn);
-        wonderfulBtn.setOnClickListener(this);
         urgentBtn.setOnClickListener(this);
         loopBtn.setOnClickListener(this);
 
@@ -59,7 +56,7 @@ public class VideoListActivity extends Activity implements IPCFileListener,View.
         vla = new VideoListAdapter(this);
         mIPCFileCommand = new IPCFileCommand(this, this);
         mListView.setAdapter(vla);
-        boolean flog = mIPCFileCommand.queryFileListInfo(4, 20, 0, 2147483647, "1");
+        boolean flog = mIPCFileCommand.queryFileListInfo(1, 20, 0, 2147483647, "1");
     }
 
 
@@ -91,10 +88,6 @@ public class VideoListActivity extends Activity implements IPCFileListener,View.
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.wonderful_btn:
-                mIPCFileCommand.queryFileListInfo(4, 20, 0, 2147483647, "1");
-                setBtnBg(IPCManagerFn.TYPE_SHORTCUT);
-                break;
             case R.id.loop_btn:
                 mIPCFileCommand.queryFileListInfo(1, 20, 0, 2147483647, "1");
                 setBtnBg(IPCManagerFn.TYPE_CIRCULATE);
@@ -109,14 +102,11 @@ public class VideoListActivity extends Activity implements IPCFileListener,View.
     }
 
     private void setBtnBg(int type){
-        wonderfulBtn.setBackgroundColor(getResources().getColor(R.color.not_select_color));
         urgentBtn.setBackgroundColor(getResources().getColor(R.color.not_select_color));
         loopBtn.setBackgroundColor(getResources().getColor(R.color.not_select_color));
 
         if(type == IPCManagerFn.TYPE_CIRCULATE){
             loopBtn.setBackgroundColor(getResources().getColor(R.color.select_color));
-        }else if(type == IPCManagerFn.TYPE_SHORTCUT){
-            wonderfulBtn.setBackgroundColor(getResources().getColor(R.color.select_color));
         }else if(type == IPCManagerFn.TYPE_URGENT){
             urgentBtn.setBackgroundColor(getResources().getColor(R.color.select_color));
         }
