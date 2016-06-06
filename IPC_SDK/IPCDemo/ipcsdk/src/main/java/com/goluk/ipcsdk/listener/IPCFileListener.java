@@ -1,7 +1,7 @@
 package com.goluk.ipcsdk.listener;
 
 import com.goluk.ipcsdk.bean.DownloadInfo;
-import com.goluk.ipcsdk.bean.RecordStorgeState;
+import com.goluk.ipcsdk.bean.RecordStorageState;
 import com.goluk.ipcsdk.bean.FileInfo;
 import com.goluk.ipcsdk.bean.VideoInfo;
 
@@ -20,7 +20,7 @@ public interface IPCFileListener {
     /**
      * @param recordStorgeState
      */
-    public void callback_record_storage_status(RecordStorgeState recordStorgeState);
+    public void callback_record_storage_status(RecordStorageState recordStorgeState);
 
     /**
      *

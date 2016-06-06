@@ -1,14 +1,14 @@
-package com.goluk.ipcsdk.commond;
+package com.goluk.ipcsdk.command;
 import android.content.Context;
 import android.util.Log;
 
 import com.goluk.ipcsdk.bean.DownloadInfo;
 import com.goluk.ipcsdk.bean.FileInfo;
-import com.goluk.ipcsdk.bean.RecordStorgeState;
+import com.goluk.ipcsdk.bean.RecordStorageState;
 import com.goluk.ipcsdk.bean.VideoInfo;
 import com.goluk.ipcsdk.listener.IPCFileListener;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
-import com.goluk.ipcsdk.utils.IpcDataParser;
+import com.goluk.ipcsdk.utils.IPCDataParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,7 +49,7 @@ public class IPCFileCommand extends BaseIPCCommand{
         if(!GolukIPCSdk.getInstance().isSdkValid()){
             return false;
         }
-        String queryParam = IpcDataParser.getQueryMoreFileJson(filetype, limitCount, timestart, timeend,resform);
+        String queryParam = IPCDataParser.getQueryMoreFileJson(filetype, limitCount, timestart, timeend,resform);
         return GolukIPCSdk.getInstance().mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_Query,
                 queryParam);
     }
@@ -99,7 +99,7 @@ public class IPCFileCommand extends BaseIPCCommand{
         if(!GolukIPCSdk.getInstance().isSdkValid()){
             return false;
         }
-        String json = IpcDataParser.getDownFileJson(filename, tag, savepath, filetime);
+        String json = IPCDataParser.getDownFileJson(filename, tag, savepath, filetime);
         if (filename.contains(".mp4")) {
             Log.e("","==downloadFile==json=" + json);
             Log.e("xuhw", "YYYYYY====downloadFile=====json=" + json);
@@ -127,15 +127,15 @@ public class IPCFileCommand extends BaseIPCCommand{
     public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
         switch (msg){
             case IPC_VDCPCmd_Query:
-                ArrayList<VideoInfo> fileList = IpcDataParser.parseVideoListData((String) param2);
+                ArrayList<VideoInfo> fileList = IPCDataParser.parseVideoListData((String) param2);
                 ipcFileListener.callback_query_files(fileList);
                 break;
             case IPC_VDCPCmd_RecPicUsage:
-                RecordStorgeState recordStorgeState = IpcDataParser.parseRecordStorageStatus((String) param2);
+                RecordStorageState recordStorgeState = IPCDataParser.parseRecordStorageStatus((String) param2);
                 ipcFileListener.callback_record_storage_status(recordStorgeState);
                 break;
             case IPC_VDCPCmd_SingleQuery:
-                FileInfo fileInfo = IpcDataParser.parseSingleFileResult((String) param2);
+                FileInfo fileInfo = IPCDataParser.parseSingleFileResult((String) param2);
                 ipcFileListener.callback_find_single_file(fileInfo);
                 break;
             case IPC_VDTP_Msg_File:

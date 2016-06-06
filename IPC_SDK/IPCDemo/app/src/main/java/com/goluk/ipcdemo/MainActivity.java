@@ -10,7 +10,6 @@ import android.widget.Toast;
 import com.goluk.ipcsdk.commond.IPCConnCommand;
 import com.goluk.ipcsdk.listener.IPCConnListener;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
-import com.goluk.ipcsdk.utils.IPCConnectState;
 
 public class MainActivity extends Activity implements View.OnClickListener, IPCConnListener {
 
@@ -108,8 +107,6 @@ public class MainActivity extends Activity implements View.OnClickListener, IPCC
     @Override
     protected void onResume() {
         super.onResume();
-        boolean wifiresult = IPCConnectState.getConnectState().getState();
-        Toast.makeText(MainActivity.this, "wifi connect state :" + wifiresult, Toast.LENGTH_SHORT).show();
     }
 
     @Override

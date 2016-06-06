@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.text.TextUtils;
 
-import com.goluk.ipcsdk.commond.BaseIPCCommand;
+import com.goluk.ipcsdk.command.BaseIPCCommand;
 import com.goluk.ipcsdk.listener.IPCInitListener;
 import com.goluk.ipcsdk.utils.GolukUtils;
 

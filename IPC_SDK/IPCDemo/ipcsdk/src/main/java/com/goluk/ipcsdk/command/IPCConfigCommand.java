@@ -1,15 +1,14 @@
-package com.goluk.ipcsdk.commond;
+package com.goluk.ipcsdk.command;
 
 import android.content.Context;
 
 import com.goluk.ipcsdk.listener.IPCConfigListener;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
-import com.goluk.ipcsdk.utils.IpcDataParser;
+import com.goluk.ipcsdk.utils.IPCDataParser;
 
 import org.json.JSONObject;
 
 import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 
 /**
  * Created by leege100 on 16/5/26.
@@ -47,7 +46,7 @@ public class IPCConfigCommand extends BaseIPCCommand{
             json = "";
         }
         return GolukIPCSdk.getInstance().mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
-                IPCManagerFn.IPC_VDCPCmd_SetRecAudioCfg, json);
+                IPC_VDCPCmd_SetRecAudioCfg, json);
     }
 
     /**
@@ -98,7 +97,7 @@ public class IPCConfigCommand extends BaseIPCCommand{
             if(msg ==  IPC_VDCP_Msg_Init){
             }else if (msg == IPC_VDCP_Msg_GetTime) {
                 if (param1 == RESULE_SUCESS) {
-                    long time = IpcDataParser.parseIPCTime((String) param2) * 1000;
+                    long time = IPCDataParser.parseIPCTime((String) param2) * 1000;
                     mIpcConfigListener.callback_getTime(time);
                 }
             } else if (msg == IPC_VDCP_Msg_SetTime) {

@@ -3,7 +3,7 @@ package com.goluk.ipcsdk.utils;
 import android.text.TextUtils;
 
 import com.goluk.ipcsdk.bean.FileInfo;
-import com.goluk.ipcsdk.bean.RecordStorgeState;
+import com.goluk.ipcsdk.bean.RecordStorageState;
 import com.goluk.ipcsdk.bean.VideoInfo;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
 
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 import cn.com.tiros.debug.GolukDebugUtils;
 
-public class IpcDataParser {
+public class IPCDataParser {
 
     public static class TriggerRecord {
         /**
@@ -190,7 +190,7 @@ public class IpcDataParser {
                 if (null != info) {
                     VideoInfo mVideoInfo = getVideoInfo(info);
 //					if (files == null) {
-//						int type = IpcDataParser.parseVideoFileType(mVideoInfo.filename);
+//						int type = IPCDataParser.parseVideoFileType(mVideoInfo.filename);
 //						files = FileInfoManagerUtils.getFileNames(filePath + videoPaths[type], "(.+?mp4)");
 //					}
 //
@@ -394,9 +394,9 @@ public class IpcDataParser {
      * @date 2015年4月7日
      */
 
-    public static RecordStorgeState parseRecordStorageStatus(String json) {
+    public static RecordStorageState parseRecordStorageStatus(String json) {
         try {
-            RecordStorgeState mRecordStorgeState = new RecordStorgeState();
+            RecordStorageState mRecordStorgeState = new RecordStorageState();
             JSONObject obj = new JSONObject(json);
             int SDCardActive = obj.getInt("SDCardActive");
             int isSpaceTooSmall = obj.getInt("isSpaceTooSmall");
