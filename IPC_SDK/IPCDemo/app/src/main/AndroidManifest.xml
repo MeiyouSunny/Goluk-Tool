@@ -32,14 +32,6 @@
         <!-- 必须 录制主服务 -->
         <service android:name="com.rd.car.CarRecorderService" />
 
-        <receiver android:name="com.goluk.ipcsdk.receiver.NetworkStateReceiver">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-
         <activity android:name=".VideoDetailActivity"></activity>
     </application>
 

@@ -16,8 +16,21 @@
 #   public *;
 #}
 -keepattributes *Annotation*
--keep public class com.google.vending.licensing.ILicensingService
--keep public class com.android.vending.licensing.ILicensingService
+-keep public class cn.com.goluk.ipcsdk.bean.DownloadInfo
+-keep public class cn.com.goluk.ipcsdk.bean.FileInfo
+-keep public class cn.com.goluk.ipcsdk.bean.RecordStorageState
+-keep public class cn.com.goluk.ipcsdk.bean.VideoInfo
+-keep public class cn.com.goluk.ipcsdk.command.BaseIPCCommand
+-keep public class cn.com.goluk.ipcsdk.command.IPCConfigCommand
+-keep public class cn.com.goluk.ipcsdk.command.IPCConnCommand
+-keep public class cn.com.goluk.ipcsdk.command.IPCFileCommand
+-keep public class cn.com.goluk.ipcsdk.listener.IPCConfigListener
+-keep public class cn.com.goluk.ipcsdk.listener.IPCConnListener
+-keep public class cn.com.goluk.ipcsdk.listener.IPCFileListener
+-keep public class cn.com.goluk.ipcsdk.listener.IPCInitListener
+-keep public class cn.com.goluk.ipcsdk.main.GolukIPCSdk
+-keep public class cn.com.goluk.ipcsdk.utils.GolukUtils
+-keep public class cn.com.goluk.ipcsdk.utils.IpcDataParser
 
 # For native methods, see http://proguard.sourceforge.net/manual/examples.html#native
 -keepclasseswithmembernames class * {

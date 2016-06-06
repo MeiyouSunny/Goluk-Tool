@@ -415,6 +415,9 @@ public class UrgentFragment extends Fragment implements IPCManagerFn{
 	private void gotoVideoPlayPage(int from, String path,String filename, String createTime, String videoHP, String size) {
 		if (!isShowPlayer) {
 			isShowPlayer = true;
+            ZhugeUtils.eventAlbumPlayer(getActivity(),
+                    getString(R.string.str_zhuge_video_player_urgent),
+                    getString(R.string.str_zhuge_video_player_urgent));
             GolukUtils.startPhotoAlbumPlayerActivity(UrgentFragment.this.getContext(),PhotoAlbumConfig.PHOTO_BUM_IPC_URG,"ipc",path,
                     filename,createTime,videoHP,size);
 		}
