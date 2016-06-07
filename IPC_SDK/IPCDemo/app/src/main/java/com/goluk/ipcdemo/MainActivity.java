@@ -96,7 +96,7 @@ public class MainActivity extends Activity implements View.OnClickListener, IPCC
                 startIPCConfigActivity();
                 break;
             case R.id.btIPCFileManage:
-                Intent intent = new Intent(this,IPCFileManagerActivity.class);
+                Intent intent = new Intent(this,VideoListActivity.class);
                 startActivity(intent);
                 break;
             default:

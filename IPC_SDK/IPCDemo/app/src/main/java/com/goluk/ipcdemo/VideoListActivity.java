@@ -56,7 +56,7 @@ public class VideoListActivity extends Activity implements IPCFileListener,View.
         vla = new VideoListAdapter(this);
         mIPCFileCommand = new IPCFileCommand(this, this);
         mListView.setAdapter(vla);
-        boolean flog = mIPCFileCommand.queryFileListInfo(1, 20, 0, 2147483647, "1");
+        boolean flog = mIPCFileCommand.queryFileListInfo(2, 20, 0, 2147483647, "1");
     }
 
 

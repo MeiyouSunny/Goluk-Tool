@@ -1,6 +1,8 @@
 package com.goluk.ipcdemo;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import com.goluk.ipcsdk.utils.GolukIPCUtils;
 import com.goluk.ipcsdk.utils.GolukUtils;
 
 import java.io.File;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
@@ -37,6 +40,8 @@ public class VideoDetailActivity extends Activity implements View.OnClickListene
 
     private String filename;
     private long filetime;
+
+    ProgressDialog dialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,12 +79,29 @@ public class VideoDetailActivity extends Activity implements View.OnClickListene
         return GolukUtils.getSavePath(type);
     }
 
+    public void createDialog(){
+        dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        dialog.setIcon(android.R.drawable.ic_dialog_alert);
+        dialog.setMax(100);
+        dialog.setButton("OK", new ProgressDialog.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        dialog.setCancelable(true);
+        dialog.show();
+        dialog.setProgress(0);
+    }
+
 
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.download_video_btn){
+            createDialog();
             mIPCFileCommand.downloadFile(filename,"videodownload",this.getSavepath(filename),filetime);
         }else if(v.getId() == R.id.download_img_btn){
+            createDialog();
             final String imgFileName = filename.replace("mp4", "jpg");
             final String filePath = GolukIPCSdk.getInstance().getCarrecorderCachePath() + File.separator + "image";
             File file = new File(filePath + File.separator + imgFileName);
@@ -129,6 +151,14 @@ public class VideoDetailActivity extends Activity implements View.OnClickListene
     @Override
     public void callback_download_file(DownloadInfo downloadinfo) {
         if(downloadinfo != null){
+            if(downloadinfo.filerecvsize > 0){
+                double  percent =((double) downloadinfo.filerecvsize)/ ((double) downloadinfo.filesize);
+                int p = (int)(percent * 100);
+                dialog.setProgress(p);
+            }else{
+                dialog.setProgress(100);
+            }
+
             Log.e("","zh filesize: " + downloadinfo.filesize + "  filerecvsize: " + downloadinfo.filerecvsize + "  status:" + downloadinfo.status);
             if(downloadinfo.status == 0){
                 if (downloadinfo.filename.contains(".jpg")||downloadinfo.filename.contains(".png")){
