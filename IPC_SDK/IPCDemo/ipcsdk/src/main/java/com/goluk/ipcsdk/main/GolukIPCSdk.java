@@ -172,7 +172,7 @@ public class GolukIPCSdk implements IPCManagerFn {
     }
 
     /**
-     * 获取行车记录仪缓冲路径
+     * get carrecorder cache path
      *
      * @return
      * @author xuhw

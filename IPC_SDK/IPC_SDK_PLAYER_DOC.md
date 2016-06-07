@@ -6,7 +6,7 @@
 
 		Discussion
 		set player`s data source
-		@param urlString The RTSP URL String , you can get the url by [PICUtils.getRtmpPreviewUrl()].
+		@param urlString The RTSP URL String , you can get the url by [GolukIPCUtils.getRtmpPreviewUrl()].
 		  
 `start();`
 
@@ -58,7 +58,7 @@
 	mRtspPlayerView.setZOrderMediaOverlay(true);
 	mRtspPlayerView.setBufferTime(1000);
 	mRtspPlayerView.setConnectionTimeout(30000);
-	mRtspplayer.setDataSource(PICUtils.getRtmpPreviewUrl());
+	mRtspplayer.setDataSource(GolukIPCUtils.getRtmpPreviewUrl());
 	mRtspplayer.setPlayerListener(mPlayerListener);
 ```
 **2. Play video**

@@ -18,9 +18,8 @@ import com.goluk.ipcsdk.bean.VideoInfo;
 import com.goluk.ipcsdk.command.IPCFileCommand;
 import com.goluk.ipcsdk.listener.IPCFileListener;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
+import com.goluk.ipcsdk.utils.GolukIPCUtils;
 import com.goluk.ipcsdk.utils.GolukUtils;
-
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ public class VideoDetailActivity extends Activity implements View.OnClickListene
 
         mIPCFileCommand.queryRecordStorageStatus();
 
-        Uri uri = Uri.parse(GolukUtils.getRemoteVideoUrl(filename));
+        Uri uri = Uri.parse(GolukIPCUtils.getRemoteVideoUrl(filename));
         mVideoviewPlayer.setVideoURI(uri);
         mVideoviewPlayer.start();
     }
