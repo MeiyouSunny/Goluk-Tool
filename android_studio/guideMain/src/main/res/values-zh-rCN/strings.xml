@@ -189,6 +189,7 @@
     <string name="my_profit_leave">余额</string>
     <string name="my_profit_detail_title_text">收益明细</string>
     <string name="my_profit_G_text">获得奖励Ｇ币</string>
+    <string name="str_my_profit_rank_text">抽奖获得G币</string>
     <string name="video_detail_head_active_title">此视频获得了活动奖励</string>
     <string name="video_detail_head_sys_title">此视频获得了系统奖励</string>
     <string name="video_detail_head_recom_title">此视频已入选推荐视频</string>
