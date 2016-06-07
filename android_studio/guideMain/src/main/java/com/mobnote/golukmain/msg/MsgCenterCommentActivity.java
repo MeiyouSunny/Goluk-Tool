@@ -225,14 +225,6 @@ public class MsgCenterCommentActivity extends BaseActivity implements OnClickLis
 		finish();
 	}
 
-	TimerTask task = new TimerTask(){
-
-		public void run(){
-			MsgCenterCommentActivity.this.finish();
-		}
-
-	};
-
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		if (requestType == IPageNotifyFn.PageType_MsgComment) {
@@ -247,8 +239,6 @@ public class MsgCenterCommentActivity extends BaseActivity implements OnClickLis
                     }
                     GolukUtils.showToast(this, this.getResources().getString(R.string.invalid_token));
 					GolukUtils.startUserLogin(this);
-					Timer timer = new Timer();
-					timer.schedule(task, GolukConfig.CLOSE_ACTIVITY_TIMER);
                     return;
 				}
 			}

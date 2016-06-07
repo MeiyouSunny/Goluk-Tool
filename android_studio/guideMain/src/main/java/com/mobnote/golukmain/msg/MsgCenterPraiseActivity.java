@@ -1,9 +1,6 @@
 package com.mobnote.golukmain.msg;
 
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
@@ -116,14 +113,6 @@ public class MsgCenterPraiseActivity extends BaseActivity implements OnClickList
 		}
 	}
 
-	TimerTask task = new TimerTask(){
-
-		public void run(){
-			MsgCenterPraiseActivity.this.finish();
-		}
-
-	};
-
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		if (requestType == IPageNotifyFn.PageType_MsgPraise) {
@@ -137,8 +126,7 @@ public class MsgCenterPraiseActivity extends BaseActivity implements OnClickList
 					mRefreshLayout.setVisibility(View.VISIBLE);
 					GolukUtils.showToast(this, this.getResources().getString(R.string.invalid_token));
 					GolukUtils.startUserLogin(this);
-					Timer timer = new Timer();
-					timer.schedule(task, GolukConfig.CLOSE_ACTIVITY_TIMER);
+					this.finish();
 					return;
 				}
 			}

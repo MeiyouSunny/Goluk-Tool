@@ -340,6 +340,9 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 	}
 
 	public void startUserLogin(){
+		mApp.isUserLoginSucess = false;
+		mApp.loginStatus = 2;
+		mApp.autoLoginStatus = 3;
 		Intent loginIntent = null;
 		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(getActivity(), InternationUserLoginActivity.class);
@@ -496,7 +499,6 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 					if(10001 == bean.code|| 10002 == bean.code){
 						mLoginRL.setVisibility(View.VISIBLE);
 						mListView.setVisibility(View.GONE);
-						mApp.isUserLoginSucess = false;
 						startUserLogin();
 						return;
 					}else if(bean.code == 12011){
@@ -531,7 +533,6 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 				if(10001 == bean.code|| 10002 == bean.code){
 					mLoginRL.setVisibility(View.VISIBLE);
 					mListView.setVisibility(View.GONE);
-					mApp.isUserLoginSucess = false;
 					startUserLogin();
 					return;
 				}

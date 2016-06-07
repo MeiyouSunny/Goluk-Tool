@@ -162,16 +162,6 @@ public class MyPraisedActivity extends BaseActivity implements IRequestResultLis
 		super.onDestroy();
 	};
 
-	public void startUserLogin(){
-		Intent loginIntent = null;
-		if(GolukApplication.getInstance().isMainland() == false){
-			loginIntent = new Intent(this, InternationUserLoginActivity.class);
-		}else{
-			loginIntent = new Intent(this, UserLoginActivity.class);
-		}
-		startActivity(loginIntent);
-	}
-
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		// TODO Auto-generated method stub
@@ -193,7 +183,11 @@ public class MyPraisedActivity extends BaseActivity implements IRequestResultLis
 			if(bean != null && bean.data != null){
 				if ("10001".equals(bean.data.result) || "10002".equals(bean.data.result)){
 					setEmptyView();
-					startUserLogin();
+					GolukApplication.getInstance().isUserLoginSucess = false;
+					GolukApplication.getInstance().loginStatus = 2;
+					GolukApplication.getInstance().autoLoginStatus = 3;
+					GolukUtils.startUserLogin(this);
+					this.finish();
 					return;
 				}
 			}
