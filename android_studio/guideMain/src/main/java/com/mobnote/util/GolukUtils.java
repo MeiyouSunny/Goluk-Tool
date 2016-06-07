@@ -1083,12 +1083,14 @@ public class GolukUtils {
         context.startActivity(intent);
     }
 
-	public static void startVideoShareActivity(Context context, int type, String path, String filename,boolean isAEVideo) {
+	public static void startVideoShareActivity(Context context, int type, String path, String filename, boolean isAEVideo, int duration, String quality) {
 		Intent intent = new Intent(context, VideoShareActivity.class);
 		intent.putExtra("vidType", type);
 		intent.putExtra("vidPath", path);
 		intent.putExtra("filename", filename);
         intent.putExtra("isAEVideo",isAEVideo);
+		intent.putExtra("video_duration", duration);
+		intent.putExtra("video_quality", quality);
 		context.startActivity(intent);
 	}
 

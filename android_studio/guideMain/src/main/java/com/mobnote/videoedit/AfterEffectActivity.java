@@ -584,7 +584,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                     ZhugeUtils.eventVideoExport(this, durationStr, musicName, mExportQuality);
                 }
 
-                GolukUtils.startVideoShareActivity(AfterEffectActivity.this, PhotoAlbumConfig.PHOTO_BUM_IPC_WND, retBean.path, retBean.path, true);
+                GolukUtils.startVideoShareActivity(AfterEffectActivity.this, PhotoAlbumConfig.PHOTO_BUM_IPC_WND,
+                        retBean.path, retBean.path, true, (int)(getChannelDuration() * 1000), mExportQuality);
                 finish();
             } else {
                 Toast.makeText(this, getString(R.string.str_video_export_failed), Toast.LENGTH_SHORT).show();

@@ -109,6 +109,8 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     private int mSelectedShareType;
     private String mSelectedShareString;
     private boolean isAEVideo;//是否是后经过后处理的视频
+    private int mVideoDuration;
+    private String mVideoQuality;
 
     PopupWindow mPopupWindow;
     boolean isPopup;
@@ -193,18 +195,22 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         outState.putBoolean("isAEVideo",isAEVideo);
         super.onSaveInstanceState(outState);
     }
-    private void initData(Bundle savedInstanceState){
 
+    private void initData(Bundle savedInstanceState){
         if (savedInstanceState == null) {
             mVideoPath = getIntent().getStringExtra("vidPath");
             videoName = getIntent().getStringExtra("filename");
             mVideoType = getIntent().getIntExtra("vidType",1);
             isAEVideo = getIntent().getBooleanExtra("isAEVideo",false);
+            mVideoDuration = getIntent().getIntExtra("video_duration", 0);
+            mVideoQuality = getIntent().getStringExtra("video_quality");
         } else {
             mVideoPath = savedInstanceState.getString("vidPath");
             mVideoType = savedInstanceState.getInt("vidType", 2);
             videoName = savedInstanceState.getString("filename");
             isAEVideo = savedInstanceState.getBoolean("isAEVideo");
+            mVideoDuration = getIntent().getIntExtra("video_duration", 0);
+            mVideoQuality = getIntent().getStringExtra("video_quality");
         }
 
         mCurrSelectedSharePlatform = SharePlatformBean.SHARE_PLATFORM_NULL;
@@ -567,7 +573,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         GetShareAddressRequest request = new GetShareAddressRequest(IPageNotifyFn.PageType_Share, this);
         request.get(t_vid, t_type, desc, selectTypeJson, isSeque, videoCreateTime, t_signTime, channelid, activityid,
                 activityname, t_location, videoFrom);
-        ZhugeUtils.eventShareVideo(this, t_type, mShareDiscrible, mCurrSelectedSharePlatform,
+        ZhugeUtils.eventShareVideo(this, t_type, mVideoQuality, mVideoDuration, mShareDiscrible, mCurrSelectedSharePlatform,
                 activityname);
     }
     private void exit() {

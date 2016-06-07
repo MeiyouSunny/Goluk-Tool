@@ -287,25 +287,35 @@ public class ZhugeUtils {
      * @param context
      * @param videoType    视频类型
      * @param videoQuality 分享视频质量
-     * @param connectIPC   分享时是否链接记录仪
      * @param videoLength  视频时长范围
      * @param desc         是否有人工描述
      * @param channel      分享渠道
      * @param action       参加活动
      */
-    public static void eventShareVideo(Context context, String videoType, /*String videoQuality, boolean connectIPC,
-                                       String videoLength, */String desc, int channel, String action) {
+    public static void eventShareVideo(Context context, String videoType, String videoQuality,
+                                       int videoLength, String desc, int channel, String action) {
+        float duration = ((float)videoLength) / 1000;
+        String durationStr = "unsupported length";
+        if(duration >= 10f && duration < 14f) {
+            durationStr = "10~13S";
+        } else if(duration >= 14f && duration <= 30f) {
+            durationStr = "14~30S";
+        } else if(duration > 30f && duration <= 60f) {
+            durationStr = "30~60S";
+        } else if(duration > 60f && duration <= 90f) {
+            durationStr = "60~90S";
+        }
         try {
             JSONObject json = new JSONObject();
             json.put(context.getString(R.string.str_zhuge_share_video_type), getVideoType(context, videoType));
-     //       json.put(context.getString(R.string.str_zhuge_share_video_quality), videoQuality);
+            json.put(context.getString(R.string.str_zhuge_share_video_quality), videoQuality);
             json.put(context.getString(R.string.str_zhuge_share_video_network), getNetworkType(context));
             if(GolukApplication.getInstance().isIpcLoginSuccess) {
                 json.put(context.getString(R.string.str_zhuge_share_video_connect_ipc), context.getString(R.string.str_zhuge_yes));
             } else {
                 json.put(context.getString(R.string.str_zhuge_share_video_connect_ipc), context.getString(R.string.str_zhuge_no));
             }
-       //     json.put(context.getString(R.string.str_zhuge_share_video_length), videoLength);
+            json.put(context.getString(R.string.str_zhuge_share_video_length), durationStr);
             if(TextUtils.isEmpty(desc)) {
                 json.put(context.getString(R.string.str_zhuge_share_video_desc), context.getString(R.string.str_zhuge_have_not));
             } else {
@@ -441,7 +451,7 @@ public class ZhugeUtils {
      * @return
      */
     private static String getVideoType(Context context, String type) {
-        String str = "";
+        String str = context.getString(R.string.str_zhuge_video_type_ssp);
         if ("1".equals(type)) {
             return context.getString(R.string.str_zhuge_video_type_bgt);
         } else if ("3".equals(type)) {
@@ -451,7 +461,7 @@ public class ZhugeUtils {
         } else if ("5".equals(type)) {
             return context.getString(R.string.str_zhuge_video_type_sgbl);
         } else {
-
+            str = context.getString(R.string.str_zhuge_video_type_ssp);
         }
         return str;
     }

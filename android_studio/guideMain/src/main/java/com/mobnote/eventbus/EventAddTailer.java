@@ -15,11 +15,11 @@ public class EventAddTailer{
     public static final int EXPORT_STATUS_FAILED = 4;
     private int exportStatus;
     private float exportProcess;
-    private String exprotPath;
+    private String exportPath;
     public EventAddTailer(int status,float process,String path){
         this.exportStatus = status;
         this.exportProcess = process;
-        this.exprotPath = path;
+        this.exportPath = path;
     }
 
     public int getExportStatus() {
@@ -38,11 +38,11 @@ public class EventAddTailer{
         this.exportProcess = exportProcess;
     }
 
-    public String getExprotPath() {
-        return exprotPath;
+    public String getExportPath() {
+        return exportPath;
     }
 
-    public void setExprotPath(String exprotPath) {
-        this.exprotPath = exprotPath;
+    public void setExportPath(String exprotPath) {
+        this.exportPath = exprotPath;
     }
 }
