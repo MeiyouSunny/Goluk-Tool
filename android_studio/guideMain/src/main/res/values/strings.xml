@@ -185,6 +185,7 @@
     <string name="my_profit_leave">Balance</string>
     <string name="my_profit_detail_title_text">Earning statement</string>
     <string name="my_profit_G_text">Rewarded with G Currency</string>
+    <string name="str_my_profit_rank_text">抽奖获得G币</string>
     <string name="video_detail_head_active_title">This Video has won the event award</string>
     <string name="video_detail_head_sys_title">This Video has won the system award</string>
     <string name="video_detail_head_recom_title">This Video has been selected for Recommendation</string>

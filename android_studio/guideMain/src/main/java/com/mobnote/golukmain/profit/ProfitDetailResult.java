@@ -23,5 +23,9 @@ public class ProfitDetailResult {
 	/**时间戳**/
 	@JSONField(name="timestamp")
 	public String timestamp;
+
+	/**收益类型**/
+	@JSONField(name = "type")
+	public int type;
 	
 }

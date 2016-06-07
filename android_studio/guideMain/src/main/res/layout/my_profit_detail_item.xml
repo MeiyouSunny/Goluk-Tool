@@ -41,6 +41,7 @@
             android:orientation="vertical" >
 
             <TextView
+                android:id="@+id/tv_profit_detail_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/my_profit_G_text"

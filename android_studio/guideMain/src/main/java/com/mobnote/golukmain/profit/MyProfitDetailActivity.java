@@ -268,8 +268,8 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
 		if(null != mAdapter) {
 			ProfitDetailResult income = (ProfitDetailResult) mAdapter.getItem(position-1);
-			if(null != income && !"".equals(income.vid)) {
-				Intent itVideoDetail = new Intent(MyProfitDetailActivity.this,VideoDetailActivity.class);
+			if(null != income && !"".equals(income.vid) && 100 != income.type) {
+				Intent itVideoDetail = new Intent(MyProfitDetailActivity.this, VideoDetailActivity.class);
 				itVideoDetail.putExtra(VideoDetailActivity.VIDEO_ID, income.vid);
 				startActivity(itVideoDetail);
 			}
