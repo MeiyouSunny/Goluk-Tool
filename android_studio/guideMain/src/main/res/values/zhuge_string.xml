@@ -189,6 +189,7 @@
     <string name="str_zhuge_user_type_t2">T2</string>
     <string name="str_zhuge_user_type_no_ipc">无设备</string>
 
+    <!-- ################### 视频后处理,添加,删除 ###################### -->
     <string name="str_zhuge_add_chunk_success">成功</string>
     <string name="str_zhuge_add_chunk_fail">失败</string>
     <string name="str_zhuge_add_chunk_tag">视频后处理添加视频</string>

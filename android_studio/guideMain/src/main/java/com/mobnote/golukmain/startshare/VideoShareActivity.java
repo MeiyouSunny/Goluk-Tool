@@ -53,6 +53,7 @@ import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
+import com.mobnote.util.ZhugeUtils;
 import com.mobnote.util.glideblur.BlurTransformation;
 
 import java.io.ByteArrayOutputStream;
@@ -566,6 +567,8 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         GetShareAddressRequest request = new GetShareAddressRequest(IPageNotifyFn.PageType_Share, this);
         request.get(t_vid, t_type, desc, selectTypeJson, isSeque, videoCreateTime, t_signTime, channelid, activityid,
                 activityname, t_location, videoFrom);
+        ZhugeUtils.eventShareVideo(this, t_type, mShareDiscrible, mCurrSelectedSharePlatform,
+                activityname);
     }
     private void exit() {
         if (isExiting) {

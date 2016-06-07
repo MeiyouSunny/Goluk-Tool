@@ -4,9 +4,11 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.thirdshare.bean.SharePlatformBean;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
 import org.json.JSONObject;
@@ -252,6 +254,33 @@ public class ZhugeUtils {
         }
     }
 
+    private static String getSharePlatform(Context context, int channel) {
+        switch (channel) {
+            case SharePlatformBean.SHARE_PLATFORM_QQ:
+                return context.getString(R.string.str_zhuge_share_video_channel_qq);
+            case SharePlatformBean.SHARE_PLATFORM_QQ_ZONE:
+                return context.getString(R.string.str_zhuge_share_video_channel_qq_space);
+            case SharePlatformBean.SHARE_PLATFORM_WEXIN:
+                return context.getString(R.string.str_zhuge_share_video_channel_weixin);
+            case SharePlatformBean.SHARE_PLATFORM_WEXIN_CIRCLE:
+                return context.getString(R.string.str_zhuge_share_video_channel_weixin_friends);
+            case SharePlatformBean.SHARE_PLATFORM_WEIBO_SINA:
+                return context.getString(R.string.str_zhuge_share_video_channel_sina);
+            case SharePlatformBean.SHARE_PLATFORM_FACEBOOK:
+                return context.getString(R.string.str_zhuge_share_video_channel_facebook);
+            case SharePlatformBean.SHARE_PLATFORM_LINE:
+                return context.getString(R.string.str_zhuge_share_video_channel_line);
+            case SharePlatformBean.SHARE_PLATFORM_WHATSAPP:
+                return context.getString(R.string.str_zhuge_share_video_channel_whatsapp);
+            case SharePlatformBean.SHARE_PLATFORM_TWITTER:
+                return context.getString(R.string.str_zhuge_share_video_channel_twitter);
+            case SharePlatformBean.SHARE_PLATFORM_INSTAGRAM:
+                return context.getString(R.string.str_zhuge_share_video_channel_instagram);
+            default:
+                return null;
+        }
+    }
+
     /**
      * 上传分享视频
      *
@@ -264,17 +293,25 @@ public class ZhugeUtils {
      * @param channel      分享渠道
      * @param action       参加活动
      */
-    public static void eventShareVideo(Context context, String videoType, String videoQuality, String connectIPC,
-                                       String videoLength, String desc, String channel, String action) {
+    public static void eventShareVideo(Context context, String videoType, /*String videoQuality, boolean connectIPC,
+                                       String videoLength, */String desc, int channel, String action) {
         try {
             JSONObject json = new JSONObject();
             json.put(context.getString(R.string.str_zhuge_share_video_type), getVideoType(context, videoType));
-            json.put(context.getString(R.string.str_zhuge_share_video_quality), videoQuality);
+     //       json.put(context.getString(R.string.str_zhuge_share_video_quality), videoQuality);
             json.put(context.getString(R.string.str_zhuge_share_video_network), getNetworkType(context));
-            json.put(context.getString(R.string.str_zhuge_share_video_connect_ipc), connectIPC);
-            json.put(context.getString(R.string.str_zhuge_share_video_length), videoLength);
-            json.put(context.getString(R.string.str_zhuge_share_video_desc), getYesOrNo(true, context, desc));
-            json.put(context.getString(R.string.str_zhuge_share_video_channel), channel);
+            if(GolukApplication.getInstance().isIpcLoginSuccess) {
+                json.put(context.getString(R.string.str_zhuge_share_video_connect_ipc), context.getString(R.string.str_zhuge_yes));
+            } else {
+                json.put(context.getString(R.string.str_zhuge_share_video_connect_ipc), context.getString(R.string.str_zhuge_no));
+            }
+       //     json.put(context.getString(R.string.str_zhuge_share_video_length), videoLength);
+            if(TextUtils.isEmpty(desc)) {
+                json.put(context.getString(R.string.str_zhuge_share_video_desc), context.getString(R.string.str_zhuge_have_not));
+            } else {
+                json.put(context.getString(R.string.str_zhuge_share_video_desc), context.getString(R.string.str_zhuge_have));
+            }
+            json.put(context.getString(R.string.str_zhuge_share_video_channel), getSharePlatform(context, channel));
             json.put(context.getString(R.string.str_zhuge_share_video_action), getAction(context, action));
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_share_video_event), json);
