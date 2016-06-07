@@ -277,7 +277,7 @@ public class ZhugeUtils {
             case SharePlatformBean.SHARE_PLATFORM_INSTAGRAM:
                 return context.getString(R.string.str_zhuge_share_video_channel_instagram);
             default:
-                return null;
+                return context.getString(R.string.str_zhuge_have_not);
         }
     }
 
