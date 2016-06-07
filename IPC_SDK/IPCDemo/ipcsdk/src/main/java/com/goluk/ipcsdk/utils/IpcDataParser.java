@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 import cn.com.tiros.debug.GolukDebugUtils;
 
-public class IpcDataParser {
+public class IPCDataParser {
 
     public static class TriggerRecord {
         /**

@@ -1,9 +1,5 @@
 package com.goluk.ipcsdk.utils;
 
-import android.text.TextUtils;
-
-import com.goluk.ipcsdk.main.GolukIPCSdk;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 
@@ -113,77 +109,17 @@ public class GolukUtils {
 		return false;
 	}
 
-	public static int parseVideoFileType(String filename) {
-		int type = -1;
+    public static int parseVideoFileType(String filename) {
+        int type = -1;
 
-		if (filename.contains("WND")) {
-			type = IPCManagerFn.TYPE_SHORTCUT;
-		} else if(filename.contains("URG")) {
-			type = IPCManagerFn.TYPE_URGENT;
-		}else if(filename.contains("NRM")) {
-			type = IPCManagerFn.TYPE_CIRCULATE;
-		}
-
-		return type;
-	}
-
-	/**
-	 * get rtmp video preview url
-	 * @return the rtmp url
-	 */
-	public static String getRtmpPreviewUrl(){
-        if(!GolukIPCSdk.getInstance().isSdkValid()){
-            return null;
+        if (filename.contains("WND")) {
+            type = IPCManagerFn.TYPE_SHORTCUT;
+        } else if(filename.contains("URG")) {
+            type = IPCManagerFn.TYPE_URGENT;
+        }else if(filename.contains("NRM")) {
+            type = IPCManagerFn.TYPE_CIRCULATE;
         }
-		return "rtsp://" + "192.168.62.1" + "/stream1";
 
-	}
-
-	/**
-	 * get remote video url
-	 * @param fileName
-	 * @return
-	 */
-	public static String getRemoteVideoUrl(String fileName){
-        if(!GolukIPCSdk.getInstance().isSdkValid()){
-            return null;
-        }
-		if(TextUtils.isEmpty(fileName)){
-			return null;
-		}
-		String[] names = fileName.split("_");
-		if (names != null && names.length > 3) {
-			if (names[0].equals("NRM")) {
-				fileName = names[0] + "_" + names[1];
-			} else {
-				fileName = names[0] + "_" + names[2];
-			}
-			return "http://" + "192.168.62.1" + "/api/video?id=" + fileName;
-		}
-		return null;
-	}
-
-	/**
-	 * get remote image url
-	 * @param fileName
-	 * @return
-	 */
-	public static String getRemoteImageUrl(String fileName){
-        if(!GolukIPCSdk.getInstance().isSdkValid()){
-            return null;
-        }
-		if(TextUtils.isEmpty(fileName)){
-			return null;
-		}
-		String[] names = fileName.split("_");
-		if (names != null && names.length > 3) {
-			if (names[0].equals("NRM")) {
-				fileName = names[0] + "_" + names[1];
-			} else {
-				fileName = names[0] + "_" + names[2];
-			}
-			return "http://" + "192.168.62.1" + "/api/thumb?id=" + fileName;
-		}
-		return null;
-	}
+        return type;
+    }
 }
