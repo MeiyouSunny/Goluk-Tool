@@ -125,10 +125,22 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 		if (id == R.id.back_btn) {
 			exit();
 		} else if (id == R.id.notify_setting_comment_btn) {
+			if(GolukApplication.getInstance().loginStatus != 1 ){
+				startUserLogin();
+				return;
+			}
 			setCommentState(!mIsCanComment);
 		} else if (id == R.id.notify_setting_prise_btn) {
+			if(GolukApplication.getInstance().loginStatus != 1 ){
+				startUserLogin();
+				return;
+			}
 			setPariseState(!isCanParise);
 		} else if (id == R.id.notify_setting_follow_btn) {
+			if(GolukApplication.getInstance().loginStatus != 1 ){
+				startUserLogin();
+				return;
+			}
 			setFollowState(!isCanFollow);
 		}
 	}
@@ -206,6 +218,7 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 //				SettingBean bean = JsonUtil.parsePushSettingJson((String) param2);
 				if (psb != null && psb.data!=null ){
 					if("10001".equals(psb.data.result) || "10002".equals(psb.data.result)){
+						GolukApplication.getInstance().loginStatus = 2;
 						startUserLogin();
 						return;
 					}
