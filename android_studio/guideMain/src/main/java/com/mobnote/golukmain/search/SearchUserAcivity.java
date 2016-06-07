@@ -95,6 +95,8 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 		setup();
 
 		sendRecommendRequest();
+
+		GolukUtils.showSoft(mSearchContentEt);
 	}
 
 	private void setup() {
@@ -303,9 +305,6 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 	}
 
 	protected void follow(final String linkuid,final String type){
-
-		//隐藏键盘
-		UserUtils.hideSoftMethod(this);
 
 		if(!GolukUtils.isNetworkConnected(this)) {
 			Toast.makeText(this,getString(R.string.network_error),
@@ -538,16 +537,16 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 		} 
 	}
 
-//	@Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-//            View v = getCurrentFocus();
-//            if (isShouldHideKeyboard(v, ev)) {
-//                hideKeyboard(v.getWindowToken());
-//            }
-//        }
-//        return super.dispatchTouchEvent(ev);
-//    }
+	@Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (isShouldHideKeyboard(v, ev)) {
+                hideKeyboard(v.getWindowToken());
+            }
+        }
+        return super.dispatchTouchEvent(ev);
+    }
 
     /**
      * 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘，因为当用户点击EditText时则不能隐藏
