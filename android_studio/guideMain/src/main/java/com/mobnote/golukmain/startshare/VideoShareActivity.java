@@ -573,7 +573,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         GetShareAddressRequest request = new GetShareAddressRequest(IPageNotifyFn.PageType_Share, this);
         request.get(t_vid, t_type, desc, selectTypeJson, isSeque, videoCreateTime, t_signTime, channelid, activityid,
                 activityname, t_location, videoFrom);
-        ZhugeUtils.eventShareVideo(this, t_type, mVideoQuality, mVideoDuration, mShareDiscrible, mCurrSelectedSharePlatform,
+        ZhugeUtils.eventShareVideo(this, mSelectedShareType + "", mVideoQuality, mVideoDuration, mShareDiscrible, mCurrSelectedSharePlatform,
                 activityname);
     }
     private void exit() {
