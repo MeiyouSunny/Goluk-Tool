@@ -196,7 +196,7 @@ public class GolukIPCSdk implements IPCManagerFn {
         }
         @Override
         protected String doInBackground(Integer... params) {
-            String postUrl = "http://svr.goluk.cn/cdcGraph/open.htm";
+            String postUrl = "https://s.goluk.cn/cdcGraph/open.htm";
             Map<String,String> map = new HashMap<>();
             map.put("method","appConfig");
             map.put("xieyi","200");
@@ -218,7 +218,7 @@ public class GolukIPCSdk implements IPCManagerFn {
             try {
                 url = new URL(postUrl);
                 connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("POST");
+                connection.setRequestMethod("GET");
                 connection.setDoInput(true);
                 connection.setDoOutput(true);
                 connection.setUseCaches(false);
@@ -270,6 +270,7 @@ public class GolukIPCSdk implements IPCManagerFn {
             JSONObject jsonObject = null;
             try {
                 jsonObject = new JSONObject(result);
+                //Log.i("IPCSdk","result:" + result);
                 JSONObject dataObject = jsonObject.getJSONObject("data");
                 String startTime = dataObject.getString("starttime");
                 String endTime = dataObject.getString("endtime");
@@ -279,12 +280,11 @@ public class GolukIPCSdk implements IPCManagerFn {
                     editor.putString("startTime", startTime);
                     editor.putString("endTime", endTime);
                     editor.commit();//提交修改
-
-                    initIPCLogic();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            initIPCLogic();
         }
     }
 
