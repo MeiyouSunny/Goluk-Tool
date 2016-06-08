@@ -29,8 +29,6 @@ import com.umeng.socialize.media.UMImage;
 
 import java.io.File;
 
-import cn.com.tiros.debug.GolukDebugUtils;
-
 /**
  * Created by leege100 on 16/5/18.
  */
@@ -38,6 +36,7 @@ public class ThirdShareTool extends AbsThirdShare{
     public ThirdShareTool(Activity activity, SharePlatformUtil spf, String surl, String curl, String db, String tl, Bitmap bitmap, String realDesc, String videoId, String shareType, String filePath) {
         super(activity, spf, surl, curl, db, tl, bitmap, realDesc, videoId, shareType, filePath);
         modifyUMDialog();
+        initFacebook();
     }
 
     private void initFacebook() {
@@ -217,7 +216,6 @@ public class ThirdShareTool extends AbsThirdShare{
             GolukUtils.showToast(mActivity, mActivity.getResources().getString(R.string.str_facebook_no_install));
             return;
         }
-        initFacebook();
         if (!isCanClick()) {
             return;
         }
