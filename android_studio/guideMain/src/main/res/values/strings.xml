@@ -900,8 +900,6 @@
     <string name="str_wonderfulvideo_and_photo">Wonderful Video + Photo</string>
     <string name="str_wonderfulvideo">Wonderful Video</string>
 
-    <!-- <string name="facebook_app_id">1679907912268496</string> -->
-    <string name="facebook_app_id">1693308594241132</string>
     <string name="login_or_txt">OR</string>
     <string name="login_in_facebook_btn">Login With Facebook</string>
     <string name="user_insert_msg">Dont have an account?</string>

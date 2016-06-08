@@ -987,8 +987,6 @@
     <string name="str_followed_now_login">现在去登录</string>
     <string name="zero">0</string>
     
-    <!-- <string name="facebook_app_id">1679907912268496</string> -->
-    <string name="facebook_app_id">1679907912268496</string>
     <string name="login_or_txt">或</string>
     <string name="login_in_facebook_btn">Facebook登录</string>
     <string name="user_insert_msg">还没有账号</string>

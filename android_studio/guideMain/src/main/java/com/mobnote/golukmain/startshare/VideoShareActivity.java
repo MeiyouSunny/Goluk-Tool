@@ -666,11 +666,11 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
                 }
                 break;
             case IPageNotifyFn.PageType_Share:
-                toInitState();
                 ShareDataFullBean shareDataFull = (ShareDataFullBean) result;
                 if(shareDataFull != null && shareDataFull.data != null){
                     if ("10001".equals(shareDataFull.data.result) || "10002".equals(shareDataFull.data.result)){
                         GolukUtils.startLoginActivity(VideoShareActivity.this);
+                        toInitState();
                         return;
                     }
                 }
@@ -692,6 +692,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         if (null != mShareLoading) {
             mShareLoading.hide();
             mShareLoading.switchState(ShareLoading.STATE_NONE);
+            mShareLoading = null;
         }
     }
     /**
@@ -700,17 +701,21 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     public void videoShareCallBack(ShareDataBean shareData) {
         if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_NULL){
             EventBus.getDefault().post(new EventShareCompleted(true));
+            toInitState();
             return;
         }
         if (mShareLoading == null || mUploadVideo == null) {
+            toInitState();
             return;
         }
         mShareLoading.switchState(ShareLoading.STATE_SHAREING);
         if (shareData == null) {
             GolukUtils.showToast(this, this.getString(R.string.str_get_share_address_fail));
+            toInitState();
             return;
         }
 
+        toInitState();
         final String title = this.getString(R.string.str_video_edit_share_title);
         final String describe = mShareDiscrible;
         final String sinaTxt = this.getString(R.string.str_share_board_real_desc);

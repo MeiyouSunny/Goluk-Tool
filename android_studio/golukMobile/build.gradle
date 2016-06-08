@@ -10,7 +10,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.mobnote.golukmobile"
+        applicationId "cn.com.mobnote.golukmobile"
         minSdkVersion 14
         targetSdkVersion 14
         multiDexEnabled true
@@ -18,20 +18,21 @@ android {
     productFlavors {
         internal {
             applicationId "cn.com.mobnote.golukmobile"
+            resValue 'string', 'FacebookID', '"1693308594241132"'
             manifestPlaceholders=[HTML_SCHEME : "golukapp" ,
                                   HTML_HOST : "goluk.app" ,
-                                  FacebookID : "771491992987541" ,
-                                  FacebookAuth : "com.facebook.app.FacebookContentProvider771491992987541"]
+                                  FacebookAuth : "com.facebook.app.FacebookContentProvider1693308594241132"]
         }
 
         international {
             applicationId "com.mobnote.golukmobile"
+            resValue 'string', 'FacebookID', '"1693308594241132"'
             manifestPlaceholders=[HTML_SCHEME : "igolukapp" ,
                                   HTML_HOST : "goluk.app" ,
-                                  FacebookID : "1693308594241132" ,
                                   FacebookAuth : "com.facebook.app.FacebookContentProvider1693308594241132"]
         }
     }
+
     signingConfigs {
         release {
             storeFile file("../../makeApk/xiaocheben.keystore")
