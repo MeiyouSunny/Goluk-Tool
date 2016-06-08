@@ -1088,4 +1088,5 @@
     <string name="str_default_video_edit_user_name">无名极友</string>
 
     <string name="str_sys_msg_gaward_text">恭喜您，抽中了</string>
+    <string name="str_rank_click_btn_txt">点击查看</string>
 </resources>
