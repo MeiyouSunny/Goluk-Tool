@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.facebook.FacebookSdk;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventGetShareSignTokenInvalid;
 import com.mobnote.eventbus.EventShareCompleted;
@@ -50,6 +51,7 @@ import com.mobnote.golukmain.thirdshare.ThirdShareTool;
 import com.mobnote.golukmain.thirdshare.bean.SharePlatformBean;
 import com.mobnote.map.LngLat;
 import com.mobnote.user.UserUtils;
+import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
@@ -143,6 +145,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(GolukApplication.getInstance(), GolukConfig.REQUEST_CODE_FACEBOOK_SHARE);
         setContentView(R.layout.activity_video_share);
         EventBus.getDefault().register(this);
 
@@ -689,7 +692,6 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         if (null != mShareLoading) {
             mShareLoading.hide();
             mShareLoading.switchState(ShareLoading.STATE_NONE);
-            mShareLoading = null;
         }
     }
     /**

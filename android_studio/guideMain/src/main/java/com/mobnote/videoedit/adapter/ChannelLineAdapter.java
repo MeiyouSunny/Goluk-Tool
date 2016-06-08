@@ -262,8 +262,8 @@ public class ChannelLineAdapter extends
 					}
 
 					if(null != videoThumbList && videoThumbList.size() > 0) {
-//						int count = videoThumbList.size();
-						for(int i = 0; i < bitmapCount; i++) {
+						int count = videoThumbList.size();
+						for(int i = 0; i < bitmapCount && i < count; i++) {
 							VideoThumb videoThumb = videoThumbList.get(i);
 							ImageView imageView = new ImageView(mContext);
 							// Last, to calc bitmap width

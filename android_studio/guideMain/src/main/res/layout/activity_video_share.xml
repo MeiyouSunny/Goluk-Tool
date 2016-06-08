@@ -135,9 +135,12 @@
                         android:id="@+id/tv_share_newActivity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="3dp"
+                        android:layout_marginBottom="2dp"
                         android:background="@drawable/share_newactivities_bubble"
                         android:text="@string/str_new"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:paddingBottom="4dp"
                         android:textColor="#FFFFFF"
                         android:textSize="10sp"
                         android:visibility="gone" />

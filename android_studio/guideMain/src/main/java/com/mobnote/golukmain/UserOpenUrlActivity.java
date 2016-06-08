@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.webkit.DownloadListener;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -34,6 +35,7 @@ import com.mobnote.golukmain.thirdshare.ThirdShareBean;
 import com.mobnote.user.MyProgressWebView;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.JavaScriptInterface;
 
 /**
  * 程序内打开浏览器
@@ -89,6 +91,9 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		mWebView = (MyProgressWebView) findViewById(R.id.my_webview);
         String currUa = mWebView.getSettings().getUserAgentString();
         mWebView.getSettings().setUserAgentString(currUa + "/ goluk /"+ "golukAndroid /");
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.setWebChromeClient(new WebChromeClient());
+        mWebView.addJavascriptInterface(new JavaScriptInterface(this), "mobile");
 
 		mTextRight = (TextView) findViewById(R.id.user_title_right);
 		if (GolukConfig.NEED_SHARE.equals(webType)) {
