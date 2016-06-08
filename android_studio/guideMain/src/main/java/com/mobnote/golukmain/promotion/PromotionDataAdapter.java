@@ -1,9 +1,5 @@
 package com.mobnote.golukmain.promotion;
 
-import java.util.ArrayList;
-
-import com.mobnote.golukmain.R;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -12,6 +8,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.mobnote.golukmain.R;
+
+import java.util.ArrayList;
 
 public class PromotionDataAdapter extends BaseAdapter {
 
@@ -166,10 +166,10 @@ public class PromotionDataAdapter extends BaseAdapter {
 			if (mSelectedActivityID != null && item.activityid.equalsIgnoreCase(mSelectedActivityID)) {
 				convertView.requestFocus();
 				itemHolder.title.setTextColor(Color.parseColor("#0080ff"));
-				itemHolder.itemLayout.setBackgroundResource(R.drawable.share_promotion_frame_selected);
+				itemHolder.title.setBackgroundResource(R.drawable.share_promotion_frame_selected);
 			} else {
 				itemHolder.title.setTextColor(Color.parseColor("#808080"));
-				itemHolder.itemLayout.setBackgroundResource(R.drawable.share_promotion_frame);
+				itemHolder.title.setBackgroundResource(R.drawable.share_promotion_frame);
 			}
 			break;
 		}
