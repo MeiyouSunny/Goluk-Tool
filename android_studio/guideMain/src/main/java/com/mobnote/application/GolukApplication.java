@@ -1152,9 +1152,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 	/**
 	 * 处理登录结果
 	 * 
-	 * @param success
 	 *            1/其它 成功/失败
-	 * @param param2
 	 *            登录回调数据
 	 * @author jiayf
 	 * @date Apr 20, 2015

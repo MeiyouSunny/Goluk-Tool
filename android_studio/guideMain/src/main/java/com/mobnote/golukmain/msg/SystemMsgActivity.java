@@ -193,14 +193,7 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
 		}
 	}
 
-	TimerTask task = new TimerTask(){
 
-		public void run(){
-			SystemMsgActivity.this.finish();
-		}
-
-	};
-	
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		if(requestType == IPageNotifyFn.PageType_SystemMsgMain){
@@ -213,8 +206,7 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
                     mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime(this));
                     GolukUtils.showToast(this, this.getResources().getString(R.string.invalid_token));
 					GolukUtils.startUserLogin(this);
-					Timer timer = new Timer();
-					timer.schedule(task, GolukConfig.CLOSE_ACTIVITY_TIMER);
+					this.finish();
                     return;
 				}
 			}

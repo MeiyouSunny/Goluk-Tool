@@ -340,6 +340,9 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 	}
 
 	public void startUserLogin(){
+		mApp.isUserLoginSucess = false;
+		mApp.loginStatus = 2;
+		mApp.autoLoginStatus = 3;
 		Intent loginIntent = null;
 		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(getActivity(), InternationUserLoginActivity.class);
@@ -370,10 +373,10 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 
             if(bean.data != null) {
                 if("10001".equals(bean.data.result) || "10002".equals(bean.data.result)){
-//                    mLoginRL.setVisibility(View.GONE);
-//                    mListView.setVisibility(View.VISIBLE);
-//                    sendFollowedContentRequest(REFRESH_NORMAL, mTimeStamp);
-startUserLogin();
+					mLoginRL.setVisibility(View.VISIBLE);
+					mListView.setVisibility(View.GONE);
+					mApp.isUserLoginSucess = false;
+					startUserLogin();
                     return;
                 }
             }
@@ -494,6 +497,8 @@ startUserLogin();
 				if(bean.code != 0) {
 					//token过期
 					if(10001 == bean.code|| 10002 == bean.code){
+						mLoginRL.setVisibility(View.VISIBLE);
+						mListView.setVisibility(View.GONE);
 						startUserLogin();
 						return;
 					}else if(bean.code == 12011){
@@ -526,6 +531,8 @@ startUserLogin();
 			if(null != bean) {
 				//token过期
 				if(10001 == bean.code|| 10002 == bean.code){
+					mLoginRL.setVisibility(View.VISIBLE);
+					mListView.setVisibility(View.GONE);
 					startUserLogin();
 					return;
 				}

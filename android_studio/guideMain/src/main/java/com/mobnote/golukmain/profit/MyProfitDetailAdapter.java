@@ -81,6 +81,7 @@ public class MyProfitDetailAdapter extends BaseAdapter {
 			holder.mImagePic = (ImageView) convertView.findViewById(R.id.my_profit_detail_item_videopic);
 			holder.mTextCount = (TextView) convertView.findViewById(R.id.my_profit_detail_item_count);
 			holder.mTextTime = (TextView) convertView.findViewById(R.id.my_profit_time);
+			holder.mTextType = (TextView) convertView.findViewById(R.id.tv_profit_detail_type);
 			
 			int nheight = (int) ((float) width / 1.77f);
 			int nwidth = (int) (GolukUtils.mDensity * 95);
@@ -98,12 +99,20 @@ public class MyProfitDetailAdapter extends BaseAdapter {
 		}
 		
 		ProfitDetailResult result = mIncomeList.get(arg0);
-		GolukDebugUtils.e("", "==========imageUrl========="+result.url);
-		GlideUtils.loadImage(mContext, holder.mImagePic, result.url, R.drawable.tacitly_pic);
-		holder.mTextCount.setText("+" + UserUtils.formatNumber(result.gold)
-				+ mContext.getResources().getString(R.string.str_profit_detail_unit));
-		holder.mTextTime.setText(GolukUtils.getCommentShowFormatTime(mContext, this.formatDate(result.time)));
-		
+		if(null != result){
+			GolukDebugUtils.e("", "==========imageUrl========="+result.url);
+			if (result.type == 100) {
+				holder.mTextType.setText(mContext.getString(R.string.str_my_profit_rank_text));
+				holder.mImagePic.setImageResource(R.drawable.icon_g);
+			} else {
+				holder.mTextType.setText(mContext.getString(R.string.my_profit_G_text));
+				GlideUtils.loadImage(mContext, holder.mImagePic, result.url, R.drawable.tacitly_pic);
+			}
+			holder.mTextCount.setText("+" + UserUtils.formatNumber(result.gold)
+					+ mContext.getResources().getString(R.string.str_profit_detail_unit));
+			holder.mTextTime.setText(GolukUtils.getCommentShowFormatTime(mContext, this.formatDate(result.time)));
+		}
+
 		return convertView;
 	}
 	
@@ -123,7 +132,7 @@ public class MyProfitDetailAdapter extends BaseAdapter {
 	
 	class ViewHolder {
 		ImageView mImagePic;
-		TextView mTextCount,mTextTime;
+		TextView mTextCount,mTextTime, mTextType;
 	}
 
 }

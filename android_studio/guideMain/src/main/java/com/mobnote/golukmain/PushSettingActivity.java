@@ -125,10 +125,31 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 		if (id == R.id.back_btn) {
 			exit();
 		} else if (id == R.id.notify_setting_comment_btn) {
+			if(GolukApplication.getInstance().loginStatus != 1 ){
+				GolukApplication.getInstance().isUserLoginSucess = false;
+				GolukApplication.getInstance().loginStatus = 2;
+				GolukApplication.getInstance().autoLoginStatus = 3;
+				GolukUtils.startUserLogin(this);
+				return;
+			}
 			setCommentState(!mIsCanComment);
 		} else if (id == R.id.notify_setting_prise_btn) {
+			if(GolukApplication.getInstance().loginStatus != 1 ){
+				GolukApplication.getInstance().isUserLoginSucess = false;
+				GolukApplication.getInstance().loginStatus = 2;
+				GolukApplication.getInstance().autoLoginStatus = 3;
+				GolukUtils.startUserLogin(this);
+				return;
+			}
 			setPariseState(!isCanParise);
 		} else if (id == R.id.notify_setting_follow_btn) {
+			if(GolukApplication.getInstance().loginStatus != 1 ){
+				GolukApplication.getInstance().isUserLoginSucess = false;
+				GolukApplication.getInstance().loginStatus = 2;
+				GolukApplication.getInstance().autoLoginStatus = 3;
+				GolukUtils.startUserLogin(this);
+				return;
+			}
 			setFollowState(!isCanFollow);
 		}
 	}
@@ -187,15 +208,6 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 
 	}
 
-	public void startUserLogin(){
-		Intent loginIntent = null;
-		if(GolukApplication.getInstance().isMainland() == false){
-			loginIntent = new Intent(this, InternationUserLoginActivity.class);
-		}else{
-			loginIntent = new Intent(this, UserLoginActivity.class);
-		}
-		startActivity(loginIntent);
-	}
 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
@@ -206,7 +218,11 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 //				SettingBean bean = JsonUtil.parsePushSettingJson((String) param2);
 				if (psb != null && psb.data!=null ){
 					if("10001".equals(psb.data.result) || "10002".equals(psb.data.result)){
-						startUserLogin();
+						GolukApplication.getInstance().isUserLoginSucess = false;
+						GolukApplication.getInstance().loginStatus = 2;
+						GolukApplication.getInstance().autoLoginStatus = 3;
+						GolukUtils.startUserLogin(this);
+						this.finish();
 						return;
 					}
 				}

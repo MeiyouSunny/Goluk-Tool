@@ -590,7 +590,9 @@
         <activity
             android:name="com.mobnote.golukmain.search.SearchUserAcivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:configChanges="screenSize|orientation"
+            android:windowSoftInputMode="adjustPan">
         </activity>
         <activity
             android:name="com.mobnote.golukmain.startshare.VideoShareActivity"
