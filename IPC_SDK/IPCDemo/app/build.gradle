@@ -30,7 +30,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'joda-time:joda-time:2.9.4'
 //    compile project(':ipcsdk')
-    compile(name:'ipcsdk', ext:'aar')
+    compile(name:'IPCSdk', ext:'aar')
     compile files('libs/rebound-0.3.7.jar')
     compile 'com.android.support:support-v4:22.0.0'
     compile 'com.android.support:appcompat-v7:22.0.0'
