@@ -443,11 +443,13 @@ public class FragmentMine extends Fragment implements OnClickListener,
 				}else{
 					loginIntent = new Intent(getActivity(), UserLoginActivity.class);
 				}
-				return;
+				getActivity().startActivity(loginIntent);
+			}else{
+				Intent praiseIntent = new Intent(getActivity(),
+						MyPraisedActivity.class);
+				getActivity().startActivity(praiseIntent);
 			}
-			Intent praiseIntent = new Intent(getActivity(),
-					MyPraisedActivity.class);
-			getActivity().startActivity(praiseIntent);
+
 		} else {
 			GolukDebugUtils.d(TAG, "unknown view clicked");
 		}
