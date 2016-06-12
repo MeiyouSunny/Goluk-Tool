@@ -224,7 +224,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 				//竖屏播放页访问即刻分享页面统计
 				ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
 
-                GolukUtils.startVideoShareActivity(this, mType, event.getExportPath(), mExportedFilename, false, mVideoView.getDuration(), mHP);
+                GolukUtils.startVideoShareActivity(this, mType, event.getExportPath(), mExportedFilename, true, mVideoView.getDuration(), mHP);
                 if(mAddTailerDialog != null && mAddTailerDialog.isVisible()) {
                     mAddTailerDialog.dismiss();
                 }

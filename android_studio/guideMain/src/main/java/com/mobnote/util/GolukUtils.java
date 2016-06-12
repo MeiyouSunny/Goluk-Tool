@@ -1,43 +1,5 @@
 package com.mobnote.util;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.MainActivity;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.UserLoginActivity;
-import com.mobnote.golukmain.carrecorder.IPCControlManager;
-import com.mobnote.golukmain.fan.FanListActivity;
-import com.mobnote.golukmain.following.FollowingListActivity;
-import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
-import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
-import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
-import com.mobnote.golukmain.startshare.VideoEditActivity;
-import com.mobnote.golukmain.startshare.VideoShareActivity;
-import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
-import com.mobnote.golukmain.usercenter.UCUserInfo;
-import com.mobnote.golukmain.videodetail.VideoDetailActivity;
-import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
-import com.mobnote.videoedit.AfterEffectActivity;
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -68,6 +30,42 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.MainActivity;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.UserLoginActivity;
+import com.mobnote.golukmain.carrecorder.IPCControlManager;
+import com.mobnote.golukmain.fan.FanListActivity;
+import com.mobnote.golukmain.following.FollowingListActivity;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
+import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
+import com.mobnote.golukmain.startshare.VideoShareActivity;
+import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
+import com.mobnote.golukmain.videodetail.VideoDetailActivity;
+import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
+import com.mobnote.videoedit.AfterEffectActivity;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class GolukUtils {
@@ -1083,12 +1081,12 @@ public class GolukUtils {
         context.startActivity(intent);
     }
 
-	public static void startVideoShareActivity(Context context, int type, String path, String filename, boolean isAEVideo, int duration, String quality) {
+	public static void startVideoShareActivity(Context context, int type, String path, String filename, boolean shouldDelete, int duration, String quality) {
 		Intent intent = new Intent(context, VideoShareActivity.class);
 		intent.putExtra("vidType", type);
 		intent.putExtra("vidPath", path);
 		intent.putExtra("filename", filename);
-        intent.putExtra("isAEVideo",isAEVideo);
+        intent.putExtra("shouldDelete",shouldDelete);
 		intent.putExtra("video_duration", duration);
 		intent.putExtra("video_quality", quality);
 		context.startActivity(intent);

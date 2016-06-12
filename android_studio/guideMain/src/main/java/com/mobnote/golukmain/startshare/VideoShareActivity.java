@@ -110,7 +110,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     private PromotionSelectItem mSelectedPromotionItem;
     private int mSelectedShareType;
     private String mSelectedShareString;
-    private boolean isAEVideo;//是否是后经过后处理的视频
+    private boolean shouldDelete;//分享完成后是否应该删除
     private int mVideoDuration;
     private String mVideoQuality;
 
@@ -126,6 +126,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     private int mVideoType;
     /** 分享的视频名称 */
     private String videoName = "";
+
     private UploadVideo mUploadVideo = null;
     private boolean mIsT1Video = false;
     private boolean isExiting = false;
@@ -195,7 +196,9 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         outState.putString("vidPath", mVideoPath);
         outState.putInt("vidType", mVideoType);
         outState.putString("filename",videoName);
-        outState.putBoolean("isAEVideo",isAEVideo);
+        outState.putBoolean("shouldDelete",shouldDelete);
+        outState.putInt("video_duration",mVideoDuration);
+        outState.putString("video_quality",mVideoQuality);
         super.onSaveInstanceState(outState);
     }
 
@@ -204,16 +207,16 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             mVideoPath = getIntent().getStringExtra("vidPath");
             videoName = getIntent().getStringExtra("filename");
             mVideoType = getIntent().getIntExtra("vidType",1);
-            isAEVideo = getIntent().getBooleanExtra("isAEVideo",false);
+            shouldDelete = getIntent().getBooleanExtra("shouldDelete",false);
             mVideoDuration = getIntent().getIntExtra("video_duration", 0);
             mVideoQuality = getIntent().getStringExtra("video_quality");
         } else {
             mVideoPath = savedInstanceState.getString("vidPath");
             mVideoType = savedInstanceState.getInt("vidType", 2);
             videoName = savedInstanceState.getString("filename");
-            isAEVideo = savedInstanceState.getBoolean("isAEVideo");
-            mVideoDuration = getIntent().getIntExtra("video_duration", 0);
-            mVideoQuality = getIntent().getStringExtra("video_quality");
+            shouldDelete = savedInstanceState.getBoolean("shouldDelete");
+            mVideoDuration = savedInstanceState.getInt("video_duration", 0);
+            mVideoQuality = savedInstanceState.getString("video_quality");
         }
 
         mCurrSelectedSharePlatform = SharePlatformBean.SHARE_PLATFORM_NULL;
@@ -584,8 +587,8 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             return;
         }
         isExiting = true;
-        //如果分享的视频未经过视频后处理过程，仅仅是加片尾的视频，则在退出时删除
-        if(!isAEVideo){
+        //原视频和经过视频后处理的视频都不删除，直接加片尾的视频需要删除
+        if(shouldDelete){
             File file = new File(mVideoPath);
             if(file.exists()){
                 file.delete();
