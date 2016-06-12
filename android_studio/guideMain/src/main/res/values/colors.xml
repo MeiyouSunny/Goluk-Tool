@@ -137,5 +137,8 @@
     <color name="ae_controller_normal">#242629</color>
     <color name="ae_controller_pressed">#16181a</color>
 
+    <color name="btn_startAE_normal">#2d2f33</color>
+    <color name="btn_startAE_press">#16181a</color>
+
     <color name="color_ae_function_pressed">#929394</color>
 </resources>
