@@ -1,16 +1,5 @@
 package com.mobnote.videoedit;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -44,6 +33,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
@@ -64,6 +54,17 @@ import com.mobnote.videoedit.utils.DeviceUtil;
 import com.mobnote.videoedit.utils.VideoEditUtils;
 import com.mobnote.videoedit.view.VideoEditExportDialog;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 import cn.npnt.ae.AfterEffect;
 import cn.npnt.ae.AfterEffectListener;
 import cn.npnt.ae.exceptions.EffectException;
@@ -73,7 +74,6 @@ import cn.npnt.ae.exceptions.InvalidVideoSourceException;
 import cn.npnt.ae.model.Chunk;
 import cn.npnt.ae.model.Project;
 import cn.npnt.ae.model.Transition;
-import com.mobnote.application.GolukApplication;
 import cn.npnt.ae.model.VideoEncoderCapability;
 
 public class AfterEffectActivity extends BaseActivity implements AfterEffectListener, View.OnClickListener {
@@ -585,7 +585,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                 }
 
                 GolukUtils.startVideoShareActivity(AfterEffectActivity.this, PhotoAlbumConfig.PHOTO_BUM_IPC_WND,
-                        retBean.path, retBean.path, true, (int)(getChannelDuration() * 1000), mExportQuality);
+                        retBean.path, retBean.path, false, (int)(getChannelDuration() * 1000), mExportQuality);
                 finish();
             } else {
                 Toast.makeText(this, getString(R.string.str_video_export_failed), Toast.LENGTH_SHORT).show();

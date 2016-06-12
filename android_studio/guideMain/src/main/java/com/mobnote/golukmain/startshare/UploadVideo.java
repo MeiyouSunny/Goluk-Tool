@@ -1,10 +1,5 @@
 package com.mobnote.golukmain.startshare;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,7 +9,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore.Video.Thumbnails;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
@@ -22,10 +16,13 @@ import com.mobnote.golukmain.carrecorder.util.ImageManager;
 import com.mobnote.golukmain.helper.IUploadRequestListener;
 import com.mobnote.golukmain.helper.QCloudHelper;
 import com.mobnote.golukmain.helper.UpLoadVideoRequest;
-import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.util.GolukUtils;
-import com.tencent.upload.task.impl.VideoUploadTask;
-import com.tencent.upload.task.impl.PhotoUploadTask;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.HashMap;
+
+import cn.com.tiros.debug.GolukDebugUtils;
 
 
 public class UploadVideo implements IUploadRequestListener {
@@ -368,7 +365,7 @@ public class UploadVideo implements IUploadRequestListener {
 	}
 
 	private void exit(boolean isdestroyTopwindow) {
-		mIsExit = true;
+		mIsExit = isdestroyTopwindow;
 		// 取消上传
 		if (isUploading && mUpLoadVideoRequest != null) {
 			mUpLoadVideoRequest.Cancel();

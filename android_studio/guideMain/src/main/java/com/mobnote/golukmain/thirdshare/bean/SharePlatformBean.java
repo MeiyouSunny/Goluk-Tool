@@ -15,6 +15,7 @@ public class SharePlatformBean {
     public static final int SHARE_PLATFORM_WHATSAPP = 103;
     public static final int SHARE_PLATFORM_TWITTER = 104;
     public static final int SHARE_PLATFORM_INSTAGRAM = 105;
+    public static final int SHARE_PLATFORM_COPYLINK = 201;//拷贝链接
 
     private int platformType;
     public SharePlatformBean(int type){

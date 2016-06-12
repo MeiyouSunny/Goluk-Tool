@@ -446,7 +446,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 			intent.putExtra("title", title);
 			startActivity(intent);
 		} else if("3".equals(type)){//活动聚合页面
-            Intent intent = new Intent(this, SpecialListActivity.class);
+            Intent intent = new Intent(this, ClusterActivity.class);
             intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, id);
             intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, title);
             startActivity(intent);

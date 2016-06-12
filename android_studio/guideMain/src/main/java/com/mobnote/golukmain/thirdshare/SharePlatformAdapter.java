@@ -71,6 +71,8 @@ public class SharePlatformAdapter extends RecyclerView.Adapter{
             addInternationalSharePlatform();
             addInternalSharePlatform();
         }
+        //添加拷贝链接
+        mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_COPYLINK));
     }
 
     private void addInternalSharePlatform(){
@@ -225,6 +227,13 @@ public class SharePlatformAdapter extends RecyclerView.Adapter{
                             ivPlatformIcon.setImageResource(R.drawable.icon_share_weibo_click);
                         }else{
                             ivPlatformIcon.setImageResource(R.drawable.icon_share_weibo);
+                        }
+                    }else if(tempBean.getPlatformType() == SharePlatformBean.SHARE_PLATFORM_COPYLINK){
+                        tvPlatformName.setText(R.string.str_copy_link);
+                        if(mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_COPYLINK){
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_copy_click);
+                        }else{
+                            ivPlatformIcon.setImageResource(R.drawable.icon_share_copy);
                         }
                     }else {
                         tvPlatformName.setVisibility(View.VISIBLE);
