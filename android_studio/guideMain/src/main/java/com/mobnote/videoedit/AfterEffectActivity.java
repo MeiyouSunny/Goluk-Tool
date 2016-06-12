@@ -450,6 +450,16 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         addChunk(mVideoPath);
     }
 
+    private void finishAfterEffect() {
+        if(null != mAfterEffect) {
+            mAfterEffect.playStop();
+            mPlayerState = PlayerState.RELEASED;
+            mAfterEffect.release();
+            mAfterEffect = null;
+        }
+        finish();
+    }
+
     private void addTail() {
         InputStream istr = null;
         GolukApplication mApp = GolukApplication.getInstance();
@@ -586,7 +596,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 
                 GolukUtils.startVideoShareActivity(AfterEffectActivity.this, PhotoAlbumConfig.PHOTO_BUM_IPC_WND,
                         retBean.path, retBean.path, false, (int)(getChannelDuration() * 1000), mExportQuality);
-                finish();
+                finishAfterEffect();
             } else {
                 Toast.makeText(this, getString(R.string.str_video_export_failed), Toast.LENGTH_SHORT).show();
             }
@@ -623,7 +633,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             Toast.makeText(this, getString(R.string.str_ae_add_chunk_failed), Toast.LENGTH_SHORT).show();
             ZhugeUtils.eventAddChunk(this, false);
             if(mProjectItemList == null || mProjectItemList.size() <= 3) {
-                finish();
+                finishAfterEffect();
             }
             break;
         }
@@ -998,7 +1008,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         mBackBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AfterEffectActivity.this.finish();
+                finishAfterEffect();
             }
         });
 
@@ -1295,7 +1305,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+        finishAfterEffect();
     }
 
     @Override
@@ -1333,7 +1343,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     @Override
     public void onPause() {
         super.onPause();
-        mAfterEffect.onActivityPause();
+        if(null != mAfterEffect) {
+            mAfterEffect.onActivityPause();
+        }
 //		mVideoPlayIV.setVisibility(View.VISIBLE);
 //		mIsPlaying = false;
 //		mPlayerState = PlayerState.PAUSED;
@@ -1342,7 +1354,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     @Override
     public void onResume() {
         super.onResume();
-        mAfterEffect.onActivityResume();
+        if(null != mAfterEffect) {
+            mAfterEffect.onActivityResume();
+        }
 //		mVideoPlayIV.setVisibility(View.VISIBLE);
 //		mIsPlaying = false;
 //		mPlayerState = PlayerState.PLAYING;
@@ -1391,7 +1405,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                 clearEditController();
                 mChannelLineAdapter.notifyDataSetChanged();
                 if(mProjectItemList == null || mProjectItemList.size() <= 3) {
-                    finish();
+                    finishAfterEffect();
                 } else {
                     if(overlap) {
                         // Need additional seek to neighbour chunk
