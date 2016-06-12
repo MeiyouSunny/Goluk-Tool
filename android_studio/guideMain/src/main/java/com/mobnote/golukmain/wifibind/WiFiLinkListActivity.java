@@ -53,6 +53,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 	private final String G1G2_ShowName = " Goluk xxxxxx ";
 	private final String T1_ShowName = " Goluk_T1_xxxxxx ";
 	private final String T1S_ShowName = " Goluk_T1S_xxxxxx ";
+	private final String T2_ShowName = " Goluk_T2_xxxxxx ";
 
 	/** 未连接或连接失败 */
 	private static final int STATE_FAILED = 0;
@@ -142,6 +143,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 			return T1_ShowName;
 		} else if (IPCControlManager.T1s_SIGN.equals(mIpcRealtype)) {
 			return T1S_ShowName;
+		} else if (IPCControlManager.T2_SIGN.equals(mIpcRealtype)) {
+			return T2_ShowName;
 		} else {
 			return G1G2_ShowName;
 		}

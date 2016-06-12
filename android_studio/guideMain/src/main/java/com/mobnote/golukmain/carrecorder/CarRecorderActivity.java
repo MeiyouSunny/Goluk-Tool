@@ -718,7 +718,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 				
 				
 				mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();
-				if(IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)){//T1
+				if(IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
+                        || IPCControlManager.T2_SIGN.equals(mApp.mIPCControlManager.mProduceName)){//T1
 					if(GolukApplication.getInstance().getT1VideoCfgState() == 1){
 						isRecVideo = true;
 					}else{
@@ -950,7 +951,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			if (GolukApplication.getInstance().getIpcIsLogin()) {
 				Intent setting = null;
 				if (IPCControlManager.T1_SIGN
-						.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+						.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)
+                    || IPCControlManager.T2_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
 					setting = new Intent(CarRecorderActivity.this, TSettingsActivity.class);
 					startActivity(setting);
 				} else {
@@ -967,7 +969,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			}else{
 				videoState = 1;
 			}
-			if(IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)){
+			if(IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
+                    || IPCControlManager.T2_SIGN.equals(mApp.mIPCControlManager.mProduceName)){
 				boolean isSuccess = GolukApplication.getInstance().getIPCControlManager().setAudioCfg_T1(videoState);
 				if(isSuccess){
 					if(videoState == 1){
@@ -1289,7 +1292,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	}
 
 	private boolean isT1() {
-		return IPCControlManager.T1_SIGN.equals(mApp.getIPCControlManager().mProduceName);
+		return IPCControlManager.T1_SIGN.equals(mApp.getIPCControlManager().mProduceName)
+                || IPCControlManager.T2_SIGN.equals(mApp.getIPCControlManager().mProduceName);
 	}
 
 	@Override
@@ -1299,7 +1303,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			GolukApplication.getInstance().stopDownloadList();// 停止视频同步
 		}
 		
-		if(mApp.mIPCControlManager.mProduceName.equals(IPCControlManager.T1_SIGN)){
+		if(mApp.mIPCControlManager.mProduceName.equals(IPCControlManager.T1_SIGN)
+                || mApp.mIPCControlManager.mProduceName.equals(IPCControlManager.T2_SIGN)){
 			mVideoResolutions.setVisibility(View.GONE);
 			setAdasIconState(true);
 		}else{
@@ -1698,7 +1703,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 	 * @date 2015年3月8日
 	 */
 	private void stopTrimVideo() {
-		if (!IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+		if (!IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
+                && !IPCControlManager.T2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
 			mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT, CarRecorderActivity.QUERYFILETIME);
 		}
 		mShootTime = 0;
@@ -1896,7 +1902,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		case IPC_VDCPCmd_TriggerRecord:
 			GolukDebugUtils.e("xuhw", "m8sBtn===IPC_VDCPCmd_TriggerRecord===4444=====param1=" + param1 + "==param2="
 					+ param2);
-			if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+			if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
+                    || IPCControlManager.T2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
 				if (RESULE_SUCESS == param1) {
 					if (mWonderfulTime == 30) {
 						mHandler.sendEmptyMessage(CLASSIC);
@@ -2033,7 +2040,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 			GolukDebugUtils.e("", "CarRecorderActivity-----------callback_getWonderfulVideoType-----param2: " + param2);
 			if (RESULE_SUCESS == param1) {
 				if (IPCControlManager.T1_SIGN
-						.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+						.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)
+                        || IPCControlManager.T2_SIGN
+                            .equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
 					WonderfulVideoJson videoJson = GolukFastJsonUtil.getParseObj((String) param2,
 							WonderfulVideoJson.class);
 					if (null != videoJson && null != videoJson.data) {

@@ -555,7 +555,8 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 				// 只有视频下载才提示音频
 				playDownLoadedSound();
 
-				if (!IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+				if (!IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
+						&& !IPCControlManager.T2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
 					try {
 						if (filename.length() >= 22) {
 							String t = filename.substring(18, 22);

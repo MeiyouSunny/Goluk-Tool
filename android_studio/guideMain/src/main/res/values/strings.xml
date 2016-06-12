@@ -484,6 +484,7 @@
     <string name="str_app_download">Download</string>
     <string name="str_update_not_match">Current device client version does not match with Goluk Firmware version. Please try again after upgrade. Checking latest updates now</string>
 
+    <string name="unbind_select_type_t2">Goluk T2</string>
     <string name="unbind_select_type_t1">Goluk T1</string>
     <string name="unbind_select_type_g2">Goluk G2</string>
     <string name="unbind_select_type_g1">Goluk G1</string>

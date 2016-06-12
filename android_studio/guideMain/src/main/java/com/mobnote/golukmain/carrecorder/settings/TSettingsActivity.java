@@ -33,6 +33,7 @@ import com.mobnote.golukmain.adas.AdasConfigActivity;
 import com.mobnote.golukmain.adas.AdasConfigParamterBean;
 import com.mobnote.golukmain.adas.AdasGuideActivity;
 import com.mobnote.golukmain.adas.AdasVerificationActivity;
+import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.IpcDataParser;
 import com.mobnote.golukmain.carrecorder.entity.RecordStorgeState;
 import com.mobnote.golukmain.carrecorder.entity.VideoConfigState;
@@ -74,8 +75,10 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 	private Button mAdasAssistanceBtn, mForwardCloseBtn, mForwardSetupBtn;
 	private RelativeLayout mForwardCloseLayout, mForwardSetupLayout, mAdasConfigLayout;
 	
-	private static final String GOLUK_LOCAL_LIST = "goluk_local_list_T1";
-	private static final String GOLUK_BASIC_LIST = "goluk_basic_list_T1";
+	private static final String GOLUK_LOCAL_LIST_T1 = "goluk_local_list_T1";
+	private static final String GOLUK_BASIC_LIST_T1 = "goluk_basic_list_T1";
+	private static final String GOLUK_LOCAL_LIST_T2 = "goluk_local_list_T2";
+	private static final String GOLUK_BASIC_LIST_T2 = "goluk_basic_list_T2";
 	/**精彩视频质量**/
 	public static final int REQUEST_CODE_WONDERFUL_VIDEO_QUALITY = 33;
 	/**提示音音量大小**/
@@ -419,8 +422,15 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 				"conf_volume", "conf_voice", "auto_flip", "conf_logo", "conf_gsensor", "conf_mode", "adas",
 				"conf_powoff_time", "conf_voice_type", "time", "systeminfo", "restore" };
 
-		String basicList = GolukUtils.getDataFromAssets(this, GOLUK_BASIC_LIST);
-		String localList = GolukUtils.getDataFromAssets(this, GOLUK_LOCAL_LIST);
+		String basicList = "";
+		String localList = "";
+		if(IPCControlManager.T1_SIGN.equals(mIPCName)) {
+			basicList = GolukUtils.getDataFromAssets(this, GOLUK_BASIC_LIST_T1);
+			localList = GolukUtils.getDataFromAssets(this, GOLUK_LOCAL_LIST_T1);
+		} else {
+			basicList = GolukUtils.getDataFromAssets(this, GOLUK_BASIC_LIST_T2);
+			localList = GolukUtils.getDataFromAssets(this, GOLUK_LOCAL_LIST_T2);
+		}
 		TSettingsJson localJson = GolukFastJsonUtil.getParseObj(localList, TSettingsJson.class);
 		if (null != localJson && null != localJson.data) {
 			settingList = localJson.data.list;

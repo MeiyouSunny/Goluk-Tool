@@ -37,6 +37,7 @@ public class IPCControlManager implements IPCManagerFn {
 	public static final String G2_SIGN = "G2";
 	public static final String T1_SIGN = "T1";
 	public static final String T1s_SIGN = "T1S";
+	public static final String T2_SIGN = "T2";
 
 	public static final String MODEL_T = "T";
 	public static final String MODEL_G = "G";
@@ -74,7 +75,7 @@ public class IPCControlManager implements IPCManagerFn {
 	public void setIpcMode() {
 		if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName) || T1s_SIGN.equals(mProduceName)) {
 			setIpcMode(IPCMgrMode_IPCDirect);
-		} else if (T1_SIGN.equals(mProduceName)) {
+		} else if (T1_SIGN.equals(mProduceName) || T2_SIGN.equals(mProduceName)) {
 			setIpcMode(IPCMgrMode_T1);
 		} else {
 			// 不处理
@@ -83,7 +84,7 @@ public class IPCControlManager implements IPCManagerFn {
 	
 	// 判断是否是T1设备
 	public boolean isT1Relative() {
-		return T1_SIGN.equals(mProduceName);
+		return T1_SIGN.equals(mProduceName) || T2_SIGN.equals(mProduceName);
 	}
 
 	/**

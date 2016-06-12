@@ -100,7 +100,8 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
 
 		getArrays();
 		
-		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)) {
+		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)
+				|| IPCControlManager.T2_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)) {
 			mLayoutHigh720.setVisibility(View.GONE);
 			mLayoutMiddle720.setVisibility(View.GONE);
 		} else {
