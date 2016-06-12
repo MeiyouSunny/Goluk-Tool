@@ -39,6 +39,8 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
+import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
+import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 import com.mobnote.videoedit.adapter.AEMusicAdapter;
@@ -585,7 +587,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                 }
 
                 GolukUtils.startVideoShareActivity(AfterEffectActivity.this, PhotoAlbumConfig.PHOTO_BUM_IPC_WND,
-                        retBean.path, retBean.path, false, (int)(getChannelDuration() * 1000), mExportQuality);
+                        retBean.path, retBean.path, false, (int)(getChannelDuration() * 1000), mExportQuality,
+                        (PromotionSelectItem) getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO));
                 finish();
             } else {
                 Toast.makeText(this, getString(R.string.str_video_export_failed), Toast.LENGTH_SHORT).show();

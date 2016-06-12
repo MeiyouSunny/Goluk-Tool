@@ -27,6 +27,7 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
+import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 
@@ -373,12 +374,14 @@ public class LocalFragment extends Fragment {
 
 			if (!"0".equals(mFragmentAlbum.mPlatform)) {
 				if (type != 3) {// 不是循环视频
-                    GolukUtils.startPhotoAlbumPlayerActivity(getActivity(),type,"local",path,filename, createTime,videoHP,size);
+                    GolukUtils.startPhotoAlbumPlayerActivity(getActivity(),type,"local",path,filename, createTime,videoHP,size,
+							(PromotionSelectItem) getActivity().getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO));
 					return;
 				}
 			}
 
-            GolukUtils.startPhotoAlbumPlayerActivity(LocalFragment.this.getContext(),type,"local",path,filename,createTime,videoHP,size);
+            GolukUtils.startPhotoAlbumPlayerActivity(LocalFragment.this.getContext(),type,"local",path,filename,createTime,videoHP,size,
+					(PromotionSelectItem) getActivity().getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO));
 		}
 	}
 

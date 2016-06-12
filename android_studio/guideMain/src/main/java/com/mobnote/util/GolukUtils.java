@@ -40,6 +40,7 @@ import com.mobnote.golukmain.fan.FanListActivity;
 import com.mobnote.golukmain.following.FollowingListActivity;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
+import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.startshare.VideoShareActivity;
 import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
@@ -1062,8 +1063,8 @@ public class GolukUtils {
 		context.startActivity(intent);
 	}
 
-	public static void startPhotoAlbumPlayerActivity(Context context,int type , String vidFrom ,String path ,String filename,String createTime,
-                                                     String videoHP,String size) {
+	public static void startPhotoAlbumPlayerActivity(Context context, int type , String vidFrom , String path , String filename, String createTime,
+													 String videoHP, String size, PromotionSelectItem promotionItem) {
         Intent intent = new Intent(context, PhotoAlbumPlayer.class);
         intent.putExtra(PhotoAlbumPlayer.TYPE, type);
         intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, vidFrom);
@@ -1072,6 +1073,7 @@ public class GolukUtils {
         intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
         intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
         intent.putExtra(PhotoAlbumPlayer.SIZE, size);
+		intent.putExtra(PhotoAlbumPlayer.ACTIVITY_INFO,promotionItem);
 		context.startActivity(intent);
 	}
 
@@ -1081,7 +1083,8 @@ public class GolukUtils {
         context.startActivity(intent);
     }
 
-	public static void startVideoShareActivity(Context context, int type, String path, String filename, boolean shouldDelete, int duration, String quality) {
+	public static void startVideoShareActivity(Context context, int type, String path, String filename,
+											   boolean shouldDelete, int duration, String quality,PromotionSelectItem promotionSelectItem) {
 		Intent intent = new Intent(context, VideoShareActivity.class);
 		intent.putExtra("vidType", type);
 		intent.putExtra("vidPath", path);
@@ -1089,15 +1092,17 @@ public class GolukUtils {
         intent.putExtra("shouldDelete",shouldDelete);
 		intent.putExtra("video_duration", duration);
 		intent.putExtra("video_quality", quality);
+		intent.putExtra(PhotoAlbumPlayer.ACTIVITY_INFO,promotionSelectItem);
 		context.startActivity(intent);
 	}
 
-	public static void startAEActivity(Context context,int type,String path){
+	public static void startAEActivity(Context context,int type,String path,PromotionSelectItem promotionSelectItem){
 		//视频后处理页面访问统计
 		ZhugeUtils.eventVideoEdit(context);
 		Intent intent = new Intent(context, AfterEffectActivity.class);
 		intent.putExtra("vidType", type);
 		intent.putExtra("vidPath", path);
+		intent.putExtra(PhotoAlbumPlayer.ACTIVITY_INFO,promotionSelectItem);
 		context.startActivity(intent);
 	}
 

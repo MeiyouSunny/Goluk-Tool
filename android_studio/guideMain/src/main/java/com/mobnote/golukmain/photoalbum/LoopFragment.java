@@ -1,12 +1,5 @@
 package com.mobnote.golukmain.photoalbum;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -26,9 +19,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.tiros.api.FileUtils;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.mobnote.application.GolukApplication;
@@ -44,9 +34,20 @@ import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.api.FileUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 public class LoopFragment extends Fragment implements IPCManagerFn {
@@ -425,7 +426,8 @@ public class LoopFragment extends Fragment implements IPCManagerFn {
             ZhugeUtils.eventAlbumPlayer(getActivity(),
                     getString(R.string.str_zhuge_video_player_recycle),
                     getString(R.string.str_zhuge_video_player_recycle));
-			GolukUtils.startPhotoAlbumPlayerActivity(LoopFragment.this.getContext(),PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP,"ipc",path,filename,createTime,videoHP,size);
+			GolukUtils.startPhotoAlbumPlayerActivity(LoopFragment.this.getContext(),PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP,"ipc",path,
+					filename,createTime,videoHP,size,(PromotionSelectItem) getActivity().getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO));
 		}
 	}
 

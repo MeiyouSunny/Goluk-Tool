@@ -33,10 +33,10 @@ import com.mobnote.eventbus.EventSharetypeSelected;
 import com.mobnote.eventbus.SharePlatformSelectedEvent;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.newest.IDialogDealFn;
+import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
 import com.mobnote.golukmain.player.MovieActivity;
 import com.mobnote.golukmain.promotion.PromotionActivity;
 import com.mobnote.golukmain.promotion.PromotionData;
@@ -131,7 +131,6 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     private String videoName = "";
 
     private UploadVideo mUploadVideo = null;
-    private boolean mIsT1Video = false;
     private boolean isExiting = false;
     private ShareLoading mShareLoading = null;
 
@@ -141,7 +140,6 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     private Thread mProgressThread = null;
 
     private ThirdShareTool mThirdShareTool;
-    GolukVideoInfoDbManager mGolukVideoInfoDbManager = GolukVideoInfoDbManager.getInstance();
     private List<PromotionData> mPromotionList;
     private boolean isShowNew;
     private TextView mNewActivityTv;
@@ -193,15 +191,15 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-//        if (mPromotionSelectItem != null) {
-//            outState.putSerializable(FragmentAlbum.ACTIVITY_INFO, mPromotionSelectItem);
-//        }
         outState.putString("vidPath", mVideoPath);
         outState.putInt("vidType", mVideoType);
         outState.putString("filename",videoName);
         outState.putBoolean("shouldDelete",shouldDelete);
         outState.putInt("video_duration",mVideoDuration);
         outState.putString("video_quality",mVideoQuality);
+        if(mSelectedPromotionItem != null){
+            outState.putSerializable(PhotoAlbumPlayer.ACTIVITY_INFO,mSelectedPromotionItem);
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -213,6 +211,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             shouldDelete = getIntent().getBooleanExtra("shouldDelete",false);
             mVideoDuration = getIntent().getIntExtra("video_duration", 0);
             mVideoQuality = getIntent().getStringExtra("video_quality");
+            mSelectedPromotionItem = (PromotionSelectItem) getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO);
         } else {
             mVideoPath = savedInstanceState.getString("vidPath");
             mVideoType = savedInstanceState.getInt("vidType", 2);
@@ -220,6 +219,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             shouldDelete = savedInstanceState.getBoolean("shouldDelete");
             mVideoDuration = savedInstanceState.getInt("video_duration", 0);
             mVideoQuality = savedInstanceState.getString("video_quality");
+            mSelectedPromotionItem = (PromotionSelectItem) savedInstanceState.getSerializable(PhotoAlbumPlayer.ACTIVITY_INFO);
         }
 
         mCurrSelectedSharePlatform = SharePlatformBean.SHARE_PLATFORM_NULL;
@@ -367,6 +367,10 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
         mShareTypeTv.setText(mSelectedShareString);
         mShareTypeTv.setText(mSelectedShareString);
+        if(mSelectedPromotionItem != null){
+            mJoinActivityTV.setText(mSelectedPromotionItem.activitytitle);
+            mJoinActivityTV.setTextColor(Color.parseColor("#0080ff"));
+        }
     }
 
     private void initView(){
@@ -569,15 +573,15 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         final String desc = (TextUtils.isEmpty(mShareDiscrible) ? this.getString(R.string.default_comment) : mShareDiscrible);
         final String isSeque = "1";
         final String t_location = (TextUtils.isEmpty(mLocationAddress) ? "" : mLocationAddress);
-        PromotionSelectItem item = mSelectedPromotionItem;
+
         String channelid = "";
         String activityid = "";
         String activityname = "";
 
-        if (item != null) {
-            channelid = item.channelid;
-            activityid = item.activityid;
-            activityname = item.activitytitle;
+        if (mSelectedPromotionItem != null) {
+            channelid = mSelectedPromotionItem.channelid;
+            activityid = mSelectedPromotionItem.activityid;
+            activityname = mSelectedPromotionItem.activitytitle;
         }
         GetShareAddressRequest request = new GetShareAddressRequest(IPageNotifyFn.PageType_Share, this);
         request.get(t_vid, t_type, desc, selectTypeJson, isSeque, videoCreateTime, t_signTime, channelid, activityid,
