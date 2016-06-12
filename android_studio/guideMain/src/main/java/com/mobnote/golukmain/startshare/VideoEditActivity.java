@@ -300,7 +300,8 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 				if (videoFileInfoBean != null) {
 					videoCreateTime = videoFileInfoBean.timestamp + "000";
 					videoFrom = videoFileInfoBean.devicename;
-					if (IPCControlManager.T1_SIGN.equalsIgnoreCase(videoFrom)) {
+					if (IPCControlManager.T1_SIGN.equalsIgnoreCase(videoFrom)
+							|| IPCControlManager.T2_SIGN.equalsIgnoreCase(videoFrom)) {
 						mIsT1Video = true;
 					}
 				}

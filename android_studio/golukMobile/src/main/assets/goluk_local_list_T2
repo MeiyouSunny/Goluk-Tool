@@ -1,0 +1,9 @@
+{
+    "data": {
+        "total": 38,
+        "list": 
+                ["sd","conf_stream","record","conf_event_resolution","conf_volume","conf_voice","auto_flip","conf_gsensor","conf_mode","conf_powoff_time","conf_voice_type","time","systeminfo","restore","conf_logo","conf_event_time"]
+      },
+    "msg": "OK",
+    "result": 0
+}

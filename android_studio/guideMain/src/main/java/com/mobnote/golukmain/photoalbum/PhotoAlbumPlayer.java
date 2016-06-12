@@ -652,7 +652,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 			mImageUrl = filePath + File.separator + fileName;
 
 		} else if (mVideoFrom.equals("ipc")) {
-			if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)) {
+			if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)
+					|| IPCControlManager.T2_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)) {
 				String fileName = mFileName;
 				String[] names = fileName.split("_");
 				if (names.length > 3) {

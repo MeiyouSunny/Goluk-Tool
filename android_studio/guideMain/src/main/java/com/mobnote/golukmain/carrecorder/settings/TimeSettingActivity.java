@@ -234,7 +234,8 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 	}
 
 	private boolean isT1() {
-		return IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName);
+		return IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)
+				|| IPCControlManager.T2_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName);
 	}
 
 	@Override

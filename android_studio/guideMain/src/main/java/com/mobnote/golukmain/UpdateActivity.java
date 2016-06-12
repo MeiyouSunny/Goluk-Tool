@@ -230,7 +230,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			mBtnDownload.setEnabled(true);
 			mNoBreakImage.setVisibility(View.GONE);
 			mNoBreakText.setVisibility(View.GONE);
-			if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+			if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
+					|| IPCControlManager.T2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
 				mtfCardImage.setVisibility(View.VISIBLE);
 				mtfCardText.setVisibility(View.VISIBLE);
 			}
@@ -296,7 +297,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					if (mIsExit) {
 						return;
 					}
-					if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+					if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
+							|| IPCControlManager.T2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
 						UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, mApp.getResources()
 								.getString(R.string.str_ipc_update_success_t1));
 					} else {
@@ -366,7 +368,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 							.getString(R.string.str_ipc_update_first_period_disconnect));
 					mNoBreakImage.setVisibility(View.GONE);
 					mNoBreakText.setVisibility(View.GONE);
-					if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+					if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
+							|| IPCControlManager.T2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
 						mtfCardImage.setVisibility(View.VISIBLE);
 						mtfCardText.setVisibility(View.VISIBLE);
 					}
@@ -603,7 +606,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 			mBtnDownload.setEnabled(true);
 			mNoBreakImage.setVisibility(View.GONE);
 			mNoBreakText.setVisibility(View.GONE);
-			if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+			if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
+					|| IPCControlManager.T2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
 				mtfCardImage.setVisibility(View.VISIBLE);
 				mtfCardText.setVisibility(View.VISIBLE);
 			}
@@ -652,7 +656,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 						mStage = json.getString("stage");
 						mPercent = json.getString("percent");
 						GolukDebugUtils.i("lily", "---------stage-----" + mStage + "-------percent----" + mPercent);
-						if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+						if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
+								|| IPCControlManager.T2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
 							if (mStage.equals("1")) {
 								// 正在传输文件，请稍候……
 								EventBus.getDefault().post(new EventIPCUpdate(EventConfig.UPDATE_TRANSFER_FILE_T1));
@@ -699,7 +704,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 						}
 					} else {
 						// TODO T系列检测存储卡
-						if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+						if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
+								|| IPCControlManager.T2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
 							JSONObject jsonError = new JSONObject((String) param2);
 							int errorcode = jsonError.getInt("errcode");
 							if (1 == errorcode) {
@@ -769,7 +775,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 					mIsDisConnect = true;
 					mNoBreakImage.setVisibility(View.GONE);
 					mNoBreakText.setVisibility(View.GONE);
-					if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
+					if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
+							|| IPCControlManager.T2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
 						mtfCardImage.setVisibility(View.VISIBLE);
 						mtfCardText.setVisibility(View.VISIBLE);
 					}

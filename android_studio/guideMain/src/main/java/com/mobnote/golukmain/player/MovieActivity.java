@@ -197,7 +197,8 @@ public class MovieActivity extends Activity {
 		} else if (from.equals("suqare")) {
 			mVideoUrl = getIntent().getStringExtra("playUrl");
 		} else if (from.equals("ipc")) {
-			if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)) {
+			if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)
+					|| IPCControlManager.T2_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)) {
 				String fileName = filename;
 				String[] names = fileName.split("_");
 				if (names.length > 3) {

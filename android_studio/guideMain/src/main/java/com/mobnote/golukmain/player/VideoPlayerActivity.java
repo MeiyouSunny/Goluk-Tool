@@ -300,7 +300,8 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		} else if (from.equals("suqare")) {
 			videoUrl = getIntent().getStringExtra("playUrl");
 		} else if (from.equals("ipc")) {
-			if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)) {
+			if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)
+					|| IPCControlManager.T2_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)) {
 				String fileName = filename;
 				String[] names = fileName.split("_");
 				if (names.length > 3) {

@@ -1028,7 +1028,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	 * @author jyf
 	 */
 	private void click_imageFlip() {
-		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)
+				|| IPCControlManager.T2_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
 			if (1 == t1AutpRotaingEnable) {
 				t1AutpRotaingEnable = 0;
 			} else {
@@ -1109,7 +1110,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private int state_soundRecord_T1 = 0;
 
 	private void click_SoundRecord() {
-		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)
+				|| IPCControlManager.T2_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
 			state_soundRecord_T1 = state_soundRecord_T1 == 0 ? 1 : 0;
 			GolukApplication.getInstance().setT1VideoCfgState(state_soundRecord_T1);
 			boolean isSuccess = GolukApplication.getInstance().getIPCControlManager()
@@ -1143,7 +1145,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		GolukApplication.getInstance().setContext(this, "carrecordsettings");
 		mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();
 		int t1VideoCfg = GolukApplication.getInstance().getT1VideoCfgState();
-		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)
+				|| IPCControlManager.T2_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
 			refreshUI_soundRecod(t1VideoCfg);
 		} else {
 			if (null != mVideoConfigState) {
@@ -1230,7 +1233,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					// updateVideoQualityText();
 					setData2UI();
 					if (IPCControlManager.T1_SIGN
-							.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+							.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)
+							|| IPCControlManager.T2_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
 						return;
 					}
 					if (null != mVideoConfigState) {
@@ -1688,7 +1692,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				mFatigueBtn.setBackgroundResource(R.drawable.set_close_btn);
 			}
 
-			if (!IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+			if (!IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)
+					&& !IPCControlManager.T2_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
 				if (1 == autoRotation) {
 					mImageFlipBtn.setBackgroundResource(R.drawable.set_open_btn);
 				} else {
@@ -1766,7 +1771,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				mFatigueBtn.setBackgroundResource(R.drawable.set_close_btn);
 			}
 
-			if (!IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
+			if (!IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)
+					&& !IPCControlManager.T2_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
 				if (1 == autoRotation) {
 					mImageFlipBtn.setBackgroundResource(R.drawable.set_open_btn);
 				} else {
