@@ -783,6 +783,7 @@
     <string name="str_weibo">Weibo</string>
     <string name="str_qzone">QQ Space</string>
     <string name="str_qq_friends">QQ Friends</string>
+    <string name="str_copy_link">Copy Link</string>
     <string name="str_video_generation">Generating Video</string>
     <string name="str_video_uploading">Uploading Video</string>
     <string name="str_get_share_links">Requesting share link</string>

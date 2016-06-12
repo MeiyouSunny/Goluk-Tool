@@ -794,6 +794,7 @@
     <string name="str_weibo">微博</string>
     <string name="str_qzone">QQ空间</string>
     <string name="str_qq_friends">QQ好友</string>
+    <string name="str_copy_link">拷贝链接</string>
     <string name="str_video_generation">视频生成中</string>
     <string name="str_video_uploading">视频上传中</string>
     <string name="str_get_share_links">获取分享连接...</string>

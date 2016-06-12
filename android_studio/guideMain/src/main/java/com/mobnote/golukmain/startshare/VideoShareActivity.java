@@ -1,5 +1,8 @@
 package com.mobnote.golukmain.startshare;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -704,7 +707,12 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     public void videoShareCallBack(ShareDataBean shareData) {
         if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_NULL){
             EventBus.getDefault().post(new EventShareCompleted(true));
-            toInitState();
+            return;
+        }
+        if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_COPYLINK){
+            ClipboardManager cmb = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+            cmb.setPrimaryClip(ClipData.newPlainText("goluk", shareData.shorturl));
+            EventBus.getDefault().post(new EventShareCompleted(true));
             return;
         }
         if (mShareLoading == null || mUploadVideo == null) {
