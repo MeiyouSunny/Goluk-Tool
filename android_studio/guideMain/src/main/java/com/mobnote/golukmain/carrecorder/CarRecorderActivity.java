@@ -51,6 +51,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import com.mobnote.eventbus.EventUpdateAddr;
 import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.golukmain.BaseActivity;
@@ -69,6 +70,7 @@ import com.mobnote.golukmain.carrecorder.util.ImageManager;
 import com.mobnote.golukmain.carrecorder.util.ReadWifiConfig;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
+import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.live.LiveSettingBean;
@@ -80,6 +82,7 @@ import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
 import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
+import com.mobnote.golukmain.photoalbum.VideoDataManagerUtils;
 import com.mobnote.golukmain.videosuqare.RingView;
 import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
 import com.mobnote.util.GolukFastJsonUtil;
@@ -396,6 +399,38 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 		// 注册回调监听
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("main", this);
+		}
+
+	}
+
+	/**
+	 * 删除本地视频event
+	 *
+	 * @param event
+	 */
+	public void onEventMainThread(EventDeletePhotoAlbumVid event) {
+		if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
+			List<String> list = new ArrayList<String>();
+			list.add(event.getVidPath());
+			final String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+			for (String path : list) {
+				if(!TextUtils.isEmpty(path)){
+					File mp4file = new File(path);
+					if (mp4file.exists()) {
+						mp4file.delete();
+					}
+					String filename = path.substring(path.lastIndexOf("/") + 1);
+					// 删除数据库中的数据
+					GolukVideoInfoDbManager.getInstance().delVideoInfo(filename);
+					// 删除视频对应的图片
+					filename = filename.replace(".mp4", ".jpg");
+					File imgfile = new File(filePath + File.separator + filename);
+					if (imgfile.exists()) {
+						imgfile.delete();
+					}
+				}
+			}
+			initVideoImage();// 初始化相册列表
 		}
 
 	}
