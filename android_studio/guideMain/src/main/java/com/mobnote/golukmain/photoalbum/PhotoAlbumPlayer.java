@@ -276,6 +276,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	@Override
 	protected void onResume() {
 		super.onResume();
+		isCanRotate = true;
 		mApp.setContext(this, TAG);
 		if (mResume) {
 			mVideoView.seekTo(mPlayTime);
@@ -291,6 +292,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 	protected void onPause() {
 		super.onPause();
 		mResume = true;
+		isCanRotate = false;
 		mHandler.removeCallbacksAndMessages(null);
 		mPlayTime = mVideoView.getCurrentPosition();
 		mVideoView.suspend();
