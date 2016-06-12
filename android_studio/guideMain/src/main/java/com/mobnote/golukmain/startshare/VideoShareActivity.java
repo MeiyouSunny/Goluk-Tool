@@ -568,7 +568,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         final String selectTypeJson = JsonUtil.createShareType(String.valueOf(mSelectedShareType));
         final String desc = (TextUtils.isEmpty(mShareDiscrible) ? this.getString(R.string.default_comment) : mShareDiscrible);
         final String isSeque = "1";
-        final String t_location = (TextUtils.isEmpty(mLocationAddress) ? "0" : mLocationAddress);
+        final String t_location = (TextUtils.isEmpty(mLocationAddress) ? "" : mLocationAddress);
         PromotionSelectItem item = mSelectedPromotionItem;
         String channelid = "";
         String activityid = "";
