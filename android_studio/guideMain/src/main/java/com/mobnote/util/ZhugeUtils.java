@@ -199,6 +199,27 @@ public class ZhugeUtils {
     }
 
     /**
+     * 导出编辑视频失败
+     *
+     * @param context
+     * @param factory 视频时长
+     * @param deviceType   音乐类型
+     * @param osVersion  导出分辨率
+     */
+    public static void eventVideoExportFail(Context context, String factory, String deviceType, String osVersion) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_after_effect_export_fail_manufacturer), factory);
+            json.put(context.getString(R.string.str_zhuge_after_effect_export_fail_device), deviceType);
+            json.put(context.getString(R.string.str_zhuge_after_effect_export_fail_os_version), osVersion);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_after_effect_export_fail_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 视频拆分
      *
      * @param context

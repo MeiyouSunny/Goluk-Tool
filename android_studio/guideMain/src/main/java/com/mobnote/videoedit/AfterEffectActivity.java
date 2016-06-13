@@ -629,6 +629,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             });
             mExportFailDialog = mExportFailDialogBuilder.create();
             mExportFailDialog = mExportFailDialogBuilder.show();
+            ZhugeUtils.eventVideoExportFail(this, android.os.Build.MANUFACTURER, android.os.Build.MODEL, android.os.Build.VERSION.RELEASE);
             break;
         case MSG_AE_THUMB_GENERATED: {
             Chunk chunkThumb = (Chunk) msg.obj;
