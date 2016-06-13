@@ -353,11 +353,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 		if (mHP != null) {
 			ImageView ivHP = (ImageView) findViewById(R.id.iv_hp);
             if(!TextUtils.isEmpty(mHP)){
-                if("480p".equals(mHP)){
+                if("480p".equalsIgnoreCase(mHP)){
                     ivHP.setImageResource(R.drawable.icon_480p);
-                }else if("720p".equals(mHP)){
+                }else if("720p".equalsIgnoreCase(mHP)){
                     ivHP.setImageResource(R.drawable.icon_720p);
-                }else if("1080p".equals(mHP)){
+                }else if("1080p".equalsIgnoreCase(mHP)){
                     ivHP.setImageResource(R.drawable.icon_1080p);
                 }
             }
@@ -962,11 +962,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         }
         int quality = 0;//0,1,2 分别代表低(480P)，中(720P)，高(1080P)。
         if(!TextUtils.isEmpty(mHP)){
-            if("480p".equals(mHP)){
+            if("480p".equalsIgnoreCase(mHP)){
                 quality = 0;
-            }else if("720p".equals(mHP)){
+            }else if("720p".equalsIgnoreCase(mHP)){
                 quality = 1;
-            }else if("1080p".equals(mHP)){
+            }else if("1080p".equalsIgnoreCase(mHP)){
                 quality = 2;
             }
         }
