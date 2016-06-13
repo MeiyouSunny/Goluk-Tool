@@ -857,14 +857,25 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                 if (progress == 0) {
                     mAEVolumeSettingIv.setImageDrawable(
                             AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume_closed));
-                    mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(index), 0.0f);
+                    setChunkVolume(index, 0.0f);
                 } else {
                     mAEVolumeSettingIv.setImageDrawable(
                             AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume_checked));
-                    mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(index), progress / 100f);
+                    setChunkVolume(index, progress / 100f);
                 }
             }
         });
+    }
+
+    private void setChunkVolume(int index, float volume) {
+        if(volume > 5f) {
+            volume = 5f;
+        }
+
+        if(volume < 0f) {
+            volume = 0f;
+        }
+        mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(index), volume);
     }
 
     public void recordEditChunkVolume(int volume) {
@@ -926,7 +937,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                         getResources().getDrawable(R.drawable.ic_ae_volume_closed));
             }
             mAEVolumeSeekBar.setProgress(chunkBean.curVolume);
-            mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(index), chunkBean.curVolume);
+            setChunkVolume(index, chunkBean.curVolume);
         }
     }
 
