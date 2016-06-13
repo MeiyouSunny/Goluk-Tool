@@ -237,7 +237,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 				//竖屏播放页访问即刻分享页面统计
 				ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
 
-                //分享失败，则直接分享原视频
+                //导出失败，则直接分享原视频
                 GolukUtils.startVideoShareActivity(this, mType, mPath, mFileName,
 						false, mVideoView.getDuration(), mHP,(PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
                 if(mAddTailerDialog != null && mAddTailerDialog.isVisible()){
@@ -960,6 +960,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         if(TextUtils.isEmpty(qualityStr)){
             return;
         }
+		if(mAddTailerDialog == null){
+			mAddTailerDialog = new AddTailerDialogFragment();
+		}
         int quality = 0;//0,1,2 分别代表低(480P)，中(720P)，高(1080P)。
         if(!TextUtils.isEmpty(mHP)){
             if("480p".equalsIgnoreCase(mHP)){
@@ -971,11 +974,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             }
         }
         isExporting = true;
-        if(mAddTailerDialog == null){
-            mAddTailerDialog = new AddTailerDialogFragment();
-        }
-        mAddTailerDialog.setCancelable(false);
-        mAddTailerDialog.show(getSupportFragmentManager(), "dialog_fragment");
 
         // 初始化，读取gl脚本需要
         MediaUtils.getInstance(this);
@@ -988,6 +986,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             e1.printStackTrace();
             Toast.makeText(this,getString(R.string.load_video_fail),Toast.LENGTH_SHORT);
             isExporting = false;
+			GolukUtils.startVideoShareActivity(this, mType, mPath, mFileName,
+					false, mVideoView.getDuration(), mHP,(PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
             return;
         }
         VideoFile videoFileInfo = mSimpleExporter.getVideoFileInfo();
@@ -996,6 +996,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         if (capaList == null || capaList.size() == 0) {
             Toast.makeText(this,getString(R.string.not_supported_resolution),Toast.LENGTH_SHORT).show();
             isExporting = false;
+			GolukUtils.startVideoShareActivity(this, mType, mPath, mFileName,
+					false, mVideoView.getDuration(), mHP,(PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
             return;
         }
         VideoEncoderCapability vc = null;
@@ -1014,6 +1016,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         addTailerMask(mSimpleExporter);
 
         Log.i("destPath", "export to:" + destPath);
+		mAddTailerDialog.setCancelable(false);
+		mAddTailerDialog.show(getSupportFragmentManager(), "dialog_fragment");
         mSimpleExporter.export(destPath, width, height, (int) fps, (int) bitrate);
 
     }
