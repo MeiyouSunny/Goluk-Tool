@@ -54,6 +54,7 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
+import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.photoalbum.OrientationManager.IOrientationFn;
 import com.mobnote.golukmain.player.DensityUtil;
 import com.mobnote.golukmain.player.FullScreenVideoView;
@@ -1050,8 +1051,14 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             if(currDate == null){
                 currDate = "";
 			}
-            Bitmap tailerBitmap = mSimpleExporter.createTailer(bitmap, getText(R.string.str_default_video_edit_user_name).toString(), currDate, font);
-
+			String nickName;
+			if (GolukApplication.getInstance().isUserLoginSucess) {
+				UserInfo userInfo = mApp.getMyInfo();
+				nickName = userInfo.nickname;
+			} else {
+				nickName = getString(R.string.str_default_video_edit_user_name);
+			}
+            Bitmap tailerBitmap = mSimpleExporter.createTailer(bitmap, nickName , currDate, font);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
