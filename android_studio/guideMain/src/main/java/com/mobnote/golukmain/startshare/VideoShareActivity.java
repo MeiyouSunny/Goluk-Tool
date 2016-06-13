@@ -4,11 +4,14 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -339,12 +342,17 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
     private void setupView() {
 
-        Glide.with( this )
-                .load( Uri.fromFile( new File( mVideoPath ) ) )
-                .into( mVideoThumbIv );
+        Bitmap temp = ThumbnailUtils.createVideoThumbnail(mVideoPath, MediaStore.Video.Thumbnails.MINI_KIND);
+        if (temp == null) {
+            temp = GolukUtils.createVideoThumbnail(mVideoPath);
+        }
+        mVideoThumbIv.setImageBitmap(temp);
+
         Glide.with( this )
                 .load( Uri.fromFile( new File( mVideoPath ) ) )
                 .bitmapTransform(new BlurTransformation(VideoShareActivity.this, 50))
+                .placeholder(R.drawable.album_default_img) // can also be a drawable
+                .error(R.drawable.album_default_img) // will be displayed if the image cannot be loaded
                 .into( (ImageView) findViewById(R.id.iv_videoshare_blur));
 
         mUploadVideo = new UploadVideo(this, GolukApplication.getInstance(), videoName);

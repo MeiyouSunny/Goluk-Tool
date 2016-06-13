@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mobnote.eventbus.EventAddTailer;
 import com.mobnote.golukmain.R;
