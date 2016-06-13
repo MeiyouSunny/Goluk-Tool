@@ -91,6 +91,14 @@
     <string name="str_zhuge_after_effect_resolution720">720p</string>
     <string name="str_zhuge_after_effect_resolution1080">1080p</string>
 
+    <!-- ################### 导出后处理视频失败 ###################### -->
+    <!--事件-->
+    <string name="str_zhuge_after_effect_export_fail_event">导出编辑视频失败</string>
+    <!--属性-->
+    <string name="str_zhuge_after_effect_export_fail_manufacturer">厂商</string>
+    <string name="str_zhuge_after_effect_export_fail_device">机型</string>
+    <string name="str_zhuge_after_effect_export_fail_os_version">系统版本</string>
+
 <!-- ################### 上传分享视频 ###################### -->
     <!--事件-->
     <string name="str_zhuge_share_video_event">上传分享视频</string>

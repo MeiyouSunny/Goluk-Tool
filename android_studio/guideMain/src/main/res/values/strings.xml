@@ -1123,6 +1123,7 @@
     <string name="str_ae_export_dialog_480p">Middle 480P</string>
     <string name="str_ae_export_dialog_720p">HD720P</string>
     <string name="str_ae_export_dialog_1080p">FULL HD 1080P</string>
+    <string name="str_video_export_failed_info">手机性能无法满足导出视频的要求，您可以尝试分享原视频</string>
 
     <string name="str_sys_msg_gaward_text">恭喜您，抽中了</string>
 

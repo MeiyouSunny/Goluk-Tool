@@ -1,5 +1,7 @@
 package com.mobnote.videoedit;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -140,6 +142,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     String mVideoPath;// = VideoEditConstant.VIDEO_PATH_1;
 //	String mMusicPath = VideoEditConstant.MUSIC_PATH;
     private RingViewDialogFragment mExportingDialog;
+    private AlertDialog.Builder mExportFailDialogBuilder;
+    private AlertDialog mExportFailDialog;
 
     public final static int MSG_AE_PLAY_STARTED = 1001;
     public final static int MSG_AE_PLAY_PROGRESS = 1002;
@@ -613,7 +617,19 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             if(null != mExportingDialog && mExportingDialog.isVisible()) {
                 mExportingDialog.dismiss();
             }
-            Toast.makeText(this, getString(R.string.str_video_export_failed), Toast.LENGTH_SHORT).show();
+
+            mExportFailDialogBuilder.setTitle(getString(R.string.str_video_export_failed));
+            mExportFailDialogBuilder.setMessage(getString(R.string.str_video_export_failed_info));
+
+            mExportFailDialogBuilder.setPositiveButton(getString(R.string.str_button_ok), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            mExportFailDialog = mExportFailDialogBuilder.create();
+            mExportFailDialog = mExportFailDialogBuilder.show();
+            ZhugeUtils.eventVideoExportFail(this, android.os.Build.MANUFACTURER, android.os.Build.MODEL, android.os.Build.VERSION.RELEASE);
             break;
         case MSG_AE_THUMB_GENERATED: {
             Chunk chunkThumb = (Chunk) msg.obj;
@@ -841,14 +857,25 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                 if (progress == 0) {
                     mAEVolumeSettingIv.setImageDrawable(
                             AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume_closed));
-                    mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(index), 0.0f);
+                    setChunkVolume(index, 0.0f);
                 } else {
                     mAEVolumeSettingIv.setImageDrawable(
                             AfterEffectActivity.this.getResources().getDrawable(R.drawable.ic_ae_volume_checked));
-                    mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(index), progress / 100f);
+                    setChunkVolume(index, progress / 100f);
                 }
             }
         });
+    }
+
+    private void setChunkVolume(int index, float volume) {
+        if(volume > 5f) {
+            volume = 5f;
+        }
+
+        if(volume < 0f) {
+            volume = 0f;
+        }
+        mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(index), volume);
     }
 
     public void recordEditChunkVolume(int volume) {
@@ -910,7 +937,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                         getResources().getDrawable(R.drawable.ic_ae_volume_closed));
             }
             mAEVolumeSeekBar.setProgress(chunkBean.curVolume);
-            mAfterEffect.editChunkVolume(VideoEditUtils.mapI2CIndex(index), chunkBean.curVolume);
+            setChunkVolume(index, chunkBean.curVolume);
         }
     }
 
@@ -1033,6 +1060,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         dialogWindow.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
 
+        if(null == mExportFailDialogBuilder) {
+            mExportFailDialogBuilder = new AlertDialog.Builder(this);
+        }
         if(mExportingDialog == null) {
             mExportingDialog = new RingViewDialogFragment();
         }
@@ -1320,6 +1350,12 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         if(mExportingDialog != null && mExportingDialog.isVisible()) {
             mExportingDialog.dismiss();
             mExportingDialog = null;
+        }
+
+        if(null != mExportFailDialog && mExportFailDialogBuilder != null) {
+            mExportFailDialog.dismiss();
+            mExportFailDialog = null;
+            mExportFailDialogBuilder = null;
         }
         super.onDestroy();
     }
