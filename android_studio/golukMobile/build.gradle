@@ -18,10 +18,10 @@ android {
     productFlavors {
         internal {
             applicationId "cn.com.mobnote.golukmobile"
-            resValue 'string', 'FacebookID', '"1693308594241132"'
+            resValue 'string', 'FacebookID', '"771491992987541"'
             manifestPlaceholders=[HTML_SCHEME : "golukapp" ,
                                   HTML_HOST : "goluk.app" ,
-                                  FacebookAuth : "com.facebook.app.FacebookContentProvider1693308594241132"]
+                                  FacebookAuth : "com.facebook.app.FacebookContentProvider771491992987541"]
         }
 
         international {
