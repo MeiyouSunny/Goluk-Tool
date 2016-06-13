@@ -55,6 +55,7 @@ import com.mobnote.videoedit.constant.VideoEditConstant;
 import com.mobnote.videoedit.utils.DeviceUtil;
 import com.mobnote.videoedit.utils.VideoEditUtils;
 import com.mobnote.videoedit.view.VideoEditExportDialog;
+import com.mobnote.view.RingViewDialogFragment;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -138,6 +139,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 //	String mVideoPath1 = VideoEditConstant.VIDEO_PATH;
     String mVideoPath;// = VideoEditConstant.VIDEO_PATH_1;
 //	String mMusicPath = VideoEditConstant.MUSIC_PATH;
+    private RingViewDialogFragment mExportingDialog;
 
     public final static int MSG_AE_PLAY_STARTED = 1001;
     public final static int MSG_AE_PLAY_PROGRESS = 1002;
@@ -562,14 +564,17 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             Log.d(TAG, "MSG_AE_EXPORT_PROGRESS: " + msg.arg1);
             String org = getString(R.string.str_video_export_progress);
             String formattedOrg = String.format(org, msg.arg1);
-            mFullLoadingDialog.setTextTitle(formattedOrg);
+
+            int progress = (int) msg.arg1;
+            mExportingDialog.setRingViewProgress(progress);
+            mExportingDialog.setTextProgress(formattedOrg);
             break;
         case MSG_AE_EXPORT_FINISHED:
             Log.d(TAG, "MSG_AE_EXPORT_FINISHED");
             ExportRet retBean = (ExportRet)msg.obj;
 //            String path = (String)msg.obj;
-            if (null != mFullLoadingDialog) {
-                mFullLoadingDialog.close();
+            if(mExportingDialog != null && mExportingDialog.isVisible()) {
+                mExportingDialog.dismiss();
             }
             if(retBean.succeed) {
                 Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -605,8 +610,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             }
             break;
         case MSG_AE_EXPORT_FAILED:
-            if(null != mFullLoadingDialog) {
-                mFullLoadingDialog.close();
+            if(null != mExportingDialog && mExportingDialog.isVisible()) {
+                mExportingDialog.dismiss();
             }
             Toast.makeText(this, getString(R.string.str_video_export_failed), Toast.LENGTH_SHORT).show();
             break;
@@ -1028,6 +1033,12 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         dialogWindow.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
 
+        if(mExportingDialog == null) {
+            mExportingDialog = new RingViewDialogFragment();
+        }
+
+        mExportingDialog.setCancelable(false);
+
         mFullLoadingDialog = new CustomLoadingDialog(this, "");
         mFullLoadingDialog.setCancel(false);
         mTimeLineWrapperRL = findViewById(R.id.rl_ae_time_line_parent_wrapper);
@@ -1219,7 +1230,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             mExportQuality = "480P";
         }
 
-        mFullLoadingDialog.show();
+//        mFullLoadingDialog.show();
+        mExportingDialog.show(getSupportFragmentManager(), "dialog_fragment");
         try {
             mAfterEffect.export(destPath,
                     exportWidth, exportHeight,
@@ -1297,10 +1309,17 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 
         if (null != mExportDialog && mExportDialog.isShowing()) {
             mExportDialog.dismiss();
+            mExportDialog = null;
         }
 
         if (null != mFullLoadingDialog && mFullLoadingDialog.isShowing()) {
             mFullLoadingDialog.close();
+            mFullLoadingDialog = null;
+        }
+
+        if(mExportingDialog != null && mExportingDialog.isVisible()) {
+            mExportingDialog.dismiss();
+            mExportingDialog = null;
         }
         super.onDestroy();
     }
