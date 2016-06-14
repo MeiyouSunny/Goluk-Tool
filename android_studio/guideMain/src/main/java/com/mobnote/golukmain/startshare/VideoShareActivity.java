@@ -349,27 +349,21 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         }
         if(thumbnail != null){
             mVideoThumbIv.setImageBitmap(thumbnail);
-            Bitmap blurBitmap;
+
+            Bitmap blurBitmap = thumbnail.copy(thumbnail.getConfig(),true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 try {
-                    blurBitmap = RSBlur.blur(this, thumbnail, 50);
+                    blurBitmap = RSBlur.blur(this, blurBitmap, 50);
                 } catch (RSRuntimeException e) {
-                    blurBitmap = FastBlur.blur(thumbnail, 50, true);
+                    blurBitmap = FastBlur.blur(blurBitmap, 50, true);
                 }
             } else {
-                blurBitmap = FastBlur.blur(thumbnail, 50, true);
+                blurBitmap = FastBlur.blur(blurBitmap, 50, true);
             }
             if(blurBitmap != null){
                 ((ImageView) findViewById(R.id.iv_videoshare_blur)).setImageBitmap(blurBitmap);
             }
         }
-
-//        Glide.with( this )
-//                .load( Uri.fromFile( new File( mVideoPath ) ) )
-//                .bitmapTransform(new BlurTransformation(VideoShareActivity.this, 50))
-//                .placeholder(R.drawable.album_default_img) // can also be a drawable
-//                .error(R.drawable.album_default_img) // will be displayed if the image cannot be loaded
-//                .into( (ImageView) findViewById(R.id.iv_videoshare_blur));
 
         mUploadVideo = new UploadVideo(this, GolukApplication.getInstance(), videoName);
         mUploadVideo.setListener(this);
