@@ -617,7 +617,9 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 						mApp.mRegistAndRepwdManage.setUserRegistAndRepwd(this);
 						boolean b = false;
 						if ("fromBindPhone".equals(intentRegistInter)) {
-							b = mApp.mRegistAndRepwdManage.bindPhoneNum(phone, vCode);
+//							b = mApp.mRegistAndRepwdManage.bindPhoneNum(phone, vCode);
+                            b = true;
+                            mApp.mRegistAndRepwdManage.sendBindRequest(mApp.mCurrentUId, phone, vCode);
 						} else {
 							b = mApp.mRegistAndRepwdManage.registAndRepwd(flag, phone, password, vCode);
 						}

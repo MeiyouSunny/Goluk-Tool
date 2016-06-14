@@ -3,18 +3,33 @@ package com.mobnote.user;
 import org.json.JSONObject;
 
 import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.user.bindphone.BindPhoneRequest;
+import com.mobnote.user.bindphone.bean.BindPhoneDataBean;
+import com.mobnote.user.bindphone.bean.BindPhoneRetBean;
+import com.mobnote.util.GolukConfig;
+import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 
+import android.app.Activity;
 import android.text.TextUtils;
+import android.util.Log;
+
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
-public class UserRegistAndRepwdManage {
+public class UserRegistAndRepwdManage implements IRequestResultListener {
 
 	private static final String TAG = "lily";
 	private GolukApplication mApp = null;
 	private UserRegistAndRepwdInterface mInterface = null;
+
+    private static final int BIND_PHONE_SUCCESS = 0;
+    private static final int BIND_PHONE_PARAM_ERROR = 1;
+    private static final int BIND_PHONE_UNKNOWN_EXCEPTION = 2;
+    private static final int BIND_PHONE_VCODE_MISMATCH = 3;
+    private static final int BIND_PHONE_VCODE_TIMEOUT = 4;
 
 	public UserRegistAndRepwdManage(GolukApplication mApp) {
 		super();
@@ -107,6 +122,7 @@ public class UserRegistAndRepwdManage {
 				String result = (String) obj;
 				JSONObject json = new JSONObject(result);
 				JSONObject data = json.optJSONObject("data");
+
 				if (data != null) {
 					String status = data.optString("result");
 					if (TextUtils.isDigitsOnly(status)) {
@@ -126,6 +142,7 @@ public class UserRegistAndRepwdManage {
 							registAndRepwdStatusChange(7);
 							break;
 						default:
+                            registAndRepwdStatusChange(9);
 							break;
 
 						}
@@ -203,7 +220,67 @@ public class UserRegistAndRepwdManage {
 				break;
 			}
 		}
-
 	}
 
+    public void sendBindRequest(String uid, String phone, String vcode) {
+        BindPhoneRequest request =
+                new BindPhoneRequest(IPageNotifyFn.PageType_BindInfo, this);
+        if(null != mApp && mApp.isUserLoginSucess) {
+            if(!TextUtils.isEmpty(mApp.mCurrentUId)) {
+                request.get("100", uid, phone, vcode);
+            }
+        }
+    }
+
+    @Override
+    public void onLoadComplete(int requestType, Object result) {
+        if (requestType == IPageNotifyFn.PageType_BindInfo) {
+            BindPhoneRetBean retBean = (BindPhoneRetBean) result;
+            if (null == retBean) {
+                registAndRepwdStatusChange(9);
+                return;
+            }
+
+            if (!retBean.success) {
+                if(null == retBean.data) {
+                    registAndRepwdStatusChange(9);
+                    return;
+                }
+            }
+
+            BindPhoneDataBean dataBean = retBean.data;
+            if (TextUtils.isDigitsOnly(dataBean.result)) {
+                int code = Integer.valueOf(dataBean.result);
+                switch (code) {
+                    case BIND_PHONE_SUCCESS:
+                        registAndRepwdStatusChange(2);
+                        break;
+                    case BIND_PHONE_PARAM_ERROR:
+                    case BIND_PHONE_UNKNOWN_EXCEPTION:
+                        registAndRepwdStatusChange(3);
+                        break;
+                    case BIND_PHONE_VCODE_MISMATCH:
+                        registAndRepwdStatusChange(6);
+                        break;
+                    case BIND_PHONE_VCODE_TIMEOUT:
+                        registAndRepwdStatusChange(7);
+                        break;
+                    case GolukConfig.SERVER_TOKEN_EXPIRED:
+                    case GolukConfig.SERVER_TOKEN_DEVICE_INVALID:
+                    case GolukConfig.SERVER_TOKEN_INVALID:
+                        if(mInterface instanceof Activity) {
+                            Activity activity = (Activity)mInterface;
+                            GolukUtils.startLoginActivity(activity);
+                            activity.finish();
+                        }
+                        break;
+                    default:
+                        registAndRepwdStatusChange(9);
+                        break;
+                }
+            } else {
+                registAndRepwdStatusChange(9);
+            }
+        }
+    }
 }
