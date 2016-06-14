@@ -1,11 +1,5 @@
 package com.mobnote.golukmain.videodetail;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,8 +30,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
@@ -88,6 +80,14 @@ import com.rockerhieu.emojicon.EmojiconsFragment;
 import com.rockerhieu.emojicon.emoji.Emojicon;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -1151,7 +1151,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			CommentDelResultBean DelResultBean = (CommentDelResultBean) result;
 
 			if(DelResultBean != null && DelResultBean.data != null){
-				if("10001".equals(DelResultBean.data.result)||"10002".equals(DelResultBean.data.result)){
+				if(!GolukUtils.isTokenValid(DelResultBean.data.result)){
 					startUserLogin();
 					return;
 				}
@@ -1179,7 +1179,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			CommentAddResultBean addResultBean = (CommentAddResultBean) result;
 
 			if(addResultBean != null && addResultBean.data != null){
-				if("10001".equals(addResultBean.data.result)||"10002".equals(addResultBean.data.result)){
+				if(!GolukUtils.isTokenValid(addResultBean.data.result)){
 					startUserLogin();
 					return;
 				}
@@ -1325,7 +1325,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 			DeleteJson deleteVideo = (DeleteJson) result;
 			if(null != deleteVideo && null != deleteVideo.data) {
 				String resultCode = deleteVideo.data.result;
-				if ("10001".equals(resultCode) || "10002".equals(resultCode)) {
+				if (!GolukUtils.isTokenValid(resultCode)) {
 					startUserLogin();
 					return;
 				}

@@ -119,7 +119,7 @@ public class MsgCenterPraiseActivity extends BaseActivity implements OnClickList
 			mMessageBean = (MessageBean) result;
 
 			if(mMessageBean != null && mMessageBean.data != null){
-				if ("10001".equals(mMessageBean.data.result) || "10002".equals(mMessageBean.data.result)){
+				if (!GolukUtils.isTokenValid(mMessageBean.data.result)){
 					mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime(this));
 					mRTPullListView.setVisibility(View.GONE);
 					nNoPraiseText.setVisibility(View.GONE);

@@ -699,7 +699,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             case IPageNotifyFn.PageType_Share:
                 ShareDataFullBean shareDataFull = (ShareDataFullBean) result;
                 if(shareDataFull != null && shareDataFull.data != null){
-                    if ("10001".equals(shareDataFull.data.result) || "10002".equals(shareDataFull.data.result)){
+                    if (!GolukUtils.isTokenValid(shareDataFull.data.result)){
                         GolukUtils.startLoginActivity(VideoShareActivity.this);
                         toInitState();
                         return;

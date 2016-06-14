@@ -1,8 +1,5 @@
 package com.mobnote.golukmain.fan;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -16,7 +13,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.com.mobnote.module.page.IPageNotifyFn;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -24,8 +20,8 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.follow.FollowRequest;
 import com.mobnote.golukmain.follow.bean.FollowRetBean;
 import com.mobnote.golukmain.following.FollowingConfig;
@@ -35,6 +31,11 @@ import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.userbase.bean.SimpleUserItemBean;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.com.mobnote.module.page.IPageNotifyFn;
 
 /**
  * 关注的用户列表
@@ -339,7 +340,7 @@ public class FanListActivity extends BaseActivity implements IRequestResultListe
 			if(null != bean) {
 
 				if(bean.code != 0) {
-                    if(10001 ==bean.code || 10002 == bean.code){
+                    if(!GolukUtils.isTokenValid(bean.code)){
                         GolukUtils.startLoginActivity(FanListActivity.this);
                     }else if(bean.code == 12011){
                         Toast.makeText(FanListActivity.this, getString(R.string.follow_operation_limit_total), Toast.LENGTH_SHORT).show();

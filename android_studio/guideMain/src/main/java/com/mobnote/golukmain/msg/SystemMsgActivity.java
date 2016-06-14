@@ -1,25 +1,5 @@
 package com.mobnote.golukmain.msg;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.BaseActivity;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
-import com.mobnote.golukmain.http.IRequestResultListener;
-import com.mobnote.golukmain.msg.bean.MessageBean;
-import com.mobnote.golukmain.msg.bean.MessageMsgsBean;
-import com.mobnote.golukmain.msg.bean.SystemMsgBenRequest;
-import com.mobnote.golukmain.videosuqare.RTPullListView;
-import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
-import com.mobnote.manager.MessageManager;
-import com.mobnote.util.GolukConfig;
-import com.mobnote.util.GolukUtils;
-
-import cn.com.mobnote.module.page.IPageNotifyFn;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -32,6 +12,24 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.msg.bean.MessageBean;
+import com.mobnote.golukmain.msg.bean.MessageMsgsBean;
+import com.mobnote.golukmain.msg.bean.SystemMsgBenRequest;
+import com.mobnote.golukmain.videosuqare.RTPullListView;
+import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
+import com.mobnote.manager.MessageManager;
+import com.mobnote.util.GolukUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.com.mobnote.module.page.IPageNotifyFn;
 public class SystemMsgActivity  extends BaseActivity implements OnClickListener,IRequestResultListener {
 	
 	private ImageButton mBackBtn;
@@ -202,7 +200,7 @@ public class SystemMsgActivity  extends BaseActivity implements OnClickListener,
             mRTPullListView.removeFooterView(1);
             mRTPullListView.removeFooterView(2);
 			if(mb != null && mb.data != null){
-				if ("10001".equals(mb.data.result) || "10002".equals(mb.data.result)){
+				if (!GolukUtils.isTokenValid(mb.data.result)){
                     mRTPullListView.onRefreshComplete(GolukUtils.getCurrentFormatTime(this));
                     GolukUtils.showToast(this, this.getResources().getString(R.string.invalid_token));
 					GolukUtils.startUserLogin(this);

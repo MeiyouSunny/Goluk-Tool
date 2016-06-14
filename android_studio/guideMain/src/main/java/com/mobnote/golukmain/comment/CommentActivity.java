@@ -1,7 +1,5 @@
 package com.mobnote.golukmain.comment;
 
-import java.util.ArrayList;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
@@ -28,10 +26,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.BaseActivity;
@@ -59,6 +53,13 @@ import com.mobnote.util.JsonUtil;
 import com.rockerhieu.emojicon.EmojiconGridFragment;
 import com.rockerhieu.emojicon.EmojiconsFragment;
 import com.rockerhieu.emojicon.emoji.Emojicon;
+
+import java.util.ArrayList;
+
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class CommentActivity extends BaseActivity implements OnClickListener, OnRefreshListener, OnRTScrollListener,
 		ILiveDialogManagerFn, ICommentFn, TextWatcher, OnItemClickListener, IRequestResultListener,
@@ -709,7 +710,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			CommentAddResultBean addResultBean = (CommentAddResultBean) result;
 
 			if(addResultBean != null && addResultBean.data != null){
-				if("10001".equals(addResultBean.data.result)||"10002".equals(addResultBean.data.result)){
+				if(!GolukUtils.isTokenValid(addResultBean.data.result)){
 					startUserLogin();
 					return;
 				}
@@ -777,7 +778,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 			CommentDelResultBean DelResultBean = (CommentDelResultBean) result;
 
 			if(DelResultBean != null && DelResultBean.data != null){
-				if("10001".equals(DelResultBean.data.result)||"10002".equals(DelResultBean.data.result)){
+				if(!GolukUtils.isTokenValid(DelResultBean.data.result)){
 					startUserLogin();
 					return;
 				}

@@ -1,19 +1,5 @@
 package com.mobnote.golukmain;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
-import com.mobnote.golukmain.http.IRequestResultListener;
-import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
-import com.mobnote.golukmain.userlogin.UpHeadData;
-import com.mobnote.golukmain.userlogin.UpHeadResult;
-import com.mobnote.golukmain.userlogin.UpdUserHeadBeanRequest;
-import com.mobnote.user.UserUtils;
-import com.mobnote.util.GolukUtils;
-
-import cn.com.mobnote.module.page.IPageNotifyFn;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
@@ -27,6 +13,21 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
+import com.mobnote.golukmain.userlogin.UpHeadData;
+import com.mobnote.golukmain.userlogin.UpHeadResult;
+import com.mobnote.golukmain.userlogin.UpdUserHeadBeanRequest;
+import com.mobnote.user.UserUtils;
+import com.mobnote.util.GolukUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cn.com.mobnote.module.page.IPageNotifyFn;
 
 public class UserPersonalHeadActivity extends BaseActivity implements OnClickListener, OnTouchListener,IRequestResultListener {
 
@@ -343,7 +344,7 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 			UpHeadResult headResult = (UpHeadResult) result;
 
 			if(headResult != null && headResult.data != null){
-				if ("10001".equals(headResult.data.result) || "10002".equals(headResult.data.result)){
+				if (!GolukUtils.isTokenValid(headResult.data.result)){
 					startUserLogin();
 					return;
 				}

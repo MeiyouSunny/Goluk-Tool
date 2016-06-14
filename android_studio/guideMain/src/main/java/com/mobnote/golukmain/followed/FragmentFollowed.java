@@ -1,8 +1,5 @@
 package com.mobnote.golukmain.followed;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,8 +15,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -55,6 +50,11 @@ import com.mobnote.golukmain.videoshare.bean.VideoShareRetBean;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 public class FragmentFollowed extends Fragment implements IRequestResultListener {
@@ -372,7 +372,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 			}
 
             if(bean.data != null) {
-                if("10001".equals(bean.data.result) || "10002".equals(bean.data.result)){
+                if(!GolukUtils.isTokenValid(bean.data.result)){
 					mLoginRL.setVisibility(View.VISIBLE);
 					mListView.setVisibility(View.GONE);
 					mApp.isUserLoginSucess = false;
@@ -496,7 +496,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 			if(null != bean) {
 				if(bean.code != 0) {
 					//token过期
-					if(10001 == bean.code|| 10002 == bean.code){
+					if(!GolukUtils.isTokenValid(bean.code)){
 						mLoginRL.setVisibility(View.VISIBLE);
 						mListView.setVisibility(View.GONE);
 						startUserLogin();
@@ -530,7 +530,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 			FollowAllRetBean bean = (FollowAllRetBean)result;
 			if(null != bean) {
 				//token过期
-				if(10001 == bean.code|| 10002 == bean.code){
+				if(!GolukUtils.isTokenValid(bean.code)){
 					mLoginRL.setVisibility(View.VISIBLE);
 					mListView.setVisibility(View.GONE);
 					startUserLogin();

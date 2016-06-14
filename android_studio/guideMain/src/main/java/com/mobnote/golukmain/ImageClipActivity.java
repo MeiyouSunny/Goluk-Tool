@@ -1,14 +1,17 @@
 package com.mobnote.golukmain;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.Button;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
@@ -23,20 +26,18 @@ import com.mobnote.user.UserUtils;
 import com.mobnote.util.ClipImageView;
 import com.mobnote.util.GolukUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.api.FileUtils;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.view.View;
-import android.view.Window;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 
 public class ImageClipActivity extends BaseActivity implements OnClickListener,IRequestResultListener{
 
@@ -421,7 +422,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,I
 			UpHeadResult headResult = (UpHeadResult) result;
 
 			if(headResult != null && headResult.data != null){
-				if ("10001".equals(headResult.data.result) || "10002".equals(headResult.data.result)){
+				if (!GolukUtils.isTokenValid(headResult.data.result)){
 					startUserLogin();
 					return;
 				}

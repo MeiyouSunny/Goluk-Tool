@@ -1,24 +1,20 @@
 package com.mobnote.golukmain.helper;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
-import android.os.Message;
-
 import com.mobnote.eventbus.EventGetShareSignTokenInvalid;
 import com.mobnote.golukmain.helper.bean.SignBean;
 import com.mobnote.golukmain.helper.bean.SignDataBean;
 import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.http.IRequestResultListener;
-import com.mobnote.golukmain.startshare.VideoShareActivity;
 import com.mobnote.util.GolukUtils;
+import com.tencent.upload.task.ITask.TaskState;
 import com.tencent.upload.task.IUploadTaskListener;
 import com.tencent.upload.task.VideoAttr;
-import com.tencent.upload.task.ITask.TaskState;
 import com.tencent.upload.task.data.FileInfo;
 import com.tencent.upload.task.impl.PhotoUploadTask;
 import com.tencent.upload.task.impl.VideoUploadTask;
+
+import java.io.File;
+import java.util.HashMap;
 
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -67,7 +63,7 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 		if (requestType == IPageNotifyFn.PageType_UploadVideo) {
 			SignBean signBean = (SignBean) result;
 			if(signBean != null && signBean.data != null){
-				if ("10001".equals(signBean.data.result) || "10002".equals(signBean.data.result)){
+				if (!GolukUtils.isTokenValid(signBean.data.result)){
 					EventBus.getDefault().post(new EventGetShareSignTokenInvalid());
 					return;
 				}

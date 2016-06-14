@@ -1,8 +1,5 @@
 package com.mobnote.golukmain.following;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,7 +14,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.com.mobnote.module.page.IPageNotifyFn;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -26,8 +22,8 @@ import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserLoginActivity;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.follow.FollowRequest;
 import com.mobnote.golukmain.follow.bean.FollowRetBean;
 import com.mobnote.golukmain.following.bean.FollowingRetBean;
@@ -36,6 +32,11 @@ import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.userbase.bean.SimpleUserItemBean;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.com.mobnote.module.page.IPageNotifyFn;
 
 /**
  * 关注的用户列表
@@ -289,7 +290,7 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 
 			if(bean != null){
 				//token过期
-				if(10001 == bean.code|| 10002 == bean.code){
+				if(!GolukUtils.isTokenValid(bean.code)){
 					startUserLogin();
 					return;
 				}
@@ -344,7 +345,7 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 			if(null != bean) {
 				if(bean.code != 0) {
 					//token过期
-					if(10001 == bean.code|| 10002 == bean.code){
+					if(!GolukUtils.isTokenValid(bean.code)){
 						startUserLogin();
 					}else if(bean.code == 12011){
 						Toast.makeText(FollowingListActivity.this, getString(R.string.follow_operation_limit_total), Toast.LENGTH_SHORT).show();

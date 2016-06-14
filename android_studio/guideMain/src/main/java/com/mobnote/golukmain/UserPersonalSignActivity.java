@@ -227,7 +227,7 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 			}
 
 			if(upnameresult != null && upnameresult.data != null){
-				if ("10001".equals(upnameresult.data.result) || "10002".equals(upnameresult.data.result)){
+				if (!GolukUtils.isTokenValid(upnameresult.data.result)){
 					startUserLogin();
 					return;
 				}

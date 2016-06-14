@@ -1,21 +1,5 @@
 package com.mobnote.golukmain.profit;
 
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.BaseActivity;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.UserLoginActivity;
-import com.mobnote.golukmain.UserOpenUrlActivity;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
-import com.mobnote.golukmain.http.IRequestResultListener;
-import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
-import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
-import com.mobnote.user.UserUtils;
-import com.mobnote.util.GolukConfig;
-import com.mobnote.util.GolukUtils;
-import com.mobnote.util.ZhugeUtils;
-
-import cn.com.mobnote.module.page.IPageNotifyFn;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -34,8 +18,23 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.UserOpenUrlActivity;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
+import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
+import com.mobnote.user.UserUtils;
+import com.mobnote.util.GolukConfig;
+import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
+
 import java.util.Timer;
 import java.util.TimerTask;
+
+import cn.com.mobnote.module.page.IPageNotifyFn;
 
 /**
  * 我的收益
@@ -271,7 +270,7 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener, O
 						+ this.getResources().getString(R.string.str_profit_unit));
 			} else {
 				if(null != profitInfo && profitInfo.data != null) {
-					if ("10001".equals(profitInfo.data.result) || "10002".equals(profitInfo.data.result)) {
+					if (!GolukUtils.isTokenValid(profitInfo.data.result)) {
 						mImageRefresh.setVisibility(View.VISIBLE);
 						mIsDataBack = true;
 						GolukUtils.startUserLogin(this);

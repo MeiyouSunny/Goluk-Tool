@@ -1,7 +1,5 @@
 package com.mobnote.golukmain.usercenter;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -16,9 +14,6 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.handmark.pulltorefresh.library.GridViewWithHeaderAndFooter;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -47,6 +42,10 @@ import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 
+import java.util.List;
+
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 public class NewUserCenterActivity extends BaseActivity implements IRequestResultListener, OnClickListener,
@@ -224,7 +223,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 			mHomeJson = (HomeJson) result;
 			if(mHomeJson != null){
 				//token过期
-				if("10001".equals(mHomeJson.code) || "10002".equals(mHomeJson.code)){
+				if(!GolukUtils.isTokenValid(mHomeJson.code)){
 					mRefreshLayout.setVisibility(View.VISIBLE);
 					mGridView.setVisibility(View.GONE);
 					startUserLogin();
@@ -293,7 +292,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 
 			if(attention != null){
 				//token过期
-				if(10001 ==attention.code || 10002 == attention.code){
+				if(!GolukUtils.isTokenValid(attention.code)){
 					startUserLogin();
 					return;
 				}else if(attention.code == 12011){

@@ -1,24 +1,5 @@
 package com.mobnote.golukmain.praised;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.mobnote.application.GolukApplication;
-import com.mobnote.eventbus.EventConfig;
-import com.mobnote.eventbus.EventPraiseStatusChanged;
-import com.mobnote.golukmain.BaseActivity;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.UserLoginActivity;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
-import com.mobnote.golukmain.http.IRequestResultListener;
-import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
-import com.mobnote.golukmain.praised.bean.MyPraisedListBean;
-import com.mobnote.golukmain.praised.bean.MyPraisedVideoBean;
-import com.mobnote.util.GolukUtils;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -28,6 +9,23 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventPraiseStatusChanged;
+import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.praised.bean.MyPraisedListBean;
+import com.mobnote.golukmain.praised.bean.MyPraisedVideoBean;
+import com.mobnote.util.GolukUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import de.greenrobot.event.EventBus;
 
@@ -181,7 +179,7 @@ public class MyPraisedActivity extends BaseActivity implements IRequestResultLis
 			}
 
 			if(bean != null && bean.data != null){
-				if ("10001".equals(bean.data.result) || "10002".equals(bean.data.result)){
+				if (!GolukUtils.isTokenValid(bean.data.result)){
 					setEmptyView();
 					GolukApplication.getInstance().isUserLoginSucess = false;
 					GolukApplication.getInstance().loginStatus = 2;

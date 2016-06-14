@@ -231,7 +231,7 @@ public class MsgCenterCommentActivity extends BaseActivity implements OnClickLis
 			mMessageBean = (MessageBean) result;
 			closeLoadingDialog();
 			if(mMessageBean != null && mMessageBean.data != null){
-				if ("10001".equals(mMessageBean.data.result) || "10002".equals(mMessageBean.data.result)){
+				if (!GolukUtils.isTokenValid(mMessageBean.data.result)){
                     if (mCurrentOperator == OPERATOR_UP) {
                         this.removeFoot(1);
                     } else {

@@ -1,8 +1,5 @@
 package com.mobnote.golukmain.search;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -16,17 +13,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
-import cn.com.mobnote.module.page.IPageNotifyFn;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -45,9 +38,13 @@ import com.mobnote.golukmain.recommend.bean.RecommendRetBean;
 import com.mobnote.golukmain.search.bean.SearchListBean;
 import com.mobnote.golukmain.search.bean.SearchRetBean;
 import com.mobnote.golukmain.userbase.bean.SimpleUserItemBean;
-import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.com.mobnote.module.page.IPageNotifyFn;
 
 public class SearchUserAcivity extends BaseActivity implements IRequestResultListener, OnClickListener{
 
@@ -475,7 +472,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 			if(null != bean) {
 
 				if(bean.code != 0) {
-					if(10001 == bean.code|| 10002 == bean.code){
+					if(!GolukUtils.isTokenValid(bean.code)){
 						GolukUtils.startLoginActivity(SearchUserAcivity.this);
 					}else if(bean.code == 12011){
 						Toast.makeText(SearchUserAcivity.this, getString(R.string.follow_operation_limit_total), Toast.LENGTH_SHORT).show();

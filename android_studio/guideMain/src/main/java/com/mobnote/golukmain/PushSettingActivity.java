@@ -1,24 +1,23 @@
 package com.mobnote.golukmain;
 
+import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.Button;
+
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.bean.GetPushSettingRequest;
 import com.mobnote.golukmain.bean.PushMsgSettingBean;
 import com.mobnote.golukmain.bean.SetPushSettingRequest;
 import com.mobnote.golukmain.http.IRequestResultListener;
-import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
 import com.mobnote.golukmain.xdpush.SettingBean;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.Window;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 
@@ -217,7 +216,7 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 			if(psb != null){
 //				SettingBean bean = JsonUtil.parsePushSettingJson((String) param2);
 				if (psb != null && psb.data!=null ){
-					if("10001".equals(psb.data.result) || "10002".equals(psb.data.result)){
+					if(!GolukUtils.isTokenValid(psb.data.result)){
 						GolukApplication.getInstance().isUserLoginSucess = false;
 						GolukApplication.getInstance().loginStatus = 2;
 						GolukApplication.getInstance().autoLoginStatus = 3;

@@ -1279,4 +1279,18 @@ public class GolukUtils {
         }
         return isWifiConnect;
     }
+
+	public static boolean isTokenValid(int code){
+        if(code == 10001 || code == 10002 || code == 10003){
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isTokenValid(String result){
+        if(!TextUtils.isEmpty(result) && ("10001".equals(result) || "10002".equals(result) || "10003".equals(result))){
+            return false;
+        }
+        return true;
+    }
 }
