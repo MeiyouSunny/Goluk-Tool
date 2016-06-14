@@ -1456,6 +1456,10 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         } else if (vId == R.id.ll_ae_delete) {
             int index = mChannelLineAdapter.getEditIndex();
             if(index != -1) {
+                if(mProjectItemList == null || mProjectItemList.size() <= 5) {
+                    finishAfterEffect();
+                    return;
+                }
                 boolean overlap = VideoEditUtils.judgeChunkOverlap(mAELayoutManager, mGateLocationX, index);
                 VideoEditUtils.removeChunk(mAfterEffect, mProjectItemList, index);
                 ZhugeUtils.eventChunkRemove(this);
