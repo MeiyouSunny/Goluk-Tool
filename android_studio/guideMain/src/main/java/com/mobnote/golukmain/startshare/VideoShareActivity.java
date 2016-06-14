@@ -9,9 +9,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.media.ThumbnailUtils;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.renderscript.RSRuntimeException;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -27,7 +28,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.facebook.FacebookSdk;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventGetShareSignTokenInvalid;
@@ -62,7 +62,8 @@ import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.ZhugeUtils;
-import com.mobnote.util.glideblur.BlurTransformation;
+import com.mobnote.util.glideblur.FastBlur;
+import com.mobnote.util.glideblur.RSBlur;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -342,18 +343,33 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
     private void setupView() {
 
-        Bitmap temp = ThumbnailUtils.createVideoThumbnail(mVideoPath, MediaStore.Video.Thumbnails.MINI_KIND);
-        if (temp == null) {
-            temp = GolukUtils.createVideoThumbnail(mVideoPath);
+        Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(mVideoPath, MediaStore.Video.Thumbnails.MINI_KIND);
+        if (thumbnail == null) {
+            thumbnail = GolukUtils.createVideoThumbnail(mVideoPath);
         }
-        mVideoThumbIv.setImageBitmap(temp);
+        if(thumbnail != null){
+            mVideoThumbIv.setImageBitmap(thumbnail);
+            Bitmap blurBitmap;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                try {
+                    blurBitmap = RSBlur.blur(this, thumbnail, 50);
+                } catch (RSRuntimeException e) {
+                    blurBitmap = FastBlur.blur(thumbnail, 50, true);
+                }
+            } else {
+                blurBitmap = FastBlur.blur(thumbnail, 50, true);
+            }
+            if(blurBitmap != null){
+                ((ImageView) findViewById(R.id.iv_videoshare_blur)).setImageBitmap(blurBitmap);
+            }
+        }
 
-        Glide.with( this )
-                .load( Uri.fromFile( new File( mVideoPath ) ) )
-                .bitmapTransform(new BlurTransformation(VideoShareActivity.this, 50))
-                .placeholder(R.drawable.album_default_img) // can also be a drawable
-                .error(R.drawable.album_default_img) // will be displayed if the image cannot be loaded
-                .into( (ImageView) findViewById(R.id.iv_videoshare_blur));
+//        Glide.with( this )
+//                .load( Uri.fromFile( new File( mVideoPath ) ) )
+//                .bitmapTransform(new BlurTransformation(VideoShareActivity.this, 50))
+//                .placeholder(R.drawable.album_default_img) // can also be a drawable
+//                .error(R.drawable.album_default_img) // will be displayed if the image cannot be loaded
+//                .into( (ImageView) findViewById(R.id.iv_videoshare_blur));
 
         mUploadVideo = new UploadVideo(this, GolukApplication.getInstance(), videoName);
         mUploadVideo.setListener(this);
