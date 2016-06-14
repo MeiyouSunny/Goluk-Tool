@@ -8,10 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.media.ThumbnailUtils;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.renderscript.RSRuntimeException;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -343,10 +341,11 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
     private void setupView() {
 
-        Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(mVideoPath, MediaStore.Video.Thumbnails.MINI_KIND);
-        if (thumbnail == null) {
-            thumbnail = GolukUtils.createVideoThumbnail(mVideoPath);
-        }
+//        Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(mVideoPath, MediaStore.Video.Thumbnails.MINI_KIND);
+//        if (thumbnail == null) {
+//            thumbnail = GolukUtils.createVideoThumbnail(mVideoPath);
+//        }
+        Bitmap thumbnail = GolukUtils.createVideoThumbnail(mVideoPath);
         if(thumbnail != null){
             mVideoThumbIv.setImageBitmap(thumbnail);
 
