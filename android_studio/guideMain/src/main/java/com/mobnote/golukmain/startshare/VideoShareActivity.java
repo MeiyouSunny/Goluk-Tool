@@ -462,6 +462,10 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     }
 
     private void startShare(){
+        if(!GolukApplication.getInstance().isUserLoginSucess){
+            GolukUtils.startLoginActivity(this);
+            return;
+        }
         if (isSharing) {
             return;
         }
