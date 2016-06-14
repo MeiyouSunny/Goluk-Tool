@@ -1281,14 +1281,19 @@ public class GolukUtils {
     }
 
 	public static boolean isTokenValid(int code){
-        if(code == 10001 || code == 10002 || code == 10003){
+        if(code == GolukConfig.SERVER_TOKEN_DEVICE_INVALID ||
+                code == GolukConfig.SERVER_TOKEN_INVALID ||
+                code == GolukConfig.SERVER_TOKEN_EXPIRED){
             return false;
         }
         return true;
     }
 
     public static boolean isTokenValid(String result){
-        if(!TextUtils.isEmpty(result) && ("10001".equals(result) || "10002".equals(result) || "10003".equals(result))){
+        if(!TextUtils.isEmpty(result) &&
+                (String.valueOf(GolukConfig.SERVER_TOKEN_DEVICE_INVALID).equals(result) ||
+                        String.valueOf(GolukConfig.SERVER_TOKEN_INVALID).equals(result) ||
+                        String.valueOf(GolukConfig.SERVER_TOKEN_EXPIRED).equals(result))){
             return false;
         }
         return true;
