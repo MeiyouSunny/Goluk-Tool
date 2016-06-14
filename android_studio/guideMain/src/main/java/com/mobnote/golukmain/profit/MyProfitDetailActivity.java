@@ -232,7 +232,7 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		if (requestType == IPageNotifyFn.PageType_ProfitDetail) {
 			detailInfo = (ProfitDetailInfo) result;
 			if(detailInfo.data != null){
-				if("10001".equals(detailInfo.data.result) || "10002".equals(detailInfo.data.result)){
+				if(!GolukUtils.isTokenValid(detailInfo.data.result)){
 					mImageRefresh.setVisibility(View.GONE);
 					mRTPullListView.setVisibility(View.GONE);
 					mTextNoData.setVisibility(View.VISIBLE);
