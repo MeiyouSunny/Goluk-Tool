@@ -4,11 +4,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore.Video.Thumbnails;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
@@ -202,11 +200,12 @@ public class UploadVideo implements IUploadRequestListener {
 			return null;
 		}
 
-		Bitmap temp = ThumbnailUtils.createVideoThumbnail(mVideoPath, Thumbnails.MINI_KIND);
-		if (temp == null) {
-			temp = GolukUtils.createVideoThumbnail(mVideoPath);
-		}
+//		Bitmap temp = ThumbnailUtils.createVideoThumbnail(mVideoPath, Thumbnails.MINI_KIND);
+//		if (temp == null) {
+//			temp = GolukUtils.createVideoThumbnail(mVideoPath);
+//		}
 
+		Bitmap temp = GolukUtils.createVideoThumbnail(mVideoPath);
 		return temp;
 	}
 

@@ -27,11 +27,11 @@ public class RingView extends View {
         int center = getWidth()/2;  
         int width = getWidth();
         //绘制外圆  
-        this.paint.setColor(Color.argb(0x7f, 0x00, 0x00, 0x00));
+        this.paint.setColor(Color.argb(0x00, 0x00, 0x00, 0x00));
         canvas.drawCircle(center,center, center, this.paint);  
         
         //绘制扇形
-        this.paint.setColor(Color.argb(0x7f, 0xff, 0xff, 0xff));
+        this.paint.setColor(Color.argb(0xff, 0xff, 0xff, 0xff));
         RectF oval2 = new RectF(0, 0, width, width);
         canvas.drawArc(oval2, 270, mProcess, true, paint);  
         

@@ -379,7 +379,7 @@ public class GolukUtils {
 		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 		try {
 			retriever.setDataSource(filePath);
-			bitmap = retriever.getFrameAtTime();
+			bitmap = retriever.getFrameAtTime(1000000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
 		} catch (IllegalArgumentException ex) {
 		} catch (RuntimeException ex) {
 		} finally {
