@@ -57,8 +57,8 @@ public class AddTailerDialogFragment extends DialogFragment implements SimpleExp
                 Log.i("msg","视频导出:导出eventBus+ " + String.valueOf(event.getExportProcess()));
 
                 String org = getString(R.string.str_video_export_progress);
-                String formattedOrg = String.format(org, process);
-                this.mAddTailerProgressTv.setText(formattedOrg);
+                //String formattedOrg = String.format(org, process);
+                this.mAddTailerProgressTv.setText(org);
             }else if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_FINISH){
                 mAddTailerRingview.setProcess(100);
                 this.mAddTailerProgressTv.setText(getString(R.string.str_video_export_succeed));
@@ -78,29 +78,21 @@ public class AddTailerDialogFragment extends DialogFragment implements SimpleExp
 
     @Override
     public void onStartToExport(SimpleExporter mSimpleExporter) {
-
-        Log.i("msg","视频导出:开始");
         EventBus.getDefault().post(new EventAddTailer(EventAddTailer.EXPORT_STATUS_START,0,null));
     }
 
     @Override
     public void onExporting(SimpleExporter mSimpleExporter, float v) {
-
-        Log.i("msg","视频导出:导出 中+ " + String.valueOf(v));
         EventBus.getDefault().post(new EventAddTailer(EventAddTailer.EXPORT_STATUS_EXPORTING,v,null));
     }
 
     @Override
     public void onExportFinished(SimpleExporter mSimpleExporter, String path) {
-
-        Log.i("msg","视频导出:完成 Path:" + path);
         EventBus.getDefault().post(new EventAddTailer(EventAddTailer.EXPORT_STATUS_FINISH,0,path));
     }
 
     @Override
     public void onExportFailed(SimpleExporter mSimpleExporter, EffectException e) {
-
-        Log.i("msg","视频导出:失败");
         EventBus.getDefault().post(new EventAddTailer(EventAddTailer.EXPORT_STATUS_FAILED,0,null));
     }
 }

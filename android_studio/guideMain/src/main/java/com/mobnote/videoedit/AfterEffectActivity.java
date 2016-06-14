@@ -567,11 +567,11 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         case MSG_AE_EXPORT_PROGRESS:
             Log.d(TAG, "MSG_AE_EXPORT_PROGRESS: " + msg.arg1);
             String org = getString(R.string.str_video_export_progress);
-            String formattedOrg = String.format(org, msg.arg1);
+//            String formattedOrg = String.format(org, msg.arg1);
 
             int progress = (int) msg.arg1;
             mExportingDialog.setRingViewProgress(progress);
-            mExportingDialog.setTextProgress(formattedOrg);
+            mExportingDialog.setTextProgress(org);
             break;
         case MSG_AE_EXPORT_FINISHED:
             Log.d(TAG, "MSG_AE_EXPORT_FINISHED");

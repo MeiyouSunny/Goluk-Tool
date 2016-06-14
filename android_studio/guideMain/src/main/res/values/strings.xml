@@ -1101,7 +1101,6 @@
     <string name="str_cluster_ranking_txt">Total ranking</string>
     <string name="str_video_export_min_limit">Can not export video with length less than %1$ds</string>
     <string name="str_video_export_max_limit">Can not export video with length more than %1$ds</string>
-    <string name="str_video_export_progress">Exporting %1$d%%</string>
     <string name="str_ae_split">Split</string>
     <string name="str_ae_delete">Delete</string>
     <string name="str_ae_cut">Cut</string>
