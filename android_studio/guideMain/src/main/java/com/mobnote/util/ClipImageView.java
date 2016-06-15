@@ -473,9 +473,13 @@ public class ClipImageView extends ImageView implements View.OnTouchListener, Vi
 		x = (getWidth() - clipWidth) / 2;
 		y = (getHeight() - clipHeight) / 2;
 
-		return Bitmap.createBitmap(bitmap, x, y,
-				clipWidth, clipHeight);
-
+        try {
+            return Bitmap.createBitmap(bitmap, x, y,
+                    clipWidth, clipHeight);
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+            return null;
+        }
 	}
 
 	public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
