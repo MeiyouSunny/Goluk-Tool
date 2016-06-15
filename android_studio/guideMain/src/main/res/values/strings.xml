@@ -1127,4 +1127,6 @@
     <string name="str_sys_msg_gaward_text">恭喜您，抽中了</string>
 
     <string name="str_rank_click_btn_txt">Click Entry</string>
+    <string name="str_push_setting_save_success">保存推送消息成功</string>
+    <string name="str_push_setting_save_fail">保存推送消息失败</string>
 </resources>

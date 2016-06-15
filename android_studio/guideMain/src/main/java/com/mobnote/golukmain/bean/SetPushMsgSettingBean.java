@@ -8,5 +8,5 @@ public class SetPushMsgSettingBean {
 	@JSONField(name="success")
 	public boolean success;
 	@JSONField(name="data")
-	public PushMsgSettingData data;
+	public SetPushMsgSettingData data;
 }

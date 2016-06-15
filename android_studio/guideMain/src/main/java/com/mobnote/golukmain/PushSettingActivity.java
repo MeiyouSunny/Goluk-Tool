@@ -6,10 +6,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.bean.GetPushSettingRequest;
 import com.mobnote.golukmain.bean.PushMsgSettingBean;
+import com.mobnote.golukmain.bean.SetPushMsgSettingBean;
 import com.mobnote.golukmain.bean.SetPushSettingRequest;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.live.LiveDialogManager;
@@ -156,7 +158,7 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 	private void exit() {
 		// 把当前的设置通知上报服务器
 		saveConfigToServer();
-		this.finish();
+//		this.finish();
 	}
 
 	@Override
@@ -210,12 +212,13 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
-		if(requestType == IPageNotifyFn.PageType_GetPushCfg){
-			LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
+        LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
+
+		if(requestType == IPageNotifyFn.PageType_GetPushCfg) {
 			PushMsgSettingBean psb = (PushMsgSettingBean) result;
 			if(psb != null){
 //				SettingBean bean = JsonUtil.parsePushSettingJson((String) param2);
-				if (psb != null && psb.data!=null ){
+				if (psb != null && psb.data != null ) {
 					if(!GolukUtils.isTokenValid(psb.data.result)){
 						GolukApplication.getInstance().isUserLoginSucess = false;
 						GolukApplication.getInstance().loginStatus = 2;
@@ -236,8 +239,27 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 				GolukUtils.showToast(this, getResources().getString(R.string.network_error));
 				return;
 			}
-		}
-		
+		} else if(requestType == IPageNotifyFn.PageType_SetPushCfg) {
+            SetPushMsgSettingBean retBean = (SetPushMsgSettingBean)result;
+            if(null == retBean || null == retBean.data) {
+                Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
+
+            if(!GolukUtils.isTokenValid(retBean.data.result)) {
+                Toast.makeText(this, getString(R.string.invalid_token), Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
+
+            if(!"0".equals(retBean.data.result)) {
+                Toast.makeText(this, getString(R.string.str_push_setting_save_fail), Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
+            finish();
+        }
 	}
 
 }
