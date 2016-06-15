@@ -578,7 +578,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             ExportRet retBean = (ExportRet)msg.obj;
 //            String path = (String)msg.obj;
             if(mExportingDialog != null && mExportingDialog.isVisible()) {
-                mExportingDialog.dismiss();
+                mExportingDialog.dismissAllowingStateLoss();
             }
             if(retBean.succeed) {
                 Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -615,7 +615,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             break;
         case MSG_AE_EXPORT_FAILED:
             if(null != mExportingDialog && mExportingDialog.isVisible()) {
-                mExportingDialog.dismiss();
+                mExportingDialog.dismissAllowingStateLoss();
             }
 
             mExportFailDialogBuilder.setTitle(getString(R.string.str_video_export_failed));
@@ -1348,7 +1348,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         }
 
         if(mExportingDialog != null && mExportingDialog.isVisible()) {
-            mExportingDialog.dismiss();
+            mExportingDialog.dismissAllowingStateLoss();
             mExportingDialog = null;
         }
 
