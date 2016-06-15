@@ -225,15 +225,15 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
             }else if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_FINISH){
 
+				isExporting = false;
 				//竖屏播放页访问即刻分享页面统计
 				ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
 
                 GolukUtils.startVideoShareActivity(this, mType, event.getExportPath(), mExportedFilename,
 						true, mVideoView.getDuration(), mHP,(PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
                 if(mAddTailerDialog != null && mAddTailerDialog.isVisible()) {
-                    mAddTailerDialog.dismiss();
+                    mAddTailerDialog.dismissAllowingStateLoss();
                 }
-                isExporting = false;
             }else if(event.getExportStatus() == EventAddTailer.EXPORT_STATUS_FAILED) {
 				//竖屏播放页访问即刻分享页面统计
 				ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
@@ -242,7 +242,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 GolukUtils.startVideoShareActivity(this, mType, mPath, mFileName,
 						false, mVideoView.getDuration(), mHP,(PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
                 if(mAddTailerDialog != null && mAddTailerDialog.isVisible()){
-                    mAddTailerDialog.dismiss();
+                    mAddTailerDialog.dismissAllowingStateLoss();
                 }
                 isExporting = false;
             }
