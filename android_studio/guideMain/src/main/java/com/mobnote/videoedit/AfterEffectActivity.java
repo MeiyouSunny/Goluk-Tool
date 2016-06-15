@@ -625,6 +625,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
+                    if(null != mExportingDialog && mExportingDialog.isVisible()) {
+                        mExportingDialog.dismissAllowingStateLoss();
+                    }
                 }
             });
             mExportFailDialog = mExportFailDialogBuilder.create();
