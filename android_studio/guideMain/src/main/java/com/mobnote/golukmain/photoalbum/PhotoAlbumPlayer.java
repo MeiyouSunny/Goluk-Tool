@@ -214,7 +214,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
     public void onEventMainThread(EventShareCompleted event){
         if(event != null){
-            Toast.makeText(this, getString(R.string.str_share_success), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, getString(R.string.str_share_success), Toast.LENGTH_SHORT).show();
             exit();
         }
     }
