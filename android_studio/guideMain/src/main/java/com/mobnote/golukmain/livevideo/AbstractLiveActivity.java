@@ -461,6 +461,12 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 	private void startLiveFailed() {
 		GolukDebugUtils.e("", "newlive-----LiveActivity-----startLiveFailed :--");
 		if (!isAlreadExit) {
+			if(null != mSettingData) {
+				GolukDebugUtils.e("zhibo","-----fail------444");
+				//无网IPC发起直播失败
+				ZhugeUtils.eventOpenLive(this, mSettingData.duration,
+						mLiveOperator.getZhugeErrorCode() + "", mSettingData.isCanVoice);
+			}
 			LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
 					LiveDialogManager.DIALOG_TYPE_LIVE_REQUEST_SERVER, LIVE_DIALOG_TITLE,
 					getString(R.string.str_live_upload_first_error));
@@ -517,7 +523,8 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 		switch (what) {
 			//TODO 发起直播失败
 		case MSG_H_UPLOAD_TIMEOUT:
-			if(null != mSettingData) {
+			if(isAlreadExit && null != mSettingData) {
+				GolukDebugUtils.e("zhibo","-----fail------111");
 				//IPC发起直播失败
 				ZhugeUtils.eventOpenLive(this, mSettingData.duration,
 						mLiveOperator.getZhugeErrorCode() + "", mSettingData.isCanVoice);
@@ -533,6 +540,13 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 				LiveDialogManager.getManagerInstance().showSingleBtnDialog(AbstractLiveActivity.this,
 						LiveDialogManager.DIALOG_TYPE_LIVE_TIMEOUT, LIVE_DIALOG_TITLE,
 						this.getString(R.string.str_live_net_error));
+
+				GolukDebugUtils.e("zhibo","-----fail------222");
+				//网络错误，直播关闭
+				if(null != mSettingData) {
+					int remianTime = mSettingData.duration - mRemainLiveTime;
+					ZhugeUtils.eventCloseLive(this, mLiveOperator.getZhugeErrorCode() + "", remianTime);
+				}
 			}
 			break;
 		case MSG_H_RETRY_UPLOAD:
@@ -726,6 +740,12 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 			// 断开，提示用户是否继续上传
 			GolukDebugUtils.e("", "newlive-----LiveActivity-----liveUploadVideoFailed :---alread");
 			if (!isAlreadExit && GolukUtils.isActivityAlive(this)) {
+				if(null != mSettingData) {
+					GolukDebugUtils.e("zhibo","-----fail------333");
+					//无网IPC发起直播失败
+					ZhugeUtils.eventOpenLive(this, mSettingData.duration,
+							mLiveOperator.getZhugeErrorCode() + "", mSettingData.isCanVoice);
+				}
 				LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
 						LiveDialogManager.DIALOG_TYPE_LIVE_RELOAD_UPLOAD, LIVE_DIALOG_TITLE,
 						getString(R.string.str_live_upload_first_error));
@@ -1445,6 +1465,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 				//TODO 异常退出
 				//异常退出直播统计
 				if(null != mSettingData) {
+					GolukDebugUtils.e("zhibo","-----fail------444异常退出");
 					int remianTime = mSettingData.duration - mRemainLiveTime;
 					ZhugeUtils.eventCloseLive(this, mLiveOperator.getZhugeErrorCode() + "", remianTime);
 				}
@@ -1513,6 +1534,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 				if (TimerManager.RESULT_FINISH == result) {
 					//直播正常结束统计
 					if(null != mSettingData) {
+						GolukDebugUtils.e("zhibo","-----fail------555正常结束");
 						int remianTime = mSettingData.duration - mRemainLiveTime;
 						ZhugeUtils.eventCloseLive(this, this.getString(R.string.str_zhuge_close_live_timeup), remianTime);
 					}
