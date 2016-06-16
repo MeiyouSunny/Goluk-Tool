@@ -280,7 +280,10 @@ public class UploadVideo implements IUploadRequestListener {
 		if (mIsExit) {
 			return;
 		}
-		// GlobalWindow.getInstance().toFailed("视频上传失败");
+		// GlobalWindow.getInstance().toFailed("视频上传失败")
+		//
+		//
+		// ;
 
 		mErrorDialog = new AlertDialog.Builder(mContext).setTitle(mContext.getString(R.string.user_dialog_hint_title))
 				.setMessage(mContext.getString(R.string.str_upload_fail))
@@ -301,7 +304,8 @@ public class UploadVideo implements IUploadRequestListener {
 					}
 
 				}).create();
-
+		mErrorDialog.setCanceledOnTouchOutside(false);
+		mErrorDialog.setCancelable(false);
 		mErrorDialog.show();
 	}
 

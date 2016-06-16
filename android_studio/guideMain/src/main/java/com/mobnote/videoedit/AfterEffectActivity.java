@@ -578,7 +578,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             ExportRet retBean = (ExportRet)msg.obj;
 //            String path = (String)msg.obj;
             if(mExportingDialog != null && mExportingDialog.isVisible()) {
-                mExportingDialog.dismiss();
+                mExportingDialog.dismissAllowingStateLoss();
             }
             if(retBean.succeed) {
                 Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -615,7 +615,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             break;
         case MSG_AE_EXPORT_FAILED:
             if(null != mExportingDialog && mExportingDialog.isVisible()) {
-                mExportingDialog.dismiss();
+                mExportingDialog.dismissAllowingStateLoss();
             }
 
             mExportFailDialogBuilder.setTitle(getString(R.string.str_video_export_failed));
@@ -625,6 +625,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
+                    if(null != mExportingDialog && mExportingDialog.isVisible()) {
+                        mExportingDialog.dismissAllowingStateLoss();
+                    }
                 }
             });
             mExportFailDialog = mExportFailDialogBuilder.create();
@@ -730,6 +733,13 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         case MSG_AE_BITMAP_READ_FAILED: {
             Log.d(TAG, "MSG_AE_BITMAP_READ_FAILED");
             ZhugeUtils.eventAddChunk(this, false);
+            if(null != mFullLoadingDialog && mFullLoadingDialog.isShowing()) {
+                mFullLoadingDialog.close();
+            }
+            Toast.makeText(this, getString(R.string.str_ae_add_chunk_failed), Toast.LENGTH_SHORT).show();
+            if(mProjectItemList == null || mProjectItemList.size() <= 3) {
+                finishAfterEffect();
+            }
         }
             break;
         case MSG_AE_CHUNK_PLAY_END: {
@@ -1348,7 +1358,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         }
 
         if(mExportingDialog != null && mExportingDialog.isVisible()) {
-            mExportingDialog.dismiss();
+            mExportingDialog.dismissAllowingStateLoss();
             mExportingDialog = null;
         }
 

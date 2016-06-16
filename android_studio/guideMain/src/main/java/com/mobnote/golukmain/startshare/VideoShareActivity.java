@@ -261,7 +261,12 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
     public void onEventMainThread(EventShareCompleted event){
         if(event != null){
-            Toast.makeText(this, getString(R.string.str_share_success), Toast.LENGTH_SHORT).show();
+            if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_COPYLINK){
+
+                Toast.makeText(this, getString(R.string.str_copy_link_success), Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(this, getString(R.string.str_share_success), Toast.LENGTH_SHORT).show();
+            }
             toInitState();
             exit();
         }
@@ -279,7 +284,8 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     public void onEventMainThread(SharePlatformSelectedEvent event){
         if(event != null){
             this.mCurrSelectedSharePlatform = event.getSharePlatform();
-            if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_NULL){
+            if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_NULL ||
+                    mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_COPYLINK){
                 mShareTv.setText(getString(R.string.share_to_jishe));
             }else{
                 mShareTv.setText(getString(R.string.share_btn_text));
