@@ -447,6 +447,7 @@ public class ClipImageView extends ImageView implements View.OnTouchListener, Vi
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
 		draw(canvas);
+		return Bitmap.createBitmap(bitmap, (getWidth() - borderlength) / 2, (getHeight() - borderlength) / 2,borderlength, borderlength);
 
 //		//如果图片的宽和高都大于750,把图片裁剪成750×750；否则按原图裁剪
 //		Drawable d = getDrawable();
@@ -474,9 +475,6 @@ public class ClipImageView extends ImageView implements View.OnTouchListener, Vi
 //		y = (getHeight() - clipHeight) / 2;
 //		return Bitmap.createBitmap(bitmap, x, y,
 //				clipWidth, clipHeight);
-
-
-		return Bitmap.createBitmap(bitmap, (getWidth() - borderlength) / 2, (getHeight() - borderlength) / 2,borderlength, borderlength);
 
 	}
 
