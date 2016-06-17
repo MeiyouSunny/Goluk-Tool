@@ -399,6 +399,15 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,I
 		super.onResume();
 	}
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (null != mCustomProgressDialog && mCustomProgressDialog.isShowing()) {
+            mCustomProgressDialog.close();
+            mCustomProgressDialog = null;
+        }
+    }
+
 	public void startUserLogin(){
 		Intent loginIntent = null;
 		if(GolukApplication.getInstance().isMainland() == false){
