@@ -76,7 +76,7 @@ public class RankingActivity extends BaseActivity implements IRequestResultListe
     @Override
     protected void onResume() {
         super.onResume();
-        getRankingData("0","");//首次进入请求数据
+//        getRankingData("0","");//首次进入请求数据
     }
 
     private void initListener(){
@@ -136,7 +136,7 @@ public class RankingActivity extends BaseActivity implements IRequestResultListe
         mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         mRTPullListView.setAdapter(mRrankingAdapter);
         mRTPullListView.firstFreshState();
-//        getRankingData("0","");//首次进入请求数据
+        getRankingData("0","");//首次进入请求数据
     }
 
     private void getRankingData(String operation,String timestamp){
