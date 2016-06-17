@@ -1029,11 +1029,16 @@ public class IPCControlManager implements IPCManagerFn {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
 				IPCManagerFn.IPC_VDCPCmd_LiveStart, jsonData);
 	}
-	
-	public boolean stopLive() {
-		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
-				IPCManagerFn.IPC_VDCPCmd_LiveStop, "");
-	}
+
+    public boolean stopLive() {
+        if(null == mApplication || null == mApplication.mGoluk) {
+            return false;
+        }
+
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+                IPCManagerFn.IPC_VDCPCmd_LiveStop, "");
+    }
+
 	/**
 	 * 获取全局设置列表
 	 * 
