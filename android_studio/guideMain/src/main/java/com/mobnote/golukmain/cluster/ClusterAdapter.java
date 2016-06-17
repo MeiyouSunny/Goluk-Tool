@@ -246,6 +246,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 					holder.voteBtn = (Button)convertView.findViewById(R.id.btn_cluster_head_vote);
 					holder.rankingBtn = (TextView) convertView.findViewById(R.id.now_ranking_btn);
 					holder.textrank = (TextView) convertView.findViewById(R.id.text_rank);
+					holder.iconrank = (ImageView) convertView.findViewById(R.id.icon_rank);
 					convertView.setTag(holder);
 				} else {
 					holder = (HeadViewHolder) convertView.getTag();
@@ -259,9 +260,11 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 				if ("1".equals(mHeadData.isopen)){
 					holder.rankingBtn.setVisibility(View.VISIBLE);
 					holder.textrank.setVisibility(View.VISIBLE);
+					holder.iconrank.setVisibility(View.VISIBLE);
 				}else{
 					holder.rankingBtn.setVisibility(View.GONE);
 					holder.textrank.setVisibility(View.GONE);
+					holder.iconrank.setVisibility(View.GONE);
 				}
 
 				holder.rankingBtn.setOnClickListener(new OnClickListener() {
@@ -847,6 +850,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 	public static class HeadViewHolder {
 		TextView title;
 		ImageView headImg;
+		ImageView iconrank;
 		TextView rankingBtn;
 		TextView textrank;
 		TextView partakes;
