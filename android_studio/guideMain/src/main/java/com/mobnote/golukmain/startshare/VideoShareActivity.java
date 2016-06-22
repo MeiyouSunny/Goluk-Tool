@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.renderscript.RSRuntimeException;
@@ -112,6 +113,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     private String mShareDiscrible;
     private ImageView mBackIv;
     private ImageView mVideoThumbIv;
+    private ImageView mVideoThumbBlurIv;
     private PromotionSelectItem mSelectedPromotionItem;
     private int mSelectedShareType;
     private String mSelectedShareString;
@@ -145,6 +147,9 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     private List<PromotionData> mPromotionList;
     private boolean isShowNew;
     private TextView mNewActivityTv;
+
+    Bitmap mVidThumbnail;
+    Bitmap mVidBlurBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -345,30 +350,45 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    private void setupView() {
+    private class GetThumbAsyncTask extends AsyncTask<Integer, Integer, String> {
 
-//        Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(mVideoPath, MediaStore.Video.Thumbnails.MINI_KIND);
-//        if (thumbnail == null) {
-//            thumbnail = GolukUtils.createVideoThumbnail(mVideoPath);
-//        }
-        Bitmap thumbnail = GolukUtils.createVideoThumbnail(mVideoPath);
-        if(thumbnail != null){
-            mVideoThumbIv.setImageBitmap(thumbnail);
+        @Override
+        protected String doInBackground(Integer... params) {
 
-            Bitmap blurBitmap = thumbnail.copy(thumbnail.getConfig(),true);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                try {
-                    blurBitmap = RSBlur.blur(this, blurBitmap, 50);
-                } catch (RSRuntimeException e) {
-                    blurBitmap = FastBlur.blur(blurBitmap, 50, true);
-                }
-            } else {
-                blurBitmap = FastBlur.blur(blurBitmap, 50, true);
+            if(mVidThumbnail == null){
+                mVidThumbnail = GolukUtils.createVideoThumbnail(mVideoPath);
             }
-            if(blurBitmap != null){
-                ((ImageView) findViewById(R.id.iv_videoshare_blur)).setImageBitmap(blurBitmap);
+
+            if(mVidThumbnail != null){
+                mVidBlurBitmap = mVidThumbnail.copy(mVidThumbnail.getConfig(),true);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    try {
+                        mVidBlurBitmap = RSBlur.blur(VideoShareActivity.this, mVidBlurBitmap, 50);
+                    } catch (RSRuntimeException e) {
+                        mVidBlurBitmap = FastBlur.blur(mVidBlurBitmap, 50, true);
+                    }
+                } else {
+                    mVidBlurBitmap = FastBlur.blur(mVidBlurBitmap, 50, true);
+                }
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            // TODO Auto-generated method stub
+            if(mVidThumbnail != null && mVideoThumbIv != null) {
+                mVideoThumbIv.setImageBitmap(mVidThumbnail);
+            }
+
+            if(mVidBlurBitmap != null && mVideoThumbBlurIv != null){
+                mVideoThumbBlurIv.setImageBitmap(mVidBlurBitmap);
             }
         }
+    }
+
+    private void setupView() {
+
+        new GetThumbAsyncTask().execute();
 
         mUploadVideo = new UploadVideo(this, GolukApplication.getInstance(), videoName);
         mUploadVideo.setListener(this);
@@ -408,6 +428,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         mShareTypeTv = (TextView) findViewById(R.id.tv_share_videoType);
         mShareLL = (LinearLayout) findViewById(R.id.ll_share_now);
         mVideoThumbIv = (ImageView) findViewById(R.id.iv_videoshare_videothumb);
+        mVideoThumbBlurIv = (ImageView) findViewById(R.id.iv_videoshare_blur);
         mShareTv = (TextView) findViewById(R.id.tv_share);
         mNewActivityTv = (TextView) findViewById(R.id.tv_share_newActivity);
 
