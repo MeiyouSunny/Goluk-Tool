@@ -132,8 +132,7 @@ public class BaiduMapManage implements IMapTools{
 
 	/**
 	 * 添加地图大头针
-	 * 
-	 * @param map
+	 *
 	 * @param json
 	 */
 	public void AddMapPoint(JSONArray json) {

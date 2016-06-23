@@ -417,7 +417,7 @@
             android:value="mobnote" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAOCQX0S0Y0HIEUIz0M97glDV0Nka0YEKg" />
+            android:value="AIzaSyBnDOLOTn6fQhDmMrvW_lInJRQB3In4XDE" />
         <!--
              <meta-data
             android:name="com.google.android.gms.version"

@@ -196,7 +196,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 		// 显示数据
 		setViewInitData();
 		// 地图初始化
-		initMap();
+		initMap(savedInstanceState);
 		// 获取我的登录信息
 		myInfo = mApp.getMyInfo();
 		// 开始预览或开始直播

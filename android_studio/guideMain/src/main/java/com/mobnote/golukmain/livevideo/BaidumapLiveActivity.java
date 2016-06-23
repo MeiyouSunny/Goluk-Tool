@@ -1,5 +1,6 @@
 package com.mobnote.golukmain.livevideo;
 
+import android.os.Bundle;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.location.BaiduPosition;
@@ -89,7 +90,7 @@ public class BaidumapLiveActivity extends AbstractLiveActivity implements
 	}
 
 	@Override
-	public void initMap() {
+	public void initMap(Bundle bundle) {
 		// TODO Auto-generated method stub
 		BaiduMapOptions options = new BaiduMapOptions();
 		options.rotateGesturesEnabled(false); // 不允许手势
