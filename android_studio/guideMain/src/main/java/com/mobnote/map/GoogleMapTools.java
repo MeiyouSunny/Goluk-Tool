@@ -180,7 +180,7 @@ public class GoogleMapTools implements IMapTools{
 			JSONObject data = new JSONObject(userinfo);
 			String lon = data.getString("lon");
 			String lat = data.getString("lat");
-			if (!"".equals(lon) && !"".equals(lat)) {
+			if (!"".equals(lon) && !"".equals(lat) ) {
 				// 用户头像类型
 				int utype = Integer.valueOf(data.getString("head"));
 				int head = mHeadImg[utype];

@@ -544,7 +544,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 	 */
 	public boolean isMainland() {
 		if (null != this.getPackageName() && "cn.com.mobnote.golukmobile".equals(this.getPackageName())) {
-			return true;
+			return false;
 		} else {
 			return false;
 		}
