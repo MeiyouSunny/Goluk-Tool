@@ -6,6 +6,7 @@ import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventFinishWifiActivity;
 import com.mobnote.eventbus.EventWifiState;
 import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpenUrlActivity;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
@@ -28,7 +29,6 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -54,6 +54,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     private final String T1_ShowName = " Goluk_T1_xxxxxx ";
     private final String T1S_ShowName = " Goluk_T1S_xxxxxx ";
     private final String T2_ShowName = " Goluk_T2_xxxxxx ";
+    private final String GOLUK_COMMON_SHOW_NAME = " Goluk_xx_xxxxxx ";
 
     /**
      * 未连接或连接失败
@@ -104,6 +105,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
     private boolean mIsCanAcceptIPC = false;
     private boolean mIsCanAcceptNetState = false;
+    private boolean mReturnToMainAlbum;
 
     /**
      * 用于表示当前的状态 0/1/2 未连接/连接中/已连接
@@ -117,7 +119,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
      * 用户要绑定的设备类型
      */
     private String mIPcType = "";
-    private String mIpcRealtype = null;
+//    private String mIpcRealtype = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -135,7 +137,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
         getIntentData();
 
-        ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setHdType(mIpcRealtype);
+//        ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setHdType(mIpcRealtype);
 
         mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         mWac = new WifiConnectManager(mWifiManager, this);
@@ -155,23 +157,26 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         Intent intent = this.getIntent();
         if (null != intent) {
             mIPcType = intent.getStringExtra(WifiUnbindSelectTypeActivity.KEY_IPC_TYPE);
-            mIpcRealtype = intent.getStringExtra(WifiUnbindSelectTypeActivity.KEY_IPC_REAL_TYPE);
+//            mIpcRealtype = intent.getStringExtra(WifiUnbindSelectTypeActivity.KEY_IPC_REAL_TYPE);
+            mReturnToMainAlbum = intent.getBooleanExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM,false);
         }
     }
 
     private String getWifiShowName() {
-        if (TextUtils.isEmpty(mIpcRealtype)) {
-            return G1G2_ShowName;
-        }
-        if (IPCControlManager.T1_SIGN.equals(mIpcRealtype)) {
-            return T1_ShowName;
-        } else if (IPCControlManager.T1s_SIGN.equals(mIpcRealtype)) {
-            return T1S_ShowName;
-        } else if (IPCControlManager.T2_SIGN.equals(mIpcRealtype)) {
-            return T2_ShowName;
-        } else {
-            return G1G2_ShowName;
-        }
+        return GOLUK_COMMON_SHOW_NAME;
+
+//        if (TextUtils.isEmpty(mIpcRealtype)) {
+//            return G1G2_ShowName;
+//        }
+//        if (IPCControlManager.T1_SIGN.equals(mIpcRealtype)) {
+//            return T1_ShowName;
+//        } else if (IPCControlManager.T1s_SIGN.equals(mIpcRealtype)) {
+//            return T1S_ShowName;
+//        } else if (IPCControlManager.T2_SIGN.equals(mIpcRealtype)) {
+//            return T2_ShowName;
+//        } else {
+//            return G1G2_ShowName;
+//        }
     }
 
     /**
@@ -289,10 +294,11 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         } else {
             t_type = GolukUtils.getIpcTypeFromName(mWillConnName);
         }
-        if (!t_type.equals(mIPcType)) {
-            connFailed();
-            return false;
-        }
+        //不再限定类型
+//        if (!t_type.equals(mIPcType)) {
+//            connFailed();
+//            return false;
+//        }
 
         collectLog("isGetWifiBean", "willConnName2:" + mWillConnName + "  willConnMac2:" + mWillConnMac);
         saveConnectWifiMsg(mWillConnName, IPC_PWD_DEFAULT, mWillConnMac);
@@ -418,9 +424,10 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         GolukDebugUtils.e("", "WiFiLinkListActivity   ipc连接成功回调---ipcLinkedCallBack---1");
         this.dimissLoadingDialog();
         // 标识已连接ipc热点,可以点击下一步
-        this.nextCan();
+//        this.nextCan();
         mCurrentState = STATE_SUCCESS;
-        this.setStateSwitch();
+//        this.setStateSwitch();
+        onClick(mNextBtn);
     }
 
     @Override
@@ -525,7 +532,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         // 跳转到修改热点密码页面
         Intent modifyPwd = new Intent(WiFiLinkListActivity.this, WiFiLinkCompleteActivity.class);
         modifyPwd.putExtra("com.mobnote.golukmain.wifiname", WiFiInfo.IPC_SSID);
-        modifyPwd.putExtra(WifiUnbindSelectTypeActivity.KEY_IPC_TYPE, mIPcType);
+        modifyPwd.putExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM,mReturnToMainAlbum);
+//        modifyPwd.putExtra(WifiUnbindSelectTypeActivity.KEY_IPC_TYPE, mIPcType);
         startActivity(modifyPwd);
     }
 

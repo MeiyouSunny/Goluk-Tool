@@ -457,7 +457,7 @@ public class WifiConnectManagerSupport {
         String configString;
         try {
             configString = readPassFile(fileName);
-            if (configString == null) {
+            if (TextUtils.isEmpty(configString)) {
                 return null;
             }
             JSONObject config = new JSONObject(configString);

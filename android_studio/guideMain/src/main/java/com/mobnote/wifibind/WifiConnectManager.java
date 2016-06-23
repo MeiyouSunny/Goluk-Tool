@@ -91,6 +91,16 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
         return wifiSupport.readConfig(WIFICONFIG);
     }
 
+    /**
+     * 是否在过去有过极路客连接
+     * @return
+     */
+    @Deprecated
+    public boolean haveHistoryGolukConnection() {
+        //FIXME 为什么这里有一个wifi.config 又 有一个WifiBindDataCenter 保持在SharedPreferences 中
+        return readConfig() == null ? false : true;
+    }
+
     public void isConnectIPC() {
         isConnectIPC(30000);
     }
