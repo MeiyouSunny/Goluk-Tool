@@ -2,6 +2,7 @@ package com.mobnote.golukmain.carrecorder;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.TimeZone;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -277,6 +278,25 @@ public class IPCControlManager implements IPCManagerFn {
 	}
 
 	/**
+	 * 设置IPC系统时间
+	 *
+	 * @param time
+	 *            距离1970年1月1日0时0分0秒所经过的秒数
+	 * @author xuhw
+	 * @date 2015年4月3日
+	 */
+	public boolean setIPCSystemTime(long time) {
+		String zone = "";
+		if(mProduceName.equals(T1_SIGN)){
+			zone = TimeZone.getDefault().getID();
+		}else{
+			zone = "";
+		}
+		String json = JsonUtil.getTimeJson(time,zone);
+		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetTime, json);
+	}
+
+	/**
 	 * 下载文件
 	 * 
 	 * @param filename
@@ -405,20 +425,6 @@ public class IPCControlManager implements IPCManagerFn {
 	public boolean formatDisk() {
 		return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_FormatDisk,
 				"");
-	}
-
-	/**
-	 * 设置IPC系统时间
-	 * 
-	 * @param time
-	 *            距离1970年1月1日0时0分0秒所经过的秒数
-	 * @author xuhw
-	 * @date 2015年4月3日
-	 */
-	public boolean setIPCSystemTime(long time) {
-		String json = JsonUtil.getTimeJson(time);
-		return mApplication.mGoluk
-				.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetTime, json);
 	}
 
 	/**
