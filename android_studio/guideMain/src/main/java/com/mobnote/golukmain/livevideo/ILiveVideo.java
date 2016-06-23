@@ -1,8 +1,10 @@
 package com.mobnote.golukmain.livevideo;
 
+import android.os.Bundle;
+
 public interface ILiveVideo {
 	
-	public void initMap();
+	public void initMap(Bundle bundle);
 	
 	public void drawPersonsHead();
 
