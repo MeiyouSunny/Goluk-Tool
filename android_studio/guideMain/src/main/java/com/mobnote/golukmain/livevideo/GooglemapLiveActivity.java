@@ -2,16 +2,22 @@ package com.mobnote.golukmain.livevideo;
 
 import android.os.Bundle;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mobnote.golukmain.R;
 import com.mobnote.map.GoogleMapTools;
+import com.mobnote.map.LngLat;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 
@@ -19,6 +25,8 @@ import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.location.BaiduPosition;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.tiros.debug.GolukDebugUtils;
+import io.vov.vitamio.utils.Log;
+
 public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMapReadyCallback,OnMapLoadedCallback{
 
 	private MapView mMapView;
@@ -32,8 +40,7 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
 			return;
 		}
 
-		GolukDebugUtils.e("",
-				"jyf----20150406----LiveActivity----LocationCallBack  : " + gpsJson);
+		GolukDebugUtils.e("", "jyf----20150406----LiveActivity----LocationCallBack  : " + gpsJson);
 
 		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
 		if (null != location && null != mApp && null != mMapTools) {
@@ -114,8 +121,7 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
 
         try {
             drawMyLocation();
-            GolukDebugUtils
-                    .e(null,"jyf----20150406----LiveActivity----drawPersonsHead----2: ");
+
             if (isShareLive) {
                 // 自己直播不再绘制其它人的点
                 return;
@@ -124,14 +130,11 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
                 GolukUtils.showToast(this, this.getString(R.string.str_live_cannot_get_coordinates));
                 return;
             }
-            GolukDebugUtils.e(null,
-                    "jyf----20150406----LiveActivity----drawPersonsHead----3  : " + currentUserInfo.aid);
-            mMapTools.addSinglePoint(JsonUtil
-                    .UserInfoToString(currentUserInfo));
+
+            mMapTools.addSinglePoint(JsonUtil.UserInfoToString(currentUserInfo));
         } catch (Exception e) {
             e.printStackTrace();
-            GolukDebugUtils
-                    .e(null,"jyf----20150406----LiveActivity----drawPersonsHead---4-Exception : ");
+            GolukDebugUtils.e(null,"jyf----20150406----LiveActivity----drawPersonsHead---4-Exception : ");
         }
 	}
 
@@ -139,15 +142,11 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
 	public void drawMyLocation() {
 		// TODO Auto-generated method stub
 
-        GolukDebugUtils.e(null,"jyf----20150406----LiveActivity----drawMyLocation----1: ");
 
         BaiduPosition myPosition = JsonUtil.parseLocatoinJson(mApp.mGoluk
-                .GolukLogicCommGet(GolukModule.Goluk_Module_Location,
-                        ILocationFn.LOCATION_CMD_GET_POSITION, ""));
+                .GolukLogicCommGet(GolukModule.Goluk_Module_Location, ILocationFn.LOCATION_CMD_GET_POSITION, ""));
         if (null == myPosition) {
-            GolukUtils.showToast(this,
-                    this.getString(R.string.str_live_cannot_get_location));
-            GolukDebugUtils.e(null,"jyf----20150406----LiveActivity----drawMyLocation---2: ");
+            GolukUtils.showToast(this, this.getString(R.string.str_live_cannot_get_location));
             return;
         }
 
@@ -156,29 +155,21 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
             if (null == myInfo) {
                 myInfo = mApp.getMyInfo();
             }
-            GolukDebugUtils.e(null,
-                    "jyf----20150406----LiveActivity----drawMyLocation---3: "
-                            + myInfo.nickname);
+            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---3: " + myInfo.nickname);
             if (null != myInfo) {
-                GolukDebugUtils
-                        .e(null,
-                                "jyf----20150406----LiveActivity----drawMyLocation---4: ");
+                GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---4: ");
                 mCurrentLocationType = LOCATION_TYPE_HEAD;
                 myInfo.lon = String.valueOf(myPosition.rawLon);
                 myInfo.lat = String.valueOf(myPosition.rawLat);
                 String drawTxt = JsonUtil.UserInfoToString(myInfo);
                 mMapTools.addSinglePoint(drawTxt);
-                GolukDebugUtils.e(null,
-                        "jyf----20150406----LiveActivity----drawMyLocation---5: "
-                                + drawTxt);
+                GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---5: " + drawTxt);
             }
 
-            GolukDebugUtils.e(null,
-                    "jyf----20150406----LiveActivity----drawMyLocation---6: ");
+            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---6: ");
 
         } else {
-            GolukDebugUtils.e(null,
-                    "jyf----20150406----LiveActivity----drawMyLocation---7: ");
+            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---7: ");
             mCurrentLocationType = LOCATION_TYPE_POINT;
             // 画小蓝点
 //            MyLocationData locData = new MyLocationData.Builder()
@@ -205,14 +196,20 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
 	public void toMyLocation() {
 		// TODO Auto-generated method stub
 
+        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(LngLat.lat, LngLat.lng)));
 	}
 
 	@Override
 	public void onMapReady(GoogleMap map) {
 		// TODO Auto-generated method stub
         mGoogleMap = map;
-        mGoogleMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
-
+        if(currentUserInfo != null){
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(Double.valueOf(currentUserInfo.lat), Double.valueOf(currentUserInfo.lon)))      // Sets the center of the map to Mountain View
+                    .zoom(10)                   // Sets the zoom
+                    .build();
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
         mMapTools = new GoogleMapTools(this, mApp, mGoogleMap, "LiveVideo");
         mGoogleMap.setOnMapLoadedCallback(this);
         mGoogleMap.setMyLocationEnabled(false);

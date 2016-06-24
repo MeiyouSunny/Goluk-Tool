@@ -282,7 +282,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements OnCli
 			}
 			mVideoSquareManager.addVideoSquareManagerListener("live", this);
 		}
-		mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_MYLOCATION, 10 * 1000);
+		//mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_MYLOCATION, 10 * 1000);
 	}
 
 	private void getURL() {
