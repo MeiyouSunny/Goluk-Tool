@@ -1131,4 +1131,5 @@
     <string name="str_push_setting_save_fail">保存推送消息失败</string>
     <string name="str_copy_link_success">复制链接成功</string>
     <string name="choose_ipc_device">Choose Your Cams </string>
+    <string name="start_connect_ipc_device">Connect Cams: %1$s</string>
 </resources>

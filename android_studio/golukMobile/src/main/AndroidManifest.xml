@@ -465,6 +465,12 @@
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
 
+        <activity
+            android:name="com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+
         <!-- 信鸽 -->
 
 
