@@ -161,6 +161,7 @@ public class WifiHistorySelectListActivity extends BaseActivity implements OnCli
     }
 
     private void ipcConnSuccess() {
+        GolukUtils.showToast(this,getResources().getString(R.string.str_wifi_connect_success));
         if (mReturnToMainAlbum) {
             Intent it = new Intent(WifiHistorySelectListActivity.this, MainActivity.class);
             startActivity(it);

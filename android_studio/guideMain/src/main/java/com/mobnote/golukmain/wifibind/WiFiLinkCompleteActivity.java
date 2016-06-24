@@ -39,6 +39,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -88,6 +90,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
      * 中间的根布局
      */
     private FrameLayout mMiddleLayout = null;
+    private LinearLayout mLLError;
     private WifiLinkSetIpcLayout layout1 = null;
     private WifiLinkWaitConnLayout layout2 = null;
     private WifiLinkSucessLayout layout3 = null;
@@ -96,7 +99,9 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
      */
     private ViewFrame mCurrentLayout = null;
     private Button mCompleteBtn = null;
+    private Button mBtnOnlyWIFI;
     private ImageView mProgressImg = null;
+    private TextView mtvFailureDesc;
     private int connectCount = 0;
     /**
      * ipc连接mac地址
@@ -129,8 +134,12 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         initChildView();
         mMiddleLayout = (FrameLayout) findViewById(R.id.wifi_link_complete_frmelayout);
         mCompleteBtn = (Button) findViewById(R.id.complete_btn);
+        mBtnOnlyWIFI = (Button) findViewById(R.id.btn_only_connect_goluk_wifi);
         mCompleteBtn.setOnClickListener(this);
+        mBtnOnlyWIFI.setOnClickListener(this);
         mProgressImg = (ImageView) findViewById(R.id.wifilink_progress);
+        mLLError = (LinearLayout) findViewById(R.id.ll_link_complete_bottom);
+        mtvFailureDesc = (TextView) findViewById(R.id.tv_connect_failure_desc);
         init();
         toSetIPCInfoView();
         setIpcLinkInfo();
@@ -303,7 +312,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
      */
     public void ipcLinkWiFiCallBack(Object param2) {
         collectLog("ipcLinkWiFiCallBack", "*****   Bind Sucess ! *****");
-
+        mLLError.setVisibility(View.GONE);
+        mtvFailureDesc.setVisibility(View.GONE);
         IpcConnSuccessInfo ipcInfo = null;
         if (null != param2) {
             ipcInfo = GolukFastJsonUtil.getParseObj((String) param2, IpcConnSuccessInfo.class);
@@ -466,7 +476,9 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         if (id == R.id.back_btn) {
             backSetup();
         } else if (id == R.id.complete_btn) {
-            click_complete();
+            mBaseHandler.sendEmptyMessageDelayed(MSG_H_CREATE_HOT, 3 * 1000);
+//            click_complete();
+        } else if (id == R.id.btn_only_connect_goluk_wifi) {
         }
     }
 
@@ -570,22 +582,24 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
     private void connFailed() {
         collectLog("connFailed", "WifiLinkCompleteActivity-----------connFailed : " + mStep);
-        if (0 == mStep) {
-            collectLog("connFailed", "connFailed show Dialog  please 5~10s");
-            // 弹框提示用户重启GoLUK
-            LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-                    LiveDialogManager.DIALOG_TYPE_WIFIBIND_RESTART_IPC,
-                    getResources().getString(R.string.wifi_link_prompt),
-                    getResources().getString(R.string.wifi_link_blackout));
-            mStep++;
-        } else {
-            collectLog("connFailed", "connFailed show Dialog Conn Failed");
-            // 提示用户绑定失败，重新退出程序绑定
-            LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-                    LiveDialogManager.DIALOG_TYPE_WIFIBIND_FAILED,
-                    this.getResources().getString(R.string.wifi_link_prompt),
-                    getResources().getString(R.string.wifi_link_goluk_bind_failed));
-        }
+        mLLError.setVisibility(View.VISIBLE);
+        mtvFailureDesc.setVisibility(View.VISIBLE);
+//        if (0 == mStep) {
+//            collectLog("connFailed", "connFailed show Dialog  please 5~10s");
+//            // 弹框提示用户重启GoLUK
+//            LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
+//                    LiveDialogManager.DIALOG_TYPE_WIFIBIND_RESTART_IPC,
+//                    getResources().getString(R.string.wifi_link_prompt),
+//                    getResources().getString(R.string.wifi_link_blackout));
+//            mStep++;
+//        } else {
+//            collectLog("connFailed", "connFailed show Dialog Conn Failed");
+//            // 提示用户绑定失败，重新退出程序绑定
+//            LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
+//                    LiveDialogManager.DIALOG_TYPE_WIFIBIND_FAILED,
+//                    this.getResources().getString(R.string.wifi_link_prompt),
+//                    getResources().getString(R.string.wifi_link_goluk_bind_failed));
+//        }
     }
 
     private void wifiCallBack_5(int state, int process, String message, Object arrays) {

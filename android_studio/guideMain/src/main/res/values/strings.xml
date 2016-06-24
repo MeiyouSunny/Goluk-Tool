@@ -1132,4 +1132,8 @@
     <string name="str_copy_link_success">复制链接成功</string>
     <string name="choose_ipc_device">Choose Your Cams </string>
     <string name="start_connect_ipc_device">Connect Cams: %1$s</string>
+    <string name="goluk_wifi_connection">Connect Goluk Cams</string>
+    <string name="connect_only_wifi_desc">Only use Goluk Cams Wi-fi for video transmission\nLive video and mobile data network can not be used in this case</string>
+    <string name="reconnect_hotspot">RECONNECT HOTSPOT</string>
+    <string name="goluk_cannot_connect_hotspot">Can not connect Goluk Cams...</string>
 </resources>
