@@ -1,11 +1,10 @@
 package com.mobnote.golukmain.livevideo;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
@@ -13,8 +12,9 @@ import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.mobnote.golukmain.R;
 import com.mobnote.map.GoogleMapTools;
 import com.mobnote.map.LngLat;
@@ -30,6 +30,7 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
 
 	private MapView mMapView;
 	private GoogleMap mGoogleMap;
+    private Circle circle;
 
 	@Override
 	public void LocationCallBack(String gpsJson) {
@@ -39,7 +40,7 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
 			return;
 		}
 
-		GolukDebugUtils.e("", "jyf----20150406----LiveActivity----LocationCallBack  : " + gpsJson);
+        GolukDebugUtils.e("", "leege----------gpsJson: " + gpsJson);
 
 		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
 		if (null != location && null != mApp && null != mMapTools) {
@@ -99,9 +100,7 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
 	public void initMap(Bundle saveInstance) {
         GoogleMapOptions options = new GoogleMapOptions();
         options.rotateGesturesEnabled(false); // 不允许手势
-        //options.overlookingGesturesEnabled(false);
 
-        //RelativeLayout mMapRootLayout = (RelativeLayout) findViewById(R.id.live_map_layout);
         mMapView = new MapView(this, options);
 
         mMapView.setClickable(true);
@@ -141,7 +140,6 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
 	public void drawMyLocation() {
 		// TODO Auto-generated method stub
 
-
         BaiduPosition myPosition = JsonUtil.parseLocatoinJson(mApp.mGoluk
                 .GolukLogicCommGet(GolukModule.Goluk_Module_Location, ILocationFn.LOCATION_CMD_GET_POSITION, ""));
         if (null == myPosition) {
@@ -170,25 +168,13 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
         } else {
             GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---7: ");
             mCurrentLocationType = LOCATION_TYPE_POINT;
-            // 画小蓝点
-//            MyLocationData locData = new MyLocationData.Builder()
-//                    .accuracy((float) myPosition.radius).direction(100)
-//                    .latitude(myPosition.rawLat).longitude(myPosition.rawLon)
-//                    .build();
-//             //确认地图我的位置点是否更新位置
-//            mGoogleMap.setLocationSource();
+
         }
 	}
 
 	@Override
 	public void drawMyPosition(double lon, double lat, double radius) {
 		// TODO Auto-generated method stub
-
-//        MyLocationData locData = new MyLocationData.Builder()
-//                .accuracy((float) radius).direction(100).latitude(lat)
-//                .longitude(lon).build();
-//        // 确认地图我的位置点是否更新位置
-        //mGoogleMap.setLocationSource();
 	}
 
 	@Override

@@ -177,6 +177,7 @@ public class GoogleMapTools implements IMapTools{
 	@Override
 	public void addSinglePoint(String userinfo) {
 		try {
+			GolukDebugUtils.e("", "leege----------userinfo: " + userinfo);
 			JSONObject data = new JSONObject(userinfo);
 			String lon = data.getString("lon");
 			String lat = data.getString("lat");
