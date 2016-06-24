@@ -86,6 +86,10 @@ import com.mobnote.golukmain.photoalbum.FragmentAlbum;
 import com.mobnote.golukmain.special.SpecialListActivity;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
+import com.mobnote.golukmain.wifibind.WiFiInfo;
+import com.mobnote.golukmain.wifibind.WiFiLinkCompleteActivity;
+import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
+import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
 import com.mobnote.golukmain.xdpush.GolukNotification;
@@ -112,6 +116,7 @@ import de.greenrobot.event.EventBus;
 @SuppressLint({"HandlerLeak", "NewApi"})
 public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiveDialogManagerFn, IBaiduGeoCoderFn,
         IRequestResultListener {
+    public static final String INTENT_ACTION_RETURN_MAIN_ALBUM = "returnToAlbum";
 
     /**
      * 程序启动需要20秒的时间用来等待IPC连接
@@ -370,8 +375,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
                 //IPC页面访问统计
                 ZhugeUtils.eventIpc(MainActivity.this);
 
-                Intent intent = new Intent(MainActivity.this, CarRecorderActivity.class);
-                startActivity(intent);
+                connectGoluk(false);
             }
         });
 
@@ -386,6 +390,33 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
                 }
             }
         });
+    }
+
+
+    public void connectGoluk(boolean returnToMainActivityWhenSuccess) {
+        //如果没有历史纪录的话， mApp.mWiFiStatus 一定为 WIFI_STATE_FAILED
+
+        if (!WifiBindDataCenter.getInstance().isHasDataHistory()) {
+            Intent intent = new Intent(MainActivity.this, WiFiLinkListActivity.class);
+            intent.putExtra(INTENT_ACTION_RETURN_MAIN_ALBUM, returnToMainActivityWhenSuccess);
+            startActivity(intent);
+            return;
+        }
+        if (mApp.mWiFiStatus == WIFI_STATE_SUCCESS) {
+            Intent intent = new Intent(MainActivity.this, CarRecorderActivity.class);
+            startActivity(intent);
+            return;
+        }
+        if (mApp.mWiFiStatus == WIFI_STATE_CONNING) {
+            Intent intent = new Intent(MainActivity.this, WiFiLinkCompleteActivity.class);
+            intent.putExtra(INTENT_ACTION_RETURN_MAIN_ALBUM, returnToMainActivityWhenSuccess);
+            startActivity(intent);
+            return;
+        } else {
+            Intent intent = new Intent(this, WifiUnbindSelectListActivity.class);
+            intent.putExtra(INTENT_ACTION_RETURN_MAIN_ALBUM, returnToMainActivityWhenSuccess);
+            startActivity(intent);
+        }
     }
 
     public void setTabHostVisibility(boolean visible) {
@@ -1084,6 +1115,12 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         if (null == mCurrentConnBean) {
             return;
         }
+        //时刻保存全局变量为上次连接的IPC设备
+        WiFiInfo.IPC_MAC = mCurrentConnBean.getIpc_mac();
+        WiFiInfo.IPC_SSID = mCurrentConnBean.getIpc_ssid();
+        WiFiInfo.IPC_PWD = mCurrentConnBean.getIpc_pass();
+        WiFiInfo.MOBILE_SSID = mCurrentConnBean.getPh_ssid();
+        WiFiInfo.MOBILE_PWD = mCurrentConnBean.getPh_pass();
         GolukDebugUtils.e("",
                 "select wifibind---MainActivity------refreshIpcDataToFile1: " + mCurrentConnBean.getIpc_ssid());
         // 如果本地文件中已经有记录了，则不再保存

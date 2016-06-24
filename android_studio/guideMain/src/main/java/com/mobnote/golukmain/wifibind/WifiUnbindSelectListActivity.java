@@ -55,16 +55,19 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
      * 编辑按钮
      **/
     private Button mEditBtn;
+    private Button mbtnConnectGoluk;
     /**
      * 连接中headView
      **/
     public View mHeadView = null;
+    private TextView mtvChooseGoluk;
     public HeadViewHodler mHeadData = null;
     private WifiBindHistoryBean mWifiBindConnectData = null;
     private WifiUnbindSelectListAdapter mListAdapter;
     private CustomLoadingDialog mLoadingDialog = null;
     public GolukApplication mApp = null;
     private boolean isCanReceiveFailed = true;
+    private boolean mReturnToMainAlbum;
 
     private int mHeadContentHeight = (int) (88 * GolukUtils.mDensity);
 
@@ -96,8 +99,10 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
         mListView = (ListView) findViewById(R.id.listView);
         mEmptyLayout = (RelativeLayout) findViewById(R.id.emptyLayout);
         mCloseBtn = (ImageView) findViewById(R.id.close_btn);
+        mbtnConnectGoluk = (Button) findViewById(R.id.btn_connect_my_goluk);
         mEditBtn = (Button) findViewById(R.id.edit_btn);
         mHeadView = LayoutInflater.from(this).inflate(R.layout.unbind_connection_head, null);
+        mtvChooseGoluk = (TextView) findViewById(R.id.tv_choose_goluk_title);
         findViewById(R.id.addMoblieBtn).setOnClickListener(this);
 
     }
@@ -108,6 +113,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
     private void initLisenner() {
         mCloseBtn.setOnClickListener(this);
         mEditBtn.setOnClickListener(this);
+        mbtnConnectGoluk.setOnClickListener(this);
     }
 
     /**
@@ -116,6 +122,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
     private void initData() {
         mListView.setEmptyView(mEmptyLayout);
         mListView.addHeaderView(mHeadView);
+        mReturnToMainAlbum = getIntent().getBooleanExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, false);
         mListAdapter = new WifiUnbindSelectListAdapter(this);
         getBindHistoryData();
     }
@@ -126,7 +133,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
     public void getBindHistoryData() {
         GolukDebugUtils.e("", "select wifibind---WifiUnbindSelectListActivity ------getBindHistoryData--1");
         List<WifiBindHistoryBean> binds = WifiBindDataCenter.getInstance().getAllBindData();
-        if (binds != null) {
+        if (binds != null && binds.size() > 1) {
             mEditBtn.setVisibility(View.VISIBLE);
             if (isCanShowListViewHead()) {
                 for (int i = 0; i < binds.size(); i++) {
@@ -144,11 +151,16 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
             } else {
                 mHeadView.setPadding(0, -1 * mHeadContentHeight, 0, 0);
                 mHeadView.setVisibility(View.GONE);
-
             }
+            mtvChooseGoluk.setVisibility(View.VISIBLE);
+            mListView.setVisibility(View.VISIBLE);
+            mbtnConnectGoluk.setVisibility(View.GONE);
         } else {
             mEditBtn.setText(this.getResources().getString(R.string.edit_text));// 编辑
             mEditBtn.setVisibility(View.GONE);
+            mtvChooseGoluk.setVisibility(View.GONE);
+            mListView.setVisibility(View.GONE);
+            mbtnConnectGoluk.setVisibility(View.VISIBLE);
         }
         mListView.setAdapter(mListAdapter);
         mListAdapter.setData(binds);
@@ -213,12 +225,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
                 if (mApp.isIpcLoginSuccess) {
                     //IPC页面访问统计
                     ZhugeUtils.eventIpc(WifiUnbindSelectListActivity.this);
-
-                    Intent intent = new Intent(WifiUnbindSelectListActivity.this, CarRecorderActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    startActivity(intent);
-                    finish();
+                    startCarRecordActivity();
                 }
             }
         });
@@ -252,6 +259,14 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
                 });
             }
         });
+    }
+
+    private void startCarRecordActivity(){
+        Intent intent = new Intent(WifiUnbindSelectListActivity.this, CarRecorderActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        finish();
     }
 
     /**
@@ -295,6 +310,8 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
             click_Edit();
         } else if (id == R.id.addMoblieBtn) {
             click_AddIpc();
+        } else if (id == R.id.btn_connect_my_goluk) {
+
         } else {
         }
     }
@@ -420,7 +437,8 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
             setNotEditState();
             mListAdapter.notifyDataSetChanged();
         }
-        Intent intent = new Intent(this, WifiUnbindSelectTypeActivity.class);
+        Intent intent = new Intent(this, WiFiLinkListActivity.class);
+        intent.putExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, mReturnToMainAlbum);
         startActivity(intent);
     }
 

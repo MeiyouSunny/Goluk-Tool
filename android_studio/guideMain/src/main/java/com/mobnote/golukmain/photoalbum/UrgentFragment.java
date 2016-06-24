@@ -26,6 +26,7 @@ import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import com.mobnote.eventbus.EventDownloadIpcVid;
 import com.mobnote.eventbus.EventIpcConnState;
+import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
 import com.mobnote.golukmain.carrecorder.IpcDataParser;
@@ -411,8 +412,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn {
                         //IPC页面访问统计
                         ZhugeUtils.eventIpc(getActivity());
 
-                        Intent intent = new Intent(getActivity(), CarRecorderActivity.class);
-                        startActivity(intent);
+                        ((MainActivity)getActivity()).connectGoluk(true);
                     }
                 }
             }

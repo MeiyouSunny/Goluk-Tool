@@ -7,6 +7,7 @@ import com.mobnote.eventbus.EventBindResult;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventFinishWifiActivity;
 import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
 import com.mobnote.golukmain.live.LiveDialogManager;
@@ -82,6 +83,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
     private ImageButton mBackBtn = null;
     private WifiConnectManager mWac = null;
     private boolean isExit = false;
+    private boolean mReturnToMainAlbum;
     /**
      * 中间的根布局
      */
@@ -133,7 +135,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         toSetIPCInfoView();
         setIpcLinkInfo();
         // 6秒后，没有配置成功，直接跳转“等待连接”界面
-        mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_WAITING_VIEW, TIMEOUT_SETIPC);
+        mBaseHandler.sendEmptyMessage(MSG_H_TO_WAITING_VIEW);
         EventBus.getDefault().register(this);
     }
 
@@ -144,7 +146,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
     private void getIntentData() {
         Intent intent = this.getIntent();
         if (null != intent) {
-            mIPcType = intent.getStringExtra(WifiUnbindSelectTypeActivity.KEY_IPC_TYPE);
+//            mIPcType = intent.getStringExtra(WifiUnbindSelectTypeActivity.KEY_IPC_TYPE);
+            mReturnToMainAlbum = intent.getBooleanExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, false);
         }
     }
 
@@ -352,6 +355,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         // 发送绑定成功的消息
         EventBus.getDefault().post(new EventBindResult(EventConfig.BIND_COMPLETE));
         mApp.setBinding(false);
+        click_complete();
     }
 
     private void reportLog() {
@@ -480,10 +484,16 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
             //IPC页面访问统计
             ZhugeUtils.eventIpc(WiFiLinkCompleteActivity.this);
 
-            Intent it = new Intent(WiFiLinkCompleteActivity.this, CarRecorderActivity.class);
-            it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(it);
+            if (mReturnToMainAlbum) {
+                Intent it = new Intent(WiFiLinkCompleteActivity.this, MainActivity.class);
+                startActivity(it);
+                finish();
+            } else {
+                Intent it = new Intent(WiFiLinkCompleteActivity.this, CarRecorderActivity.class);
+                it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(it);
+            }
         }
     }
 

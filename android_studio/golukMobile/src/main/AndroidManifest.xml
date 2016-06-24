@@ -201,10 +201,12 @@
         <activity
             android:name="com.mobnote.golukmain.wifibind.WiFiLinkListActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.mobnote.golukmain.wifibind.WiFiLinkCompleteActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.mobnote.golukmain.carrecorder.CarRecorderActivity"
