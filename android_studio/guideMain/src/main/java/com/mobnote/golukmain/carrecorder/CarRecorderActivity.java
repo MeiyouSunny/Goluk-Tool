@@ -592,6 +592,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 }
 
                 setVideoBtnState(true);
+                onClick(findViewById(R.id.mPlayBtn));
                 break;
             default:
                 break;
@@ -1395,7 +1396,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         mVideoOff.setVisibility(View.GONE);
         mConnectTip.setText(wifiname);
         mPalyerLayout.setVisibility(View.GONE);
-        mNotconnected.setVisibility(View.VISIBLE);
+//        mNotconnected.setVisibility(View.VISIBLE);
         mConncetLayout.setVisibility(View.GONE);
         mSettingBtn.setVisibility(View.GONE);
         mChangeBtn.setVisibility(View.GONE);

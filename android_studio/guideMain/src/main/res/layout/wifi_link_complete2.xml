@@ -44,7 +44,8 @@
         android:background="@drawable/ipcbind_btn_disable"
         android:text="@string/wifi_link_28_text"
         android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:visibility="invisible"/>
 
     <!-- 中间的布局 -->
 

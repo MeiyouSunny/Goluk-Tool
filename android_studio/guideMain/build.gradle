@@ -25,7 +25,7 @@ android {
 dependencies {
     compile project(':emojicon')
     compile project(':commonGoluk')
-    compile project(':initActivity')
+ //   compile project(':vitamio')
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.android.support:support-v4:21.0.0'
     compile files('libs/mid-sdk-2.20.jar')

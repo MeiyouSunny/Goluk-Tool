@@ -134,6 +134,8 @@ public class UserStartActivity extends BaseActivity implements OnClickListener, 
 	protected void onResume() {
 		super.onResume();
 		mApp.setContext(mContext, "UserStart");
+		//FIXME 为了测试方便，需要删除
+		onClick( mImageViewLook);
 	}
 
 	public void initView() {

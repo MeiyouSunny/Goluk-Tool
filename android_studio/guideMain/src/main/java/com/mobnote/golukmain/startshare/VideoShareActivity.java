@@ -76,8 +76,8 @@ import java.util.List;
 
 import cn.com.mobnote.eventbus.EventShortLocationFinish;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
-import io.vov.vitamio.utils.Log;
 
 /**
  * Created by wangli on 2016/5/10.
@@ -600,7 +600,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
                 if (null != obj && null != mShareLoading) {
                     final int process = (Integer) obj;
                     mShareLoading.setProcess(process);
-                    Log.i("process","process: " + process);
+                    GolukDebugUtils.i("process","process: " + process);
                 }
                 break;
         }
