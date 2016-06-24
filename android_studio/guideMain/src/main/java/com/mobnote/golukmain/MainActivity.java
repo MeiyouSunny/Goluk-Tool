@@ -89,6 +89,7 @@ import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.golukmain.wifibind.WiFiInfo;
 import com.mobnote.golukmain.wifibind.WiFiLinkCompleteActivity;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
+import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
 import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
@@ -413,7 +414,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             startActivity(intent);
             return;
         } else {
-            Intent intent = new Intent(this, WifiUnbindSelectListActivity.class);
+            Intent intent = new Intent(this, WifiHistorySelectListActivity.class);
             intent.putExtra(INTENT_ACTION_RETURN_MAIN_ALBUM, returnToMainActivityWhenSuccess);
             startActivity(intent);
         }

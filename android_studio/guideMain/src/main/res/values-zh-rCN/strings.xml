@@ -1091,4 +1091,5 @@
     <string name="str_sys_msg_gaward_text">恭喜您，抽中了</string>
     <string name="str_rank_click_btn_txt">点击查看</string>
     <string name="choose_ipc_device">选择设备：</string>
+    <string name="start_connect_ipc_device">连接：%1$s</string>
 </resources>
