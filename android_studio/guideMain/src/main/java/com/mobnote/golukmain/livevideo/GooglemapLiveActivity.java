@@ -25,7 +25,6 @@ import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.location.BaiduPosition;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.tiros.debug.GolukDebugUtils;
-import io.vov.vitamio.utils.Log;
 
 public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMapReadyCallback,OnMapLoadedCallback{
 
