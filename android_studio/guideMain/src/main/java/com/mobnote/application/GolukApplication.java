@@ -63,7 +63,6 @@ import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
 import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.internation.login.CountryBean;
 import com.mobnote.golukmain.internation.login.GolukMobUtils;
-import com.mobnote.golukmain.live.LiveActivity;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
 import com.mobnote.golukmain.livevideo.BaidumapLiveActivity;
@@ -2002,11 +2001,11 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 			intent = new Intent(mContext, GooglemapLiveActivity.class);
 		}
 
-		intent.putExtra(LiveActivity.KEY_IS_LIVE, false);
-		intent.putExtra(LiveActivity.KEY_GROUPID, "");
-		intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
-		intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
-		intent.putExtra(LiveActivity.KEY_USERINFO, userInfo);
+		intent.putExtra(AbstractLiveActivity.KEY_IS_LIVE, false);
+		intent.putExtra(AbstractLiveActivity.KEY_GROUPID, "");
+		intent.putExtra(AbstractLiveActivity.KEY_PLAY_URL, "");
+		intent.putExtra(AbstractLiveActivity.KEY_JOIN_GROUP, "");
+		intent.putExtra(AbstractLiveActivity.KEY_USERINFO, userInfo);
 		mContext.startActivity(intent);
 		GolukDebugUtils.e(null, "jyf----20150406----MainActivity----startLiveLook");
 	}

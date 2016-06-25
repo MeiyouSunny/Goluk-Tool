@@ -1,9 +1,7 @@
 package com.mobnote.golukmain.livevideo;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -12,9 +10,9 @@ import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventMapQuery;
 import com.mobnote.golukmain.R;
 import com.mobnote.map.GoogleMapTools;
 import com.mobnote.map.LngLat;
@@ -25,12 +23,12 @@ import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.location.BaiduPosition;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMapReadyCallback,OnMapLoadedCallback{
 
 	private MapView mMapView;
 	private GoogleMap mGoogleMap;
-    private Circle circle;
 
 	@Override
 	public void LocationCallBack(String gpsJson) {
@@ -180,7 +178,6 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
 	@Override
 	public void toMyLocation() {
 		// TODO Auto-generated method stub
-
         mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(LngLat.lat, LngLat.lng)));
 	}
 
@@ -204,7 +201,8 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
 	@Override
 	public void onMapLoaded() {
 		// TODO Auto-generated method stub
-
+        EventBus.getDefault().post(
+                new EventMapQuery(EventConfig.LIVE_MAP_QUERY));
 	}
 
 }

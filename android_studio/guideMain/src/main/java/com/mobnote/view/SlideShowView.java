@@ -10,7 +10,6 @@ import com.bumptech.glide.Glide;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpenUrlActivity;
 import com.mobnote.golukmain.cluster.ClusterActivity;
-import com.mobnote.golukmain.live.LiveActivity;
 import com.mobnote.golukmain.newest.BannerSlideBody;
 import com.mobnote.golukmain.special.SpecialListActivity;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
