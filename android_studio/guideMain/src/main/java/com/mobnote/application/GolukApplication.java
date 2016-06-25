@@ -290,6 +290,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
      */
     public int mWiFiStatus = 0;
 
+
     private ArrayList<VideoFileInfo> fileList;
 
     private boolean mIsExit = true;
@@ -297,7 +298,10 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
      * T1声音录制开关　０关闭１打开
      **/
     public int mT1RecAudioCfg = 1;
-
+    /**
+     * 是否启用单项连接
+     */
+    private boolean enableSingleWifi;
     /**
      * 当前的国家区号
      **/
@@ -2127,5 +2131,18 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         } catch (Exception e) {
 
         }
+    }
+
+    public boolean getEnableSingleWifi() {
+        enableSingleWifi = SharedPrefUtil.getEnableSingleWifi();
+        return enableSingleWifi;
+    }
+
+    public void setEnableSingleWifi(boolean value) {
+        if (value == enableSingleWifi) {
+            return;
+        }
+        SharedPrefUtil.setEnableSingleWifi(value);
+        enableSingleWifi = value;
     }
 }

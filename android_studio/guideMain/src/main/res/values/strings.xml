@@ -1136,4 +1136,5 @@
     <string name="connect_only_wifi_desc">Only use Goluk Cams Wi-fi for video transmission\nLive video and mobile data network can not be used in this case</string>
     <string name="reconnect_hotspot">RECONNECT HOTSPOT</string>
     <string name="goluk_cannot_connect_hotspot">Can not connect Goluk Cams...</string>
+    <string name="goluk_only_wifi">ONLY GOLUK CAMS</string>
 </resources>

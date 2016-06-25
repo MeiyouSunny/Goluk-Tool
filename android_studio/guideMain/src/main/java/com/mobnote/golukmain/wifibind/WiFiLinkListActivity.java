@@ -47,7 +47,7 @@ import de.greenrobot.event.EventBus;
  */
 public class WiFiLinkListActivity extends BaseActivity implements OnClickListener, WifiConnCallBack, ForbidBack {
 
-    private static final String TAG = "WiFiLinkListActivity";
+    private static final String TAG = "WiFiLinkList";
     private static final String CONNECT_IPC_IP = "192.168.62.1";
 
     private final String G1G2_ShowName = " Goluk xxxxxx ";
@@ -74,7 +74,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     /**
      * application
      */
-    private GolukApplication mApp = null;
+    protected GolukApplication mApp = null;
     /**
      * 返回按钮
      */
@@ -105,7 +105,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
     private boolean mIsCanAcceptIPC = false;
     private boolean mIsCanAcceptNetState = false;
-    private boolean mReturnToMainAlbum;
+    protected boolean mReturnToMainAlbum;
 
     /**
      * 用于表示当前的状态 0/1/2 未连接/连接中/已连接
@@ -125,10 +125,10 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.wifi_link_list);
+        setContentView(getContentViewResourceId());
         // 获得GolukApplication对象
         mApp = (GolukApplication) getApplication();
-        mApp.setContext(this, "WiFiLinkList");
+        mApp.setContext(this, TAG);
         // 清除数据
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).clear();
         // 写日志，表示绑定失败
@@ -158,8 +158,12 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         if (null != intent) {
             mIPcType = intent.getStringExtra(WifiUnbindSelectTypeActivity.KEY_IPC_TYPE);
 //            mIpcRealtype = intent.getStringExtra(WifiUnbindSelectTypeActivity.KEY_IPC_REAL_TYPE);
-            mReturnToMainAlbum = intent.getBooleanExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM,false);
+            mReturnToMainAlbum = intent.getBooleanExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, false);
         }
+    }
+
+    protected int getContentViewResourceId() {
+        return R.layout.wifi_link_list;
     }
 
     private String getWifiShowName() {
@@ -182,7 +186,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     /**
      * 页面初始化
      */
-    private void initView() {
+    protected void initView() {
         // 获取页面元素
         mBackBtn = (ImageButton) findViewById(R.id.back_btn);
         mIpcSignalImage = (ImageView) findViewById(R.id.imageView1);
@@ -225,7 +229,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         mIpcSignalAnim.start();
     }
 
-    private void setStateSwitch() {
+    protected void setStateSwitch() {
         switch (mCurrentState) {
             case STATE_FAILED:
                 mNextBtn.setText(getResources().getString(R.string.wifi_link_go_system));
@@ -501,15 +505,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             // 返回
             exit();
         } else if (id == R.id.next_btn) {
-            // 已连接ipc热点,可以跳转到修改密码页面
-            if (STATE_SUCCESS == mCurrentState) {
-                toNextView();
-            } else if (STATE_FAILED == mCurrentState) {
-                collectLog("dialogManagerCallBack", "-Jump----System WifiLIst");
-                GolukUtils.startSystemWifiList(this);
-            } else {
-
-            }
+            doConnect();
         } else if (id == R.id.wifi_link_list_help) {
             Intent itSkill = new Intent(this, UserOpenUrlActivity.class);
             itSkill.putExtra(UserOpenUrlActivity.FROM_TAG, "skill");
@@ -518,7 +514,19 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         }
     }
 
-    private void setDefaultInfo() {
+    protected void doConnect() {
+        // 已连接ipc热点,可以跳转到修改密码页面
+        if (STATE_SUCCESS == mCurrentState) {
+            toNextView();
+        } else if (STATE_FAILED == mCurrentState) {
+            collectLog("dialogManagerCallBack", "-Jump----System WifiLIst");
+            GolukUtils.startSystemWifiList(this);
+        } else {
+
+        }
+    }
+
+    protected void setDefaultInfo() {
         // 保存默认的信息
         WiFiInfo.IPC_PWD = IPC_PWD_DEFAULT;
         String wifiName = WiFiInfo.IPC_SSID;
@@ -527,17 +535,17 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         WiFiInfo.MOBILE_PWD = MOBILE_HOT_PWD_DEFAULT;
     }
 
-    private void toNextView() {
+    protected void toNextView() {
         setDefaultInfo();
         // 跳转到修改热点密码页面
         Intent modifyPwd = new Intent(WiFiLinkListActivity.this, WiFiLinkCompleteActivity.class);
         modifyPwd.putExtra("com.mobnote.golukmain.wifiname", WiFiInfo.IPC_SSID);
-        modifyPwd.putExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM,mReturnToMainAlbum);
+        modifyPwd.putExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, mReturnToMainAlbum);
 //        modifyPwd.putExtra(WifiUnbindSelectTypeActivity.KEY_IPC_TYPE, mIPcType);
         startActivity(modifyPwd);
     }
 
-    private void nextCan() {
+    protected void nextCan() {
         // mIsConnSucess = true;
         mNextBtn.setBackgroundResource(R.drawable.ipcbind_btn_able);
     }

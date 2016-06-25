@@ -1096,4 +1096,5 @@
     <string name="connect_only_wifi_desc">仅Wi-Fi连接行车记录仪\n连接时直播功能和移动数据网络将不可用</string>
     <string name="reconnect_hotspot">重新连接热点</string>
     <string name="goluk_cannot_connect_hotspot">极路客连接到手机热点失败...</string>
+    <string name="goluk_only_wifi">仅连接行车记录仪</string>
 </resources>

@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?><!-- wifi链接完成 -->
+<?xml version="1.0" encoding="utf-8"?>
+<!-- wifi链接完成 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_ipcbind_bg">
+   android:background="@color/color_ipcbind_bg" >
 
     <!-- Title -->
-
     <RelativeLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
@@ -29,67 +29,30 @@
             android:textSize="18sp" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tv_connect_failure_desc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:gravity="center"
-        android:layout_below="@+id/title_layout"
-        android:text="@string/goluk_cannot_connect_hotspot"
-        android:textColor="@color/ae_controller_pressed"
-        android:textSize="18sp"
-        android:visibility="gone"/>
-
     <!-- 开始使用按钮 -->
 
-    <LinearLayout
-        android:id="@+id/ll_link_complete_bottom"
+    <Button
+        android:id="@+id/complete_btn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="42dp"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:layout_marginBottom="34dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/ipcbind_btn_disable"
+        android:text="@string/wifi_link_28_text"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:visibility="invisible"/>
 
-        <Button
-            android:id="@+id/complete_btn"
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin"
-            android:background="@drawable/share_promotion_frame_selected"
-            android:text="@string/reconnect_hotspot"
-            android:textColor="@color/textcolor_select"
-            android:textSize="16sp" />
-
-        <Button
-            android:id="@+id/btn_only_connect_goluk_wifi"
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/ipcbind_btn_finish"
-            android:text="@string/wifi_link_28_text"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:gravity="center"
-            android:text="@string/connect_only_wifi_desc" />
-    </LinearLayout>
     <!-- 中间的布局 -->
 
     <FrameLayout
         android:id="@+id/wifi_link_complete_frmelayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/ll_link_complete_bottom"
-        android:layout_below="@id/title_layout"></FrameLayout>
+        android:layout_above="@id/complete_btn"
+        android:layout_below="@id/title_layout" >
+    </FrameLayout>
 
 </RelativeLayout>

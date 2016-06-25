@@ -152,6 +152,8 @@ public class SharedPrefUtil {
      **/
     public static final String PROPERTY_SAVE_IPC_NUMBER = "ipc_number";
 
+    public static final String PROPERTY_ENABLE_SINGLE_WIFI = "only_use_wifi_connection";
+
 
     public static void setTokenId(String tokenid) {
         SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
@@ -661,5 +663,14 @@ public class SharedPrefUtil {
         return preference.getString(USER_PASSWORD, "");
     }
 
+    public static void setEnableSingleWifi(boolean value) {
+        SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
+        preference.edit().putBoolean(PROPERTY_ENABLE_SINGLE_WIFI, value).commit();
+    }
+
+    public static boolean getEnableSingleWifi() {
+        SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
+        return preference.getBoolean(PROPERTY_ENABLE_SINGLE_WIFI, false);
+    }
 
 }

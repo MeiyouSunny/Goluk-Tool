@@ -90,7 +90,6 @@ import com.mobnote.golukmain.wifibind.WiFiInfo;
 import com.mobnote.golukmain.wifibind.WiFiLinkCompleteActivity;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
-import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
 import com.mobnote.golukmain.xdpush.GolukNotification;
@@ -218,6 +217,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         // 获得GolukApplication对象
         mApp = (GolukApplication) getApplication();
         mApp.setContext(this, "Main");
+        mApp.getEnableSingleWifi();
         mApp.initLogic();
         // 页面初始化,获取页面控件
         mApp.startTime = System.currentTimeMillis();
