@@ -9,6 +9,7 @@ import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpenUrlActivity;
+import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
@@ -554,12 +555,23 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
     protected void toNextView() {
         setDefaultInfo();
-        // 跳转到修改热点密码页面
-        Intent modifyPwd = new Intent(WiFiLinkListActivity.this, WiFiLinkCompleteActivity.class);
-        modifyPwd.putExtra("com.mobnote.golukmain.wifiname", WiFiInfo.IPC_SSID);
-        modifyPwd.putExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, mReturnToMainAlbum);
+        if (mApp.getEnableSingleWifi()) {
+            if (mReturnToMainAlbum) {
+                Intent mainIntent = new Intent(WiFiLinkListActivity.this, MainActivity.class);
+                startActivity(mainIntent);
+                finish();
+            } else {
+                Intent mainIntent = new Intent(WiFiLinkListActivity.this, CarRecorderActivity.class);
+                startActivity(mainIntent);
+                finish();
+            }
+        } else {
+            Intent modifyPwd = new Intent(WiFiLinkListActivity.this, WiFiLinkCompleteActivity.class);
+            modifyPwd.putExtra("com.mobnote.golukmain.wifiname", WiFiInfo.IPC_SSID);
+            modifyPwd.putExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, mReturnToMainAlbum);
 //        modifyPwd.putExtra(WifiUnbindSelectTypeActivity.KEY_IPC_TYPE, mIPcType);
-        startActivity(modifyPwd);
+            startActivity(modifyPwd);
+        }
     }
 
     protected void nextCan() {

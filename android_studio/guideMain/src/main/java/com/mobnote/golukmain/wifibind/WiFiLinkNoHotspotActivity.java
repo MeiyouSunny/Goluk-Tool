@@ -44,24 +44,6 @@ public class WiFiLinkNoHotspotActivity extends WiFiLinkListActivity implements V
     }
 
     @Override
-    protected void toNextView() {
-        if (mApp.getEnableSingleWifi()) {
-            setDefaultInfo();
-            if (mReturnToMainAlbum) {
-                Intent mainIntent = new Intent(WiFiLinkNoHotspotActivity.this, MainActivity.class);
-                startActivity(mainIntent);
-                finish();
-            } else {
-                Intent mainIntent = new Intent(WiFiLinkNoHotspotActivity.this, CarRecorderActivity.class);
-                startActivity(mainIntent);
-                finish();
-            }
-        } else {
-            super.toNextView();
-        }
-    }
-
-    @Override
     protected void setStateSwitch() {
         //override parent setStateSwitch, in case the ui reference return null
     }
