@@ -1,6 +1,6 @@
 package cn.com.mobnote.module.location;
 
-public class BaiduPosition {
+public class GolukPosition {
 	/** 　百度定位给的原始定位数据 (目前是一样的) */
 	public double elon;
 	public double elat;

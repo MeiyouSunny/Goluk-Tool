@@ -2658,7 +2658,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     }
 
 	/*
-     * @Override public void LocationCallBack(String gpsJson) { BaiduPosition
+     * @Override public void LocationCallBack(String gpsJson) { GolukPosition
 	 * location = JsonUtil.parseLocatoinJson(gpsJson); if (location == null) {
 	 * return; } // 保存经纬度 LngLat.lng = location.rawLon; LngLat.lat =
 	 * location.rawLat;

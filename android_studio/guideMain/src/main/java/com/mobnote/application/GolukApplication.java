@@ -25,7 +25,7 @@ import android.util.Log;
 import cn.com.mobnote.logic.GolukLogic;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.mobnote.module.location.BaiduPosition;
+import cn.com.mobnote.module.location.GolukPosition;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -543,7 +543,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 	 */
 	public boolean isMainland() {
 		if (null != this.getPackageName() && "cn.com.mobnote.golukmobile".equals(this.getPackageName())) {
-			return false;
+			return true;
 		} else {
 			return false;
 		}
@@ -1634,7 +1634,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 			return;
 		}
 
-		BaiduPosition location = JsonUtil.parseLocatoinJson(locationJson);
+		GolukPosition location = JsonUtil.parseLocatoinJson(locationJson);
 		if (null != location) {
 			LngLat.lat = location.rawLat;
 			LngLat.lng = location.rawLon;

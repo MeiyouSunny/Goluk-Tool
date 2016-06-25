@@ -21,7 +21,7 @@ import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 
 import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.location.BaiduPosition;
+import cn.com.mobnote.module.location.GolukPosition;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -179,7 +179,7 @@ public class BaiduMapView implements ILocationFn {
 
 	@Override
 	public void LocationCallBack(String gpsJson) {
-		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
+		GolukPosition location = JsonUtil.parseLocatoinJson(gpsJson);
 		if (location == null || mMapView == null) {
 			return;
 		}

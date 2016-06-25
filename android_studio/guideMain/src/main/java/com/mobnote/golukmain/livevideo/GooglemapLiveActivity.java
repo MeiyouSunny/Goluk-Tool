@@ -20,7 +20,7 @@ import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 
 import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.location.BaiduPosition;
+import cn.com.mobnote.module.location.GolukPosition;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
@@ -40,7 +40,7 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
 
         GolukDebugUtils.e("", "leege----------gpsJson: " + gpsJson);
 
-		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
+		GolukPosition location = JsonUtil.parseLocatoinJson(gpsJson);
 		if (null != location && null != mApp && null != mMapTools) {
 			if (mApp.isUserLoginSucess) {
 				if (null == myInfo) {
@@ -138,7 +138,7 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
 	public void drawMyLocation() {
 		// TODO Auto-generated method stub
 
-        BaiduPosition myPosition = JsonUtil.parseLocatoinJson(mApp.mGoluk
+        GolukPosition myPosition = JsonUtil.parseLocatoinJson(mApp.mGoluk
                 .GolukLogicCommGet(GolukModule.Goluk_Module_Location, ILocationFn.LOCATION_CMD_GET_POSITION, ""));
         if (null == myPosition) {
             GolukUtils.showToast(this, this.getString(R.string.str_live_cannot_get_location));

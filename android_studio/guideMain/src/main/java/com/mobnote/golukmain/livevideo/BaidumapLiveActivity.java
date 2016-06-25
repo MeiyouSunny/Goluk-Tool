@@ -3,7 +3,7 @@ package com.mobnote.golukmain.livevideo;
 import android.os.Bundle;
 import android.widget.RelativeLayout;
 import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.location.BaiduPosition;
+import cn.com.mobnote.module.location.GolukPosition;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import com.baidu.mapapi.map.BaiduMap;
@@ -63,7 +63,7 @@ public class BaidumapLiveActivity extends AbstractLiveActivity implements
 		GolukDebugUtils.e("",
 				"jyf----20150406----LiveActivity----LocationCallBack  : " + gpsJson);
 
-		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
+		GolukPosition location = JsonUtil.parseLocatoinJson(gpsJson);
 		if (null != location && null != mApp && null != mMapTools) {
 			if (mApp.isUserLoginSucess) {
 				if (null == myInfo) {
@@ -163,7 +163,7 @@ public class BaidumapLiveActivity extends AbstractLiveActivity implements
 		// TODO Auto-generated method stub
 		GolukDebugUtils.e(null,"jyf----20150406----LiveActivity----drawMyLocation----1: ");
 
-		BaiduPosition myPosition = JsonUtil.parseLocatoinJson(mApp.mGoluk
+		GolukPosition myPosition = JsonUtil.parseLocatoinJson(mApp.mGoluk
 				.GolukLogicCommGet(GolukModule.Goluk_Module_Location,
 						ILocationFn.LOCATION_CMD_GET_POSITION, ""));
 		if (null == myPosition) {
