@@ -38,8 +38,10 @@ public class WifiHistorySelectListActivity extends BaseActivity implements OnCli
     private CustomLoadingDialog mLoadingDialog = null;
 
     public GolukApplication mApp = null;
-    private boolean isCanReceiveFailed = true;
+    private boolean isCanReceiveFailed = false;
     private boolean mReturnToMainAlbum;
+    //神秘的成功标志，解决成功之后又会莫名其妙收到失败的标志
+    //TODO event为什么会收到失败
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,6 +156,13 @@ public class WifiHistorySelectListActivity extends BaseActivity implements OnCli
         }
         dismissLoading();
         GolukUtils.showToast(this, this.getResources().getString(R.string.wifi_link_conn_failed));
+        //FIXME 需要与需求讨论
+        //Shang Ji增加的需求，当连接失败之后，就跳转到可以单项连接的页面
+        //当连接失败的时候，直接跳转到支持单项连接的页面
+//        Intent mainIntent = new Intent(WifiHistorySelectListActivity.this, WiFiLinkNoHotspotActivity.class);
+//        mainIntent.putExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, mReturnToMainAlbum);
+//        startActivity(mainIntent);
+//        finish();
     }
 
     private void ipcConnecting() {
@@ -161,7 +170,7 @@ public class WifiHistorySelectListActivity extends BaseActivity implements OnCli
     }
 
     private void ipcConnSuccess() {
-        GolukUtils.showToast(this,getResources().getString(R.string.str_wifi_connect_success));
+        GolukUtils.showToast(this, getResources().getString(R.string.str_wifi_connect_success));
         if (mReturnToMainAlbum) {
             Intent it = new Intent(WifiHistorySelectListActivity.this, MainActivity.class);
             startActivity(it);
@@ -171,6 +180,7 @@ public class WifiHistorySelectListActivity extends BaseActivity implements OnCli
             it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(it);
+            finish();
         }
     }
 
@@ -181,6 +191,7 @@ public class WifiHistorySelectListActivity extends BaseActivity implements OnCli
         Intent intent = new Intent(this, WiFiLinkListActivity.class);
         intent.putExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, mReturnToMainAlbum);
         startActivity(intent);
+        finish();
     }
 
 

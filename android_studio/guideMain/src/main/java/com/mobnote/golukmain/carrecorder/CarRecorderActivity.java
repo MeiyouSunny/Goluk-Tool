@@ -554,6 +554,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
      * @author 曾浩
      */
     private void initIpcState(int ipcS) {
+        if (mApp.getEnableSingleWifi() && mApp.isIpcConnSuccess){
+            startPlayVideo();
+            return;
+        }
         switch (ipcS) {
             case WIFI_STATE_FAILED:
                 ipcConnFailed();
@@ -576,27 +580,31 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 break;
             case WIFI_STATE_SUCCESS:
                 // GolukApplication.getInstance().stopDownloadList();
-                WifiRsBean wrb = ReadWifiConfig.readConfig();
-                if (wrb != null) {
-                    mConnectTip.setText(wrb.getIpc_ssid());
-                }
-                mSettingBtn.setVisibility(View.VISIBLE);
-                mPalyerLayout.setVisibility(View.VISIBLE);
-                mNotconnected.setVisibility(View.GONE);
-                mConncetLayout.setVisibility(View.GONE);
-                mChangeBtn.setVisibility(View.VISIBLE);
-                if (mApp.isIpcLoginSuccess) {
-                    liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon);
-                } else {
-                    liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
-                }
-
-                setVideoBtnState(true);
-                onClick(findViewById(R.id.mPlayBtn));
+                startPlayVideo();
                 break;
             default:
                 break;
         }
+    }
+
+    private void startPlayVideo() {
+        WifiRsBean wrb = ReadWifiConfig.readConfig();
+        if (wrb != null) {
+            mConnectTip.setText(wrb.getIpc_ssid());
+        }
+        mSettingBtn.setVisibility(View.VISIBLE);
+        mPalyerLayout.setVisibility(View.VISIBLE);
+        mNotconnected.setVisibility(View.GONE);
+        mConncetLayout.setVisibility(View.GONE);
+        mChangeBtn.setVisibility(View.VISIBLE);
+        if (mApp.isIpcLoginSuccess) {
+            liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon);
+        } else {
+            liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+        }
+
+        setVideoBtnState(true);
+        onClick(findViewById(R.id.mPlayBtn));
     }
 
     private void click_ConnFailed() {

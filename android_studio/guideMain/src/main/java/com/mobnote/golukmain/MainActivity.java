@@ -193,7 +193,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        // TODO Auto-generated method stub
         // super.onSaveInstanceState(outState);
     }
 
@@ -249,11 +248,16 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 
         // 初始化连接与綁定状态
         if (mApp.isBindSucess()) {
-            startWifi();
-            // 启动创建热点
-            autoConnWifi();
-            // 等待IPC连接时间
-            mBaseHandler.sendEmptyMessageDelayed(MSG_H_WIFICONN_TIME, 40 * 1000);
+            if (mApp.getEnableSingleWifi()) {
+                mApp.mIpcIp = WiFiLinkListActivity.CONNECT_IPC_IP;
+                //什么都不干
+            } else {
+                startWifi();
+                // 启动创建热点
+                autoConnWifi();
+                // 等待IPC连接时间
+                mBaseHandler.sendEmptyMessageDelayed(MSG_H_WIFICONN_TIME, 40 * 1000);
+            }
         } else {
             wifiConnectFailed();
         }
@@ -393,11 +397,9 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         });
     }
 
-
     public void connectGoluk(boolean returnToMainActivityWhenSuccess) {
         //如果没有历史纪录的话， mApp.mWiFiStatus 一定为 WIFI_STATE_FAILED
-
-        if (!WifiBindDataCenter.getInstance().isHasDataHistory()) {
+        if (!WifiBindDataCenter.getInstance().isHasDataHistory() || mApp.getEnableSingleWifi()) {
             Intent intent = new Intent(MainActivity.this, WiFiLinkListActivity.class);
             intent.putExtra(INTENT_ACTION_RETURN_MAIN_ALBUM, returnToMainActivityWhenSuccess);
             startActivity(intent);

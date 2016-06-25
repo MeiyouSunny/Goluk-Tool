@@ -301,7 +301,10 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
      */
     public void ipcLinkWiFiCallBack(Object param2) {
         collectLog("ipcLinkWiFiCallBack", "*****   Bind Sucess ! *****");
-
+        //TODO 这里需要好好的研究下，当连接成功时，改函数会调用两次，第一次是正常连接回掉，第二次从何而来。暂时先加null判断。程序运行没有问题
+        if (mWac == null){
+            return;
+        }
         IpcConnSuccessInfo ipcInfo = null;
         if (null != param2) {
             ipcInfo = GolukFastJsonUtil.getParseObj((String) param2, IpcConnSuccessInfo.class);
@@ -480,19 +483,19 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
             // GolukApplication.getInstance().stopDownloadList();// 停止视频同步
 
             //IPC页面访问统计
-            ZhugeUtils.eventIpc(WiFiLinkCompleteActivity.this);
+        ZhugeUtils.eventIpc(WiFiLinkCompleteActivity.this);
 
-            if (mReturnToMainAlbum) {
-                Intent it = new Intent(WiFiLinkCompleteActivity.this, MainActivity.class);
-                startActivity(it);
-                finish();
-            } else {
-                Intent it = new Intent(WiFiLinkCompleteActivity.this, CarRecorderActivity.class);
-                it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(it);
-            }
+        if (mReturnToMainAlbum) {
+            Intent it = new Intent(WiFiLinkCompleteActivity.this, MainActivity.class);
+            startActivity(it);
+            finish();
+        } else {
+            Intent it = new Intent(WiFiLinkCompleteActivity.this, CarRecorderActivity.class);
+            it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(it);
         }
+    }
     }
 
     private void toSetIPCInfoView() {

@@ -1356,7 +1356,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             ((WiFiLinkCompleteActivity) mContext).ipcLinkWiFiCallBack(param2);
         }
 
-        if (isBindSucess()) {
+        if (isBindSucess() || getEnableSingleWifi()) {
             GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + param2);
             IpcConnSuccessInfo ipcInfo = null;
             if (null != param2) {

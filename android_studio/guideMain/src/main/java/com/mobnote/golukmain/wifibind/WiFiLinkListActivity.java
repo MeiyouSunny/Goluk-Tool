@@ -48,7 +48,7 @@ import de.greenrobot.event.EventBus;
 public class WiFiLinkListActivity extends BaseActivity implements OnClickListener, WifiConnCallBack, ForbidBack {
 
     private static final String TAG = "WiFiLinkList";
-    private static final String CONNECT_IPC_IP = "192.168.62.1";
+    public static final String CONNECT_IPC_IP = "192.168.62.1";
 
     private final String G1G2_ShowName = " Goluk xxxxxx ";
     private final String T1_ShowName = " Goluk_T1_xxxxxx ";
@@ -356,6 +356,11 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         collectLog("sendLogicLinkIpc", "--------1");
         // 连接ipc热点wifi---调用ipc接口
         mIsCanAcceptIPC = true;
+        if (mApp.getEnableSingleWifi()) {
+            mApp.mIpcIp = CONNECT_IPC_IP;
+        } else {
+            mApp.mIpcIp = "";
+        }
         boolean b = mApp.mIPCControlManager.setIPCWifiState(true, CONNECT_IPC_IP);
         GolukDebugUtils.e("", "bindbind-------------sendLogicLinkIpc  :" + b);
         collectLog("sendLogicLinkIpc", "--------3------: " + b);
@@ -431,7 +436,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 //        this.nextCan();
         mCurrentState = STATE_SUCCESS;
 //        this.setStateSwitch();
-        onClick(mNextBtn);
+        doConnect();
     }
 
     @Override
@@ -533,6 +538,18 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         String name = wifiName.replace("Goluk", "GOLUK");
         WiFiInfo.MOBILE_SSID = name + "_s";
         WiFiInfo.MOBILE_PWD = MOBILE_HOT_PWD_DEFAULT;
+
+        //当程序使用过单向连接之后，以后就一直使用单向连接
+        if (mApp.getEnableSingleWifi()) {
+            WifiRsBean beans = new WifiRsBean();
+            beans.setIpc_mac(WiFiInfo.IPC_MAC);
+            beans.setIpc_ssid(WiFiInfo.IPC_SSID);
+            beans.setIpc_ip(CONNECT_IPC_IP);
+            beans.setIpc_pass(WiFiInfo.IPC_PWD);
+            beans.setPh_ssid(WiFiInfo.MOBILE_SSID);
+            beans.setPh_pass(WiFiInfo.MOBILE_PWD);
+            mWac.saveConfiguration(beans);
+        }
     }
 
     protected void toNextView() {
