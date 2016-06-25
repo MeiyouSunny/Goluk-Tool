@@ -66,6 +66,7 @@ import com.mobnote.golukmain.internation.login.CountryBean;
 import com.mobnote.golukmain.internation.login.GolukMobUtils;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
+import com.mobnote.golukmain.livevideo.AbstractLiveActivity01;
 import com.mobnote.golukmain.livevideo.BaidumapLiveActivity;
 import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
 import com.mobnote.golukmain.livevideo.LiveOperateVdcp;
@@ -1028,7 +1029,10 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     if (mContext instanceof AbstractLiveActivity) {
                         // 为了更新直播界面的别人的位置信息
                         ((AbstractLiveActivity) mContext).pointDataCallback(success, param2);
-                    } else if (mContext instanceof VideoCategoryActivity) {
+                    } if(mContext instanceof AbstractLiveActivity01){
+                        // 为了更新直播界面的别人的位置信息
+                        ((AbstractLiveActivity01) mContext).pointDataCallback(success, param2);
+                    }else if (mContext instanceof VideoCategoryActivity) {
                         ((VideoCategoryActivity) mContext).pointDataCallback(success, param2);
                     }
                 }
@@ -1045,6 +1049,8 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     GolukDebugUtils.e("", "pageNotifyCallBack---直播视频数据--" + String.valueOf(param2));
                     if (mContext instanceof AbstractLiveActivity) {
                         ((AbstractLiveActivity) mContext).LiveVideoDataCallBack(success, param2);
+                    }else if (mContext instanceof AbstractLiveActivity01) {
+                        ((AbstractLiveActivity01) mContext).LiveVideoDataCallBack(success, param2);
                     }
                 }
                 break;
@@ -1106,6 +1112,8 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 // 获取直播信息成功
                 if (null != mContext && mContext instanceof AbstractLiveActivity) {
                     ((AbstractLiveActivity) mContext).callBack_LiveLookStart(true, success, param1, param2);
+                }else if (null != mContext && mContext instanceof AbstractLiveActivity01) {
+                    ((AbstractLiveActivity01) mContext).callBack_LiveLookStart(true, success, param1, param2);
                 }
 
                 break;
@@ -1154,6 +1162,8 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             case IPageNotifyFn.PageType_LiveUploadPic:
                 if (mContext instanceof AbstractLiveActivity) {
                     ((AbstractLiveActivity) mContext).uploadImgCallBack(success, param1, param2);
+                }else if (mContext instanceof AbstractLiveActivity01) {
+                    ((AbstractLiveActivity01) mContext).uploadImgCallBack(success, param1, param2);
                 }
                 break;
         }
