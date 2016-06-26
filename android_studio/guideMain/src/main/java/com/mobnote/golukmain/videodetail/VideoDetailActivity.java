@@ -975,6 +975,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
         if (GolukUtils.isFastDoubleClick()) {
             return;
         }
+        if (!SharePlatformUtil.checkShareableWhenNotHotspot(VideoDetailActivity.this)) return;
         showLoadingDialog();
         ShareVideoShortUrlRequest request = new ShareVideoShortUrlRequest(IPageNotifyFn.PageType_GetShareURL, this);
         boolean result = request.get(mVideoJson.data.avideo.video.videoid, mVideoJson.data.avideo.video.type);

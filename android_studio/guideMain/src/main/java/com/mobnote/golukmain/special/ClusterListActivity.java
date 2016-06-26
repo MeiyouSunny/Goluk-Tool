@@ -45,6 +45,7 @@ import com.mobnote.golukmain.videosuqare.RTPullListView;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.SharedPrefUtil;
 
 public class ClusterListActivity extends BaseActivity implements
         OnClickListener, VideoSuqareManagerFn {
@@ -268,6 +269,7 @@ public class ClusterListActivity extends BaseActivity implements
         if (id == R.id.back_btn) {
             this.finish();
         } else if (id == R.id.title_share) {
+            if (!SharePlatformUtil.checkShareableWhenNotHotspot(ClusterListActivity.this)) return;
             if (null == mCustomProgressDialog) {
                 mCustomProgressDialog = new CustomLoadingDialog(this, null);
             }

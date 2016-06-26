@@ -63,6 +63,7 @@ import com.mobnote.golukmain.player.factory.GolukPlayer.OnCompletionListener;
 import com.mobnote.golukmain.player.factory.GolukPlayer.OnErrorListener;
 import com.mobnote.golukmain.player.factory.GolukPlayer.OnPreparedListener;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
+import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
@@ -486,6 +487,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             // 返回
             exit();
         } else if (id == R.id.tv_share_video_rightnow) {
+            if (!SharePlatformUtil.checkShareableWhenNotHotspot(PhotoAlbumPlayer.this)) return;
             pauseVideo();
             if (videoEditSupport()) {
                 doSimpleExport(mPath, mHP);

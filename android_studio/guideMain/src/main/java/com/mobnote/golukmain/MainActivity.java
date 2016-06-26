@@ -399,13 +399,13 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 
     public void connectGoluk(boolean returnToMainActivityWhenSuccess) {
         //如果没有历史纪录的话， mApp.mWiFiStatus 一定为 WIFI_STATE_FAILED
-        if (!WifiBindDataCenter.getInstance().isHasDataHistory() || mApp.getEnableSingleWifi()) {
+        if (!WifiBindDataCenter.getInstance().isHasDataHistory() || (mApp.getEnableSingleWifi() && !mApp.isIpcLoginSuccess)) {
             Intent intent = new Intent(MainActivity.this, WiFiLinkListActivity.class);
             intent.putExtra(INTENT_ACTION_RETURN_MAIN_ALBUM, returnToMainActivityWhenSuccess);
             startActivity(intent);
             return;
         }
-        if (mApp.mWiFiStatus == WIFI_STATE_SUCCESS) {
+        if (mApp.mWiFiStatus == WIFI_STATE_SUCCESS || (mApp.getEnableSingleWifi() && mApp.isIpcLoginSuccess)) {
             Intent intent = new Intent(MainActivity.this, CarRecorderActivity.class);
             startActivity(intent);
             return;

@@ -76,6 +76,7 @@
             android:layout_marginBottom="@dimen/activity_horizontal_margin"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            android:layout_marginTop="@dimen/indicator_right_padding"
             android:gravity="center"
             android:text="@string/connect_only_wifi_desc" />
     </LinearLayout>
@@ -85,6 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/ll_link_complete_bottom"
-        android:layout_below="@+id/tv_connect_failure_desc" />
+        android:layout_below="@+id/tv_connect_failure_desc"
+        android:src="@drawable/finish_pic_14"/>
 
 </RelativeLayout>

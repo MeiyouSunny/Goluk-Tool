@@ -56,6 +56,7 @@ import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import com.mobnote.eventbus.EventUpdateAddr;
 import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserLoginActivity;
 import com.mobnote.golukmain.carrecorder.IpcDataParser.TriggerRecord;
@@ -85,6 +86,7 @@ import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.photoalbum.VideoDataManagerUtils;
 import com.mobnote.golukmain.videosuqare.RingView;
+import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
 import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.GolukFileUtils;
@@ -554,7 +556,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
      * @author 曾浩
      */
     private void initIpcState(int ipcS) {
-        if (mApp.getEnableSingleWifi() && mApp.isIpcConnSuccess){
+        if (mApp.getEnableSingleWifi() && mApp.isIpcConnSuccess) {
+            fqzb.setVisibility(View.GONE);
             startPlayVideo();
             return;
         }
@@ -1400,19 +1403,23 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     }
 
     private void ipcConnFailed() {
-        mFullScreen.setVisibility(View.GONE);
-        mVideoOff.setVisibility(View.GONE);
-        mConnectTip.setText(wifiname);
-        mPalyerLayout.setVisibility(View.GONE);
-//        mNotconnected.setVisibility(View.VISIBLE);
-        mConncetLayout.setVisibility(View.GONE);
-        mSettingBtn.setVisibility(View.GONE);
-        mChangeBtn.setVisibility(View.GONE);
-
-        setVideoBtnState(false);
-
-        m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
-        liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+        //新需求确定，只要连接失败就跳转到连接界面
+        Intent intent = new Intent(this, WiFiLinkListActivity.class);
+        startActivity(intent);
+        finish();
+//        mFullScreen.setVisibility(View.GONE);
+//        mVideoOff.setVisibility(View.GONE);
+//        mConnectTip.setText(wifiname);
+//        mPalyerLayout.setVisibility(View.GONE);
+////        mNotconnected.setVisibility(View.VISIBLE);
+//        mConncetLayout.setVisibility(View.GONE);
+//        mSettingBtn.setVisibility(View.GONE);
+//        mChangeBtn.setVisibility(View.GONE);
+//
+//        setVideoBtnState(false);
+//
+//        m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
+//        liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
     }
 
     private void ipcConnSucess() {
@@ -2509,12 +2516,13 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             String name1 = mImagePath + videoname1.replace("mp4", "jpg");
             File video1 = new File(name1);
             VideoShareInfo vsi1 = new VideoShareInfo();
+            Bitmap cacheImg = null;
             if (video1.exists()) {
-                vsi1.setBitmap(ImageManager.getBitmapFromCache(name1, 114, 64));
-            } else {
-                vsi1.setBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.album_default_img));
+                cacheImg = ImageManager.getBitmapFromCache(name1, 114, 64);
             }
-
+            if (cacheImg == null)
+                cacheImg = BitmapFactory.decodeResource(this.getResources(), R.drawable.album_default_img);
+            vsi1.setBitmap(cacheImg);
             vsi1.setName(videoname1);
 
             if (!"".equals(videoname2)) {
@@ -2551,12 +2559,13 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             File video2 = new File(name2);
             VideoShareInfo vsi2 = new VideoShareInfo();
             vsi2.setName(videoname2);
+            Bitmap cacheImg = null;
             if (video2.exists()) {
-                vsi2.setBitmap(ImageManager.getBitmapFromCache(name2, 114, 64));
-            } else {
-                vsi2.setBitmap(BitmapFactory.decodeResource(this.getResources(), R.drawable.album_default_img));
+                cacheImg = ImageManager.getBitmapFromCache(videoname2, 114, 64);
             }
-
+            if (cacheImg == null)
+                cacheImg = BitmapFactory.decodeResource(this.getResources(), R.drawable.album_default_img);
+            vsi2.setBitmap(cacheImg);
             images[1] = vsi2;
             image2.setImageBitmap(vsi2.getBitmap());
 

@@ -6,7 +6,10 @@ import android.content.Intent;
 
 import cn.com.tiros.debug.GolukDebugUtils;
 
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
+import com.mobnote.util.GolukUtils;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.handler.UMSSOHandler;
@@ -51,6 +54,15 @@ public class SharePlatformUtil {
 
     public boolean isSinaWBValid() {
         return mSinaWBUtils.isAccessValid();
+    }
+
+    public static boolean checkShareableWhenNotHotspot(Context context) {
+        GolukApplication app = (GolukApplication) context.getApplicationContext();
+        if (app.getEnableSingleWifi() && app.isIpcLoginSuccess) {
+            GolukUtils.showToast(context, context.getResources().getString(R.string.disconnect_goluk_before_share));
+            return false;
+        }
+        return true;
     }
 
 }

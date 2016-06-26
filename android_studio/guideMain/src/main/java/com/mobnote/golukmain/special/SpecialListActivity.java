@@ -223,6 +223,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
             mBugLayout.putExtra("url", headdata.outurl);
             startActivity(mBugLayout);
         } else if (id == R.id.title_share) {
+            if (!SharePlatformUtil.checkShareableWhenNotHotspot(SpecialListActivity.this)) return;
             showProgressDialog();
             boolean result = GolukApplication.getInstance().getVideoSquareManager().getTagShareUrl("1", ztid);
             if (result == false) {

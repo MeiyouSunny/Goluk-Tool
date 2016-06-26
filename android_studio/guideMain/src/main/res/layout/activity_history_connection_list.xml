@@ -33,12 +33,23 @@
         android:layout_height="match_parent"
         android:layout_above="@id/addMoblieBtn"
         android:layout_below="@id/close_btn"
+        android:layout_margin="@dimen/live_text_size"
         android:orientation="vertical">
 
-        <ImageView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/banner_text_size"
+                android:drawableTop="@drawable/no_music"
+                android:gravity="center"
+                android:text="@string/photoalbum_no_ipc_connect_text" />
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -65,8 +76,8 @@
                 android:layout_width="312dp"
                 android:layout_height="42dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/ipcbind_btn_able"
-                android:textColor="#047cf3"
+                android:background="@drawable/ipcbind_btn_finish"
+                android:textColor="#fff"
                 android:textSize="16sp" />
         </RelativeLayout>
     </LinearLayout>
