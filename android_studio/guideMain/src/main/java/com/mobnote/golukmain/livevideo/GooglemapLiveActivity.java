@@ -78,7 +78,15 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
         LatLng point = new LatLng(Double.parseDouble(currentUserInfo.lat), Double.parseDouble(currentUserInfo.lon));
 
         if(mPublisherMarker == null){
+
             int utype = 1;
+            utype = Integer.valueOf(currentUserInfo.head);
+            if(utype <= 0){// 防止数组越界，且不能为第0个
+                utype = 1;
+            }
+            if(utype >= mHeadImg.length){
+                utype = mHeadImg.length -1;
+            }
             int head = mHeadImg[utype];
 
             // 构建Marker图标
@@ -125,6 +133,13 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
 
             if(mAudienceMarker == null){
                 int utype = 1;
+                utype = Integer.valueOf(myInfo.head);
+                if(utype <= 0){// 防止数组越界，且不能为第0个
+                    utype = 1;
+                }
+                if(utype >= mHeadImg.length){
+                    utype = mHeadImg.length -1;
+                }
                 int head = mHeadImg[utype];
 
                 // 构建Marker图标
@@ -209,7 +224,7 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
         if(currentUserInfo != null){
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(Double.valueOf(currentUserInfo.lat), Double.valueOf(currentUserInfo.lon)))      // Sets the center of the map to Mountain View
-                    .zoom(8)                   // Sets the zoom
+                    .zoom(9)                   // Sets the zoom
                     .build();
             mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
