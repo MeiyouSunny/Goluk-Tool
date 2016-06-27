@@ -11,6 +11,7 @@ import android.graphics.Matrix;
 import android.os.Bundle;
 import cn.com.tiros.debug.GolukDebugUtils;
 
+import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.util.GolukUtils;
 import com.sina.weibo.sdk.api.TextObject;
@@ -65,8 +66,13 @@ public class SinaWeiBoUtils implements WeiboAuthListener, IWeiboHandler.Response
 	 * @date 2015年7月20日
 	 */
 	private void initAuth() {
-		mAuthInfo = new AuthInfo(mActivity, SinaWeiBoConstants.APP_KEY, SinaWeiBoConstants.REDIRECT_URL,
-				SinaWeiBoConstants.SCOPE);
+		if(GolukApplication.getInstance().isMainland()){
+			mAuthInfo = new AuthInfo(mActivity, SinaWeiBoConstants.SINA_APP_KEY_MAINLAND, SinaWeiBoConstants.REDIRECT_URL,
+					SinaWeiBoConstants.SCOPE);
+		}else{
+			mAuthInfo = new AuthInfo(mActivity, SinaWeiBoConstants.SINA_APP_KEY_INTERNATIONAL, SinaWeiBoConstants.REDIRECT_URL,
+                    SinaWeiBoConstants.SCOPE);
+		}
 		mSsoHandler = new SsoHandler(mActivity, mAuthInfo);
 	}
 
@@ -78,7 +84,11 @@ public class SinaWeiBoUtils implements WeiboAuthListener, IWeiboHandler.Response
 	 */
 	private void initWeiboShare() {
 		// 创建微博 SDK 接口实例
-		mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(mActivity, SinaWeiBoConstants.APP_KEY);
+        if(GolukApplication.getInstance().isMainland()){
+            mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(mActivity, SinaWeiBoConstants.SINA_APP_KEY_MAINLAND);
+        }else{
+            mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(mActivity, SinaWeiBoConstants.SINA_APP_KEY_INTERNATIONAL);
+        }
 		boolean isSucess = mWeiboShareAPI.registerApp();
 		GolukDebugUtils.e("", "SinaWeiBoUtils-----------------------------------register:" + isSucess);
 	}
@@ -167,8 +177,14 @@ public class SinaWeiBoUtils implements WeiboAuthListener, IWeiboHandler.Response
 			mWeiboShareAPI.sendRequest(mActivity, request);
 		} else {
 			GolukDebugUtils.e("", "sina-------click----EEEEEE:  ");
-			AuthInfo authInfo = new AuthInfo(mActivity, SinaWeiBoConstants.APP_KEY, SinaWeiBoConstants.REDIRECT_URL,
-					SinaWeiBoConstants.SCOPE);
+            AuthInfo authInfo;
+            if(GolukApplication.getInstance().isMainland()){
+                authInfo = new AuthInfo(mActivity, SinaWeiBoConstants.SINA_APP_KEY_MAINLAND, SinaWeiBoConstants.REDIRECT_URL,
+                        SinaWeiBoConstants.SCOPE);
+            }else{
+                authInfo = new AuthInfo(mActivity, SinaWeiBoConstants.SINA_APP_KEY_INTERNATIONAL, SinaWeiBoConstants.REDIRECT_URL,
+                        SinaWeiBoConstants.SCOPE);
+            }
 			Oauth2AccessToken accessToken = readAccessToken(mActivity);
 			String token = "";
 			if (accessToken != null) {
