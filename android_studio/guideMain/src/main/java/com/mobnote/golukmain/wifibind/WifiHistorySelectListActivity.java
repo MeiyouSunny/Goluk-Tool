@@ -154,13 +154,6 @@ public class WifiHistorySelectListActivity extends BaseActivity implements OnCli
         }
         dismissLoading();
         GolukUtils.showToast(this, this.getResources().getString(R.string.wifi_link_conn_failed));
-        //FIXME 需要与需求讨论
-        //Shang Ji增加的需求，当连接失败之后，就跳转到可以单项连接的页面
-        //当连接失败的时候，直接跳转到支持单项连接的页面
-//        Intent mainIntent = new Intent(WifiHistorySelectListActivity.this, WiFiLinkNoHotspotActivity.class);
-//        mainIntent.putExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, mReturnToMainAlbum);
-//        startActivity(mainIntent);
-//        finish();
     }
 
     private void ipcConnecting() {
@@ -205,21 +198,8 @@ public class WifiHistorySelectListActivity extends BaseActivity implements OnCli
         EventBindFinish eventFnish = new EventBindFinish(EventConfig.CAR_RECORDER_BIND_CREATEAP);
         eventFnish.bean = bindHistoryBean;
         EventBus.getDefault().post(eventFnish);
-        updateConnectingDrawable();
     }
 
-
-    private void updateConnectingDrawable() {
-        //FIXME 动画逻辑
-//        if (mApp.mWiFiStatus == MainActivity.WIFI_STATE_SUCCESS) {
-//            mbtnConnectGoluk.setCompoundDrawables(null, null, getResources().getDrawable(R.drawable.connect_pointgreen_icon), null);
-//        } else {
-//            // 获取AnimationDrawable对象
-//            AnimationDrawable animationDrawable = (AnimationDrawable) getResources().getDrawable(R.anim.wifi_connect_animation);
-//            mbtnConnectGoluk.setCompoundDrawables(null, null, animationDrawable, null);
-//            animationDrawable.start();
-//        }
-    }
 
     public void onEventMainThread(EventWifiConnect event) {
         if (null == event) {

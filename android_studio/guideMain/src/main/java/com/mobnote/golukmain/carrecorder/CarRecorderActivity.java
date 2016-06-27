@@ -627,7 +627,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     }
 
     private void toSelectIpcActivity() {
-        Intent intent = new Intent(this, WifiUnbindSelectListActivity.class);
+        Intent intent = new Intent(this, WiFiLinkListActivity.class);
         startActivity(intent);
     }
 
@@ -1403,23 +1403,19 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     }
 
     private void ipcConnFailed() {
-        //新需求确定，只要连接失败就跳转到连接界面
-        Intent intent = new Intent(this, WiFiLinkListActivity.class);
-        startActivity(intent);
-        finish();
-//        mFullScreen.setVisibility(View.GONE);
-//        mVideoOff.setVisibility(View.GONE);
-//        mConnectTip.setText(wifiname);
-//        mPalyerLayout.setVisibility(View.GONE);
-////        mNotconnected.setVisibility(View.VISIBLE);
-//        mConncetLayout.setVisibility(View.GONE);
-//        mSettingBtn.setVisibility(View.GONE);
-//        mChangeBtn.setVisibility(View.GONE);
-//
-//        setVideoBtnState(false);
-//
-//        m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
-//        liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+        mFullScreen.setVisibility(View.GONE);
+        mVideoOff.setVisibility(View.GONE);
+        mConnectTip.setText(wifiname);
+        mPalyerLayout.setVisibility(View.GONE);
+        mNotconnected.setVisibility(View.VISIBLE);
+        mConncetLayout.setVisibility(View.GONE);
+        mSettingBtn.setVisibility(View.GONE);
+        mChangeBtn.setVisibility(View.GONE);
+
+        setVideoBtnState(false);
+
+        m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
+        liveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
     }
 
     private void ipcConnSucess() {

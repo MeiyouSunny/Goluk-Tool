@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
-        android:layout_height="62dp"
+        android:layout_height="@dimen/activity_title_height"
         android:background="@color/photoalbum_title_bg_color">
 
         <ImageButton
@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:background="@drawable/connect_back_btn_btn"
+            android:background="@drawable/cross_screen_arrow_icon1"
             android:contentDescription="@string/imgdes" />
 
         <TextView
@@ -87,6 +87,6 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/ll_link_complete_bottom"
         android:layout_below="@+id/tv_connect_failure_desc"
-        android:src="@drawable/finish_pic_14"/>
+        android:src="@drawable/connection_failed"/>
 
 </RelativeLayout>

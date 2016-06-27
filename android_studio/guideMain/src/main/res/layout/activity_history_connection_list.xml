@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawablePadding="@dimen/banner_text_size"
-                android:drawableTop="@drawable/no_music"
+                android:drawableTop="@drawable/connection_failed"
                 android:gravity="center"
                 android:text="@string/photoalbum_no_ipc_connect_text" />
         </LinearLayout>

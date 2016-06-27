@@ -97,7 +97,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
      */
     @Deprecated
     public boolean haveHistoryGolukConnection() {
-        //FIXME 为什么这里有一个wifi.config 又 有一个WifiBindDataCenter 保持在SharedPreferences 中
         return readConfig() == null ? false : true;
     }
 
