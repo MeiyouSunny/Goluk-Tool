@@ -52,6 +52,12 @@
 <!-- ################### IPC页面访问 ###################### -->
     <!--事件-->
     <string name="str_zhuge_ipc_event">IPC页面访问</string>
+    <string name="str_zhuge_ipc_hotspot_error">热点创建失败</string>
+    <string name="str_zhuge_ipc_hotspot_error_timeout">手机创建热点超时</string>
+    <string name="str_zhuge_ipc_hotspot_error_ipc_connect">IPC连接手机失败</string>
+    <string name="str_zhuge_ipc_hotspot_connect_type">连接类型</string>
+    <string name="str_zhuge_ipc_hotspot_connect_type_manual">手动创建</string>
+    <string name="str_zhuge_ipc_hotspot_connect_type_auto">自动创建</string>
 
 <!-- ################### 相册竖屏播放页面访问 ###################### -->
     <!--事件-->

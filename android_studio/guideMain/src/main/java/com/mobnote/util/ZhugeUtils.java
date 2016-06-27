@@ -18,26 +18,37 @@ import org.json.JSONObject;
  */
 public class ZhugeUtils {
 
-    /** 5分钟 **/
+    /**
+     * 5分钟
+     **/
     private static final int MINS_5 = 300;
-    /** 10分钟 **/
+    /**
+     * 10分钟
+     **/
     private static final int MINS_10 = 600;
-    /** 30分钟 **/
+    /**
+     * 30分钟
+     **/
     private static final int MINS_30 = 1800;
-    /** 60分钟 **/
+    /**
+     * 60分钟
+     **/
     private static final int MINS_60 = 3600;
-    /** 120分钟 **/
+    /**
+     * 120分钟
+     **/
     private static final int MINS_120 = 7200;
 
     /**
      * 用户统计
+     *
      * @param context
-     * @param uid 用户ID
-     * @param name 用户昵称
-     * @param desc 是否默认个性签名
+     * @param uid           用户ID
+     * @param name          用户昵称
+     * @param desc          是否默认个性签名
      * @param shareVideoNum 上传视频数
-     * @param followedNum 关注好友数
-     * @param fansNum 粉丝数
+     * @param followedNum   关注好友数
+     * @param fansNum       粉丝数
      */
     public static void userInfoAnalyze(Context context, String uid, String name, String desc,
                                        String shareVideoNum, String followedNum, String fansNum) {
@@ -59,9 +70,10 @@ public class ZhugeUtils {
     }
 
     /**
-     * 登录方式　
+     * 登录方式
+     *
      * @param context
-     * @return  微信用户 / 极路客用户
+     * @return 微信用户 / 极路客用户
      */
     private static String getLoginStyle(Context context) {
         String str = GolukFileUtils.loadString(GolukFileUtils.LOGIN_PLATFORM, "");
@@ -75,6 +87,7 @@ public class ZhugeUtils {
 
     /**
      * 用户类型
+     *
      * @param context
      * @return G1/G2/T1/T1S/T2/其它/无设备
      */
@@ -198,12 +211,27 @@ public class ZhugeUtils {
         }
     }
 
+    public static void eventHotspotCreatFailed(Context context, String type, String msg) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_ipc_hotspot_error), msg);
+            json.put(context.getString(R.string.str_zhuge_ipc_hotspot_connect_type), type);
+            json.put(context.getString(R.string.str_zhuge_user_type), getIpcModle(context));
+            json.put(context.getString(R.string.str_zhuge_share_video_network), getNetworkType(context));
+            json.put(context.getString(R.string.str_zhuge_after_effect_export_fail_manufacturer), android.os.Build.MANUFACTURER);
+            json.put(context.getString(R.string.str_zhuge_after_effect_export_fail_device), android.os.Build.MODEL);
+            json.put(context.getString(R.string.str_zhuge_after_effect_export_fail_os_version), android.os.Build.VERSION.RELEASE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 导出编辑视频失败
      *
      * @param context
-     * @param factory 视频时长
-     * @param deviceType   音乐类型
+     * @param factory    视频时长
+     * @param deviceType 音乐类型
      * @param osVersion  导出分辨率
      */
     public static void eventVideoExportFail(Context context, String factory, String deviceType, String osVersion) {
@@ -261,7 +289,7 @@ public class ZhugeUtils {
     public static void eventAddChunk(Context context, boolean ret) {
         try {
             JSONObject json = new JSONObject();
-            if(ret) {
+            if (ret) {
                 json.put(context.getString(R.string.str_zhuge_add_chunk_status),
                         context.getString(R.string.str_zhuge_add_chunk_success));
             } else {
@@ -315,15 +343,15 @@ public class ZhugeUtils {
      */
     public static void eventShareVideo(Context context, String videoType, String videoQuality,
                                        int videoLength, String desc, int channel, String action) {
-        float duration = ((float)videoLength) / 1000;
+        float duration = ((float) videoLength) / 1000;
         String durationStr = "unsupported length";
-        if(duration >= 10f && duration < 14f) {
+        if (duration >= 10f && duration < 14f) {
             durationStr = "10~13S";
-        } else if(duration >= 14f && duration <= 30f) {
+        } else if (duration >= 14f && duration <= 30f) {
             durationStr = "14~30S";
-        } else if(duration > 30f && duration <= 60f) {
+        } else if (duration > 30f && duration <= 60f) {
             durationStr = "30~60S";
-        } else if(duration > 60f && duration <= 90f) {
+        } else if (duration > 60f && duration <= 90f) {
             durationStr = "60~90S";
         }
         try {
@@ -331,13 +359,13 @@ public class ZhugeUtils {
             json.put(context.getString(R.string.str_zhuge_share_video_type), getVideoType(context, videoType));
             json.put(context.getString(R.string.str_zhuge_share_video_quality), videoQuality);
             json.put(context.getString(R.string.str_zhuge_share_video_network), getNetworkType(context));
-            if(GolukApplication.getInstance().isIpcLoginSuccess) {
+            if (GolukApplication.getInstance().isIpcLoginSuccess) {
                 json.put(context.getString(R.string.str_zhuge_share_video_connect_ipc), context.getString(R.string.str_zhuge_yes));
             } else {
                 json.put(context.getString(R.string.str_zhuge_share_video_connect_ipc), context.getString(R.string.str_zhuge_no));
             }
             json.put(context.getString(R.string.str_zhuge_share_video_length), durationStr);
-            if(TextUtils.isEmpty(desc)) {
+            if (TextUtils.isEmpty(desc)) {
                 json.put(context.getString(R.string.str_zhuge_share_video_desc), context.getString(R.string.str_zhuge_have_not));
             } else {
                 json.put(context.getString(R.string.str_zhuge_share_video_desc), context.getString(R.string.str_zhuge_have));
@@ -372,10 +400,11 @@ public class ZhugeUtils {
 
     /**
      * 发起直播
+     *
      * @param context
-     * @param time　时长
-     * @param state　发起状态
-     * @param voice　直播声音
+     * @param time    　时长
+     * @param state   　发起状态
+     * @param voice   　直播声音
      */
     public static void eventOpenLive(Context context, int time, String state, boolean voice) {
         try {
@@ -392,9 +421,10 @@ public class ZhugeUtils {
 
     /**
      * 关闭直播
+     *
      * @param context
      * @param closeType 关闭类型
-     * @param time 已直播时间
+     * @param time      已直播时间
      */
     public static void eventCloseLive(Context context, String closeType, int time) {
         try {
@@ -410,8 +440,9 @@ public class ZhugeUtils {
 
     /**
      * 关注用户
+     *
      * @param context
-     * @param from　关注来源
+     * @param from    　关注来源
      */
     public static void eventFollowed(Context context, String from) {
         try {
@@ -594,6 +625,7 @@ public class ZhugeUtils {
 
     /**
      * 开启直播时长
+     *
      * @param context
      * @param time
      * @return
@@ -613,6 +645,7 @@ public class ZhugeUtils {
 
     /**
      * 关闭直播时已直播时间
+     *
      * @param context
      * @param time
      * @return
@@ -641,6 +674,7 @@ public class ZhugeUtils {
 
     /**
      * 获取直播声音
+     *
      * @param context
      * @param voice
      * @return
