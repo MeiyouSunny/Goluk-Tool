@@ -88,7 +88,7 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 		if (isLive()) {
 			mMapView = new BaiduMapView(this, mApp);
 			mSwitchLayout.addView(mMapView.getView(), lp);
-			mMapBtn.setVisibility(View.VISIBLE);
+			mMapBtn.setVisibility(View.GONE);
 		}
 
 		mSwitchLayout.addView(mCategoryLayout.getView(), lp);
