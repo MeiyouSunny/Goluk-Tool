@@ -40,8 +40,6 @@ public class WifiHistorySelectListActivity extends BaseActivity implements OnCli
     public GolukApplication mApp = null;
     private boolean isCanReceiveFailed = false;
     private boolean mReturnToMainAlbum;
-    //神秘的成功标志，解决成功之后又会莫名其妙收到失败的标志
-    //TODO event为什么会收到失败
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
