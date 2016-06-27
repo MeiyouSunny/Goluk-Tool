@@ -18,12 +18,22 @@ public class GolukConfig {
 
 	public final static String STRING_VIDEO_SYNC_SETTING_VALUE = "video_sync_setting_value";
 
-	/** 微信 appid secret **/
-	public static final String WX_APPID = "wxd437f1e0f67dfac1";
-	public static final String WX_APPSECRET = "90d4bc4ae1b3dba372dd72d03cc8e82d";
-	/** QQ appid secret **/
-	public static final String QQ_APPID = "1104418156";
-	public static final String QQ_APPKEY = "G7OfQ0qbqe5OJlUP";
+	/** 微信国内版 appid secret **/
+	public static final String WX_APPID_MAINLAND = "wxd437f1e0f67dfac1";
+	public static final String WX_APPSECRET_MAINLAND = "90d4bc4ae1b3dba372dd72d03cc8e82d";
+
+    /** 微信国际版 appid secret **/
+    public static final String WX_APPID_INTERNATIONAL = "wx493f46bf1a71416f";
+    public static final String WX_APPSECRET_INTERNATIONAL = "b572ec9cbd3fac52e138e34eff0b4926";
+
+	/** QQ国内版 appid secret **/
+	public static final String QQ_APPID_MAINLAND = "1104418156";
+	public static final String QQ_APPKEY_MAINLAND = "G7OfQ0qbqe5OJlUP";
+
+    /** QQ国际版 appid secret **/
+    public static final String QQ_APPID_INTERNATIONAL = "1105266664";
+    public static final String QQ_APPKEY_INTERNATIONAL = "atVlUoZ9yo4nH8wn";
+
 	public static final String SHARE_DESCRIPTOR = "com.umeng.share";
 	public static final String LOGIN_DESCRIPTOR = "com.umeng.login";
 
