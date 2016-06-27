@@ -1,9 +1,15 @@
 package com.mobnote.golukmain.livevideo;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.text.TextUtils;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
@@ -21,6 +27,7 @@ import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventMapQuery;
 import com.mobnote.golukmain.R;
 import com.mobnote.map.LngLat;
+import com.mobnote.util.GlideCircleTransform;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 
@@ -35,9 +42,56 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
     private Marker mPublisherMarker;
     private Marker mAudienceMarker;
 
+    private LatLng mPublisherLatLng;
+    private LatLng mAudienceLatLng;
+
+    private SimpleTarget mPublisherTarget = new SimpleTarget<Bitmap>(48,48) {
+        @Override
+        public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
+
+            if (isLiveUploadTimeOut) {
+                return;
+            }
+            if(bitmap != null){
+
+                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
+                MarkerOptions markerOptions = new MarkerOptions().position(mPublisherLatLng).icon(bitmapDescriptor);
+                mPublisherMarker = mGoogleMap.addMarker(markerOptions);
+            }else{
+                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(mHeadImg[mHeadImg.length-1]);
+                MarkerOptions markerOptions = new MarkerOptions().position(mPublisherLatLng).icon(bitmapDescriptor);
+                mPublisherMarker = mGoogleMap.addMarker(markerOptions);
+            }
+        }
+    };
+
+    private SimpleTarget mAudienceTarget = new SimpleTarget<Bitmap>(48,48) {
+        @Override
+        public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
+
+            if (isLiveUploadTimeOut) {
+                return;
+            }
+            if(bitmap != null){
+
+                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
+                MarkerOptions markerOptions = new MarkerOptions().position(mAudienceLatLng).icon(bitmapDescriptor);
+                mAudienceMarker = mGoogleMap.addMarker(markerOptions);
+            }else{
+                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(mHeadImg[mHeadImg.length-1]);
+                MarkerOptions markerOptions = new MarkerOptions().position(mAudienceLatLng).icon(bitmapDescriptor);
+                mAudienceMarker = mGoogleMap.addMarker(markerOptions);
+            }
+        }
+    };
+
 	@Override
 	public void LocationCallBack(String gpsJson) {
 		// TODO Auto-generated method stub
+        if (isLiveUploadTimeOut) {
+            // 不更新数据
+            return;
+        }
         if(TextUtils.isEmpty(gpsJson)){
             return;
         }
@@ -75,28 +129,37 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
         }
 
         // 定义Maker坐标点
-        LatLng point = new LatLng(Double.parseDouble(currentUserInfo.lat), Double.parseDouble(currentUserInfo.lon));
+        mPublisherLatLng = new LatLng(Double.parseDouble(currentUserInfo.lat), Double.parseDouble(currentUserInfo.lon));
 
         if(mPublisherMarker == null){
 
-            int utype = 1;
-            utype = Integer.valueOf(currentUserInfo.head);
-            if(utype <= 0){// 防止数组越界，且不能为第0个
-                utype = 1;
-            }
-            if(utype >= mHeadImg.length){
-                utype = mHeadImg.length -1;
-            }
-            int head = mHeadImg[utype];
+            if(TextUtils.isEmpty(currentUserInfo.customavatar)){
+                int utype = 1;
+                utype = Integer.valueOf(currentUserInfo.head);
+                if(utype <= 0){// 防止数组越界，且不能为第0个
+                    utype = 1;
+                }
+                if(utype >= mHeadImg.length){
+                    utype = mHeadImg.length -1;
+                }
+                int head = mHeadImg[utype];
 
-            // 构建Marker图标
-            BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(head);
-            // 构建MarkerOption，用于在地图上添加Marker
-            MarkerOptions markerOptions = new MarkerOptions().position(point).icon(bitmap);
-            // 在地图上添加Marker，并显示
-            mPublisherMarker = mGoogleMap.addMarker(markerOptions);
+                // 构建Marker图标
+                BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(head);
+                // 构建MarkerOption，用于在地图上添加Marker
+                MarkerOptions markerOptions = new MarkerOptions().position(mPublisherLatLng).icon(bitmap);
+                // 在地图上添加Marker，并显示
+                mPublisherMarker = mGoogleMap.addMarker(markerOptions);
+            }else{
+                Glide.with( this ) // could be an issue!
+                        .load(currentUserInfo.customavatar)
+                        .asBitmap()
+                        .transform(new GlideCircleTransform(this))
+                        .into(mPublisherTarget);
+            }
+
         }else{
-            mPublisherMarker.setPosition(point);
+            mPublisherMarker.setPosition(mPublisherLatLng);
         }
 
     }
@@ -124,7 +187,7 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
             return;
         }
 
-        LatLng point = new LatLng(lat, lon);
+        mAudienceLatLng = new LatLng(lat, lon);
 
         if (GolukApplication.getInstance().isUserLoginSucess) {
             if (null == myInfo) {
@@ -132,33 +195,45 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
             }
 
             if(mAudienceMarker == null){
-                int utype = 1;
-                utype = Integer.valueOf(myInfo.head);
-                if(utype <= 0){// 防止数组越界，且不能为第0个
-                    utype = 1;
-                }
-                if(utype >= mHeadImg.length){
-                    utype = mHeadImg.length -1;
-                }
-                int head = mHeadImg[utype];
 
-                // 构建Marker图标
-                BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(head);
-                // 构建MarkerOption，用于在地图上添加Marker
-                MarkerOptions markerOptions = new MarkerOptions().position(point).icon(bitmap);
-                // 在地图上添加Marker，并显示
-                mAudienceMarker = mGoogleMap.addMarker(markerOptions);
+                if(TextUtils.isEmpty(myInfo.customavatar)){
+                    int utype = 1;
+                    utype = Integer.valueOf(myInfo.head);
+                    if(utype <= 0){// 防止数组越界，且不能为第0个
+                        utype = 1;
+                    }
+                    if(utype >= mHeadImg.length){
+                        utype = mHeadImg.length -1;
+                    }
+                    int head = mHeadImg[utype];
+
+                    // 构建Marker图标
+                    BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(head);
+                    // 构建MarkerOption，用于在地图上添加Marker
+                    MarkerOptions markerOptions = new MarkerOptions().position(mAudienceLatLng).icon(bitmap);
+                    // 在地图上添加Marker，并显示
+                    mAudienceMarker = mGoogleMap.addMarker(markerOptions);
+                }else{
+                    Glide.with( this ) // could be an issue!
+                            .load(myInfo.customavatar)
+                            .asBitmap()
+                            .transform(new GlideCircleTransform(this))
+                            .into(mAudienceTarget);
+                }
+
+
             }else{
-                mAudienceMarker.setPosition(point);
+                mAudienceMarker.setPosition(mAudienceLatLng);
             }
         } else {
             if(mAudienceMarker == null){
+                BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.ic_my_location);
                 mAudienceMarker = mGoogleMap.addMarker(
                         new MarkerOptions()
-                                .position(point)
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                                .position(mAudienceLatLng)
+                                .icon(bitmap));
             }else{
-                mAudienceMarker.setPosition(point);
+                mAudienceMarker.setPosition(mAudienceLatLng);
             }
         }
     }
