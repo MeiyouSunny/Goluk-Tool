@@ -32,6 +32,14 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
+    <style name="NewCustomDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
     <!-- Activity主题 -->
     <style name="activityTheme" parent="@android:style/Theme">
         <item name="android:windowIsTranslucent">true</item>

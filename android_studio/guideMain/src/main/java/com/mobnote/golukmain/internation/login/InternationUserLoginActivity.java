@@ -270,7 +270,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 		if (!"".equals(mSharedPreferences.getString("setupPhone", ""))) {
 			String phone = mSharedPreferences.getString("setupPhone", "");
 			GolukDebugUtils.i(TAG, "----UserLoginActivity--------phone:" + phone);
-			mEditTextPhoneNumber.setText(phone);
+			mEditTextPhoneNumber.setText(phone.replace("-", ""));
 			mEditTextPhoneNumber.setSelection(mEditTextPhoneNumber.getText().toString().length());
 		}
 
@@ -334,7 +334,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 		mEditTextPwd.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				String number = mEditTextPhoneNumber.getText().toString();
+				String number = mEditTextPhoneNumber.getText().toString().replace("-", "");
 				String psw = mEditTextPwd.getText().toString();
 				if (isOnClick) {
 					if (!"".equals(psw.trim()) && !"".equals(number)) {
@@ -431,7 +431,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 	 * 
 	 */
 	public void loginManage() {
-		phone = mEditTextPhoneNumber.getText().toString();
+		phone = mEditTextPhoneNumber.getText().toString().replace("-", "");
 		pwd = mEditTextPwd.getText().toString();
 		if (!"".equals(phone)) {
 //			if (UserUtils.isMobileNO(phone)) {

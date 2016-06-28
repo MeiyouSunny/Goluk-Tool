@@ -41,11 +41,16 @@ import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserSetupActivity;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.profit.MyProfitActivity;
+import com.mobnote.golukmain.userlogin.UserResult;
+import com.mobnote.golukmain.userlogin.UserloginBeanRequest;
 import com.mobnote.user.UserIdentifyInterface;
 import com.mobnote.user.UserRegistAndRepwdInterface;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.SharedPrefUtil;
+import com.sina.weibo.sdk.utils.MD5;
 
 import de.greenrobot.event.EventBus;
 
@@ -55,7 +60,7 @@ import de.greenrobot.event.EventBus;
  * @author mobnote
  *
  */
-public class InternationUserIdentifyActivity extends BaseActivity implements OnClickListener, UserRegistAndRepwdInterface {
+public class InternationUserIdentifyActivity extends BaseActivity implements OnClickListener, UserRegistAndRepwdInterface,IRequestResultListener {
 
 	public static final String IDENTIFY_DIFFERENT = "identify_different";
 	public static final String IDENTIFY_PHONE = "identify_phone";
@@ -93,10 +98,15 @@ public class InternationUserIdentifyActivity extends BaseActivity implements OnC
 	private String mZone = null;
 	/** 发送验证码手机号 **/
 	private String mUserPhone = "";
+
+	/** 密码 **/
+	private String intentPassword = "";
 	/** title **/
 	private ImageButton mBtnBack;
 	
 	private TextView mCodeText, mTitleText;
+
+	public UserloginBeanRequest userloginBean = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -207,10 +217,22 @@ public class InternationUserIdentifyActivity extends BaseActivity implements OnC
 		if (null == it) {
 			return;
 		}
-		mUserPhone = it.getStringExtra(IDENTIFY_PHONE);
+
+		if (null != it.getStringExtra(IDENTIFY_PHONE)) {
+			mUserPhone = it.getStringExtra(IDENTIFY_PHONE).toString();
+		}
+
 		mZone = it.getStringExtra(InternationUserIdentifyActivity.IDENTIFY_REGISTER_CODE);
 		justDifferent = it.getBooleanExtra(IDENTIFY_DIFFERENT, false);
-		intentRegistInter = it.getStringExtra(IDENTIFY_INTER_REGIST);
+		GolukDebugUtils.i(TAG, "-------justDifferent-------" + justDifferent);
+
+		if (null != it.getStringExtra(IDENTIFY_PASSWORD)) {
+			intentPassword = it.getStringExtra(IDENTIFY_PASSWORD).toString();
+		}
+
+		if (null != it.getStringExtra(IDENTIFY_INTER_REGIST)) {
+			intentRegistInter = it.getStringExtra(IDENTIFY_INTER_REGIST).toString();
+		}
 	}
 
 	@Override
@@ -234,8 +256,6 @@ public class InternationUserIdentifyActivity extends BaseActivity implements OnC
 
 	/**
 	 * 重新获取验证码
-	 * 
-	 * @param phone
 	 */
 	private void getUserIdentify() {
 		if (!UserUtils.isNetDeviceAvailable(this)) {
@@ -520,16 +540,20 @@ public class InternationUserIdentifyActivity extends BaseActivity implements OnC
 	 * 注册完成后自动调一次登录的接口，以存储用户信息
 	 */
 	public void registLogin() {
-		final String pwd = mPwdEditText.getText().toString();
-		GolukDebugUtils.i("", "---------registLogin()----------");
-		String condi = "{\"PNumber\":\"" + mUserPhone + "\",\"Password\":\"" + pwd + "\",\"tag\":\"android\"}";
-		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Login,
-				condi);
-		GolukDebugUtils.i("final", "--------UserIdentifyActivity--------registLogin()-------b-------" + b);
-		if (b) {
-			// 登录成功跳转
-			mApp.loginStatus = 0;// 登录中
-		}
+		userloginBean = new UserloginBeanRequest(IPageNotifyFn.PageType_Login, this);
+		userloginBean.get(mUserPhone.replace("-", ""),  MD5.hexdigest(intentPassword),"");
+		mApp.loginStatus = 0;// 登录中
+//
+//		final String pwd = mPwdEditText.getText().toString();
+//		GolukDebugUtils.i("", "---------registLogin()----------");
+//		String condi = "{\"PNumber\":\"" + mUserPhone + "\",\"Password\":\"" + pwd + "\",\"tag\":\"android\"}";
+//		boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_Login,
+//				condi);
+//		GolukDebugUtils.i("final", "--------UserIdentifyActivity--------registLogin()-------b-------" + b);
+//		if (b) {
+//			// 登录成功跳转
+//			mApp.loginStatus = 0;// 登录中
+//		}
 	}
 
 	/**
@@ -701,4 +725,81 @@ public class InternationUserIdentifyActivity extends BaseActivity implements OnC
 		}
 	}
 
+	@Override
+	public void onLoadComplete(int requestType, Object result) {
+		if(requestType == IPageNotifyFn.PageType_Login){
+			try {
+				GolukDebugUtils.i("lily", "-----UserLoginManage-----" + result);
+				UserResult userresult = (UserResult) result;
+				int code = Integer.parseInt(userresult.code);
+				switch (code) {
+					case 200:
+						// 登录成功后，存储用户的登录信息
+						mSharedPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+						mEditor = mSharedPreferences.edit();
+						mEditor.putBoolean("FirstLogin", false);
+						mEditor.commit();
+						mSharedPreferences = mApp.getContext().getSharedPreferences("setup", Context.MODE_PRIVATE);
+						mEditor = mSharedPreferences.edit();
+						mEditor.putString("uid", userresult.data.uid);
+						mEditor.commit();
+						// 登录成功跳转
+						mApp.loginStatus = 1;// 登录成功
+						mApp.isUserLoginSucess = true;
+						mApp.registStatus = 2;// 注册成功的状态
+						mApp.mUser.timerCancel();
+						mApp.autoLoginStatus = 2;
+
+						Intent it = null;
+						mSharedPreferences = getSharedPreferences("setup", MODE_PRIVATE);
+
+						SharedPrefUtil.saveUserInfo(com.alibaba.fastjson.JSONObject.toJSONString(userresult.data));
+						SharedPrefUtil.saveUserToken(userresult.data.token);
+						JSONObject json = new JSONObject();
+
+						if(!"".equals(userresult.data.phone)){
+							json.put("phone",userresult.data.phone);
+						}
+						if(!"".equals(intentPassword)){
+							json.put("pwd", intentPassword);
+						}
+						json.put("uid", userresult.data.uid);
+						SharedPrefUtil.saveUserPwd(json.toString());
+
+						GolukApplication.getInstance().parseLoginData(userresult.data);
+						if ("fromStart".equals(intentRegistInter)) {
+							it = new Intent(InternationUserIdentifyActivity.this, MainActivity.class);
+							it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+							it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+							startActivity(it);
+						} else if ("fromIndexMore".equals(intentRegistInter)) {
+							it = new Intent(InternationUserIdentifyActivity.this, MainActivity.class);
+							it.putExtra("showMe", "showMe");
+							it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+							it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+							startActivity(it);
+						} else if ("fromSetup".equals(intentRegistInter)) {
+							it = new Intent(InternationUserIdentifyActivity.this, UserSetupActivity.class);
+							it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+							it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+							startActivity(it);
+						} else if("fromProfit".equals(intentRegistInter)) {
+							it = new Intent(InternationUserIdentifyActivity.this,MyProfitActivity.class);
+//						it.putExtra("uid", uid);
+//						it.putExtra("phone", title_phone.replaceAll("-", ""));
+							it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							startActivity(it);
+							UserUtils.exit();
+						}
+						finish();
+						break;
+
+					default:
+						break;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
