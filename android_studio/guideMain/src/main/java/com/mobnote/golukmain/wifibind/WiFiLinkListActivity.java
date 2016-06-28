@@ -15,6 +15,8 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
+import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
+import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.wifibind.WifiConnCallBack;
@@ -106,6 +108,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
     private boolean mIsCanAcceptIPC = false;
     private boolean mIsCanAcceptNetState = false;
+    private boolean mStartSystemWifi = false;
     protected boolean mReturnToMainAlbum;
 
     /**
@@ -445,7 +448,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         mApp.setContext(this, "WiFiLinkList");
         super.onResume();
         collectLog("onResume", "----1:");
-        autoConnWifi();
+        if (WifiBindDataCenter.getInstance().isHasDataHistory() || mStartSystemWifi)
+            autoConnWifi();
         mIsCanAcceptNetState = true;
     }
 
@@ -526,6 +530,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             toNextView();
         } else if (STATE_FAILED == mCurrentState) {
             collectLog("dialogManagerCallBack", "-Jump----System WifiLIst");
+            mStartSystemWifi = true;
             GolukUtils.startSystemWifiList(this);
         } else {
 
@@ -550,6 +555,17 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             beans.setPh_ssid(WiFiInfo.MOBILE_SSID);
             beans.setPh_pass(WiFiInfo.MOBILE_PWD);
             mWac.saveConfiguration(beans);
+
+            // 保存绑定历史记录
+            WifiBindHistoryBean historyBean = new WifiBindHistoryBean();
+            historyBean.ipc_ssid = WiFiInfo.IPC_SSID;
+            historyBean.ipc_pwd = WiFiInfo.IPC_PWD;
+            historyBean.ipc_mac = WiFiInfo.IPC_MAC;
+            historyBean.ipc_ip = CONNECT_IPC_IP;
+            historyBean.mobile_ssid = WiFiInfo.MOBILE_SSID;
+            historyBean.mobile_pwd = WiFiInfo.MOBILE_PWD;
+            historyBean.state = WifiBindHistoryBean.CONN_USE;
+            WifiBindDataCenter.getInstance().saveBindData(historyBean);
         }
     }
 
