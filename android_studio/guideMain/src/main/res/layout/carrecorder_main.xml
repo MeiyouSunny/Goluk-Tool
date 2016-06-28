@@ -52,7 +52,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:contentDescription="@string/imgdes"
-            android:src="@drawable/recorder_changeipc_icon" />
+            android:src="@drawable/recorder_changeipc_icon"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/mConnectTip"

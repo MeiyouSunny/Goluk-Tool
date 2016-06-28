@@ -152,8 +152,10 @@ public class WifiHistorySelectListActivity extends BaseActivity implements OnCli
             isCanReceiveFailed = true;
             return;
         }
-        dismissLoading();
-        GolukUtils.showToast(this, this.getResources().getString(R.string.wifi_link_conn_failed));
+        if (mLoadingDialog != null) {
+            GolukUtils.showToast(this, this.getResources().getString(R.string.wifi_link_conn_failed));
+            dismissLoading();
+        }
     }
 
     private void ipcConnecting() {

@@ -575,11 +575,11 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             if (mReturnToMainAlbum) {
                 Intent mainIntent = new Intent(WiFiLinkListActivity.this, MainActivity.class);
                 startActivity(mainIntent);
-                finish();
+                EventBus.getDefault().post(new EventFinishWifiActivity());
             } else {
                 Intent mainIntent = new Intent(WiFiLinkListActivity.this, CarRecorderActivity.class);
                 startActivity(mainIntent);
-                finish();
+                EventBus.getDefault().post(new EventFinishWifiActivity());
             }
         } else {
             Intent modifyPwd = new Intent(WiFiLinkListActivity.this, WiFiLinkCompleteActivity.class);
