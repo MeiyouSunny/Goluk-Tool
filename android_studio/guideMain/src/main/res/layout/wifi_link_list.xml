@@ -1,15 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- 选择WIFI -->
+<?xml version="1.0" encoding="utf-8"?><!-- 选择WIFI -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_ipcbind_bg" >
+    android:background="@color/color_ipcbind_bg">
 
     <RelativeLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
-        android:layout_height="62dp"
-        android:background="@color/color_ipcbind_bg" >
+        android:layout_height="@dimen/activity_title_height"
+        android:background="@color/photoalbum_title_bg_color">
 
         <ImageButton
             android:id="@+id/back_btn"
@@ -19,14 +18,13 @@
             android:background="@drawable/connect_back_btn_btn"
             android:contentDescription="@string/imgdes" />
 
-        <ImageView
-            android:id="@+id/wifilink_progress"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/setp_2"
-            android:contentDescription="@string/imgdes" />
+            android:layout_centerInParent="true"
+            android:text="@string/goluk_wifi_connection"
+            android:textColor="#fff"
+            android:textSize="18sp" />
     </RelativeLayout>
 
     <!-- 确认 wifi指示灯闪烁 -->
@@ -89,7 +87,7 @@
         android:layout_below="@id/wifilist_textView3"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:background="@drawable/ipcbinding_wifilist_img"
+        android:background="@drawable/icon_connect_wi_fi"
         android:contentDescription="@string/imgdes" />
 
     <TextView

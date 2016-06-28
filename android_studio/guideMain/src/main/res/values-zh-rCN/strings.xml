@@ -1091,4 +1091,11 @@
     <string name="str_sys_msg_gaward_text">恭喜您，抽中了</string>
     <string name="str_rank_click_btn_txt">点击查看</string>
     <string name="choose_ipc_device">选择设备：</string>
+    <string name="start_connect_ipc_device">连接：%1$s</string>
+    <string name="goluk_wifi_connection">极路客Wi-Fi连接</string>
+    <string name="connect_only_wifi_desc">仅Wi-Fi连接行车记录仪\n连接时直播功能和移动数据网络将不可用</string>
+    <string name="reconnect_hotspot">重新连接热点</string>
+    <string name="goluk_cannot_connect_hotspot">极路客连接到手机热点失败...</string>
+    <string name="goluk_only_wifi">仅连接行车记录仪</string>
+    <string name="disconnect_goluk_before_share">需断开记录仪Wi-Fi才能使用网络分享</string>
 </resources>

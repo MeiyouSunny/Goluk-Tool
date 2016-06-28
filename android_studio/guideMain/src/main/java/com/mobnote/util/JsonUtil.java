@@ -21,7 +21,7 @@ import com.mobnote.golukmain.xdpush.XingGeMsgBean;
 import com.mobnote.user.APPInfo;
 import com.mobnote.user.IPCInfo;
 
-import cn.com.mobnote.module.location.BaiduPosition;
+import cn.com.mobnote.module.location.GolukPosition;
 import cn.com.tiros.api.CSLog;
 import cn.com.tiros.api.FileUtils;
 
@@ -589,13 +589,13 @@ public class JsonUtil {
 		}
 	}
 
-	public static BaiduPosition parseLocatoinJson(String jsonData) {
+	public static GolukPosition parseLocatoinJson(String jsonData) {
 		if (null == jsonData || "".equals(jsonData) || 0 >= jsonData.length()) {
 			return null;
 		}
 
 		try {
-			BaiduPosition positon = new BaiduPosition();
+			GolukPosition positon = new GolukPosition();
 			JSONObject rootObj = new JSONObject(jsonData);
 			positon.elon = getJsonDoubleValue(rootObj, "elon", 0.0);
 			positon.elat = getJsonDoubleValue(rootObj, "elat", 0.0);

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/goluk_conn_layout"
+    android:layout_width="match_parent"
+    android:layout_height="54dp"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/goluk_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:contentDescription="@string/def"
+        android:src="@drawable/connect_g1_img" />
+
+    <TextView
+        android:id="@+id/goluk_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@id/goluk_icon"
+        android:text="@string/unbind_select_type_t1"
+        android:textColor="#565656"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/goluk_pointgrey_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="20dp"
+        android:contentDescription="@string/def"
+        android:src="@drawable/connect_pointgrey_icon" />
+
+</RelativeLayout>

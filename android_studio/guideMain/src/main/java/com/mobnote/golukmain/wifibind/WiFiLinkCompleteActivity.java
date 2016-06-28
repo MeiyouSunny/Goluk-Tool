@@ -96,7 +96,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
      */
     private ViewFrame mCurrentLayout = null;
     private Button mCompleteBtn = null;
-    private ImageView mProgressImg = null;
     private int connectCount = 0;
     /**
      * ipc连接mac地址
@@ -130,7 +129,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         mMiddleLayout = (FrameLayout) findViewById(R.id.wifi_link_complete_frmelayout);
         mCompleteBtn = (Button) findViewById(R.id.complete_btn);
         mCompleteBtn.setOnClickListener(this);
-        mProgressImg = (ImageView) findViewById(R.id.wifilink_progress);
         init();
         toSetIPCInfoView();
         setIpcLinkInfo();
@@ -303,7 +301,10 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
      */
     public void ipcLinkWiFiCallBack(Object param2) {
         collectLog("ipcLinkWiFiCallBack", "*****   Bind Sucess ! *****");
-
+        //TODO 这里需要好好的研究下，当连接成功时，改函数会调用两次，第一次是正常连接回掉，第二次从何而来。暂时先加null判断。程序运行没有问题
+        if (mWac == null) {
+            return;
+        }
         IpcConnSuccessInfo ipcInfo = null;
         if (null != param2) {
             ipcInfo = GolukFastJsonUtil.getParseObj((String) param2, IpcConnSuccessInfo.class);
@@ -527,7 +528,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         mCurrentLayout = layout3;
         layout3.start();
         mCompleteBtn.setBackgroundResource(R.drawable.ipcbind_btn_finish);
-        mProgressImg.setBackgroundResource(R.drawable.setp_4);
         this.mBaseHandler.sendEmptyMessageDelayed(MSG_H_FREE_2, 500);
     }
 
@@ -563,6 +563,11 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                     break;
             }
         } else {
+            if (getResources().getString(R.string.str_create_wifi_fail).equals(message)) {
+                ZhugeUtils.eventHotspotCreatFailed(this, getResources().getString(R.string.str_zhuge_ipc_hotspot_connect_type_manual), getResources().getString(R.string.str_zhuge_ipc_hotspot_error_timeout));
+            } else if (getResources().getString(R.string.str_no_connect_ipc).equals(message)) {
+                ZhugeUtils.eventHotspotCreatFailed(this, getResources().getString(R.string.str_zhuge_ipc_hotspot_connect_type_manual), getResources().getString(R.string.str_zhuge_ipc_hotspot_error_ipc_connect));
+            }
             GolukUtils.showToast(mContext, message);
             connFailed();
         }
@@ -570,22 +575,27 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
     private void connFailed() {
         collectLog("connFailed", "WifiLinkCompleteActivity-----------connFailed : " + mStep);
-        if (0 == mStep) {
-            collectLog("connFailed", "connFailed show Dialog  please 5~10s");
-            // 弹框提示用户重启GoLUK
-            LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-                    LiveDialogManager.DIALOG_TYPE_WIFIBIND_RESTART_IPC,
-                    getResources().getString(R.string.wifi_link_prompt),
-                    getResources().getString(R.string.wifi_link_blackout));
-            mStep++;
-        } else {
-            collectLog("connFailed", "connFailed show Dialog Conn Failed");
-            // 提示用户绑定失败，重新退出程序绑定
-            LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-                    LiveDialogManager.DIALOG_TYPE_WIFIBIND_FAILED,
-                    this.getResources().getString(R.string.wifi_link_prompt),
-                    getResources().getString(R.string.wifi_link_goluk_bind_failed));
-        }
+
+        //当连接失败的时候，直接跳转到支持单项连接的页面
+        Intent mainIntent = new Intent(WiFiLinkCompleteActivity.this, WiFiLinkNoHotspotActivity.class);
+        startActivity(mainIntent);
+        finish();
+//        if (0 == mStep) {
+//            collectLog("connFailed", "connFailed show Dialog  please 5~10s");
+//            // 弹框提示用户重启GoLUK
+//            LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
+//                    LiveDialogManager.DIALOG_TYPE_WIFIBIND_RESTART_IPC,
+//                    getResources().getString(R.string.wifi_link_prompt),
+//                    getResources().getString(R.string.wifi_link_blackout));
+//            mStep++;
+//        } else {
+//            collectLog("connFailed", "connFailed show Dialog Conn Failed");
+//            // 提示用户绑定失败，重新退出程序绑定
+//            LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
+//                    LiveDialogManager.DIALOG_TYPE_WIFIBIND_FAILED,
+//                    this.getResources().getString(R.string.wifi_link_prompt),
+//                    getResources().getString(R.string.wifi_link_goluk_bind_failed));
+//        }
     }
 
     private void wifiCallBack_5(int state, int process, String message, Object arrays) {
@@ -609,6 +619,11 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                     break;
             }
         } else {
+            if (getResources().getString(R.string.str_create_wifi_fail).equals(message)) {
+                ZhugeUtils.eventHotspotCreatFailed(this, getResources().getString(R.string.str_zhuge_ipc_hotspot_connect_type_auto), getResources().getString(R.string.str_zhuge_ipc_hotspot_error_timeout));
+            } else if (getResources().getString(R.string.str_no_connect_ipc).equals(message)) {
+                ZhugeUtils.eventHotspotCreatFailed(this, getResources().getString(R.string.str_zhuge_ipc_hotspot_connect_type_auto), getResources().getString(R.string.str_zhuge_ipc_hotspot_error_ipc_connect));
+            }
             // 未连接
             connFailed();
         }

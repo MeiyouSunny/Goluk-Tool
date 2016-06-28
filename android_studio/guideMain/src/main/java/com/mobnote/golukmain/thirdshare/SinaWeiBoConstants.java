@@ -24,8 +24,11 @@ package com.mobnote.golukmain.thirdshare;
  */
 public interface SinaWeiBoConstants {
 
-    /** 当前 DEMO 应用的 APP_KEY，第三方应用应该使用自己的 APP_KEY 替换该 APP_KEY */
-    public static final String APP_KEY      = "3570996032";
+    /** 国内版sina微博APP_KEY */
+    public static final String SINA_APP_KEY_MAINLAND = "3570996032";
+
+    /** 国际版sina微博APP_KEY */
+    public static final String SINA_APP_KEY_INTERNATIONAL = "3481905571";
 
     /** 
      * 当前 DEMO 应用的回调页，第三方应用可以使用自己的回调页。

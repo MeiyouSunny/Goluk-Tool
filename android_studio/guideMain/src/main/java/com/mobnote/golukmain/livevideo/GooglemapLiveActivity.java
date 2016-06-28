@@ -1,70 +1,242 @@
 package com.mobnote.golukmain.livevideo;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.text.TextUtils;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventMapQuery;
 import com.mobnote.golukmain.R;
-import com.mobnote.map.GoogleMapTools;
 import com.mobnote.map.LngLat;
+import com.mobnote.util.GlideCircleTransform;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.location.BaiduPosition;
-import cn.com.mobnote.module.location.ILocationFn;
-import cn.com.tiros.debug.GolukDebugUtils;
-import io.vov.vitamio.utils.Log;
+import cn.com.mobnote.module.location.GolukPosition;
+import de.greenrobot.event.EventBus;
 
-public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMapReadyCallback,OnMapLoadedCallback{
+public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnMapReadyCallback,OnMapLoadedCallback{
 
 	private MapView mMapView;
 	private GoogleMap mGoogleMap;
 
+    private Marker mPublisherMarker;
+    private Marker mAudienceMarker;
+
+    private LatLng mPublisherLatLng;
+    private LatLng mAudienceLatLng;
+
+    private SimpleTarget mPublisherTarget = new SimpleTarget<Bitmap>(48,48) {
+        @Override
+        public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
+
+            if (isLiveUploadTimeOut) {
+                return;
+            }
+            if(bitmap != null){
+
+                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
+                MarkerOptions markerOptions = new MarkerOptions().position(mPublisherLatLng).icon(bitmapDescriptor);
+                mPublisherMarker = mGoogleMap.addMarker(markerOptions);
+            }else{
+                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(mHeadImg[mHeadImg.length-1]);
+                MarkerOptions markerOptions = new MarkerOptions().position(mPublisherLatLng).icon(bitmapDescriptor);
+                mPublisherMarker = mGoogleMap.addMarker(markerOptions);
+            }
+        }
+    };
+
+    private SimpleTarget mAudienceTarget = new SimpleTarget<Bitmap>(48,48) {
+        @Override
+        public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
+
+            if (isLiveUploadTimeOut) {
+                return;
+            }
+            if(bitmap != null){
+
+                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
+                MarkerOptions markerOptions = new MarkerOptions().position(mAudienceLatLng).icon(bitmapDescriptor);
+                mAudienceMarker = mGoogleMap.addMarker(markerOptions);
+            }else{
+                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(mHeadImg[mHeadImg.length-1]);
+                MarkerOptions markerOptions = new MarkerOptions().position(mAudienceLatLng).icon(bitmapDescriptor);
+                mAudienceMarker = mGoogleMap.addMarker(markerOptions);
+            }
+        }
+    };
+
 	@Override
 	public void LocationCallBack(String gpsJson) {
 		// TODO Auto-generated method stub
-		if (isLiveUploadTimeOut) {
-			// 不更新数据
-			return;
-		}
-
-		GolukDebugUtils.e("", "jyf----20150406----LiveActivity----LocationCallBack  : " + gpsJson);
-
-		BaiduPosition location = JsonUtil.parseLocatoinJson(gpsJson);
-		if (null != location && null != mApp && null != mMapTools) {
-			if (mApp.isUserLoginSucess) {
-				if (null == myInfo) {
-					myInfo = mApp.getMyInfo();
-				}
-				if (null != myInfo) {
-					if (LOCATION_TYPE_UNKNOW == this.mCurrentLocationType) {
-						// 当前是未定位的,　直接画气泡
-					} else if (LOCATION_TYPE_POINT == mCurrentLocationType) {
-						// 当前画的是蓝点，需要清除掉蓝点，再画气泡
-					} else {
-						// 当前是画的气泡，直接更新气泡的位置即可
-						mMapTools.updatePosition(myInfo.aid, location.rawLon, location.rawLat);
-					}
-					// 设置当前画的是头像
-					mCurrentLocationType = LOCATION_TYPE_HEAD;
-				}
-			} else {
-				drawMyPosition(location.rawLon, location.rawLat, location.radius);
-			}
-		}
+        if (isLiveUploadTimeOut) {
+            // 不更新数据
+            return;
+        }
+        if(TextUtils.isEmpty(gpsJson)){
+            return;
+        }
+        GolukPosition location = JsonUtil.parseLocatoinJson(gpsJson);
+        if(location != null){
+            if(isShareLive){
+                updatePublisherMarker(location.rawLat,location.rawLon);
+            }else{
+                updateAudienceMarker(location.rawLat,location.rawLon);
+            }
+        }
 	}
+
+    @Override
+    public void updatePublisherMarker(double lat , double lon){
+        if(mPublisherMarker == null){
+            drawPublisherMarker();
+        }else{
+            LatLng point = new LatLng(lat, lon);
+            mPublisherMarker.setPosition(point);
+        }
+    }
+
+    /**
+     * 绘制发布者的标记
+     */
+    private void drawPublisherMarker(){
+
+        if (null == currentUserInfo) {
+            GolukUtils.showToast(this, this.getString(R.string.str_live_cannot_get_coordinates));
+            return;
+        }
+        if(null == mGoogleMap){
+            return;
+        }
+
+        // 定义Maker坐标点
+        mPublisherLatLng = new LatLng(Double.parseDouble(currentUserInfo.lat), Double.parseDouble(currentUserInfo.lon));
+
+        if(mPublisherMarker == null){
+
+            if(TextUtils.isEmpty(currentUserInfo.customavatar)){
+                int utype = 1;
+                utype = Integer.valueOf(currentUserInfo.head);
+                if(utype <= 0){// 防止数组越界，且不能为第0个
+                    utype = 1;
+                }
+                if(utype >= mHeadImg.length){
+                    utype = mHeadImg.length -1;
+                }
+                int head = mHeadImg[utype];
+
+                // 构建Marker图标
+                BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(head);
+                // 构建MarkerOption，用于在地图上添加Marker
+                MarkerOptions markerOptions = new MarkerOptions().position(mPublisherLatLng).icon(bitmap);
+                // 在地图上添加Marker，并显示
+                mPublisherMarker = mGoogleMap.addMarker(markerOptions);
+            }else{
+                Glide.with( this ) // could be an issue!
+                        .load(currentUserInfo.customavatar)
+                        .asBitmap()
+                        .transform(new GlideCircleTransform(this))
+                        .into(mPublisherTarget);
+            }
+
+        }else{
+            mPublisherMarker.setPosition(mPublisherLatLng);
+        }
+
+    }
+
+    @Override
+    public void updateAudienceMarker(double lat , double lon){
+        if(mAudienceMarker == null){
+            drawAudienceMarker(lat,lon);
+        }else{
+            LatLng point = new LatLng(lat,lon);
+            mAudienceMarker.setPosition(point);
+        }
+    }
+
+    /**
+     * 绘制观看用户的标记
+     *
+     */
+    private void drawAudienceMarker(double lat , double lon){
+
+        if(isShareLive){
+            return;
+        }
+        if(mGoogleMap == null){
+            return;
+        }
+
+        mAudienceLatLng = new LatLng(lat, lon);
+
+        if (GolukApplication.getInstance().isUserLoginSucess) {
+            if (null == myInfo) {
+                myInfo = mApp.getMyInfo();
+            }
+
+            if(mAudienceMarker == null){
+
+                if(TextUtils.isEmpty(myInfo.customavatar)){
+                    int utype = 1;
+                    utype = Integer.valueOf(myInfo.head);
+                    if(utype <= 0){// 防止数组越界，且不能为第0个
+                        utype = 1;
+                    }
+                    if(utype >= mHeadImg.length){
+                        utype = mHeadImg.length -1;
+                    }
+                    int head = mHeadImg[utype];
+
+                    // 构建Marker图标
+                    BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(head);
+                    // 构建MarkerOption，用于在地图上添加Marker
+                    MarkerOptions markerOptions = new MarkerOptions().position(mAudienceLatLng).icon(bitmap);
+                    // 在地图上添加Marker，并显示
+                    mAudienceMarker = mGoogleMap.addMarker(markerOptions);
+                }else{
+                    Glide.with( this ) // could be an issue!
+                            .load(myInfo.customavatar)
+                            .asBitmap()
+                            .transform(new GlideCircleTransform(this))
+                            .into(mAudienceTarget);
+                }
+
+
+            }else{
+                mAudienceMarker.setPosition(mAudienceLatLng);
+            }
+        } else {
+            if(mAudienceMarker == null){
+                BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.ic_my_location);
+                mAudienceMarker = mGoogleMap.addMarker(
+                        new MarkerOptions()
+                                .position(mAudienceLatLng)
+                                .icon(bitmap));
+            }else{
+                mAudienceMarker.setPosition(mAudienceLatLng);
+            }
+        }
+    }
 
     @Override
     protected void onResume() {
@@ -100,103 +272,24 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
 	public void initMap(Bundle saveInstance) {
         GoogleMapOptions options = new GoogleMapOptions();
         options.rotateGesturesEnabled(false); // 不允许手势
-        //options.overlookingGesturesEnabled(false);
 
-        //RelativeLayout mMapRootLayout = (RelativeLayout) findViewById(R.id.live_map_layout);
         mMapView = new MapView(this, options);
-
-        mMapView.setClickable(true);
-
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.MATCH_PARENT);
         mMapRootLayout.addView(mMapView, 0, params);
+
+        mMapView.setClickable(true);
         mMapView.onCreate(saveInstance);
         mMapView.getMapAsync(this);
-	}
-
-    @Override
-	public void drawPersonsHead() {
-		// TODO Auto-generated method stub
-
-        try {
-            drawMyLocation();
-
-            if (isShareLive) {
-                // 自己直播不再绘制其它人的点
-                return;
-            }
-            if (null == currentUserInfo) {
-                GolukUtils.showToast(this, this.getString(R.string.str_live_cannot_get_coordinates));
-                return;
-            }
-
-            mMapTools.addSinglePoint(JsonUtil.UserInfoToString(currentUserInfo));
-        } catch (Exception e) {
-            e.printStackTrace();
-            GolukDebugUtils.e(null,"jyf----20150406----LiveActivity----drawPersonsHead---4-Exception : ");
-        }
-	}
-
-	@Override
-	public void drawMyLocation() {
-		// TODO Auto-generated method stub
-
-
-        BaiduPosition myPosition = JsonUtil.parseLocatoinJson(mApp.mGoluk
-                .GolukLogicCommGet(GolukModule.Goluk_Module_Location, ILocationFn.LOCATION_CMD_GET_POSITION, ""));
-        if (null == myPosition) {
-            GolukUtils.showToast(this, this.getString(R.string.str_live_cannot_get_location));
-            return;
-        }
-
-        // 开始绘制我的位置
-        if (mApp.isUserLoginSucess) {
-            if (null == myInfo) {
-                myInfo = mApp.getMyInfo();
-            }
-            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---3: " + myInfo.nickname);
-            if (null != myInfo) {
-                GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---4: ");
-                mCurrentLocationType = LOCATION_TYPE_HEAD;
-                myInfo.lon = String.valueOf(myPosition.rawLon);
-                myInfo.lat = String.valueOf(myPosition.rawLat);
-                String drawTxt = JsonUtil.UserInfoToString(myInfo);
-                mMapTools.addSinglePoint(drawTxt);
-                GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---5: " + drawTxt);
-            }
-
-            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---6: ");
-
-        } else {
-            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----drawMyLocation---7: ");
-            mCurrentLocationType = LOCATION_TYPE_POINT;
-            // 画小蓝点
-//            MyLocationData locData = new MyLocationData.Builder()
-//                    .accuracy((float) myPosition.radius).direction(100)
-//                    .latitude(myPosition.rawLat).longitude(myPosition.rawLon)
-//                    .build();
-//             //确认地图我的位置点是否更新位置
-//            mGoogleMap.setLocationSource();
-        }
-	}
-
-	@Override
-	public void drawMyPosition(double lon, double lat, double radius) {
-		// TODO Auto-generated method stub
-
-//        MyLocationData locData = new MyLocationData.Builder()
-//                .accuracy((float) radius).direction(100).latitude(lat)
-//                .longitude(lon).build();
-//        // 确认地图我的位置点是否更新位置
-        //mGoogleMap.setLocationSource();
 	}
 
 	@Override
 	public void toMyLocation() {
 		// TODO Auto-generated method stub
-
-        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(LngLat.lat, LngLat.lng)));
+        if(mGoogleMap != null){
+            mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(LngLat.lat, LngLat.lng)));
+        }
 	}
 
 	@Override
@@ -206,20 +299,19 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
         if(currentUserInfo != null){
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(Double.valueOf(currentUserInfo.lat), Double.valueOf(currentUserInfo.lon)))      // Sets the center of the map to Mountain View
-                    .zoom(10)                   // Sets the zoom
+                    .zoom(9)                   // Sets the zoom
                     .build();
             mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
-        mMapTools = new GoogleMapTools(this, mApp, mGoogleMap, "LiveVideo");
         mGoogleMap.setOnMapLoadedCallback(this);
         mGoogleMap.setMyLocationEnabled(false);
-        drawPersonsHead();
+        drawPublisherMarker();
 	}
 
 	@Override
 	public void onMapLoaded() {
 		// TODO Auto-generated method stub
-
+        EventBus.getDefault().post(new EventMapQuery(EventConfig.LIVE_MAP_QUERY));
 	}
 
 }
