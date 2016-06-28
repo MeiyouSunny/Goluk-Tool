@@ -1,2 +1,2 @@
 ndk-build NDK_DEBUG=1 -B
-cp -f libs/armeabi/libgolukmobile.so  ../Goluk/libs/armeabi/
+cp -f libs/armeabi/libgolukmobile.so  ../android_studio/golukMobile/src/main/jniLibs/armeabi

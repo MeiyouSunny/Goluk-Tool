@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import com.mobnote.eventbus.EventFinishWifiActivity;
 import com.mobnote.golukmain.R;
 
 /**
@@ -59,4 +60,5 @@ public class WiFiLinkNoHotspotActivity extends WiFiLinkListActivity implements V
     protected void onStop() {
         super.onStop();
     }
+
 }

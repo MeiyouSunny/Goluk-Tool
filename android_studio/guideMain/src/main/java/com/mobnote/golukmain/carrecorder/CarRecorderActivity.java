@@ -87,6 +87,7 @@ import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.photoalbum.VideoDataManagerUtils;
 import com.mobnote.golukmain.videosuqare.RingView;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
+import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
 import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
 import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.GolukFileUtils;
@@ -627,8 +628,13 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     }
 
     private void toSelectIpcActivity() {
-        Intent intent = new Intent(this, WiFiLinkListActivity.class);
-        startActivity(intent);
+        if (mApp.getEnableSingleWifi()) {
+            Intent intent = new Intent(this, WiFiLinkListActivity.class);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(this, WifiHistorySelectListActivity.class);
+            startActivity(intent);
+        }
     }
 
     private void open_shareVideo(String vname) {
@@ -811,7 +817,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         liveTime.setOnClickListener(this);
         mRtspPlayerView.setOnClickListener(this);
         mConncetLayout.setOnClickListener(this);
-        mChangeBtn.setOnClickListener(this);
+//        mChangeBtn.setOnClickListener(this);
 
         findViewById(R.id.back_btn).setOnClickListener(this);
         findViewById(R.id.mSettingBtn).setOnClickListener(this);
@@ -1438,7 +1444,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         setVideoBtnState(true);
         mNotconnected.setVisibility(View.GONE);
         mConncetLayout.setVisibility(View.GONE);
-        mChangeBtn.setVisibility(View.VISIBLE);
+//        mChangeBtn.setVisibility(View.VISIBLE);
         mSettingBtn.setVisibility(View.VISIBLE);
         m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 //		if (!isT1()) {

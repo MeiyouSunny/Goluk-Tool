@@ -65,7 +65,6 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
     private CustomLoadingDialog mLoadingDialog = null;
     public GolukApplication mApp = null;
     private boolean isCanReceiveFailed = true;
-    private boolean mReturnToMainAlbum;
 
     private int mHeadContentHeight = (int) (88 * GolukUtils.mDensity);
 
@@ -100,6 +99,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
         mEditBtn = (Button) findViewById(R.id.edit_btn);
         mHeadView = LayoutInflater.from(this).inflate(R.layout.unbind_connection_head, null);
         findViewById(R.id.addMoblieBtn).setOnClickListener(this);
+
     }
 
     /**
@@ -117,7 +117,6 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
         mListView.setEmptyView(mEmptyLayout);
         mListView.addHeaderView(mHeadView);
         mListAdapter = new WifiUnbindSelectListAdapter(this);
-        mReturnToMainAlbum = getIntent().getBooleanExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, false);
         getBindHistoryData();
     }
 
@@ -421,8 +420,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
             setNotEditState();
             mListAdapter.notifyDataSetChanged();
         }
-        Intent intent = new Intent(this, WiFiLinkListActivity.class);
-        intent.putExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, mReturnToMainAlbum);
+        Intent intent = new Intent(this, WifiUnbindSelectTypeActivity.class);
         startActivity(intent);
     }
 
