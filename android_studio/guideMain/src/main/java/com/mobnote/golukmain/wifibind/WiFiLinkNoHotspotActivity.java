@@ -11,6 +11,9 @@ import com.mobnote.golukmain.R;
  * 获取Wifi扫描列表，单向链接
  */
 public class WiFiLinkNoHotspotActivity extends WiFiLinkListActivity implements View.OnClickListener {
+    public static final String AUTO_START_CONNECT = "AutoStart";
+
+    private boolean mAutoStart;
 
     @Override
     protected int getContentViewResourceId() {
@@ -25,6 +28,8 @@ public class WiFiLinkNoHotspotActivity extends WiFiLinkListActivity implements V
         btnReconnect.setOnClickListener(this);
         btnOnlyWifi.setOnClickListener(this);
         btnClose.setOnClickListener(this);
+
+        mAutoStart = getIntent().getBooleanExtra(AUTO_START_CONNECT, true);
     }
 
 
@@ -46,9 +51,16 @@ public class WiFiLinkNoHotspotActivity extends WiFiLinkListActivity implements V
     }
 
     @Override
-    protected void nextCan() {
+    protected void autoConnWifi() {
+        //当有连接历史之后，会自动开始处理连接逻辑，但是如果是从WifiLinkComplete 过来的，就不要自动开始，静静地停留在页面就好了
+        if (mAutoStart) {
+            super.autoConnWifi();
+        }
     }
 
+    @Override
+    protected void nextCan() {
+    }
 
     @Override
     protected void onResume() {
