@@ -293,7 +293,6 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
         }else if(requestType == IPageNotifyFn.PageType_ModifyPwd ){
 			UserRepwdBean urr = (UserRepwdBean) result;
 			int code = Integer.parseInt(urr.code);
-			if ("true".equals(urr.state)) {
 				try {
 					switch (code) {
 						case 200:
@@ -320,22 +319,9 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			} else {
-				// 网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
-				GolukDebugUtils.i("outtime", "-----网络链接超时超时超时-------xxxx---" + code);
-				switch (code) {
-					case 1:
-					case 2:
-					case 3:
-					default:
-						registAndRepwdStatusChange(9);
-						break;
-				}
-			}
 		}else if(requestType == IPageNotifyFn.PageType_Register ){
 			UserRegistBean urr = (UserRegistBean) result;
 				int code = Integer.parseInt(urr.code);
-				if ("true".equals(urr.state)) {
 					try {
 						switch (code) {
 							case 200:
@@ -362,18 +348,6 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				} else {
-					// 网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
-					GolukDebugUtils.i("outtime", "-----网络链接超时超时超时-------xxxx---" + code);
-					switch (code) {
-						case 1:
-						case 2:
-						case 3:
-						default:
-							registAndRepwdStatusChange(9);
-							break;
-					}
-			}
 		}
     }
 }
