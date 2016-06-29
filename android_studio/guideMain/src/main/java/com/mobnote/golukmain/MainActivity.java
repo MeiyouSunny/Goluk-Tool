@@ -407,6 +407,8 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         }
         if (mApp.mWiFiStatus == WIFI_STATE_SUCCESS || (mApp.getEnableSingleWifi() && mApp.isIpcLoginSuccess)) {
             Intent intent = new Intent(MainActivity.this, CarRecorderActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             return;
         }

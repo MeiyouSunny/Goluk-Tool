@@ -578,6 +578,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                 EventBus.getDefault().post(new EventFinishWifiActivity());
             } else {
                 Intent mainIntent = new Intent(WiFiLinkListActivity.this, CarRecorderActivity.class);
+                mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                mainIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(mainIntent);
                 EventBus.getDefault().post(new EventFinishWifiActivity());
             }
