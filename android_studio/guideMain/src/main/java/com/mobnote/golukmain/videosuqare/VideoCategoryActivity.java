@@ -8,6 +8,7 @@ import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.videosuqare.livelistmap.ILiveListMapView;
 import com.mobnote.golukmain.videosuqare.livelistmap.LiveListBaiduMapView;
+import com.mobnote.golukmain.videosuqare.livelistmap.LiveListGoogleMapView;
 import com.mobnote.util.GolukUtils;
 
 import android.content.Intent;
@@ -60,34 +61,95 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 	private CategoryListView mCategoryLayout = null;
 	private ILiveListMapView mLiveListMapView = null;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.video_square_play);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.video_square_play);
 
-		mApp = (GolukApplication) getApplication();
-		mApp.setContext(this, TAG);
-		getIntentData();
-		initView();
-		initViewData();
+        mApp = (GolukApplication) getApplication();
+        mApp.setContext(this, TAG);
+        getIntentData();
+        initView();
+        initViewData(savedInstanceState);
 
-		switchLayout(TYPE_LIST);
+        switchLayout(TYPE_LIST);
 
-		EventBus.getDefault().register(this);
-	}
+        EventBus.getDefault().register(this);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mApp.setContext(this, TAG);
+        if (null != mCategoryLayout) {
+            mCategoryLayout.onResume();
+        }
+        if(mLiveListMapView != null){
+            mLiveListMapView.onResume();
+        }
+        mLiveListMapView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        if (null != mLiveListMapView) {
+            mLiveListMapView.onPause();
+        }
+        super.onPause();
+        if (null != mCategoryLayout) {
+            mCategoryLayout.onPause();
+        }
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (null != mCategoryLayout) {
+            mCategoryLayout.onStop();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(mLiveListMapView != null){
+            mLiveListMapView.onDestroy();
+        }
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        if(mLiveListMapView != null){
+            mLiveListMapView.onLowMemory();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(mLiveListMapView != null){
+            mLiveListMapView.onSaveInstanceState(outState);
+        }
+    }
 	private boolean isLive() {
 		return "1".equals(mType);
 	}
 
-	private void initViewData() {
+	private void initViewData(Bundle saveInstance) {
 		mTitleTv.setText(mTitle);
 		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
 				FrameLayout.LayoutParams.MATCH_PARENT);
 		mMapBtn.setVisibility(View.GONE);
 		if (isLive()) {
-			mLiveListMapView = new LiveListBaiduMapView(this, mApp);
+			if(GolukApplication.getInstance().isMainland()){
+                mLiveListMapView = new LiveListBaiduMapView(this, saveInstance);
+			}else{
+                mLiveListMapView = new LiveListGoogleMapView(this, saveInstance);
+            }
 			mSwitchLayout.addView(mLiveListMapView.getView(), lp);
 			mMapBtn.setVisibility(View.VISIBLE);
 		}
@@ -243,43 +305,6 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 		if (null != mCategoryLayout) {
 			mCategoryLayout.onBackPressed();
 		}
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		mApp.setContext(this, TAG);
-		if (null != mCategoryLayout) {
-			mCategoryLayout.onResume();
-		}
-		if (null != mLiveListMapView) {
-			mLiveListMapView.onResume();
-		}
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		if (null != mCategoryLayout) {
-			mCategoryLayout.onPause();
-		}
-		if (null != mLiveListMapView) {
-			// mLiveListMapView.onPause();
-		}
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		if (null != mCategoryLayout) {
-			mCategoryLayout.onStop();
-		}
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		EventBus.getDefault().unregister(this);
 	}
 
 }

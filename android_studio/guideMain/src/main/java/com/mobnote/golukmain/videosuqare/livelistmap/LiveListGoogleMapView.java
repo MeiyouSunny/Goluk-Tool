@@ -8,23 +8,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
+import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.videosuqare.VideoCategoryActivity;
 import com.mobnote.map.BaiduMapTools;
 import com.mobnote.map.GoogleMapTools;
+import com.mobnote.map.LngLat;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.JsonUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import cn.com.mobnote.logic.GolukLogic;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.location.GolukPosition;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -38,7 +52,7 @@ public class LiveListGoogleMapView implements ILiveListMapView ,OnMapReadyCallba
     private Context mContext = null;
     private RelativeLayout mRootLayout = null;
     private RelativeLayout indexMapLayout = null;
-    /** 百度地图 */
+    /** Google地图 */
     private MapView mMapView = null;
     private GoogleMap mGoogleMap = null;
 
@@ -59,27 +73,21 @@ public class LiveListGoogleMapView implements ILiveListMapView ,OnMapReadyCallba
     /** 首页handler用来接收消息,更新UI */
     public Handler mGoogleHandler = null;
 
-    private GolukApplication mApp = null;
-
-    public LiveListGoogleMapView(Context context, GolukApplication app) {
+    Marker mAudienceMarker;
+    public LiveListGoogleMapView(Context context, Bundle saveInstance) {
         mContext = context;
-        mApp = app;
+
         mRootLayout = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.baidu_map, null);
 
         ma = (VideoCategoryActivity) mContext;
         ma.mApp.addLocationListener("main", this);
 
-        initMap();
+        initMap(saveInstance);
     }
 
     @Override
     public View getView() {
-        return null;
-    }
-
-    @Override
-    public void onCreate() {
-
+        return mRootLayout;
     }
 
     @Override
@@ -96,18 +104,14 @@ public class LiveListGoogleMapView implements ILiveListMapView ,OnMapReadyCallba
         // 在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
         if (null != mMapView) {
             mMapView.onResume();
-            mMapView.invalidate();
         }
     }
 
     @Override
     public void onPause() {
-
-    }
-
-    @Override
-    public void onStop() {
-
+        if(mMapView != null){
+            mMapView.onPause();
+        }
     }
 
     @Override
@@ -131,16 +135,20 @@ public class LiveListGoogleMapView implements ILiveListMapView ,OnMapReadyCallba
 
     @Override
     public void onLowMemory() {
-
+        if(mMapView != null){
+            mMapView.onLowMemory();
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-
+        if(outState != null){
+            mMapView.onSaveInstanceState(outState);
+        }
     }
 
     @Override
-    public void initMap() {
+    public void initMap(Bundle saveInstance) {
 
         indexMapLayout = (RelativeLayout) mRootLayout.findViewById(R.id.index_map_layout);
 
@@ -157,8 +165,9 @@ public class LiveListGoogleMapView implements ILiveListMapView ,OnMapReadyCallba
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.MATCH_PARENT);
         indexMapLayout.addView(mMapView, 0, params);
-
-
+        mMapView.setClickable(true);
+        mMapView.onCreate(saveInstance);
+        mMapView.getMapAsync(this);
 
         // 更新UI handler
         mGoogleHandler = new Handler() {
@@ -226,40 +235,46 @@ public class LiveListGoogleMapView implements ILiveListMapView ,OnMapReadyCallba
 
     @Override
     public void LocationCallBack(String gpsJson) {
+        GolukPosition location = JsonUtil.parseLocatoinJson(gpsJson);
+        if (location == null || mMapView == null || mGoogleMap == null) {
+            return;
+        }
 
-//        GolukPosition location = JsonUtil.parseLocatoinJson(gpsJson);
-//        if (location == null || mMapView == null) {
-//            return;
-//        }
-//        // 此处设置开发者获取到的方向信息，顺时针0-360
-//        MyLocationData locData = new MyLocationData.Builder().accuracy((float) location.radius).direction(100)
-//                .latitude(location.rawLat).longitude(location.rawLon).build();
-//        // 确认地图我的位置点是否更新位置
-//        mBaiduMap.setMyLocationData(locData);
-//
-//        // 移动了地图,第一次不改变地图中心点位置
-//        if (isFirstLoc) {
-//            isFirstLoc = false;
-//            // 移动地图中心点
-//            LatLng ll = new LatLng(location.rawLat, location.rawLon);
-//            MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-//            mBaiduMap.animateMapStatus(u);
-//        }
-//
-//        // 保存经纬度
-//        LngLat.lng = location.rawLon;
-//        LngLat.lat = location.rawLat;
-//
-//        if (ma.mApp.getContext() instanceof CarRecorderActivity) {
-//            GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
-//        }
+        // 移动地图中心点
+        LatLng myPoint = new LatLng(location.rawLat, location.rawLon);
+        if(mAudienceMarker == null){
+            BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.ic_my_location);
+            mAudienceMarker = mGoogleMap.addMarker(
+                    new MarkerOptions()
+                            .position(myPoint)
+                            .icon(bitmap));
+        }else{
+            mAudienceMarker.setPosition(myPoint);
+        }
+
+        GolukDebugUtils.e("LocationCallBack","locationin_1");
+        // 移动了地图,第一次不改变地图中心点位置
+        if (isFirstLoc) {
+            isFirstLoc = false;
+            if(mGoogleMap != null){
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(LngLat.lat, LngLat.lng)));
+            }
+        }
+
+        // 保存经纬度
+        LngLat.lng = location.rawLon;
+        LngLat.lat = location.rawLat;
+
+        if (ma.mApp.getContext() instanceof CarRecorderActivity) {
+            GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
+        }
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         // 获取map对象
         mGoogleMap = googleMap;
-        mGoogleMapTools = new GoogleMapTools(mContext, mApp, mGoogleMap, "Main");
+        mGoogleMapTools = new GoogleMapTools(mContext, GolukApplication.getInstance(), mGoogleMap, "Main");
 
         // 开启定位图层
         mGoogleMap.setMyLocationEnabled(false);
@@ -270,7 +285,6 @@ public class LiveListGoogleMapView implements ILiveListMapView ,OnMapReadyCallba
             public void onMapLoaded() {
                 // 地图加载完成,请求大头针数据
                 GolukDebugUtils.e("", "jyf----VideoCategoryActivity----LiveListBaiduMapView--onMapLoaded ----11111");
-
                 ma.mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
                         IPageNotifyFn.PageType_GetPinData, "");
             }
@@ -301,6 +315,12 @@ public class LiveListGoogleMapView implements ILiveListMapView ,OnMapReadyCallba
 
     @Override
     public void onClick(View v) {
-
+        int id = v.getId();
+        if (id == R.id.map_location_btn) {
+            // 回到我的位置
+            if(mGoogleMap != null){
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(LngLat.lat, LngLat.lng)));
+            }
+        }
     }
 }

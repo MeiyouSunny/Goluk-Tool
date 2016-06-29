@@ -61,17 +61,15 @@ public class LiveListBaiduMapView implements ILiveListMapView {
 	/** 首页handler用来接收消息,更新UI */
 	public Handler mBaiduHandler = null;
 
-	private GolukApplication mApp = null;
-
-	public LiveListBaiduMapView(Context context, GolukApplication app) {
+	public LiveListBaiduMapView(Context context, Bundle saveInstance) {
 		mContext = context;
-		mApp = app;
+
 		mRootLayout = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.baidu_map, null);
 
 		ma = (VideoCategoryActivity) mContext;
 		ma.mApp.addLocationListener("main", this);
 
-		initMap();
+		initMap(saveInstance);
 	}
 
 	public void onResume() {
@@ -90,16 +88,11 @@ public class LiveListBaiduMapView implements ILiveListMapView {
 		}
 	}
 
-	@Override
-	public void onStop() {
-
-	}
-
 	/**
 	 * 初始化地图
 	 */
     @Override
-	public void initMap() {
+	public void initMap(Bundle saveInstance) {
 
 		indexMapLayout = (RelativeLayout) mRootLayout.findViewById(R.id.index_map_layout);
 
@@ -124,7 +117,7 @@ public class LiveListBaiduMapView implements ILiveListMapView {
 
 		// 获取map对象
 		mBaiduMap = mMapView.getMap();
-		mBaiduMapManage = new BaiduMapTools(mContext, mApp, mBaiduMap, "Main");
+		mBaiduMapManage = new BaiduMapTools(mContext, GolukApplication.getInstance(), mBaiduMap, "Main");
 
 		// 开启定位图层
 		mBaiduMap.setMyLocationEnabled(true);
@@ -248,11 +241,6 @@ public class LiveListBaiduMapView implements ILiveListMapView {
 
 	public View getView() {
 		return mRootLayout;
-	}
-
-	@Override
-	public void onCreate() {
-
 	}
 
     @Override
