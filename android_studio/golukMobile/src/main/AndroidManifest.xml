@@ -411,10 +411,10 @@
         <!-- ###################添加Zhuge统计###################### -->
         <meta-data
             android:name="ZHUGE_APPKEY"
-            android:value="a8caee548a8e49598ea685cb1150d4e8"/>
+            android:value="373eb7ba28214c33810577442304d9fa"/>
         <meta-data
             android:name="ZHUGE_CHANNEL"
-            android:value="wandoujia"/>
+            android:value="googleplay"/>
 
         <activity
             android:name="com.umeng.socialize.view.ShareActivity"
