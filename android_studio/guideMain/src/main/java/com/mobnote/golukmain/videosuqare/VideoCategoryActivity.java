@@ -6,7 +6,8 @@ import com.mobnote.eventbus.EventDeleteVideo;
 import com.mobnote.eventbus.EventPraiseStatusChanged;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.newest.NewestListView;
+import com.mobnote.golukmain.videosuqare.livelistmap.ILiveListMapView;
+import com.mobnote.golukmain.videosuqare.livelistmap.LiveListBaiduMapView;
 import com.mobnote.util.GolukUtils;
 
 import android.content.Intent;
@@ -57,7 +58,7 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 
 	private ImageButton mMapBtn = null;
 	private CategoryListView mCategoryLayout = null;
-	private BaiduMapView mMapView = null;
+	private ILiveListMapView mLiveListMapView = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,9 +87,9 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 				FrameLayout.LayoutParams.MATCH_PARENT);
 		mMapBtn.setVisibility(View.GONE);
 		if (isLive()) {
-			mMapView = new BaiduMapView(this, mApp);
-			mSwitchLayout.addView(mMapView.getView(), lp);
-			mMapBtn.setVisibility(View.GONE);
+			mLiveListMapView = new LiveListBaiduMapView(this, mApp);
+			mSwitchLayout.addView(mLiveListMapView.getView(), lp);
+			mMapBtn.setVisibility(View.VISIBLE);
 		}
 
 		mSwitchLayout.addView(mCategoryLayout.getView(), lp);
@@ -119,7 +120,7 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 			// 切换到列表页
 			mCategoryLayout.getView().setVisibility(View.VISIBLE);
 			if (isLive()) {
-				mMapView.getView().setVisibility(View.INVISIBLE);
+				mLiveListMapView.getView().setVisibility(View.INVISIBLE);
 				mMapBtn.setBackgroundResource(R.drawable.btn_live_switch_map);
 			}
 
@@ -128,7 +129,7 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 			mCurrentType = type;
 			// 切换到地图
 			mCategoryLayout.getView().setVisibility(View.INVISIBLE);
-			mMapView.getView().setVisibility(View.VISIBLE);
+			mLiveListMapView.getView().setVisibility(View.VISIBLE);
 			mMapBtn.setBackgroundResource(R.drawable.btn_live_switch_list);
 		}
 	}
@@ -155,8 +156,8 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 		}
 
 		GolukDebugUtils.e("", "jyf----VideoCategoryActivity------back ----2222");
-		if (null != mMapView) {
-			mMapView.onDestroy();
+		if (null != mLiveListMapView) {
+			mLiveListMapView.onDestroy();
 		}
 
 		GolukDebugUtils.e("", "jyf----VideoCategoryActivity------back ----3333");
@@ -201,12 +202,12 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 			// 当前不是直播界面，不需更新数据
 			return;
 		}
-		this.mMapView.pointDataCallback(success, obj);
+		this.mLiveListMapView.pointDataCallback(success, obj);
 	}
 
 	public void downloadBubbleImageCallBack(int success, Object obj) {
-		if (this.isLive() && null != mMapView) {
-			mMapView.downloadBubbleImageCallBack(success, obj);
+		if (this.isLive() && null != mLiveListMapView) {
+			mLiveListMapView.downloadBubbleImageCallBack(success, obj);
 		}
 	}
 
@@ -251,8 +252,8 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 		if (null != mCategoryLayout) {
 			mCategoryLayout.onResume();
 		}
-		if (null != mMapView) {
-			mMapView.onResume();
+		if (null != mLiveListMapView) {
+			mLiveListMapView.onResume();
 		}
 	}
 
@@ -262,8 +263,8 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 		if (null != mCategoryLayout) {
 			mCategoryLayout.onPause();
 		}
-		if (null != mMapView) {
-			// mMapView.onPause();
+		if (null != mLiveListMapView) {
+			// mLiveListMapView.onPause();
 		}
 	}
 

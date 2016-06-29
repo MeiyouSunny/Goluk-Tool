@@ -17,7 +17,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventMapQuery;
 import com.mobnote.golukmain.R;
-import com.mobnote.map.BaiduMapManage;
+import com.mobnote.map.BaiduMapTools;
 import com.mobnote.map.LngLat;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
@@ -108,7 +108,7 @@ public class BaidumapLiveActivity extends AbstractLiveActivity implements
 		mBaiduMap = mMapView.getMap();
 		// 找开定位图层，可以显示我的位置小蓝点
 		mBaiduMap.setMyLocationEnabled(true);
-		mMapTools = new BaiduMapManage(this, mApp, mBaiduMap, "LiveVideo");
+		mMapTools = new BaiduMapTools(this, mApp, mBaiduMap, "LiveVideo");
 		mBaiduMap.setOnMapStatusChangeListener(this);
 		mBaiduMap.setOnMapLoadedCallback(this);
 	}
