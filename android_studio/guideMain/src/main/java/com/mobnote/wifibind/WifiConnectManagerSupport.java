@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 import org.json.JSONObject;
 
 import cn.com.tiros.api.Const;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -160,7 +161,9 @@ public class WifiConnectManagerSupport {
             bRet = wifiManager.setWifiEnabled(true);
         } else {
             if (!wifiManager.isWifiEnabled()) {
+                GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "setWifiEnabled started");
                 bRet = wifiManager.setWifiEnabled(true);
+                GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "setWifiEnabled finished");
             }
         }
         return bRet;

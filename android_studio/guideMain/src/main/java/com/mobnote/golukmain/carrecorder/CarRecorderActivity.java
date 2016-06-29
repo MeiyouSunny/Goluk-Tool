@@ -590,6 +590,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 break;
             case WIFI_STATE_SUCCESS:
                 // GolukApplication.getInstance().stopDownloadList();
+                fqzb.setVisibility(View.VISIBLE);
                 startPlayVideo();
                 break;
             default:
