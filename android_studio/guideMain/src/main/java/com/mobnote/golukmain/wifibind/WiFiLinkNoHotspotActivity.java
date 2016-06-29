@@ -35,6 +35,7 @@ public class WiFiLinkNoHotspotActivity extends WiFiLinkListActivity implements V
 
     @Override
     public void onClick(View v) {
+        mAutoStart = true;
         super.onClick(v);
         if (v.getId() == R.id.btn_reconnect_hotspot) {
             mApp.setEnableSingleWifi(false);
@@ -55,6 +56,8 @@ public class WiFiLinkNoHotspotActivity extends WiFiLinkListActivity implements V
         //当有连接历史之后，会自动开始处理连接逻辑，但是如果是从WifiLinkComplete 过来的，就不要自动开始，静静地停留在页面就好了
         if (mAutoStart) {
             super.autoConnWifi();
+        } else {
+            mAutoStart = true;
         }
     }
 

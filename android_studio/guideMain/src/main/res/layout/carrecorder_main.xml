@@ -474,7 +474,8 @@
             android:layout_toRightOf="@+id/jcqp"
             android:text="@string/str_make_live"
             android:textColor="#808181"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <LinearLayout
