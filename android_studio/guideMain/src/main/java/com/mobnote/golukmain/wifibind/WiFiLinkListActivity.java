@@ -459,7 +459,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         mIsCanAcceptNetState = false;
     }
 
-    private void autoConnWifi() {
+    protected void autoConnWifi() {
         collectLog("autoConnWifi", "----auto Conn--1:" + mApp.isIpcConnSuccess);
         if (mApp.isIpcConnSuccess) {
             GolukDebugUtils.e("", "bindbind-------------onResume:" + mApp.isIpcLoginSuccess);

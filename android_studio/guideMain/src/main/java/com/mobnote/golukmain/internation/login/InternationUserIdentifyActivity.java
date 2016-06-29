@@ -246,7 +246,8 @@ public class InternationUserIdentifyActivity extends BaseActivity implements OnC
 			final String pwd = mPwdEditText.getText().toString();
 			final String code = mCodeEditText.getText().toString();
 			if (null != pwd && pwd.length() > 0) {
-				toRegistAndRepwd(justDifferent, mUserPhone, pwd, code);
+				intentPassword = pwd;
+				toRegistAndRepwd(justDifferent, mUserPhone, MD5.hexdigest(pwd), code);
 			}else{
 				GolukUtils.showToast(this,this.getResources().getString(R.string.user_no_getidentify));
 			}

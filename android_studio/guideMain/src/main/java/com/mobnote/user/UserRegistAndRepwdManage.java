@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.userinfohome.bean.UserRecomBean;
 import com.mobnote.user.bindphone.BindPhoneRequest;
 import com.mobnote.user.bindphone.bean.BindPhoneDataBean;
 import com.mobnote.user.bindphone.bean.BindPhoneRetBean;
@@ -49,7 +50,7 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
 
 	/**
 	 * 注册/重置密码请求
-	 * 
+	 *
 	 * @param phone
 	 * @param password
 	 * @param vCode
@@ -66,8 +67,11 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
 			return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 					IPageNotifyFn.PageType_Register, jsonStr);
 		} else {
-			return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-					IPageNotifyFn.PageType_ModifyPwd, jsonStr);
+			UserRepwdRequest urr = new UserRepwdRequest(IPageNotifyFn.PageType_ModifyPwd,this);
+			urr.get(phone,password,vCode,"");
+			return true;
+//			return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+//					IPageNotifyFn.PageType_ModifyPwd, jsonStr);
 		}
 	}
 	
@@ -92,8 +96,9 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
 			return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 					IPageNotifyFn.PageType_Register, jsonStr);
 		} else {
-			return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-					IPageNotifyFn.PageType_ModifyPwd, jsonStr);
+			UserRepwdRequest urr = new UserRepwdRequest(IPageNotifyFn.PageType_ModifyPwd,this);
+			urr.get(phone,password,vCode,zone);
+			return true;
 		}
 	}
 
@@ -184,26 +189,26 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
 				int code = json.getInt("code");
 				GolukDebugUtils.i(TAG, "------code-----" + code);
 				switch (code) {
-				case 200:
-					registAndRepwdStatusChange(2);
-					break;
-				case 500:
-					registAndRepwdStatusChange(4);
-					break;
-				case 405:
-					registAndRepwdStatusChange(5);
-					break;
-				case 406:
-					registAndRepwdStatusChange(6);
-					break;
-				case 407:
-					registAndRepwdStatusChange(7);
-					break;
-				case 480:
-					registAndRepwdStatusChange(8);
-					break;
-				default:
-					break;
+					case 200:
+						registAndRepwdStatusChange(2);
+						break;
+					case 500:
+						registAndRepwdStatusChange(4);
+						break;
+					case 405:
+						registAndRepwdStatusChange(5);
+						break;
+					case 406:
+						registAndRepwdStatusChange(6);
+						break;
+					case 407:
+						registAndRepwdStatusChange(7);
+						break;
+					case 480:
+						registAndRepwdStatusChange(8);
+						break;
+					default:
+						break;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -212,12 +217,12 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
 			// 网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
 			GolukDebugUtils.i("outtime", "-----网络链接超时超时超时-------xxxx---" + codeOut);
 			switch (codeOut) {
-			case 1:
-			case 2:
-			case 3:
-			default:
-				registAndRepwdStatusChange(9);
-				break;
+				case 1:
+				case 2:
+				case 3:
+				default:
+					registAndRepwdStatusChange(9);
+					break;
 			}
 		}
 	}
@@ -281,6 +286,48 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
             } else {
                 registAndRepwdStatusChange(9);
             }
-        }
+        }else if(requestType == IPageNotifyFn.PageType_ModifyPwd){
+			UserRepwdBean urr = (UserRepwdBean) result;
+			int code = Integer.parseInt(urr.code);
+			if ("true".equals(urr.state)) {
+				try {
+					switch (code) {
+						case 200:
+							registAndRepwdStatusChange(2);
+							break;
+						case 500:
+							registAndRepwdStatusChange(4);
+							break;
+						case 405:
+							registAndRepwdStatusChange(5);
+							break;
+						case 406:
+							registAndRepwdStatusChange(6);
+							break;
+						case 407:
+							registAndRepwdStatusChange(7);
+							break;
+						case 480:
+							registAndRepwdStatusChange(8);
+							break;
+						default:
+							break;
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				// 网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
+				GolukDebugUtils.i("outtime", "-----网络链接超时超时超时-------xxxx---" + code);
+				switch (code) {
+					case 1:
+					case 2:
+					case 3:
+					default:
+						registAndRepwdStatusChange(9);
+						break;
+				}
+			}
+		}
     }
 }

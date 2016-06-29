@@ -56,7 +56,6 @@ import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import com.mobnote.eventbus.EventUpdateAddr;
 import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.golukmain.BaseActivity;
-import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserLoginActivity;
 import com.mobnote.golukmain.carrecorder.IpcDataParser.TriggerRecord;
@@ -84,7 +83,6 @@ import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
 import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
-import com.mobnote.golukmain.photoalbum.VideoDataManagerUtils;
 import com.mobnote.golukmain.videosuqare.RingView;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
@@ -516,6 +514,14 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("main", this);
         }
 
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        ipcState = mApp.mWiFiStatus;
+        initIpcState(ipcState);// 初始化ipc的连接状态
     }
 
     /**
@@ -1022,6 +1028,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 break;
             case EventConfig.WIFI_STATE_CONNING:
                 ipcConnecting();
+
                 break;
             case EventConfig.WIFI_STATE_SUCCESS:
                 ipcConnSucess();

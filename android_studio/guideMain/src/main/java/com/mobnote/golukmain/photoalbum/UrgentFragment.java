@@ -28,7 +28,6 @@ import com.mobnote.eventbus.EventDownloadIpcVid;
 import com.mobnote.eventbus.EventIpcConnState;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
 import com.mobnote.golukmain.carrecorder.IpcDataParser;
 import com.mobnote.golukmain.carrecorder.entity.DoubleVideoInfo;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
