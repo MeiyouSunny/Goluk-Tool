@@ -2,6 +2,7 @@ package com.mobnote.golukmain.internation.login;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -168,17 +169,16 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 			if (action == 0) {
 				mShareAPI.getPlatformInfo(InternationUserLoginActivity.this, SHARE_MEDIA.FACEBOOK, umAuthListener);
 			} else if (action == 2) {
-				JSONObject json = new JSONObject();
+				HashMap<String,String> result = new HashMap<String,String>();
 				try {
-					json.put("platform", "facebook");
-					json.put("userinfo", URLEncoder.encode(new JSONObject(data).toString(), "utf-8"));
-					json.put("devices", "");
+					result.put("platform", "facebook");
+					result.put("userinfo", URLEncoder.encode(new JSONObject(data).toString(), "utf-8"));
+					result.put("devices", "");
 					mApplication.mLoginManage.setUserLoginInterface(InternationUserLoginActivity.this);
-					boolean flog = mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-							IPageNotifyFn.PageType_OauthLogin, json.toString());
-					GolukDebugUtils.e("facebooklogin1", "facebooklogin request = " + json.toString() + " flog = " + flog);
-				} catch (JSONException e) {
-					e.printStackTrace();
+					mApplication.mLoginManage.login(result);
+//					boolean flog = mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+//							IPageNotifyFn.PageType_OauthLogin, json.toString());
+//					GolukDebugUtils.e("facebooklogin1", "facebooklogin request = " + json.toString() + " flog = " + flog);
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
