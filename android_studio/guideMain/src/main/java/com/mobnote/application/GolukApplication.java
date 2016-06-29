@@ -2019,7 +2019,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 
             Log.e("dengting", "getUserInfo------------------logic-userInfo:" + user);
 
-            if (null != user) {
+            if (null != user && !"".equals(user)) {
                 myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(user));
             }
 
