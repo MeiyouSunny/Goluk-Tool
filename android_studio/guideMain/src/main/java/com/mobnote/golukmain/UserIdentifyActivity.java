@@ -239,7 +239,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 					+ mEditTextThree.getText().toString() + mEditTextFour.getText().toString()
 					+ mEditTextFive.getText().toString() + mEditTextSix.getText().toString();
 			GolukDebugUtils.i(TAG, "-----UserIdentifyActivity------vCode-------" + vCode);
-			toRegistAndRepwd(justDifferent, title_phone.replace("-", ""), intentPassword, vCode);
+			toRegistAndRepwd(justDifferent, title_phone.replace("-", ""), MD5.hexdigest(intentPassword), vCode);
 		} else {
 		}
 	}
