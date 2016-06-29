@@ -64,8 +64,11 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
 		}
 
 		if (b) {
-			return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-					IPageNotifyFn.PageType_Register, jsonStr);
+			UserRegistRequest urr = new UserRegistRequest(IPageNotifyFn.PageType_Register,this);
+			urr.get(phone,password,vCode,"");
+			return true;
+//			return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
+//					IPageNotifyFn.PageType_Register, jsonStr);
 		} else {
 			UserRepwdRequest urr = new UserRepwdRequest(IPageNotifyFn.PageType_ModifyPwd,this);
 			urr.get(phone,password,vCode,"");
@@ -93,8 +96,9 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
 		GolukDebugUtils.e("","registAndRepwd: " + jsonStr);
 
 		if (b) {
-			return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-					IPageNotifyFn.PageType_Register, jsonStr);
+			UserRegistRequest urr = new UserRegistRequest(IPageNotifyFn.PageType_Register,this);
+			urr.get(phone,password,vCode,zone);
+			return true;
 		} else {
 			UserRepwdRequest urr = new UserRepwdRequest(IPageNotifyFn.PageType_ModifyPwd,this);
 			urr.get(phone,password,vCode,zone);
@@ -286,7 +290,7 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
             } else {
                 registAndRepwdStatusChange(9);
             }
-        }else if(requestType == IPageNotifyFn.PageType_ModifyPwd){
+        }else if(requestType == IPageNotifyFn.PageType_ModifyPwd ){
 			UserRepwdBean urr = (UserRepwdBean) result;
 			int code = Integer.parseInt(urr.code);
 			if ("true".equals(urr.state)) {
@@ -327,6 +331,48 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
 						registAndRepwdStatusChange(9);
 						break;
 				}
+			}
+		}else if(requestType == IPageNotifyFn.PageType_Register ){
+			UserRegistBean urr = (UserRegistBean) result;
+				int code = Integer.parseInt(urr.code);
+				if ("true".equals(urr.state)) {
+					try {
+						switch (code) {
+							case 200:
+								registAndRepwdStatusChange(2);
+								break;
+							case 500:
+								registAndRepwdStatusChange(4);
+								break;
+							case 405:
+								registAndRepwdStatusChange(5);
+								break;
+							case 406:
+								registAndRepwdStatusChange(6);
+								break;
+							case 407:
+								registAndRepwdStatusChange(7);
+								break;
+							case 480:
+								registAndRepwdStatusChange(8);
+								break;
+							default:
+								break;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else {
+					// 网络超时当重试按照3、6、9、10s的重试机制，当网络链接超时时
+					GolukDebugUtils.i("outtime", "-----网络链接超时超时超时-------xxxx---" + code);
+					switch (code) {
+						case 1:
+						case 2:
+						case 3:
+						default:
+							registAndRepwdStatusChange(9);
+							break;
+					}
 			}
 		}
     }
