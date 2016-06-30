@@ -58,6 +58,7 @@ public class NetUtil {
 				cancel();
 				sendData(TIMEOUT, null);
 				GolukDebugUtils.e("", "Error!!!!!!!");
+				GolukDebugUtils.t("HOTSPOT_CONNECT_LOG_TAG", "socket receive data Time Out");
 				break;
 			}
 			super.handleMessage(msg);
@@ -132,6 +133,7 @@ public class NetUtil {
 
 		isCanScan = true;
 
+		GolukDebugUtils.t("HOTSPOT_CONNECT_LOG_TAG", "waiting ipc connect phone hotspot thread create");
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -140,8 +142,9 @@ public class NetUtil {
 					try {
 						mPacket = new DatagramPacket(recvbuf, 256);
 						GolukDebugUtils.e("", "++TestUDP--------findServerIpAddress-----accept socket Data");
+						GolukDebugUtils.t("HOTSPOT_CONNECT_LOG_TAG", "waiting socket");
 						mUdpSocket.receive(mPacket);
-
+						GolukDebugUtils.t("HOTSPOT_CONNECT_LOG_TAG", "socket receive data");
 						int length = mPacket.getLength();
 						byte[] data = mPacket.getData();
 						String s = new String(data, 0, length - 1, "GBK");
@@ -149,6 +152,7 @@ public class NetUtil {
 						GolukDebugUtils.e("", "++TestUDP--------findServerIpAddress----accept Sucess!!!!!!!!:	" + s);
 
 						if (s.startsWith(PRE_CONNECT_SIGN)) {
+							GolukDebugUtils.t("HOTSPOT_CONNECT_LOG_TAG", "socket receive data from ipc");
 							String address2 = mPacket.getAddress().toString();
 							receiveSucess(ssid, address2);
 							break;
@@ -159,6 +163,7 @@ public class NetUtil {
 						GolukDebugUtils.e("",
 								"++TestUDP--------findServerIpAddress-------8888888888-ip=  Accept Data Exception ");
 						e.printStackTrace();
+						GolukDebugUtils.t("HOTSPOT_CONNECT_LOG_TAG", "socket receive data exception");
 						if (!mIsCancel) {
 							mHandler.sendEmptyMessage(MSG_H_ACCEPT_ERROR);
 							isCanScan = false;

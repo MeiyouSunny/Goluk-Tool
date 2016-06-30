@@ -171,8 +171,8 @@ public class WifiConnectManagerSupport {
 
     // 关闭wifi功能
     boolean closeWifi() {
+        GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "setWifi not Enabled");
         setWifiApEnabled(null, false);
-
         boolean bRet = wifiManager.isWifiEnabled();
         int count = 0;
         while (bRet) {
@@ -181,12 +181,14 @@ public class WifiConnectManagerSupport {
                     return false;
                 }
                 Thread.sleep(500);
+                GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "setWifi not Enabled waiting 500 MS");
                 bRet = wifiManager.isWifiEnabled();
                 count++;
             } catch (Exception e) {
             }
 
         }
+        GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "setWifi not Enabled");
         return bRet;
     }
 
