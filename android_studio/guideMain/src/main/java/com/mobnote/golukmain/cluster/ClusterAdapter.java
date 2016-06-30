@@ -528,7 +528,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 //			holder.zText.setText(clusterInfo.mVideoEntity.praisenumber);
 			holder.weiguan.setText(clusterInfo.mVideoEntity.clicknumber + " " + mContext.getResources().getString(R.string.cluster_weiguan));
 			int count = Integer.parseInt(clusterInfo.mVideoEntity.comcount);
-			holder.totalcomments.setText(mContext.getResources().getString(R.string.cluster_check_all) + clusterInfo.mVideoEntity.comcount + mContext.getResources().getString(R.string.cluster_number_pl));
+			holder.totalcomments.setText(mContext.getString(R.string.str_see_comments, clusterInfo.mVideoEntity.comcount));
 			if (count > 3) {
 				holder.totalcomments.setVisibility(View.VISIBLE);
 			} else {

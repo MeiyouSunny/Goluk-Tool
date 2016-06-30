@@ -209,8 +209,7 @@ public class ClusterViewAdapter extends BaseAdapter implements OnTouchListener {
 			holder.zText.setText(clusterInfo.praisenumber);
 			holder.weiguan.setText(clusterInfo.clicknumber + " " + mContext.getString(R.string.cluster_weiguan));
 			holder.detail.setText(clusterInfo.author + "  " + clusterInfo.describe);
-			holder.totalcomments.setText(mContext.getString(R.string.cluster_check_all) + clusterInfo.comments
-					+ mContext.getString(R.string.cluster_number_pl));
+			holder.totalcomments.setText(mContext.getString(R.string.str_see_comments, clusterInfo.comments));
 			holder.zText.setText(clusterInfo.praisenumber + " " + mContext.getString(R.string.str_usercenter_praise));
 			loadImage(holder.imageLayout, clusterInfo.imagepath);
 			initListener(index);
