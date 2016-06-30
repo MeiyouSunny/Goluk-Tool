@@ -11,7 +11,7 @@ public interface ILiveMap {
 
     public void updatePublisherMarker(double lat,double lon);
 
-    public void updateAudienceMarker(double lat,double lon);
+    public void updateCurrUserMarker(double lat, double lon);
 
     public void toMyLocation();
 }

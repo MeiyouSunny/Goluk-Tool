@@ -109,7 +109,7 @@ public abstract class AbstractLiveActivity01 extends BaseActivity implements Vie
     /** 观看人数 */
     private TextView mLookCountTv = null;
     private ImageView mMoreImg = null;
-    protected UserInfo currentUserInfo = null;
+    protected UserInfo mPublisher = null;
     /** 我的登录信息 如果未登录，则为空 */
     protected UserInfo myInfo = null;
     /** 是否续直播 */
@@ -177,7 +177,6 @@ public abstract class AbstractLiveActivity01 extends BaseActivity implements Vie
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        SDKInitializer.initialize(getApplicationContext());
         mLayoutFlater = LayoutInflater.from(this);
         mRootLayout = (RelativeLayout) mLayoutFlater.inflate(R.layout.live, null);
         getWindow().setContentView(mRootLayout);
@@ -216,18 +215,18 @@ public abstract class AbstractLiveActivity01 extends BaseActivity implements Vie
             setUserHeadImage(myInfo.head, myInfo.customavatar);
             setAuthentication(myInfo.mUserLabel);
         } else {
-            if (null != currentUserInfo && null != currentUserInfo.desc) {
-                mDescTv.setText(currentUserInfo.desc);
+            if (null != mPublisher && null != mPublisher.desc) {
+                mDescTv.setText(mPublisher.desc);
             }
             mMoreImg.setVisibility(View.VISIBLE);
             SharedPrefUtil.setIsLiveNormalExit(true);
-            if (null != currentUserInfo) {
-                mLiveCountSecond = currentUserInfo.liveDuration;
+            if (null != mPublisher) {
+                mLiveCountSecond = mPublisher.liveDuration;
             }
-            mTitleTv.setText(currentUserInfo.nickname + this.getString(R.string.str_live_someone));
-            mNickName.setText(currentUserInfo.nickname);
-            setUserHeadImage(currentUserInfo.head, currentUserInfo.customavatar);
-            setAuthentication(currentUserInfo.mUserLabel);
+            mTitleTv.setText(mPublisher.nickname + this.getString(R.string.str_live_someone));
+            mNickName.setText(mPublisher.nickname);
+            setUserHeadImage(mPublisher.head, mPublisher.customavatar);
+            setAuthentication(mPublisher.mUserLabel);
         }
 
         mLiveManager = new TimerManager(10);
@@ -259,8 +258,8 @@ public abstract class AbstractLiveActivity01 extends BaseActivity implements Vie
         } else {
             // 计时，90秒后，防止用户进入时没网
             start90Timer();
-            startLiveLook(currentUserInfo);
-            updateCount(Integer.parseInt(currentUserInfo.zanCount), Integer.parseInt(currentUserInfo.persons));
+            startLiveLook(mPublisher);
+            updateCount(Integer.parseInt(mPublisher.zanCount), Integer.parseInt(mPublisher.persons));
         }
         setCallBackListener();
     }
@@ -344,7 +343,7 @@ public abstract class AbstractLiveActivity01 extends BaseActivity implements Vie
                         break;
                     }
                 } else {
-                    if (aid.equals(currentUserInfo.aid)) {
+                    if (aid.equals(mPublisher.aid)) {
                         tempUserInfo = JsonUtil.parseSingleUserInfoJson(tempObj);
                         break;
                     }
@@ -375,8 +374,8 @@ public abstract class AbstractLiveActivity01 extends BaseActivity implements Vie
                     + " lon:" + tempUserInfo.lon + " lat:" + tempUserInfo.lat);
             updatePublisherMarker(Double.parseDouble(tempUserInfo.aid), Double.parseDouble(tempUserInfo.lon));
 
-            currentUserInfo.lat = tempUserInfo.lat;
-            currentUserInfo.lon = tempUserInfo.lon;
+            mPublisher.lat = tempUserInfo.lat;
+            mPublisher.lon = tempUserInfo.lon;
             GolukDebugUtils.e(null, "jyf-------live----LiveActivity--pointDataCallback type55555:  ：");
             // 设置“赞”的人数，和观看人数
             this.updateCount(Integer.parseInt(tempUserInfo.zanCount), Integer.parseInt(tempUserInfo.persons));
@@ -395,15 +394,15 @@ public abstract class AbstractLiveActivity01 extends BaseActivity implements Vie
         // 获取视频路径
         Intent intent = getIntent();
         isShareLive = intent.getBooleanExtra(KEY_IS_LIVE, true);
-        currentUserInfo = (UserInfo) intent.getSerializableExtra(KEY_USERINFO);
+        mPublisher = (UserInfo) intent.getSerializableExtra(KEY_USERINFO);
         isContinueLive = intent.getBooleanExtra(KEY_LIVE_CONTINUE, false);
         mSettingData = (LiveSettingBean) intent.getSerializableExtra(KEY_LIVE_SETTING_DATA);
     }
 
     private void setViewInitData() {
-        if (null != currentUserInfo) {
-            zanBtn.setText(currentUserInfo.zanCount);
-            mLookCountTv.setText(currentUserInfo.persons);
+        if (null != mPublisher) {
+            zanBtn.setText(mPublisher.zanCount);
+            mLookCountTv.setText(mPublisher.persons);
         }
         mStartTimeTv.setText(this.getString(R.string.str_today) + " " + GolukUtils.getCurrentTime());
     }
@@ -557,7 +556,7 @@ public abstract class AbstractLiveActivity01 extends BaseActivity implements Vie
                 startVideoAndLive("");
                 break;
             case MSG_H_RETRY_REQUEST_DETAIL:
-                startLiveLook(currentUserInfo);
+                startLiveLook(mPublisher);
                 break;
             case MSG_H_PLAY_LOADING:
                 mVideoLoading.setVisibility(View.VISIBLE);
@@ -1741,7 +1740,7 @@ public abstract class AbstractLiveActivity01 extends BaseActivity implements Vie
         if (this.isShareLive) {
             return this.myInfo.nickname;
         } else {
-            return this.currentUserInfo.nickname;
+            return this.mPublisher.nickname;
         }
     }
 
