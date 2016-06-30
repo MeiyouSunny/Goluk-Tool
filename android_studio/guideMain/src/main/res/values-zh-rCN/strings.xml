@@ -384,8 +384,7 @@
     <string name="cluster_jx_zt_share">极路客精选专题分享</string>
     <string name="cluster_jxzt_share_txt">极路客精选专题(使用#极路客Goluk#拍摄)</string>
     <string name="cluster_weiguan">围观</string>
-    <string name="cluster_number_pl">条评论</string>
-    <string name="cluster_check_all">查看所有</string>
+    <string name="str_see_comments">查看所有 %1$s 条评论</string>
     <string name="cluster_time_format">MM月dd日 HH时mm分</string>
     <string name="str_update_file_not_exist">没有找到升级文件。</string>
     <string name="str_update_prepare_file">正在为您准备升级，请稍候……</string>
@@ -654,8 +653,6 @@
     <string name="str_share_title">极路客精彩视频分享</string>
 
     <!-- 最新页面 -->
-    <string name="str_newest_check_all_comments_prefix">查看所有</string>
-    <string name="str_newest_check_all_comments_postfix">条评论</string>
     <string name="str_reply">回复</string>
     <string name="str_colon">：</string>
     <!-- 精选专题 -->

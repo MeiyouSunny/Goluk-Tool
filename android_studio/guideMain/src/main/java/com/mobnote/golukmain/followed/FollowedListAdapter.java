@@ -572,10 +572,8 @@ public class FollowedListAdapter extends BaseAdapter {
 					holderFollow.totalcomments.setVisibility(View.GONE);
 				} else {
 					holderFollow.totalcomments.setVisibility(View.VISIBLE);
-					holderFollow.totalcomments.setText(mFragment.getActivity()
-						.getString(R.string.str_newest_check_all_comments_prefix)+ GolukUtils
-						.getFormatNumber(videoObjectBean.video.comment.comcount)
-						+ mFragment.getActivity().getString(R.string.str_newest_check_all_comments_postfix));
+					holderFollow.totalcomments.setText(mFragment.getActivity().getString(R.string.str_see_comments, GolukUtils
+							.getFormatNumber(videoObjectBean.video.comment.comcount)));
 				}
 
 				holderFollow.totlaCommentLayout.setVisibility(View.VISIBLE);
