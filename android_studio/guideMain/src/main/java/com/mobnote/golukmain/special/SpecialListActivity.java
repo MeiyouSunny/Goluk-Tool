@@ -372,8 +372,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 
                         }
 
-                        commentLink.setText(this.getString(R.string.cluster_check_all) + "  " + map.get("comcount")
-                                + " " + this.getString(R.string.cluster_number_pl));
+                        commentLink.setText(this.getString(R.string.str_see_comments, map.get("comcount")));
 
                         commentLink.setOnClickListener(this);
                         outurl.setOnClickListener(this);
