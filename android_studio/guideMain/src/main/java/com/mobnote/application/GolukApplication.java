@@ -1090,13 +1090,13 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             case PageType_BindInfo:
                 mRegistAndRepwdManage.bindPhoneNumCallback(success, param1, param2);
                 break;
-            case PageType_Register:
-                mRegistAndRepwdManage.registAndRepwdCallback(success, param1, param2);
-                break;
-            // 重置密码PageType_ModifyPwd
-            case PageType_ModifyPwd:
-                mRegistAndRepwdManage.registAndRepwdCallback(success, param1, param2);
-                break;
+//            case PageType_Register:
+//                mRegistAndRepwdManage.registAndRepwdCallback(success, param1, param2);
+//                break;
+//            // 重置密码PageType_ModifyPwd
+//            case PageType_ModifyPwd:
+//                mRegistAndRepwdManage.registAndRepwdCallback(success, param1, param2);
+//                break;
 
 //		case PageType_ModifyNickName:
 //			if (mPageSource == "UserPersonalName") {

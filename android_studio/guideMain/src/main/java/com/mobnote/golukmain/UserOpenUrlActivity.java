@@ -29,6 +29,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
+import com.mobnote.golukmain.http.UrlHostManager;
 import com.mobnote.golukmain.thirdshare.ProxyThirdShare;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.thirdshare.ThirdShareBean;
@@ -191,7 +192,8 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					if (mErrorState) {
 						return;
 					}
-					mWebView.loadUrl(getRtmpAddress() + "?type=3" + getCommParams());
+//					mWebView.loadUrl(getRtmpAddress() + "?type=3" + getCommParams());
+					mWebView.loadUrl(getUrlParams() + "installationguide");
 				} else if (from_tag.equals("shopping")) {
 					mTextTitle.setText(this.getResources().getString(R.string.my_shopping_title_text));
 					if (mErrorState) {
@@ -204,7 +206,8 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					if (mErrorState) {
 						return;
 					}
-					mWebView.loadUrl(getRtmpAddress() + "?type=1" + getCommParams());
+//					mWebView.loadUrl(getRtmpAddress() + "?type=1" + getCommParams());
+					mWebView.loadUrl(getUrlParams() + "buystepdownline");
 				} else if (from_tag.equals("wifihelp")) {
 					mTextTitle.setText(this.getResources().getString(R.string.wifi_link_34_text));
 					if (mErrorState) {
@@ -481,5 +484,20 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			e.printStackTrace();
 		}
 	}
+
+    /**
+     * 获取安装指导/购买链接的params
+     *
+     * @return
+     */
+    private String getUrlParams() {
+        String url = "";
+        if (GolukApplication.getInstance().isMainland()) {
+            url = UrlHostManager.TEST_HOST;
+        } else {
+            url = UrlHostManager.INTERNATIIONAL_HOST;
+        }
+        return url;
+    }
 
 }

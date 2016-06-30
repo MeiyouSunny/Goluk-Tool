@@ -163,6 +163,12 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	/** 删除视频 **/
 	public static final int PageType_DeleteVideo = 75;
 
+	/** 删除视频 **/
+	public static final int PageType_InternationalRegister = 76;
+
+	/** 删除视频 **/
+	public static final int PageType_InternationalCheckvcode = 77;
+
 	/**
 	 * 
 	 * 以下为同步获取信息标识

@@ -488,7 +488,13 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			findViewById(R.id.tv_t_settings_parking_sleep_desc).setVisibility(View.GONE);
 			findViewById(R.id.tv_t_settings_security_desc).setVisibility(View.GONE);
 		}
-		findViewById(R.id.ly_t_settings_buy).setVisibility(View.VISIBLE);
+//		findViewById(R.id.ly_t_settings_buy).setVisibility(View.VISIBLE);
+		//国际版不显示购买链接
+		if (GolukApplication.getInstance().isMainland()) {
+			findViewById(R.id.ly_t_settings_buy).setVisibility(View.VISIBLE);
+		} else {
+			findViewById(R.id.ly_t_settings_buy).setVisibility(View.GONE);
+		}
 	}
 
 	@Override
