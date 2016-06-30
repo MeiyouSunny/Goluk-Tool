@@ -66,6 +66,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -1297,5 +1299,21 @@ public class GolukUtils {
             return false;
         }
         return true;
+    }
+
+    /**
+     * @return -1: error happen, 0: for mainland, 1: for oversea, others TBD
+     */
+    public static int judgeIPCDistrict(String ipcVersion) {
+        if(null == ipcVersion || ipcVersion.length() == 0) {
+            return -1;
+        }
+        String lowerCase = ipcVersion.toLowerCase();
+        Pattern pattern = Pattern.compile("t[0-9]*u.*");
+        Matcher matcher = pattern.matcher(lowerCase);
+        if(matcher.matches()) {
+            return 1;
+        }
+        return 0;
     }
 }

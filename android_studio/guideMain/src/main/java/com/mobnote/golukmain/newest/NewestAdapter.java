@@ -381,9 +381,8 @@ public class NewestAdapter extends BaseAdapter {
 						holder.totalcomments.setVisibility(View.GONE);
 					} else {
 						holder.totalcomments.setVisibility(View.VISIBLE);
-						holder.totalcomments.setText(mContext.getString(R.string.str_newest_check_all_comments_prefix)
-								+ GolukUtils.getFormatNumber(mVideoSquareInfo.mVideoEntity.comcount)
-								+ mContext.getString(R.string.str_newest_check_all_comments_postfix));
+						holder.totalcomments.setText(mContext.getString(R.string.str_see_comments,
+								GolukUtils.getFormatNumber(mVideoSquareInfo.mVideoEntity.comcount)));
 					}
 
 					holder.totlaCommentLayout.setVisibility(View.VISIBLE);

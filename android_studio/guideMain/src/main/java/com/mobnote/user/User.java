@@ -3,25 +3,18 @@ package com.mobnote.user;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.json.JSONObject;
-
-import com.alibaba.fastjson.JSON;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.http.IRequestResultListener;
-import com.mobnote.golukmain.userlogin.UserData;
 import com.mobnote.golukmain.userlogin.UserResult;
 import com.mobnote.golukmain.userlogin.UserloginBeanRequest;
-import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.SharedPrefUtil;
-import com.sina.weibo.sdk.utils.MD5;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
-import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
