@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.multicast.IMultiCastFn;
 import com.mobnote.golukmain.multicast.NetUtil;
+import com.mobnote.util.GolukUtils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -93,6 +94,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 
     /**
      * 是否在过去有过极路客连接
+     *
      * @return
      */
     @Deprecated
@@ -299,6 +301,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
         // 如果没有开启wifi功能 等待1.5秒后检查wifi 的链接状态
         // 有可能手机当前状态已经开启wifi
         if (!flag) {
+            GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "user phone ");
             try {
                 int temp_1 = 2000;
                 Thread.sleep(temp_1);
@@ -385,11 +388,12 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
     private void createWifiAP(final String type, final String ssid, final String password, final String ipc_ssid,
                               final String ipc_ip, final int outTime) {
         GolukDebugUtils.i(TAG, "创建热点开始....11111");
-
+        GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG,"CREATE CONNECTION THREAD");
         Runnable runnable = new Runnable() {
             Message msg = new Message();
 
             public void run() {
+                GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG,"CONNECTION THREAD started");
                 int sTime = 0;
                 try {
                     sTime = openWifi(false, outTime);

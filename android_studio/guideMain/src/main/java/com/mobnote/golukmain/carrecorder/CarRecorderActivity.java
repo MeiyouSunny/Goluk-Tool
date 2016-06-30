@@ -400,6 +400,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     private ImageView mRedRoom;
 
     private boolean isRecVideo = false;
+    private boolean canReceiveFailed = true;
 
     private ImageView mAdasImg = null;
 
@@ -590,6 +591,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 break;
             case WIFI_STATE_SUCCESS:
                 // GolukApplication.getInstance().stopDownloadList();
+                fqzb.setVisibility(View.VISIBLE);
                 startPlayVideo();
                 break;
             default:
@@ -1024,6 +1026,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
         switch (event.getOpCode()) {
             case EventConfig.WIFI_STATE_FAILED:
+                if (canReceiveFailed) {
+                    mApp.setIpcDisconnect();
+                    canReceiveFailed = false;
+                }
                 ipcConnFailed();
                 break;
             case EventConfig.WIFI_STATE_CONNING:
