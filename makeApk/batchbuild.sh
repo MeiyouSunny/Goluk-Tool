@@ -31,6 +31,10 @@ then
 	then
 		echo "build nvd"
 		cp -f 	version_nvd/version ${project_source_path}/assets/version
+	elif [ $1 = "invd" ];
+	then
+		echo "build invd"
+		cp -f 	version_nvd/version ${project_source_path}/assets/version
 	elif [ $1 = "txy" ];
 	then
 		echo "build txy"
