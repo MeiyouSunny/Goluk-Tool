@@ -290,16 +290,16 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
 	public void onMapReady(GoogleMap map) {
 		// TODO Auto-generated method stub
         mGoogleMap = map;
-        if(mPublisher != null){
+        mGoogleMap.setOnMapLoadedCallback(this);
+        mGoogleMap.setMyLocationEnabled(false);
+        if(!isShareLive && mPublisher != null){
+            drawPublisherMarker();
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(Double.valueOf(mPublisher.lat), Double.valueOf(mPublisher.lon)))      // Sets the center of the map to Mountain View
                     .zoom(9)                   // Sets the zoom
                     .build();
             mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
-        mGoogleMap.setOnMapLoadedCallback(this);
-        mGoogleMap.setMyLocationEnabled(false);
-        drawPublisherMarker();
 	}
 
 	@Override

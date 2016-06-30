@@ -286,7 +286,7 @@ public class BaidumapLiveActivity extends AbstractLiveActivity01 implements Baid
         mBaiduMap.setOnMapStatusChangeListener(this);
         mBaiduMap.setOnMapLoadedCallback(this);
 
-        if(!isShareLive){
+        if(!isShareLive && mPublisher != null){
             updatePublisherMarker(Double.valueOf(mPublisher.lat),Double.valueOf(mPublisher.lon));
             LatLng ll = new LatLng(Double.valueOf(mPublisher.lat),Double.valueOf(mPublisher.lon));
             MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
