@@ -50,11 +50,29 @@ public class CustomLoadingDialog {
 		}
 	}
 
-	public void setListener(ForbidBack forbidInterface) {
+	public void setListener(final ForbidBack forbidInterface) {
 		if (null != forbidInterface) {
 			this.forbidInterface = forbidInterface;
+			mDialog.setOnKeyListener(new OnKeyListener() {
+
+				@Override
+				public boolean onKey(DialogInterface arg0, int arg1, KeyEvent arg2) {
+					if (arg2.getAction() == KeyEvent.ACTION_UP) {
+						GolukDebugUtils.e("", "------------------customDialog-------------back");
+						setData(1);
+					}
+					return false;
+				}
+			});
+			this.mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					forbidInterface.forbidBackKey(1);
+				}
+			});
 		}
 	}
+
 
 	private void setData(int key) {
 		if (null != forbidInterface) {
