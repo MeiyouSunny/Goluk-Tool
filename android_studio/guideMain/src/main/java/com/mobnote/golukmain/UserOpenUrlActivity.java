@@ -193,7 +193,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 						return;
 					}
 //					mWebView.loadUrl(getRtmpAddress() + "?type=3" + getCommParams());
-					mWebView.loadUrl(getUrlParams() + "installationguide");
+					mWebView.loadUrl(getUrlParams() + "/s/installationguide");
 				} else if (from_tag.equals("shopping")) {
 					mTextTitle.setText(this.getResources().getString(R.string.my_shopping_title_text));
 					if (mErrorState) {
@@ -207,7 +207,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 						return;
 					}
 //					mWebView.loadUrl(getRtmpAddress() + "?type=1" + getCommParams());
-					mWebView.loadUrl(getUrlParams() + "buystepdownline");
+					mWebView.loadUrl(getUrlParams() + "/s/buystepdownline");
 				} else if (from_tag.equals("wifihelp")) {
 					mTextTitle.setText(this.getResources().getString(R.string.wifi_link_34_text));
 					if (mErrorState) {
