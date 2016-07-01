@@ -1310,7 +1310,11 @@ public class GolukUtils {
         if(null == ipcVersion || ipcVersion.length() == 0) {
             return -1;
         }
+
         String lowerCase = ipcVersion.toLowerCase();
+        if(ipcVersion.startsWith("g")) {
+            return 1;
+        }
         Pattern pattern = Pattern.compile("t[0-9]*u.*");
         Matcher matcher = pattern.matcher(lowerCase);
         if(matcher.matches()) {

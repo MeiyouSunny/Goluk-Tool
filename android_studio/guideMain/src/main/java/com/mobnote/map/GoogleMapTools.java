@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
@@ -192,7 +193,9 @@ public class GoogleMapTools implements IMapTools{
 				MarkerOptions markerOptions = new MarkerOptions().position(point).icon(bitmap);
 				// 在地图上添加Marker，并显示
 				Marker mk = (Marker) (mMap.addMarker(markerOptions));
-
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("utype", utype);
+                //mk.setExtraInfo(bundle);
 				mMarkerData.put(mk, data);
 
 				mMap.setOnMarkerClickListener(new MyOnMarkerClickListener());

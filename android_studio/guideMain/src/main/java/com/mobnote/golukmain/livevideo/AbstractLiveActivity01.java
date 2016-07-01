@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.baidu.mapapi.SDKInitializer;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventMapQuery;
@@ -43,10 +42,10 @@ import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.thirdshare.ProxyThirdShare;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.thirdshare.ThirdShareBean;
-import com.mobnote.golukmain.videosuqare.livelistmap.LiveListBaiduMapView;
 import com.mobnote.golukmain.videosuqare.JsonCreateUtils;
 import com.mobnote.golukmain.videosuqare.ShareDataBean;
 import com.mobnote.golukmain.videosuqare.VideoSquareManager;
+import com.mobnote.golukmain.videosuqare.livelistmap.LiveListBaiduMapView;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
@@ -96,8 +95,6 @@ public abstract class AbstractLiveActivity01 extends BaseActivity implements Vie
     private String mFilePath = "";
     /** 是否直播 还是　看别人直播 true/false 直播/看别人直播 */
     protected boolean isShareLive = true;
-    /** 直播开启标志 */
-    private boolean isStartLive = false;
     /** 直播视频id */
     private String liveVid;
     /** 单次直播录制时间 (秒)(包括自己的时间与看别人的时间) */
@@ -122,8 +119,6 @@ public abstract class AbstractLiveActivity01 extends BaseActivity implements Vie
     /** 防止多次按退出键 */
     private boolean isAlreadExit = false;
     private String mCurrentVideoId = null;
-    /** -1/0/1 未定位/小蓝点/气泡 */
-    protected int mCurrentLocationType = LOCATION_TYPE_UNKNOW;
     /** 当前点赞次数 */
     private int mCurrentOKCount = 0;
     /** 是否支持声音 */
@@ -144,10 +139,7 @@ public abstract class AbstractLiveActivity01 extends BaseActivity implements Vie
     private LiveSettingBean mSettingData = null;
     /** 标识直播上传是否超时 */
     protected boolean isLiveUploadTimeOut = false;
-    /** 保存录制的文件名字 */
-    public String mRecordVideFileName = "";
-    /** 保存录制中的状态 */
-    public boolean isRecording = false;
+
     private VideoSquareManager mVideoSquareManager = null;
     private SharePlatformUtil sharePlatform;
     /** 设置是否返回 */
@@ -166,12 +158,13 @@ public abstract class AbstractLiveActivity01 extends BaseActivity implements Vie
     private boolean mIsFirstSucess = true;
     private String mRtmpUrl = null;
 
-
     private ILiveOperateFn mLiveOperator = null;
     private boolean isSetAudioMute = false;
 
     //诸葛统计中记录直播剩余时间
     private int mRemainLiveTime = 0;
+
+    public static final int TIMING = 1 * 60 * 1000;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -281,7 +274,6 @@ public abstract class AbstractLiveActivity01 extends BaseActivity implements Vie
             }
             mVideoSquareManager.addVideoSquareManagerListener("live", this);
         }
-        //mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_MYLOCATION, 10 * 1000);
     }
 
     private void getURL() {
@@ -318,7 +310,7 @@ public abstract class AbstractLiveActivity01 extends BaseActivity implements Vie
         if (1 != success) {
             GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type:  sucess:" + success);
             // 重新請求大头針数据
-            mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, LiveListBaiduMapView.mTiming);
+            mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, TIMING);
             return;
         }
         final String str = (String) obj;
@@ -354,20 +346,20 @@ public abstract class AbstractLiveActivity01 extends BaseActivity implements Vie
                 // 如果是我发起的直播,更新我的信息即可
                 if (null == tempMyInfo) {
                     // 重新請求大头針数据
-                    mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, LiveListBaiduMapView.mTiming);
+                    mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, TIMING);
                     return;
                 }
                 this.updateCount(Integer.parseInt(tempMyInfo.zanCount), Integer.parseInt(tempMyInfo.persons));
                 GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback 3333333:  更新我自己的赞 zanCount："
                         + tempMyInfo.zanCount + "	permson:" + tempMyInfo.persons);
                 // 重新請求大头針数据
-                mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, LiveListBaiduMapView.mTiming);
+                mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, TIMING);
                 return;
             }
             if (null == tempUserInfo) {
                 GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type44444:  ：");
                 // 重新請求大头針数据
-                mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, LiveListBaiduMapView.mTiming);
+                mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, TIMING);
                 return;
             }
             GolukDebugUtils.e("", "jyf----20150406----LiveActivity----pointDataCallback----aid  : " + tempUserInfo.aid
@@ -386,7 +378,7 @@ public abstract class AbstractLiveActivity01 extends BaseActivity implements Vie
         }
 
         // 重新請求大头針数据
-        mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, LiveListBaiduMapView.mTiming);
+        mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, TIMING);
 
     }
 
@@ -549,7 +541,6 @@ public abstract class AbstractLiveActivity01 extends BaseActivity implements Vie
                 }
                 break;
             case MSG_H_RETRY_UPLOAD:
-                isStartLive = false;
                 startLive(mCurrentVideoId);
                 break;
             case MSG_H_RETRY_SHOW_VIEW:
@@ -762,8 +753,6 @@ public abstract class AbstractLiveActivity01 extends BaseActivity implements Vie
     Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
-            // if (!CarRecorderManager.isRTSPLiving()) {
-            isStartLive = false;
             startLive(mCurrentVideoId);
             GolukDebugUtils.e("", "YYYYYY===onLiveRecordFailed=====222222====");
             // }
