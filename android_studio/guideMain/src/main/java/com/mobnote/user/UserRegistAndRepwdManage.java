@@ -4,6 +4,8 @@ import org.json.JSONObject;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.internation.bean.CheckVcodeBean;
+import com.mobnote.golukmain.internation.login.InternationCheckVcodeRequest;
 import com.mobnote.golukmain.userinfohome.bean.UserRecomBean;
 import com.mobnote.user.bindphone.BindPhoneRequest;
 import com.mobnote.user.bindphone.bean.BindPhoneDataBean;
@@ -31,6 +33,9 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
     private static final int BIND_PHONE_UNKNOWN_EXCEPTION = 2;
     private static final int BIND_PHONE_VCODE_MISMATCH = 3;
     private static final int BIND_PHONE_VCODE_TIMEOUT = 4;
+
+    /** 用于二次验证 **/
+    public String mStep2Code = "";
 
 	public UserRegistAndRepwdManage(GolukApplication mApp) {
 		super();
@@ -96,9 +101,12 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
 		GolukDebugUtils.e("","registAndRepwd: " + jsonStr);
 
 		if (b) {
-			UserRegistRequest urr = new UserRegistRequest(IPageNotifyFn.PageType_Register,this);
-			urr.get(phone,password,vCode,zone);
-			return true;
+//			UserRegistRequest urr = new UserRegistRequest(IPageNotifyFn.PageType_Register,this);
+//			urr.get(phone,password,vCode,zone);
+//			return true;
+			//检查验证码
+			InternationCheckVcodeRequest checkVcode = new InternationCheckVcodeRequest(IPageNotifyFn.PageType_InternationalCheckvcode, this);
+			return checkVcode.get(phone, vCode, zone);
 		} else {
 			UserRepwdRequest urr = new UserRepwdRequest(IPageNotifyFn.PageType_ModifyPwd,this);
 			urr.get(phone,password,vCode,zone);
@@ -348,6 +356,27 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+		} else if (requestType == IPageNotifyFn.PageType_InternationalCheckvcode) {
+			CheckVcodeBean bean = (CheckVcodeBean) result;
+			if (null == bean) {
+				registAndRepwdStatusChange(9);
+				return;
+			}
+			int code = bean.code;
+			if (code == 0) {
+				if(null != bean.data) {
+					mStep2Code = bean.data.step2code;
+				}
+				registAndRepwdStatusChange(2);
+			} else if (code == 20010) {//错误
+				registAndRepwdStatusChange(6);
+			} else if (code == 21001) {//超时
+				registAndRepwdStatusChange(7);
+			} else if (code == 12010) {//超出限制
+				registAndRepwdStatusChange(10);
+			} else {
+				registAndRepwdStatusChange(9);
+			}
 		}
     }
 }

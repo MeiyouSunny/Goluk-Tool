@@ -257,11 +257,7 @@ public class BaidumapLiveActivity extends AbstractLiveActivity01 implements Baid
     @Override
     public void onMapLoaded() {
         GolukDebugUtils.e("", "jyf-------live----LiveActivity--onMapLoaded:");
-        // MainActivity.mMainHandler.sendEmptyMessage(99);
-        EventBus.getDefault().post(
-                new EventMapQuery(EventConfig.LIVE_MAP_QUERY));
     }
-
 
     @Override
     public void initMap(Bundle bundle) {

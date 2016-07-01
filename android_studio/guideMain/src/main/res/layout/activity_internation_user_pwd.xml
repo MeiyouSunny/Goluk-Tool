@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_backdrop"
+    android:orientation="vertical"
+    tools:context="com.mobnote.golukmain.internation.login.InternationUserPwdActivity">
+
+    <ImageButton
+        android:id="@+id/ib_internation_pwd_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/index_close_btn" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="55dp"
+        android:src="@drawable/phone_number" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:text="@string/str_regist_password_hint_text"
+        android:textColor="#ffffff"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/bg_rounded_rectangle"
+        android:gravity="center">
+
+        <EditText
+            android:id="@+id/et_internation_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            android:hint="@string/user_insert_pwd_hint"
+            android:maxLength="16"
+            android:paddingLeft="10dp"
+            android:password="true"
+            android:singleLine="true"
+            android:textColor="#7fffffff"
+            android:textColorHint="@color/user_hint_text_color"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_interantion_pwd_next"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="17.3dp"
+        android:background="@drawable/bg_rounded_rectangle"
+        android:gravity="center"
+        android:text="@string/user_regist_btn"
+        android:textColor="#7fffffff"
+        android:textSize="14sp" />
+
+</LinearLayout>

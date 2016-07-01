@@ -83,6 +83,9 @@
         <activity
             android:name="com.mobnote.golukmain.internation.login.InternationUserIdentifyActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.mobnote.golukmain.internation.login.InternationUserPwdActivity"
+            android:screenOrientation="portrait" />
         <!-- 顺序：我的主页、个人资料、编辑资料、编辑签名、编辑昵称 -->
         <activity
             android:name="com.mobnote.golukmain.UserPersonalInfoActivity"

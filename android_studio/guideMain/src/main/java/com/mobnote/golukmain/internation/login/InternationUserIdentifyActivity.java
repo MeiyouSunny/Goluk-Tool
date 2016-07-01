@@ -135,23 +135,25 @@ public class InternationUserIdentifyActivity extends BaseActivity implements OnC
 	protected void onResume() {
 		super.onResume();
 		mApp.setContext(mContext, "UserIdentify");
-		mPwdEditText.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				changeBtnColor();
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				
-			}
-			
-			@Override
-			public void afterTextChanged(Editable arg0) {
-				
-			}
-		});
+		if(!justDifferent) {
+			mPwdEditText.addTextChangedListener(new TextWatcher() {
+
+				@Override
+				public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+					changeBtnColor();
+				}
+
+				@Override
+				public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+
+				}
+
+				@Override
+				public void afterTextChanged(Editable arg0) {
+
+				}
+			});
+		}
 		mCodeEditText.addTextChangedListener(new TextWatcher() {
 			
 			@Override
@@ -243,15 +245,18 @@ public class InternationUserIdentifyActivity extends BaseActivity implements OnC
 			// 重新获取验证码
 			getUserIdentify();
 		}else if(R.id.user_identify_btn == view.getId()){
-			final String pwd = mPwdEditText.getText().toString();
-			final String code = mCodeEditText.getText().toString();
-			if (null != pwd && pwd.length() > 0) {
+			String pwd = "";
+			String code = mCodeEditText.getText().toString();
+			if(!justDifferent) {
+				pwd = mPwdEditText.getText().toString();
+				if ("".equals(pwd) && pwd.length() < 0) {
+					GolukUtils.showToast(this, this.getResources().getString(R.string.user_no_getidentify));
+					return ;
+				}
 				intentPassword = pwd;
-				toRegistAndRepwd(justDifferent, mUserPhone, MD5.hexdigest(pwd), code);
-			}else{
-				GolukUtils.showToast(this,this.getResources().getString(R.string.user_no_getidentify));
 			}
-		}
+			toRegistAndRepwd(justDifferent, mUserPhone, pwd, code);
+	}
 
 	}
 
@@ -454,10 +459,10 @@ public class InternationUserIdentifyActivity extends BaseActivity implements OnC
 	 */
 	@Override
 	public void registAndRepwdInterface() {
+		justCloseDialog(justDifferent);
 		switch (mApp.registStatus) {
 		// 注册/重置密码 中
 		case 1:
-			justCloseDialog(justDifferent);
 			// mBtnBack.setEnabled(false);
 			// mEditTextOne.setEnabled(false);
 			// mBtnCount.setEnabled(false);
@@ -465,18 +470,23 @@ public class InternationUserIdentifyActivity extends BaseActivity implements OnC
 			break;
 		// 注册/重置密码成功
 		case 2:
-			justCloseDialog(justDifferent);
 			if (justDifferent) {
-				GolukUtils.showToast(this, this.getResources().getString(R.string.user_regist_success));
+//				GolukUtils.showToast(this, this.getResources().getString(R.string.user_regist_success));
+				mApp.registStatus = 0;
+				Intent it = new Intent(mApp.getContext(), InternationUserPwdActivity.class);
+				it.putExtra("phone", mUserPhone);
+				it.putExtra("vcode", mCodeEditText.getText().toString());
+				it.putExtra("zone", mZone.substring(mZone.indexOf("+") + 1));
+				it.putExtra("from", intentRegistInter);
+				it.putExtra("step2code", mApp.mRegistAndRepwdManage.mStep2Code);
+				startActivity(it);
 			} else {
 				GolukUtils.showToast(this, this.getResources().getString(R.string.user_repwd_success));
+				registLogin();
 			}
-
-			registLogin();
 			break;
 		// 注册/重置失败
 		case 3:
-			justCloseDialog(justDifferent);
 			if (justDifferent) {
 				GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_regist_fail));
 			} else {
@@ -485,12 +495,10 @@ public class InternationUserIdentifyActivity extends BaseActivity implements OnC
 			break;
 		// code = 500
 		case 4:
-			justCloseDialog(justDifferent);
 			UserUtils.showDialog(this, this.getResources().getString(R.string.user_background_error));
 			break;
 		// code = 405
 		case 5:
-			justCloseDialog(justDifferent);
 			if (justDifferent) {
 				UserUtils.showDialog(this, this.getResources().getString(R.string.user_already_regist));
 			} else {
@@ -514,22 +522,18 @@ public class InternationUserIdentifyActivity extends BaseActivity implements OnC
 			break;
 		// code = 406
 		case 6:
-			justCloseDialog(justDifferent);
 			UserUtils.showDialog(this, this.getResources().getString(R.string.user_identify_right_hint));
 			break;
 		// code = 407
 		case 7:
-			justCloseDialog(justDifferent);
 			UserUtils.showDialog(this, this.getResources().getString(R.string.user_identify_outtime));
 			break;
 		// code = 480
 		case 8:
-			justCloseDialog(justDifferent);
 			UserUtils.showDialog(this, this.getResources().getString(R.string.user_getidentify_fail));
 			break;
 		// 超时
 		case 9:
-			justCloseDialog(justDifferent);
 			GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_netword_outtime));
 			break;
 		default:
@@ -705,20 +709,21 @@ public class InternationUserIdentifyActivity extends BaseActivity implements OnC
 	}
 	
 	private void changeBtnColor() {
-		String password = mPwdEditText.getText().toString();
+		String password = "";
 		String code = mCodeEditText.getText().toString();
-		if (!"".equals(password.trim()) && password.length()>5 && password.length()<16 && !"".equals(code.trim())) {
-			if (justDifferent) {
+		if (justDifferent) {
+			if (!"".equals(code.trim())) {
 				mBtnNext.setTextColor(Color.parseColor("#FFFFFF"));
 				mBtnNext.setEnabled(true);
 			} else {
-				mBtnNext.setTextColor(Color.parseColor("#000000"));
-				mBtnNext.setEnabled(true);
-			}
-		} else {
-			if (justDifferent) {
 				mBtnNext.setTextColor(Color.parseColor("#7fffffff"));
 				mBtnNext.setEnabled(false);
+			}
+		} else {
+			password = mPwdEditText.getText().toString();
+			if (!"".equals(password.trim()) && password.length() > 5 && password.length() < 16 && !"".equals(code.trim())) {
+				mBtnNext.setTextColor(Color.parseColor("#000000"));
+				mBtnNext.setEnabled(true);
 			} else {
 				mBtnNext.setTextColor(Color.parseColor("#33000000"));
 				mBtnNext.setEnabled(false);
