@@ -740,7 +740,7 @@
     <string name="str_live_upload_first_error">很抱歉，直播创建不成功，再试一次吧。</string>
     <string name="str_mylive_text">我的直播</string>
     <string name="str_live_someone"> 的直播</string>
-    <string name="str_live_cannot_get_coordinates">无法获取看直播人的经纬度</string>
+    <string name="str_live_cannot_get_coordinates">无法获取直播人的经纬度</string>
     <string name="str_live_cannot_get_location">无法获取我的位置信息</string>
     <string name="str_live_over">直播已经结束</string>
     <string name="str_live_over2">该用户直播己结束，谢谢观看</string>
@@ -1096,4 +1096,5 @@
     <string name="goluk_only_wifi">仅连接行车记录仪</string>
     <string name="disconnect_goluk_before_share">需断开记录仪Wi-Fi才能使用网络分享</string>
     <string name="str_regist_password_hint_text">输入密码</string>
+    <string name="interantion_ban_mainland_goluk">无法使用来自中国地区销售记录仪</string>
 </resources>

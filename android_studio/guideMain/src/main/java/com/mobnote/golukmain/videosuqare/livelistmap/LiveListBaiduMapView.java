@@ -1,4 +1,4 @@
-package com.mobnote.golukmain.videosuqare;
+package com.mobnote.golukmain.videosuqare.livelistmap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,18 +15,19 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
 import com.mobnote.golukmain.live.GetBaiduAddress;
-import com.mobnote.map.BaiduMapManage;
+import com.mobnote.golukmain.videosuqare.VideoCategoryActivity;
+import com.mobnote.map.BaiduMapTools;
 import com.mobnote.map.LngLat;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.location.GolukPosition;
-import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -35,7 +36,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 
 @SuppressLint("InflateParams")
-public class BaiduMapView implements ILocationFn {
+public class LiveListBaiduMapView implements ILiveListMapView {
 	private Context mContext = null;
 	private RelativeLayout mRootLayout = null;
 	private RelativeLayout indexMapLayout = null;
@@ -47,7 +48,7 @@ public class BaiduMapView implements ILocationFn {
 	public static final int mTiming = 1 * 60 * 1000;
 	/** 是否首次定位 */
 	private boolean isFirstLoc = true;
-	private BaiduMapManage mBaiduMapManage = null;
+	private BaiduMapTools mBaiduMapManage = null;
 
 	/** 我的位置按钮 */
 	private Button mMapLocationBtn = null;
@@ -60,17 +61,15 @@ public class BaiduMapView implements ILocationFn {
 	/** 首页handler用来接收消息,更新UI */
 	public Handler mBaiduHandler = null;
 
-	private GolukApplication mApp = null;
-
-	public BaiduMapView(Context context, GolukApplication app) {
+	public LiveListBaiduMapView(Context context, Bundle saveInstance) {
 		mContext = context;
-		mApp = app;
+
 		mRootLayout = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.baidu_map, null);
 
 		ma = (VideoCategoryActivity) mContext;
 		ma.mApp.addLocationListener("main", this);
 
-		initMap();
+		initMap(saveInstance);
 	}
 
 	public void onResume() {
@@ -92,7 +91,8 @@ public class BaiduMapView implements ILocationFn {
 	/**
 	 * 初始化地图
 	 */
-	private void initMap() {
+    @Override
+	public void initMap(Bundle saveInstance) {
 
 		indexMapLayout = (RelativeLayout) mRootLayout.findViewById(R.id.index_map_layout);
 
@@ -117,7 +117,7 @@ public class BaiduMapView implements ILocationFn {
 
 		// 获取map对象
 		mBaiduMap = mMapView.getMap();
-		mBaiduMapManage = new BaiduMapManage(mContext, mApp, mBaiduMap, "Main");
+		mBaiduMapManage = new BaiduMapTools(mContext, GolukApplication.getInstance(), mBaiduMap, "Main");
 
 		// 开启定位图层
 		mBaiduMap.setMyLocationEnabled(true);
@@ -127,7 +127,7 @@ public class BaiduMapView implements ILocationFn {
 			@Override
 			public void onMapLoaded() {
 				// 地图加载完成,请求大头针数据
-				GolukDebugUtils.e("", "jyf----VideoCategoryActivity----BaiduMapView--onMapLoaded ----11111");
+				GolukDebugUtils.e("", "jyf----VideoCategoryActivity----LiveListBaiduMapView--onMapLoaded ----11111");
 
 				ma.mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 						IPageNotifyFn.PageType_GetPinData, "");
@@ -142,17 +142,17 @@ public class BaiduMapView implements ILocationFn {
 				// 移动了地图,第一次不改变地图中心点位置
 				isFirstLoc = false;
 
-				GolukDebugUtils.e("", "jyf----VideoCategoryActivity----BaiduMapView--onMapStatusChangeStart ----: ");
+				GolukDebugUtils.e("", "jyf----VideoCategoryActivity----LiveListBaiduMapView--onMapStatusChangeStart ----: ");
 			}
 
 			@Override
 			public void onMapStatusChangeFinish(MapStatus arg0) {
-				GolukDebugUtils.e("", "jyf----VideoCategoryActivity----BaiduMapView--onMapStatusChangeFinish ----: ");
+				GolukDebugUtils.e("", "jyf----VideoCategoryActivity----LiveListBaiduMapView--onMapStatusChangeFinish ----: ");
 			}
 
 			@Override
 			public void onMapStatusChange(MapStatus arg0) {
-				GolukDebugUtils.e("", "jyf----VideoCategoryActivity----BaiduMapView--onMapStatusChange ----: ");
+				GolukDebugUtils.e("", "jyf----VideoCategoryActivity----LiveListBaiduMapView--onMapStatusChange ----: ");
 			}
 		});
 
@@ -214,7 +214,7 @@ public class BaiduMapView implements ILocationFn {
 	public void pointDataCallback(int success, Object obj) {
 		if (1 == success) {
 			String str = (String) obj;
-			GolukDebugUtils.e("", "jyf----VideoCategoryActivity----BaiduMapView--pointDataCallback ----obj: "
+			GolukDebugUtils.e("", "jyf----VideoCategoryActivity----LiveListBaiduMapView--pointDataCallback ----obj: "
 					+ (String) obj);
 			try {
 				JSONObject json = new JSONObject(str);
@@ -243,6 +243,7 @@ public class BaiduMapView implements ILocationFn {
 		return mRootLayout;
 	}
 
+    @Override
 	public void onDestroy() {
 		ma.mApp.removeLocationListener("main");
 		// TODO 先不释放，释放会引起界面退出卡死的问题
@@ -260,7 +261,18 @@ public class BaiduMapView implements ILocationFn {
 		}
 	}
 
-	protected void onPause() {
+    @Override
+    public void onLowMemory() {
+        //do nothing
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //do nothing
+    }
+
+    @Override
+	public void onPause() {
 		if (null != mMapView) {
 			mMapView.onPause();
 		}
@@ -271,6 +283,7 @@ public class BaiduMapView implements ILocationFn {
 	 * 
 	 * @param obj
 	 */
+    @Override
 	public void downloadBubbleImageCallBack(int success, Object obj) {
 		if (1 == success) {
 			// 更新在线视频图片

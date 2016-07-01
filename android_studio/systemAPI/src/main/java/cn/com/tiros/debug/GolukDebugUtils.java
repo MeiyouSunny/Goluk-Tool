@@ -5,8 +5,9 @@ import android.util.Log;
 import cn.com.tiros.api.BuildConfig;
 
 public class GolukDebugUtils {
-    private static final boolean DEBUG = BuildConfig.DEBUG;
+    private static final boolean DEBUG =BuildConfig.DEBUG;
     public static final String WIFICONNECT_LOG_TAG = "WifiConnection";
+    public static final String HOTSPOT_CONNECT_LOG_TAG = "HotspotConnection";
 
     private static long TIMESTAMP = 0;
 
@@ -49,10 +50,11 @@ public class GolukDebugUtils {
             long duration = 0;
             if (TIMESTAMP == 0) {
                 TIMESTAMP = System.currentTimeMillis();
-                Log.v(tag, "Start Count Time : " + String.valueOf(TIMESTAMP) + " MS\n" + msg);
+                Log.i(tag, "Start Count Time : " + String.valueOf(TIMESTAMP/ 1000.0) + " S\n" + msg);
             } else {
                 duration = System.currentTimeMillis() - TIMESTAMP;
-                Log.v(tag, "DURATION : " + String.valueOf(duration) + "MS\n" + msg);
+                TIMESTAMP = System.currentTimeMillis();
+                Log.i(tag, "DURATION : " + String.valueOf(duration/ 1000.0) + "S\n" + msg);
             }
         }
     }

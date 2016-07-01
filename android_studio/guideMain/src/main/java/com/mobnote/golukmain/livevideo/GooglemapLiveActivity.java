@@ -2,8 +2,6 @@ package com.mobnote.golukmain.livevideo;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.text.TextUtils;
 import android.widget.RelativeLayout;
 
@@ -40,10 +38,10 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
 	private GoogleMap mGoogleMap;
 
     private Marker mPublisherMarker;
-    private Marker mAudienceMarker;
+    private Marker mCurrUserMarker;
 
     private LatLng mPublisherLatLng;
-    private LatLng mAudienceLatLng;
+    private LatLng mCurrUserLatLng;
 
     private SimpleTarget mPublisherTarget = new SimpleTarget<Bitmap>(48,48) {
         @Override
@@ -65,7 +63,7 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
         }
     };
 
-    private SimpleTarget mAudienceTarget = new SimpleTarget<Bitmap>(48,48) {
+    private SimpleTarget mCurrUserTarget = new SimpleTarget<Bitmap>(48,48) {
         @Override
         public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
 
@@ -75,12 +73,12 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
             if(bitmap != null){
 
                 BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
-                MarkerOptions markerOptions = new MarkerOptions().position(mAudienceLatLng).icon(bitmapDescriptor);
-                mAudienceMarker = mGoogleMap.addMarker(markerOptions);
+                MarkerOptions markerOptions = new MarkerOptions().position(mCurrUserLatLng).icon(bitmapDescriptor);
+                mCurrUserMarker = mGoogleMap.addMarker(markerOptions);
             }else{
                 BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(mHeadImg[mHeadImg.length-1]);
-                MarkerOptions markerOptions = new MarkerOptions().position(mAudienceLatLng).icon(bitmapDescriptor);
-                mAudienceMarker = mGoogleMap.addMarker(markerOptions);
+                MarkerOptions markerOptions = new MarkerOptions().position(mCurrUserLatLng).icon(bitmapDescriptor);
+                mCurrUserMarker = mGoogleMap.addMarker(markerOptions);
             }
         }
     };
@@ -97,11 +95,7 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
         }
         GolukPosition location = JsonUtil.parseLocatoinJson(gpsJson);
         if(location != null){
-            if(isShareLive){
-                updatePublisherMarker(location.rawLat,location.rawLon);
-            }else{
-                updateAudienceMarker(location.rawLat,location.rawLon);
-            }
+            updateCurrUserMarker(location.rawLat,location.rawLon);
         }
 	}
 
@@ -120,7 +114,7 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
      */
     private void drawPublisherMarker(){
 
-        if (null == currentUserInfo) {
+        if (null == mPublisher) {
             GolukUtils.showToast(this, this.getString(R.string.str_live_cannot_get_coordinates));
             return;
         }
@@ -129,13 +123,13 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
         }
 
         // 定义Maker坐标点
-        mPublisherLatLng = new LatLng(Double.parseDouble(currentUserInfo.lat), Double.parseDouble(currentUserInfo.lon));
+        mPublisherLatLng = new LatLng(Double.parseDouble(mPublisher.lat), Double.parseDouble(mPublisher.lon));
 
         if(mPublisherMarker == null){
 
-            if(TextUtils.isEmpty(currentUserInfo.customavatar)){
+            if(TextUtils.isEmpty(mPublisher.customavatar)){
                 int utype = 1;
-                utype = Integer.valueOf(currentUserInfo.head);
+                utype = Integer.valueOf(mPublisher.head);
                 if(utype <= 0){// 防止数组越界，且不能为第0个
                     utype = 1;
                 }
@@ -152,7 +146,7 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
                 mPublisherMarker = mGoogleMap.addMarker(markerOptions);
             }else{
                 Glide.with( this ) // could be an issue!
-                        .load(currentUserInfo.customavatar)
+                        .load(mPublisher.customavatar)
                         .asBitmap()
                         .transform(new GlideCircleTransform(this))
                         .into(mPublisherTarget);
@@ -165,12 +159,12 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
     }
 
     @Override
-    public void updateAudienceMarker(double lat , double lon){
-        if(mAudienceMarker == null){
+    public void updateCurrUserMarker(double lat , double lon){
+        if(mCurrUserMarker == null){
             drawAudienceMarker(lat,lon);
         }else{
             LatLng point = new LatLng(lat,lon);
-            mAudienceMarker.setPosition(point);
+            mCurrUserMarker.setPosition(point);
         }
     }
 
@@ -187,14 +181,14 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
             return;
         }
 
-        mAudienceLatLng = new LatLng(lat, lon);
+        mCurrUserLatLng = new LatLng(lat, lon);
 
         if (GolukApplication.getInstance().isUserLoginSucess) {
             if (null == myInfo) {
                 myInfo = mApp.getMyInfo();
             }
 
-            if(mAudienceMarker == null){
+            if(mCurrUserMarker == null){
 
                 if(TextUtils.isEmpty(myInfo.customavatar)){
                     int utype = 1;
@@ -210,30 +204,30 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
                     // 构建Marker图标
                     BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(head);
                     // 构建MarkerOption，用于在地图上添加Marker
-                    MarkerOptions markerOptions = new MarkerOptions().position(mAudienceLatLng).icon(bitmap);
+                    MarkerOptions markerOptions = new MarkerOptions().position(mCurrUserLatLng).icon(bitmap);
                     // 在地图上添加Marker，并显示
-                    mAudienceMarker = mGoogleMap.addMarker(markerOptions);
+                    mCurrUserMarker = mGoogleMap.addMarker(markerOptions);
                 }else{
                     Glide.with( this ) // could be an issue!
                             .load(myInfo.customavatar)
                             .asBitmap()
                             .transform(new GlideCircleTransform(this))
-                            .into(mAudienceTarget);
+                            .into(mCurrUserTarget);
                 }
 
 
             }else{
-                mAudienceMarker.setPosition(mAudienceLatLng);
+                mCurrUserMarker.setPosition(mCurrUserLatLng);
             }
         } else {
-            if(mAudienceMarker == null){
+            if(mCurrUserMarker == null){
                 BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.ic_my_location);
-                mAudienceMarker = mGoogleMap.addMarker(
+                mCurrUserMarker = mGoogleMap.addMarker(
                         new MarkerOptions()
-                                .position(mAudienceLatLng)
+                                .position(mCurrUserLatLng)
                                 .icon(bitmap));
             }else{
-                mAudienceMarker.setPosition(mAudienceLatLng);
+                mCurrUserMarker.setPosition(mCurrUserLatLng);
             }
         }
     }
@@ -296,16 +290,16 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
 	public void onMapReady(GoogleMap map) {
 		// TODO Auto-generated method stub
         mGoogleMap = map;
-        if(currentUserInfo != null){
+        mGoogleMap.setOnMapLoadedCallback(this);
+        mGoogleMap.setMyLocationEnabled(false);
+        if(!isShareLive && mPublisher != null){
+            drawPublisherMarker();
             CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(Double.valueOf(currentUserInfo.lat), Double.valueOf(currentUserInfo.lon)))      // Sets the center of the map to Mountain View
+                    .target(new LatLng(Double.valueOf(mPublisher.lat), Double.valueOf(mPublisher.lon)))      // Sets the center of the map to Mountain View
                     .zoom(9)                   // Sets the zoom
                     .build();
             mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
-        mGoogleMap.setOnMapLoadedCallback(this);
-        mGoogleMap.setMyLocationEnabled(false);
-        drawPublisherMarker();
 	}
 
 	@Override

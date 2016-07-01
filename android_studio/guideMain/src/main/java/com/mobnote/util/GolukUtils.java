@@ -75,6 +75,8 @@ public class GolukUtils {
 
 	/** 1 表示国际版 ，0 表示国内版 （主要与服务器交互） */
 	public static final String GOLUK_APP_VERSION = "1";
+	public static final int GOLUK_APP_VERSION_OVERSEA = 1;
+	public static final int GOLUK_APP_VERSION_MAINLAND = 0;
 
 	/** Goluk绑定连接出现问题URL */
 	public static final String URL_BIND_CONN_PROBLEM = "https://surl.goluk.cn/faq/link.html";

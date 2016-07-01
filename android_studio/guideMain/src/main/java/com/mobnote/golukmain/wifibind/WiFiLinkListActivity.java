@@ -1,5 +1,26 @@
 package com.mobnote.golukmain.wifibind;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Paint;
+import android.graphics.drawable.AnimationDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
+import android.os.Bundle;
+import android.os.Message;
+import android.text.Html;
+import android.text.TextUtils;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventBinding;
 import com.mobnote.eventbus.EventConfig;
@@ -23,24 +44,10 @@ import com.mobnote.wifibind.WifiConnCallBack;
 import com.mobnote.wifibind.WifiConnectManager;
 import com.mobnote.wifibind.WifiRsBean;
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Paint;
-import android.graphics.drawable.AnimationDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
-import android.os.Bundle;
-import android.text.Html;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
@@ -48,7 +55,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Wifi扫描列表
  */
-public class WiFiLinkListActivity extends BaseActivity implements OnClickListener, WifiConnCallBack, ForbidBack {
+public class WiFiLinkListActivity extends BaseActivity implements OnClickListener, WifiConnCallBack, ForbidBack, IPCManagerFn {
 
     private static final String TAG = "WiFiLinkList";
     public static final String CONNECT_IPC_IP = "192.168.62.1";
@@ -438,9 +445,18 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         this.dimissLoadingDialog();
         // 标识已连接ipc热点,可以点击下一步
 //        this.nextCan();
-        mCurrentState = STATE_SUCCESS;
 //        this.setStateSwitch();
-        doConnect();
+        if (!mApp.isMainland()) {
+            mApp.setBinding(true);
+            mCurrentState = STATE_FAILED;
+            if (null != mApp.getIPCControlManager()) {
+                mApp.getIPCControlManager().addIPCManagerListener("carversion", this);
+            }
+            mApp.getIPCControlManager().getVersion();
+        } else {
+            mCurrentState = STATE_SUCCESS;
+            doConnect();
+        }
     }
 
     @Override
@@ -651,6 +667,45 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     public void forbidBackKey(int backKey) {
         if (1 == backKey) {
             connFailed();
+        }
+    }
+
+    @Override
+    public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+        if (IPC_VDCP_Msg_GetVersion == msg) {
+            if (param1 == RESULE_SUCESS) {
+                String str = (String) param2;
+                if (TextUtils.isEmpty(str)) {
+                    return;
+                }
+                try {
+                    JSONObject json = new JSONObject(str);
+                    String version = json.optString("version");
+                    int regionType = GolukUtils.judgeIPCDistrict(version);
+                    if (regionType == GolukUtils.GOLUK_APP_VERSION_MAINLAND && !mApp.isMainland()) {
+//                        connFailed();
+                        mApp.isIpcConnSuccess = false;
+                        mCurrentState = STATE_FAILED;
+                        mBaseHandler.sendEmptyMessage(MSG_H_REGION);
+                    } else {
+                        mCurrentState = STATE_SUCCESS;
+                        doConnect();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
+    private final int MSG_H_REGION = 1;
+
+    @Override
+    protected void hMessage(Message msg) {
+        if (MSG_H_REGION == msg.what) {
+            this.dimissLoadingDialog();
+            GolukUtils.showToast(WiFiLinkListActivity.this, getResources().getString(R.string.interantion_ban_mainland_goluk));
         }
     }
 
