@@ -201,7 +201,9 @@ public class LiveListGoogleMapView implements ILiveListMapView ,OnMapReadyCallba
                 JSONObject json = new JSONObject(str);
                 // 请求成功
                 JSONArray list = json.getJSONArray("info");
-                mGoogleMapTools.AddMapPoint(list);
+                if(mGoogleMapTools != null){
+                    mGoogleMapTools.AddMapPoint(list);
+                }
             } catch (Exception e) {
 
             }
@@ -227,7 +229,9 @@ public class LiveListGoogleMapView implements ILiveListMapView ,OnMapReadyCallba
             String imgJson = (String) obj;
             // String imgJson = "{\"path\":\"fs1:/Cache/test11.png\"}";
             GolukDebugUtils.e("", "下载气泡图片完成downloadBubbleImageCallBack:" + imgJson);
-            mGoogleMapTools.bubbleImageDownload(imgJson);
+            if(mGoogleMapTools != null){
+                mGoogleMapTools.bubbleImageDownload(imgJson);
+            }
         } else {
             GolukUtils.showToast(mContext, mContext.getString(R.string.str_bubble_image_download_fail));
         }

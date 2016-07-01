@@ -32,7 +32,7 @@ import com.mobnote.util.JsonUtil;
 import cn.com.mobnote.module.location.GolukPosition;
 import de.greenrobot.event.EventBus;
 
-public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnMapReadyCallback,OnMapLoadedCallback{
+public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnMapReadyCallback{
 
 	private MapView mMapView;
 	private GoogleMap mGoogleMap;
@@ -290,7 +290,6 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
 	public void onMapReady(GoogleMap map) {
 		// TODO Auto-generated method stub
         mGoogleMap = map;
-        mGoogleMap.setOnMapLoadedCallback(this);
         mGoogleMap.setMyLocationEnabled(false);
         if(!isShareLive && mPublisher != null){
             drawPublisherMarker();
@@ -300,12 +299,6 @@ public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnM
                     .build();
             mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
-	}
-
-	@Override
-	public void onMapLoaded() {
-		// TODO Auto-generated method stub
-        EventBus.getDefault().post(new EventMapQuery(EventConfig.LIVE_MAP_QUERY));
 	}
 
 }
