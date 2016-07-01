@@ -1155,7 +1155,7 @@ public class GolukUtils {
 
 	/**
 	 * 读取assets下文件
-	 * 
+	 *
 	 * @param context
 	 * @param fileName
 	 * @return
@@ -1190,7 +1190,7 @@ public class GolukUtils {
 
 	/**
 	 * 容量大小转字符串
-	 * 
+	 *
 	 * @param size
 	 *            容量大小
 	 * @return
@@ -1306,15 +1306,20 @@ public class GolukUtils {
     /**
      * @return -1: error happen, 0: for mainland, 1: for oversea, others TBD
      */
-    public static int judgeIPCDistrict(String ipcVersion) {
+    public static int judgeIPCDistrict(String model ,String ipcVersion) {
+        if(null == model || model.length() == 0) {
+            return -1;
+        }
         if(null == ipcVersion || ipcVersion.length() == 0) {
             return -1;
         }
 
-        String lowerCase = ipcVersion.toLowerCase();
-        if(ipcVersion.startsWith("g")) {
+        model = model.toLowerCase();
+        if(model.startsWith("g") || model.equals("t1s")){
             return 1;
         }
+
+        String lowerCase = ipcVersion.toLowerCase();
         Pattern pattern = Pattern.compile("t[0-9]*u.*");
         Matcher matcher = pattern.matcher(lowerCase);
         if(matcher.matches()) {

@@ -683,7 +683,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                 try {
                     JSONObject json = new JSONObject(str);
                     String version = json.optString("version");
-                    int regionType = GolukUtils.judgeIPCDistrict(version);
+                    String model = json.optString("model");
+                    int regionType = GolukUtils.judgeIPCDistrict(model,version);
                     if (regionType == GolukUtils.GOLUK_APP_VERSION_MAINLAND && !mApp.isMainland()) {
 //                        connFailed();
                         mApp.isIpcConnSuccess = false;
@@ -710,6 +711,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             this.dimissLoadingDialog();
             mApp.getIPCControlManager().removeIPCManagerListener("carversion");
             GolukUtils.showToast(WiFiLinkListActivity.this, getResources().getString(R.string.interantion_ban_mainland_goluk));
+            finish();
         }
     }
 
