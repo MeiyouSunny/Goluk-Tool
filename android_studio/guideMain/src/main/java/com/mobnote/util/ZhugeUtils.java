@@ -211,16 +211,23 @@ public class ZhugeUtils {
         }
     }
 
+    /**
+     * 安卓热点链接不成功页面访问
+     * @param context
+     * @param type
+     * @param msg
+     */
     public static void eventHotspotCreatFailed(Context context, String type, String msg) {
         try {
             JSONObject json = new JSONObject();
-            json.put(context.getString(R.string.str_zhuge_ipc_hotspot_error), msg);
-            json.put(context.getString(R.string.str_zhuge_ipc_hotspot_connect_type), type);
-            json.put(context.getString(R.string.str_zhuge_user_type), getIpcModle(context));
-            json.put(context.getString(R.string.str_zhuge_share_video_network), getNetworkType(context));
-            json.put(context.getString(R.string.str_zhuge_after_effect_export_fail_manufacturer), android.os.Build.MANUFACTURER);
-            json.put(context.getString(R.string.str_zhuge_after_effect_export_fail_device), android.os.Build.MODEL);
+            json.put(context.getString(R.string.str_zhuge_wifi_connect_fail_ipc_type), getIpcModle(context));
             json.put(context.getString(R.string.str_zhuge_after_effect_export_fail_os_version), android.os.Build.VERSION.RELEASE);
+            json.put(context.getString(R.string.str_zhuge_ipc_hotspot_connect_type), type);
+            json.put(context.getString(R.string.str_zhuge_after_effect_export_fail_manufacturer), android.os.Build.MANUFACTURER);
+            json.put(context.getString(R.string.str_zhuge_wifi_connect_fail_reason), msg);
+            json.put(context.getString(R.string.str_zhuge_after_effect_export_fail_device), android.os.Build.MODEL);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_wifi_connect_fail_event), json);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -342,7 +349,7 @@ public class ZhugeUtils {
      * @param action       参加活动
      */
     public static void eventShareVideo(Context context, String videoType, String videoQuality,
-                                       int videoLength, String desc, int channel, String action) {
+                                       int videoLength, String desc, int channel, String action, String state) {
         float duration = ((float) videoLength) / 1000;
         String durationStr = "unsupported length";
         if (duration >= 10f && duration < 14f) {
@@ -372,6 +379,7 @@ public class ZhugeUtils {
             }
             json.put(context.getString(R.string.str_zhuge_share_video_channel), getSharePlatform(context, channel));
             json.put(context.getString(R.string.str_zhuge_share_video_action), getAction(context, action));
+            json.put(context.getString(R.string.str_zhuge_share_video_state), state);
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_share_video_event), json);
         } catch (Exception e) {

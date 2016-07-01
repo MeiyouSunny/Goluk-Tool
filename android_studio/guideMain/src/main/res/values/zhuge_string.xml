@@ -52,12 +52,6 @@
 <!-- ################### IPC页面访问 ###################### -->
     <!--事件-->
     <string name="str_zhuge_ipc_event">IPC页面访问</string>
-    <string name="str_zhuge_ipc_hotspot_error">热点创建失败</string>
-    <string name="str_zhuge_ipc_hotspot_error_timeout">手机创建热点超时</string>
-    <string name="str_zhuge_ipc_hotspot_error_ipc_connect">IPC连接手机失败</string>
-    <string name="str_zhuge_ipc_hotspot_connect_type">连接类型</string>
-    <string name="str_zhuge_ipc_hotspot_connect_type_manual">手动创建</string>
-    <string name="str_zhuge_ipc_hotspot_connect_type_auto">自动创建</string>
 
 <!-- ################### 相册竖屏播放页面访问 ###################### -->
     <!--事件-->
@@ -210,5 +204,19 @@
     <string name="str_zhuge_add_chunk_status">添加状态</string>
     <string name="str_zhuge_chunk_cut_video_type">裁剪类型</string>
     <string name="str_zhuge_chunk_cut_video_tag">裁剪视频</string>
+
+<!-- ################### 用户统计 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_wifi_connect_fail_event">安卓热点链接不成功页面访问</string>
+    <!-- 属性 -->
+    <string name="str_zhuge_wifi_connect_fail_ipc_type">记录仪型号</string>
+    <string name="str_zhuge_ipc_hotspot_connect_type">连接类型</string>
+    <string name="str_zhuge_wifi_connect_fail_reason">不成功的原因</string>
+    <!-- 参数 -->
+    <string name="str_zhuge_ipc_hotspot_error_timeout">手机创建热点超时</string>
+    <string name="str_zhuge_ipc_hotspot_error_ipc_connect">IPC连接手机失败</string>
+    <string name="str_zhuge_ipc_hotspot_connect_type_manual">手动创建</string>
+    <string name="str_zhuge_ipc_hotspot_connect_type_auto">自动创建</string>
+
 
 </resources>

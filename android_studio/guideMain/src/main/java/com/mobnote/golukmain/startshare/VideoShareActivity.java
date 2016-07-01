@@ -151,6 +151,8 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     Bitmap mVidThumbnail;
     Bitmap mVidBlurBitmap;
 
+    private String mActivityname = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -624,18 +626,15 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
         String channelid = "";
         String activityid = "";
-        String activityname = "";
 
         if (mSelectedPromotionItem != null) {
             channelid = mSelectedPromotionItem.channelid;
             activityid = mSelectedPromotionItem.activityid;
-            activityname = mSelectedPromotionItem.activitytitle;
+            mActivityname = mSelectedPromotionItem.activitytitle;
         }
         GetShareAddressRequest request = new GetShareAddressRequest(IPageNotifyFn.PageType_Share, this);
         request.get(t_vid, t_type, desc, selectTypeJson, isSeque, videoCreateTime, t_signTime, channelid, activityid,
-                activityname, t_location, videoFrom);
-        ZhugeUtils.eventShareVideo(this, mSelectedShareType + "", mVideoQuality, mVideoDuration, mShareDiscrible, mCurrSelectedSharePlatform,
-                activityname);
+                mActivityname, t_location, videoFrom);
     }
     private void exit() {
         if (isExiting) {
@@ -732,11 +731,16 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
                         return;
                     }
                 }
+                String shareState = "";
                 if (shareDataFull != null && shareDataFull.success) {
+                    shareState = this.getString(R.string.str_zhuge_share_video_state_success);
                     videoShareCallBack(shareDataFull.data);
                 } else {
+                    shareState = shareDataFull.msg;
                     GolukUtils.showToast(this, this.getString(R.string.str_get_share_address_fail));
                 }
+                ZhugeUtils.eventShareVideo(this, mSelectedShareType + "", mVideoQuality, mVideoDuration, mShareDiscrible, mCurrSelectedSharePlatform,
+                        mActivityname, shareState);
                 break;
         }
     }
