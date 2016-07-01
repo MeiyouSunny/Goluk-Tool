@@ -5,7 +5,7 @@ import android.util.Log;
 import cn.com.tiros.api.BuildConfig;
 
 public class GolukDebugUtils {
-    private static final boolean DEBUG = true;//BuildConfig.DEBUG;
+    private static final boolean DEBUG =BuildConfig.DEBUG;
     public static final String WIFICONNECT_LOG_TAG = "WifiConnection";
     public static final String HOTSPOT_CONNECT_LOG_TAG = "HotspotConnection";
 
