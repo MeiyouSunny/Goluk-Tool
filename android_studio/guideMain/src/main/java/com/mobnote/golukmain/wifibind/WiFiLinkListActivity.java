@@ -130,6 +130,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
      * 用户要绑定的设备类型
      */
     private String mIPcType = "";
+    private boolean mNeverReceiveMessage;
 //    private String mIpcRealtype = null;
 
     @Override
@@ -452,6 +453,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             if (null != mApp.getIPCControlManager()) {
                 mApp.getIPCControlManager().addIPCManagerListener("carversion", this);
             }
+            mNeverReceiveMessage = false;
             mApp.getIPCControlManager().getVersion();
         } else {
             mCurrentState = STATE_SUCCESS;
@@ -672,7 +674,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
     @Override
     public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-        if (IPC_VDCP_Msg_GetVersion == msg) {
+        if (IPC_VDCP_Msg_GetVersion == msg && !mNeverReceiveMessage) {
             if (param1 == RESULE_SUCESS) {
                 String str = (String) param2;
                 if (TextUtils.isEmpty(str)) {
@@ -689,6 +691,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                         mBaseHandler.sendEmptyMessage(MSG_H_REGION);
                     } else {
                         mCurrentState = STATE_SUCCESS;
+                        mNeverReceiveMessage = true;
                         doConnect();
                     }
                 } catch (JSONException e) {
@@ -705,6 +708,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     protected void hMessage(Message msg) {
         if (MSG_H_REGION == msg.what) {
             this.dimissLoadingDialog();
+            mApp.getIPCControlManager().removeIPCManagerListener("carversion");
             GolukUtils.showToast(WiFiLinkListActivity.this, getResources().getString(R.string.interantion_ban_mainland_goluk));
         }
     }
