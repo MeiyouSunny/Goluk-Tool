@@ -11,6 +11,7 @@ public class WiFiInfo {
     public static String IPC_SSID;
     public static String IPC_PWD;
     public static String IPC_MAC;
+    public static String IPC_MODEL;
 
     /**
      * 手机热点的信息 (创建手机Wifi热点使用)

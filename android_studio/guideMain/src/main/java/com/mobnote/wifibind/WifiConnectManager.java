@@ -476,6 +476,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
                     config.put("ph_pass", beans.getPh_pass());
                     config.put("ipc_ip", beans.getIpc_ip());
                     config.put("ipc_pass", beans.getIpc_pass());
+                    config.put("ipc_model",beans.getIpc_model());
                     config.toString();
                     try {
                         wifiSupport.writePassFile(WIFICONFIG, config.toString());

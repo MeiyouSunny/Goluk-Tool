@@ -84,6 +84,7 @@ import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.videosuqare.RingView;
+import com.mobnote.golukmain.wifibind.WiFiInfo;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
 import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
@@ -591,7 +592,16 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 break;
             case WIFI_STATE_SUCCESS:
                 // GolukApplication.getInstance().stopDownloadList();
-                fqzb.setVisibility(View.VISIBLE);
+                // 国际版T1设备隐藏直播
+                if (!mApp.isMainland() && GolukUtils.isIPCTypeT1(WiFiInfo.IPC_MODEL)) {
+                    fqzb.setVisibility(View.GONE);
+                } else {
+                    fqzb.setVisibility(View.VISIBLE);
+                }
+
+
+
+
                 startPlayVideo();
                 break;
             default:

@@ -473,6 +473,7 @@ public class WifiConnectManagerSupport {
             rs.setPh_ssid(config.getString("ph_ssid"));
             rs.setPh_pass(config.getString("ph_pass"));
             rs.setIpc_pass(config.getString("ipc_pass"));
+            rs.setIpc_model(config.getString("ipc_model"));
             return rs;
         } catch (Exception e) {
             e.printStackTrace();
