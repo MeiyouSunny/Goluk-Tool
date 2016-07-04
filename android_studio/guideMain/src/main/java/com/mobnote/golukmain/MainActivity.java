@@ -1138,7 +1138,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         historyBean.mobile_ssid = mCurrentConnBean.getPh_ssid();
         historyBean.mobile_pwd = mCurrentConnBean.getPh_pass();
 
-        WifiBindDataCenter.getInstance().saveBindData(historyBean);
+        `.saveBindData(historyBean);
         mCurrentConnBean = null;
     }
 
