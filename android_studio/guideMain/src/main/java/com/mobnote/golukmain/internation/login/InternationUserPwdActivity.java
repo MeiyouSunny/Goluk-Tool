@@ -120,7 +120,7 @@ public class InternationUserPwdActivity extends Activity implements View.OnClick
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String password = mPwdEditText.getText().toString();
-                if (!"".equals(password.trim())) {
+                if (!"".equals(password.trim()) && password.length() >= 6) {
                     mNextBtn.setTextColor(Color.parseColor("#FFFFFF"));
                     mNextBtn.setEnabled(true);
                 } else {
@@ -148,10 +148,10 @@ public class InternationUserPwdActivity extends Activity implements View.OnClick
 
     private void clickToRegist() {
         final String pwd = mPwdEditText.getText().toString();
-        if (null != pwd && pwd.length() > 0) {
-            if (!UserUtils.isNetDeviceAvailable(this)) {
-                GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
-            } else {
+        if (!UserUtils.isNetDeviceAvailable(this)) {
+            GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
+        } else {
+            if (null != pwd && pwd.length() >= 6 && pwd.length() <= 16) {
                 InternationRegistRequest request = new InternationRegistRequest(IPageNotifyFn.PageType_InternationalRegister, this);
                 boolean b = request.get(mPhone, MD5.hexdigest(pwd), mVcode, mZone, mStep2code);
                 if (b) {
@@ -162,8 +162,10 @@ public class InternationUserPwdActivity extends Activity implements View.OnClick
                     GolukUtils
                             .showToast(this, this.getResources().getString(R.string.user_regist_fail));
                 }
+            } else {
+                UserUtils.showDialog(this,
+                        this.getResources().getString(R.string.user_login_password_show_error));
             }
-
         }
     }
 
