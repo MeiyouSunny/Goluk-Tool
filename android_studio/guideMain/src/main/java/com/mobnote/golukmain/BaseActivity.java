@@ -171,14 +171,14 @@ public class BaseActivity extends FragmentActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (!mBaseApp.isMainland()) {
-			if(FacebookSdk.isInitialized() == false){
-				return;
-			}
-			if (requestCode == CallbackManagerImpl.RequestCodeOffset.Share.toRequestCode()) {
-				FacebookShareHelper.getInstance().mCallbackManager.onActivityResult(requestCode, resultCode, data);
-			}
+
+		if(FacebookSdk.isInitialized() == false){
+			return;
 		}
+		if (requestCode == CallbackManagerImpl.RequestCodeOffset.Share.toRequestCode()) {
+			FacebookShareHelper.getInstance().mCallbackManager.onActivityResult(requestCode, resultCode, data);
+		}
+
 	}
 
 }
