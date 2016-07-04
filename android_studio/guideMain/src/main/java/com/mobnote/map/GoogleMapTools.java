@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
@@ -161,7 +163,7 @@ public class GoogleMapTools implements IMapTools{
 					Marker mk = (Marker) (mMap.addMarker(markerOptions));
 
 					mMarkerData.put(mk, data);
-					mMap.setOnMarkerClickListener(new MyOnMarkerClickListener());
+					mMap.setOnMarkerClickListener(new MyOnMarkerClickListener(utype));
 					GolukDebugUtils.e("", "jyf------AddMapPoint----array[2]: ");
 				}
 			} catch (JSONException e) {
@@ -193,12 +195,10 @@ public class GoogleMapTools implements IMapTools{
 				MarkerOptions markerOptions = new MarkerOptions().position(point).icon(bitmap);
 				// 在地图上添加Marker，并显示
 				Marker mk = (Marker) (mMap.addMarker(markerOptions));
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("utype", utype);
                 //mk.setExtraInfo(bundle);
 				mMarkerData.put(mk, data);
 
-				mMap.setOnMarkerClickListener(new MyOnMarkerClickListener());
+				mMap.setOnMarkerClickListener(new MyOnMarkerClickListener(utype));
 			}
 		} catch (Exception e) {
 		}
@@ -286,16 +286,16 @@ public class GoogleMapTools implements IMapTools{
 		nameView.setText(nickName);
 		speedView.setText(speed);
 
-		mBubbleView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				GolukDebugUtils.e("", "jyf-----click------1111");
-				if (mPageSource == "Main") {
-					GolukDebugUtils.e("", "jyf-----click------2222");
-					lookOtherLive();
-				}
-			}
-		});
+//		mBubbleView.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View arg0) {
+//				GolukDebugUtils.e("", "jyf-----mBubbleViewclick------1111");
+//				if (mPageSource == "Main") {
+//					GolukDebugUtils.e("", "jyf-----mBubbleViewclick------2222");
+//					lookOtherLive();
+//				}
+//			}
+//		});
 
 		// 当前全屏,改成半屏
 		DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
@@ -315,7 +315,17 @@ public class GoogleMapTools implements IMapTools{
 				return mBubbleView;
 			}
 		};
+
 		mMap.setInfoWindowAdapter(mInfoWindow);
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                if (mPageSource == "Main") {
+                    GolukDebugUtils.e("", "jyf-----mBubbleViewclick------2222");
+                    lookOtherLive();
+                }
+            }
+        });
 	}
 
 	private void lookOtherLive() {
@@ -386,63 +396,66 @@ public class GoogleMapTools implements IMapTools{
 
 	class MyOnMarkerClickListener implements OnMarkerClickListener {
 
+        private int utype;
+        public MyOnMarkerClickListener(int type){
+            this.utype = type;
+        }
 		@Override
 		public boolean onMarkerClick(Marker marker) {
 
-//			JSONObject data = (JSONObject) mMarkerData.get(marker);
-//			try {
-//				if (null != mCurrentMarker) {
-//					// 原来的大头针 换小图标
-//					int utype = (Integer) mCurrentMarker.getExtraInfo().get("utype");
-//					int head = mHeadImg[utype];
-//					BitmapDescriptor sbitmap = BitmapDescriptorFactory.fromResource(head);
-//					mCurrentMarker.setIcon(sbitmap);
-//					mCurrentMarker.setZIndex(1);
-//				}
-//				marker.setZIndex(999);
-//				mCurrentMarker = marker;
-//				// 构建Marker大图标
-//				int utype = (Integer) marker.getExtraInfo().get("utype");
-//				int head = mBigHeadImg[utype];
-//				BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(head);
-//				marker.setIcon(bitmap);
-//
-//				String picUrl = data.getString("picurl");
-//				String aid = data.getString("aid");
-//				String nikeName = data.getString("nickname");
-//				String speed = data.getString("speed");
-//				String lon = data.getString("lon");
-//				String lat = data.getString("lat");
-//				String open = data.getString("open");
-//				String zan = data.getString("zan");
-//				String persons = data.getString("persons");
-//
-//				GolukDebugUtils.e("", "jyf-----click------AAAAA:" + data);
-//
-//				// 解析获取用户信息
-//				mCurrentUserInfo = JsonUtil.parseSingleUserInfoJson(data);
-//
-//				// 改变地图中心点,让气泡框显示到屏幕中间
-//				DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
-//				float density = dm.density;
-//				int offset = (int) (75 * density);
-//				LatLng ll = ConvertLonLat(Double.parseDouble(lat), Double.parseDouble(lon));
-//				Point pt = mMap.getProjection().toScreenLocation(ll);
-//				pt.y = pt.y - offset;
-//				LatLng lg = mMap.getProjection().fromScreenLocation(pt);
+			JSONObject data = (JSONObject) mMarkerData.get(marker);
+			try {
+				if (null != mCurrentMarker) {
+					// 原来的大头针 换小图标
+					int head = mHeadImg[utype];
+					BitmapDescriptor sbitmap = BitmapDescriptorFactory.fromResource(head);
+					mCurrentMarker.setIcon(sbitmap);
+				}
+				mCurrentMarker = marker;
+				// 构建Marker大图标
+				int head = mBigHeadImg[utype];
+				BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(head);
+				marker.setIcon(bitmap);
+
+				String picUrl = data.getString("picurl");
+				String aid = data.getString("aid");
+				String nikeName = data.getString("nickname");
+				String speed = data.getString("speed");
+				String lon = data.getString("lon");
+				String lat = data.getString("lat");
+				String open = data.getString("open");
+				String zan = data.getString("zan");
+				String persons = data.getString("persons");
+
+				GolukDebugUtils.e("", "jyf-----click------AAAAA:" + data);
+
+				// 解析获取用户信息
+				mCurrentUserInfo = JsonUtil.parseSingleUserInfoJson(data);
+
+				// 改变地图中心点,让气泡框显示到屏幕中间
+				DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
+				float density = dm.density;
+				int offset = (int) (75 * density);
+				LatLng ll = ConvertLonLat(Double.parseDouble(lat), Double.parseDouble(lon));
+				Point pt = mMap.getProjection().toScreenLocation(ll);
+				pt.y = pt.y - offset;
+				LatLng lg = mMap.getProjection().fromScreenLocation(pt);
+                if(mMap != null){
+                    mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(LngLat.lat, LngLat.lng)));
+                }
 //				MapStatus status = new MapStatus.Builder().target(lg).build();
 //				MapStatusUpdate statusUpdate = MapStatusUpdateFactory.newMapStatus(status);
 //				// 改变地图中心点
 //				mMap.setMapStatus(statusUpdate);
-//				GolukDebugUtils.e("", "下载气泡图片---onMarkerClick---" + picUrl);
-//				downloadBubbleImg(picUrl, aid);
-//				createBubbleInfo(nikeName, persons, lon, lat, open);
-//			} catch (JSONException e) {
-//				e.printStackTrace();
-//			}
-//
-//			manageHandler.removeMessages(1);
-//			manageHandler.sendEmptyMessageDelayed(1, 10000);
+				GolukDebugUtils.e("", "下载气泡图片---onMarkerClick---" + picUrl);
+				downloadBubbleImg(picUrl, aid);
+				createBubbleInfo(nikeName, persons, lon, lat, open);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+			manageHandler.removeMessages(1);
+			manageHandler.sendEmptyMessageDelayed(1, 10000);
 			return false;
 		}
 	}

@@ -72,6 +72,7 @@ import com.rd.car.player.RtmpPlayerView;
 
 import de.greenrobot.event.EventBus;
 
+@Deprecated
 public abstract class AbstractLiveActivity extends BaseActivity implements OnClickListener,
 		RtmpPlayerView.RtmpPlayerViewLisener, ILiveDialogManagerFn, ITimerManagerFn, ILocationFn, IPCManagerFn, ILive,
 		VideoSuqareManagerFn, ILiveVideo, ILiveFnAdapter, IRequestResultListener {

@@ -50,6 +50,7 @@ import com.rd.car.editor.FilterVideoEditorException;
 import de.greenrobot.event.EventBus;
 
 @SuppressLint("HandlerLeak")
+@Deprecated
 public class VideoEditActivity extends BaseActivity implements OnClickListener, ICreateNewVideoFn, IUploadVideoFn,
 		IRequestResultListener {
 	public static final int EVENT_COMM_EXIT = 0;
