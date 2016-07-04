@@ -7,10 +7,9 @@ import com.mobnote.eventbus.EventPraiseStatusChanged;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.videosuqare.livelistmap.ILiveListMapView;
-import com.mobnote.golukmain.videosuqare.livelistmap.LiveListBaiduMapView;
-import com.mobnote.golukmain.videosuqare.livelistmap.LiveListGoogleMapView;
 import com.mobnote.util.GolukUtils;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -20,6 +19,10 @@ import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
@@ -145,17 +148,43 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
 				FrameLayout.LayoutParams.MATCH_PARENT);
 		mMapBtn.setVisibility(View.GONE);
 		if (isLive()) {
-			if(GolukApplication.getInstance().isMainland()){
-                mLiveListMapView = new LiveListBaiduMapView(this, saveInstance);
-			}else{
-                mLiveListMapView = new LiveListGoogleMapView(this, saveInstance);
-            }
-			mSwitchLayout.addView(mLiveListMapView.getView(), lp);
-			mMapBtn.setVisibility(View.VISIBLE);
-		}
 
-		mSwitchLayout.addView(mCategoryLayout.getView(), lp);
-	}
+            String activityNameStr = "";
+            if (GolukApplication.getInstance().isMainland()) {
+                activityNameStr = "com.mobnote.golukmain.videosuqare.livelistmap.LiveListBaiduMapView";
+            } else {
+                activityNameStr = "com.mobnote.golukmain.videosuqare.livelistmap.LiveListGoogleMapView";
+            }
+            try {
+                Class<?> c = Class.forName(activityNameStr);
+                if(null != c){
+                    Class[] paramTypes = { Context.class, Bundle.class};
+                    Object[] params = {this, saveInstance}; // 方法传入的参数
+                    Constructor constructor = c.getConstructor(paramTypes);
+                    mLiveListMapView = (ILiveListMapView) constructor.newInstance(this,saveInstance);
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                return;
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+                return;
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+                return;
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            mSwitchLayout.addView(mLiveListMapView.getView(), lp);
+            mMapBtn.setVisibility(View.VISIBLE);
+        }
+
+        mSwitchLayout.addView(mCategoryLayout.getView(), lp);
+    }
 
 	private void getIntentData() {
 		Intent intent = getIntent();

@@ -5,7 +5,6 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.entity.VideoConfigState;
 import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
 import com.mobnote.golukmain.livevideo.BaidumapLiveActivity;
-import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
 import com.mobnote.util.GolukUtils;
 
 import android.content.Context;
@@ -25,6 +24,10 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeListener {
@@ -142,13 +145,33 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 					if (!isUserDimiss) {
 						if (null != mContext && mContext instanceof AbstractLiveActivity) {
 
-							if (GolukApplication.getInstance().isMainland()) {
-								((BaidumapLiveActivity) mContext).exit();
-							} else {
-								((GooglemapLiveActivity) mContext).exit();
-							}
-						}
-					}
+                            String activityNameStr = "";
+                            if (GolukApplication.getInstance().isMainland()) {
+                                activityNameStr = "com.mobnote.golukmain.livevideo.BaidumapLiveActivity";
+                            } else {
+                                activityNameStr = "com.mobnote.golukmain.livevideo.GooglemapLiveActivity";
+                            }
+                            try {
+                                Class<?> c = Class.forName(activityNameStr);
+                                if(null != c){
+                                    ((BaidumapLiveActivity) mContext).exit();
+                                    Method method = c.getMethod("exit", new Class[]{String.class});
+                                    method.invoke(c.cast(mContext));
+                                }
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                                return;
+                            } catch (NoSuchMethodException e) {
+                                e.printStackTrace();
+                                return;
+                            } catch (InvocationTargetException e) {
+                                e.printStackTrace();
+                                return;
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
 
 				}
 			});
