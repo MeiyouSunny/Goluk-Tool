@@ -156,7 +156,9 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(GolukApplication.getInstance(), GolukConfig.REQUEST_CODE_FACEBOOK_SHARE);
+        if(FacebookSdk.isInitialized() == false){
+            FacebookSdk.sdkInitialize(GolukApplication.getInstance(), GolukConfig.REQUEST_CODE_FACEBOOK_SHARE);
+        }
         setContentView(R.layout.activity_video_share);
         EventBus.getDefault().register(this);
 
