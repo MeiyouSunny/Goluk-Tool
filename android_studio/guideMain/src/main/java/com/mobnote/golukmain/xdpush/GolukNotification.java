@@ -18,14 +18,11 @@ import com.mobnote.golukmain.cluster.ClusterActivity;
 import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
-import com.mobnote.golukmain.livevideo.AbstractLiveActivity01;
 import com.mobnote.golukmain.msg.MsgCenterCommentActivity;
 import com.mobnote.golukmain.msg.MsgCenterPraiseActivity;
 import com.mobnote.golukmain.msg.SystemMsgActivity;
 import com.mobnote.golukmain.profit.MyProfitActivity;
 import com.mobnote.golukmain.special.SpecialListActivity;
-import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
-import com.mobnote.golukmain.usercenter.UCUserInfo;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.golukmobile.GuideActivity;
 import com.mobnote.util.GolukConfig;
@@ -288,7 +285,7 @@ public class GolukNotification {
 			return false;
 		}
 		Context context = GolukApplication.getInstance().getContext();
-		if (context instanceof AbstractLiveActivity || context instanceof AbstractLiveActivity01 || context instanceof CarRecorderActivity) {
+		if (context instanceof AbstractLiveActivity || context instanceof AbstractLiveActivity || context instanceof CarRecorderActivity) {
 			return false;
 		}
 

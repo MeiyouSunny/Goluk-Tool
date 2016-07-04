@@ -76,9 +76,6 @@ import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
-import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
-import com.mobnote.golukmain.livevideo.BaidumapLiveActivity;
-import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
 import com.mobnote.golukmain.msg.MessageBadger;
 import com.mobnote.golukmain.msg.MsgCenterCounterRequest;
 import com.mobnote.golukmain.msg.bean.MessageCounterBean;
@@ -1038,20 +1035,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             }
         } else if (LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE == dialogType) {
             if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
-                // 继续直播
-                Intent intent;
-                if (GolukApplication.getInstance().isMainland()) {
-                    intent = new Intent(this, BaidumapLiveActivity.class);
-                } else {
-                    intent = new Intent(this, GooglemapLiveActivity.class);
-                }
-
-                intent.putExtra(AbstractLiveActivity.KEY_IS_LIVE, true);
-                intent.putExtra(AbstractLiveActivity.KEY_LIVE_CONTINUE, true);
-                intent.putExtra(AbstractLiveActivity.KEY_GROUPID, "");
-                intent.putExtra(AbstractLiveActivity.KEY_PLAY_URL, "");
-                intent.putExtra(AbstractLiveActivity.KEY_JOIN_GROUP, "");
-                startActivity(intent);
+                GolukUtils.startLiveActivity(this,true,true,null,null);
             } else if (LiveDialogManager.FUNCTION_DIALOG_CANCEL == function) {
                 if (mApp.mIPCControlManager.isT1Relative()) {
                     mApp.mIPCControlManager.stopLive();

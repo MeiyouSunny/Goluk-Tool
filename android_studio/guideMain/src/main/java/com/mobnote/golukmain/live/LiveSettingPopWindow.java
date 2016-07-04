@@ -4,7 +4,6 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.entity.VideoConfigState;
 import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
-import com.mobnote.golukmain.livevideo.AbstractLiveActivity01;
 import com.mobnote.golukmain.livevideo.BaidumapLiveActivity;
 import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
 import com.mobnote.util.GolukUtils;
@@ -142,13 +141,6 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 					isShow = false;
 					if (!isUserDimiss) {
 						if (null != mContext && mContext instanceof AbstractLiveActivity) {
-
-							if (GolukApplication.getInstance().isMainland()) {
-								((BaidumapLiveActivity) mContext).exit();
-							} else {
-								((GooglemapLiveActivity) mContext).exit();
-							}
-						}else if(null != mContext && mContext instanceof AbstractLiveActivity01) {
 
 							if (GolukApplication.getInstance().isMainland()) {
 								((BaidumapLiveActivity) mContext).exit();
