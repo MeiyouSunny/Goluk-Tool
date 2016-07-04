@@ -4,6 +4,7 @@ public class WifiRsBean {
     String ipc_bssid = ""; // IPC的bssid
     String ipc_ssid = ""; // IPC的ssid
     String ipc_mac = ""; // IPC的mac地址
+    String ipc_model = "";
 
     String ipc_ip = ""; // IPC的IP地址
     String ipc_pass = ""; // IPC PASS
@@ -120,6 +121,14 @@ public class WifiRsBean {
 
     public void setWifiSignal(Integer wifiSignal) {
         this.wifiSignal = wifiSignal;
+    }
+
+    public String getIpc_model() {
+        return ipc_model;
+    }
+
+    public void setIpc_model(String ipc_model) {
+        this.ipc_model = ipc_model;
     }
 
     public WifiRsBean(String ipAddr, String hWAddr, boolean isReachable) {

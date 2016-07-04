@@ -41,6 +41,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
+import cn.com.tiros.api.WIFIInfo;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
@@ -331,6 +332,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         beans.setIpc_ssid(WiFiInfo.IPC_SSID);
         beans.setIpc_ip(mWiFiIp);
         beans.setIpc_pass(WiFiInfo.IPC_PWD);
+        beans.setIpc_model(WiFiInfo.IPC_MODEL);
 
         beans.setPh_ssid(WiFiInfo.MOBILE_SSID);
         beans.setPh_pass(WiFiInfo.MOBILE_PWD);

@@ -96,6 +96,7 @@ public class GolukUtils {
     public static final String T1S_WIFINAME_SIGN = "Goluk_T1S";
     public static final String T1_WIFINAME_SIGN = "Goluk_T1";
     public static final String G1G2_WIFINAME_SIGN = "Goluk";
+    public static final String IPC_MODEL_T1 = "t1";
 
     // 键盘的高度
     private static int keyBoardHeight = 250;
@@ -1347,5 +1348,15 @@ public class GolukUtils {
             return 1;
         }
         return 0;
+    }
+
+    public static boolean isIPCTypeT1(final String model) {
+        if (TextUtils.isEmpty(model)) {
+            return false;
+        }
+        if (model.toLowerCase().equals(IPC_MODEL_T1)) {
+            return true;
+        }
+        return false;
     }
 }

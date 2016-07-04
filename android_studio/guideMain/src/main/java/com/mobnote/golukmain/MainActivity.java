@@ -1110,6 +1110,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         WiFiInfo.IPC_PWD = mCurrentConnBean.getIpc_pass();
         WiFiInfo.MOBILE_SSID = mCurrentConnBean.getPh_ssid();
         WiFiInfo.MOBILE_PWD = mCurrentConnBean.getPh_pass();
+        WiFiInfo.IPC_MODEL = mCurrentConnBean.getIpc_model();
         GolukDebugUtils.e("",
                 "select wifibind---MainActivity------refreshIpcDataToFile1: " + mCurrentConnBean.getIpc_ssid());
         // 如果本地文件中已经有记录了，则不再保存

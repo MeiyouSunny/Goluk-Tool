@@ -49,6 +49,7 @@ import org.json.JSONObject;
 
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
+import cn.com.tiros.api.WIFIInfo;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
@@ -580,6 +581,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             historyBean.ipc_pwd = WiFiInfo.IPC_PWD;
             historyBean.ipc_mac = WiFiInfo.IPC_MAC;
             historyBean.ipc_ip = CONNECT_IPC_IP;
+            historyBean.ipcSign = WiFiInfo.IPC_MODEL;
             historyBean.mobile_ssid = WiFiInfo.MOBILE_SSID;
             historyBean.mobile_pwd = WiFiInfo.MOBILE_PWD;
             historyBean.state = WifiBindHistoryBean.CONN_USE;
@@ -683,10 +685,10 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                 try {
                     JSONObject json = new JSONObject(str);
                     String version = json.optString("version");
-                    String model = json.optString("model");
+                    String model = json.optString("productname");
+                    WiFiInfo.IPC_MODEL = model;
                     int regionType = GolukUtils.judgeIPCDistrict(model,version);
                     if (regionType == GolukUtils.GOLUK_APP_VERSION_MAINLAND && !mApp.isMainland()) {
-//                        connFailed();
                         mApp.isIpcConnSuccess = false;
                         mCurrentState = STATE_FAILED;
                         mBaseHandler.sendEmptyMessage(MSG_H_REGION);
