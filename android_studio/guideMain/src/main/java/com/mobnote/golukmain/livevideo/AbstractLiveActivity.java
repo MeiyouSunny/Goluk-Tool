@@ -363,7 +363,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements View.
             }
             GolukDebugUtils.e("", "jyf----20150406----LiveActivity----pointDataCallback----aid  : " + tempUserInfo.aid
                     + " lon:" + tempUserInfo.lon + " lat:" + tempUserInfo.lat);
-            updatePublisherMarker(Double.parseDouble(tempUserInfo.aid), Double.parseDouble(tempUserInfo.lon));
+            updatePublisherMarker(Double.parseDouble(tempUserInfo.lat), Double.parseDouble(tempUserInfo.lon));
 
             mPublisher.lat = tempUserInfo.lat;
             mPublisher.lon = tempUserInfo.lon;
