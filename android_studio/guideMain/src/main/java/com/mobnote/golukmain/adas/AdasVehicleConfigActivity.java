@@ -11,9 +11,9 @@ import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -115,6 +115,11 @@ public class AdasVehicleConfigActivity extends BaseActivity implements OnClickLi
 			return;
 		}
 		mCarName.setText(mParamter.name);
+		if ("zh".equals(GolukUtils.getLanguage())) {
+			mCarName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(6)});
+		} else {
+			mCarName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+		}
 		mCarName.setSelection(mParamter.name.length());
 		if (mParamter.wheel_offset != 0) {
 			mWheelOffset.setText("" + mParamter.wheel_offset);
