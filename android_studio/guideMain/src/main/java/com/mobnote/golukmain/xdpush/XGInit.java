@@ -20,11 +20,15 @@ public class XGInit implements XGIOperateCallback {
 	/** 保存TokenId,在服务端注册成功后，保存在本地 */
 	private String mTokenId = "";
 
-	private final String NVD_ACCESS_KEY = "A9MITK29U27G";
-	private final long NVD_ACCESS_ID = 2100148036;
+    private final String NVD_ACCESS_KEY = "A9MITK29U27G";
+    private final String INVD_ACCESS_KEY = "AQN896B52GLF";
+    private final String TEST_ACCESS_KEY = "AP4Y1I386HQQ";
+    private final String ITEST_ACCESS_KEY = "AU29JR34A3CT";
 
-	private final String TEST_ACCESS_KEY = "AP4Y1I386HQQ";
-	private final long TEST_ACCESS_ID = 2100156386;
+    private final long NVD_ACCESS_ID = 2100148036;
+    private final long INVD_ACCESS_ID = 2100181851;
+    private final long TEST_ACCESS_ID = 2100156386;
+    private final long ITEST_ACCESS_ID = 2100185172;
 
 	public XGInit() {
 		mContext = GolukApplication.getInstance();
@@ -32,11 +36,22 @@ public class XGInit implements XGIOperateCallback {
 
 	public void init() {
 		if (GolukUtils.isTestServer()) {
-			XGPushConfig.setAccessId(mContext, TEST_ACCESS_ID);
-			XGPushConfig.setAccessKey(mContext, TEST_ACCESS_KEY);
+            if(GolukApplication.getInstance().isMainland()){
+                XGPushConfig.setAccessId(mContext, TEST_ACCESS_ID);
+                XGPushConfig.setAccessKey(mContext, TEST_ACCESS_KEY);
+            }else{
+                XGPushConfig.setAccessId(mContext, ITEST_ACCESS_ID);
+                XGPushConfig.setAccessKey(mContext, ITEST_ACCESS_KEY);
+            }
 		} else {
-			XGPushConfig.setAccessId(mContext, NVD_ACCESS_ID);
-			XGPushConfig.setAccessKey(mContext, NVD_ACCESS_KEY);
+            if(GolukApplication.getInstance().isMainland()){
+                XGPushConfig.setAccessId(mContext, NVD_ACCESS_ID);
+                XGPushConfig.setAccessKey(mContext, NVD_ACCESS_KEY);
+            }else{
+                XGPushConfig.setAccessId(mContext, INVD_ACCESS_ID);
+                XGPushConfig.setAccessKey(mContext, INVD_ACCESS_KEY);
+            }
+
 		}
 
 		XGPushConfig.enableDebug(mContext, isDebug);
