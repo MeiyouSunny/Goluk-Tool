@@ -39,6 +39,11 @@ import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.fan.FanListActivity;
 import com.mobnote.golukmain.following.FollowingListActivity;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
+import com.mobnote.golukmain.live.LiveSettingBean;
+import com.mobnote.golukmain.live.UserInfo;
+import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
+import com.mobnote.golukmain.livevideo.BaidumapLiveActivity;
+import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.startshare.VideoShareActivity;
@@ -1229,6 +1234,24 @@ public class GolukUtils {
             loginIntent = new Intent(context, UserLoginActivity.class);
         }
         context.startActivity(loginIntent);
+    }
+
+    public static void startLiveActivity(Context mContext, boolean isLive, boolean isContinue, LiveSettingBean mSettingData, UserInfo userInfo){
+        Intent intent;
+        if (GolukApplication.getInstance().isMainland()) {
+            intent = new Intent(mContext, BaidumapLiveActivity.class);
+        } else {
+            intent = new Intent(mContext, GooglemapLiveActivity.class);
+        }
+
+        intent.putExtra(AbstractLiveActivity.KEY_IS_LIVE, isLive);
+        intent.putExtra(AbstractLiveActivity.KEY_LIVE_CONTINUE, isContinue);
+        intent.putExtra(AbstractLiveActivity.KEY_GROUPID, "");
+        intent.putExtra(AbstractLiveActivity.KEY_PLAY_URL, "");
+        intent.putExtra(AbstractLiveActivity.KEY_JOIN_GROUP, "");
+        intent.putExtra(AbstractLiveActivity.KEY_LIVE_SETTING_DATA, mSettingData);
+        intent.putExtra(AbstractLiveActivity.KEY_USERINFO, userInfo);
+        mContext.startActivity(intent);
     }
 
     public static void startH5(Context context, WebView webview, String url) {

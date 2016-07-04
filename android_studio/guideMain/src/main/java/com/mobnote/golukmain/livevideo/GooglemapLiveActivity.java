@@ -10,7 +10,6 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -21,8 +20,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mobnote.application.GolukApplication;
-import com.mobnote.eventbus.EventConfig;
-import com.mobnote.eventbus.EventMapQuery;
 import com.mobnote.golukmain.R;
 import com.mobnote.map.LngLat;
 import com.mobnote.util.GlideCircleTransform;
@@ -30,9 +27,8 @@ import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 
 import cn.com.mobnote.module.location.GolukPosition;
-import de.greenrobot.event.EventBus;
 
-public class GooglemapLiveActivity extends AbstractLiveActivity01 implements OnMapReadyCallback{
+public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMapReadyCallback{
 
 	private MapView mMapView;
 	private GoogleMap mGoogleMap;

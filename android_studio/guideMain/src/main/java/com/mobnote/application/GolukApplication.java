@@ -66,9 +66,6 @@ import com.mobnote.golukmain.internation.login.CountryBean;
 import com.mobnote.golukmain.internation.login.GolukMobUtils;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
-import com.mobnote.golukmain.livevideo.AbstractLiveActivity01;
-import com.mobnote.golukmain.livevideo.BaidumapLiveActivity;
-import com.mobnote.golukmain.livevideo.GooglemapLiveActivity;
 import com.mobnote.golukmain.livevideo.LiveOperateVdcp;
 import com.mobnote.golukmain.livevideo.VdcpLiveBean;
 import com.mobnote.golukmain.thirdshare.GolukUmConfig;
@@ -1026,12 +1023,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             case 7:
                 // 地图大头针数据
                 if (null != mContext) {
-                    if (mContext instanceof AbstractLiveActivity) {
+                    if(mContext instanceof AbstractLiveActivity){
                         // 为了更新直播界面的别人的位置信息
                         ((AbstractLiveActivity) mContext).pointDataCallback(success, param2);
-                    } if(mContext instanceof AbstractLiveActivity01){
-                        // 为了更新直播界面的别人的位置信息
-                        ((AbstractLiveActivity01) mContext).pointDataCallback(success, param2);
                     }else if (mContext instanceof VideoCategoryActivity) {
                         ((VideoCategoryActivity) mContext).pointDataCallback(success, param2);
                     }
@@ -1049,8 +1043,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     GolukDebugUtils.e("", "pageNotifyCallBack---直播视频数据--" + String.valueOf(param2));
                     if (mContext instanceof AbstractLiveActivity) {
                         ((AbstractLiveActivity) mContext).LiveVideoDataCallBack(success, param2);
-                    }else if (mContext instanceof AbstractLiveActivity01) {
-                        ((AbstractLiveActivity01) mContext).LiveVideoDataCallBack(success, param2);
                     }
                 }
                 break;
@@ -1112,8 +1104,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 // 获取直播信息成功
                 if (null != mContext && mContext instanceof AbstractLiveActivity) {
                     ((AbstractLiveActivity) mContext).callBack_LiveLookStart(true, success, param1, param2);
-                }else if (null != mContext && mContext instanceof AbstractLiveActivity01) {
-                    ((AbstractLiveActivity01) mContext).callBack_LiveLookStart(true, success, param1, param2);
                 }
 
                 break;
@@ -1162,8 +1152,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             case IPageNotifyFn.PageType_LiveUploadPic:
                 if (mContext instanceof AbstractLiveActivity) {
                     ((AbstractLiveActivity) mContext).uploadImgCallBack(success, param1, param2);
-                }else if (mContext instanceof AbstractLiveActivity01) {
-                    ((AbstractLiveActivity01) mContext).uploadImgCallBack(success, param1, param2);
                 }
                 break;
         }
@@ -2098,22 +2086,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         if (null == userInfo) {
             return;
         }
-        // 跳转看他人界面
-
-        Intent intent;
-        if (isMainland()) {
-            intent = new Intent(mContext, BaidumapLiveActivity.class);
-        } else {
-            intent = new Intent(mContext, GooglemapLiveActivity.class);
-        }
-
-        intent.putExtra(AbstractLiveActivity.KEY_IS_LIVE, false);
-        intent.putExtra(AbstractLiveActivity.KEY_GROUPID, "");
-        intent.putExtra(AbstractLiveActivity.KEY_PLAY_URL, "");
-        intent.putExtra(AbstractLiveActivity.KEY_JOIN_GROUP, "");
-        intent.putExtra(AbstractLiveActivity.KEY_USERINFO, userInfo);
-        mContext.startActivity(intent);
-        GolukDebugUtils.e(null, "jyf----20150406----MainActivity----startLiveLook");
+        GolukUtils.startLiveActivity(mContext,false,false,null,userInfo);
     }
 
     private boolean isMainProcess() {

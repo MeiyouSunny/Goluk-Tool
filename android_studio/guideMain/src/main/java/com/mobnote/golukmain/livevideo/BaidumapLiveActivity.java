@@ -16,15 +16,12 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.mobnote.application.GolukApplication;
-import com.mobnote.eventbus.EventConfig;
-import com.mobnote.eventbus.EventMapQuery;
 import com.mobnote.golukmain.R;
 import com.mobnote.map.LngLat;
 import com.mobnote.util.GlideCircleTransform;
@@ -33,9 +30,8 @@ import com.mobnote.util.JsonUtil;
 
 import cn.com.mobnote.module.location.GolukPosition;
 import cn.com.tiros.debug.GolukDebugUtils;
-import de.greenrobot.event.EventBus;
 
-public class BaidumapLiveActivity extends AbstractLiveActivity01 implements BaiduMap.OnMapStatusChangeListener, BaiduMap.OnMapLoadedCallback {
+public class BaidumapLiveActivity extends AbstractLiveActivity implements BaiduMap.OnMapStatusChangeListener, BaiduMap.OnMapLoadedCallback {
 
     private MapView mMapView = null;
     private BaiduMap mBaiduMap = null;
