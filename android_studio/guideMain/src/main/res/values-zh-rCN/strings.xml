@@ -705,9 +705,6 @@
     <string name="str_adas_length_unit">cm</string>
     <string name="str_my_profit_rank_text">抽奖获得G币</string>
     <string name="str_see_comments">查看所有 %1$s 条评论</string>
-    <string name="cluster_check_all">查看所有</string>
-    <string name="str_newest_check_all_comments_prefix">查看所有</string>
-    <string name="str_newest_check_all_comments_postfix">条评论</string>
     <string name="wifi_link_21_text">WiFi名称</string>
     <string name="user_personal_home_nologin_name">未登录</string>
     <string name="wifi_link_text">未连接</string>
