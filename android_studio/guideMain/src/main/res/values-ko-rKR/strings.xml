@@ -217,7 +217,7 @@
     <string name="dialog_str_tuijian">추천</string>
     <string name="dialog_str_del">이 동영상 삭제</string>
     <string name="dialog_str_confirm">신고</string>
-    <string name="str_delete_video_message">동영상을 삭제하면 '좋아요' 기록과 댓글도 함께 삭제됩니다. 삭제 하시겠습니까? (네/아니오)</string>
+    <string name="str_delete_video_message">동영상을 삭제하면 \'좋아요\' 기록과 댓글도 함께 삭제됩니다. 삭제 하시겠습니까? (네/아니오)</string>
     <string name="delete_text">삭제</string>
     <string name="str_delete_video_fail">동영상을 삭제 할 수 없습니다</string>
     <string name="str_add_v_txt">인증 메시지</string>
@@ -311,7 +311,7 @@
     <string name="str_adas_middle_sensibility">중간 감도</string>
     <string name="str_adas_low_sensibility">낮은 감도</string>
     <string name="str_smart_driving">스마트 GO 운전자 보조 시스템</string>
-    <string name="str_adas_guide_des">Goluk 스마트 GO 운전자 보조 시스템은 고급 '따라가는 거리 안전 경고'를 보낼 수 있습니다</string>
+    <string name="str_adas_guide_des">Goluk 스마트 GO 운전자 보조 시스템은 고급 \'따라가는 거리 안전 경고\'를 보낼 수 있습니다</string>
     <string name="get_current_location">위치를 알려면 누르세요</string>
     <string name="str_localization_ongoing">위치 결정 중</string>
     <string name="user_opinion_type_cancle">취소</string>
@@ -320,7 +320,7 @@
     <string name="str_title_message_setting">설정</string>
     <string name="str_message_center_comment_reply">댓글/답변</string>
     <string name="str_msg_center_no_comment">댓글/답변 없음</string>
-    <string name="str_msg_center_no_praise">'좋아요' 없음</string>
+    <string name="str_msg_center_no_praise">\'좋아요\' 없음</string>
     <string name="str_message_center_official">공식 알림</string>
     <string name="str_server_request_no_data">알림 없음</string>
     <string name="str_message_center_system">시스템 메시지</string>
@@ -437,8 +437,8 @@
     <string name="setting_title_text">설정</string>
     <string name="str_praise_failed">실패함</string>
     <string name="str_cancel_praise_failed">실패함</string>
-    <string name="str_no_duplicated_praise">이미 '좋아요'를 눌렀습니다</string>
-    <string name="str_my_praised_list">'좋아요'를 눌렀습니다</string>
+    <string name="str_no_duplicated_praise">이미 \'좋아요\'를 눌렀습니다</string>
+    <string name="str_my_praised_list">\'좋아요\'를 눌렀습니다</string>
     <string name="ipc_check_zone_msg">차량용 블랙박스를 다시 시작해 새로운 시간대를 사용 하시겠습니까?</string>
     <string name="str_reboot_ipc_now">다시 시작</string>
     <string name="no_following_tips">팔로우 없음</string>
@@ -458,7 +458,7 @@
     <string name="str_follow_fail">팔로우 실패.</string>
     <string name="str_cancel_follow_fail">팔로우 취소 실패.</string>
     <string name="str_confirm_cancel_follow">정말 팔로우를 취소 하시겠습니까?</string>
-    <string name="str_praised_list_request_no_data">'좋아요' 기록 없음</string>
+    <string name="str_praised_list_request_no_data">\'좋아요\' 기록 없음</string>
     <string name="local_video_title_text">동영상 선택</string>
     <string name="str_wonderful_title">WDF</string>
     <string name="str_urgent_title">URG</string>
@@ -486,7 +486,7 @@
     <string name="str_settings_video_type1">캡처 하이라이트 (6+6)</string>
     <string name="str_settings_video_type2">클래식 모드</string>
     <string name="str_seconds">초</string>
-    <string name="str_settings_wonderful_video_type_hint_text">캡처 하이라이트 (6+6)：첫 6+6 (12)초의 하이라이트 동영상 부분 녹음을 활성화 하려면 '키트' 버튼을 누르세요.클래식 모드：30초 동안의 하이라이트 동영상 녹음을 활성화 하려면 '키트' 버튼을 누르세요.</string>
+    <string name="str_settings_wonderful_video_type_hint_text">캡처 하이라이트 (6+6)：첫 6+6 (12)초의 하이라이트 동영상 부분 녹음을 활성화 하려면 \'키트\' 버튼을 누르세요.클래식 모드：30초 동안의 하이라이트 동영상 녹음을 활성화 하려면 \'키트\' 버튼을 누르세요.</string>
     <string name="str_usercenter_header_attention_each_other_text">상호간 팔로우 하기</string>
     <string name="str_follow_list_title">팔로잉 합니다</string>
     <string name="str_search_hint">사용자 검색 (별명/인증 설명으로)</string>
@@ -826,7 +826,7 @@
     <string name="str_photo_delete_ok">동영상이 성공적으로 삭제되었습니다</string>
     <string name="str_load_below_txt">로딩 중</string>
     <string name="str_settings_security_hint_text_g1">Goluk은 자동으로 차량의 현재 상태를 판단해, 차량이 주행 상태일 경우, 자동 루프 촬영 모드에 따라 작동하게 됩니다. 차량이 주차 상태일 경우, Goluk은 매 초마다 사진 촬영을 캡처하며 진동 감지 모드 (트리거 전 8초, 트리거 후 8초 동영상) 및 움직임 감지 모드를 (트리거 전 8초, 트리거 후 8초 동영상) 시작합니다.</string>
-    <string name="str_settings_sleep_hint_text_t1">이 기능이 활성화 된 후, 차량이 10분 이상 정지 상태임을 감지 할 경우, 배터리 전력 손실을 막기 위해 자동으로 초절전 '주차 절전 모드'로 전환됩니다. 주차 상태에서 차량 엔진이 꺼져있는 경우, 라이터 어댑터가 정상적으로 전기를 공급할 수 있습니다. 이 기능을 키는 것을 강력하게 추천합니다.</string>
+    <string name="str_settings_sleep_hint_text_t1">이 기능이 활성화 된 후, 차량이 10분 이상 정지 상태임을 감지 할 경우, 배터리 전력 손실을 막기 위해 자동으로 초절전 \'주차 절전 모드\'로 전환됩니다. 주차 상태에서 차량 엔진이 꺼져있는 경우, 라이터 어댑터가 정상적으로 전기를 공급할 수 있습니다. 이 기능을 키는 것을 강력하게 추천합니다.</string>
     <string name="str_carrecoder_setting_photo_title">이미지 품질</string>
     <string name="str_ipc_dialog_normal">카메라가 제대로 연결되어 있는지 확인하세요</string>
     <string name="str_year">년</string>
