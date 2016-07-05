@@ -85,6 +85,7 @@ import com.mobnote.golukmain.wifibind.WiFiInfo;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
 import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
+import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
@@ -643,7 +644,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     }
 
     private void toSelectIpcActivity() {
-        if (mApp.getEnableSingleWifi()) {
+        if (mApp.getEnableSingleWifi() || !WifiBindDataCenter.getInstance().isHasDataHistory()) {
             Intent intent = new Intent(this, WiFiLinkListActivity.class);
             startActivity(intent);
         } else {

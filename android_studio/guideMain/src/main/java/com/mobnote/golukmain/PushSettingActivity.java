@@ -126,7 +126,7 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 		if (id == R.id.back_btn) {
 			exit();
 		} else if (id == R.id.notify_setting_comment_btn) {
-			if(GolukApplication.getInstance().loginStatus != 1 ){
+			if(!GolukApplication.getInstance().isUserLoginToServerSuccess()){
 				GolukApplication.getInstance().isUserLoginSucess = false;
 				GolukApplication.getInstance().loginStatus = 2;
 				GolukApplication.getInstance().autoLoginStatus = 3;
@@ -135,7 +135,7 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 			}
 			setCommentState(!mIsCanComment);
 		} else if (id == R.id.notify_setting_prise_btn) {
-			if(GolukApplication.getInstance().loginStatus != 1 ){
+			if(!GolukApplication.getInstance().isUserLoginToServerSuccess() ){
 				GolukApplication.getInstance().isUserLoginSucess = false;
 				GolukApplication.getInstance().loginStatus = 2;
 				GolukApplication.getInstance().autoLoginStatus = 3;
@@ -144,7 +144,7 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 			}
 			setPariseState(!isCanParise);
 		} else if (id == R.id.notify_setting_follow_btn) {
-			if(GolukApplication.getInstance().loginStatus != 1 ){
+			if(!GolukApplication.getInstance().isUserLoginToServerSuccess() ){
 				GolukApplication.getInstance().isUserLoginSucess = false;
 				GolukApplication.getInstance().loginStatus = 2;
 				GolukApplication.getInstance().autoLoginStatus = 3;

@@ -91,7 +91,6 @@ public class VideoCategoryActivity extends BaseActivity implements OnClickListen
         if(mLiveListMapView != null){
             mLiveListMapView.onResume();
         }
-        mLiveListMapView.onResume();
     }
 
     @Override

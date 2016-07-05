@@ -2128,4 +2128,8 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         SharedPrefUtil.setEnableSingleWifi(value);
         enableSingleWifi = value;
     }
+
+    public boolean isUserLoginToServerSuccess(){
+        return (loginStatus==1) || (autoLoginStatus == 2) || (autoLoginStatus ==1);
+    }
 }
