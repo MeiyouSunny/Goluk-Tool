@@ -18,4 +18,14 @@ public class WiFiInfo {
      */
     public static String MOBILE_SSID;
     public static String MOBILE_PWD;
+
+    //清空全局变量
+    public static void clear() {
+        IPC_SSID = "";
+        IPC_PWD = "";
+        IPC_MAC = "";
+        IPC_MODEL = "";
+        MOBILE_SSID = "";
+        MOBILE_PWD = "";
+    }
 }

@@ -2,7 +2,7 @@
     "data": {
         "total": 38,
         "list": 
-              ["sd","conf_stream","record","conf_voice","auto_flip","conf_gsensor","conf_mode","adas","time","restore"]
+              ["sd","conf_stream","record","conf_voice","auto_flip","conf_gsensor","conf_mode","adas","time","restore","systeminfo"]
       },
     "msg": "OK",
     "result": 0

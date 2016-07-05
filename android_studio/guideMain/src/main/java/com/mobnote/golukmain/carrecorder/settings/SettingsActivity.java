@@ -25,6 +25,7 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
+import com.mobnote.golukmain.wifibind.WiFiInfo;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
 import com.mobnote.util.GolukFastJsonUtil;
@@ -992,6 +993,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					@Override
 					public void onClickListener() {
 						if (GolukApplication.getInstance().getIpcIsLogin()) {
+							WifiBindDataCenter.getInstance().deleteBindData(WiFiInfo.IPC_SSID);
+							EventBindFinish eventFnish = new EventBindFinish(EventConfig.BIND_LIST_DELETE_CONFIG);
+							EventBus.getDefault().post(eventFnish);
+							WiFiInfo.clear();
 							boolean a = GolukApplication.getInstance().getIPCControlManager().restoreIPC();
 							GolukDebugUtils.e("xuhw", "YYYYYY=================restoreIPC============a=" + a);
 						}
