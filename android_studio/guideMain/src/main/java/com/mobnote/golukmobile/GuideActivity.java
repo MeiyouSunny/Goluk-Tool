@@ -71,7 +71,7 @@ public class GuideActivity extends BaseActivity {
 		((GolukApplication) this.getApplication()).initLogic();
 		// 注册信鸽的推送
 		GolukNotification.getInstance().createXG();
-		//((GolukApplication) this.getApplication()).startUpgrade();
+		((GolukApplication) this.getApplication()).startUpgrade();
 		// 初始化
 		init();
 	}
