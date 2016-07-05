@@ -414,10 +414,10 @@
         <!-- ###################添加Zhuge统计###################### -->
         <meta-data
             android:name="ZHUGE_APPKEY"
-            android:value="373eb7ba28214c33810577442304d9fa"/>
+            android:value="@string/ZhugeAppkey"/>
         <meta-data
             android:name="ZHUGE_CHANNEL"
-            android:value="googleplay"/>
+            android:value="@string/ZhugeChannel"/>
 
         <activity
             android:name="com.umeng.socialize.view.ShareActivity"

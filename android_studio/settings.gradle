@@ -1,5 +1,4 @@
 include ':emojicon'
-include ':vitamio'
 include ':systemAPI'
 include ':commonGoluk'
 include ':guideMain'

@@ -19,6 +19,8 @@ android {
         internal {
             applicationId "cn.com.mobnote.golukmobile"
             resValue 'string', 'FacebookID', '"771491992987541"'
+            resValue 'string', 'ZhugeAppkey', '"1eda80f18ad84c5d8c5add807fc1664f"'
+            resValue 'string', 'ZhugeChannel', '"wandoujia"'
             manifestPlaceholders=[HTML_SCHEME : "golukapp" ,
                                   HTML_HOST : "goluk.app" ,
                                   FacebookAuth : "com.facebook.app.FacebookContentProvider771491992987541"]
@@ -27,6 +29,8 @@ android {
         international {
             applicationId "com.mobnote.golukmobile"
             resValue 'string', 'FacebookID', '"1693308594241132"'
+            resValue 'string', 'ZhugeAppkey', '"373eb7ba28214c33810577442304d9fa"'
+            resValue 'string', 'ZhugeChannel', '"googleplay"'
             manifestPlaceholders=[HTML_SCHEME : "igolukapp" ,
                                   HTML_HOST : "goluk.app" ,
                                   FacebookAuth : "com.facebook.app.FacebookContentProvider1693308594241132"]
@@ -48,6 +52,11 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
+    lintOptions {
+        abortOnError false
+    }
+
 }
 
 dependencies {
