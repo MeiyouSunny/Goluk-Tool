@@ -1042,5 +1042,6 @@
     <string name="disconnect_goluk_before_share">Need to disconnect the Goluk Wi-Fi in order to use the network to share</string>
     <string name="interantion_ban_mainland_goluk">Can not use this Device which is from China</string>
     <string name="start_connect_ipc_device">To connect: %1$s</string>
+    <string name="str_video_export_progress">Video generating</string>
 
 </resources>
