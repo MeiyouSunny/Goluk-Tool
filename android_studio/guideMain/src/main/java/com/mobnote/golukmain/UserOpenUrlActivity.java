@@ -29,6 +29,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
+import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.http.UrlHostManager;
 import com.mobnote.golukmain.thirdshare.ProxyThirdShare;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
@@ -193,7 +194,8 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 						return;
 					}
 //					mWebView.loadUrl(getRtmpAddress() + "?type=3" + getCommParams());
-					mWebView.loadUrl(getUrlParams() + "/s/installationguide");
+					GolukDebugUtils.e("", "installationguide------"+HttpManager.getInstance().getWebDirectHost() + "/s/installationguide");
+					mWebView.loadUrl(HttpManager.getInstance().getWebDirectHost() + "/s/installationguide");
 				} else if (from_tag.equals("shopping")) {
 					mTextTitle.setText(this.getResources().getString(R.string.my_shopping_title_text));
 					if (mErrorState) {
@@ -207,7 +209,8 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 						return;
 					}
 //					mWebView.loadUrl(getRtmpAddress() + "?type=1" + getCommParams());
-					mWebView.loadUrl(getUrlParams() + "/s/buystepdownline");
+					GolukDebugUtils.e("", "buystepdownline------"+HttpManager.getInstance().getWebDirectHost() + "/s/buystepdownline");
+					mWebView.loadUrl(HttpManager.getInstance().getWebDirectHost() + "/s/buystepdownline");
 				} else if (from_tag.equals("wifihelp")) {
 					mTextTitle.setText(this.getResources().getString(R.string.wifi_link_34_text));
 					if (mErrorState) {
