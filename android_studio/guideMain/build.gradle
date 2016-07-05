@@ -20,6 +20,11 @@ android {
         exclude 'META-INF/maven/org.twitter4j/twitter4j-core/pom.xml'
         exclude 'META-INF/maven/org.twitter4j/twitter4j-core/pom.properties'
     }
+
+    lintOptions {
+        abortOnError false
+    }
+
 }
 
 dependencies {
