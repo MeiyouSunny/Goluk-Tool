@@ -255,7 +255,7 @@ public class InternationUserIdentifyActivity extends BaseActivity implements OnC
 				}
 				intentPassword = pwd;
 			}
-			toRegistAndRepwd(justDifferent, mUserPhone, pwd, code);
+			toRegistAndRepwd(justDifferent, mUserPhone, MD5.hexdigest(intentPassword), code);
 	}
 
 	}
