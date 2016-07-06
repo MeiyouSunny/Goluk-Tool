@@ -77,7 +77,7 @@
     <string name="user_opinion_type_tuxiang">Effet graphique</string>
     <string name="user_opinion_type_shouji">Client de l\'appareil</string>
     <string name="user_opinion_type_qita">Autres</string>
-    <string name="str_photo_deletepromote">Supprimer la vidéo (Oui/Non)</string>
+    <string name="str_photo_deletepromote">%1$s Supprimer la vidéo (Oui/Non)</string>
     <string name="str_choose_head">Choisir un avatar</string>
     <string name="str_choose_one_head">Veuillez sélectionner un avatar</string>
     <string name="str_save_photo_fail">Impossible d\'enregistrer l\'avatar. Veuillez réessayer plus tard.</string>
@@ -130,7 +130,7 @@
     <string name="str_cluster_wonderful">Encore aucune recommandation de vidéos excellentes</string>
     <string name="attend_activity">Participer à l\'événement</string>
     <string name="activity_time_out">L\'événement est terminé</string>
-    <string name="str_participation_population">%@ partages</string>
+    <string name="str_participation_population">%1$s partages</string>
     <string name="str_adas_guide_des1">Veuillez conduire au milieu de la voie avec moins de véhicules.</string>
     <string name="str_adas_guide_des2">Après avoir garé le véhicule, terminez les paramètres de la première utilisation en utilisant le guide de configuration.</string>
     <string name="str_adas_verification_des">Consultez l\'image ci-dessous. Déplacez la croix affichée ci-dessus vers le milieu de la fin de la route.</string>
@@ -169,9 +169,9 @@
     <string name="unbind_select_type_title">Choisissez et appairez avec votre appareil Goluk</string>
     <string name="str_today">Aujourd\'hui</string>
     <string name="str_yestoday">Hier</string>
-    <string name="str_minute_refresh">minutes auparavant</string>
-    <string name="str_hours_refresh">heures auparavant</string>
-    <string name="str_day_refresh">jours auparavant</string>
+    <string name="str_minute_refresh">%1$s minutes auparavant</string>
+    <string name="str_hours_refresh">%1$s heures auparavant</string>
+    <string name="str_day_refresh">%1$s jours auparavant</string>
     <string name="msg_system_connect_error">Réseau indisponible. Touchez l\'écran et réessayez</string>
     <string name="str_submit">Soumettre</string>
     <string name="str_input_recommend_reason">Veuillez saisir les raisons de votre recommandation</string>
@@ -209,7 +209,7 @@
     <string name="cluster_comment_txt">Commenter</string>
     <string name="video_play_comment_send">Envoyer</string>
     <string name="str_reply">Réponse</string>
-    <string name="str_floor_text">Publication# %@</string>
+    <string name="str_floor_text">Publication %1$s</string>
     <string name="str_usercenter_more_share">Partager cette page</string>
     <string name="dialog_str_goback">Revenir à l\'accueil</string>
     <string name="str_network_error">Erreur réseau.</string>
@@ -398,7 +398,7 @@
     <string name="str_circle_of_friends">Moments</string>
     <string name="str_weixin_friends">Amis WeChat</string>
     <string name="str_weibo">Weibo</string>
-    <string name="str_photo_select">%@ vidéos sélectionnées</string>
+    <string name="str_photo_select">%1$s vidéos sélectionnées</string>
     <string name="str_profit_unit">GCoin</string>
     <string name="str_live_retry_live">Restauration du direct</string>
     <string name="str_live_create">Création du direct</string>

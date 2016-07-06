@@ -77,7 +77,7 @@
     <string name="user_opinion_type_tuxiang">그래픽 효과</string>
     <string name="user_opinion_type_shouji">기기 클라이언트</string>
     <string name="user_opinion_type_qita">그 외</string>
-    <string name="str_photo_deletepromote">동영상 삭제 (네/아니오)</string>
+    <string name="str_photo_deletepromote">%1$s 동영상 삭제 (네/아니오)</string>
     <string name="str_choose_head">아바타 선택</string>
     <string name="str_choose_one_head">아바타를 선택하세요</string>
     <string name="str_save_photo_fail">아바타를 저장 할 수 없습니다. 다시 시도하세요.</string>
@@ -131,7 +131,7 @@
     <string name="str_cluster_wonderful">아직 우수한 추천 동영상이 없습니다</string>
     <string name="attend_activity">이벤트 가입</string>
     <string name="activity_time_out">이벤트가 종료되었습니다</string>
-    <string name="str_participation_population">%@ 공유</string>
+    <string name="str_participation_population">%1$s 공유</string>
     <string name="str_adas_guide_des1">적은 수의 차량이 있는 중앙 차선에서 운전하세요.</string>
     <string name="str_adas_guide_des2">주차 후, 구성 가이드에 따라 처음 사용자 설정을 완성하세요.</string>
     <string name="str_adas_verification_des">아래 그림을 참조하세요. 도로 끝의 중간에 위의 십자가를 이동 시키세요.</string>
@@ -170,9 +170,9 @@
     <string name="unbind_select_type_title">Goluk 기기를 선택해 쌍을 만드세요</string>
     <string name="str_today">오늘</string>
     <string name="str_yestoday">어제</string>
-    <string name="str_minute_refresh">몇 분 전</string>
-    <string name="str_hours_refresh">몇 시간 전</string>
-    <string name="str_day_refresh">며칠 전</string>
+    <string name="str_minute_refresh">%1$s몇 분 전</string>
+    <string name="str_hours_refresh">%1$s몇 시간 전</string>
+    <string name="str_day_refresh">%1$s며칠 전</string>
     <string name="msg_system_connect_error">네트워크를 사용 할 수 없습니다. 화면을 눌러 다시 시도하세요.</string>
     <string name="str_submit">제출</string>
     <string name="str_input_recommend_reason">추천 이유를 입력하세요</string>
@@ -210,7 +210,7 @@
     <string name="cluster_comment_txt">댓글</string>
     <string name="video_play_comment_send">전송</string>
     <string name="str_reply">답장</string>
-    <string name="str_floor_text">게시물# %@</string>
+    <string name="str_floor_text">게시물 %1$s</string>
     <string name="str_usercenter_more_share">이 페이지 공유</string>
     <string name="dialog_str_goback">홈페이지로 돌아가기</string>
     <string name="str_network_error">네트워크 오류</string>
@@ -399,7 +399,7 @@
     <string name="str_circle_of_friends">순간</string>
     <string name="str_weixin_friends">위챗 친구</string>
     <string name="str_weibo">웨이보</string>
-    <string name="str_photo_select">%@ 동영상이 선택되었습니다</string>
+    <string name="str_photo_select">%1$s 동영상이 선택되었습니다</string>
     <string name="str_profit_unit">G코인</string>
     <string name="str_live_retry_live">라이브 복원</string>
     <string name="str_live_create">라이브 생성</string>

@@ -340,7 +340,7 @@ public class LocalFragment extends Fragment {
 			} else {
 				mFragmentAlbum.updateDeleteState(true);
 				mFragmentAlbum.updateTitleName(getActivity().getString(R.string.str_photo_select,
-						selectedListData.size()));
+						selectedListData.size()+""));
 			}
 		}
 	}

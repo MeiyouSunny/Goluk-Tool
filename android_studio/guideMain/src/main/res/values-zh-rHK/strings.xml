@@ -77,7 +77,7 @@
     <string name="user_opinion_type_tuxiang">圖像效果</string>
     <string name="user_opinion_type_shouji">裝置客戶</string>
     <string name="user_opinion_type_qita">其他</string>
-    <string name="str_photo_deletepromote">刪除影片 (是/否)</string>
+    <string name="str_photo_deletepromote">刪除 %1$s 影片 (是/否)</string>
     <string name="str_choose_head">選擇頭像</string>
     <string name="str_choose_one_head">請選擇另一個頭像</string>
     <string name="str_save_photo_fail">無法儲存頭像。請再試一次</string>
@@ -130,7 +130,7 @@
     <string name="str_cluster_wonderful">尚未有推薦的出色影片</string>
     <string name="attend_activity">參與活動</string>
     <string name="activity_time_out">活動已結束</string>
-    <string name="str_participation_population">%@ 個分享</string>
+    <string name="str_participation_population">%1$s 個分享</string>
     <string name="str_adas_guide_des1">請使用較少車輛的車道，並駕駛於車道中間。</string>
     <string name="str_adas_guide_des2">泊車後，根據配置指南完成首次使用設定。</string>
     <string name="str_adas_verification_des">參考以下圖示。將上面所示的交叉移至道路盡頭的中央。</string>
@@ -169,9 +169,9 @@
     <string name="unbind_select_type_title">選取並配對至您的極路客裝置</string>
     <string name="str_today">今日</string>
     <string name="str_yestoday">昨日</string>
-    <string name="str_minute_refresh">分鐘前</string>
-    <string name="str_hours_refresh">小時前</string>
-    <string name="str_day_refresh">日前</string>
+    <string name="str_minute_refresh">%1$s 分鐘前</string>
+    <string name="str_hours_refresh">%1$s 小時前</string>
+    <string name="str_day_refresh">%1$s 日前</string>
     <string name="msg_system_connect_error">沒有網絡。點按畫面然後再試一次</string>
     <string name="str_submit">提交</string>
     <string name="str_input_recommend_reason">請輸入您推薦的原因</string>
@@ -209,7 +209,7 @@
     <string name="cluster_comment_txt">意見</string>
     <string name="video_play_comment_send">發送</string>
     <string name="str_reply">重播</string>
-    <string name="str_floor_text">發佈# %@</string>
+    <string name="str_floor_text">發佈 %1$s</string>
     <string name="str_usercenter_more_share">分享此頁面</string>
     <string name="dialog_str_goback">回到首頁</string>
     <string name="str_network_error">網絡錯誤。</string>
@@ -398,7 +398,7 @@
     <string name="str_circle_of_friends">時刻</string>
     <string name="str_weixin_friends">微信好友</string>
     <string name="str_weibo">微博</string>
-    <string name="str_photo_select">已選取 %@ 段影片</string>
+    <string name="str_photo_select">已選取 %1$s 段影片</string>
     <string name="str_profit_unit">G 幣</string>
     <string name="str_live_retry_live">恢復直播</string>
     <string name="str_live_create">製作直播</string>

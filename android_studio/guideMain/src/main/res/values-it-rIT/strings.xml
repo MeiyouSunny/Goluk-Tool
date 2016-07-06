@@ -77,7 +77,7 @@
     <string name="user_opinion_type_tuxiang">Effetto grafico</string>
     <string name="user_opinion_type_shouji">Client del dispositivo</string>
     <string name="user_opinion_type_qita">Altri</string>
-    <string name="str_photo_deletepromote">Cancella il video (S/N)</string>
+    <string name="str_photo_deletepromote">Cancella il %1$s video (S/N)</string>
     <string name="str_choose_head">Scegli un avatar</string>
     <string name="str_choose_one_head">Prima scegli un avatar</string>
     <string name="str_save_photo_fail">Impossibile salvare l\'avatar. Ti preghiamo di riprovare</string>
@@ -130,7 +130,7 @@
     <string name="str_cluster_wonderful">Ancora nessun video eccellente consigliato</string>
     <string name="attend_activity">Partecipa all\'evento</string>
     <string name="activity_time_out">L\'evento è terminato</string>
-    <string name="str_participation_population">%@ condivisioni</string>
+    <string name="str_participation_population">%1$s condivisioni</string>
     <string name="str_adas_guide_des1">Guida al centro di una corsia con meno veicoli.</string>
     <string name="str_adas_guide_des2">Dopo aver parcheggiato, segui la guida di configurazione per completare le impostazioni del primo utilizzo.</string>
     <string name="str_adas_verification_des">Consulta l\'immagine in basso. Sposta la croce visibile in alto verso la parte centrale della fine della strada.</string>
@@ -169,9 +169,9 @@
     <string name="unbind_select_type_title">Scegli e abbina al tuo dispositivo Goluk</string>
     <string name="str_today">Oggi</string>
     <string name="str_yestoday">Ieri</string>
-    <string name="str_minute_refresh">minuti fa</string>
-    <string name="str_hours_refresh">ore fa</string>
-    <string name="str_day_refresh">giorni fa</string>
+    <string name="str_minute_refresh">%1$s minuti fa</string>
+    <string name="str_hours_refresh">%1$s ore fa</string>
+    <string name="str_day_refresh">%1$s giorni fa</string>
     <string name="msg_system_connect_error">Rete non disponibile. Tocca lo schermo e riprova</string>
     <string name="str_submit">Invia</string>
     <string name="str_input_recommend_reason">Conferma i motivi della raccomandazione</string>
@@ -209,7 +209,7 @@
     <string name="cluster_comment_txt">Commento</string>
     <string name="video_play_comment_send">Invia</string>
     <string name="str_reply">Rispondi</string>
-    <string name="str_floor_text">Pubblica# %@</string>
+    <string name="str_floor_text">Pubblica %1$s</string>
     <string name="str_usercenter_more_share">Condividi questa pagina</string>
     <string name="dialog_str_goback">Ritorna alla Home</string>
     <string name="str_network_error">Errore di rete.</string>
@@ -398,7 +398,7 @@
     <string name="str_circle_of_friends">Momenti</string>
     <string name="str_weixin_friends">Amici di WeChat</string>
     <string name="str_weibo">Weibo</string>
-    <string name="str_photo_select">%@ video selezionati</string>
+    <string name="str_photo_select">%1$s video selezionati</string>
     <string name="str_profit_unit">GCoin</string>
     <string name="str_live_retry_live">Reimpostando dal vivo</string>
     <string name="str_live_create">Creando dal vivo</string>

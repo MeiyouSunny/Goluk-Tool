@@ -77,7 +77,7 @@
     <string name="user_opinion_type_tuxiang">グラフィック効果</string>
     <string name="user_opinion_type_shouji">デバイスクライアント</string>
     <string name="user_opinion_type_qita">その他</string>
-    <string name="str_photo_deletepromote">ビデオを削除します（はい/いいえ）</string>
+    <string name="str_photo_deletepromote">ビデオを削除 %1$s します（はい/いいえ）</string>
     <string name="str_choose_head">アバターを選択</string>
     <string name="str_choose_one_head">アバターを選択してください</string>
     <string name="str_save_photo_fail">アバターを保存できません。もう一度お試しください</string>
@@ -130,7 +130,7 @@
     <string name="str_cluster_wonderful">推薦優秀ビデオはまだありません</string>
     <string name="attend_activity">イベントに参加</string>
     <string name="activity_time_out">イベントは終了しました</string>
-    <string name="str_participation_population">共有数：%@</string>
+    <string name="str_participation_population">共有数：%1$s</string>
     <string name="str_adas_guide_des1">車両の少ない中央レーンを走行してください。</string>
     <string name="str_adas_guide_des2">駐車してから、設定ガイドに従って新規ユーザーの設定を完了させてください。</string>
     <string name="str_adas_verification_des">下の画像を参照して、上に表示されているクロスを道路端の中央に移動させます。</string>
@@ -169,9 +169,9 @@
     <string name="unbind_select_type_title">選択して、お使いのGolukデバイスとペアリングします</string>
     <string name="str_today">今日</string>
     <string name="str_yestoday">昨日</string>
-    <string name="str_minute_refresh">数分前</string>
-    <string name="str_hours_refresh">数時間前</string>
-    <string name="str_day_refresh">数日前</string>
+    <string name="str_minute_refresh">%1$s数分前</string>
+    <string name="str_hours_refresh">%1$s数時間前</string>
+    <string name="str_day_refresh">%1$s数日前</string>
     <string name="msg_system_connect_error">ネットワークが利用できません。画面をタップしてもう一度お試しください</string>
     <string name="str_submit">送信</string>
     <string name="str_input_recommend_reason">推薦する理由を入力してください</string>
@@ -209,7 +209,7 @@
     <string name="cluster_comment_txt">コメント</string>
     <string name="video_play_comment_send">送信</string>
     <string name="str_reply">返信</string>
-    <string name="str_floor_text">投稿番号%@</string>
+    <string name="str_floor_text">投稿番号 %1$s</string>
     <string name="str_usercenter_more_share">このページを共有</string>
     <string name="dialog_str_goback">ホームに戻る</string>
     <string name="str_network_error">ネットワークエラー。</string>
@@ -398,7 +398,7 @@
     <string name="str_circle_of_friends">Moments</string>
     <string name="str_weixin_friends">WeChatの友達</string>
     <string name="str_weibo">Weibo</string>
-    <string name="str_photo_select">%@個のビデオが選択されました</string>
+    <string name="str_photo_select">%1$s 個のビデオが選択されました</string>
     <string name="str_profit_unit">GCoin</string>
     <string name="str_live_retry_live">ライブを復元中</string>
     <string name="str_live_create">ライブを作成中</string>

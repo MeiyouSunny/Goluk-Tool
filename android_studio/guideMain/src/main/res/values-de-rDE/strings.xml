@@ -77,7 +77,7 @@
     <string name="user_opinion_type_tuxiang">Grafikeffekt</string>
     <string name="user_opinion_type_shouji">Geräteclient</string>
     <string name="user_opinion_type_qita">Andere</string>
-    <string name="str_photo_deletepromote">Video löschen (J/N)</string>
+    <string name="str_photo_deletepromote">%1$s Video löschen (J/N)</string>
     <string name="str_choose_head">Avatar auswählen</string>
     <string name="str_choose_one_head">Bitte einen Avatar auswählen</string>
     <string name="str_save_photo_fail">Avatar konnte nicht gespeichert werden. Bitte erneut versuchen</string>
@@ -130,7 +130,7 @@
     <string name="str_cluster_wonderful">Noch keine empfohlenen exzellenten Videos</string>
     <string name="attend_activity">Am Ereignis teilnehmen</string>
     <string name="activity_time_out">Ereignis is beendet.</string>
-    <string name="str_participation_population">%@ Mal geteilt</string>
+    <string name="str_participation_population">%1$s Mal geteilt</string>
     <string name="str_adas_guide_des1">Bitte in der Mitte einer Spur mit weniger Fahrzeugen fahren.</string>
     <string name="str_adas_guide_des2">Fülle nach dem Parken die erstmaligen Benutzereinstellungen basierend auf dem Konfigurationshandbuch aus.</string>
     <string name="str_adas_verification_des">Siehe folgende Abbildung. Verschiebe das Kreuz oben bis zur Mitte des Straßenendes.</string>
@@ -169,9 +169,9 @@
     <string name="unbind_select_type_title">Ihr Goluk-Gerät auswählen und damit koppeln</string>
     <string name="str_today">Heute</string>
     <string name="str_yestoday">Gestern</string>
-    <string name="str_minute_refresh">Minuten</string>
-    <string name="str_hours_refresh">Stunden</string>
-    <string name="str_day_refresh">Tage</string>
+    <string name="str_minute_refresh">%1$s Minuten</string>
+    <string name="str_hours_refresh">%1$s Stunden</string>
+    <string name="str_day_refresh">%1$s Tage</string>
     <string name="msg_system_connect_error">Netzwerk nicht verfügbar. Auf den Bildschirm tippen und erneut versuchen</string>
     <string name="str_submit">Absenden</string>
     <string name="str_input_recommend_reason">Bitte begründe deine Empfehlung</string>
@@ -209,7 +209,7 @@
     <string name="cluster_comment_txt">Kommentar</string>
     <string name="video_play_comment_send">Senden</string>
     <string name="str_reply">Antworten</string>
-    <string name="str_floor_text">%@. Beitrag</string>
+    <string name="str_floor_text">%1$s Beitrag</string>
     <string name="str_usercenter_more_share">Diese Seite teilen</string>
     <string name="dialog_str_goback">Zur Startseite</string>
     <string name="str_network_error">Netzwerkfehler.</string>
@@ -398,7 +398,7 @@
     <string name="str_circle_of_friends">Momente</string>
     <string name="str_weixin_friends">WeChat-Freunde</string>
     <string name="str_weibo">Weibo</string>
-    <string name="str_photo_select">%@ Videos ausgewählt</string>
+    <string name="str_photo_select">%1$s Videos ausgewählt</string>
     <string name="str_profit_unit">GCoin</string>
     <string name="str_live_retry_live">Live wird hergestellt</string>
     <string name="str_live_create">Live erstellen</string>

@@ -77,7 +77,7 @@
     <string name="user_opinion_type_tuxiang">Графический эффект</string>
     <string name="user_opinion_type_shouji">Клиент устройства</string>
     <string name="user_opinion_type_qita">Прочее</string>
-    <string name="str_photo_deletepromote">Удалить видео (Д/Н)</string>
+    <string name="str_photo_deletepromote">%1$s Удалить видео (Д/Н)</string>
     <string name="str_choose_head">Выбрать аватар</string>
     <string name="str_choose_one_head">Выберите аватар</string>
     <string name="str_save_photo_fail">Не удается сохранить аватар. Повторите попытку.</string>
@@ -130,7 +130,7 @@
     <string name="str_cluster_wonderful">Еще нет рекомендованных замечательных видео</string>
     <string name="attend_activity">Принять участие</string>
     <string name="activity_time_out">Событие завершено</string>
-    <string name="str_participation_population">Публикаций: %@</string>
+    <string name="str_participation_population">Публикаций: %1$s</string>
     <string name="str_adas_guide_des1">Вам нужно проехать по средней линии, где меньше автомобилей.</string>
     <string name="str_adas_guide_des2">После парковки выполните первую настройку, воспользовавшись руководством по настройке.</string>
     <string name="str_adas_verification_des">См. рисунок ниже. Переместите крестик, показанный выше, в середину конца дороги.</string>
@@ -169,9 +169,9 @@
     <string name="unbind_select_type_title">Выберите и подключите устройство Goluk</string>
     <string name="str_today">Сегодня</string>
     <string name="str_yestoday">Вчера</string>
-    <string name="str_minute_refresh">мин. назад</string>
-    <string name="str_hours_refresh">ч. назад</string>
-    <string name="str_day_refresh">дн. назад</string>
+    <string name="str_minute_refresh">%1$sмин. назад</string>
+    <string name="str_hours_refresh">%1$sч. назад</string>
+    <string name="str_day_refresh">%1$sдн. назад</string>
     <string name="msg_system_connect_error">Сеть недоступна. Коснитесь экрана и повторите попытку.</string>
     <string name="str_submit">Отправить</string>
     <string name="str_input_recommend_reason">Укажите причины рекомендации</string>
@@ -209,7 +209,7 @@
     <string name="cluster_comment_txt">Комментарий</string>
     <string name="video_play_comment_send">Отправить</string>
     <string name="str_reply">Ответить</string>
-    <string name="str_floor_text">Публикация# %@</string>
+    <string name="str_floor_text">Публикация %1$s</string>
     <string name="str_usercenter_more_share">Поделиться этой страницей</string>
     <string name="dialog_str_goback">Вернуться на домашний экран</string>
     <string name="str_network_error">Ошибка сети.</string>
@@ -398,7 +398,7 @@
     <string name="str_circle_of_friends">Моменты</string>
     <string name="str_weixin_friends">Друзья в WeChat</string>
     <string name="str_weibo">Weibo</string>
-    <string name="str_photo_select">Выбрано %@ видео</string>
+    <string name="str_photo_select">Выбрано %1$s видео</string>
     <string name="str_profit_unit">G-монета</string>
     <string name="str_live_retry_live">Восстановление прямой трансляции</string>
     <string name="str_live_create">Создание прямой трансляции</string>
@@ -1012,7 +1012,7 @@
     <string name="str_ae_only_selected_can_split">Разделить можно только выбранный объект</string>
     <string name="str_ae_selected_chunk_can_not_split">Нельзя разделить этот объект</string>
     <string name="str_ae_add_chunk_failed">Не удалось добавить видео</string>
-    <string name="str_ae_can_not_split_from">Нельзя разделить с длиной %1$ss</string>
+    <string name="str_ae_can_not_split_from">Нельзя разделить с длиной %1$s s</string>
     <string name="str_cluster_ranking_count_txt">Популярность</string>
     <string name="str_ae_no_export_size_supported">Нет поддерживаемого размера для экспорта</string>
     <string name="user_insert_butoom_msg">Зарегистрировавшись, вы принимаете наши Условия и</string>
