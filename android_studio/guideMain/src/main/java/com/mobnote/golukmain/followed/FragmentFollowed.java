@@ -215,7 +215,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 				new FollowAllRequest(IPageNotifyFn.PageType_FollowAll, this);
 		if(null != mApp && mApp.isUserLoginSucess) {
 			if(!TextUtils.isEmpty(mApp.mCurrentUId)) {
-				request.get(PROTOCOL, linkuid, mApp.mCurrentUId);
+				request.get("200", linkuid, mApp.mCurrentUId);
 			}
 		}
 	}
