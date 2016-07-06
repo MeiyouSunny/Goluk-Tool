@@ -169,6 +169,11 @@ public class FragmentMine extends Fragment implements OnClickListener,
 				.getMessageTotalCount();
 		setMessageTipCount(msgCount);
 		sendGetUserHomeRequest();
+        if(GolukApplication.getInstance().isMainland()){
+            mProfitItem.setVisibility(View.VISIBLE);
+        }else{
+            mProfitItem.setVisibility(View.GONE);
+        }
 	}
 
 	@Override
