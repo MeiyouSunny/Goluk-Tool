@@ -92,9 +92,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.mobnote.golukmain.UserPersonalEditActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name="com.mobnote.golukmain.UserPersonalSignActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -108,9 +105,6 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.mobnote.golukmain.UserSetupChangeWifiActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name="com.mobnote.golukmain.IndexMoreActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.mobnote.golukmain.UserSetupActivity"
@@ -234,10 +228,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"></activity>
         <activity
-            android:name="com.mobnote.golukmain.live.LiveActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name="com.mobnote.golukmain.livevideo.BaidumapLiveActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait"/>
@@ -308,10 +298,6 @@
             android:name="com.mobnote.golukmain.special.ClusterListActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"></activity>
-        <activity
-            android:name="com.mobnote.golukmain.usercenter.UserCenterActivity"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.mobnote.golukmain.usercenter.UserVideoCategoryActivity"
             android:hardwareAccelerated="true"
