@@ -142,7 +142,11 @@ public class SystemMsgAdapter extends BaseAdapter {
 				if (resultFial.equals(mmbTxt.content.certificate.result)) {// 失败
 					txt = mContext.getResources().getString(R.string.msg_system_certificate_fail);
 				} else {
-					txt = mContext.getResources().getString(R.string.msg_system_certificate_success);
+					if("0".equals(mmbTxt.content.certificate.type)){
+						txt = mContext.getResources().getString(R.string.msg_system_certificate_success_sys);
+					}else{
+						txt = mContext.getResources().getString(R.string.msg_system_certificate_success);
+					}
 				}
 
 			} else if (mmbTxt.type == msgTypeWithdraw) {// 提现
