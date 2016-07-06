@@ -636,7 +636,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_local_video_list">LocalVideoListActivity</string>
     <string name="share_str_open">公开(发布到广场)</string>
-    <string name="share_str_no_location">定位中&amp;#8230;</string>
+    <string name="share_str_no_location">定位中…</string>
     <string name="str_rank_click_btn_txt">Click Entry</string>
     <string name="str_ae_export_dialog_480p">中 480P</string>
     <string name="str_ae_export_dialog_720p">HD720P</string>
@@ -807,7 +807,7 @@
     <string name="user_personal_autoloading_progress">正在为您登录，请稍候……</string>
     <string name="live_title">网络直播</string>
     <string name="live_pause">暂停</string>
-    <string name="refreshing">正在刷新&amp;#8230;</string>
+    <string name="refreshing">正在刷新…</string>
     <string name="str_shortshare_other">说点其它的！</string>
     <string name="carrecorder_hint_text1">开启停车安防功能会自动判断车辆当前状态：当车辆处于停车状态极路客会触发1秒钟拍1张照片；</string>
     <string name="carrecorder_hint_text2">开启停车安防同时具备侦测功能，分为振动侦测（触发前8秒+后8秒视频）与移动侦测（触发前8秒+后8秒视频）两种。</string>
