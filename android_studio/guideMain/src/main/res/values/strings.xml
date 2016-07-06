@@ -325,6 +325,7 @@
     <string name="str_message_center_system">System Messages</string>
     <string name="msg_system_no_message">No System messages</string>
     <string name="msg_system_certificate_success">Your real name has been verified. Come check it out now!</string>
+    <string name="msg_system_certificate_success_sys">您被认证为星级用户啦，快去看看吧。</string>
     <string name="msg_system_select_txt">Congratulations! Your video has been featured.  Go check it out</string>
     <string name="msg_system_poll_txt">Your video is being voted on right now. Go check it out</string>
     <string name="msg_system_withdraw_check_fail">Your withdrawal was not approved. Tap to see why</string>
