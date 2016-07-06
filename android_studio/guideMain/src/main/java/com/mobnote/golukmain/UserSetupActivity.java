@@ -128,6 +128,9 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		mApp.setContext(mContext, "UserSetup");
 		mApp.mUser.setUserInterface(this);
 		judgeLogin();
+        if(!GolukApplication.getInstance().isMainland()){
+            mBindPhone.setVisibility(View.GONE);
+		}
 		// 缓存
 		try {
 			String cacheSize = DataCleanManage.getTotalCacheSize(mContext);
