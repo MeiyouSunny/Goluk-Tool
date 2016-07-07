@@ -31,7 +31,7 @@
     <string name="str_carrecorder_storage_format_sdcard_fail">Échec du formatage de la carte SD</string>
     <string name="str_carrecorder_connect_text">Connexion à Goluk en cours</string>
     <string name="str_ipc_no_connect_str">Déconnecté</string>
-    <string name="str_wonderful_qiangpai">Vidéo de 12 s</string>
+    <string name="str_wonderful_qiangpai">Vidéo</string>
     <string name="str_describe_video">Description de votre diffusion en direct</string>
     <string name="str_wonderful_live">Vidéo en direct magnifique de Goluk</string>
     <string name="str_update_ipc_ununited">Incorrectement connecté à Goluk</string>
@@ -77,7 +77,7 @@
     <string name="user_opinion_type_tuxiang">Effet graphique</string>
     <string name="user_opinion_type_shouji">Client de l\'appareil</string>
     <string name="user_opinion_type_qita">Autres</string>
-    <string name="str_photo_deletepromote">%1$s Supprimer la vidéo (Oui/Non)</string>
+    <string name="str_photo_deletepromote">Supprimer %1$s la vidéo (Oui/Non)</string>
     <string name="str_choose_head">Choisir un avatar</string>
     <string name="str_choose_one_head">Veuillez sélectionner un avatar</string>
     <string name="str_save_photo_fail">Impossible d\'enregistrer l\'avatar. Veuillez réessayer plus tard.</string>
@@ -169,9 +169,9 @@
     <string name="unbind_select_type_title">Choisissez et appairez avec votre appareil Goluk</string>
     <string name="str_today">Aujourd\'hui</string>
     <string name="str_yestoday">Hier</string>
-    <string name="str_minute_refresh">%1$s minutes auparavant</string>
-    <string name="str_hours_refresh">%1$s heures auparavant</string>
-    <string name="str_day_refresh">%1$s jours auparavant</string>
+    <string name="str_minute_refresh">%1$sminutes auparavant</string>
+    <string name="str_hours_refresh">%1$sheures auparavant</string>
+    <string name="str_day_refresh">%1$sjours auparavant</string>
     <string name="msg_system_connect_error">Réseau indisponible. Touchez l\'écran et réessayez</string>
     <string name="str_submit">Soumettre</string>
     <string name="str_input_recommend_reason">Veuillez saisir les raisons de votre recommandation</string>
@@ -184,6 +184,7 @@
     <string name="video_detail_head_sys_title">Cette vidéo a remporté le prix du système</string>
     <string name="video_detail_head_recom_title">La vidéo a été sélectionnée pour recommandation</string>
     <string name="str_atreason_default">Récompense de participation</string>
+    <string name="msg_system_reason_began">Raison :</string>
     <string name="str_surround_watch">Vues</string>
     <string name="str_usercenter_comment">Commentaire</string>
     <string name="str_wonderful_text">Tendance</string>
@@ -209,7 +210,7 @@
     <string name="cluster_comment_txt">Commenter</string>
     <string name="video_play_comment_send">Envoyer</string>
     <string name="str_reply">Réponse</string>
-    <string name="str_floor_text">Publication %1$s</string>
+    <string name="str_floor_text">Publication# %1$s</string>
     <string name="str_usercenter_more_share">Partager cette page</string>
     <string name="dialog_str_goback">Revenir à l\'accueil</string>
     <string name="str_network_error">Erreur réseau.</string>
@@ -860,7 +861,6 @@ Une qualité médiocre de la carte mémoire provoquera des enregistrements anorm
     <string name="msg_system_certificate_fail">Désolé, votre authentification a échoué</string>
     <string name="msg_system_reward_txt_began">Obtenir</string>
     <string name="msg_system_reward_txt_end">unités de monnaie G</string>
-    <string name="msg_system_reason_began">Raison :</string>
     <string name="str_pull_to_refresh_refreshing_label">Actualisation en cours</string>
     <string name="my_shopping_buck_line">Acheter le câble de détection de pression de Goluk</string>
     <string name="str_loginning">Inscription en cours. Veuillez patienter</string>
@@ -1026,4 +1026,17 @@ Une qualité médiocre de la carte mémoire provoquera des enregistrements anorm
     <string name="invalid_token">Connexion expirée, veuillez vous reconnecter</string>
     <string name="str_edit_short_video">Modifier la courte vidéo</string>
     <string name="str_video_export_failed_info">Votre appareil vidéo ne peut pas gérer les prérequis de la vidéo. Veuillez essayer de partager la vidéo originale</string>
+    <string name="str_regist_password_hint_text">Saisir le mot de passe </string>
+    <string name="interantion_ban_mainland_goluk">Impossible d\'utiliser une caméra embarquée vendue en Chine</string>
+    <string name="str_video_export_progress">Création de la vidéo en cours</string>
+    <string name="start_connect_ipc_device">Connecter：%1$s</string>
+    <string name="str_adas_car_name">Nommer votre véhicule</string>
+    <string name="choose_ipc_device">Sélectionner l\'appareil：</string>
+    <string name="goluk_wifi_connection">Connexion Wi-Fi Goluk</string>
+    <string name="goluk_cannot_connect_hotspot">Goluk connection to your mobile hotspot has failed</string>
+    <string name="reconnect_hotspot">Reconnect mobile hotspot</string>
+    <string name="goluk_only_wifi">Direct connect to Goluk Wi-Fi</string>
+    <string name="connect_only_wifi_desc">Direct connect to Goluk Wi-Fi, the live broadcast function and mobile data network connection will not be available.</string>
+    <string name="disconnect_goluk_before_share">Need to disconnect the Goluk Wi-Fi in order to use the network to share</string>
+    <string name="msg_system_certificate_success_sys">Vous êtes désormais un membre étoile. Allez y jeter un œil !</string>
 </resources>

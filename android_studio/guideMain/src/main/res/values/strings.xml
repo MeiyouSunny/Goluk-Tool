@@ -31,7 +31,7 @@
     <string name="str_carrecorder_storage_format_sdcard_fail">Failed to format the SD card</string>
     <string name="str_carrecorder_connect_text">Connecting to Goluk…</string>
     <string name="str_ipc_no_connect_str">Disconnected</string>
-    <string name="str_wonderful_qiangpai">12s VIDEO</string>
+    <string name="str_wonderful_qiangpai">VIDEO</string>
     <string name="str_describe_video">Describe this Video</string>
     <string name="str_wonderful_live">Goluk Wonderful Live Video</string>
     <string name="str_update_ipc_ununited">Not correctly connected to Goluk</string>
@@ -184,6 +184,7 @@
     <string name="video_detail_head_sys_title">This Video has won the system award</string>
     <string name="video_detail_head_recom_title">This Video has been selected for Recommendation</string>
     <string name="str_atreason_default">Reason : Participation Reward</string>
+    <string name="msg_system_reason_began">Reason:</string>
     <string name="str_surround_watch">Views</string>
     <string name="str_usercenter_comment">Comment</string>
     <string name="str_wonderful_text">Hot</string>
@@ -325,7 +326,6 @@
     <string name="str_message_center_system">System Messages</string>
     <string name="msg_system_no_message">No System messages</string>
     <string name="msg_system_certificate_success">Your real name has been verified. Come check it out now!</string>
-    <string name="msg_system_certificate_success_sys">您被认证为星级用户啦，快去看看吧。</string>
     <string name="msg_system_select_txt">Congratulations! Your video has been featured.  Go check it out</string>
     <string name="msg_system_poll_txt">Your video is being voted on right now. Go check it out</string>
     <string name="msg_system_withdraw_check_fail">Your withdrawal was not approved. Tap to see why</string>
@@ -862,7 +862,6 @@
     <string name="msg_system_certificate_fail">Sorry, your authentication has failed</string>
     <string name="msg_system_reward_txt_began">Obtain</string>
     <string name="msg_system_reward_txt_end">units of G Currency</string>
-    <string name="msg_system_reason_began">Reason:</string>
     <string name="str_pull_to_refresh_refreshing_label">Refreshing</string>
     <string name="my_shopping_buck_line">Buy Goluk pressure sensor cable</string>
     <string name="str_loginning">Signing up. Please wait</string>
@@ -1014,7 +1013,7 @@
     <string name="str_ae_only_selected_can_split">Only selected item can be splitted</string>
     <string name="str_ae_selected_chunk_can_not_split">This item can not be splitted</string>
     <string name="str_ae_add_chunk_failed">Add video failed</string>
-    <string name="str_ae_can_not_split_from">Can not split length with %1$ss</string>
+    <string name="str_ae_can_not_split_from">Can not split length with %1$s s</string>
     <string name="str_cluster_ranking_count_txt">Popularity</string>
     <string name="str_ae_no_export_size_supported">No supported size can be exported</string>
     <string name="user_insert_butoom_msg">By signing up, you agree to our Terms  &amp;</string>
@@ -1028,18 +1027,17 @@
     <string name="invalid_token">Login expired, please log in again</string>
     <string name="str_edit_short_video">Edit short video</string>
     <string name="str_video_export_failed_info">Your mobile device cannot handle the requirements of the video. Please try to share the original</string>
-
+    <string name="str_regist_password_hint_text">Enter password</string>
+    <string name="interantion_ban_mainland_goluk">Unable to use dashcam sold in China</string>
+    <string name="str_video_export_progress">Generating Video</string>
+    <string name="start_connect_ipc_device">Connect：%1$s</string>
     <string name="str_adas_car_name">Name your vehicle</string>
-    <string name="choose_ipc_device">Select device </string>
-    <string name="str_regist_password_hint_text">ENTER PASSWORD</string>
+    <string name="choose_ipc_device">Select device：</string>
     <string name="goluk_wifi_connection">Goluk Wi-Fi connection</string>
     <string name="goluk_cannot_connect_hotspot">Goluk connection to your mobile hotspot has failed</string>
     <string name="reconnect_hotspot">Reconnect mobile hotspot</string>
     <string name="goluk_only_wifi">Direct connect to Goluk Wi-Fi</string>
-    <string name="connect_only_wifi_desc">Direct connect to Goluk Wi-Fi\n the live broadcast function and mobile data network connection will not be available</string>
+    <string name="connect_only_wifi_desc">Direct connect to Goluk Wi-Fi, the live broadcast function and mobile data network connection will not be available.</string>
     <string name="disconnect_goluk_before_share">Need to disconnect the Goluk Wi-Fi in order to use the network to share</string>
-    <string name="interantion_ban_mainland_goluk">Can not use this Device which is from China</string>
-    <string name="start_connect_ipc_device">To connect: %1$s</string>
-    <string name="str_video_export_progress">Video generating</string>
-
+    <string name="msg_system_certificate_success_sys">You\'re now a star member. Go check it out!</string>
 </resources>
