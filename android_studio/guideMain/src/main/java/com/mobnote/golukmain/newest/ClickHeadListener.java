@@ -30,9 +30,9 @@ public class ClickHeadListener implements OnClickListener {
 		// 防止重复点击
 		if (null != mContext && mContext instanceof BaseActivity) {
 			if (!((BaseActivity) mContext).isAllowedClicked()) {
+				((BaseActivity) mContext).setJumpToNext();
 				return;
 			}
-			((BaseActivity) mContext).setJumpToNext();
 		}
 
 		if (null == mVideoSquareInfo) {

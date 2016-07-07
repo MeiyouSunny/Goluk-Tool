@@ -313,6 +313,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 
     private static final String SNAPSHOT_DIR = "fs1:/pic/";
 
+    /** 保存区分国际版与国内版的标示 例如：国际版 T1U 国内版 T1**/
+    public String mIpcVersion = "";
+
     static {
 //		System.loadLibrary("golukmobile");
     }
@@ -1360,6 +1363,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             if (null != param2) {
                 ipcInfo = GolukFastJsonUtil.getParseObj((String) param2, IpcConnSuccessInfo.class);
                 ipcInfo.lasttime = String.valueOf(System.currentTimeMillis());
+                mIpcVersion = ipcInfo.version;
             }
 
             // 保存ipc设备型号,是G1, G2 还是T1
