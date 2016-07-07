@@ -954,6 +954,10 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
      * @author jyf
      */
     private void deleteVideo() {
+        if (!UserUtils.isNetDeviceAvailable(this)) {
+            GolukUtils.showToast(this, getResources().getString(R.string.user_net_unavailable));
+            return;
+        }
         if (null == mVideoJson || mVideoJson.success == false || null == mVideoJson.data
                 || null == mVideoJson.data.avideo || null == mVideoJson.data.avideo.video
                 || null == mVideoJson.data.avideo.video.videoid || null == mVideoJson.data.avideo.user
