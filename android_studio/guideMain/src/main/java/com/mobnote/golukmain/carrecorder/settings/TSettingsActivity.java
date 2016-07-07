@@ -489,11 +489,15 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			findViewById(R.id.tv_t_settings_security_desc).setVisibility(View.GONE);
 		}
 //		findViewById(R.id.ly_t_settings_buy).setVisibility(View.VISIBLE);
-		//国际版不显示购买链接
+		//国际版不显示购买链接、视频水印、语言设置
 		if (GolukApplication.getInstance().isMainland()) {
 			findViewById(R.id.ly_t_settings_buy).setVisibility(View.VISIBLE);
+			mVideoLogoLayout.setVisibility(View.VISIBLE);
+			mLanguageLayout.setVisibility(View.VISIBLE);
 		} else {
 			findViewById(R.id.ly_t_settings_buy).setVisibility(View.GONE);
+			mVideoLogoLayout.setVisibility(View.GONE);
+			mLanguageLayout.setVisibility(View.GONE);
 		}
 	}
 
