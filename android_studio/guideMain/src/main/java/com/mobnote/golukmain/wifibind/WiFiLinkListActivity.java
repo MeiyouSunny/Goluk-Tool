@@ -142,6 +142,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         // 获得GolukApplication对象
         mApp = (GolukApplication) getApplication();
         mApp.setContext(this, TAG);
+        mApp.getIPCControlManager().removeIPCManagerListener("carversion");
         // 清除数据
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).clear();
         // 写日志，表示绑定失败
@@ -454,7 +455,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             if (null != mApp.getIPCControlManager()) {
                 mApp.getIPCControlManager().addIPCManagerListener("carversion", this);
             }
-            mNeverReceiveMessage = false;
+            mNeverReceiveMessage = true;
             mApp.getIPCControlManager().getVersion();
         } else {
             mCurrentState = STATE_SUCCESS;
@@ -676,7 +677,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
     @Override
     public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-        if (IPC_VDCP_Msg_GetVersion == msg && !mNeverReceiveMessage) {
+        if (IPC_VDCP_Msg_GetVersion == msg && mNeverReceiveMessage) {
             if (param1 == RESULE_SUCESS) {
                 String str = (String) param2;
                 if (TextUtils.isEmpty(str)) {
@@ -694,7 +695,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                         mBaseHandler.sendEmptyMessage(MSG_H_REGION);
                     } else {
                         mCurrentState = STATE_SUCCESS;
-                        mNeverReceiveMessage = true;
+                        mNeverReceiveMessage = false;
                         doConnect();
                     }
                 } catch (JSONException e) {
@@ -711,7 +712,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     protected void hMessage(Message msg) {
         if (MSG_H_REGION == msg.what) {
             this.dimissLoadingDialog();
-            mApp.getIPCControlManager().removeIPCManagerListener("carversion");
+//            mApp.getIPCControlManager().removeIPCManagerListener("carversion");
             GolukUtils.showToast(WiFiLinkListActivity.this, getResources().getString(R.string.interantion_ban_mainland_goluk));
             finish();
         }

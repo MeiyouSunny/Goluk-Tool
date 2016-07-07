@@ -1109,7 +1109,7 @@ public class IPCControlManager implements IPCManagerFn {
 	}
 
 	@Override
-	public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+	public synchronized void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		// LogUtil.e("jyf",
 		// "YYYYYYY----IPCManage_CallBack-----222222222---------IPCManagerAdapter-22---event:"
 		// + event + " msg:" + msg+"==param1="+param1+"==data:"+(String)param2);
