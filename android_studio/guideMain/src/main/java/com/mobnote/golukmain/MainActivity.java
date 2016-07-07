@@ -61,6 +61,8 @@ import com.mobnote.eventbus.EventUserLoginRet;
 import com.mobnote.eventbus.EventWifiAuto;
 import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.eventbus.EventWifiState;
+import com.mobnote.golukmain.FollowCount.FollowCountRequest;
+import com.mobnote.golukmain.FollowCount.bean.FollowCountRetBean;
 import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.util.GFileUtils;
@@ -305,7 +307,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         }
         GolukUtils.getMobileInfo(this);
 
-        // msgRequest();
+        //msgRequest();
         mSharePlatform = new SharePlatformUtil(this);
     }
 
@@ -436,6 +438,12 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         }
     }
 
+    private void followCountRequest(){
+        if (GolukApplication.getInstance().isUserLoginSucess) {
+            FollowCountRequest followCountRequest = new FollowCountRequest(IPageNotifyFn.PageType_FollowCount, this);
+            followCountRequest.get(GolukApplication.getInstance().mCurrentUId);
+        }
+    }
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -933,6 +941,8 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             this.updateRecoderBtn(mApp.mWiFiStatus);
         }
 
+        followCountRequest();
+
         super.onResume();
     }
 
@@ -1286,6 +1296,14 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 
                 MessageManager.getMessageManager().setMessageEveryCount(praiseCount, commentCount, followCount,
                         systemCount);
+            }
+        }else if(requestType == IPageNotifyFn.PageType_FollowCount) {
+            FollowCountRetBean bean = (FollowCountRetBean) result;
+            if (null == bean || null == bean.data) {
+                return;
+            }
+            if(bean.data.newvideo > 0){
+                mFollowedVideoTipIV.setVisibility(View.VISIBLE);
             }
         }
     }
