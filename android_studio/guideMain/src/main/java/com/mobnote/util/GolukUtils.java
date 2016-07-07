@@ -48,6 +48,7 @@ import com.mobnote.golukmain.startshare.VideoShareActivity;
 import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
+import com.mobnote.user.UserUtils;
 import com.mobnote.videoedit.AfterEffectActivity;
 
 import java.io.BufferedReader;
@@ -1034,7 +1035,7 @@ public class GolukUtils {
     public static void startFollowingListActivity(Context context, String uId) {
 
         if (!isNetworkConnected(context)) {
-            Toast.makeText(context, context.getString(R.string.network_error),
+            Toast.makeText(context, context.getString(R.string.str_network_unavailable),
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -1047,7 +1048,7 @@ public class GolukUtils {
 
     public static void startFanListActivity(Context context, String uId) {
         if (!isNetworkConnected(context)) {
-            Toast.makeText(context, context.getString(R.string.network_error),
+            Toast.makeText(context, context.getString(R.string.str_network_unavailable),
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -1088,6 +1089,10 @@ public class GolukUtils {
     }
 
     public static void startUserCenterActivity(Context context, String userId) {
+        if (!UserUtils.isNetDeviceAvailable(context)) {
+            GolukUtils.showToast(context, context.getString(R.string.str_network_unavailable));
+            return;
+        }
         Intent intent = new Intent(context, NewUserCenterActivity.class);
         intent.putExtra("userId", userId);
         context.startActivity(intent);
