@@ -741,8 +741,9 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
                     shareState = shareDataFull.msg;
                     GolukUtils.showToast(this, this.getString(R.string.str_get_share_address_fail));
                 }
-                ZhugeUtils.eventShareVideo(this, mSelectedShareType + "", mVideoQuality, mVideoDuration, mShareDiscrible, mCurrSelectedSharePlatform,
-                        mActivityname, shareState);
+//                ZhugeUtils.eventShareVideo(this, mSelectedShareType + "", mVideoQuality, mVideoDuration, mShareDiscrible, mCurrSelectedSharePlatform,
+//                        mActivityname, shareState);
+                zhugeShareVideo(shareState);
                 break;
         }
     }
@@ -898,5 +899,10 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public void zhugeShareVideo(String state) {
+        ZhugeUtils.eventShareVideo(this, mSelectedShareType + "", mVideoQuality, mVideoDuration, mShareDiscrible, mCurrSelectedSharePlatform,
+                mActivityname, state);
     }
 }

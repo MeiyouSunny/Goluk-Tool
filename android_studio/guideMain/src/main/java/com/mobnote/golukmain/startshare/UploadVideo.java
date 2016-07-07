@@ -433,6 +433,9 @@ public class UploadVideo implements IUploadRequestListener {
 	public void onUploadFailed(int errorCode, String errorMsg) {
 		// TODO Auto-generated method stub
 		GolukDebugUtils.e("goluk", "上传结果:失败! ret:" + errorCode + " msg:" + errorMsg);
+		if (null != mContext && mContext instanceof VideoShareActivity) {
+			((VideoShareActivity) mContext).zhugeShareVideo(errorMsg);
+		}
 		mBaseHandler.sendEmptyMessage(MSG_H_UPLOAD_ERROR);
 	}
 }
