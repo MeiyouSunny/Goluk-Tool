@@ -114,7 +114,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 				return;
 			}
 		});
-        GolukUtils.getAppVersionName(getActivity());
+
 		mRetryClickIV.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

@@ -31,7 +31,7 @@
     <string name="str_carrecorder_storage_format_sdcard_fail">SD 카드 포맷 실패</string>
     <string name="str_carrecorder_connect_text">Goluk에 연결 중</string>
     <string name="str_ipc_no_connect_str">연결 끊김</string>
-    <string name="str_wonderful_qiangpai">12초 동영상</string>
+    <string name="str_wonderful_qiangpai">동영상</string>
     <string name="str_describe_video">라이브 방송에 대해 설명 해주세요</string>
     <string name="str_wonderful_live">Goluk 원더풀 라이브 동영상</string>
     <string name="str_update_ipc_ununited">Goluk에 제대로 연결되지 않았습니다</string>
@@ -77,7 +77,7 @@
     <string name="user_opinion_type_tuxiang">그래픽 효과</string>
     <string name="user_opinion_type_shouji">기기 클라이언트</string>
     <string name="user_opinion_type_qita">그 외</string>
-    <string name="str_photo_deletepromote">%1$s 동영상 삭제 (네/아니오)</string>
+    <string name="str_photo_deletepromote">%1$s동영상 삭제 (네/아니오)</string>
     <string name="str_choose_head">아바타 선택</string>
     <string name="str_choose_one_head">아바타를 선택하세요</string>
     <string name="str_save_photo_fail">아바타를 저장 할 수 없습니다. 다시 시도하세요.</string>
@@ -185,6 +185,7 @@
     <string name="video_detail_head_sys_title">이 동영상은 시스템 상을 수상했습니다</string>
     <string name="video_detail_head_recom_title">이 동영상은 추천 작품으로 선택되었습니다</string>
     <string name="str_atreason_default">참가상</string>
+    <string name="msg_system_reason_began">이유:</string>
     <string name="str_surround_watch">조회수</string>
     <string name="str_usercenter_comment">댓글</string>
     <string name="str_wonderful_text">핫</string>
@@ -210,7 +211,7 @@
     <string name="cluster_comment_txt">댓글</string>
     <string name="video_play_comment_send">전송</string>
     <string name="str_reply">답장</string>
-    <string name="str_floor_text">게시물 %1$s</string>
+    <string name="str_floor_text">게시물# %1$s</string>
     <string name="str_usercenter_more_share">이 페이지 공유</string>
     <string name="dialog_str_goback">홈페이지로 돌아가기</string>
     <string name="str_network_error">네트워크 오류</string>
@@ -861,7 +862,6 @@
     <string name="msg_system_certificate_fail">죄송합니다. 인증에 실패했습니다.</string>
     <string name="msg_system_reward_txt_began">획득</string>
     <string name="msg_system_reward_txt_end">G 통화 단위</string>
-    <string name="msg_system_reason_began">이유:</string>
     <string name="str_pull_to_refresh_refreshing_label">새로고침 중</string>
     <string name="my_shopping_buck_line">Goluk 압력 센서 케이블 구매하기</string>
     <string name="str_loginning">가입 중. 잠시만 기다리세요.</string>
@@ -1027,4 +1027,17 @@
     <string name="invalid_token">로그인이 만료되었습니다. 다시 로그인 하세요.</string>
     <string name="str_edit_short_video">짧은 동영상 수정</string>
     <string name="str_video_export_failed_info">회원님의 휴대전화 기기가 동영상의 동작 환경을 처리 할 수 없습니다. 원본을 공유 해보세요.</string>
+    <string name="str_regist_password_hint_text">비밀번호 입력</string>
+    <string name="interantion_ban_mainland_goluk">중국에서 판매된 차량용 블랙박스 사용 불가</string>
+    <string name="str_video_export_progress">동영상 생성 중</string>
+    <string name="start_connect_ipc_device">연결：%1$s</string>
+    <string name="str_adas_car_name">차량 이름 짓기</string>
+    <string name="choose_ipc_device">기기 선택：</string>
+    <string name="goluk_wifi_connection">Goluk 와이파이 연결</string>
+    <string name="goluk_cannot_connect_hotspot">Goluk connection to your mobile hotspot has failed</string>
+    <string name="reconnect_hotspot">Reconnect mobile hotspot</string>
+    <string name="goluk_only_wifi">Direct connect to Goluk Wi-Fi</string>
+    <string name="connect_only_wifi_desc">Direct connect to Goluk Wi-Fi, the live broadcast function and mobile data network connection will not be available.</string>
+    <string name="disconnect_goluk_before_share">Need to disconnect the Goluk Wi-Fi in order to use the network to share</string>
+    <string name="msg_system_certificate_success_sys">회원님은 이제 스타 멤버입니다. 확인 해보세요!</string>
 </resources>
