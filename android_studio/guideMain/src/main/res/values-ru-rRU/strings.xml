@@ -31,7 +31,7 @@
     <string name="str_carrecorder_storage_format_sdcard_fail">Не удается отформатировать SD-карту</string>
     <string name="str_carrecorder_connect_text">Подключение к Goluk</string>
     <string name="str_ipc_no_connect_str">Отключено</string>
-    <string name="str_wonderful_qiangpai">ВИДЕО 12 с.</string>
+    <string name="str_wonderful_qiangpai">ВИДЕО</string>
     <string name="str_describe_video">Опишите свою прямую трансляцию</string>
     <string name="str_wonderful_live">Замечательная прямая трансляция Goluk</string>
     <string name="str_update_ipc_ununited">Некорректное подключение к Goluk</string>
@@ -77,7 +77,7 @@
     <string name="user_opinion_type_tuxiang">Графический эффект</string>
     <string name="user_opinion_type_shouji">Клиент устройства</string>
     <string name="user_opinion_type_qita">Прочее</string>
-    <string name="str_photo_deletepromote">%1$s Удалить видео (Д/Н)</string>
+    <string name="str_photo_deletepromote">Удалить %1$s видео (Д/Н)</string>
     <string name="str_choose_head">Выбрать аватар</string>
     <string name="str_choose_one_head">Выберите аватар</string>
     <string name="str_save_photo_fail">Не удается сохранить аватар. Повторите попытку.</string>
@@ -184,6 +184,7 @@
     <string name="video_detail_head_sys_title">Это видео удостоено системной награды</string>
     <string name="video_detail_head_recom_title">Это видео выбрано для рекомендации</string>
     <string name="str_atreason_default">Награда за участие</string>
+    <string name="msg_system_reason_began">Причина:</string>
     <string name="str_surround_watch">Просмотры</string>
     <string name="str_usercenter_comment">Комментарий</string>
     <string name="str_wonderful_text">Популярное</string>
@@ -209,7 +210,7 @@
     <string name="cluster_comment_txt">Комментарий</string>
     <string name="video_play_comment_send">Отправить</string>
     <string name="str_reply">Ответить</string>
-    <string name="str_floor_text">Публикация %1$s</string>
+    <string name="str_floor_text">Публикация# %1$s</string>
     <string name="str_usercenter_more_share">Поделиться этой страницей</string>
     <string name="dialog_str_goback">Вернуться на домашний экран</string>
     <string name="str_network_error">Ошибка сети.</string>
@@ -860,7 +861,6 @@
     <string name="msg_system_certificate_fail">К сожалению, вы не прошли аутентификацию</string>
     <string name="msg_system_reward_txt_began">Получить</string>
     <string name="msg_system_reward_txt_end">ед. G-валюты</string>
-    <string name="msg_system_reason_began">Причина:</string>
     <string name="str_pull_to_refresh_refreshing_label">Обновление</string>
     <string name="my_shopping_buck_line">Купить кабель датчика давления Goluk</string>
     <string name="str_loginning">Идет регистрация. Подождите.</string>
@@ -1026,4 +1026,17 @@
     <string name="invalid_token">Сессия завершена, войдите еще раз</string>
     <string name="str_edit_short_video">Редактировать короткое видео</string>
     <string name="str_video_export_failed_info">Ваше мобильное устройство не удовлетворяет требованиям этого видео. Попробуйте поделиться иходным</string>
+    <string name="str_regist_password_hint_text">Введите пароль </string>
+    <string name="interantion_ban_mainland_goluk">Нельзя использовать видеорегистратор, проданный в Китае</string>
+    <string name="str_video_export_progress">Генерация видео</string>
+    <string name="start_connect_ipc_device">Подключиться：%1$s</string>
+    <string name="str_adas_car_name">Дайте название автомобилю</string>
+    <string name="choose_ipc_device">Выберите устройство：</string>
+    <string name="goluk_wifi_connection">Подключение к Wi-Fi Goluk</string>
+    <string name="goluk_cannot_connect_hotspot">Goluk connection to your mobile hotspot has failed</string>
+    <string name="reconnect_hotspot">Reconnect mobile hotspot</string>
+    <string name="goluk_only_wifi">Direct connect to Goluk Wi-Fi</string>
+    <string name="connect_only_wifi_desc">Direct connect to Goluk Wi-Fi, the live broadcast function and mobile data network connection will not be available.</string>
+    <string name="disconnect_goluk_before_share">Need to disconnect the Goluk Wi-Fi in order to use the network to share</string>
+    <string name="msg_system_certificate_success_sys">Вы стали звездным участником. Посмотрите!</string>
 </resources>

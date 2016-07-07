@@ -31,7 +31,7 @@
     <string name="str_carrecorder_storage_format_sdcard_fail">無法將 SD 卡格式化</string>
     <string name="str_carrecorder_connect_text">正在連接至極路客</string>
     <string name="str_ipc_no_connect_str">連接已中斷</string>
-    <string name="str_wonderful_qiangpai">12 秒影片</string>
+    <string name="str_wonderful_qiangpai">影片</string>
     <string name="str_describe_video">您的直播說明</string>
     <string name="str_wonderful_live">極路客精彩實時影片</string>
     <string name="str_update_ipc_ununited">未正確連接至極路客</string>
@@ -169,9 +169,9 @@
     <string name="unbind_select_type_title">選取並配對至您的極路客裝置</string>
     <string name="str_today">今日</string>
     <string name="str_yestoday">昨日</string>
-    <string name="str_minute_refresh">%1$s 分鐘前</string>
-    <string name="str_hours_refresh">%1$s 小時前</string>
-    <string name="str_day_refresh">%1$s 日前</string>
+    <string name="str_minute_refresh">%1$s分鐘前</string>
+    <string name="str_hours_refresh">%1$s小時前</string>
+    <string name="str_day_refresh">%1$s日前</string>
     <string name="msg_system_connect_error">沒有網絡。點按畫面然後再試一次</string>
     <string name="str_submit">提交</string>
     <string name="str_input_recommend_reason">請輸入您推薦的原因</string>
@@ -184,6 +184,7 @@
     <string name="video_detail_head_sys_title">此影片榮獲系統獎項</string>
     <string name="video_detail_head_recom_title">此影片獲選為推薦影片</string>
     <string name="str_atreason_default">參與獎勵</string>
+    <string name="msg_system_reason_began">原因：</string>
     <string name="str_surround_watch">觀看次數</string>
     <string name="str_usercenter_comment">評論</string>
     <string name="str_wonderful_text">熱門</string>
@@ -209,7 +210,7 @@
     <string name="cluster_comment_txt">意見</string>
     <string name="video_play_comment_send">發送</string>
     <string name="str_reply">重播</string>
-    <string name="str_floor_text">發佈 %1$s</string>
+    <string name="str_floor_text">發佈# %1$s</string>
     <string name="str_usercenter_more_share">分享此頁面</string>
     <string name="dialog_str_goback">回到首頁</string>
     <string name="str_network_error">網絡錯誤。</string>
@@ -860,7 +861,6 @@
     <string name="msg_system_certificate_fail">抱歉，認證失敗</string>
     <string name="msg_system_reward_txt_began">取得</string>
     <string name="msg_system_reward_txt_end">G 貨幣的單位</string>
-    <string name="msg_system_reason_began">原因：</string>
     <string name="str_pull_to_refresh_refreshing_label">刷新中</string>
     <string name="my_shopping_buck_line">購買極路客壓力感應器連接線</string>
     <string name="str_loginning">正在註冊，請稍等</string>
@@ -1026,4 +1026,17 @@
     <string name="invalid_token">登錄過期，請重新登入</string>
     <string name="str_edit_short_video">編輯短片</string>
     <string name="str_video_export_failed_info">手機性能未達匯出影片的要求，您可以嘗試分享原始影片檔案</string>
+    <string name="str_regist_password_hint_text">輸入密碼</string>
+    <string name="interantion_ban_mainland_goluk">無法使用來自中國地區的記錄儀</string>
+    <string name="str_video_export_progress">製作影片</string>
+    <string name="start_connect_ipc_device">連接：%1$s</string>
+    <string name="str_adas_car_name">為您的汽車命名</string>
+    <string name="choose_ipc_device">選擇裝置：</string>
+    <string name="goluk_wifi_connection">極路客 Wi-Fi 連接</string>
+    <string name="goluk_cannot_connect_hotspot">极路客连接到手机热点失败…</string>
+    <string name="reconnect_hotspot">重新连接热点</string>
+    <string name="goluk_only_wifi">仅连接行车记录仪</string>
+    <string name="connect_only_wifi_desc">仅Wi-Fi连接行车记录仪\n连接时直播功能和移动数据网络将不可用</string>
+    <string name="disconnect_goluk_before_share">需断开记录仪Wi-Fi才能使用网络分享</string>
+    <string name="msg_system_certificate_success_sys">您已成為星級會員。快來看看！</string>
 </resources>
