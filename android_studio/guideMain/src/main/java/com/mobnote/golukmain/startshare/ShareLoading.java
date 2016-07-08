@@ -68,13 +68,13 @@ public class ShareLoading implements OnClickListener, OnTouchListener {
 		case STATE_CREATE_VIDEO:
 			mLoadingTv.setText(mContext.getString(R.string.str_video_generation));
 			mLoadingProress.setVisibility(View.VISIBLE);
-			mLoadingProress.setText("0%");
+			mLoadingProress.setText(" 0%");
 			setProcess(0);
 			break;
 		case STATE_UPLOAD:
 			mLoadingTv.setText(mContext.getString(R.string.str_video_uploading));
 			mLoadingProress.setVisibility(View.VISIBLE);
-			mLoadingProress.setText("0%");
+			mLoadingProress.setText(" 0%");
 			setProcess(0);
 			break;
 		case STATE_GET_SHARE:
@@ -105,7 +105,7 @@ public class ShareLoading implements OnClickListener, OnTouchListener {
 			return;
 		}
 		mRingView.setProcess(process);
-		mLoadingProress.setText(process + mContext.getString(R.string.str_ipc_update_percent_unit));
+		mLoadingProress.setText(" "+process + mContext.getString(R.string.str_ipc_update_percent_unit));
 	}
 
 	public void showLoadingLayout() {
