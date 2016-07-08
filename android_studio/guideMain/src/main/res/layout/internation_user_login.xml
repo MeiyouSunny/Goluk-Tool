@@ -111,6 +111,7 @@
                 android:gravity="center"
                 android:text="@string/user_login_title_text"
                 android:textColor="#7fffffff"
+                android:textAllCaps="false"
                 android:textSize="14sp" />
         </RelativeLayout>
 

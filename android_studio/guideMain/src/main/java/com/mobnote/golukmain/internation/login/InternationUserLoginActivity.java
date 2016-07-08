@@ -345,7 +345,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 						mBtnLogin.setEnabled(false);
 					}
 				}
-				if (!psw.equals("") && !"".equals(number) && UserUtils.isNumber(number)) {
+				if (!psw.equals("") && !"".equals(number) && UserUtils.isNumber(number) && psw.trim().length() >=6) {
 					mBtnLogin.setTextColor(Color.parseColor("#FFFFFF"));
 					mBtnLogin.setEnabled(true);
 					mEditTextPwd.setTextColor(getResources().getColor(R.color.login_next_btn_fial));

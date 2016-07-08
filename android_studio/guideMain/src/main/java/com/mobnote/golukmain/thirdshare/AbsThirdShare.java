@@ -18,6 +18,8 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.widget.Toast;
+
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public abstract class AbsThirdShare implements IThirdShareFn {
@@ -171,7 +173,8 @@ public abstract class AbsThirdShare implements IThirdShareFn {
 		if (GolukUtils.isActivityAlive(mActivity)) {
 			close();
 		}
-	}
+        Toast.makeText(mActivity, mActivity.getString(R.string.str_share_success), Toast.LENGTH_SHORT).show();
+    }
 
 	// 分享失败的回调
 	protected void callBack_ShareFailed() {

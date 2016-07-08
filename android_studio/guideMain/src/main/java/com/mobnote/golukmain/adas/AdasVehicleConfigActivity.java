@@ -107,7 +107,9 @@ public class AdasVehicleConfigActivity extends BaseActivity implements OnClickLi
 	}
 
 	private void loadData() {
-		mParamter = mCustomVehicleList.get(mIndex);
+        if(null != mCustomVehicleList) {
+            mParamter = mCustomVehicleList.get(mIndex);
+        }
 	}
 
 	private void refreshUI() {

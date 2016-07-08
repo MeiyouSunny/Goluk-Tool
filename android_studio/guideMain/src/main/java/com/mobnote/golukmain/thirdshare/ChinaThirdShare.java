@@ -73,7 +73,7 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 
 	@Override
 	public void showAtLocation(View parent, int gravity, int x, int y) {
-		if (null != mPopWindow) {
+		if (null != mPopWindow && GolukUtils.isActivityAlive(mActivity)) {
 			mPopWindow.showAtLocation(parent, gravity, x, y);
 		}
 	}
