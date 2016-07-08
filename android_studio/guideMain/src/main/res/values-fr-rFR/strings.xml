@@ -1033,10 +1033,10 @@ Une qualité médiocre de la carte mémoire provoquera des enregistrements anorm
     <string name="str_adas_car_name">Nommer votre véhicule</string>
     <string name="choose_ipc_device">Sélectionner l\'appareil：</string>
     <string name="goluk_wifi_connection">Connexion Wi-Fi Goluk</string>
-    <string name="goluk_cannot_connect_hotspot">Goluk connection to your mobile hotspot has failed</string>
-    <string name="reconnect_hotspot">Reconnect mobile hotspot</string>
-    <string name="goluk_only_wifi">Direct connect to Goluk Wi-Fi</string>
-    <string name="connect_only_wifi_desc">Direct connect to Goluk Wi-Fi, the live broadcast function and mobile data network connection will not be available.</string>
-    <string name="disconnect_goluk_before_share">Need to disconnect the Goluk Wi-Fi in order to use the network to share</string>
+    <string name="goluk_cannot_connect_hotspot">Goluk n\'a pas pu se connecter au point d\'accès du téléphone.</string>
+    <string name="reconnect_hotspot">Se reconnecter au point d\'accès</string>
+    <string name="goluk_only_wifi">Seulement connecté à la caméra embarquée</string>
+    <string name="connect_only_wifi_desc">Seulement connecté à la caméra embarquée par Wi-Fi. Durant la connexion, la fonction de diffusion en direct et le réseau de données mobiles ne peuvent pas être utilisés.</string>
+    <string name="disconnect_goluk_before_share">Doit être déconnecté du Wi-Fi de la caméra embarquée avant que le partage de réseau ne puisse être utilisé.</string>
     <string name="msg_system_certificate_success_sys">Vous êtes désormais un membre étoile. Allez y jeter un œil !</string>
 </resources>
