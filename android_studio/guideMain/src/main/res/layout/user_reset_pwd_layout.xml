@@ -114,6 +114,7 @@
             android:layout_marginTop="17.3dp"
             android:background="@drawable/next"
             android:gravity="center"
+            android:enabled="false"
             android:text="@string/user_regist_btn"
             android:textColor="#7f000000"
             android:textSize="14sp" />
