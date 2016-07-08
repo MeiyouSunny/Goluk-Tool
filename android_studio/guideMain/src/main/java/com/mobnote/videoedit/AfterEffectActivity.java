@@ -570,8 +570,10 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 //            String formattedOrg = String.format(org, msg.arg1);
 
             int progress = (int) msg.arg1;
-            mExportingDialog.setRingViewProgress(progress);
-            mExportingDialog.setTextProgress(org);
+            if(null != mExportingDialog) {
+                mExportingDialog.setRingViewProgress(progress);
+                mExportingDialog.setTextProgress(org);
+            }
             break;
         case MSG_AE_EXPORT_FINISHED:
             Log.d(TAG, "MSG_AE_EXPORT_FINISHED");
