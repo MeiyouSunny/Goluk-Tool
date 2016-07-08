@@ -68,6 +68,7 @@
         android:background="@drawable/bg_rounded_rectangle"
         android:gravity="center"
         android:text="@string/user_regist_btn"
+        android:textAllCaps="false"
         android:textColor="#7fffffff"
         android:textSize="14sp" />
 

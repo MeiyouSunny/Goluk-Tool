@@ -62,6 +62,7 @@
                 android:background="@drawable/next"
                 android:enabled="false"
                 android:text="@string/user_regist_btn"
+                android:textAllCaps="false"
                 android:textColor="#33000000" />
         </LinearLayout>
     </LinearLayout>
