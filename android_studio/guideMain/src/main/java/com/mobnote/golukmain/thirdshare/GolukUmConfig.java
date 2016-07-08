@@ -8,8 +8,8 @@ import com.umeng.socialize.PlatformConfig;
 public class GolukUmConfig {
 
 	// twitter国际
-	private static final String TWITTER_APPID_INTERNATIONAL = "FLzjlkpJDyZL5pKgdYxl5jpAY";
-	private static final String TWITTER_APPSECRET_INTERNATIONAL = "zThc89YoNntZ25jKSwMaT3vXgNwDhQOz2H449FGIZFrlpElfba";
+	private static final String TWITTER_APPID_INTERNATIONAL = "EwGTl7iobCSmvy6PvotqsEKuA";
+	private static final String TWITTER_APPSECRET_INTERNATIONAL = "e0xqiVEFYkSQasEBmz9AANfW2VkKC0NUWPvIo9W2cPSpuks64k";
 	// twitter国内
 	private static final String TWITTER_APPID_MAINLAND = "bX61Sal2t0iSDXLMxjqAEAA2p";
 	private static final String TWITTER_APPSECRET_MAINLAND = "Ris7Fpsj7wx03CdM3Sle6AOgIkYjq4Tosgj6EmseXU63OToVh3";

@@ -7,8 +7,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.PixelFormat;
+import android.media.audiofx.BassBoost;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +21,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.lang.reflect.Method;
+
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class GlobalWindow implements View.OnClickListener {
@@ -88,6 +95,23 @@ public class GlobalWindow implements View.OnClickListener {
 		}
 		cancelTimer();
 		mContext = mApplication;
+        if(Build.VERSION.SDK_INT >= 23) {
+            boolean allowDrawOverlays = true;
+            try {
+                Class<?> c = Class.forName("android.provider.Settings");
+                Method canDrawOverlays = c.getDeclaredMethod("canDrawOverlays", Context.class);
+
+                if(canDrawOverlays != null) {
+                    allowDrawOverlays = (boolean)canDrawOverlays.invoke(null, mContext);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if(!allowDrawOverlays) {
+                Toast.makeText(mContext, mContext.getString(R.string.str_system_window_not_allowed), Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
 
 		// 获取LayoutParams对象
 		mWMParams = new WindowManager.LayoutParams();

@@ -169,6 +169,9 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	/** 删除视频 **/
 	public static final int PageType_InternationalCheckvcode = 77;
 
+    /** 关注数量 */
+    public static final int PageType_FollowCount = 78;
+
 	/**
 	 * 
 	 * 以下为同步获取信息标识
