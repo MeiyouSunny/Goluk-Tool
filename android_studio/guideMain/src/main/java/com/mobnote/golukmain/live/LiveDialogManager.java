@@ -2,7 +2,9 @@ package com.mobnote.golukmain.live;
 
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.util.GolukUtils;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -320,6 +322,11 @@ public class LiveDialogManager {
 	}
 
 	public void showSingleBtnDialog(Context context, int type, String title, String message) {
+        if(context instanceof Activity) {
+            if(!GolukUtils.isActivityAlive((Activity)context)) {
+                return;
+            }
+        }
 		if (null != mSingleButtonDialog) {
 			return;
 		}
