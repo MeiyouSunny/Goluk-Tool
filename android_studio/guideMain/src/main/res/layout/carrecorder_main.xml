@@ -389,7 +389,7 @@
                     android:id="@+id/image1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/share_video_no_pic" />
+                    android:src="@drawable/share_video_no_pic" />
 
                 <ImageView
                     android:id="@+id/new1"
@@ -420,7 +420,7 @@
                     android:id="@+id/image2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/share_video_no_pic" />
+                    android:src="@drawable/share_video_no_pic" />
 
                 <ImageView
                     android:id="@+id/new2"
@@ -437,7 +437,7 @@
                 android:layout_height="64dp"
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/layout2"
-                android:background="@drawable/share_video_pic" />
+                android:src="@drawable/share_video_pic" />
         </RelativeLayout>
     </RelativeLayout>
 

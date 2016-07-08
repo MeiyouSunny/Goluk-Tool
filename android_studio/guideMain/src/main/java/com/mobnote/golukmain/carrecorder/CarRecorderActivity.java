@@ -2572,7 +2572,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             vsi2.setName(videoname2);
             Bitmap cacheImg = null;
             if (video2.exists()) {
-                cacheImg = ImageManager.getBitmapFromCache(videoname2, 114, 64);
+                cacheImg = ImageManager.getBitmapFromCache(name2, 114, 64);
             }
             if (cacheImg == null)
                 cacheImg = BitmapFactory.decodeResource(this.getResources(), R.drawable.album_default_img);
