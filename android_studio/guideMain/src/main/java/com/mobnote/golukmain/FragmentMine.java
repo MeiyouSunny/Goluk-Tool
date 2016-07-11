@@ -561,8 +561,10 @@ public class FragmentMine extends Fragment implements OnClickListener,
 
 			if (customavatar != null && !"".equals(customavatar)) {
 				mImageHead.setImageURI(Uri.parse(customavatar));
-				GlideUtils.loadNetHead(getActivity(), mImageHead, customavatar,
-						R.drawable.editor_head_feault7);
+                if(null != getActivity()) {
+                    GlideUtils.loadNetHead(getActivity(), mImageHead, customavatar,
+                            R.drawable.editor_head_feault7);
+                }
 			} else {
 				showHead(mImageHead, userHead);
 			}
@@ -588,8 +590,10 @@ public class FragmentMine extends Fragment implements OnClickListener,
 			GolukDebugUtils.i("lily", userHead);
 
 			if ("".equals(userDesc) || null == userDesc) {
-				mTextIntroduction.setText(getActivity().getResources()
-						.getString(R.string.str_let_sharevideo));
+                if(null != getActivity()) {
+                    mTextIntroduction.setText(getActivity().getResources()
+                            .getString(R.string.str_let_sharevideo));
+                }
 			} else {
 				mTextIntroduction.setText(userDesc);
 			}
@@ -598,11 +602,13 @@ public class FragmentMine extends Fragment implements OnClickListener,
 			// mTextFans.setText(GolukUtils.getFormatNumber(0));
 			// mTextFollow.setText(GolukUtils.getFormatNumber(0));
 			if (newFansCout > 0) {
-				Drawable redPoint = getActivity().getResources().getDrawable(
-						R.drawable.home_red_point_little);
-				redPoint.setBounds(0, 0, redPoint.getMinimumWidth(),
-						redPoint.getMinimumHeight());
-				mTextFans.setCompoundDrawables(null, null, redPoint, null);
+                if(null != getActivity()) {
+                    Drawable redPoint = getActivity().getResources().getDrawable(
+                            R.drawable.home_red_point_little);
+                    redPoint.setBounds(0, 0, redPoint.getMinimumWidth(),
+                            redPoint.getMinimumHeight());
+                    mTextFans.setCompoundDrawables(null, null, redPoint, null);
+                }
 			} else {
 				mTextFans.setCompoundDrawables(null, null, null, null);
 			}
@@ -614,6 +620,9 @@ public class FragmentMine extends Fragment implements OnClickListener,
 	}
 
 	private void showHead(ImageView view, String headportrait) {
+        if(null == getActivity()) {
+            return;
+        }
 		try {
 			GlideUtils.loadLocalHead(getActivity(), view,
 					ILive.mBigHeadImg[Integer.parseInt(headportrait)]);
