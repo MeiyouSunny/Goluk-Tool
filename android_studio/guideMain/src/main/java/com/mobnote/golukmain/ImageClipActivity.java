@@ -423,11 +423,11 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,I
 	public void onLoadComplete(int requestType, Object result) {
 		if(IPageNotifyFn.PageType_ModifyHeadPic == requestType){
 			isSave = true;
-			
-			if (mCustomProgressDialog.isShowing()) {
+
+			if (null != mCustomProgressDialog && mCustomProgressDialog.isShowing()) {
 				mCustomProgressDialog.close();
 			}
-			
+
 			UpHeadResult headResult = (UpHeadResult) result;
 
 			if(headResult != null && headResult.data != null){
