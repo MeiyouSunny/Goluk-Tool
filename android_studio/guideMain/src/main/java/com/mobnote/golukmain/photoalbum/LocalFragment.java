@@ -250,7 +250,7 @@ public class LocalFragment extends Fragment {
 
 	public void loadData(boolean flag) {
 		if (flag) {
-			if (!mCustomProgressDialog.isShowing()) {
+			if (null != mCustomProgressDialog && !mCustomProgressDialog.isShowing()) {
 				mCustomProgressDialog.show();
 			}
 		}
@@ -270,7 +270,7 @@ public class LocalFragment extends Fragment {
 
 				mStickyListHeadersListView.setAdapter(mWonderfulVideoAdapter);
 				try {
-					if (mCustomProgressDialog.isShowing()) {
+					if (null != mCustomProgressDialog && mCustomProgressDialog.isShowing()) {
 						mCustomProgressDialog.close();
 					}
 				} catch (Exception e) {
