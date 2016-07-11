@@ -406,7 +406,7 @@
     <string name="user_login_phone_hint">输入手机号码</string>
     <string name="user_login_phone">忘记密码</string>
     <string name="login_in_facebook_btn">Facebook登录</string>
-    <string name="user_insert_msg">还没有账号</string>
+    <string name="user_insert_msg">还没有账号?</string>
     <string name="user_insert_btn_txt">注册</string>
     <string name="user_insert_add_number">输入手机号</string>
     <string name="str_user_regist_below_hint">注册即代表你同意用户协议和隐私条款</string>
@@ -1014,7 +1014,7 @@
     <string name="str_ae_can_not_split_from">不能拆分长度%1$s秒</string>
     <string name="str_cluster_ranking_count_txt">人气值</string>
     <string name="str_ae_no_export_size_supported">没有合适的视频能被导出</string>
-    <string name="user_insert_butoom_msg">注册表示您同意了我们的用户  &amp;#038;</string>
+    <string name="user_insert_butoom_msg">注册表示您同意了我们的用户 &amp;</string>
     <string name="user_insert_butoom_msg_agian">隐私政策。</string>
     <string name="str_sharetype">选择类型</string>
     <string name="share_hint">为你的视频写下一段漂亮的描述...</string>

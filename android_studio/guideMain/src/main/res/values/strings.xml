@@ -1027,7 +1027,7 @@
     <string name="invalid_token">Login expired, please log in again</string>
     <string name="str_edit_short_video">Edit short video</string>
     <string name="str_video_export_failed_info">Your mobile device cannot handle the requirements of the video. Please try to share the original</string>
-    <string name="str_regist_password_hint_text">Enter password</string>
+    <string name="str_regist_password_hint_text">ENTER PASSWORD</string>
     <string name="interantion_ban_mainland_goluk">Unable to use dashcam sold in China</string>
     <string name="str_video_export_progress">Generating Video</string>
     <string name="start_connect_ipc_device">Connect：%1$s</string>
