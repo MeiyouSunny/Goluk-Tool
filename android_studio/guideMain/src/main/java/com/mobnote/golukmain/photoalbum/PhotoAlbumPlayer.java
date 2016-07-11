@@ -338,6 +338,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         }
         mConfirmDeleteDialog = null;
 
+        if(mAddTailerDialog != null && mAddTailerDialog.isVisible()) {
+            mAddTailerDialog.dismissAllowingStateLoss();
+        }
+        mAddTailerDialog = null;
+
         super.onDestroy();
     }
 
