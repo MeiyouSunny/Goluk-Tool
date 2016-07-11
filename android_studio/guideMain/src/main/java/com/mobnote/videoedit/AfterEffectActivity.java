@@ -987,12 +987,18 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 
     // Seek to chunk with specified offset
     public void seekWith(int chunkIndex, int chunkWidth, float delta) {
+        if(null == mAfterEffect) {
+            return;
+        }
         Chunk chunk = mAfterEffect.getMainChunks().get(chunkIndex);
         mAfterEffect.seekTo(chunkIndex, delta / chunkWidth * chunk.getDuration());
     }
 
     // Seek to chunk with 0 offset
     public void seekWith(int chunkIndex) {
+        if(null == mAfterEffect) {
+            return;
+        }
         mAfterEffect.seekTo(chunkIndex);
     }
 
