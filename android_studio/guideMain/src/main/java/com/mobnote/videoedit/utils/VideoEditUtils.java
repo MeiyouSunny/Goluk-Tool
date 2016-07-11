@@ -44,7 +44,7 @@ public class VideoEditUtils {
 //		float last = (int)(time % VideoEditConstant.BITMAP_TIME_INTERVAL);
 //		return thumbCount * bitmapDefaultWidth
 //				+ (int)((last / VideoEditConstant.BITMAP_TIME_INTERVAL) * bitmapDefaultWidth);
-		if(chunk == null) {
+		if(chunk == null || null == chunk.getChunkThumbs()) {
 			return 0;
 		}
 //		return (int)(bitmapDefaultWidth / VideoEditConstant.BITMAP_TIME_INTERVAL * time);
