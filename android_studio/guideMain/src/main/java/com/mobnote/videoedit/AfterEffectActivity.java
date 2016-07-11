@@ -1229,6 +1229,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     }
 
     public float getChannelDuration() {
+        if(null == mAfterEffect) {
+            return 0f;
+        }
         return mAfterEffect.getDuration();
     }
 
@@ -1273,7 +1276,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         }
 
 //        mFullLoadingDialog.show();
-        mExportingDialog.show(getSupportFragmentManager(), "dialog_fragment");
+        if(!mExportingDialog.isAdded()) {
+            mExportingDialog.show(getSupportFragmentManager(), "dialog_fragment");
+        }
         try {
             mAfterEffect.export(destPath,
                     exportWidth, exportHeight,
