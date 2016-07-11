@@ -1331,8 +1331,10 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 
 								@Override
 								public void onClick(DialogInterface arg0, int arg1) {
-									mRestartDialog.dismiss();
-									mRestartDialog = null;
+                                    if(null != mRestartDialog && mRestartDialog.isShowing()) {
+                                        mRestartDialog.dismiss();
+                                        mRestartDialog = null;
+                                    }
 								}
 							})
 					.setPositiveButton(this.getString(R.string.str_reboot_ipc_now),
@@ -1344,8 +1346,10 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 											.setIPCReboot();
 									GolukDebugUtils.e("", "TSettingsActivity-----------IPC_VDCP_Msg_Reboot-----reboot: " + reboot);
 									if (reboot) {
-										mRestartDialog.dismiss();
-										mRestartDialog = null;
+                                        if(null != mRestartDialog && mRestartDialog.isShowing()) {
+                                            mRestartDialog.dismiss();
+                                            mRestartDialog = null;
+                                        }
 									}
 								}
 							}).setCancelable(false).show();
