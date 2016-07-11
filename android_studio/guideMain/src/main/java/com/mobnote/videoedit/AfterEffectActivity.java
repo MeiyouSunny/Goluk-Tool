@@ -1229,6 +1229,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     }
 
     public float getChannelDuration() {
+        if(null == mAfterEffect) {
+            return 0f;
+        }
         return mAfterEffect.getDuration();
     }
 
