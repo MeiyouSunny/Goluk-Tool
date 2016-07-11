@@ -700,11 +700,15 @@ public class FragmentMine extends Fragment implements OnClickListener,
 		if (ma.mApp.autoLoginStatus == 3 || ma.mApp.autoLoginStatus == 4) {
 			mVideoLayout.setVisibility(View.GONE);
 			mImageAuthentication.setVisibility(View.GONE);
-			mTextName.setText(getActivity().getResources().getString(
-					R.string.str_click_to_login));
+            if(null != getActivity()) {
+                mTextName.setText(getActivity().getResources().getString(
+                        R.string.str_click_to_login));
+            }
 			mTextIntroduction.setTextColor(Color.rgb(128, 138, 135));
-			mTextIntroduction.setText(getActivity().getResources().getString(
-					R.string.str_login_tosee_usercenter));
+            if(null != getActivity()) {
+                mTextIntroduction.setText(getActivity().getResources().getString(
+                        R.string.str_login_tosee_usercenter));
+            }
 			showHead(mImageHead, "7");
 			return;
 		}
@@ -717,11 +721,15 @@ public class FragmentMine extends Fragment implements OnClickListener,
 		} else {// 没有用户信息
 			mVideoLayout.setVisibility(View.GONE);
 			mImageAuthentication.setVisibility(View.GONE);
-			mTextName.setText(getActivity().getResources().getString(
-					R.string.str_click_to_login));
+            if(null != getActivity()) {
+                mTextName.setText(getActivity().getResources().getString(
+                        R.string.str_click_to_login));
+            }
 			mTextIntroduction.setTextColor(Color.rgb(128, 138, 135));
-			mTextIntroduction.setText(getActivity().getResources().getString(
-					R.string.str_login_tosee_usercenter));
+            if(null != getActivity()) {
+                mTextIntroduction.setText(getActivity().getResources().getString(
+                        R.string.str_login_tosee_usercenter));
+            }
 			showHead(mImageHead, "7");
 		}
 	}
