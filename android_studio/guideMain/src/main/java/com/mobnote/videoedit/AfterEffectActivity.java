@@ -1276,7 +1276,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         }
 
 //        mFullLoadingDialog.show();
-        mExportingDialog.show(getSupportFragmentManager(), "dialog_fragment");
+        if(!mExportingDialog.isAdded()) {
+            mExportingDialog.show(getSupportFragmentManager(), "dialog_fragment");
+        }
         try {
             mAfterEffect.export(destPath,
                     exportWidth, exportHeight,
