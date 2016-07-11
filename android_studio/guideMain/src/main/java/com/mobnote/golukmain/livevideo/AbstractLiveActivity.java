@@ -1501,12 +1501,16 @@ public abstract class AbstractLiveActivity extends BaseActivity implements View.
                 this.mLiveOperator.stopLive();
             }
             // 停止上报自己的位置
-            mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StopUploadPosition,
-                    "");
+            if(null != mApp && null != mApp.mGoluk) {
+                mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StopUploadPosition,
+                        "");
+            }
             if (isKaiGeSucess) {
                 // 调用服务器的退出直播
-                mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_LiveStop,
-                        JsonUtil.getStopLiveJson());
+                if(null != mApp && null != mApp.mGoluk) {
+                    mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_LiveStop,
+                            JsonUtil.getStopLiveJson());
+                }
             }
             liveStopUploadVideo();
         }
