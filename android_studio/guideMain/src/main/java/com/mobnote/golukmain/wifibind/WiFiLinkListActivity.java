@@ -142,7 +142,11 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         // 获得GolukApplication对象
         mApp = (GolukApplication) getApplication();
         mApp.setContext(this, TAG);
-        mApp.getIPCControlManager().removeIPCManagerListener("carversion");
+        if (!mApp.isMainland()) {
+            if (null != mApp.getIPCControlManager()) {
+                mApp.getIPCControlManager().addIPCManagerListener("carversion", this);
+            }
+        }
         // 清除数据
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).clear();
         // 写日志，表示绑定失败
@@ -452,9 +456,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         if (!mApp.isMainland()) {
             mApp.setBinding(true);
             mCurrentState = STATE_FAILED;
-            if (null != mApp.getIPCControlManager()) {
-                mApp.getIPCControlManager().addIPCManagerListener("carversion", this);
-            }
             mNeverReceiveMessage = true;
             mApp.getIPCControlManager().getVersion();
         } else {
@@ -659,6 +660,9 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         if (null != mIpcSignalAnim) {
             mIpcSignalAnim.stop();
         }
+        if (!mApp.isMainland()) {
+            mApp.getIPCControlManager().removeIPCManagerListener("carversion");
+        }
         LiveDialogManager.getManagerInstance().dismissTwoButtonDialog();
         this.dimissLoadingDialog();
     }
@@ -688,7 +692,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                     String version = json.optString("version");
                     String model = json.optString("productname");
                     WiFiInfo.IPC_MODEL = model;
-                    int regionType = GolukUtils.judgeIPCDistrict(model,version);
+                    int regionType = GolukUtils.judgeIPCDistrict(model, version);
                     if (regionType == GolukUtils.GOLUK_APP_VERSION_MAINLAND && !mApp.isMainland()) {
                         mApp.isIpcConnSuccess = false;
                         mCurrentState = STATE_FAILED;
@@ -712,7 +716,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     protected void hMessage(Message msg) {
         if (MSG_H_REGION == msg.what) {
             this.dimissLoadingDialog();
-//            mApp.getIPCControlManager().removeIPCManagerListener("carversion");
             GolukUtils.showToast(WiFiLinkListActivity.this, getResources().getString(R.string.interantion_ban_mainland_goluk));
             finish();
         }
