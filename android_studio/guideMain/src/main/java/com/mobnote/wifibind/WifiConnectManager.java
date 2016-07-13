@@ -5,6 +5,8 @@ import org.json.JSONObject;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.multicast.IMultiCastFn;
 import com.mobnote.golukmain.multicast.NetUtil;
+import com.mobnote.util.GolukUtils;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -297,19 +299,16 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
         // 如果没有开启wifi功能 等待1.5秒后检查wifi 的链接状态
         // 有可能手机当前状态已经开启wifi
         if (!flag) {
-            GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "user phone open wifi Failed.");
             try {
                 int temp_1 = 2000;
                 Thread.sleep(temp_1);
-                GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "Waiting open wifi 2000 MS");
                 // 耗时 2000毫秒
                 tempTime += temp_1;
                 if (tempTime > outTime) {
-                    GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "Waiting open wifi over time :" + outTime + "MS");
                     return 0;
                 }
             } catch (InterruptedException e) {
-
+                CrashReport.postCatchedException(e);
                 e.printStackTrace();
             }
         }
@@ -318,17 +317,15 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
             try {
                 int temp_2 = 100;
                 Thread.sleep(temp_2);
-                GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "Waiting open wifi 100 MS");
                 tempTime += temp_2;
                 if (tempTime > outTime) {
-                    GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "Waiting open wifi over time :" + outTime + "MS");
                     return 0;
                 }
             } catch (InterruptedException e) {
+                CrashReport.postCatchedException(e);
                 e.printStackTrace();
             }
         }
-        GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "Wifi Open success");
         GolukDebugUtils.e(TAG, "opentime----------------" + (outTime - tempTime) + "-------------");
         return outTime - tempTime;
     }
@@ -403,8 +400,9 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
                     GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.1.2  " + type + " create cellphone hotspot " + ssid);
                     apManagesupport.createWifiHot(ssid, password);
                 } catch (Exception e) {
-                    GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.1  " + type + " create hotspot Exception " + e.getStackTrace().toString());
+                    GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.1  " + type + " create hotspot Exception " + GolukUtils.getExceptionStackString(e));
                     e.printStackTrace();
+                    CrashReport.postCatchedException(e);
                 }
                 int tempTime = 0;
                 // 如果wifi打开了
@@ -425,8 +423,9 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
                             return;
                         }
                     } catch (InterruptedException e) {
-                        GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.2  " + type + " create hotspot InterruptedException " + e.getStackTrace().toString());
+                        GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.2  " + type + " create hotspot InterruptedException " + GolukUtils.getExceptionStackString(e));
                         e.printStackTrace();
+                        CrashReport.postCatchedException(e);
                     }
                 }
 
@@ -619,6 +618,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
                     msg.obj = null;
                     handler.sendMessage(msg);
                     e.printStackTrace();
+                    CrashReport.postCatchedException(e);
                 }
             }
 
@@ -728,8 +728,8 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
                         createWifiAP("5", ph_ssid, ph_pass, ipc_ssid, ipc_ip, openTime);
                     }
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
+                    CrashReport.postCatchedException(e);
                 }
             }
 

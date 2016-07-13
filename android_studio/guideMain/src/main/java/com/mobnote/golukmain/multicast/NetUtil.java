@@ -4,7 +4,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
+import com.mobnote.util.GolukUtils;
 import com.mobnote.wifibind.WifiRsBean;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import android.os.Handler;
 import android.os.Message;
@@ -101,7 +103,9 @@ public class NetUtil {
                 GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.0.3 " + mType + " close socket");
             }
         } catch (Exception e) {
+            GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.0.3 " + mType + " close socket Exception:" + GolukUtils.getExceptionStackString(e));
             e.printStackTrace();
+            CrashReport.postCatchedException(e);
         }
     }
 
@@ -136,11 +140,12 @@ public class NetUtil {
             GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.1  " + type + " create socket");
             GolukDebugUtils.e("", "TestUDP--------findServerIpAddress-----2");
         } catch (SocketException e) {
-            GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.1  " + type + " create socket failed " + e.getStackTrace().toString());
+            GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.1  " + type + " create socket failed " + GolukUtils.getExceptionStackString(e));
             if (!this.mIsCancel) {
                 mHandler.sendEmptyMessage(MSG_H_ACCEPT_ERROR);
             }
             GolukDebugUtils.e("", "TestUDP--------findServerIpAddress-----Exception");
+            CrashReport.postCatchedException(e);
             return;
         }
 
@@ -176,11 +181,12 @@ public class NetUtil {
                         GolukDebugUtils.e("",
                                 "++TestUDP--------findServerIpAddress-------8888888888-ip=  Accept Data Exception ");
                         e.printStackTrace();
-                        GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.4  " + mType + " socket receive data exception:" + e.getStackTrace().toString());
+                        GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.4  " + mType + " socket receive data exception:" + GolukUtils.getExceptionStackString(e));
                         if (!mIsCancel) {
                             mHandler.sendEmptyMessage(MSG_H_ACCEPT_ERROR);
                             isCanScan = false;
                         }
+                        CrashReport.postCatchedException(e);
                         return;
                     }
                     GolukDebugUtils.e("", "++TestUDP--------findServerIpAddress-------99999999999--ip=" + mPacket.getAddress());
