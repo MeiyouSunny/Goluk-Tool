@@ -438,12 +438,13 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         }
     }
 
-    private void followCountRequest(){
+    private void followCountRequest() {
         if (GolukApplication.getInstance().isUserLoginSucess) {
             FollowCountRequest followCountRequest = new FollowCountRequest(IPageNotifyFn.PageType_FollowCount, this);
             followCountRequest.get(GolukApplication.getInstance().mCurrentUId);
         }
     }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -576,6 +577,11 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         switch (msg.what) {
             case MSG_H_WIFICONN_TIME:
                 // 设置未连接状态
+                try {
+                    throw new RuntimeException("Main Activity auto connect time out :40 s");
+                } catch (Exception e) {
+                    CrashReport.postCatchedException(e);
+                }
                 this.wifiConnectFailed();
                 break;
         }
@@ -1046,7 +1052,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             }
         } else if (LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE == dialogType) {
             if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
-                GolukUtils.startLiveActivity(this,true,true,null,null);
+                GolukUtils.startLiveActivity(this, true, true, null, null);
             } else if (LiveDialogManager.FUNCTION_DIALOG_CANCEL == function) {
                 if (mApp.mIPCControlManager.isT1Relative()) {
                     mApp.mIPCControlManager.stopLive();
@@ -1298,12 +1304,12 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
                 MessageManager.getMessageManager().setMessageEveryCount(praiseCount, commentCount, followCount,
                         systemCount);
             }
-        }else if(requestType == IPageNotifyFn.PageType_FollowCount) {
+        } else if (requestType == IPageNotifyFn.PageType_FollowCount) {
             FollowCountRetBean bean = (FollowCountRetBean) result;
             if (null == bean || null == bean.data) {
                 return;
             }
-            if(bean.data.newvideo > 0){
+            if (bean.data.newvideo > 0) {
                 mFollowedVideoTipIV.setVisibility(View.VISIBLE);
             }
         }

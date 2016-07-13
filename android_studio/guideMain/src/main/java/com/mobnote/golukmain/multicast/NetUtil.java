@@ -66,6 +66,11 @@ public class NetUtil {
                     sendData(TIMEOUT, null);
                     GolukDebugUtils.e("", "Error!!!!!!!");
                     GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.4  " + mType + " socket receive data Time Out");
+                    try {
+                        throw new RuntimeException(mType + " socket receive data time out : 90 s");
+                    } catch (Exception e) {
+                        CrashReport.postCatchedException(e);
+                    }
                     break;
             }
             super.handleMessage(msg);

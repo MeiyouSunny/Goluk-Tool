@@ -417,6 +417,11 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
                             wifiSupport.closeWifi();
                             msg.what = Integer.parseInt("-" + type + "4");
                             GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.2 " + type + " create cellphone timeout " + String.valueOf(outTime));
+                            try {
+                                throw new RuntimeException(type + " create cellphone timeout: " + String.valueOf(outTime));
+                            } catch (Exception e) {
+                                CrashReport.postCatchedException(e);
+                            }
                             final int wifiState = apManagesupport.getWifiApState();
                             msg.obj = null;
                             handler.sendMessage(msg);
