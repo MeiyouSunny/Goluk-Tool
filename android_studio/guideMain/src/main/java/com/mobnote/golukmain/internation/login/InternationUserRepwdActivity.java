@@ -160,8 +160,6 @@ public class InternationUserRepwdActivity extends BaseActivity implements OnClic
 					mBtnOK.setTextColor(Color.parseColor("#33000000"));
 					mBtnOK.setEnabled(false);
 				}
-				// 格式化显示手机号
-//				UserUtils.formatPhone(arg0, mEditTextPhone);
 			}
 
 			@Override
@@ -342,7 +340,6 @@ public class InternationUserRepwdActivity extends BaseActivity implements OnClic
 			mCustomProgressDialogIdentify.close();
 			mBtnOK.setEnabled(true);
 			mEditTextPhone.setEnabled(true);
-			// mEditTextPwd.setEnabled(true);
 			mBtnBack.setEnabled(true);
 		}
 	}

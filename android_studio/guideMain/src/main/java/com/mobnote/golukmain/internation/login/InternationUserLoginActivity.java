@@ -104,7 +104,6 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		//getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.internation_user_login);
 
@@ -120,9 +119,6 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 					R.string.str_loginning));
 		}
 
-		// 设置title
-		// mTextViewTitle.setText(this.getResources().getString(R.string.user_login_title_text));
-
 		if (null != mApplication && null != mApplication.mLoginManage) {
 			mApplication.mLoginManage.initData();
 		}
@@ -132,8 +128,6 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// GolukDebugUtils.d("facebooklogin2", "facebooklogin data = " +
-		// data.toString());
 		mShareAPI.onActivityResult(requestCode, resultCode, data);
 		switch (requestCode) {
 		case REQUEST_SELECT_COUNTRY_CODE:
@@ -176,9 +170,6 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 					result.put("devices", "");
 					mApplication.mLoginManage.setUserLoginInterface(InternationUserLoginActivity.this);
 					mApplication.mLoginManage.login(result);
-//					boolean flog = mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-//							IPageNotifyFn.PageType_OauthLogin, json.toString());
-//					GolukDebugUtils.e("facebooklogin1", "facebooklogin request = " + json.toString() + " flog = " + flog);
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
@@ -221,9 +212,6 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 	}
 
 	public void initView() {
-		// 登录title
-		// mBackButton = (ImageButton) findViewById(R.id.back_btn);
-		// mTextViewTitle = (TextView) findViewById(R.id.user_title_text);
 		// 手机号和密码、登录按钮
 		mEditTextPhoneNumber = (EditText) findViewById(R.id.user_login_phonenumber);
 		mEditTextPwd = (EditText) findViewById(R.id.user_login_pwd);
@@ -244,11 +232,8 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 			mSelectCountryText.setText(GolukUtils.getDefaultZone());
 		}
 
-		// title返回按钮
-		// mBackButton.setOnClickListener(this);
 		// 登录按钮
 		mBtnLogin.setOnClickListener(this);
-		//mBtnLogin.setOnTouchListener(this);
 		mLoginInfacebookTxt.setOnClickListener(this);
 		mLoginInfacebookImg.setOnClickListener(this);
 		// 快速注册
@@ -302,7 +287,6 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 					mBtnLogin.setTextColor(Color.parseColor("#7fffffff"));
 					mBtnLogin.setEnabled(false);
 				}
-//				UserUtils.formatPhone(arg0, mEditTextPhoneNumber);
 			}
 
 			@Override
@@ -452,11 +436,6 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 								mTextViewRegist.setEnabled(false);
 								mTextViewForgetPwd.setEnabled(false);
 								mBtnLogin.setEnabled(false);
-								// mBackButton.setEnabled(false);
-//							} else {
-//								closeProgressDialog();
-//								mApplication.loginStatus = 2;
-//							}
 						}
 
 					} else {
@@ -465,11 +444,6 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 								this.getResources().getString(R.string.user_login_password_show_error));
 					}
 				}
-//			} else {
-//				UserUtils.hideSoftMethod(this);
-//				UserUtils.showDialog(mApplication.getContext(),
-//						this.getResources().getString(R.string.user_login_phone_show_error));
-//			}
 		}
 	}
 
@@ -492,7 +466,6 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 			mTextViewRegist.setEnabled(true);
 			mTextViewForgetPwd.setEnabled(true);
 			mBtnLogin.setEnabled(true);
-			// mBackButton.setEnabled(true);
 			mApplication.mUser.timerCancel();
 			mApplication.autoLoginStatus = 2;
 			Intent it = new Intent();
@@ -513,7 +486,6 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 			mTextViewRegist.setEnabled(true);
 			mTextViewForgetPwd.setEnabled(true);
 			mBtnLogin.setEnabled(true);
-			// mBackButton.setEnabled(true);
 			break;
 		case 3:
 			mApplication.isUserLoginSucess = false;
@@ -523,9 +495,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 			mTextViewRegist.setEnabled(true);
 			mTextViewForgetPwd.setEnabled(true);
 			mBtnLogin.setEnabled(true);
-			// mBackButton.setEnabled(true);
-//			if (UserUtils.isMobileNO(phone)) {
-				new AlertDialog.Builder(this)
+			new AlertDialog.Builder(this)
 						.setTitle(this.getResources().getString(R.string.user_dialog_hint_title))
 						.setMessage(this.getResources().getString(R.string.user_no_regist))
 						.setNegativeButton(this.getResources().getString(R.string.user_cancle), null)
@@ -549,10 +519,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 
 										startActivity(it);
 									}
-								}).create().show();
-//			} else {
-//				UserUtils.showDialog(this, this.getResources().getString(R.string.user_login_phone_show_error));
-//			}
+			}).create().show();
 			break;
 		case 4:
 			GolukUtils.showToast(this, this.getResources().getString(R.string.user_netword_outtime));
@@ -563,7 +530,6 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 			mTextViewRegist.setEnabled(true);
 			mTextViewForgetPwd.setEnabled(true);
 			mBtnLogin.setEnabled(true);
-			// mBackButton.setEnabled(true);
 			break;
 		case 5:
 			mApplication.isUserLoginSucess = false;
@@ -573,7 +539,6 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 			mTextViewRegist.setEnabled(true);
 			mTextViewForgetPwd.setEnabled(true);
 			mBtnLogin.setEnabled(true);
-			// mBackButton.setEnabled(true);
 			new AlertDialog.Builder(mContext)
 					.setTitle(this.getResources().getString(R.string.user_dialog_hint_title))
 					.setMessage(this.getResources().getString(R.string.user_login_password_limit_top_hint))
@@ -644,7 +609,6 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 			mTextViewRegist.setEnabled(true);
 			mTextViewForgetPwd.setEnabled(true);
 			mBtnLogin.setEnabled(true);
-			// mBackButton.setEnabled(true);
 		}
 	}
 
@@ -700,48 +664,5 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 		String packageName = context.getPackageName();
 		return packageName;
 	}
-
-//	public void pageNotifyCallBack(int success, Object param1, Object param2) {
-//		GolukDebugUtils.e("","facebooklogin success = " + success + "data = " + param2.toString());
-//
-//		JSONObject rootObj;
-//		try {
-//			rootObj = new JSONObject((String) param2);
-//
-//			// 登录成功后，存储用户的登录信息
-//			mSharedPreferences = mApplication.getContext().getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
-//			mEditor = mSharedPreferences.edit();
-//			mEditor.putBoolean("FirstLogin", false);
-//			// 提交
-//			mEditor.commit();
-//
-//			mSharedPreferences = mApplication.getContext().getSharedPreferences("setup", Context.MODE_PRIVATE);
-//			mEditor = mSharedPreferences.edit();
-//			mEditor.putString("uid", rootObj.getJSONObject("data").getString("uid").toString());
-//			mEditor.commit();
-//			GolukApplication.getInstance().mCurrentUId = rootObj.getJSONObject("data").getString("uid").toString();
-//			mApplication.isUserLoginSucess = true;
-//			mApplication.loginoutStatus = false;
-//
-//			mEditTextPhoneNumber.setEnabled(true);
-//			mEditTextPwd.setEnabled(true);
-//			mTextViewRegist.setEnabled(true);
-//			mTextViewForgetPwd.setEnabled(true);
-//			mBtnLogin.setEnabled(true);
-//			mApplication.mUser.timerCancel();
-//			mApplication.autoLoginStatus = 2;
-//			Intent it = new Intent();
-//			if ("profit".equals(justLogin)) {
-//				it.setClass(InternationUserLoginActivity.this, MyProfitActivity.class);
-//				startActivity(it);
-//			} else {
-//				setResult(Activity.RESULT_OK, it);
-//			}
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-//
-//		this.finish();
-//	}
 
 }
