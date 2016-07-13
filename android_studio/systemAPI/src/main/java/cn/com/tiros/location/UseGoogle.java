@@ -17,6 +17,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 public class UseGoogle implements LocationListener {
 
@@ -165,7 +166,8 @@ public class UseGoogle implements LocationListener {
 
 			@Override
 			protected void onPostExecute(LocationAddressDetailBean result) {
-				if (result == null) {
+				if (result == null || TextUtils.isEmpty(result.cityName)
+						|| TextUtils.isEmpty(result.subLocatity) || TextUtils.isEmpty(result.detail)) {
 					return;
 				}
 				GolukDebugUtils.e("xxx", "location--------------onLocationChanged---1: lat: " + lat + "  lon:" + lng

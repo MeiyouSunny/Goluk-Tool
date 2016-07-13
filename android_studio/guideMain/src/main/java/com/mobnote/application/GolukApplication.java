@@ -1143,20 +1143,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     ((PushSettingActivity) mContext).page_CallBack(type, success, param1, param2);
                 }
                 break;
-//		case PageType_ModifyHeadPic:
-//			if (mContext instanceof ImageClipActivity) {
-//				((ImageClipActivity) mContext).pageNotifyCallBack(type, success, param1, param2);
-//			}
-//
-//			if (mContext instanceof UserPersonalHeadActivity) {
-//				((UserPersonalHeadActivity) mContext).pageNotifyCallBack(type, success, param1, param2);
-//			}
-//			break;
-            case IPageNotifyFn.PageType_LiveUploadPic:
-                if (mContext instanceof AbstractLiveActivity) {
-                    ((AbstractLiveActivity) mContext).uploadImgCallBack(success, param1, param2);
-                }
-                break;
         }
     }
 

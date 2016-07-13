@@ -278,7 +278,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                 .e("", "创建手机热点---startWifiAp---1---" + wifiName + "---" + pwd + "---" + ipcssid + "---" + ipcmac);
 
         collectLog("createPhoneHot", wifiName + "---" + pwd + "---" + ipcssid + "---" + ipcmac);
-
         mWac.createWifiAP(wifiName, pwd, ipcssid, ipcmac);
     }
 

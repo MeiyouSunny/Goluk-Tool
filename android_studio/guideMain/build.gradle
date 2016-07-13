@@ -70,7 +70,6 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile files('libs/photoview-library-1.2.2.jar')
     compile files('libs/Zhuge_SDK_v2.3.0.jar')
-    compile files('libs/bugly_crash_release.jar')
     compile 'com.android.support:recyclerview-v7:23.3.0'
 }
 

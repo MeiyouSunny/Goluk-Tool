@@ -250,7 +250,7 @@ public class LocalFragment extends Fragment {
 
 	public void loadData(boolean flag) {
 		if (flag) {
-			if (!mCustomProgressDialog.isShowing()) {
+			if (null != mCustomProgressDialog && !mCustomProgressDialog.isShowing()) {
 				mCustomProgressDialog.show();
 			}
 		}
@@ -270,7 +270,7 @@ public class LocalFragment extends Fragment {
 
 				mStickyListHeadersListView.setAdapter(mWonderfulVideoAdapter);
 				try {
-					if (mCustomProgressDialog.isShowing()) {
+					if (null != mCustomProgressDialog && mCustomProgressDialog.isShowing()) {
 						mCustomProgressDialog.close();
 					}
 				} catch (Exception e) {
@@ -288,9 +288,11 @@ public class LocalFragment extends Fragment {
 		GolukDebugUtils.e("", "Album------WondowvideoListView------checkListState");
 		if (mDataList.size() <= 0) {
 			empty.setVisibility(View.VISIBLE);
-			Drawable drawable=this.getResources().getDrawable(R.drawable.album_img_novideo); 
-			empty.setCompoundDrawablesRelativeWithIntrinsicBounds(null,drawable,null,null);
-			empty.setText(getActivity().getResources().getString(R.string.photoalbum_local_no_video_text));
+            if(isAdded()) {
+                Drawable drawable = this.getResources().getDrawable(R.drawable.album_img_novideo);
+                empty.setCompoundDrawablesRelativeWithIntrinsicBounds(null, drawable, null, null);
+                empty.setText(getActivity().getResources().getString(R.string.photoalbum_local_no_video_text));
+            }
 			mStickyListHeadersListView.setVisibility(View.GONE);
 			updateEditState(false);
 		} else {

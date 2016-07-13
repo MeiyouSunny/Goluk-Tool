@@ -548,7 +548,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
         }
 
         if (flag) {
-            if (!mCustomProgressDialog.isShowing()) {
+            if (null != mCustomProgressDialog && !mCustomProgressDialog.isShowing()) {
                 mCustomProgressDialog.show();
             }
             empty.setVisibility(View.GONE);

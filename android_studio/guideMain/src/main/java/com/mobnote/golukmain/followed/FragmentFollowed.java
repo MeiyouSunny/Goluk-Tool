@@ -364,7 +364,9 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 			FollowedRetBean bean = (FollowedRetBean)result;
 
 			if(null == bean) {
-				Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+                if(isAdded()) {
+                    Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+                }
 				if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
 					setEmptyView();
 				}

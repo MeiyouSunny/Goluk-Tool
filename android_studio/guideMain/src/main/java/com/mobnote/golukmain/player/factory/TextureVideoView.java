@@ -337,8 +337,10 @@ public class TextureVideoView extends TextureView
 			mVideoWidth = mp.getVideoWidth();
 			mVideoHeight = mp.getVideoHeight();
 			if (mVideoWidth != 0 && mVideoHeight != 0) {
-				getSurfaceTexture().setDefaultBufferSize(mVideoWidth, mVideoHeight);
-				requestLayout();
+                if(null != getSurfaceTexture()) {
+                    getSurfaceTexture().setDefaultBufferSize(mVideoWidth, mVideoHeight);
+                    requestLayout();
+                }
 			}
 		}
 	};

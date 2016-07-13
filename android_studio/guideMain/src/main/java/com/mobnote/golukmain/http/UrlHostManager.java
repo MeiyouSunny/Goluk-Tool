@@ -9,8 +9,6 @@ import com.mobnote.util.GolukUtils;
 
 public  class UrlHostManager {
 
-	public static final String USER_CENTER_PATH = "/cdcRegister/modifyUserInfo.htm";
-	public static final String UPLOAD_IMAG_PATH = "/fileService/HeadUploadServlet";
 	// 国内版域名
 	public static final String ONLINE_HOST = "https://s.goluk.cn";
 	// 腾讯云域名

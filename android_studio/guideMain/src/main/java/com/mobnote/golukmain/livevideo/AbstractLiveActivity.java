@@ -1501,12 +1501,16 @@ public abstract class AbstractLiveActivity extends BaseActivity implements View.
                 this.mLiveOperator.stopLive();
             }
             // 停止上报自己的位置
-            mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StopUploadPosition,
-                    "");
+            if(null != mApp && null != mApp.mGoluk) {
+                mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StopUploadPosition,
+                        "");
+            }
             if (isKaiGeSucess) {
                 // 调用服务器的退出直播
-                mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_LiveStop,
-                        JsonUtil.getStopLiveJson());
+                if(null != mApp && null != mApp.mGoluk) {
+                    mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_LiveStop,
+                            JsonUtil.getStopLiveJson());
+                }
             }
             liveStopUploadVideo();
         }
@@ -1624,19 +1628,8 @@ public abstract class AbstractLiveActivity extends BaseActivity implements View.
             return;
         }
         mThumbBitmap = ImageManager.getBitmapFromCache(picName, 100, 100);
-        String newFilePath = FileUtils.javaToLibPath(picName);
-        String uploadJson = JsonUtil.getUploadSnapJson(mCurrentVideoId, newFilePath);
-        GolukDebugUtils.e("", "jyf----20150406----LiveActivity----uploadImg-----6: " + uploadJson);
-        boolean isSuccess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-                IPageNotifyFn.PageType_LiveUploadPic, uploadJson);
+        new UploadLiveScreenShotTask(picName,myInfo.uid).execute();
 
-        GolukDebugUtils.e("", "jyf----20150406----LiveActivity----uploadImg-----7: " + isSuccess);
-
-    }
-
-    public void uploadImgCallBack(int success, Object param1, Object param2) {
-        GolukDebugUtils.e("", "jyf----20150406----LiveActivity----uploadImgCallBack-----0: " + success + "  param1: "
-                + param1 + "   param2: " + param2);
     }
 
     private String getShareVideoId() {
