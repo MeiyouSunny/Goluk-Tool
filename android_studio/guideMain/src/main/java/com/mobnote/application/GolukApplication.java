@@ -311,8 +311,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 
     private boolean mIsQuery = false;
 
-    private static final String SNAPSHOT_DIR = "fs1:/pic/";
-
     /** 保存区分国际版与国内版的标示 例如：国际版 T1U 国内版 T1**/
     public String mIpcVersion = "";
 

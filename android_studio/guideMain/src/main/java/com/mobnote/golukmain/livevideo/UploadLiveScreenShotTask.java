@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.mobnote.golukmain.http.HttpManager;
-import com.mobnote.golukmain.userlogin.UploadUtil;
 import com.mobnote.util.GolukUtils;
 
 import java.io.DataOutputStream;
@@ -28,7 +27,6 @@ public class UploadLiveScreenShotTask extends AsyncTask<String, Integer, String>
     public UploadLiveScreenShotTask(String fPath,String uid) {
         this.filePath = fPath;
         this.uid = uid;
-
     }
 
     @Override
@@ -87,7 +85,6 @@ public class UploadLiveScreenShotTask extends AsyncTask<String, Integer, String>
                 while ((len = is.read(buffer)) != -1) {
                     outStream.write(buffer, 0, len);
                 }
-
                 is.close();
             }
 
