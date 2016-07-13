@@ -172,8 +172,25 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			@Override
 			public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
 				// TODO Auto-generated method stub
-				handler.proceed();
+//				handler.proceed();
+                final SslErrorHandler sslErrorHandler = handler;
 				super.onReceivedSslError(view, handler, error);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(UserOpenUrlActivity.this);
+                builder.setMessage(R.string.str_notification_error_ssl_cert_invalid);
+                builder.setPositiveButton(UserOpenUrlActivity.this.getString(R.string.str_button_ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sslErrorHandler.proceed();
+                    }
+                });
+                builder.setNegativeButton(UserOpenUrlActivity.this.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sslErrorHandler.cancel();
+                    }
+                });
+                final AlertDialog dialog = builder.create();
+                dialog.show();
 			}
 		});
 

@@ -7,12 +7,12 @@ public class PlayUrlManager {
 	/** 视频上传地址, 用于直播 */
 	public static final String UPLOAD_VOIDE_PRE = "rtmp://goluk.8686c.com/live/";
 	/** 自己看 */
-	public static final String DEFAULT_RTSP_URL = "rtsp://admin:123456@192.168.43.234/sub";
+	public static final String DEFAULT_RTSP_URL = "rtsp://192.168.43.234/sub";
 	/** 其它人看 */
 	public static final String DEFAULT_LIVE_URL = "rtmp://211.103.234.234/live/test100";
 
 	/** G1 及 G2 视频设备地址 */
-	private static final String COMM_URL_PRE = "rtsp://admin:123456@";
+	private static final String COMM_URL_PRE = "rtsp://";
 	private static final String COMM_URL_END = "/sub";
 
 	/** T1设备视频预览地址 */
