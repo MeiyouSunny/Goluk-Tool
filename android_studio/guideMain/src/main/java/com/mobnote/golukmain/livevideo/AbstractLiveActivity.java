@@ -1628,13 +1628,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements View.
             return;
         }
         mThumbBitmap = ImageManager.getBitmapFromCache(picName, 100, 100);
-        String newFilePath = FileUtils.javaToLibPath(picName);
-        String uploadJson = JsonUtil.getUploadSnapJson(mCurrentVideoId, newFilePath);
-        GolukDebugUtils.e("", "jyf----20150406----LiveActivity----uploadImg-----6: " + uploadJson);
-        boolean isSuccess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-                IPageNotifyFn.PageType_LiveUploadPic, uploadJson);
-
-        GolukDebugUtils.e("", "jyf----20150406----LiveActivity----uploadImg-----7: " + isSuccess);
+        new UploadLiveScreenShotTask(picName,myInfo.uid).execute();
 
     }
 
