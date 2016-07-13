@@ -63,7 +63,7 @@ public class NetUtil {
                     cancel();
                     sendData(TIMEOUT, null);
                     GolukDebugUtils.e("", "Error!!!!!!!");
-                    GolukDebugUtils.bt("HOTSPOT_CONNECT_LOG_TAG", "socket receive data Time Out");
+                    GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.4  " + mType + " socket receive data Time Out");
                     break;
             }
             super.handleMessage(msg);
@@ -98,6 +98,7 @@ public class NetUtil {
             if (null != mUdpSocket) {
                 mUdpSocket.close();
                 mUdpSocket = null;
+                GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.0.3 " + mType + " close socket");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,17 +110,21 @@ public class NetUtil {
             return;
         }
         cancelTimer();
+        GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.0.2 " + mType + "  timer started:" + String.valueOf(seconds) + " MS");
         mHandler.sendEmptyMessageDelayed(MSG_H_TIMEOUT, seconds);
     }
 
     private void cancelTimer() {
         if (mHandler.hasMessages(MSG_H_TIMEOUT)) {
             mHandler.removeMessages(MSG_H_TIMEOUT);
+            GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.0.2 " + mType + "  timer stop");
         }
     }
 
     public void findServerIpAddress(int type, final String ssid, final String ip, int seconds) {
+        GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4  " + type + " waiting ipc connect hotspot");
         if (null != mUdpSocket) {
+            GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.0.1  " + type + "socket exists");
             return;
         }
         mIsCancel = false;
@@ -128,12 +133,13 @@ public class NetUtil {
         startTimer(seconds);
         try {
             mUdpSocket = new DatagramSocket(GRAM_PORT);
+            GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.1  " + type + " create socket");
             GolukDebugUtils.e("", "TestUDP--------findServerIpAddress-----2");
         } catch (SocketException e) {
+            GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.1  " + type + " create socket failed " + e.getStackTrace().toString());
             if (!this.mIsCancel) {
                 mHandler.sendEmptyMessage(MSG_H_ACCEPT_ERROR);
             }
-
             GolukDebugUtils.e("", "TestUDP--------findServerIpAddress-----Exception");
             return;
         }
@@ -149,19 +155,19 @@ public class NetUtil {
                     try {
                         mPacket = new DatagramPacket(recvbuf, 256);
                         GolukDebugUtils.e("", "++TestUDP--------findServerIpAddress-----accept socket Data");
-                        GolukDebugUtils.bt("HOTSPOT_CONNECT_LOG_TAG", "waiting socket");
+                        GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.2  " + mType + " waiting socket");
                         mUdpSocket.receive(mPacket);
-                        GolukDebugUtils.bt("HOTSPOT_CONNECT_LOG_TAG", "socket receive data");
+                        GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.3  " + mType + " socket receive data");
                         int length = mPacket.getLength();
                         byte[] data = mPacket.getData();
                         String s = new String(data, 0, length - 1, "GBK");
-
+                        GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.3.1  " + mType + " socket recvbuf " + s);
                         GolukDebugUtils.e("", "++TestUDP--------findServerIpAddress----accept Sucess!!!!!!!!:	" + s);
-
                         if (s.startsWith(PRE_CONNECT_SIGN)) {
                             GolukDebugUtils.bt("HOTSPOT_CONNECT_LOG_TAG", "socket receive data from ipc");
                             String address2 = mPacket.getAddress().toString();
                             receiveSucess(ssid, address2);
+                            GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.4  " + mType + "connected ssid: " + ssid + " ip: " + address2);
                             break;
                         } else {
                             GolukDebugUtils.e("", "+++TestUDP--------findServerIpAddress-----77777 recvbuf1=" + s);
@@ -170,16 +176,14 @@ public class NetUtil {
                         GolukDebugUtils.e("",
                                 "++TestUDP--------findServerIpAddress-------8888888888-ip=  Accept Data Exception ");
                         e.printStackTrace();
-                        GolukDebugUtils.bt("HOTSPOT_CONNECT_LOG_TAG", "socket receive data exception");
+                        GolukDebugUtils.bt(GolukDebugUtils.HOTSPOT_CONNECT_LOG_TAG, "4.4  " + mType + " socket receive data exception:" + e.getStackTrace().toString());
                         if (!mIsCancel) {
                             mHandler.sendEmptyMessage(MSG_H_ACCEPT_ERROR);
                             isCanScan = false;
                         }
-
                         return;
                     }
-                    GolukDebugUtils.e("",
-                            "++TestUDP--------findServerIpAddress-------99999999999--ip=" + mPacket.getAddress());
+                    GolukDebugUtils.e("", "++TestUDP--------findServerIpAddress-------99999999999--ip=" + mPacket.getAddress());
                 }
             }
         }).start();
@@ -191,7 +195,6 @@ public class NetUtil {
         if (ip.contains("/")) {
             ip = ip.replace("/", "");
         }
-
         WifiRsBean bean = new WifiRsBean();
         bean.setIpc_ip(ip);
         bean.setIpc_ssid(ssid);

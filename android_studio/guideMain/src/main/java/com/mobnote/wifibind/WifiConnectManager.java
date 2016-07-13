@@ -5,7 +5,6 @@ import org.json.JSONObject;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.multicast.IMultiCastFn;
 import com.mobnote.golukmain.multicast.NetUtil;
-import com.mobnote.util.GolukUtils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -281,9 +280,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
                     return;
                 }
             }
-
-            ;
-
         };
         Thread mythread = new Thread(runnable);
         mythread.start();
@@ -301,15 +297,15 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
         // 如果没有开启wifi功能 等待1.5秒后检查wifi 的链接状态
         // 有可能手机当前状态已经开启wifi
         if (!flag) {
-            GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "user phone open wifi Failed.");
+            GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "user phone open wifi Failed.");
             try {
                 int temp_1 = 2000;
                 Thread.sleep(temp_1);
-                GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "Waiting open wifi 2000 MS");
+                GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "Waiting open wifi 2000 MS");
                 // 耗时 2000毫秒
                 tempTime += temp_1;
                 if (tempTime > outTime) {
-                    GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "Waiting open wifi over time :" + outTime + "MS");
+                    GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "Waiting open wifi over time :" + outTime + "MS");
                     return 0;
                 }
             } catch (InterruptedException e) {
@@ -322,17 +318,17 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
             try {
                 int temp_2 = 100;
                 Thread.sleep(temp_2);
-                GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "Waiting open wifi 100 MS");
+                GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "Waiting open wifi 100 MS");
                 tempTime += temp_2;
                 if (tempTime > outTime) {
-                    GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "Waiting open wifi over time :" + outTime + "MS");
+                    GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "Waiting open wifi over time :" + outTime + "MS");
                     return 0;
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "Wifi Open success");
+        GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "Wifi Open success");
         GolukDebugUtils.e(TAG, "opentime----------------" + (outTime - tempTime) + "-------------");
         return outTime - tempTime;
     }
@@ -393,20 +389,21 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
     private void createWifiAP(final String type, final String ssid, final String password, final String ipc_ssid,
                               final String ipc_ip, final int outTime) {
         GolukDebugUtils.i(TAG, "创建热点开始....11111");
-        GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "CREATE CONNECTION THREAD");
         Runnable runnable = new Runnable() {
             Message msg = new Message();
 
             public void run() {
-                GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "CONNECTION THREAD started");
+                GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3 " + type + " create hotspot");
                 int sTime = 0;
                 try {
+                    GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, type + "3.1.1 " + type + "  open wifi");
                     sTime = openWifi(false, outTime);
+                    GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.1.2  " + type + " close wifi");
                     wifiSupport.closeWifi();
-                    GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "Create hotspot");
+                    GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.1.2  " + type + " create cellphone hotspot " + ssid);
                     apManagesupport.createWifiHot(ssid, password);
-                    GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "Create hotspot end");
                 } catch (Exception e) {
+                    GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.1  " + type + " create hotspot Exception " + e.getStackTrace().toString());
                     e.printStackTrace();
                 }
                 int tempTime = 0;
@@ -416,36 +413,32 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
                         GolukDebugUtils.i(TAG, "创建热点等待状态变化....22222");
                         int temp_2 = 300;
                         Thread.sleep(temp_2);
-                        GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "waiting Check wifi Hotspot 300 MS");
                         tempTime += temp_2;
                         // 如果超时了 直接返回
                         if (tempTime > sTime) {
-                            GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "waiting Check wifi Hotspot over time : " + tempTime + "MS");
                             wifiSupport.closeWifi();
                             msg.what = Integer.parseInt("-" + type + "4");
+                            GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.2 " + type + " create cellphone timeout " + String.valueOf(outTime));
                             final int wifiState = apManagesupport.getWifiApState();
                             msg.obj = null;
                             handler.sendMessage(msg);
                             return;
                         }
                     } catch (InterruptedException e) {
+                        GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.2  " + type + " create hotspot InterruptedException " + e.getStackTrace().toString());
                         e.printStackTrace();
                     }
                 }
 
                 GolukDebugUtils.i(TAG, "创建热成功");
-
                 msg.what = Integer.parseInt(type + "1");
                 WifiRsBean rs = wifiSupport.getConnResult();
+                GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.3  " + type + " create hotspot success " + rs.getIpc_ssid());
                 msg.obj = rs;
                 handler.sendMessage(msg);
-                GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "Create hotspot successfully");
                 GolukDebugUtils.i(TAG, "创建热点等待ipc接入");
                 netUtil.findServerIpAddress(Integer.parseInt(type), ssid, "", WAITTIME);
             }
-
-            ;
-
         };
         Thread mythread = new Thread(runnable);
         mythread.start();
@@ -476,7 +469,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
                     config.put("ph_pass", beans.getPh_pass());
                     config.put("ipc_ip", beans.getIpc_ip());
                     config.put("ipc_pass", beans.getIpc_pass());
-                    config.put("ipc_model",beans.getIpc_model());
+                    config.put("ipc_model", beans.getIpc_model());
                     config.toString();
                     try {
                         wifiSupport.writePassFile(WIFICONFIG, config.toString());

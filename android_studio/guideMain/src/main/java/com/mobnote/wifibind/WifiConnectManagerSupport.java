@@ -161,9 +161,9 @@ public class WifiConnectManagerSupport {
             bRet = wifiManager.setWifiEnabled(true);
         } else {
             if (!wifiManager.isWifiEnabled()) {
-                GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "setWifiEnabled started");
+                GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "setWifiEnabled started");
                 bRet = wifiManager.setWifiEnabled(true);
-                GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "setWifiEnabled finished");
+                GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "setWifiEnabled finished");
             }
         }
         return bRet;
@@ -171,7 +171,7 @@ public class WifiConnectManagerSupport {
 
     // 关闭wifi功能
     boolean closeWifi() {
-        GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "setWifi not Enabled");
+        GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "setWifi not Enabled");
         setWifiApEnabled(null, false);
         boolean bRet = wifiManager.isWifiEnabled();
         int count = 0;
@@ -181,14 +181,14 @@ public class WifiConnectManagerSupport {
                     return false;
                 }
                 Thread.sleep(500);
-                GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "setWifi not Enabled waiting 500 MS");
+                GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "setWifi not Enabled waiting 500 MS");
                 bRet = wifiManager.isWifiEnabled();
                 count++;
             } catch (Exception e) {
             }
 
         }
-        GolukDebugUtils.t(GolukDebugUtils.WIFICONNECT_LOG_TAG, "setWifi not Enabled");
+        GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "setWifi not Enabled");
         return bRet;
     }
 
