@@ -153,7 +153,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
                         .findViewById(R.id.mLookNum);
 
                 RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(
-                        width, height);
+                        ViewGroup.LayoutParams.MATCH_PARENT, height);
                 holder.videoImg.setLayoutParams(mPreLoadingParams);
                 convertView.setTag(holder);
             } else {
@@ -161,7 +161,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
                 bannerHolder = new ViewHolderBanner();
                 bannerHolder.mBannerSlide = (SlideShowView) convertView.findViewById(R.id.ssv_wonderful_banner);
                 LinearLayout.LayoutParams mPreLoadingParams = new LinearLayout.LayoutParams(
-                        width, height);
+                        ViewGroup.LayoutParams.MATCH_PARENT, height);
                 bannerHolder.mBannerSlide.setLayoutParams(mPreLoadingParams);
                 bannerHolder.mTextBanner1 = (TextView) convertView.findViewById(R.id.tv_text_banner1);
                 bannerHolder.mTextBanner2 = (TextView) convertView.findViewById(R.id.tv_text_banner2);
