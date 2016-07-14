@@ -58,661 +58,663 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 public class FragmentFollowed extends Fragment implements IRequestResultListener {
-	private final static String TAG = "FragmentFollow";
-	private final static String REFRESH_NORMAL = "0";
-	private final static String REFRESH_PULL_DOWN = "1";
-	private final static String REFRESH_PULL_UP = "2";
+    private final static String TAG = "FragmentFollow";
+    private final static String REFRESH_NORMAL = "0";
+    private final static String REFRESH_PULL_DOWN = "1";
+    private final static String REFRESH_PULL_UP = "2";
 
-	private PullToRefreshListView mListView;
-	private FollowedListAdapter mAdapter;
-	private List<Object> mFollowedList;
-	private RelativeLayout mEmptyRL;
-	private final static String PAGESIZE = "10";
-	private String mTimeStamp = "";
-	private String mCurMotion = REFRESH_NORMAL;
-	private TextView mRetryClickIV;
-	private CustomLoadingDialog mLoadingDialog;
-	private final static String PROTOCOL = "100";
-	private SharePlatformUtil mSharePlatform = null;
-	private int mCurrentIndex;
-	protected final static String FOLLOWD_EMPTY = "FOLLOWED_EMPTY";
-	private GolukApplication mApp;
-	private Button mLoginButton;
-	private View mLoginRL;
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		GolukDebugUtils.d(TAG, "onCreate");
-		EventBus.getDefault().register(this);
-	}
+    private PullToRefreshListView mListView;
+    private FollowedListAdapter mAdapter;
+    private List<Object> mFollowedList;
+    private RelativeLayout mEmptyRL;
+    private final static String PAGESIZE = "10";
+    private String mTimeStamp = "";
+    private String mCurMotion = REFRESH_NORMAL;
+    private TextView mRetryClickIV;
+    private CustomLoadingDialog mLoadingDialog;
+    private final static String PROTOCOL = "100";
+    private SharePlatformUtil mSharePlatform = null;
+    private int mCurrentIndex;
+    protected final static String FOLLOWD_EMPTY = "FOLLOWED_EMPTY";
+    private GolukApplication mApp;
+    private Button mLoginButton;
+    private View mLoginRL;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreateView(inflater, container, savedInstanceState);
-		GolukDebugUtils.d(TAG, "onCreateView");
-		View rootView = inflater.inflate(R.layout.fragment_followed_content_layout, null);
-		mEmptyRL = (RelativeLayout)rootView.findViewById(R.id.rl_follow_fragment_exception_refresh);
-		mRetryClickIV = (TextView)rootView.findViewById(R.id.iv_follow_fragment_exception_refresh);
-		mListView = (PullToRefreshListView)rootView.findViewById(R.id.plv_follow_fragment);
-		mLoginButton = (Button)rootView.findViewById(R.id.btn_fragment_followed_content_to_login);
-		mLoginRL = rootView.findViewById(R.id.rl_follow_fragment_no_login);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        GolukDebugUtils.d(TAG, "onCreate");
+        EventBus.getDefault().register(this);
+    }
 
-		mLoginButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = null;
-				if(GolukApplication.getInstance().isMainland() == false){
-					intent = new Intent(FragmentFollowed.this.getActivity(), InternationUserLoginActivity.class);
-				}else{
-					intent = new Intent(FragmentFollowed.this.getActivity(), UserLoginActivity.class);
-				}
-				
-				FragmentFollowed.this.getActivity().startActivity(intent);
-				return;
-			}
-		});
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreateView(inflater, container, savedInstanceState);
+        GolukDebugUtils.d(TAG, "onCreateView");
+        View rootView = inflater.inflate(R.layout.fragment_followed_content_layout, null);
+        mEmptyRL = (RelativeLayout) rootView.findViewById(R.id.rl_follow_fragment_exception_refresh);
+        mRetryClickIV = (TextView) rootView.findViewById(R.id.iv_follow_fragment_exception_refresh);
+        mListView = (PullToRefreshListView) rootView.findViewById(R.id.plv_follow_fragment);
+        mLoginButton = (Button) rootView.findViewById(R.id.btn_fragment_followed_content_to_login);
+        mLoginRL = rootView.findViewById(R.id.rl_follow_fragment_no_login);
 
-		mRetryClickIV.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				sendFollowedContentRequest(REFRESH_NORMAL, mTimeStamp);
-			}
-		});
+        mLoginButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = null;
+                if (GolukApplication.getInstance().isMainland() == false) {
+                    intent = new Intent(FragmentFollowed.this.getActivity(), InternationUserLoginActivity.class);
+                } else {
+                    intent = new Intent(FragmentFollowed.this.getActivity(), UserLoginActivity.class);
+                }
 
-		mAdapter = new FollowedListAdapter(this);
-		mListView.setAdapter(mAdapter);
-		mLoadingDialog = new CustomLoadingDialog(getActivity(), null);
-		mListView.setMode(PullToRefreshBase.Mode.DISABLED);
-		mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-			@Override
-			public void onPullDownToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
-				// show latest refresh time
-				pullToRefreshBase.getLoadingLayoutProxy(true, false).setLastUpdatedLabel(
-						getActivity().getString(R.string.updating) +
-						GolukUtils.getCurrentFormatTime(getActivity()));
-				sendFollowedContentRequest(REFRESH_PULL_DOWN, mTimeStamp);
-				mCurMotion = REFRESH_PULL_DOWN;
-			}
+                FragmentFollowed.this.getActivity().startActivity(intent);
+                return;
+            }
+        });
 
-			@Override
-			public void onPullUpToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
-				pullToRefreshBase.getLoadingLayoutProxy(false, true).setPullLabel(
-						getActivity().getResources().getString(
-						R.string.goluk_pull_to_refresh_footer_pull_label));
-				sendFollowedContentRequest(REFRESH_PULL_UP, mTimeStamp);
-				mCurMotion = REFRESH_PULL_UP;
-			}
-		});
+        mRetryClickIV.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendFollowedContentRequest(REFRESH_NORMAL, mTimeStamp);
+            }
+        });
 
-		mFollowedList = new ArrayList<Object>();
-		if(getActivity() instanceof MainActivity) {
-			mSharePlatform = ((MainActivity)getActivity()).getSharePlatform();
-		}
-		mApp = GolukApplication.getInstance();
-		if(null != mApp && mApp.isUserLoginSucess) {
-			mLoginRL.setVisibility(View.GONE);
+        mAdapter = new FollowedListAdapter(this);
+        mListView.setAdapter(mAdapter);
+        mLoadingDialog = new CustomLoadingDialog(getActivity(), null);
+        mListView.setMode(PullToRefreshBase.Mode.DISABLED);
+        mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
+                // show latest refresh time
+                pullToRefreshBase.getLoadingLayoutProxy(true, false).setLastUpdatedLabel(
+                        getActivity().getString(R.string.updating) +
+                                GolukUtils.getCurrentFormatTime(getActivity()));
+                sendFollowedContentRequest(REFRESH_PULL_DOWN, mTimeStamp);
+                mCurMotion = REFRESH_PULL_DOWN;
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> pullToRefreshBase) {
+                pullToRefreshBase.getLoadingLayoutProxy(false, true).setPullLabel(
+                        getActivity().getResources().getString(
+                                R.string.goluk_pull_to_refresh_footer_pull_label));
+                sendFollowedContentRequest(REFRESH_PULL_UP, mTimeStamp);
+                mCurMotion = REFRESH_PULL_UP;
+            }
+        });
+
+        mFollowedList = new ArrayList<Object>();
+        if (getActivity() instanceof MainActivity) {
+            mSharePlatform = ((MainActivity) getActivity()).getSharePlatform();
+        }
+        mApp = GolukApplication.getInstance();
+        if (null != mApp && mApp.isUserLoginSucess) {
+            mLoginRL.setVisibility(View.GONE);
 //			mEmptyRL.setVisibility(View.GONE);
-			mListView.setVisibility(View.VISIBLE);
-			sendFollowedContentRequest(REFRESH_NORMAL, mTimeStamp);
-		} else {
-			mLoginRL.setVisibility(View.VISIBLE);
+            mListView.setVisibility(View.VISIBLE);
+            sendFollowedContentRequest(REFRESH_NORMAL, mTimeStamp);
+        } else {
+            mLoginRL.setVisibility(View.VISIBLE);
 //			mEmptyRL.setVisibility(View.GONE);
-			mListView.setVisibility(View.GONE);
-		}
-		
-		return rootView;
-	}
+            mListView.setVisibility(View.GONE);
+        }
 
-	@Override
-	public void onHiddenChanged(boolean hidden) {
-		// TODO Auto-generated method stub
-		super.onHiddenChanged(hidden);
-		GolukDebugUtils.d(TAG, "onHiddenChanged");
-		if(!hidden){
-			if(null != mApp && mApp.isUserLoginSucess) {
-				mLoginRL.setVisibility(View.GONE);
-				mListView.setVisibility(View.VISIBLE);
-			} else {
-				mLoginRL.setVisibility(View.VISIBLE);
-				mListView.setVisibility(View.GONE);
-			}
-		}
-	}
+        return rootView;
+    }
 
-	private void sendFollowedContentRequest(String op, String timeStamp) {
-		String tmpOp = op;
-		if(REFRESH_PULL_DOWN.equals(op)) {
-			tmpOp = REFRESH_NORMAL;
-		}
-		FollowedListRequest request =
-				new FollowedListRequest(IPageNotifyFn.PageType_FollowedContent, this);
-		if(null != mApp && mApp.isUserLoginSucess) {
-			if(!TextUtils.isEmpty(mApp.mCurrentUId)) {
-				request.get(PROTOCOL, mApp.mCurrentUId, PAGESIZE, tmpOp, timeStamp);
-			}
-		}
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        // TODO Auto-generated method stub
+        super.onHiddenChanged(hidden);
+        GolukDebugUtils.d(TAG, "onHiddenChanged");
+        if (!hidden) {
+            if (null != mApp && mApp.isUserLoginSucess) {
+                mLoginRL.setVisibility(View.GONE);
+                mListView.setVisibility(View.VISIBLE);
+            } else {
+                mLoginRL.setVisibility(View.VISIBLE);
+                mListView.setVisibility(View.GONE);
+            }
+        }
+    }
 
-		if(!mLoadingDialog.isShowing() && REFRESH_NORMAL.equals(op)) {
-			mLoadingDialog.show();
-		}
-	}
+    private void sendFollowedContentRequest(String op, String timeStamp) {
+        String tmpOp = op;
+        if (REFRESH_PULL_DOWN.equals(op)) {
+            tmpOp = REFRESH_NORMAL;
+        }
+        FollowedListRequest request =
+                new FollowedListRequest(IPageNotifyFn.PageType_FollowedContent, this);
+        if (null != mApp && mApp.isUserLoginSucess) {
+            if (!TextUtils.isEmpty(mApp.mCurrentUId)) {
+                request.get(PROTOCOL, mApp.mCurrentUId, PAGESIZE, tmpOp, timeStamp);
+            }
+        }
 
-	protected void sendFollowRequest(String linkuid, String type) {
-		FollowRequest request =
-				new FollowRequest(IPageNotifyFn.PageType_Follow, this);
-		if(null != mApp && mApp.isUserLoginSucess) {
-			if(!TextUtils.isEmpty(mApp.mCurrentUId)) {
-				request.get("200", linkuid, type, mApp.mCurrentUId);
-			}
-		}
-	}
+        if (!mLoadingDialog.isShowing() && REFRESH_NORMAL.equals(op)) {
+            mLoadingDialog.show();
+        }
+    }
 
-	protected void sendFollowAllRequest(String linkuid) {
-		FollowAllRequest request =
-				new FollowAllRequest(IPageNotifyFn.PageType_FollowAll, this);
-		if(null != mApp && mApp.isUserLoginSucess) {
-			if(!TextUtils.isEmpty(mApp.mCurrentUId)) {
-				request.get("200", linkuid, mApp.mCurrentUId);
-			}
-		}
-	}
+    protected void sendFollowRequest(String linkuid, String type) {
+        FollowRequest request =
+                new FollowRequest(IPageNotifyFn.PageType_Follow, this);
+        if (null != mApp && mApp.isUserLoginSucess) {
+            if (!TextUtils.isEmpty(mApp.mCurrentUId)) {
+                request.get("200", linkuid, type, mApp.mCurrentUId);
+            }
+        }
+    }
 
-	protected void sendGetShareVideoUrlRequest(String videoId, String type) {
-		ShareVideoShortUrlRequest request = new ShareVideoShortUrlRequest(
-				IPageNotifyFn.PageType_GetShareURL, this);
-		if(null != mApp && mApp.isUserLoginSucess) {
-			if(!TextUtils.isEmpty(mApp.mCurrentUId)) {
-				request.get(videoId, type);
-			}
-		}
-	}
+    protected void sendFollowAllRequest(String linkuid) {
+        FollowAllRequest request =
+                new FollowAllRequest(IPageNotifyFn.PageType_FollowAll, this);
+        if (null != mApp && mApp.isUserLoginSucess) {
+            if (!TextUtils.isEmpty(mApp.mCurrentUId)) {
+                request.get("200", linkuid, mApp.mCurrentUId);
+            }
+        }
+    }
 
-	public void onEventMainThread(EventPraiseStatusChanged event) {
-		if(null == event) {
-			return;
-		}
+    protected void sendGetShareVideoUrlRequest(String videoId, String type) {
+        ShareVideoShortUrlRequest request = new ShareVideoShortUrlRequest(
+                IPageNotifyFn.PageType_GetShareURL, this);
+        if (null != mApp && mApp.isUserLoginSucess) {
+            if (!TextUtils.isEmpty(mApp.mCurrentUId)) {
+                request.get(videoId, type);
+            }
+        }
+    }
 
-		switch(event.getOpCode()) {
-		case EventConfig.PRAISE_STATUS_CHANGE:
-			changePraiseStatus(event.isStatus(), event.getVideoId());
-			break;
-		default:
-			break;
-		}
-	}
+    public void onEventMainThread(EventPraiseStatusChanged event) {
+        if (null == event) {
+            return;
+        }
 
-	private void changePraiseStatus(boolean status, String videoId) {
-		int index = findFollowedVideoItem(videoId);
-		if(-1 == index) {
-			return;
-		}
+        switch (event.getOpCode()) {
+            case EventConfig.PRAISE_STATUS_CHANGE:
+                changePraiseStatus(event.isStatus(), event.getVideoId());
+                break;
+            default:
+                break;
+        }
+    }
 
-		FollowedVideoObjectBean bean = (FollowedVideoObjectBean)mFollowedList.get(index);
+    private void changePraiseStatus(boolean status, String videoId) {
+        int index = findFollowedVideoItem(videoId);
+        if (-1 == index) {
+            return;
+        }
 
-		int number = Integer.parseInt(bean.video.praisenumber);
-		if (status) {
-			number++;
-		} else {
-			number--;
-		}
+        FollowedVideoObjectBean bean = (FollowedVideoObjectBean) mFollowedList.get(index);
 
-		bean.video.praisenumber = "" + number;
-		bean.video.ispraise = status ? "1" : "0";
-		mAdapter.notifyDataSetChanged();
-	}
+        int number = Integer.parseInt(bean.video.praisenumber);
+        if (status) {
+            number++;
+        } else {
+            number--;
+        }
 
-	public void onEventMainThread(EventUserLoginRet event) {
-		if(null == event) {
-			return;
-		}
+        bean.video.praisenumber = "" + number;
+        bean.video.ispraise = status ? "1" : "0";
+        mAdapter.notifyDataSetChanged();
+    }
 
-		if(event.getRet()) {
-			mLoginRL.setVisibility(View.GONE);
-			sendFollowedContentRequest(REFRESH_NORMAL, mTimeStamp);
-			mListView.setVisibility(View.VISIBLE);
-		}
-	}
+    public void onEventMainThread(EventUserLoginRet event) {
+        if (null == event) {
+            return;
+        }
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onActivityCreated(savedInstanceState);
-		GolukDebugUtils.d(TAG, "onActivityCreated");
-	}
+        if (event.getRet()) {
+            mLoginRL.setVisibility(View.GONE);
+            sendFollowedContentRequest(REFRESH_NORMAL, mTimeStamp);
+            mListView.setVisibility(View.VISIBLE);
+        }
+    }
 
-	@Override
-	public void onDestroyView() {
-		GolukDebugUtils.d(TAG, "onDestroyView");
-		super.onDestroyView();
-	}
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onActivityCreated(savedInstanceState);
+        GolukDebugUtils.d(TAG, "onActivityCreated");
+    }
 
-	@Override
-	public void onPause() {
-		GolukDebugUtils.d(TAG, "onPause");
-		super.onPause();
-	}
+    @Override
+    public void onDestroyView() {
+        GolukDebugUtils.d(TAG, "onDestroyView");
+        super.onDestroyView();
+    }
 
-	@Override
-	public void onResume() {
-		GolukDebugUtils.d(TAG, "onResume");
-		super.onResume();
-	}
+    @Override
+    public void onPause() {
+        GolukDebugUtils.d(TAG, "onPause");
+        super.onPause();
+    }
 
-	@Override
-	public void onStop() {
-		GolukDebugUtils.d(TAG, "onStop");
-		super.onStop();
-	}
+    @Override
+    public void onResume() {
+        GolukDebugUtils.d(TAG, "onResume");
+        super.onResume();
+    }
 
-	@Override
-	public void onAttach(Activity activity) {
-		// TODO Auto-generated method stub
-		GolukDebugUtils.d(TAG, "onAttach, context=" + activity);
-		super.onAttach(activity);
-	}
+    @Override
+    public void onStop() {
+        GolukDebugUtils.d(TAG, "onStop");
+        super.onStop();
+    }
 
-	@Override
-	public void onDetach() {
-		// TODO Auto-generated method stub
-		GolukDebugUtils.d(TAG, "onDetach");
-		super.onDetach();
-	}
+    @Override
+    public void onAttach(Activity activity) {
+        // TODO Auto-generated method stub
+        GolukDebugUtils.d(TAG, "onAttach, context=" + activity);
+        super.onAttach(activity);
+    }
 
-	@Override
-	public void onDestroy() {
-		GolukDebugUtils.d(TAG, "onDestroy");
-		if(mLoadingDialog != null) {
-			mLoadingDialog.close();
-			mLoadingDialog = null;
-		}
-		EventBus.getDefault().unregister(this);
-		super.onDestroy();
-	}
+    @Override
+    public void onDetach() {
+        // TODO Auto-generated method stub
+        GolukDebugUtils.d(TAG, "onDetach");
+        super.onDetach();
+    }
 
-	private void setEmptyView() {
-		if(REFRESH_NORMAL.equals(mCurMotion)) {
-			mListView.setEmptyView(mEmptyRL);
-			mListView.setMode(PullToRefreshBase.Mode.DISABLED);
-		}
-	}
+    @Override
+    public void onDestroy() {
+        GolukDebugUtils.d(TAG, "onDestroy");
+        if (mLoadingDialog != null) {
+            mLoadingDialog.close();
+            mLoadingDialog = null;
+        }
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
 
-	public void startUserLogin(){
-		mApp.isUserLoginSucess = false;
-		mApp.loginStatus = 2;
-		mApp.autoLoginStatus = 3;
-		Intent loginIntent = null;
-		if(GolukApplication.getInstance().isMainland() == false){
-			loginIntent = new Intent(getActivity(), InternationUserLoginActivity.class);
-		}else{
-			loginIntent = new Intent(getActivity(), UserLoginActivity.class);
-		}
-		startActivity(loginIntent);
-	}
+    private void setEmptyView() {
+        if (REFRESH_NORMAL.equals(mCurMotion)) {
+            mListView.setEmptyView(mEmptyRL);
+            mListView.setMode(PullToRefreshBase.Mode.DISABLED);
+        }
+    }
 
-	@Override
-	public void onLoadComplete(int requestType, Object result) {
-		// TODO Auto-generated method stub
-		mListView.onRefreshComplete();
-		if(null != mLoadingDialog) {
-			mLoadingDialog.close();
-		}
+    public void startUserLogin() {
+        mApp.isUserLoginSucess = false;
+        mApp.loginStatus = 2;
+        mApp.autoLoginStatus = 3;
+        Intent loginIntent = null;
+        if (GolukApplication.getInstance().isMainland() == false) {
+            loginIntent = new Intent(getActivity(), InternationUserLoginActivity.class);
+        } else {
+            loginIntent = new Intent(getActivity(), UserLoginActivity.class);
+        }
+        startActivity(loginIntent);
+    }
 
-		if(requestType == IPageNotifyFn.PageType_FollowedContent) {
-			FollowedRetBean bean = (FollowedRetBean)result;
+    @Override
+    public void onLoadComplete(int requestType, Object result) {
+        // TODO Auto-generated method stub
+        mListView.onRefreshComplete();
+        if (null != mLoadingDialog) {
+            mLoadingDialog.close();
+        }
 
-			if(null == bean) {
-                if(isAdded()) {
+        if (requestType == IPageNotifyFn.PageType_FollowedContent) {
+            FollowedRetBean bean = (FollowedRetBean) result;
+
+            if (null == bean) {
+                if (isAdded()) {
                     Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
                 }
-				if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
-					setEmptyView();
-				}
-				return;
-			}
+                if (REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
+                    setEmptyView();
+                }
+                return;
+            }
 
-            if(bean.data != null) {
-                if(!GolukUtils.isTokenValid(bean.data.result)){
-					mLoginRL.setVisibility(View.VISIBLE);
-					mListView.setVisibility(View.GONE);
-					mApp.isUserLoginSucess = false;
-					startUserLogin();
+            if (bean.data != null) {
+                if (!GolukUtils.isTokenValid(bean.data.result)) {
+                    mLoginRL.setVisibility(View.VISIBLE);
+                    mListView.setVisibility(View.GONE);
+                    mApp.isUserLoginSucess = false;
+                    startUserLogin();
                     return;
                 }
             }
 
-			if(!bean.success) {
-				if(!TextUtils.isEmpty(bean.msg)) {
-					Toast.makeText(getActivity(), bean.msg, Toast.LENGTH_SHORT).show();
-				}
-				setEmptyView();
-				return;
-			}
+            if (!bean.success) {
+                if (!TextUtils.isEmpty(bean.msg)) {
+                    Toast.makeText(getActivity(), bean.msg, Toast.LENGTH_SHORT).show();
+                }
+                setEmptyView();
+                return;
+            }
 
-			if(null == bean.data) {
-				setEmptyView();
-				return;
-			}
+            if (null == bean.data) {
+                setEmptyView();
+                return;
+            }
 
-			if("1".equals(bean.data.result)) {
-				Toast.makeText(getActivity(), getActivity().getString(
-						R.string.str_server_request_arg_error), Toast.LENGTH_SHORT).show();
-				setEmptyView();
-				return;
-			}
+            if ("1".equals(bean.data.result)) {
+                Toast.makeText(getActivity(), getActivity().getString(
+                        R.string.str_server_request_arg_error), Toast.LENGTH_SHORT).show();
+                setEmptyView();
+                return;
+            }
 
-			if("2".equals(bean.data.result)) {
-				Toast.makeText(getActivity(), getActivity().getString(
-						R.string.str_server_request_unknown_error), Toast.LENGTH_SHORT).show();
-				setEmptyView();
-				return;
-			}
+            if ("2".equals(bean.data.result)) {
+                Toast.makeText(getActivity(), getActivity().getString(
+                        R.string.str_server_request_unknown_error), Toast.LENGTH_SHORT).show();
+                setEmptyView();
+                return;
+            }
 
-			mListView.setMode(PullToRefreshBase.Mode.BOTH);
+            mListView.setMode(PullToRefreshBase.Mode.BOTH);
 
-			List<FollowedListBean> followedBeanList = bean.data.list;
-			if(null == followedBeanList || followedBeanList.size() == 0) {
-				if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
-					Toast.makeText(getActivity(), getString(
-							R.string.str_follow_no_content), Toast.LENGTH_SHORT).show();
-				} else {
-					Toast.makeText(getActivity(), getString(
-						R.string.str_pull_refresh_listview_bottom_reach), Toast.LENGTH_SHORT).show();
-				}
-				return;
-			}
+            List<FollowedListBean> followedBeanList = bean.data.list;
+            if (null == followedBeanList || followedBeanList.size() == 0) {
+                if (REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
+                    Toast.makeText(getActivity(), getString(
+                            R.string.str_follow_no_content), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), getString(
+                            R.string.str_pull_refresh_listview_bottom_reach), Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
 
-			FollowedListBean last = followedBeanList.get(followedBeanList.size() - 1);
-			if(null != last) {
-				if(null != last.followvideo && last.followvideo.video != null) {
-					mTimeStamp = last.followvideo.video.sharingtime;
-				}
-			} else {
-				return;
-			}
+            FollowedListBean last = followedBeanList.get(followedBeanList.size() - 1);
+            if (null != last) {
+                if (null != last.followvideo && last.followvideo.video != null) {
+                    mTimeStamp = last.followvideo.video.sharingtime;
+                }
+            } else {
+                return;
+            }
 
-			List<Object> gotList = new ArrayList<Object>();
-			// Refill to common list
-			if(0 == bean.data.count) {
-				if(followedBeanList.size() == 1) {
-					gotList.add(new String(FOLLOWD_EMPTY));
-					FollowedListBean followBean = followedBeanList.get(0);
-					if("1".equals(followBean.type)) {
-						List<FollowedRecomUserBean> userBeanList = followBean.recomuser;
-						if(null != userBeanList && userBeanList.size() > 0) {
-							int userCount = userBeanList.size();
-							for(int j = 0; j < userCount; j++) {
-								FollowedRecomUserBean tmpBean = userBeanList.get(j);
-								tmpBean.position = j;
-								tmpBean.showAllFollow = true;
-								gotList.add(tmpBean);
-							}
-						}
-					}
-				} else {
-					// TODO: no recommend, no followed
-				}
-				mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-			} else {
-				int count = followedBeanList.size();
-				for(int i = 0; i < count; i++) {
-					FollowedListBean followBean = followedBeanList.get(i);
-					if(null == followBean) {
-						continue;
-					}
-					if("0".equals(followBean.type)) {
-						gotList.add(followBean.followvideo);
-					} else {
-						List<FollowedRecomUserBean> userBeanList = followBean.recomuser;
-						if(null != userBeanList && userBeanList.size() > 0) {
-							int userCount = userBeanList.size();
-							for(int j = 0; j < userCount; j++) {
-								FollowedRecomUserBean tmpBean = userBeanList.get(j);
-								tmpBean.position = j;
-								tmpBean.showAllFollow = false;
-								gotList.add(tmpBean);
-							}
-						}
-					}
-				}
-			}
+            List<Object> gotList = new ArrayList<Object>();
+            // Refill to common list
+            if (0 == bean.data.count) {
+                if (followedBeanList.size() == 1) {
+                    gotList.add(new String(FOLLOWD_EMPTY));
+                    FollowedListBean followBean = followedBeanList.get(0);
+                    if ("1".equals(followBean.type)) {
+                        List<FollowedRecomUserBean> userBeanList = followBean.recomuser;
+                        if (null != userBeanList && userBeanList.size() > 0) {
+                            int userCount = userBeanList.size();
+                            for (int j = 0; j < userCount; j++) {
+                                FollowedRecomUserBean tmpBean = userBeanList.get(j);
+                                tmpBean.position = j;
+                                tmpBean.showAllFollow = true;
+                                gotList.add(tmpBean);
+                            }
+                        }
+                    }
+                } else {
+                    // TODO: no recommend, no followed
+                }
+                mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+            } else {
+                int count = followedBeanList.size();
+                for (int i = 0; i < count; i++) {
+                    FollowedListBean followBean = followedBeanList.get(i);
+                    if (null == followBean) {
+                        continue;
+                    }
+                    if ("0".equals(followBean.type)) {
+                        gotList.add(followBean.followvideo);
+                    } else {
+                        List<FollowedRecomUserBean> userBeanList = followBean.recomuser;
+                        if (null != userBeanList && userBeanList.size() > 0) {
+                            int userCount = userBeanList.size();
+                            for (int j = 0; j < userCount; j++) {
+                                FollowedRecomUserBean tmpBean = userBeanList.get(j);
+                                tmpBean.position = j;
+                                tmpBean.showAllFollow = false;
+                                gotList.add(tmpBean);
+                            }
+                        }
+                    }
+                }
+            }
 
-			if(REFRESH_PULL_UP.equals(mCurMotion)) {
-				mFollowedList.addAll(gotList);
-				mAdapter.notifyDataSetChanged();
-			} else if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
-				mFollowedList.clear();
-				mFollowedList.addAll(gotList);
-				mAdapter.setData(mFollowedList);
-			} else {
-			}
+            if (REFRESH_PULL_UP.equals(mCurMotion)) {
+                mFollowedList.addAll(gotList);
+                mAdapter.notifyDataSetChanged();
+            } else if (REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
+                mFollowedList.clear();
+                mFollowedList.addAll(gotList);
+                mAdapter.setData(mFollowedList);
+            } else {
+            }
 
 //			if(mOfficialMsgList.size() < PAGESIZE) {
 //				mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 //			}
-			mCurMotion = REFRESH_NORMAL;
-		} else if(requestType == IPageNotifyFn.PageType_Follow) {
-			FollowRetBean bean = (FollowRetBean)result;
-			if(null != bean) {
-				if(bean.code != 0) {
-					//token过期
-					if(!GolukUtils.isTokenValid(bean.code)){
-						mLoginRL.setVisibility(View.VISIBLE);
-						mListView.setVisibility(View.GONE);
-						startUserLogin();
-						return;
-					}else if(bean.code == 12011){
-						Toast.makeText(FragmentFollowed.this.getContext(), getString(R.string.follow_operation_limit_total), Toast.LENGTH_SHORT).show();
-						return;
-					}else if(bean.code == 12016){
-						Toast.makeText(FragmentFollowed.this.getContext(), getString(R.string.follow_operation_limit_day), Toast.LENGTH_SHORT).show();
-						return;
-					}else{
-						Toast.makeText(getActivity(), bean.msg, Toast.LENGTH_SHORT).show();
-					}
-					return;
-				}
-				// User link uid to find the changed recommend user item status
-				int i = findLinkUserItem(bean.data.linkuid);
-				if(i >=0 && i < mFollowedList.size()) {
-					FollowedRecomUserBean userBean = (FollowedRecomUserBean)mFollowedList.get(i);
-					userBean.link = bean.data.link;
-					mAdapter.notifyDataSetChanged();
+            mCurMotion = REFRESH_NORMAL;
+        } else if (requestType == IPageNotifyFn.PageType_Follow) {
+            FollowRetBean bean = (FollowRetBean) result;
+            if (null != bean) {
+                if (bean.code != 0) {
+                    //token过期
+                    if (!GolukUtils.isTokenValid(bean.code)) {
+                        mLoginRL.setVisibility(View.VISIBLE);
+                        mListView.setVisibility(View.GONE);
+                        startUserLogin();
+                        return;
+                    } else if (bean.code == 12011) {
+                        Toast.makeText(FragmentFollowed.this.getContext(), getString(R.string.follow_operation_limit_total), Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if (bean.code == 12016) {
+                        Toast.makeText(FragmentFollowed.this.getContext(), getString(R.string.follow_operation_limit_day), Toast.LENGTH_SHORT).show();
+                        return;
+                    } else {
+                        Toast.makeText(getActivity(), bean.msg, Toast.LENGTH_SHORT).show();
+                    }
+                    return;
+                }
+                // User link uid to find the changed recommend user item status
+                int i = findLinkUserItem(bean.data.linkuid);
+                if (i >= 0 && i < mFollowedList.size()) {
+                    FollowedRecomUserBean userBean = (FollowedRecomUserBean) mFollowedList.get(i);
+                    userBean.link = bean.data.link;
+                    mAdapter.notifyDataSetChanged();
 
-					//关注页推荐——关注统计
-					ZhugeUtils.eventFollowed(getActivity(), getActivity().getString(R.string.str_zhuge_followed_from_followed_recommed));
-				}
-			} else {
-				// Toast for operation failed
-				Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
-			}
-		} else if(requestType == IPageNotifyFn.PageType_FollowAll) {
-			FollowAllRetBean bean = (FollowAllRetBean)result;
-			if(null != bean) {
-				//token过期
-				if(!GolukUtils.isTokenValid(bean.code)){
-					mLoginRL.setVisibility(View.VISIBLE);
-					mListView.setVisibility(View.GONE);
-					startUserLogin();
-					return;
-				}
-				if(bean.code == 0) {
-					sendFollowedContentRequest(REFRESH_NORMAL, "");
-				} else {
-					Toast.makeText(getActivity(), bean.msg, Toast.LENGTH_SHORT).show();
-				}
-			} else {
-				Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
-			}
-		} else if(requestType == IPageNotifyFn.PageType_GetShareURL) {
-			VideoShareRetBean bean = (VideoShareRetBean)result;
-			if(null == bean) {
-				Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
-				return;
-			}
+                    //关注页推荐——关注统计
+                    ZhugeUtils.eventFollowed(getActivity(), getActivity().getString(R.string.str_zhuge_followed_from_followed_recommed));
+                }
+            } else {
+                // Toast for operation failed
+                Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestType == IPageNotifyFn.PageType_FollowAll) {
+            FollowAllRetBean bean = (FollowAllRetBean) result;
+            if (null != bean) {
+                //token过期
+                if (!GolukUtils.isTokenValid(bean.code)) {
+                    mLoginRL.setVisibility(View.VISIBLE);
+                    mListView.setVisibility(View.GONE);
+                    startUserLogin();
+                    return;
+                }
+                if (bean.code == 0) {
+                    sendFollowedContentRequest(REFRESH_NORMAL, "");
+                } else {
+                    Toast.makeText(getActivity(), bean.msg, Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestType == IPageNotifyFn.PageType_GetShareURL) {
+            VideoShareRetBean bean = (VideoShareRetBean) result;
+            if (null == bean) {
+                Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-			if(!bean.success) {
-				Toast.makeText(getActivity(), bean.msg, Toast.LENGTH_SHORT).show();
-				return;
-			}
+            if (!bean.success) {
+                Toast.makeText(getActivity(), bean.msg, Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-			if(null == mSharePlatform) {
-				return;
-			}
-			String shareurl = bean.data.shorturl;
-			String coverurl = bean.data.coverurl;
-			String describe = bean.data.describe;
+            if (null == mSharePlatform) {
+                return;
+            }
+            String shareurl = bean.data.shorturl;
+            String coverurl = bean.data.coverurl;
+            String describe = bean.data.describe;
 
-			String realDesc = getResources().getString(R.string.str_share_board_real_desc);
-			if (TextUtils.isEmpty(describe)) {
-				describe = getResources().getString(R.string.str_share_describe);
-			}
-			String ttl = getResources().getString(R.string.str_goluk_wonderful_video);
-			Object obj = mFollowedList.get(mCurrentIndex);
-			if(obj instanceof FollowedVideoObjectBean) {
-				FollowedVideoObjectBean videoBean = (FollowedVideoObjectBean)obj;
-				String videoId = null != videoBean ? videoBean.video.videoid
-						: "";
-				String username = null != videoBean ? videoBean.user.nickname
-						: "";
-				describe = username + this.getString(R.string.str_colon) + describe;
-				
-				
-				ThirdShareBean shareBean = new ThirdShareBean();
-				shareBean.surl = shareurl;
-				shareBean.curl = coverurl;
-				shareBean.db = describe;
-				shareBean.tl = ttl;
-				shareBean.bitmap = null;
-				shareBean.realDesc = realDesc;
-				shareBean.videoId = videoId;
-				
-				ProxyThirdShare shareBoard = new ProxyThirdShare(this.getActivity(), mSharePlatform, shareBean);
-				shareBoard.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-			}
-		} else if(requestType == IPageNotifyFn.PageType_Praise) {
-			// assume the success
-			PraiseResultBean prBean = (PraiseResultBean)result;
-			if(null == prBean || !prBean.success) {
-				GolukUtils.showToast(getActivity(), getString(R.string.user_net_unavailable));
-				return;
-			}
+            String realDesc = getResources().getString(R.string.str_share_board_real_desc);
+            if (TextUtils.isEmpty(describe)) {
+                describe = getResources().getString(R.string.str_share_describe);
+            }
+            String ttl = getResources().getString(R.string.str_goluk_wonderful_video);
+            Object obj = mFollowedList.get(mCurrentIndex);
+            if (obj instanceof FollowedVideoObjectBean) {
+                FollowedVideoObjectBean videoBean = (FollowedVideoObjectBean) obj;
+                String videoId = null != videoBean ? videoBean.video.videoid
+                        : "";
+                String username = null != videoBean ? videoBean.user.nickname
+                        : "";
+                describe = username + this.getString(R.string.str_colon) + describe;
 
-			PraiseResultDataBean ret = prBean.data;
-			if(null != ret && !TextUtils.isEmpty(ret.result)) {
-				if("0".equals(ret.result)) {
-					Object obj = mFollowedList.get(mCurrentIndex);
-					if(obj instanceof FollowedVideoObjectBean) {
-						FollowedVideoObjectBean praisedBean = (FollowedVideoObjectBean)obj;
-						praisedBean.video.ispraise = "1";
-						try {
-							int number = Integer.valueOf(praisedBean.video.praisenumber);
-							praisedBean.video.praisenumber = String.valueOf(++number);
-							mAdapter.notifyDataSetChanged();
-						} catch(NumberFormatException e) {
-							e.printStackTrace();
-							praisedBean.video.praisenumber = "0";
-						}
-					}
-;				} else if("7".equals(ret.result)) {
-					GolukUtils.showToast(getActivity(), getString(R.string.str_no_duplicated_praise));
-				} else {
-					GolukUtils.showToast(getActivity(), getString(R.string.str_praise_failed));
-				}
-			}
-		} else if(requestType == IPageNotifyFn.PageType_PraiseCancel) {
-			// assume the success
-			PraiseCancelResultBean praiseCancelResultBean = (PraiseCancelResultBean) result;
-			if (praiseCancelResultBean == null
-					|| !praiseCancelResultBean.success) {
-				GolukUtils.showToast(getActivity(),
-						this.getString(R.string.user_net_unavailable));
-				return;
-			}
 
-			PraiseCancelResultDataBean cancelRet = praiseCancelResultBean.data;
-			if (null != cancelRet && !TextUtils.isEmpty(cancelRet.result)) {
-				if ("0".equals(cancelRet.result)) {
-					Object obj = mFollowedList.get(mCurrentIndex);
-					if(obj instanceof FollowedVideoObjectBean) {
-						FollowedVideoObjectBean cancelBean = (FollowedVideoObjectBean)obj;
-						cancelBean.video.ispraise = "0";
-						try {
-							int number = Integer.valueOf(cancelBean.video.praisenumber);
-							number--;
-							if(number < 0) {
-								number = 0;
-							}
-							cancelBean.video.praisenumber = String.valueOf(number);
-							mAdapter.notifyDataSetChanged();
-						} catch(NumberFormatException e) {
-							e.printStackTrace();
-							cancelBean.video.praisenumber = "0";
-						}
-					}
-				} else {
-					GolukUtils.showToast(getActivity(),
-							getString(R.string.str_cancel_praise_failed));
-				}
-			}
-		}
-	}
+                ThirdShareBean shareBean = new ThirdShareBean();
+                shareBean.surl = shareurl;
+                shareBean.curl = coverurl;
+                shareBean.db = describe;
+                shareBean.tl = ttl;
+                shareBean.bitmap = null;
+                shareBean.realDesc = realDesc;
+                shareBean.videoId = videoId;
 
-	public boolean sendPraiseRequest(String videoId, String type) {
-		PraiseRequest request = new PraiseRequest(IPageNotifyFn.PageType_Praise, this);
-		return request.get("1", videoId, type);
-	}
+                ProxyThirdShare shareBoard = new ProxyThirdShare(this.getActivity(), mSharePlatform, shareBean);
+                shareBoard.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+            }
+        } else if (requestType == IPageNotifyFn.PageType_Praise) {
+            // assume the success
+            PraiseResultBean prBean = (PraiseResultBean) result;
+            if (null == prBean || !prBean.success) {
+                GolukUtils.showToast(getActivity(), getString(R.string.user_net_unavailable));
+                return;
+            }
 
-	public boolean sendCancelPraiseRequest(String videoId) {
-		PraiseCancelRequest request = new PraiseCancelRequest(IPageNotifyFn.PageType_PraiseCancel, this);
-		return request.get("1", videoId);
-	}
+            PraiseResultDataBean ret = prBean.data;
+            if (null != ret && !TextUtils.isEmpty(ret.result)) {
+                if ("0".equals(ret.result)) {
+                    Object obj = mFollowedList.get(mCurrentIndex);
+                    if (obj instanceof FollowedVideoObjectBean) {
+                        FollowedVideoObjectBean praisedBean = (FollowedVideoObjectBean) obj;
+                        praisedBean.video.ispraise = "1";
+                        try {
+                            int number = Integer.valueOf(praisedBean.video.praisenumber);
+                            praisedBean.video.praisenumber = String.valueOf(++number);
+                            mAdapter.notifyDataSetChanged();
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                            praisedBean.video.praisenumber = "0";
+                        }
+                    }
+                    ;
+                } else if ("7".equals(ret.result)) {
+                    GolukUtils.showToast(getActivity(), getString(R.string.str_no_duplicated_praise));
+                } else {
+                    GolukUtils.showToast(getActivity(), getString(R.string.str_praise_failed));
+                }
+            }
+        } else if (requestType == IPageNotifyFn.PageType_PraiseCancel) {
+            // assume the success
+            PraiseCancelResultBean praiseCancelResultBean = (PraiseCancelResultBean) result;
+            if (praiseCancelResultBean == null
+                    || !praiseCancelResultBean.success) {
+                GolukUtils.showToast(getActivity(),
+                        this.getString(R.string.user_net_unavailable));
+                return;
+            }
 
-	protected void storeCurrentIndex(int index) {
-		mCurrentIndex = index;
-	}
+            PraiseCancelResultDataBean cancelRet = praiseCancelResultBean.data;
+            if (null != cancelRet && !TextUtils.isEmpty(cancelRet.result)) {
+                if ("0".equals(cancelRet.result)) {
+                    Object obj = mFollowedList.get(mCurrentIndex);
+                    if (obj instanceof FollowedVideoObjectBean) {
+                        FollowedVideoObjectBean cancelBean = (FollowedVideoObjectBean) obj;
+                        cancelBean.video.ispraise = "0";
+                        try {
+                            int number = Integer.valueOf(cancelBean.video.praisenumber);
+                            number--;
+                            if (number < 0) {
+                                number = 0;
+                            }
+                            cancelBean.video.praisenumber = String.valueOf(number);
+                            mAdapter.notifyDataSetChanged();
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                            cancelBean.video.praisenumber = "0";
+                        }
+                    }
+                } else {
+                    GolukUtils.showToast(getActivity(),
+                            getString(R.string.str_cancel_praise_failed));
+                }
+            }
+        }
+    }
 
-	private int findLinkUserItem(String linkuid) {
-		if(null == mFollowedList || mFollowedList.size() == 0 || TextUtils.isEmpty(linkuid)) {
-			return -1;
-		}
+    public boolean sendPraiseRequest(String videoId, String type) {
+        PraiseRequest request = new PraiseRequest(IPageNotifyFn.PageType_Praise, this);
+        return request.get("1", videoId, type);
+    }
 
-		int size = mFollowedList.size();
-		for(int i = 0; i < size; i++) {
-			Object obj = mFollowedList.get(i);
-			if(null != obj && obj instanceof FollowedRecomUserBean) {
-				FollowedRecomUserBean bean = (FollowedRecomUserBean)obj;
-				if(!TextUtils.isEmpty(bean.uid)) {
-					if(bean.uid.equals(linkuid)) {
-						return i;
-					}
-				}
-			}
-		}
+    public boolean sendCancelPraiseRequest(String videoId) {
+        PraiseCancelRequest request = new PraiseCancelRequest(IPageNotifyFn.PageType_PraiseCancel, this);
+        return request.get("1", videoId);
+    }
 
-		return -1;
-	}
+    protected void storeCurrentIndex(int index) {
+        mCurrentIndex = index;
+    }
 
-	private int findFollowedVideoItem(String videoId) {
-		if(null == mFollowedList || mFollowedList.size() == 0 || TextUtils.isEmpty(videoId)) {
-			return -1;
-		}
+    private int findLinkUserItem(String linkuid) {
+        if (null == mFollowedList || mFollowedList.size() == 0 || TextUtils.isEmpty(linkuid)) {
+            return -1;
+        }
 
-		int size = mFollowedList.size();
-		for(int i = 0; i < size; i++) {
-			Object obj = mFollowedList.get(i);
-			if(null != obj && obj instanceof FollowedVideoObjectBean) {
-				FollowedVideoObjectBean bean = (FollowedVideoObjectBean)obj;
-				if(!TextUtils.isEmpty(bean.video.videoid)) {
-					if(bean.video.videoid.equals(videoId)) {
-						return i;
-					}
-				}
-			}
-		}
+        int size = mFollowedList.size();
+        for (int i = 0; i < size; i++) {
+            Object obj = mFollowedList.get(i);
+            if (null != obj && obj instanceof FollowedRecomUserBean) {
+                FollowedRecomUserBean bean = (FollowedRecomUserBean) obj;
+                if (!TextUtils.isEmpty(bean.uid)) {
+                    if (bean.uid.equals(linkuid)) {
+                        return i;
+                    }
+                }
+            }
+        }
 
-		return -1;
-	}
+        return -1;
+    }
+
+    private int findFollowedVideoItem(String videoId) {
+        if (null == mFollowedList || mFollowedList.size() == 0 || TextUtils.isEmpty(videoId)) {
+            return -1;
+        }
+
+        int size = mFollowedList.size();
+        for (int i = 0; i < size; i++) {
+            Object obj = mFollowedList.get(i);
+            if (null != obj && obj instanceof FollowedVideoObjectBean) {
+                FollowedVideoObjectBean bean = (FollowedVideoObjectBean) obj;
+                if (!TextUtils.isEmpty(bean.video.videoid)) {
+                    if (bean.video.videoid.equals(videoId)) {
+                        return i;
+                    }
+                }
+            }
+        }
+
+        return -1;
+    }
 }
