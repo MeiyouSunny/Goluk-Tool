@@ -14,6 +14,7 @@ import com.mobnote.eventbus.SharePlatformSelectedEvent;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.thirdshare.bean.SharePlatformBean;
 import com.mobnote.util.GolukConfig;
+import com.mobnote.util.GolukUtils;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.ArrayList;
@@ -107,11 +108,11 @@ public class SharePlatformAdapter extends RecyclerView.Adapter{
         if(mSharePlatform.isInstallPlatform(SHARE_MEDIA.WHATSAPP)){
             mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_WHATSAPP));
         }
-        if(mSharePlatform.isInstallPlatform(SHARE_MEDIA.LINE)){
+        if(GolukUtils.isAppInstalled(mContext, GolukConfig.LINE_PACKAGE)){
             mSharePlatformBeanList.add(new SharePlatformBean(SharePlatformBean.SHARE_PLATFORM_LINE));
         }
-
     }
+
     private class SharePlatformOnClickListener implements View.OnClickListener{
 
         private int position;
