@@ -3,11 +3,14 @@ package com.mobnote.user;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.baidu.mapapi.map.Text;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventIPCUpdate;
@@ -26,6 +29,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 
 import cn.com.mobnote.logic.GolukModule;
@@ -108,7 +112,7 @@ public class IpcUpdateManage implements IPCManagerFn {
     /**
      * int state, Object param1, Object param2
      **/
-    public int mState = -1;
+    private int mState = -1;
     /**
      * 保存下载进度
      **/
@@ -161,6 +165,7 @@ public class IpcUpdateManage implements IPCManagerFn {
                     IPageNotifyFn.PageType_CheckUpgrade, ipcString);
             GolukDebugUtils.i(TAG, "=====" + b + "===ipcUpdateManage======");
             if (b) {
+                mState = -1; //每次重新下载就重置状态
                 mFunction = function;
                 if (mFunction == FUNCTION_SETTING_APP || mFunction == FUNCTION_SETTING_IPC) {
                     showLoadingDialog();
@@ -242,7 +247,6 @@ public class IpcUpdateManage implements IPCManagerFn {
      * 文件存在，返回文件路径
      *
      * @param ipcVersion
-     * @param ipcModel
      */
     public String isHasIPCFile(String ipcVersion) {
         String ipcStr = JsonUtil.selectIPCFile(ipcVersion, mApp.mIPCControlManager.mProduceName);
@@ -446,17 +450,12 @@ public class IpcUpdateManage implements IPCManagerFn {
         mState = state;
         mParam2 = param2;
         if (state == DOWNLOAD_STATUS) {
-            // 下载中
-            mApp.mLoadStatus = true;
             mParam1 = param1;
         } else if (state == DOWNLOAD_STATUS_SUCCESS) {
-            // 下载成功
-            mApp.mLoadStatus = false;
             // 下载成功删除文件
-//			downIpcSucess();
+            // downIpcSucess();
+            SharedPrefUtil.saveNewFirmware(SharedPrefUtil.getIPCVersion(), true);
         } else if (state == DOWNLOAD_STATUS_FAIL) {
-            // 下载失败
-            mApp.mLoadStatus = false;
             mParam1 = -1;
         }
         if (mApp.getContext() != null && mApp.getContext() instanceof UpdateActivity) {
@@ -753,7 +752,7 @@ public class IpcUpdateManage implements IPCManagerFn {
     /**
      * ipc安装升级回调
      *
-     * @param success
+     * @param event
      * @param param1
      * @param param2
      */
@@ -769,8 +768,8 @@ public class IpcUpdateManage implements IPCManagerFn {
      * 强制升级提示
      *
      * @param mContext
-     * @param message1
-     * @param message2
+     * @param message
+     * @param url
      */
     public void showUpgradeGoluk(final Context mContext, String message, final String url) {
         mBuilder = new AlertDialog.Builder(mContext);
@@ -817,8 +816,8 @@ public class IpcUpdateManage implements IPCManagerFn {
      * 非强制升级提示
      *
      * @param mContext
-     * @param message1
-     * @param message2
+     * @param message
+     * @param url
      */
     public void showUpgradeGoluk2(final Context mContext, String message, final String url) {
         mBuilder = new AlertDialog.Builder(mContext);
@@ -868,8 +867,6 @@ public class IpcUpdateManage implements IPCManagerFn {
 
     /**
      * ipc自动连接后
-     *
-     * @param param2
      */
     public boolean ipcConnect() {
         try {
@@ -958,4 +955,28 @@ public class IpcUpdateManage implements IPCManagerFn {
         return false;
     }
 
+    public boolean isDownloading() {
+        return mState == DOWNLOAD_STATUS;
+    }
+
+    public boolean isDownloadSuccess() {
+        return mState == DOWNLOAD_STATUS_SUCCESS;
+    }
+
+    public boolean isDownloadCached(String vIPC) {
+        if (TextUtils.isEmpty(vIPC)) {
+            return false;
+        }
+        Set<String> cache = SharedPrefUtil.getNewFirmware();
+        if (cache == null) {
+            return false;
+        }
+        Iterator it = cache.iterator();
+        while (it.hasNext()) {
+            if (vIPC.equals(it.next())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -1,27 +1,5 @@
 package com.mobnote.golukmain;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.json.JSONObject;
-
-import com.mobnote.application.GolukApplication;
-import com.mobnote.eventbus.EventConfig;
-import com.mobnote.eventbus.EventIPCUpdate;
-import com.mobnote.eventbus.EventWifiConnect;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.IPCControlManager;
-import com.mobnote.user.DataCleanManage;
-import com.mobnote.user.IPCInfo;
-import com.mobnote.user.IpcUpdateManage;
-import com.mobnote.user.UserUtils;
-import com.mobnote.util.GolukUtils;
-import com.mobnote.util.SharedPrefUtil;
-
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.tiros.debug.GolukDebugUtils;
-import de.greenrobot.event.EventBus;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -32,13 +10,34 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventIPCUpdate;
+import com.mobnote.eventbus.EventWifiConnect;
+import com.mobnote.golukmain.carrecorder.IPCControlManager;
+import com.mobnote.user.DataCleanManage;
+import com.mobnote.user.IPCInfo;
+import com.mobnote.user.IpcUpdateManage;
+import com.mobnote.user.UserUtils;
+import com.mobnote.util.GolukUtils;
+import com.mobnote.util.SharedPrefUtil;
+
+import org.json.JSONObject;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 /**
  * 升级下载安装
@@ -46,11 +45,6 @@ import android.widget.TextView;
  * @author mobnote
  */
 public class UpdateActivity extends BaseActivity implements OnClickListener, IPCManagerFn {
-
-    /**
-     * 返回按钮
-     **/
-    private ImageButton mBtnBack = null;
     /**
      * 下载 / 安装按钮
      **/
@@ -208,7 +202,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
     private String mIpcSize = "";
     private String mIpcContent = "";
     private String mIpcUrl = "";
-    private String mIpcPath = "";
     /**
      * true为已退出当前activity
      **/
@@ -259,7 +252,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         mIpcSize = SharedPrefUtil.getIPCFileSize();
         mIpcContent = SharedPrefUtil.getIPCContent();
         mIpcUrl = SharedPrefUtil.getIPCURL();
-        mIpcPath = SharedPrefUtil.getIPCPath();
 
         mTextIpcVersion.setText(mIpcVersion);
         if (!TextUtils.isEmpty(mIpcSize)) {
@@ -271,10 +263,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         Intent itClick = getIntent();
         int progressSetup = itClick.getIntExtra(UPDATE_PROGRESS, 0);
 
-        GolukDebugUtils.i("", "----UpdateActivity----mApp.mLoadStatus-----" + mApp.mLoadStatus);
         GolukDebugUtils.i("", "----UpdateActivity----progressSetup-----" + progressSetup);
         if (mSign == 0) {
-            if (mApp.mLoadStatus) {
+            if (mApp.mIpcUpdateManage.isDownloading()) {
                 mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
                 if (!UserUtils.isNetDeviceAvailable(this)) {
                     GolukUtils.showToast(mApp.getContext(), this.getResources().getString(R.string.str_ipc_update_download_file_fail));
@@ -284,8 +275,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                     mBtnDownload.setEnabled(true);
                 } else {
                     mTextDowload.setText(this.getResources().getString(R.string.str_ipc_update_downloading));
-                    mBtnDownload.setText(this.getResources().getString(R.string.str_ipc_update_downloading_ellipsis)
-                            + progressSetup + this.getResources().getString(R.string.str_ipc_update_percent_unit));
+                    mBtnDownload.setText(this.getResources().getString(R.string.str_ipc_update_downloading_ellipsis) + progressSetup + this.getResources().getString(R.string.str_ipc_update_percent_unit));
                     mDownloadStatus = IpcUpdateManage.DOWNLOAD_STATUS;
                     mBtnDownload.setEnabled(false);
                 }
@@ -374,6 +364,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         mApp.mIpcUpdateManage.stopIpcUpgrade();
                         UserUtils.dismissUpdateDialog(mUpdateDialog);
                         mUpdateDialog = null;
+                        SharedPrefUtil.saveNewFirmware(mIpcVersion,false);
                         if (mIsExit) {
                             return;
                         }
@@ -574,7 +565,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 
     // 初始化view
     public void initView() {
-        mBtnBack = (ImageButton) findViewById(R.id.back_btn);
+        ImageButton mBtnBack = (ImageButton) findViewById(R.id.back_btn);
         mBtnDownload = (TextView) findViewById(R.id.update_btn);
         mTextIpcVersion = (TextView) findViewById(R.id.upgrade_ipc_name);
         mTextIpcSize = (TextView) findViewById(R.id.upgrade_ipc_size_text);
@@ -651,7 +642,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         } else if (id == R.id.rl_update_voice) {
             mVoiceLayout.setVisibility(View.GONE);
             mLaterLayout.setVisibility(View.VISIBLE);
-        } else {
         }
     }
 
@@ -659,9 +649,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
      * 下载ipc文件回调 void* pvUser, int type ,int state , unsigned long param1,
      * unsigned long param2 其中的state==2时，param1为下载进度数值（0~100）
      *
-     * @param state
-     * @param param1
-     * @param param2
      */
     public void downloadCallback(int state, Object param1, Object param2) {
         GolukDebugUtils.i("lily", "---UpdateActivity---------downloadCallback-----------state：" + state + "----param1："
@@ -669,18 +656,11 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         mApp.mIpcUpdateManage.dimissLoadingDialog();
         mDownloadStatus = state;
         if (state == IpcUpdateManage.DOWNLOAD_STATUS) {
-            // 下载中
-            mApp.mLoadStatus = true;
             int progress = (Integer) param1;
             GolukDebugUtils.i("lily", "======下载文件progress=====" + progress);
             mBtnDownload.setEnabled(false);
-            mBtnDownload.setText(this.getResources().getString(R.string.str_ipc_update_downloading_omit) + progress
-                    + this.getResources().getString(R.string.str_ipc_update_percent_unit));
-            // 保存进度
-            mApp.mLoadProgress = progress;
+            mBtnDownload.setText(this.getResources().getString(R.string.str_ipc_update_downloading_omit) + progress + this.getResources().getString(R.string.str_ipc_update_percent_unit));
         } else if (state == IpcUpdateManage.DOWNLOAD_STATUS_SUCCESS) {
-            // 下载成功
-            mApp.mLoadStatus = false;
             mTextDowload.setText(this.getResources().getString(R.string.ipc_download_text));
             mBtnDownload.setText(this.getResources().getString(R.string.str_ipc_update_install));
             mBtnDownload.setEnabled(true);
@@ -695,8 +675,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
             // 下载成功删除文件
             // mApp.mIpcUpdateManage.downIpcSucess();
         } else if (state == IpcUpdateManage.DOWNLOAD_STATUS_FAIL) {
-            // 下载失败
-            mApp.mLoadStatus = false;
             GolukUtils.showToast(mApp.getContext(),
                     this.getResources().getString(R.string.str_ipc_update_download_file_fail));
             mTextDowload.setText(this.getResources().getString(R.string.str_ipc_update_undownload));
@@ -709,10 +687,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
     /**
      * ipc安装升级回调
      *
-     * @param event
-     * @param msg
-     * @param param1
-     * @param param2
      */
     @Override
     public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
@@ -722,7 +696,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
             if (mIsExit) {
                 return;
             }
-            if (mApp.mLoadStatus) {
+            if (mApp.mIpcUpdateManage.isDownloading()) {
                 return;
             }
             if (event == ENetTransEvent_IPC_UpGrade_Resp) {

@@ -6,6 +6,9 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * 2012-10-09
  *
@@ -92,6 +95,12 @@ public class SharedPrefUtil {
      * 保存ipc更新信息
      **/
     public static final String PROPERTY_SAVE_IPC_PATH = "property_save_ipc_path";
+
+    /**
+     * 是否有新的可用固件包使用
+     */
+    public static final String PROPERTY_NEW_FIREWARE = "property_new_fireware";
+
 
     /**
      * 保存下载本地的IPC升级BIN文件信息
@@ -506,6 +515,32 @@ public class SharedPrefUtil {
     public static String getIPCContent() {
         SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
         return preference.getString(PROPERTY_SAVE_IPC_CONTENT, "");
+    }
+
+    /**
+     * 缓存所有APP下载的固件，缓存列表以 VIPC 为单位，如果存在VIPC的下载文件表示，该固件存在对应的升级包
+     * 用一个列队解决当切换设备的时候，好检查是否有对应设备的固件包
+     *
+     * @param vIPC 当前Vipc版本
+     * @param add  是否是添加， true 表示添加，false 表示移除
+     */
+    public static void saveNewFirmware(String vIPC, boolean add) {
+        SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
+        Set<String> cacheFirmwareList = getNewFirmware();
+        if (cacheFirmwareList == null) {
+            cacheFirmwareList = new HashSet<>();
+        }
+        if (add) {
+            cacheFirmwareList.add(vIPC);
+        } else {
+            cacheFirmwareList.remove(vIPC);
+        }
+        preference.edit().putStringSet(PROPERTY_NEW_FIREWARE, cacheFirmwareList).commit();
+    }
+
+    public static Set<String> getNewFirmware() {
+        SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
+        return preference.getStringSet(PROPERTY_NEW_FIREWARE, null);
     }
 
     /**

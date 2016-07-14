@@ -272,14 +272,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
      */
     private int downloadCount = 0;
     /**
-     * 极路客固件升级文件下载中的状态
-     **/
-    public boolean mLoadStatus = false;
-    /**
-     * 极路客固件升级文件下载中的进度
-     **/
-    public int mLoadProgress = 0;
-    /**
      * 极路客升级成功的状态
      **/
     public boolean updateSuccess = false;
@@ -452,8 +444,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         isSDCardFull = false;
         isDownloading = false;
         downloadCount = 0;
-        mLoadStatus = false;
-        mLoadProgress = 0;
         updateSuccess = false;
         mWiFiStatus = 0;
         if (null != fileList) {
