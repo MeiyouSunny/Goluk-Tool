@@ -39,6 +39,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import com.alibaba.fastjson.JSON;
 import com.baidu.mapapi.SDKInitializer;
 import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventDownloadVideoFinish;
 import com.mobnote.eventbus.EventIpcConnState;
 import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.eventbus.EventPhotoUpdateLoginState;
@@ -963,7 +964,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
                 } catch (Exception e) {
                 }
-
+                EventBus.getDefault().post(new EventDownloadVideoFinish());
             }
 
         } catch (JSONException e) {

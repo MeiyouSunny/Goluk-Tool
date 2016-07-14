@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
+import com.mobnote.eventbus.EventDownloadVideoFinish;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.entity.DoubleVideoInfo;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
@@ -72,40 +73,15 @@ public class LocalFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mFragmentAlbum = (FragmentAlbum) getParentFragment();
+        mLocalVideoView = inflater.inflate(R.layout.wonderful_listview, container, false);
+        density = SoundUtils.getInstance().getDisplayMetrics().density;
 
-        if (mLocalVideoView == null) {
-            mLocalVideoView = inflater.inflate(R.layout.wonderful_listview,
-                    (ViewGroup) getActivity().findViewById(R.id.viewpager), false);
-            density = SoundUtils.getInstance().getDisplayMetrics().density;
-
-            this.mDataList = new ArrayList<VideoInfo>();
-            this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
-            this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-            initView();
-            loadData(true);
-        }
-
-        ViewGroup parent = (ViewGroup) mLocalVideoView.getParent();
-        if (parent != null) {
-            parent.removeView(mLocalVideoView);
-        }
-
+        this.mDataList = new ArrayList<>();
+        this.mDoubleDataList = new ArrayList<>();
+        this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
+        initView();
+        loadData(true);
         return mLocalVideoView;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
-    public void onEventMainThread(EventDeletePhotoAlbumVid event) {
-        if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
-
-            List<String> list = new ArrayList<String>();
-            list.add(event.getVidPath());
-            deleteListData(list);
-        }
     }
 
     public void deleteListData(List<String> deleteData) {
@@ -134,7 +110,7 @@ public class LocalFragment extends Fragment {
             }
         }
 
-        List<String> mGroupListName = new ArrayList<String>();
+        List<String> mGroupListName = new ArrayList<>();
         for (VideoInfo info : mDataList) {
             String time = info.videoCreateDate;
             String tabTime = time.substring(0, 10);
@@ -276,7 +252,7 @@ public class LocalFragment extends Fragment {
                         mCustomProgressDialog.close();
                     }
                 } catch (Exception e) {
-
+                    e.printStackTrace();
                 }
 
                 checkListState();
@@ -322,9 +298,6 @@ public class LocalFragment extends Fragment {
 
     /**
      * 选择视频item
-     *
-     * @param tag1
-     * @param mTMLayout1
      */
     private void selectedVideoItem(String tag1, RelativeLayout mTMLayout1) {
         List<String> selectedListData = mFragmentAlbum.getSelectedList();
@@ -351,8 +324,6 @@ public class LocalFragment extends Fragment {
 
     /**
      * 跳转到本地视频播放页面
-     *
-     * @param path
      */
     private void gotoVideoPlayPage(int type, String path, String filename, String createTime, String videoHP, String size) {
         if (!TextUtils.isEmpty(path)) {
@@ -390,13 +361,35 @@ public class LocalFragment extends Fragment {
     }
 
     public int getVideoType(String name) {
-        if (name.indexOf("WND") >= 0) {
+        if (name.contains("WND")) {
             return 1;
-        } else if (name.indexOf("URG") >= 0) {
+        } else if (name.contains("URG")) {
             return 2;
         } else {
             return 3;
         }
     }
+
+    public void onEventMainThread(EventDeletePhotoAlbumVid event) {
+        if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
+
+            List<String> list = new ArrayList<>();
+            list.add(event.getVidPath());
+            deleteListData(list);
+        }
+    }
+
+    public void onEventMainThread(EventDownloadVideoFinish event) {
+        if (event != null && isResumed()) {
+            loadData(true);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
 
 }
