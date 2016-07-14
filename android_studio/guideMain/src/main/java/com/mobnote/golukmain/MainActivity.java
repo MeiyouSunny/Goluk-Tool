@@ -538,7 +538,12 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         MobclickAgent.setDebugMode(false);
         MobclickAgent.setCatchUncaughtExceptions(false);
         // 添加腾讯崩溃统计 初始化SDK
-        String appId = CrashReportUtil.BUGLY_RELEASE_APPID_GOLUK;
+        String appId = null;
+        if(GolukApplication.getInstance().isMainland()) {
+            appId = CrashReportUtil.BUGLY_RELEASE_APPID_GOLUK_INTERNAL;
+        } else {
+            appId = CrashReportUtil.BUGLY_RELEASE_APPID_GOLUK_INTERNATIONAL;
+        }
         boolean isDebug = false;
         if (GolukUtils.isTestServer()) {
             appId = CrashReportUtil.BUGLY_DEV_APPID_GOLUK;

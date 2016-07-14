@@ -1619,7 +1619,6 @@ public abstract class AbstractLiveActivity extends BaseActivity implements View.
         }
         mThumbBitmap = ImageManager.getBitmapFromCache(picName, 100, 100);
         new UploadLiveScreenShotTask(picName,myInfo.uid).execute();
-
     }
 
     private String getShareVideoId() {

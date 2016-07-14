@@ -1041,4 +1041,5 @@
     <string name="disconnect_goluk_before_share">Must be disconnected from dashcam wi-fi before network sharing can be used.</string>
     <string name="msg_system_certificate_success_sys">You\'re now a star member. Go check it out!</string>
     <string name="str_system_window_not_allowed">不能弹出系统窗口，请到app管理中打开权限</string>
+    <string name="str_notification_error_ssl_cert_invalid">将要跳转到不安全的网页，是否继续?</string>
 </resources>

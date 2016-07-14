@@ -21,6 +21,6 @@ public class CrashReportUtil {
 	/** 手机客户端 腾讯dev appid */
 	public static final String BUGLY_DEV_APPID_GOLUK = "900002451";
 	/** 手机客户端 腾讯release appid */
-	public static final String BUGLY_RELEASE_APPID_GOLUK = "900012751";
-
+	public static final String BUGLY_RELEASE_APPID_GOLUK_INTERNAL = "900012751";
+	public static final String BUGLY_RELEASE_APPID_GOLUK_INTERNATIONAL = "900021946";
 }

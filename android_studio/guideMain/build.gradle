@@ -34,7 +34,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.android.support:support-v4:21.0.0'
     compile files('libs/mid-sdk-2.20.jar')
-    compile files('libs/bolts-android-1.1.4.jar')
+  //  compile files('libs/bolts-android-1.1.4.jar')
     compile files('libs/com.rd.car.player.jar')
     compile files('libs/com.rd.car.sdk.jar')
     compile files('libs/download_1.1.3.300_4200.jar')
@@ -63,13 +63,18 @@ dependencies {
     compile files('libs/twitter4j-core-4.0.4.jar')
     compile files('libs/umeng_social_sdk.jar')
     compile files('libs/upload_1.1.3.300_4200.jar')
-    compile files('libs/weibosdkcore_v3.1.1.jar')
+ //   compile files('libs/weibosdkcore_v3.1.1.jar')
+    compile files('libs/weiboSDKCore_3.1.4.jar')
     compile files('libs/wup-1.0.0-SNAPSHOT.jar')
     compile files('libs/Xg_sdk_v2.39_20150915_1121.jar')
     compile files('libs/after-effect.jar')
     compile 'com.android.support:multidex:1.0.1'
     compile files('libs/photoview-library-1.2.2.jar')
     compile files('libs/Zhuge_SDK_v2.3.0.jar')
+    compile files('libs/bugly_crash_release.jar')
+    compile files('libs/SocialSDK_Sina.jar')
+    compile files('libs/SocialSDK_instagram.jar')
+    compile files('libs/mta-sdk-1.6.2.jar')
     compile 'com.android.support:recyclerview-v7:23.3.0'
 }
 
