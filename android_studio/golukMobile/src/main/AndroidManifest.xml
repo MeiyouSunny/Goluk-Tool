@@ -236,6 +236,10 @@
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait"/>
         <activity
+            android:name="com.mobnote.golukmain.livevideo.StartLiveActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"/>
+        <activity
             android:name="com.mobnote.golukmain.player.VitamioPlayerActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:process=":vitamio"

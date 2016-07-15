@@ -638,7 +638,7 @@
     <string name="title_activity_local_video_list">LocalVideoListActivity</string>
     <string name="share_str_open">公开(发布到广场)</string>
     <string name="share_str_no_location">定位中…</string>
-    <string name="str_rank_click_btn_txt">Click Entry</string>
+    <string name="str_rank_click_btn_txt">点击查看</string>
     <string name="str_ae_export_dialog_480p">中 480P</string>
     <string name="str_ae_export_dialog_720p">HD720P</string>
     <string name="str_ae_export_dialog_1080p">FULL HD 1080P</string>
