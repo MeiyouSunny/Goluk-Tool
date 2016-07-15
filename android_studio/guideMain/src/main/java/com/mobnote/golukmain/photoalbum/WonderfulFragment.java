@@ -438,7 +438,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
                         //IPC页面访问统计
                         ZhugeUtils.eventIpc(getActivity());
 
-                        ((MainActivity)getActivity()).connectGoluk(true);
+                        ((MainActivity) getActivity()).connectGoluk(true);
                     }
                 }
             }
@@ -575,7 +575,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn {
     private void updateEditState(boolean isHasData) {
         getFragmentAlbum().setEditBtnState(isHasData);
         /*
-		 * GolukDebugUtils.e("",
+         * GolukDebugUtils.e("",
 		 * "Album------WondowvideoListView------updateEditState" + isHasData);
 		 * if (null == mCloudVideoListView) { return; }
 		 * mCloudVideoListView.updateEdit(4, isHasData);
