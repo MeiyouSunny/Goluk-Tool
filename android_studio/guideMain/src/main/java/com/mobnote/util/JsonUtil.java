@@ -1299,8 +1299,8 @@ public class JsonUtil {
             bean.isPraise = getJsonStringValue(dataObj, "ispraise", "1");
             bean.uid = getJsonStringValue(dataObj, "uid", "");
             bean.isFollow = getJsonStringValue(dataObj, "isfollow", "1");
+            bean.isFriend = getJsonStringValue(dataObj, "isfriend", "1");
             return bean;
-
         } catch (Exception e) {
             return null;
         }

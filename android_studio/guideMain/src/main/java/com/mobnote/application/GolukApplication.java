@@ -1126,12 +1126,12 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 // token上传回调
                 GolukNotification.getInstance().getXg().golukServerRegisterCallBack(success, param1, param2);
                 break;
-            case PageType_GetPushCfg:
-            case PageType_SetPushCfg:
-                if (null != mContext && mContext instanceof PushSettingActivity) {
-                    ((PushSettingActivity) mContext).page_CallBack(type, success, param1, param2);
-                }
-                break;
+//            case PageType_GetPushCfg:
+//            case PageType_SetPushCfg:
+//                if (null != mContext && mContext instanceof PushSettingActivity) {
+//                    ((PushSettingActivity) mContext).page_CallBack(type, success, param1, param2);
+//                }
+//                break;
         }
     }
 
