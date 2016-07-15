@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
@@ -36,11 +35,11 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
     private FragmentAlbum mFragment = null;
     private Context mContext = null;
     private LayoutInflater inflater = null;
-    //	private StickyListHeadersListView mListView = null;
     private List<DoubleVideoInfo> mDataList = null;
     private List<String> mGroupNameList = null;
     private float density = 1;
     private int screenWidth = 0;
+    private IListViewItemClickColumn onListViewItemClickColumnListener;
     /**
      * 滚动中锁标识
      */
@@ -48,17 +47,17 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
     private String from = null;
     private int type = 0;
 
-    public LocalWonderfulVideoAdapter(Context c, FragmentAlbum fragment, StickyListHeadersListView listview, int type, String from) {
+    public LocalWonderfulVideoAdapter(Context c, FragmentAlbum fragment, int type, String from, IListViewItemClickColumn itemClickColumnListener) {
         this.from = from;
         this.type = type;
         this.mFragment = fragment;
         this.mContext = c;
-//		this.mListView = listview;
         this.inflater = LayoutInflater.from(c);
         this.density = SoundUtils.getInstance().getDisplayMetrics().density;
         this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-        this.mDataList = new ArrayList<DoubleVideoInfo>();
-        this.mGroupNameList = new ArrayList<String>();
+        this.mDataList = new ArrayList<>();
+        this.mGroupNameList = new ArrayList<>();
+        this.onListViewItemClickColumnListener = itemClickColumnListener;
     }
 
     public void setData(List<String> groupname, List<DoubleVideoInfo> data) {
@@ -85,13 +84,13 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View view, ViewGroup parent) {
         ViewHolder holder;
         int width = (int) (screenWidth - 95 * density) / 2;
         int height = (int) ((float) width / 1.77f);
-        if (convertView == null) {
+        if (view == null) {
             holder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.video_list_item, parent, false);
+            final View convertView = inflater.inflate(R.layout.video_list_item, parent, false);
             holder.mVideoLayout1 = (RelativeLayout) convertView.findViewById(R.id.mVideoLayout1);
             holder.mVideoLayout2 = (RelativeLayout) convertView.findViewById(R.id.mVideoLayout2);
             holder.mTMLayout1 = (RelativeLayout) convertView.findViewById(R.id.mTMLayout1);
@@ -139,11 +138,24 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
             holder.mVideoLayout2.setLayoutParams(layoutParams2);
 
             convertView.setTag(holder);
+            holder.mVideoLayout1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onListViewItemClickColumnListener.onItemClicked(convertView, position, IListViewItemClickColumn.COLUMN_FIRST);
+                }
+            });
+            holder.mVideoLayout2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onListViewItemClickColumnListener.onItemClicked(convertView, position, IListViewItemClickColumn.COLUMN_SECOND);
+                }
+            });
+            view = convertView;
         } else {
-            holder = (ViewHolder) convertView.getTag();
+            holder = (ViewHolder) view.getTag();
         }
 
-        if ("0".equals(mFragment.mPlatform)) {
+        if (mFragment.parentViewIsMainActivity) {
             holder.mPreView1.setVisibility(View.GONE);
             holder.mPreView2.setVisibility(View.GONE);
             //holder.mVideoQuality1.setVisibility(View.GONE);
@@ -160,7 +172,7 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
         holder.image2.setImageResource(R.drawable.tacitly_pic);
 
         if (position > this.getCount() - 1) {
-            return convertView;
+            return view;
         }
 
         holder.mVideoLayout2.setVisibility(View.GONE);
@@ -227,7 +239,7 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 
         updateEditState(mDataList.get(position), holder.mTMLayout1, holder.mTMLayout2);
 
-        return convertView;
+        return view;
     }
 
     /**
@@ -489,4 +501,10 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 //		// this.notifyDataSetChanged();
 //	}
 
+    public interface IListViewItemClickColumn {
+        int COLUMN_FIRST = 1;
+        int COLUMN_SECOND = 2;
+
+        void onItemClicked(View parent, int position, int columnIndex);
+    }
 }

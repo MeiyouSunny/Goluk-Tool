@@ -130,7 +130,7 @@ public class LocalVideoChooseAdapter extends BaseAdapter implements StickyListHe
             holder = (ViewHolder) convertView.getTag();
         }
 
-//        if("0".equals(mFragment.mPlatform)){
+//        if("0".equals(mFragment.parentViewIsMainActivity)){
 //            holder.mPreView1.setVisibility(View.GONE);
 //            holder.mPreView2.setVisibility(View.GONE);
 //        }else{
