@@ -11,7 +11,7 @@
         android:background="#242629">
 
         <ImageButton
-            android:id="@+id/ib_back"
+            android:id="@+id/ib_live_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -120,11 +120,12 @@
                     android:layout_marginRight="3dp">
 
                     <SeekBar
-                        android:id="@+id/seekbar_livetime"
-                        style="?android:attr/progressBarStyleHorizontal"
+                        android:id="@+id/seekbar_duration"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
+                        android:maxHeight="1dip"
+                        android:minHeight="1dip"
                         android:background="@drawable/set_time_bg"
                         android:max="10800"
                         android:paddingLeft="16.0dip"
@@ -261,7 +262,7 @@
                     android:textSize="14sp" />
 
                 <Button
-                    android:id="@+id/bt_enable_save_live"
+                    android:id="@+id/btn_enable_save_live"
                     android:layout_width="51dp"
                     android:layout_height="31dp"
                     android:layout_alignParentRight="true"
