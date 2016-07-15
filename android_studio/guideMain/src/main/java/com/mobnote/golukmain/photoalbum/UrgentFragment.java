@@ -1,7 +1,6 @@
 package com.mobnote.golukmain.photoalbum;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -51,7 +50,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 
-public class UrgentFragment extends Fragment implements IPCManagerFn {
+public class UrgentFragment extends Fragment implements IPCManagerFn, LocalWonderfulVideoAdapter.IListViewItemClickColumn {
     private View mUrgentVideoView;
 
     /**
@@ -61,15 +60,6 @@ public class UrgentFragment extends Fragment implements IPCManagerFn {
 
     private List<VideoInfo> mDataList = null;
     private List<DoubleVideoInfo> mDoubleDataList = null;
-
-
-    private float density = 1;
-
-    /**
-     * 保存屏幕点击横坐标点
-     */
-    private float screenX = 0;
-    private int screenWidth = 0;
 
     private CustomLoadingDialog mCustomProgressDialog = null;
 
@@ -146,10 +136,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn {
             this.mDoubleDataList = new ArrayList<DoubleVideoInfo>();
             this.mGroupListName = new ArrayList<String>();
 
-//			mCloudVideoListView = new CloudVideoManager(this.getContext());
-            this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
             this.mUrgentVideoView = inflater.inflate(R.layout.wonderful_listview, null, false);
-            this.density = SoundUtils.getInstance().getDisplayMetrics().density;
             initView();
         }
 
@@ -290,21 +277,11 @@ public class UrgentFragment extends Fragment implements IPCManagerFn {
         empty = (TextView) mUrgentVideoView.findViewById(R.id.empty);
         this.mCustomProgressDialog = new CustomLoadingDialog(getActivity(), null);
         mStickyListHeadersListView = (StickyListHeadersListView) mUrgentVideoView.findViewById(R.id.mStickyListHeadersListView);
-        mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(getActivity(), (FragmentAlbum) getParentFragment(), mStickyListHeadersListView);
+        mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(getActivity(), (FragmentAlbum) getParentFragment(), mStickyListHeadersListView, this);
         setListener();
     }
 
     private void setListener() {
-        // 屏蔽某些机型的下拉悬停操作
-        // mStickyListHeadersListView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        mStickyListHeadersListView.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                screenX = arg1.getX();
-                return false;
-            }
-        });
-
         mStickyListHeadersListView.setOnScrollListener(new OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView arg0, int scrollState) {
@@ -353,65 +330,18 @@ public class UrgentFragment extends Fragment implements IPCManagerFn {
             }
         });
 
-        mStickyListHeadersListView.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                if (screenX < (30 * density)) {
-                    return;
-                }
-
-                if (arg2 < mDoubleDataList.size()) {
-                    RelativeLayout mTMLayout1 = (RelativeLayout) arg1.findViewById(R.id.mTMLayout1);
-                    RelativeLayout mTMLayout2 = (RelativeLayout) arg1.findViewById(R.id.mTMLayout2);
-                    String tag1 = (String) mTMLayout1.getTag();
-                    String tag2 = (String) mTMLayout2.getTag();
-                    if (mFragmentAlbum.getEditState()) {
-                        if ((screenX > 0) && (screenX < (screenWidth / 2))) {
-                            selectedVideoItem(tag1, mTMLayout1);
-                        } else {
-                            selectedVideoItem(tag2, mTMLayout2);
-                        }
-                    } else {
-                        DoubleVideoInfo d = mDoubleDataList.get(arg2);
-                        // 点击播放
-                        if ((screenX > 0) && (screenX < (screenWidth / 2))) {
-                            // 点击列表左边项,跳转到视频播放页面
-                            VideoInfo info1 = d.getVideoInfo1();
-                            gotoVideoPlayPage(PhotoAlbumConfig.PHOTO_BUM_IPC_URG, info1.videoPath, info1.filename, info1.videoCreateDate, info1.videoHP, info1.videoSize);
-                            String filename = d.getVideoInfo1().filename;
-                            updateNewState(filename);
-
-                            mDoubleDataList.get(arg2).getVideoInfo1().isNew = false;
-                            mCloudWonderfulVideoAdapter.notifyDataSetChanged();
-                        } else {
-                            // 点击列表右边项,跳转到视频播放页面
-                            VideoInfo info2 = d.getVideoInfo2();
-                            if (null == info2)
-                                return;
-                            gotoVideoPlayPage(PhotoAlbumConfig.PHOTO_BUM_IPC_URG, info2.videoPath, info2.filename, info2.videoCreateDate, info2.videoHP, info2.videoSize);
-                            String filename = info2.filename;
-                            updateNewState(filename);
-
-                            mDoubleDataList.get(arg2).getVideoInfo2().isNew = false;
-                            mCloudWonderfulVideoAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-            }
-        });
-
         empty.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
                 if (GolukApplication.getInstance().isIpcLoginSuccess == false) {
-                    if (!"0".equals(mFragmentAlbum.mPlatform)) {
+                    if (!mFragmentAlbum.parentViewIsMainActivity) {
                         getActivity().finish();
                     } else {
                         //IPC页面访问统计
                         ZhugeUtils.eventIpc(getActivity());
 
-                        ((MainActivity)getActivity()).connectGoluk(true);
+                        ((MainActivity) getActivity()).connectGoluk(true);
                     }
                 }
             }
@@ -524,7 +454,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn {
     private void updateEditState(boolean isHasData) {
         mFragmentAlbum.setEditBtnState(isHasData);
         /*GolukDebugUtils.e("", "Album------WondowvideoListView------updateEditState" + isHasData);
-		if (null == mCloudVideoListView) {
+        if (null == mCloudVideoListView) {
 			return;
 		}
 		mCloudVideoListView.updateEdit(4, isHasData);*/
@@ -688,6 +618,47 @@ public class UrgentFragment extends Fragment implements IPCManagerFn {
 
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void onItemClicked(View parent, int position, int columnIndex) {
+        if (position < mDoubleDataList.size()) {
+            RelativeLayout mTMLayout1 = (RelativeLayout) parent.findViewById(R.id.mTMLayout1);
+            RelativeLayout mTMLayout2 = (RelativeLayout) parent.findViewById(R.id.mTMLayout2);
+            String tag1 = (String) mTMLayout1.getTag();
+            String tag2 = (String) mTMLayout2.getTag();
+            if (mFragmentAlbum.getEditState()) {
+                if (columnIndex == LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_FIRST) {
+                    selectedVideoItem(tag1, mTMLayout1);
+                } else {
+                    selectedVideoItem(tag2, mTMLayout2);
+                }
+            } else {
+                DoubleVideoInfo d = mDoubleDataList.get(position);
+                // 点击播放
+                if (columnIndex == LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_FIRST) {
+                    // 点击列表左边项,跳转到视频播放页面
+                    VideoInfo info1 = d.getVideoInfo1();
+                    gotoVideoPlayPage(PhotoAlbumConfig.PHOTO_BUM_IPC_URG, info1.videoPath, info1.filename, info1.videoCreateDate, info1.videoHP, info1.videoSize);
+                    String filename = d.getVideoInfo1().filename;
+                    updateNewState(filename);
+
+                    mDoubleDataList.get(position).getVideoInfo1().isNew = false;
+                    mCloudWonderfulVideoAdapter.notifyDataSetChanged();
+                } else {
+                    // 点击列表右边项,跳转到视频播放页面
+                    VideoInfo info2 = d.getVideoInfo2();
+                    if (null == info2)
+                        return;
+                    gotoVideoPlayPage(PhotoAlbumConfig.PHOTO_BUM_IPC_URG, info2.videoPath, info2.filename, info2.videoCreateDate, info2.videoHP, info2.videoSize);
+                    String filename = info2.filename;
+                    updateNewState(filename);
+
+                    mDoubleDataList.get(position).getVideoInfo2().isNew = false;
+                    mCloudWonderfulVideoAdapter.notifyDataSetChanged();
+                }
+            }
         }
     }
 }
