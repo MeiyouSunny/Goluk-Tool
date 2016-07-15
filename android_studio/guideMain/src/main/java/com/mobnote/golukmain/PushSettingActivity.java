@@ -29,6 +29,7 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
     private Button mCanCommentBtn = null;
     private Button mCanPariseBtn = null;
     private Button mCanFollowBtn = null;
+    private Button mCanFriendBtn;
 
     /**
      * 是否允许评论
@@ -42,9 +43,10 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
      * 有人关注我
      */
     private boolean isCanFollow = true;
-
-    private GetPushSettingRequest mGetPushSettingRequest = null;
-    private SetPushSettingRequest mSetPushSettingRequest = null;
+    /**
+     * 有朋友新动态
+     */
+    private boolean isCanShowFriendMsg = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,13 +63,16 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
         mCanCommentBtn = (Button) findViewById(R.id.notify_setting_comment_btn);
         mCanPariseBtn = (Button) findViewById(R.id.notify_setting_prise_btn);
         mCanFollowBtn = (Button) findViewById(R.id.notify_setting_follow_btn);
+        mCanFriendBtn = (Button) findViewById(R.id.notify_setting_friends_btn);
         mCanCommentBtn.setOnClickListener(this);
         mCanPariseBtn.setOnClickListener(this);
         mCanFollowBtn.setOnClickListener(this);
+        mCanFriendBtn.setOnClickListener(this);
         findViewById(R.id.back_btn).setOnClickListener(this);
         // 赋初始值
         setCommentState(mIsCanComment);
         setPariseState(isCanParise);
+        setFriendState(isCanShowFriendMsg);
     }
 
     @Override
@@ -79,11 +84,9 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
 
     /**
      * 去服务器获取配置信息
-     *
-     * @author jyf
      */
     private void getConfigFromServer() {
-        mGetPushSettingRequest = new GetPushSettingRequest(IPageNotifyFn.PageType_GetPushCfg, this);
+        GetPushSettingRequest mGetPushSettingRequest = new GetPushSettingRequest(IPageNotifyFn.PageType_GetPushCfg, this);
         mGetPushSettingRequest.get(mBaseApp.getMyInfo().uid);
 
         LiveDialogManager.getManagerInstance().showCommProgressDialog(this,
@@ -92,11 +95,13 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
     }
 
     private void saveConfigToServer() {
-        mSetPushSettingRequest = new SetPushSettingRequest(IPageNotifyFn.PageType_SetPushCfg, this);
-        mSetPushSettingRequest.get(mBaseApp.getMyInfo().uid, mIsCanComment == true ? "1" : "0", isCanParise == true ? "1" : "0", isCanFollow == true ? "1" : "0");
-//		String json = JsonUtil.getPushSetJson(mIsCanComment, isCanParise,isCanFollow);
-//		mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SetPushCfg,
-//				json);
+        SetPushSettingRequest mSetPushSettingRequest = new SetPushSettingRequest(IPageNotifyFn.PageType_SetPushCfg, this);
+        mSetPushSettingRequest.get(mBaseApp.getMyInfo().uid,
+                mIsCanComment ? "1" : "0",
+                isCanParise ? "1" : "0",
+                isCanFollow ? "1" : "0",
+                isCanShowFriendMsg ? "1" : "0"
+        );
     }
 
     private void setCommentState(boolean isOpen) {
@@ -126,45 +131,43 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
         }
     }
 
+    private void setFriendState(boolean isOpen) {
+        isCanShowFriendMsg = isOpen;
+        if (isOpen) {
+            mCanFriendBtn.setBackgroundResource(R.drawable.set_open_btn);
+        } else {
+            mCanFriendBtn.setBackgroundResource(R.drawable.set_close_btn);
+        }
+    }
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.back_btn) {
             exit();
-        } else if (id == R.id.notify_setting_comment_btn) {
-            if (!GolukApplication.getInstance().isUserLoginToServerSuccess()) {
-                GolukApplication.getInstance().isUserLoginSucess = false;
-                GolukApplication.getInstance().loginStatus = 2;
-                GolukApplication.getInstance().autoLoginStatus = 3;
-                GolukUtils.startUserLogin(this);
-                return;
-            }
+            return;
+        }
+        if (!GolukApplication.getInstance().isUserLoginToServerSuccess()) {
+            GolukApplication.getInstance().isUserLoginSucess = false;
+            GolukApplication.getInstance().loginStatus = 2;
+            GolukApplication.getInstance().autoLoginStatus = 3;
+            GolukUtils.startUserLogin(this);
+            return;
+        }
+        if (id == R.id.notify_setting_comment_btn) {
             setCommentState(!mIsCanComment);
         } else if (id == R.id.notify_setting_prise_btn) {
-            if (!GolukApplication.getInstance().isUserLoginToServerSuccess()) {
-                GolukApplication.getInstance().isUserLoginSucess = false;
-                GolukApplication.getInstance().loginStatus = 2;
-                GolukApplication.getInstance().autoLoginStatus = 3;
-                GolukUtils.startUserLogin(this);
-                return;
-            }
             setPariseState(!isCanParise);
         } else if (id == R.id.notify_setting_follow_btn) {
-            if (!GolukApplication.getInstance().isUserLoginToServerSuccess()) {
-                GolukApplication.getInstance().isUserLoginSucess = false;
-                GolukApplication.getInstance().loginStatus = 2;
-                GolukApplication.getInstance().autoLoginStatus = 3;
-                GolukUtils.startUserLogin(this);
-                return;
-            }
             setFollowState(!isCanFollow);
+        } else if (id == R.id.notify_setting_friends_btn) {
+            setFriendState(!isCanShowFriendMsg);
         }
     }
 
     private void exit() {
         // 把当前的设置通知上报服务器
         saveConfigToServer();
-//		this.finish();
     }
 
     @Override
@@ -176,34 +179,6 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
         return super.onKeyDown(keyCode, event);
     }
 
-    private void deal_getPush_CallBack(int success, Object param1, Object param2) {
-        LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
-        if (1 != success) {
-            GolukUtils.showToast(this, getResources().getString(R.string.network_error));
-            return;
-        }
-        SettingBean bean = JsonUtil.parsePushSettingJson((String) param2);
-        if (null == bean || !bean.isSucess || !"0".equals(bean.result)) {
-            GolukUtils.showToast(this, getResources().getString(R.string.network_error));
-            return;
-        }
-        setFollowState(bean.isFollow.equals("1") ? true : false);
-        setCommentState(bean.isComment.equals("1") ? true : false);
-        setPariseState(bean.isPraise.equals("1") ? true : false);
-    }
-
-    private void deal_setPush_CallBack(int success, Object param1, Object param2) {
-
-    }
-
-    public void page_CallBack(int event, int success, Object param1, Object param2) {
-        if (IPageNotifyFn.PageType_GetPushCfg == event) {
-            deal_getPush_CallBack(success, param1, param2);
-        } else if (IPageNotifyFn.PageType_SetPushCfg == event) {
-            deal_setPush_CallBack(success, param1, param2);
-        }
-    }
-
     @Override
     public void dialogManagerCallBack(int dialogType, int function, String data) {
         if (LiveDialogManager.DIALOG_TYPE_GET_PUSH_CONFIGE == dialogType) {
@@ -212,7 +187,6 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
             mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetPushCfg,
                     JsonUtil.getCancelJson());
         }
-
     }
 
 
@@ -223,27 +197,28 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
         if (requestType == IPageNotifyFn.PageType_GetPushCfg) {
             PushMsgSettingBean psb = (PushMsgSettingBean) result;
             if (psb != null) {
-//				SettingBean bean = JsonUtil.parsePushSettingJson((String) param2);
-                if (psb != null && psb.data != null) {
-                    if (!GolukUtils.isTokenValid(psb.data.result)) {
-                        GolukApplication.getInstance().isUserLoginSucess = false;
-                        GolukApplication.getInstance().loginStatus = 2;
-                        GolukApplication.getInstance().autoLoginStatus = 3;
-                        GolukUtils.startUserLogin(this);
-                        this.finish();
-                        return;
-                    }
-                }
-                if (null == psb || !psb.success || !"0".equals(psb.data.result)) {
+                if (!psb.success
+                        ||
+                        psb.data == null
+                        ||
+                        !"0".equals(psb.data.result)) {
                     GolukUtils.showToast(this, this.getResources().getString(R.string.str_getwificfg_fail));
                     return;
                 }
-                setFollowState(psb.data.isfollow.equals("1") ? true : false);
-                setCommentState(psb.data.iscomment.equals("1") ? true : false);
-                setPariseState(psb.data.ispraise.equals("1") ? true : false);
+                if (!GolukUtils.isTokenValid(psb.data.result)) {
+                    GolukApplication.getInstance().isUserLoginSucess = false;
+                    GolukApplication.getInstance().loginStatus = 2;
+                    GolukApplication.getInstance().autoLoginStatus = 3;
+                    GolukUtils.startUserLogin(this);
+                    this.finish();
+                    return;
+                }
+                setFollowState(psb.data.isfollow.equals("1"));
+                setCommentState(psb.data.iscomment.equals("1"));
+                setPariseState(psb.data.ispraise.equals("1"));
+                setFriendState(psb.data.isfriend.equals("1"));
             } else {
                 GolukUtils.showToast(this, getResources().getString(R.string.network_error));
-                return;
             }
         } else if (requestType == IPageNotifyFn.PageType_SetPushCfg) {
             SetPushMsgSettingBean retBean = (SetPushMsgSettingBean) result;

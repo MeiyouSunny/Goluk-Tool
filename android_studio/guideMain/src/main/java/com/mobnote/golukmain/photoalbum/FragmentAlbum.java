@@ -91,7 +91,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         super.onCreateView(inflater, container, savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            parentViewIsMainActivity = bundle.getBoolean(PARENT_VIEW);
+            parentViewIsMainActivity = bundle.getBoolean(PARENT_VIEW,true);
         }
 
         if (savedInstanceState == null) {
