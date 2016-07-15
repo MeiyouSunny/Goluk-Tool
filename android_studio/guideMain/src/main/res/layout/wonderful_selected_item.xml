@@ -26,8 +26,10 @@
 
             <ImageView
                 android:id="@+id/simpledrawee"
-                android:layout_width="100dp"
+                android:layout_width="match_parent"
                 android:layout_height="37dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
                 android:contentDescription="@string/imgdes" />
 
             <ImageView

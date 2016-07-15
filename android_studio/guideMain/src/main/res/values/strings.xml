@@ -1044,4 +1044,9 @@
     <string name="install_new_firmware">安装新固件程序</string>
     <string name="newest_firmware">已是最新版本</string>
     <string name="str_notification_error_ssl_cert_invalid">将要跳转到不安全的网页，是否继续?</string>
+    <string name="str_start_live">发起直播</string>
+    <string name="str_public_live">公开直播</string>
+    <string name="str_save_live">保存回放</string>
+    <string name="str_save_live_replay_hint">如果您希望别人能够看到本次直播的回放，您可以保存回放。</string>
+    <string name="str_describle_live_hint">描述一下你的直播吧</string>
 </resources>

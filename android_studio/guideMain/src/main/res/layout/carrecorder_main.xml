@@ -111,7 +111,7 @@
             <RelativeLayout
                 android:id="@+id/vLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="160dp" >
 
                 <com.rd.car.player.RtspPlayerView
                     android:id="@+id/mRtmpPlayerView"
@@ -247,126 +247,6 @@
         android:textSize="12sp" />
 
     <RelativeLayout
-        android:id="@+id/fqzb_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/mAddr"
-        android:visibility="invisible" >
-
-        <EditText
-            android:id="@+id/assess"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:background="#17191a"
-            android:hint="@string/str_describe_video"
-            android:maxLength="50"
-            android:paddingLeft="10dp"
-            android:textColor="#808181"
-            android:textSize="13sp" />
-
-        <LinearLayout
-            android:id="@+id/live_tab"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_below="@+id/assess"
-            android:background="#17191a" >
-
-            <!-- android:layout_below="@+id/assess" -->
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="8dp" >
-
-                <ImageView
-                    android:id="@+id/driving_car_time_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/driving_car_time_icon" />
-
-                <TextView
-                    android:id="@+id/live_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_toRightOf="@+id/driving_car_time_icon"
-                    android:textSize="12sp" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="220dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" >
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center" >
-
-                    <ImageView
-                        android:id="@+id/live_video"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/live_video_btn" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center" >
-
-                    <ImageView
-                        android:id="@+id/live_gps_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/live_gps_icon_btn" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center" >
-
-                    <ImageView
-                        android:id="@+id/live_talk_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/live_talk_icon_btn" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center" >
-
-                    <ImageView
-                        android:id="@+id/live_release_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/live_release_icon_btn" />
-                </RelativeLayout>
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/car_recorder"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="#00000000"
-                android:drawableRight="@drawable/driving_car_next_btn"
-                android:text="@string/more_text"
-                android:textColor="#808181"
-                android:textSize="12sp" />
-        </LinearLayout>
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/jcqp_info"
         android:layout_width="match_parent"
         android:layout_height="115dp"
@@ -441,73 +321,33 @@
         </RelativeLayout>
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/red_room"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/fqzb_info"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="9dp"
-        android:background="@drawable/driving_car_red_point" />
-
-    <RelativeLayout
-        android:id="@+id/txt_tab"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/red_room"
-        android:layout_marginTop="9dp" >
-
-        <TextView
-            android:id="@+id/jcqp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginRight="40dp"
-            android:text="@string/str_wonderful_qiangpai"
-            android:textColor="#e13737"
-            android:textSize="13sp" />
-
-        <TextView
-            android:id="@+id/fqzb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/jcqp"
-            android:text="@string/str_make_live"
-            android:textColor="#808181"
-            android:textSize="13sp"
-            android:visibility="gone"/>
-    </RelativeLayout>
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/ipclive"
+        android:layout_below="@+id/jcqp_info"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="6dp"
-        android:visibility="gone" >
-
+        android:visibility="gone">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginRight="6dp"
             android:background="@drawable/carrecorder_icon_record"
-            android:contentDescription="@string/def" />
-
+            android:contentDescription="@string/def"/>
         <TextView
             android:id="@+id/mTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="6dp"
             android:textColor="@color/carrecorder_text_nor_color"
-            android:textSize="12sp" />
+            android:textSize="12sp"/>
     </LinearLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/txt_tab" >
+        android:layout_below="@+id/jcqp_info" >
 
         <Button
             android:id="@+id/m8sBtn"
@@ -521,13 +361,13 @@
             android:textColor="@color/white" />
 
         <ImageButton
-            android:id="@+id/liveBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:id="@+id/btn_carrecorder_live"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_toRightOf="@+id/m8sBtn"
+            android:layout_marginLeft="36dp"
             android:layout_centerVertical="true"
-            android:background="@drawable/driving_car_living_icon"
-            android:visibility="invisible" />
+            android:background="@drawable/driving_car_living_icon" />
     </RelativeLayout>
 
 
