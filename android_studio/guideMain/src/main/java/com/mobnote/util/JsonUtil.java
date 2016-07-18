@@ -277,7 +277,7 @@ public class JsonUtil {
                 talk = beanData.isCanTalk ? "1" : "0";
             }
 
-            String voice = beanData.isCanVoice ? "1" : "0";
+            String voice = beanData.isEnableVoice ? "1" : "0";
 
             JSONObject obj = new JSONObject();
             obj.put("active", "1");

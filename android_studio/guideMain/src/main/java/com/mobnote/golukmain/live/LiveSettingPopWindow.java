@@ -202,7 +202,7 @@ public class LiveSettingPopWindow implements OnClickListener, OnSeekBarChangeLis
 		 * mDescEdit.getText().toString(); }
 		 */
 		bean.isCanTalk = false;
-		bean.isCanVoice = mIsCanSound;
+		bean.isEnableVoice = mIsCanSound;
 		bean.netCountStr = getCurrentFlow(mCurrentLiveSecond);
 		return bean;
 	}

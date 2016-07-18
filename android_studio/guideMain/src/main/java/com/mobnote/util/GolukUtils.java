@@ -1242,7 +1242,16 @@ public class GolukUtils {
         context.startActivity(loginIntent);
     }
 
-    public static void startLiveActivity(Context mContext, boolean isLive, boolean isContinue, LiveSettingBean mSettingData, UserInfo userInfo){
+    /**
+     * 跳转到百度（谷歌）直播页面
+     * 此段代码用到反射，目的是为了国内国际版的编译和打包的优化
+     * @param mContext
+     * @param isLive
+     * @param isContinue
+     * @param mSettingData
+     * @param userInfo
+     */
+    public static void startPublishOrLookLiveActivity(Context mContext, boolean isLive, boolean isContinue, LiveSettingBean mSettingData, UserInfo userInfo){
         Intent intent = null;
         String activityNameStr = "";
         if (GolukApplication.getInstance().isMainland()) {

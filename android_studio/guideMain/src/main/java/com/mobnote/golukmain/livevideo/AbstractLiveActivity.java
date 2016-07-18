@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -387,6 +388,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements View.
         mPublisher = (UserInfo) intent.getSerializableExtra(KEY_USERINFO);
         isContinueLive = intent.getBooleanExtra(KEY_LIVE_CONTINUE, false);
         mSettingData = (LiveSettingBean) intent.getSerializableExtra(KEY_LIVE_SETTING_DATA);
+        Log.i("","");
     }
 
     private void setViewInitData() {
@@ -454,7 +456,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements View.
                 GolukDebugUtils.e("zhibo","-----fail------444");
                 //无网IPC发起直播失败
                 ZhugeUtils.eventOpenLive(this, mSettingData.duration,
-                        mLiveOperator.getZhugeErrorCode() + "", mSettingData.isCanVoice);
+                        mLiveOperator.getZhugeErrorCode() + "", mSettingData.isEnableVoice);
             }
             LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
                     LiveDialogManager.DIALOG_TYPE_LIVE_REQUEST_SERVER, LIVE_DIALOG_TITLE,
@@ -516,7 +518,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements View.
                     GolukDebugUtils.e("zhibo","-----fail------111");
                     //IPC发起直播失败
                     ZhugeUtils.eventOpenLive(this, mSettingData.duration,
-                            mLiveOperator.getZhugeErrorCode() + "", mSettingData.isCanVoice);
+                            mLiveOperator.getZhugeErrorCode() + "", mSettingData.isEnableVoice);
                 }
                 // 上传视频超时，提示用户上传失败，退出程序
                 isLiveUploadTimeOut = true;
@@ -585,7 +587,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements View.
         if (null != mLiveOperator) {
             StartLiveBean bean = new StartLiveBean();
             bean.url = mRtmpUrl + liveVid;
-            bean.isVoice = !mSettingData.isCanVoice;
+            bean.isVoice = mSettingData.isEnableVoice;
             bean.stream = "1";
             bean.time = "" + mLiveCountSecond;
             mLiveOperator.startLive(bean);
@@ -606,7 +608,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements View.
         if(null != mSettingData) {
             //IPC发起直播成功
             ZhugeUtils.eventOpenLive(this, mSettingData.duration,
-                    this.getString(R.string.str_zhuge_share_video_state_success), mSettingData.isCanVoice);
+                    this.getString(R.string.str_zhuge_share_video_state_success), mSettingData.isEnableVoice);
         }
         // 正常发起直播 ，开始计时
         if (!isStartTimer) {
@@ -732,7 +734,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements View.
                     GolukDebugUtils.e("zhibo","-----fail------333");
                     //无网IPC发起直播失败
                     ZhugeUtils.eventOpenLive(this, mSettingData.duration,
-                            mLiveOperator.getZhugeErrorCode() + "", mSettingData.isCanVoice);
+                            mLiveOperator.getZhugeErrorCode() + "", mSettingData.isEnableVoice);
                 }
                 LiveDialogManager.getManagerInstance().showTwoBtnDialog(this,
                         LiveDialogManager.DIALOG_TYPE_LIVE_RELOAD_UPLOAD, LIVE_DIALOG_TITLE,
