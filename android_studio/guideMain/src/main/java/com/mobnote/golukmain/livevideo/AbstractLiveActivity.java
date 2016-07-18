@@ -37,7 +37,6 @@ import com.mobnote.golukmain.live.ILive;
 import com.mobnote.golukmain.live.LiveDataInfo;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.LiveSettingBean;
-import com.mobnote.golukmain.live.LiveSettingPopWindow;
 import com.mobnote.golukmain.live.TimerManager;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.thirdshare.ProxyThirdShare;
@@ -230,8 +229,9 @@ public abstract class AbstractLiveActivity extends BaseActivity implements View.
                 GolukDebugUtils.e("", "newlive-----LiveActivity----onCreate---开始续播---: ");
                 // 续直播
                 // 获取墨认的设置
-                LiveSettingPopWindow lpw = new LiveSettingPopWindow(this, mRootLayout);
-                mSettingData = lpw.getCurrentSetting();
+//                LiveSettingPopWindow lpw = new LiveSettingPopWindow(this, mRootLayout);
+//                mSettingData = lpw.getCurrentSetting();
+                mSettingData = new LiveSettingBean();
                 startLiveLook(myInfo);
                 LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE,
                         this.getString(R.string.str_live_retry_live));
