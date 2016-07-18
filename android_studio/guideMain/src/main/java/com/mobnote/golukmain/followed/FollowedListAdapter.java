@@ -18,7 +18,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,7 +88,7 @@ public class FollowedListAdapter extends BaseAdapter {
         } else if (obj instanceof FollowedRecomUserBean) {
             return TYPE_RECOMMEND;
         } else if (obj instanceof String) {
-            if (FragmentFollowed.FOLLOWD_EMPTY.equals((String) obj)) {
+            if (FragmentFollowed.FOLLOWED_EMPTY.equals((String) obj)) {
                 return TYPE_EMPTY;
             }
         }

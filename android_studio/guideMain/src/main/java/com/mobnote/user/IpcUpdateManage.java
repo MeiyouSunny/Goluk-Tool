@@ -13,7 +13,7 @@ import android.view.KeyEvent;
 import com.alibaba.fastjson.JSON;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
-import com.mobnote.eventbus.EventIPCNewIsNewest;
+import com.mobnote.eventbus.EventIPCCheckUpgradeResult;
 import com.mobnote.eventbus.EventIPCUpdate;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UpdateActivity;
@@ -827,10 +827,7 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                         GolukUtils.showToast(mApp.getContext(),
                                 mApp.getContext().getResources().getString(R.string.str_ipc_no_connect));
                     } else {
-                        EventBus.getDefault().post(new EventIPCNewIsNewest());
-//                        Intent itNew = new Intent(mApp.getContext(), UpdateActivity.class);
-//                        itNew.putExtra(UpdateActivity.UPDATE_IS_NEW, true);
-//                        mApp.getContext().startActivity(itNew);
+                        EventBus.getDefault().post(new EventIPCCheckUpgradeResult(EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW));
                     }
                 } else {
                     /**
@@ -850,6 +847,12 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                                         + ipcInfo.version
                                         + mApp.getContext().getResources()
                                         .getString(R.string.str_update_find_new_second))
+                                .setNegativeButton(mApp.getContext().getResources().getString(R.string.str_update_later), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        EventBus.getDefault().post(new EventIPCCheckUpgradeResult(EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_DELAY));
+                                    }
+                                })
                                 .setPositiveButton(mApp.getContext().getResources().getString(R.string.str_button_ok),
                                         new DialogInterface.OnClickListener() {
 
