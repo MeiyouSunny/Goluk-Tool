@@ -29,6 +29,7 @@ import com.mobnote.user.IpcUpdateManage;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SharedPrefUtil;
+import com.mobnote.util.ZhugeUtils;
 
 import org.json.JSONObject;
 
@@ -561,6 +562,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         if (null != GolukApplication.getInstance().getIPCControlManager()) {
             GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener(TAG, this);
         }
+
+        ZhugeUtils.eventIpcUpdate(this);
     }
 
     // 初始化view

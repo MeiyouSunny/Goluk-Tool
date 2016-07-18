@@ -84,7 +84,6 @@ public class WifiLinkSucessLayout extends ViewFrame implements OnClickListener {
 		int id = v.getId();
 		if (id == R.id.wifi_link_sucess_modify) {
 			EventBus.getDefault().post(new EventFinishWifiActivity());
-			ZhugeUtils.eventIpcManage(mContext);
 			Intent i = new Intent(mContext, UnbindActivity.class);
 			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

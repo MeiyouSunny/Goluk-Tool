@@ -1063,7 +1063,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             if (GolukApplication.getInstance().getIpcIsLogin()) {
                 Intent intent = null;
                 if (mApp.isUserLoginSucess == false) {
-                    ZhugeUtils.eventLogin(this);
                     Intent it = null;
                     if (GolukApplication.getInstance().isMainland() == false) {
                         intent = new Intent(this, InternationUserLoginActivity.class);

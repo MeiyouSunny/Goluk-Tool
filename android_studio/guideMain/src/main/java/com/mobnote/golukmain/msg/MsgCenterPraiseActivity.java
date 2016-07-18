@@ -15,6 +15,7 @@ import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
 import com.mobnote.manager.MessageManager;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.os.Bundle;
 import android.view.View;
@@ -71,6 +72,8 @@ public class MsgCenterPraiseActivity extends BaseActivity implements OnClickList
 		mIsFirst = true;
 		mRTPullListView.firstFreshState();
 		httpData(OPERATOR_FIRST, "");
+
+		ZhugeUtils.eventMsgCenterPraise(this);
 	}
 
 	// 初始化view

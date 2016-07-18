@@ -410,7 +410,6 @@ public class FollowingListActivity extends BaseActivity implements IRequestResul
 	}
 
 	public void startUserLogin(){
-		ZhugeUtils.eventLogin(this);
 		Intent loginIntent = null;
 		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(this, InternationUserLoginActivity.class);

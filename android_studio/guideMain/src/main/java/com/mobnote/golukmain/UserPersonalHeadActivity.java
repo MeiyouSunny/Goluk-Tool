@@ -329,7 +329,6 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 //	}
 
 	public void startUserLogin(){
-		ZhugeUtils.eventLogin(this);
 		Intent loginIntent = null;
 		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(this, InternationUserLoginActivity.class);

@@ -128,6 +128,8 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		mApplication.setContext(mContext, "UserLogin");
 
 		getInfo();
+
+		ZhugeUtils.eventLogin(this);
 	}
 
 	@Override
@@ -304,7 +306,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		} else if (id == R.id.user_login_phoneRegist) {
 			mApplication.mLoginManage.setUserLoginInterface(null);
 			UserUtils.hideSoftMethod(this);
-			ZhugeUtils.eventRegist(UserLoginActivity.this);
 			Intent itRegist = new Intent(UserLoginActivity.this, UserRegistActivity.class);
 			GolukDebugUtils.i("final", "-----------UserLoginActivity-----------" + justLogin);
 			if (justLogin.equals("main") || justLogin.equals("back")) {// 从起始页注册
@@ -320,7 +321,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		} else if (id == R.id.user_login_forgetpwd) {
 			mApplication.mLoginManage.setUserLoginInterface(null);
 			UserUtils.hideSoftMethod(this);
-			ZhugeUtils.eventForgetPwd(UserLoginActivity.this);
 			Intent itForget = new Intent(UserLoginActivity.this, UserRepwdActivity.class);
 			if (justLogin.equals("main") || justLogin.equals("back")) {// 从起始页注册
 				itForget.putExtra("fromRegist", "fromStart");
@@ -466,7 +466,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 									@Override
 									public void onClick(DialogInterface arg0, int arg1) {
 										mApplication.mLoginManage.setUserLoginInterface(null);
-										ZhugeUtils.eventRegist(UserLoginActivity.this);
 										Intent it = new Intent(UserLoginActivity.this, UserRegistActivity.class);
 										it.putExtra("intentLogin",
 												mEditTextPhoneNumber.getText().toString().replace("-", ""));
@@ -516,7 +515,6 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 								@Override
 								public void onClick(DialogInterface arg0, int arg1) {
 									mApplication.mLoginManage.setUserLoginInterface(null);
-									ZhugeUtils.eventForgetPwd(UserLoginActivity.this);
 									Intent it = new Intent(UserLoginActivity.this, UserRepwdActivity.class);
 									it.putExtra("errorPwdOver",
 											mEditTextPhoneNumber.getText().toString().replace("-", ""));

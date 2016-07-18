@@ -1069,7 +1069,6 @@ public class GolukUtils {
      * @param context
      */
     public static void startLoginActivity(Context context) {
-        ZhugeUtils.eventLogin(context);
         Intent intent = new Intent();
         if (GolukApplication.getInstance().isMainland()) {
             intent.setClass(context, UserLoginActivity.class);
@@ -1098,7 +1097,6 @@ public class GolukUtils {
             GolukUtils.showToast(context, context.getString(R.string.str_network_unavailable));
             return;
         }
-        ZhugeUtils.eventUserCenter(context);
         Intent intent = new Intent(context, NewUserCenterActivity.class);
         intent.putExtra("userId", userId);
         context.startActivity(intent);
@@ -1237,7 +1235,6 @@ public class GolukUtils {
     }
 
     public static void startUserLogin(Context context) {
-        ZhugeUtils.eventLogin(context);
         Intent loginIntent = null;
         if (GolukApplication.getInstance().isMainland() == false) {
             loginIntent = new Intent(context, InternationUserLoginActivity.class);
@@ -1388,7 +1385,6 @@ public class GolukUtils {
     }
 
     public static void startUpdateActivity(Context context, int sign, IPCInfo ipcInfo, boolean isNew){
-        ZhugeUtils.eventIpcUpdate(context);
         Intent intent = new Intent(context, UpdateActivity.class);
         intent.putExtra(UpdateActivity.UPDATE_SIGN, sign);
         intent.putExtra(UpdateActivity.UPDATE_DATA, ipcInfo);

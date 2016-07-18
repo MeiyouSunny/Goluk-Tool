@@ -93,6 +93,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 		super.onResume();
 		mApplication.setContext(mContext, "UserRepwd");
 		getInfo();
+		ZhugeUtils.eventForgetPwd(this);
 	}
 
 	public void initView() {
@@ -317,7 +318,6 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 
 								@Override
 								public void onClick(DialogInterface arg0, int arg1) {
-									ZhugeUtils.eventRegist(UserRepwdActivity.this);
 									String phone = mEditTextPhone.getText().toString();
 									Intent intentRepwd = new Intent(UserRepwdActivity.this, UserRegistActivity.class);
 									intentRepwd.putExtra("intentRepassword", phone);

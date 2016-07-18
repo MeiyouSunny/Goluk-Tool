@@ -108,6 +108,12 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		ZhugeUtils.eventUserCenter(this);
+	}
+
 	private void initView() {
 		mGridView = (PullToRefreshHeaderGridView) findViewById(R.id.gv_usercenter);
 		mBackBtn = (ImageButton) findViewById(R.id.ib_usercenter_back);
@@ -202,7 +208,6 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	}
 
 	public void startUserLogin(){
-		ZhugeUtils.eventLogin(this);
 		Intent loginIntent = null;
 		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(this, InternationUserLoginActivity.class);

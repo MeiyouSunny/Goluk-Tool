@@ -110,6 +110,8 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		super.onResume();
 
 		mApplication.setContext(mContext, "UserRegist");
+
+		ZhugeUtils.eventRegist(this);
 	}
 
 	public void initView() {

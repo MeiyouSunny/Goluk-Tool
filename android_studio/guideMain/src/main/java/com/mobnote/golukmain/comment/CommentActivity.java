@@ -296,7 +296,6 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	private void click_send() {
 		// 发评论前需要先判断用户是否登录
 		if (!mApp.isUserLoginSucess) {
-			ZhugeUtils.eventLogin(this);
 			Intent intent = null;
 			if (GolukApplication.getInstance().isMainland() == false) {
 				intent = new Intent(this, InternationUserLoginActivity.class);
@@ -816,7 +815,6 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	}
 
 	public void startUserLogin(){
-		ZhugeUtils.eventLogin(this);
 		Intent loginIntent = null;
 		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(this, InternationUserLoginActivity.class);

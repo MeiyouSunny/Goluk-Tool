@@ -275,7 +275,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         if (null != itStart_have.getStringExtra("userstart")) {
             String start_have = itStart_have.getStringExtra("userstart").toString();
             if ("start_have".equals(start_have)) {
-                ZhugeUtils.eventLogin(this);
                 Intent intent = null;
                 if (GolukApplication.getInstance().isMainland() == false) {
                     intent = new Intent(this, InternationUserLoginActivity.class);
@@ -1047,7 +1046,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
     public void dialogManagerCallBack(int dialogType, int function, String data) {
         if (dialogType == LiveDialogManager.DIALOG_TYPE_LOGIN) {
             if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
-                ZhugeUtils.eventLogin(this);
                 Intent intent = null;
                 if (GolukApplication.getInstance().isMainland() == false) {
                     intent = new Intent(this, InternationUserLoginActivity.class);

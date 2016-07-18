@@ -427,12 +427,10 @@ public class GolukNotification {
 				} else if (101 == type) {
 					// start comment activity
 					Context context = GolukApplication.getInstance().getContext();
-					ZhugeUtils.eventMsgCenterComment(context);
 					Intent intent = new Intent(context, MsgCenterCommentActivity.class);
 					context.startActivity(intent);
 				} else if (102 == type) {
 					Context context = GolukApplication.getInstance().getContext();
-					ZhugeUtils.eventMsgCenterPraise(context);
 					Intent intent = new Intent(context, MsgCenterPraiseActivity.class);
 					context.startActivity(intent);
 				} else if (103 == type) {

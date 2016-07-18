@@ -342,7 +342,6 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 
 									@Override
 									public void onClick(DialogInterface arg0, int arg1) {
-										ZhugeUtils.eventRegist(UserIdentifyActivity.this);
 										Intent intentRepwd = new Intent(UserIdentifyActivity.this,
 												UserRegistActivity.class);
 										intentRepwd.putExtra("intentRepassword", title_phone);
@@ -720,7 +719,6 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 
 									@Override
 									public void onClick(DialogInterface arg0, int arg1) {
-										ZhugeUtils.eventRegist(UserIdentifyActivity.this);
 										Intent intentRepwd = new Intent(UserIdentifyActivity.this,
 												UserRegistActivity.class);
 										intentRepwd.putExtra("intentRepassword", title_phone);

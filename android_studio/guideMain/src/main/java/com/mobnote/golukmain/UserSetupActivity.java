@@ -316,7 +316,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 		} else if (id == R.id.notify_comm_item) {
 			startMsgSettingActivity();
 		} else if (id == R.id.RelativeLayout_binding_phone) {
-			ZhugeUtils.eventRegist(this);
 			Intent itRegist = new Intent(this, UserRegistActivity.class);
 			itRegist.putExtra("fromRegist", "fromBindPhone");
 			startActivity(itRegist);
@@ -417,7 +416,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
 	 */
 	@SuppressWarnings("rawtypes")
 	public void initIntent(Class intentClass) {
-		ZhugeUtils.eventLogin(this);
 		Intent it = new Intent(UserSetupActivity.this, intentClass);
 		it.putExtra("isInfo", "setup");
 

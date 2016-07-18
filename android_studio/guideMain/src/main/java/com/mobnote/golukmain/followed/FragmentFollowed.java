@@ -104,7 +104,6 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
         mLoginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                ZhugeUtils.eventLogin(getActivity());
                 Intent intent = null;
                 if (GolukApplication.getInstance().isMainland() == false) {
                     intent = new Intent(FragmentFollowed.this.getActivity(), InternationUserLoginActivity.class);
@@ -342,7 +341,6 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
     }
 
     public void startUserLogin() {
-        ZhugeUtils.eventLogin(getActivity());
         mApp.isUserLoginSucess = false;
         mApp.loginStatus = 2;
         mApp.autoLoginStatus = 3;
