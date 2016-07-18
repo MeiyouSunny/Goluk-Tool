@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ededed" >
+    android:background="#ededed">
 
     <!-- title -->
 
@@ -10,7 +10,7 @@
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:background="@color/bg" >
+        android:background="@color/bg">
 
         <ImageButton
             android:id="@+id/back_btn"
@@ -37,7 +37,7 @@
         android:layout_height="42dp"
         android:layout_below="@id/title_layout"
         android:layout_marginTop="32dp"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <View
             android:id="@+id/notify_setting_sold1"
@@ -49,7 +49,7 @@
             android:id="@+id/notify_setting_comment_item"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="#f4f4f4" >
+            android:background="#f4f4f4">
 
             <TextView
                 android:id="@+id/notify_setting_comment_text"
@@ -85,13 +85,13 @@
         android:layout_width="match_parent"
         android:layout_height="41dp"
         android:layout_below="@id/notify_setting_comment_layout"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/notify_setting_prise_item"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="#f4f4f4" >
+            android:background="#f4f4f4">
 
             <TextView
                 android:id="@+id/notify_setting_prise_text"
@@ -127,13 +127,13 @@
         android:layout_width="match_parent"
         android:layout_height="41dp"
         android:layout_below="@id/notify_setting_prise_layout"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/notify_setting_follow_item"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="#f4f4f4" >
+            android:background="#f4f4f4">
 
             <TextView
                 android:id="@+id/notify_setting_follow_text"
@@ -155,5 +155,40 @@
                 android:background="@drawable/set_open_btn" />
         </RelativeLayout>
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/notify_setting_friends_layout"
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:layout_below="@id/notify_setting_follow_layout"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/notify_setting_friends_item"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#f4f4f4">
+
+            <TextView
+                android:id="@+id/notify_setting_friends_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="14dp"
+                android:text="@string/settting_notify_friends"
+                android:textColor="#3f3f3f"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/notify_setting_friends_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="14dp"
+                android:background="@drawable/set_open_btn" />
+        </RelativeLayout>
+    </LinearLayout>
+
 
 </RelativeLayout>

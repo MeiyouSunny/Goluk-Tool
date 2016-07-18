@@ -41,21 +41,23 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
     private int count = 0;
     private float density = 1;
     private int screenWidth = 0;
+    private LocalWonderfulVideoAdapter.IListViewItemClickColumn onListViewItemClickColumnListener;
+
 
     /**
      * 滚动中锁标识
      */
 //	private boolean lock = false;
-    public CloudWonderfulVideoAdapter(Context c, FragmentAlbum fragment, StickyListHeadersListView listview) {
+    public CloudWonderfulVideoAdapter(Context c, FragmentAlbum fragment, StickyListHeadersListView listview, LocalWonderfulVideoAdapter.IListViewItemClickColumn itemClickColumnListener) {
         this.mFragment = fragment;
         this.mContext = c;
         this.mListView = listview;
         this.inflater = LayoutInflater.from(c);
         this.density = SoundUtils.getInstance().getDisplayMetrics().density;
         this.screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-        this.mDataList = new ArrayList<DoubleVideoInfo>();
-        this.mGroupNameList = new ArrayList<String>();
-
+        this.mDataList = new ArrayList<>();
+        this.mGroupNameList = new ArrayList<>();
+        this.onListViewItemClickColumnListener = itemClickColumnListener;
     }
 
     public void setData(List<String> groupname, List<DoubleVideoInfo> data) {
@@ -83,13 +85,13 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View view, ViewGroup parent) {
         ViewHolder holder;
         int width = (int) (screenWidth - 95 * density) / 2;
         int height = (int) ((float) width / 1.77f);
-        if (convertView == null) {
+        if (view == null) {
             holder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.video_list_item, parent, false);
+            final View convertView = inflater.inflate(R.layout.video_list_item, parent, false);
             holder.mVideoLayout1 = (RelativeLayout) convertView.findViewById(R.id.mVideoLayout1);
             holder.mVideoLayout2 = (RelativeLayout) convertView.findViewById(R.id.mVideoLayout2);
             holder.mTMLayout1 = (RelativeLayout) convertView.findViewById(R.id.mTMLayout1);
@@ -137,8 +139,21 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
             holder.mVideoLayout2.setLayoutParams(layoutParams2);
 
             convertView.setTag(holder);
+            holder.mVideoLayout1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onListViewItemClickColumnListener.onItemClicked(convertView, position, LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_FIRST);
+                }
+            });
+            holder.mVideoLayout2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onListViewItemClickColumnListener.onItemClicked(convertView, position, LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_SECOND);
+                }
+            });
+            view = convertView;
         } else {
-            holder = (ViewHolder) convertView.getTag();
+            holder = (ViewHolder) view.getTag();
         }
 
         holder.image1.setImageResource(R.drawable.tacitly_pic);
@@ -190,7 +205,7 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 
         updateEditState(mDataList.get(position), holder.mTMLayout1, holder.mTMLayout2);
 
-        return convertView;
+        return view;
     }
 
     /**

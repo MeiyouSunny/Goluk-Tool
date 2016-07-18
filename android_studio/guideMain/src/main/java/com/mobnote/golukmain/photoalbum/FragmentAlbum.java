@@ -36,6 +36,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
      */
     public static final String ACTIVITY_INFO = "activityinfo";
     private static final String TAG = "FragmentAlbum";
+    public static final String PARENT_VIEW = "MainActivity";
 
     private CustomViewPager mViewPager;
     private LocalFragment mLocalFragment;
@@ -76,7 +77,11 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 
     private List<String> selectedListData = null;
 
-    public String mPlatform = null;
+    /**
+     * Fragment的父节点只会是{@link com.mobnote.golukmain.MainActivity} 和  {@link com.mobnote.golukmain.photoalbum.PhotoAlbumActivity}
+     * 如果为true 表示父页面为MainActivity，否则相反
+     */
+    public boolean parentViewIsMainActivity = true;
 
     public PromotionSelectItem mPromotionSelectItem;
 
@@ -86,7 +91,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         super.onCreateView(inflater, container, savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            mPlatform = bundle.getString("platform");
+            parentViewIsMainActivity = bundle.getBoolean(PARENT_VIEW,true);
         }
 
         if (savedInstanceState == null) {
@@ -158,7 +163,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         mCancelBtn = (Button) mAlbumRootView.findViewById(R.id.cancel_btn);
         ImageView mBackBtn = (ImageView) mAlbumRootView.findViewById(R.id.back_btn);
 
-        if ("0".equals(mPlatform)) {
+        if (parentViewIsMainActivity) {
             mBackBtn.setVisibility(View.GONE);
         } else {
             mBackBtn.setVisibility(View.VISIBLE);
@@ -181,7 +186,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         GolukDebugUtils.e(TAG, "FragmentAlbum-----onResume------------:");
         GolukApplication.getInstance().setContext(getActivity(), "ipcfilemanager");
 
-        if ("0".equals(mPlatform) && !getEditState()) {
+        if (parentViewIsMainActivity && !getEditState()) {
             if (GolukApplication.getInstance().isIpcLoginSuccess) {
                 if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
                     if (!mWonderfulFragment.isShowPlayer) {
