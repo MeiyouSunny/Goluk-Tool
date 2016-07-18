@@ -12,9 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mobnote.application.GolukApplication;
-import com.mobnote.eventbus.EventBindFinish;
-import com.mobnote.eventbus.EventConfig;
-import com.mobnote.eventbus.EventIPCNewIsNewest;
+import com.mobnote.eventbus.EventIPCCheckUpgradeResult;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
@@ -175,6 +173,11 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         mUpdateLayout.setEnabled(false);
     }
 
+    private void installLater() {
+        mTextVersion.setText(R.string.str_update_find_new_first);
+        mUpdateLayout.setEnabled(true);
+    }
+
     @Override
     public void onClick(View arg0) {
         int id = arg0.getId();
@@ -208,8 +211,12 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         }
     }
 
-    public void onEventMainThread(EventIPCNewIsNewest event) {
-        isNewest();
+    public void onEventMainThread(EventIPCCheckUpgradeResult event) {
+        if (event.ResultType == EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW) {
+            isNewest();
+        } else if (event.ResultType == EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_DELAY) {
+            installLater();
+        }
     }
 
     @Override
