@@ -376,8 +376,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         mTabHost.getTabWidget().getChildTabViewAt(2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //IPC页面访问统计
-                ZhugeUtils.eventIpc(MainActivity.this);
+                ZhugeUtils.eventIpcCarrecorder(MainActivity.this);
 
                 connectGoluk(false);
             }

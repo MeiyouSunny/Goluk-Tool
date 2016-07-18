@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.thirdshare.bean.SharePlatformBean;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
@@ -494,7 +495,7 @@ public class ZhugeUtils {
      * @param context
      * @param lableName
      */
-    public static void eventLable(Context context, String lableName) {
+    public static void eventBannerText(Context context, String lableName) {
         try {
             JSONObject json = new JSONObject();
             json.put(context.getString(R.string.str_zhuge_wonderful_lable_name), lableName);
@@ -509,7 +510,7 @@ public class ZhugeUtils {
      * 精选页面-下拉刷新
      * @param context
      */
-    public static void eventWonderfulPull(Context context, int depth) {
+    public static void eventWonderfulPull(Context context) {
         ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_wonderful_pulltorefresh_event));
     }
 
@@ -597,10 +598,16 @@ public class ZhugeUtils {
      * @param context
      * @param from
      */
-    public static void eventWaitConnect(Context context, String from) {
+    public static void eventWaitConnect(Context context, boolean from) {
         try {
             JSONObject json = new JSONObject();
-            json.put(context.getString(R.string.str_zhuge_call_album_source), from);
+            String str = "";
+            if (from) {
+                str = context.getString(R.string.str_zhuge_ipc_album);
+            } else {
+                str = context.getString(R.string.str_zhuge_ipc_carrecorder);
+            }
+            json.put(context.getString(R.string.str_zhuge_call_album_source), str);
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_ipc_wait_connect_event), json);
         } catch (Exception e) {
@@ -613,10 +620,16 @@ public class ZhugeUtils {
      * @param context
      * @param from
      */
-    public static void eventConnecting(Context context, String from) {
+    public static void eventConnecting(Context context, boolean from) {
         try {
             JSONObject json = new JSONObject();
-            json.put(context.getString(R.string.str_zhuge_call_album_source), from);
+            String str = "";
+            if (from) {
+                str = context.getString(R.string.str_zhuge_ipc_album);
+            } else {
+                str = context.getString(R.string.str_zhuge_ipc_carrecorder);
+            }
+            json.put(context.getString(R.string.str_zhuge_call_album_source), str);
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_ipc_connecting_event), json);
         } catch (Exception e) {
@@ -629,10 +642,16 @@ public class ZhugeUtils {
      * @param context
      * @param from
      */
-    public static void eventConnectFail(Context context, String from) {
+    public static void eventConnectFail(Context context, boolean from) {
         try {
             JSONObject json = new JSONObject();
-            json.put(context.getString(R.string.str_zhuge_call_album_source), from);
+            String str = "";
+            if (from) {
+                str = context.getString(R.string.str_zhuge_ipc_album);
+            } else {
+                str = context.getString(R.string.str_zhuge_ipc_carrecorder);
+            }
+            json.put(context.getString(R.string.str_zhuge_call_album_source), str);
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_ipc_connect_fail_event), json);
         } catch (Exception e) {
@@ -645,10 +664,16 @@ public class ZhugeUtils {
      * @param context
      * @param from
      */
-    public static void eventConnectFailWifi(Context context, String from) {
+    public static void eventConnectFailWifi(Context context, boolean from) {
         try {
             JSONObject json = new JSONObject();
-            json.put(context.getString(R.string.str_zhuge_call_album_source), from);
+            String str = "";
+            if (from) {
+                str = context.getString(R.string.str_zhuge_ipc_album);
+            } else {
+                str = context.getString(R.string.str_zhuge_ipc_carrecorder);
+            }
+            json.put(context.getString(R.string.str_zhuge_call_album_source), str);
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_ipc_connect_fail_wifi_event), json);
         } catch (Exception e) {
@@ -665,14 +690,22 @@ public class ZhugeUtils {
     }
 
     /**
+     * 相册页面-连接记录仪
+     * @param context
+     */
+    public static void eventAlbumClickToConnectIPC(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_ablum_to_connect_ipc_event));
+    }
+
+    /**
      * 相册页面-批量删除视频
      * @param context
      * @param type 页面类型  本地/精彩/紧急/循环
      */
-    public static void eventAlbumBatchDelete(Context context, String type) {
+    public static void eventAlbumBatchDelete(Context context, int type) {
         try {
             JSONObject json = new JSONObject();
-            json.put(context.getString(R.string.str_zhuge_album_detail_style), type);
+            json.put(context.getString(R.string.str_zhuge_album_detail_style), getAlbumType(context, type));
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_album_batch_delete_video_event), json);
         } catch (Exception e) {
@@ -693,10 +726,10 @@ public class ZhugeUtils {
      * @param context
      * @param type 视频类型  精彩/紧急/循环
      */
-    public static void eventAlbumBatchDownload(Context context, String type) {
+    public static void eventAlbumBatchDownload(Context context, int type) {
         try {
             JSONObject json = new JSONObject();
-            json.put(context.getString(R.string.str_zhuge_share_video_type), type);
+            json.put(context.getString(R.string.str_zhuge_share_video_type), getAlbumType(context, type));
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_album_batch_download_video_event), json);
         } catch (Exception e) {
@@ -1253,6 +1286,26 @@ public class ZhugeUtils {
             return context.getString(R.string.str_zhuge_call_album_connect_ipc_state_true);
         }
         return context.getString(R.string.str_zhuge_call_album_connect_ipc_state_false);
+    }
+
+    /**
+     * 视频类型    本地/精彩/紧急/循环
+     * @param context
+     * @param type
+     * @return
+     */
+    private static String getAlbumType(Context context, int type) {
+        String str = "";
+        if (type == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
+            str = context.getString(R.string.str_zhuge_video_player_wonderful);
+        } else if (type == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
+            str = context.getString(R.string.str_zhuge_video_player_urgent);
+        } else if (type == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
+            str = context.getString(R.string.str_zhuge_video_player_recycle);
+        } else {
+            str = context.getString(R.string.str_zhuge_video_player_local);
+        }
+        return str;
     }
 
 

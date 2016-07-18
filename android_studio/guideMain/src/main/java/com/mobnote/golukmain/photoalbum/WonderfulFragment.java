@@ -407,8 +407,8 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
                     if (!getFragmentAlbum().parentViewIsMainActivity) {
                         getActivity().finish();
                     } else {
-                        //IPC页面访问统计
-                        ZhugeUtils.eventIpc(getActivity());
+                        //相册页面-连接记录仪
+                        ZhugeUtils.eventAlbumClickToConnectIPC(getActivity());
                         ((MainActivity) getActivity()).connectGoluk(true);
                     }
                 }

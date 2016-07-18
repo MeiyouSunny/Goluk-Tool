@@ -12,6 +12,7 @@ import com.mobnote.golukmain.newest.WonderfulSelectedListView;
 import com.mobnote.golukmain.search.SearchUserAcivity;
 import com.mobnote.golukmain.videosuqare.VideoSquareAdapter;
 import com.mobnote.util.SharedPrefUtil;
+import com.mobnote.util.ZhugeUtils;
 
 import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -127,6 +128,7 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 		@Override
 		public void onPageSelected(int page) {
 			GolukDebugUtils.e(TAG, "onPageSelected:" + page);
+			mState = true;
 			updateState(page);
 		}
 
@@ -172,22 +174,34 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 
 	private void updateState(int type) {
 		if (0 == type) {
+			if(mState){
+                mState = false;
+				ZhugeUtils.eventWonderfulPage(getActivity());
+			}
 			hotTitle.setTextColor(textColorSelect);
 			squareTitle.setTextColor(textcolorQx);
 		} else if (1 == type) {
+			if(mState) {
+				mState = false;
+				ZhugeUtils.eventNewestPage(getActivity());
+			}
 			hotTitle.setTextColor(textcolorQx);
 			squareTitle.setTextColor(textColorSelect);
 		}
 	}
 
+	private boolean mState = false;
+
 	@Override
 	public void onClick(View arg0) {
 		int id = arg0.getId();
 		if (id == R.id.hot_title) {
+			mState = true;
 			mViewPager.setCurrentItem(0);
 			this.updateState(0);
 			updateLine(0);
 		} else if (id == R.id.square_title) {
+			mState = true;
 			mViewPager.setCurrentItem(1);
 			this.updateState(1);
 			updateLine(100);

@@ -39,6 +39,7 @@ import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
+import com.mobnote.util.ZhugeUtils;
 import com.mobnote.wifibind.WifiConnCallBack;
 import com.mobnote.wifibind.WifiConnectManager;
 import com.mobnote.wifibind.WifiRsBean;
@@ -152,6 +153,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         collectLog("onCreate", "---1");
 
         getIntentData();
+        //IPC-待连接页面
+        ZhugeUtils.eventWaitConnect(this, mReturnToMainAlbum);
 
 //        ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setHdType(mIpcRealtype);
 

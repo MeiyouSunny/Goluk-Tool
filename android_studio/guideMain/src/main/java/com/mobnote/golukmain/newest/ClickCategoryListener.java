@@ -2,6 +2,7 @@ package com.mobnote.golukmain.newest;
 
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.videosuqare.VideoCategoryActivity;
+import com.mobnote.util.ZhugeUtils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -68,6 +69,7 @@ public class ClickCategoryListener implements OnTouchListener {
 //		
 //		// 跳转到点播
 //		mNewestAdapter.setClickLock(true);
+		ZhugeUtils.eventNewestSort(mContext, mCategoryDataInfo.name);
 		Intent intent = new Intent(mContext, VideoCategoryActivity.class);
 		intent.putExtra(VideoCategoryActivity.KEY_VIDEO_CATEGORY_TYPE, VideoCategoryActivity.CATEGORY_TYPE_DB);
 		intent.putExtra(VideoCategoryActivity.KEY_VIDEO_CATEGORY_ATTRIBUTE, mCategoryDataInfo.id);

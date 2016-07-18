@@ -525,6 +525,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             if (mVideoFrom.equals("local")) {
                 GolukUtils.showToast(this, getString(R.string.str_synchronous_video_loaded));
             } else {
+                //相册详情页面-下载到本地
+                ZhugeUtils.eventAlbumDownloadVideo(PhotoAlbumPlayer.this);
                 EventBus.getDefault().post(new EventDownloadIpcVid(mFileName, getType()));
             }
         } else if (id == R.id.btn_delete) {
@@ -638,6 +640,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                         if (!GolukApplication.getInstance().getIpcIsLogin()) {
                             GolukUtils.showToast(PhotoAlbumPlayer.this, PhotoAlbumPlayer.this.getResources().getString(R.string.str_photo_check_ipc_state));
                         } else {
+                            //相册详情页面-删除视频
+                            ZhugeUtils.eventAlbumDeleteVideo(PhotoAlbumPlayer.this);
                             EventBus.getDefault().post(new EventDeletePhotoAlbumVid(path, getType()));
                             GolukUtils.showToast(PhotoAlbumPlayer.this, PhotoAlbumPlayer.this.getResources().getString(R.string.str_photo_delete_ok));
                         }
@@ -647,6 +651,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                         GolukUtils.showToast(PhotoAlbumPlayer.this, PhotoAlbumPlayer.this.getResources().getString(R.string.str_photo_downing));
                     }
                 } else {
+                    //相册详情页面-删除视频
+                    ZhugeUtils.eventAlbumDeleteVideo(PhotoAlbumPlayer.this);
                     EventBus.getDefault().post(new EventDeletePhotoAlbumVid(path, getType()));
                     GolukUtils.showToast(PhotoAlbumPlayer.this, PhotoAlbumPlayer.this.getResources().getString(R.string.str_photo_delete_ok));
                     PhotoAlbumPlayer.this.finish();

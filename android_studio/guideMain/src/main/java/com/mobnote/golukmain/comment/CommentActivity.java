@@ -746,6 +746,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 				bean.mCommentTime = GolukUtils.getCurrentCommentTime();
 				if (!"".equals(bean.result)) {
 					if ("0".equals(bean.result)) {// 成功
+						//评论视频
+						ZhugeUtils.eventCommentVideo(this);
 						this.mAdapter.addFirstData(bean);
 						noData(false);
 						mEditInput.setText("");

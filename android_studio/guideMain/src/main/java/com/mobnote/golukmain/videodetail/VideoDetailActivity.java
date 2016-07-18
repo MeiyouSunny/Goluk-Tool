@@ -1263,6 +1263,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
                     bean.mCommentTime = GolukUtils.getCurrentCommentTime();
                     if (!"".equals(bean.result)) {
                         if ("0".equals(bean.result)) {// 成功
+                            //评论视频
+                            ZhugeUtils.eventCommentVideo(this);
                             removeFooterView();
                             this.mAdapter.addFirstData(bean);
                             mVideoJson.data.avideo.video.comment.comcount = String.valueOf(Integer

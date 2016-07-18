@@ -13,6 +13,7 @@ import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 import com.mobnote.view.SlideShowView;
 
 import android.content.Context;
@@ -354,6 +355,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
         }
 
         Intent intent = null;
+        ZhugeUtils.eventBannerText(mContext, body.getTitle());
 
         if (PURE_PIC.equals(type)) {
             // do nothing
