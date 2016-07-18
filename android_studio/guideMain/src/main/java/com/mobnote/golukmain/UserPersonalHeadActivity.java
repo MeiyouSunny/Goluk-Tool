@@ -23,6 +23,7 @@ import com.mobnote.golukmain.userlogin.UpHeadResult;
 import com.mobnote.golukmain.userlogin.UpdUserHeadBeanRequest;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -328,6 +329,7 @@ public class UserPersonalHeadActivity extends BaseActivity implements OnClickLis
 //	}
 
 	public void startUserLogin(){
+		ZhugeUtils.eventLogin(this);
 		Intent loginIntent = null;
 		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(this, InternationUserLoginActivity.class);

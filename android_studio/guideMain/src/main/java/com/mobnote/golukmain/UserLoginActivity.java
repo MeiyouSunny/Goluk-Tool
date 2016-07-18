@@ -19,6 +19,7 @@ import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SharedPrefUtil;
+import com.mobnote.util.ZhugeUtils;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
@@ -303,6 +304,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		} else if (id == R.id.user_login_phoneRegist) {
 			mApplication.mLoginManage.setUserLoginInterface(null);
 			UserUtils.hideSoftMethod(this);
+			ZhugeUtils.eventRegist(UserLoginActivity.this);
 			Intent itRegist = new Intent(UserLoginActivity.this, UserRegistActivity.class);
 			GolukDebugUtils.i("final", "-----------UserLoginActivity-----------" + justLogin);
 			if (justLogin.equals("main") || justLogin.equals("back")) {// 从起始页注册
@@ -318,6 +320,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		} else if (id == R.id.user_login_forgetpwd) {
 			mApplication.mLoginManage.setUserLoginInterface(null);
 			UserUtils.hideSoftMethod(this);
+			ZhugeUtils.eventForgetPwd(UserLoginActivity.this);
 			Intent itForget = new Intent(UserLoginActivity.this, UserRepwdActivity.class);
 			if (justLogin.equals("main") || justLogin.equals("back")) {// 从起始页注册
 				itForget.putExtra("fromRegist", "fromStart");
@@ -335,6 +338,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 					GolukUtils.showToast(this, getString(R.string.str_no_weixin));
 					return;
 				}
+				ZhugeUtils.eventWixinLogin(this);
 				String infoStr = GolukFileUtils.loadString(GolukFileUtils.THIRD_USER_INFO, "");
 				if (TextUtils.isEmpty(infoStr)) {
 					ThirdPlatformLoginUtil thirdPlatformLogin = new ThirdPlatformLoginUtil(this);
@@ -462,6 +466,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 									@Override
 									public void onClick(DialogInterface arg0, int arg1) {
 										mApplication.mLoginManage.setUserLoginInterface(null);
+										ZhugeUtils.eventRegist(UserLoginActivity.this);
 										Intent it = new Intent(UserLoginActivity.this, UserRegistActivity.class);
 										it.putExtra("intentLogin",
 												mEditTextPhoneNumber.getText().toString().replace("-", ""));
@@ -511,6 +516,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 								@Override
 								public void onClick(DialogInterface arg0, int arg1) {
 									mApplication.mLoginManage.setUserLoginInterface(null);
+									ZhugeUtils.eventForgetPwd(UserLoginActivity.this);
 									Intent it = new Intent(UserLoginActivity.this, UserRepwdActivity.class);
 									it.putExtra("errorPwdOver",
 											mEditTextPhoneNumber.getText().toString().replace("-", ""));

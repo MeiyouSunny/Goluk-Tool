@@ -105,7 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:padding="10dp"
-                android:text="@string/user_login_phone" />
+                android:text="@string/user_immediately_regist" />
 
             <TextView
                 android:id="@+id/user_login_forgetpwd"

@@ -402,6 +402,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
 			intent.putExtra("from", "local");
 			getActivity().startActivity(intent);
 		} else if (id == R.id.camera_item) {
+			ZhugeUtils.eventIpcManage(getActivity());
 			Intent itCamera = new Intent(getActivity(), UnbindActivity.class);
 			getActivity().startActivity(itCamera);
 		} else if (id == R.id.set_item) {
@@ -428,6 +429,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
 				clickToLogin(TYPE_PROFIT);
 			}
 		} else if (id == R.id.rl_my_message) {
+			ZhugeUtils.eventMsgCenter(getActivity());
 			Intent msgIntent = new Intent(getActivity(), MessageCenterActivity.class);
 			getActivity().startActivity(msgIntent);
 		} else if (id == R.id.tv_praise_item) {
@@ -440,8 +442,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
 			GolukApplication app = (GolukApplication) (getActivity())
 					.getApplication();
 			if (!app.isUserLoginSucess) {
-				// GolukUtils.showToast(this,
-				// this.getResources().getString(R.string.str_please_login));
+				ZhugeUtils.eventLogin(getActivity());
 				Intent loginIntent = null;
 				if(GolukApplication.getInstance().isMainland() == false){
 					loginIntent = new Intent(getActivity(), InternationUserLoginActivity.class);
@@ -483,6 +484,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
 		mPreferences = getActivity().getSharedPreferences("toRepwd",
 				Context.MODE_PRIVATE);
 		mEditor = mPreferences.edit();
+		ZhugeUtils.eventLogin(getActivity());
 		Intent itNo = null;
 		if(GolukApplication.getInstance().isMainland() == false){
 			itNo = new Intent(getActivity(), InternationUserLoginActivity.class);

@@ -20,6 +20,7 @@ import com.mobnote.user.UserUtils;
 import com.mobnote.user.CountDownButtonHelper.OnFinishListener;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SharedPrefUtil;
+import com.mobnote.util.ZhugeUtils;
 import com.sina.weibo.sdk.utils.MD5;
 
 import cn.com.mobnote.logic.GolukModule;
@@ -211,6 +212,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 		}
 
 		justDifferent = it.getBooleanExtra(IDENTIFY_DIFFERENT, false);
+		ZhugeUtils.eventSmsCode(this, justDifferent);
 		GolukDebugUtils.i(TAG, "-------justDifferent-------" + justDifferent);
 
 		if (null != it.getStringExtra(IDENTIFY_PASSWORD)) {
@@ -340,6 +342,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 
 									@Override
 									public void onClick(DialogInterface arg0, int arg1) {
+										ZhugeUtils.eventRegist(UserIdentifyActivity.this);
 										Intent intentRepwd = new Intent(UserIdentifyActivity.this,
 												UserRegistActivity.class);
 										intentRepwd.putExtra("intentRepassword", title_phone);
@@ -675,6 +678,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 				finish();
 			} else {
 				if (justDifferent) {
+					ZhugeUtils.eventRegistSuccess(this);
 					GolukUtils.showToast(this, this.getResources().getString(R.string.user_regist_success));
 				} else {
 					GolukUtils.showToast(this, this.getResources().getString(R.string.user_repwd_success));
@@ -716,6 +720,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 
 									@Override
 									public void onClick(DialogInterface arg0, int arg1) {
+										ZhugeUtils.eventRegist(UserIdentifyActivity.this);
 										Intent intentRepwd = new Intent(UserIdentifyActivity.this,
 												UserRegistActivity.class);
 										intentRepwd.putExtra("intentRepassword", title_phone);
@@ -868,6 +873,13 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 				int code = Integer.parseInt(userresult.code);
 				switch (code) {
 				case 200:
+					String type = "";
+					if (justDifferent) {
+						type = this.getString(R.string.str_zhuge_regist_success_event);
+					} else {
+						type = this.getString(R.string.str_zhuge_change_pwd_success);
+					}
+					ZhugeUtils.eventLoginSuccess(mApp.getContext(), type);
 					// 登录成功后，存储用户的登录信息
 					mSharedPreferences = getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
 					mEditor = mSharedPreferences.edit();

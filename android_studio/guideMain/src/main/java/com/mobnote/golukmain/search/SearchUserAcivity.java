@@ -360,6 +360,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 			SearchRetBean bean = (SearchRetBean)result;
 
 			if(null == bean) {
+				ZhugeUtils.eventSearch(this, searchContent, this.getString(R.string.str_zhuge_have_not));
 				Toast.makeText(SearchUserAcivity.this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 				if(REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
 					setEmptyView(getString(R.string.msg_system_connect_error));
@@ -368,6 +369,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 			}
 
 			if(null == bean.data) {
+				ZhugeUtils.eventSearch(this, searchContent, this.getString(R.string.str_zhuge_have_not));
 				setEmptyView(getString(R.string.no_following_tips));
 				mUserlistPtrList.setMode(PullToRefreshBase.Mode.DISABLED);
 				return;
@@ -393,6 +395,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 					if(recommendBeanList == null || recommendBeanList.size() == 0){
 
 					}else{
+						ZhugeUtils.eventSearch(this, searchContent, this.getString(R.string.str_zhuge_have_not));
 						//没有搜索到用户时，显示推荐用户
 						mFollowFrom = this.getString(R.string.str_zhuge_followed_from_search_recommed);
 
@@ -407,6 +410,7 @@ public class SearchUserAcivity extends BaseActivity implements IRequestResultLis
 					return;
 				}
 			}else{
+				ZhugeUtils.eventSearch(this, searchContent, this.getString(R.string.str_zhuge_have));
 				//搜索到用户时，显示搜索用户
 				mFollowFrom = this.getString(R.string.str_zhuge_followed_from_search_list);
 

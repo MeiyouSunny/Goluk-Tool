@@ -28,6 +28,7 @@ import com.mobnote.golukmobile.GuideActivity;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
+import com.mobnote.util.ZhugeUtils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -426,10 +427,12 @@ public class GolukNotification {
 				} else if (101 == type) {
 					// start comment activity
 					Context context = GolukApplication.getInstance().getContext();
+					ZhugeUtils.eventMsgCenterComment(context);
 					Intent intent = new Intent(context, MsgCenterCommentActivity.class);
 					context.startActivity(intent);
 				} else if (102 == type) {
 					Context context = GolukApplication.getInstance().getContext();
+					ZhugeUtils.eventMsgCenterPraise(context);
 					Intent intent = new Intent(context, MsgCenterPraiseActivity.class);
 					context.startActivity(intent);
 				} else if (103 == type) {

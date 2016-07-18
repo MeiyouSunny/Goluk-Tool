@@ -6,6 +6,7 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.user.UserIdentifyInterface;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -316,6 +317,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 
 								@Override
 								public void onClick(DialogInterface arg0, int arg1) {
+									ZhugeUtils.eventRegist(UserRepwdActivity.this);
 									String phone = mEditTextPhone.getText().toString();
 									Intent intentRepwd = new Intent(UserRepwdActivity.this, UserRegistActivity.class);
 									intentRepwd.putExtra("intentRepassword", phone);

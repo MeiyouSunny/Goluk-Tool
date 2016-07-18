@@ -11,6 +11,7 @@ import com.mobnote.golukmain.userlogin.UpNameResult;
 import com.mobnote.golukmain.userlogin.UpdUserNameBeanRequest;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -232,6 +233,7 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 	}
 
 	public void startUserLogin(){
+		ZhugeUtils.eventLogin(this);
 		Intent loginIntent = null;
 		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(this, InternationUserLoginActivity.class);

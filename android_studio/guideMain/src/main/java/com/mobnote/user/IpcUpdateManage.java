@@ -21,6 +21,7 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.SharedPrefUtil;
+import com.mobnote.util.ZhugeUtils;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -360,9 +361,10 @@ public class IpcUpdateManage implements IPCManagerFn {
                         } else {
                             String version_new = SharedPrefUtil.getIPCVersion();
 //							GolukUtils.showToast(mApp.getContext(), "极路客固件版本号" + version_new + "，当前已是最新版本");
-                            Intent itNew = new Intent(mApp.getContext(), UpdateActivity.class);
-                            itNew.putExtra(UpdateActivity.UPDATE_IS_NEW, true);
-                            mApp.getContext().startActivity(itNew);
+//                            Intent itNew = new Intent(mApp.getContext(), UpdateActivity.class);
+//                            itNew.putExtra(UpdateActivity.UPDATE_IS_NEW, true);
+//                            mApp.getContext().startActivity(itNew);
+                            GolukUtils.startUpdateActivity(mApp.getContext(), 0, null, true);
                         }
                     } else {
                         /**
@@ -504,6 +506,7 @@ public class IpcUpdateManage implements IPCManagerFn {
     public void ipcUpgrade(final int type, final IPCInfo ipcInfo, String message) {
         GolukDebugUtils.i(TAG, "------------isConnect-----------" + mApp.isIpcLoginSuccess);
         GolukDebugUtils.i(TAG, "=======弹出Dialog=======type：" + type);
+        final String[] operate = {""};
         final String msg = TYPE_DOWNLOAD == type ? mApp.getContext().getResources().getString(R.string.str_download)
                 : mApp.getContext().getResources().getString(R.string.str_update);
         mDownloadDialog = new AlertDialog.Builder(mApp.getContext())
@@ -514,13 +517,22 @@ public class IpcUpdateManage implements IPCManagerFn {
                     public void onClick(DialogInterface arg0, int arg1) {
                         // 跳转升级界面
                         dimissDownLoadDialog();
-                        Intent intent = new Intent(mApp.getContext(), UpdateActivity.class);
-                        intent.putExtra(UpdateActivity.UPDATE_SIGN, type);
-                        intent.putExtra(UpdateActivity.UPDATE_DATA, ipcInfo);
-                        mApp.getContext().startActivity(intent);
+//                        Intent intent = new Intent(mApp.getContext(), UpdateActivity.class);
+//                        intent.putExtra(UpdateActivity.UPDATE_SIGN, type);
+//                        intent.putExtra(UpdateActivity.UPDATE_DATA, ipcInfo);
+//                        mApp.getContext().startActivity(intent);
+                        operate[0] = mApp.getContext().getString(R.string.str_zhuge_ipc_update_dialog_operate_download);
+                        GolukUtils.startUpdateActivity(mApp.getContext(), type, ipcInfo, false);
                     }
-                }).setNegativeButton(mApp.getContext().getResources().getString(R.string.str_update_later), null)
+                }).setNegativeButton(mApp.getContext().getResources().getString(R.string.str_update_later), new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        operate[0] = mApp.getContext().getString(R.string.str_zhuge_ipc_update_dialog_operate_ignore);
+                    }
+                })
                 .setCancelable(false).create();
+
+        ZhugeUtils.eventIpcUpdateDialog(mApp.getContext(), operate[0]);
 
         mDownloadDialog.show();
     }

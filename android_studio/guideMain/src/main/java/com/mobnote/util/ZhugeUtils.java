@@ -13,6 +13,8 @@ import com.zhuge.analysis.stat.ZhugeSDK;
 
 import org.json.JSONObject;
 
+import cn.com.tiros.debug.GolukDebugUtils;
+
 /**
  * Created by lily on 16-6-1.
  */
@@ -861,12 +863,18 @@ public class ZhugeUtils {
     /**
      * 短信验证页面
      * @param context
-     * @param from 来源
+     * @param from  来源
      */
-    public static void eventSmsCode(Context context, String from) {
+    public static void eventSmsCode(Context context, boolean from) {
         try {
             JSONObject json = new JSONObject();
-            json.put(context.getString(R.string.str_zhuge_from), from);
+            String str = "";
+            if (from) {
+                str = context.getString(R.string.str_zhuge_sms_code_from_regist);
+            } else {
+                str = context.getString(R.string.str_zhuge_sms_code_from_forget_pwd);
+            }
+            json.put(context.getString(R.string.str_zhuge_from), str);
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_sms_code_event), json);
         } catch (Exception e) {
@@ -936,7 +944,7 @@ public class ZhugeUtils {
      * @param keyWords  搜索关键词
      * @param result  搜索结果
      */
-    public static void eventLoginSuccess(Context context, String keyWords, String result) {
+    public static void eventSearch(Context context, String keyWords, String result) {
         try {
             JSONObject json = new JSONObject();
             json.put(context.getString(R.string.str_zhuge_search_key_words), keyWords);

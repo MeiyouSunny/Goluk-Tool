@@ -427,6 +427,7 @@
     <string name="str_zhuge_login_type">属性</string>
     <!--参数-->
     <string name="str_zhuge_login_style_phone">手机登录</string>
+    <string name="str_zhuge_change_pwd_success">修改密码成功</string>
 
 <!-- ################### 搜索页面 ###################### -->
     <!-- 事件 -->

@@ -50,6 +50,7 @@ import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
+import com.mobnote.util.ZhugeUtils;
 import com.rockerhieu.emojicon.EmojiconGridFragment;
 import com.rockerhieu.emojicon.EmojiconsFragment;
 import com.rockerhieu.emojicon.emoji.Emojicon;
@@ -295,6 +296,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	private void click_send() {
 		// 发评论前需要先判断用户是否登录
 		if (!mApp.isUserLoginSucess) {
+			ZhugeUtils.eventLogin(this);
 			Intent intent = null;
 			if (GolukApplication.getInstance().isMainland() == false) {
 				intent = new Intent(this, InternationUserLoginActivity.class);
@@ -814,6 +816,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 	}
 
 	public void startUserLogin(){
+		ZhugeUtils.eventLogin(this);
 		Intent loginIntent = null;
 		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(this, InternationUserLoginActivity.class);

@@ -25,6 +25,7 @@ import com.mobnote.golukmain.userlogin.UploadUtil;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.ClipImageView;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -409,6 +410,7 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,I
     }
 
 	public void startUserLogin(){
+		ZhugeUtils.eventLogin(this);
 		Intent loginIntent = null;
 		if(GolukApplication.getInstance().isMainland() == false){
 			loginIntent = new Intent(this, InternationUserLoginActivity.class);

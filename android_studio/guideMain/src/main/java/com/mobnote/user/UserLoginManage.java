@@ -27,6 +27,7 @@ import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.SharedPrefUtil;
+import com.mobnote.util.ZhugeUtils;
 import com.sina.weibo.sdk.utils.MD5;
 
 /**
@@ -214,6 +215,13 @@ public class UserLoginManage implements IRequestResultListener {
 				int code = Integer.parseInt(userresult.code);
 				switch (code) {
 				case 200:
+					String type = "";
+					if(requestType == IPageNotifyFn.PageType_Login){
+						type = mApp.getContext().getString(R.string.str_zhuge_login_style_phone);
+					} else {
+						type = mApp.getContext().getString(R.string.str_zhuge_wxin_login_event);
+					}
+					ZhugeUtils.eventLoginSuccess(mApp.getContext(), type);
 					// 登录成功后，存储用户的登录信息
 					UserData userdata = userresult.data;
 					String uid = userdata.uid;

@@ -29,6 +29,7 @@ import com.mobnote.golukmain.msg.bean.MessageCounterBean;
 import com.mobnote.manager.MessageManager;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import de.greenrobot.event.EventBus;
 
@@ -115,6 +116,7 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 			GolukApplication app = (GolukApplication)getApplication();
 			if (!app.isUserLoginSucess) {
 //					GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
+				ZhugeUtils.eventLogin(this);
 				Intent intent = null;
 				if(GolukApplication.getInstance().isMainland() == false){
 					intent = new Intent(this, InternationUserLoginActivity.class);
@@ -125,6 +127,7 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 				startActivityForResult(intent, GolukConfig.REQUEST_CODE_MSG_LOGIN_PRAISE);
 				return;
 			}
+			ZhugeUtils.eventMsgCenterPraise(this);
 			Intent praise = new Intent(this, MsgCenterPraiseActivity.class);
 			startActivity(praise);
 		} else if (id == R.id.rl_msg_center_comment) {
@@ -135,6 +138,7 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 			GolukApplication app = (GolukApplication)getApplication();
 			if (!app.isUserLoginSucess) {
 //					GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
+				ZhugeUtils.eventLogin(this);
 				Intent intent = null;
 				if(GolukApplication.getInstance().isMainland() == false){
 					intent = new Intent(this, InternationUserLoginActivity.class);
@@ -144,6 +148,7 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 				startActivityForResult(intent, GolukConfig.REQUEST_CODE_MSG_LOGIN_COMMENT);
 				return;
 			}
+			ZhugeUtils.eventMsgCenterComment(this);
 			Intent comment = new Intent(this, MsgCenterCommentActivity.class);
 			startActivity(comment);
 		} else if (id == R.id.rl_msg_center_system) {
@@ -154,6 +159,7 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 			GolukApplication app = (GolukApplication)getApplication();
 			if (!app.isUserLoginSucess) {
 //					GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
+				ZhugeUtils.eventLogin(this);
 				Intent intent = null;
 				if(GolukApplication.getInstance().isMainland() == false){
 					intent = new Intent(this, InternationUserLoginActivity.class);
@@ -182,11 +188,13 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 		if(resultCode == Activity.RESULT_OK) {
 			switch(requestCode) {
 			case GolukConfig.REQUEST_CODE_MSG_LOGIN_PRAISE:
+				ZhugeUtils.eventMsgCenterPraise(this);
 				//start praise list
 				Intent praise = new Intent(this, MsgCenterPraiseActivity.class);
 				startActivity(praise);
 				break;
 			case GolukConfig.REQUEST_CODE_MSG_LOGIN_COMMENT:
+				ZhugeUtils.eventMsgCenterComment(this);
 				//start comment list
 				Intent comment = new Intent(this, MsgCenterCommentActivity.class);
 				startActivity(comment);
@@ -262,6 +270,7 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 //		}
 		if (!app.isUserLoginSucess) {
 //			GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
+			ZhugeUtils.eventLogin(this);
 			Intent intent = null;
 			if(GolukApplication.getInstance().isMainland() == false){
 				intent = new Intent(this, InternationUserLoginActivity.class);

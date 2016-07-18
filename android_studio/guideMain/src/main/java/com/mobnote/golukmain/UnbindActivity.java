@@ -190,13 +190,15 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             startActivityForResult(it, 10);
         } else if (id == R.id.unbind_layout_update) {
             if (mApplication.mIpcUpdateManage.isDownloading()) {// 下载中
-                Intent intent = new Intent(UnbindActivity.this, UpdateActivity.class);
-                intent.putExtra(UpdateActivity.UPDATE_SIGN, 0);
-                startActivity(intent);
+//                Intent intent = new Intent(UnbindActivity.this, UpdateActivity.class);
+//                intent.putExtra(UpdateActivity.UPDATE_SIGN, 0);
+//                startActivity(intent);
+                GolukUtils.startUpdateActivity(UnbindActivity.this, 0, null, false);
             } else if (mApplication.mIpcUpdateManage.isDownloadSuccess() || canOfflineInstall) {
-                Intent intent = new Intent(UnbindActivity.this, UpdateActivity.class);
-                intent.putExtra(UpdateActivity.UPDATE_SIGN, 1);
-                startActivity(intent);
+//                Intent intent = new Intent(UnbindActivity.this, UpdateActivity.class);
+//                intent.putExtra(UpdateActivity.UPDATE_SIGN, 1);
+//                startActivity(intent);
+                GolukUtils.startUpdateActivity(UnbindActivity.this, 1, null, false);
             }
         }
     }

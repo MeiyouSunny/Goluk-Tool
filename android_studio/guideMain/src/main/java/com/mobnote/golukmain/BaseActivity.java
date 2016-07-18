@@ -19,6 +19,7 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.thirdshare.FacebookShareHelper;
+import com.mobnote.util.ZhugeUtils;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -138,6 +139,7 @@ public class BaseActivity extends FragmentActivity {
 	 * @author jyf
 	 */
 	public void toLoginBack() {
+		ZhugeUtils.eventLogin(this);
 		Intent intent = null;
 		if (GolukApplication.getInstance().isMainland() == false) {
 			intent = new Intent(this, InternationUserLoginActivity.class);

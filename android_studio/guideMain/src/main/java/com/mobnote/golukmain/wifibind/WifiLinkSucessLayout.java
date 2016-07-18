@@ -6,6 +6,7 @@ import com.mobnote.golukmain.UnbindActivity;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.util.ImageManager;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -83,6 +84,7 @@ public class WifiLinkSucessLayout extends ViewFrame implements OnClickListener {
 		int id = v.getId();
 		if (id == R.id.wifi_link_sucess_modify) {
 			EventBus.getDefault().post(new EventFinishWifiActivity());
+			ZhugeUtils.eventIpcManage(mContext);
 			Intent i = new Intent(mContext, UnbindActivity.class);
 			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

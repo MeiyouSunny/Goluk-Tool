@@ -535,6 +535,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
     private void click_send() {
         // 发评论／回复 前需要先判断用户是否登录
         if (!mBaseApp.isUserLoginSucess) {
+            ZhugeUtils.eventLogin(this);
             Intent intent = null;
             if (GolukApplication.getInstance().isMainland() == false) {
                 intent = new Intent(this, InternationUserLoginActivity.class);
@@ -1419,6 +1420,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
     }
 
     public void startUserLogin() {
+        ZhugeUtils.eventLogin(this);
         Intent loginIntent = null;
         if (GolukApplication.getInstance().isMainland() == false) {
             loginIntent = new Intent(this, InternationUserLoginActivity.class);
