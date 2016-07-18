@@ -10,28 +10,26 @@ import android.widget.TextView;
 
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.live.LiveSettingBean;
 import com.mobnote.util.GolukUtils;
 
 /**
+ * 直播设置页面
  * Created by leege100 on 16/7/13.
  */
 public class StartLiveActivity extends BaseActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
-    ImageView mBackIv;
-    TextView mLiveDurationTv;
-    TextView mLiveConsumeFlowTv;
-    SeekBar mLiveDurationSeekBar;
+    private ImageView mBackIv;
+    private TextView mLiveDurationTv;
+    private TextView mLiveConsumeFlowTv;
+    private SeekBar mLiveDurationSeekBar;
 
-    Button mEnablePublicBtn;
-    Button mEnableVoiceBtn;
-    Button mEnableSaveLiveBtn;
+    private Button mEnablePublicBtn;
+    private Button mEnableVoiceBtn;
+    private Button mEnableSaveLiveBtn;
 
-    EditText mDescriptionEt;
-    Button mStartLiveBtn;
-
-    boolean isEnablePublic;
-    boolean isEnableVoice;
-    boolean isEnableSaveReplay;
+    private EditText mDescriptionEt;
+    private Button mStartLiveBtn;
 
     /** 默认直播时长 */
     private final int DEFAULT_SECOND = 30 * 60;
@@ -40,6 +38,7 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
     /** 直播时长 */
     private int mCurrentLiveSecond = DEFAULT_SECOND;
 
+    private LiveSettingBean mLiveSettingBean;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,9 +49,10 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initData() {
-        isEnablePublic = true;
-        isEnableVoice = true;
-        isEnableSaveReplay = false;
+        mLiveSettingBean = new LiveSettingBean();
+        mLiveSettingBean.isEnablePublic = true;
+        mLiveSettingBean.isEnableVoice = true;
+        mLiveSettingBean.isEnableSaveReplay = false;
     }
 
     private void setupView() {
@@ -80,19 +80,19 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
         mDescriptionEt = (EditText) findViewById(R.id.et_live_description);
         mStartLiveBtn = (Button) findViewById(R.id.btn_start_live);
 
-        if(isEnablePublic){
+        if(mLiveSettingBean.isEnablePublic){
             mEnablePublicBtn.setBackgroundResource(R.drawable.set_open_btn);
         }else{
             mEnablePublicBtn.setBackgroundResource(R.drawable.set_close_btn);
         }
 
-        if(isEnableSaveReplay){
+        if(mLiveSettingBean.isEnableSaveReplay){
             mEnableSaveLiveBtn.setBackgroundResource(R.drawable.set_open_btn);
         }else{
             mEnableSaveLiveBtn.setBackgroundResource(R.drawable.set_close_btn);
         }
 
-        if(isEnableVoice){
+        if(mLiveSettingBean.isEnableVoice){
             mEnableVoiceBtn.setBackgroundResource(R.drawable.set_open_btn);
         }else{
             mEnableVoiceBtn.setBackgroundResource(R.drawable.set_close_btn);
@@ -113,28 +113,28 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
         if(vId == R.id.ib_live_back){
             this.finish();
         }else if(vId == R.id.btn_enable_public_live){
-            if(isEnablePublic){
+            if(mLiveSettingBean.isEnablePublic){
                 mEnablePublicBtn.setBackgroundResource(R.drawable.set_close_btn);
             }else{
                 mEnablePublicBtn.setBackgroundResource(R.drawable.set_open_btn);
             }
-            isEnablePublic = !isEnablePublic;
+            mLiveSettingBean.isEnablePublic = !mLiveSettingBean.isEnablePublic;
         }else if(vId == R.id.btn_enable_live_voice){
-            if(isEnableVoice){
+            if(mLiveSettingBean.isEnableVoice){
                 mEnableVoiceBtn.setBackgroundResource(R.drawable.set_close_btn);
             }else{
                 mEnableVoiceBtn.setBackgroundResource(R.drawable.set_open_btn);
             }
-            isEnableVoice = !isEnableVoice;
+            mLiveSettingBean.isEnableVoice = !mLiveSettingBean.isEnableVoice;
         }else if(vId == R.id.btn_enable_save_live){
-            if(isEnableSaveReplay){
+            if(mLiveSettingBean.isEnableSaveReplay){
                 mEnableSaveLiveBtn.setBackgroundResource(R.drawable.set_close_btn);
             }else{
                 mEnableSaveLiveBtn.setBackgroundResource(R.drawable.set_open_btn);
             }
-            isEnableSaveReplay = !isEnableSaveReplay;
+            mLiveSettingBean.isEnableSaveReplay = !mLiveSettingBean.isEnableSaveReplay;
         }else if(vId == R.id.btn_start_live){
-
+            GolukUtils.startPublishOrLookLiveActivity(this,true,false,mLiveSettingBean,null);
         }
     }
 

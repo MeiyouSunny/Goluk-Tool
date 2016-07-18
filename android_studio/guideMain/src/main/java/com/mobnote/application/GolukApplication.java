@@ -45,7 +45,6 @@ import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.eventbus.EventPhotoUpdateLoginState;
 import com.mobnote.eventbus.EventUserLoginRet;
 import com.mobnote.golukmain.MainActivity;
-import com.mobnote.golukmain.PushSettingActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpinionActivity;
 import com.mobnote.golukmain.UserSetupActivity;
@@ -2065,7 +2064,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         if (null == userInfo) {
             return;
         }
-        GolukUtils.startLiveActivity(mContext,false,false,null,userInfo);
+        GolukUtils.startPublishOrLookLiveActivity(mContext,false,false,null,userInfo);
     }
 
     private boolean isMainProcess() {

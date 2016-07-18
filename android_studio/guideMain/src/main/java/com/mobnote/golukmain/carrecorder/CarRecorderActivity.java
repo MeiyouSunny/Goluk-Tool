@@ -1071,7 +1071,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                     intent.putExtra("isInfo", "back");
                     startActivity(intent);
                 } else {
-//                    GolukUtils.startLiveActivity(this,true,false,mSettingData,null);
+//                    GolukUtils.startPublishOrLookLiveActivity(this,true,false,mSettingData,null);
                     intent = new Intent(this, StartLiveActivity.class);
                     startActivity(intent);
                 }
