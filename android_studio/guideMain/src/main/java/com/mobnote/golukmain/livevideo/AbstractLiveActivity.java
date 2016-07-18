@@ -232,6 +232,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements View.
                 // 获取墨认的设置
                 LiveSettingPopWindow lpw = new LiveSettingPopWindow(this, mRootLayout);
                 mSettingData = lpw.getCurrentSetting();
+                startLiveLook(myInfo);
                 LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE,
                         this.getString(R.string.str_live_retry_live));
                 isSettingCallBack = true;
@@ -281,6 +282,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements View.
         if (null == mRtmpUrl) {
             mRtmpUrl = PlayUrlManager.UPLOAD_VOIDE_PRE;
         }
+        Log.i("","");
     }
 
     @Override
