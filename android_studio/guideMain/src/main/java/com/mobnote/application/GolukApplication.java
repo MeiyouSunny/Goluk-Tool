@@ -1105,9 +1105,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 //			}
 //			break;
 //		// APP升级+IPC升级检测
-            case PageType_CheckUpgrade:
-                mIpcUpdateManage.requestInfoCallback(success, param1, param2);
-                break;
+//            case PageType_CheckUpgrade:
+//                mIpcUpdateManage.requestInfoCallback(success, param1, param2);
+//                break;
             // ipc升级文件下载
             // case PageType_CommDownloadFile:
             // mIpcUpdateManage.downloadCallback(success, param1, param2);
