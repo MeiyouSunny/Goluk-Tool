@@ -255,6 +255,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
                 // 启动创建热点
                 autoConnWifi();
                 // 等待IPC连接时间
+
                 mBaseHandler.sendEmptyMessageDelayed(MSG_H_WIFICONN_TIME, 40 * 1000);
             }
         } else {
