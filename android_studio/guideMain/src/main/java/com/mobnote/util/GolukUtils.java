@@ -41,7 +41,7 @@ import com.mobnote.golukmain.following.FollowingListActivity;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.LiveSettingBean;
 import com.mobnote.golukmain.live.UserInfo;
-import com.mobnote.golukmain.livevideo.AbstractLiveActivity;
+import com.mobnote.golukmain.livevideo.LiveActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.startshare.VideoShareActivity;
@@ -1254,11 +1254,6 @@ public class GolukUtils {
     public static void startPublishOrLookLiveActivity(Context mContext, boolean isLive, boolean isContinue, LiveSettingBean mSettingData, UserInfo userInfo){
         Intent intent = null;
         String activityNameStr = "";
-//        if (GolukApplication.getInstance().isMainland()) {
-//            activityNameStr = "com.mobnote.golukmain.livevideo.BaidumapLiveActivity";
-//        } else {
-//            activityNameStr = "com.mobnote.golukmain.livevideo.GooglemapLiveActivity";
-//        }
         activityNameStr = "com.mobnote.golukmain.livevideo.LiveActivity";
         try {
             Class<?> c = Class.forName(activityNameStr);
@@ -1270,13 +1265,13 @@ public class GolukUtils {
             return;
         }
         if(intent != null){
-            intent.putExtra(AbstractLiveActivity.KEY_IS_LIVE, isLive);
-            intent.putExtra(AbstractLiveActivity.KEY_LIVE_CONTINUE, isContinue);
-            intent.putExtra(AbstractLiveActivity.KEY_GROUPID, "");
-            intent.putExtra(AbstractLiveActivity.KEY_PLAY_URL, "");
-            intent.putExtra(AbstractLiveActivity.KEY_JOIN_GROUP, "");
-            intent.putExtra(AbstractLiveActivity.KEY_LIVE_SETTING_DATA, mSettingData);
-            intent.putExtra(AbstractLiveActivity.KEY_USERINFO, userInfo);
+            intent.putExtra(LiveActivity.KEY_IS_LIVE, isLive);
+            intent.putExtra(LiveActivity.KEY_LIVE_CONTINUE, isContinue);
+            intent.putExtra(LiveActivity.KEY_GROUPID, "");
+            intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+            intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
+            intent.putExtra(LiveActivity.KEY_LIVE_SETTING_DATA, mSettingData);
+            intent.putExtra(LiveActivity.KEY_USERINFO, userInfo);
             mContext.startActivity(intent);
         }
     }

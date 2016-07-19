@@ -228,14 +228,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"></activity>
         <activity
-            android:name="com.mobnote.golukmain.livevideo.BaidumapLiveActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name="com.mobnote.golukmain.livevideo.GooglemapLiveActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name="com.mobnote.golukmain.livevideo.LiveActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait"/>

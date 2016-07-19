@@ -53,6 +53,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -249,12 +251,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         // 显示数据
         setViewInitData();
         // 地图初始化
-        if(GolukApplication.getInstance().isMainland()){
-            mLiveFragment = new BaidumapLiveFragment();
-        }else{
-            mLiveFragment = new GoogleMapLiveFragment();
-        }
-        getSupportFragmentManager().beginTransaction().add(R.id.fl_more, mLiveFragment).commit();
+        initMapViewFragment();
         // 获取我的登录信息
         myInfo = mApp.getMyInfo();
         // 开始预览或开始直播
@@ -319,6 +316,39 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             updateCount(Integer.parseInt(mPublisher.zanCount), Integer.parseInt(mPublisher.persons));
         }
         setCallBackListener();
+    }
+
+    private boolean initMapViewFragment() {
+        String activityNameStr = "";
+        if (GolukApplication.getInstance().isMainland()) {
+            activityNameStr = "com.mobnote.golukmain.livevideo.BaiduMapLiveFragment";
+        } else {
+            activityNameStr = "com.mobnote.golukmain.livevideo.GoogleMapLiveFragment";
+        }
+        try {
+            Class<?> c = Class.forName(activityNameStr);
+            if(null != c){
+                Class[] paramTypes = { };
+                Constructor constructor = c.getConstructor(paramTypes);
+                mLiveFragment = (AbstractLiveFragment) constructor.newInstance();
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return true;
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            return true;
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            return true;
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+            return true;
+        }
+        getSupportFragmentManager().beginTransaction().add(R.id.fl_more, mLiveFragment).commit();
+        return false;
     }
 
     // 计时，90秒后
