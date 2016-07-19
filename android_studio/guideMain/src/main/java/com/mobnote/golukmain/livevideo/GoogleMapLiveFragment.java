@@ -2,7 +2,11 @@ package com.mobnote.golukmain.livevideo;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
@@ -28,10 +32,12 @@ import com.mobnote.util.JsonUtil;
 
 import cn.com.mobnote.module.location.GolukPosition;
 
-public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMapReadyCallback{
-
-	private MapView mMapView;
-	private GoogleMap mGoogleMap;
+/**
+ * Created by leege100 on 2016/7/19.
+ */
+public class GoogleMapLiveFragment extends AbstractLiveFragment implements OnMapReadyCallback {
+    private MapView mMapView;
+    private GoogleMap mGoogleMap;
 
     private Marker mPublisherMarker;
     private Marker mCurrUserMarker;
@@ -43,7 +49,7 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
         @Override
         public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
 
-            if (isLiveUploadTimeOut) {
+            if (mLiveActivity.isLiveUploadTimeOut) {
                 return;
             }
             if(bitmap != null){
@@ -63,7 +69,7 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
         @Override
         public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
 
-            if (isLiveUploadTimeOut) {
+            if (mLiveActivity.isLiveUploadTimeOut) {
                 return;
             }
             if(bitmap != null){
@@ -79,10 +85,16 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
         }
     };
 
-	@Override
-	public void LocationCallBack(String gpsJson) {
-		// TODO Auto-generated method stub
-        if (isLiveUploadTimeOut) {
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void LocationCallBack(String gpsJson) {
+        // TODO Auto-generated method stub
+        if (mLiveActivity.isLiveUploadTimeOut) {
             // 不更新数据
             return;
         }
@@ -93,7 +105,7 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
         if(location != null){
             updateCurrUserMarker(location.rawLat,location.rawLon);
         }
-	}
+    }
 
     @Override
     public void updatePublisherMarker(double lat , double lon){
@@ -110,8 +122,8 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
      */
     private void drawPublisherMarker(){
 
-        if (null == mPublisher) {
-            GolukUtils.showToast(this, this.getString(R.string.str_live_cannot_get_coordinates));
+        if (null == mLiveActivity.mPublisher) {
+            GolukUtils.showToast(mLiveActivity, this.getString(R.string.str_live_cannot_get_coordinates));
             return;
         }
         if(null == mGoogleMap){
@@ -119,13 +131,13 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
         }
 
         // 定义Maker坐标点
-        mPublisherLatLng = new LatLng(Double.parseDouble(mPublisher.lat), Double.parseDouble(mPublisher.lon));
+        mPublisherLatLng = new LatLng(Double.parseDouble(mLiveActivity.mPublisher.lat), Double.parseDouble(mLiveActivity.mPublisher.lon));
 
         if(mPublisherMarker == null){
 
-            if(TextUtils.isEmpty(mPublisher.customavatar)){
+            if(TextUtils.isEmpty(mLiveActivity.mPublisher.customavatar)){
                 int utype = 1;
-                utype = Integer.valueOf(mPublisher.head);
+                utype = Integer.valueOf(mLiveActivity.mPublisher.head);
                 if(utype <= 0){// 防止数组越界，且不能为第0个
                     utype = 1;
                 }
@@ -142,9 +154,9 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
                 mPublisherMarker = mGoogleMap.addMarker(markerOptions);
             }else{
                 Glide.with( this ) // could be an issue!
-                        .load(mPublisher.customavatar)
+                        .load(mLiveActivity.mPublisher.customavatar)
                         .asBitmap()
-                        .transform(new GlideCircleTransform(this))
+                        .transform(new GlideCircleTransform(mLiveActivity))
                         .into(mPublisherTarget);
             }
 
@@ -170,7 +182,7 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
      */
     private void drawAudienceMarker(double lat , double lon){
 
-        if(isShareLive){
+        if(mLiveActivity.isShareLive){
             return;
         }
         if(mGoogleMap == null){
@@ -180,15 +192,15 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
         mCurrUserLatLng = new LatLng(lat, lon);
 
         if (GolukApplication.getInstance().isUserLoginSucess) {
-            if (null == myInfo) {
-                myInfo = mApp.getMyInfo();
+            if (null == mLiveActivity.myInfo) {
+                mLiveActivity.myInfo = GolukApplication.getInstance().getMyInfo();
             }
 
             if(mCurrUserMarker == null){
 
-                if(TextUtils.isEmpty(myInfo.customavatar)){
+                if(TextUtils.isEmpty(mLiveActivity.myInfo.customavatar)){
                     int utype = 1;
-                    utype = Integer.valueOf(myInfo.head);
+                    utype = Integer.valueOf(mLiveActivity.myInfo.head);
                     if(utype <= 0){// 防止数组越界，且不能为第0个
                         utype = 1;
                     }
@@ -205,9 +217,9 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
                     mCurrUserMarker = mGoogleMap.addMarker(markerOptions);
                 }else{
                     Glide.with( this ) // could be an issue!
-                            .load(myInfo.customavatar)
+                            .load(mLiveActivity.myInfo.customavatar)
                             .asBitmap()
-                            .transform(new GlideCircleTransform(this))
+                            .transform(new GlideCircleTransform(mLiveActivity))
                             .into(mCurrUserTarget);
                 }
 
@@ -229,19 +241,24 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         mMapView.onResume();
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         mMapView.onPause();
         super.onPause();
     }
 
     @Override
-    protected void onDestroy() {
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onDestroy() {
         mMapView.onDestroy();
         super.onDestroy();
     }
@@ -258,12 +275,12 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
         mMapView.onSaveInstanceState(outState);
     }
 
-	@Override
-	public void initMap(Bundle saveInstance) {
+    @Override
+    public void initMap(Bundle saveInstance) {
         GoogleMapOptions options = new GoogleMapOptions();
         options.rotateGesturesEnabled(false); // 不允许手势
 
-        mMapView = new MapView(this, options);
+        mMapView = new MapView(mLiveActivity, options);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -272,29 +289,29 @@ public class GooglemapLiveActivity extends AbstractLiveActivity implements OnMap
         mMapView.setClickable(true);
         mMapView.onCreate(saveInstance);
         mMapView.getMapAsync(this);
-	}
+    }
 
-	@Override
-	public void toMyLocation() {
-		// TODO Auto-generated method stub
+    @Override
+    public void toMyLocation() {
+        // TODO Auto-generated method stub
         if(mGoogleMap != null){
             mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(LngLat.lat, LngLat.lng)));
         }
-	}
+    }
 
-	@Override
-	public void onMapReady(GoogleMap map) {
-		// TODO Auto-generated method stub
+    @Override
+    public void onMapReady(GoogleMap map) {
+        // TODO Auto-generated method stub
         mGoogleMap = map;
         mGoogleMap.setMyLocationEnabled(false);
-        if(!isShareLive && mPublisher != null){
+        if(!mLiveActivity.isShareLive && mLiveActivity.mPublisher != null){
             drawPublisherMarker();
             CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(Double.valueOf(mPublisher.lat), Double.valueOf(mPublisher.lon)))      // Sets the center of the map to Mountain View
+                    .target(new LatLng(Double.valueOf(mLiveActivity.mPublisher.lat), Double.valueOf(mLiveActivity.mPublisher.lon)))      // Sets the center of the map to Mountain View
                     .zoom(9)                   // Sets the zoom
                     .build();
             mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
-	}
+    }
 
 }

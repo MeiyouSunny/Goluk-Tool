@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_live_map"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@id/live_play_info_layout"
+    android:layout_marginTop="0dp"
+    android:background="#ededed">
+
+    <!-- 定位按钮 -->
+
+    <Button
+        android:id="@+id/btn_live_location"
+        android:layout_width="44dp"
+        android:layout_height="34dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="14dp"
+        android:background="@drawable/location" />
+</RelativeLayout>
