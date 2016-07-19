@@ -249,7 +249,11 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         // 显示数据
         setViewInitData();
         // 地图初始化
-        mLiveFragment = new GoogleMapLiveFragment();
+        if(GolukApplication.getInstance().isMainland()){
+            mLiveFragment = new BaidumapLiveFragment();
+        }else{
+            mLiveFragment = new GoogleMapLiveFragment();
+        }
         getSupportFragmentManager().beginTransaction().add(R.id.fl_more, mLiveFragment).commit();
         // 获取我的登录信息
         myInfo = mApp.getMyInfo();
