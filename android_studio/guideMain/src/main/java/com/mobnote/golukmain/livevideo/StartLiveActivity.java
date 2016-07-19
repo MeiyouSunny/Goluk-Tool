@@ -139,6 +139,12 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
             }
             mLiveSettingBean.isEnableSaveReplay = !mLiveSettingBean.isEnableSaveReplay;
         }else if(vId == R.id.btn_start_live){
+            String liveDescription = null;
+            liveDescription = mDescriptionEt.getText().toString();
+            if(liveDescription == null){
+                liveDescription = "";
+            }
+            mLiveSettingBean.desc = liveDescription;
             GolukUtils.startPublishOrLookLiveActivity(this,true,false,mLiveSettingBean,null);
         }
     }
