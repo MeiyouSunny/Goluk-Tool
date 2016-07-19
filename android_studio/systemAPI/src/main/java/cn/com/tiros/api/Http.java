@@ -161,7 +161,7 @@ public class Http implements IHttpFn {
 		try {
 			httpasync = new HttpAsyncTask(this, mHttpHandler, mHttpClient, mHttpPost, bContainsHead);
 //			httpasync.execute();
-			httpasync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+			httpasync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		} catch (Exception e) {
 			return false;
 		}
@@ -186,7 +186,7 @@ public class Http implements IHttpFn {
 		try {
 			httpasync = new HttpAsyncTask(this, mHttpHandler, mHttpClient, mHttpPut, bContainsHead);
 //			httpasync.execute();
-			httpasync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+			httpasync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		} catch (Exception e) {
 			return false;
 		}
@@ -284,7 +284,7 @@ public class Http implements IHttpFn {
 		try {
 			httpasync = new HttpAsyncTask(this, mHttpHandler, mHttpClient, mHttpGet, bContainsHead);
 //			httpasync.execute();
-			httpasync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+			httpasync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		} catch (Exception e) {
 			return false;
 		}
@@ -309,7 +309,7 @@ public class Http implements IHttpFn {
 		try {
 			httpasync = new HttpAsyncTask(this, mHttpHandler, mHttpClient, mHttpDelete, bContainsHead);
 //			httpasync.execute();
-			httpasync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+			httpasync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		} catch (Exception e) {
 			return false;
 		}
@@ -342,7 +342,7 @@ public class Http implements IHttpFn {
 			mPostFileAsyncTask = new HttpAsyncTaskPostFile(this, mHttpHandler, uploadurl, filePath, bContainsHead,
 					mHeaders);
 //			mPostFileAsyncTask.execute();
-			mPostFileAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+			mPostFileAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		} catch (Exception e) {
 			return false;
 		}
