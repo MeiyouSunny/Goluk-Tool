@@ -39,6 +39,18 @@
             android:src="@drawable/mine_icon_lock"
             android:contentDescription="@string/imgdes"
             android:visibility="gone"/>
+        
+        <TextView
+            android:layout_width="26dp"
+            android:layout_height="15dp"
+            android:id="@+id/tv_videocategory_playback"
+            android:background="#0080ff"
+            android:textSize="9sp"
+            android:textColor="@color/white"
+            android:text="@string/str_play_back"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <TextView
