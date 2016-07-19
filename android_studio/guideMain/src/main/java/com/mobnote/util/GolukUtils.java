@@ -1254,11 +1254,12 @@ public class GolukUtils {
     public static void startPublishOrLookLiveActivity(Context mContext, boolean isLive, boolean isContinue, LiveSettingBean mSettingData, UserInfo userInfo){
         Intent intent = null;
         String activityNameStr = "";
-        if (GolukApplication.getInstance().isMainland()) {
-            activityNameStr = "com.mobnote.golukmain.livevideo.BaidumapLiveActivity";
-        } else {
-            activityNameStr = "com.mobnote.golukmain.livevideo.GooglemapLiveActivity";
-        }
+//        if (GolukApplication.getInstance().isMainland()) {
+//            activityNameStr = "com.mobnote.golukmain.livevideo.BaidumapLiveActivity";
+//        } else {
+//            activityNameStr = "com.mobnote.golukmain.livevideo.GooglemapLiveActivity";
+//        }
+        activityNameStr = "com.mobnote.golukmain.livevideo.LiveActivity";
         try {
             Class<?> c = Class.forName(activityNameStr);
             if(null != c){
