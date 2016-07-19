@@ -1,6 +1,5 @@
 package com.mobnote.golukmain.followed;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -67,22 +66,19 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
     private FollowedListAdapter mAdapter;
     private List<Object> mFollowedList;
     private RelativeLayout mEmptyRL;
-    private final static String PAGESIZE = "10";
+    private final static String PAGE_SIZE = "10";
     private String mTimeStamp = "";
     private String mCurMotion = REFRESH_NORMAL;
-    private TextView mRetryClickIV;
     private CustomLoadingDialog mLoadingDialog;
     private final static String PROTOCOL = "100";
     private SharePlatformUtil mSharePlatform = null;
     private int mCurrentIndex;
-    protected final static String FOLLOWD_EMPTY = "FOLLOWED_EMPTY";
+    protected final static String FOLLOWED_EMPTY = "FOLLOWED_EMPTY";
     private GolukApplication mApp;
-    private Button mLoginButton;
     private View mLoginRL;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         GolukDebugUtils.d(TAG, "onCreate");
         EventBus.getDefault().register(this);
@@ -91,28 +87,26 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreateView(inflater, container, savedInstanceState);
         GolukDebugUtils.d(TAG, "onCreateView");
-        View rootView = inflater.inflate(R.layout.fragment_followed_content_layout, null);
+        View rootView = inflater.inflate(R.layout.fragment_followed_content_layout, container, false);
         mEmptyRL = (RelativeLayout) rootView.findViewById(R.id.rl_follow_fragment_exception_refresh);
-        mRetryClickIV = (TextView) rootView.findViewById(R.id.iv_follow_fragment_exception_refresh);
+        TextView mRetryClickIV = (TextView) rootView.findViewById(R.id.iv_follow_fragment_exception_refresh);
         mListView = (PullToRefreshListView) rootView.findViewById(R.id.plv_follow_fragment);
-        mLoginButton = (Button) rootView.findViewById(R.id.btn_fragment_followed_content_to_login);
+        Button mLoginButton = (Button) rootView.findViewById(R.id.btn_fragment_followed_content_to_login);
         mLoginRL = rootView.findViewById(R.id.rl_follow_fragment_no_login);
 
         mLoginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = null;
-                if (GolukApplication.getInstance().isMainland() == false) {
+                Intent intent;
+                if (!GolukApplication.getInstance().isMainland()) {
                     intent = new Intent(FragmentFollowed.this.getActivity(), InternationUserLoginActivity.class);
                 } else {
                     intent = new Intent(FragmentFollowed.this.getActivity(), UserLoginActivity.class);
                 }
 
                 FragmentFollowed.this.getActivity().startActivity(intent);
-                return;
             }
         });
 
@@ -148,19 +142,17 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
             }
         });
 
-        mFollowedList = new ArrayList<Object>();
+        mFollowedList = new ArrayList<>();
         if (getActivity() instanceof MainActivity) {
             mSharePlatform = ((MainActivity) getActivity()).getSharePlatform();
         }
         mApp = GolukApplication.getInstance();
         if (null != mApp && mApp.isUserLoginSucess) {
             mLoginRL.setVisibility(View.GONE);
-//			mEmptyRL.setVisibility(View.GONE);
             mListView.setVisibility(View.VISIBLE);
             sendFollowedContentRequest(REFRESH_NORMAL, mTimeStamp);
         } else {
             mLoginRL.setVisibility(View.VISIBLE);
-//			mEmptyRL.setVisibility(View.GONE);
             mListView.setVisibility(View.GONE);
         }
 
@@ -169,7 +161,6 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 
     @Override
     public void onHiddenChanged(boolean hidden) {
-        // TODO Auto-generated method stub
         super.onHiddenChanged(hidden);
         GolukDebugUtils.d(TAG, "onHiddenChanged");
         if (!hidden) {
@@ -192,7 +183,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
                 new FollowedListRequest(IPageNotifyFn.PageType_FollowedContent, this);
         if (null != mApp && mApp.isUserLoginSucess) {
             if (!TextUtils.isEmpty(mApp.mCurrentUId)) {
-                request.get(PROTOCOL, mApp.mCurrentUId, PAGESIZE, tmpOp, timeStamp);
+                request.get(PROTOCOL, mApp.mCurrentUId, PAGE_SIZE, tmpOp, timeStamp);
             }
         }
 
@@ -278,51 +269,6 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onActivityCreated(savedInstanceState);
-        GolukDebugUtils.d(TAG, "onActivityCreated");
-    }
-
-    @Override
-    public void onDestroyView() {
-        GolukDebugUtils.d(TAG, "onDestroyView");
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onPause() {
-        GolukDebugUtils.d(TAG, "onPause");
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        GolukDebugUtils.d(TAG, "onResume");
-        super.onResume();
-    }
-
-    @Override
-    public void onStop() {
-        GolukDebugUtils.d(TAG, "onStop");
-        super.onStop();
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        // TODO Auto-generated method stub
-        GolukDebugUtils.d(TAG, "onAttach, context=" + activity);
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        // TODO Auto-generated method stub
-        GolukDebugUtils.d(TAG, "onDetach");
-        super.onDetach();
-    }
-
-    @Override
     public void onDestroy() {
         GolukDebugUtils.d(TAG, "onDestroy");
         if (mLoadingDialog != null) {
@@ -344,8 +290,8 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
         mApp.isUserLoginSucess = false;
         mApp.loginStatus = 2;
         mApp.autoLoginStatus = 3;
-        Intent loginIntent = null;
-        if (GolukApplication.getInstance().isMainland() == false) {
+        Intent loginIntent;
+        if (!GolukApplication.getInstance().isMainland()) {
             loginIntent = new Intent(getActivity(), InternationUserLoginActivity.class);
         } else {
             loginIntent = new Intent(getActivity(), UserLoginActivity.class);
@@ -355,7 +301,6 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 
     @Override
     public void onLoadComplete(int requestType, Object result) {
-        // TODO Auto-generated method stub
         mListView.onRefreshComplete();
         if (null != mLoadingDialog) {
             mLoadingDialog.close();
@@ -434,11 +379,11 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
                 return;
             }
 
-            List<Object> gotList = new ArrayList<Object>();
+            List<Object> gotList = new ArrayList<>();
             // Refill to common list
             if (0 == bean.data.count) {
                 if (followedBeanList.size() == 1) {
-                    gotList.add(new String(FOLLOWD_EMPTY));
+                    gotList.add(FOLLOWED_EMPTY);
                     FollowedListBean followBean = followedBeanList.get(0);
                     if ("1".equals(followBean.type)) {
                         List<FollowedRecomUserBean> userBeanList = followBean.recomuser;
@@ -452,8 +397,6 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
                             }
                         }
                     }
-                } else {
-                    // TODO: no recommend, no followed
                 }
                 mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
             } else {
@@ -487,12 +430,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
                 mFollowedList.clear();
                 mFollowedList.addAll(gotList);
                 mAdapter.setData(mFollowedList);
-            } else {
             }
-
-//			if(mOfficialMsgList.size() < PAGESIZE) {
-//				mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-//			}
             mCurMotion = REFRESH_NORMAL;
         } else if (requestType == IPageNotifyFn.PageType_Follow) {
             FollowRetBean bean = (FollowRetBean) result;
@@ -574,10 +512,8 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
             Object obj = mFollowedList.get(mCurrentIndex);
             if (obj instanceof FollowedVideoObjectBean) {
                 FollowedVideoObjectBean videoBean = (FollowedVideoObjectBean) obj;
-                String videoId = null != videoBean ? videoBean.video.videoid
-                        : "";
-                String username = null != videoBean ? videoBean.user.nickname
-                        : "";
+                String videoId = videoBean.video.videoid;
+                String username = videoBean.user.nickname;
                 describe = username + this.getString(R.string.str_colon) + describe;
 
 
@@ -620,7 +556,6 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
                             praisedBean.video.praisenumber = "0";
                         }
                     }
-                    ;
                 } else if ("7".equals(ret.result)) {
                     GolukUtils.showToast(getActivity(), getString(R.string.str_no_duplicated_praise));
                 } else {
@@ -679,8 +614,8 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
         mCurrentIndex = index;
     }
 
-    private int findLinkUserItem(String linkuid) {
-        if (null == mFollowedList || mFollowedList.size() == 0 || TextUtils.isEmpty(linkuid)) {
+    private int findLinkUserItem(String linkUid) {
+        if (null == mFollowedList || mFollowedList.size() == 0 || TextUtils.isEmpty(linkUid)) {
             return -1;
         }
 
@@ -690,7 +625,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
             if (null != obj && obj instanceof FollowedRecomUserBean) {
                 FollowedRecomUserBean bean = (FollowedRecomUserBean) obj;
                 if (!TextUtils.isEmpty(bean.uid)) {
-                    if (bean.uid.equals(linkuid)) {
+                    if (bean.uid.equals(linkUid)) {
                         return i;
                     }
                 }

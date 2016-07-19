@@ -255,6 +255,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
                 // 启动创建热点
                 autoConnWifi();
                 // 等待IPC连接时间
+
                 mBaseHandler.sendEmptyMessageDelayed(MSG_H_WIFICONN_TIME, 40 * 1000);
             }
         } else {
@@ -1058,7 +1059,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             }
         } else if (LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE == dialogType) {
             if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
-                GolukUtils.startLiveActivity(this, true, true, null, null);
+                GolukUtils.startPublishOrLookLiveActivity(this, true, true, null, null);
             } else if (LiveDialogManager.FUNCTION_DIALOG_CANCEL == function) {
                 if (mApp.mIPCControlManager.isT1Relative()) {
                     mApp.mIPCControlManager.stopLive();

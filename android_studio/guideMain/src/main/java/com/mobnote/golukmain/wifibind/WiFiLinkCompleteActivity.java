@@ -170,7 +170,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                 // 直接跳转下个界面
                 toWaitConnView();
                 // 开始创建手机热点
-                mBaseHandler.sendEmptyMessageDelayed(MSG_H_CREATE_HOT, 3 * 1000);
+                mBaseHandler.sendEmptyMessage(MSG_H_CREATE_HOT);
             }
         } else if (MSG_H_FREE_1 == msg.what) {
             freeLayout1();

@@ -45,7 +45,6 @@ import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.eventbus.EventPhotoUpdateLoginState;
 import com.mobnote.eventbus.EventUserLoginRet;
 import com.mobnote.golukmain.MainActivity;
-import com.mobnote.golukmain.PushSettingActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpinionActivity;
 import com.mobnote.golukmain.UserSetupActivity;
@@ -1109,9 +1108,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 //			}
 //			break;
 //		// APP升级+IPC升级检测
-            case PageType_CheckUpgrade:
-                mIpcUpdateManage.requestInfoCallback(success, param1, param2);
-                break;
+//            case PageType_CheckUpgrade:
+//                mIpcUpdateManage.requestInfoCallback(success, param1, param2);
+//                break;
             // ipc升级文件下载
             // case PageType_CommDownloadFile:
             // mIpcUpdateManage.downloadCallback(success, param1, param2);
@@ -2072,7 +2071,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         if (null == userInfo) {
             return;
         }
-        GolukUtils.startLiveActivity(mContext,false,false,null,userInfo);
+        GolukUtils.startPublishOrLookLiveActivity(mContext,false,false,null,userInfo);
     }
 
     private boolean isMainProcess() {

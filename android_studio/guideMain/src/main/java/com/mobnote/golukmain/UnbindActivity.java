@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventIPCCheckUpgradeResult;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
@@ -25,6 +26,7 @@ import org.json.JSONObject;
 
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 public class UnbindActivity extends BaseActivity implements OnClickListener, IPCManagerFn {
 
@@ -63,7 +65,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.unbind_layout);
-        // 获得GolukApplication对象
+        EventBus.getDefault().register(this);
         mApplication = (GolukApplication) getApplication();
         mApplication.setContext(this, TAG);
         if (mApplication.getIPCControlManager() != null) {
@@ -164,11 +166,19 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             if (canCheckServer) {
                 return;
             }
-            mTextVersion.setText(R.string.newest_firmware);
-            mUpdateLayout.setEnabled(false);
+            isNewest();
         }
     }
 
+    private void isNewest() {
+        mTextVersion.setText(R.string.newest_firmware);
+        mUpdateLayout.setEnabled(false);
+    }
+
+    private void installLater() {
+        mTextVersion.setText(R.string.str_update_find_new_first);
+        mUpdateLayout.setEnabled(true);
+    }
 
     @Override
     public void onClick(View arg0) {
@@ -202,6 +212,14 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 //                startActivity(intent);
                 GolukUtils.startUpdateActivity(UnbindActivity.this, 1, null, false);
             }
+        }
+    }
+
+    public void onEventMainThread(EventIPCCheckUpgradeResult event) {
+        if (event.ResultType == EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW) {
+            isNewest();
+        } else if (event.ResultType == EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_DELAY) {
+            installLater();
         }
     }
 
@@ -245,7 +263,6 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         }
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -260,6 +277,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         if (mApplication.getIPCControlManager() != null) {
             mApplication.getIPCControlManager().removeIPCManagerListener(TAG);
         }
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 

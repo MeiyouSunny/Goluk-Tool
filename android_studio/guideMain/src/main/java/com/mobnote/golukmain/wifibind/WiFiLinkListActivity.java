@@ -65,6 +65,14 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     private final String T1S_ShowName = " Goluk_T1S_xxxxxx ";
     private final String T2_ShowName = " Goluk_T2_xxxxxx ";
     private final String GOLUK_COMMON_SHOW_NAME = " Goluk_xx_xxxxxx ";
+    /**
+     * IPC默认要修改的密码
+     */
+    public static final String IPC_PWD_DEFAULT = "123456789";
+    /**
+     * 手机创建热点默认密码
+     */
+    public static final String MOBILE_HOT_PWD_DEFAULT = "123456789";
 
     /**
      * 未连接或连接失败

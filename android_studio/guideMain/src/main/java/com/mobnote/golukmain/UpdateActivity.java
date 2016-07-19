@@ -611,7 +611,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                     if (b) {
                         mApp.mIpcUpdateManage.showLoadingDialog();
                     } else {
-                        mApp.mIpcUpdateManage.dimissLoadingDialog();
+                        mApp.mIpcUpdateManage.dismissLoadingDialog();
                     }
                 }
             } else if (mSign == 1) {
@@ -656,7 +656,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
     public void downloadCallback(int state, Object param1, Object param2) {
         GolukDebugUtils.i("lily", "---UpdateActivity---------downloadCallback-----------state：" + state + "----param1："
                 + param1);
-        mApp.mIpcUpdateManage.dimissLoadingDialog();
+        mApp.mIpcUpdateManage.dismissLoadingDialog();
         mDownloadStatus = state;
         if (state == IpcUpdateManage.DOWNLOAD_STATUS) {
             int progress = (Integer) param1;
@@ -905,7 +905,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         super.onDestroy();
         timerCancel();
         if (mApp.mIpcUpdateManage != null) {
-            mApp.mIpcUpdateManage.dimissLoadingDialog();
+            mApp.mIpcUpdateManage.dismissLoadingDialog();
         }
 
         if (null != mPrepareDialog) {

@@ -14,6 +14,10 @@ public class LiveSettingBean implements Serializable {
 	/** 是否支持对讲 */
 	public boolean isCanTalk;
 	/** 是否支持视频声音 */
-	public boolean isCanVoice;
+	public boolean isEnableVoice;
+    /** 是否支持公开视频**/
+    public boolean isEnablePublic;
+    /** 是否保存回放**/
+    public boolean isEnableSaveReplay;
 	public String netCountStr;
 }
