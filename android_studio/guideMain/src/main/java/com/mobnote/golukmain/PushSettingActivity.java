@@ -1,6 +1,7 @@
 package com.mobnote.golukmain;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,7 +17,6 @@ import com.mobnote.golukmain.bean.SetPushSettingRequest;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
-import com.mobnote.golukmain.xdpush.SettingBean;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 
@@ -202,7 +202,7 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
                         psb.data == null
                         ||
                         !"0".equals(psb.data.result)) {
-                    GolukUtils.showToast(this, this.getResources().getString(R.string.str_getwificfg_fail));
+                    showToast(R.string.str_getwificfg_fail);
                     return;
                 }
                 if (!GolukUtils.isTokenValid(psb.data.result)) {
@@ -216,26 +216,30 @@ public class PushSettingActivity extends BaseActivity implements OnClickListener
                 setFollowState(psb.data.isfollow.equals("1"));
                 setCommentState(psb.data.iscomment.equals("1"));
                 setPariseState(psb.data.ispraise.equals("1"));
-                setFriendState(psb.data.isfriend.equals("1"));
+                if (TextUtils.isEmpty(psb.data.isfriend)) {
+                    setFriendState(true);
+                } else {
+                    setFriendState(psb.data.isfriend.equals("1"));
+                }
             } else {
-                GolukUtils.showToast(this, getResources().getString(R.string.network_error));
+                showToast(R.string.network_error);
             }
         } else if (requestType == IPageNotifyFn.PageType_SetPushCfg) {
             SetPushMsgSettingBean retBean = (SetPushMsgSettingBean) result;
             if (null == retBean || null == retBean.data) {
-                Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+                showToast(R.string.network_error);
                 finish();
                 return;
             }
 
             if (!GolukUtils.isTokenValid(retBean.data.result)) {
-                Toast.makeText(this, getString(R.string.invalid_token), Toast.LENGTH_SHORT).show();
+                showToast(R.string.invalid_token);
                 finish();
                 return;
             }
 
             if (!"0".equals(retBean.data.result)) {
-                Toast.makeText(this, getString(R.string.str_push_setting_save_fail), Toast.LENGTH_SHORT).show();
+                showToast(R.string.str_push_setting_save_fail);
                 finish();
                 return;
             }
