@@ -250,6 +250,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/fl_video_sur_layout"
         android:id="@+id/rl_ae_time_line_parent_wrapper"
+        android:clickable="true"
         android:layout_marginBottom="143dp" >
 
         <LinearLayout

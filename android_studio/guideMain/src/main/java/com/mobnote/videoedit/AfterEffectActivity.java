@@ -121,6 +121,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     private TextView mNextTV;
     AEMusicAdapter mAEMusicAdapter;
     private String mExportQuality;
+    private int mTimeLineLastX;
 
     /** 是否为静音 */
 //	private boolean mIsMute;
@@ -1090,10 +1091,24 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         mFullLoadingDialog = new CustomLoadingDialog(this, "");
         mFullLoadingDialog.setCancel(false);
         mTimeLineWrapperRL = findViewById(R.id.rl_ae_time_line_parent_wrapper);
-        mTimeLineWrapperRL.setOnClickListener(new View.OnClickListener() {
+
+        mTimeLineWrapperRL.setOnTouchListener(new OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                clearChunkFocus();
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_MOVE) {
+                    mAERecyclerView.scrollBy(mTimeLineLastX - (int)event.getX(), 0);
+                    mTimeLineLastX = (int)event.getX();
+                } else if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                    mTimeLineLastX = (int)event.getX();
+                    clearChunkFocus();
+                    mAfterEffect.playPause();
+                } else if(event.getAction() == MotionEvent.ACTION_UP) {
+                    mTimeLineLastX = 0;
+                } else {
+                    // Nothing needed here till now
+                }
+                // do not swallow this event
+                return false;
             }
         });
 
