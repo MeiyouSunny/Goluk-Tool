@@ -12,6 +12,7 @@ import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.live.LiveSettingBean;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 /**
  * 直播设置页面
@@ -145,6 +146,9 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
                 liveDescription = "";
             }
             mLiveSettingBean.desc = liveDescription;
+            //直播页面
+            ZhugeUtils.eventLive(this, this.getString(R.string.str_zhuge_live_ipc_page));
+
             GolukUtils.startPublishOrLookLiveActivity(this,true,false,mLiveSettingBean,null);
         }
     }

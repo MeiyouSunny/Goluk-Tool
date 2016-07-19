@@ -1682,6 +1682,7 @@ public abstract class AbstractLiveActivity extends BaseActivity implements View.
             bean.bitmap = mThumbBitmap;
             bean.realDesc = sinaTxt;
             bean.videoId = getShareVideoId();
+            bean.from = this.getString(R.string.str_zhuge_live_share_event);
             ProxyThirdShare sb = new ProxyThirdShare(AbstractLiveActivity.this, sharePlatform, bean);
             sb.showAtLocation(AbstractLiveActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
         }

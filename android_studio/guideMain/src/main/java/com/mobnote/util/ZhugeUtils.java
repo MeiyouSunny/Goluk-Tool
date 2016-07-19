@@ -870,7 +870,7 @@ public class ZhugeUtils {
     public static void eventLiveShare(Context context, String channel) {
         try {
             JSONObject json = new JSONObject();
-            json.put(context.getString(R.string.str_zhuge_share_video_channel), channel);
+            json.put(context.getString(R.string.str_zhuge_share_video_channel), getShareChannel(context, channel));
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_live_share_event), json);
         } catch (Exception e) {

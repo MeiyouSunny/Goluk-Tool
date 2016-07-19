@@ -2071,6 +2071,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         if (null == userInfo) {
             return;
         }
+        //直播页面
+        ZhugeUtils.eventLive(this, this.getString(R.string.str_zhuge_share_video_network_other));
+
         GolukUtils.startPublishOrLookLiveActivity(mContext,false,false,null,userInfo);
     }
 
