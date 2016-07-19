@@ -93,6 +93,7 @@ import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.SortByDate;
+import com.mobnote.util.ZhugeUtils;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 
@@ -918,6 +919,8 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     }
 
                     if (checkDownloadCompleteState()) {
+                        //未中止--视频自动同步
+                        ZhugeUtils.eventAutoSynchronizeVideo(mContext, mContext.getString(R.string.str_zhuge_synchronize_video_not), mDownLoadFileList.size());
                         autodownloadfile = false;
                         mDownLoadFileList.clear();
                         mNoDownLoadFileList.clear();
@@ -1848,6 +1851,10 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         autodownloadfile = false;
         mIPCControlManager.stopDownloadFile();
         if (mDownLoadFileList.size() > 0) {
+            if (mDownLoadFileList.size() >= mNoDownLoadFileList.size()) {
+                //中止同步--视频自动同步
+                ZhugeUtils.eventAutoSynchronizeVideo(mContext, mContext.getString(R.string.str_zhuge_synchronize_video_stop), (mDownLoadFileList.size() - mNoDownLoadFileList.size()));
+            }
             mDownLoadFileList.clear();
             mNoDownLoadFileList.clear();
             if (GlobalWindow.getInstance().isShow()) {

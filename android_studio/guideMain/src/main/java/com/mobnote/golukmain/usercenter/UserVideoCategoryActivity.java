@@ -14,6 +14,7 @@ import com.mobnote.golukmain.usercenter.bean.VideoList;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -242,6 +243,9 @@ public class UserVideoCategoryActivity extends BaseActivity implements OnClickLi
 		if (null != mAdapter) {
 			VideoList video = (VideoList) mAdapter.getItem(position);
 			if (null != video) {
+				//视频详情页访问
+				ZhugeUtils.eventVideoDetail(this, this.getString(R.string.str_zhuge_followed_from_usercenter));
+
 				Intent itVideoDetail = new Intent(this, VideoDetailActivity.class);
 				itVideoDetail.putExtra(VideoDetailActivity.VIDEO_ID, video.videoid);
 				startActivity(itVideoDetail);

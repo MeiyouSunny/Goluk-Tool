@@ -589,6 +589,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
                 shareBean.bitmap = null;
                 shareBean.realDesc = realDesc;
                 shareBean.videoId = videoId;
+                shareBean.from = getActivity().getString(R.string.str_zhuge_follow);
 
                 ProxyThirdShare shareBoard = new ProxyThirdShare(this.getActivity(), mSharePlatform, shareBean);
                 shareBoard.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
@@ -604,6 +605,8 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
             PraiseResultDataBean ret = prBean.data;
             if (null != ret && !TextUtils.isEmpty(ret.result)) {
                 if ("0".equals(ret.result)) {
+                    //关注页--视频点赞
+                    ZhugeUtils.eventPraiseVideo(getActivity(), getActivity().getString(R.string.str_zhuge_follow));
                     Object obj = mFollowedList.get(mCurrentIndex);
                     if (obj instanceof FollowedVideoObjectBean) {
                         FollowedVideoObjectBean praisedBean = (FollowedVideoObjectBean) obj;

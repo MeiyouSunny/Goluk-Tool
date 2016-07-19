@@ -380,6 +380,7 @@
     <string name="str_zhuge_video_detail">视频详情页面</string>
     <string name="str_zhuge_follow">关注页面</string>
     <string name="str_zhuge_action_tag">活动标签页面</string>
+    <string name="str_zhuge_share_instantly">即刻分享</string>
 
 <!-- ################### 视频分享 ###################### -->
     <!-- 事件 -->

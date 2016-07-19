@@ -6,6 +6,7 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.startshare.VideoEditActivity;
 import com.mobnote.golukmain.startshare.VideoShareActivity;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.ShareContent;
 import com.umeng.socialize.media.UMImage;
@@ -41,9 +42,11 @@ public abstract class AbsThirdShare implements IThirdShareFn {
 	protected String mShareType = "";
 	/** 视频文件的本地地址 **/
 	protected String filepath = "";
+	/** 分享来源 **/
+	protected String mFrom = "";
 
 	public AbsThirdShare(Activity activity, SharePlatformUtil spf, String surl, String curl, String db, String tl,
-			Bitmap bitmap, String realDesc, String videoId, String shareType, String filePath) {
+			Bitmap bitmap, String realDesc, String videoId, String shareType, String filePath, String from) {
 		this.mActivity = activity;
 		sharePlatform = spf;
 		shareurl = surl;
@@ -55,6 +58,7 @@ public abstract class AbsThirdShare implements IThirdShareFn {
 		mVideoId = videoId;
 		filepath = filePath;
 		this.mShareType = shareType;
+		this.mFrom = from;
 
 		if (TextUtils.isEmpty(mDescribe)) {
 			mDescribe = mActivity.getResources().getString(R.string.app_name);
@@ -153,6 +157,8 @@ public abstract class AbsThirdShare implements IThirdShareFn {
 		if (null == shareType) {
 			return null;
 		}
+		//分享视频
+		ZhugeUtils.eventShareVideo(mActivity, shareType, mFrom);
 		final String videoUrl = shareurl + "&type=" + shareType;
 		ShareContent sc = new ShareContent();
 		sc.mTitle = mTitle;

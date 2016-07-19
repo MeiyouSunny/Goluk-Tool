@@ -11,6 +11,7 @@ import com.mobnote.golukmain.live.ILive;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -212,6 +213,9 @@ public class FollowedListAdapter extends BaseAdapter {
             holderRec.nItemFirstVideoIV.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //视频详情页访问
+                    ZhugeUtils.eventVideoDetail(mFragment.getActivity(), mFragment.getActivity().getString(R.string.str_zhuge_follow));
+
                     GolukUtils.startVideoDetailActivity(mFragment.getActivity(), firstVideoId);
                 }
             });
@@ -219,6 +223,9 @@ public class FollowedListAdapter extends BaseAdapter {
             holderRec.nItemFirstVideoDesTV.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //视频详情页访问
+                    ZhugeUtils.eventVideoDetail(mFragment.getActivity(), mFragment.getActivity().getString(R.string.str_zhuge_follow));
+
                     GolukUtils.startVideoDetailActivity(mFragment.getActivity(), firstVideoId);
                 }
             });
@@ -236,6 +243,9 @@ public class FollowedListAdapter extends BaseAdapter {
                 holderRec.nItemSecondVideoIV.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //视频详情页访问
+                        ZhugeUtils.eventVideoDetail(mFragment.getActivity(), mFragment.getActivity().getString(R.string.str_zhuge_follow));
+
                         GolukUtils.startVideoDetailActivity(mFragment.getActivity(), secondVideoId);
                     }
                 });
@@ -243,6 +253,9 @@ public class FollowedListAdapter extends BaseAdapter {
                 holderRec.nItemSecondVideoDesTV.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        //视频详情页访问
+                        ZhugeUtils.eventVideoDetail(mFragment.getActivity(), mFragment.getActivity().getString(R.string.str_zhuge_follow));
+
                         GolukUtils.startVideoDetailActivity(mFragment.getActivity(), secondVideoId);
                     }
                 });

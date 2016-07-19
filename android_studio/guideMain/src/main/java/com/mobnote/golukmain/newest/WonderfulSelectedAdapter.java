@@ -366,6 +366,8 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
             if (null == accessId || accessId.trim().equals("")) {
                 return;
             } else {
+                //视频详情页访问
+                ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_share_video_network_other));
                 intent = new Intent(mContext, VideoDetailActivity.class);
                 intent.putExtra(VideoDetailActivity.VIDEO_ID, body.getAccess());
                 intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
@@ -426,6 +428,9 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
             if (null == accessId || accessId.trim().equals("")) {
                 return;
             } else {
+                //视频详情页访问
+                ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_share_video_network_other));
+
                 intent = new Intent(mContext, VideoDetailActivity.class);
                 // intent.putExtra("imageurl", body.getPicture());
                 intent.putExtra("ztid", body.getAccess());

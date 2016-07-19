@@ -13,6 +13,7 @@ import com.mobnote.golukmain.usercenter.UCUserInfo;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -123,6 +124,9 @@ public class SpecialListViewAdapter extends BaseAdapter {
 			holder.videoTitle.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					//视频详情页访问
+					ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_share_video_network_other));
+
 					startVideoDetailActivity(specialInfo);
 				}
 			});
@@ -144,6 +148,9 @@ public class SpecialListViewAdapter extends BaseAdapter {
 	}
 
 	private void startVideoDetailActivity(SpecialInfo specialInfo) {
+		//视频详情页访问
+		ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_share_video_network_other));
+
 		Intent intent = new Intent(mContext, VideoDetailActivity.class);
 		intent.putExtra("videoid", specialInfo.videoid);
 		mContext.startActivity(intent);

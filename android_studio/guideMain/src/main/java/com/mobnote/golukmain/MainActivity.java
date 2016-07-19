@@ -496,6 +496,8 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         String voteUrl = mStartAppBean.voteUrl;
 
         if ("1".equals(type)) {// 单视频
+            //视频详情页访问
+            ZhugeUtils.eventVideoDetail(this, this.getString(R.string.str_zhuge_share_video_network_other));
             Intent intent = new Intent(this, VideoDetailActivity.class);
             intent.putExtra(VideoDetailActivity.VIDEO_ID, id);
             intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);

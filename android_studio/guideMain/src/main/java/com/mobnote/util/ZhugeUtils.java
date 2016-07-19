@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
+import com.mobnote.golukmain.thirdshare.IThirdShareFn;
 import com.mobnote.golukmain.thirdshare.bean.SharePlatformBean;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
@@ -714,14 +715,6 @@ public class ZhugeUtils {
     }
 
     /**
-     * 相册页面-保存视频到系统相册
-     * @param context
-     */
-    public static void eventAlbumSaveVideo(Context context) {
-        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_album_save_video_event));
-    }
-
-    /**
      * 相册页面-批量下载到本地
      * @param context
      * @param type 视频类型  精彩/紧急/循环
@@ -841,10 +834,10 @@ public class ZhugeUtils {
      * @param channel 分享渠道
      * @param from 所在页面
      */
-    public static void eventPraiseVideo(Context context, String channel, String from) {
+    public static void eventShareVideo(Context context, String channel, String from) {
         try {
             JSONObject json = new JSONObject();
-            json.put(context.getString(R.string.str_zhuge_share_video_channel), channel);
+            json.put(context.getString(R.string.str_zhuge_share_video_channel), getShareChannel(context, channel));
             json.put(context.getString(R.string.str_zhuge_praise_video_page), from);
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_share_video_event), json);
@@ -1308,5 +1301,38 @@ public class ZhugeUtils {
         return str;
     }
 
+    /**
+     * 获取分享渠道
+     * @param context
+     * @param channel
+     * @return
+     */
+    private static String getShareChannel(Context context, String channel){
+        String str = "";
+        if (IThirdShareFn.TYPE_WEIXIN.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_weixin);
+        } else if (IThirdShareFn.TYPE_WEIBO_XINLANG.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_sina);
+        } else if (IThirdShareFn.TYPE_QQ.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_qq);
+        } else if (IThirdShareFn.TYPE_WEIXIN_CIRCLE.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_weixin_friends);
+        } else if (IThirdShareFn.TYPE_QQ_ZONE.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_qq_space);
+        } else if (IThirdShareFn.TYPE_FACEBOOK.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_facebook);
+        } else if (IThirdShareFn.TYPE_TWITTER.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_twitter);
+        } else if (IThirdShareFn.TYPE_INSTAGRAM.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_instagram);
+        } else if (IThirdShareFn.TYPE_WHATSAPP.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_whatsapp);
+        } else if (IThirdShareFn.TYPE_LINE.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_line);
+        } else {
+            str = context.getString(R.string.str_zhuge_share_video_channel_copy);
+        }
+        return str;
+    }
 
 }

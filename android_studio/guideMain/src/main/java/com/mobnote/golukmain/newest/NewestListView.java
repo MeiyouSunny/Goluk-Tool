@@ -414,6 +414,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 								bean.bitmap = null;
 								bean.realDesc = realDesc;
 								bean.videoId = videoId;
+								bean.from = mContext.getString(R.string.str_zhuge_newest_event);
 								ProxyThirdShare share = new ProxyThirdShare(vspa, sharePlatform, bean);
 								share.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 							}
@@ -538,6 +539,8 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 			PraiseResultDataBean ret = prBean.data;
 			if (null != ret && !TextUtils.isEmpty(ret.result)) {
 				if ("0".equals(ret.result)) {
+					//最新页面--视频点赞
+					ZhugeUtils.eventPraiseVideo(mContext, mContext.getString(R.string.str_zhuge_newest_event));
 					if (null != mVideoSquareInfo) {
 						if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
 							mVideoSquareInfo.mVideoEntity.ispraise = "1";

@@ -33,8 +33,8 @@ import java.io.File;
  * Created by leege100 on 16/5/18.
  */
 public class ThirdShareTool extends AbsThirdShare{
-    public ThirdShareTool(Activity activity, SharePlatformUtil spf, String surl, String curl, String db, String tl, Bitmap bitmap, String realDesc, String videoId, String shareType, String filePath) {
-        super(activity, spf, surl, curl, db, tl, bitmap, realDesc, videoId, shareType, filePath);
+    public ThirdShareTool(Activity activity, SharePlatformUtil spf, String surl, String curl, String db, String tl, Bitmap bitmap, String realDesc, String videoId, String shareType, String filePath, String from) {
+        super(activity, spf, surl, curl, db, tl, bitmap, realDesc, videoId, shareType, filePath, from);
         modifyUMDialog();
         initFacebook();
     }

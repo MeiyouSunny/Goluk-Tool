@@ -14,6 +14,7 @@ import com.mobnote.golukmain.newest.BannerSlideBody;
 import com.mobnote.golukmain.special.SpecialListActivity;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.util.GolukConfig;
+import com.mobnote.util.ZhugeUtils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -135,6 +136,9 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
                 if(null == accessId || accessId.trim().equals("")) {
                     return;
                 } else {
+                    //视频详情页访问
+                    ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_share_video_network_other));
+
                     intent = new Intent(mContext,VideoDetailActivity.class);
                     intent.putExtra(VideoDetailActivity.VIDEO_ID, tag.data.getAccess());
                     intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
@@ -194,6 +198,9 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
                 if(null == accessId || accessId.trim().equals("")) {
                     return;
                 } else {
+                    //视频详情页访问
+                    ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_share_video_network_other));
+
                     intent = new Intent(mContext, VideoDetailActivity.class);
                     intent.putExtra(VideoDetailActivity.TYPE, "Wonderful");
                     intent.putExtra("imageurl", tag.data.getPicture());

@@ -10,6 +10,7 @@ import com.mobnote.golukmain.usercenter.UCUserInfo;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -97,6 +98,9 @@ public class MyPraisedListAdapter extends BaseAdapter {
 		viewHolder.nCoverIV.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				//视频详情页访问
+				ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_share_video_network_other));
+
 				Intent intent = new Intent(mContext, VideoDetailActivity.class);
 				intent.putExtra(VideoDetailActivity.VIDEO_ID, videoID);
 				mContext.startActivity(intent);
@@ -158,6 +162,9 @@ public class MyPraisedListAdapter extends BaseAdapter {
 
 		@Override
 		public void onClick(View widget) {
+			//视频详情页访问
+			ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_share_video_network_other));
+
 			Intent intent = new Intent(mContext, VideoDetailActivity.class);
 			intent.putExtra(VideoDetailActivity.VIDEO_ID, nPraisedBean.videoid);
 			mContext.startActivity(intent);

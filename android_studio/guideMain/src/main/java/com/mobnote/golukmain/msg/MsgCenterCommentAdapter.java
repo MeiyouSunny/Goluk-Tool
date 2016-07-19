@@ -13,6 +13,7 @@ import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -194,6 +195,8 @@ public class MsgCenterCommentAdapter extends BaseAdapter {
 		} else {
 			if (null != bean && 101 == bean.type && null != bean.content) {
 				if ("1".equals(bean.content.type)) {
+					//视频详情页访问
+					ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_msg_center));
 					// 视频详情
 					Intent itVideoDetail = new Intent(mContext, VideoDetailActivity.class);
 					itVideoDetail.putExtra(VideoDetailActivity.VIDEO_ID, bean.content.access);
@@ -211,6 +214,8 @@ public class MsgCenterCommentAdapter extends BaseAdapter {
 					itCluster.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, "");
 					mContext.startActivity(itCluster);
 				} else if ("6".equals(bean.content.type)) {
+					//视频详情页访问
+					ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_msg_center));
 					// 精选单视频
 					Intent itWonderful = new Intent(mContext, VideoDetailActivity.class);
 					itWonderful.putExtra("ztid", bean.content.access);
