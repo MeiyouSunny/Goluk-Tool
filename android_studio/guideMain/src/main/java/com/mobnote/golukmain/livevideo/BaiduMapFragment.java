@@ -34,7 +34,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 /**
  * Created by leege100 on 2016/7/19.
  */
-public class BaiduMapLiveFragment extends AbstractLiveFragment implements BaiduMap.OnMapStatusChangeListener, BaiduMap.OnMapLoadedCallback {
+public class BaiduMapFragment extends AbstractLiveFragment implements BaiduMap.OnMapStatusChangeListener, BaiduMap.OnMapLoadedCallback {
 
     private MapView mMapView = null;
     private BaiduMap mBaiduMap = null;
