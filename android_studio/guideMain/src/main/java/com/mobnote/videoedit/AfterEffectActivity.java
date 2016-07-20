@@ -121,14 +121,9 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     private TextView mNextTV;
     AEMusicAdapter mAEMusicAdapter;
     private String mExportQuality;
-
-    /** 是否为静音 */
-//	private boolean mIsMute;
-    /** 当前音量 */
-//	private int mCurrVolumeProgress;
+    private int mTimeLineLastX;
 
     private final static String TAG = "AfterEffectActivity";
-//	private float mCurrentPlayPosition = 0f;
     private int mCurrentPointedItemIndex;
     float mPlayingChunkPosition = 0f;
 
@@ -137,10 +132,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     private CustomLoadingDialog mFullLoadingDialog;
     private int mTailWidth;
     private View mTimeLineWrapperRL;
-
-//	String mVideoPath1 = VideoEditConstant.VIDEO_PATH;
-    String mVideoPath;// = VideoEditConstant.VIDEO_PATH_1;
-//	String mMusicPath = VideoEditConstant.MUSIC_PATH;
+    String mVideoPath;
     private RingViewDialogFragment mExportingDialog;
     private AlertDialog.Builder mExportFailDialogBuilder;
     private AlertDialog mExportFailDialog;
@@ -165,8 +157,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     public final static int MSG_AE_MUSIC_FAILED = 1018;
     public final static int MSG_AE_MUSIC_STARTED = 1019;
 
-//	private boolean mIsPlaying;
-//	private boolean mIsPlayFinished;
     enum PlayerState {
         INITED,
         STOPPED,
@@ -842,20 +832,17 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         mAEVolumeLayout.setOnClickListener(this);
 
         mAEVolumeSeekBar.setMax(VideoEditConstant.VIDEO_VOLUME_MAX);
-//		mCurrVolumeProgress = 100;
-//		mAEVolumeSeekBar.setProgress(mCurrVolumeProgress);
         mAEVolumeSeekBar.setProgress(100);
 
         mAEVolumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
 
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
+
             }
 
             @Override
@@ -1090,10 +1077,24 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         mFullLoadingDialog = new CustomLoadingDialog(this, "");
         mFullLoadingDialog.setCancel(false);
         mTimeLineWrapperRL = findViewById(R.id.rl_ae_time_line_parent_wrapper);
-        mTimeLineWrapperRL.setOnClickListener(new View.OnClickListener() {
+
+        mTimeLineWrapperRL.setOnTouchListener(new OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                clearChunkFocus();
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_MOVE) {
+                    mAERecyclerView.scrollBy(mTimeLineLastX - (int)event.getX(), 0);
+                    mTimeLineLastX = (int)event.getX();
+                } else if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                    mTimeLineLastX = (int)event.getX();
+                    clearChunkFocus();
+                    mAfterEffect.playPause();
+                } else if(event.getAction() == MotionEvent.ACTION_UP) {
+                    mTimeLineLastX = 0;
+                } else {
+                    // Nothing needed here till now
+                }
+                // do not swallow this event
+                return false;
             }
         });
 
@@ -1176,15 +1177,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                 });
         mTransitionWidth = DeviceUtil.dp2px(this, VideoEditConstant.TRANSITION_COMMON_WIDTH);
         mTailWidth = DeviceUtil.dp2px(this, VideoEditConstant.VIDEO_TAIL_WIDTH);
-//        mAERecyclerView.setOnTouchListener(new OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                if(event.getAction() == MotionEvent.ACTION_MOVE) {
-//                    clearChunkFocus();
-//                }
-//                return false;
-//            }
-//        });
 
         mAERecyclerView.addOnScrollListener(new OnScrollListener() {
             @Override
@@ -1391,14 +1383,12 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 
     @Override
     public void onGeneratedThumbs(AfterEffect ae, Chunk chunk) {
-        // TODO Auto-generated method stub
         Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_BITMAP_READ_OUT, chunk);
         mAfterEffecthandler.sendMessage(msg);
     }
 
     @Override
     public void onGeneratedThumbsFailed(AfterEffect ae, Chunk chunk) {
-        // TODO Auto-generated method stub
         Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_BITMAP_READ_FAILED, chunk);
         mAfterEffecthandler.sendMessage(msg);
     }
@@ -1406,7 +1396,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     @Override
     public void onChunkAddedFinished(AfterEffect self, Project project,
                                      Chunk chunk) {
-        // TODO Auto-generated method stub
         Log.d(TAG, "onChunkAddedFinished");
         Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_CHUNK_ADD_FINISHED, chunk);
         mAfterEffecthandler.sendMessage(msg);
@@ -1415,7 +1404,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     @Override
     public void onChunkAddedFailed(AfterEffect self, Project project,
                                    String filePath) {
-        // TODO Auto-generated method stub
         Log.d(TAG, "onChunkAddedFinished");
         Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_CHUNK_ADD_FAILED);
         mAfterEffecthandler.sendMessage(msg);
@@ -1515,14 +1503,12 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 
     @Override
     public void onPlayPaused(AfterEffect afterEffect) {
-        // TODO Auto-generated method stub
         Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_PLAY_PAUSED, afterEffect);
         mAfterEffecthandler.sendMessage(msg);
     }
 
     @Override
     public void onPlayResume(AfterEffect afterEffect) {
-        // TODO Auto-generated method stub
         Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_PLAY_RESUMED, afterEffect);
         mAfterEffecthandler.sendMessage(msg);
     }
@@ -1588,5 +1574,22 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
     public void onReplayWithMusicFailed(AfterEffect afterEffect) {
         Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_MUSIC_FAILED);
         mAfterEffecthandler.sendMessage(msg);
+    }
+
+    public boolean needMusicMoreScroll(int index) {
+        if(-1 == index) {
+            return false;
+        }
+
+        int last = mAEMusicLayoutManager.findLastCompletelyVisibleItemPosition();
+        if(index >= last) {
+            return true;
+        }
+        return false;
+    }
+
+    public void moreMusicScroll() {
+        int first = mAEMusicLayoutManager.findFirstCompletelyVisibleItemPosition();
+        mAEMusicLayoutManager.scrollToPositionWithOffset(++first, 0);
     }
 }

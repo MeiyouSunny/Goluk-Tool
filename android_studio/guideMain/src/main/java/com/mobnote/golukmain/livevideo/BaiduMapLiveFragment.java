@@ -31,7 +31,10 @@ import com.mobnote.util.JsonUtil;
 import cn.com.mobnote.module.location.GolukPosition;
 import cn.com.tiros.debug.GolukDebugUtils;
 
-public class BaidumapLiveActivity extends AbstractLiveActivity implements BaiduMap.OnMapStatusChangeListener, BaiduMap.OnMapLoadedCallback {
+/**
+ * Created by leege100 on 2016/7/19.
+ */
+public class BaiduMapLiveFragment extends AbstractLiveFragment implements BaiduMap.OnMapStatusChangeListener, BaiduMap.OnMapLoadedCallback {
 
     private MapView mMapView = null;
     private BaiduMap mBaiduMap = null;
@@ -46,7 +49,7 @@ public class BaidumapLiveActivity extends AbstractLiveActivity implements BaiduM
         @Override
         public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
 
-            if (isLiveUploadTimeOut) {
+            if (mLiveActivity.isLiveUploadTimeOut) {
                 return;
             }
             if (bitmap != null) {
@@ -66,7 +69,7 @@ public class BaidumapLiveActivity extends AbstractLiveActivity implements BaiduM
         @Override
         public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
 
-            if (isLiveUploadTimeOut) {
+            if (mLiveActivity.isLiveUploadTimeOut) {
                 return;
             }
             if (bitmap != null) {
@@ -84,7 +87,7 @@ public class BaidumapLiveActivity extends AbstractLiveActivity implements BaiduM
 
     @Override
     public void LocationCallBack(String gpsJson) {
-        if (isLiveUploadTimeOut) {
+        if (mLiveActivity.isLiveUploadTimeOut) {
             // 不更新数据
             return;
         }
@@ -113,8 +116,8 @@ public class BaidumapLiveActivity extends AbstractLiveActivity implements BaiduM
      */
     private void drawPublisherMarker() {
 
-        if (null == mPublisher) {
-            GolukUtils.showToast(this, this.getString(R.string.str_live_cannot_get_coordinates));
+        if (null == mLiveActivity.mPublisher) {
+            GolukUtils.showToast(mLiveActivity, this.getString(R.string.str_live_cannot_get_coordinates));
             return;
         }
         if (null == mBaiduMap) {
@@ -122,13 +125,13 @@ public class BaidumapLiveActivity extends AbstractLiveActivity implements BaiduM
         }
 
         // 定义Maker坐标点
-        mPublisherLatLng = new LatLng(Double.parseDouble(mPublisher.lat), Double.parseDouble(mPublisher.lon));
+        mPublisherLatLng = new LatLng(Double.parseDouble(mLiveActivity.mPublisher.lat), Double.parseDouble(mLiveActivity.mPublisher.lon));
 
         if (mPublisherMarker == null) {
 
-            if (TextUtils.isEmpty(mPublisher.customavatar)) {
+            if (TextUtils.isEmpty(mLiveActivity.mPublisher.customavatar)) {
                 int utype = 1;
-                utype = Integer.valueOf(mPublisher.head);
+                utype = Integer.valueOf(mLiveActivity.mPublisher.head);
                 if (utype <= 0) {// 防止数组越界，且不能为第0个
                     utype = 1;
                 }
@@ -145,9 +148,9 @@ public class BaidumapLiveActivity extends AbstractLiveActivity implements BaiduM
                 mPublisherMarker = (Marker) mBaiduMap.addOverlay(markerOptions);
             } else {
                 Glide.with(this) // could be an issue!
-                        .load(mPublisher.customavatar)
+                        .load(mLiveActivity.mPublisher.customavatar)
                         .asBitmap()
-                        .transform(new GlideCircleTransform(this))
+                        .transform(new GlideCircleTransform(mLiveActivity))
                         .into(mPublisherTarget);
             }
 
@@ -172,7 +175,7 @@ public class BaidumapLiveActivity extends AbstractLiveActivity implements BaiduM
      */
     private void drawAudienceMarker(double lat, double lon) {
 
-        if (isShareLive) {
+        if (mLiveActivity.isShareLive) {
             return;
         }
         if (mBaiduMap == null) {
@@ -182,15 +185,15 @@ public class BaidumapLiveActivity extends AbstractLiveActivity implements BaiduM
         mCurrUserLatLng = new LatLng(lat, lon);
 
         if (GolukApplication.getInstance().isUserLoginSucess) {
-            if (null == myInfo) {
-                myInfo = mApp.getMyInfo();
+            if (null ==mLiveActivity. myInfo) {
+                mLiveActivity.myInfo = GolukApplication.getInstance().getMyInfo();
             }
 
             if (mCurrUserMarker == null) {
 
-                if (TextUtils.isEmpty(myInfo.customavatar)) {
+                if (TextUtils.isEmpty(mLiveActivity.myInfo.customavatar)) {
                     int utype = 1;
-                    utype = Integer.valueOf(myInfo.head);
+                    utype = Integer.valueOf(mLiveActivity.myInfo.head);
                     if (utype <= 0) {// 防止数组越界，且不能为第0个
                         utype = 1;
                     }
@@ -207,9 +210,9 @@ public class BaidumapLiveActivity extends AbstractLiveActivity implements BaiduM
                     mCurrUserMarker = (Marker) mBaiduMap.addOverlay(markerOptions);
                 } else {
                     Glide.with(this) // could be an issue!
-                            .load(myInfo.customavatar)
+                            .load(mLiveActivity.myInfo.customavatar)
                             .asBitmap()
-                            .transform(new GlideCircleTransform(this))
+                            .transform(new GlideCircleTransform(mLiveActivity))
                             .into(mCurrUserTarget);
                 }
 
@@ -242,12 +245,12 @@ public class BaidumapLiveActivity extends AbstractLiveActivity implements BaiduM
 
     @Override
     public void onMapStatusChangeFinish(MapStatus arg0) {
-        mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_MYLOCATION, 10 * 1000);
+        //mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_MYLOCATION, 10 * 1000);
     }
 
     @Override
     public void onMapStatusChangeStart(MapStatus arg0) {
-        mBaseHandler.removeMessages(MSG_H_TO_MYLOCATION);
+       // mBaseHandler.removeMessages(MSG_H_TO_MYLOCATION);
     }
 
     @Override
@@ -258,11 +261,11 @@ public class BaidumapLiveActivity extends AbstractLiveActivity implements BaiduM
     @Override
     public void initMap(Bundle bundle) {
         // TODO Auto-generated method stub
-        SDKInitializer.initialize(getApplicationContext());
+        SDKInitializer.initialize(mLiveActivity.getApplicationContext());
         BaiduMapOptions options = new BaiduMapOptions();
         options.rotateGesturesEnabled(false); // 不允许手势
         options.overlookingGesturesEnabled(false);
-        mMapView = new MapView(this, options);
+        mMapView = new MapView(mLiveActivity, options);
         mMapView.setClickable(true);
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
@@ -278,9 +281,9 @@ public class BaidumapLiveActivity extends AbstractLiveActivity implements BaiduM
         mBaiduMap.setOnMapStatusChangeListener(this);
         mBaiduMap.setOnMapLoadedCallback(this);
 
-        if(!isShareLive && mPublisher != null){
-            updatePublisherMarker(Double.valueOf(mPublisher.lat),Double.valueOf(mPublisher.lon));
-            LatLng ll = new LatLng(Double.valueOf(mPublisher.lat),Double.valueOf(mPublisher.lon));
+        if(!mLiveActivity.isShareLive && mLiveActivity.mPublisher != null){
+            updatePublisherMarker(Double.valueOf(mLiveActivity.mPublisher.lat),Double.valueOf(mLiveActivity.mPublisher.lon));
+            LatLng ll = new LatLng(Double.valueOf(mLiveActivity.mPublisher.lat),Double.valueOf(mLiveActivity.mPublisher.lon));
             MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
             mBaiduMap.animateMapStatus(u);
         }
@@ -294,3 +297,4 @@ public class BaidumapLiveActivity extends AbstractLiveActivity implements BaiduM
         mBaiduMap.animateMapStatus(u);
     }
 }
+

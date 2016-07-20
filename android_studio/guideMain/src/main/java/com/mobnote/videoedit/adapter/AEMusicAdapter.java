@@ -101,6 +101,9 @@ public class AEMusicAdapter extends RecyclerView.Adapter<ViewHolder> {
                 mItemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if(mActivity.needMusicMoreScroll(position)) {
+                            mActivity.moreMusicScroll();
+                        }
                         if (mCurrSelectedIndex != position) {
                             if(mCurrSelectedIndex != -1) {
                                 AEMusic preSeletedMusic = mAEMusicList.get(mCurrSelectedIndex);
