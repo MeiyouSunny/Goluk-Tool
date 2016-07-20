@@ -3,7 +3,6 @@
     android:id="@+id/layout_live_map"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@id/live_play_info_layout"
     android:layout_marginTop="0dp"
     android:background="#ededed">
 

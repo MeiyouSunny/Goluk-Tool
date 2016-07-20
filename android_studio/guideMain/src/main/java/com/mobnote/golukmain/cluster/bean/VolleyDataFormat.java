@@ -124,6 +124,7 @@ public class VolleyDataFormat {
 						mUserEntity.sex = user.sex;
 						mUserEntity.mCustomAvatar = user.customavatar;
 						mUserEntity.label = user.label;
+						mUserEntity.link = user.link;
 					}
 
 					long id = time + i;

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="#ffffff"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/comment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#f9f9f9"
+        android:orientation="vertical" >
+
+        <!-- 输入框 -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="#eaeaea"
+            android:focusable="true"
+            android:focusableInTouchMode="true" >
+
+            <LinearLayout
+                android:id="@+id/layout_like"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center" >
+
+                <Button
+                    android:id="@+id/like_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#00000000"
+                    android:drawableLeft="@drawable/videodetail_like"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="5dp"
+                    android:text="0"
+                    android:textColor="#888888"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/str_live_ok_praise_unit"
+                    android:textColor="#888888"
+                    android:layout_marginRight="5dp"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/emojicon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="7dp"
+                android:src="@drawable/input_state_emojo" />
+
+            <com.rockerhieu.emojicon.EmojiconEditText
+                android:id="@+id/comment_input"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="8dp"
+                android:layout_toLeftOf="@id/layout_like"
+                android:layout_toRightOf="@id/emojicon"
+                android:background="@drawable/videodetail_inputbox"
+                android:hint="@string/str_comment_input_hit"
+                android:maxLength="250"
+                android:paddingLeft="10dp"
+                android:textColor="#333333"
+                android:textColorHint="@color/user_hint_text_color"
+                android:textCursorDrawable="@drawable/cursor_color"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <!-- 表情输入 -->
+
+        <FrameLayout
+            android:id="@+id/emojiconsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:background="#f9f9f9"
+            android:visibility="gone" />
+    </LinearLayout>
+</RelativeLayout>

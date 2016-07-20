@@ -151,6 +151,7 @@ public class ClickNewestListener implements OnClickListener {
 		user.head = mVideoSquareInfo.mUserEntity.headportrait;
 		user.customavatar = mVideoSquareInfo.mUserEntity.mCustomAvatar;
 		user.mUserLabel = mVideoSquareInfo.mUserEntity.label;
+		user.link = mVideoSquareInfo.mUserEntity.link;
 
 		GolukUtils.startPublishOrLookLiveActivity(mContext,false,false,null,user);
 	}

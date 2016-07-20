@@ -396,6 +396,7 @@ public class JsonUtil {
             userInfo.followingnumber = getJsonIntValue(rootObj, "followingnumber", 0);
             userInfo.fansnumber = getJsonIntValue(rootObj, "fansnumber", 0);
             userInfo.newfansnumber = getJsonIntValue(rootObj, "newfansnumber", 0);
+            userInfo.link = getJsonIntValue(rootObj, "link", 0);
             // 解析 用户标签
             if (rootObj.has("label")) {
                 JSONObject labelObj = rootObj.getJSONObject("label");

@@ -19,6 +19,8 @@ public class UserEntity {
 	public String headportrait;
 	/** 性别 */
 	public String sex;
+	/** 关注关系*/
+	public int link;
 	/** 用户自定义头像,(头像服务器地址) */
 	public String mCustomAvatar;
 	/**用户认证信息 **/
