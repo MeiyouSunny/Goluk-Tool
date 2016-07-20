@@ -27,5 +27,7 @@ public class UserBean {
 	/**认证信息**/
 	@JSONField(name="label")
 	public UserLabelBean label;
-	
+
+	@JSONField(name="link")
+	public int link;
 }

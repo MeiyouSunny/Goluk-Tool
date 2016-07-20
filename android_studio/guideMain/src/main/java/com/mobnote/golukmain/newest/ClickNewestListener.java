@@ -151,6 +151,7 @@ public class ClickNewestListener implements OnClickListener {
 		user.head = mVideoSquareInfo.mUserEntity.headportrait;
 		user.customavatar = mVideoSquareInfo.mUserEntity.mCustomAvatar;
 		user.mUserLabel = mVideoSquareInfo.mUserEntity.label;
+		user.link = mVideoSquareInfo.mUserEntity.link;
 
 		//直播页面
 		ZhugeUtils.eventLive(mContext, mContext.getString(R.string.str_zhuge_newest_event));

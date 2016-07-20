@@ -55,5 +55,6 @@ public class UserInfo implements Serializable {
 	public int newfansnumber;
 	/**手机号**/
 	public String phone;
-
+    /** 关注状态*/
+    public int link;
 }

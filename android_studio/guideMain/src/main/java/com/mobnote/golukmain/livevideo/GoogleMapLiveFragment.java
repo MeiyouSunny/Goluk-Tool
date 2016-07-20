@@ -35,7 +35,7 @@ import cn.com.mobnote.module.location.GolukPosition;
 /**
  * Created by leege100 on 2016/7/19.
  */
-public class GoogleMapLiveFragment extends AbstractLiveFragment implements OnMapReadyCallback {
+public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implements OnMapReadyCallback {
     private MapView mMapView;
     private GoogleMap mGoogleMap;
 
