@@ -213,7 +213,7 @@ public class NewestAdapter extends BaseAdapter {
         // 举报监听
         holder.function.setOnClickListener(new ClickFunctionListener(mContext, mVideoSquareInfo, false, null));
         // 评论监听
-        holder.commentText.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
+        holder.commentText.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true, mContext.getString(R.string.str_zhuge_newest_event)));
         // 播放区域监听
         holder.videoImg.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo, mNewestListView, mPlayPage));
         holder.headimg.setOnClickListener(new ClickHeadListener(mContext, mVideoSquareInfo));
@@ -224,8 +224,8 @@ public class NewestAdapter extends BaseAdapter {
         // 评论总数监听
         List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
         if (comments.size() > 0) {
-            holder.totalcomments.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
-            holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
+            holder.totalcomments.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false, mContext.getString(R.string.str_zhuge_newest_event)));
+            holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false, mContext.getString(R.string.str_zhuge_newest_event)));
         }
 
         final VideoSquareInfo vsInfo = mVideoSquareInfo;
@@ -387,9 +387,9 @@ public class NewestAdapter extends BaseAdapter {
 
                     holder.totlaCommentLayout.setVisibility(View.VISIBLE);
                     holder.totalcomments
-                            .setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
+                            .setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false, mContext.getString(R.string.str_zhuge_newest_event)));
                     holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo,
-                            false));
+                            false, mContext.getString(R.string.str_zhuge_newest_event)));
                     holder.comment1.setVisibility(View.VISIBLE);
                     holder.comment2.setVisibility(View.VISIBLE);
                     holder.comment3.setVisibility(View.VISIBLE);

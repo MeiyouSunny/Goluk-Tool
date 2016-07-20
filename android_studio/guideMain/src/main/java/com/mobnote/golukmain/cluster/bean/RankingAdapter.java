@@ -26,6 +26,7 @@ import com.mobnote.user.UserUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import java.util.List;
 
@@ -90,6 +91,8 @@ public class RankingAdapter extends BaseAdapter{
             @Override
             public void onClick(View v) {
                 if(UserUtils.isNetDeviceAvailable(mContext)){
+                    //视频详情页访问
+                    ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_play_video_page_cluster));
                     Intent intent = new Intent(mContext,VideoDetailActivity.class);
                     intent.putExtra("videoid",video.video.videoid);
                     mContext.startActivity(intent);
@@ -103,6 +106,8 @@ public class RankingAdapter extends BaseAdapter{
             @Override
             public void onClick(View v) {
                 if(UserUtils.isNetDeviceAvailable(mContext)) {
+                    //视频详情页访问
+                    ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_play_video_page_cluster));
                     Intent intent = new Intent(mContext, VideoDetailActivity.class);
                     intent.putExtra("videoid", video.video.videoid);
                     mContext.startActivity(intent);

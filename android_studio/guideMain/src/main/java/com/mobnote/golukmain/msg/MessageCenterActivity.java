@@ -29,6 +29,7 @@ import com.mobnote.golukmain.msg.bean.MessageCounterBean;
 import com.mobnote.manager.MessageManager;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import de.greenrobot.event.EventBus;
 
@@ -69,6 +70,8 @@ public class MessageCenterActivity extends BaseActivity implements OnClickListen
 		mCommentRL.setOnClickListener(this);
 		mSystemRL.setOnClickListener(this);
 		mOfficialTV.setOnClickListener(this);
+
+		ZhugeUtils.eventMsgCenter(this);
 
 		mScrollView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 		if(GolukApplication.getInstance().isUserLoginSucess) {

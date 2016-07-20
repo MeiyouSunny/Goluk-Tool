@@ -19,6 +19,7 @@ import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SharedPrefUtil;
+import com.mobnote.util.ZhugeUtils;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
@@ -127,6 +128,8 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		mApplication.setContext(mContext, "UserLogin");
 
 		getInfo();
+
+		ZhugeUtils.eventLogin(this);
 	}
 
 	@Override
@@ -335,6 +338,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 					GolukUtils.showToast(this, getString(R.string.str_no_weixin));
 					return;
 				}
+				ZhugeUtils.eventWixinLogin(this);
 				String infoStr = GolukFileUtils.loadString(GolukFileUtils.THIRD_USER_INFO, "");
 				if (TextUtils.isEmpty(infoStr)) {
 					ThirdPlatformLoginUtil thirdPlatformLogin = new ThirdPlatformLoginUtil(this);

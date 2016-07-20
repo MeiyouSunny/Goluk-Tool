@@ -14,7 +14,6 @@ import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
-import com.mobnote.util.ZhugeUtils;
 import com.rd.car.player.RtspPlayerView;
 import com.rd.car.player.RtspPlayerView.RtspPlayerLisener;
 
@@ -159,9 +158,6 @@ public class AdasVerificationActivity extends BaseActivity implements OnClickLis
 				mCustomDialog.setLeftButton(this.getResources().getString(R.string.str_button_ok), new OnLeftClickListener() {
 					@Override
 					public void onClickListener() {
-						//IPC页面访问统计
-						ZhugeUtils.eventIpc(AdasVerificationActivity.this);
-
 						Intent it = new Intent(AdasVerificationActivity.this, CarRecorderActivity.class);
 						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

@@ -33,11 +33,14 @@
     <string name="str_zhuge_call_album_event">相册页面访问</string>
     <!--属性-->
     <string name="str_zhuge_call_album_source">访问来源</string>
+    <string name="str_zhuge_call_album_connect_ipc_state">IPC连接状态</string>
     <!--参数-->
     <string name="str_zhuge_call_album_source_ipc">IPC</string>
     <string name="str_zhuge_call_album_source_tabbar">Tabbar</string>
     <string name="str_zhuge_call_album_source_cluster">活动聚合页</string>
     <string name="str_zhuge_call_album_source_profit">我的收益</string>
+    <string name="str_zhuge_call_album_connect_ipc_state_true">已连接</string>
+    <string name="str_zhuge_call_album_connect_ipc_state_false">未连接</string>
 
 <!-- ################### 即刻分享页面访问 ###################### -->
     <!--事件-->
@@ -52,6 +55,11 @@
 <!-- ################### IPC页面访问 ###################### -->
     <!--事件-->
     <string name="str_zhuge_ipc_event">IPC页面访问</string>
+    <!--参数-->
+    <string name="str_zhuge_ipc_carrecorder">记录仪</string>
+    <string name="str_zhuge_ipc_carrecorder_connecting">记录仪-连接中</string>
+    <string name="str_zhuge_ipc_album">相册</string>
+    <string name="str_zhuge_ipc_album_connecting">相册-连接中</string>
 
 <!-- ################### 相册竖屏播放页面访问 ###################### -->
     <!--事件-->
@@ -101,7 +109,7 @@
 
 <!-- ################### 上传分享视频 ###################### -->
     <!--事件-->
-    <string name="str_zhuge_share_video_event">上传分享视频</string>
+    <string name="str_zhuge_upload_sharevideo_event">上传分享视频</string>
     <!--属性-->
     <string name="str_zhuge_share_video_type">视频类型</string>
     <string name="str_zhuge_share_video_quality">分享视频质量</string>
@@ -133,7 +141,7 @@
 
 <!-- ################### IPC发起直播 ###################### -->
     <!--事件-->
-    <string name="str_zhuge_live_event">IPC发起直播</string>
+    <string name="str_zhuge_start_live_event">IPC发起直播</string>
     <!--属性-->
     <string name="str_zhuge_live_time">时长</string>
     <string name="str_zhuge_live_state">发起状态</string>
@@ -218,5 +226,244 @@
     <string name="str_zhuge_ipc_hotspot_connect_type_manual">手动创建</string>
     <string name="str_zhuge_ipc_hotspot_connect_type_auto">自动创建</string>
 
+
+<!-- ################### 精选页面-轮播图点击 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_slide_view_event">精选页面-轮播图点击</string>
+    <!-- 属性 -->
+    <string name="str_zhuge_slide_view_order">轮播图顺序</string>
+    <!-- 参数 -->
+    <string name="str_zhuge_slide_view_page">第 %1$s 张</string>
+
+<!-- ################### 精选页面 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_wonderful_event">精选页面</string>
+
+<!-- ################### 精选页面-标签点击 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_wonderful_lable_event">精选页面-标签点击</string>
+    <!-- 属性 -->
+    <string name="str_zhuge_wonderful_lable_name">标签名称</string>
+    <!-- 参数 -->
+
+<!-- ################### 精选页面-下拉刷新 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_wonderful_pulltorefresh_event">精选页面-下拉刷新</string>
+
+<!-- ################### 精选页面-上拉加载 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_wonderful_pushtorefresh_event">精选页面-上拉加载</string>
+    <!-- 属性 -->
+    <string name="str_zhuge_pushtorefresh_depth">加载深度</string>
+    <!-- 参数 -->
+    <string name="str_zhuge_pushtorefresh_numbers">第 %1$s 次</string>
+
+<!-- ################### 最新页面 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_newest_event">最新页面</string>
+
+<!-- ################### 最新页面-上拉加载 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_newest_pushtorefresh_event">最新页面-上拉加载</string>
+
+<!-- ################### 最新页面-分类页面 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_newest_sort_event">最新页面-分类页面</string>
+    <!-- 属性 -->
+    <string name="str_zhuge_newest_sort_name">分类</string>
+
+<!-- ################### IPC页面-精彩抓拍 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_ipc_snap_event">IPC页面-精彩抓拍</string>
+
+<!-- ################### IPC页面-设置 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_ipc_settings_event">IPC页面-设置</string>
+
+<!-- ################### IPC-记录仪点击 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_ipc_carrecorder_event">IPC-记录仪点击</string>
+
+<!-- ################### IPC-待连接页面 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_ipc_wait_connect_event">IPC-待连接页面</string>
+
+<!-- ################### IPC-连接中页面 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_ipc_connecting_event">IPC-连接中页面</string>
+    <!-- 属性 -->
+    <!--<string name="str_zhuge_ipc_connecting_style">连接方式</string>
+    &lt;!&ndash; 参数 &ndash;&gt;
+    <string name="str_zhuge_ipc_connecting_hot_spot">热点连接</string>
+    <string name="str_zhuge_ipc_connecting_unidirectional">单向连接</string>-->
+
+<!-- ################### IPC-连接失败页面 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_ipc_connect_fail_event">IPC-连接失败页面</string>
+
+<!-- ################### IPC-连接失败页面-仅Wi-fi连接 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_ipc_connect_fail_wifi_event">IPC-连接失败页面-仅Wi-fi连接</string>
+
+<!-- ################### IPC-连接成功 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_ipc_connect_success_event">IPC-连接成功</string>
+
+<!-- ################### 相册页面-连接记录仪 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_ablum_to_connect_ipc_event">相册页面-连接记录仪</string>
+
+<!-- ################### 相册详情页面 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_album_detail_event">相册详情页面</string>
+    <!-- 属性 -->
+    <string name="str_zhuge_album_detail_style">页面类型</string>
+
+<!-- ################### 相册页面-批量删除视频 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_album_batch_delete_video_event">相册页面-批量删除视频</string>
+
+<!-- ################### 相册页面-保存视频到系统相册 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_album_save_video_event">相册页面-保存视频到系统相册</string>
+
+<!-- ################### 相册页面-批量下载到本地 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_album_batch_download_video_event">相册页面-批量下载到本地</string>
+
+<!-- ################### 相册详情页面-删除视频 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_album_delete_single_video_event">相册详情页面-删除视频</string>
+
+<!-- ################### 相册详情页面-下载到本地 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_album_download_single_video_event">相册详情页面-下载到本地</string>
+
+<!-- ################### 视频自动同步 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_synchronize_video_event">视频自动同步</string>
+    <!-- 属性 -->
+    <string name="str_zhuge_synchronize_video_whether_stop">是否中止同步</string>
+    <string name="str_zhuge_synchronize_video_number">同步视频数量</string>
+    <!-- 参数 -->
+    <string name="str_zhuge_synchronize_video_stop">中止同步</string>
+    <string name="str_zhuge_synchronize_video_not">未中止</string>
+
+<!-- ################### 视频制作页面-删除 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_edit_delete_video_event">视频制作页面-删除</string>
+
+<!-- ################### 视频制作页面-裁剪 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_edit_cut_video_event">视频制作页面-裁剪</string>
+
+<!-- ################### 视频制作页面-添加音乐 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_edit_video_add_music_event">视频制作页面-添加音乐</string>
+
+<!-- ################### 视频详细页面 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_video_detail_event">视频详细页面</string>
+    <!-- 参数 -->
+    <string name="str_zhuge_msg_center">消息中心</string>
+
+<!-- ################### 视频评论 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_comment_video_event">视频评论</string>
+
+<!-- ################### 视频点赞 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_praise_video_event">视频点赞</string>
+    <!-- 属性 -->
+    <string name="str_zhuge_praise_video_page">所在页面</string>
+    <!--参数-->
+    <string name="str_zhuge_video_detail">视频详情页面</string>
+    <string name="str_zhuge_follow">关注页面</string>
+    <string name="str_zhuge_action_tag">活动标签页面</string>
+    <string name="str_zhuge_share_instantly">即刻分享</string>
+
+<!-- ################### 视频分享 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_share_video_event">视频分享</string>
+
+<!-- ################### 直播页面 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_live_event">直播页面</string>
+    <!--属性-->
+    <string name="str_zhuge_live_ipc_page">IPC页面</string>
+
+<!-- ################### 直播分享 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_live_share_event">直播分享</string>
+
+<!-- ################### 注册页面 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_regist_event">注册页面</string>
+
+<!-- ################### 短信验证页面 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_sms_code_event">短信验证页面</string>
+    <!--属性-->
+    <string name="str_zhuge_from">来源</string>
+    <!--参数-->
+    <string name="str_zhuge_sms_code_from_regist">手机注册</string>
+    <string name="str_zhuge_sms_code_from_forget_pwd">忘记密码</string>
+
+<!-- ################### 注册成功 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_regist_success_event">注册成功</string>
+
+<!-- ################### 登录页面 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_login_event">登录页面</string>
+
+<!-- ################### 微信登录 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_wxin_login_event">微信登录</string>
+
+<!-- ################### 登录成功 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_login_success_event">登录成功</string>
+    <!--属性-->
+    <string name="str_zhuge_login_type">属性</string>
+    <!--参数-->
+    <string name="str_zhuge_login_style_phone">手机登录</string>
+    <string name="str_zhuge_change_pwd_success">修改密码成功</string>
+
+<!-- ################### 搜索页面 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_search_event">搜索页面</string>
+    <!--属性-->
+    <string name="str_zhuge_search_key_words">搜索关键词</string>
+    <string name="str_zhuge_search_result">搜索结果</string>
+
+<!-- ################### 消息中心页面 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_msg_center_event">消息中心页面</string>
+
+<!-- ################### 消息中心-赞页面 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_msg_center_praise_event">消息中心-赞页面</string>
+
+<!-- ################### 消息中心-回复/评论页面 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_msg_center_comment_event">消息中心-回复/评论页面</string>
+
+<!-- ################### 摄像头管理页面 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_ipc_manage_event">摄像头管理页面</string>
+
+<!-- ################### 固件升级页面 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_ipc_update_event">固件升级页面</string>
+
+<!-- ################### 固件升级弹窗 ###################### -->
+    <!-- 事件 -->
+    <string name="str_zhuge_ipc_update_dialog_event">固件升级弹窗</string>
+    <!--属性-->
+    <string name="str_zhuge_ipc_update_dialog_operate">升级操作</string>
+    <!--参数-->
+    <string name="str_zhuge_ipc_update_dialog_operate_ignore">忽略</string>
+    <string name="str_zhuge_ipc_update_dialog_operate_download">下载</string>
 
 </resources>

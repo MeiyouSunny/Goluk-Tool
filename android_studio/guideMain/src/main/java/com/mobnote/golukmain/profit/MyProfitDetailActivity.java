@@ -14,6 +14,7 @@ import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -269,6 +270,9 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		if(null != mAdapter) {
 			ProfitDetailResult income = (ProfitDetailResult) mAdapter.getItem(position-1);
 			if(null != income && !"".equals(income.vid) && 100 != income.type) {
+				//视频详情页访问
+				ZhugeUtils.eventVideoDetail(this, this.getString(R.string.str_zhuge_share_video_network_other));
+
 				Intent itVideoDetail = new Intent(MyProfitDetailActivity.this, VideoDetailActivity.class);
 				itVideoDetail.putExtra(VideoDetailActivity.VIDEO_ID, income.vid);
 				startActivity(itVideoDetail);

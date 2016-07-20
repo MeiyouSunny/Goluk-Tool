@@ -6,14 +6,18 @@ import android.widget.ImageButton;
 
 import com.mobnote.eventbus.EventFinishWifiActivity;
 import com.mobnote.golukmain.R;
+import com.mobnote.util.ZhugeUtils;
 
 /**
  * 获取Wifi扫描列表，单向链接
  */
 public class WiFiLinkNoHotspotActivity extends WiFiLinkListActivity implements View.OnClickListener {
     public static final String AUTO_START_CONNECT = "AutoStart";
+    public static final String INTENT_ACTION_RETURN_MAIN_ALBUM = "returnToAlbum";
 
     private boolean mAutoStart;
+
+    private boolean mReturnToMainAlbum;
 
     @Override
     protected int getContentViewResourceId() {
@@ -30,6 +34,7 @@ public class WiFiLinkNoHotspotActivity extends WiFiLinkListActivity implements V
         btnClose.setOnClickListener(this);
 
         mAutoStart = getIntent().getBooleanExtra(AUTO_START_CONNECT, true);
+        mReturnToMainAlbum = getIntent().getBooleanExtra(INTENT_ACTION_RETURN_MAIN_ALBUM, false);
     }
 
 
@@ -41,6 +46,8 @@ public class WiFiLinkNoHotspotActivity extends WiFiLinkListActivity implements V
             mApp.setEnableSingleWifi(false);
             toNextView();
         } else if (v.getId() == R.id.btn_only_connect_goluk_wifi) {
+            //IPC-连接失败页面-点击仅Wi-fi连接按钮
+            ZhugeUtils.eventConnectFailWifi(this, mReturnToMainAlbum);
             mApp.setEnableSingleWifi(true);
             doConnect();
         }
@@ -68,6 +75,8 @@ public class WiFiLinkNoHotspotActivity extends WiFiLinkListActivity implements V
     @Override
     protected void onResume() {
         super.onResume();
+        //IPC-连接失败
+        ZhugeUtils.eventConnectFail(this, mReturnToMainAlbum);
     }
 
 

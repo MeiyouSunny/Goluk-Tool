@@ -7,6 +7,7 @@ import com.mobnote.golukmain.special.ClusterListActivity;
 import com.mobnote.golukmain.special.SpecialListActivity;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.util.GolukConfig;
+import com.mobnote.util.ZhugeUtils;
 
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
@@ -69,6 +70,8 @@ public class ClickWonderfulSelectedListener implements OnTouchListener {
 //			intent.putExtra("ztid", mJXListItemDataInfo.ztid);
 //			intent.putExtra("title", mJXListItemDataInfo.ztitle);
 		} else if ("3".equals(mJXListItemDataInfo.ztype)) {// 单视频
+			//视频详情页访问
+			ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_wonderful_event));
 			intent = new Intent(mContext, VideoDetailActivity.class);
 			intent.putExtra(VideoDetailActivity.TYPE, "Wonderful");
 			intent.putExtra("ztid", mJXListItemDataInfo.ztid);

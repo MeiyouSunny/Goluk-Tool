@@ -1263,6 +1263,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
                     bean.mCommentTime = GolukUtils.getCurrentCommentTime();
                     if (!"".equals(bean.result)) {
                         if ("0".equals(bean.result)) {// 成功
+                            //评论视频
+                            ZhugeUtils.eventCommentVideo(this);
                             removeFooterView();
                             this.mAdapter.addFirstData(bean);
                             mVideoJson.data.avideo.video.comment.comcount = String.valueOf(Integer
@@ -1320,6 +1322,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
                             shareBean.bitmap = bitmap;
                             shareBean.realDesc = realDesc;
                             shareBean.videoId = mVideoJson.data.avideo.video.videoid;
+                            shareBean.from = this.getString(R.string.str_zhuge_video_detail);
 
                             ProxyThirdShare shareBoard = new ProxyThirdShare(this, sharePlatform, shareBean);
                             shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
@@ -1340,6 +1343,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
                 PraiseResultDataBean ret = praiseResultBean.data;
                 if (null != ret && !TextUtils.isEmpty(ret.result)) {
                     if ("0".equals(ret.result)) {
+                        //详情页--视频点赞
+                        ZhugeUtils.eventPraiseVideo(this, this.getString(R.string.str_zhuge_video_detail));
                         EventBus.getDefault().post(
                                 new EventPraiseStatusChanged(EventConfig.PRAISE_STATUS_CHANGE, mVideoId, true));
                     } else if ("7".equals(ret.result)) {

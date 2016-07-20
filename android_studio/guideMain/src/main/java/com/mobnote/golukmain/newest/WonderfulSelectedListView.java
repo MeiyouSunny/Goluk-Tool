@@ -19,6 +19,7 @@ import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SharedPrefUtil;
+import com.mobnote.util.ZhugeUtils;
 
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
@@ -72,6 +73,9 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	private TextView mRefresh = null;
 	
 	private AlphaAnimation mHideAnimation = null;
+
+	/** 上拉加载次数 **/
+	private int mPushCount = 0;
 
 	public WonderfulSelectedListView(Context context) {
 		mContext = context;
@@ -242,6 +246,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 		mRTPullListView.setonRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
+				ZhugeUtils.eventWonderfulPull(mContext);
 				historyDate = SettingUtils.getInstance().getString("hotHistoryDate", sdf.format(new Date()));
 				SettingUtils.getInstance().putString("hotHistoryDate", sdf.format(new Date()));
 				httpPost(false, "0", "");
@@ -276,6 +281,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 								mRTPullListView.addFooterView(mBottomLoadingView);
 							}
 
+							ZhugeUtils.eventWonderfulPush(mContext, (++mPushCount));
 							httpPost(false, mDataList.get(mDataList.size() - 1).jxid, "");
 						}
 					}

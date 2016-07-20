@@ -11,6 +11,7 @@ import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -169,6 +170,8 @@ public class MsgCenterPraiseAdapter extends BaseAdapter {
 			}
 		} else {
 			if (null != bean && null != bean.content) {
+				//视频详情页访问
+				ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_msg_center));
 				Intent itVideoDetail = new Intent(mContext, VideoDetailActivity.class);
 				itVideoDetail.putExtra(VideoDetailActivity.VIDEO_ID, bean.content.access);
 				mContext.startActivity(itVideoDetail);

@@ -14,6 +14,7 @@ import com.mobnote.golukmain.usercenter.UCUserInfo;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -136,6 +137,8 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 					// do nothing
 					Log.d(TAG, "pure picture clicked");
 				} else if (VIDEO_DETAIL.equals(type)) {
+					//视频详情页访问
+					ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_msg_center));
 					// launch video detail
 					intent = new Intent(mContext, VideoDetailActivity.class);
 					intent.putExtra(VideoDetailActivity.VIDEO_ID, accessId);
@@ -190,6 +193,9 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 						mContext.startActivity(intent);
 					}
 				} else if (SPECIAL_SOLO.equals(type)) {
+					//视频详情页访问
+					ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_msg_center));
+
 					intent = new Intent(mContext, VideoDetailActivity.class);
 					intent.putExtra(VideoDetailActivity.TYPE, "Wonderful");
 					intent.putExtra("ztid", accessId);

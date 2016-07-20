@@ -32,6 +32,7 @@ import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
 import com.mobnote.golukmain.videosuqare.ZhugeParameterFn;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -77,6 +78,8 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 	private RelativeLayout shareBg = null;
 	private long zXRequestId = 0;
 	private long typeVideoRequestId = 0;
+	/** 上拉加载的次数 **/
+	private int mPushCount = 0;
 
 	public NewestListView(Context context) {
 		mContext = context;
@@ -250,6 +253,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 			}
 		});
 
+
 		mRTPullListView.setOnRTScrollListener(new OnRTScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
@@ -265,6 +269,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 										R.layout.video_square_below_loading, null);
 								mRTPullListView.addFooterView(mBottomLoadingView);
 							}
+							ZhugeUtils.eventNewestlPush(mContext, (++mPushCount));
 							httpPost(false, "2", mDataList.get(mDataList.size() - 1).mVideoEntity.sharingtime);
 						}
 					}
@@ -409,6 +414,7 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 								bean.bitmap = null;
 								bean.realDesc = realDesc;
 								bean.videoId = videoId;
+								bean.from = mContext.getString(R.string.str_zhuge_newest_event);
 								ProxyThirdShare share = new ProxyThirdShare(vspa, sharePlatform, bean);
 								share.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 							}
@@ -533,6 +539,8 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 			PraiseResultDataBean ret = prBean.data;
 			if (null != ret && !TextUtils.isEmpty(ret.result)) {
 				if ("0".equals(ret.result)) {
+					//最新页面--视频点赞
+					ZhugeUtils.eventPraiseVideo(mContext, mContext.getString(R.string.str_zhuge_newest_event));
 					if (null != mVideoSquareInfo) {
 						if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
 							mVideoSquareInfo.mVideoEntity.ispraise = "1";

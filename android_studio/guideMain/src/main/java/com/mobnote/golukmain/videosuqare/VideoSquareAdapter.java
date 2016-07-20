@@ -2,6 +2,7 @@ package com.mobnote.golukmain.videosuqare;
 
 import com.mobnote.golukmain.newest.NewestListView;
 import com.mobnote.golukmain.newest.WonderfulSelectedListView;
+import com.mobnote.util.ZhugeUtils;
 
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Context;
@@ -33,6 +34,7 @@ public class VideoSquareAdapter extends PagerAdapter {
 		if (0 == position) {
 			mWonderfulSelectedListView = new WonderfulSelectedListView(mContext);
 			container.addView(mWonderfulSelectedListView.getView());
+			ZhugeUtils.eventWonderfulPage(mContext);
 			return mWonderfulSelectedListView.getView();
 		} else {
 			mNewestListView = new NewestListView(mContext);

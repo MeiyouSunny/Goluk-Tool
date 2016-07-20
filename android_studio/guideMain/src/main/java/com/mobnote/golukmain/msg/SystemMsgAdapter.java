@@ -15,6 +15,7 @@ import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
@@ -190,6 +191,9 @@ public class SystemMsgAdapter extends BaseAdapter {
 								i.putExtra("title", "");
 								mContext.startActivity(i);
 							}else if (selectDsp.equals(mmbTxt.content.type)) {//单视频
+								//视频详情页访问
+								ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_msg_center));
+
 								String specialid = mmbTxt.content.access;
 								Intent i = new Intent(mContext, VideoDetailActivity.class);
 								i.putExtra(VideoDetailActivity.TYPE, "Wonderful");
@@ -279,6 +283,9 @@ public class SystemMsgAdapter extends BaseAdapter {
 				public void onClick(View arg0) {
 
 					if (GolukUtils.isNetworkConnected(mContext)) {
+						//视频详情页访问
+						ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_msg_center));
+
 						System.out.println("woqunimeide" + mmbImg.content.access);
 						Intent intent = new Intent(mContext, VideoDetailActivity.class);
 						intent.putExtra("videoid", mmbImg.content.access);

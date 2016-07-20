@@ -377,8 +377,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         mTabHost.getTabWidget().getChildTabViewAt(2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //IPC页面访问统计
-                ZhugeUtils.eventIpc(MainActivity.this);
+                ZhugeUtils.eventIpcCarrecorder(MainActivity.this);
 
                 connectGoluk(false);
             }
@@ -498,6 +497,8 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         String voteUrl = mStartAppBean.voteUrl;
 
         if ("1".equals(type)) {// 单视频
+            //视频详情页访问
+            ZhugeUtils.eventVideoDetail(this, this.getString(R.string.str_zhuge_share_video_network_other));
             Intent intent = new Intent(this, VideoDetailActivity.class);
             intent.putExtra(VideoDetailActivity.VIDEO_ID, id);
             intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
@@ -1058,6 +1059,9 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             }
         } else if (LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE == dialogType) {
             if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
+                //直播页面
+                ZhugeUtils.eventLive(this, this.getString(R.string.str_zhuge_share_video_network_other));
+
                 GolukUtils.startPublishOrLookLiveActivity(this, true, true, null, null);
             } else if (LiveDialogManager.FUNCTION_DIALOG_CANCEL == function) {
                 if (mApp.mIPCControlManager.isT1Relative()) {

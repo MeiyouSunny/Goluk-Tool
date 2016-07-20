@@ -36,8 +36,8 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
 	private PopupWindow mPopWindow = null;
 
 	public AbroadThirdShare(Activity activity, SharePlatformUtil spf, String surl, String curl, String db, String tl,
-			Bitmap bitmap, String realDesc, String videoId, String shareType, String filepath) {
-		super(activity, spf, surl, curl, db, tl, bitmap, realDesc, videoId, shareType, filepath);
+			Bitmap bitmap, String realDesc, String videoId, String shareType, String filepath, String from) {
+		super(activity, spf, surl, curl, db, tl, bitmap, realDesc, videoId, shareType, filepath, from);
 		initView();
 		modifyUMDialog();
 		initFacebook();

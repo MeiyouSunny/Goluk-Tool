@@ -703,7 +703,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 				false, (ClusterActivity) mContext)
 				.setConfirm(true));
 		// 评论监听
-		holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true));
+		holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true, mContext.getString(R.string.str_zhuge_play_video_page_cluster)));
 		// 播放区域监听
 		holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo, null, ZHUGE_PLAY_VIDEO_PAGE_CLUSTER));
 		// 点赞
@@ -711,8 +711,8 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 		// 评论总数监听
 		List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
 		if (comments.size() > 0) {
-			holder.totalcomments.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
-			holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false));
+			holder.totalcomments.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false, mContext.getString(R.string.str_zhuge_play_video_page_cluster)));
+			holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false, mContext.getString(R.string.str_zhuge_play_video_page_cluster)));
 		}
 	}
 

@@ -82,6 +82,7 @@ public class NewUserCenterAdapter extends BaseAdapter {
 			viewHolder.mCommentCountText = (TextView) convertView.findViewById(R.id.tv_videocategory_item_comment);
 			viewHolder.mLookCountText = (TextView) convertView.findViewById(R.id.tv_videocategory_item_look);
 			viewHolder.mLockImage = (ImageView) convertView.findViewById(R.id.iv_videocategory_item_lock);
+			viewHolder.mVideoType = (TextView) convertView.findViewById(R.id.tv_videocategory_playback);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
@@ -103,6 +104,11 @@ public class NewUserCenterAdapter extends BaseAdapter {
 					}
 				}
 			}
+			if (videos.type == 1) {
+				viewHolder.mVideoType.setVisibility(View.VISIBLE);
+			} else {
+				viewHolder.mVideoType.setVisibility(View.GONE);
+			}
 		}
 
 		return convertView;
@@ -115,6 +121,7 @@ public class NewUserCenterAdapter extends BaseAdapter {
 		TextView mCommentCountText;
 		TextView mLookCountText;
 		ImageView mLockImage;
+		TextView mVideoType;
 	}
 
 }

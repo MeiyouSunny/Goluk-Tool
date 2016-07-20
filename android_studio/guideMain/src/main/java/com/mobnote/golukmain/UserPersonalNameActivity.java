@@ -11,6 +11,7 @@ import com.mobnote.golukmain.userlogin.UpNameResult;
 import com.mobnote.golukmain.userlogin.UpdUserNameBeanRequest;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.content.Intent;
 import android.graphics.Color;

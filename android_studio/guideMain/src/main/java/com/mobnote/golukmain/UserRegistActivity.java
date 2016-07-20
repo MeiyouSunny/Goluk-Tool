@@ -8,6 +8,7 @@ import com.mobnote.user.UserIdentifyInterface;
 import com.mobnote.user.UserProtocolClickableSpan;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -109,6 +110,8 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 		super.onResume();
 
 		mApplication.setContext(mContext, "UserRegist");
+
+		ZhugeUtils.eventRegist(this);
 	}
 
 	public void initView() {
