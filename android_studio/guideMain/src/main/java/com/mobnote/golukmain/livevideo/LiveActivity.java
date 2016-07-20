@@ -321,7 +321,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     private boolean initMapViewFragment() {
         String activityNameStr = "";
         if (GolukApplication.getInstance().isMainland()) {
-            activityNameStr = "com.mobnote.golukmain.livevideo.BaiduMapFragment";
+            activityNameStr = "com.mobnote.golukmain.livevideo.BaiduMapLiveFragment";
         } else {
             activityNameStr = "com.mobnote.golukmain.livevideo.GoogleMapLiveFragment";
         }
