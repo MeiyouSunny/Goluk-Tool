@@ -311,6 +311,8 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
                     .zoom(9)                   // Sets the zoom
                     .build();
             mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }else{
+            toMyLocation();
         }
     }
 

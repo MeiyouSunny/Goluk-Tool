@@ -286,6 +286,8 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
             LatLng ll = new LatLng(Double.valueOf(mLiveActivity.mPublisher.lat),Double.valueOf(mLiveActivity.mPublisher.lon));
             MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
             mBaiduMap.animateMapStatus(u);
+        }else{
+            toMyLocation();
         }
     }
 

@@ -162,7 +162,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
                 bannerHolder = new ViewHolderBanner();
                 bannerHolder.mBannerSlide = (SlideShowView) convertView.findViewById(R.id.ssv_wonderful_banner);
                 LinearLayout.LayoutParams mPreLoadingParams = new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, height);
+                        ViewGroup.LayoutParams.MATCH_PARENT, /*height*/(int) ((float) width / 2.67f));
                 bannerHolder.mBannerSlide.setLayoutParams(mPreLoadingParams);
                 bannerHolder.mTextBanner1 = (TextView) convertView.findViewById(R.id.tv_text_banner1);
                 bannerHolder.mTextBanner2 = (TextView) convertView.findViewById(R.id.tv_text_banner2);

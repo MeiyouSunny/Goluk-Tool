@@ -405,23 +405,33 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             e.printStackTrace();
             return true;
         }
+        getSupportFragmentManager().beginTransaction().add(R.id.fl_more, mLiveMapViewFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.fl_more, mLiveCommentFragment).commit();
         return false;
     }
 
     private boolean resetTabAndFragment() {
 
         if(mCurrTab == TAB_COMMENT){
-            if(!mLiveMapViewFragment.isAdded()) {
-                getSupportFragmentManager().beginTransaction().add(R.id.fl_more, mLiveCommentFragment).commit();
-            }else{
-                getSupportFragmentManager().beginTransaction().replace(R.id.fl_more, mLiveCommentFragment).commit();
-            }
+//            if(!mLiveMapViewFragment.isAdded()) {
+//                getSupportFragmentManager().beginTransaction().add(R.id.fl_more, mLiveCommentFragment).commit();
+//            }else{
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fl_more, mLiveCommentFragment).commit();
+//            }
+            getSupportFragmentManager().beginTransaction().show(mLiveCommentFragment).commit();
+            getSupportFragmentManager().beginTransaction().hide(mLiveMapViewFragment).commit();
+            mCommentTabTv.setTextColor(Color.parseColor("#0080ff"));
+            mMapTabTv.setTextColor(Color.parseColor("#707070"));
         }else if(mCurrTab == TAB_MAP){
-            if(!mLiveCommentFragment.isAdded()) {
-                getSupportFragmentManager().beginTransaction().add(R.id.fl_more, mLiveMapViewFragment).commit();
-            }else{
-                getSupportFragmentManager().beginTransaction().replace(R.id.fl_more, mLiveMapViewFragment).commit();
-            }
+//            if(!mLiveCommentFragment.isAdded()) {
+//                getSupportFragmentManager().beginTransaction().add(R.id.fl_more, mLiveMapViewFragment).commit();
+//            }else{
+//                getSupportFragmentManager().beginTransaction().replace(R.id.fl_more, mLiveMapViewFragment).commit();
+//            }
+            getSupportFragmentManager().beginTransaction().hide(mLiveCommentFragment).commit();
+            getSupportFragmentManager().beginTransaction().show(mLiveMapViewFragment).commit();
+            mMapTabTv.setTextColor(Color.parseColor("#0080ff"));
+            mCommentTabTv.setTextColor(Color.parseColor("#707070"));
         }
 
         return false;
@@ -1233,17 +1243,15 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             click_Like();
         } else if (id == R.id.ll_tab_comment){
             if(mCurrTab == TAB_COMMENT){
-                mCurrTab = TAB_MAP;
-            }else{
-                mCurrTab = TAB_COMMENT;
+                return;
             }
+            mCurrTab = TAB_COMMENT;
             resetTabAndFragment();
         } else if (id == R.id.ll_tab_map){
-            if(mCurrTab == TAB_COMMENT){
-                mCurrTab = TAB_MAP;
-            }else{
-                mCurrTab = TAB_COMMENT;
+            if(mCurrTab == TAB_MAP){
+                return;
             }
+            mCurrTab = TAB_MAP;
             resetTabAndFragment();
         }
     }
