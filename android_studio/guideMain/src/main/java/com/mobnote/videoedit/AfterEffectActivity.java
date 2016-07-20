@@ -419,7 +419,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         mGLSurfaceView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 playOrPause();
             }
         });
@@ -905,13 +904,15 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         ProjectItemBean itemBean = mProjectItemList.get(index);
         if(itemBean instanceof ChunkBean) {
             ChunkBean chunkBean = (ChunkBean)itemBean;
-            mAEVolumeSeekBar.setProgress(chunkBean.curVolume);
-            if(chunkBean.curVolume == 0) {
+
+            if(chunkBean.isMute) {
                 mAEVolumeSettingIv.setImageDrawable(
                         getResources().getDrawable(R.drawable.ic_ae_volume_closed));
+                mAEVolumeSeekBar.setProgress(0);
             } else {
                 mAEVolumeSettingIv.setImageDrawable(
                         getResources().getDrawable(R.drawable.ic_ae_volume_checked));
+                mAEVolumeSeekBar.setProgress(chunkBean.curVolume);
             }
         }
     }
@@ -926,17 +927,23 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         if(itemBean instanceof ChunkBean) {
             ChunkBean chunkBean = (ChunkBean)itemBean;
 
-            if(chunkBean.curVolume == 0) {
-                chunkBean.curVolume = 100;
+            if(chunkBean.isMute) {
+                chunkBean.isMute = false;
                 mAEVolumeSettingIv.setImageDrawable(
                         getResources().getDrawable(R.drawable.ic_ae_volume_checked));
             } else {
-                chunkBean.curVolume = 0;
+                chunkBean.isMute = true;
                 mAEVolumeSettingIv.setImageDrawable(
                         getResources().getDrawable(R.drawable.ic_ae_volume_closed));
             }
-            mAEVolumeSeekBar.setProgress(chunkBean.curVolume);
-            setChunkVolume(index, chunkBean.curVolume);
+
+            if(chunkBean.isMute) {
+                mAEVolumeSeekBar.setProgress(0);
+                setChunkVolume(index, 0);
+            } else {
+                mAEVolumeSeekBar.setProgress(chunkBean.curVolume);
+                setChunkVolume(index, chunkBean.curVolume);
+            }
         }
     }
 
