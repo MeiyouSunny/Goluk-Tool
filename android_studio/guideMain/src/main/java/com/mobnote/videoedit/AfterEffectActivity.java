@@ -1604,4 +1604,21 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         Message msg = mAfterEffecthandler.obtainMessage(MSG_AE_MUSIC_FAILED);
         mAfterEffecthandler.sendMessage(msg);
     }
+
+    public boolean needMusicMoreScroll(int index) {
+        if(-1 == index) {
+            return false;
+        }
+
+        int last = mAEMusicLayoutManager.findLastCompletelyVisibleItemPosition();
+        if(index >= last) {
+            return true;
+        }
+        return false;
+    }
+
+    public void moreMusicScroll() {
+        int first = mAEMusicLayoutManager.findFirstCompletelyVisibleItemPosition();
+        mAEMusicLayoutManager.scrollToPositionWithOffset(++first, 0);
+    }
 }
