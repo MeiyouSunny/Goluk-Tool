@@ -301,7 +301,7 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
             view.setTag(R.id.tag_slideshow_item, new ImageViewTag(i, /*imageUrls.get(i))*/mBannerDataList.get(i)));
             if (i == 0)//给一个默认图
                 view.setBackgroundResource(R.drawable.album_default_img);
-            view.setScaleType(ScaleType.FIT_XY);
+            view.setScaleType(ScaleType.CENTER_CROP);
             imageViewsList.add(view);
             view.setOnClickListener(this);
 
