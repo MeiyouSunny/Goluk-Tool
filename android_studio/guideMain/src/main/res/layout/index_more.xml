@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/user_login_bg"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:background="#f5242629" >
+        android:background="#f5242629">
 
         <TextView
             android:layout_width="wrap_content"
@@ -24,12 +24,12 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none" >
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <View
                 android:id="@+id/user_personal_solid_1"
@@ -46,7 +46,7 @@
                 android:background="#f4f4f4"
                 android:gravity="center"
                 android:paddingLeft="14dp"
-                android:paddingRight="14dp" >
+                android:paddingRight="14dp">
 
                 <ImageView
                     android:id="@+id/user_center_head"
@@ -72,7 +72,7 @@
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="5dp"
                     android:layout_toRightOf="@id/user_center_head"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/user_center_name_text"
@@ -100,7 +100,7 @@
                     android:contentDescription="@string/app_name"
                     android:src="@drawable/editor_arrow" />
             </RelativeLayout>
-            
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
@@ -113,7 +113,7 @@
                 android:background="#f4f4f4"
                 android:baselineAligned="false"
                 android:gravity="center_vertical"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/user_share"
@@ -121,15 +121,15 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/user_share_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@string/zero"
                         android:textColor="@color/user_login_text"
-                        android:textSize="14sp"
-                        android:text="@string/zero"/>
+                        android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -145,15 +145,15 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/user_follow_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@string/zero"
                         android:textColor="@color/user_login_text"
-                        android:textSize="14sp"
-                        android:text="@string/zero" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -169,7 +169,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -179,16 +179,16 @@
                             android:id="@+id/user_fans_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="@string/zero"
                             android:textColor="@color/user_login_text"
-                            android:textSize="14sp"
-                            android:text="@string/zero" />
+                            android:textSize="14sp" />
 
                         <ImageView
                             android:id="@+id/iv_new_fans"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="2dp"
                             android:layout_centerVertical="true"
+                            android:layout_marginLeft="2dp"
                             android:layout_toRightOf="@id/user_fans_count"
                             android:contentDescription="@string/imgdes"
                             android:src="@drawable/icon_new_fans"
@@ -225,7 +225,7 @@
                 android:layout_height="40dp"
                 android:background="#f4f4f4"
                 android:paddingLeft="14dp"
-                android:paddingRight="14dp" >
+                android:paddingRight="14dp">
 
                 <TextView
                     android:id="@+id/tv_my_message"
@@ -394,6 +394,36 @@
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
                 android:background="@drawable/solid" />
+
+            <LinearLayout
+                android:id="@+id/ll_advanced_setting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/txt_advanced_setting"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="#f4f4f4"
+                    android:drawableLeft="@drawable/my_skill_icon"
+                    android:drawablePadding="10dp"
+                    android:drawableRight="@drawable/editor_arrow"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="14dp"
+                    android:text="高级配置"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
+                <!-- 安装指导 -->
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:background="@drawable/solid" />
+
+            </LinearLayout>
             <!-- 极路客小技巧 -->
 
             <View
@@ -402,6 +432,7 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/solid" />
+
 
             <TextView
                 android:id="@+id/skill_item"

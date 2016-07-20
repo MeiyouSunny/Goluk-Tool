@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_ipcbind_bg"
+    android:orientation="vertical"
+    tools:context=".specialsetting.SpecialSettingActivity">
+
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_title_height"
+        android:background="@color/photoalbum_title_bg_color">
+
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/connect_back_btn_btn"
+            android:contentDescription="@string/imgdes" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/sepcial_setting_for_ssss"
+            android:textColor="#fff"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:text="@string/special_desc"
+        android:textColor="@color/color_input_count" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/photoalbum_line_color" />
+
+    <RelativeLayout
+        android:id="@+id/rl_special_setting_band_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <TextView
+            android:id="@+id/tv_special_setting_band_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/band"
+            android:textColor="#3f3f3f"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/iv_special_setting_band_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/editor_arrow" />
+
+        <ImageView
+            android:id="@+id/iv_special_setting_brand"
+            android:layout_width="@dimen/mainactivity_bottom_height"
+            android:layout_height="@dimen/mainactivity_bottom_height"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_toLeftOf="@+id/iv_special_setting_band_right"
+            android:contentDescription="@string/app_name" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:background="@color/photoalbum_line_color" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/photoalbum_line_color" />
+
+    <RelativeLayout
+        android:id="@+id/rl_special_setting_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <TextView
+            android:id="@+id/tv_special_setting_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/ssss_name"
+            android:textColor="#3f3f3f"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/edt_special_setting_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/tv_special_setting_name"
+            android:background="@null"
+            android:gravity="right"
+            android:hint="@string/input_ssss_name"
+            android:singleLine="true"
+            android:textColor="#3f3f3f"
+            android:maxLength="10"
+            android:textColorHint="@color/user_hint_text_color"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:background="@color/photoalbum_line_color" />
+
+    <Button
+        android:id="@+id/btn_special_setting_save"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:background="@drawable/ipcbind_btn_finish"
+        android:text="@string/save"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+</LinearLayout>
