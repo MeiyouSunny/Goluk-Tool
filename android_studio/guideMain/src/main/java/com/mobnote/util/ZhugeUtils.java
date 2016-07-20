@@ -8,10 +8,14 @@ import android.text.TextUtils;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
+import com.mobnote.golukmain.thirdshare.IThirdShareFn;
 import com.mobnote.golukmain.thirdshare.bean.SharePlatformBean;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
 import org.json.JSONObject;
+
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * Created by lily on 16-6-1.
@@ -141,15 +145,15 @@ public class ZhugeUtils {
 
     /**
      * 相册页面访问
-     *
      * @param context
      * @param source
-     * @return
      */
     public static void eventCallAlbum(Context context, String source) {
         try {
             JSONObject json = new JSONObject();
             json.put(context.getString(R.string.str_zhuge_call_album_source), source);
+            json.put(context.getString(R.string.str_zhuge_call_album_connect_ipc_state), getIsBind(context));
+
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_call_album_event), json);
         } catch (Exception e) {
             e.printStackTrace();
@@ -381,7 +385,7 @@ public class ZhugeUtils {
             json.put(context.getString(R.string.str_zhuge_share_video_action), getAction(context, action));
             json.put(context.getString(R.string.str_zhuge_share_video_state), state);
 
-            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_share_video_event), json);
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_upload_sharevideo_event), json);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -421,7 +425,7 @@ public class ZhugeUtils {
             json.put(context.getString(R.string.str_zhuge_live_state), state);
             json.put(context.getString(R.string.str_zhuge_live_voice), getLiveVoice(context, voice));
 
-            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_live_event), json);
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_start_live_event), json);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -458,6 +462,577 @@ public class ZhugeUtils {
             json.put(context.getString(R.string.str_zhuge_followed_from), from);
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_followed_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 精选页面
+     * @param context
+     */
+    public static void eventWonderfulPage(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_wonderful_event));
+    }
+
+    /**
+     * 精选页面-轮播图点击
+     * @param context
+     * @param page
+     */
+    public static void eventSlideView(Context context, int page) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_slide_view_order), context.getString(R.string.str_zhuge_slide_view_page, page));
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_slide_view_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 精选页面-标签点击
+     * @param context
+     * @param lableName
+     */
+    public static void eventBannerText(Context context, String lableName) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_wonderful_lable_name), lableName);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_wonderful_lable_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 精选页面-下拉刷新
+     * @param context
+     */
+    public static void eventWonderfulPull(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_wonderful_pulltorefresh_event));
+    }
+
+    /**
+     * 精选页面-上拉加载
+     * @param context
+     * @param number
+     */
+    public static void eventWonderfulPush(Context context, int number) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_pushtorefresh_depth), context.getString(R.string.str_zhuge_pushtorefresh_numbers, number));
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_wonderful_pushtorefresh_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 最新页面
+     * @param context
+     */
+    public static void eventNewestPage(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_newest_event));
+    }
+
+    /**
+     * 最新页面-上拉加载
+     * @param context
+     * @param number
+     */
+    public static void eventNewestlPush(Context context, int number) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_pushtorefresh_depth), context.getString(R.string.str_zhuge_pushtorefresh_numbers, number));
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_newest_pushtorefresh_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 最新页面-分类页面
+     * @param context
+     */
+    public static void eventNewestSort(Context context, String name) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_newest_sort_name), name);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_newest_sort_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * IPC页面-精彩抓拍
+     * @param context
+     */
+    public static void eventIpcSnap(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_ipc_snap_event));
+    }
+
+    /**
+     * IPC页面-设置
+     * @param context
+     */
+    public static void eventIpcSettings(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_ipc_settings_event));
+    }
+
+    /**
+     * IPC-记录仪点击
+     * @param context
+     */
+    public static void eventIpcCarrecorder(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_ipc_carrecorder_event));
+    }
+
+    /**
+     * IPC-待连接页面
+     * @param context
+     * @param from
+     */
+    public static void eventWaitConnect(Context context, boolean from) {
+        try {
+            JSONObject json = new JSONObject();
+            String str = "";
+            if (from) {
+                str = context.getString(R.string.str_zhuge_ipc_album);
+            } else {
+                str = context.getString(R.string.str_zhuge_ipc_carrecorder);
+            }
+            json.put(context.getString(R.string.str_zhuge_call_album_source), str);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_ipc_wait_connect_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * IPC-连接中页面
+     * @param context
+     * @param from
+     */
+    public static void eventConnecting(Context context, boolean from) {
+        try {
+            JSONObject json = new JSONObject();
+            String str = "";
+            if (from) {
+                str = context.getString(R.string.str_zhuge_ipc_album);
+            } else {
+                str = context.getString(R.string.str_zhuge_ipc_carrecorder);
+            }
+            json.put(context.getString(R.string.str_zhuge_call_album_source), str);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_ipc_connecting_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * IPC-连接失败页面
+     * @param context
+     * @param from
+     */
+    public static void eventConnectFail(Context context, boolean from) {
+        try {
+            JSONObject json = new JSONObject();
+            String str = "";
+            if (from) {
+                str = context.getString(R.string.str_zhuge_ipc_album);
+            } else {
+                str = context.getString(R.string.str_zhuge_ipc_carrecorder);
+            }
+            json.put(context.getString(R.string.str_zhuge_call_album_source), str);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_ipc_connect_fail_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * IPC-连接失败页面-仅Wi-fi连接
+     * @param context
+     * @param from
+     */
+    public static void eventConnectFailWifi(Context context, boolean from) {
+        try {
+            JSONObject json = new JSONObject();
+            String str = "";
+            if (from) {
+                str = context.getString(R.string.str_zhuge_ipc_album);
+            } else {
+                str = context.getString(R.string.str_zhuge_ipc_carrecorder);
+            }
+            json.put(context.getString(R.string.str_zhuge_call_album_source), str);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_ipc_connect_fail_wifi_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * IPC-连接成功
+     * @param context
+     */
+    public static void eventConnectSuccess(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_ipc_connect_success_event));
+    }
+
+    /**
+     * 相册页面-连接记录仪
+     * @param context
+     */
+    public static void eventAlbumClickToConnectIPC(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_ablum_to_connect_ipc_event));
+    }
+
+    /**
+     * 相册页面-批量删除视频
+     * @param context
+     * @param type 页面类型  本地/精彩/紧急/循环
+     */
+    public static void eventAlbumBatchDelete(Context context, int type) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_album_detail_style), getAlbumType(context, type));
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_album_batch_delete_video_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 相册页面-批量下载到本地
+     * @param context
+     * @param type 视频类型  精彩/紧急/循环
+     */
+    public static void eventAlbumBatchDownload(Context context, int type) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_share_video_type), getAlbumType(context, type));
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_album_batch_download_video_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 相册详情页面-删除视频
+     * @param context
+     */
+    public static void eventAlbumDeleteVideo(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_album_delete_single_video_event));
+    }
+
+    /**
+     * 相册详情页面-下载到本地
+     * @param context
+     */
+    public static void eventAlbumDownloadVideo(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_album_download_single_video_event));
+    }
+
+    /**
+     * 视频自动同步
+     * @param context
+     * @param isStop  是否中止同步
+     * @param number  同步视频数量
+     */
+    public static void eventAutoSynchronizeVideo(Context context, String isStop, int number) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_synchronize_video_whether_stop), isStop);
+            json.put(context.getString(R.string.str_zhuge_synchronize_video_number), number);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_synchronize_video_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 视频制作页面-删除
+     * @param context
+     */
+    public static void eventEditVideoDelete(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_edit_delete_video_event));
+    }
+
+    /**
+     * 视频制作页面-裁剪
+     * @param context
+     */
+    public static void eventEditVideoCut(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_edit_cut_video_event));
+    }
+
+    /**
+     * 视频制作页面-添加音乐
+     * @param context
+     */
+    public static void eventEditVideoMusic(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_edit_video_add_music_event));
+    }
+
+    /**
+     * 视频详细页面
+     * @param context
+     * @param from  访问来源
+     */
+    public static void eventVideoDetail(Context context, String from) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_call_album_source), from);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_video_detail_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 视频评论
+     * @param context
+     */
+    public static void eventCommentVideo(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_comment_video_event));
+    }
+
+    /**
+     * 视频点赞
+     * @param context
+     * @param from  所在页面
+     */
+    public static void eventPraiseVideo(Context context, String from) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_praise_video_page), from);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_praise_video_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 视频分享
+     * @param context
+     * @param channel 分享渠道
+     * @param from 所在页面
+     */
+    public static void eventShareVideo(Context context, String channel, String from) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_share_video_channel), getShareChannel(context, channel));
+            json.put(context.getString(R.string.str_zhuge_praise_video_page), from);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_share_video_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 直播页面
+     * @param context
+     * @param from 访问来源
+     */
+    public static void eventLive(Context context, String from) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_call_album_source), from);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_live_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 直播分享
+     * @param context
+     * @param channel 分享渠道
+     */
+    public static void eventLiveShare(Context context, String channel) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_share_video_channel), getShareChannel(context, channel));
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_live_share_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 注册页面
+     * @param context
+     */
+    public static void eventRegist(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_regist_event));
+    }
+
+    /**
+     * 短信验证页面
+     * @param context
+     * @param from  来源
+     */
+    public static void eventSmsCode(Context context, boolean from) {
+        try {
+            JSONObject json = new JSONObject();
+            String str = "";
+            if (from) {
+                str = context.getString(R.string.str_zhuge_sms_code_from_regist);
+            } else {
+                str = context.getString(R.string.str_zhuge_sms_code_from_forget_pwd);
+            }
+            json.put(context.getString(R.string.str_zhuge_from), str);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_sms_code_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 注册成功
+     * @param context
+     */
+    public static void eventRegistSuccess(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_regist_success_event));
+    }
+
+    /**
+     * 登录页面
+     * @param context
+     */
+    public static void eventLogin(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_login_event));
+    }
+
+    /**
+     * 微信登录
+     * @param context
+     */
+    public static void eventWixinLogin(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_wxin_login_event));
+    }
+
+    /**
+     * 登录成功
+     * @param context
+     * @param type 属性
+     */
+    public static void eventLoginSuccess(Context context, String type) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_login_type), type);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_login_success_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 忘记密码
+     * @param context
+     */
+    public static void eventForgetPwd(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_sms_code_from_forget_pwd));
+    }
+
+    /**
+     * 个人主页
+     * @param context
+     */
+    public static void eventUserCenter(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_followed_from_usercenter));
+    }
+
+    /**
+     * 搜索页面
+     * @param context
+     * @param keyWords  搜索关键词
+     * @param result  搜索结果
+     */
+    public static void eventSearch(Context context, String keyWords, String result) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_search_key_words), keyWords);
+            json.put(context.getString(R.string.str_zhuge_search_result), result);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_search_event), json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 消息中心页面
+     * @param context
+     */
+    public static void eventMsgCenter(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_msg_center_event));
+    }
+
+    /**
+     * 消息中心-赞页面
+     * @param context
+     */
+    public static void eventMsgCenterPraise(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_msg_center_praise_event));
+    }
+
+    /**
+     * 消息中心-回复/评论页面
+     * @param context
+     */
+    public static void eventMsgCenterComment(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_msg_center_comment_event));
+    }
+
+    /**
+     * 摄像头管理页面
+     * @param context
+     */
+    public static void eventIpcManage(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_ipc_manage_event));
+    }
+
+    /**
+     * 固件升级页面
+     * @param context
+     */
+    public static void eventIpcUpdate(Context context) {
+        ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_ipc_update_event));
+    }
+
+    /**
+     * 固件升级弹窗
+     * @param context
+     * @param operate  升级操作
+     */
+    public static void eventIpcUpdateDialog(Context context, String operate) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put(context.getString(R.string.str_zhuge_ipc_update_dialog_operate), operate);
+
+            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_ipc_update_dialog_event), json);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -694,5 +1269,70 @@ public class ZhugeUtils {
         return context.getString(R.string.str_zhuge_live_voice_close);
     }
 
+    /**
+     * IPC连接状态
+     * @param context
+     * @return  已连接/未连接
+     */
+    private static String getIsBind(Context context) {
+        if (GolukApplication.getInstance().isBindSucess()) {
+            return context.getString(R.string.str_zhuge_call_album_connect_ipc_state_true);
+        }
+        return context.getString(R.string.str_zhuge_call_album_connect_ipc_state_false);
+    }
+
+    /**
+     * 视频类型    本地/精彩/紧急/循环
+     * @param context
+     * @param type
+     * @return
+     */
+    private static String getAlbumType(Context context, int type) {
+        String str = "";
+        if (type == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
+            str = context.getString(R.string.str_zhuge_video_player_wonderful);
+        } else if (type == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
+            str = context.getString(R.string.str_zhuge_video_player_urgent);
+        } else if (type == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
+            str = context.getString(R.string.str_zhuge_video_player_recycle);
+        } else {
+            str = context.getString(R.string.str_zhuge_video_player_local);
+        }
+        return str;
+    }
+
+    /**
+     * 获取分享渠道
+     * @param context
+     * @param channel
+     * @return
+     */
+    private static String getShareChannel(Context context, String channel){
+        String str = "";
+        if (IThirdShareFn.TYPE_WEIXIN.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_weixin);
+        } else if (IThirdShareFn.TYPE_WEIBO_XINLANG.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_sina);
+        } else if (IThirdShareFn.TYPE_QQ.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_qq);
+        } else if (IThirdShareFn.TYPE_WEIXIN_CIRCLE.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_weixin_friends);
+        } else if (IThirdShareFn.TYPE_QQ_ZONE.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_qq_space);
+        } else if (IThirdShareFn.TYPE_FACEBOOK.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_facebook);
+        } else if (IThirdShareFn.TYPE_TWITTER.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_twitter);
+        } else if (IThirdShareFn.TYPE_INSTAGRAM.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_instagram);
+        } else if (IThirdShareFn.TYPE_WHATSAPP.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_whatsapp);
+        } else if (IThirdShareFn.TYPE_LINE.equals(channel)) {
+            str = context.getString(R.string.str_zhuge_share_video_channel_line);
+        } else {
+            str = context.getString(R.string.str_zhuge_share_video_channel_copy);
+        }
+        return str;
+    }
 
 }

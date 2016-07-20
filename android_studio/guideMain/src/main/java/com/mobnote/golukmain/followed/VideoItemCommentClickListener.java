@@ -1,8 +1,10 @@
 package com.mobnote.golukmain.followed;
 
 import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.followed.bean.FollowedVideoObjectBean;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
+import com.mobnote.util.ZhugeUtils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +30,8 @@ public class VideoItemCommentClickListener implements OnClickListener {
 			((BaseActivity) mContext).setJumpToNext();
 		}
 
+		//视频详情页访问
+		ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_follow));
 		Intent intent = new Intent(mContext, VideoDetailActivity.class);
 		intent.putExtra(VideoDetailActivity.VIDEO_ID, mVideoSquareInfo.video.videoid);
 		boolean iscomment = false;

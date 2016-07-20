@@ -44,7 +44,11 @@ public class HomeVideoList {
 	@JSONField(name = "index")
 	public String index;
 	
-	/** 索引 **/
+	/** 视频是否公开 **/
 	@JSONField(name = "isopen")
 	public int isopen;
+
+	/** 视频类型 **/
+	@JSONField(name = "type")
+	public int type;
 }

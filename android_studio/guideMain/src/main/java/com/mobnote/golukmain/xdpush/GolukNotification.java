@@ -28,6 +28,7 @@ import com.mobnote.golukmobile.GuideActivity;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
+import com.mobnote.util.ZhugeUtils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -470,6 +471,9 @@ public class GolukNotification {
 					} else if (VIDEO_DETAIL.equals(msgBean.tarkey)) {
 						// launch video detail
 						Context context = GolukApplication.getInstance().getContext();
+						//视频详情页访问
+						ZhugeUtils.eventVideoDetail(context, context.getString(R.string.str_zhuge_share_video_network_other));
+
 						intent = new Intent(context, VideoDetailActivity.class);
 						intent.putExtra(VideoDetailActivity.VIDEO_ID, vidArray[0]);
 						intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
@@ -518,6 +522,9 @@ public class GolukNotification {
 						}
 					} else if (SPECIAL_SOLO.equals(msgBean.tarkey)) {
 						Context context = GolukApplication.getInstance().getContext();
+						//视频详情页访问
+						ZhugeUtils.eventVideoDetail(context, context.getString(R.string.str_zhuge_share_video_network_other));
+
 						intent = new Intent(context, VideoDetailActivity.class);
 						intent.putExtra(VideoDetailActivity.VIDEO_ID, vidArray[0]);
 						intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
@@ -568,6 +575,9 @@ public class GolukNotification {
 			return;
 		}
 		Context context = GolukApplication.getInstance().getContext();
+		//视频详情页访问
+		ZhugeUtils.eventVideoDetail(context, context.getString(R.string.str_zhuge_share_video_network_other));
+
 		Intent intent = new Intent(context, VideoDetailActivity.class);
 		intent.putExtra(VideoDetailActivity.TYPE, "Wonderful");
 		intent.putExtra("ztid", ztid);
@@ -624,6 +634,9 @@ public class GolukNotification {
 	 */
 	public void startDetail(String vid) {
 		Context context = GolukApplication.getInstance().getContext();
+		//视频详情页访问
+		ZhugeUtils.eventVideoDetail(context, context.getString(R.string.str_zhuge_share_video_network_other));
+
 		Intent intent = new Intent(context, VideoDetailActivity.class);
 		intent.putExtra(VideoDetailActivity.VIDEO_ID, vid);
 		context.startActivity(intent);

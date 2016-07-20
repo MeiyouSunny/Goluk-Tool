@@ -483,9 +483,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
             mWac = null;
             // GolukApplication.getInstance().stopDownloadList();// 停止视频同步
 
-            //IPC页面访问统计
-            ZhugeUtils.eventIpc(WiFiLinkCompleteActivity.this);
-
             if (mReturnToMainAlbum) {
                 Intent it = new Intent(WiFiLinkCompleteActivity.this, MainActivity.class);
                 startActivity(it);
@@ -510,6 +507,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
     }
 
     private void toWaitConnView() {
+        //IPC-连接中页面
+        ZhugeUtils.eventConnecting(this, mReturnToMainAlbum);
         mBackBtn.setVisibility(View.VISIBLE);
         this.mState = STATE_WAIT_CONN;
         mMiddleLayout.removeAllViews();
@@ -522,6 +521,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
     }
 
     private void toSucessView() {
+        //IPC-连接成功
+        ZhugeUtils.eventConnectSuccess(this);
         mBackBtn.setVisibility(View.GONE);
         this.mState = STATE_SUCESS;
         mMiddleLayout.removeAllViews();
@@ -580,6 +581,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         //当连接失败的时候，直接跳转到支持单项连接的页面
         Intent mainIntent = new Intent(WiFiLinkCompleteActivity.this, WiFiLinkNoHotspotActivity.class);
         mainIntent.putExtra(WiFiLinkNoHotspotActivity.AUTO_START_CONNECT,false);
+        mainIntent.putExtra(WiFiLinkNoHotspotActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, mReturnToMainAlbum);
         startActivity(mainIntent);
         finish();
 //        if (0 == mStep) {

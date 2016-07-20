@@ -23,6 +23,7 @@ import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -253,6 +254,8 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
     private void downloadVideoFlush() {
         if (GolukApplication.getInstance().getIpcIsLogin()) {
             if (mCurrentType != PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
+                //相册页面-批量下载到本地
+                ZhugeUtils.eventAlbumBatchDownload(getActivity(), mCurrentType);
                 if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
                     mWonderfulFragment.downloadVideoFlush(selectedListData);
                 } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
@@ -354,6 +357,9 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
     }
 
     private void deleteDataFlush() {
+
+        //相册页面-批量删除视频
+        ZhugeUtils.eventAlbumBatchDelete(getActivity(), mCurrentType);
 
         if (mCurrentType != PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
             if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {

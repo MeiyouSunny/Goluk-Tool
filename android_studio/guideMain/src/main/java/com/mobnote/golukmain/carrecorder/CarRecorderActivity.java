@@ -972,6 +972,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             GolukDebugUtils.e("xuhw", "m8sBtn========================11111======");
             if (GolukApplication.getInstance().getIpcIsLogin()) {
                 if (!isRecording) {
+                    ZhugeUtils.eventIpcSnap(this);
                     m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
                     isRecording = true;
                     if (mWonderfulTime == 30) {
@@ -993,6 +994,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 return;
             }
             if (GolukApplication.getInstance().getIpcIsLogin()) {
+                ZhugeUtils.eventIpcSettings(this);
                 Intent setting = null;
                 if (IPCControlManager.T1_SIGN
                         .equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)
@@ -1063,6 +1065,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             if (GolukApplication.getInstance().getIpcIsLogin()) {
                 Intent intent = null;
                 if (mApp.isUserLoginSucess == false) {
+                    Intent it = null;
                     if (GolukApplication.getInstance().isMainland() == false) {
                         intent = new Intent(this, InternationUserLoginActivity.class);
                     } else {
@@ -1255,6 +1258,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
+        //IPC页面访问统计
+        ZhugeUtils.eventIpc(this);
         if (mApp.mIPCControlManager.isG1Relative()) {
             GolukApplication.getInstance().stopDownloadList();// 停止视频同步
         }

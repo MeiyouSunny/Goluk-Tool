@@ -108,6 +108,12 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		ZhugeUtils.eventUserCenter(this);
+	}
+
 	private void initView() {
 		mGridView = (PullToRefreshHeaderGridView) findViewById(R.id.gv_usercenter);
 		mBackBtn = (ImageButton) findViewById(R.id.ib_usercenter_back);
@@ -487,6 +493,9 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 		if (null != mAdapter && position >= 2) {
 			HomeVideoList video = (HomeVideoList) mAdapter.getItem(position - 2);
 			if (null != video) {
+				//视频详情页访问
+				ZhugeUtils.eventVideoDetail(this, this.getString(R.string.str_zhuge_followed_from_usercenter));
+
 				Intent itVideoDetail = new Intent(this, VideoDetailActivity.class);
 				itVideoDetail.putExtra(VideoDetailActivity.VIDEO_ID, video.videoid);
 				startActivity(itVideoDetail);

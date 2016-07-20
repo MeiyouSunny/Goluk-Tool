@@ -800,8 +800,9 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         bean.videoId = this.mUploadVideo.getVideoId();
         bean.mShareType = "1";
         bean.filePath = mVideoPath;
+        bean.from = this.getString(R.string.str_zhuge_share_instantly);
         mThirdShareTool = new ThirdShareTool(this,new SharePlatformUtil(this),bean.surl,bean.curl,bean.db,bean.tl,
-                bean.bitmap,bean.realDesc,bean.videoId,bean.mShareType,bean.filePath);
+                bean.bitmap,bean.realDesc,bean.videoId,bean.mShareType,bean.filePath, bean.from);
 
         if(mSharePlatformAdapter != null && mSharePlatformAdapter.mCurrSelectedPlatform != SharePlatformBean.SHARE_PLATFORM_NULL){
             if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_WEXIN_CIRCLE){

@@ -6,6 +6,7 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.user.UserIdentifyInterface;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -92,6 +93,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 		super.onResume();
 		mApplication.setContext(mContext, "UserRepwd");
 		getInfo();
+		ZhugeUtils.eventForgetPwd(this);
 	}
 
 	public void initView() {

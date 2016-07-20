@@ -13,6 +13,7 @@ import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
 import com.mobnote.view.SlideShowView;
 
 import android.content.Context;
@@ -242,6 +243,9 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
                                 slidesList.remove(slidesList.size() - 1);
                             }
                         }
+                        for (int i = 1; i <= slidesList.size(); i++) {
+                            slidesList.get(i-1).setIndex(i);
+                        }
                         bannerHolder.mBannerSlide.clearImages();
                         bannerHolder.mBannerSlide.setImageDataList(slidesList);
                     } else {
@@ -318,6 +322,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
         slideView.clearImages();
         BannerSlideBody body = new BannerSlideBody();
         body.setPicture(FAKE_CONTENT);
+        body.setIndex(1);
         List<BannerSlideBody> bodyList = new ArrayList<BannerSlideBody>();
         bodyList.add(body);
         slideView.setImageDataList(bodyList);
@@ -354,6 +359,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
         }
 
         Intent intent = null;
+        ZhugeUtils.eventBannerText(mContext, body.getTitle());
 
         if (PURE_PIC.equals(type)) {
             // do nothing
@@ -364,6 +370,8 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
             if (null == accessId || accessId.trim().equals("")) {
                 return;
             } else {
+                //视频详情页访问
+                ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_share_video_network_other));
                 intent = new Intent(mContext, VideoDetailActivity.class);
                 intent.putExtra(VideoDetailActivity.VIDEO_ID, body.getAccess());
                 intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
@@ -424,6 +432,9 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
             if (null == accessId || accessId.trim().equals("")) {
                 return;
             } else {
+                //视频详情页访问
+                ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_share_video_network_other));
+
                 intent = new Intent(mContext, VideoDetailActivity.class);
                 // intent.putExtra("imageurl", body.getPicture());
                 intent.putExtra("ztid", body.getAccess());
