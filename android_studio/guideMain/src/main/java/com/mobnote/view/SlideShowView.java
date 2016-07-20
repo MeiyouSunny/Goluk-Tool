@@ -36,6 +36,8 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 
+import cn.com.tiros.debug.GolukDebugUtils;
+
 /**
  * ViewPager实现的轮播图广告自定义视图，如京东首页的广告轮播图效果；
  * 既支持自动轮播页面也支持手势滑动切换页面
@@ -126,8 +128,10 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
 
         Intent intent = null;
 
-        if(null != type) {
-            if(PURE_PIC.equals(type)) {
+        if (null != type) {
+            //轮播图点击
+            ZhugeUtils.eventSlideView(mContext, tag.data.getIndex());
+            if (PURE_PIC.equals(type)) {
                 // do nothing
                 Log.d(TAG, "pure picture clicked");
             } else if(VIDEO_DETAIL.equals(type)) {

@@ -243,6 +243,9 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
                                 slidesList.remove(slidesList.size() - 1);
                             }
                         }
+                        for (int i = 1; i <= slidesList.size(); i++) {
+                            slidesList.get(i-1).setIndex(i);
+                        }
                         bannerHolder.mBannerSlide.clearImages();
                         bannerHolder.mBannerSlide.setImageDataList(slidesList);
                     } else {
@@ -319,6 +322,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
         slideView.clearImages();
         BannerSlideBody body = new BannerSlideBody();
         body.setPicture(FAKE_CONTENT);
+        body.setIndex(1);
         List<BannerSlideBody> bodyList = new ArrayList<BannerSlideBody>();
         bodyList.add(body);
         slideView.setImageDataList(bodyList);
