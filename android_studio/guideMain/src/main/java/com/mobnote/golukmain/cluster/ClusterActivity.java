@@ -65,7 +65,6 @@ import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
-import com.mobnote.util.ZhugeUtils;
 
 public class ClusterActivity extends BaseActivity implements OnClickListener, IRequestResultListener, IClickShareView,
 		IClickPraiseView, IDialogDealFn, IClusterInterface, VideoSuqareManagerFn {
@@ -155,7 +154,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
 	/**
 	 * 获取网络数据
-	 * 
+	 *
 	 * @param activityid
 	 *            是否显示加载中对话框
 	 * @author xuhw
@@ -301,7 +300,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
 	/**
 	 * 获取推荐的上拉刷新时间戳
-	 * 
+	 *
 	 * @param list
 	 */
 	private void setTjTime(List<VideoListBean> list) {
@@ -496,7 +495,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 							bean.bitmap = bitmap;
 							bean.realDesc = realDesc;
 							bean.videoId = mActivityid;
-							bean.from = this.getString(R.string.str_zhuge_action_tag);
 							ProxyThirdShare shareBoard = new ProxyThirdShare(ClusterActivity.this, mSharePlatform, bean);
 							shareBoard.showAtLocation(ClusterActivity.this.getWindow().getDecorView(), Gravity.BOTTOM,
 									0, 0);
@@ -524,8 +522,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 				if ("0".equals(ret.result)) {
 					if (null != mVideoSquareInfo) {
 						if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
-							//活动聚合页--视频点赞
-							ZhugeUtils.eventPraiseVideo(this, this.getString(R.string.str_zhuge_action_tag));
 							mVideoSquareInfo.mVideoEntity.ispraise = "1";
 							updateClickPraiseNumber(true, mVideoSquareInfo);
 						}
@@ -561,7 +557,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
 	/**
 	 * 更改聚合页面底部显示的布局
-	 * 
+	 *
 	 * @param type
 	 */
 	public void updateListViewBottom(int type) {
@@ -731,7 +727,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 							bean.bitmap = null;
 							bean.realDesc = realDesc;
 							bean.videoId = videoId;
-							bean.from = this.getString(R.string.str_zhuge_action_tag);
 
 							ProxyThirdShare shareBoard = new ProxyThirdShare(this, mSharePlatform, bean);
 							shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
