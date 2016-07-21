@@ -36,15 +36,15 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
 
     public VideoSquareAdapter mVideoSquareAdapter = null;
     private ViewPager mViewPager = null;
-    private ImageView hot = null;
+    private View hot = null;
     private TextView hotTitle = null;
     private TextView squareTitle = null;
     public String shareVideoId;
     private float density;
     RelativeLayout.LayoutParams lineParams = null;
     private int lineTop = 0;
-    private int textColorSelect = 0;
-    private int textcolorQx = 0;
+//    private int textColorSelect = 0;
+//    private int textcolorQx = 0;
     View mSquareRootView;
     private String mCityCode;
 
@@ -67,8 +67,8 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
         density = SoundUtils.getInstance().getDisplayMetrics().density;
         lineParams = new RelativeLayout.LayoutParams((int) (50 * density), (int) (2 * density));
         lineTop = (int) (5 * density);
-        textColorSelect = getResources().getColor(R.color.textcolor_select);
-        textcolorQx = getResources().getColor(R.color.textcolor_qx);
+//        textColorSelect = getResources().getColor(R.color.textcolor_select);
+//        textcolorQx = getResources().getColor(R.color.textcolor_qx);
         mSearchView = (ImageView) rootView.findViewById(R.id.iv_followed_search);
 
         mSearchView.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +103,7 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
         mVideoSquareAdapter = new VideoSquareAdapter(getActivity());
         mViewPager.setAdapter(mVideoSquareAdapter);
         mViewPager.setOnPageChangeListener(opcl);
-        hot = (ImageView) mSquareRootView.findViewById(R.id.line_hot);
+        hot = mSquareRootView.findViewById(R.id.line_hot);
         hotTitle = (TextView) mSquareRootView.findViewById(R.id.hot_title);
         squareTitle = (TextView) mSquareRootView.findViewById(R.id.square_title);
         setListener();
@@ -176,15 +176,15 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
                 mState = false;
                 ZhugeUtils.eventWonderfulPage(getActivity());
             }
-            hotTitle.setTextColor(textColorSelect);
-            squareTitle.setTextColor(textcolorQx);
+//            hotTitle.setTextColor(textColorSelect);
+//            squareTitle.setTextColor(textcolorQx);
         } else if (1 == type) {
             if (mState) {
                 mState = false;
                 ZhugeUtils.eventNewestPage(getActivity());
             }
-            hotTitle.setTextColor(textcolorQx);
-            squareTitle.setTextColor(textColorSelect);
+//            hotTitle.setTextColor(textcolorQx);
+//            squareTitle.setTextColor(textColorSelect);
         }
     }
 

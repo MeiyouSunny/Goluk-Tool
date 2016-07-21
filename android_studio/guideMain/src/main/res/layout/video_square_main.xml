@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:text="@string/str_wonderful_text"
-                android:textColor="#0b59be"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <TextView
@@ -32,16 +32,16 @@
                 android:layout_alignParentRight="true"
                 android:gravity="center_horizontal"
                 android:text="@string/str_newest_text"
-                android:textColor="#ffffff"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
-            <ImageView
+            <View
                 android:id="@+id/line_hot"
                 android:layout_width="50dp"
                 android:layout_height="2dp"
                 android:layout_below="@+id/hot_title"
                 android:layout_marginTop="5dp"
-                android:background="#0b59be" />
+                android:background="@color/white" />
         </RelativeLayout>
         <ImageView
             android:id="@+id/iv_followed_search"
