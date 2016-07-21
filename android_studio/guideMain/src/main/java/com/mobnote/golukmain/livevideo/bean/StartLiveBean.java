@@ -1,4 +1,4 @@
-package com.mobnote.golukmain.livevideo;
+package com.mobnote.golukmain.livevideo.bean;
 
 public class StartLiveBean {
 	/** 必选，rtmp 推流地址，webencode编码（先base64编码，然后url编码） */
