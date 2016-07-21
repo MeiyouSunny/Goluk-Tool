@@ -580,6 +580,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
         //当连接失败的时候，直接跳转到支持单项连接的页面
         Intent mainIntent = new Intent(WiFiLinkCompleteActivity.this, WiFiLinkNoHotspotActivity.class);
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         mainIntent.putExtra(WiFiLinkNoHotspotActivity.AUTO_START_CONNECT,false);
         mainIntent.putExtra(WiFiLinkNoHotspotActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, mReturnToMainAlbum);
         startActivity(mainIntent);

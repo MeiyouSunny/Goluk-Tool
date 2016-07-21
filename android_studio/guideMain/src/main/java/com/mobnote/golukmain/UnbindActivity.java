@@ -42,6 +42,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
     private GolukApplication mApplication = null;
     private boolean isGetIPCSucess = false;
     private boolean canOfflineInstall = false;
+    private boolean installLater = false;
 
     private String mGolukSSID = "";
     private String mGolukPWD = "";
@@ -176,6 +177,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
     }
 
     private void installLater() {
+        installLater = true;
         mTextVersion.setText(R.string.str_update_find_new_first);
         mUpdateLayout.setEnabled(true);
     }
@@ -201,15 +203,9 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             it.putExtra("appwd", mApPWD);
             startActivityForResult(it, 10);
         } else if (id == R.id.unbind_layout_update) {
-            if (mApplication.mIpcUpdateManage.isDownloading()) {// 下载中
-//                Intent intent = new Intent(UnbindActivity.this, UpdateActivity.class);
-//                intent.putExtra(UpdateActivity.UPDATE_SIGN, 0);
-//                startActivity(intent);
+            if (mApplication.mIpcUpdateManage.isDownloading() || installLater) {// 下载中
                 GolukUtils.startUpdateActivity(UnbindActivity.this, 0, null, false);
             } else if (mApplication.mIpcUpdateManage.isDownloadSuccess() || canOfflineInstall) {
-//                Intent intent = new Intent(UnbindActivity.this, UpdateActivity.class);
-//                intent.putExtra(UpdateActivity.UPDATE_SIGN, 1);
-//                startActivity(intent);
                 GolukUtils.startUpdateActivity(UnbindActivity.this, 1, null, false);
             }
         }

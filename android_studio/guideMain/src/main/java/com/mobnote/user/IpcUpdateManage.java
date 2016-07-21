@@ -333,10 +333,11 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                         operate[0] = mApp.getContext().getString(R.string.str_zhuge_ipc_update_dialog_operate_download);
                         GolukUtils.startUpdateActivity(mApp.getContext(), type, ipcInfo, false);
                     }
-                }).setNegativeButton(mApp.getContext().getResources().getString(R.string.str_update_later), new DialogInterface.OnClickListener(){
+                }).setNegativeButton(mApp.getContext().getResources().getString(R.string.str_update_later), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
                         operate[0] = mApp.getContext().getString(R.string.str_zhuge_ipc_update_dialog_operate_ignore);
+                        EventBus.getDefault().post(new EventIPCCheckUpgradeResult(EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_DELAY));
                     }
                 })
                 .setCancelable(false).create();
@@ -387,10 +388,10 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
             GolukDebugUtils.i(TAG, "------------ipcUpgrade-----------" + ipcFile);
             GolukDebugUtils.i(TAG, "=======弹出Dialog=======ipcFile：" + ipcFile);
             if ("".equals(ipcFile) || null == ipcFile) {
-                // TODO 提示用户下载文件Dialog
+                // 提示用户下载文件Dialog
                 ipcUpgrade(TYPE_DOWNLOAD, ipcInfo, ipcInfo.appcontent);
             } else {
-                // TODO 弹框提示用户安装本地的文件 (Dialog)
+                // 弹框提示用户安装本地的文件 (Dialog)
                 ipcUpgrade(TYPE_INSTALL, ipcInfo, ipcInfo.appcontent);
             }
         }
@@ -479,7 +480,6 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
 
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
-                                // TODO 弹Loading框,提示正在检测
                                 showLoadingDialog();
                                 requestInfo(FUNCTION_CONNECTIPC, vIpc);
                             }
@@ -747,7 +747,11 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
         }
         for (String temp : cache) {
             if (vIPC.equals(temp)) {
-                return true;
+                if (!TextUtils.isEmpty(isHasIPCFile(vIPC))) {
+                    SharedPrefUtil.saveNewFirmware(vIPC, false);
+                    return true;
+                }
+                break;
             }
         }
         return false;
