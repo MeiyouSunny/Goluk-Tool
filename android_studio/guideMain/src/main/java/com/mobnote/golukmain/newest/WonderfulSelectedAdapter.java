@@ -44,7 +44,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
     private List<Object> mDataList = null;
     private int count = 0;
     private int width = 0;
-    private Typeface mTypeface = null;
+ //   private Typeface mTypeface = null;
     private final static int BANNER_ITEM = 0;
     private final static int VIDEO_ITEM = 1;
     private BannerDataModel mBannerData = null;
@@ -63,7 +63,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
         mContext = context;
         mDataList = new ArrayList<Object>();
         width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-        mTypeface = Typeface.createFromAsset(context.getAssets(), "AdobeHebrew-Bold.otf");
+ //       mTypeface = Typeface//Typeface.createFromAsset(context.getAssets(), "AdobeHebrew-Bold.otf");
     }
 
     public void setBannerData(BannerDataModel model) {
@@ -208,16 +208,16 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
                 } else {
                     String phoneDate = Utils.getDateStr(System.currentTimeMillis());
                     if (phoneDate.trim().equals(info.jxdate.trim())) {
-                        holder.mDate.setTypeface(mTypeface);
+ //                       holder.mDate.setTypeface(mTypeface);
                         holder.mDate.setText(mContext.getString(R.string.str_jx_today));
                         holder.mDate.setVisibility(View.VISIBLE);
                     } else {
                         if (position != 1) {
-                            holder.mDate.setTypeface(mTypeface);
+ //                           holder.mDate.setTypeface(mTypeface);
                             holder.mDate.setText(GolukUtils.getTime(info.jxdate));
                             holder.mDate.setVisibility(View.VISIBLE);
                         } else {
-                            holder.mDate.setTypeface(mTypeface);
+ //                           holder.mDate.setTypeface(mTypeface);
                             holder.mDate.setText(mContext.getString(R.string.str_jx_other_day));
                             holder.mDate.setVisibility(View.VISIBLE);
                         }
