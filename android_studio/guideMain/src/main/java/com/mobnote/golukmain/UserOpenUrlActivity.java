@@ -125,7 +125,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			mBackBtn.setBackgroundResource(R.drawable.browser_close_btn);
 		} else {
 			mTextRight.setVisibility(View.VISIBLE);
-			mBackBtn.setBackgroundResource(R.drawable.cross_screen_arrow_icon1);
+			mBackBtn.setBackgroundResource(R.drawable.cross_screen_arrow_icon);
 		}
 		WebSettings webSettings = mWebView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
