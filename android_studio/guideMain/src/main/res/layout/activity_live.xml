@@ -205,8 +205,8 @@
 
         <ImageView
             android:id="@+id/iv_publisher_avatar"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="9dp"
@@ -219,35 +219,6 @@
             android:layout_alignBottom="@id/iv_publisher_avatar"
             android:layout_alignRight="@id/iv_publisher_avatar"
             android:contentDescription="@string/imgdes" />
-
-        <TextView
-            android:id="@+id/tv_publisher_nickname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/iv_publisher_avatar"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="0dp"
-            android:layout_marginLeft="9dp"
-            android:layout_marginRight="101dp"
-            android:layout_toRightOf="@id/iv_publisher_avatar"
-            android:gravity="left|center_vertical"
-            android:singleLine="true"
-            android:textColor="#0080ff"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/tv_publisher_introduction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_publisher_nickname"
-            android:layout_marginLeft="9dp"
-            android:layout_marginRight="101dp"
-            android:layout_marginTop="6dp"
-            android:layout_toRightOf="@id/iv_publisher_avatar"
-            android:gravity="left|center_vertical"
-            android:singleLine="true"
-            android:textColor="#333333"
-            android:textSize="12sp" />
 
         <LinearLayout
             android:id="@+id/ll_publisher_link"
@@ -274,6 +245,37 @@
                 android:textColor="#ffffff"
                 android:textSize="12sp" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_publisher_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/iv_publisher_avatar"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="8dp"
+            android:layout_toLeftOf="@id/ll_publisher_link"
+            android:layout_toRightOf="@id/iv_publisher_avatar"
+            android:gravity="left|center_vertical"
+            android:singleLine="true"
+            android:textColor="#0080ff"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_publisher_introduction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_publisher_nickname"
+            android:layout_marginLeft="9dp"
+            android:layout_marginRight="8dp"
+            android:layout_toLeftOf="@id/ll_publisher_link"
+            android:layout_marginTop="3dp"
+            android:layout_toRightOf="@id/iv_publisher_avatar"
+            android:gravity="left|center_vertical"
+            android:singleLine="true"
+            android:textColor="#333333"
+            android:textSize="12sp" />
 
     </RelativeLayout>
 
@@ -328,13 +330,19 @@
                 android:text="地理位置"/>
         </LinearLayout>
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/ll_tabs"
+        android:background="#eeeeee"/>
+
     <FrameLayout
         android:id="@+id/fl_more"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="1px"
         android:layout_below="@id/ll_tabs"
-        android:background="#ededed" >
-
+        android:background="#f6f6f6" >
     </FrameLayout>
-
 </RelativeLayout>
