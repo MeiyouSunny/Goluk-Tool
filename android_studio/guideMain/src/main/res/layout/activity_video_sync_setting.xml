@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/cross_screen_arrow_icon1" />
+            android:src="@drawable/cross_screen_arrow_icon" />
 
         <TextView
             android:id="@+id/tv_video_sync_setting_title"
