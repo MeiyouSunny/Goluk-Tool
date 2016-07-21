@@ -1048,7 +1048,7 @@
     <string name="str_start_live">发起直播</string>
     <string name="str_public_live">公开直播</string>
     <string name="str_save_live">保存回放</string>
-    <string name="str_save_live_replay_hint">如果您希望别人能够看到本次直播的回放，您可以保存回放。</string>
+    <string name="str_save_live_replay_hint">保存回放，您的个人主页会有本次直播的回放。</string>
     <string name="str_describle_live_hint">描述一下你的直播吧</string>
     <string name="str_play_back">回放</string>
 </resources>

@@ -8,6 +8,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.mobnote.golukmain.carrecorder.PreferencesReader;
 import com.mobnote.golukmain.carrecorder.RecorderMsgReceiverBase;
+import com.mobnote.golukmain.livevideo.bean.StartLiveBean;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.ResultConstants;

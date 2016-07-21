@@ -9,6 +9,7 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.livevideo.bean.StartLiveBean;
 import com.mobnote.util.GolukFastJsonUtil;
 import com.umeng.socialize.net.utils.Base64;
 

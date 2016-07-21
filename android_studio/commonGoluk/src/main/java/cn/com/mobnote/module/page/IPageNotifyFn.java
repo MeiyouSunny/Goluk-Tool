@@ -172,6 +172,9 @@ public interface IPageNotifyFn extends IGolukCommFn {
     /** 关注数量 */
     public static final int PageType_FollowCount = 78;
 
+    /** 获取直播签名*/
+    public static final int PageType_LiveSign = 79;
+
 	/**
 	 * 
 	 * 以下为同步获取信息标识

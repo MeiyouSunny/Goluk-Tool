@@ -47,7 +47,6 @@ public class UploadLiveScreenShotTask extends AsyncTask<String, Integer, String>
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.i("nothing","1");
         return result;
     }
 
@@ -103,4 +102,5 @@ public class UploadLiveScreenShotTask extends AsyncTask<String, Integer, String>
         conn.disconnect();
         return sb2.toString();
     }
+
 }

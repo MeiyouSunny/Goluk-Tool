@@ -39,6 +39,8 @@ import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.LiveSettingBean;
 import com.mobnote.golukmain.live.TimerManager;
 import com.mobnote.golukmain.live.UserInfo;
+import com.mobnote.golukmain.livevideo.bean.LiveSignRetBean;
+import com.mobnote.golukmain.livevideo.bean.StartLiveBean;
 import com.mobnote.golukmain.thirdshare.ProxyThirdShare;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.thirdshare.ThirdShareBean;
@@ -242,6 +244,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     AbstractLiveMapViewFragment mLiveMapViewFragment;
     LiveCommentFragment mLiveCommentFragment;
 
+    private String mVidUrl;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -276,25 +279,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         mLiveManager.setListener(this);
         mApp.addLocationListener(TAG, this);
         if (isShareLive) {
-            if (isContinueLive) {
-                GolukDebugUtils.e("", "newlive-----LiveActivity----onCreate---开始续播---: ");
-                // 续直播
-                mSettingData = new LiveSettingBean();
-                startLiveLook(myInfo);
-                LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE,
-                        this.getString(R.string.str_live_retry_live));
-                isSettingCallBack = true;
-            } else {
-                // 显示设置窗口
-                if (null == mSettingData) {
-                    this.finish();
-                    return;
-                }
-                if (null != mLiveOperator) {
-                    mLiveOperator.stopLive();
-                }
-                startLiveForSetting();
-            }
+            continueOrStartLive();
             updateCount(0, 0);
         } else {
             // 计时，90秒后，防止用户进入时没网
@@ -304,6 +289,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         }
         setCallBackListener();
     }
+
 
     private void initUserInfo() {
         if (isShareLive) {
@@ -590,6 +576,17 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         return "live" + time;
     }
 
+    /**
+     * 获取直播签名
+     */
+    private void getLiveSign(){
+        if (null != myInfo) {
+            LiveSignRequest liveSignRequest = new LiveSignRequest(IPageNotifyFn.PageType_LiveSign,this);
+            liveSignRequest.get(myInfo.uid,myInfo.lon,myInfo.lat);
+        }
+
+    }
+
     // 开启自己的直播,请求服务器 (在用户点击完设置后开始请求)
     private void startLiveForServer() {
         isRequestedForServer = true;
@@ -776,7 +773,9 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         liveVid = aid;
         if (null != mLiveOperator) {
             StartLiveBean bean = new StartLiveBean();
-            bean.url = mRtmpUrl + liveVid;
+//            bean.url = mRtmpUrl + liveVid;
+            Log.e("rtmpurl",mVidUrl);
+            bean.url = mVidUrl;
             bean.isVoice = mSettingData.isEnableVoice;
             bean.stream = "1";
             bean.time = "" + mLiveCountSecond;
@@ -1571,6 +1570,27 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         return super.onKeyDown(keyCode, event);
     }
 
+    private void continueOrStartLive(){
+        if (isContinueLive) {
+            GolukDebugUtils.e("", "newlive-----LiveActivity----onCreate---开始续播---: ");
+            // 续直播
+            mSettingData = new LiveSettingBean();
+            //startLiveLook(myInfo);
+            LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE,
+                    this.getString(R.string.str_live_retry_live));
+            isSettingCallBack = true;
+        } else {
+            // 显示设置窗口
+            if (null == mSettingData) {
+                this.finish();
+                return;
+            }
+            if (null != mLiveOperator) {
+                mLiveOperator.stopLive();
+            }
+            getLiveSign();
+        }
+    }
     private void startLiveForSetting() {
         mLiveCountSecond = mSettingData.duration;
         if (!isAlreadExit) {
@@ -1764,7 +1784,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     private void dealSnapCallBack(int param1, Object param2) {
         GolukDebugUtils.e("", "newlive-----share-------dealSnapCallBack callBack");
-        GolukDebugUtils.e("", "jyf----20150406----LiveActivity----callBack_VDCP----接收图片命令回调");
         if (0 != param1) {
             GolukDebugUtils.e("", "jyf----20150406----LiveActivity----callBack_VDCP----接收图片命令失败-------");
             return;
@@ -1923,6 +1942,16 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (IPageNotifyFn.PageType_LiveStart == requestType) {
             LiveDataInfo liveInfo = (LiveDataInfo) result;
             CallBack_StartLiveServer(true, liveInfo);
+        }else if (IPageNotifyFn.PageType_LiveSign == requestType){
+            LiveSignRetBean liveSignRetBean = (LiveSignRetBean)result;
+            if(GolukUtils.isTokenValid(liveSignRetBean.code)){
+                if(liveSignRetBean != null && liveSignRetBean.data != null){
+                    mVidUrl = liveSignRetBean.data.liveurl + "?vdoid=" + liveSignRetBean.data.videoid;
+                    startLiveForSetting();
+                }
+            }else{
+                GolukUtils.startUserLogin(this);
+            }
         }
     }
 

@@ -32,7 +32,6 @@ public class LiveStartRequest extends GolukFastjsonRequest<LiveDataInfo> {
 
 	public boolean get(String json) {
 		try {
-
 			JSONObject jsonObj = new JSONObject(json);
 
 			String active = jsonObj.optString("active");
@@ -45,6 +44,7 @@ public class LiveStartRequest extends GolukFastjsonRequest<LiveDataInfo> {
 			String flux = jsonObj.optString("flux");
 			String voice = jsonObj.optString("voice");
 
+            httpAddHeader("xieyi", "200");
 			httpAddHeader("active", active);
 			httpAddHeader("talk", talk);
 			httpAddHeader("tag", tag);
@@ -59,12 +59,12 @@ public class LiveStartRequest extends GolukFastjsonRequest<LiveDataInfo> {
 
 			UserInfo userInfo = GolukApplication.getInstance().getMyInfo();
 			httpAddHeader("mid", Tapi.getMobileId());
-			httpAddHeader("uid", userInfo.uid);
+			httpAddHeader("commuid", userInfo.uid);
 			httpAddHeader("aid", userInfo.aid);
 
 			httpAddHeader("lon", "" + LngLat.lng);
 			httpAddHeader("lat", "" + LngLat.lat);
-			httpAddHeader("speed", "" + 10);
+			httpAddHeader("speed", "" + 10);;
 
 		} catch (Exception e) {
 

@@ -1,5 +1,7 @@
 package com.mobnote.golukmain.livevideo;
 
+import com.mobnote.golukmain.livevideo.bean.StartLiveBean;
+
 public interface ILiveOperateFn {
 	
 	public void onStart();
