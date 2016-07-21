@@ -67,6 +67,7 @@ import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.tiros.api.FileUtils;
@@ -74,9 +75,10 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 /**
+ * 此类包含部分未切换到金山云的直播功能，仅供参考
  * Created by leege100 on 2016/7/19.
  */
-public class LiveActivity extends BaseActivity implements View.OnClickListener,
+public class LiveActivityGoluk extends BaseActivity implements View.OnClickListener,
         RtmpPlayerView.RtmpPlayerViewLisener, LiveDialogManager.ILiveDialogManagerFn, TimerManager.ITimerManagerFn, IPCManagerFn, ILive,
         VideoSuqareManagerFn, ILiveFnAdapter, IRequestResultListener, ILocationFn {
 
@@ -213,6 +215,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     private Bitmap mThumbBitmap = null;
     private boolean isRequestedForServer = false;
     private boolean mIsFirstSucess = true;
+    private String mRtmpUrl = null;
 
     FrameLayout mFrameLayout;
     private ILiveOperateFn mLiveOperator = null;
@@ -242,7 +245,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     AbstractLiveMapViewFragment mLiveMapViewFragment;
     LiveCommentFragment mLiveCommentFragment;
 
-    private String mRtmpUrl;
+    private String mVidUrl;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -442,6 +445,10 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     private void getURL() {
         VIEW_SELF_PLAY = PlayUrlManager.getRtspUrl();
+        mRtmpUrl = this.getRtmpAddress();
+        if (null == mRtmpUrl) {
+            mRtmpUrl = PlayUrlManager.UPLOAD_VOIDE_PRE;
+        }
     }
 
     @Override
@@ -449,9 +456,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         super.onActivityResult(requestCode, resultCode, data);
         if (null != sharePlatform) {
             sharePlatform.onActivityResult(requestCode, resultCode, data);
-        }
-        if(!isUploadSucessed){
-            getLiveSign();
         }
     }
 
@@ -712,7 +716,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 liveEnd();
                 if (!isAlreadExit) {
                     LiveDialogManager.getManagerInstance().dismissProgressDialog();
-                    LiveDialogManager.getManagerInstance().showSingleBtnDialog(LiveActivity.this,
+                    LiveDialogManager.getManagerInstance().showSingleBtnDialog(LiveActivityGoluk.this,
                             LiveDialogManager.DIALOG_TYPE_LIVE_TIMEOUT, LIVE_DIALOG_TITLE,
                             this.getString(R.string.str_live_net_error));
 
@@ -770,12 +774,20 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         liveVid = aid;
         if (null != mLiveOperator) {
             StartLiveBean bean = new StartLiveBean();
-            bean.url = mRtmpUrl;
+//            bean.url = mRtmpUrl + liveVid;
+            bean.url = mVidUrl;
             bean.isVoice = mSettingData.isEnableVoice;
             bean.stream = "1";
             bean.time = "" + mLiveCountSecond;
             mLiveOperator.startLive(bean);
         }
+    }
+
+    private String getRtmpAddress() {
+        String rtmpUrl = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_GetServerAddress,
+                IGetServerAddressType.GetServerAddress_RtmpServer, "UploadVedioPre");
+        GolukDebugUtils.e("", "jyf-----MainActivity-----test:" + rtmpUrl);
+        return rtmpUrl;
     }
 
     boolean isStartTimer = false;
@@ -1187,7 +1199,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     // 视频已经下线
     private void videoInValid() {
-        LiveDialogManager.getManagerInstance().showSingleBtnDialog(LiveActivity.this,
+        LiveDialogManager.getManagerInstance().showSingleBtnDialog(LiveActivityGoluk.this,
                 LiveDialogManager.DIALOG_TYPE_LIVE_OFFLINE, this.getString(R.string.user_dialog_hint_title),
                 this.getString(R.string.str_live_over2));
         mBaseHandler.removeMessages(MSG_H_RETRY_REQUEST_DETAIL);
@@ -1662,9 +1674,9 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 final String reporttype = (String) data;
                 boolean isSucess = report("1", getCurrentVideoId(), reporttype);
                 if (isSucess) {
-                    GolukUtils.showToast(LiveActivity.this, this.getString(R.string.str_report_success));
+                    GolukUtils.showToast(LiveActivityGoluk.this, this.getString(R.string.str_report_success));
                 } else {
-                    GolukUtils.showToast(LiveActivity.this, this.getString(R.string.str_report_fail));
+                    GolukUtils.showToast(LiveActivityGoluk.this, this.getString(R.string.str_report_fail));
                 }
                 break;
         }
@@ -1712,7 +1724,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                     // 计时器完成
                     liveEnd();
                     if (!isAlreadExit) {
-                        LiveDialogManager.getManagerInstance().showLiveExitDialog(LiveActivity.this,
+                        LiveDialogManager.getManagerInstance().showLiveExitDialog(LiveActivityGoluk.this,
                                 LIVE_DIALOG_TITLE, this.getString(R.string.str_live_time_end));
                     }
                 }
@@ -1730,7 +1742,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 if (TimerManager.RESULT_FINISH == result) {
                     liveEnd();
                     if (!isAlreadExit) {
-                        LiveDialogManager.getManagerInstance().showLiveExitDialog(LiveActivity.this,
+                        LiveDialogManager.getManagerInstance().showLiveExitDialog(LiveActivityGoluk.this,
                                 LIVE_DIALOG_TITLE, this.getString(R.string.str_live_over2));
                     }
                 }
@@ -1867,8 +1879,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             bean.bitmap = mThumbBitmap;
             bean.realDesc = sinaTxt;
             bean.videoId = getShareVideoId();
-            ProxyThirdShare sb = new ProxyThirdShare(LiveActivity.this, sharePlatform, bean);
-            sb.showAtLocation(LiveActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+            ProxyThirdShare sb = new ProxyThirdShare(LiveActivityGoluk.this, sharePlatform, bean);
+            sb.showAtLocation(LiveActivityGoluk.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
         }
     }
 
@@ -1934,11 +1946,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             LiveSignRetBean liveSignRetBean = (LiveSignRetBean)result;
             if(GolukUtils.isTokenValid(liveSignRetBean.code)){
                 if(liveSignRetBean != null && liveSignRetBean.data != null){
-                    if(mSettingData.isEnableSaveReplay){
-                        mRtmpUrl = liveSignRetBean.data.liveurl + "?vdoid=" + liveSignRetBean.data.videoid;
-                    }else{
-                        mRtmpUrl = liveSignRetBean.data.liveurl;
-                    }
+                    mVidUrl = liveSignRetBean.data.liveurl + "?vdoid=" + liveSignRetBean.data.videoid;
                     startLiveForSetting();
                 }
             }else{
