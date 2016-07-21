@@ -13,30 +13,36 @@ import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.watermark.bean.BandCarBrandResultBean;
 import com.mobnote.golukmain.watermark.bean.CarBrandBean;
+import com.mobnote.util.GolukConfig;
+import com.mobnote.util.GolukUtils;
 
-public class WatermarkSettingActivity extends BaseActivity implements View.OnClickListener {
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+
+public class WatermarkSettingActivity extends BaseActivity implements View.OnClickListener, IPCManagerFn, IRequestResultListener {
     public static final int SPECIAL_SETTING_REQUEST = 1;
     public static final String SPECIAL_SETTING_RESULT = "CarBrand";
+    private static final String IPC_WATERMARK = "WatermarkSetting";
     private EditText edtName;
     private CarBrandBean bean;
     private ImageView ivLogo;
+
+    private BandCarBrandsRequest request;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_special_setting);
+        mBaseApp.mIPCControlManager.addIPCManagerListener(IPC_WATERMARK, this);
         initView();
         initViewData();
     }
 
     private void initViewData() {
-        if (bean == null) {
-            return;
-        }
-        edtName.setText(bean.name);
-        Glide.with(this).load(bean.logoUrl).into(ivLogo);
+
     }
 
     private void initView() {
@@ -48,11 +54,6 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
         btnBack.setOnClickListener(this);
         btnSave.setOnClickListener(this);
         rlBrands.setOnClickListener(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -68,9 +69,20 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mBaseApp.mIPCControlManager.removeIPCManagerListener(IPC_WATERMARK);
+    }
+
     private void saveBrand() {
+        if (!mBaseApp.isIpcConnSuccess) {
+            GolukUtils.showToast(this, getString(R.string.ipc_disconnect_try_again));
+            return;
+        }
         String name = edtName.getText().toString();
-        String code = bean.code;
+        String code = bean.logoUrl;
+        mBaseApp.mIPCControlManager.setIPCWatermark(code, name);
     }
 
     @Override
@@ -80,6 +92,34 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
             return;
         }
         bean = data.getParcelableExtra(SPECIAL_SETTING_RESULT);
-        initViewData();
+        if (bean == null) {
+            return;
+        }
+        edtName.setText(bean.name);
+        Glide.with(this).load(bean.logoUrl).into(ivLogo);
+    }
+
+
+    @Override
+    public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
+        if (event == ENetTransEvent_IPC_VDCP_CommandResp && msg == IPC_VDCP_Msg_SetIPCLogo) {
+            //成功
+            if (0 == param1) {
+                request = new BandCarBrandsRequest(this);
+                request.get(GolukConfig.SERVER_PROTOCOL_V2, bean.brandId, bean.code, edtName.getText().toString(), mBaseApp.mCurrentUId);
+                finish();
+            } else {
+                GolukUtils.showToast(this, getString(R.string.user_personal_save_failed));
+            }
+        }
+    }
+
+    @Override
+    public void onLoadComplete(int requestType, Object result) {
+        BandCarBrandResultBean bean = (BandCarBrandResultBean) result;
+        if (bean == null || bean.code != GolukConfig.SERVER_RESULT_OK) {
+            //下次启动的时候再来上传内容
+            request.saveCacheRequest();
+        }
     }
 }

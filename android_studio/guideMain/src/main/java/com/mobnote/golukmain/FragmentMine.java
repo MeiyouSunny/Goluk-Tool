@@ -14,15 +14,19 @@ import com.mobnote.golukmain.msg.MessageCenterActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.praised.MyPraisedActivity;
 import com.mobnote.golukmain.profit.MyProfitActivity;
+import com.mobnote.golukmain.watermark.BandCarBrandsRequest;
 import com.mobnote.golukmain.watermark.WatermarkSettingActivity;
 import com.mobnote.golukmain.userinfohome.UserInfohomeRequest;
 import com.mobnote.golukmain.userinfohome.bean.UserLabelBean;
 import com.mobnote.golukmain.userinfohome.bean.UserinfohomeRetBean;
 import com.mobnote.golukmain.videosuqare.VideoSquareManager;
+import com.mobnote.golukmain.watermark.bean.BandCarBrandResultBean;
 import com.mobnote.manager.MessageManager;
 import com.mobnote.user.UserInterface;
 import com.mobnote.util.GlideUtils;
+import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.ZhugeUtils;
 
 import android.annotation.SuppressLint;
@@ -537,6 +541,20 @@ public class FragmentMine extends Fragment implements OnClickListener,
             mVideoSquareManager
                     .addVideoSquareManagerListener("indexmore", this);
         }
+        //2.8.10所增加的需求，如果用户以前没有上传服务器，就再来上传一次
+        final BandCarBrandsRequest request = new BandCarBrandsRequest(new IRequestResultListener() {
+            @Override
+            public void onLoadComplete(int requestType, Object result) {
+                BandCarBrandResultBean bean = (BandCarBrandResultBean) result;
+                if (bean == null || bean.code != GolukConfig.SERVER_RESULT_OK) {
+                    return;
+                }
+                SharedPrefUtil.removeBandCarRequest();
+            }
+        });
+        if (request.resotreCacheRequest()) {
+            request.getCache();
+        }
     }
 
     /**
@@ -642,6 +660,10 @@ public class FragmentMine extends Fragment implements OnClickListener,
             GlideUtils.loadLocalHead(getActivity(), view,
                     R.drawable.usercenter_head_default);
         }
+        boolean cache4S = SharedPrefUtil.getUserIs4SShop();
+        if (cache4S) {
+            mLLSSSS.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -707,8 +729,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
      * 个人中心状态的变化
      */
     public void personalChanged() {
-        GolukDebugUtils.i("lily", "======registStatus===="
-                + ma.mApp.registStatus);
+        GolukDebugUtils.i("lily", "======registStatus====" + ma.mApp.registStatus);
         if (ma.mApp.autoLoginStatus == 3 || ma.mApp.autoLoginStatus == 4) {
             mVideoLayout.setVisibility(View.GONE);
             mImageAuthentication.setVisibility(View.GONE);
@@ -784,9 +805,13 @@ public class FragmentMine extends Fragment implements OnClickListener,
                         //该用户是4S店
                         if ("1".equals(lable.is4s)) {
                             mLLSSSS.setVisibility(View.VISIBLE);
+                            //Cache the flag , we can setIpc watermark when offline
+                            SharedPrefUtil.saveUserIs4SShop(true);
                         } else {
                             mLLSSSS.setVisibility(View.GONE);
+                            SharedPrefUtil.saveUserIs4SShop(false);
                         }
+
                         mImageAuthentication.setVisibility(View.VISIBLE);
                         if ("1".equals(lable.approvelabel)) {
                             mImageAuthentication

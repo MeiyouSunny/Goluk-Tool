@@ -5,6 +5,13 @@ import com.mobnote.application.GolukApplication;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.text.TextUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 2012-10-09
@@ -153,6 +160,10 @@ public class SharedPrefUtil {
     public static final String PROPERTY_SAVE_IPC_NUMBER = "ipc_number";
 
     public static final String PROPERTY_ENABLE_SINGLE_WIFI = "only_use_wifi_connection";
+
+    public static final String PROPERTY_USER_HAVE_4S_SHOP = "user_is_4s_shop";
+
+    public static final String PROPERTY_BAND_CAR_REQUEST = "offline_request_band_car";
 
 
     public static void setTokenId(String tokenid) {
@@ -671,6 +682,59 @@ public class SharedPrefUtil {
     public static boolean getEnableSingleWifi() {
         SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
         return preference.getBoolean(PROPERTY_ENABLE_SINGLE_WIFI, false);
+    }
+
+    public static boolean getUserIs4SShop() {
+        SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
+        return preference.getBoolean(PROPERTY_USER_HAVE_4S_SHOP, false);
+    }
+
+    public static boolean saveUserIs4SShop(boolean value) {
+        SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
+        return preference.edit().putBoolean(PROPERTY_USER_HAVE_4S_SHOP, value).commit();
+    }
+
+    public static boolean saveBandCarRequest(String protocol, String uid, String code, String bid, String name) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("xieyi", protocol);
+            json.put("commuid", uid);
+            json.put("code", code);
+            json.put("brandid", bid);
+            json.put("storename", name);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+        SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
+        return preference.edit().putString(PROPERTY_BAND_CAR_REQUEST, json.toString()).commit();
+    }
+
+    public static boolean removeBandCarRequest() {
+        SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
+        return preference.edit().remove(PROPERTY_BAND_CAR_REQUEST).commit();
+    }
+
+    public static HashMap<String, String> getBandCarRequest() {
+        SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
+        String temp = preference.getString(PROPERTY_BAND_CAR_REQUEST, "");
+        if (TextUtils.isEmpty(temp)) {
+            return null;
+        }
+        JSONObject json;
+        try {
+            json = new JSONObject(temp);
+            HashMap<String, String> result = new HashMap<>();
+            result.put("xieyi", json.getString("xieyi"));
+            result.put("commuid", json.getString("commuid"));
+            result.put("brandid", json.getString("brandid"));
+            result.put("code", json.getString("code"));
+            result.put("storename", json.getString("storename"));
+            return result;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

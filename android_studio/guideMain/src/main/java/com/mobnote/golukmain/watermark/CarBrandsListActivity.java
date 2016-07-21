@@ -138,6 +138,7 @@ public class CarBrandsListActivity extends BaseActivity implements View.OnClickL
             GolukUtils.showToast(this, getResources().getString(R.string.network_error));
             return;
         }
+
         mList = bean.carBrands.list;
         Collections.sort(mList, new PinyinComparator());
         mAdapter.setList(mList);
