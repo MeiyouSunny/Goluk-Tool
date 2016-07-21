@@ -1,4 +1,4 @@
-package com.mobnote.golukmain.specialsetting.bean;
+package com.mobnote.golukmain.watermark.bean;
 
 import android.os.Parcel;
 import android.os.Parcelable;

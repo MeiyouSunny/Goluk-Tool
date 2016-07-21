@@ -1,4 +1,4 @@
-package com.mobnote.golukmain.specialsetting;
+package com.mobnote.golukmain.watermark;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.specialsetting.bean.CarBrandBean;
+import com.mobnote.golukmain.watermark.bean.CarBrandBean;
 
 import java.util.List;
 

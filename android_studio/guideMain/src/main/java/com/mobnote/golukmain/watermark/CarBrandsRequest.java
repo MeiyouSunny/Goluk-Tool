@@ -1,8 +1,8 @@
-package com.mobnote.golukmain.specialsetting;
+package com.mobnote.golukmain.watermark;
 
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.http.request.GolukFastjsonRequest;
-import com.mobnote.golukmain.specialsetting.bean.CarBrandsResultBean;
+import com.mobnote.golukmain.watermark.bean.CarBrandsResultBean;
 
 import java.util.HashMap;
 

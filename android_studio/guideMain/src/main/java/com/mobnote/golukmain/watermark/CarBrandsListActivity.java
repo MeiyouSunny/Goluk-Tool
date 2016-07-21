@@ -1,4 +1,4 @@
-package com.mobnote.golukmain.specialsetting;
+package com.mobnote.golukmain.watermark;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,8 +15,8 @@ import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.http.IRequestResultListener;
-import com.mobnote.golukmain.specialsetting.bean.CarBrandBean;
-import com.mobnote.golukmain.specialsetting.bean.CarBrandsResultBean;
+import com.mobnote.golukmain.watermark.bean.CarBrandBean;
+import com.mobnote.golukmain.watermark.bean.CarBrandsResultBean;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.view.SideBar;
@@ -57,7 +57,7 @@ public class CarBrandsListActivity extends BaseActivity implements View.OnClickL
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 CarBrandBean bean = mList.get(position);
                 Intent data = new Intent();
-                data.putExtra(SpecialSettingActivity.SPECIAL_SETTING_RESULT, bean);
+                data.putExtra(WatermarkSettingActivity.SPECIAL_SETTING_RESULT, bean);
                 setResult(RESULT_OK, data);
                 finish();
             }

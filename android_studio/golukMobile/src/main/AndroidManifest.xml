@@ -373,7 +373,7 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
         <activity
-            android:name="com.mobnote.golukmain.specialsetting.SpecialSettingActivity"
+            android:name="com.mobnote.golukmain.watermark.WatermarkSettingActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.mobnote.golukmain.adas.AdasConfigActivity"
@@ -581,7 +581,7 @@
             android:hardwareAccelerated="true"
 
             android:theme="@android:style/Theme.NoTitleBar"></activity>
-        <activity android:name="com.mobnote.golukmain.specialsetting.CarBrandsListActivity">
+        <activity android:name="com.mobnote.golukmain.watermark.CarBrandsListActivity">
         </activity>
         <activity
             android:name="com.mobnote.golukmain.usercenter.UserLargeHeadActivity"

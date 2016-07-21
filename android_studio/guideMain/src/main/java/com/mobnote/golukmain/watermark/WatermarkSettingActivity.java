@@ -1,8 +1,7 @@
-package com.mobnote.golukmain.specialsetting;
+package com.mobnote.golukmain.watermark;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -11,14 +10,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.baidu.mapapi.map.Text;
 import com.bumptech.glide.Glide;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.specialsetting.bean.CarBrandBean;
-import com.mobnote.util.GolukUtils;
+import com.mobnote.golukmain.watermark.bean.CarBrandBean;
 
-public class SpecialSettingActivity extends BaseActivity implements View.OnClickListener {
+public class WatermarkSettingActivity extends BaseActivity implements View.OnClickListener {
     public static final int SPECIAL_SETTING_REQUEST = 1;
     public static final String SPECIAL_SETTING_RESULT = "CarBrand";
     private EditText edtName;
@@ -75,7 +72,6 @@ public class SpecialSettingActivity extends BaseActivity implements View.OnClick
         String name = edtName.getText().toString();
         String code = bean.code;
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

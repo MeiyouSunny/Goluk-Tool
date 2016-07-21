@@ -14,7 +14,7 @@ import com.mobnote.golukmain.msg.MessageCenterActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.praised.MyPraisedActivity;
 import com.mobnote.golukmain.profit.MyProfitActivity;
-import com.mobnote.golukmain.specialsetting.SpecialSettingActivity;
+import com.mobnote.golukmain.watermark.WatermarkSettingActivity;
 import com.mobnote.golukmain.userinfohome.UserInfohomeRequest;
 import com.mobnote.golukmain.userinfohome.bean.UserLabelBean;
 import com.mobnote.golukmain.userinfohome.bean.UserinfohomeRetBean;
@@ -463,7 +463,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
     private void gotoSSSSSetting() {
         if (ma.mApp.isIpcConnSuccess) {
             if (ma.mApp.mIPCControlManager.isT1Relative()) {
-                Intent specialSetting = new Intent(this.getActivity(), SpecialSettingActivity.class);
+                Intent specialSetting = new Intent(this.getActivity(), WatermarkSettingActivity.class);
                 startActivity(specialSetting);
             } else {
                 Toast.makeText(getActivity(), R.string.not_support_g, Toast.LENGTH_SHORT).show();
