@@ -1932,17 +1932,19 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             CallBack_StartLiveServer(true, liveInfo);
         }else if (IPageNotifyFn.PageType_LiveSign == requestType){
             LiveSignRetBean liveSignRetBean = (LiveSignRetBean)result;
-            if(GolukUtils.isTokenValid(liveSignRetBean.code)){
-                if(liveSignRetBean != null && liveSignRetBean.data != null){
-                    if(mSettingData.isEnableSaveReplay){
-                        mRtmpUrl = liveSignRetBean.data.liveurl + "?vdoid=" + liveSignRetBean.data.videoid;
-                    }else{
-                        mRtmpUrl = liveSignRetBean.data.liveurl;
+            if(liveSignRetBean != null){
+                if(GolukUtils.isTokenValid(liveSignRetBean.code)){
+                    if(liveSignRetBean.data != null){
+                        if(mSettingData.isEnableSaveReplay){
+                            mRtmpUrl = liveSignRetBean.data.liveurl + "?vdoid=" + liveSignRetBean.data.videoid;
+                        }else{
+                            mRtmpUrl = liveSignRetBean.data.liveurl;
+                        }
+                        startLiveForSetting();
                     }
-                    startLiveForSetting();
+                }else{
+                    GolukUtils.startUserLogin(this);
                 }
-            }else{
-                GolukUtils.startUserLogin(this);
             }
         }
     }
