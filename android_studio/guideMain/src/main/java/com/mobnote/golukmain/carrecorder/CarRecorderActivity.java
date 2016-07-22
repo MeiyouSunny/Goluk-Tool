@@ -497,7 +497,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 mSettingBtn.setVisibility(View.GONE);
                 mChangeBtn.setVisibility(View.GONE);
                 m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
-                mLiveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+                mLiveBtn.setImageResource(R.drawable.driving_car_living_icon_1);
                 setVideoBtnState(false);
                 break;
             case WIFI_STATE_SUCCESS:
@@ -526,9 +526,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         mConncetLayout.setVisibility(View.GONE);
         mChangeBtn.setVisibility(View.VISIBLE);
         if (mApp.isIpcLoginSuccess) {
-            mLiveBtn.setBackgroundResource(R.drawable.driving_car_living_icon);
+            mLiveBtn.setImageResource(R.drawable.driving_car_living_icon);
         } else {
-            mLiveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+            mLiveBtn.setImageResource(R.drawable.driving_car_living_icon_1);
         }
 
         setVideoBtnState(true);
@@ -1192,14 +1192,14 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             mConncetLayout.setVisibility(View.VISIBLE);
 
             m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
-            mLiveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+            mLiveBtn.setImageResource(R.drawable.driving_car_living_icon_1);
         } else {
             mPalyerLayout.setVisibility(View.GONE);
             mNotconnected.setVisibility(View.VISIBLE);
             mConncetLayout.setVisibility(View.GONE);
 
             m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
-            mLiveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+            mLiveBtn.setImageResource(R.drawable.driving_car_living_icon_1);
         }
     }
 
@@ -1216,7 +1216,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         setVideoBtnState(false);
 
         m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
-        mLiveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+        mLiveBtn.setImageResource(R.drawable.driving_car_living_icon_1);
     }
 
     private void ipcConnSucess() {
@@ -1243,9 +1243,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         mSettingBtn.setVisibility(View.VISIBLE);
         m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 //		if (!isT1()) {
-        mLiveBtn.setBackgroundResource(R.drawable.driving_car_living_icon);
+        mLiveBtn.setImageResource(R.drawable.driving_car_living_icon);
 //		} else {
-//			mLiveBtn.setBackgroundResource(R.drawable.driving_car_living_icon_1);
+//			mLiveBtn.setImageResource(R.drawable.driving_car_living_icon_1);
 //		}
 
     }
