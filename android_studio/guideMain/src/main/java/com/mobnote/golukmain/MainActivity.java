@@ -709,11 +709,11 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             } else if (state == WIFI_STATE_SUCCESS) {
                 Toast.makeText(MainActivity.this, getResources().getString(R.string.wifi_link_success_conn),
                         Toast.LENGTH_LONG).show();
-                mCarrecorderIv.setImageResource(R.drawable.index_video_icon);
+                mCarrecorderIv.setImageResource(R.drawable.tb_car_recorder_connected);
             } else if (state == WIFI_STATE_FAILED) {
-                mCarrecorderIv.setImageResource(R.drawable.tb_notconnected);
+                mCarrecorderIv.setImageResource(R.drawable.tb_car_recorder_not_connected);
             } else {
-                mCarrecorderIv.setImageResource(R.drawable.tb_notconnected);
+                mCarrecorderIv.setImageResource(R.drawable.tb_car_recorder_not_connected);
             }
         }
     }

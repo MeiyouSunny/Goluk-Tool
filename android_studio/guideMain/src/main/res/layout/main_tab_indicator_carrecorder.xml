@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="#0080ff"
     android:layout_height="match_parent">
 
     <ImageView
@@ -12,6 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/tb_notconnected" />
+        android:src="@drawable/tb_car_recorder_not_connected" />
 
 </LinearLayout>
