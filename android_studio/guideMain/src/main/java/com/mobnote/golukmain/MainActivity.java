@@ -52,6 +52,7 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventBindFinish;
 import com.mobnote.eventbus.EventBindResult;
 import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventDownloadVideoFinish;
 import com.mobnote.eventbus.EventFollowPush;
 import com.mobnote.eventbus.EventMapQuery;
 import com.mobnote.eventbus.EventMessageUpdate;
@@ -654,7 +655,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
                 updateHotPointState(true);
 
                 EventBus.getDefault().post(new EventPhotoUpdateDate(EventConfig.PHOTO_ALBUM_UPDATE_DATE, filename));
-
+                EventBus.getDefault().post(new EventDownloadVideoFinish());
                 GFileUtils.writeIPCLog("YYYYYY===@@@@@@==2222==downloadfiletime=" + time);
             }
         } catch (JSONException e) {
