@@ -276,10 +276,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         mLiveManager = new TimerManager(10);
         mLiveManager.setListener(this);
         mApp.addLocationListener(TAG, this);
-        if (isShareLive) {
-            continueOrStartLive();
-            updateCount(0, 0);
-        } else {
+        if (!isShareLive) {
             // 计时，90秒后，防止用户进入时没网
             start90Timer();
             startLiveLook(mPublisher);
@@ -288,6 +285,25 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         setCallBackListener();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (null != mLiveOperator) {
+            mLiveOperator.onStart();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mApp.setContext(this, "LiveVideo");
+        if (null != mLiveOperator) {
+            mLiveOperator.onResume();
+        }
+        if(!isUploadSucessed){
+            continueOrStartLive();
+        }
+    }
 
     private void initUserInfo() {
         if (isShareLive) {
@@ -552,7 +568,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         mPublisher = (UserInfo) intent.getSerializableExtra(KEY_USERINFO);
         isContinueLive = intent.getBooleanExtra(KEY_LIVE_CONTINUE, false);
         mSettingData = (LiveSettingBean) intent.getSerializableExtra(KEY_LIVE_SETTING_DATA);
-        Log.i("", "");
     }
 
     private void setViewInitData() {
@@ -923,23 +938,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     private void liveStopUploadVideo() {
         if (null != mLiveOperator) {
             this.mLiveOperator.stopLive();
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (null != mLiveOperator) {
-            mLiveOperator.onStart();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mApp.setContext(this, "LiveVideo");
-        if (null != mLiveOperator) {
-            mLiveOperator.onResume();
         }
     }
 
@@ -1564,8 +1562,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             // 续直播
             mSettingData = new LiveSettingBean();
             //startLiveLook(myInfo);
-            LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE,
-                    this.getString(R.string.str_live_retry_live));
+            LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE, this.getString(R.string.str_live_retry_live));
             isSettingCallBack = true;
         } else {
             // 显示设置窗口

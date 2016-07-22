@@ -168,6 +168,7 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
         }
 
         mCurrentLiveSecond = progress;
+        mLiveSettingBean.duration = mCurrentLiveSecond;
         mLiveDurationTv.setText(GolukUtils.secondToString(progress));
         mLiveConsumeFlowTv.setText(getCurrentFlow(progress));
     }
