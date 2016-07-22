@@ -5,12 +5,14 @@ import android.os.Parcelable;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
+import java.io.Serializable;
+
 /**
  * this is the first time to user Parcelable
  * I Strongly recommend to use Parcelable to replace Serializable
  * http://www.developerphil.com/parcelable-vs-serializable/
  */
-public class CarBrandBean implements Parcelable {
+public class CarBrandBean implements Serializable {
     /**
      * 品牌id
      */
@@ -41,46 +43,5 @@ public class CarBrandBean implements Parcelable {
      */
     @JSONField(name = "description")
     public String description;
-
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.brandId);
-        dest.writeString(this.name);
-        dest.writeString(this.alphaName);
-        dest.writeString(this.code);
-        dest.writeString(this.logoUrl);
-        dest.writeString(this.description);
-    }
-
-    public CarBrandBean() {
-    }
-
-    protected CarBrandBean(Parcel in) {
-        this.brandId = in.readString();
-        this.name = in.readString();
-        this.alphaName = in.readString();
-        this.code = in.readString();
-        this.logoUrl = in.readString();
-        this.description = in.readString();
-    }
-
-    public static final Parcelable.Creator<CarBrandBean> CREATOR = new Parcelable.Creator<CarBrandBean>() {
-        @Override
-        public CarBrandBean createFromParcel(Parcel source) {
-            return new CarBrandBean(source);
-        }
-
-        @Override
-        public CarBrandBean[] newArray(int size) {
-            return new CarBrandBean[size];
-        }
-    };
-
 
 }

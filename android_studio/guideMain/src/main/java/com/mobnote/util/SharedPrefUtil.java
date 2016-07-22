@@ -165,6 +165,8 @@ public class SharedPrefUtil {
 
     public static final String PROPERTY_BAND_CAR_REQUEST = "offline_request_band_car";
 
+    public static final String PROPERTY_CACHE_ALL_CAR_BRAND = "is_cache_all_car_brand";
+
 
     public static void setTokenId(String tokenid) {
         SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
@@ -693,6 +695,17 @@ public class SharedPrefUtil {
         SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
         return preference.edit().putBoolean(PROPERTY_USER_HAVE_4S_SHOP, value).commit();
     }
+
+    public static boolean getCacheCarBrand() {
+        SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
+        return preference.getBoolean(PROPERTY_CACHE_ALL_CAR_BRAND, false);
+    }
+
+    public static boolean saveCacheCarBrand(boolean value) {
+        SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
+        return preference.edit().putBoolean(PROPERTY_CACHE_ALL_CAR_BRAND, value).commit();
+    }
+
 
     public static boolean saveBandCarRequest(String protocol, String uid, String code, String bid, String name) {
         JSONObject json = new JSONObject();

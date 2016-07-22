@@ -2,16 +2,28 @@ package com.mobnote.util;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
+import java.io.StreamCorruptedException;
+import java.util.List;
 import java.util.Properties;
 
 import com.mobnote.application.GolukApplication;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 
 public class GolukFileUtils {
     public static String APP_PREF_KEY = "goluk_android";
+    public static String CAR_BRAND_PATH = "goluk/CarBrands";
+    public static String CAR_BRAND_OBJECT = "objectList";
 
     /**
      * 是否显示活动提示
@@ -303,4 +315,115 @@ public class GolukFileUtils {
 
         return content.toString();
     }
+
+    public static <T> boolean saveListToFile(List<T> list, String fileName) {
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + CAR_BRAND_PATH;
+        File pathDir = new File(path);
+        if (!pathDir.exists()) {
+            if (!pathDir.mkdirs()) {
+                return false;
+            }
+        }
+        String name = path + File.separator + fileName;
+        try {
+            FileOutputStream fos = new FileOutputStream(name);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(list);
+            oos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public static <T> List<T> restoreFileToList(String fileName) {
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + CAR_BRAND_PATH;
+        File pathDir = new File(path);
+        if (!pathDir.exists()) {
+            if (pathDir.mkdirs()) {
+                return null;
+            }
+        }
+        String name = path + File.separator + fileName;
+        FileInputStream fis;
+        try {
+            fis = new FileInputStream(name);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            List<T> list = (List<T>) ois.readObject();
+            ois.close();
+            return list;
+        } catch (StreamCorruptedException e) {
+            e.printStackTrace();
+        } catch (OptionalDataException e) {
+            e.printStackTrace();
+            return null;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return null;
+    }
+
+    public static boolean saveImageToExternalStorage(Bitmap image, String name) {
+        String fullPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + CAR_BRAND_PATH;
+        try {
+            File dir = new File(fullPath);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            FileOutputStream fOut;
+            File file = new File(fullPath, name);
+            if (file.exists()) {
+                return true;
+            }
+            if (!file.createNewFile()) {
+                return false;
+            }
+            fOut = new FileOutputStream(file);
+            // 100 means no compression, the lower you go, the stronger the compression
+            image.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+            fOut.flush();
+            fOut.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    public static boolean isSdReadable() {
+        boolean mExternalStorageAvailable;
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            mExternalStorageAvailable = true;
+        } else mExternalStorageAvailable = Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
+        return mExternalStorageAvailable;
+    }
+
+    public static Bitmap reloadThumbnail(String filename) {
+        String fullPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + CAR_BRAND_PATH;
+        Bitmap thumbnail = null;
+        // Look for the file on the external storage
+        try {
+            if (isSdReadable()) {
+                thumbnail = BitmapFactory.decodeFile(fullPath + File.separator + filename);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return thumbnail;
+    }
+
 }

@@ -14,11 +14,8 @@ import android.widget.ImageButton;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.watermark.bean.CarBrandBean;
-import com.mobnote.golukmain.watermark.bean.CarBrandsResultBean;
-import com.mobnote.util.GolukConfig;
-import com.mobnote.util.GolukUtils;
+import com.mobnote.util.GolukFileUtils;
 import com.mobnote.view.SideBar;
 
 import java.util.ArrayList;
@@ -26,11 +23,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class CarBrandsListActivity extends BaseActivity implements View.OnClickListener, SideBar.OnTouchingLetterChangedListener, IRequestResultListener {
+public class CarBrandsListActivity extends BaseActivity implements View.OnClickListener, SideBar.OnTouchingLetterChangedListener {
 
-    private EditText mEdtSearch;
     private StickyListHeadersListView mLvCar;
-    private SideBar mSideBar;
     private CarBrandsAdapter mAdapter;
     private List<CarBrandBean> mList;
 
@@ -45,9 +40,9 @@ public class CarBrandsListActivity extends BaseActivity implements View.OnClickL
 
     private void initView() {
         ImageButton btnBack = (ImageButton) findViewById(R.id.back_btn);
-        mEdtSearch = (EditText) findViewById(R.id.et_search_content);
+        EditText mEdtSearch = (EditText) findViewById(R.id.et_search_content);
         mLvCar = (StickyListHeadersListView) findViewById(R.id.lv_car_brands);
-        mSideBar = (SideBar) findViewById(R.id.side_bar);
+        SideBar mSideBar = (SideBar) findViewById(R.id.side_bar);
         mAdapter = new CarBrandsAdapter(this);
         mLvCar.setAdapter(mAdapter);
         btnBack.setOnClickListener(this);
@@ -81,9 +76,12 @@ public class CarBrandsListActivity extends BaseActivity implements View.OnClickL
     }
 
     private void initData() {
-        CarBrandsRequest request = new CarBrandsRequest(this);
-        request.setCache(true);
-        request.get(GolukConfig.SERVER_PROTOCOL_V2, mBaseApp.mCurrentUId);
+//        CarBrandsRequest request = new CarBrandsRequest(this);
+//        request.setCache(true);
+//        request.get(GolukConfig.SERVER_PROTOCOL_V2, mBaseApp.mCurrentUId);
+        mList = GolukFileUtils.restoreFileToList(GolukFileUtils.CAR_BRAND_OBJECT);
+        Collections.sort(mList, new PinyinComparator());
+        mAdapter.setList(mList);
     }
 
     @Override
@@ -122,26 +120,6 @@ public class CarBrandsListActivity extends BaseActivity implements View.OnClickL
         }
 
         mAdapter.setList(filterDateList);
-    }
-
-    @Override
-    public void onLoadComplete(int requestType, Object result) {
-        CarBrandsResultBean bean = (CarBrandsResultBean) result;
-        if (bean == null
-                ||
-                bean.code != GolukConfig.SERVER_RESULT_OK
-                ||
-                bean.carBrands == null
-                ||
-                bean.carBrands.list == null
-                ) {
-            GolukUtils.showToast(this, getResources().getString(R.string.network_error));
-            return;
-        }
-
-        mList = bean.carBrands.list;
-        Collections.sort(mList, new PinyinComparator());
-        mAdapter.setList(mList);
     }
 
     public class PinyinComparator implements Comparator<CarBrandBean> {

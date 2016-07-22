@@ -1,7 +1,9 @@
 package com.mobnote.golukmain.watermark;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -17,7 +19,13 @@ import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.watermark.bean.BandCarBrandResultBean;
 import com.mobnote.golukmain.watermark.bean.CarBrandBean;
 import com.mobnote.util.GolukConfig;
+import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
 
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 
@@ -26,10 +34,12 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
     public static final String SPECIAL_SETTING_RESULT = "CarBrand";
     private static final String IPC_WATERMARK = "WatermarkSetting";
     private EditText edtName;
-    private CarBrandBean bean;
+    private CarBrandBean currentBean;
     private ImageView ivLogo;
 
     private BandCarBrandsRequest request;
+    //从缓存里直接读取 , 前置条件必须已经缓存过
+    private List<CarBrandBean> mList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +52,8 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
     }
 
     private void initViewData() {
-
+        mList = GolukFileUtils.restoreFileToList(GolukFileUtils.CAR_BRAND_OBJECT);
+        mBaseApp.mIPCControlManager.getIPCWatermark();
     }
 
     private void initView() {
@@ -81,7 +92,7 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
             return;
         }
         String name = edtName.getText().toString();
-        String code = bean.logoUrl;
+        String code = currentBean.code;
         mBaseApp.mIPCControlManager.setIPCWatermark(code, name);
     }
 
@@ -91,27 +102,67 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
         if (requestCode != SPECIAL_SETTING_REQUEST || resultCode != RESULT_OK) {
             return;
         }
-        bean = data.getParcelableExtra(SPECIAL_SETTING_RESULT);
-        if (bean == null) {
+        currentBean = (CarBrandBean) data.getSerializableExtra(SPECIAL_SETTING_RESULT);
+        if (currentBean == null) {
             return;
         }
-        edtName.setText(bean.name);
-        Glide.with(this).load(bean.logoUrl).into(ivLogo);
+        edtName.setText(currentBean.name);
+        Glide.with(this).load(currentBean.logoUrl).into(ivLogo);
     }
 
 
     @Override
     public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
-        if (event == ENetTransEvent_IPC_VDCP_CommandResp && msg == IPC_VDCP_Msg_SetIPCLogo) {
-            //成功
-            if (0 == param1) {
-                request = new BandCarBrandsRequest(this);
-                request.get(GolukConfig.SERVER_PROTOCOL_V2, bean.brandId, bean.code, edtName.getText().toString(), mBaseApp.mCurrentUId);
-                finish();
-            } else {
-                GolukUtils.showToast(this, getString(R.string.user_personal_save_failed));
+        if (event == ENetTransEvent_IPC_VDCP_CommandResp) {
+            if (msg == IPC_VDCP_Msg_SetIPCLogo) {
+                //成功
+                if (0 == param1) {
+                    request = new BandCarBrandsRequest(this);
+                    request.get(GolukConfig.SERVER_PROTOCOL_V2, currentBean.brandId, currentBean.code, edtName.getText().toString(), mBaseApp.mCurrentUId);
+                    finish();
+                } else {
+                    GolukUtils.showToast(this, getString(R.string.user_personal_save_failed));
+                }
+            } else if (msg == IPC_VDCP_Msg_GetIPCLogo) {
+                if (0 == param1) {
+                    String watermarkInfo = (String) param2;
+                    try {
+                        JSONObject jsonObject = new JSONObject(watermarkInfo);
+                        String code = jsonObject.getString("code");
+                        String name = jsonObject.getString("name");
+                        convertToServerBean(code, name);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                //如果获取不到什么东西的话，说明没有
             }
         }
+    }
+
+    private void convertToServerBean(String code, String name) {
+        if (TextUtils.isEmpty(code)) {
+            return;
+        }
+        if (TextUtils.isEmpty(name)) {
+            return;
+        }
+        if (mList == null) {
+            return;
+        }
+
+        for (CarBrandBean bean : mList) {
+            if (bean.code.equals(code)) {
+                currentBean = bean;
+                break;
+            }
+        }
+        if (currentBean == null) {
+            return;
+        }
+        edtName.setText(name);
+        Bitmap logo = GolukFileUtils.reloadThumbnail(currentBean.code + ".jpg");
+        ivLogo.setImageBitmap(logo);
     }
 
     @Override

@@ -387,6 +387,10 @@ public interface IPCManagerFn extends IGolukCommFn {
      * 设置IPC水印Logo
      */
     int IPC_VDCP_Msg_SetIPCLogo = 2217;
+    /**
+     * 获取IPC水印Logo
+     */
+    int IPC_VDCP_Msg_GetIPCLogo = 2218;
 
 
     /**
@@ -736,9 +740,13 @@ public interface IPCManagerFn extends IGolukCommFn {
      */
     int IPC_VDCPCmd_SetIPCLogo = 2217;
     /**
+     * 获取IPC水印Logo
+     */
+    int IPC_VDCPCmd_GetIPCLogo = 2218;
+    /**
      * 命令数量
      */
-    int IPC_VDCPCmd_Msg_COUNT = 2218;
+    int IPC_VDCPCmd_Msg_COUNT = 2219;
 
 
     public void IPCManage_CallBack(int event, int msg, int param1, Object param2);

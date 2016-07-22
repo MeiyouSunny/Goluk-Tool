@@ -1105,6 +1105,10 @@ public class IPCControlManager implements IPCManagerFn {
         return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPCManagerFn.IPC_VDCPCmd_SetIPCLogo, json.toString());
     }
 
+    public boolean getIPCWatermark() {
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPCManagerFn.IPC_VDCPCmd_GetIPCLogo, "");
+    }
+
     @Override
     public synchronized void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
         // LogUtil.e("jyf",
