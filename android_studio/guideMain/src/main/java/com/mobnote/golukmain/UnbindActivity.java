@@ -17,6 +17,7 @@ import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
+import com.mobnote.user.IPCInfo;
 import com.mobnote.user.IpcUpdateManage;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SharedPrefUtil;
@@ -29,7 +30,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 public class UnbindActivity extends BaseActivity implements OnClickListener, IPCManagerFn {
-
+    public static final String TAG = "Unbind";
     /**
      * title
      **/
@@ -42,6 +43,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
     private GolukApplication mApplication = null;
     private boolean isGetIPCSucess = false;
     private boolean canOfflineInstall = false;
+    private boolean canOfflineInstallLater = false;
     private boolean installLater = false;
 
     private String mGolukSSID = "";
@@ -59,7 +61,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
     private RelativeLayout mIPCViewLayout;
     private TextView mIPCModelText, mIPCNumberText, mIPCVersionText;
     private ImageView mIPCimage;
-    public static final String TAG = "Unbind";
+    private IPCInfo mIpcInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +70,6 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         setContentView(R.layout.unbind_layout);
         EventBus.getDefault().register(this);
         mApplication = (GolukApplication) getApplication();
-        mApplication.setContext(this, TAG);
         if (mApplication.getIPCControlManager() != null) {
             mApplication.getIPCControlManager().addIPCManagerListener(TAG, this);
         }
@@ -146,6 +147,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
     @Override
     protected void onResume() {
         super.onResume();
+        mApplication.setContext(this, TAG);
         initViewData();
         adaptDownloadState();
         ZhugeUtils.eventIpcManage(this);
@@ -154,7 +156,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
     private void adaptDownloadState() {
         mUpdateLayout.setEnabled(true);
         if (mApplication.mIpcUpdateManage.isDownloading()) {// 下载中
-            mTextVersion.setText(R.string.str_ipc_update_downloading_ellipsis);
+            mTextVersion.setText(R.string.str_fireware_is_downloading);
         } else if (mApplication.mIpcUpdateManage.isDownloadSuccess()) {
             mTextVersion.setText(R.string.install_new_firmware);
         } else {
@@ -182,6 +184,14 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         mUpdateLayout.setEnabled(true);
     }
 
+    private void installNow(IPCInfo ipcInfo) {
+        mTextVersion.setText(R.string.str_update_find_new_first);
+        mUpdateLayout.setEnabled(true);
+        canOfflineInstallLater = true;
+        mIpcInfo = ipcInfo;
+    }
+
+
     @Override
     public void onClick(View arg0) {
         int id = arg0.getId();
@@ -205,8 +215,8 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         } else if (id == R.id.unbind_layout_update) {
             if (mApplication.mIpcUpdateManage.isDownloading() || installLater) {// 下载中
                 GolukUtils.startUpdateActivity(UnbindActivity.this, 0, null, false);
-            } else if (mApplication.mIpcUpdateManage.isDownloadSuccess() || canOfflineInstall) {
-                GolukUtils.startUpdateActivity(UnbindActivity.this, 1, null, false);
+            } else if (mApplication.mIpcUpdateManage.isDownloadSuccess() || canOfflineInstall || canOfflineInstallLater) {
+                GolukUtils.startUpdateActivity(UnbindActivity.this, 1, mIpcInfo, false);
             }
         }
     }
@@ -216,6 +226,8 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             isNewest();
         } else if (event.ResultType == EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_DELAY) {
             installLater();
+        } else if (event.ResultType == EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_OFFLINE_INSTALL_DELAY) {
+            installNow(event.ipcInfo);
         }
     }
 

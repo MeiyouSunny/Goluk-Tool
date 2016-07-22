@@ -966,7 +966,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
                 } catch (Exception e) {
                 }
-                EventBus.getDefault().post(new EventDownloadVideoFinish());
             }
 
         } catch (JSONException e) {
