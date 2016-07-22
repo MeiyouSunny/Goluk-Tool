@@ -407,6 +407,10 @@ public class FragmentMine extends Fragment implements OnClickListener,
                 .findViewById(R.id.user_follow);
         mNewFansIv = (ImageView) mMineRootView.findViewById(R.id.iv_new_fans);
         mLLSSSS = (LinearLayout) mMineRootView.findViewById(R.id.ll_advanced_setting);
+        if (SharedPrefUtil.getUserIs4SShop()) {
+            mLLSSSS.setVisibility(View.VISIBLE);
+        }
+
         // 注册事件
         // 个人中心 我的相册 摄像头管理 通用设置 极路客小技巧 安装指导 版本信息 购买极路客
         mUserCenterItem.setOnClickListener(this);
