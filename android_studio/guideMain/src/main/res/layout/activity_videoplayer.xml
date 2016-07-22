@@ -24,10 +24,11 @@
         android:orientation="vertical"
         android:visibility="gone" >
 
-        <ImageView
+        <ProgressBar
             android:id="@+id/mLoading"
-            android:layout_width="133.33dp"
-            android:layout_height="146.66dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
             android:layout_gravity="center" />
 
         <TextView
