@@ -1,5 +1,7 @@
 package com.mobnote.golukmain.livevideo;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 
 import org.json.JSONObject;
@@ -10,6 +12,7 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.http.request.GolukFastjsonRequest;
 import com.mobnote.golukmain.live.LiveDataInfo;
+import com.mobnote.golukmain.live.LiveSettingBean;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.map.LngLat;
 
@@ -30,6 +33,51 @@ public class LiveStartRequest extends GolukFastjsonRequest<LiveDataInfo> {
         return null;
     }
 
+    public boolean get(String vid ,LiveSettingBean bean){
+        if(bean == null){
+            return false;
+        }
+        String talk = "0";
+        String desc = null;
+        String flux = "";
+        String vTypeStr = "";
+        if (bean != null) {
+            talk = bean.isCanTalk ? "1" : "0";
+            if(null != bean.desc) {
+                try {
+                    desc = URLEncoder.encode(bean.desc, "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+            flux = null != bean.netCountStr ? "" + bean.netCountStr : "";
+            vTypeStr = null != bean ? "" + bean.vtype : "";
+        }
+
+        httpAddHeader("xieyi", "200");
+        httpAddHeader("active", "1");
+        httpAddHeader("talk", talk);
+        httpAddHeader("tag", "android");
+        httpAddHeader("part", "phone");
+        httpAddHeader("vid", vid);
+        httpAddHeader("desc", desc);
+        httpAddHeader("restime", bean.duration + "");
+        httpAddHeader("vtype", vTypeStr);
+        httpAddHeader("flux",flux);
+        httpAddHeader("voice",bean.isEnableVoice ? "1" : "0");
+
+        UserInfo userInfo = GolukApplication.getInstance().getMyInfo();
+        httpAddHeader("mid", Tapi.getMobileId());
+        httpAddHeader("commuid", userInfo.uid);
+        httpAddHeader("aid", userInfo.aid);
+
+        httpAddHeader("location", bean.shortLocation);
+        httpAddHeader("commlon", String.valueOf(bean.lon));
+        httpAddHeader("commlat",  String.valueOf(bean.lat));
+        httpAddHeader("speed", "" + 10);
+        super.post();
+        return true;
+    }
     public boolean get(String json) {
         try {
             JSONObject jsonObj = new JSONObject(json);

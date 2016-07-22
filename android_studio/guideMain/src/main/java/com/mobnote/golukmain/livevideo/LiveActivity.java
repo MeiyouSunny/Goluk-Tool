@@ -242,6 +242,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     LiveCommentFragment mLiveCommentFragment;
 
     private String mRtmpUrl;
+    private String mVid;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -594,7 +595,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     private void getLiveSign(){
         if (null != myInfo) {
             LiveSignRequest liveSignRequest = new LiveSignRequest(IPageNotifyFn.PageType_LiveSign,this);
-            liveSignRequest.get(myInfo.uid,myInfo.lon,myInfo.lat);
+            liveSignRequest.get(myInfo.uid,String.valueOf(mSettingData.lon),String.valueOf(mSettingData.lat));
         }
 
     }
@@ -602,25 +603,14 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     // 开启自己的直播,请求服务器 (在用户点击完设置后开始请求)
     private void startLiveForServer() {
         isRequestedForServer = true;
-        String json = null;
-        if (this.isContinueLive) {
-        } else {
-            json = JsonUtil.getStartLiveJson(mCurrentVideoId, mSettingData);
-        }
-        if (null == json) {
-            return;
-        }
         // 请求发起直播
         LiveStartRequest liveRequest = new LiveStartRequest(IPageNotifyFn.PageType_LiveStart, this);
-        boolean isSucess = liveRequest.get(json);
-
+        boolean isSucess = liveRequest.get(mVid,mSettingData);
         if (!isSucess) {
-            GolukDebugUtils.e("", "newlive-----LiveActivity-----startLiveForServer :--failed");
             startLiveFailed();
         } else {
             if (!isAlreadExit) {
-                LiveDialogManager.getManagerInstance().setProgressDialogMessage(
-                        this.getString(R.string.str_live_create));
+                LiveDialogManager.getManagerInstance().setProgressDialogMessage(this.getString(R.string.str_live_create));
             }
         }
     }
@@ -1933,6 +1923,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             if(liveSignRetBean != null){
                 if(GolukUtils.isTokenValid(liveSignRetBean.code)){
                     if(liveSignRetBean.data != null){
+                        mVid = liveSignRetBean.data.videoid;
                         if(mSettingData.isEnableSaveReplay){
                             mRtmpUrl = liveSignRetBean.data.liveurl + "?vdoid=" + liveSignRetBean.data.videoid;
                         }else{
