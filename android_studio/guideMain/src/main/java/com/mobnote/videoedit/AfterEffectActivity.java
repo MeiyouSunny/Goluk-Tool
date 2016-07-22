@@ -1583,20 +1583,34 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         mAfterEffecthandler.sendMessage(msg);
     }
 
-    public boolean needMusicMoreScroll(int index) {
+    // return 0 for no more scroll, 1 for right scroll, -1 for left scroll
+    public int needMusicMoreScroll(int index) {
         if(-1 == index) {
-            return false;
+            return 0;
         }
 
         int last = mAEMusicLayoutManager.findLastCompletelyVisibleItemPosition();
+        int first = mAEMusicLayoutManager.findFirstCompletelyVisibleItemPosition();
         if(index >= last) {
-            return true;
+            return 1;
+        } else if(index <= first) {
+            return -1;
         }
-        return false;
+
+
+        return 0;
     }
 
-    public void moreMusicScroll() {
+    public void moreMusicScrollRight() {
         int first = mAEMusicLayoutManager.findFirstCompletelyVisibleItemPosition();
         mAEMusicLayoutManager.scrollToPositionWithOffset(++first, 0);
+    }
+
+    public void moreMusicScrollLeft() {
+        int first = mAEMusicLayoutManager.findFirstCompletelyVisibleItemPosition();
+        if(first > 0) {
+            first--;
+        }
+        mAEMusicLayoutManager.scrollToPositionWithOffset(first, 0);
     }
 }
