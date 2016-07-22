@@ -1,5 +1,7 @@
 package com.mobnote.golukmain.livevideo;
 
+import android.text.TextUtils;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -41,15 +43,19 @@ public class LiveStartRequest extends GolukFastjsonRequest<LiveDataInfo> {
         String desc = null;
         String flux = "";
         String vTypeStr = "";
+        String shortLocation = "";
         if (bean != null) {
             talk = bean.isCanTalk ? "1" : "0";
-            if(null != bean.desc) {
                 try {
-                    desc = URLEncoder.encode(bean.desc, "utf-8");
+                    if(!TextUtils.isEmpty(bean.shortLocation)){
+                        shortLocation =  URLEncoder.encode(bean.shortLocation, "utf-8");
+                    }
+                    if(!TextUtils.isEmpty(bean.desc)) {
+                        desc = URLEncoder.encode(bean.desc, "utf-8");
+                    }
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-            }
             flux = null != bean.netCountStr ? "" + bean.netCountStr : "";
             vTypeStr = null != bean ? "" + bean.vtype : "";
         }
@@ -71,7 +77,7 @@ public class LiveStartRequest extends GolukFastjsonRequest<LiveDataInfo> {
         httpAddHeader("commuid", userInfo.uid);
         httpAddHeader("aid", userInfo.aid);
 
-        httpAddHeader("location", bean.shortLocation);
+        httpAddHeader("location", shortLocation);
         httpAddHeader("commlon", String.valueOf(bean.lon));
         httpAddHeader("commlat",  String.valueOf(bean.lat));
         httpAddHeader("speed", "" + 10);

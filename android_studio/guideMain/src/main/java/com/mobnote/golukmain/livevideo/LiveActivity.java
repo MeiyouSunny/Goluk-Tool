@@ -1792,7 +1792,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             return;
         }
         mThumbBitmap = ImageManager.getBitmapFromCache(picName, 100, 100);
-        new UploadLiveScreenShotTask(picName, myInfo.uid).execute();
+        new UploadLiveScreenShotTask(picName, myInfo.uid,mVid).execute();
     }
 
     private String getShareVideoId() {

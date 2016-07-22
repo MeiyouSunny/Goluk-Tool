@@ -24,9 +24,11 @@ public class UploadLiveScreenShotTask extends AsyncTask<String, Integer, String>
 
     private String filePath;
     private String uid;
-    public UploadLiveScreenShotTask(String fPath,String uid) {
+    private String vid;
+    public UploadLiveScreenShotTask(String fPath,String uid,String vid) {
         this.filePath = fPath;
         this.uid = uid;
+        this.vid = vid;
     }
 
     @Override
@@ -37,9 +39,10 @@ public class UploadLiveScreenShotTask extends AsyncTask<String, Integer, String>
         files.put("pic", file);
 
         final Map<String, String> requestParams = new HashMap<String, String>();
+        requestParams.put("xieyi", "200");
         requestParams.put("md5", GolukUtils.getFileMD5(file));
-        requestParams.put("uid",uid);
-        requestParams.put("vid",uid);
+        requestParams.put("commuid",uid);
+        requestParams.put("vid",vid);
 
         String result = null;
         try {
