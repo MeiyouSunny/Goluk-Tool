@@ -181,7 +181,7 @@ public class UseGoogle implements LocationListener {
 				locationInfo.radius = radius;
 
 				BaiduLocation.postLocationInfo(0, lat, lng, radius, speed, direction, result.detail, "-1");
-				BaiduLocation.postShortLocationAddress(result.cityName  + "·" +  result.subLocatity);
+				BaiduLocation.postShortLocationAddress(result.cityName  + "·" +  result.subLocatity,lat,lng);
 				getMessage(locationInfo);
 			}
 		}.execute();

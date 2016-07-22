@@ -620,11 +620,11 @@ public class LiveActivityGoluk extends BaseActivity implements View.OnClickListe
             return;
         }
         String condi = "{\"uid\":\"" + userInfo.uid + "\",\"desAid\":\"" + userInfo.aid + "\"}";
-        GolukDebugUtils.e("", "newlive-----LiveActivity----startLiveLook---查看他人直播---: " + condi);
+        GolukDebugUtils.e("", "newlive-----LiveActivity----getLiveDetail---查看他人直播---: " + condi);
         boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
                 IPageNotifyFn.PageType_GetVideoDetail, condi);
         if (!isSucess) {
-            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----startLiveLook----22 : FASE False FAlse");
+            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----getLiveDetail----22 : FASE False FAlse");
         }
     }
 
@@ -1575,7 +1575,7 @@ public class LiveActivityGoluk extends BaseActivity implements View.OnClickListe
             GolukDebugUtils.e("", "newlive-----LiveActivity----onCreate---开始续播---: ");
             // 续直播
             mSettingData = new LiveSettingBean();
-            //startLiveLook(myInfo);
+            //getLiveDetail(myInfo);
             LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE,
                     this.getString(R.string.str_live_retry_live));
             isSettingCallBack = true;

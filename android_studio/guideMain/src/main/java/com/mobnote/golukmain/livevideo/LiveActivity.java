@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -266,6 +265,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         setViewInitData();
         // 地图初始化
         initMapviewFragment();
+        // 设置评论和地图的tab和fragment
         resetTabAndFragment();
         // 获取我的登录信息
         myInfo = mApp.getMyInfo();
@@ -279,7 +279,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (!isShareLive) {
             // 计时，90秒后，防止用户进入时没网
             start90Timer();
-            startLiveLook(mPublisher);
+            getLiveDetail(mPublisher);
             updateCount(Integer.parseInt(mPublisher.zanCount), Integer.parseInt(mPublisher.persons));
         }
         setCallBackListener();
@@ -625,17 +625,18 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    // 查看他人的直播
-    public void startLiveLook(UserInfo userInfo) {
+    /**
+     * 获取直播详情
+     * @param userInfo
+     */
+    public void getLiveDetail(UserInfo userInfo) {
         if (isLiveUploadTimeOut) {
             return;
         }
         String condi = "{\"uid\":\"" + userInfo.uid + "\",\"desAid\":\"" + userInfo.aid + "\"}";
-        GolukDebugUtils.e("", "newlive-----LiveActivity----startLiveLook---查看他人直播---: " + condi);
-        boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
-                IPageNotifyFn.PageType_GetVideoDetail, condi);
+        boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetVideoDetail, condi);
         if (!isSucess) {
-            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----startLiveLook----22 : FASE False FAlse");
+            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----getLiveDetail----22 : FASE False FAlse");
         }
     }
 
@@ -746,7 +747,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 startVideoAndLive("");
                 break;
             case MSG_H_RETRY_REQUEST_DETAIL:
-                startLiveLook(mPublisher);
+                getLiveDetail(mPublisher);
                 break;
             case MSG_H_PLAY_LOADING:
                 mVideoLoading.setVisibility(View.VISIBLE);
@@ -1561,7 +1562,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             GolukDebugUtils.e("", "newlive-----LiveActivity----onCreate---开始续播---: ");
             // 续直播
             mSettingData = new LiveSettingBean();
-            //startLiveLook(myInfo);
+            getLiveDetail(myInfo);
             LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE, this.getString(R.string.str_live_retry_live));
             isSettingCallBack = true;
         } else {

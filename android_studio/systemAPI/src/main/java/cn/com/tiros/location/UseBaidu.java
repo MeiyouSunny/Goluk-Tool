@@ -94,7 +94,7 @@ public class UseBaidu implements BDLocationListener {
 		if (null != cityCode) {
 			BaiduLocation.postLocationInfo(locationType, lat, lon, radius, speed, direction, province + city + district
 					+ street, cityCode);
-			BaiduLocation.postShortLocationAddress(city + "·" + district);
+			BaiduLocation.postShortLocationAddress(city + "·" + district,lat,lon);
 		} else {
 			if (mTryCount > BaiduLocation.LOCATION_TRY_LIMIT) {
 				BaiduLocation.postLocationInfo("-1");

@@ -1,5 +1,6 @@
 package com.mobnote.golukmain.livevideo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -40,6 +41,11 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
     private int mCurrentLiveSecond = DEFAULT_SECOND;
 
     private LiveSettingBean mLiveSettingBean;
+
+    public static final String CURR_LON = "curr_lon";
+    public static final String CURR_LAT = "curr_lat";
+    public static final String SHORT_LOCATION = "short_location";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +65,11 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
         mLiveSettingBean.isEnablePublic = true;
         mLiveSettingBean.isEnableVoice = true;
         mLiveSettingBean.isEnableSaveReplay = false;
+
+        Intent intent = getIntent();
+        mLiveSettingBean.shortLocation = intent.getStringExtra(SHORT_LOCATION);
+        mLiveSettingBean.lat = intent.getDoubleExtra(CURR_LAT,0.0);
+        mLiveSettingBean.lon = intent.getDoubleExtra(CURR_LON,0.0);
     }
 
     private void setupView() {

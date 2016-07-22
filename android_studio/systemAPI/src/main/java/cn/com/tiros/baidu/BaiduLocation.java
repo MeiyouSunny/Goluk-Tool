@@ -101,8 +101,8 @@ public class BaiduLocation implements PostMessageInterface {
 		EventBus.getDefault().post(new cn.com.mobnote.eventbus.EventLocationFinish(LOCATION_FINISH, cityCode));
 	}
 
-	public static void postShortLocationAddress(String shortAddress){
-		EventBus.getDefault().post(new cn.com.mobnote.eventbus.EventShortLocationFinish(shortAddress));
+	public static void postShortLocationAddress(String shortAddress, double lat, double lon){
+		EventBus.getDefault().post(new cn.com.mobnote.eventbus.EventShortLocationFinish(shortAddress, lat, lon));
 	}
 
 	private int mTryCount = 0;

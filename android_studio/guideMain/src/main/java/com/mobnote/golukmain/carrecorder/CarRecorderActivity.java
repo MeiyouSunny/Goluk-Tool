@@ -88,6 +88,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.com.mobnote.eventbus.EventLocationFinish;
+import cn.com.mobnote.eventbus.EventShortLocationFinish;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -334,6 +335,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     private String SelfContextTag = "carrecorder";
 
     private String mLocationAddress = "";
+    private String mShortLocation;
+    private double mLocationLat;
+    private double mLocationLon;
 
     private ImageView mChangeBtn;
 
@@ -1075,8 +1079,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                     intent.putExtra("isInfo", "back");
                     startActivity(intent);
                 } else {
-//                    GolukUtils.startPublishOrLookLiveActivity(this,true,false,mSettingData,null);
                     intent = new Intent(this, StartLiveActivity.class);
+                    intent.putExtra(StartLiveActivity.SHORT_LOCATION,mShortLocation);
+                    intent.putExtra(StartLiveActivity.CURR_LON,mLocationLon);
+                    intent.putExtra(StartLiveActivity.CURR_LAT,mLocationLat);
                     startActivity(intent);
                 }
             }
@@ -2400,6 +2406,15 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         }
     }
 
+    public void onEventMainThread(EventShortLocationFinish eventShortLocationFinish){
+        if(null == eventShortLocationFinish){
+            return;
+        }
+        mShortLocation = eventShortLocationFinish.getShortAddress();
+        mLocationLon = eventShortLocationFinish.getLon();
+        mLocationLat = eventShortLocationFinish.getLat();
+    }
+
     public void onEventMainThread(EventLocationFinish event) {
         if (null == event) {
             return;
@@ -2414,6 +2429,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         } else {// 定位成功
             if (event.getAddress() != null && !"".equals(event.getAddress())) {
                 mLocationAddress = event.getAddress();
+                mLocationLat = event.getLat();
+                mLocationLon = event.getLon();
                 com.mobnote.util.GolukFileUtils.saveString("loactionAddress", mLocationAddress);
                 mAddr.setText(mLocationAddress);
             }
