@@ -308,7 +308,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
         mEmojiImg = (ImageView) findViewById(R.id.emojicon);
         emoLayout = (FrameLayout) findViewById(R.id.emojiconsLayout);
 
-        mImageRight.setImageResource(R.drawable.mine_icon_more);
+        mImageRight.setImageResource(R.drawable.mine_icon_more_click);
         mTextTitle.setText(mTitleStr);
         mAdapter = new VideoDetailAdapter(this, 0);
         mHeader = new VideoDetailHeader(this, mType);
