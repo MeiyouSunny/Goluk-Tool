@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -182,7 +183,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     /**
      * 加载中动画显示控件
      */
-    private ImageView mLoading = null;
+    private ProgressBar mLoading = null;
 
     private RingView downloadSize = null;
 
@@ -205,7 +206,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     /**
      * 加载中动画对象
      */
-    private AnimationDrawable mAnimationDrawable = null;
+    //private AnimationDrawable mAnimationDrawable = null;
     /**
      * 加载中显示文字
      */
@@ -643,9 +644,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         mAddr = (TextView) findViewById(R.id.mAddr);
         mConnectTip = (TextView) findViewById(R.id.mConnectTip);
         mLoadingLayout = (LinearLayout) findViewById(R.id.mLoadingLayout);
-        mLoading = (ImageView) findViewById(R.id.mLoading);
-        mLoading.setBackgroundResource(R.anim.video_loading);
-        mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
+        mLoading = (ProgressBar) findViewById(R.id.mLoading);
+      //  mLoading.setBackgroundResource(R.anim.video_loading);
+    //    mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
         mLoadingText = (TextView) findViewById(R.id.mLoadingText);
 
         mLiveBtn = (ImageButton) findViewById(R.id.btn_carrecorder_live);
@@ -1137,16 +1138,16 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         mLoadingText.setText(this.getResources().getString(R.string.str_video_loading));
         mLoadingLayout.setVisibility(View.VISIBLE);
         mLoading.setVisibility(View.VISIBLE);
-        mLoading.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mAnimationDrawable != null) {
-                    if (!mAnimationDrawable.isRunning()) {
-                        mAnimationDrawable.start();
-                    }
-                }
-            }
-        }, 100);
+//        mLoading.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (mAnimationDrawable != null) {
+//                    if (!mAnimationDrawable.isRunning()) {
+//                        mAnimationDrawable.start();
+//                    }
+//                }
+//            }
+//        }, 100);
     }
 
     /**
@@ -1156,11 +1157,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
      * @date 2015年3月8日
      */
     private void hideLoading() {
-        if (mAnimationDrawable != null) {
-            if (mAnimationDrawable.isRunning()) {
-                mAnimationDrawable.stop();
-            }
-        }
+//        if (mAnimationDrawable != null) {
+//            if (mAnimationDrawable.isRunning()) {
+//                mAnimationDrawable.stop();
+//            }
+//        }
         mLoadingLayout.setVisibility(View.GONE);
     }
 

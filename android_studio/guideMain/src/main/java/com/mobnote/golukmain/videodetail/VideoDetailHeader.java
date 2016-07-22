@@ -41,6 +41,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -61,7 +62,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 	private ImageView mPlayBtn = null;
 	private SeekBar mSeekBar = null;
 	private LinearLayout mVideoLoading = null;
-	private ImageView mLoading = null;
+	private ProgressBar mLoading = null;
 	private RelativeLayout mPlayerLayout = null;
 
 	private TextView mTextDescribe = null;
@@ -78,7 +79,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 	public ConnectivityManager mConnectivityManager = null;
 	public NetworkInfo mNetInfo = null;
 	/** 加载中动画对象 */
-	private AnimationDrawable mAnimationDrawable = null;
+	//private AnimationDrawable mAnimationDrawable = null;
 	public boolean isShow = false;
 //	/** 缓冲标识 */
 	public boolean isBuffering = false;
@@ -141,7 +142,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 		mPlayBtn = (ImageView) convertView.findViewById(R.id.play_btn);
 		mSeekBar = (SeekBar) convertView.findViewById(R.id.seekbar);
 		mVideoLoading = (LinearLayout) convertView.findViewById(R.id.mLoadingLayout);
-		mLoading = (ImageView) convertView.findViewById(R.id.mLoading);
+		mLoading = (ProgressBar) convertView.findViewById(R.id.mLoading);
 		mPlayerLayout = (RelativeLayout) convertView.findViewById(R.id.mPlayerLayout);
 		simpleDraweeView = (ImageView) convertView.findViewById(R.id.video_detail_first_pic);
 
@@ -171,8 +172,8 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 		mActiveLayout = (RelativeLayout) convertView.findViewById(R.id.video_detail_activie_layout);
 		mSysLayout = (RelativeLayout) convertView.findViewById(R.id.video_detail_sys_layout);
 		mRecomLayout = (RelativeLayout) convertView.findViewById(R.id.video_detail_recom_layout);
-		mLoading.setBackgroundResource(R.anim.video_loading);
-		mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
+		//mLoading.setBackgroundResource(R.anim.video_loading);
+		//mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
 
 		mPlayBtn.setOnClickListener(this);
 		mPlayerLayout.setOnClickListener(this);
@@ -423,16 +424,16 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 			mVideoLoading.setVisibility(View.VISIBLE);
 			mLoading.setVisibility(View.VISIBLE);
 			mPlayBtn.setVisibility(View.GONE);
-			mLoading.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					if (mAnimationDrawable != null) {
-						if (!mAnimationDrawable.isRunning()) {
-							mAnimationDrawable.start();
-						}
-					}
-				}
-			}, 100);
+//			mLoading.postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+//					if (mAnimationDrawable != null) {
+//						if (!mAnimationDrawable.isRunning()) {
+//							mAnimationDrawable.start();
+//						}
+//					}
+//				}
+//			}, 100);
 		}
 	}
 
@@ -446,11 +447,11 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 		if (isShow) {
 			isShow = false;
 			mImageLayout.setVisibility(View.GONE);
-			if (mAnimationDrawable != null) {
-				if (mAnimationDrawable.isRunning()) {
-					mAnimationDrawable.stop();
-				}
-			}
+//			if (mAnimationDrawable != null) {
+//				if (mAnimationDrawable.isRunning()) {
+//					mAnimationDrawable.stop();
+//				}
+//			}
 			mVideoLoading.setVisibility(View.GONE);
 		}
 	}

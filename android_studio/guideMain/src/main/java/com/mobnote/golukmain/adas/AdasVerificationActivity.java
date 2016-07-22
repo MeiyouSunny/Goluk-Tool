@@ -31,6 +31,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
@@ -51,9 +52,9 @@ public class AdasVerificationActivity extends BaseActivity implements OnClickLis
 	/** 加载中布局 */
 	private LinearLayout mLoadingLayout = null;
 	/** 加载中动画显示控件 */
-	private ImageView mLoading = null;
+	private ProgressBar mLoading = null;
 	/** 加载中动画对象 */
-	private AnimationDrawable mAnimationDrawable = null;
+	//private AnimationDrawable mAnimationDrawable = null;
 
 	private AdasVerificationFrameLayout mFrameLayoutOverlay;
 
@@ -114,9 +115,9 @@ public class AdasVerificationActivity extends BaseActivity implements OnClickLis
 		lp.height = (int) (screenWidth / 1.7833);
 		playerLayout.setLayoutParams(lp);
 		mLoadingLayout = (LinearLayout) findViewById(R.id.linearlayout_loading);
-		mLoading = (ImageView) findViewById(R.id.imageview_loading);
-		mLoading.setBackgroundResource(R.anim.video_loading);
-		mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
+		mLoading = (ProgressBar) findViewById(R.id.imageview_loading);
+//		mLoading.setBackgroundResource(R.anim.video_loading);
+//		mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
 		mLeftImageView = (ImageView) findViewById(R.id.imageview_leftmove);
 		mLeftImageView.setOnClickListener(this);
 		mRightImageView = (ImageView) findViewById(R.id.imageview_rightmove);
@@ -331,16 +332,16 @@ public class AdasVerificationActivity extends BaseActivity implements OnClickLis
 	private void showLoading() {
 		mLoadingLayout.setVisibility(View.VISIBLE);
 		mLoading.setVisibility(View.VISIBLE);
-		mLoading.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				if (mAnimationDrawable != null) {
-					if (!mAnimationDrawable.isRunning()) {
-						mAnimationDrawable.start();
-					}
-				}
-			}
-		}, 100);
+//		mLoading.postDelayed(new Runnable() {
+//			@Override
+//			public void run() {
+//				if (mAnimationDrawable != null) {
+//					if (!mAnimationDrawable.isRunning()) {
+//						mAnimationDrawable.start();
+//					}
+//				}
+//			}
+//		}, 100);
 		mFrameLayoutOverlay.setTouchMode(false);
 		mFrameLayoutOverlay.setBackgroundColor(Color.BLACK);
 		hideMoveControl();
@@ -369,11 +370,11 @@ public class AdasVerificationActivity extends BaseActivity implements OnClickLis
 	 * 
 	 */
 	private void hideLoading() {
-		if (mAnimationDrawable != null) {
-			if (mAnimationDrawable.isRunning()) {
-				mAnimationDrawable.stop();
-			}
-		}
+//		if (mAnimationDrawable != null) {
+//			if (mAnimationDrawable.isRunning()) {
+//				mAnimationDrawable.stop();
+//			}
+//		}
 		mLoadingLayout.setVisibility(View.GONE);
 		mFrameLayoutOverlay.setTouchMode(true);
 		mFrameLayoutOverlay.setBackgroundResource(R.drawable.adas_verification_mask);

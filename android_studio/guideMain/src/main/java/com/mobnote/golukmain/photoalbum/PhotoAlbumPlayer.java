@@ -34,6 +34,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SeekBar;
@@ -147,11 +148,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
     /**
      * 加载中动画显示控件
      */
-    private ImageView mLoading = null;
+    private ProgressBar mLoading = null;
     /**
      * 加载中动画对象
      */
-    private AnimationDrawable mAnimationDrawable = null;
+    //private AnimationDrawable mAnimationDrawable = null;
     /**
      * 自动隐藏顶部和底部View的时间
      */
@@ -360,9 +361,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         mTopView = findViewById(R.id.upper_layout);
         mBottomView = findViewById(R.id.bottom_layout);
         mLoadingLayout = (LinearLayout) findViewById(R.id.mLoadingLayout);
-        mLoading = (ImageView) findViewById(R.id.mLoading);
-        mLoading.setBackgroundResource(R.anim.video_loading);
-        mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
+        mLoading = (ProgressBar) findViewById(R.id.mLoading);
+     //   mLoading.setBackgroundResource(R.anim.video_loading);
+   //     mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
 
         mPlayImg = (ImageView) findViewById(R.id.play_img);
         mBtnVtPlay = (Button) findViewById(R.id.btn_vt_play);
@@ -836,16 +837,16 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             isShow = true;
             mLoadingLayout.setVisibility(View.VISIBLE);
             mLoading.setVisibility(View.VISIBLE);
-            mLoading.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (mAnimationDrawable != null) {
-                        if (!mAnimationDrawable.isRunning()) {
-                            mAnimationDrawable.start();
-                        }
-                    }
-                }
-            }, 100);
+//            mLoading.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (mAnimationDrawable != null) {
+//                        if (!mAnimationDrawable.isRunning()) {
+//                            mAnimationDrawable.start();
+//                        }
+//                    }
+//                }
+//            }, 100);
         }
     }
 
@@ -857,11 +858,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         if (isShow) {
             isShow = false;
 
-            if (mAnimationDrawable != null) {
-                if (mAnimationDrawable.isRunning()) {
-                    mAnimationDrawable.stop();
-                }
-            }
+//            if (mAnimationDrawable != null) {
+//                if (mAnimationDrawable.isRunning()) {
+//                    mAnimationDrawable.stop();
+//                }
+//            }
             mLoadingLayout.setVisibility(View.GONE);
         }
     }
