@@ -62,6 +62,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -205,6 +207,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
             return;
         }
         if (SharedPrefUtil.getCacheCarBrand()) {
+            startDownLoad(true);
             return;
         }
         mLLSSSS.setVisibility(View.VISIBLE);
@@ -221,13 +224,13 @@ public class FragmentMine extends Fragment implements OnClickListener,
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        startDownLoad();
+                        startDownLoad(false);
                     }
                 })
                 .create().show();
     }
 
-    private void startDownLoad() {
+    private void startDownLoad(final boolean checkCacheValid) {
         //对于4S特殊用户，这里需要查看是否已经有缓存列表，如果没有，需要从服务器上缓存所有的汽车品牌列表
         final CarBrandsRequest request = new CarBrandsRequest(new IRequestResultListener() {
             @Override
@@ -244,6 +247,17 @@ public class FragmentMine extends Fragment implements OnClickListener,
                     return;
                 }
                 mServerCarBrandCount = bean.carBrands.list.size();
+                boolean sameAsServer = true;
+                if (checkCacheValid) {
+                    List<CarBrandBean> oldList = GolukFileUtils.restoreFileToList(GolukFileUtils.CAR_BRAND_OBJECT);
+                    if (oldList != null) {
+                        sameAsServer = oldList.size() == mServerCarBrandCount;
+                    }
+                    if (sameAsServer) {
+                        return;
+                    }
+                }
+
                 final ProgressDialog progressDialog = new ProgressDialog(ma);
                 if (!GolukFileUtils.saveListToFile(bean.carBrands.list, GolukFileUtils.CAR_BRAND_OBJECT)) {
                     //TODO 没有保存成功，然后怎么办？

@@ -13,11 +13,13 @@ import java.util.List;
 import java.util.Properties;
 
 import com.mobnote.application.GolukApplication;
+import com.umeng.socialize.utils.Log;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.nfc.Tag;
 import android.os.Environment;
 
 public class GolukFileUtils {
@@ -385,7 +387,10 @@ public class GolukFileUtils {
             FileOutputStream fOut;
             File file = new File(fullPath, name);
             if (file.exists()) {
-                return true;
+                if (!file.delete()) {
+                    Log.e("GolukFileUtils", "can not delete file!");
+                    return true;
+                }
             }
             if (!file.createNewFile()) {
                 return false;

@@ -50,7 +50,7 @@ public class CarBrandsListActivity extends BaseActivity implements View.OnClickL
         mLvCar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                CarBrandBean bean = mList.get(position);
+                CarBrandBean bean = (CarBrandBean) mAdapter.getItem(position);
                 Intent data = new Intent();
                 data.putExtra(WatermarkSettingActivity.SPECIAL_SETTING_RESULT, bean);
                 setResult(RESULT_OK, data);
