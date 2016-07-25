@@ -98,7 +98,6 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
             return;
         }
         String name = edtName.getText().toString();
-        name = GolukUtils.toUtf8(name);
         String code = currentBean == null ? "" : currentBean.code;
         mBaseApp.mIPCControlManager.setIPCWatermark(code, name);
     }
@@ -152,9 +151,7 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
         if (TextUtils.isEmpty(code)) {
             return;
         }
-        if (TextUtils.isEmpty(name)) {
-            return;
-        }
+
         if (mList == null) {
             return;
         }
