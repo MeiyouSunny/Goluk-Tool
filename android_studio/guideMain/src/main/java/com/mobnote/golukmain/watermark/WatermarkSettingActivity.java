@@ -3,6 +3,8 @@ package com.mobnote.golukmain.watermark;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -28,6 +30,8 @@ import org.json.JSONObject;
 
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.api.WIFIInfo;
@@ -65,6 +69,8 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
         RelativeLayout rlBrands = (RelativeLayout) findViewById(R.id.rl_special_setting_band_layout);
         edtName = (EditText) findViewById(R.id.edt_special_setting_name);
         ivLogo = (ImageView) findViewById(R.id.iv_special_setting_brand);
+        InputFilter[] filters = {new NameLengthFilter(10)};
+        edtName.setFilters(filters);
         btnBack.setOnClickListener(this);
         btnSave.setOnClickListener(this);
         rlBrands.setOnClickListener(this);
@@ -124,8 +130,10 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
             if (msg == IPC_VDCP_Msg_SetIPCLogo) {
                 //成功
                 if (0 == param1) {
-                    request = new BandCarBrandsRequest(this);
-                    request.post(GolukConfig.SERVER_PROTOCOL_V2, currentBean.brandId, currentBean.code, edtName.getText().toString(), mBaseApp.mCurrentUId, WiFiInfo.MOBILE_SSID);
+                    if (currentBean != null) {
+                        request = new BandCarBrandsRequest(this);
+                        request.post(GolukConfig.SERVER_PROTOCOL_V2, currentBean.brandId, currentBean.code, edtName.getText().toString(), mBaseApp.mCurrentUId, WiFiInfo.MOBILE_SSID);
+                    }
                     finish();
                 } else {
                     GolukUtils.showToast(this, getString(R.string.user_personal_save_failed));
@@ -178,4 +186,43 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
             request.saveCacheRequest();
         }
     }
+
+
+    private class NameLengthFilter implements InputFilter {
+        int MAX_EN;// 最大英文/数字长度 一个汉字算两个字母
+        String regEx = "[\\u4e00-\\u9fa5]"; // unicode编码，判断是否为汉字
+
+        public NameLengthFilter(int mAX_EN) {
+            super();
+            MAX_EN = mAX_EN;
+        }
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end,
+                                   Spanned dest, int dstart, int dend) {
+            int destCount = dest.toString().length()
+                    + getChineseCount(dest.toString());
+            int sourceCount = source.toString().length()
+                    + getChineseCount(source.toString());
+            if (destCount + sourceCount > MAX_EN) {
+                return "";
+
+            } else {
+                return source;
+            }
+        }
+
+        private int getChineseCount(String str) {
+            int count = 0;
+            Pattern p = Pattern.compile(regEx);
+            Matcher m = p.matcher(str);
+            while (m.find()) {
+                for (int i = 0; i <= m.groupCount(); i++) {
+                    count = count + 1;
+                }
+            }
+            return count;
+        }
+    }
+
 }
