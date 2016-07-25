@@ -46,10 +46,9 @@
             <!-- 直播时长 -->
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="2dp"
+                android:layout_height="33dp"
                 android:gravity="center_vertical"
-                android:paddingLeft="20dp"
+                android:paddingLeft="14dp"
                 android:paddingRight="14dp">
 
                 <TextView
@@ -59,8 +58,8 @@
                     android:layout_centerVertical="true"
                     android:contentDescription="@string/def"
                     android:text="@string/live_setting_timelength"
-                    android:textColor="#333333"
-                    android:textSize="14sp" />
+                    android:textColor="#8e8e93"
+                    android:textSize="11sp" />
 
                 <TextView
                     android:id="@+id/tv_live_duration"
@@ -71,7 +70,7 @@
                     android:layout_toRightOf="@+id/tv_live_duration_text"
                     android:contentDescription="@string/def"
                     android:textColor="#999999"
-                    android:textSize="14sp" />
+                    android:textSize="11sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -81,7 +80,7 @@
                     android:layout_toLeftOf="@+id/tv_live_consumeflow"
                     android:text="@string/live_flow"
                     android:textColor="#333333"
-                    android:textSize="14sp" />
+                    android:textSize="11sp" />
 
                 <TextView
                     android:id="@+id/tv_live_consumeflow"
@@ -90,18 +89,18 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:textColor="#dc1430"
-                    android:textSize="14sp" />
+                    android:textSize="11sp" />
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.1dp"
+                android:layout_height="1dp"
                 android:background="#dad9dc" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="@drawable/carrecorder_setup_option_bg"
+                android:background="#ffffff"
                 android:gravity="center_vertical"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp">
@@ -141,12 +140,13 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.1dp"
+                android:layout_height="1dp"
                 android:background="#dad9dc" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.1dp"
+                android:layout_height="1dp"
+                android:visibility="gone"
                 android:layout_marginTop="15dp"
                 android:background="#dad9dc" />
             <!-- 公开直播 -->
@@ -189,33 +189,23 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.1dp"
-                android:visibility="gone"
+                android:layout_height="1dp"
+                android:layout_marginTop="17dp"
+                android:visibility="visible"
                 android:background="#dad9dc" />
 
             <!-- 视频声音开关 -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:background="@drawable/carrecorder_setup_option_bg"
-                android:paddingLeft="10dp"
+                android:background="#ffffff"
+                android:paddingLeft="14dp"
                 android:paddingRight="14dp">
-
-                <ImageView
-                    android:id="@+id/iv_enable_voice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/living_set_notice_icon"
-                    android:contentDescription="@string/def"
-                    android:visibility="gone" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@+id/iv_enable_voice"
                     android:text="@string/voice_switch"
                     android:textColor="#000000"
                     android:textSize="14sp" />
@@ -231,32 +221,21 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.1dp"
+                android:layout_height="1dp"
                 android:background="#dad9dc" />
 
             <!-- 视频回放开关 -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:background="@drawable/carrecorder_setup_option_bg"
-                android:paddingLeft="10dp"
+                android:background="#ffffff"
+                android:paddingLeft="14dp"
                 android:paddingRight="14dp">
-
-                <ImageView
-                    android:id="@+id/iv_save_replay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/living_set_notice_icon"
-                    android:contentDescription="@string/def"
-                    android:visibility="gone" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@+id/iv_save_replay"
                     android:text="@string/str_save_live"
                     android:textColor="#000000"
                     android:textSize="14sp" />
@@ -272,25 +251,25 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.1dp"
+                android:layout_height="1dp"
                 android:background="#dad9dc" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="18dp"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="14dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="6dp"
                 android:text="@string/str_save_live_replay_hint"
-                android:textColor="#909090"
+                android:textColor="#8e8e93"
                 android:textSize="11sp" />
         </LinearLayout>
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.1dp"
+        android:layout_height="1dp"
         android:background="#dad9dc" />
 
     <EditText
@@ -302,24 +281,24 @@
         android:gravity="top|left"
         android:hint="@string/str_describle_live_hint"
         android:lines="5"
-        android:paddingBottom="6dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:paddingTop="6dp"
-        android:textSize="14sp" />
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:textSize="13sp" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.1dp"
-        android:background="#dad9dc" />
+        android:layout_height="1dp"
+        android:background="#d7d6da" />
 
     <Button
         android:id="@+id/btn_start_live"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
         android:layout_marginTop="25dp"
         android:background="#0080ff"
         android:orientation="horizontal"
