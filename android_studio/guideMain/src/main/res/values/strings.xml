@@ -1045,7 +1045,7 @@
     <string name="sepcial_setting_for_ssss">高级配置</string>
     <string name="special_desc">车辆品牌销售水印配置</string>
     <string name="band">品牌</string>
-    <string name="ssss_name">名称</string>
+    <string name="ssss_name">4S店显示名称</string>
     <string name="input_ssss_name">输入名称</string>
     <string name="save">保存</string>
     <string name="choose_car_brand">选择品牌</string>
