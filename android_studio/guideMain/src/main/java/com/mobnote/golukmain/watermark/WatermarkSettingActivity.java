@@ -128,7 +128,7 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
                     String watermarkInfo = (String) param2;
                     try {
                         JSONObject jsonObject = new JSONObject(watermarkInfo);
-                        String code = jsonObject.getString("code");
+                        String code = jsonObject.getString("logo");
                         String name = jsonObject.getString("name");
                         convertToServerBean(code, name);
                     } catch (JSONException e) {
