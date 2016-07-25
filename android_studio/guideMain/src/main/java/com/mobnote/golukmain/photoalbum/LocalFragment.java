@@ -123,7 +123,7 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
 
     public void loadData(boolean flag) {
         if (flag) {
-            if (null != mCustomProgressDialog && !mCustomProgressDialog.isShowing()) {
+            if (null != mCustomProgressDialog && !mCustomProgressDialog.isShowing() && isResumed()) {
                 mCustomProgressDialog.show();
             }
         }
@@ -315,7 +315,7 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
     }
 
     public void onEventMainThread(EventDownloadVideoFinish event) {
-        if (event != null && isResumed()) {
+        if (event != null) {
             loadData(true);
         }
     }
