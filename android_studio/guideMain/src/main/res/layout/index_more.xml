@@ -407,7 +407,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:background="#f4f4f4"
-                    android:drawableLeft="@drawable/my_skill_icon"
+                    android:drawableLeft="@drawable/advance"
                     android:drawablePadding="10dp"
                     android:drawableRight="@drawable/editor_arrow"
                     android:gravity="center_vertical"
