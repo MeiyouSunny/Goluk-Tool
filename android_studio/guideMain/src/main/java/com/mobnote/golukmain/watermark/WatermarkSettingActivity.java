@@ -91,6 +91,10 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
             GolukUtils.showToast(this, getString(R.string.ipc_disconnect_try_again));
             return;
         }
+        if (currentBean == null) {
+            GolukUtils.showToast(this, getString(R.string.select_car_brands_hint));
+            return;
+        }
         String name = edtName.getText().toString();
         String code = currentBean.code;
         mBaseApp.mIPCControlManager.setIPCWatermark(code, name);
@@ -106,7 +110,6 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
         if (currentBean == null) {
             return;
         }
-        edtName.setText(currentBean.name);
         Glide.with(this).load(currentBean.logoUrl).into(ivLogo);
     }
 

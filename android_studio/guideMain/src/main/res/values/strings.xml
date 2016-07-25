@@ -1051,4 +1051,5 @@
     <string name="choose_car_brand">选择品牌</string>
     <string name="not_support_g">不支持非T系列的设备</string>
     <string name="ipc_disconnect_try_again">摄像头断开连接，请检查后重试</string>
+    <string name="select_car_brands_hint">请选择品牌</string>
 </resources>
