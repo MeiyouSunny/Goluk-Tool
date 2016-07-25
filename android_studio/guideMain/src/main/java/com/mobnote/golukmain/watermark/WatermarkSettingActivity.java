@@ -28,13 +28,11 @@ import com.mobnote.util.GolukUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.tiros.api.WIFIInfo;
 
 public class WatermarkSettingActivity extends BaseActivity implements View.OnClickListener, IPCManagerFn, IRequestResultListener {
     public static final int SPECIAL_SETTING_REQUEST = 1;
@@ -69,7 +67,7 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
         RelativeLayout rlBrands = (RelativeLayout) findViewById(R.id.rl_special_setting_band_layout);
         edtName = (EditText) findViewById(R.id.edt_special_setting_name);
         ivLogo = (ImageView) findViewById(R.id.iv_special_setting_brand);
-        InputFilter[] filters = {new NameLengthFilter(10)};
+        InputFilter[] filters = {new NameLengthFilter(20)};
         edtName.setFilters(filters);
         btnBack.setOnClickListener(this);
         btnSave.setOnClickListener(this);
@@ -104,6 +102,7 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
             return;
         }
         String name = edtName.getText().toString();
+        name = name.replaceAll(" ", "~");
         String code = currentBean == null ? "" : currentBean.code;
         mBaseApp.mIPCControlManager.setIPCWatermark(code, name);
     }
@@ -117,7 +116,6 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
         currentBean = (CarBrandBean) data.getSerializableExtra(SPECIAL_SETTING_RESULT);
         if (currentBean == null) {
             ivLogo.setImageDrawable(null);
-            edtName.setText("");
             return;
         }
         Glide.with(this).load(currentBean.logoUrl).into(ivLogo);
@@ -145,6 +143,7 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
                         JSONObject jsonObject = new JSONObject(watermarkInfo);
                         String code = jsonObject.getString("logo");
                         String name = jsonObject.getString("name");
+                        name = name.replaceAll("~", " ");
                         convertToServerBean(code, name);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -156,24 +155,23 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
     }
 
     private void convertToServerBean(String code, String name) {
-        if (TextUtils.isEmpty(code)) {
-            return;
-        }
-
         if (mList == null) {
             return;
         }
 
-        for (CarBrandBean bean : mList) {
-            if (bean.code.equals(code)) {
-                currentBean = bean;
-                break;
+        if (!TextUtils.isEmpty(code)) {
+            for (CarBrandBean bean : mList) {
+                if (bean.code.equals(code)) {
+                    currentBean = bean;
+                    break;
+                }
             }
+
         }
+        edtName.setText(name);
         if (currentBean == null) {
             return;
         }
-        edtName.setText(name);
         Bitmap logo = GolukFileUtils.reloadThumbnail(currentBean.code + ".jpg");
         ivLogo.setImageBitmap(logo);
     }
