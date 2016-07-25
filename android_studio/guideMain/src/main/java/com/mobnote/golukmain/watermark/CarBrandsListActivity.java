@@ -24,10 +24,12 @@ import java.util.Comparator;
 import java.util.List;
 
 public class CarBrandsListActivity extends BaseActivity implements View.OnClickListener, SideBar.OnTouchingLetterChangedListener {
+    public static final String CURRENT_SELECTED_CAR_BRAND_CODE = "currentSelected";
 
     private StickyListHeadersListView mLvCar;
     private CarBrandsAdapter mAdapter;
     private List<CarBrandBean> mList;
+    private String mCurrentSelectedCarCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,9 @@ public class CarBrandsListActivity extends BaseActivity implements View.OnClickL
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 CarBrandBean bean = (CarBrandBean) mAdapter.getItem(position);
                 Intent data = new Intent();
-                data.putExtra(WatermarkSettingActivity.SPECIAL_SETTING_RESULT, bean);
+                if (!bean.code.equals(mCurrentSelectedCarCode)) {
+                    data.putExtra(WatermarkSettingActivity.SPECIAL_SETTING_RESULT, bean);
+                }
                 setResult(RESULT_OK, data);
                 finish();
             }
@@ -79,6 +83,11 @@ public class CarBrandsListActivity extends BaseActivity implements View.OnClickL
 //        CarBrandsRequest request = new CarBrandsRequest(this);
 //        request.setCache(true);
 //        request.get(GolukConfig.SERVER_PROTOCOL_V2, mBaseApp.mCurrentUId);
+        Intent data = getIntent();
+        if (data != null) {
+            mCurrentSelectedCarCode = data.getStringExtra(CURRENT_SELECTED_CAR_BRAND_CODE);
+            mAdapter.setCurrentSelected(mCurrentSelectedCarCode);
+        }
         mList = GolukFileUtils.restoreFileToList(GolukFileUtils.CAR_BRAND_OBJECT);
         Collections.sort(mList, new PinyinComparator());
         mAdapter.setList(mList);

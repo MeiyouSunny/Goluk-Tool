@@ -663,7 +663,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
             }
         });
         if (request.resotreCacheRequest()) {
-            request.getCache();
+            request.postCache();
         }
     }
 

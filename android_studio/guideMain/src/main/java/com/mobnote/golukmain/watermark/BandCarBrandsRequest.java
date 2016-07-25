@@ -25,29 +25,31 @@ public class BandCarBrandsRequest extends GolukFastjsonRequest<BandCarBrandResul
         return "";
     }
 
-    public void get(String protocolType, String brandId, String code, String storeName, String commUId) {
-        HashMap<String, String> headers = (HashMap<String, String>) getHeader();
+    public void post(String protocolType, String brandId, String code, String storeName, String commUId,String ssid) {
+        HashMap<String, String> headers = (HashMap<String, String>) getParam();
         headers.clear();
         headers.put("xieyi", protocolType);
         headers.put("commuid", commUId);
         headers.put("brandid", brandId);
         headers.put("code", code);
         headers.put("storename", storeName);
-        get();
+        headers.put("ssid",ssid);
+        super.post();
     }
 
-    public void getCache() {
-        get();
+    public void postCache() {
+        super.post();
     }
 
     public void saveCacheRequest() {
-        HashMap<String, String> headers = (HashMap<String, String>) getHeader();
+        HashMap<String, String> headers = (HashMap<String, String>) getParam();
         SharedPrefUtil.saveBandCarRequest(
                 headers.get("xieyi"),
                 headers.get("commuid"),
                 headers.get("code"),
                 headers.get("brandid"),
-                headers.get("storename"));
+                headers.get("storename"),
+                headers.get("ssid"));
     }
 
     /**
@@ -58,7 +60,7 @@ public class BandCarBrandsRequest extends GolukFastjsonRequest<BandCarBrandResul
         if (cacheHeader == null) {
             return false;
         }
-        HashMap<String, String> headers = (HashMap<String, String>) getHeader();
+        HashMap<String, String> headers = (HashMap<String, String>) getParam();
         headers.clear();
         headers.putAll(cacheHeader);
         return true;

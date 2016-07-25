@@ -707,7 +707,7 @@ public class SharedPrefUtil {
     }
 
 
-    public static boolean saveBandCarRequest(String protocol, String uid, String code, String bid, String name) {
+    public static boolean saveBandCarRequest(String protocol, String uid, String code, String bid, String name,String ssid) {
         JSONObject json = new JSONObject();
         try {
             json.put("xieyi", protocol);
@@ -715,6 +715,7 @@ public class SharedPrefUtil {
             json.put("code", code);
             json.put("brandid", bid);
             json.put("storename", name);
+            json.put("ssid",ssid);
         } catch (JSONException e) {
             e.printStackTrace();
             return false;
@@ -743,6 +744,7 @@ public class SharedPrefUtil {
             result.put("brandid", json.getString("brandid"));
             result.put("code", json.getString("code"));
             result.put("storename", json.getString("storename"));
+            result.put("ssid",json.getString("ssid"));
             return result;
         } catch (JSONException e) {
             e.printStackTrace();

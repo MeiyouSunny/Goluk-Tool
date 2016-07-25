@@ -1,6 +1,9 @@
 package com.mobnote.golukmain.watermark;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.media.Image;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.baidu.mapapi.map.Text;
 import com.bumptech.glide.Glide;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 import com.mobnote.golukmain.R;
@@ -23,16 +27,23 @@ public class CarBrandsAdapter extends BaseAdapter implements StickyListHeadersAd
     private List<CarBrandBean> mList;
     private LayoutInflater inflater;
     private Context context;
+    private String currentSelected;
 
     public CarBrandsAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
     }
 
+    public void setCurrentSelected(String currentSelected) {
+        this.currentSelected = currentSelected;
+        notifyDataSetChanged();
+    }
+
     public void setList(List<CarBrandBean> list) {
         this.mList = list;
         notifyDataSetChanged();
     }
+
 
     @Override
     public long getHeaderId(int i) {
@@ -63,6 +74,7 @@ public class CarBrandsAdapter extends BaseAdapter implements StickyListHeadersAd
             convertView = inflater.inflate(R.layout.listview_car_brands_item, parent, false);
             holder.mImgLogo = (ImageView) convertView.findViewById(R.id.iv_car_brand_img);
             holder.mTvName = (TextView) convertView.findViewById(R.id.tv_car_brand_name);
+            holder.mImgSelected = (ImageView) convertView.findViewById(R.id.iv_car_brand_selected);
             convertView.setTag(holder);
         } else {
             holder = (CarBrandViewHolder) convertView.getTag();
@@ -70,6 +82,14 @@ public class CarBrandsAdapter extends BaseAdapter implements StickyListHeadersAd
 
         holder.mTvName.setText(mList.get(position).name);
         Glide.with(context).load(mList.get(position).logoUrl).into(holder.mImgLogo);
+        //Mark Current
+        if (!TextUtils.isEmpty(currentSelected) && currentSelected.equals((mList.get(position).code))) {
+            holder.mTvName.setTextColor(context.getResources().getColor(R.color.photoalbum_text_color));
+            holder.mImgSelected.setVisibility(View.VISIBLE);
+        } else {
+            holder.mTvName.setTextColor(context.getResources().getColor(R.color.user_personal_homepage_text));
+            holder.mImgSelected.setVisibility(View.GONE);
+        }
         return convertView;
     }
 
@@ -107,6 +127,7 @@ public class CarBrandsAdapter extends BaseAdapter implements StickyListHeadersAd
     class CarBrandViewHolder {
         ImageView mImgLogo;
         TextView mTvName;
+        ImageView mImgSelected;
     }
 
 }

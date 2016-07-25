@@ -58,7 +58,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -1240,7 +1242,7 @@ public class GolukUtils {
         context.startActivity(loginIntent);
     }
 
-    public static void startLiveActivity(Context mContext, boolean isLive, boolean isContinue, LiveSettingBean mSettingData, UserInfo userInfo){
+    public static void startLiveActivity(Context mContext, boolean isLive, boolean isContinue, LiveSettingBean mSettingData, UserInfo userInfo) {
         Intent intent = null;
         String activityNameStr = "";
         if (GolukApplication.getInstance().isMainland()) {
@@ -1250,14 +1252,14 @@ public class GolukUtils {
         }
         try {
             Class<?> c = Class.forName(activityNameStr);
-            if(null != c){
+            if (null != c) {
                 intent = new Intent(mContext, c);
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return;
         }
-        if(intent != null){
+        if (intent != null) {
             intent.putExtra(AbstractLiveActivity.KEY_IS_LIVE, isLive);
             intent.putExtra(AbstractLiveActivity.KEY_LIVE_CONTINUE, isContinue);
             intent.putExtra(AbstractLiveActivity.KEY_GROUPID, "");
@@ -1372,5 +1374,15 @@ public class GolukUtils {
             return true;
         }
         return false;
+    }
+
+    public static String toUtf8(String str) {
+        String result = null;
+        try {
+            result = URLEncoder.encode(str, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

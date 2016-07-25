@@ -18,6 +18,7 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.watermark.bean.BandCarBrandResultBean;
 import com.mobnote.golukmain.watermark.bean.CarBrandBean;
+import com.mobnote.golukmain.wifibind.WiFiInfo;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
@@ -25,9 +26,11 @@ import com.mobnote.util.GolukUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
 import java.util.List;
 
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.api.WIFIInfo;
 
 public class WatermarkSettingActivity extends BaseActivity implements View.OnClickListener, IPCManagerFn, IRequestResultListener {
     public static final int SPECIAL_SETTING_REQUEST = 1;
@@ -76,6 +79,9 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
             saveBrand();
         } else if (id == R.id.rl_special_setting_band_layout) {
             Intent specialSetting = new Intent(this, CarBrandsListActivity.class);
+            if (currentBean != null) {
+                specialSetting.putExtra(CarBrandsListActivity.CURRENT_SELECTED_CAR_BRAND_CODE, currentBean.code);
+            }
             startActivityForResult(specialSetting, SPECIAL_SETTING_REQUEST);
         }
     }
@@ -91,12 +97,9 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
             GolukUtils.showToast(this, getString(R.string.ipc_disconnect_try_again));
             return;
         }
-        if (currentBean == null) {
-            GolukUtils.showToast(this, getString(R.string.select_car_brands_hint));
-            return;
-        }
         String name = edtName.getText().toString();
-        String code = currentBean.code;
+        name = GolukUtils.toUtf8(name);
+        String code = currentBean == null ? "" : currentBean.code;
         mBaseApp.mIPCControlManager.setIPCWatermark(code, name);
     }
 
@@ -108,6 +111,8 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
         }
         currentBean = (CarBrandBean) data.getSerializableExtra(SPECIAL_SETTING_RESULT);
         if (currentBean == null) {
+            ivLogo.setImageDrawable(null);
+            edtName.setText("");
             return;
         }
         Glide.with(this).load(currentBean.logoUrl).into(ivLogo);
@@ -121,7 +126,7 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
                 //成功
                 if (0 == param1) {
                     request = new BandCarBrandsRequest(this);
-                    request.get(GolukConfig.SERVER_PROTOCOL_V2, currentBean.brandId, currentBean.code, edtName.getText().toString(), mBaseApp.mCurrentUId);
+                    request.post(GolukConfig.SERVER_PROTOCOL_V2, currentBean.brandId, currentBean.code, edtName.getText().toString(), mBaseApp.mCurrentUId, WiFiInfo.MOBILE_SSID);
                     finish();
                 } else {
                     GolukUtils.showToast(this, getString(R.string.user_personal_save_failed));
