@@ -44,7 +44,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
     private boolean isGetIPCSucess = false;
     private boolean canOfflineInstall = false;
     private boolean canOfflineInstallLater = false;
-    private boolean installLater = false;
+    private boolean downloadLater = false;
 
     private String mGolukSSID = "";
     private String mGolukPWD = "";
@@ -178,19 +178,24 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         mUpdateLayout.setEnabled(false);
     }
 
-    private void installLater() {
-        installLater = true;
+    private void downloadLater() {
+        downloadLater = true;
         mTextVersion.setText(R.string.str_update_find_new_first);
         mUpdateLayout.setEnabled(true);
     }
 
-    private void installNow(IPCInfo ipcInfo) {
+    private void downloadNow(IPCInfo ipcInfo) {
         mTextVersion.setText(R.string.str_update_find_new_first);
         mUpdateLayout.setEnabled(true);
         canOfflineInstallLater = true;
         mIpcInfo = ipcInfo;
     }
 
+    private void installLater(IPCInfo ipcInfo) {
+        mTextVersion.setText(R.string.install_new_firmware);
+        mUpdateLayout.setEnabled(true);
+        mIpcInfo = ipcInfo;
+    }
 
     @Override
     public void onClick(View arg0) {
@@ -213,7 +218,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             it.putExtra("appwd", mApPWD);
             startActivityForResult(it, 10);
         } else if (id == R.id.unbind_layout_update) {
-            if (mApplication.mIpcUpdateManage.isDownloading() || installLater) {// 下载中
+            if (mApplication.mIpcUpdateManage.isDownloading() || downloadLater) {// 下载中
                 GolukUtils.startUpdateActivity(UnbindActivity.this, 0, null, false);
             } else if (mApplication.mIpcUpdateManage.isDownloadSuccess() || canOfflineInstall || canOfflineInstallLater) {
                 GolukUtils.startUpdateActivity(UnbindActivity.this, 1, mIpcInfo, false);
@@ -225,9 +230,11 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         if (event.ResultType == EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW) {
             isNewest();
         } else if (event.ResultType == EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_DELAY) {
-            installLater();
+            downloadLater();
         } else if (event.ResultType == EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_OFFLINE_INSTALL_DELAY) {
-            installNow(event.ipcInfo);
+            downloadNow(event.ipcInfo);
+        } else if (event.ResultType == EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_INSTALL_DELAY) {
+            installLater(event.ipcInfo);
         }
     }
 
