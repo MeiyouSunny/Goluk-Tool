@@ -1379,7 +1379,7 @@ public class GolukUtils {
     public static String toUtf8(String str) {
         String result = null;
         try {
-            result = URLEncoder.encode(str, "UTF-8");
+            result = URLEncoder.encode(str, "UTF-8").replaceAll("\\+","%20");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

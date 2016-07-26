@@ -102,7 +102,7 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
             return;
         }
         String name = edtName.getText().toString();
-        name = name.replaceAll(" ", "~");
+        name = GolukUtils.toUtf8(name);
         String code = currentBean == null ? "" : currentBean.code;
         mBaseApp.mIPCControlManager.setIPCWatermark(code, name);
     }
@@ -118,7 +118,9 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
             ivLogo.setImageDrawable(null);
             return;
         }
-        Glide.with(this).load(currentBean.logoUrl).into(ivLogo);
+        GolukFileUtils.reloadThumbnail(currentBean.code + ".jpg");
+        Bitmap logo = GolukFileUtils.reloadThumbnail(currentBean.code + ".jpg");
+        ivLogo.setImageBitmap(logo);
     }
 
 
@@ -143,7 +145,6 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
                         JSONObject jsonObject = new JSONObject(watermarkInfo);
                         String code = jsonObject.getString("logo");
                         String name = jsonObject.getString("name");
-                        name = name.replaceAll("~", " ");
                         convertToServerBean(code, name);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -166,7 +167,6 @@ public class WatermarkSettingActivity extends BaseActivity implements View.OnCli
                     break;
                 }
             }
-
         }
         edtName.setText(name);
         if (currentBean == null) {

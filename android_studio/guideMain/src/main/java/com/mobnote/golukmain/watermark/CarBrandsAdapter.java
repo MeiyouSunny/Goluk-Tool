@@ -1,6 +1,7 @@
 package com.mobnote.golukmain.watermark;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.Image;
 import android.text.TextUtils;
@@ -16,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.watermark.bean.CarBrandBean;
+import com.mobnote.util.GolukFileUtils;
 
 import java.util.List;
 
@@ -81,7 +83,8 @@ public class CarBrandsAdapter extends BaseAdapter implements StickyListHeadersAd
         }
 
         holder.mTvName.setText(mList.get(position).name);
-        Glide.with(context).load(mList.get(position).logoUrl).into(holder.mImgLogo);
+        Bitmap logo = GolukFileUtils.reloadThumbnail(mList.get(position).code + ".jpg");
+        holder.mImgLogo.setImageBitmap(logo);
         //Mark Current
         if (!TextUtils.isEmpty(currentSelected) && currentSelected.equals((mList.get(position).code))) {
             holder.mTvName.setTextColor(context.getResources().getColor(R.color.photoalbum_text_color));
