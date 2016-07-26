@@ -194,7 +194,7 @@
                 android:paddingRight="@dimen/sizeSmall"
                 android:drawableLeft="@drawable/icon_1"
                 android:background="@drawable/ipcbind_btn_finish"
-                android:text="@string/liveVideoReplay"
+                android:text="@string/str_live_play_back"
                 android:drawablePadding="@dimen/sizeSmall"
                 android:layout_marginRight="@dimen/sizeSmall"
                 android:gravity="center_vertical"

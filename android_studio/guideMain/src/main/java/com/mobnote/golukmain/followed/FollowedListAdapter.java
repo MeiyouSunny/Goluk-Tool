@@ -430,6 +430,10 @@ public class FollowedListAdapter extends BaseAdapter {
             holderFollow.rlUserInfo = (RelativeLayout) convertView.findViewById(R.id.rl_user_info);
             holderFollow.tvPraiseCount = (TextView) convertView.findViewById(R.id.tv_newest_list_item_praise_count);
 
+            holderFollow.liveBackLayout = (LinearLayout) convertView.findViewById(R.id.ly_followed_live_back);
+            holderFollow.liveBackTime = (TextView) convertView.findViewById(R.id.tv_followed_live_back_time);
+            holderFollow.playBtn = (ImageView) convertView.findViewById(R.id.mPlayBigBtn);
+
             int height = (int) ((float) width / widthHeight);
             RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
             mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
@@ -569,6 +573,20 @@ public class FollowedListAdapter extends BaseAdapter {
                     UserUtils.showCommentText(holderFollow.detail, videoObjectBean.user.nickname,
                             videoObjectBean.video.describe);
                 }
+            }
+
+            if (TextUtils.isEmpty(videoObjectBean.video.type) || !"1".equals(videoObjectBean.video.type)) {
+                holderFollow.liveBackLayout.setVisibility(View.GONE);
+                holderFollow.playBtn.setVisibility(View.VISIBLE);
+            } else {
+                if (TextUtils.isEmpty(videoObjectBean.video.livetime) || "".equals(videoObjectBean.video.livetime)) {
+                    holderFollow.liveBackTime.setText(mFragment.getActivity().getString(R.string.str_live_time, "00:00:00"));
+                } else {
+                    holderFollow.liveBackTime.setText(mFragment.getActivity().getString(R.string.str_live_time,
+                            GolukUtils.secondToString(Integer.valueOf(videoObjectBean.video.livetime))));
+                }
+                holderFollow.liveBackLayout.setVisibility(View.VISIBLE);
+                holderFollow.playBtn.setVisibility(View.GONE);
             }
         }
 
@@ -794,6 +812,10 @@ public class FollowedListAdapter extends BaseAdapter {
         TextView tvPraiseCount;
 
         RelativeLayout rlUserInfo;
+
+        LinearLayout liveBackLayout;
+        TextView liveBackTime;
+        ImageView playBtn;
     }
 
     static class ViewHolderEmpty {

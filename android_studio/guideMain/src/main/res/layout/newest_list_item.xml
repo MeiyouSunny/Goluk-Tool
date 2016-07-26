@@ -156,6 +156,36 @@
             android:layout_centerInParent="true"
             android:background="@drawable/btn_player_play"
             android:contentDescription="@string/imgdes" />
+
+        <LinearLayout
+            android:id="@+id/ly_followed_live_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:drawablePadding="5dp"
+                android:background="@drawable/btn_live_back"
+                android:text="@string/str_live_play_back"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:drawableLeft="@drawable/icon_live_playback"
+                android:gravity="center"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:id="@+id/tv_followed_live_back_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
     </RelativeLayout>
 
     <RelativeLayout
