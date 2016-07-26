@@ -119,10 +119,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
      * 是否直播 还是　看别人直播 true/false 直播/看别人直播
      */
     protected boolean isShareLive = true;
-    /**
-     * 直播视频id
-     */
-    private String liveVid;
+
     /**
      * 单次直播录制时间 (秒)(包括自己的时间与看别人的时间)
      */
@@ -301,7 +298,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (null != mLiveOperator) {
             mLiveOperator.onResume();
         }
-        if(!isUploadSucessed){
+        if(isShareLive){
             continueOrStartLive();
         }
     }
@@ -414,27 +411,16 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     private boolean resetTabAndFragment() {
 
         if(mCurrTab == TAB_COMMENT){
-//            if(!mLiveMapViewFragment.isAdded()) {
-//                getSupportFragmentManager().beginTransaction().add(R.id.fl_more, mLiveCommentFragment).commit();
-//            }else{
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fl_more, mLiveCommentFragment).commit();
-//            }
             getSupportFragmentManager().beginTransaction().show(mLiveCommentFragment).commit();
             getSupportFragmentManager().beginTransaction().hide(mLiveMapViewFragment).commit();
             mCommentTabTv.setTextColor(Color.parseColor("#0080ff"));
             mMapTabTv.setTextColor(Color.parseColor("#707070"));
         }else if(mCurrTab == TAB_MAP){
-//            if(!mLiveCommentFragment.isAdded()) {
-//                getSupportFragmentManager().beginTransaction().add(R.id.fl_more, mLiveMapViewFragment).commit();
-//            }else{
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fl_more, mLiveMapViewFragment).commit();
-//            }
             getSupportFragmentManager().beginTransaction().hide(mLiveCommentFragment).commit();
             getSupportFragmentManager().beginTransaction().show(mLiveMapViewFragment).commit();
             mMapTabTv.setTextColor(Color.parseColor("#0080ff"));
             mCommentTabTv.setTextColor(Color.parseColor("#707070"));
         }
-
         return false;
     }
 
@@ -773,7 +759,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
      */
     private void startLive(String aid) {
         GolukDebugUtils.e("", "newlive-----LiveActivity-----startLive  ---1");
-        liveVid = aid;
         if (null != mLiveOperator) {
             StartLiveBean bean = new StartLiveBean();
             bean.url = mRtmpUrl;
@@ -1561,10 +1546,12 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 this.finish();
                 return;
             }
-            if (null != mLiveOperator) {
-                mLiveOperator.stopLive();
+            if(!isUploadSucessed){
+//                if (null != mLiveOperator) {
+//                    mLiveOperator.stopLive();
+//                }
+                getLiveSign();
             }
-            getLiveSign();
         }
     }
     private void startLiveForSetting() {

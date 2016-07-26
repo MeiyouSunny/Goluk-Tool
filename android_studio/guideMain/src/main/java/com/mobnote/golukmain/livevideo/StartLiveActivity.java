@@ -160,7 +160,7 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
             //直播页面
             ZhugeUtils.eventLive(this, this.getString(R.string.str_zhuge_live_ipc_page));
 
-            GolukUtils.startPublishOrLookLiveActivity(this,true,false,mLiveSettingBean,null);
+            GolukUtils.startPublishOrWatchLiveActivity(this,true,false,mLiveSettingBean,null);
         }
     }
 
