@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/color_ipcbind_bg"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_title_height"
+        android:background="@color/photoalbum_title_bg_color">
+
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/connect_back_btn_btn"
+            android:contentDescription="@string/imgdes" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/choose_car_brand"
+            android:textColor="#fff"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="27dp"
+        android:layout_marginBottom="@dimen/size_small"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/size_small"
+        android:background="@drawable/bg_search">
+
+        <ImageView
+            android:id="@+id/iv_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:contentDescription="@string/imgdes"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_search" />
+
+        <EditText
+            android:id="@+id/et_search_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/iv_search"
+            android:background="#00000000"
+            android:gravity="left|center"
+            android:hint="@string/str_search"
+            android:imeOptions="actionSearch"
+            android:singleLine="true"
+            android:textColor="#333333"
+            android:textColorHint="@color/user_hint_text_color"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/white">
+
+        <com.emilsjolander.components.stickylistheaders.StickyListHeadersListView
+            android:id="@+id/lv_car_brands"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawSelectorOnTop="false"
+            android:fastScrollEnabled="false"
+            android:listSelector="@android:color/darker_gray"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbars="none" />
+
+        <com.mobnote.view.SideBar
+            android:id="@+id/side_bar"
+            android:layout_width="30dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="right|center" />
+    </FrameLayout>
+
+</LinearLayout>

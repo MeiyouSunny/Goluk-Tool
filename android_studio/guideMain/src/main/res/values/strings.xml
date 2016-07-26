@@ -1044,6 +1044,16 @@
     <string name="install_new_firmware">安装新固件程序</string>
     <string name="newest_firmware">已是最新版本</string>
     <string name="str_notification_error_ssl_cert_invalid">将要跳转到不安全的网页，是否继续?</string>
+    <string name="sepcial_setting_for_ssss">高级配置</string>
+    <string name="special_desc">车辆品牌销售水印配置</string>
+    <string name="band">品牌</string>
+    <string name="ssss_name">4S店显示名称</string>
+    <string name="input_ssss_name">输入名称</string>
+    <string name="save">保存</string>
+    <string name="choose_car_brand">选择品牌</string>
+    <string name="not_support_g">不支持非T系列的设备</string>
+    <string name="ipc_disconnect_try_again">摄像头断开连接，请检查后重试</string>
+    <string name="select_car_brands_hint">请选择品牌</string>
     <string name="settting_notify_friends">有朋友动态</string>
     <string name="str_start_live">发起直播</string>
     <string name="str_public_live">公开直播</string>
@@ -1052,4 +1062,6 @@
     <string name="str_describle_live_hint">描述一下你的直播吧</string>
     <string name="str_play_back">回放</string>
     <string name="str_fireware_is_downloading">新固件程序下载中...</string>
+    <string name="str_live_play_back">直播回放</string>
+    <string name="str_live_time">直播时长：%1$s</string>
 </resources>

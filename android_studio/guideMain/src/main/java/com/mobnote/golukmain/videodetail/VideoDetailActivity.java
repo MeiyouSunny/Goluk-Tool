@@ -1077,6 +1077,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
                         // 下拉刷新
                         mHeader.getHeadData(false);
                     }
+                    if (VideoInfo.VIDEO_TYPE_LIVE.equals(videoAllData.avideo.video.type)){
+                        this.mTextTitle.setText(R.string.str_live_play_back);
+                    }
                     mHeaderView.setVisibility(View.VISIBLE);
                     VideoCommentInfo commentInfo = videoInfo.comment;
 

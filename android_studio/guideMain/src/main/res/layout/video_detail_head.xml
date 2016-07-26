@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <!-- 用户信息 -->
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/white" >
+        android:background="@color/white">
 
         <!-- 围观 -->
         <TextView
@@ -40,7 +40,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:layout_toLeftOf="@id/video_detail_head_award_image" >
+            android:layout_toLeftOf="@id/video_detail_head_award_image">
 
             <!-- 头像 -->
             <ImageView
@@ -48,14 +48,14 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:contentDescription="@string/imgdes" />
-            
-            <ImageView 
+
+            <ImageView
                 android:id="@+id/im_listview_item_head_authentication"
                 android:layout_width="13dp"
                 android:layout_height="13dp"
-                android:layout_alignRight="@id/user_head"
                 android:layout_alignBottom="@id/user_head"
-                android:contentDescription="@string/imgdes"/>
+                android:layout_alignRight="@id/user_head"
+                android:contentDescription="@string/imgdes" />
 
             <!-- 用户昵称 -->
             <TextView
@@ -89,7 +89,7 @@
     <RelativeLayout
         android:id="@+id/mPlayerLayout"
         android:layout_width="match_parent"
-        android:layout_height="205dp" >
+        android:layout_height="205dp">
 
         <com.mobnote.golukmain.player.FullScreenVideoView
             android:id="@+id/video_detail_videoview"
@@ -101,7 +101,7 @@
         <RelativeLayout
             android:id="@+id/mImageLayout"
             android:layout_width="match_parent"
-            android:layout_height="205dp" >
+            android:layout_height="205dp">
 
             <ImageView
                 android:id="@+id/video_detail_first_pic"
@@ -149,14 +149,14 @@
             android:layout_centerInParent="true"
             android:layout_gravity="center"
             android:orientation="vertical"
-            android:visibility="gone" >
+            android:visibility="gone">
 
             <ProgressBar
                 android:id="@+id/mLoading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:indeterminate="true" />
 
             <TextView
                 android:id="@+id/mLoadingText"
@@ -179,19 +179,39 @@
         android:orientation="vertical"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="8dp" >
+        android:paddingTop="8dp">
 
-        <TextView
-            android:id="@+id/video_detail_describe"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/live_time_desc"
-            android:textSize="12sp" />
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/video_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:paddingLeft="@dimen/sizeSmall"
+                android:paddingRight="@dimen/sizeSmall"
+                android:drawableLeft="@drawable/icon_1"
+                android:background="@drawable/ipcbind_btn_finish"
+                android:text="@string/str_live_play_back"
+                android:drawablePadding="@dimen/sizeSmall"
+                android:layout_marginRight="@dimen/sizeSmall"
+                android:gravity="center_vertical"
+                android:visibility="gone"
+                android:textSize="12sp" />
+            <TextView
+                android:id="@+id/video_detail_describe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/live_time_desc"
+                android:textSize="12sp" />
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp" >
+            android:paddingTop="5dp">
 
             <TextView
                 android:id="@+id/video_detail_author"
@@ -227,7 +247,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <!-- 第一个获奖视频 -->
 
@@ -236,7 +256,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="9dp"
-            android:layout_marginTop="9dp" >
+            android:layout_marginTop="9dp">
 
             <ImageView
                 android:id="@+id/active_image"
@@ -265,7 +285,7 @@
                 android:layout_marginLeft="6dp"
                 android:layout_toLeftOf="@id/active_count"
                 android:layout_toRightOf="@id/active_image"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/active_title"
@@ -291,7 +311,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="9dp"
-            android:layout_marginTop="9dp" >
+            android:layout_marginTop="9dp">
 
             <ImageView
                 android:id="@+id/sys_image"
@@ -320,7 +340,7 @@
                 android:layout_marginLeft="6dp"
                 android:layout_toLeftOf="@id/sys_count"
                 android:layout_toRightOf="@id/sys_image"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/sys_title"
@@ -346,7 +366,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="9dp"
-            android:layout_marginTop="9dp" >
+            android:layout_marginTop="9dp">
 
             <ImageView
                 android:id="@+id/recom_image"
@@ -364,7 +384,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="6dp"
                 android:layout_toRightOf="@id/recom_image"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/recom_title"
@@ -401,7 +421,7 @@
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:paddingTop="10dp" >
+        android:paddingTop="10dp">
 
         <LinearLayout
             android:id="@+id/commentLayout"
@@ -439,7 +459,7 @@
             android:id="@+id/shareLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true" >
+            android:layout_alignParentRight="true">
 
             <ImageView
                 android:id="@+id/video_square_detail_share"
@@ -463,8 +483,8 @@
             android:id="@+id/praiseLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/shareLayout"
-            android:layout_marginRight="30dp">
+            android:layout_marginRight="30dp"
+            android:layout_toLeftOf="@id/shareLayout">
 
             <ImageView
                 android:id="@+id/video_square_detail_like_image"
@@ -498,7 +518,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white" >
+        android:background="@color/white">
 
         <ImageView
             android:id="@+id/line"

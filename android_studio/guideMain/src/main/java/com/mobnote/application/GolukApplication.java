@@ -338,7 +338,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             GolukMobUtils.initMob(this);
 
             //初始化诸葛io
-            ZhugeSDK.getInstance().openDebug();
+//            ZhugeSDK.getInstance().openDebug();
             ZhugeSDK.getInstance().init(getApplicationContext());
         }
 

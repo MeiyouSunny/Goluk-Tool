@@ -23,4 +23,9 @@ public class UserLabelBean {
 	/** 黄V认证 */
 	@JSONField(name = "headplusvdes")
 	public String headplusvdes;
+	/**
+	 * 是否是4S用户
+	 */
+	@JSONField(name = "is4s")
+	public String is4s;
 }

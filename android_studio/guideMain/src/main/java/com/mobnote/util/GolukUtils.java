@@ -62,7 +62,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -1247,26 +1249,27 @@ public class GolukUtils {
     /**
      * 跳转到百度（谷歌）直播页面
      * 此段代码用到反射，目的是为了国内国际版的编译和打包的优化
+     *
      * @param mContext
      * @param isLive
      * @param isContinue
      * @param mSettingData
      * @param userInfo
      */
-    public static void startPublishOrWatchLiveActivity(Context mContext, boolean isLive, boolean isContinue, LiveSettingBean mSettingData, UserInfo userInfo){
+    public static void startPublishOrWatchLiveActivity(Context mContext, boolean isLive, boolean isContinue, LiveSettingBean mSettingData, UserInfo userInfo) {
         Intent intent = null;
         String activityNameStr = "";
         activityNameStr = "com.mobnote.golukmain.livevideo.LiveActivity";
         try {
             Class<?> c = Class.forName(activityNameStr);
-            if(null != c){
+            if (null != c) {
                 intent = new Intent(mContext, c);
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return;
         }
-        if(intent != null){
+        if (intent != null) {
             intent.putExtra(LiveActivity.KEY_IS_LIVE, isLive);
             intent.putExtra(LiveActivity.KEY_LIVE_CONTINUE, isContinue);
             intent.putExtra(LiveActivity.KEY_GROUPID, "");
@@ -1383,17 +1386,27 @@ public class GolukUtils {
         return false;
     }
 
-    public static String getExceptionStackString(Exception ex){
+    public static String getExceptionStackString(Exception ex) {
         StringWriter errors = new StringWriter();
         ex.printStackTrace(new PrintWriter(errors));
         return errors.toString();
     }
 
-    public static void startUpdateActivity(Context context, int sign, IPCInfo ipcInfo, boolean isNew){
+    public static void startUpdateActivity(Context context, int sign, IPCInfo ipcInfo, boolean downloadOnCreate) {
         Intent intent = new Intent(context, UpdateActivity.class);
         intent.putExtra(UpdateActivity.UPDATE_SIGN, sign);
         intent.putExtra(UpdateActivity.UPDATE_DATA, ipcInfo);
-        intent.putExtra(UpdateActivity.UPDATE_IS_NEW, isNew);
+        intent.putExtra(UpdateActivity.DOWNLOAD_ON_CREATE, downloadOnCreate);
         context.startActivity(intent);
+    }
+
+    public static String toUtf8(String str) {
+        String result = null;
+        try {
+            result = URLEncoder.encode(str, "UTF-8").replaceAll("\\+", "%20");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

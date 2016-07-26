@@ -2,9 +2,13 @@ package com.mobnote.golukmain;
 
 import org.json.JSONObject;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventMessageUpdate;
+import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.ILive;
@@ -14,23 +18,34 @@ import com.mobnote.golukmain.msg.MessageCenterActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.praised.MyPraisedActivity;
 import com.mobnote.golukmain.profit.MyProfitActivity;
+import com.mobnote.golukmain.watermark.BandCarBrandsRequest;
+import com.mobnote.golukmain.watermark.CarBrandsRequest;
+import com.mobnote.golukmain.watermark.WatermarkSettingActivity;
 import com.mobnote.golukmain.userinfohome.UserInfohomeRequest;
 import com.mobnote.golukmain.userinfohome.bean.UserLabelBean;
 import com.mobnote.golukmain.userinfohome.bean.UserinfohomeRetBean;
 import com.mobnote.golukmain.videosuqare.VideoSquareManager;
+import com.mobnote.golukmain.watermark.bean.BandCarBrandResultBean;
+import com.mobnote.golukmain.watermark.bean.CarBrandBean;
+import com.mobnote.golukmain.watermark.bean.CarBrandsResultBean;
 import com.mobnote.manager.MessageManager;
 import com.mobnote.user.UserInterface;
 import com.mobnote.util.GlideUtils;
+import com.mobnote.util.GolukConfig;
+import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.ZhugeUtils;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -46,6 +61,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.List;
 
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
@@ -111,6 +128,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
     private ImageView mImageHead, mImageAuthentication;
     private TextView mTextName, mTextIntroduction;
     private LinearLayout mVideoLayout;
+    private LinearLayout mLLSSSS;
     private TextView mTextShare, mTextFans, mTextFollow;
     /**
      * 分享视频 赞我的人
@@ -149,6 +167,8 @@ public class FragmentMine extends Fragment implements OnClickListener,
      **/
     private static final int TYPE_FOLLOWING = 4;
     private static final String TAG = "FragmentMine";
+    private int mServerCarBrandCount = 0;
+    private int mClientCacheCount = 0;
 
     LinearLayout mMineRootView = null;
     private UserinfohomeRetBean mUserinfohomeRetBean;
@@ -156,7 +176,6 @@ public class FragmentMine extends Fragment implements OnClickListener,
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         GolukDebugUtils.d(TAG, "onCreate");
         EventBus.getDefault().register(this);
@@ -164,7 +183,6 @@ public class FragmentMine extends Fragment implements OnClickListener,
 
     @Override
     public void onDestroy() {
-        // TODO Auto-generated method stub
         super.onDestroy();
         GolukDebugUtils.d(TAG, "onDestroy");
         EventBus.getDefault().unregister(this);
@@ -173,7 +191,6 @@ public class FragmentMine extends Fragment implements OnClickListener,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreateView(inflater, container, savedInstanceState);
         GolukDebugUtils.d(TAG, "onCreateView");
         View rootView = inflater.inflate(R.layout.index_more, null);
@@ -185,12 +202,102 @@ public class FragmentMine extends Fragment implements OnClickListener,
         return rootView;
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onActivityCreated(savedInstanceState);
-        GolukDebugUtils.d(TAG, "onActivityCreated");
+    private void initDataFor4SShop() {
+        if (!SharedPrefUtil.getUserIs4SShop()) {
+            return;
+        }
+        if (SharedPrefUtil.getCacheCarBrand()) {
+            startDownLoad(true);
+            return;
+        }
+        mLLSSSS.setVisibility(View.VISIBLE);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ma);
+        builder.setMessage("修改记录仪水印功能需要下载品牌资源")
+                .setTitle("提示")
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        startDownLoad(false);
+                    }
+                })
+                .create().show();
     }
+
+    private void startDownLoad(final boolean checkCacheValid) {
+        //对于4S特殊用户，这里需要查看是否已经有缓存列表，如果没有，需要从服务器上缓存所有的汽车品牌列表
+        final CarBrandsRequest request = new CarBrandsRequest(new IRequestResultListener() {
+            @Override
+            public void onLoadComplete(int requestType, Object result) {
+                CarBrandsResultBean bean = (CarBrandsResultBean) result;
+                if (bean == null
+                        ||
+                        bean.code != GolukConfig.SERVER_RESULT_OK
+                        ||
+                        bean.carBrands == null
+                        ||
+                        bean.carBrands.list == null
+                        ) {
+                    return;
+                }
+                mServerCarBrandCount = bean.carBrands.list.size();
+                boolean sameAsServer = true;
+                if (checkCacheValid) {
+                    List<CarBrandBean> oldList = GolukFileUtils.restoreFileToList(GolukFileUtils.CAR_BRAND_OBJECT);
+                    if (oldList != null) {
+                        sameAsServer = oldList.size() == mServerCarBrandCount;
+                    }
+                    if (sameAsServer) {
+                        return;
+                    }
+                }
+
+                final ProgressDialog progressDialog = new ProgressDialog(ma);
+                if (!GolukFileUtils.saveListToFile(bean.carBrands.list, GolukFileUtils.CAR_BRAND_OBJECT)) {
+                    //TODO 没有保存成功，然后怎么办？
+                    return;
+                }
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                progressDialog.setTitle("提示");
+                progressDialog.setMessage("正在下载资源");
+                progressDialog.setMax(mServerCarBrandCount);
+                progressDialog.setIndeterminate(false);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+                for (final CarBrandBean carBrandBean : bean.carBrands.list) {
+                    final ImageRequest request = new ImageRequest(carBrandBean.logoUrl,
+                            new Response.Listener<Bitmap>() {
+                                @Override
+                                public void onResponse(Bitmap bitmap) {
+                                    String imageName = carBrandBean.code + ".jpg";
+                                    if (!GolukFileUtils.saveImageToExternalStorage(bitmap, imageName)) {
+                                        progressDialog.dismiss();
+                                        return;
+                                    }
+                                    mClientCacheCount++;
+                                    progressDialog.setProgress(mClientCacheCount);
+                                    //当前缓存的是最后一条数据，说明缓存完毕了
+                                    if (mServerCarBrandCount != 0 && mClientCacheCount != 0 && mServerCarBrandCount == mClientCacheCount) {
+                                        SharedPrefUtil.saveCacheCarBrand(true);
+                                        mServerCarBrandCount = 0;
+                                        mClientCacheCount = 0;
+                                        progressDialog.dismiss();
+                                    }
+                                }
+                            }, 0, 0, null, null, null);
+                    HttpManager.getInstance().add(request);
+                }
+            }
+        });
+        request.get(GolukConfig.SERVER_PROTOCOL_V2, ma.mApp.mCurrentUId);
+    }
+
 
     @Override
     public void onResume() {
@@ -208,52 +315,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        // TODO Auto-generated method stub
-        super.onDestroyView();
-        GolukDebugUtils.d(TAG, "onDestroyView");
-        mMineRootView = null;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        // TODO Auto-generated method stub
-        super.onAttach(activity);
-        GolukDebugUtils.d(TAG, "onAttach, context=" + activity);
-    }
-
-    @Override
-    public void onDetach() {
-        // TODO Auto-generated method stub
-        super.onDetach();
-        GolukDebugUtils.d(TAG, "onDetach");
-    }
-
-    @Override
-    public void onPause() {
-        // TODO Auto-generated method stub
-        super.onPause();
-        GolukDebugUtils.d(TAG, "onPause");
-    }
-
-    @Override
-    public void onStart() {
-        // TODO Auto-generated method stub
-        super.onStart();
-        GolukDebugUtils.d(TAG, "onStart");
-    }
-
-    @Override
-    public void onStop() {
-        // TODO Auto-generated method stub
-        super.onStop();
-        GolukDebugUtils.d(TAG, "onStop");
-    }
-
-    @Override
     public void onHiddenChanged(boolean hidden) {
-        // TODO Auto-generated method stub
         super.onHiddenChanged(hidden);
         GolukDebugUtils.d(TAG, "onHiddenChanged");
         if (!hidden) {
@@ -345,6 +407,10 @@ public class FragmentMine extends Fragment implements OnClickListener,
         mFollowLayout = (LinearLayout) mMineRootView
                 .findViewById(R.id.user_follow);
         mNewFansIv = (ImageView) mMineRootView.findViewById(R.id.iv_new_fans);
+        mLLSSSS = (LinearLayout) mMineRootView.findViewById(R.id.ll_advanced_setting);
+        if (SharedPrefUtil.getUserIs4SShop()) {
+            mLLSSSS.setVisibility(View.VISIBLE);
+        }
 
         // 注册事件
         // 个人中心 我的相册 摄像头管理 通用设置 极路客小技巧 安装指导 版本信息 购买极路客
@@ -362,6 +428,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
         mProfitItem.setOnClickListener(this);
         mMsgCenterItem.setOnClickListener(this);
         mPraisedListItem.setOnClickListener(this);
+        mLLSSSS.setOnClickListener(this);
     }
 
     // 获取登录状态及用户信息
@@ -374,7 +441,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
         GolukDebugUtils.i("lily", "--------" + ma.mApp.autoLoginStatus
                 + ma.mApp.isUserLoginSucess + "=====mApp.registStatus ===="
                 + ma.mApp.registStatus);
-        if (ma.mApp.isUserLoginSucess == true || ma.mApp.registStatus == 2) {// 登录过
+        if (ma.mApp.isUserLoginSucess || ma.mApp.registStatus == 2) {// 登录过
             GolukDebugUtils.i("lily", "---------------"
                     + ma.mApp.autoLoginStatus + "------loginStatus------"
                     + ma.mApp.loginStatus);
@@ -382,6 +449,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
             personalChanged();
         } else {
             // 未登录
+            mLLSSSS.setVisibility(View.GONE);
             mVideoLayout.setVisibility(View.GONE);
             mImageAuthentication.setVisibility(View.GONE);
             GlideUtils.loadLocalHead(getActivity(), mImageHead,
@@ -475,7 +543,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
                 // GolukUtils.showToast(this,
                 // this.getResources().getString(R.string.str_please_login));
                 Intent loginIntent = null;
-                if (GolukApplication.getInstance().isMainland() == false) {
+                if (!GolukApplication.getInstance().isMainland()) {
                     loginIntent = new Intent(getActivity(), InternationUserLoginActivity.class);
                 } else {
                     loginIntent = new Intent(getActivity(), UserLoginActivity.class);
@@ -486,9 +554,24 @@ public class FragmentMine extends Fragment implements OnClickListener,
                         MyPraisedActivity.class);
                 getActivity().startActivity(praiseIntent);
             }
+        } else if (id == R.id.ll_advanced_setting) {
+            gotoSSSSSetting();
+        }
+    }
 
+    /**
+     * 针对4S店铺所增加的特别功能
+     */
+    private void gotoSSSSSetting() {
+        if (ma.mApp.isIpcConnSuccess && SharedPrefUtil.getCacheCarBrand()) {
+            if (ma.mApp.mIPCControlManager.isT1Relative()) {
+                Intent specialSetting = new Intent(this.getActivity(), WatermarkSettingActivity.class);
+                startActivity(specialSetting);
+            } else {
+                Toast.makeText(getActivity(), R.string.not_support_g, Toast.LENGTH_SHORT).show();
+            }
         } else {
-            GolukDebugUtils.d(TAG, "unknown view clicked");
+            Toast.makeText(getActivity(), getActivity().getString(R.string.str_ipc_no_connect_str), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -556,6 +639,20 @@ public class FragmentMine extends Fragment implements OnClickListener,
             mVideoSquareManager
                     .addVideoSquareManagerListener("indexmore", this);
         }
+        //2.8.10所增加的需求，如果用户以前没有上传服务器，就再来上传一次
+        final BandCarBrandsRequest request = new BandCarBrandsRequest(new IRequestResultListener() {
+            @Override
+            public void onLoadComplete(int requestType, Object result) {
+                BandCarBrandResultBean bean = (BandCarBrandResultBean) result;
+                if (bean == null || bean.code != GolukConfig.SERVER_RESULT_OK) {
+                    return;
+                }
+                SharedPrefUtil.removeBandCarRequest();
+            }
+        });
+        if (request.resotreCacheRequest()) {
+            request.postCache();
+        }
     }
 
     /**
@@ -590,7 +687,6 @@ public class FragmentMine extends Fragment implements OnClickListener,
             userSex = userInfo.sex;
             customavatar = userInfo.customavatar;
             userPhone = userInfo.phone;
-
             if (customavatar != null && !"".equals(customavatar)) {
                 mImageHead.setImageURI(Uri.parse(customavatar));
                 if (null != getActivity()) {
@@ -707,7 +803,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
             dismissDialog();
             personalChanged();
         } else if (ma.mApp.autoLoginStatus == 3 || ma.mApp.autoLoginStatus == 4
-                || ma.mApp.isUserLoginSucess == false) {
+                || !ma.mApp.isUserLoginSucess) {
             dismissDialog();
             personalChanged();
             mVideoLayout.setVisibility(View.GONE);
@@ -727,8 +823,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
      * 个人中心状态的变化
      */
     public void personalChanged() {
-        GolukDebugUtils.i("lily", "======registStatus===="
-                + ma.mApp.registStatus);
+        GolukDebugUtils.i("lily", "======registStatus====" + ma.mApp.registStatus);
         if (ma.mApp.autoLoginStatus == 3 || ma.mApp.autoLoginStatus == 4) {
             mVideoLayout.setVisibility(View.GONE);
             mImageAuthentication.setVisibility(View.GONE);
@@ -773,7 +868,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
             mUserinfohomeRetBean = (UserinfohomeRetBean) result;
             if (null != mUserinfohomeRetBean
                     && null != mUserinfohomeRetBean.data) {
-                if ((ma.mApp.isUserLoginSucess == true || ma.mApp.registStatus == 2)
+                if ((ma.mApp.isUserLoginSucess || ma.mApp.registStatus == 2)
                         && !TextUtils.isEmpty(userUId)) {
                     mTextShare
                             .setText(GolukUtils
@@ -801,7 +896,16 @@ public class FragmentMine extends Fragment implements OnClickListener,
                     if (mUserinfohomeRetBean.data.user != null
                             && mUserinfohomeRetBean.data.user.label != null) {
                         UserLabelBean lable = mUserinfohomeRetBean.data.user.label;
-
+                        //该用户是4S店
+                        if ("1".equals(lable.is4s)) {
+                            mLLSSSS.setVisibility(View.VISIBLE);
+                            //Cache the flag , we can setIpc watermark when offline
+                            SharedPrefUtil.saveUserIs4SShop(true);
+                            initDataFor4SShop();
+                        } else {
+                            mLLSSSS.setVisibility(View.GONE);
+                            SharedPrefUtil.saveUserIs4SShop(false);
+                        }
                         mImageAuthentication.setVisibility(View.VISIBLE);
                         if ("1".equals(lable.approvelabel)) {
                             mImageAuthentication

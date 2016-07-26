@@ -106,7 +106,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
     /**
      * 是否为最新版本
      **/
-    public final static String UPDATE_IS_NEW = "update_is_new";
+//    public final static String UPDATE_IS_NEW = "update_is_new";
+    public final static String DOWNLOAD_ON_CREATE = "update_when_created";
 
     /**
      * 0下载 / 1安装的标志
@@ -233,11 +234,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         mIsExit = false;
 
         Intent it = getIntent();
-        boolean isNew = it.getBooleanExtra(UPDATE_IS_NEW, false);
-        if (isNew) {
-            isNewVersion();
-            return;
-        }
+        boolean downloadOnCreate = it.getBooleanExtra(DOWNLOAD_ON_CREATE, false);
         mSign = it.getIntExtra(UPDATE_SIGN, 0);
         mIpcInfo = (IPCInfo) it.getSerializableExtra(UPDATE_DATA);
 
@@ -281,14 +278,18 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                     mBtnDownload.setEnabled(false);
                 }
             } else {
-                boolean b = mApp.mIpcUpdateManage.download(mIpcUrl, mIpcVersion);
-                if (b) {
-                    mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
-                    mTextDowload.setText(this.getResources().getString(R.string.str_ipc_update_downloading));
-                    mBtnDownload.setText(this.getResources().getString(R.string.str_ipc_update_downloading_zero));
-                    mDownloadStatus = IpcUpdateManage.DOWNLOAD_STATUS;
-                    mBtnDownload.setEnabled(false);
-                } else {
+                boolean b = false;
+                if (downloadOnCreate) {
+                    b = mApp.mIpcUpdateManage.download(mIpcUrl, mIpcVersion);
+                    if (b) {
+                        mApp.mIpcUpdateManage.mDownLoadIpcInfo = mIpcInfo;
+                        mTextDowload.setText(this.getResources().getString(R.string.str_ipc_update_downloading));
+                        mBtnDownload.setText(this.getResources().getString(R.string.str_ipc_update_downloading_zero));
+                        mDownloadStatus = IpcUpdateManage.DOWNLOAD_STATUS;
+                        mBtnDownload.setEnabled(false);
+                    }
+                }
+                if (!b || !downloadOnCreate) {
                     mTextDowload.setText(this.getResources().getString(R.string.str_ipc_update_undownload));
                     mBtnDownload.setText(this.getResources().getString(R.string.str_ipc_update_download_file));
                     mDownloadStatus = IpcUpdateManage.DOWNLOAD_STATUS_FAIL;
@@ -365,7 +366,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         mApp.mIpcUpdateManage.stopIpcUpgrade();
                         UserUtils.dismissUpdateDialog(mUpdateDialog);
                         mUpdateDialog = null;
-                        SharedPrefUtil.saveNewFirmware(mIpcVersion,false);
+                        SharedPrefUtil.saveNewFirmware(mIpcVersion, false);
                         if (mIsExit) {
                             return;
                         }
@@ -651,7 +652,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
     /**
      * 下载ipc文件回调 void* pvUser, int type ,int state , unsigned long param1,
      * unsigned long param2 其中的state==2时，param1为下载进度数值（0~100）
-     *
      */
     public void downloadCallback(int state, Object param1, Object param2) {
         GolukDebugUtils.i("lily", "---UpdateActivity---------downloadCallback-----------state：" + state + "----param1："
@@ -689,7 +689,6 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
 
     /**
      * ipc安装升级回调
-     *
      */
     @Override
     public void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
