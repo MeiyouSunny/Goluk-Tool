@@ -338,7 +338,7 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                     public void onClick(DialogInterface arg0, int arg1) {
                         operate[0] = mApp.getContext().getString(R.string.str_zhuge_ipc_update_dialog_operate_ignore);
                         if (type == 0) {
-                            EventBus.getDefault().post(new EventIPCCheckUpgradeResult(EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_OFFLINE_INSTALL_DELAY, ipcInfo));
+                            EventBus.getDefault().post(new EventIPCCheckUpgradeResult(EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_DELAY, ipcInfo));
                         } else {
                             EventBus.getDefault().post(new EventIPCCheckUpgradeResult(EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_INSTALL_DELAY, ipcInfo));
                         }
