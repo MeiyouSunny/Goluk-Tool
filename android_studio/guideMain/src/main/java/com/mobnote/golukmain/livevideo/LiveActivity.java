@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
@@ -241,6 +242,9 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     private String mRtmpUrl;
     private String mVid;
+
+    private RelativeLayout mLiveInfoLayout;
+    private boolean isShowLiveInfoLayout;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -665,6 +669,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         mMapTabLl = (LinearLayout) findViewById(R.id.ll_tab_map);
         mMapTabIv = (ImageView) findViewById(R.id.iv_tab_map);
         mMapTabTv = (TextView) findViewById(R.id.tv_tab_map);
+        mLiveInfoLayout = (RelativeLayout) findViewById(R.id.layout_live_info);
 
         // 视频事件回调注册
         mRPVPalyVideo.setPlayerListener(this);
@@ -678,6 +683,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         mPauseBtn.setOnClickListener(this);
         mCommentTabLl.setOnClickListener(this);
         mMapTabLl.setOnClickListener(this);
+        mRPVPalyVideo.setOnClickListener(this);
 
         hidePlayer();
     }
@@ -747,6 +753,13 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 break;
             case MSG_H_TO_GETMAP_PERSONS:
                 EventBus.getDefault().post(new EventMapQuery(EventConfig.LIVE_MAP_QUERY));
+                break;
+            case MSG_H_HIDE_LIVE_INFO:
+                mLiveInfoLayout.setVisibility(View.GONE);
+                isShowLiveInfoLayout = false;
+                break;
+            case MSG_H_SHOW_LIVE_INFO:
+                mLiveInfoLayout.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -990,8 +1003,15 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             this.click_share(false);
             mIsFirstSucess = false;
         }
+        showLiveInfoLayout();
     }
 
+    private void showLiveInfoLayout(){
+        mBaseHandler.removeMessages(MSG_H_HIDE_LIVE_INFO);
+        mLiveInfoLayout.setVisibility(View.VISIBLE);
+        isShareLive = true;
+        mBaseHandler.sendEmptyMessageDelayed(MSG_H_HIDE_LIVE_INFO,2000);
+    }
     // 抓取第一帧图
     private void startScreenShot() {
         if (this.isShareLive) {
@@ -1148,6 +1168,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         this.isKaiGeSucess = true;
         mLiveCountSecond = liveData.restTime;
 
+        showLiveInfoLayout();
+
         if (1 == liveData.active) {
             GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----6666 : "
                     + liveData.playUrl);
@@ -1215,6 +1237,11 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             }
             mCurrTab = TAB_MAP;
             resetTabAndFragment();
+        } else if(id == R.id.live_vRtmpPlayVideo){
+            if(isShowLiveInfoLayout){
+            }else{
+                showLiveInfoLayout();
+            }
         }
     }
 
