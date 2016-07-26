@@ -178,10 +178,11 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         mUpdateLayout.setEnabled(false);
     }
 
-    private void downloadLater() {
+    private void downloadLater(IPCInfo ipcInfo) {
         downloadLater = true;
         mTextVersion.setText(R.string.str_update_find_new_first);
         mUpdateLayout.setEnabled(true);
+        mIpcInfo = ipcInfo;
     }
 
     private void downloadNow(IPCInfo ipcInfo) {
@@ -195,6 +196,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         mTextVersion.setText(R.string.install_new_firmware);
         mUpdateLayout.setEnabled(true);
         mIpcInfo = ipcInfo;
+        canOfflineInstall = true;
     }
 
     @Override
@@ -219,7 +221,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             startActivityForResult(it, 10);
         } else if (id == R.id.unbind_layout_update) {
             if (mApplication.mIpcUpdateManage.isDownloading() || downloadLater) {// 下载中
-                GolukUtils.startUpdateActivity(UnbindActivity.this, 0, null, false);
+                GolukUtils.startUpdateActivity(UnbindActivity.this, 0, mIpcInfo, false);
             } else if (mApplication.mIpcUpdateManage.isDownloadSuccess() || canOfflineInstall || canOfflineInstallLater) {
                 GolukUtils.startUpdateActivity(UnbindActivity.this, 1, mIpcInfo, false);
             }
@@ -230,7 +232,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         if (event.ResultType == EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW) {
             isNewest();
         } else if (event.ResultType == EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_DELAY) {
-            downloadLater();
+            downloadLater(event.ipcInfo);
         } else if (event.ResultType == EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_OFFLINE_INSTALL_DELAY) {
             downloadNow(event.ipcInfo);
         } else if (event.ResultType == EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_INSTALL_DELAY) {
