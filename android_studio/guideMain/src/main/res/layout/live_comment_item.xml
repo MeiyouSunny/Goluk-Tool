@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_live_comment_list"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+    <!-- 头像 -->
+    <ImageView
+        android:id="@+id/iv_live_comment_item_avatar"
+        android:layout_width="31dp"
+        android:layout_height="31dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/imgdes" />
+
+    <ImageView
+        android:id="@+id/iv_live_comment_item_authentication"
+        android:layout_width="13dp"
+        android:layout_height="13dp"
+        android:layout_alignBottom="@id/iv_live_comment_item_avatar"
+        android:layout_alignRight="@id/iv_live_comment_item_avatar"
+        android:contentDescription="@string/imgdes" />
+
+    <TextView
+        android:id="@+id/tv_live_comment_item_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/iv_live_comment_item_avatar"
+        android:singleLine="true"
+        android:textColor="#1163a2"
+        android:textSize="14sp" />
+
+    <com.rockerhieu.emojicon.EmojiconTextView
+        android:id="@+id/emojtv_live_comment_item_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_live_comment_item_nickname"
+        android:layout_below="@id/tv_live_comment_item_nickname"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:textColor="#333333"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignLeft="@id/tv_live_comment_item_nickname"
+        android:layout_below="@id/emojtv_live_comment_item_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="#e5e5e5" />
+</RelativeLayout>

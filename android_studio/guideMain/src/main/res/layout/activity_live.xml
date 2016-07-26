@@ -108,6 +108,7 @@
             android:orientation="horizontal" >
 
             <ImageView
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -123,20 +124,11 @@
                 android:layout_marginRight="3dp"
                 android:contentDescription="@string/imgdes"
                 android:text="@string/live_str_look_default"
-                android:textColor="#8e8e8e"
-                android:textSize="@dimen/live_text_time1_size" />
-
-            <TextView
-                android:id="@+id/live_countdown"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="4dp"
-                android:text="@string/live_str_default_timer"
-                android:textColor="@color/live_color_time1"
+                android:textColor="#ffffff"
                 android:textSize="@dimen/live_text_time1_size" />
 
             <ImageView
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -145,6 +137,17 @@
                 android:src="@drawable/live_icon_live" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/live_countdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="2dp"
+            android:text="@string/live_str_default_timer"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/live_text_time1_size" />
         <!-- 控制视频播放暂停 -->
 
         <RelativeLayout

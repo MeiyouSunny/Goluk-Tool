@@ -41,6 +41,7 @@ import com.mobnote.golukmain.live.TimerManager;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.livevideo.bean.LiveSignRetBean;
 import com.mobnote.golukmain.livevideo.bean.StartLiveBean;
+import com.mobnote.golukmain.livevideo.livecomment.LiveCommentFragment;
 import com.mobnote.golukmain.thirdshare.ProxyThirdShare;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.thirdshare.ThirdShareBean;
