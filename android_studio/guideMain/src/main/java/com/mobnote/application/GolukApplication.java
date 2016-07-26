@@ -39,7 +39,6 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import com.alibaba.fastjson.JSON;
 import com.baidu.mapapi.SDKInitializer;
 import com.mobnote.eventbus.EventConfig;
-import com.mobnote.eventbus.EventDownloadVideoFinish;
 import com.mobnote.eventbus.EventIpcConnState;
 import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.eventbus.EventPhotoUpdateLoginState;
@@ -2073,7 +2072,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         //直播页面
         ZhugeUtils.eventLive(this, this.getString(R.string.str_zhuge_share_video_network_other));
 
-        GolukUtils.startPublishOrLookLiveActivity(mContext,false,false,null,userInfo);
+        GolukUtils.startPublishOrWatchLiveActivity(mContext,false,false,null,userInfo);
     }
 
     private boolean isMainProcess() {
