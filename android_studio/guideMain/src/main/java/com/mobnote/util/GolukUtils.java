@@ -1389,11 +1389,11 @@ public class GolukUtils {
         return errors.toString();
     }
 
-    public static void startUpdateActivity(Context context, int sign, IPCInfo ipcInfo, boolean isNew){
+    public static void startUpdateActivity(Context context, int sign, IPCInfo ipcInfo, boolean downloadOnCreate){
         Intent intent = new Intent(context, UpdateActivity.class);
         intent.putExtra(UpdateActivity.UPDATE_SIGN, sign);
         intent.putExtra(UpdateActivity.UPDATE_DATA, ipcInfo);
-        intent.putExtra(UpdateActivity.UPDATE_IS_NEW, isNew);
+        intent.putExtra(UpdateActivity.DOWNLOAD_ON_CREATE, downloadOnCreate);
         context.startActivity(intent);
     }
 }

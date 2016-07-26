@@ -1052,4 +1052,5 @@
     <string name="str_describle_live_hint">描述一下你的直播吧</string>
     <string name="str_play_back">回放</string>
     <string name="str_fireware_is_downloading">新固件程序下载中...</string>
+    <string name="liveVideoReplay">直播回放</string>
 </resources>

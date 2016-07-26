@@ -326,12 +326,8 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                     public void onClick(DialogInterface arg0, int arg1) {
                         // 跳转升级界面
                         dimissDownLoadDialog();
-//                        Intent intent = new Intent(mApp.getContext(), UpdateActivity.class);
-//                        intent.putExtra(UpdateActivity.UPDATE_SIGN, type);
-//                        intent.putExtra(UpdateActivity.UPDATE_DATA, ipcInfo);
-//                        mApp.getContext().startActivity(intent);
                         operate[0] = mApp.getContext().getString(R.string.str_zhuge_ipc_update_dialog_operate_download);
-                        GolukUtils.startUpdateActivity(mApp.getContext(), type, ipcInfo, false);
+                        GolukUtils.startUpdateActivity(mApp.getContext(), type, ipcInfo, true);
                     }
                 }).setNegativeButton(mApp.getContext().getResources().getString(R.string.str_update_later), new DialogInterface.OnClickListener() {
                     @Override

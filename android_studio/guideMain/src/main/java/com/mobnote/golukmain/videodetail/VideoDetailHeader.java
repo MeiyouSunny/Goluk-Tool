@@ -68,7 +68,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 	private TextView mTextDescribe = null;
 	private TextView mTextAuthor, mTextLink;
 	private LinearLayout mPraiseLayout, mShareLayout, mCommentLayout;
-	private TextView mTextZan, mTextComment, mTextZanName;
+	private TextView mTextZan, mTextComment, mTextZanName,mTvVideoType;
 	private ImageView mZanImage;
 
 	// 奖励视频／推荐视频
@@ -147,6 +147,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 		simpleDraweeView = (ImageView) convertView.findViewById(R.id.video_detail_first_pic);
 
 		mTextDescribe = (TextView) convertView.findViewById(R.id.video_detail_describe);
+		mTvVideoType = (TextView) convertView.findViewById(R.id.video_type);
 		mTextAuthor = (TextView) convertView.findViewById(R.id.video_detail_author);
 		mTextLink = (TextView) convertView.findViewById(R.id.video_detail_link);
 		mPraiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
@@ -241,6 +242,9 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 			mTextZan.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
 		}
 		mTextComment.setText(GolukUtils.getFormatNumber(videoAllData.avideo.video.comment.comcount));
+		if(VideoInfo.VIDEO_TYPE_LIVE.equals(videoAllData.avideo.video.type)){
+			mTvVideoType.setVisibility(View.VISIBLE);
+		}
 		// TODO 在视频描述之后添加活动标签
 		if (null == videoAllData.avideo.video.recom || "".equals(videoAllData.avideo.video.recom)
 				|| null == videoAllData.avideo.video.recom.topicname
@@ -250,6 +254,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 			showTopicText(mTextDescribe, videoAllData.avideo.video.describe + "    ", "#"
 					+ videoAllData.avideo.video.recom.topicname + "#");
 		}
+
 
 		final String location = videoAllData.avideo.video.mLocation;
 		if (null != location && !"".equals(location)) {
