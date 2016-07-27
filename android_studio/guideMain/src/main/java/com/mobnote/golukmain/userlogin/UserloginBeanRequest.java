@@ -1,9 +1,6 @@
 package com.mobnote.golukmain.userlogin;
 
 import java.util.HashMap;
-
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.cluster.bean.JsonData;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.http.request.GolukFastjsonRequest;
 

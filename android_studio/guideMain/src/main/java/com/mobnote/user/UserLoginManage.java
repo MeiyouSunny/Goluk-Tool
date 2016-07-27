@@ -19,7 +19,7 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.http.HttpCommHeaderBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.live.UserInfo;
-import com.mobnote.golukmain.userlogin.OhterUserloginBeanRequest;
+import com.mobnote.golukmain.userlogin.OtherUserloginBeanRequest;
 import com.mobnote.golukmain.userlogin.UserData;
 import com.mobnote.golukmain.userlogin.UserResult;
 import com.mobnote.golukmain.userlogin.UserloginBeanRequest;
@@ -45,7 +45,7 @@ public class UserLoginManage implements IRequestResultListener {
 
 	private UserloginBeanRequest userloginBean = null;
 
-	private OhterUserloginBeanRequest otherloginBean = null;
+	private OtherUserloginBeanRequest otherloginBean = null;
 
 	private String mPwd = "";
 
@@ -57,7 +57,7 @@ public class UserLoginManage implements IRequestResultListener {
 	public UserLoginManage(GolukApplication mApp) {
 		super();
 		userloginBean = new UserloginBeanRequest(IPageNotifyFn.PageType_Login, this);
-		otherloginBean = new OhterUserloginBeanRequest(IPageNotifyFn.PageType_OauthLogin, this);
+		otherloginBean = new OtherUserloginBeanRequest(IPageNotifyFn.PageType_OauthLogin, this);
 		this.mApp = mApp;
 	}
 

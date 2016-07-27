@@ -413,7 +413,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
                     updateViewData(false, 0);
                 }
             } else {
-
                 GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
                 updateViewData(false, 0);
                 if (mIsfrist) {
