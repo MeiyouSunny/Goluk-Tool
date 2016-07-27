@@ -154,11 +154,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
      * 防止多次按退出键
      */
     private boolean isAlreadExit = false;
-    private String mCurrentVideoId = null;
-    /**
-     * 当前点赞次数
-     */
-    private int mCurrentOKCount = 0;
     /**
      * 是否支持声音
      */
@@ -317,7 +312,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             }
             mBaseApp.isAlreadyLive = true;
             SharedPrefUtil.setIsLiveNormalExit(false);
-            mCurrentVideoId = getVideoId();
             startVideoAndLive("");
             mTitleTv.setText(this.getString(R.string.str_mylive_text));
             mNickName.setText(myInfo.nickname);
@@ -570,16 +564,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         //mStartTimeTv.setText(this.getString(R.string.str_today) + " " + GolukUtils.getCurrentTime());
     }
 
-    private String getVideoId() {
-        if (null != myInfo) {
-            return myInfo.uid;
-        }
-        Date dt = new Date();
-        long time = dt.getTime();
-
-        return "live" + time;
-    }
-
     /**
      * 获取直播签名
      */
@@ -724,7 +708,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 }
                 break;
             case MSG_H_RETRY_UPLOAD:
-                startLive(mCurrentVideoId);
+                startLive();
                 break;
             case MSG_H_RETRY_SHOW_VIEW:
                 startVideoAndLive("");
@@ -767,11 +751,10 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     /**
      * 开启直播录制上传
      *
-     * @param aid
      * @author xuhw
      * @date 2015年3月8日
      */
-    private void startLive(String aid) {
+    private void startLive() {
         GolukDebugUtils.e("", "newlive-----LiveActivity-----startLive  ---1");
         if (null != mLiveOperator) {
             StartLiveBean bean = new StartLiveBean();
@@ -1094,7 +1077,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             // 上次的视频还有效,开始上传直播，调用上报位置
             if (!mApp.mIPCControlManager.isT1Relative()) {
                 // 如果是T1,则不需要重新开启
-                startLive(mCurrentVideoId);
+                startLive();
             }
             startUploadMyPosition();
             isSettingCallBack = true;
@@ -1286,7 +1269,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         GolukDebugUtils.e("", "newlive-----share-------click_share ");
         String vid = null;
         if (isShareLive) {
-            vid = mCurrentVideoId;
+            vid = mRtmpUrl;
         } else {
             if (!isKaiGeSucess) {
                 return;
@@ -1307,16 +1290,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    private String getCurrentVideoId() {
-        if (isShareLive) {
-            return mCurrentVideoId;
-        }
-        if (null != liveData) {
-            return liveData.vid;
-        }
-        return "";
-    }
-
     private void click_Like() {
         if (!this.isKaiGeSucess) {
             return;
@@ -1334,7 +1307,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 //            zanBtn.setText("" + mCurrentOKCount);
 //            zanBtn.setText("" + mCurrentOKCount);
 //        }
-        boolean isSucess = clickPraise("1", getCurrentVideoId(), "1");
+        boolean isSucess = clickPraise("1", mVid, "1");
         GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----click_OK----isSucess : " + isSucess);
     }
 
@@ -1590,7 +1563,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         }
 
         // 开始视频上传
-        startLive(mCurrentVideoId);
+        startLive();
         updateCountDown(GolukUtils.secondToString(mLiveCountSecond));
         // 开始计时
         isSettingCallBack = true;
@@ -1663,7 +1636,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             case LiveDialogManager.DIALOG_TYPE_CONFIRM:
 
                 final String reporttype = (String) data;
-                boolean isSucess = report("1", getCurrentVideoId(), reporttype);
+                boolean isSucess = report("1", mVid, reporttype);
                 if (isSucess) {
                     GolukUtils.showToast(LiveActivity.this, this.getString(R.string.str_report_success));
                 } else {
@@ -1810,20 +1783,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         new UploadLiveScreenShotTask(picName, myInfo.uid,mVid).execute();
     }
 
-    private String getShareVideoId() {
-        String vid = null;
-        if (isShareLive) {
-            vid = mCurrentVideoId;
-        } else {
-            if (!isKaiGeSucess) {
-                vid = "";
-            } else {
-                vid = liveData.vid;
-            }
-        }
-        return vid;
-    }
-
     // 分享成功后需要调用的接口
     public void shareSucessDeal(boolean isSucess, String channel) {
         if (!isSucess) {
@@ -1832,7 +1791,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         }
         String vid = null;
         if (isShareLive) {
-            vid = mCurrentVideoId;
+            vid = mVid;
         } else {
             if (!isKaiGeSucess) {
                 return;
@@ -1869,7 +1828,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             bean.tl = title;
             bean.bitmap = mThumbBitmap;
             bean.realDesc = sinaTxt;
-            bean.videoId = getShareVideoId();
+            bean.videoId = mRtmpUrl;
             ProxyThirdShare sb = new ProxyThirdShare(LiveActivity.this, sharePlatform, bean);
             sb.showAtLocation(LiveActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
         }
@@ -1939,6 +1898,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 if(GolukUtils.isTokenValid(liveSignRetBean.code)){
                     if(liveSignRetBean.data != null){
                         mVid = liveSignRetBean.data.videoid;
+                        mLiveCommentFragment.setmVid(mVid);
                         if(mSettingData.isEnableSaveReplay){
                             mRtmpUrl = liveSignRetBean.data.liveurl + "?vdoid=" + liveSignRetBean.data.videoid;
                         }else{

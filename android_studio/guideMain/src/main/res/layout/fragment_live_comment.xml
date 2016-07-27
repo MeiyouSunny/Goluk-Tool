@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content">
                 <LinearLayout
                     android:id="@+id/layout_like"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
@@ -65,7 +65,7 @@
                 </LinearLayout>
                 <TextView
                     android:id="@+id/tv_send_comment"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
