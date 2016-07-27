@@ -3,7 +3,6 @@ package com.mobnote.golukmain.cluster;
 import java.util.HashMap;
 
 import com.mobnote.golukmain.cluster.bean.ActivityJsonData;
-import com.mobnote.golukmain.cluster.bean.JsonData;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.http.request.GolukFastjsonRequest;
 

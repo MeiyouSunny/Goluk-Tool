@@ -3,7 +3,6 @@ package com.mobnote.golukmain.cluster;
 import android.text.TextUtils;
 
 import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.cluster.bean.JsonData;
 import com.mobnote.golukmain.cluster.bean.RankingListBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.http.request.GolukFastjsonRequest;
