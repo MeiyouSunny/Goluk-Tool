@@ -1880,6 +1880,7 @@ public class LiveActivityGoluk extends BaseActivity implements View.OnClickListe
             bean.bitmap = mThumbBitmap;
             bean.realDesc = sinaTxt;
             bean.videoId = getShareVideoId();
+            bean.from = this.getString(R.string.str_zhuge_live_share_event);
             ProxyThirdShare sb = new ProxyThirdShare(LiveActivityGoluk.this, sharePlatform, bean);
             sb.showAtLocation(LiveActivityGoluk.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
         }

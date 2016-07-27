@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
+import com.mobnote.golukmain.cluster.bean.TagsBean;
 import com.mobnote.golukmain.followed.bean.FollowedComListBean;
 import com.mobnote.golukmain.followed.bean.FollowedRecomUserBean;
 import com.mobnote.golukmain.followed.bean.FollowedVideoObjectBean;
@@ -12,6 +13,7 @@ import com.mobnote.user.UserUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
+import com.mobnote.view.FlowLayout;
 
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -433,6 +435,7 @@ public class FollowedListAdapter extends BaseAdapter {
             holderFollow.liveBackLayout = (LinearLayout) convertView.findViewById(R.id.ly_followed_live_back);
             holderFollow.liveBackTime = (TextView) convertView.findViewById(R.id.tv_followed_live_back_time);
             holderFollow.playBtn = (ImageView) convertView.findViewById(R.id.mPlayBigBtn);
+            holderFollow.nTagsFL = (FlowLayout) convertView.findViewById(R.id.flowlayout_video_item_tags);
 
             int height = (int) ((float) width / widthHeight);
             RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(width, height);
@@ -558,21 +561,14 @@ public class FollowedListAdapter extends BaseAdapter {
                 holderFollow.detail.setVisibility(View.GONE);
             } else {
                 holderFollow.detail.setVisibility(View.VISIBLE);
-                if (null != videoObjectBean.video.gen) {
-                    if (!TextUtils.isEmpty(videoObjectBean.video.gen.topicid) &&
-                            !TextUtils.isEmpty(videoObjectBean.video.gen.topicname)) {
-                        UserUtils.showCommentText(
-                                mFragment.getActivity(), true, videoObjectBean,
-                                holderFollow.detail, videoObjectBean.user.nickname,
-                                videoObjectBean.video.describe, "#" + videoObjectBean.video.gen.topicname + "#");
-                    } else {
-                        UserUtils.showCommentText(holderFollow.detail, videoObjectBean.user.nickname,
-                                videoObjectBean.video.describe);
-                    }
-                } else {
-                    UserUtils.showCommentText(holderFollow.detail, videoObjectBean.user.nickname,
-                            videoObjectBean.video.describe);
-                }
+                UserUtils.showCommentText(holderFollow.detail, videoObjectBean.user.nickname,
+                        videoObjectBean.video.describe);
+            }
+
+            if(null != videoObjectBean.video.tags) {
+                GolukUtils.addTagsViews(mFragment.getActivity(), videoObjectBean.video.tags, holderFollow.nTagsFL);
+            } else {
+                holderFollow.nTagsFL.setVisibility(View.GONE);
             }
 
             if (TextUtils.isEmpty(videoObjectBean.video.type) || !"1".equals(videoObjectBean.video.type)) {
@@ -816,6 +812,7 @@ public class FollowedListAdapter extends BaseAdapter {
         LinearLayout liveBackLayout;
         TextView liveBackTime;
         ImageView playBtn;
+        FlowLayout nTagsFL;
     }
 
     static class ViewHolderEmpty {

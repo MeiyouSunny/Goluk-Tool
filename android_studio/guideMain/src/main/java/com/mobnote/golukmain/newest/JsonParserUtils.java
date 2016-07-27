@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.mobnote.golukmain.cluster.bean.TagsBean;
 import com.mobnote.golukmain.cluster.bean.UserLabelBean;
 import com.mobnote.golukmain.videosuqare.LiveVideoData;
 import com.mobnote.golukmain.videosuqare.UserEntity;
@@ -205,6 +206,18 @@ public class JsonParserUtils {
 						mVideoEntity.videoExtra.sysflag = extraObj.optString("sysflag");
 					}
 
+					JSONArray tagsObjArray = video.optJSONArray("tags");
+					if(null != tagsObjArray && tagsObjArray.length() > 0) {
+						int tagsLength = tagsObjArray.length();
+						for(int j = 0; j < tagsLength; j++) {
+							JSONObject tagsObj = tagsObjArray.optJSONObject(j);
+							TagsBean tagsBean = new TagsBean();
+							tagsBean.tagid = tagsObj.optString("tagid");
+							tagsBean.name = tagsObj.optString("name");
+							tagsBean.type = tagsObj.optInt("type");
+							mVideoEntity.tags.add(tagsBean);
+						}
+					}
 					if (video.isNull("isopen")) {
 						mVideoEntity.isopen = "0";
 					} else {

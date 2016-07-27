@@ -861,6 +861,7 @@ public class VideoEditActivity extends BaseActivity implements OnClickListener, 
 		bean.videoId = this.mUploadVideo.getVideoId();
 		bean.mShareType = "1";
 		bean.filePath = mFilePath;
+		bean.from = this.getString(R.string.str_zhuge_share_video_network_other);
 		mShareDealTool.toShare(bean);
 	}
 

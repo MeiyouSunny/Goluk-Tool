@@ -383,6 +383,7 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 				bean.bitmap = null;
 				bean.realDesc = realDesc;
 				bean.videoId = videoId;
+				bean.from = mContext.getString(R.string.str_zhuge_newest_event);
 
 				ProxyThirdShare shareBoard = new ProxyThirdShare(activity, sharePlatform, bean);
 				shareBoard.showAtLocation(activity.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);

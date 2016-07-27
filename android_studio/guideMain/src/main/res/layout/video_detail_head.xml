@@ -199,13 +199,13 @@
                 android:layout_marginRight="@dimen/sizeSmall"
                 android:gravity="center_vertical"
                 android:visibility="gone"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
             <TextView
                 android:id="@+id/video_detail_describe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/live_time_desc"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <RelativeLayout
@@ -411,8 +411,17 @@
         android:layout_height="10dp"
         android:background="@color/user_login_bg" />
 
-    <!-- 操作 -->
+    <com.mobnote.view.FlowLayout
+        android:id="@+id/flowlayout_video_detail_header_tags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:visibility="gone"
+        android:background="@android:color/white"/>
 
+    <!-- 操作 -->
     <RelativeLayout
         android:id="@+id/functionLayouyt"
         android:layout_width="match_parent"

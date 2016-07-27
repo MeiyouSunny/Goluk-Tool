@@ -1,6 +1,9 @@
 package com.mobnote.golukmain.videodetail;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.mobnote.golukmain.cluster.bean.TagsBean;
+
+import java.util.List;
 
 public class VideoInfo {
 	public static final String VIDEO_TYPE_LIVE = "1";
@@ -46,9 +49,10 @@ public class VideoInfo {
 	public String picture_thmb;
 	/** 地理位置 */
 	@JSONField(name="location")
-	public String mLocation;
+	public String location;
 	/**推荐及金币相关**/
 	@JSONField(name="gen")
 	public VideoRecommend recom;
-	
+	@JSONField(name="tags")
+	public List<TagsBean> tags;
 }

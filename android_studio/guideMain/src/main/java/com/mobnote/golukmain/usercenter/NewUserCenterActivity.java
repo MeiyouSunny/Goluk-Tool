@@ -287,6 +287,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 				shareBean.bitmap = null;
 				shareBean.realDesc = realDesc;
 				shareBean.videoId = "";
+				shareBean.from = getString(R.string.str_zhuge_share_video_network_other);
 
 				ProxyThirdShare shareBoard = new ProxyThirdShare(this, mSharePlatform, shareBean);
 				shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
@@ -510,4 +511,11 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 		}
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (null != mSharePlatform) {
+			mSharePlatform.onActivityResult(requestCode, resultCode, data);
+		}
+	}
 }

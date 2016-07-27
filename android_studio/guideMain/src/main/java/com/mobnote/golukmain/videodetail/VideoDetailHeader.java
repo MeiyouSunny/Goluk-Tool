@@ -15,6 +15,7 @@ import com.mobnote.golukmain.usercenter.UCUserInfo;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.view.FlowLayout;
 
 import android.content.Context;
 import android.content.Intent;
@@ -70,6 +71,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 	private LinearLayout mPraiseLayout, mShareLayout, mCommentLayout;
 	private TextView mTextZan, mTextComment, mTextZanName,mTvVideoType;
 	private ImageView mZanImage;
+	private FlowLayout mTagsFL;
 
 	// 奖励视频／推荐视频
 	private ImageView mImageHeadAward, mActiveImage, mSysImage, mRecomImage;
@@ -173,6 +175,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 		mActiveLayout = (RelativeLayout) convertView.findViewById(R.id.video_detail_activie_layout);
 		mSysLayout = (RelativeLayout) convertView.findViewById(R.id.video_detail_sys_layout);
 		mRecomLayout = (RelativeLayout) convertView.findViewById(R.id.video_detail_recom_layout);
+		mTagsFL = (FlowLayout)convertView.findViewById(R.id.flowlayout_video_detail_header_tags);
 		//mLoading.setBackgroundResource(R.anim.video_loading);
 		//mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
 
@@ -245,18 +248,18 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 		if(VideoInfo.VIDEO_TYPE_LIVE.equals(videoAllData.avideo.video.type)){
 			mTvVideoType.setVisibility(View.VISIBLE);
 		}
+
 		// TODO 在视频描述之后添加活动标签
-		if (null == videoAllData.avideo.video.recom || "".equals(videoAllData.avideo.video.recom)
-				|| null == videoAllData.avideo.video.recom.topicname
-				|| "".equals(videoAllData.avideo.video.recom.topicname)) {
+		if (null != videoAllData.avideo.video) {
 			mTextDescribe.setText(videoAllData.avideo.video.describe);
-		} else {
-			showTopicText(mTextDescribe, videoAllData.avideo.video.describe + "    ", "#"
-					+ videoAllData.avideo.video.recom.topicname + "#");
 		}
 
-
-		final String location = videoAllData.avideo.video.mLocation;
+		if(null != videoAllData.avideo.video && null != videoAllData.avideo.video.tags) {
+			GolukUtils.addTagsViews(mContext, videoAllData.avideo.video.tags, mTagsFL);
+		} else {
+			mTagsFL.setVisibility(View.GONE);
+		}
+		final String location = videoAllData.avideo.video.location;
 		if (null != location && !"".equals(location)) {
 			mTextTime.append("  " + location);
 		} else {

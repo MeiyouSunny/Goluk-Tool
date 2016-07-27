@@ -158,7 +158,7 @@ public abstract class AbsThirdShare implements IThirdShareFn {
 			return null;
 		}
 		//分享视频
-		if(mFrom.equals(mActivity.getString(R.string.str_zhuge_live_share_event))){
+		if (null != mFrom && mFrom.equals(mActivity.getString(R.string.str_zhuge_live_share_event))) {
 			ZhugeUtils.eventLiveShare(mActivity, shareType);
 		} else {
 			ZhugeUtils.eventShareVideo(mActivity, shareType, mFrom);

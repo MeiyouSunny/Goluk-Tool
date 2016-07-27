@@ -5,18 +5,19 @@ import java.util.List;
 
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
+import com.mobnote.golukmain.cluster.bean.TagsBean;
 import com.mobnote.golukmain.live.ILive;
-import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
-import com.mobnote.golukmain.usercenter.UCUserInfo;
 import com.mobnote.golukmain.videosuqare.CategoryListView;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
-import com.mobnote.golukmain.videosuqare.ZhugeParameterFn;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.view.FlowLayout;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
@@ -182,6 +183,7 @@ public class NewestAdapter extends BaseAdapter {
         holder.surroundWatch = (TextView) convertView.findViewById(R.id.tv_newest_list_item_surround);
         holder.totalcomments = (TextView) convertView.findViewById(R.id.totalcomments);
         holder.detail = (TextView) convertView.findViewById(R.id.detail);
+        holder.nTagsFL = (FlowLayout) convertView.findViewById(R.id.flowlayout_video_item_tags);
         holder.ivReward = (ImageView) convertView.findViewById(R.id.iv_reward_tag);
         holder.totlaCommentLayout = (LinearLayout) convertView.findViewById(R.id.totlaCommentLayout);
         holder.comment1 = (TextView) convertView.findViewById(R.id.comment1);
@@ -340,20 +342,14 @@ public class NewestAdapter extends BaseAdapter {
             holder.detail.setVisibility(View.GONE);
         } else {
             holder.detail.setVisibility(View.VISIBLE);
-            if (null != mVideoSquareInfo.mVideoEntity.videoExtra) {
-                if (!TextUtils.isEmpty(mVideoSquareInfo.mVideoEntity.videoExtra.topicid)
-                        && !TextUtils.isEmpty(mVideoSquareInfo.mVideoEntity.videoExtra.topicname)) {
-                    UserUtils.showCommentText(mContext, true, mVideoSquareInfo, holder.detail,
-                            mVideoSquareInfo.mUserEntity.nickname, mVideoSquareInfo.mVideoEntity.describe, "#"
-                                    + mVideoSquareInfo.mVideoEntity.videoExtra.topicname + "#");
-                } else {
-                    UserUtils.showCommentText(holder.detail, mVideoSquareInfo.mUserEntity.nickname,
-                            mVideoSquareInfo.mVideoEntity.describe);
-                }
-            } else {
-                UserUtils.showCommentText(holder.detail, mVideoSquareInfo.mUserEntity.nickname,
-                        mVideoSquareInfo.mVideoEntity.describe);
-            }
+            UserUtils.showCommentText(holder.detail, mVideoSquareInfo.mUserEntity.nickname,
+                    mVideoSquareInfo.mVideoEntity.describe);
+        }
+
+        if(null != mVideoSquareInfo.mVideoEntity && null != mVideoSquareInfo.mVideoEntity.tags) {
+            GolukUtils.addTagsViews(mContext, mVideoSquareInfo.mVideoEntity.tags, holder.nTagsFL);
+        } else {
+            holder.nTagsFL.setVisibility(View.GONE);
         }
 
         if (isLive(mVideoSquareInfo)) {
@@ -582,6 +578,7 @@ public class NewestAdapter extends BaseAdapter {
         TextView shareText;
         TextView surroundWatch;
         TextView detail;
+        FlowLayout nTagsFL;
         TextView totalcomments;
 
         LinearLayout totlaCommentLayout;

@@ -479,6 +479,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
                             shareBean.bitmap = bitmap;
                             shareBean.realDesc = realDesc;
                             shareBean.videoId = ztid;
+                            shareBean.from = this.getString(R.string.str_zhuge_share_video_network_other);
 
                             ProxyThirdShare shareBoard = new ProxyThirdShare(SpecialListActivity.this, sharePlatform,
                                     shareBean);
