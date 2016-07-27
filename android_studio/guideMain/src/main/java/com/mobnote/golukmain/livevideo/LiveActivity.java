@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
@@ -20,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
@@ -45,7 +43,6 @@ import com.mobnote.golukmain.livevideo.livecomment.LiveCommentFragment;
 import com.mobnote.golukmain.thirdshare.ProxyThirdShare;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.thirdshare.ThirdShareBean;
-import com.mobnote.golukmain.videosuqare.JsonCreateUtils;
 import com.mobnote.golukmain.videosuqare.ShareDataBean;
 import com.mobnote.golukmain.videosuqare.VideoSquareManager;
 import com.mobnote.util.GlideUtils;
@@ -53,6 +50,7 @@ import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.ZhugeUtils;
+import com.mobnote.videoedit.utils.DeviceUtil;
 import com.rd.car.player.RtmpPlayerView;
 
 import org.json.JSONArray;
@@ -177,6 +175,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
      */
     private boolean isTryingReUpload = false;
     private RelativeLayout mVLayout = null;
+    private RelativeLayout mVideoPalylayout = null;
     /**
      * 用户设置数据
      */
@@ -231,6 +230,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     private static final int TAB_COMMENT = 0;
     private static final int TAB_MAP = 1;
     private int mCurrTab;
+    private View mViewLine;
 
     AbstractLiveMapViewFragment mLiveMapViewFragment;
     LiveCommentFragment mLiveCommentFragment;
@@ -240,6 +240,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     private RelativeLayout mLiveInfoLayout;
     private boolean isShowLiveInfoLayout;
+    int mVideoPlayerHeight;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -250,17 +251,16 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         // 获得GolukApplication对象
         mApp = (GolukApplication) getApplication();
         mApp.setContext(this, "LiveVideo");
-
         sharePlatform = new SharePlatformUtil(this);
 
         // 获取直播所需的地址
-        getURL();
+        VIEW_SELF_PLAY = PlayUrlManager.getRtspUrl();
         // 获取数据
         getIntentData();
         // 界面初始化
         initView();
         // 显示数据
-        setViewInitData();
+        setView();
         // 地图初始化
         initMapviewFragment();
         // 设置评论和地图的tab和fragment
@@ -442,10 +442,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    private void getURL() {
-        VIEW_SELF_PLAY = PlayUrlManager.getRtspUrl();
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -556,12 +552,15 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         mSettingData = (LiveSettingBean) intent.getSerializableExtra(KEY_LIVE_SETTING_DATA);
     }
 
-    private void setViewInitData() {
+    private void setView() {
+//        mVideoPlayerHeight = DeviceUtil.getScreenWidthSize(this)*9/16;
+//        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVideoPalylayout.getLayoutParams();
+//        lp.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+//        lp.height = mVideoPlayerHeight;
+//        mVLayout.setLayoutParams(lp);
         if (null != mPublisher) {
-            //zanBtn.setText(mPublisher.zanCount);
             mLookCountTv.setText(mPublisher.persons);
         }
-        //mStartTimeTv.setText(this.getString(R.string.str_today) + " " + GolukUtils.getCurrentTime());
     }
 
     /**
@@ -628,6 +627,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         mLiveBackBtn = (TextView) findViewById(R.id.btn_live_back);
         mTitleTv = (TextView) findViewById(R.id.live_title);
         mVLayout = (RelativeLayout) findViewById(R.id.vLayout);
+        mVideoPalylayout = (RelativeLayout) findViewById(R.id.live_video_play_layout);
         mVideoLoading = (RelativeLayout) findViewById(R.id.live_video_loading);
         mPlayLayout = (RelativeLayout) findViewById(R.id.live_play_layout);
         mLookCountTv = (TextView) findViewById(R.id.live_lookcount);
@@ -1206,8 +1206,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             } else {
                 click_share(true);
             }
-        } else if (id == R.id.like_btn) {
-            click_Like();
         } else if (id == R.id.ll_tab_comment){
             if(mCurrTab == TAB_COMMENT){
                 return;
@@ -1226,43 +1224,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 showLiveInfoLayout();
             }
         }
-    }
-
-    // 点击 "举报"
-    private void click_juBao() {
-        if (!isShareLive) {
-            LiveDialogManager.getManagerInstance().showDialog(this, LiveDialogManager.DIALOG_TYPE_CONFIRM);
-        }
-    }
-
-    /**
-     * 点赞
-     *
-     * @param channel 分享渠道：1.视频广场 2.微信 3.微博 4.QQ
-     * @param videoid 视频id
-     * @param type    点赞类型：0.取消点赞 1.点赞
-     * @return true:命令发送成功 false:失败
-     * @author xuhw
-     * @date 2015年4月17日
-     */
-    public boolean clickPraise(String channel, String videoid, String type) {
-        String json = JsonCreateUtils.getClickPraiseRequestJson(channel, videoid, type);
-        return mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Square,
-                VideoSuqareManagerFn.VSquare_Req_VOP_Praise, json);
-    }
-
-    /**
-     * 举报
-     *
-     * @param channel    分享渠道：1.视频广场 2.微信 3.微博 4.QQ
-     * @param videoid    视频id
-     * @param reporttype 举报类型：1.色情低俗 2.谣言惑众 3.政治敏感 4.其他原因
-     * @return true:命令发送成功 false:失败
-     * @author xuhw
-     * @date 2015年4月17日
-     */
-    public boolean report(String channel, String videoid, String reporttype) {
-        return GolukApplication.getInstance().getVideoSquareManager().report(channel, videoid, reporttype);
     }
 
     private void click_share(boolean isClick) {
@@ -1288,27 +1249,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                         this.getString(R.string.str_request_share_address));
             }
         }
-    }
-
-    private void click_Like() {
-        if (!this.isKaiGeSucess) {
-            return;
-        }
-        if (isAlreadClickOK) {
-            return;
-        }
-        isAlreadClickOK = true;
-
-        Drawable drawable = getResources().getDrawable(R.drawable.videodetail_like_press);
-        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-//        Btn.setCompoundDrawables(drawable, null, null, null); // 设置点赞背景
-//        mCurrentOKzanCount++;
-//        if (null != zanBtn) {
-//            zanBtn.setText("" + mCurrentOKCount);
-//            zanBtn.setText("" + mCurrentOKCount);
-//        }
-        boolean isSucess = clickPraise("1", mVid, "1");
-        GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----click_OK----isSucess : " + isSucess);
     }
 
     /**
@@ -1634,14 +1574,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 }
                 break;
             case LiveDialogManager.DIALOG_TYPE_CONFIRM:
-
-                final String reporttype = (String) data;
-                boolean isSucess = report("1", mVid, reporttype);
-                if (isSucess) {
-                    GolukUtils.showToast(LiveActivity.this, this.getString(R.string.str_report_success));
-                } else {
-                    GolukUtils.showToast(LiveActivity.this, this.getString(R.string.str_report_fail));
-                }
+                //report
                 break;
         }
     }
@@ -1915,7 +1848,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             }
         }
     }
-
     @Override
     public void LocationCallBack(String gpsJson) {
         mLiveMapViewFragment.LocationCallBack(gpsJson);

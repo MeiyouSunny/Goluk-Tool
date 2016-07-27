@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -56,7 +57,7 @@ import de.greenrobot.event.EventBus;
  * Created by leege100 on 2016/7/20.
  */
 public class LiveCommentFragment extends Fragment implements IRequestResultListener, View.OnClickListener,EmojiconGridFragment.OnEmojiconClickedListener,
-        EmojiconsFragment.OnEmojiconBackspaceClickedListener, View.OnLayoutChangeListener {
+        EmojiconsFragment.OnEmojiconBackspaceClickedListener, View.OnLayoutChangeListener{
 
     private String mVid;
     private View mRootView;
@@ -100,7 +101,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
      **/
     private ArrayList<CommentBean> commentDataList = null;
     private boolean isSwitchStateFinish;
-    private boolean mInputState;
+    private boolean mInputState = true;
     private int screenHeight = 0;
     private int keyHeight = 0;
     @Nullable
@@ -111,6 +112,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         initEmojIconFragment();
         screenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
         keyHeight = screenHeight / 3;
+        observeSoftKeyboard();
         return mRootView;
     }
     private void initEmojIconFragment() {
@@ -132,7 +134,23 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         mEmojIconIv.setOnClickListener(this);
         mLikeLayout.setOnClickListener(this);
         mSendCommentTv.setOnClickListener(this);
+
+        mEmojiconEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean isFocused) {
+                if(isFocused){
+
+                }else{
+
+                }
+            }
+        });
     }
+
+    /**
+     * 设置videoId
+     * @param vid
+     */
     public void setmVid(String vid){
         this.mVid = vid;
     }
@@ -203,14 +221,15 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
 
     // 点赞请求
     public boolean sendPraiseRequest() {
+
         PraiseRequest request = new PraiseRequest(IPageNotifyFn.PageType_Praise, this);
-        return request.get("1", mVid, "1");
+        return request.get(ICommentFn.COMMENT_TYPE_LIVE, mVid, "1");
     }
 
     // 取消点赞请求
     public boolean sendCancelPraiseRequest() {
         PraiseCancelRequest request = new PraiseCancelRequest(IPageNotifyFn.PageType_PraiseCancel, this);
-        return request.get("1",mVid);
+        return request.get(ICommentFn.COMMENT_TYPE_LIVE,mVid);
     }
 
     private boolean isCanShowSoft() {
@@ -457,16 +476,36 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     }
 
     @Override
-    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight,
-                               int oldBottom) {
+    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
         if (oldBottom != 0 && bottom != 0 && (oldBottom - bottom > keyHeight)) {
+            //软键盘弹起
             setSwitchState(true);
+            showSendComment();
         } else if (oldBottom != 0 && bottom != 0 && (bottom - oldBottom > keyHeight)) {
+            //软键盘关闭
             if (this.mEmojiconEt.getVisibility() == View.GONE) {
                 setSwitchState(true);
+                showLikeLayout();
             } else {
                 setSwitchState(false);
+                showSendComment();
             }
         }
+    }
+
+    /**
+     * 显示发送评论按钮
+     */
+    private void showSendComment(){
+        mLikeLayout.setVisibility(View.GONE);
+        mSendCommentTv.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 显示喜欢（赞）按钮
+     */
+    private void showLikeLayout(){
+        mLikeLayout.setVisibility(View.VISIBLE);
+        mSendCommentTv.setVisibility(View.GONE);
     }
 }

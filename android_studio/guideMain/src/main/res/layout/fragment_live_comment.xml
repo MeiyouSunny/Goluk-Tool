@@ -3,7 +3,7 @@
     android:id="@+id/all_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white" >
+    android:background="#00000000" >
 
     <!-- 底部布局，包括写评论发送和喜欢 -->
     <LinearLayout
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content">
                 <LinearLayout
                     android:id="@+id/layout_like"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
@@ -65,7 +65,7 @@
                 </LinearLayout>
                 <TextView
                     android:id="@+id/tv_send_comment"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -102,7 +102,7 @@
         <FrameLayout
             android:id="@+id/layout_emoj_icons"
             android:layout_width="match_parent"
-            android:layout_height="260dp"
+            android:layout_height="wrap_content"
             android:background="#f9f9f9"
             android:visibility="gone" />
     </LinearLayout>
@@ -111,6 +111,7 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview_live_comment"
+        android:layout_marginTop="200dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/layout_comment_like_and_emoj"

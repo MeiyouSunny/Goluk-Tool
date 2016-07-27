@@ -1586,8 +1586,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
     }
 
     @Override
-    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight,
-                               int oldBottom) {
+    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
         if (oldBottom != 0 && bottom != 0 && (oldBottom - bottom > keyHeight)) {
             setSwitchState(true);
         } else if (oldBottom != 0 && bottom != 0 && (bottom - oldBottom > keyHeight)) {

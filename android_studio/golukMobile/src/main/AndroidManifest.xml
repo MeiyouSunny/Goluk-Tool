@@ -230,10 +230,12 @@
         <activity
             android:name="com.mobnote.golukmain.livevideo.LiveActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
         <activity
             android:name="com.mobnote.golukmain.livevideo.StartLiveActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             android:theme="@android:style/Theme.NoTitleBar"/>
         <activity
             android:name="com.mobnote.golukmain.player.VitamioPlayerActivity"
