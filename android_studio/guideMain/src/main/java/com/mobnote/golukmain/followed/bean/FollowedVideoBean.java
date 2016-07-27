@@ -1,6 +1,9 @@
 package com.mobnote.golukmain.followed.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.mobnote.golukmain.cluster.bean.TagsBean;
+
+import java.util.List;
 
 public class FollowedVideoBean {
 
@@ -65,4 +68,6 @@ public class FollowedVideoBean {
 	// 视频清晰度 480p, 1080p
 	@JSONField(name="resolution")
 	public String resolution;
+	@JSONField(name="tags")
+	public List<TagsBean> tags;
 }

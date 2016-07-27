@@ -137,6 +137,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
     private boolean mIsLoadDataNews = false;
 
     private String mTjtime = "00000000000000000";
+    private int mTagType;
+    private View mClusterCommentRL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,6 +148,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
         Intent intent = this.getIntent();
         mActivityid = intent.getStringExtra(CLUSTER_KEY_ACTIVITYID);
         mClusterTitle = intent.getStringExtra(CLUSTER_KEY_TITLE);
+        mTagType = intent.getIntExtra(CLUSTER_KEY_TYPE, 0);
 
         this.initData();// 初始化view
         this.initListener();// 初始化view的监听
@@ -196,6 +199,12 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
         mShareBtn = (Button) findViewById(R.id.title_share);
         mEditText = (EditText) findViewById(R.id.custer_comment_input);
         mCommenCountTv = (TextView) findViewById(R.id.custer_comment_send);
+        mClusterCommentRL = findViewById(R.id.custer_comment_layout);
+        if(mTagType == 1) {
+            mClusterCommentRL.setVisibility(View.VISIBLE);
+        } else {
+            mClusterCommentRL.setVisibility(View.GONE);
+        }
         mSharePlatform = new SharePlatformUtil(this);
         mClusterAdapter = new ClusterAdapter(this, mSharePlatform, 1, this, mActivityid);
         mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));

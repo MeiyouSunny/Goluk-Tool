@@ -10,6 +10,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
@@ -25,10 +26,13 @@ import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobnote.application.GolukApplication;
@@ -37,6 +41,8 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UpdateActivity;
 import com.mobnote.golukmain.UserLoginActivity;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
+import com.mobnote.golukmain.cluster.ClusterActivity;
+import com.mobnote.golukmain.cluster.bean.TagsBean;
 import com.mobnote.golukmain.fan.FanListActivity;
 import com.mobnote.golukmain.following.FollowingListActivity;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
@@ -52,6 +58,7 @@ import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
 import com.mobnote.user.IPCInfo;
 import com.mobnote.user.UserUtils;
 import com.mobnote.videoedit.AfterEffectActivity;
+import com.mobnote.view.FlowLayout;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -1408,5 +1415,57 @@ public class GolukUtils {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public static void startTagActivity(Context context, String topicId, String topicName, int topicType) {
+        if(TextUtils.isEmpty(topicId)) {
+            return;
+        }
+        Intent intent = new Intent(context, ClusterActivity.class);
+        intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, topicId);
+        intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, "#" + topicName);
+        intent.putExtra(ClusterActivity.CLUSTER_KEY_TYPE, topicType);
+        context.startActivity(intent);
+    }
+
+    public static void addTagsViews(final Context context, List<TagsBean> tagsList, FlowLayout flowLayout) {
+        if(null == flowLayout) {
+            return;
+        }
+
+        if(null == context || null == tagsList) {
+            flowLayout.setVisibility(View.GONE);
+            return;
+        }
+
+        if(tagsList.size() > 0) {
+            flowLayout.removeAllViews();
+            for(int i = 0; i < tagsList.size(); i++) {
+                final TagsBean tagsBean = tagsList.get(i);
+                if(null == tagsBean) {
+                    continue;
+                }
+                TextView tagTV = new TextView(context);
+                RelativeLayout.LayoutParams tagParams = new RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                tagTV.setLayoutParams(tagParams);
+                tagTV.setText("#" + tagsBean.name);
+                tagTV.setPadding(0, 0, 20, 0);
+                tagTV.setTextSize(14);
+                tagTV.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
+                tagTV.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        GolukUtils.startTagActivity(context, tagsBean.tagid, tagsBean.name, tagsBean.type);
+                    }
+                });
+
+                flowLayout.addView(tagTV);
+            }
+            flowLayout.setVisibility(View.VISIBLE);
+        } else {
+            flowLayout.setVisibility(View.GONE);
+        }
     }
 }
