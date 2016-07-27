@@ -1870,6 +1870,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             bean.bitmap = mThumbBitmap;
             bean.realDesc = sinaTxt;
             bean.videoId = getShareVideoId();
+            bean.from = this.getString(R.string.str_zhuge_live_share_event);
             ProxyThirdShare sb = new ProxyThirdShare(LiveActivity.this, sharePlatform, bean);
             sb.showAtLocation(LiveActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
         }

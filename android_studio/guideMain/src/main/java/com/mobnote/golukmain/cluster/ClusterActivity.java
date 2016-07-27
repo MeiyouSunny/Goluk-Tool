@@ -495,6 +495,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 							bean.bitmap = bitmap;
 							bean.realDesc = realDesc;
 							bean.videoId = mActivityid;
+							bean.from = this.getString(R.string.str_zhuge_action_tag);
 							ProxyThirdShare shareBoard = new ProxyThirdShare(ClusterActivity.this, mSharePlatform, bean);
 							shareBoard.showAtLocation(ClusterActivity.this.getWindow().getDecorView(), Gravity.BOTTOM,
 									0, 0);
@@ -727,6 +728,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 							bean.bitmap = null;
 							bean.realDesc = realDesc;
 							bean.videoId = videoId;
+							bean.from = this.getString(R.string.str_zhuge_action_tag);
 
 							ProxyThirdShare shareBoard = new ProxyThirdShare(this, mSharePlatform, bean);
 							shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);

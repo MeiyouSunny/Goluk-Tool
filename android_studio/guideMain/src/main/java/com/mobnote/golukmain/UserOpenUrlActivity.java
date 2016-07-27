@@ -381,6 +381,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					bean.bitmap = null;
 					bean.realDesc = realDesc;
 					bean.videoId = "";
+					bean.from = this.getString(R.string.str_zhuge_share_video_network_other);
 
 					GolukDebugUtils.e("", "UserOpenUrlActivity------1: title: " + bean.tl + "  txt: " + bean.db);
 
@@ -405,6 +406,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					bean.bitmap = null;
 					bean.realDesc = realDesc;
 					bean.videoId = "";
+					bean.from = this.getString(R.string.str_zhuge_share_video_network_other);
 
 					GolukDebugUtils.e("", "UserOpenUrlActivity------2: title: " + bean.tl + "  txt: " + bean.db);
 
