@@ -170,7 +170,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                 // 直接跳转下个界面
                 toWaitConnView();
                 // 开始创建手机热点
-                mBaseHandler.sendEmptyMessage(MSG_H_CREATE_HOT);
+                mBaseHandler.sendEmptyMessageDelayed(MSG_H_CREATE_HOT, 3 * 1000);
             }
         } else if (MSG_H_FREE_1 == msg.what) {
             freeLayout1();
@@ -582,7 +582,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         Intent mainIntent = new Intent(WiFiLinkCompleteActivity.this, WiFiLinkNoHotspotActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        mainIntent.putExtra(WiFiLinkNoHotspotActivity.AUTO_START_CONNECT,false);
+        mainIntent.putExtra(WiFiLinkNoHotspotActivity.AUTO_START_CONNECT, false);
         mainIntent.putExtra(WiFiLinkNoHotspotActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, mReturnToMainAlbum);
         startActivity(mainIntent);
         finish();
