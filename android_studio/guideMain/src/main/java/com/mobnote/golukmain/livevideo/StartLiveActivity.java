@@ -46,6 +46,7 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
     public static final String CURR_LAT = "curr_lat";
     public static final String SHORT_LOCATION = "short_location";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,6 +152,10 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
             }
             mLiveSettingBean.isEnableSaveReplay = !mLiveSettingBean.isEnableSaveReplay;
         }else if(vId == R.id.btn_start_live){
+            if (!mBaseApp.isIpcConnSuccess){
+                showToast(R.string.str_disconnect_goluk);
+                return;
+            }
             String liveDescription = null;
             liveDescription = mDescriptionEt.getText().toString();
             if(liveDescription == null){
@@ -193,4 +198,5 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
     public void onStopTrackingTouch(SeekBar seekBar) {
 
     }
+
 }
