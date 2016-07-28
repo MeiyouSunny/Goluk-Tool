@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -241,6 +242,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     private RelativeLayout mLiveInfoLayout;
     private boolean isShowLiveInfoLayout;
     int mVideoPlayerHeight;
+    private View mSeparateLine;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -291,6 +293,20 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
+
+    @Override
+
+    public
+    void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        int separateHeight = mSeparateLine.getBottom();
+        if(mLiveCommentFragment != null){
+            mLiveCommentFragment.onFramgentTopMarginReceived(separateHeight);
+        }
+        if(mLiveMapViewFragment != null){
+            mLiveMapViewFragment.onFramgentTopMarginReceived(separateHeight);
+        }
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -412,13 +428,15 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if(mCurrTab == TAB_COMMENT){
             getSupportFragmentManager().beginTransaction().show(mLiveCommentFragment).commit();
             getSupportFragmentManager().beginTransaction().hide(mLiveMapViewFragment).commit();
-            mCommentTabTv.setTextColor(Color.parseColor("#0080ff"));
+            mCommentTabTv.setTextColor(Color.parseColor("#1163a2"));
             mMapTabTv.setTextColor(Color.parseColor("#707070"));
+            mCommentTabIv.setImageResource(R.drawable.videodetail_comment_solid);
         }else if(mCurrTab == TAB_MAP){
             getSupportFragmentManager().beginTransaction().hide(mLiveCommentFragment).commit();
             getSupportFragmentManager().beginTransaction().show(mLiveMapViewFragment).commit();
-            mMapTabTv.setTextColor(Color.parseColor("#0080ff"));
+            mMapTabTv.setTextColor(Color.parseColor("#1163a2"));
             mCommentTabTv.setTextColor(Color.parseColor("#707070"));
+            mCommentTabIv.setImageResource(R.drawable.videodetail_comment_press);
         }
         return false;
     }
@@ -654,6 +672,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         mMapTabIv = (ImageView) findViewById(R.id.iv_tab_map);
         mMapTabTv = (TextView) findViewById(R.id.tv_tab_map);
         mLiveInfoLayout = (RelativeLayout) findViewById(R.id.layout_live_info);
+        mSeparateLine = findViewById(R.id.view_separate_line);
 
         // 视频事件回调注册
         mRPVPalyVideo.setPlayerListener(this);

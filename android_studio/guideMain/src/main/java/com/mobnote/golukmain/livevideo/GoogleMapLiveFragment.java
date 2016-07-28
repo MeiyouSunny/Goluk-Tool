@@ -316,4 +316,15 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
         }
     }
 
+    @Override
+    public void onFramgentTopMarginReceived(int topMargin) {
+        if(!isResetedView && mMapView != null){
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT);
+            params.setMargins(0,topMargin,0,0);
+            mMapView.setLayoutParams(params);
+            isResetedView = true;
+        }
+    }
 }

@@ -44,7 +44,6 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
 
     private LatLng mPublisherLatLng;
     private LatLng mCurrUserLatLng;
-
     private SimpleTarget mPublisherTarget = new SimpleTarget<Bitmap>(48, 48) {
         @Override
         public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
@@ -297,6 +296,18 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
         LatLng ll = new LatLng(LngLat.lat, LngLat.lng);
         MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
         mBaiduMap.animateMapStatus(u);
+    }
+
+    @Override
+    public void onFramgentTopMarginReceived(int topMargin) {
+        if(!isResetedView && mMapView != null){
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT);
+            params.setMargins(0,topMargin,0,0);
+            mMapView.setLayoutParams(params);
+            isResetedView = true;
+        }
     }
 }
 

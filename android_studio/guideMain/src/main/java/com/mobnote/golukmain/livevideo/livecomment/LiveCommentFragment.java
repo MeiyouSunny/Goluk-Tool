@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mobnote.application.GolukApplication;
@@ -32,6 +33,7 @@ import com.mobnote.golukmain.comment.bean.CommentResultBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.UserInfo;
+import com.mobnote.golukmain.livevideo.ILiveUIChangeListener;
 import com.mobnote.golukmain.praise.PraiseCancelRequest;
 import com.mobnote.golukmain.praise.PraiseRequest;
 import com.mobnote.golukmain.praise.bean.PraiseCancelResultBean;
@@ -41,6 +43,7 @@ import com.mobnote.golukmain.praise.bean.PraiseResultDataBean;
 import com.mobnote.golukmain.videodetail.SoftKeyBoardListener;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
+import com.mobnote.videoedit.utils.DeviceUtil;
 import com.rockerhieu.emojicon.EmojiconEditText;
 import com.rockerhieu.emojicon.EmojiconGridFragment;
 import com.rockerhieu.emojicon.EmojiconsFragment;
@@ -57,7 +60,7 @@ import de.greenrobot.event.EventBus;
  * Created by leege100 on 2016/7/20.
  */
 public class LiveCommentFragment extends Fragment implements IRequestResultListener, View.OnClickListener,EmojiconGridFragment.OnEmojiconClickedListener,
-        EmojiconsFragment.OnEmojiconBackspaceClickedListener, View.OnLayoutChangeListener{
+        EmojiconsFragment.OnEmojiconBackspaceClickedListener, View.OnLayoutChangeListener,ILiveUIChangeListener {
 
     private String mVid;
     private View mRootView;
@@ -507,5 +510,13 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     private void showLikeLayout(){
         mLikeLayout.setVisibility(View.VISIBLE);
         mSendCommentTv.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onFramgentTopMarginReceived(int topMargin) {
+        if(mLiveCommentRecyclerView != null){
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLiveCommentRecyclerView.getLayoutParams();
+            layoutParams.setMargins(0,topMargin,0, DeviceUtil.dp2px(getContext(),48));
+        }
     }
 }

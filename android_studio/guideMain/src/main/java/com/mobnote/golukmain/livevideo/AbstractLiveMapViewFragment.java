@@ -17,7 +17,7 @@ import cn.com.mobnote.module.location.ILocationFn;
 /**
  * Created by leege100 on 2016/7/19.
  */
-abstract class AbstractLiveMapViewFragment extends Fragment implements ILiveMap , ILocationFn, View.OnClickListener {
+abstract class AbstractLiveMapViewFragment extends Fragment implements ILiveMap ,ILiveUIChangeListener, ILocationFn, View.OnClickListener {
     public static final int[] shootImg = { R.drawable.live_btn_6s_record, R.drawable.live_btn_5s_record,
             R.drawable.live_btn_4s_record, R.drawable.live_btn_3s_record, R.drawable.live_btn_2s_record,
             R.drawable.live_btn_1s_record };
@@ -37,6 +37,7 @@ abstract class AbstractLiveMapViewFragment extends Fragment implements ILiveMap 
     protected Button mLocationBtn = null;
     protected RelativeLayout mMapRootLayout;
     Bundle mSavedInstanceState;
+    protected boolean isResetedView = false;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -61,4 +62,5 @@ abstract class AbstractLiveMapViewFragment extends Fragment implements ILiveMap 
         if(view.getId() == R.id.btn_live_location)
         toMyLocation();
     }
+
 }

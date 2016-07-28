@@ -97,8 +97,7 @@ import de.greenrobot.event.EventBus;
  */
 public class VideoDetailActivity extends BaseActivity implements OnClickListener, OnRefreshListener,
         OnRTScrollListener, ICommentFn, TextWatcher, ILiveDialogManagerFn, OnItemClickListener, IRequestResultListener,
-        EmojiconGridFragment.OnEmojiconClickedListener,
-        EmojiconsFragment.OnEmojiconBackspaceClickedListener, OnLayoutChangeListener, ZhugeParameterFn {
+        EmojiconGridFragment.OnEmojiconClickedListener, EmojiconsFragment.OnEmojiconBackspaceClickedListener, OnLayoutChangeListener, ZhugeParameterFn {
 
     private static final String TAG = "VideoDetailActivity";
     private final static int DIALOG_TYPE_VIDEO_DELETED = 24;
