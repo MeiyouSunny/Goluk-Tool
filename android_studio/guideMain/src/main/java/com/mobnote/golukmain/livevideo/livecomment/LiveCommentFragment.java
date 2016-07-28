@@ -113,7 +113,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         mRootView.getViewTreeObserver().addOnGlobalLayoutListener(this);
         return mRootView;
     }
-    private void updateLikeCount(int count){
+    public void updateLikeCount(int count){
         mLikeCount = count;
         mLikeCountTv.setText(mLikeCount + getContext().getText(R.string.str_live_ok_praise_unit).toString());
     }

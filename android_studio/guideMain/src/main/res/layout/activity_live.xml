@@ -123,7 +123,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="2dp"
                 android:text="@string/live_str_default_timer"
-                android:textColor="#ffffff"
+                android:textColor="#dddddd"
                 android:textSize="@dimen/live_text_time1_size" />
 
             <TextView
@@ -135,17 +135,17 @@
                 android:layout_alignParentRight="true"
                 android:contentDescription="@string/imgdes"
                 android:text="@string/live_str_look_default"
-                android:textColor="#ffffff"
+                android:textColor="#dddddd"
                 android:textSize="@dimen/live_text_time1_size" />
 
             <ImageView
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="8dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@id/live_lookcount"
                 android:contentDescription="@string/imgdes"
-                android:src="@drawable/live_icon_live" />
+                android:src="@drawable/usercenter_scan" />
         </RelativeLayout>
         <!-- 控制视频播放暂停 -->
         <RelativeLayout
@@ -303,7 +303,7 @@
                 android:id="@+id/tv_tab_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="6dp"
                 android:textColor="#1163a2"
                 android:textSize="14sp"
                 android:text="@string/str_usercenter_comment"/>
@@ -325,7 +325,7 @@
                 android:id="@+id/tv_tab_map"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="6dp"
                 android:textColor="#707070"
                 android:textSize="14sp"
                 android:text="@string/geo_location"/>

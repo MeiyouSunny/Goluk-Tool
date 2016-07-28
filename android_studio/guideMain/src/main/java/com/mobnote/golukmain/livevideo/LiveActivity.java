@@ -84,33 +84,12 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
      * 自己预览地址
      */
     private static String VIEW_SELF_PLAY = "";
-    /**
-     * application
-     */
     protected GolukApplication mApp = null;
-    /**
-     * 返回按钮
-     */
     private TextView mLiveBackBtn = null;
-    /**
-     * 暂停按钮
-     */
     private Button mPauseBtn = null;
-    /**
-     * title
-     */
     private TextView mTitleTv = null;
-    /**
-     * 视频loading
-     */
     private RelativeLayout mVideoLoading = null;
-    /**
-     * 播放布局
-     */
     private RelativeLayout mPlayLayout = null;
-    /**
-     * 自定义播放器支持特效
-     */
     public RtmpPlayerView mRPVPalyVideo = null;
     /**
      * 视频地址
@@ -144,10 +123,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     private boolean isContinueLive = false;
     private LayoutInflater mLayoutFlater = null;
     private RelativeLayout mRootLayout = null;
-    /**
-     * 是否已经点过“赞”
-     */
-    private boolean isAlreadClickOK = false;
     private TimerManager mLiveManager = null;
     /**
      * 防止多次按退出键
@@ -199,10 +174,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     private TextView mIntroductionTv;
     private TextView mShareBtn = null;
-    /**
-     * 直播发起时间
-     */
-   // private TextView mStartTimeTv = null;
     private Bitmap mThumbBitmap = null;
     private boolean isRequestedForServer = false;
     private boolean mIsFirstSucess = true;
@@ -231,7 +202,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     private static final int TAB_COMMENT = 0;
     private static final int TAB_MAP = 1;
     private int mCurrTab;
-    private View mViewLine;
 
     AbstractLiveMapViewFragment mLiveMapViewFragment;
     LiveCommentFragment mLiveCommentFragment;
@@ -280,7 +250,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             // 计时，90秒后，防止用户进入时没网
             start90Timer();
             getLiveDetail(mPublisher);
-            updateCount(Integer.parseInt(mPublisher.zanCount), Integer.parseInt(mPublisher.persons));
+            mLiveCommentFragment.updateLikeCount(Integer.parseInt(mPublisher.zanCount));
+            mLookCountTv.setText(GolukUtils.getFormatedNumber(mPublisher.persons));
         }
         setCallBackListener();
     }
@@ -471,17 +442,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    // 更新观看人数和点赞人数
-    private void updateCount(int okCount, int lookCount) {
-//        mCurrentOKCount = okCount;
-//        if (null != zanBtn) {
-//            zanBtn.setText("" + GolukUtils.getFormatNumber("" + okCount));
-//        }
-//        if (null != mLookCountTv) {
-//            mLookCountTv.setText("" + GolukUtils.getFormatNumber("" + lookCount));
-//        }
-    }
-
     /**
      * 首页大头针数据返回
      */
@@ -528,9 +488,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                     mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, TIMING);
                     return;
                 }
-                this.updateCount(Integer.parseInt(tempMyInfo.zanCount), Integer.parseInt(tempMyInfo.persons));
-                GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback 3333333:  更新我自己的赞 zanCount："
-                        + tempMyInfo.zanCount + "	permson:" + tempMyInfo.persons);
+                mLiveCommentFragment.updateLikeCount(Integer.parseInt(tempMyInfo.zanCount));
+                mLookCountTv.setText(GolukUtils.getFormatedNumber(tempMyInfo.persons));
                 // 重新請求大头針数据
                 mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, TIMING);
                 return;
@@ -549,7 +508,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             mPublisher.lon = tempUserInfo.lon;
             GolukDebugUtils.e(null, "jyf-------live----LiveActivity--pointDataCallback type55555:  ：");
             // 设置“赞”的人数，和观看人数
-            this.updateCount(Integer.parseInt(tempUserInfo.zanCount), Integer.parseInt(tempUserInfo.persons));
+            mLiveCommentFragment.updateLikeCount(Integer.parseInt(tempMyInfo.zanCount));
+            mLookCountTv.setText(GolukUtils.getFormatedNumber(tempMyInfo.persons));
             GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type66666:  ：");
         } catch (Exception e) {
             e.printStackTrace();
@@ -657,7 +617,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         mRPVPalyVideo = (RtmpPlayerView) findViewById(R.id.live_vRtmpPlayVideo);
         mNickName = (TextView) findViewById(R.id.tv_publisher_nickname);
         mIntroductionTv = (TextView) findViewById(R.id.tv_publisher_introduction);
-        //mStartTimeTv = (TextView) findViewById(R.id.live_start_time);
         mFrameLayout = (FrameLayout) findViewById(R.id.fl_more);
 
         mPublisherLinkLl = (LinearLayout) findViewById(R.id.ll_publisher_link);
@@ -1614,8 +1573,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             }
             // 停止上报自己的位置
             if (null != mApp && null != mApp.mGoluk) {
-                mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StopUploadPosition,
-                        "");
+                mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StopUploadPosition, "");
             }
             if (isKaiGeSucess) {
                 // 调用服务器的退出直播
