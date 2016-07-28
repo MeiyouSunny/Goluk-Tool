@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -18,8 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mobnote.application.GolukApplication;
-import com.mobnote.eventbus.EventConfig;
-import com.mobnote.eventbus.EventPraiseStatusChanged;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.comment.CommentAddRequest;
 import com.mobnote.golukmain.comment.CommentBean;
@@ -35,16 +32,11 @@ import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.livevideo.ILiveUIChangeListener;
-import com.mobnote.golukmain.praise.PraiseCancelRequest;
 import com.mobnote.golukmain.praise.PraiseRequest;
-import com.mobnote.golukmain.praise.bean.PraiseCancelResultBean;
-import com.mobnote.golukmain.praise.bean.PraiseCancelResultDataBean;
 import com.mobnote.golukmain.praise.bean.PraiseResultBean;
 import com.mobnote.golukmain.praise.bean.PraiseResultDataBean;
 import com.mobnote.golukmain.videodetail.SoftKeyBoardListener;
-import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
-import com.mobnote.util.ZhugeUtils;
 import com.mobnote.videoedit.utils.DeviceUtil;
 import com.rockerhieu.emojicon.EmojiconEditText;
 import com.rockerhieu.emojicon.EmojiconGridFragment;
@@ -55,7 +47,6 @@ import java.util.ArrayList;
 
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
-import de.greenrobot.event.EventBus;
 
 /**
  * 直播评论fragment
@@ -76,7 +67,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     private EmojiconEditText mEmojiconEt;
     public FrameLayout mEmojIconsLayout;
     private RecyclerView mLiveCommentRecyclerView;
-
+    private boolean isLiked;
     /**
      * 是否处于回复状态
      */
@@ -107,19 +98,24 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     private ArrayList<CommentBean> commentDataList = null;
     private boolean isSwitchStateFinish;
     private boolean mInputState = true;
-    private int screenHeight = 0;
-    private int keyHeight = 0;
+    private int mScreenHeight = 0;
+    private int mKeyHeight = 0;
+    private int mLikeCount = 0;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_live_comment,container,false);
         initView();
         initEmojIconFragment();
-        screenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
-        keyHeight = screenHeight / 3;
+        mScreenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
+        mKeyHeight = mScreenHeight / 3;
         observeSoftKeyboard();
         mRootView.getViewTreeObserver().addOnGlobalLayoutListener(this);
         return mRootView;
+    }
+    private void updateLikeCount(int count){
+        mLikeCount = count;
+        mLikeCountTv.setText(mLikeCount + getContext().getText(R.string.str_live_ok_praise_unit).toString());
     }
     private void initEmojIconFragment() {
         EmojiconsFragment fg = EmojiconsFragment.newInstance(false);
@@ -163,7 +159,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     private void click_send() {
         // 发评论／回复 前需要先判断用户是否登录
         if (!GolukApplication.getInstance().isUserLoginSucess) {
-           GolukUtils.startUserLogin(getContext());
+            GolukUtils.startUserLogin(getContext());
             return;
         }
         UserInfo loginUser = GolukApplication.getInstance().getMyInfo();
@@ -173,8 +169,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         long currentTime = System.currentTimeMillis();
         if (currentTime - mLastCommentTime < COMMENT_CIMMIT_TIMEOUT) {
             LiveDialogManager.getManagerInstance().showSingleBtnDialog(getContext(),
-                    LiveDialogManager.DIALOG_TYPE_COMMENT_TIMEOUT, "",
-                    this.getResources().getString(R.string.comment_sofast_text));
+                    LiveDialogManager.DIALOG_TYPE_COMMENT_TIMEOUT, "", this.getResources().getString(R.string.comment_sofast_text));
             return;
         }
 
@@ -226,15 +221,12 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
 
     // 点赞请求
     public boolean sendPraiseRequest() {
-
+        if (!GolukApplication.getInstance().isUserLoginSucess) {
+            GolukUtils.startUserLogin(getContext());
+            return false;
+        }
         PraiseRequest request = new PraiseRequest(IPageNotifyFn.PageType_Praise, this);
-        return request.get(ICommentFn.COMMENT_TYPE_LIVE, mVid, "1");
-    }
-
-    // 取消点赞请求
-    public boolean sendCancelPraiseRequest() {
-        PraiseCancelRequest request = new PraiseCancelRequest(IPageNotifyFn.PageType_PraiseCancel, this);
-        return request.get(ICommentFn.COMMENT_TYPE_LIVE,mVid);
+        return request.get("1", mVid,"1");
     }
 
     private boolean isCanShowSoft() {
@@ -430,27 +422,13 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                 PraiseResultDataBean ret = praiseResultBean.data;
                 if (null != ret && !TextUtils.isEmpty(ret.result)) {
                     if ("0".equals(ret.result)) {
+                        updateLikeCount(mLikeCount + 1);
+                        isLiked = true;
+
                     } else if ("7".equals(ret.result)) {
                         GolukUtils.showToast(getContext(), this.getString(R.string.str_no_duplicated_praise));
                     } else {
                         GolukUtils.showToast(getContext(), this.getString(R.string.str_praise_failed));
-                    }
-                }
-                break;
-            case IPageNotifyFn.PageType_PraiseCancel:
-                PraiseCancelResultBean praiseCancelResultBean = (PraiseCancelResultBean) result;
-                if (praiseCancelResultBean == null || !praiseCancelResultBean.success) {
-                    GolukUtils.showToast(getContext(), this.getString(R.string.user_net_unavailable));
-                    return;
-                }
-
-                PraiseCancelResultDataBean cancelRet = praiseCancelResultBean.data;
-                if (null != cancelRet && !TextUtils.isEmpty(cancelRet.result)) {
-                    if ("0".equals(cancelRet.result)) {
-                        EventBus.getDefault().post(
-                                new EventPraiseStatusChanged(EventConfig.PRAISE_STATUS_CHANGE, mVid, false));
-                    } else {
-                        GolukUtils.showToast(getContext(), this.getString(R.string.str_cancel_praise_failed));
                     }
                 }
                 break;
@@ -465,6 +443,9 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         if(viewId == R.id.iv_emojicon){
             click_switchInput();
         }else if(viewId == R.id.layout_like){
+            if(!isLiked){
+                sendPraiseRequest();
+            }
         }else if(viewId == R.id.tv_send_comment){
             click_send();
         }
@@ -482,11 +463,11 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
 
     @Override
     public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-        if (oldBottom != 0 && bottom != 0 && (oldBottom - bottom > keyHeight)) {
+        if (oldBottom != 0 && bottom != 0 && (oldBottom - bottom > mKeyHeight)) {
             //软键盘弹起
             setSwitchState(true);
             showSendComment();
-        } else if (oldBottom != 0 && bottom != 0 && (bottom - oldBottom > keyHeight)) {
+        } else if (oldBottom != 0 && bottom != 0 && (bottom - oldBottom > mKeyHeight)) {
             //软键盘关闭
             if (this.mEmojiconEt.getVisibility() == View.GONE) {
                 setSwitchState(true);
