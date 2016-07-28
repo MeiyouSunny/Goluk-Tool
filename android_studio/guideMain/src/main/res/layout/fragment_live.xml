@@ -3,9 +3,7 @@
     android:id="@+id/layout_live_map"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="0dp"
-    android:background="#ededed">
-
+    android:background="#00000000">
     <!-- 定位按钮 -->
 
     <Button

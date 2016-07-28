@@ -1064,4 +1064,5 @@
     <string name="str_fireware_is_downloading">新固件程序下载中...</string>
     <string name="str_live_play_back">直播回放</string>
     <string name="str_live_time">直播时长：%1$s</string>
+    <string name="geo_location">地理位置</string>
 </resources>
