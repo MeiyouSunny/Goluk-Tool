@@ -1486,6 +1486,10 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----onKeyDown----111111 : ");
         if (KeyEvent.KEYCODE_BACK == keyCode) {
+            if(mLiveCommentFragment.mEmojIconsLayout.getVisibility() == View.VISIBLE){
+                mLiveCommentFragment.mEmojIconsLayout.setVisibility(View.GONE);
+                return true;
+            }
             preExit();
             return true;
         }

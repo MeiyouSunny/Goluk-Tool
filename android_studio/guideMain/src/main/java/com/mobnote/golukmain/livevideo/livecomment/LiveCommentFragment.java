@@ -74,7 +74,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     private TextView mLikeCountTv;
     private TextView mSendCommentTv;
     private EmojiconEditText mEmojiconEt;
-    private FrameLayout mEmojIconsLayout;
+    public FrameLayout mEmojIconsLayout;
     private RecyclerView mLiveCommentRecyclerView;
 
     /**
