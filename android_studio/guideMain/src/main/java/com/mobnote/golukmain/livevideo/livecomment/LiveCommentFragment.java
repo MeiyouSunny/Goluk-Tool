@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -41,6 +42,7 @@ import com.mobnote.golukmain.praise.bean.PraiseCancelResultDataBean;
 import com.mobnote.golukmain.praise.bean.PraiseResultBean;
 import com.mobnote.golukmain.praise.bean.PraiseResultDataBean;
 import com.mobnote.golukmain.videodetail.SoftKeyBoardListener;
+import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 import com.mobnote.videoedit.utils.DeviceUtil;
@@ -60,7 +62,7 @@ import de.greenrobot.event.EventBus;
  * Created by leege100 on 2016/7/20.
  */
 public class LiveCommentFragment extends Fragment implements IRequestResultListener, View.OnClickListener,EmojiconGridFragment.OnEmojiconClickedListener,
-        EmojiconsFragment.OnEmojiconBackspaceClickedListener, View.OnLayoutChangeListener,ILiveUIChangeListener {
+        EmojiconsFragment.OnEmojiconBackspaceClickedListener, View.OnLayoutChangeListener,ILiveUIChangeListener, ViewTreeObserver.OnGlobalLayoutListener {
 
     private String mVid;
     private View mRootView;
@@ -116,6 +118,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         screenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
         keyHeight = screenHeight / 3;
         observeSoftKeyboard();
+        mRootView.getViewTreeObserver().addOnGlobalLayoutListener(this);
         return mRootView;
     }
     private void initEmojIconFragment() {
@@ -138,13 +141,12 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         mLikeLayout.setOnClickListener(this);
         mSendCommentTv.setOnClickListener(this);
 
-        mEmojiconEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        mEmojiconEt.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View view, boolean isFocused) {
-                if(isFocused){
-
-                }else{
-
+            public void onClick(View view) {
+                if (mEmojIconsLayout.getVisibility() == View.VISIBLE) {
+                    mEmojIconIv.setImageDrawable(getContext().getResources().getDrawable(R.drawable.input_state_emojo));
+                    mEmojIconsLayout.setVisibility(View.GONE);
                 }
             }
         });
@@ -511,12 +513,28 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         mLikeLayout.setVisibility(View.VISIBLE);
         mSendCommentTv.setVisibility(View.GONE);
     }
-
     @Override
     public void onFramgentTopMarginReceived(int topMargin) {
         if(mLiveCommentRecyclerView != null){
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLiveCommentRecyclerView.getLayoutParams();
             layoutParams.setMargins(0,topMargin,0, DeviceUtil.dp2px(getContext(),48));
+        }
+    }
+
+    @Override
+    public void onGlobalLayout() {
+        int heightDiff = mRootView.getRootView().getHeight() - mRootView.getHeight();
+        if (heightDiff > 200) {
+            mLikeLayout.setVisibility(View.GONE);
+            mSendCommentTv.setVisibility(View.VISIBLE);
+        }else{
+            if(mEmojIconsLayout.getVisibility() == View.VISIBLE){
+                mLikeLayout.setVisibility(View.GONE);
+                mSendCommentTv.setVisibility(View.VISIBLE);
+            }else{
+                mLikeLayout.setVisibility(View.VISIBLE);
+                mSendCommentTv.setVisibility(View.GONE);
+            }
         }
     }
 }

@@ -241,7 +241,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     private RelativeLayout mLiveInfoLayout;
     private boolean isShowLiveInfoLayout;
-    int mVideoPlayerHeight;
+
     private View mSeparateLine;
     @Override
     public void onCreate(Bundle savedInstanceState) {
