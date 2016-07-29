@@ -1,37 +1,28 @@
 package com.mobnote.golukmain.cluster;
 
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import com.baidu.mapapi.map.Text;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpenUrlActivity;
-import com.mobnote.golukmain.carrecorder.util.ImageManager;
-import com.mobnote.golukmain.carrecorder.util.MD5Utils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.cluster.ClusterActivity.NoVideoDataViewHolder;
-import com.mobnote.golukmain.cluster.bean.ActivityBean;
+import com.mobnote.golukmain.cluster.bean.TagActivityBean;
 import com.mobnote.golukmain.cluster.bean.ClusterVoteShareBean;
 import com.mobnote.golukmain.cluster.bean.ClusterVoteShareDataBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.live.ILive;
-import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.newest.ClickCommentListener;
 import com.mobnote.golukmain.newest.ClickFunctionListener;
 import com.mobnote.golukmain.newest.ClickNewestListener;
-import com.mobnote.golukmain.newest.ClickPraiseListener;
 import com.mobnote.golukmain.newest.ClickShareListener;
 import com.mobnote.golukmain.newest.CommentDataInfo;
 import com.mobnote.golukmain.photoalbum.FragmentAlbum;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
-import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
-import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
-import com.mobnote.golukmain.usercenter.UCUserInfo;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
 import com.mobnote.golukmain.videosuqare.ZhugeParameterFn;
 import com.mobnote.user.UserUtils;
@@ -39,19 +30,18 @@ import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
+import com.mobnote.view.ExpandableTextView;
+import com.mobnote.view.FlowLayout;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Environment;
 import android.text.TextUtils;
-import android.text.TextUtils.TruncateAt;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -86,39 +76,39 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
     private IClusterInterface mIClusterInterface = null;
 
-    static final int sViewType_Head = 0;
-    static final int sViewType_RecommendVideoList = 1; // 推荐视频列表
-    static final int sViewType_NewsVideoList = 2; // 最新视频列表
-    static final int sViewType_NoData = 3;
+    static final int VIEW_TYPE_HEAD = 0;
+    static final int VIEW_TYPE_RECOMMEND = 1; // 推荐视频列表
+    static final int VIEW_TYPE_NEWEST = 2; // 最新视频列表
+    static final int VIEW_TYPE_NO_DATA = 3;
 
     private int mCurrentViewType = 1; // 当前视图类型（推荐列表，最新列表）
 
-    public boolean mIsMoreLine = false;
-
-    public ActivityBean mHeadData = null;
+    public TagActivityBean mHeadData = null;
     public List<VideoSquareInfo> mRecommendlist = null;
     public List<VideoSquareInfo> mNewslist = null;
 
     private int mFirstItemHeight = 0;
 
     private int mWidth = 0;
-    private String mActivityId;
+    private String mTagId;
+    Drawable mRecommendDrawable = null;
 
-    public ClusterAdapter(Context context, SharePlatformUtil spf, int tabtype, IClusterInterface ici, String activityId) {
+    public ClusterAdapter(Context context, int tabType,
+                          IClusterInterface clusterInterface, String tagId) {
         mContext = context;
         loadRes();
-        mIClusterInterface = ici;
+        mIClusterInterface = clusterInterface;
         // 默认进入分享视频列表类别
-        mCurrentViewType = tabtype;
+        mCurrentViewType = tabType;
 
         mWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-        mActivityId = activityId;
+        mTagId = tagId;
     }
 
     /**
      * 填充数据
      */
-    public void setDataInfo(ActivityBean head, List<VideoSquareInfo> recommend, List<VideoSquareInfo> news) {
+    public void setDataInfo(TagActivityBean head, List<VideoSquareInfo> recommend, List<VideoSquareInfo> news) {
         this.mHeadData = head;
         this.mRecommendlist = recommend;
         this.mNewslist = news;
@@ -131,7 +121,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
      */
     public void deleteVideo(String vid) {
         boolean isDelSuccess = false;
-        if (this.getCurrentViewType() == sViewType_RecommendVideoList) {
+        if (this.getCurrentViewType() == VIEW_TYPE_RECOMMEND) {
             if (TextUtils.isEmpty(vid) || null == mRecommendlist || mRecommendlist.size() <= 0) {
                 return;
             }
@@ -141,7 +131,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                     isDelSuccess = true;
                 }
             }
-        } else if (this.getCurrentViewType() == sViewType_NewsVideoList) {
+        } else if (this.getCurrentViewType() == VIEW_TYPE_NEWEST) {
             if (TextUtils.isEmpty(vid) || null == mNewslist || mNewslist.size() <= 0) {
                 return;
             }
@@ -167,17 +157,16 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
     // 每个convert view都会调用此方法，获得当前所需要的view样式
     @Override
     public int getItemViewType(int position) {
-        int p = position;
-        if (p == 0) {
-            return sViewType_Head;
+        if (position == 0) {
+            return VIEW_TYPE_HEAD;
         } else {
-            if (mCurrentViewType == sViewType_RecommendVideoList) {
+            if (mCurrentViewType == VIEW_TYPE_RECOMMEND) {
                 if (mRecommendlist == null || mRecommendlist.size() == 0) {
-                    return sViewType_NoData;
+                    return VIEW_TYPE_NO_DATA;
                 }
             } else {
                 if (mNewslist == null || mNewslist.size() == 0) {
-                    return sViewType_NoData;
+                    return VIEW_TYPE_NO_DATA;
                 }
             }
             return mCurrentViewType;
@@ -196,15 +185,13 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
         } else {
             int datacount = 0;
 
-            if (this.mCurrentViewType == sViewType_RecommendVideoList) {
+            if (this.mCurrentViewType == VIEW_TYPE_RECOMMEND) {
                 if (mRecommendlist != null && mRecommendlist.size() > 0) {
                     datacount = this.mRecommendlist.size() + 1;
                 } else {
                     datacount++;
                 }
-
             } else {
-
                 if (mNewslist != null && mNewslist.size() > 0) {
                     datacount = this.mNewslist.size() + 1;
                 } else {
@@ -232,7 +219,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
         int type = getItemViewType(position);
 
         switch (type) {
-            case sViewType_Head:
+            case VIEW_TYPE_HEAD:
                 if (mHeadData != null) {
                     HeadViewHolder holder = null;
                     if (convertView == null) {
@@ -246,9 +233,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                         holder.newsBtn = (Button) convertView.findViewById(R.id.news_btn);
                         holder.partakeBtn = (Button) convertView.findViewById(R.id.partake_btn);
                         holder.voteBtn = (Button) convertView.findViewById(R.id.btn_cluster_head_vote);
-                        holder.rankingBtn = (TextView) convertView.findViewById(R.id.now_ranking_btn);
-                        holder.textrank = (TextView) convertView.findViewById(R.id.text_rank);
-                        holder.iconrank = (ImageView) convertView.findViewById(R.id.icon_rank);
+                        holder.nTagDescriptionETV = (ExpandableTextView) convertView.findViewById(R.id.tag_description_expandable_textview);
                         convertView.setTag(holder);
                     } else {
                         holder = (HeadViewHolder) convertView.getTag();
@@ -258,33 +243,10 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                     mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
                     holder.headImg.setLayoutParams(mPlayerLayoutParams);
 
-                    //开启
-                    if ("1".equals(mHeadData.isopen)) {
-                        holder.rankingBtn.setVisibility(View.VISIBLE);
-                        holder.textrank.setVisibility(View.VISIBLE);
-                        holder.iconrank.setVisibility(View.VISIBLE);
-                    } else {
-                        holder.rankingBtn.setVisibility(View.GONE);
-                        holder.textrank.setVisibility(View.GONE);
-                        holder.iconrank.setVisibility(View.GONE);
-                    }
-
-                    holder.rankingBtn.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (UserUtils.isNetDeviceAvailable(mContext)) {
-                                Intent intent = new Intent(mContext, RankingActivity.class);
-                                intent.putExtra("activityid", mHeadData.activityid);
-                                mContext.startActivity(intent);
-                            } else {
-                                GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.network_error));
-                            }
-                        }
-                    });
                     holder.headImg.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            String url = getRtmpAddress() + "?type=9&activityid=" + mActivityId;
+                            String url = getRtmpAddress() + "?type=9&activityid=" + mTagId;
                             Intent intent = new Intent(mContext,
                                     UserOpenUrlActivity.class);
                             intent.putExtra("url", url);
@@ -310,6 +272,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                         holder.voteBtn.setVisibility(View.GONE);
                     }
 
+                    holder.nTagDescriptionETV.setText(mContext.getString(R.string.testdata));
                     GlideUtils.loadImage(mContext, holder.headImg, mHeadData.picture,
                             R.drawable.tacitly_pic);
                     holder.partakes.setText(mContext.getString(R.string.str_participation_population,
@@ -317,14 +280,14 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                     //活动过期
                     if ("1".equals(mHeadData.expiration)) {
                         holder.partakeBtn.setText(mContext.getResources().getString(R.string.activity_time_out));
-                        holder.partakeBtn.setBackgroundResource(R.drawable.together_join_icon_press);
+                        holder.partakeBtn.setTextColor(mContext.getResources().getColor(R.color.white));
+                        holder.partakeBtn.setBackgroundResource(R.drawable.btn_gray_stroke_gray_body);
                     } else {
                         holder.partakeBtn.setText(mContext.getResources().getString(R.string.attend_activity));
-                        holder.partakeBtn.setBackgroundResource(R.drawable.together_join_icon);
+                        holder.partakeBtn.setBackgroundResource(R.drawable.btn_style_white_blue_selector);
                         holder.partakeBtn.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View arg0) {
-
                                 //聚合页面相册页面访问统计
                                 ZhugeUtils.eventCallAlbum(mContext, mContext.getString(R.string.str_zhuge_call_album_source_cluster));
 
@@ -345,8 +308,8 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
                         @Override
                         public void onClick(View arg0) {
-                            if (mCurrentViewType == sViewType_NewsVideoList) {
-                                mCurrentViewType = sViewType_RecommendVideoList;
+                            if (mCurrentViewType == VIEW_TYPE_NEWEST) {
+                                mCurrentViewType = VIEW_TYPE_RECOMMEND;
                                 notifyDataSetChanged();
                             }
                         }
@@ -356,14 +319,14 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
                         @Override
                         public void onClick(View arg0) {
-                            if (mCurrentViewType == sViewType_RecommendVideoList) {
-                                mCurrentViewType = sViewType_NewsVideoList;
+                            if (mCurrentViewType == VIEW_TYPE_RECOMMEND) {
+                                mCurrentViewType = VIEW_TYPE_NEWEST;
                                 notifyDataSetChanged();
                             }
                         }
                     });
 
-                    if (mCurrentViewType == sViewType_RecommendVideoList) {
+                    if (mCurrentViewType == VIEW_TYPE_RECOMMEND) {
                         holder.recommendBtn.setTextColor(Color.rgb(9, 132, 255));
                         holder.newsBtn.setTextColor(Color.rgb(51, 51, 51));
                     } else {
@@ -377,11 +340,11 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                     ca.updateListViewBottom(mCurrentViewType);
                 }
                 break;
-            case sViewType_NewsVideoList:
-            case sViewType_RecommendVideoList:
+            case VIEW_TYPE_NEWEST:
+            case VIEW_TYPE_RECOMMEND:
                 int index_v = position - 1;
                 final VideoSquareInfo clusterInfo;
-                if (mCurrentViewType == sViewType_RecommendVideoList) {
+                if (mCurrentViewType == VIEW_TYPE_RECOMMEND) {
                     clusterInfo = this.mRecommendlist.get(index_v);
                 } else {
                     clusterInfo = this.mNewslist.get(index_v);
@@ -563,7 +526,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                 ca.updateListViewBottom(mCurrentViewType);
                 break;
 
-            case sViewType_NoData:
+            case VIEW_TYPE_NO_DATA:
                 NoVideoDataViewHolder noVideoDataViewHolder = null;
                 if (convertView == null) {
                     convertView = LayoutInflater.from(mContext).inflate(R.layout.user_center_novideodata, null);
@@ -589,7 +552,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                 boolean bNeedRefrush = false;
 
                 noVideoDataViewHolder.emptyImage.setVisibility(View.GONE);
-                if (mCurrentViewType == sViewType_NewsVideoList) {
+                if (mCurrentViewType == VIEW_TYPE_NEWEST) {
                     noVideoDataViewHolder.tipsText.setText(mContext.getString(R.string.str_cluster_newest));
                 } else {
                     noVideoDataViewHolder.tipsText.setText(mContext.getString(R.string.str_cluster_wonderful));
@@ -598,7 +561,6 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                 bNeedRefrush = true;
                 if (bNeedRefrush == true) {
                     noVideoDataViewHolder.tipsText.setOnClickListener(new OnClickListener() {
-
                         @Override
                         public void onClick(View v) {
                             if (mIClusterInterface != null) {
@@ -615,11 +577,9 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
         return convertView;
     }
 
-    Drawable mRecommentDrawable = null;
-
     private void loadRes() {
-        mRecommentDrawable = mContext.getResources().getDrawable(R.drawable.together_recommend_icon);
-        mRecommentDrawable.setBounds(0, 0, mRecommentDrawable.getMinimumWidth(), mRecommentDrawable.getMinimumHeight());
+        mRecommendDrawable = mContext.getResources().getDrawable(R.drawable.together_recommend_icon);
+        mRecommendDrawable.setBounds(0, 0, mRecommendDrawable.getMinimumWidth(), mRecommendDrawable.getMinimumHeight());
     }
 
     private void showHead(ImageView view, String headportrait) {
@@ -644,7 +604,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
         VideoSquareInfo mVideoSquareInfo = null;
 
-        if (mCurrentViewType == sViewType_RecommendVideoList) {
+        if (mCurrentViewType == VIEW_TYPE_RECOMMEND) {
             mVideoSquareInfo = this.mRecommendlist.get(index);
         } else {
             mVideoSquareInfo = this.mNewslist.get(index);
@@ -700,7 +660,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
             }
             // 显示是否推荐
             if (clusterInfo.mVideoEntity.videoExtra.isrecommend.equals("1")) {
-                holder.time_location.setCompoundDrawables(null, null, this.mRecommentDrawable, null);
+                holder.time_location.setCompoundDrawables(null, null, this.mRecommendDrawable, null);
             } else {
                 holder.time_location.setCompoundDrawables(null, null, null, null);
             }
@@ -738,67 +698,40 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
         return false;
     }
 
-    public int getUserHead(String head) {
-        return 0;
-    }
-
-    public void onBackPressed() {
-
-    }
-
 
     @SuppressLint("SimpleDateFormat")
     public String formatTime(String date) {
-        String time = "";
-        if (null != date) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        if(null == date) {
+            return "";
+        }
 
-            try {
-                Date strtodate = formatter.parse(date);
-                if (null != strtodate) {
-                    formatter = new SimpleDateFormat(mContext.getResources().getString(R.string.cluster_time_format));
-                    if (null != formatter) {
-                        time = formatter.format(strtodate);
-                    }
+        String time = "";
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+
+        try {
+            Date str2date = formatter.parse(date);
+            if (null != str2date) {
+                formatter = new SimpleDateFormat(mContext.getResources().getString(R.string.cluster_time_format));
+                if (null != formatter) {
+                    time = formatter.format(str2date);
                 }
-            } catch (ParseException e) {
-                e.printStackTrace();
             }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
         return time;
-    }
-
-
-    /**
-     * 锁住后滚动时禁止下载图片
-     *
-     * @author xuhw
-     * @date 2015年6月8日
-     */
-    public void lock() {
-    }
-
-    /**
-     * 解锁后恢复下载图片功能
-     *
-     * @author xuhw
-     * @date 2015年6月8日
-     */
-    public void unlock() {
-        this.notifyDataSetChanged();
     }
 
     public static class HeadViewHolder {
         TextView title;
         ImageView headImg;
-        ImageView iconrank;
-        TextView rankingBtn;
-        TextView textrank;
         TextView partakes;
         Button recommendBtn;
         Button newsBtn;
         Button partakeBtn;
         Button voteBtn;
+        FlowLayout nTagsFL;
+        ExpandableTextView nTagDescriptionETV;
     }
 
     public static class ViewHolder {
@@ -837,17 +770,6 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
         ImageView isopen;
     }
 
-    public Bitmap getThumbBitmap(String netUrl) {
-        String name = MD5Utils.hashKeyForDisk(netUrl) + ".0";
-        String path = Environment.getExternalStorageDirectory() + File.separator + "goluk/image_cache";
-        File file = new File(path + File.separator + name);
-        Bitmap t_bitmap = null;
-        if (file.exists()) {
-            t_bitmap = ImageManager.getBitmapFromCache(file.getAbsolutePath(), 100, 100);
-        }
-        return t_bitmap;
-    }
-
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         int action = event.getAction();
@@ -870,30 +792,19 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
         return false;
     }
 
-    private boolean isMy(String uid) {
-        if (!GolukApplication.getInstance().isUserLoginSucess) {
-            return false;
-        }
-        UserInfo userInfo = GolukApplication.getInstance().getMyInfo();
-        if (null == userInfo || !userInfo.uid.equals(uid)) {
-            return false;
-        }
-        return true;
-    }
-
     public void startUserCenter(VideoSquareInfo clusterInfo) {
         // 跳转当前点赞人的个人中心
         GolukUtils.startUserCenterActivity(mContext, clusterInfo.mUserEntity.uid);
     }
 
     @Override
-    public Object getItem(int arg0) {
+    public Object getItem(int position) {
         return null;
     }
 
     @Override
-    public long getItemId(int arg0) {
-        return 0;
+    public long getItemId(int position) {
+        return (long)position;
     }
 
     @Override

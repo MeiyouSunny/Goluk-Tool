@@ -11,7 +11,7 @@ public class ClusterHeadBean {
 	
 	/**活动信息**/
 	@JSONField(name="activity")
-	public ActivityBean activity;
+	public TagActivityBean activity;
 	
 	/**推荐列表**/
 	@JSONField(name="recommendvideo")

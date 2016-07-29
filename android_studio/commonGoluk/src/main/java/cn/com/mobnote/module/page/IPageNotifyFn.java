@@ -77,7 +77,7 @@ public interface IPageNotifyFn extends IGolukCommFn {
 	/** 设置登录应答信息 */
 	public static final int PageType_SetLoginRespInfo = 39;
 
-	public static final int PageType_ClusterMain =  40;
+	public static final int PageType_TagGet =  40;
 	
 	/**我的收益**/
 	public static final int PageType_MyProfit = 41;

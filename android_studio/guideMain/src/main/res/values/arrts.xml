@@ -79,10 +79,19 @@
         <attr name="ptrDrawableTop" format="reference" />
         <attr name="ptrDrawableBottom" format="reference" />
     </declare-styleable>
+
     <declare-styleable name="FlowLayout">
         <attr name="android:gravity" />
     </declare-styleable>
     <declare-styleable name="FlowLayout_Layout">
         <attr name="android:layout_gravity" />
+    </declare-styleable>
+
+    <declare-styleable name="ExpandableTextView">
+        <attr name="collapse_text" format="string" />
+        <attr name="fold_text" format="string" />
+        <attr name="max_lines" format="integer" />
+        <attr name="additional_text_color" format="color" />
+        <attr name="underlined" format="boolean" />
     </declare-styleable>
 </resources>

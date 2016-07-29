@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:expandabletextview="http://schemas.android.com/apk/res-auto"
     android:background="#ffffff"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/mPlayerLayout"
@@ -15,46 +16,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
-            android:src="@drawable/album_default_img"/>
+            android:src="@drawable/tacitly_pic"/>
     </RelativeLayout>
 
-    <!-- <RelativeLayout
+    <com.mobnote.view.ExpandableTextView
+        android:id="@+id/tag_description_expandable_textview"
+        android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:layout_marginTop="8dp" >
+        android:textSize="14sp"
+        android:textColor="#666666"
+        android:visibility="visible"
+        expandabletextview:max_lines="3"
+        expandabletextview:additional_text_color="#216da8"
+        expandabletextview:underlined="false"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
 
-        <TextView
-            android:id="@+id/video_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:text=""
-            android:textColor="#333333"
-            android:textSize="14sp" />
-    </RelativeLayout> -->
-    <TextView
-            android:id="@+id/partake_num"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="11dp"
-            android:layout_centerVertical="true"
-            android:textColor="#216da8"
-            android:textSize="14sp" />
+    <com.mobnote.view.FlowLayout
+        android:id="@+id/flowlayout_tag_page_header_tags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:visibility="gone"
+        android:background="@android:color/white"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp">
-
+        <TextView
+            android:id="@+id/partake_num"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:textColor="#216da8"
+            android:textSize="14sp" />
+<!--
         <ImageView
             android:id="@+id/icon_rank"
             android:layout_width="wrap_content"
@@ -86,32 +91,38 @@
             android:textColor="#ffffff"
             android:textSize="11sp"
             android:text="@string/str_rank_click_btn_txt"/>
-
+-->
         <Button
             android:id="@+id/partake_btn"
             android:layout_width="wrap_content"
-            android:layout_height="24dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:text="@string/attend_activity"
-            android:textColor="#ffffff"
-            android:layout_marginRight="8dp"
-            android:padding="4dp"
-            android:background="@drawable/together_join_icon"
+            android:textColor="@drawable/btn_color_blue_normal_white_press_selector"
+            android:layout_marginRight="10dp"
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:background="@drawable/btn_style_white_blue_selector"
             android:layout_centerVertical="true"
             android:textSize="12sp" />
 
         <Button
             android:id="@+id/btn_cluster_head_vote"
             android:layout_width="wrap_content"
-            android:layout_height="24dp"
+            android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/partake_btn"
             android:layout_alignBottom="@id/partake_btn"
             android:text="@string/str_vote_now"
-            android:textColor="#0080ff"
-            android:padding="4dp"
+            android:textColor="@drawable/btn_color_blue_normal_white_press_selector"
+            android:paddingRight="8dp"
+            android:paddingLeft="8dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
             android:layout_marginRight="8dp"
             android:layout_centerVertical="true"
-            android:background="@drawable/btn_white_body_blue_stroke"
+            android:background="@drawable/btn_style_white_blue_selector"
             android:textSize="12sp" />
     </RelativeLayout>
 
@@ -135,7 +146,7 @@
                 android:id="@+id/recommend_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/str_recommend"
+                android:text="@string/str_tag_tab_hot"
                 android:layout_marginRight="21dp"
                 android:background="#00000000"
                 android:textColor="#0080ff"
