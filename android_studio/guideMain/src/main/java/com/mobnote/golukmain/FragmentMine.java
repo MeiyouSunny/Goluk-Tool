@@ -247,7 +247,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
                     return;
                 }
                 mServerCarBrandCount = bean.carBrands.list.size();
-                boolean sameAsServer = true;
+                boolean sameAsServer = false;
                 if (checkCacheValid) {
                     List<CarBrandBean> oldList = GolukFileUtils.restoreFileToList(GolukFileUtils.CAR_BRAND_OBJECT);
                     if (oldList != null) {

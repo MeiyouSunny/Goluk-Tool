@@ -133,8 +133,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         init();
         toSetIPCInfoView();
         setIpcLinkInfo();
-        // 6秒后，没有配置成功，直接跳转“等待连接”界面
-        mBaseHandler.sendEmptyMessage(MSG_H_TO_WAITING_VIEW);
         EventBus.getDefault().register(this);
     }
 
@@ -244,14 +242,9 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         }
         collectLog("setIpcLinkWiFiCallBack", "---1 :   " + state);
         if (0 == state) {
-            mBaseHandler.removeMessages(MSG_H_TO_WAITING_VIEW);
-            // 隐藏loading
-            toWaitConnView();
             // 开始创建手机热点
-            mBaseHandler.sendEmptyMessageDelayed(MSG_H_CREATE_HOT, 3 * 1000);
-            collectLog("setIpcLinkWiFiCallBack", "--------: 2");
+            mBaseHandler.sendEmptyMessage(MSG_H_CREATE_HOT);
         } else {
-            collectLog("setIpcLinkWiFiCallBack", "---: 3 failed:  " + connectCount);
             if (connectCount > 3) {
                 GolukUtils.showToast(this, this.getResources().getString(R.string.wifi_link_bind_failed));
             } else {
@@ -501,9 +494,9 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         this.mState = STATE_SET_IPC_INFO;
         mMiddleLayout.removeAllViews();
         freeLayout();
-        mMiddleLayout.addView(layout1.getRootLayout());
-        mCurrentLayout = layout1;
-        layout1.start();
+        mMiddleLayout.addView(layout2.getRootLayout());
+        mCurrentLayout = layout2;
+        layout2.start();
     }
 
     private void toWaitConnView() {
