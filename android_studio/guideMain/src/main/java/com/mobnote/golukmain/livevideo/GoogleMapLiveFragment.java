@@ -327,4 +327,8 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
             isResetedView = true;
         }
     }
+
+    @Override
+    public void onExit() {
+    }
 }

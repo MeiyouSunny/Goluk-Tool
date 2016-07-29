@@ -402,12 +402,14 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             mCommentTabTv.setTextColor(Color.parseColor("#1163a2"));
             mMapTabTv.setTextColor(Color.parseColor("#707070"));
             mCommentTabIv.setImageResource(R.drawable.videodetail_comment_solid);
+            mMapTabIv.setImageResource(R.drawable.icon_location);
         }else if(mCurrTab == TAB_MAP){
             getSupportFragmentManager().beginTransaction().hide(mLiveCommentFragment).commit();
             getSupportFragmentManager().beginTransaction().show(mLiveMapViewFragment).commit();
             mMapTabTv.setTextColor(Color.parseColor("#1163a2"));
             mCommentTabTv.setTextColor(Color.parseColor("#707070"));
             mCommentTabIv.setImageResource(R.drawable.videodetail_comment_press);
+            mMapTabIv.setImageResource(R.drawable.icon_location_selected);
         }
         return false;
     }
@@ -1377,6 +1379,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
      * @date Apr 2, 2015
      */
     public void exit() {
+        mLiveCommentFragment.onExit();
+        mLiveMapViewFragment.onExit();
         if (isAlreadExit) {
             return;
         }

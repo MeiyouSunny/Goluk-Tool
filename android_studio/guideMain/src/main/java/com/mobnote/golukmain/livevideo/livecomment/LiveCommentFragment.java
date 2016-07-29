@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +15,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.comment.CommentAddRequest;
-import com.mobnote.golukmain.comment.CommentBean;
 import com.mobnote.golukmain.comment.CommentDeleteRequest;
+import com.mobnote.golukmain.comment.CommentListRequest;
 import com.mobnote.golukmain.comment.ICommentFn;
 import com.mobnote.golukmain.comment.bean.CommentAddBean;
 import com.mobnote.golukmain.comment.bean.CommentAddResultBean;
@@ -44,6 +46,7 @@ import com.rockerhieu.emojicon.EmojiconsFragment;
 import com.rockerhieu.emojicon.emoji.Emojicon;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -54,6 +57,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  */
 public class LiveCommentFragment extends Fragment implements IRequestResultListener, View.OnClickListener,EmojiconGridFragment.OnEmojiconClickedListener,
         EmojiconsFragment.OnEmojiconBackspaceClickedListener, View.OnLayoutChangeListener,ILiveUIChangeListener, ViewTreeObserver.OnGlobalLayoutListener {
+    public FrameLayout mEmojIconsLayout;
 
     private String mVid;
     private View mRootView;
@@ -62,12 +66,12 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     private LinearLayout mSendCommentAndLikeLayout;
     private LinearLayout mLikeLayout;
     private ImageView mLikeIv;
-    private TextView mLikeCountTv;
+    private TextSwitcher mLikeCounterTs;
     private TextView mSendCommentTv;
     private EmojiconEditText mEmojiconEt;
-    public FrameLayout mEmojIconsLayout;
     private RecyclerView mLiveCommentRecyclerView;
     private boolean isLiked;
+    private boolean isExit = false;
     /**
      * 是否处于回复状态
      */
@@ -83,7 +87,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     /**
      * 是否正在轮询评论列表
      */
-    boolean isPollingCommentList;
+    boolean isPollingCommentList = false;
     /**
      * 评论超时时间为10 秒
      */
@@ -95,17 +99,20 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     /**
      * 评论列表
      **/
-    private ArrayList<CommentBean> commentDataList = null;
-    private boolean isSwitchStateFinish;
+    private List<CommentItemBean> mCommentDataList = null;
     private boolean mInputState = true;
     private int mScreenHeight = 0;
     private int mKeyHeight = 0;
     private int mLikeCount = 0;
+
+    private String mLastCommentTimeStamp;
+    private String mLastSendCommentId;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_live_comment,container,false);
         initView();
+        updateLikeCount(0);
         initEmojIconFragment();
         mScreenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
         mKeyHeight = mScreenHeight / 3;
@@ -115,7 +122,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     }
     public void updateLikeCount(int count){
         mLikeCount = count;
-        mLikeCountTv.setText(mLikeCount + getContext().getText(R.string.str_live_ok_praise_unit).toString());
+        mLikeCounterTs.setText(mLikeCount + getContext().getText(R.string.str_live_ok_praise_unit).toString());
     }
     private void initEmojIconFragment() {
         EmojiconsFragment fg = EmojiconsFragment.newInstance(false);
@@ -127,7 +134,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         mSendCommentAndLikeLayout = (LinearLayout) mRootView.findViewById(R.id.layout_comment_and_like);
         mLikeLayout = (LinearLayout) mRootView.findViewById(R.id.layout_like);
         mLikeIv = (ImageView) mRootView.findViewById(R.id.iv_like);
-        mLikeCountTv = (TextView) mRootView.findViewById(R.id.tv_like_count);
+        mLikeCounterTs = (TextSwitcher) mRootView.findViewById(R.id.ts_likes_counter);
         mSendCommentTv = (TextView) mRootView.findViewById(R.id.tv_send_comment);
         mEmojiconEt = (EmojiconEditText) mRootView.findViewById(R.id.et_comment_input);
         mEmojIconsLayout = (FrameLayout) mRootView.findViewById(R.id.layout_emoj_icons);
@@ -154,6 +161,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
      */
     public void setmVid(String vid){
         this.mVid = vid;
+        startPollingCommentList();
     }
     // 发表评论
     private void click_send() {
@@ -194,6 +202,36 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         LiveDialogManager.getManagerInstance().showCommProgressDialog(getContext(),
                 LiveDialogManager.DIALOG_TYPE_COMMENT_PROGRESS_DELETE, "", this.getString(R.string.str_delete_ongoing),
                 true);
+    }
+
+    /**
+     * 开始轮询评论
+     */
+    public void startPollingCommentList(){
+        if(isExit || isPollingCommentList || TextUtils.isEmpty(mVid)){
+            return;
+        }
+        new Thread(){
+            public void run(){
+                isPollingCommentList = true;
+                while(!isExit){
+                    getCommentList();
+                    try {
+                        sleep(15000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
+    }
+    /**
+     * 获取评论列表数据
+     */
+    private void getCommentList() {
+        String type = ICommentFn.COMMENT_TYPE_VIDEO;
+        CommentListRequest request = new CommentListRequest(IPageNotifyFn.PageType_CommentList, this);
+        request.get(mVid, type, 1, mLastCommentTimeStamp);
     }
 
     // 添加评论
@@ -250,7 +288,6 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         if (!this.isCanShowSoft()) {
             return;
         }
-        isSwitchStateFinish = false;
         mEmojiconEt.setFocusable(true);
         mEmojiconEt.requestFocus();
 
@@ -267,7 +304,6 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         GolukUtils.showSoftNotThread(mEmojiconEt);
         hideEmojocon();
         this.setResize();
-        isSwitchStateFinish = true;
     }
     private void setSwitchState(boolean isTextInput) {
         mInputState = isTextInput;
@@ -306,11 +342,9 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         if (!isCanShowSoft()) {
             return;
         }
-        isSwitchStateFinish = false;
         GolukUtils.hideSoft(getContext(), mEmojiconEt);
         showEmojocon();
         setSwitchState(false);
-        isSwitchStateFinish = true;
     }
 
     private void setLayoutHeight() {
@@ -327,15 +361,16 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     }
     @Override
     public void onLoadComplete(int requestType, Object result) {
+        if(isExit){
+            return;
+        }
         switch (requestType) {
             case IPageNotifyFn.PageType_CommentList:
 
                 CommentResultBean resultBean = (CommentResultBean) result;
                 if (resultBean != null && resultBean.success && resultBean.data != null) {
                     CommentDataBean dataBean = resultBean.data;
-                    int count = 0;
                     if (!TextUtils.isEmpty(dataBean.count) && TextUtils.isDigitsOnly(dataBean.count)) {
-                        count = Integer.parseInt(dataBean.count);
                     }
 
                     if (null == dataBean.comments || dataBean.comments.size() <= 0) {
@@ -343,8 +378,22 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                     }
 
                     // 有数据
-                    commentDataList.clear();
-                    for (CommentItemBean item : dataBean.comments) {
+                    if(mCommentDataList == null){
+                        mCommentDataList = new ArrayList<CommentItemBean>();
+                        for(CommentItemBean comment: mCommentDataList){
+                            if(comment != null ){
+
+                                String commentAuthorId = null;
+                                if(comment.author != null){
+                                    commentAuthorId = comment.author.authorid;
+                                }
+                                if(GolukApplication.getInstance().isUserLoginSucess && !TextUtils.isEmpty(GolukApplication.getInstance().mCurrentUId)
+                                        && !TextUtils.isEmpty(commentAuthorId) && GolukApplication.getInstance().mCurrentUId.equals(commentAuthorId) ){
+                                    continue;
+                                }
+                                mCommentDataList.add(comment);
+                            }
+                        }
                     }
 
                 } else {
@@ -503,12 +552,17 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     }
 
     @Override
+    public void onExit() {
+        isExit = true;
+    }
+
+    @Override
     public void onGlobalLayout() {
         int heightDiff = mRootView.getRootView().getHeight() - mRootView.getHeight();
-        if (heightDiff > 200) {
+        if (heightDiff > 200) {//软键盘弹起
             mLikeLayout.setVisibility(View.GONE);
             mSendCommentTv.setVisibility(View.VISIBLE);
-        }else{
+        }else{//软键盘处于关闭状态
             if(mEmojIconsLayout.getVisibility() == View.VISIBLE){
                 mLikeLayout.setVisibility(View.GONE);
                 mSendCommentTv.setVisibility(View.VISIBLE);

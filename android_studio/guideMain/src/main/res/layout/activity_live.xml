@@ -320,7 +320,7 @@
                 android:id="@+id/iv_tab_map"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/living_set_location_icon"/>
+                android:src="@drawable/icon_location"/>
             <TextView
                 android:id="@+id/tv_tab_map"
                 android:layout_width="wrap_content"

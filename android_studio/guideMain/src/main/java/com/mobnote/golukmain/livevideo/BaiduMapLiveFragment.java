@@ -309,5 +309,9 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
             isResetedView = true;
         }
     }
+
+    @Override
+    public void onExit() {
+    }
 }
 

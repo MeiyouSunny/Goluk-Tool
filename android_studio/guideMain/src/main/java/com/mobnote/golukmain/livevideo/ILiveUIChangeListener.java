@@ -5,4 +5,5 @@ package com.mobnote.golukmain.livevideo;
  */
 public interface ILiveUIChangeListener {
     public void onFramgentTopMarginReceived(int topMargin);
+    public void onExit();
 }

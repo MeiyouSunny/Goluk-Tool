@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.comment.CommentBean;
+import com.mobnote.golukmain.comment.bean.CommentDataBean;
+import com.mobnote.golukmain.comment.bean.CommentItemBean;
 import com.rockerhieu.emojicon.EmojiconTextView;
 
 import java.util.List;
@@ -19,10 +21,10 @@ import java.util.List;
  * Created by leege100 on 2016/7/26.
  */
 public class LiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private List<CommentBean> mCommentList;
+    private List<CommentItemBean> mCommentList;
     private Context mContext;
 
-    public LiveCommentAdapter(Context cxt,List<CommentBean> list){
+    public LiveCommentAdapter(Context cxt,List<CommentItemBean> list){
         this.mContext = cxt;
         this.mCommentList = list;
     }
