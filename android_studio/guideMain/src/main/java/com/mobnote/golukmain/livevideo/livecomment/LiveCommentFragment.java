@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -183,6 +184,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
 
         final String content = mEmojiconEt.getText().toString().trim();
         if (null == content || "".equals(content)) {
+            mSendCommentTv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.shake_error));
             GolukUtils.showToast(getContext(), this.getString(R.string.str_input_comment_content));
             return;
         }

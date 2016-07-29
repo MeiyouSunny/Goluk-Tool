@@ -1,8 +1,11 @@
 package com.mobnote.golukmain.livevideo;
 
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.util.GolukUtils;
 
@@ -21,14 +24,15 @@ import java.util.Map;
  */
 public class UploadLiveScreenShotTask extends AsyncTask<String, Integer, String>{
     private static String mRequestUrl = HttpManager.getInstance().getWebDirectHost() + "/navidog4MeetTrans/uploadpic.htm";
-
     private String filePath;
     private String uid;
     private String vid;
-    public UploadLiveScreenShotTask(String fPath,String uid,String vid) {
+    private CallbackUploadLiveScreenShot uploadLiveScreenShotListener;
+    public UploadLiveScreenShotTask(String fPath,String uid,String vid,CallbackUploadLiveScreenShot listener) {
         this.filePath = fPath;
         this.uid = uid;
         this.vid = vid;
+        this.uploadLiveScreenShotListener = listener;
     }
 
     @Override
@@ -55,6 +59,17 @@ public class UploadLiveScreenShotTask extends AsyncTask<String, Integer, String>
 
     @Override
     protected void onPostExecute(String result) {
+        if(!TextUtils.isEmpty(result)) {
+            JSONObject resultJson = JSON.parseObject(result);
+            if (resultJson != null) {
+                String code = resultJson.getString("code");
+                if (!TextUtils.isEmpty(code) && "200".equals(code)) {
+                    uploadLiveScreenShotListener.onUploadLiveScreenShotSuccess();
+                    return;
+                }
+            }
+            uploadLiveScreenShotListener.onUploadLiveScreenShotFail();
+        }
     }
     public static String post(String url, Map<String, String> params, Map<String, File> files)
             throws IOException {
@@ -106,4 +121,8 @@ public class UploadLiveScreenShotTask extends AsyncTask<String, Integer, String>
         return sb2.toString();
     }
 
+    public interface CallbackUploadLiveScreenShot{
+        public void onUploadLiveScreenShotSuccess();
+        public void onUploadLiveScreenShotFail();
+    }
 }

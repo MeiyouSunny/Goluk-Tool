@@ -78,7 +78,7 @@ import de.greenrobot.event.EventBus;
  */
 public class LiveActivity extends BaseActivity implements View.OnClickListener,
         RtmpPlayerView.RtmpPlayerViewLisener, LiveDialogManager.ILiveDialogManagerFn, TimerManager.ITimerManagerFn, IPCManagerFn, ILive,
-        VideoSuqareManagerFn, ILiveFnAdapter, IRequestResultListener, ILocationFn {
+        VideoSuqareManagerFn, ILiveFnAdapter, IRequestResultListener, ILocationFn, UploadLiveScreenShotTask.CallbackUploadLiveScreenShot {
 
     /**
      * 自己预览地址
@@ -962,10 +962,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         isKaiGeSucess = true;
         startScreenShot();
         startUploadMyPosition();
-        if (mIsFirstSucess) {
-            this.click_share(false);
-            mIsFirstSucess = false;
-        }
         showLiveInfoLayout();
     }
 
@@ -1210,7 +1206,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         GolukDebugUtils.e("", "newlive-----share-------click_share ");
         String vid = null;
         if (isShareLive) {
-            vid = mRtmpUrl;
+            vid = mVid;
         } else {
             if (!isKaiGeSucess) {
                 return;
@@ -1698,7 +1694,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             return;
         }
         mThumbBitmap = ImageManager.getBitmapFromCache(picName, 100, 100);
-        new UploadLiveScreenShotTask(picName, myInfo.uid,mVid).execute();
+        new UploadLiveScreenShotTask(picName, myInfo.uid,mVid,this).execute();
     }
 
     // 分享成功后需要调用的接口
@@ -1747,7 +1743,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             bean.bitmap = mThumbBitmap;
             bean.realDesc = sinaTxt;
 
-            bean.videoId = mRtmpUrl;
+            bean.videoId = mVid;
             bean.from = this.getString(R.string.str_zhuge_live_share_event);
 
             ProxyThirdShare sb = new ProxyThirdShare(LiveActivity.this, sharePlatform, bean);
@@ -1836,5 +1832,18 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void LocationCallBack(String gpsJson) {
         mLiveMapViewFragment.LocationCallBack(gpsJson);
+    }
+
+    @Override
+    public void onUploadLiveScreenShotSuccess() {
+        if (mIsFirstSucess) {
+            this.click_share(false);
+            mIsFirstSucess = false;
+        }
+    }
+
+    @Override
+    public void onUploadLiveScreenShotFail() {
+
     }
 }

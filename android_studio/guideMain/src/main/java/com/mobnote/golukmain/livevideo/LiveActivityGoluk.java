@@ -1817,7 +1817,7 @@ public class LiveActivityGoluk extends BaseActivity implements View.OnClickListe
             return;
         }
         mThumbBitmap = ImageManager.getBitmapFromCache(picName, 100, 100);
-        new UploadLiveScreenShotTask(picName, myInfo.uid, myInfo.uid).execute();
+        //new UploadLiveScreenShotTask(picName, myInfo.uid, myInfo.uid).execute();
     }
 
     private String getShareVideoId() {
