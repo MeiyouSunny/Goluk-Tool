@@ -130,7 +130,7 @@
     <string name="str_cluster_wonderful">还没有优质视频推荐\n就等您来上传呦~</string>
     <string name="attend_activity">我要参加</string>
     <string name="activity_time_out">活动已结束</string>
-    <string name="str_participation_population">参与 %1$s 人次</string>
+    <string name="str_participation_population">参与 %1$s 人</string>
     <string name="str_adas_guide_des1">请您将爱车行驶到车辆较少的车道中央</string>
     <string name="str_adas_guide_des2">停车后，根据配置引导提示，完成初次使用配置</string>
     <string name="str_adas_verification_des">请参考下图，将上方的十字移动至道路尽头的中央</string>
