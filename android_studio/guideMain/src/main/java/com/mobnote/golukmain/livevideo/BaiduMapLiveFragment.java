@@ -44,6 +44,7 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
 
     private LatLng mPublisherLatLng;
     private LatLng mCurrUserLatLng;
+    private boolean isInitedMargin;
     private SimpleTarget mPublisherTarget = new SimpleTarget<Bitmap>(48, 48) {
         @Override
         public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
@@ -300,7 +301,7 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
 
     @Override
     public void onFramgentTopMarginReceived(int topMargin) {
-        if(!isResetedView && mMapView != null){
+        if(!isResetedView && mMapView != null && !isInitedMargin){
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);

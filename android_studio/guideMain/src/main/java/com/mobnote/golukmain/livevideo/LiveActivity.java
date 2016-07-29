@@ -1407,8 +1407,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         GolukDebugUtils.e("", "next live------------------LIve----setDialogManageFn: set NULL");
         if (isShareLive) {
             // 如果是开启直播，则停止上报自己的位置
-            mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StopUploadPosition,
-                    "");
+            mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StopUploadPosition, "");
             if (isKaiGeSucess) {
                 // 如果没有开启直播，则不需要调用服务器的退出直播
                 mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_LiveStop,
