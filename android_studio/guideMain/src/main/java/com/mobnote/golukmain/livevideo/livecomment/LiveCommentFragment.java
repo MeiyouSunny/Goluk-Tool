@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +44,6 @@ import com.mobnote.golukmain.praise.bean.PraiseResultBean;
 import com.mobnote.golukmain.praise.bean.PraiseResultDataBean;
 import com.mobnote.golukmain.videodetail.SoftKeyBoardListener;
 import com.mobnote.util.GolukUtils;
-import com.mobnote.videoedit.utils.DeviceUtil;
 import com.rockerhieu.emojicon.EmojiconEditText;
 import com.rockerhieu.emojicon.EmojiconGridFragment;
 import com.rockerhieu.emojicon.EmojiconsFragment;
@@ -76,6 +74,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     private TextView mSendCommentTv;
     private EmojiconEditText mEmojiconEt;
     private RecyclerView mLiveCommentRecyclerView;
+    private TextView mNewCommentTv;
     private boolean isLiked;
     private boolean isExit = false;
     private boolean isInitedMargin;
@@ -130,6 +129,13 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         mKeyHeight = mScreenHeight / 3;
         observeSoftKeyboard();
         mRootView.getViewTreeObserver().addOnGlobalLayoutListener(this);
+        mLiveCommentRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                mNewCommentTv.setVisibility(View.GONE);
+            }
+        });
         mLastCommentTime = System.currentTimeMillis();
         return mRootView;
     }
@@ -152,12 +158,14 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         mLikeCounterTs = (TextSwitcher) mRootView.findViewById(R.id.ts_likes_counter);
         mSendCommentTv = (TextView) mRootView.findViewById(R.id.tv_send_comment);
         mEmojiconEt = (EmojiconEditText) mRootView.findViewById(R.id.et_comment_input);
+        mNewCommentTv = (TextView) mRootView.findViewById(R.id.tv_new_comment);
         mEmojIconsLayout = (FrameLayout) mRootView.findViewById(R.id.layout_emoj_icons);
         mLiveCommentRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recyclerview_live_comment);
 
         mEmojIconIv.setOnClickListener(this);
         mLikeLayout.setOnClickListener(this);
         mSendCommentTv.setOnClickListener(this);
+        mNewCommentTv.setOnClickListener(this);
 
         mEmojiconEt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -396,12 +404,14 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                         mCommentDataList = new ArrayList<CommentItemBean>();
                     }
                     int currCommentCount = mCommentDataList.size();
+                    boolean hasNewComment = false;
                     for (CommentItemBean comment : dataBean.comments) {
                         if (comment != null) {
                             if(!TextUtils.isEmpty(mLastSendCommentId) && !TextUtils.isEmpty(comment.commentId) && mLastSendCommentId.equals(comment.commentId)){
                                 continue;
                             }
                             mCommentDataList.add(comment);
+                            hasNewComment = true;
                         }
                     }
                     if(mLiveCommentAdapter == null){
@@ -410,6 +420,9 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                         mLiveCommentRecyclerView.setAdapter(mLiveCommentAdapter);
                     }else{
                         mLiveCommentAdapter.notifyItemRangeChanged(currCommentCount,mCommentDataList.size() - currCommentCount);
+                    }
+                    if(hasNewComment){
+                        mNewCommentTv.setVisibility(View.VISIBLE);
                     }
                 }
                 break;
@@ -483,6 +496,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                             imm.showSoftInput(mRootView,InputMethodManager.SHOW_FORCED);
                             imm.hideSoftInputFromWindow(mRootView.getWindowToken(), 0); //强制隐藏键盘
                             mEmojiconEt.setText("");
+                            mLiveCommentRecyclerView.smoothScrollToPosition(mCommentDataList.size()-1);
                             getCommentList();
                         } else if ("1".equals(addBean.result)) {
                             GolukDebugUtils.e("", "参数错误");
@@ -540,6 +554,11 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
             }
         }else if(viewId == R.id.tv_send_comment){
             click_send();
+        }else if(viewId == R.id.tv_new_comment){
+            if(mLiveCommentRecyclerView != null && mCommentDataList != null && mLiveCommentAdapter != null){
+                mLiveCommentRecyclerView.smoothScrollToPosition(mCommentDataList.size()-1);
+                mNewCommentTv.setVisibility(View.GONE);
+            }
         }
     }
 

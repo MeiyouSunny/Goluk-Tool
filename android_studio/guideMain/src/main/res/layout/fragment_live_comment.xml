@@ -135,4 +135,21 @@
         android:background="#ffffff"
         android:layout_above="@+id/layout_comment_like_and_emoj"
         android:divider="@null" />
+
+    <TextView
+        android:id="@+id/tv_new_comment"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:text="@string/str_new_comment"
+        android:textColor="#0080ff"
+        android:textSize="12sp"
+        android:background="#300080ff"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp"/>
 </RelativeLayout>
