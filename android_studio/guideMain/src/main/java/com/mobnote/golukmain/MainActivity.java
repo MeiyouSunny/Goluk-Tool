@@ -1063,7 +1063,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
                 //直播页面
                 ZhugeUtils.eventLive(this, this.getString(R.string.str_zhuge_share_video_network_other));
 
-                GolukUtils.startPublishOrWatchLiveActivity(this, true, true, null, null);
+                GolukUtils.startPublishOrWatchLiveActivity(this, true, true,null, null, null);
             } else if (LiveDialogManager.FUNCTION_DIALOG_CANCEL == function) {
                 if (mApp.mIPCControlManager.isT1Relative()) {
                     mApp.mIPCControlManager.stopLive();

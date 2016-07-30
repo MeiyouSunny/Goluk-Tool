@@ -155,7 +155,7 @@ public class ClickNewestListener implements OnClickListener {
 
 		//直播页面
 		ZhugeUtils.eventLive(mContext, mContext.getString(R.string.str_zhuge_newest_event));
-		GolukUtils.startPublishOrWatchLiveActivity(mContext,false,false,null,user);
+		GolukUtils.startPublishOrWatchLiveActivity(mContext,false,false,mVideoSquareInfo.mVideoEntity.videoid,null,user);
 	}
 
 	/**

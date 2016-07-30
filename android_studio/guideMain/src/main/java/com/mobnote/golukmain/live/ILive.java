@@ -31,6 +31,7 @@ public interface ILive {
      * 播放与直播地址
      */
     public static final String KEY_PLAY_URL = "key_play_url";
+    public static final String KEY_VID = "key_vid";
     public static final String KEY_JOIN_GROUP = "key_join_group";
     public static final String KEY_USERINFO = "key_userinfo";
     public static final String KEY_LIVE_DATA = "key_livedata";

@@ -249,6 +249,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (!isShareLive) {
             // 计时，90秒后，防止用户进入时没网
             start90Timer();
+            mLiveCommentFragment.setmVid(mVid);
             getLiveDetail(mPublisher);
             mLiveCommentFragment.updateLikeCount(Integer.parseInt(mPublisher.zanCount));
             mLookCountTv.setText(GolukUtils.getFormatedNumber(mPublisher.persons));
@@ -530,6 +531,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         mPublisher = (UserInfo) intent.getSerializableExtra(KEY_USERINFO);
         isContinueLive = intent.getBooleanExtra(KEY_LIVE_CONTINUE, false);
         mSettingData = (LiveSettingBean) intent.getSerializableExtra(KEY_LIVE_SETTING_DATA);
+        mVid = intent.getStringExtra(KEY_VID);
     }
 
     private void setView() {

@@ -1263,7 +1263,7 @@ public class GolukUtils {
      * @param mSettingData
      * @param userInfo
      */
-    public static void startPublishOrWatchLiveActivity(Context mContext, boolean isLive, boolean isContinue, LiveSettingBean mSettingData, UserInfo userInfo) {
+    public static void startPublishOrWatchLiveActivity(Context mContext, boolean isLive, boolean isContinue,String mVid , LiveSettingBean mSettingData, UserInfo userInfo) {
         Intent intent = null;
         String activityNameStr = "";
         activityNameStr = "com.mobnote.golukmain.livevideo.LiveActivity";
@@ -1281,6 +1281,7 @@ public class GolukUtils {
             intent.putExtra(LiveActivity.KEY_LIVE_CONTINUE, isContinue);
             intent.putExtra(LiveActivity.KEY_GROUPID, "");
             intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
+            intent.putExtra(LiveActivity.KEY_VID, mVid);
             intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
             intent.putExtra(LiveActivity.KEY_LIVE_SETTING_DATA, mSettingData);
             intent.putExtra(LiveActivity.KEY_USERINFO, userInfo);
