@@ -1469,9 +1469,10 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 return;
             }
             if(!isUploadSucessed){
-//                if (null != mLiveOperator) {
-//                    mLiveOperator.stopLive();
-//                }
+                if (null != mLiveOperator) {
+                    //发起新的直播前，强制中断上一次的直播
+                    mLiveOperator.stopLive();
+                }
                 getLiveSign();
             }
         }
