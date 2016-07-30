@@ -44,7 +44,7 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
 
     private LatLng mPublisherLatLng;
     private LatLng mCurrUserLatLng;
-    private boolean isInitedMargin;
+    private int mTopMargin;
     private SimpleTarget mPublisherTarget = new SimpleTarget<Bitmap>(48,48) {
         @Override
         public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
@@ -243,6 +243,12 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
     @Override
     public void onResume() {
         super.onResume();
+        if(isResetedView){
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT);
+            params.setMargins(0,mTopMargin,0,0);
+        }
         mMapView.onResume();
     }
 
@@ -318,7 +324,7 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
 
     @Override
     public void onFramgentTopMarginReceived(int topMargin) {
-        if(!isResetedView && mMapView != null && !isInitedMargin){
+        if(!isResetedView && mMapView != null){
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);

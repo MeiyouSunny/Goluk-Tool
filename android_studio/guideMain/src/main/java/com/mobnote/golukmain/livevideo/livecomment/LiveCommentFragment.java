@@ -115,7 +115,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     private int mScreenHeight = 0;
     private int mKeyHeight = 0;
     private int mLikeCount = 0;
-
+    private int mTopMargin = 0;
     private LiveCommentAdapter mLiveCommentAdapter;
 
     @Nullable
@@ -139,6 +139,16 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         mLastCommentTime = System.currentTimeMillis();
         return mRootView;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(isInitedMargin){
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLiveCommentRecyclerView.getLayoutParams();
+            layoutParams.setMargins(0,mTopMargin,0,0);
+        }
+    }
+
     public void updateLikeCount(int count){
         mLikeCount = count;
         if(getContext() != null){
@@ -610,6 +620,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         if(mLiveCommentRecyclerView != null && !isInitedMargin){
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLiveCommentRecyclerView.getLayoutParams();
             layoutParams.setMargins(0,topMargin,0,0);
+            this.mTopMargin = topMargin;
             isInitedMargin = true;
         }
     }
