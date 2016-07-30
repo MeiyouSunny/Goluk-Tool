@@ -970,7 +970,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     private void showLiveInfoLayout(){
         mBaseHandler.removeMessages(MSG_H_HIDE_LIVE_INFO);
         mLiveInfoLayout.setVisibility(View.VISIBLE);
-        isShareLive = true;
         mBaseHandler.sendEmptyMessageDelayed(MSG_H_HIDE_LIVE_INFO,2000);
     }
     // 抓取第一帧图
@@ -1132,8 +1131,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         showLiveInfoLayout();
 
         if (1 == liveData.active) {
-            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----6666 : "
-                    + liveData.playUrl);
+            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----6666 : " + liveData.playUrl);
             if (null != mRPVPalyVideo) {
                 // 主动直播
                 if (!mRPVPalyVideo.isPlaying()) {
