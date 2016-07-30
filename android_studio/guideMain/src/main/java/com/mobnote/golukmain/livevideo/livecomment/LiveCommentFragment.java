@@ -1,5 +1,6 @@
 package com.mobnote.golukmain.livevideo.livecomment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,12 +28,14 @@ import com.mobnote.golukmain.comment.CommentAddRequest;
 import com.mobnote.golukmain.comment.CommentDeleteRequest;
 import com.mobnote.golukmain.comment.CommentListRequest;
 import com.mobnote.golukmain.comment.ICommentFn;
+import com.mobnote.golukmain.comment.bean.AuthorBean;
 import com.mobnote.golukmain.comment.bean.CommentAddBean;
 import com.mobnote.golukmain.comment.bean.CommentAddResultBean;
 import com.mobnote.golukmain.comment.bean.CommentDataBean;
 import com.mobnote.golukmain.comment.bean.CommentDelResultBean;
 import com.mobnote.golukmain.comment.bean.CommentItemBean;
 import com.mobnote.golukmain.comment.bean.CommentResultBean;
+import com.mobnote.golukmain.comment.bean.ReplyBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.UserInfo;
@@ -99,6 +103,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
      * 上传评论的时间
      */
     private long mLastCommentTime = 0;
+    private String mLastTimeStamp = "";
     /**
      * 上次发送的评论id
      */
@@ -242,8 +247,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     private void getCommentList() {
         String type = ICommentFn.COMMENT_TYPE_VIDEO;
         CommentListRequest request = new CommentListRequest(IPageNotifyFn.PageType_CommentList, this);
-        //request.get(mVid, type, 0, String.valueOf(mLastCommentTime));
-        request.get(mVid, type, 0, "");
+        request.get(mVid, type, 0, mLastTimeStamp);
     }
 
     // 添加评论
@@ -385,7 +389,9 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                     if (null == dataBean.comments || dataBean.comments.size() <= 0) {
                         return;
                     }
-
+                    if(null != dataBean.comments.get(0)){
+                        mLastTimeStamp = dataBean.comments.get(0).time;
+                    }
                     if (mCommentDataList == null) {
                         mCommentDataList = new ArrayList<CommentItemBean>();
                     }
@@ -393,7 +399,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                     for (CommentItemBean comment : dataBean.comments) {
                         if (comment != null) {
                             if(!TextUtils.isEmpty(mLastSendCommentId) && !TextUtils.isEmpty(comment.commentId) && mLastSendCommentId.equals(comment.commentId)){
-                                //continue;
+                                continue;
                             }
                             mCommentDataList.add(comment);
                         }
@@ -403,7 +409,6 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                         mLiveCommentAdapter = new LiveCommentAdapter(getContext(),mCommentDataList);
                         mLiveCommentRecyclerView.setAdapter(mLiveCommentAdapter);
                     }else{
-                        //mLiveCommentAdapter.notifyDataSetChanged();
                         mLiveCommentAdapter.notifyItemRangeChanged(currCommentCount,mCommentDataList.size() - currCommentCount);
                     }
                 }
@@ -447,8 +452,38 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                             //评论视频
                             mLastCommentTime = System.currentTimeMillis();
                             mLastSendCommentId = addBean.commentid;
+                            mLastTimeStamp = addBean.time;
                             CommentItemBean commentItemBean = new CommentItemBean();
+                            commentItemBean.author = new AuthorBean();
+                            commentItemBean.reply = new ReplyBean();
+                            commentItemBean.commentId = addBean.commentid;
+                            commentItemBean.author.authorid = addBean.authorid;
+                            commentItemBean.author.name = addBean.authorname;
+                            commentItemBean.author.avatar = addBean.authoravatar;
+                            commentItemBean.author.customavatar = addBean.customavatar;
+                            commentItemBean.author.label = addBean.label;
+                            commentItemBean.reply.id = addBean.replyid;
+                            commentItemBean.reply.name = addBean.replyname;
+                            commentItemBean.text = addBean.text;
+                            commentItemBean.time = addBean.time;
+                            if (mCommentDataList == null) {
+                                mCommentDataList = new ArrayList<CommentItemBean>();
+                            }
+                            int currCommentCount = 1;
+                            mCommentDataList.add(commentItemBean);
 
+                            if(mLiveCommentAdapter == null){
+                                mLiveCommentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                                mLiveCommentAdapter = new LiveCommentAdapter(getContext(),mCommentDataList);
+                                mLiveCommentRecyclerView.setAdapter(mLiveCommentAdapter);
+                            }else{
+                                mLiveCommentAdapter.notifyItemRangeChanged(currCommentCount,mCommentDataList.size() - currCommentCount);
+                            }
+                            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.showSoftInput(mRootView,InputMethodManager.SHOW_FORCED);
+                            imm.hideSoftInputFromWindow(mRootView.getWindowToken(), 0); //强制隐藏键盘
+                            mEmojiconEt.setText("");
+                            getCommentList();
                         } else if ("1".equals(addBean.result)) {
                             GolukDebugUtils.e("", "参数错误");
                         } else if ("2".equals(addBean.result)) {// 重复评论
