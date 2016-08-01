@@ -13,6 +13,7 @@ import com.mobnote.golukmain.cluster.ClusterActivity.NoVideoDataViewHolder;
 import com.mobnote.golukmain.cluster.bean.TagActivityBean;
 import com.mobnote.golukmain.cluster.bean.ClusterVoteShareBean;
 import com.mobnote.golukmain.cluster.bean.ClusterVoteShareDataBean;
+import com.mobnote.golukmain.cluster.bean.TagDataBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.live.ILive;
 import com.mobnote.golukmain.newest.ClickCommentListener;
@@ -41,6 +42,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -83,7 +85,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
     private int mCurrentViewType = 1; // 当前视图类型（推荐列表，最新列表）
 
-    public TagActivityBean mHeadData = null;
+    public TagDataBean mHeadData = null;
     public List<VideoSquareInfo> mRecommendlist = null;
     public List<VideoSquareInfo> mNewslist = null;
 
@@ -109,9 +111,14 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
      * 填充数据
      */
     public void setDataInfo(TagActivityBean head, List<VideoSquareInfo> recommend, List<VideoSquareInfo> news) {
-        this.mHeadData = head;
+//        this.mHeadData = head;
         this.mRecommendlist = recommend;
         this.mNewslist = news;
+    }
+
+    public void setDataInfo(TagDataBean head) {
+        this.mHeadData = head;
+        notifyDataSetChanged();
     }
 
     /**
@@ -215,132 +222,192 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         int type = getItemViewType(position);
 
         switch (type) {
-            case VIEW_TYPE_HEAD:
-                if (mHeadData != null) {
-                    HeadViewHolder holder = null;
-                    if (convertView == null) {
-                        convertView = LayoutInflater.from(mContext).inflate(R.layout.cluster_head, null);
-                        holder = new HeadViewHolder();
+        case VIEW_TYPE_HEAD: {
+            if (null == mHeadData) {
+                return convertView;
+            }
 
-                        holder.headImg = (ImageView) convertView.findViewById(R.id.mPreLoading);
-                        //holder.describe = (TextView) convertView.findViewById(R.id.video_title);
-                        holder.partakes = (TextView) convertView.findViewById(R.id.partake_num);
-                        holder.recommendBtn = (Button) convertView.findViewById(R.id.recommend_btn);
-                        holder.newsBtn = (Button) convertView.findViewById(R.id.news_btn);
-                        holder.partakeBtn = (Button) convertView.findViewById(R.id.partake_btn);
-                        holder.voteBtn = (Button) convertView.findViewById(R.id.btn_cluster_head_vote);
-                        holder.nTagDescriptionETV = (ExpandableTextView) convertView.findViewById(R.id.tag_description_expandable_textview);
-                        convertView.setTag(holder);
-                    } else {
-                        holder = (HeadViewHolder) convertView.getTag();
+            HeadViewHolder headViewHolder = null;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.cluster_head, null);
+                headViewHolder = new HeadViewHolder();
+
+                headViewHolder.headImg = (ImageView) convertView.findViewById(R.id.mPreLoading);
+                headViewHolder.partakes = (TextView) convertView.findViewById(R.id.partake_num);
+                headViewHolder.recommendBtn = (Button) convertView.findViewById(R.id.recommend_btn);
+                headViewHolder.newsBtn = (Button) convertView.findViewById(R.id.news_btn);
+                headViewHolder.partakeBtn = (Button) convertView.findViewById(R.id.partake_btn);
+                headViewHolder.voteBtn = (Button) convertView.findViewById(R.id.btn_cluster_head_vote);
+                headViewHolder.nTagDescriptionETV = (ExpandableTextView) convertView.findViewById(R.id.tag_description_expandable_textview);
+                headViewHolder.nTagTV = (TextView) convertView.findViewById(R.id.tv_tag_page_header_tag);
+                convertView.setTag(headViewHolder);
+            } else {
+                headViewHolder = (HeadViewHolder) convertView.getTag();
+            }
+
+            int height = (int) ((float) mWidth / 1.77f);
+            RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(mWidth, height);
+            mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
+            headViewHolder.headImg.setLayoutParams(mPlayerLayoutParams);
+
+            if(mHeadData.type == 1 && null != mHeadData.activity) {
+                if(TextUtils.isEmpty(mHeadData.activity.picture)) {
+                    headViewHolder.headImg.setVisibility(View.GONE);
+                } else {
+                    headViewHolder.headImg.setVisibility(View.VISIBLE);
+                    GlideUtils.loadImage(mContext, headViewHolder.headImg, mHeadData.activity.picture,
+                            R.drawable.tacitly_pic);
+                }
+
+                headViewHolder.headImg.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String url = getRtmpAddress() + "?type=9&activityid=" + mTagId;
+                        Intent intent = new Intent(mContext, UserOpenUrlActivity.class);
+                        intent.putExtra("url", url);
+                        intent.putExtra("need_h5_title", mContext.getString(R.string.str_activity_rule));
+                        mContext.startActivity(intent);
                     }
-                    int height = (int) ((float) mWidth / 1.77f);
-                    RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(mWidth, height);
-                    mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
-                    holder.headImg.setLayoutParams(mPlayerLayoutParams);
+                });
 
-                    holder.headImg.setOnClickListener(new OnClickListener() {
+                if (!TextUtils.isEmpty(mHeadData.activity.voteaddress)) {
+                    headViewHolder.voteBtn.setVisibility(View.VISIBLE);
+                    headViewHolder.voteBtn.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            String url = getRtmpAddress() + "?type=9&activityid=" + mTagId;
-                            Intent intent = new Intent(mContext,
-                                    UserOpenUrlActivity.class);
-                            intent.putExtra("url", url);
-                            intent.putExtra("need_h5_title", mContext.getString(R.string.str_activity_rule));
-                            mContext.startActivity(intent);
-                        }
-                    });
-
-                    if (!TextUtils.isEmpty(mHeadData.voteaddress)) {
-                        holder.voteBtn.setVisibility(View.VISIBLE);
-                        holder.voteBtn.setOnClickListener(new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (!TextUtils.isEmpty(mHeadData.voteid)) {
-                                    ClusterVoteShareRequest request =
-                                            new ClusterVoteShareRequest(
-                                                    IPageNotifyFn.PageType_VoteShare, ClusterAdapter.this);
-                                    request.get(mHeadData.voteid);
-                                }
-                            }
-                        });
-                    } else {
-                        holder.voteBtn.setVisibility(View.GONE);
-                    }
-
-                    holder.nTagDescriptionETV.setText(mContext.getString(R.string.testdata));
-                    GlideUtils.loadImage(mContext, holder.headImg, mHeadData.picture,
-                            R.drawable.tacitly_pic);
-                    holder.partakes.setText(mContext.getString(R.string.str_participation_population,
-                            mHeadData.participantcount));
-                    //活动过期
-                    if ("1".equals(mHeadData.expiration)) {
-                        holder.partakeBtn.setText(mContext.getResources().getString(R.string.activity_time_out));
-                        holder.partakeBtn.setTextColor(mContext.getResources().getColor(R.color.white));
-                        holder.partakeBtn.setBackgroundResource(R.drawable.btn_gray_stroke_gray_body);
-                    } else {
-                        holder.partakeBtn.setText(mContext.getResources().getString(R.string.attend_activity));
-                        holder.partakeBtn.setBackgroundResource(R.drawable.btn_style_white_blue_selector);
-                        holder.partakeBtn.setOnClickListener(new OnClickListener() {
-                            @Override
-                            public void onClick(View arg0) {
-                                //聚合页面相册页面访问统计
-                                ZhugeUtils.eventCallAlbum(mContext, mContext.getString(R.string.str_zhuge_call_album_source_cluster));
-
-                                Intent photoalbum = new Intent(mContext, PhotoAlbumActivity.class);
-                                photoalbum.putExtra("from", "cloud");
-
-                                PromotionSelectItem item = new PromotionSelectItem();
-                                item.activityid = mHeadData.activityid;
-                                item.activitytitle = mHeadData.activityname;
-                                item.channelid = mHeadData.channelid;
-                                photoalbum.putExtra(FragmentAlbum.ACTIVITY_INFO, item);
-                                mContext.startActivity(photoalbum);
-                            }
-                        });
-                    }
-
-                    holder.recommendBtn.setOnClickListener(new OnClickListener() {
-
-                        @Override
-                        public void onClick(View arg0) {
-                            if (mCurrentViewType == VIEW_TYPE_NEWEST) {
-                                mCurrentViewType = VIEW_TYPE_RECOMMEND;
-                                notifyDataSetChanged();
+                            if (!TextUtils.isEmpty(mHeadData.activity.voteid)) {
+                                ClusterVoteShareRequest request =
+                                        new ClusterVoteShareRequest(IPageNotifyFn.PageType_VoteShare, ClusterAdapter.this);
+                                request.get(mHeadData.activity.voteid);
                             }
                         }
                     });
-
-                    holder.newsBtn.setOnClickListener(new OnClickListener() {
-
-                        @Override
-                        public void onClick(View arg0) {
-                            if (mCurrentViewType == VIEW_TYPE_RECOMMEND) {
-                                mCurrentViewType = VIEW_TYPE_NEWEST;
-                                notifyDataSetChanged();
-                            }
-                        }
-                    });
-
-                    if (mCurrentViewType == VIEW_TYPE_RECOMMEND) {
-                        holder.recommendBtn.setTextColor(Color.rgb(9, 132, 255));
-                        holder.newsBtn.setTextColor(Color.rgb(51, 51, 51));
-                    } else {
-                        holder.newsBtn.setTextColor(Color.rgb(9, 132, 255));
-                        holder.recommendBtn.setTextColor(Color.rgb(51, 51, 51));
-                    }
-
-                    // 计算第一项的高度
-                    this.mFirstItemHeight = convertView.getBottom();
-                    ClusterActivity ca = (ClusterActivity) mContext;
-                    ca.updateListViewBottom(mCurrentViewType);
+                } else {
+                    headViewHolder.voteBtn.setVisibility(View.GONE);
                 }
-                break;
-            case VIEW_TYPE_NEWEST:
+
+                if(TextUtils.isEmpty(mHeadData.activity.activitycontent)) {
+                    headViewHolder.nTagDescriptionETV.setVisibility(View.GONE);
+                    headViewHolder.nTagTV.setVisibility(View.GONE);
+                } else {
+                    headViewHolder.nTagDescriptionETV.setText(mHeadData.activity.activitycontent);
+                    headViewHolder.nTagTV.setText("#" + mHeadData.activity.activityname);
+                }
+                String joinNumStr = mContext.getString(R.string.str_participation_prompt)
+                        + "<font color='#216da8'>"
+                        + mContext.getString(R.string.str_participation_num_unit, mHeadData.activity.participantcount)
+                        + "</font>";
+                headViewHolder.partakes.setText(Html.fromHtml(joinNumStr));
+
+                if ("1".equals(mHeadData.activity.expiration)) {
+                    headViewHolder.partakeBtn.setText(mContext.getResources().getString(R.string.activity_time_out));
+                    headViewHolder.partakeBtn.setTextColor(mContext.getResources().getColor(R.color.white));
+                    headViewHolder.partakeBtn.setBackgroundResource(R.drawable.btn_gray_stroke_gray_body);
+                } else {
+                    headViewHolder.partakeBtn.setText(mContext.getResources().getString(R.string.attend_activity));
+                    headViewHolder.partakeBtn.setBackgroundResource(R.drawable.btn_style_white_blue_selector);
+                    headViewHolder.partakeBtn.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View arg0) {
+                            //聚合页面相册页面访问统计
+                            ZhugeUtils.eventCallAlbum(mContext, mContext.getString(R.string.str_zhuge_call_album_source_cluster));
+
+                            Intent photoalbum = new Intent(mContext, PhotoAlbumActivity.class);
+                            photoalbum.putExtra("from", "cloud");
+
+                            PromotionSelectItem item = new PromotionSelectItem();
+                            item.activityid = mHeadData.activity.activityid;
+                            item.activitytitle = mHeadData.activity.activityname;
+                            item.channelid = mHeadData.activity.channelid;
+                            photoalbum.putExtra(FragmentAlbum.ACTIVITY_INFO, item);
+                            mContext.startActivity(photoalbum);
+                        }
+                    });
+                }
+            } else if(mHeadData.type == 0 && null != mHeadData.tag) {
+                if(TextUtils.isEmpty(mHeadData.tag.picture)) {
+                    headViewHolder.headImg.setVisibility(View.GONE);
+                } else {
+                    headViewHolder.headImg.setVisibility(View.VISIBLE);
+                    GlideUtils.loadImage(mContext, headViewHolder.headImg, mHeadData.tag.picture,
+                            R.drawable.tacitly_pic);
+                }
+
+                if(TextUtils.isEmpty(mHeadData.activity.activitycontent)) {
+                    headViewHolder.nTagDescriptionETV.setVisibility(View.GONE);
+                    headViewHolder.nTagTV.setVisibility(View.GONE);
+                } else {
+                    headViewHolder.nTagDescriptionETV.setText(mHeadData.tag.description);
+                    headViewHolder.nTagTV.setText("#" + mHeadData.tag.name);
+                }
+
+                String joinNumStr = mContext.getString(R.string.str_participation_prompt)
+                        + "<font color='#216da8'>"
+                        + mContext.getString(R.string.str_participation_num_unit, mHeadData.tag.participantcount)
+                        + "</font>";
+                headViewHolder.partakes.setText(Html.fromHtml(joinNumStr));
+                headViewHolder.voteBtn.setVisibility(View.GONE);
+
+                headViewHolder.partakeBtn.setText(mContext.getResources().getString(R.string.attend_activity));
+                headViewHolder.partakeBtn.setBackgroundResource(R.drawable.btn_style_white_blue_selector);
+                headViewHolder.partakeBtn.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View arg0) {
+                        //聚合页面相册页面访问统计
+                        ZhugeUtils.eventCallAlbum(mContext, mContext.getString(R.string.str_zhuge_call_album_source_cluster));
+
+                        Intent photoalbum = new Intent(mContext, PhotoAlbumActivity.class);
+                        photoalbum.putExtra("from", "cloud");
+
+                        PromotionSelectItem item = new PromotionSelectItem();
+                        item.activityid = mHeadData.tag.tagid;
+                        item.activitytitle = mHeadData.tag.name;
+                        item.channelid = "";
+                        photoalbum.putExtra(FragmentAlbum.ACTIVITY_INFO, item);
+                        mContext.startActivity(photoalbum);
+                    }
+                });
+            }
+
+            headViewHolder.recommendBtn.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    if (mCurrentViewType == VIEW_TYPE_NEWEST) {
+                        mCurrentViewType = VIEW_TYPE_RECOMMEND;
+                        notifyDataSetChanged();
+                    }
+                }
+            });
+
+            headViewHolder.newsBtn.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    if (mCurrentViewType == VIEW_TYPE_RECOMMEND) {
+                        mCurrentViewType = VIEW_TYPE_NEWEST;
+                        notifyDataSetChanged();
+                    }
+                }
+            });
+
+            if (mCurrentViewType == VIEW_TYPE_RECOMMEND) {
+                headViewHolder.recommendBtn.setTextColor(Color.rgb(9, 132, 255));
+                headViewHolder.newsBtn.setTextColor(Color.rgb(51, 51, 51));
+            } else {
+                headViewHolder.newsBtn.setTextColor(Color.rgb(9, 132, 255));
+                headViewHolder.recommendBtn.setTextColor(Color.rgb(51, 51, 51));
+            }
+
+            // 计算第一项的高度
+            this.mFirstItemHeight = convertView.getBottom();
+            ClusterActivity ca = (ClusterActivity) mContext;
+            ca.updateListViewBottom(mCurrentViewType);
+        }
+            break;
+
+        case VIEW_TYPE_NEWEST:
             case VIEW_TYPE_RECOMMEND:
                 int index_v = position - 1;
                 final VideoSquareInfo clusterInfo;
@@ -730,7 +797,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
         Button newsBtn;
         Button partakeBtn;
         Button voteBtn;
-        FlowLayout nTagsFL;
+        TextView nTagTV;
         ExpandableTextView nTagDescriptionETV;
     }
 
@@ -838,7 +905,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
         if (null != bean.data) {
             ClusterVoteShareDataBean data = bean.data;
-            String address = mHeadData.voteaddress;
+            String address = mHeadData.activity.voteaddress;
             if (null == address || address.trim().equals("")) {
                 return;
             } else {

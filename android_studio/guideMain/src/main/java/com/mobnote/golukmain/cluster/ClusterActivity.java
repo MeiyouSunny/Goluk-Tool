@@ -378,11 +378,11 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
     @Override
     public void onLoadComplete(int requestType, Object result) {
         if (requestType == IPageNotifyFn.PageType_TagGet) {
-            TagRetBean data = (TagRetBean) result;
+            TagRetBean ret = (TagRetBean) result;
             mRTPullListView.removeFooterView(1);
             mRTPullListView.removeFooterView(2);
-            if (data != null && data.code == 0) {
-                if (data.data != null) {
+            if (ret != null && ret.code == 0) {
+                if (ret.data != null) {
                     mIsRequestSucess = true;
 //                    ClusterHeadBean chb = data.data;
 //                    setTjTime(chb.recommendvideo);
@@ -407,6 +407,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 //                    if (null != activityname && !"".equals(activityname)) {
 //                        setTitle(activityname);
 //                    }
+                    mClusterAdapter.setDataInfo(ret.data);
 
                     updateViewData(true, 0);
                 } else {

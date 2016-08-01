@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
-import com.mobnote.golukmain.cluster.bean.TagsBean;
 import com.mobnote.golukmain.live.ILive;
 import com.mobnote.golukmain.videosuqare.CategoryListView;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
@@ -15,9 +14,6 @@ import com.mobnote.util.GolukUtils;
 import com.mobnote.view.FlowLayout;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
