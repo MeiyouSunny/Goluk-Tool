@@ -60,7 +60,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * Created by leege100 on 2016/7/20.
  */
 public class LiveCommentFragment extends Fragment implements IRequestResultListener, View.OnClickListener,EmojiconGridFragment.OnEmojiconClickedListener,
-        EmojiconsFragment.OnEmojiconBackspaceClickedListener, View.OnLayoutChangeListener,ILiveUIChangeListener, ViewTreeObserver.OnGlobalLayoutListener {
+        EmojiconsFragment.OnEmojiconBackspaceClickedListener, View.OnLayoutChangeListener,ILiveUIChangeListener, ViewTreeObserver.OnGlobalLayoutListener, LiveCommentAdapter.OnReplySelectedListener {
     public FrameLayout mEmojIconsLayout;
 
     private String mVid;
@@ -204,7 +204,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
             return;
         }
         UserInfo loginUser = GolukApplication.getInstance().getMyInfo();
-        if (mReplyToUserId != null && loginUser.uid.equals(mReplyToUserId) && mIsReply) {
+        if (mReplyToUserId != null && loginUser.uid.equals(mReplyToUserId)) {
             mIsReply = false;
         }
         long currentTime = System.currentTimeMillis();
@@ -426,7 +426,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                     }
                     if(mLiveCommentAdapter == null){
                         mLiveCommentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                        mLiveCommentAdapter = new LiveCommentAdapter(getContext(),mCommentDataList);
+                        mLiveCommentAdapter = new LiveCommentAdapter(getContext(),mCommentDataList,this);
                         mLiveCommentRecyclerView.setAdapter(mLiveCommentAdapter);
                     }else{
                         mLiveCommentAdapter.notifyItemRangeChanged(currCommentCount,mCommentDataList.size() - currCommentCount);
@@ -473,6 +473,9 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                     if (!"".equals(addBean.result)) {
                         if ("0".equals(addBean.result)) {// 成功
                             //评论视频
+                            mIsReply = false;
+                            mReplyToUserId = null;
+                            mReplyToUserName = null;
                             mLastCommentTime = System.currentTimeMillis();
                             mLastSendCommentId = addBean.commentid;
                             mLastTimeStamp = addBean.time;
@@ -497,7 +500,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
 
                             if(mLiveCommentAdapter == null){
                                 mLiveCommentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                                mLiveCommentAdapter = new LiveCommentAdapter(getContext(),mCommentDataList);
+                                mLiveCommentAdapter = new LiveCommentAdapter(getContext(),mCommentDataList,this);
                                 mLiveCommentRecyclerView.setAdapter(mLiveCommentAdapter);
                             }else{
                                 mLiveCommentAdapter.notifyItemRangeChanged(currCommentCount,mCommentDataList.size() - currCommentCount);
@@ -505,7 +508,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.showSoftInput(mRootView,InputMethodManager.SHOW_FORCED);
                             imm.hideSoftInputFromWindow(mRootView.getWindowToken(), 0); //强制隐藏键盘
-                            mEmojiconEt.setText("");
+                            cleanReplyState();
                             mLiveCommentRecyclerView.smoothScrollToPosition(mCommentDataList.size()-1);
                             getCommentList();
                         } else if ("1".equals(addBean.result)) {
@@ -641,9 +644,37 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                 mLikeLayout.setVisibility(View.GONE);
                 mSendCommentTv.setVisibility(View.VISIBLE);
             }else{
+                if(TextUtils.isEmpty(mEmojiconEt.getText().toString())){
+                    cleanReplyState();
+                }
                 mLikeLayout.setVisibility(View.VISIBLE);
                 mSendCommentTv.setVisibility(View.GONE);
             }
+        }
+    }
+
+    public void cleanReplyState(){
+        mReplyToUserId = "";
+        mReplyToUserName = "";
+        mEmojiconEt.setText("");
+        mEmojiconEt.setHint("");
+        mIsReply = false;
+    }
+    @Override
+    public void onReplySelected(String replyId, String replyAuthorId, String replyAuthorName) {
+        if(GolukApplication.getInstance().isUserLoginToServerSuccess() && GolukApplication.getInstance().getMyInfo()!= null){
+            String loginUserId = GolukApplication.getInstance().getMyInfo().uid;
+            if(!TextUtils.isEmpty(loginUserId)&&replyAuthorId.equals(loginUserId)){
+                //不能回复自己的评论
+                cleanReplyState();
+                return;
+            }
+        }
+        mReplyToUserId = replyAuthorId;
+        mReplyToUserName = replyAuthorName;
+        mIsReply = true;
+        if(TextUtils.isEmpty(mEmojiconEt.getText().toString())){
+            mEmojiconEt.setHint(getContext().getResources().getString(R.string.str_reply) + "@" + replyAuthorName);
         }
     }
 }

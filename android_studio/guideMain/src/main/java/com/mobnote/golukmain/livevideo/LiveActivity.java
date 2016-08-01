@@ -1444,6 +1444,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (KeyEvent.KEYCODE_BACK == keyCode) {
             if(mLiveCommentFragment.mEmojIconsLayout.getVisibility() == View.VISIBLE){
                 mLiveCommentFragment.mEmojIconsLayout.setVisibility(View.GONE);
+                mLiveCommentFragment.cleanReplyState();
                 return true;
             }
             preExit();

@@ -2,12 +2,14 @@ package com.mobnote.golukmain.livevideo.livecomment;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.comment.CommentBean;
 import com.mobnote.golukmain.comment.bean.CommentDataBean;
@@ -25,10 +27,12 @@ import java.util.List;
 public class LiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private List<CommentItemBean> mCommentList;
     private Context mContext;
+    private OnReplySelectedListener mReplySelectedListener;
 
-    public LiveCommentAdapter(Context cxt,List<CommentItemBean> list){
+    public LiveCommentAdapter(Context cxt,List<CommentItemBean> list,OnReplySelectedListener listener){
         this.mContext = cxt;
         this.mCommentList = list;
+        this.mReplySelectedListener = listener;
     }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -78,7 +82,7 @@ public class LiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public void bindView(final int position) {
             if (mCommentList != null && mCommentList.size() > position ) {
-                CommentItemBean commentItemBean = mCommentList.get(position);
+                final CommentItemBean commentItemBean = mCommentList.get(position);
                 if(commentItemBean == null){
                     return;
                 }
@@ -114,9 +118,33 @@ public class LiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 mItemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        if(commentItemBean == null || commentItemBean.author == null){
+                            return;
+                        }
+                        String authorName = commentItemBean.author.name;
+                        String authorId = commentItemBean.author.authorid;
+                        if(TextUtils.isEmpty(authorId)){
+                            return;
+                        }
+                        if(mReplySelectedListener != null){
+                            mReplySelectedListener.onReplySelected(commentItemBean.commentId,authorId,authorName);
+                        }
+//                        if(GolukApplication.getInstance().isUserLoginToServerSuccess() && GolukApplication.getInstance().getMyInfo()!= null){
+//                            String loginUserId = GolukApplication.getInstance().getMyInfo().uid;
+//                            if(TextUtils.isEmpty(loginUserId)){
+//                                return;
+//                            }
+//                            //不能回复自己的评论
+//                            if(authorId.equals(loginUserId)){
+//                                return;
+//                            }
+//
+//                        }
                     }});
             }
         }
+    }
+    public interface OnReplySelectedListener{
+        public void onReplySelected(String replyId,String replyAuthorId,String replyAuthorName);
     }
 }
