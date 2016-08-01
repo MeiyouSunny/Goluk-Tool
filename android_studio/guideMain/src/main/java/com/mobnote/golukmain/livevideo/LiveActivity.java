@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -51,7 +50,6 @@ import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.ZhugeUtils;
-import com.mobnote.videoedit.utils.DeviceUtil;
 import com.rd.car.player.RtmpPlayerView;
 
 import org.json.JSONArray;
@@ -1836,10 +1834,10 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onUploadLiveScreenShotSuccess() {
-        if (mIsFirstSucess) {
-            this.click_share(false);
-            mIsFirstSucess = false;
-        }
+//        if (mIsFirstSucess) {
+//            this.click_share(false);
+//            mIsFirstSucess = false;
+//        }
     }
 
     @Override
