@@ -3,7 +3,7 @@
     android:id="@+id/layout_live_comment_list"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:background="#f3f6f9">
     <!-- 头像 -->
     <ImageView
         android:id="@+id/iv_live_comment_item_avatar"
@@ -47,9 +47,9 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_alignLeft="@id/tv_live_comment_item_nickname"
         android:layout_below="@id/emojtv_live_comment_item_content"
         android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:background="#e5e5e5" />
 </RelativeLayout>

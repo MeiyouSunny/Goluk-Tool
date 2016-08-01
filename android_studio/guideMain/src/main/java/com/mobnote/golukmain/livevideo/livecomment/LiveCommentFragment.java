@@ -37,6 +37,7 @@ import com.mobnote.golukmain.comment.bean.ReplyBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.UserInfo;
+import com.mobnote.golukmain.livevideo.DelCommentDialog;
 import com.mobnote.golukmain.livevideo.ILiveUIChangeListener;
 import com.mobnote.golukmain.praise.PraiseRequest;
 import com.mobnote.golukmain.praise.bean.PraiseResultBean;
@@ -49,7 +50,6 @@ import com.rockerhieu.emojicon.EmojiconsFragment;
 import com.rockerhieu.emojicon.emoji.Emojicon;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -60,7 +60,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * Created by leege100 on 2016/7/20.
  */
 public class LiveCommentFragment extends Fragment implements IRequestResultListener, View.OnClickListener,EmojiconGridFragment.OnEmojiconClickedListener,
-        EmojiconsFragment.OnEmojiconBackspaceClickedListener, View.OnLayoutChangeListener,ILiveUIChangeListener, ViewTreeObserver.OnGlobalLayoutListener, LiveCommentAdapter.OnReplySelectedListener {
+        EmojiconsFragment.OnEmojiconBackspaceClickedListener, View.OnLayoutChangeListener,ILiveUIChangeListener, ViewTreeObserver.OnGlobalLayoutListener, LiveCommentAdapter.OnReplySelectedListener, LiveCommentAdapter.OnCommentItemLongClickListener {
     public FrameLayout mEmojIconsLayout;
 
     private String mVid;
@@ -78,6 +78,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     private boolean isLiked;
     private boolean isExit = false;
     private boolean isInitedMargin;
+    private DelCommentDialog mDelCommentDialog;
     /**
      * 是否处于回复状态
      */
@@ -147,6 +148,12 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLiveCommentRecyclerView.getLayoutParams();
             layoutParams.setMargins(0,mTopMargin,0,0);
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        onExit();
+        super.onDestroyView();
     }
 
     public void updateLikeCount(int count){
@@ -225,7 +232,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     }
 
     // 删除评论
-    void httpPost_requestDel(String id) {
+    public void deleteComment(String id) {
         CommentDeleteRequest request = new CommentDeleteRequest(IPageNotifyFn.PageType_DelComment, this);
         boolean isSucess = request.get(id);
         if (!isSucess) {
@@ -234,8 +241,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
             return;
         }
         LiveDialogManager.getManagerInstance().showCommProgressDialog(getContext(),
-                LiveDialogManager.DIALOG_TYPE_COMMENT_PROGRESS_DELETE, "", this.getString(R.string.str_delete_ongoing),
-                true);
+                LiveDialogManager.DIALOG_TYPE_COMMENT_PROGRESS_DELETE, "", this.getString(R.string.str_delete_ongoing), true);
     }
 
     /**
@@ -411,16 +417,27 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                 break;
             case IPageNotifyFn.PageType_DelComment:
                 LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
-                CommentDelResultBean DelResultBean = (CommentDelResultBean) result;
+                CommentDelResultBean delResultBean = (CommentDelResultBean) result;
 
-                if (DelResultBean != null && DelResultBean.data != null) {
-                    if (!GolukUtils.isTokenValid(DelResultBean.data.result)) {
+                if (delResultBean != null && delResultBean.data != null) {
+                    if (!GolukUtils.isTokenValid(delResultBean.data.result)) {
                         GolukUtils.startUserLogin(getContext());
                         return;
                     }
                 }
-                if (null != DelResultBean && DelResultBean.success) {
+                if (null != delResultBean && delResultBean.success) {
                     GolukUtils.showToast(getContext(), this.getString(R.string.str_delete_success));
+                    for(CommentItemBean commentItemBean : mCommentDataList){
+                        if(TextUtils.isEmpty(commentItemBean.commentId) || delResultBean.data == null){
+                            return;
+                        }
+                        String delCommentId = delResultBean.data.commentid;
+                        if(!TextUtils.isEmpty(delCommentId) && delCommentId.equals(commentItemBean.commentId)){
+                            mCommentDataList.remove(commentItemBean);
+                            mLiveCommentAdapter.notifyDataSetChanged();
+                            return;
+                        }
+                    }
                 } else {
                     GolukUtils.showToast(getContext(), this.getString(R.string.str_delete_fail));
                 }
@@ -541,7 +558,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         }
         if(mLiveCommentAdapter == null){
             mLiveCommentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            mLiveCommentAdapter = new LiveCommentAdapter(getContext(),mCommentDataList,this);
+            mLiveCommentAdapter = new LiveCommentAdapter(getContext(),mCommentDataList,this,this);
             mLiveCommentRecyclerView.setAdapter(mLiveCommentAdapter);
         }else{
             mLiveCommentAdapter.notifyItemRangeChanged(currCommentCount - 1,mCommentDataList.size() - currCommentCount - 1);
@@ -632,6 +649,10 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     @Override
     public void onExit() {
         isExit = true;
+        if(mDelCommentDialog != null && mDelCommentDialog.isShowing()){
+            mDelCommentDialog.dismiss();
+        }
+        mDelCommentDialog = null;
     }
 
     @Override
@@ -677,5 +698,14 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         if(TextUtils.isEmpty(mEmojiconEt.getText().toString())){
             mEmojiconEt.setHint(getContext().getResources().getString(R.string.str_reply) + "@" + replyAuthorName);
         }
+    }
+
+    @Override
+    public void onCommentLongClicked(String commentId) {
+        if(mDelCommentDialog == null){
+            mDelCommentDialog = new DelCommentDialog(getContext(),this, commentId);
+        }
+        mDelCommentDialog.setmCommentId(commentId);
+        mDelCommentDialog.show();
     }
 }
