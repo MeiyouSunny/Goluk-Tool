@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -1745,6 +1746,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             bean.videoId = mVid;
             bean.from = this.getString(R.string.str_zhuge_live_share_event);
 
+            //Log.e("id","uid: " + GolukApplication.getInstance().getMyInfo().uid + "   vid：" +mVid);
             ProxyThirdShare sb = new ProxyThirdShare(LiveActivity.this, sharePlatform, bean);
             sb.showAtLocation(LiveActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
         }

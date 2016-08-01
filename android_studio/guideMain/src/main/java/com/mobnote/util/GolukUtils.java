@@ -1134,6 +1134,28 @@ public class GolukUtils {
         context.startActivity(intent);
     }
 
+    /**
+     * 判断用户是否是当前登录用户
+     * @param userId
+     * @return
+     */
+    public static boolean isLoginUser(String userId){
+        if(!GolukApplication.getInstance().isUserLoginToServerSuccess() || GolukApplication.getInstance().getMyInfo() == null){
+            return false;
+        }
+        if(TextUtils.isEmpty(userId)){
+            return false;
+        }
+        String currLoginUserId = GolukApplication.getInstance().getMyInfo().uid;
+        if(TextUtils.isEmpty(currLoginUserId)){
+            return false;
+        }
+        if(!userId.equals(currLoginUserId)){
+            return false;
+        }
+        return true;
+    }
+
     public static void changePraiseStatus(List<VideoSquareInfo> dataList,
                                           boolean status, String videoId) {
         if (TextUtils.isEmpty(videoId) || null == dataList
