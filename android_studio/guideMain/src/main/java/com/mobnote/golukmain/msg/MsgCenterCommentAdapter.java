@@ -2,6 +2,7 @@ package com.mobnote.golukmain.msg;
 
 import java.util.List;
 
+import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.cluster.ClusterActivity;
 import com.mobnote.golukmain.msg.bean.MessageMsgsBean;
@@ -20,6 +21,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -122,10 +124,15 @@ public class MsgCenterCommentAdapter extends BaseAdapter {
 			} else {
 				viewHolder.nImageAuthentication.setVisibility(View.GONE);
 			}
-			if (null != messageBean.content.comment.replyid && !"".equals(messageBean.content.comment.replyid)) {
-				showCommentText(viewHolder.nTextContent,
-						mContext.getResources().getString(R.string.str_msgcenter_comment_replyme),
-						messageBean.content.comment.text);
+			if (!TextUtils.isEmpty(messageBean.content.comment.replyid)) {
+				GolukApplication app = ((MsgCenterCommentActivity)mContext).getApp();
+				String name;
+				if (messageBean.content.comment.replyid.equals(app.mCurrentUId)) {
+					name = mContext.getResources().getString(R.string.str_msgcenter_comment_replyme);
+				}else {
+					name = messageBean.content.comment.replyname;
+				}
+				showCommentText(viewHolder.nTextContent,name,messageBean.content.comment.text);
 			} else {
 				viewHolder.nTextContent.setText(messageBean.content.comment.text);
 			}

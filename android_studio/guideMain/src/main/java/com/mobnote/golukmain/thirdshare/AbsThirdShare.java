@@ -10,6 +10,7 @@ import com.mobnote.util.ZhugeUtils;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.ShareContent;
 import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.utils.Log;
 
 import android.app.Activity;
 import android.app.ProgressDialog;

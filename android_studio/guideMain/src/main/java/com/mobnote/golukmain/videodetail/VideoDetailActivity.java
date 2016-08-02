@@ -78,6 +78,7 @@ import com.mobnote.util.ZhugeUtils;
 import com.rockerhieu.emojicon.EmojiconGridFragment;
 import com.rockerhieu.emojicon.EmojiconsFragment;
 import com.rockerhieu.emojicon.emoji.Emojicon;
+import com.umeng.socialize.utils.Log;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
 import org.json.JSONArray;
@@ -1319,13 +1320,15 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
                             ThirdShareBean shareBean = new ThirdShareBean();
                             shareBean.surl = shareurl;
                             shareBean.curl = coverurl;
+                            if(TextUtils.isEmpty(shareBean.curl)){
+                                shareBean.curl = mHeader.getVideoThumbnailURL();
+                            }
                             shareBean.db = allDescribe;
                             shareBean.tl = ttl;
                             shareBean.bitmap = bitmap;
                             shareBean.realDesc = realDesc;
                             shareBean.videoId = mVideoJson.data.avideo.video.videoid;
                             shareBean.from = this.getString(R.string.str_zhuge_video_detail);
-
                             ProxyThirdShare shareBoard = new ProxyThirdShare(this, sharePlatform, shareBean);
                             shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
                         }
