@@ -188,9 +188,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
      */
     private void httpPost(String tagId) {
         mTagGetRequest = new TagGetRequest(IPageNotifyFn.PageType_TagGet, this);
-        mTagGetRequest.get("200", "1d1569e5d5f44b7fbdf635867c03e549");
-        sendTagRecommendListRequest("1d1569e5d5f44b7fbdf635867c03e549", "0", mTjtime, LIST_PAGE_SIZE);
-        sendTagNewestListRequest("1d1569e5d5f44b7fbdf635867c03e549", "0", mTjtime, LIST_PAGE_SIZE);
+        mTagGetRequest.get("200", tagId);
+        sendTagRecommendListRequest(tagId, "0", mTjtime, LIST_PAGE_SIZE);
+        sendTagNewestListRequest(tagId, "0", mTjtime, LIST_PAGE_SIZE);
     }
 
     private void initData() {
