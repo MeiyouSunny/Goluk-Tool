@@ -52,7 +52,7 @@ public class VideoItemClickPlayListener implements OnClickListener, ZhugeParamet
 		Intent intent = new Intent(mContext, MovieActivity.class);
 		intent.putExtra("from", "suqare");
 		intent.putExtra("image", mVideoSquareInfo.video.picture);
-		intent.putExtra("playUrl", mVideoSquareInfo.video.ondemandwebaddress);
+		intent.putExtra("vurl", mVideoSquareInfo.video.ondemandwebaddress);
 		uploadPlayer(mVideoSquareInfo.video.videoid, "1", "1");// 上报播放次数
 		mContext.startActivity(intent);
 	}

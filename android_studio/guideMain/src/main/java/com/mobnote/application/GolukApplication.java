@@ -1029,15 +1029,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     ((VideoCategoryActivity) mContext).downloadBubbleImageCallBack(success, param2);
                 }
                 break;
-            case 9:
-                GolukDebugUtils.e(null, "jyf----20150406----application----999999999999---- : ");
-                if (mPageSource == "LiveVideo") {
-                    GolukDebugUtils.e("", "pageNotifyCallBack---直播视频数据--" + String.valueOf(param2));
-                    if (mContext instanceof LiveActivity) {
-                        ((LiveActivity) mContext).LiveVideoDataCallBack(success, param2);
-                    }
-                }
-                break;
             case PageType_GetVCode:
                 // 注册获取验证码
                 mIdentifyManage.getIdentifyCallback(success, param1, param2);

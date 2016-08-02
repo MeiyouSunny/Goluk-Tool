@@ -48,7 +48,7 @@ public class SpecialCommentListener implements OnClickListener{
 				Intent intent = new Intent(mContext, MovieActivity.class);
 				intent.putExtra("from", from);
 				intent.putExtra("image", imagepath);
-				intent.putExtra("playUrl", videopath);
+				intent.putExtra("vurl", videopath);
 				if(vid == null || "".equals(vid)){
 					vid = "232";
 				}

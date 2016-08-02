@@ -252,7 +252,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             start90Timer();
             mLiveCommentFragment.setmVid(mVid);
             pollingRequestVideoDetail();
-            getLiveDetail(mPublisher);
+            getLiveDetail();
             mLiveCommentFragment.updateLikeCount(Integer.parseInt(mPublisher.zanCount));
             mLookCountTv.setText(GolukUtils.getFormatedNumber(mPublisher.persons));
         }
@@ -595,16 +595,16 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     /**
      * 获取直播详情
-     * @param userInfo
      */
-    public void getLiveDetail(UserInfo userInfo) {
-        if (isLiveUploadTimeOut) {
-            return;
+    public void getLiveDetail() {
+
+        if(!isShareLive && mPublisher != null){
+            LiveDetailRequest liveDetailRequest = new LiveDetailRequest(IPageNotifyFn.PageType_GetVideoDetail,this);
+            liveDetailRequest.get(mPublisher.uid,mPublisher.aid);
         }
-        String condi = "{\"uid\":\"" + userInfo.uid + "\",\"desAid\":\"" + userInfo.aid + "\"}";
-        boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetVideoDetail, condi);
-        if (!isSucess) {
-            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----getLiveDetail----22 : FASE False FAlse");
+        if(isShareLive && myInfo != null){
+            LiveDetailRequest liveDetailRequest = new LiveDetailRequest(IPageNotifyFn.PageType_GetVideoDetail,this);
+            liveDetailRequest.get(myInfo.uid,myInfo.aid);
         }
     }
 
@@ -718,7 +718,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 startVideoAndLive("");
                 break;
             case MSG_H_RETRY_REQUEST_DETAIL:
-                getLiveDetail(mPublisher);
+                getLiveDetail();
                 break;
             case MSG_H_PLAY_LOADING:
                 mVideoLoading.setVisibility(View.VISIBLE);
@@ -1042,7 +1042,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             startUploadMyPosition();
             isSettingCallBack = true;
             this.isKaiGeSucess = true;
-            mLiveCountSecond = liveData.restTime;
+            mLiveCountSecond = liveData.restime;
             mLiveManager.cancelTimer();
             // 开启timer开始计时
             updateCountDown(GolukUtils.secondToString(mLiveCountSecond));
@@ -1090,16 +1090,14 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             mBaseHandler.sendEmptyMessageDelayed(MSG_H_RETRY_REQUEST_DETAIL, 4 * 1000);
             return;
         }
-        final String data = (String) obj;
-        GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----222222 : " + data);
-        // 数据成功
-        liveData = JsonUtil.parseLiveDataJson(data);
+
+        liveData = (LiveDataInfo) obj;
         if (null == liveData) {
             GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----333333333 : ");
             mBaseHandler.sendEmptyMessageDelayed(MSG_H_RETRY_REQUEST_DETAIL, 4 * 1000);
             return;
         }
-        GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----4444 : " + (String) obj);
+
         if (200 != liveData.code) {
             mBaseHandler.removeMessages(MSG_H_UPLOAD_TIMEOUT);
             videoInValid();
@@ -1109,16 +1107,16 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----5555 : ");
         isCanVoice = liveData.voice.equals("1") ? true : false;
         this.isKaiGeSucess = true;
-        mLiveCountSecond = liveData.restTime;
+        mLiveCountSecond = liveData.restime;
 
         showLiveInfoLayout();
 
         if (1 == liveData.active) {
-            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----6666 : " + liveData.playUrl);
+            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----6666 : " + liveData.vurl);
             if (null != mRPVPalyVideo) {
                 // 主动直播
                 if (!mRPVPalyVideo.isPlaying()) {
-                    startVideoAndLive(liveData.playUrl);
+                    startVideoAndLive(liveData.vurl);
                 }
             }
         }
@@ -1229,7 +1227,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                             "jyf----20150406----LiveActivity----PlayerCallback----retryRunnable--44444 : ");
                 } else {
                     if (null != liveData) {
-                        mRPVPalyVideo.setDataSource(liveData.playUrl);
+                        mRPVPalyVideo.setDataSource(liveData.vurl);
                         mRPVPalyVideo.start();
                     }
                 }
@@ -1439,7 +1437,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             GolukDebugUtils.e("", "newlive-----LiveActivity----onCreate---开始续播---: ");
             // 续直播
             mSettingData = new LiveSettingBean();
-            getLiveDetail(myInfo);
+            getLiveDetail();
             LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE, this.getString(R.string.str_live_retry_live));
             isSettingCallBack = true;
         } else {
@@ -1768,7 +1766,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onLoadComplete(int requestType, Object result) {
-        GolukDebugUtils.e("", "newlive-----LiveActivity----********-onLoadComplete requestType:" + requestType);
         if (IPageNotifyFn.PageType_LiveStart == requestType) {
             LiveDataInfo liveInfo = (LiveDataInfo) result;
             CallBack_StartLiveServer(true, liveInfo);
@@ -1804,6 +1801,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             }
             mLiveCommentFragment.updateLikeCount(Integer.parseInt(avideoInfoBean.video.praisenumber));
             mLookCountTv.setText(GolukUtils.getFormatedNumber(avideoInfoBean.video.clicknumber));
+        }else if (IPageNotifyFn.PageType_GetVideoDetail == requestType){
+            LiveVideoDataCallBack(1,result);
         }
     }
     @Override
