@@ -764,9 +764,9 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 	}
 
 	public String getVideoThumbnailURL(){
-		if (mVideoJson==null || mVideoJson.data==null || mVideoJson.data.avideo==null || mVideoJson.data.avideo.video==null){
+		if (mVideoDetailRetBean==null || mVideoDetailRetBean.data==null || mVideoDetailRetBean.data.avideo==null || mVideoDetailRetBean.data.avideo.video==null){
 			return "";
 		}
-		return mVideoJson.data.avideo.video.picture;
+		return mVideoDetailRetBean.data.avideo.video.picture;
 	}
 }
