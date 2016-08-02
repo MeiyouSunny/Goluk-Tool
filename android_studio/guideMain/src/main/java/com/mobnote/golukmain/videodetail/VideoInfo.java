@@ -1,7 +1,7 @@
 package com.mobnote.golukmain.videodetail;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.mobnote.golukmain.cluster.bean.TagsBean;
+import com.mobnote.golukmain.cluster.bean.TagTagsBean;
 
 import java.util.List;
 
@@ -54,5 +54,5 @@ public class VideoInfo {
 	@JSONField(name="gen")
 	public VideoRecommend recom;
 	@JSONField(name="tags")
-	public List<TagsBean> tags;
+	public List<TagTagsBean> tags;
 }

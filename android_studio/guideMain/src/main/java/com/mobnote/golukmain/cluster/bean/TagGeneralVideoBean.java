@@ -1,4 +1,4 @@
-package com.mobnote.golukmain.newest.bean;
+package com.mobnote.golukmain.cluster.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by DELL-PC on 2016/7/25.
  */
-public class NewestVideoBean {
+public class TagGeneralVideoBean {
     /* 视频唯一id */
     @JSONField(name="videoid")
     public String videoid;
@@ -52,13 +52,13 @@ public class NewestVideoBean {
     public String ispraise;
     /* 直播数据 */
     @JSONField(name="videodata")
-    public NewestVideoDataBean videodata;
+    public TagGeneralVideoDataBean videodata;
     /* 推荐理由 */
     @JSONField(name="reason")
     public String reason;
     /* 	视频评论 */
     @JSONField(name="comment")
-    public NewestCommentBean comment;
+    public TagGeneralCommentBean comment;
     /* 是否为精华 0.否 1.是 */
     @JSONField(name="isessence")
     public String isessence;
@@ -70,7 +70,7 @@ public class NewestVideoBean {
     public String location;
     /* 参加活动信息 */
     @JSONField(name="gen")
-    public NewestGenBean gen;
+    public TagGeneralGenBean gen;
     /* GPS信息是否分享 0.否; 1.是 */
     @JSONField(name="isgpsshare")
     public int isgpsshare;

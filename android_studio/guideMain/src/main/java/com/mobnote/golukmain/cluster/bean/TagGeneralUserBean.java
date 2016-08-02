@@ -1,11 +1,11 @@
-package com.mobnote.golukmain.newest.bean;
+package com.mobnote.golukmain.cluster.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
 /**
  * Created by DELL-PC on 2016/7/25.
  */
-public class NewestUserBean {
+public class TagGeneralUserBean {
     /* 用户唯一id */
     @JSONField(name="uid")
     public String uid;
@@ -23,5 +23,5 @@ public class NewestUserBean {
     public String sex;
     /* 认证标签 */
     @JSONField(name="label")
-    public NewestLabelBean label;
+    public TagGeneralLabelBean label;
 }

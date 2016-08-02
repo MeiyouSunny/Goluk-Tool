@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
-import com.mobnote.golukmain.cluster.bean.TagsBean;
 import com.mobnote.golukmain.followed.bean.FollowedComListBean;
 import com.mobnote.golukmain.followed.bean.FollowedRecomUserBean;
 import com.mobnote.golukmain.followed.bean.FollowedVideoObjectBean;

@@ -34,13 +34,6 @@ public class TagGetRequest extends GolukFastjsonRequest<TagRetBean> {
         HashMap<String, String> headers = (HashMap<String, String>) getHeader();
         headers.put("tagid", tagId);
         headers.put("xieyi", protocol);
-//        String uid = GolukApplication.getInstance().mCurrentUId;
-//        if (TextUtils.isEmpty(uid)) {
-//            headers.put("uid", "");
-//        } else {
-//            headers.put("uid", uid);
-//        }
-//        headers.put("mobileid", "" + Tapi.getMobileId());
         get();
     }
 }

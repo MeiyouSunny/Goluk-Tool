@@ -92,13 +92,6 @@ public class FastjsonRequest<T> extends Request<T> {
 		try {
 			String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
 			GolukDebugUtils.e("", "-------------parseNetworkResponse--------json: " + json);
-//            JSONObject result = JSON.parseObject(json);
-//            int code = result.getIntValue("code");
-//            if(code == 10001 || code == 10002){//token过期
-//                GolukUtils.showToast(GolukApplication.getInstance().getContext(),GolukApplication.getInstance().getContext().getResources().getString(R.string.str_token_timeout_volley));
-//              Intent intent = new Intent(GolukApplication.getInstance().getContext(), UserLoginActivity.class);
-//              GolukApplication.getInstance().getContext().startActivity(intent);
-//            }
 			return Response.success(JSON.parseObject(json, clazz), HttpHeaderParser.parseCacheHeaders(response));
 		} catch (UnsupportedEncodingException e) {
 			return Response.error(new ParseError(e));

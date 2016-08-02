@@ -1,6 +1,7 @@
 package com.mobnote.golukmain.cluster;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
@@ -38,12 +39,12 @@ import com.mobnote.golukmain.carrecorder.util.ImageManager;
 import com.mobnote.golukmain.carrecorder.util.MD5Utils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.cluster.ClusterAdapter.IClusterInterface;
-import com.mobnote.golukmain.cluster.bean.ActivityJsonData;
 import com.mobnote.golukmain.cluster.bean.ClusterHeadBean;
 import com.mobnote.golukmain.cluster.bean.GetClusterShareUrlData;
+import com.mobnote.golukmain.cluster.bean.TagGeneralRetBean;
+import com.mobnote.golukmain.cluster.bean.TagGeneralVideoListBean;
 import com.mobnote.golukmain.cluster.bean.TagRetBean;
 import com.mobnote.golukmain.cluster.bean.ShareUrlDataBean;
-import com.mobnote.golukmain.cluster.bean.VideoListBean;
 import com.mobnote.golukmain.cluster.bean.VolleyDataFormat;
 import com.mobnote.golukmain.comment.CommentActivity;
 import com.mobnote.golukmain.comment.ICommentFn;
@@ -79,6 +80,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
     private CustomLoadingDialog mCustomProgressDialog = null;
     private VolleyDataFormat vdf = new VolleyDataFormat();
     private static final int ClOSE_ACTIVITY = 1000;
+    private static final String LIST_PAGE_SIZE = "20";
     /**
      * 保存列表一个显示项索引
      */
@@ -90,11 +92,11 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
     /**
      * 返回按钮
      */
-    private ImageButton mBackbtn;
+    private ImageButton mBackBtn;
     /**
      * 标题
      **/
-    private TextView mTitle;
+    private TextView mTitleTV;
 
     /**
      * 分享按钮
@@ -103,8 +105,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
     private EditText mEditText = null;
     private TextView mCommenCountTv = null;
     public ClusterHeadBean mHeadData = null;
-    public List<VideoSquareInfo> mRecommendlist = null;
-    public List<VideoSquareInfo> mNewslist = null;
+    public List<VideoSquareInfo> mRecommendList = null;
+    public List<VideoSquareInfo> mNewestList = null;
     public ClusterAdapter mClusterAdapter;
     private SharePlatformUtil mSharePlatform = null;
     /**
@@ -114,8 +116,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
     private String mClusterTitle = null;
 
     private TagGetRequest mTagGetRequest = null;
-    private RecommendBeanRequest mRecommendRequest = null;
-    private NewsBeanRequest mNewsRequest = null;
+    private TagRecommendListRequest mRecommendRequest = null;
+    private TagNewestListRequest mNewsRequest = null;
     private GetShareUrlRequest mShareRequest = null;
     private boolean mIsfrist = false;
     /**
@@ -149,6 +151,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
         mTagId = intent.getStringExtra(CLUSTER_KEY_ACTIVITYID);
         mClusterTitle = intent.getStringExtra(CLUSTER_KEY_TITLE);
         mTagType = intent.getIntExtra(CLUSTER_KEY_TYPE, 0);
+        mRecommendList = new ArrayList<VideoSquareInfo>();
+        mNewestList = new ArrayList<VideoSquareInfo>();
 
         this.initData();// 初始化view
         this.initListener();// 初始化view的监听
@@ -184,18 +188,20 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
      */
     private void httpPost(String tagId) {
         mTagGetRequest = new TagGetRequest(IPageNotifyFn.PageType_TagGet, this);
-        mTagGetRequest.get("200", "1");
+        mTagGetRequest.get("200", "1d1569e5d5f44b7fbdf635867c03e549");
+        sendTagRecommendListRequest("1d1569e5d5f44b7fbdf635867c03e549", "0", mTjtime, LIST_PAGE_SIZE);
+        sendTagNewestListRequest("1d1569e5d5f44b7fbdf635867c03e549", "0", mTjtime, LIST_PAGE_SIZE);
     }
 
     private void initData() {
         mRTPullListView = (RTPullListView) findViewById(R.id.mRTPullListView);
-        mBackbtn = (ImageButton) findViewById(R.id.back_btn);
-        mTitle = (TextView) findViewById(R.id.title);
+        mBackBtn = (ImageButton) findViewById(R.id.back_btn);
+        mTitleTV = (TextView) findViewById(R.id.title);
 
         if (mClusterTitle.length() > 12) {
             mClusterTitle = mClusterTitle.substring(0, 12) + this.getString(R.string.str_omit);
         }
-        mTitle.setText(mClusterTitle);
+        mTitleTV.setText(mClusterTitle);
         mShareBtn = (Button) findViewById(R.id.title_share);
         mEditText = (EditText) findViewById(R.id.custer_comment_input);
         mCommenCountTv = (TextView) findViewById(R.id.custer_comment_send);
@@ -216,11 +222,11 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
             return;
         }
         mClusterTitle = titles;
-        mTitle.setText(mClusterTitle);
+        mTitleTV.setText(mClusterTitle);
     }
 
     private void initListener() {
-        mBackbtn.setOnClickListener(this);
+        mBackBtn.setOnClickListener(this);
         mShareBtn.setOnClickListener(this);
         mEditText.setOnClickListener(this);
         mCommenCountTv.setOnClickListener(this);
@@ -239,9 +245,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
                     if (mRTPullListView.getAdapter().getCount() == (mWonderfulFirstVisible + mWonderfulVisibleCount)) {// 推荐
                         if (mClusterAdapter.getCurrentViewType() == ClusterAdapter.VIEW_TYPE_RECOMMEND) {// 视频列表
-                            if (mRecommendlist != null && mRecommendlist.size() > 0) {// 加载更多视频数据
+                            if (mRecommendList != null && mRecommendList.size() > 0) {// 加载更多视频数据
                                 if (mIsRecommendLoad) {
-                                    mRecommendRequest = new RecommendBeanRequest(
+                                    mRecommendRequest = new TagRecommendListRequest(
                                             IPageNotifyFn.PageType_ClusterRecommend, ClusterActivity.this);
                                     mRecommendRequest.get(mTagId, "2", mTjtime, "20");
                                     mIsRecommendLoad = false;
@@ -249,12 +255,12 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
                                 }
                             }
                         } else {// 最新列表
-                            if (mNewslist != null && mNewslist.size() > 0) {// 加载更多视频数据
+                            if (mNewestList != null && mNewestList.size() > 0) {// 加载更多视频数据
                                 if (mIsNewsLoad) {
-                                    mNewsRequest = new NewsBeanRequest(IPageNotifyFn.PageType_ClusterNews,
+                                    mNewsRequest = new TagNewestListRequest(IPageNotifyFn.PageType_ClusterNews,
                                             ClusterActivity.this);
                                     mNewsRequest.get(mTagId, "2",
-                                            mNewslist.get(mNewslist.size() - 1).mVideoEntity.sharingtime, "20");
+                                            mNewestList.get(mNewestList.size() - 1).mVideoEntity.sharingtime, "20");
                                     mIsLoadDataNews = true;
                                     mIsNewsLoad = false;
                                 }
@@ -331,9 +337,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
      *
      * @param list
      */
-    private void setTjTime(List<VideoListBean> list) {
+    private void setTjTime(List<TagGeneralVideoListBean> list) {
         if (list != null && list.size() > 0) {
-            VideoListBean vlb = list.get(list.size() - 1);
+            TagGeneralVideoListBean vlb = list.get(list.size() - 1);
             if (vlb != null && vlb.video != null && vlb.video.gen != null) {
                 mTjtime = vlb.video.gen.tjtime;
             }
@@ -375,117 +381,102 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
         return request.get("1", id);
     }
 
+    private void sendTagRecommendListRequest(String tagId, String operation, String timeStamp, String pageSize) {
+        TagRecommendListRequest request = new TagRecommendListRequest(IPageNotifyFn.PageType_ClusterRecommend, this);
+        request.get(tagId, operation, timeStamp, pageSize);
+    }
+
+    private void sendTagNewestListRequest(String tagId, String operation, String timeStamp, String pageSize) {
+        TagNewestListRequest request = new TagNewestListRequest(IPageNotifyFn.PageType_ClusterNews, this);
+        request.get(tagId, operation, timeStamp, pageSize);
+    }
+
     @Override
     public void onLoadComplete(int requestType, Object result) {
         if (requestType == IPageNotifyFn.PageType_TagGet) {
-            TagRetBean data = (TagRetBean) result;
+            TagRetBean ret = (TagRetBean) result;
             mRTPullListView.removeFooterView(1);
             mRTPullListView.removeFooterView(2);
-            if (data != null && data.code == 0) {
-                if (data.data != null) {
-                    mIsRequestSucess = true;
-//                    ClusterHeadBean chb = data.data;
-//                    setTjTime(chb.recommendvideo);
-//                    setCommentData(chb);
-//                    mRecommendlist = vdf.getClusterList(chb.recommendvideo);
-//                    if (mRecommendlist != null && mRecommendlist.size() == 20) {
-//                        mIsRecommendLoad = true;
-//                    } else {
-//                        mIsRecommendLoad = false;
-//                    }
-//
-//                    mNewslist = vdf.getClusterList(chb.latestvideo);
-//                    if (mNewslist != null && mNewslist.size() == 20) {
-//                        mIsNewsLoad = true;
-//                    } else {
-//                        mIsNewsLoad = false;
-//                    }
-//
-//                    mClusterAdapter.setDataInfo(chb.activity, mRecommendlist, mNewslist);
-//
-//                    String activityname = chb.activity.activityname;
-//                    if (null != activityname && !"".equals(activityname)) {
-//                        setTitle(activityname);
-//                    }
-
-                    updateViewData(true, 0);
-                } else {
-                    updateViewData(false, 0);
-                }
-            } else {
+            if(null == ret || ret.code != 0) {
                 GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
                 updateViewData(false, 0);
                 if (mIsfrist) {
                     mBaseHandler.sendEmptyMessageDelayed(ClOSE_ACTIVITY, 2000);
                 }
-
+                return;
             }
+
+            if (ret.data != null) {
+                mIsRequestSucess = true;
+                mClusterAdapter.setDataInfo(ret.data);
+
+                updateViewData(true, 0);
+            } else {
+                updateViewData(false, 0);
+            }
+
             mIsfrist = false;
         } else if (requestType == IPageNotifyFn.PageType_ClusterRecommend) {
             mIsLoadDataRecommend = false;
-            ActivityJsonData data = (ActivityJsonData) result;
-            if (data != null && data.success) {
-                if (data.data != null) {
-                    if ("0".equals(data.data.result)) {
-                        setTjTime(data.data.videolist);
-                        List<VideoSquareInfo> list = vdf.getClusterList(data.data.videolist);
-                        int count = mRecommendlist.size();
-                        if (list != null && list.size() > 0) {
-                            if (list.size() == 20) {
-                                mIsRecommendLoad = true;
-                            } else {
-                                mIsRecommendLoad = false;
-                            }
-                            mRecommendlist.addAll(list);
-                            updateViewData(true, count);
-                        } else {
-                            mIsRecommendLoad = false;
-                            GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
-                        }
-                    } else {
-                        mIsRecommendLoad = true;
-                        GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
-                    }
-                } else {
-                    mIsRecommendLoad = true;
-                    GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
-                }
-            } else {
+            TagGeneralRetBean ret = (TagGeneralRetBean) result;
+            if(ret == null || ret.code != 0) {
                 mIsRecommendLoad = true;
                 GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
+                return;
             }
 
+            if(null == ret.data) {
+                mIsRecommendLoad = true;
+                GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
+                return;
+            }
+
+            setTjTime(ret.data.videolist);
+            List<VideoSquareInfo> list = vdf.getClusterList(ret.data.videolist);
+            if(null == list || list.size() == 0) {
+                mIsRecommendLoad = false;
+                GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
+                return;
+            }
+
+            int count = mRecommendList.size();
+            if (list.size() == 20) {
+                mIsRecommendLoad = true;
+            } else {
+                mIsRecommendLoad = false;
+            }
+            mRecommendList.addAll(list);
+            mClusterAdapter.setDataInfo(mRecommendList, null);
+            updateViewData(true, count);
         } else if (requestType == IPageNotifyFn.PageType_ClusterNews) {
             mIsLoadDataNews = false;
-            ActivityJsonData data = (ActivityJsonData) result;
-            if (data != null && data.success) {
-                if (data.data != null) {
-                    if ("0".equals(data.data.result)) {
-                        List<VideoSquareInfo> list = vdf.getClusterList(data.data.videolist);
-                        int count = mNewslist.size();
-                        if (list != null && list.size() > 0) {
-                            if (list.size() == 20) {
-                                mIsNewsLoad = true;
-                            } else {
-                                mIsNewsLoad = false;
-                            }
-                            mNewslist.addAll(list);
-                            updateViewData(true, count);
-                        } else {
-                            mIsNewsLoad = false;
-                            GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
-                        }
-                    } else {
-                        mIsNewsLoad = true;
-                        GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
-                    }
-                } else {
-                    mIsNewsLoad = true;
-                    GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
-                }
-            } else {
+            TagGeneralRetBean ret = (TagGeneralRetBean) result;
+            if(null == ret || ret.code != 0) {
                 mIsNewsLoad = true;
                 GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
+                return;
+            }
+
+            if(null == ret.data) {
+                mIsNewsLoad = true;
+                GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
+                return;
+            }
+
+            List<VideoSquareInfo> list = vdf.getClusterList(ret.data.videolist);
+            int count = mNewestList.size();
+            if (list != null && list.size() > 0) {
+                if (list.size() == 20) {
+                    mIsNewsLoad = true;
+                } else {
+                    mIsNewsLoad = false;
+                }
+                mNewestList.addAll(list);
+                mClusterAdapter.setDataInfo(null, mNewestList);
+                updateViewData(true, count);
+            } else {
+                mIsNewsLoad = false;
+                GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
             }
         } else if (requestType == IPageNotifyFn.PageType_ClusterShareUrl) {
             closeProgressDialog();
@@ -595,7 +586,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
             if (mIsRecommendLoad) {
                 mRTPullListView.addFooterView(1);
             } else {
-                if (mRecommendlist != null && mRecommendlist.size() > 0) {
+                if (mRecommendList != null && mRecommendList.size() > 0) {
                     mRTPullListView.addFooterView(2);
                 }
             }
@@ -603,7 +594,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
             if (mIsNewsLoad) {
                 mRTPullListView.addFooterView(1);
             } else {
-                if (mNewslist != null && mNewslist.size() > 0) {
+                if (mNewestList != null && mNewestList.size() > 0) {
                     mRTPullListView.addFooterView(2);
                 }
             }
@@ -658,19 +649,19 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
             return;
         }
         if (mClusterAdapter.getCurrentViewType() == ClusterAdapter.VIEW_TYPE_RECOMMEND) {
-            if (null != mRecommendlist) {
-                for (int i = 0; i < mRecommendlist.size(); i++) {
-                    VideoSquareInfo vs = this.mRecommendlist.get(i);
-                    if (this.updatePraise(vs, mRecommendlist, i)) {
+            if (null != mRecommendList) {
+                for (int i = 0; i < mRecommendList.size(); i++) {
+                    VideoSquareInfo vs = this.mRecommendList.get(i);
+                    if (this.updatePraise(vs, mRecommendList, i)) {
                         break;
                     }
                 }
             }
         } else {
-            if (null != mNewslist) {
-                for (int i = 0; i < this.mNewslist.size(); i++) {
-                    VideoSquareInfo vs = this.mNewslist.get(i);
-                    if (this.updatePraise(vs, mNewslist, i)) {
+            if (null != mNewestList) {
+                for (int i = 0; i < this.mNewestList.size(); i++) {
+                    VideoSquareInfo vs = this.mNewestList.get(i);
+                    if (this.updatePraise(vs, mNewestList, i)) {
                         break;
                     }
                 }

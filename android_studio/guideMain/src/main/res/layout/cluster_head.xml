@@ -33,14 +33,15 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"/>
 
-    <com.mobnote.view.FlowLayout
-        android:id="@+id/flowlayout_tag_page_header_tags"
+    <TextView
+        android:id="@+id/tv_tag_page_header_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:visibility="gone"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:visibility="visible"
+        android:textColor="#216da8"
         android:background="@android:color/white"/>
 
     <RelativeLayout
@@ -57,41 +58,9 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
-            android:textColor="#216da8"
+            android:textColor="@color/black"
             android:textSize="14sp" />
-<!--
-        <ImageView
-            android:id="@+id/icon_rank"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_centerVertical="true"
-            android:background="@drawable/icon__rank"/>
 
-        <TextView
-            android:id="@+id/text_rank"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
-            android:layout_toRightOf="@id/icon_rank"
-            android:textColor="#ff0054"
-            android:layout_centerVertical="true"
-            android:text="@string/str_cluster_ranking_txt"/>
-
-        <Button
-            android:id="@+id/now_ranking_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:layout_toRightOf="@id/text_rank"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:gravity="center"
-            android:background="@drawable/icon_nor_"
-            android:drawablePadding="3dp"
-            android:textColor="#ffffff"
-            android:textSize="11sp"
-            android:text="@string/str_rank_click_btn_txt"/>
--->
         <Button
             android:id="@+id/partake_btn"
             android:layout_width="wrap_content"
@@ -103,6 +72,7 @@
             android:paddingRight="8dp"
             android:paddingLeft="8dp"
             android:paddingTop="6dp"
+            android:visibility="visible"
             android:paddingBottom="6dp"
             android:background="@drawable/btn_style_white_blue_selector"
             android:layout_centerVertical="true"
@@ -122,6 +92,7 @@
             android:paddingBottom="6dp"
             android:layout_marginRight="8dp"
             android:layout_centerVertical="true"
+            android:visibility="gone"
             android:background="@drawable/btn_style_white_blue_selector"
             android:textSize="12sp" />
     </RelativeLayout>
