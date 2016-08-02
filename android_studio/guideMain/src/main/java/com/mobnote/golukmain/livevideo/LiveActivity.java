@@ -1423,10 +1423,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         mBaseHandler.removeMessages(MSG_H_PLAY_LOADING);
         mBaseHandler.removeMessages(MSG_H_TO_GETMAP_PERSONS);
 
-        if (null != mLiveOperator) {
-            mLiveOperator.stopLive();
-        }
-
         dissmissAllDialog();
 
         freePlayer();
