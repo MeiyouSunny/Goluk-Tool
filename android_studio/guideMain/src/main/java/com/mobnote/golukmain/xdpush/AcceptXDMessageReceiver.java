@@ -111,7 +111,7 @@ public class AcceptXDMessageReceiver extends XGPushBaseReceiver {
 					// 200~300 = system
 					// 300~400 = official notification
                     // 209 live video to followers
-                    if(0 == type || 209 == type) {
+                    if(0 == type) {
                         //do nothing
 					} else if(101 == type) {
 						if(!TextUtils.isEmpty(mApp.mCurrentUId)) {

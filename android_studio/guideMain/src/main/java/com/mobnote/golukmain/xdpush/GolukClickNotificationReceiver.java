@@ -33,7 +33,7 @@ public class GolukClickNotificationReceiver extends BroadcastReceiver {
 				startApp(context, intent);
 			}
 		}
-		
+
 
 	}
 
