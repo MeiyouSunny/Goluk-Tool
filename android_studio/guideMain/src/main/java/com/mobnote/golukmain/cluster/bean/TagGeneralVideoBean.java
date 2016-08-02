@@ -88,5 +88,5 @@ public class TagGeneralVideoBean {
     public String category;
     /* 标签 */
     @JSONField(name="tags")
-    public List<String> tags;
+    public List<TagTagsBean> tags;
 }

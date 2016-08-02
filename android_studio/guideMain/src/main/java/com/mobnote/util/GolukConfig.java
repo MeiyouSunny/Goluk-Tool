@@ -98,4 +98,8 @@ public class GolukConfig {
     public final static String SERVER_PROTOCOL_V1 = "100";
     public final static String SERVER_PROTOCOL_V2 = "200";
 
+    /* List pull or refresh operation constants */
+    public final static String LIST_REFRESH_NORMAL = "0";
+    public final static String LIST_REFRESH_PULL_DOWN = "1";
+    public final static String LIST_REFRESH_PULL_UP = "2";
 }
