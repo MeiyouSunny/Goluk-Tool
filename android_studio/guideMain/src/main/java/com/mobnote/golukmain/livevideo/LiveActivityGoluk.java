@@ -1117,7 +1117,7 @@ public class LiveActivityGoluk extends BaseActivity implements View.OnClickListe
             startUploadMyPosition();
             isSettingCallBack = true;
             this.isKaiGeSucess = true;
-            mLiveCountSecond = liveData.restTime;
+            mLiveCountSecond = liveData.restime;
             mLiveManager.cancelTimer();
             // 开启timer开始计时
             updateCountDown(GolukUtils.secondToString(mLiveCountSecond));
@@ -1184,15 +1184,15 @@ public class LiveActivityGoluk extends BaseActivity implements View.OnClickListe
         GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----5555 : ");
         isCanVoice = liveData.voice.equals("1") ? true : false;
         this.isKaiGeSucess = true;
-        mLiveCountSecond = liveData.restTime;
+        mLiveCountSecond = liveData.restime;
 
         if (1 == liveData.active) {
             GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----6666 : "
-                    + liveData.playUrl);
+                    + liveData.vurl);
             if (null != mRPVPalyVideo) {
                 // 主动直播
                 if (!mRPVPalyVideo.isPlaying()) {
-                    startVideoAndLive(liveData.playUrl);
+                    startVideoAndLive(liveData.vurl);
                 }
             }
         }
@@ -1368,7 +1368,7 @@ public class LiveActivityGoluk extends BaseActivity implements View.OnClickListe
                             "jyf----20150406----LiveActivity----PlayerCallback----retryRunnable--44444 : ");
                 } else {
                     if (null != liveData) {
-                        mRPVPalyVideo.setDataSource(liveData.playUrl);
+                        mRPVPalyVideo.setDataSource(liveData.vurl);
                         mRPVPalyVideo.start();
                     }
                 }

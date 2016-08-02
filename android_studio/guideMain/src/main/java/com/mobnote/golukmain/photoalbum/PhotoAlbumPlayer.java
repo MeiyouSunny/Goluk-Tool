@@ -719,7 +719,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             }
         }
 
-        GolukDebugUtils.e(TAG, "YYYYYY==VideoPlayerActivity==playUrl=" + mVideoUrl);
+        GolukDebugUtils.e(TAG, "YYYYYY==VideoPlayerActivity==vurl=" + mVideoUrl);
     }
 
     /**

@@ -1,11 +1,11 @@
-package com.mobnote.golukmain.newest.bean;
+package com.mobnote.golukmain.cluster.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
 /**
  * Created by DELL-PC on 2016/7/25.
  */
-public class NewestVideoDataBean {
+public class TagGeneralVideoDataBean {
     /* 爱淘客id */
     @JSONField(name="aid")
     public String aid;

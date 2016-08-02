@@ -135,7 +135,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
     /**
      * 详情
      **/
-    private VideoJson mVideoJson = null;
+    private VideoDetailRetBean mVideoDetailRetBean = null;
     private VideoDetailAdapter mAdapter = null;
     /**
      * 保存列表一个显示项索引
@@ -384,7 +384,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
             type = ICommentFn.COMMENT_TYPE_WONDERFUL_VIDEO;
         }
         CommentListRequest request = new CommentListRequest(IPageNotifyFn.PageType_CommentList, this);
-        request.get(mVideoJson.data.avideo.video.videoid, type, operation, timestamp);
+        request.get(mVideoDetailRetBean.data.avideo.video.videoid, type, operation, timestamp);
     }
 
     @Override
@@ -400,13 +400,13 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
             if (!isClick) {
                 return;
             }
-            if (null == mVideoJson) {
+            if (null == mVideoDetailRetBean) {
                 if (!UserUtils.isNetDeviceAvailable(this)) {
                     GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
                     return;
                 }
             }
-            mDetailDialog = new DetailDialog(this, mVideoJson, testUser());
+            mDetailDialog = new DetailDialog(this, mVideoDetailRetBean, testUser());
             mDetailDialog.show();
         } else if (id == R.id.comment_send) {
             if (!UserUtils.isNetDeviceAvailable(this)) {
@@ -442,8 +442,8 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
             }
 
             if (count == visibleCount && mIsHaveData) {
-                if (null != mVideoJson && null != mVideoJson.data && null != mVideoJson.data.avideo
-                        && null != mVideoJson.data.avideo.video && null != mVideoJson.data.avideo.video.videoid) {
+                if (null != mVideoDetailRetBean && null != mVideoDetailRetBean.data && null != mVideoDetailRetBean.data.avideo
+                        && null != mVideoDetailRetBean.data.avideo.video && null != mVideoDetailRetBean.data.avideo.video.videoid) {
                     startPush();
                 }
             }
@@ -469,7 +469,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
      *
      * 首次进入，数据回调处理 之调用视频详情的借口
      */
-    private void firstEnterCallBack(int count, VideoJson videoJsonData, ArrayList<CommentBean> dataList) {
+    private void firstEnterCallBack(int count, VideoDetailRetBean videoDetailRetBeanData, ArrayList<CommentBean> dataList) {
         // 首次进入
         this.mAdapter.setData(dataList);
         mRTPullListView.onRefreshComplete(getLastRefreshTime());
@@ -483,7 +483,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
     }
 
     // 下拉刷新，数据回调处理
-    private void pullCallBack(int count, VideoJson videoJsonData, ArrayList<CommentBean> dataList) {
+    private void pullCallBack(int count, VideoDetailRetBean videoDetailRetBeanData, ArrayList<CommentBean> dataList) {
         this.mAdapter.setData(dataList);
         mRTPullListView.onRefreshComplete(getLastRefreshTime());
         if (count >= PAGE_SIZE) {
@@ -497,7 +497,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
     }
 
     // 上拉刷新，数据回调处理
-    private void pushCallBack(int count, VideoJson videoJsonData, ArrayList<CommentBean> dataList) {
+    private void pushCallBack(int count, VideoDetailRetBean videoDetailRetBeanData, ArrayList<CommentBean> dataList) {
         if (count >= PAGE_SIZE) {
             mIsHaveData = true;
         } else {
@@ -584,7 +584,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
     // 添加评论
     private void httpPost_requestAdd(String txt) {
-        if (null == mVideoJson.data.avideo.video.videoid) {
+        if (null == mVideoDetailRetBean.data.avideo.video.videoid) {
             GolukUtils.showToast(this, this.getString(R.string.str_load_data_ongoing));
             return;
         }
@@ -595,10 +595,10 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
         CommentAddRequest request = new CommentAddRequest(IPageNotifyFn.PageType_AddComment, this);
         boolean isSucess = false;
         if (mIsReply) {
-            isSucess = request.get(mVideoJson.data.avideo.video.videoid, type, txt, mWillDelBean.mUserId,
+            isSucess = request.get(mVideoDetailRetBean.data.avideo.video.videoid, type, txt, mWillDelBean.mUserId,
                     mWillDelBean.mUserName, ztId);
         } else {
-            isSucess = request.get(mVideoJson.data.avideo.video.videoid, type, txt, "", "", ztId);
+            isSucess = request.get(mVideoDetailRetBean.data.avideo.video.videoid, type, txt, "", "", ztId);
         }
         if (!isSucess) {
             // 失败
@@ -612,13 +612,13 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
     // 点赞请求
     public boolean sendPraiseRequest() {
         PraiseRequest request = new PraiseRequest(IPageNotifyFn.PageType_Praise, this);
-        return request.get("1", mVideoJson.data.avideo.video.videoid, "1");
+        return request.get("1", mVideoDetailRetBean.data.avideo.video.videoid, "1");
     }
 
     // 取消点赞请求
     public boolean sendCancelPraiseRequest() {
         PraiseCancelRequest request = new PraiseCancelRequest(IPageNotifyFn.PageType_PraiseCancel, this);
-        return request.get("1", mVideoJson.data.avideo.video.videoid);
+        return request.get("1", mVideoDetailRetBean.data.avideo.video.videoid);
     }
 
     // 异常情况处理
@@ -633,7 +633,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
     // 数据异常判断
     private boolean isHasData() {
-        if (null == mVideoJson || null == mVideoJson.data || null == mVideoJson.data.avideo) {
+        if (null == mVideoDetailRetBean || null == mVideoDetailRetBean.data || null == mVideoDetailRetBean.data.avideo) {
             return false;
         }
         return true;
@@ -645,11 +645,11 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
         if (!isHasData()) {
             return allDescribe;
         }
-        if (null != mVideoJson.data.avideo.user && null != mVideoJson.data.avideo.video) {
+        if (null != mVideoDetailRetBean.data.avideo.user && null != mVideoDetailRetBean.data.avideo.video) {
             if (TextUtils.isEmpty(describe)) {
-                allDescribe = mVideoJson.data.avideo.user.nickname + "：" + mVideoJson.data.avideo.video.describe;
+                allDescribe = mVideoDetailRetBean.data.avideo.user.nickname + "：" + mVideoDetailRetBean.data.avideo.video.describe;
             } else {
-                allDescribe = mVideoJson.data.avideo.user.nickname + "：" + describe;
+                allDescribe = mVideoDetailRetBean.data.avideo.user.nickname + "：" + describe;
             }
         }
         return allDescribe;
@@ -849,11 +849,11 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
     }
 
     private boolean isCanShowSoft() {
-        if (null == mVideoJson || null == mVideoJson.data || null == mVideoJson.data.avideo) {
+        if (null == mVideoDetailRetBean || null == mVideoDetailRetBean.data || null == mVideoDetailRetBean.data.avideo) {
             return false;
         }
-        if ((mVideoJson.data.avideo.video != null) && (mVideoJson.data.avideo.video.comment != null)
-                && "1".equals(mVideoJson.data.avideo.video.comment.iscomment) && isSwitchStateFinish) {
+        if ((mVideoDetailRetBean.data.avideo.video != null) && (mVideoDetailRetBean.data.avideo.video.comment != null)
+                && "1".equals(mVideoDetailRetBean.data.avideo.video.comment.iscomment) && isSwitchStateFinish) {
             return true;
         }
         return false;
@@ -936,7 +936,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
         if (null == info) {
             return false;
         }
-        if (mVideoJson.data.avideo.user.uid.equals(info.uid)) {
+        if (mVideoDetailRetBean.data.avideo.user.uid.equals(info.uid)) {
             return true;
         } else {
             return false;
@@ -958,14 +958,14 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
             GolukUtils.showToast(this, getResources().getString(R.string.user_net_unavailable));
             return;
         }
-        if (null == mVideoJson || mVideoJson.success == false || null == mVideoJson.data
-                || null == mVideoJson.data.avideo || null == mVideoJson.data.avideo.video
-                || null == mVideoJson.data.avideo.video.videoid || null == mVideoJson.data.avideo.user
-                || null == mVideoJson.data.avideo.user.uid) {
+        if (null == mVideoDetailRetBean || mVideoDetailRetBean.success == false || null == mVideoDetailRetBean.data
+                || null == mVideoDetailRetBean.data.avideo || null == mVideoDetailRetBean.data.avideo.video
+                || null == mVideoDetailRetBean.data.avideo.video.videoid || null == mVideoDetailRetBean.data.avideo.user
+                || null == mVideoDetailRetBean.data.avideo.user.uid) {
             return;
         }
         DeleteVideoRequest request = new DeleteVideoRequest(IPageNotifyFn.PageType_DeleteVideo, this);
-        boolean isSuccess = request.get(mVideoJson.data.avideo.video.videoid, mVideoJson.data.avideo.user.uid);
+        boolean isSuccess = request.get(mVideoDetailRetBean.data.avideo.video.videoid, mVideoDetailRetBean.data.avideo.user.uid);
         if (isSuccess) {
             LiveDialogManager.getManagerInstance()
                     .showCommProgressDialog(this, LiveDialogManager.DIALOG_TYPE_DEL_VIDEO, "",
@@ -982,7 +982,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
         if (!SharePlatformUtil.checkShareableWhenNotHotspot(VideoDetailActivity.this)) return;
         showLoadingDialog();
         ShareVideoShortUrlRequest request = new ShareVideoShortUrlRequest(IPageNotifyFn.PageType_GetShareURL, this);
-        boolean result = request.get(mVideoJson.data.avideo.video.videoid, mVideoJson.data.avideo.video.type);
+        boolean result = request.get(mVideoDetailRetBean.data.avideo.video.videoid, mVideoDetailRetBean.data.avideo.video.type);
         GolukDebugUtils.i("detail", "--------result-----Onclick------" + result);
         if (!result) {
             GolukUtils.showToast(this, this.getString(R.string.network_error));
@@ -994,13 +994,13 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
      */
     private void clickVideoNumber() {
         try {
-            if (null != mVideoJson && null != mVideoJson.data && null != mVideoJson.data.avideo
-                    && null != mVideoJson.data.avideo.video && null != mVideoJson.data.avideo.video.videoid) {
+            if (null != mVideoDetailRetBean && null != mVideoDetailRetBean.data && null != mVideoDetailRetBean.data.avideo
+                    && null != mVideoDetailRetBean.data.avideo.video && null != mVideoDetailRetBean.data.avideo.video.videoid) {
                 NewestVideoClickRequest videoClickRequest = new NewestVideoClickRequest(
                         IPageNotifyFn.PageType_VideoClick, this);
                 JSONArray array = new JSONArray();
                 JSONObject jsonVideo = new JSONObject();
-                jsonVideo.put("videoid", mVideoJson.data.avideo.video.videoid);
+                jsonVideo.put("videoid", mVideoDetailRetBean.data.avideo.video.videoid);
                 jsonVideo.put("number", "1");
                 array.put(jsonVideo);
                 if (null != array) {
@@ -1017,19 +1017,19 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
         closeLoadingDialog();
         switch (requestType) {
             case IPageNotifyFn.PageType_VideoDetail:
-                mVideoJson = (VideoJson) result;
-                if (mVideoJson != null && mVideoJson.success) {
+                mVideoDetailRetBean = (VideoDetailRetBean) result;
+                if (mVideoDetailRetBean != null && mVideoDetailRetBean.success) {
                     mRTPullListView.setVisibility(View.VISIBLE);
                     mCommentLayout.setVisibility(View.VISIBLE);
                     mImageRefresh.setVisibility(View.GONE);
-                    if (null != mVideoJson.data) {
-                        if ("4".equals(mVideoJson.data.result)) {
+                    if (null != mVideoDetailRetBean.data) {
+                        if ("4".equals(mVideoDetailRetBean.data.result)) {
                             mRTPullListView.setVisibility(View.GONE);
                             mCommentLayout.setVisibility(View.GONE);
                             LiveDialogManager.getManagerInstance().showSingleBtnDialog(this, DIALOG_TYPE_VIDEO_DELETED, "",
                                     this.getResources().getString(R.string.str_video_removed));
                             return;
-                        } else if ("3".equals(mVideoJson.data.result)) {
+                        } else if ("3".equals(mVideoDetailRetBean.data.result)) {
                             mRTPullListView.setVisibility(View.GONE);
                             mCommentLayout.setVisibility(View.GONE);
                             LiveDialogManager.getManagerInstance().showSingleBtnDialog(this, DIALOG_TYPE_VIDEO_DELETED, "",
@@ -1042,18 +1042,18 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
                     mEditInput.setFocusable(true);
                     updateRefreshTime();
 
-                    mHeader.setData(mVideoJson);
+                    mHeader.setData(mVideoDetailRetBean);
                     //观看视频统计
-                    playVideoStatistics(mVideoJson);
+                    playVideoStatistics(mVideoDetailRetBean);
 
-                    VideoAllData videoAllData = mVideoJson.data;
-                    if (mVideoJson.data == null) {
+                    VideoDetailDataBean videoDetailDataBean = mVideoDetailRetBean.data;
+                    if (mVideoDetailRetBean.data == null) {
                         mCurrentOperator = OPERATOR_NONE;
                         return;
                     }
 
-                    ZTHead ztHead = videoAllData.head;
-                    VideoSquareDetailInfo avideo = videoAllData.avideo;
+                    ZTHead ztHead = videoDetailDataBean.head;
+                    VideoDetailAvideoBean avideo = videoDetailDataBean.avideo;
 
                     if (avideo == null) {
                         mCurrentOperator = OPERATOR_NONE;
@@ -1077,14 +1077,14 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
                         // 下拉刷新
                         mHeader.getHeadData(false);
                     }
-                    if (VideoInfo.VIDEO_TYPE_LIVE.equals(videoAllData.avideo.video.type)){
+                    if (VideoInfo.VIDEO_TYPE_LIVE.equals(videoDetailDataBean.avideo.video.type)){
                         this.mTextTitle.setText(R.string.str_live_play_back);
                     }
                     mHeaderView.setVisibility(View.VISIBLE);
                     VideoCommentInfo commentInfo = videoInfo.comment;
 
                     if (commentInfo != null) {
-                        if ("0".equals(mVideoJson.data.avideo.video.comment.iscomment)) {
+                        if ("0".equals(mVideoDetailRetBean.data.avideo.video.comment.iscomment)) {
                             removeFooterView();
                             mCommentLayout.setVisibility(View.GONE);
                             addForbitCommentFooterView();
@@ -1114,14 +1114,14 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
                     }
                     clickVideoNumber();
-                } else if (mVideoJson != null && !mVideoJson.success) {
+                } else if (mVideoDetailRetBean != null && !mVideoDetailRetBean.success) {
                     mRTPullListView.setVisibility(View.GONE);
                     mCommentLayout.setVisibility(View.GONE);
-                    if (null != mVideoJson.data) {
-                        if ("4".equals(mVideoJson.data.result)) {
+                    if (null != mVideoDetailRetBean.data) {
+                        if ("4".equals(mVideoDetailRetBean.data.result)) {
                             LiveDialogManager.getManagerInstance().showSingleBtnDialog(this, DIALOG_TYPE_VIDEO_DELETED, "",
                                     this.getResources().getString(R.string.str_video_removed));
-                        } else if ("3".equals(mVideoJson.data.result)) {
+                        } else if ("3".equals(mVideoDetailRetBean.data.result)) {
                             LiveDialogManager.getManagerInstance().showSingleBtnDialog(this, DIALOG_TYPE_VIDEO_DELETED, "",
                                     this.getResources().getString(R.string.str_video_not_exist));
                         } else {
@@ -1183,15 +1183,15 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
 
                     if (OPERATOR_FIRST == mCurrentOperator) {
                         // 首次进入
-                        firstEnterCallBack(count, mVideoJson, commentDataList);
+                        firstEnterCallBack(count, mVideoDetailRetBean, commentDataList);
                     } else if (OPERATOR_UP == mCurrentOperator) {
                         // 上拉刷新
                         GolukDebugUtils.e("newadapter", "================VideoDetailActivity：commentDataList=="
                                 + commentDataList.size());
-                        pushCallBack(count, mVideoJson, commentDataList);
+                        pushCallBack(count, mVideoDetailRetBean, commentDataList);
                     } else {
                         // 下拉刷新
-                        pullCallBack(count, mVideoJson, commentDataList);
+                        pullCallBack(count, mVideoDetailRetBean, commentDataList);
                     }
                 } else {
                     callBackFailed();
@@ -1211,9 +1211,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
                 if (null != DelResultBean && DelResultBean.success) {
 
                     mAdapter.deleteData(mWillDelBean);
-                    mVideoJson.data.avideo.video.comment.comcount = String.valueOf(Integer
-                            .parseInt(mVideoJson.data.avideo.video.comment.comcount) - 1);
-                    mHeader.setCommentCount(mVideoJson.data.avideo.video.comment.comcount);
+                    mVideoDetailRetBean.data.avideo.video.comment.comcount = String.valueOf(Integer
+                            .parseInt(mVideoDetailRetBean.data.avideo.video.comment.comcount) - 1);
+                    mHeader.setCommentCount(mVideoDetailRetBean.data.avideo.video.comment.comcount);
                     GolukUtils.showToast(this, this.getString(R.string.str_delete_success));
 
                     if (mAdapter.getCount() < 1) {
@@ -1270,9 +1270,9 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
                             ZhugeUtils.eventCommentVideo(this);
                             removeFooterView();
                             this.mAdapter.addFirstData(bean);
-                            mVideoJson.data.avideo.video.comment.comcount = String.valueOf(Integer
-                                    .parseInt(mVideoJson.data.avideo.video.comment.comcount) + 1);
-                            mHeader.setCommentCount(mVideoJson.data.avideo.video.comment.comcount);
+                            mVideoDetailRetBean.data.avideo.video.comment.comcount = String.valueOf(Integer
+                                    .parseInt(mVideoDetailRetBean.data.avideo.video.comment.comcount) + 1);
+                            mHeader.setCommentCount(mVideoDetailRetBean.data.avideo.video.comment.comcount);
                             mEditInput.setText("");
                             switchSendState(false);
                             // 回复完评论之后需要还原状态以判断下次是评论还是回复
@@ -1316,7 +1316,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
                     String ttl = this.getString(R.string.str_video_edit_share_title);
                     Bitmap bitmap = null;
                     if (!this.isFinishing()) {
-                        if (null != mVideoJson.data.avideo.video) {
+                        if (null != mVideoDetailRetBean.data.avideo.video) {
                             ThirdShareBean shareBean = new ThirdShareBean();
                             shareBean.surl = shareurl;
                             shareBean.curl = coverurl;
@@ -1327,7 +1327,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
                             shareBean.tl = ttl;
                             shareBean.bitmap = bitmap;
                             shareBean.realDesc = realDesc;
-                            shareBean.videoId = mVideoJson.data.avideo.video.videoid;
+                            shareBean.videoId = mVideoDetailRetBean.data.avideo.video.videoid;
                             shareBean.from = this.getString(R.string.str_zhuge_video_detail);
                             ProxyThirdShare shareBoard = new ProxyThirdShare(this, sharePlatform, shareBean);
                             shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
@@ -1392,12 +1392,12 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
                         GolukUtils.showToast(this, this.getString(R.string.str_delete_success));
                         // 通知其它界面，数据更新
                         String vid = "";
-                        if (null == mVideoJson || mVideoJson.success == false || null == mVideoJson.data
-                                || null == mVideoJson.data.avideo || null == mVideoJson.data.avideo.video
-                                || null == mVideoJson.data.avideo.video.videoid) {
+                        if (null == mVideoDetailRetBean || mVideoDetailRetBean.success == false || null == mVideoDetailRetBean.data
+                                || null == mVideoDetailRetBean.data.avideo || null == mVideoDetailRetBean.data.avideo.video
+                                || null == mVideoDetailRetBean.data.avideo.video.videoid) {
 
                         } else {
-                            vid = mVideoJson.data.avideo.video.videoid;
+                            vid = mVideoDetailRetBean.data.avideo.video.videoid;
                         }
                         EventBus.getDefault().post(new EventDeleteVideo(EventConfig.VIDEO_DELETE, vid));
                         exit();
@@ -1600,15 +1600,15 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
         }
     }
 
-    private void playVideoStatistics(VideoJson videoJson) {
-        if (null != videoJson && null != videoJson.data && null != videoJson.data.avideo &&
-                null != videoJson.data.avideo.video) {
+    private void playVideoStatistics(VideoDetailRetBean videoDetailRetBean) {
+        if (null != videoDetailRetBean && null != videoDetailRetBean.data && null != videoDetailRetBean.data.avideo &&
+                null != videoDetailRetBean.data.avideo.video) {
             String actionName = "";
-            if (null != videoJson.data.avideo.video.recom && null != videoJson.data.avideo.video.recom.topicname) {
-                actionName = videoJson.data.avideo.video.recom.topicname;
+            if (null != videoDetailRetBean.data.avideo.video.recom && null != videoDetailRetBean.data.avideo.video.recom.topicname) {
+                actionName = videoDetailRetBean.data.avideo.video.recom.topicname;
             }
-            JSONObject json = ZhugeUtils.eventPlayVideo(this, videoJson.data.avideo.video.videoid,
-                    videoJson.data.avideo.video.describe, actionName, videoJson.data.avideo.video.category, ZHUGE_PLAY_VIDEO_PAGE_VIDEODETAIL);
+            JSONObject json = ZhugeUtils.eventPlayVideo(this, videoDetailRetBean.data.avideo.video.videoid,
+                    videoDetailRetBean.data.avideo.video.describe, actionName, videoDetailRetBean.data.avideo.video.category, ZHUGE_PLAY_VIDEO_PAGE_VIDEODETAIL);
             ZhugeSDK.getInstance().track(this, this.getString(R.string.str_zhuge_play_video_event), json);
         }
     }

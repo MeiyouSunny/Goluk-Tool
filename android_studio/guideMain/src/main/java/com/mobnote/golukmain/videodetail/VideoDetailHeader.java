@@ -1,17 +1,11 @@
 package com.mobnote.golukmain.videodetail;
 
-import java.util.List;
-
-import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpenUrlActivity;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.player.FullScreenVideoView;
 import com.mobnote.golukmain.player.factory.GolukPlayer;
-import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
-import com.mobnote.golukmain.usercenter.UCUserInfo;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
@@ -20,13 +14,7 @@ import com.mobnote.view.FlowLayout;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnBufferingUpdateListener;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnErrorListener;
-import android.media.MediaPlayer.OnInfoListener;
-import android.media.MediaPlayer.OnPreparedListener;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -90,7 +78,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 	/** 判断是精选(0)还是最新(1) **/
 	private int mType = 0;
 
-	private VideoJson mVideoJson = null;
+	private VideoDetailRetBean mVideoDetailRetBean = null;
 
 	private CustomDialog mCustomDialog;
 	private int mVideoPosition = 0;
@@ -193,24 +181,24 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 		return convertView;
 	}
 
-	public void setData(VideoJson videoJsonData) {
-		mVideoJson = videoJsonData;
+	public void setData(VideoDetailRetBean videoDetailRetBeanData) {
+		mVideoDetailRetBean = videoDetailRetBeanData;
 	}
 
 	public void getHeadData(boolean isStartPlay) {
-		final VideoAllData videoAllData = mVideoJson.data;
-		String netUrlHead = videoAllData.avideo.user.customavatar;
+		final VideoDetailDataBean videoDetailDataBean = mVideoDetailRetBean.data;
+		String netUrlHead = videoDetailDataBean.avideo.user.customavatar;
 		if (null != netUrlHead && !"".equals(netUrlHead)) {
 			// 使用网络地址
 			GlideUtils.loadNetHead(mContext, mImageHead, netUrlHead, R.drawable.my_head_moren7);
 		} else {
-			UserUtils.focusHead(mContext, videoAllData.avideo.user.headportrait, mImageHead);
+			UserUtils.focusHead(mContext, videoDetailDataBean.avideo.user.headportrait, mImageHead);
 		}
-		if (null != videoAllData && null != videoAllData.avideo && null != videoAllData.avideo.user
-				&& null != videoAllData.avideo.user.label) {
-			String approvelabel = videoAllData.avideo.user.label.approvelabel;
-			String headplusv = videoAllData.avideo.user.label.headplusv;
-			String tarento = videoAllData.avideo.user.label.tarento;
+		if (null != videoDetailDataBean && null != videoDetailDataBean.avideo && null != videoDetailDataBean.avideo.user
+				&& null != videoDetailDataBean.avideo.user.label) {
+			String approvelabel = videoDetailDataBean.avideo.user.label.approvelabel;
+			String headplusv = videoDetailDataBean.avideo.user.label.headplusv;
+			String tarento = videoDetailDataBean.avideo.user.label.tarento;
 			nHeadAuthentication.setVisibility(View.VISIBLE);
 			if ("1".equals(approvelabel)) {
 				nHeadAuthentication.setImageResource(R.drawable.authentication_bluev_icon);
@@ -225,17 +213,17 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 			nHeadAuthentication.setVisibility(View.GONE);
 		}
 
-		mTextName.setText(videoAllData.avideo.user.nickname);
-		mTextTime.setText(GolukUtils.getCommentShowFormatTime(mContext, videoAllData.avideo.video.sharingtime));
+		mTextName.setText(videoDetailDataBean.avideo.user.nickname);
+		mTextTime.setText(GolukUtils.getCommentShowFormatTime(mContext, videoDetailDataBean.avideo.video.sharingtime));
 		// 点赞数、评论数、观看数
-		mTextLook.setText(GolukUtils.getFormatNumber(videoAllData.avideo.video.clicknumber)
+		mTextLook.setText(GolukUtils.getFormatNumber(videoDetailDataBean.avideo.video.clicknumber)
 				+ mContext.getString(R.string.cluster_weiguan));
-		if (!"0".equals(videoAllData.avideo.video.praisenumber)) {
-			mTextZan.setText(GolukUtils.getFormatNumber(videoAllData.avideo.video.praisenumber));
+		if (!"0".equals(videoDetailDataBean.avideo.video.praisenumber)) {
+			mTextZan.setText(GolukUtils.getFormatNumber(videoDetailDataBean.avideo.video.praisenumber));
 			mTextZan.setTextColor(Color.rgb(136, 136, 136));
 		}
 
-		if("0".equals(videoAllData.avideo.video.ispraise)) {
+		if("0".equals(videoDetailDataBean.avideo.video.ispraise)) {
 			mZanImage.setImageResource(R.drawable.videodetail_like);
 			mTextZanName.setTextColor(Color.rgb(136, 136, 136));
 			mTextZan.setTextColor(Color.rgb(136, 136, 136));
@@ -244,22 +232,22 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 			mTextZanName.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
 			mTextZan.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
 		}
-		mTextComment.setText(GolukUtils.getFormatNumber(videoAllData.avideo.video.comment.comcount));
-		if(VideoInfo.VIDEO_TYPE_LIVE.equals(videoAllData.avideo.video.type)){
+		mTextComment.setText(GolukUtils.getFormatNumber(videoDetailDataBean.avideo.video.comment.comcount));
+		if(VideoInfo.VIDEO_TYPE_LIVE.equals(videoDetailDataBean.avideo.video.type)){
 			mTvVideoType.setVisibility(View.VISIBLE);
 		}
 
 		// TODO 在视频描述之后添加活动标签
-		if (null != videoAllData.avideo.video) {
-			mTextDescribe.setText(videoAllData.avideo.video.describe);
+		if (null != videoDetailDataBean.avideo.video) {
+			mTextDescribe.setText(videoDetailDataBean.avideo.video.describe);
 		}
 
-		if(null != videoAllData.avideo.video && null != videoAllData.avideo.video.tags) {
-			GolukUtils.addTagsViews(mContext, videoAllData.avideo.video.tags, mTagsFL);
+		if(null != videoDetailDataBean.avideo.video && null != videoDetailDataBean.avideo.video.tags) {
+			GolukUtils.addTagsViews(mContext, videoDetailDataBean.avideo.video.tags, mTagsFL);
 		} else {
 			mTagsFL.setVisibility(View.GONE);
 		}
-		final String location = videoAllData.avideo.video.location;
+		final String location = videoDetailDataBean.avideo.video.location;
 		if (null != location && !"".equals(location)) {
 			mTextTime.append("  " + location);
 		} else {
@@ -269,19 +257,19 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 		if (0 == mType) {
 			mTextAuthor.setVisibility(View.VISIBLE);
 			mTextAuthor.setText(mContext.getString(R.string.str_thank_to_author) + "  "
-					+ videoAllData.avideo.user.nickname);
+					+ videoDetailDataBean.avideo.user.nickname);
 		} else {
 			mTextAuthor.setVisibility(View.GONE);
 		}
-		GlideUtils.loadImage(mContext, simpleDraweeView, videoAllData.avideo.video.picture, R.drawable.tacitly_pic);
+		GlideUtils.loadImage(mContext, simpleDraweeView, videoDetailDataBean.avideo.video.picture, R.drawable.tacitly_pic);
 
 		// 外链接
-		if (null != videoAllData.link) {
-			if ("0".equals(videoAllData.link.showurl)) {
+		if (null != videoDetailDataBean.link) {
+			if ("0".equals(videoDetailDataBean.link.showurl)) {
 				mTextLink.setVisibility(View.GONE);
 			} else {
 				mTextLink.setVisibility(View.VISIBLE);
-				mTextLink.setText(videoAllData.link.outurlname);
+				mTextLink.setText(videoDetailDataBean.link.outurlname);
 			}
 		}
 
@@ -303,16 +291,16 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 		// TODO　没有活动奖励视频没有奖励信息这个模块
 		// 头部获奖视频icon显示
 		// 获奖／推荐
-		if (null != videoAllData.avideo.video.recom) {
-			if ("1".equals(videoAllData.avideo.video.recom.isreward) && "1".equals(videoAllData.avideo.video.recom.sysflag)) {
+		if (null != videoDetailDataBean.avideo.video.recom) {
+			if ("1".equals(videoDetailDataBean.avideo.video.recom.isreward) && "1".equals(videoDetailDataBean.avideo.video.recom.sysflag)) {
 				mImageHeadAward.setVisibility(View.VISIBLE);
 			} else {
 				mImageHeadAward.setVisibility(View.GONE);
 			}
 
-			if (!"1".equals(videoAllData.avideo.video.recom.atflag)
-					&& !"1".equals(videoAllData.avideo.video.recom.sysflag)
-					&& !"1".equals(videoAllData.avideo.video.recom.isrecommend)) {
+			if (!"1".equals(videoDetailDataBean.avideo.video.recom.atflag)
+					&& !"1".equals(videoDetailDataBean.avideo.video.recom.sysflag)
+					&& !"1".equals(videoDetailDataBean.avideo.video.recom.isrecommend)) {
 				mTextLine1.setVisibility(View.GONE);
 				mTextLine2.setVisibility(View.GONE);
 			} else {
@@ -320,41 +308,41 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 				mTextLine2.setVisibility(View.VISIBLE);
 			}
 
-			if ("1".equals(videoAllData.avideo.video.recom.atflag)) {
+			if ("1".equals(videoDetailDataBean.avideo.video.recom.atflag)) {
 				mActiveLayout.setVisibility(View.VISIBLE);
-				if ("".equals(videoAllData.avideo.video.recom.atreason)) {
+				if ("".equals(videoDetailDataBean.avideo.video.recom.atreason)) {
 					mActiveReason.setText(mContext.getString(R.string.str_atreason_default));
 				} else {
 					mActiveReason.setText(mContext.getString(R.string.msg_system_reason_began)
-							+ videoAllData.avideo.video.recom.atreason);
+							+ videoDetailDataBean.avideo.video.recom.atreason);
 				}
-				mActiveCount.setText("+" + UserUtils.formatNumber(videoAllData.avideo.video.recom.atgold)
+				mActiveCount.setText("+" + UserUtils.formatNumber(videoDetailDataBean.avideo.video.recom.atgold)
 						+ mContext.getString(R.string.str_profit_detail_unit));
 			} else {
 				mActiveLayout.setVisibility(View.GONE);
 			}
 
-			if ("1".equals(videoAllData.avideo.video.recom.sysflag)) {
+			if ("1".equals(videoDetailDataBean.avideo.video.recom.sysflag)) {
 				mSysLayout.setVisibility(View.VISIBLE);
-				if ("".equals(videoAllData.avideo.video.recom.sysreason)) {
+				if ("".equals(videoDetailDataBean.avideo.video.recom.sysreason)) {
 					mSysReason.setText(mContext.getString(R.string.str_atreason_default));
 				} else {
 					mSysReason.setText(mContext.getString(R.string.msg_system_reason_began)
-							+ videoAllData.avideo.video.recom.sysreason);
+							+ videoDetailDataBean.avideo.video.recom.sysreason);
 				}
-				mSysCount.setText("+" + UserUtils.formatNumber(videoAllData.avideo.video.recom.sysgold)
+				mSysCount.setText("+" + UserUtils.formatNumber(videoDetailDataBean.avideo.video.recom.sysgold)
 						+ mContext.getString(R.string.str_profit_detail_unit));
 			} else {
 				mSysLayout.setVisibility(View.GONE);
 			}
 
-			if ("1".equals(videoAllData.avideo.video.recom.isrecommend)) {
+			if ("1".equals(videoDetailDataBean.avideo.video.recom.isrecommend)) {
 				mRecomLayout.setVisibility(View.VISIBLE);
-				if ("".equals(videoAllData.avideo.video.recom.reason)) {
+				if ("".equals(videoDetailDataBean.avideo.video.recom.reason)) {
 					mRecomReason.setText(mContext.getString(R.string.str_atreason_default));
 				} else {
 					mRecomReason.setText(mContext.getString(R.string.msg_system_reason_began)
-							+ videoAllData.avideo.video.recom.reason);
+							+ videoDetailDataBean.avideo.video.recom.reason);
 				}
 			} else {
 				mRecomLayout.setVisibility(View.GONE);
@@ -372,7 +360,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 
 			@Override
 			public void onClick(View arg0) {
-				VideoUserInfo videoUser = videoAllData.avideo.user;
+				VideoUserInfo videoUser = videoDetailDataBean.avideo.user;
 				GolukUtils.startUserCenterActivity(mContext, videoUser.uid);
 			}
 		});
@@ -389,10 +377,10 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 		}
 		isCallVideo = true;
 		Uri uri = null;
-		if ("1".equals(mVideoJson.data.avideo.video.type)) {
-			uri = Uri.parse(mVideoJson.data.avideo.video.livesdkaddress);
-		} else if ("2".equals(mVideoJson.data.avideo.video.type)) {
-			uri = Uri.parse(mVideoJson.data.avideo.video.ondemandwebaddress);
+		if ("1".equals(mVideoDetailRetBean.data.avideo.video.type)) {
+			uri = Uri.parse(mVideoDetailRetBean.data.avideo.video.livesdkaddress);
+		} else if ("2".equals(mVideoDetailRetBean.data.avideo.video.type)) {
+			uri = Uri.parse(mVideoDetailRetBean.data.avideo.video.ondemandwebaddress);
 		}
 		mVideoView.setVideoURI(uri);
 		mVideoView.requestFocus();
@@ -412,7 +400,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 	private void showTopicText(TextView view, String describe, String text) {
 		String reply_str = describe + text;
 		SpannableString style = new SpannableString(reply_str);
-		ClickableSpan clickttt = new TopicClickableSpan(mContext, text, mVideoJson);
+		ClickableSpan clickttt = new TopicClickableSpan(mContext, text, mVideoDetailRetBean);
 		style.setSpan(clickttt, describe.length(), reply_str.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 		view.setText(style);
 		view.setMovementMethod(LinkMovementMethod.getInstance());
@@ -531,9 +519,9 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 			if (!UserUtils.isNetDeviceAvailable(mContext)) {
 				GolukUtils.showToast(mContext, mContext.getResources().getString(R.string.user_net_unavailable));
 			} else {
-				if ((mVideoJson.data != null) && (mVideoJson.data.link != null) && "1".equals(mVideoJson.data.link.showurl)) {
+				if ((mVideoDetailRetBean.data != null) && (mVideoDetailRetBean.data.link != null) && "1".equals(mVideoDetailRetBean.data.link.showurl)) {
 					Intent mLinkIntent = new Intent(mContext, UserOpenUrlActivity.class);
-					mLinkIntent.putExtra("url", mVideoJson.data.link.outurl);
+					mLinkIntent.putExtra("url", mVideoDetailRetBean.data.link.outurl);
 					mContext.startActivity(mLinkIntent);
 				}
 			}
@@ -551,7 +539,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 				}else{
 					mTextZan.setVisibility(View.VISIBLE);
 					mTextZan.setText(praise);
-					if(mVideoJson.data.avideo.video.ispraise.equals("1")){
+					if(mVideoDetailRetBean.data.avideo.video.ispraise.equals("1")){
 						mZanImage.setImageResource(R.drawable.videodetail_like_press);
 						mTextZan.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
 						mTextZanName.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
@@ -572,30 +560,30 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 
 	public String setClickPraise() {
 		int likeNumber = 0;
-		if ("0".equals(mVideoJson.data.avideo.video.ispraise)) {
-			if (mVideoJson.data.avideo.video.praisenumber.replace(",", "").equals("")) {
+		if ("0".equals(mVideoDetailRetBean.data.avideo.video.ispraise)) {
+			if (mVideoDetailRetBean.data.avideo.video.praisenumber.replace(",", "").equals("")) {
 				likeNumber = 1;
 			} else {
 				try {
-					likeNumber = Integer.parseInt(mVideoJson.data.avideo.video.praisenumber.replace(",", "")) + 1;
+					likeNumber = Integer.parseInt(mVideoDetailRetBean.data.avideo.video.praisenumber.replace(",", "")) + 1;
 				} catch (Exception e) {
 					likeNumber = 1;
 					e.printStackTrace();
 				}
 			}
-			mVideoJson.data.avideo.video.ispraise = "1";
+			mVideoDetailRetBean.data.avideo.video.ispraise = "1";
 			boolean b = ((VideoDetailActivity) mContext).sendPraiseRequest();
 		} else {
 			try {
-				likeNumber = Integer.parseInt(mVideoJson.data.avideo.video.praisenumber.replace(",", "")) - 1;
+				likeNumber = Integer.parseInt(mVideoDetailRetBean.data.avideo.video.praisenumber.replace(",", "")) - 1;
 			} catch (Exception e) {
 				likeNumber = 0;
 				e.printStackTrace();
 			}
-			mVideoJson.data.avideo.video.ispraise = "0";
+			mVideoDetailRetBean.data.avideo.video.ispraise = "0";
 			boolean b = ((VideoDetailActivity) mContext).sendCancelPraiseRequest();
 		}
-		mVideoJson.data.avideo.video.praisenumber = likeNumber + "";
+		mVideoDetailRetBean.data.avideo.video.praisenumber = likeNumber + "";
 		return GolukUtils.getFormatNumber(likeNumber + "");
 	}
 

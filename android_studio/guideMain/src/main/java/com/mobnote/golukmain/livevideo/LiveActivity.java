@@ -43,6 +43,9 @@ import com.mobnote.golukmain.livevideo.livecomment.LiveCommentFragment;
 import com.mobnote.golukmain.thirdshare.ProxyThirdShare;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.thirdshare.ThirdShareBean;
+import com.mobnote.golukmain.videodetail.SingleDetailRequest;
+import com.mobnote.golukmain.videodetail.VideoDetailAvideoBean;
+import com.mobnote.golukmain.videodetail.VideoDetailRetBean;
 import com.mobnote.golukmain.videosuqare.ShareDataBean;
 import com.mobnote.golukmain.videosuqare.VideoSquareManager;
 import com.mobnote.util.GlideUtils;
@@ -174,7 +177,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     private TextView mShareBtn = null;
     private Bitmap mThumbBitmap = null;
     private boolean isRequestedForServer = false;
-    private boolean mIsFirstSucess = true;
 
     FrameLayout mFrameLayout;
     private ILiveOperateFn mLiveOperator = null;
@@ -211,6 +213,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     private boolean isShowLiveInfoLayout;
 
     private View mSeparateLine;
+    private boolean mIsPollingDetail;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -248,7 +251,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             // 计时，90秒后，防止用户进入时没网
             start90Timer();
             mLiveCommentFragment.setmVid(mVid);
-            getLiveDetail(mPublisher);
+            pollingRequestVideoDetail();
+            getLiveDetail();
             mLiveCommentFragment.updateLikeCount(Integer.parseInt(mPublisher.zanCount));
             mLookCountTv.setText(GolukUtils.getFormatedNumber(mPublisher.persons));
         }
@@ -263,11 +267,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-
-    @Override
-
-    public
-    void onWindowFocusChanged(boolean hasFocus) {
+    @Override public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         int separateHeight = mSeparateLine.getBottom();
         if(mLiveCommentFragment != null){
@@ -417,6 +417,30 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     private void start90Timer() {
         mBaseHandler.removeMessages(MSG_H_UPLOAD_TIMEOUT);
         mBaseHandler.sendEmptyMessageDelayed(MSG_H_UPLOAD_TIMEOUT, DURATION_TIMEOUT);
+    }
+
+    /**
+     * 轮询获取视频详情数据
+     */
+    private void pollingRequestVideoDetail() {
+        if(!mIsPollingDetail){
+            if(!TextUtils.isEmpty(mVid)){
+                new Thread(){
+                    public void run(){
+                        mIsPollingDetail = true;
+                        while (!isAlreadExit){
+                            SingleDetailRequest request = new SingleDetailRequest(IPageNotifyFn.PageType_VideoDetail, LiveActivity.this);
+                            request.get(mVid);
+                            try {
+                                sleep(12000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }.start();
+            }
+        }
     }
 
     private void setCallBackListener() {
@@ -571,16 +595,16 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     /**
      * 获取直播详情
-     * @param userInfo
      */
-    public void getLiveDetail(UserInfo userInfo) {
-        if (isLiveUploadTimeOut) {
-            return;
+    public void getLiveDetail() {
+
+        if(!isShareLive && mPublisher != null){
+            LiveDetailRequest liveDetailRequest = new LiveDetailRequest(IPageNotifyFn.PageType_GetVideoDetail,this);
+            liveDetailRequest.get(mPublisher.uid,mPublisher.aid);
         }
-        String condi = "{\"uid\":\"" + userInfo.uid + "\",\"desAid\":\"" + userInfo.aid + "\"}";
-        boolean isSucess = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetVideoDetail, condi);
-        if (!isSucess) {
-            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----getLiveDetail----22 : FASE False FAlse");
+        if(isShareLive && myInfo != null){
+            LiveDetailRequest liveDetailRequest = new LiveDetailRequest(IPageNotifyFn.PageType_GetVideoDetail,this);
+            liveDetailRequest.get(myInfo.uid,myInfo.aid);
         }
     }
 
@@ -694,7 +718,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 startVideoAndLive("");
                 break;
             case MSG_H_RETRY_REQUEST_DETAIL:
-                getLiveDetail(mPublisher);
+                getLiveDetail();
                 break;
             case MSG_H_PLAY_LOADING:
                 mVideoLoading.setVisibility(View.VISIBLE);
@@ -978,45 +1002,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    // 自己开启直播，返回接口
-    public void callBack_LiveLookStart(boolean isLive, int success, Object param1, Object param2) {
-        if (isAlreadExit) {
-            // 界面已经退出
-            return;
-        }
-        if (IPageNotifyFn.PAGE_RESULT_SUCESS != success) {
-            GolukDebugUtils.e("", "newlive-----LiveOperateVdcp-----callBack_LiveLookStart-------:  ");
-            liveFailedStart(isLive);
-            return;
-        }
-        final String data = (String) param2;
-        // 解析回调数据
-        LiveDataInfo dataInfo = JsonUtil.parseLiveDataJson2(data);
-        if (null == dataInfo) {
-            liveFailedStart(isLive);
-            return;
-        }
-        if (200 != dataInfo.code) {
-            liveFailedStart(isLive);
-            LiveDialogManager.getManagerInstance().dismissProgressDialog();
-            LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-                    LiveDialogManager.DIALOG_TYPE_LIVE_OFFLINE, this.getString(R.string.user_dialog_hint_title),
-                    this.getString(R.string.str_live_over));
-            return;
-        }
-        LiveDialogManager.getManagerInstance().dismissProgressDialog();
-        isKaiGeSucess = true;
-        if (this.isShareLive) {
-            // 视频截图 开始视频，上传图片
-            GolukApplication.getInstance().getIPCControlManager().screenShot();
-        }
-        startUploadMyPosition();
-        if (mIsFirstSucess) {
-            this.click_share(false);
-            mIsFirstSucess = false;
-        }
-    }
-
     // 上报位置
     private void startUploadMyPosition() {
         mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StartUploadPosition, "");
@@ -1057,7 +1042,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             startUploadMyPosition();
             isSettingCallBack = true;
             this.isKaiGeSucess = true;
-            mLiveCountSecond = liveData.restTime;
+            mLiveCountSecond = liveData.restime;
             mLiveManager.cancelTimer();
             // 开启timer开始计时
             updateCountDown(GolukUtils.secondToString(mLiveCountSecond));
@@ -1105,16 +1090,14 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             mBaseHandler.sendEmptyMessageDelayed(MSG_H_RETRY_REQUEST_DETAIL, 4 * 1000);
             return;
         }
-        final String data = (String) obj;
-        GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----222222 : " + data);
-        // 数据成功
-        liveData = JsonUtil.parseLiveDataJson(data);
+
+        liveData = (LiveDataInfo) obj;
         if (null == liveData) {
             GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----333333333 : ");
             mBaseHandler.sendEmptyMessageDelayed(MSG_H_RETRY_REQUEST_DETAIL, 4 * 1000);
             return;
         }
-        GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----4444 : " + (String) obj);
+
         if (200 != liveData.code) {
             mBaseHandler.removeMessages(MSG_H_UPLOAD_TIMEOUT);
             videoInValid();
@@ -1124,16 +1107,16 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----5555 : ");
         isCanVoice = liveData.voice.equals("1") ? true : false;
         this.isKaiGeSucess = true;
-        mLiveCountSecond = liveData.restTime;
+        mLiveCountSecond = liveData.restime;
 
         showLiveInfoLayout();
 
         if (1 == liveData.active) {
-            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----6666 : " + liveData.playUrl);
+            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----6666 : " + liveData.vurl);
             if (null != mRPVPalyVideo) {
                 // 主动直播
                 if (!mRPVPalyVideo.isPlaying()) {
-                    startVideoAndLive(liveData.playUrl);
+                    startVideoAndLive(liveData.vurl);
                 }
             }
         }
@@ -1244,7 +1227,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                             "jyf----20150406----LiveActivity----PlayerCallback----retryRunnable--44444 : ");
                 } else {
                     if (null != liveData) {
-                        mRPVPalyVideo.setDataSource(liveData.playUrl);
+                        mRPVPalyVideo.setDataSource(liveData.vurl);
                         mRPVPalyVideo.start();
                     }
                 }
@@ -1393,10 +1376,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         mBaseHandler.removeMessages(MSG_H_PLAY_LOADING);
         mBaseHandler.removeMessages(MSG_H_TO_GETMAP_PERSONS);
 
-        if (null != mLiveOperator) {
-            mLiveOperator.stopLive();
-        }
-
         dissmissAllDialog();
 
         freePlayer();
@@ -1444,6 +1423,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (KeyEvent.KEYCODE_BACK == keyCode) {
             if(mLiveCommentFragment.mEmojIconsLayout.getVisibility() == View.VISIBLE){
                 mLiveCommentFragment.mEmojIconsLayout.setVisibility(View.GONE);
+                mLiveCommentFragment.cleanReplyState();
                 return true;
             }
             preExit();
@@ -1457,7 +1437,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             GolukDebugUtils.e("", "newlive-----LiveActivity----onCreate---开始续播---: ");
             // 续直播
             mSettingData = new LiveSettingBean();
-            getLiveDetail(myInfo);
+            getLiveDetail();
             LiveDialogManager.getManagerInstance().showProgressDialog(this, LIVE_DIALOG_TITLE, this.getString(R.string.str_live_retry_live));
             isSettingCallBack = true;
         } else {
@@ -1695,24 +1675,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         new UploadLiveScreenShotTask(picName, myInfo.uid,mVid,this).execute();
     }
 
-    // 分享成功后需要调用的接口
-    public void shareSucessDeal(boolean isSucess, String channel) {
-        if (!isSucess) {
-            GolukUtils.showToast(this, this.getString(R.string.str_share_fail));
-            return;
-        }
-        String vid = null;
-        if (isShareLive) {
-            vid = mVid;
-        } else {
-            if (!isKaiGeSucess) {
-                return;
-            }
-            vid = liveData.vid;
-        }
-        GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, vid);
-    }
-
     @Override
     public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
         if (event == VSquare_Req_VOP_GetShareURL_Video) {
@@ -1744,6 +1706,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             bean.videoId = mVid;
             bean.from = this.getString(R.string.str_zhuge_live_share_event);
 
+            //Log.e("id","uid: " + GolukApplication.getInstance().getMyInfo().uid + "   vid：" +mVid);
             ProxyThirdShare sb = new ProxyThirdShare(LiveActivity.this, sharePlatform, bean);
             sb.showAtLocation(LiveActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
         }
@@ -1803,7 +1766,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onLoadComplete(int requestType, Object result) {
-        GolukDebugUtils.e("", "newlive-----LiveActivity----********-onLoadComplete requestType:" + requestType);
         if (IPageNotifyFn.PageType_LiveStart == requestType) {
             LiveDataInfo liveInfo = (LiveDataInfo) result;
             CallBack_StartLiveServer(true, liveInfo);
@@ -1825,6 +1787,22 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                     GolukUtils.startUserLogin(this);
                 }
             }
+        }else if (IPageNotifyFn.PageType_VideoDetail == requestType) {
+            if(result == null){
+                return;
+            }
+            VideoDetailRetBean tempVideoDetailRetBean = (VideoDetailRetBean) result;
+            if(tempVideoDetailRetBean == null || tempVideoDetailRetBean.data == null) {
+                return;
+            }
+            VideoDetailAvideoBean avideoInfoBean = tempVideoDetailRetBean.data.avideo;
+            if(avideoInfoBean == null || avideoInfoBean.video == null){
+                return;
+            }
+            mLiveCommentFragment.updateLikeCount(Integer.parseInt(avideoInfoBean.video.praisenumber));
+            mLookCountTv.setText(GolukUtils.getFormatedNumber(avideoInfoBean.video.clicknumber));
+        }else if (IPageNotifyFn.PageType_GetVideoDetail == requestType){
+            LiveVideoDataCallBack(1,result);
         }
     }
     @Override
@@ -1834,14 +1812,9 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onUploadLiveScreenShotSuccess() {
-//        if (mIsFirstSucess) {
-//            this.click_share(false);
-//            mIsFirstSucess = false;
-//        }
+        pollingRequestVideoDetail();
     }
 
     @Override
-    public void onUploadLiveScreenShotFail() {
-
-    }
+    public void onUploadLiveScreenShotFail() {}
 }

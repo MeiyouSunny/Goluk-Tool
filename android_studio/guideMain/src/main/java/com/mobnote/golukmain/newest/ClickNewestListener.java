@@ -72,7 +72,7 @@ public class ClickNewestListener implements OnClickListener {
 			Intent intent = new Intent(mContext, MovieActivity.class);
 			intent.putExtra("from", "suqare");
 			intent.putExtra("image", mVideoSquareInfo.mVideoEntity.picture);
-			intent.putExtra("playUrl", mVideoSquareInfo.mVideoEntity.ondemandwebaddress);
+			intent.putExtra("vurl", mVideoSquareInfo.mVideoEntity.ondemandwebaddress);
 			uploadPlayer(mVideoSquareInfo.mVideoEntity.videoid, "1", "1");// 上报播放次数
 			mContext.startActivity(intent);
 		}

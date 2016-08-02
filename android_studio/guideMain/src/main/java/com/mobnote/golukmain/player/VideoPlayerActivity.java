@@ -148,7 +148,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 		if (savedInstanceState == null) {
 			getPlayAddr();
 		} else {
-			videoUrl = savedInstanceState.getString("playUrl");
+			videoUrl = savedInstanceState.getString("vurl");
 			image = savedInstanceState.getString("image");
 			playTime = savedInstanceState.getInt("playtime");
 		}
@@ -159,7 +159,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 	protected void onSaveInstanceState(Bundle outState) {
 		// TODO Auto-generated method stub
 		if (!TextUtils.isEmpty(videoUrl)) {
-			outState.putString("playUrl", videoUrl);
+			outState.putString("vurl", videoUrl);
 		}
 		if (!TextUtils.isEmpty(image)) {
 			outState.putString("image", image);
@@ -299,7 +299,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 			image = filePath + File.separator + fileName;
 			GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==image=" + image);
 		} else if (from.equals("suqare")) {
-			videoUrl = getIntent().getStringExtra("playUrl");
+			videoUrl = getIntent().getStringExtra("vurl");
 		} else if (from.equals("ipc")) {
 			if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)
 					|| IPCControlManager.T2_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)) {
@@ -329,7 +329,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 			}
 		}
 
-		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==playUrl=" + videoUrl);
+		GolukDebugUtils.e("xuhw", "YYYYYY==VideoPlayerActivity==vurl=" + videoUrl);
 	}
 
 //	@Override

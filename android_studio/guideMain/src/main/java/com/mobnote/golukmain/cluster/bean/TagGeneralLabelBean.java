@@ -1,11 +1,11 @@
-package com.mobnote.golukmain.newest.bean;
+package com.mobnote.golukmain.cluster.bean;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
 /**
  * Created by DELL-PC on 2016/7/25.
  */
-public class NewestLabelBean {
+public class TagGeneralLabelBean {
     /* 蓝V认证标识 是否认证0.否 1.是 */
     @JSONField(name="approvelabel")
     public String approvelabel;

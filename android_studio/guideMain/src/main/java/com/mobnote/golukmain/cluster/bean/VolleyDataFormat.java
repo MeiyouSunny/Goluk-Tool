@@ -3,12 +3,7 @@ package com.mobnote.golukmain.cluster.bean;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.mobnote.golukmain.newest.CommentDataInfo;
-import com.mobnote.golukmain.newest.JsonParserUtils;
 import com.mobnote.golukmain.videosuqare.LiveVideoData;
 import com.mobnote.golukmain.videosuqare.UserEntity;
 import com.mobnote.golukmain.videosuqare.VideoEntity;
@@ -19,28 +14,21 @@ public class VolleyDataFormat {
 
 	/**
 	 * 获取视频列表数据
-	 * 
-	 * @Title: getClusterList
-	 * @Description: TODO
-	 * @param response
-	 * @return List<ClusterInfo>
-	 * @author 曾浩
-	 * @throws
 	 */
-	public List<VideoSquareInfo> getClusterList(List<VideoListBean> list) {
+	public List<VideoSquareInfo> getClusterList(List<TagGeneralVideoListBean> list) {
 		List<VideoSquareInfo> clusters = null;
 
 		if(list != null && list.size()>0){
 			clusters = new ArrayList<VideoSquareInfo>();
 			long time = System.currentTimeMillis();
 			for (int i = 0; i < list.size(); i++) {
-				VideoListBean videoinfo = list.get(i);
+				TagGeneralVideoListBean videoinfo = list.get(i);
 				if (null != videoinfo) {
 					VideoEntity mVideoEntity = new VideoEntity();
-					VideoBean video = videoinfo.video;
+					TagGeneralVideoBean video = videoinfo.video;
 					if (null != video) {
 						LiveVideoData lvd = new LiveVideoData();
-						VideoDataBean live = video.videodata;
+						TagGeneralVideoDataBean live = video.videodata;
 						if (null != live) {
 							lvd.active = live.active;
 							lvd.aid = live.aid;
@@ -74,8 +62,8 @@ public class VolleyDataFormat {
 						mVideoEntity.location = video.location;
 						mVideoEntity.reason = video.reason;
 						mVideoEntity.isopen = "0";
-						
-						GenBean gb = video.gen;
+
+						TagGeneralGenBean gb = video.gen;
 						if(gb != null){
 							VideoExtra ve = new VideoExtra();
 							ve.topicid = gb.topicid;
@@ -87,17 +75,17 @@ public class VolleyDataFormat {
 							ve.sysflag = gb.sysflag;
 							mVideoEntity.videoExtra = ve;
 						}
-						
 
-						CommentBean comment = video.comment;
+
+						TagGeneralCommentBean comment = video.comment;
 						if (null != comment) {
 							mVideoEntity.iscomment = comment.iscomment;
 							mVideoEntity.comcount = comment.comcount;
 
-							List<ComlistBean> comlist = comment.comlist;
+							List<TagGeneralComListBean> comlist = comment.comlist;
 							if (null != comlist) {
 								for (int j = 0; j < comlist.size(); j++) {
-									ComlistBean item = comlist.get(j);
+									TagGeneralComListBean item = comlist.get(j);
 									CommentDataInfo comminfo = new CommentDataInfo();
 									
 									comminfo.commentid = item.commentid;
@@ -116,15 +104,22 @@ public class VolleyDataFormat {
 					}
 
 					UserEntity mUserEntity = new UserEntity();
-					UserBean user = videoinfo.user;
+					TagGeneralUserBean user = videoinfo.user;
 					if (null != user) {
 						mUserEntity.uid = user.uid;
 						mUserEntity.nickname = user.nickname;
 						mUserEntity.headportrait = user.headportrait;
 						mUserEntity.sex = user.sex;
 						mUserEntity.mCustomAvatar = user.customavatar;
-						mUserEntity.label = user.label;
-						mUserEntity.link = user.link;
+//						mUserEntity.label = user.label;
+						UserLabelBean labelBean = new UserLabelBean();
+						labelBean.approve = user.label.approve;
+						labelBean.approvelabel = user.label.approvelabel;
+						labelBean.headplusv = user.label.headplusv;
+						labelBean.headplusvdes = user.label.headplusvdes;
+						labelBean.tarento = user.label.tarento;
+						mUserEntity.label = labelBean;
+//						mUserEntity.link = user.link;
 					}
 
 					long id = time + i;

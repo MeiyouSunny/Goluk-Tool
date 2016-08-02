@@ -195,7 +195,7 @@ public class MovieActivity extends Activity {
 			mImageAddress = filePath + File.separator + fileName;
 			GolukDebugUtils.e(TAG, "YYYYYY==VideoPlayerActivity==image=" + mImageAddress);
 		} else if (from.equals("suqare")) {
-			mVideoUrl = getIntent().getStringExtra("playUrl");
+			mVideoUrl = getIntent().getStringExtra("vurl");
 		} else if (from.equals("ipc")) {
 			if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)
 					|| IPCControlManager.T2_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)) {
@@ -225,7 +225,7 @@ public class MovieActivity extends Activity {
 			}
 		}
 
-		GolukDebugUtils.e(TAG, "YYYYYY==VideoPlayerActivity==playUrl=" + mVideoUrl);
+		GolukDebugUtils.e(TAG, "YYYYYY==VideoPlayerActivity==vurl=" + mVideoUrl);
 	}
 
 	@Override

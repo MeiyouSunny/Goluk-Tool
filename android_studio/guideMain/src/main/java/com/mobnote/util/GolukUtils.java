@@ -42,7 +42,7 @@ import com.mobnote.golukmain.UpdateActivity;
 import com.mobnote.golukmain.UserLoginActivity;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.cluster.ClusterActivity;
-import com.mobnote.golukmain.cluster.bean.TagsBean;
+import com.mobnote.golukmain.cluster.bean.TagTagsBean;
 import com.mobnote.golukmain.fan.FanListActivity;
 import com.mobnote.golukmain.following.FollowingListActivity;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
@@ -1134,6 +1134,28 @@ public class GolukUtils {
         context.startActivity(intent);
     }
 
+    /**
+     * 判断用户是否是当前登录用户
+     * @param userId
+     * @return
+     */
+    public static boolean isLoginUser(String userId){
+        if(!GolukApplication.getInstance().isUserLoginToServerSuccess() || GolukApplication.getInstance().getMyInfo() == null){
+            return false;
+        }
+        if(TextUtils.isEmpty(userId)){
+            return false;
+        }
+        String currLoginUserId = GolukApplication.getInstance().getMyInfo().uid;
+        if(TextUtils.isEmpty(currLoginUserId)){
+            return false;
+        }
+        if(!userId.equals(currLoginUserId)){
+            return false;
+        }
+        return true;
+    }
+
     public static void changePraiseStatus(List<VideoSquareInfo> dataList,
                                           boolean status, String videoId) {
         if (TextUtils.isEmpty(videoId) || null == dataList
@@ -1429,7 +1451,7 @@ public class GolukUtils {
         context.startActivity(intent);
     }
 
-    public static void addTagsViews(final Context context, List<TagsBean> tagsList, FlowLayout flowLayout) {
+    public static void addTagsViews(final Context context, List<TagTagsBean> tagsList, FlowLayout flowLayout) {
         if(null == flowLayout) {
             return;
         }
@@ -1442,7 +1464,7 @@ public class GolukUtils {
         if(tagsList.size() > 0) {
             flowLayout.removeAllViews();
             for(int i = 0; i < tagsList.size(); i++) {
-                final TagsBean tagsBean = tagsList.get(i);
+                final TagTagsBean tagsBean = tagsList.get(i);
                 if(null == tagsBean) {
                     continue;
                 }

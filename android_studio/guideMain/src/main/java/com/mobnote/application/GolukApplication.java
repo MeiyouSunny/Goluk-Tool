@@ -1029,43 +1029,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     ((VideoCategoryActivity) mContext).downloadBubbleImageCallBack(success, param2);
                 }
                 break;
-            case 9:
-                GolukDebugUtils.e(null, "jyf----20150406----application----999999999999---- : ");
-                if (mPageSource == "LiveVideo") {
-                    GolukDebugUtils.e("", "pageNotifyCallBack---直播视频数据--" + String.valueOf(param2));
-                    if (mContext instanceof LiveActivity) {
-                        ((LiveActivity) mContext).LiveVideoDataCallBack(success, param2);
-                    }
-                }
-                break;
-            // 登陆
-            // case PageType_Login:
-            // // 取消自动登录
-            // mUser.timerCancel();
-            // // 登录
-            // if (mPageSource != "UserIdentify") {
-            // mLoginManage.loginCallBack(success, param1, param2);
-            // } else {
-            // ((UserIdentifyActivity) mContext).registLoginCallBack(success,
-            // param2);
-            // }
-            // parseLoginData(success, param2);
-            //
-            // break;
-            // // 第三方登陆
-            // case PageType_OauthLogin:
-            // // 取消自动登录
-            // mUser.timerCancel();
-            // // 登录
-            // mLoginManage.loginCallBack(success, param1, param2);
-            // parseLoginData(success, param2);
-            // break;
-            // 自动登录
-            // case PageType_AutoLogin:
-            // mUser.initAutoLoginCallback(success, param1, param2);
-            // parseLoginData(success, param2);
-            // break;
-            // 验证码PageType_GetVCode
             case PageType_GetVCode:
                 // 注册获取验证码
                 mIdentifyManage.getIdentifyCallback(success, param1, param2);
@@ -1074,45 +1037,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             case PageType_BindInfo:
                 mRegistAndRepwdManage.bindPhoneNumCallback(success, param1, param2);
                 break;
-//            case PageType_Register:
-//                mRegistAndRepwdManage.registAndRepwdCallback(success, param1, param2);
-//                break;
-//            // 重置密码PageType_ModifyPwd
-//            case PageType_ModifyPwd:
-//                mRegistAndRepwdManage.registAndRepwdCallback(success, param1, param2);
-//                break;
-
-//		case PageType_ModifyNickName:
-//			if (mPageSource == "UserPersonalName") {
-//				((UserPersonalNameActivity) mContext).saveNameCallBack(success, param2);
-//			}
-//			break;
-//		case PageType_ModifySignature:
-//			if (mPageSource == "UserPersonalSign") {
-//				((UserPersonalSignActivity) mContext).saveSignCallBack(success, param2);
-//			}
-//			break;
-            case PageType_LiveStart:
-                // 获取直播信息成功
-                if (null != mContext && mContext instanceof LiveActivity) {
-                    ((LiveActivity) mContext).callBack_LiveLookStart(true, success, param1, param2);
-                }
-
-                break;
-//		// 注销
-//		case PageType_SignOut:
-//			if (mPageSource == "UserSetup") {
-//				((UserSetupActivity) mContext).getLogintoutCallback(success, param2);
-//			}
-//			break;
-//		// APP升级+IPC升级检测
-//            case PageType_CheckUpgrade:
-//                mIpcUpdateManage.requestInfoCallback(success, param1, param2);
-//                break;
-            // ipc升级文件下载
-            // case PageType_CommDownloadFile:
-            // mIpcUpdateManage.downloadCallback(success, param1, param2);
-            // break;
             case PageType_DownloadIPCFile:
                 mIpcUpdateManage.downloadCallback(success, param1, param2);
                 break;

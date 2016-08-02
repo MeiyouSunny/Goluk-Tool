@@ -474,7 +474,7 @@ public class JsonUtil {
             info.groupId = getJsonStringValue(obj, "groupid", "");
             info.groupnumber = getJsonStringValue(obj, "groupnumber", "");
             info.groupType = getJsonStringValue(obj, "grouptype", "");
-            info.playUrl = getJsonStringValue(obj, "vurl", "");
+            info.vurl = getJsonStringValue(obj, "vurl", "");
 
             info.membercount = getJsonIntValue(obj, "membercount", 0);
             info.title = getJsonStringValue(obj, "title", "");
@@ -484,7 +484,7 @@ public class JsonUtil {
             if (null == restime || "".equals(restime)) {
                 restime = "0";
             }
-            info.restTime = Integer.valueOf(restime);
+            info.restime = Integer.valueOf(restime);
             info.desc = getJsonStringValue(obj, "desc", "");
             info.voice = getJsonStringValue(obj, "voice", "1");
 
