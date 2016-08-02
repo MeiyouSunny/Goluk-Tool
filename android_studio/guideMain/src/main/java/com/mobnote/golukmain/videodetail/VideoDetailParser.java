@@ -11,18 +11,18 @@ import com.mobnote.golukmain.cluster.bean.UserLabelBean;
 
 public class VideoDetailParser {
 
-//	public static VideoJson parseDataFromJson(String json) {
+//	public static VideoDetailRetBean parseDataFromJson(String json) {
 //		try {
-//			VideoJson object = null;
+//			VideoDetailRetBean object = null;
 //			JSONObject obj = new JSONObject(json);
 //			if (true == obj.getBoolean("success")) {
-//				object = new VideoJson();
+//				object = new VideoDetailRetBean();
 //				object.msg = obj.optString("msg");
 //				object.success = obj.optBoolean("success");
 //				JSONObject json_data = obj.getJSONObject("data");
-//				VideoAllData data = new VideoAllData();
+//				VideoDetailDataBean data = new VideoDetailDataBean();
 //				// if(null != json_data){
-//				VideoSquareDetailInfo videoDetailInfo = new VideoSquareDetailInfo();
+//				VideoDetailAvideoBean videoDetailInfo = new VideoDetailAvideoBean();
 //				data.result = json_data.optString("result");
 //				JSONObject json_avideo = json_data.optJSONObject("avideo");
 //				if (null != json_avideo) {

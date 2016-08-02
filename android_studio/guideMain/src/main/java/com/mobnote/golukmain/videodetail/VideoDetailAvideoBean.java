@@ -2,7 +2,7 @@ package com.mobnote.golukmain.videodetail;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-public class VideoSquareDetailInfo {
+public class VideoDetailAvideoBean {
 	@JSONField(name="video")
 	public VideoInfo video;
 	@JSONField(name="user")

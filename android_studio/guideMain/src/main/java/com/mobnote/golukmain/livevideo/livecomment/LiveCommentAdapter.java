@@ -16,6 +16,7 @@ import com.mobnote.golukmain.comment.bean.CommentDataBean;
 import com.mobnote.golukmain.comment.bean.CommentItemBean;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GlideUtils;
+import com.mobnote.util.GolukUtils;
 import com.rockerhieu.emojicon.EmojiconTextView;
 
 import java.util.List;
@@ -28,11 +29,14 @@ public class LiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private List<CommentItemBean> mCommentList;
     private Context mContext;
     private OnReplySelectedListener mReplySelectedListener;
+    private OnCommentItemLongClickListener mCommentItemLongClickListener;
 
-    public LiveCommentAdapter(Context cxt,List<CommentItemBean> list,OnReplySelectedListener listener){
+    public LiveCommentAdapter(Context cxt,List<CommentItemBean> list,OnReplySelectedListener onReplySelectedListener,
+                              OnCommentItemLongClickListener onCommentLongClickListener){
         this.mContext = cxt;
         this.mCommentList = list;
-        this.mReplySelectedListener = listener;
+        this.mReplySelectedListener = onReplySelectedListener;
+        this.mCommentItemLongClickListener = onCommentLongClickListener;
     }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -129,22 +133,25 @@ public class LiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         if(mReplySelectedListener != null){
                             mReplySelectedListener.onReplySelected(commentItemBean.commentId,authorId,authorName);
                         }
-//                        if(GolukApplication.getInstance().isUserLoginToServerSuccess() && GolukApplication.getInstance().getMyInfo()!= null){
-//                            String loginUserId = GolukApplication.getInstance().getMyInfo().uid;
-//                            if(TextUtils.isEmpty(loginUserId)){
-//                                return;
-//                            }
-//                            //不能回复自己的评论
-//                            if(authorId.equals(loginUserId)){
-//                                return;
-//                            }
-//
-//                        }
                     }});
+                mItemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        if(commentItemBean.author != null && GolukUtils.isLoginUser(commentItemBean.author.authorid)){
+                            if(mCommentItemLongClickListener != null){
+                                mCommentItemLongClickListener.onCommentLongClicked(commentItemBean.commentId);
+                            }
+                        }
+                        return true;
+                    }
+                });
             }
         }
     }
     public interface OnReplySelectedListener{
         public void onReplySelected(String replyId,String replyAuthorId,String replyAuthorName);
+    }
+    public interface OnCommentItemLongClickListener{
+        public void onCommentLongClicked(String commentId);
     }
 }

@@ -30,7 +30,6 @@ import com.mobnote.golukmain.comment.ICommentFn;
 import com.mobnote.golukmain.comment.bean.AuthorBean;
 import com.mobnote.golukmain.comment.bean.CommentAddBean;
 import com.mobnote.golukmain.comment.bean.CommentAddResultBean;
-import com.mobnote.golukmain.comment.bean.CommentDataBean;
 import com.mobnote.golukmain.comment.bean.CommentDelResultBean;
 import com.mobnote.golukmain.comment.bean.CommentItemBean;
 import com.mobnote.golukmain.comment.bean.CommentResultBean;
@@ -38,6 +37,7 @@ import com.mobnote.golukmain.comment.bean.ReplyBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.UserInfo;
+import com.mobnote.golukmain.livevideo.DelCommentDialog;
 import com.mobnote.golukmain.livevideo.ILiveUIChangeListener;
 import com.mobnote.golukmain.praise.PraiseRequest;
 import com.mobnote.golukmain.praise.bean.PraiseResultBean;
@@ -60,7 +60,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * Created by leege100 on 2016/7/20.
  */
 public class LiveCommentFragment extends Fragment implements IRequestResultListener, View.OnClickListener,EmojiconGridFragment.OnEmojiconClickedListener,
-        EmojiconsFragment.OnEmojiconBackspaceClickedListener, View.OnLayoutChangeListener,ILiveUIChangeListener, ViewTreeObserver.OnGlobalLayoutListener, LiveCommentAdapter.OnReplySelectedListener {
+        EmojiconsFragment.OnEmojiconBackspaceClickedListener, View.OnLayoutChangeListener,ILiveUIChangeListener, ViewTreeObserver.OnGlobalLayoutListener, LiveCommentAdapter.OnReplySelectedListener, LiveCommentAdapter.OnCommentItemLongClickListener {
     public FrameLayout mEmojIconsLayout;
 
     private String mVid;
@@ -78,6 +78,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     private boolean isLiked;
     private boolean isExit = false;
     private boolean isInitedMargin;
+    private DelCommentDialog mDelCommentDialog;
     /**
      * 是否处于回复状态
      */
@@ -147,6 +148,12 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLiveCommentRecyclerView.getLayoutParams();
             layoutParams.setMargins(0,mTopMargin,0,0);
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        onExit();
+        super.onDestroyView();
     }
 
     public void updateLikeCount(int count){
@@ -225,7 +232,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     }
 
     // 删除评论
-    void httpPost_requestDel(String id) {
+    public void deleteComment(String id) {
         CommentDeleteRequest request = new CommentDeleteRequest(IPageNotifyFn.PageType_DelComment, this);
         boolean isSucess = request.get(id);
         if (!isSucess) {
@@ -234,8 +241,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
             return;
         }
         LiveDialogManager.getManagerInstance().showCommProgressDialog(getContext(),
-                LiveDialogManager.DIALOG_TYPE_COMMENT_PROGRESS_DELETE, "", this.getString(R.string.str_delete_ongoing),
-                true);
+                LiveDialogManager.DIALOG_TYPE_COMMENT_PROGRESS_DELETE, "", this.getString(R.string.str_delete_ongoing), true);
     }
 
     /**
@@ -251,7 +257,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                 while(!isExit){
                     getCommentList();
                     try {
-                        sleep(15000);
+                        sleep(10000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -263,9 +269,13 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
      * 获取评论列表数据
      */
     private void getCommentList() {
-        String type = ICommentFn.COMMENT_TYPE_VIDEO;
+        String type = ICommentFn.COMMENT_TYPE_LIVE;
         CommentListRequest request = new CommentListRequest(IPageNotifyFn.PageType_CommentList, this);
-        request.get(mVid, type, 0, mLastTimeStamp);
+        if(TextUtils.isEmpty(mLastTimeStamp)){
+            request.getBySort(mVid, type, 0, mLastTimeStamp,"0");
+        }else{
+            request.getBySort(mVid, type, 1, mLastTimeStamp,"0");
+        }
     }
 
     // 添加评论
@@ -402,52 +412,32 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
             case IPageNotifyFn.PageType_CommentList:
                 CommentResultBean resultBean = (CommentResultBean) result;
                 if (resultBean != null && resultBean.success && resultBean.data != null) {
-                    CommentDataBean dataBean = resultBean.data;
-
-                    if (null == dataBean.comments || dataBean.comments.size() <= 0) {
-                        return;
-                    }
-                    if(null != dataBean.comments.get(0)){
-                        mLastTimeStamp = dataBean.comments.get(0).time;
-                    }
-                    if (mCommentDataList == null) {
-                        mCommentDataList = new ArrayList<CommentItemBean>();
-                    }
-                    int currCommentCount = mCommentDataList.size();
-                    boolean hasNewComment = false;
-                    for (CommentItemBean comment : dataBean.comments) {
-                        if (comment != null) {
-                            if(!TextUtils.isEmpty(mLastSendCommentId) && !TextUtils.isEmpty(comment.commentId) && mLastSendCommentId.equals(comment.commentId)){
-                                continue;
-                            }
-                            mCommentDataList.add(comment);
-                            hasNewComment = true;
-                        }
-                    }
-                    if(mLiveCommentAdapter == null){
-                        mLiveCommentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                        mLiveCommentAdapter = new LiveCommentAdapter(getContext(),mCommentDataList,this);
-                        mLiveCommentRecyclerView.setAdapter(mLiveCommentAdapter);
-                    }else{
-                        mLiveCommentAdapter.notifyItemRangeChanged(currCommentCount,mCommentDataList.size() - currCommentCount);
-                    }
-                    if(hasNewComment){
-                        mNewCommentTv.setVisibility(View.VISIBLE);
-                    }
+                    addAndRefreshComments(resultBean.data.comments);
                 }
                 break;
             case IPageNotifyFn.PageType_DelComment:
                 LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
-                CommentDelResultBean DelResultBean = (CommentDelResultBean) result;
+                CommentDelResultBean delResultBean = (CommentDelResultBean) result;
 
-                if (DelResultBean != null && DelResultBean.data != null) {
-                    if (!GolukUtils.isTokenValid(DelResultBean.data.result)) {
+                if (delResultBean != null && delResultBean.data != null) {
+                    if (!GolukUtils.isTokenValid(delResultBean.data.result)) {
                         GolukUtils.startUserLogin(getContext());
                         return;
                     }
                 }
-                if (null != DelResultBean && DelResultBean.success) {
+                if (null != delResultBean && delResultBean.success) {
                     GolukUtils.showToast(getContext(), this.getString(R.string.str_delete_success));
+                    for(CommentItemBean commentItemBean : mCommentDataList){
+                        if(TextUtils.isEmpty(commentItemBean.commentId) || delResultBean.data == null){
+                            return;
+                        }
+                        String delCommentId = delResultBean.data.commentid;
+                        if(!TextUtils.isEmpty(delCommentId) && delCommentId.equals(commentItemBean.commentId)){
+                            mCommentDataList.remove(commentItemBean);
+                            mLiveCommentAdapter.notifyDataSetChanged();
+                            return;
+                        }
+                    }
                 } else {
                     GolukUtils.showToast(getContext(), this.getString(R.string.str_delete_fail));
                 }
@@ -473,12 +463,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                     if (!"".equals(addBean.result)) {
                         if ("0".equals(addBean.result)) {// 成功
                             //评论视频
-                            mIsReply = false;
-                            mReplyToUserId = null;
-                            mReplyToUserName = null;
                             mLastCommentTime = System.currentTimeMillis();
-                            mLastSendCommentId = addBean.commentid;
-                            mLastTimeStamp = addBean.time;
                             CommentItemBean commentItemBean = new CommentItemBean();
                             commentItemBean.author = new AuthorBean();
                             commentItemBean.reply = new ReplyBean();
@@ -492,24 +477,14 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                             commentItemBean.reply.name = addBean.replyname;
                             commentItemBean.text = addBean.text;
                             commentItemBean.time = addBean.time;
-                            if (mCommentDataList == null) {
-                                mCommentDataList = new ArrayList<CommentItemBean>();
-                            }
-                            int currCommentCount = 1;
-                            mCommentDataList.add(commentItemBean);
 
-                            if(mLiveCommentAdapter == null){
-                                mLiveCommentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                                mLiveCommentAdapter = new LiveCommentAdapter(getContext(),mCommentDataList,this);
-                                mLiveCommentRecyclerView.setAdapter(mLiveCommentAdapter);
-                            }else{
-                                mLiveCommentAdapter.notifyItemRangeChanged(currCommentCount,mCommentDataList.size() - currCommentCount);
-                            }
-                            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.showSoftInput(mRootView,InputMethodManager.SHOW_FORCED);
-                            imm.hideSoftInputFromWindow(mRootView.getWindowToken(), 0); //强制隐藏键盘
+                            List<CommentItemBean> tempList = new ArrayList<CommentItemBean>();
+                            tempList.add(commentItemBean);
+                            addAndRefreshComments(tempList);
+
+                            mLastSendCommentId = addBean.commentid;
+                            closeSoftKeyboard();
                             cleanReplyState();
-                            mLiveCommentRecyclerView.smoothScrollToPosition(mCommentDataList.size()-1);
                             getCommentList();
                         } else if ("1".equals(addBean.result)) {
                             GolukDebugUtils.e("", "参数错误");
@@ -554,6 +529,49 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
             default:
                 break;
         }
+    }
+
+    private void addAndRefreshComments(List<CommentItemBean> commentList) {
+        if (null == commentList || commentList.size() <= 0) {
+            return;
+        }
+        if(null != commentList.get(0)){
+            if(!TextUtils.isEmpty(commentList.get(0).time)){
+                mLastTimeStamp = commentList.get(0).time;
+            }
+        }
+        if (mCommentDataList == null) {
+            mCommentDataList = new ArrayList<CommentItemBean>();
+        }
+        int currCommentCount = mCommentDataList.size();
+        boolean hasNewComment = false;
+        for (CommentItemBean comment : commentList) {
+            if (comment != null) {
+                if(!TextUtils.isEmpty(mLastSendCommentId) && !TextUtils.isEmpty(comment.commentId) && mLastSendCommentId.equals(comment.commentId)){
+                    continue;
+                }
+                mCommentDataList.add(comment);
+                if(comment.author == null ||(comment.author != null && !GolukUtils.isLoginUser(comment.author.authorid))){
+                    hasNewComment = true;
+                }
+            }
+        }
+        if(mLiveCommentAdapter == null){
+            mLiveCommentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            mLiveCommentAdapter = new LiveCommentAdapter(getContext(),mCommentDataList,this,this);
+            mLiveCommentRecyclerView.setAdapter(mLiveCommentAdapter);
+        }else{
+            mLiveCommentAdapter.notifyItemRangeChanged(currCommentCount - 1,mCommentDataList.size() - currCommentCount - 1);
+        }
+        if(hasNewComment){
+            mNewCommentTv.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void closeSoftKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(mRootView,InputMethodManager.SHOW_FORCED);
+        imm.hideSoftInputFromWindow(mRootView.getWindowToken(), 0); //强制隐藏键盘
     }
 
     @Override
@@ -631,6 +649,10 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     @Override
     public void onExit() {
         isExit = true;
+        if(mDelCommentDialog != null && mDelCommentDialog.isShowing()){
+            mDelCommentDialog.dismiss();
+        }
+        mDelCommentDialog = null;
     }
 
     @Override
@@ -676,5 +698,14 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         if(TextUtils.isEmpty(mEmojiconEt.getText().toString())){
             mEmojiconEt.setHint(getContext().getResources().getString(R.string.str_reply) + "@" + replyAuthorName);
         }
+    }
+
+    @Override
+    public void onCommentLongClicked(String commentId) {
+        if(mDelCommentDialog == null){
+            mDelCommentDialog = new DelCommentDialog(getContext(),this, commentId);
+        }
+        mDelCommentDialog.setmCommentId(commentId);
+        mDelCommentDialog.show();
     }
 }
