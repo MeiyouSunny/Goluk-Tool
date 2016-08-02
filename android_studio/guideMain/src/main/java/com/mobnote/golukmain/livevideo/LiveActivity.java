@@ -177,7 +177,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     private TextView mShareBtn = null;
     private Bitmap mThumbBitmap = null;
     private boolean isRequestedForServer = false;
-    private boolean mIsFirstSucess = true;
 
     FrameLayout mFrameLayout;
     private ILiveOperateFn mLiveOperator = null;
@@ -215,7 +214,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     private View mSeparateLine;
     private boolean mIsPollingDetail;
-    private VideoDetailRetBean mVideoDetailRetBean;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1679,24 +1677,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         new UploadLiveScreenShotTask(picName, myInfo.uid,mVid,this).execute();
     }
 
-    // 分享成功后需要调用的接口
-    public void shareSucessDeal(boolean isSucess, String channel) {
-        if (!isSucess) {
-            GolukUtils.showToast(this, this.getString(R.string.str_share_fail));
-            return;
-        }
-        String vid = null;
-        if (isShareLive) {
-            vid = mVid;
-        } else {
-            if (!isKaiGeSucess) {
-                return;
-            }
-            vid = liveData.vid;
-        }
-        GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, vid);
-    }
-
     @Override
     public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
         if (event == VSquare_Req_VOP_GetShareURL_Video) {
@@ -1824,7 +1804,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             }
             mLiveCommentFragment.updateLikeCount(Integer.parseInt(avideoInfoBean.video.praisenumber));
             mLookCountTv.setText(GolukUtils.getFormatedNumber(avideoInfoBean.video.clicknumber));
-            mVideoDetailRetBean = tempVideoDetailRetBean;
         }
     }
     @Override
@@ -1838,7 +1817,5 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    public void onUploadLiveScreenShotFail() {
-
-    }
+    public void onUploadLiveScreenShotFail() {}
 }
