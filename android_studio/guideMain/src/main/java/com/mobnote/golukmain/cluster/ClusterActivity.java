@@ -188,9 +188,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
      */
     private void httpPost(String tagId) {
         mTagGetRequest = new TagGetRequest(IPageNotifyFn.PageType_TagGet, this);
-        mTagGetRequest.get("200", tagId);
-        sendTagRecommendListRequest(mTagId, "0", mTjtime, LIST_PAGE_SIZE);
-        sendTagNewestListRequest(mTagId, "0", mTjtime, LIST_PAGE_SIZE);
+        mTagGetRequest.get("200", "1d1569e5d5f44b7fbdf635867c03e549");
+        sendTagRecommendListRequest("1d1569e5d5f44b7fbdf635867c03e549", "0", mTjtime, LIST_PAGE_SIZE);
+        sendTagNewestListRequest("1d1569e5d5f44b7fbdf635867c03e549", "0", mTjtime, LIST_PAGE_SIZE);
     }
 
     private void initData() {
@@ -431,12 +431,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
                 return;
             }
 
-            if(!"0".equals(ret.data.result)) {
-                mIsRecommendLoad = true;
-                GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
-                return;
-            }
-
             setTjTime(ret.data.videolist);
             List<VideoSquareInfo> list = vdf.getClusterList(ret.data.videolist);
             if(null == list || list.size() == 0) {
@@ -452,6 +446,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
                 mIsRecommendLoad = false;
             }
             mRecommendList.addAll(list);
+            mClusterAdapter.setDataInfo(mRecommendList, null);
             updateViewData(true, count);
         } else if (requestType == IPageNotifyFn.PageType_ClusterNews) {
             mIsLoadDataNews = false;
@@ -468,12 +463,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
                 return;
             }
 
-            if(!"0".equals(ret.data.result)) {
-                mIsNewsLoad = true;
-                GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
-                return;
-            }
-
             List<VideoSquareInfo> list = vdf.getClusterList(ret.data.videolist);
             int count = mNewestList.size();
             if (list != null && list.size() > 0) {
@@ -483,6 +472,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
                     mIsNewsLoad = false;
                 }
                 mNewestList.addAll(list);
+                mClusterAdapter.setDataInfo(null, mNewestList);
                 updateViewData(true, count);
             } else {
                 mIsNewsLoad = false;
