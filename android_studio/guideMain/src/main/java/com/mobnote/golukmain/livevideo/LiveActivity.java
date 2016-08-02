@@ -1866,7 +1866,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 return;
             }
             VideoDetailAvideoBean avideoInfoBean = tempVideoDetailRetBean.data.avideo;
-            if(avideoInfoBean == null && avideoInfoBean.video != null){
+            if(avideoInfoBean == null || avideoInfoBean.video == null){
                 return;
             }
             mLiveCommentFragment.updateLikeCount(Integer.parseInt(avideoInfoBean.video.praisenumber));
