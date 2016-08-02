@@ -336,7 +336,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                             R.drawable.tacitly_pic);
                 }
 
-                if(TextUtils.isEmpty(mHeadData.activity.activitycontent)) {
+                if(TextUtils.isEmpty(mHeadData.tag.description)) {
                     headViewHolder.nTagDescriptionETV.setVisibility(View.GONE);
                     headViewHolder.nTagTV.setVisibility(View.GONE);
                 } else {
