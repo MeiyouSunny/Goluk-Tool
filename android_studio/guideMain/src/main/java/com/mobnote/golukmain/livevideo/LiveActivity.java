@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -45,12 +44,10 @@ import com.mobnote.golukmain.thirdshare.ProxyThirdShare;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.thirdshare.ThirdShareBean;
 import com.mobnote.golukmain.videodetail.SingleDetailRequest;
-import com.mobnote.golukmain.videodetail.SingleVideoRequest;
 import com.mobnote.golukmain.videodetail.VideoDetailAvideoBean;
 import com.mobnote.golukmain.videodetail.VideoDetailRetBean;
 import com.mobnote.golukmain.videosuqare.ShareDataBean;
 import com.mobnote.golukmain.videosuqare.VideoSquareManager;
-import com.mobnote.user.UserUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
@@ -271,7 +268,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             mLiveOperator.onStart();
         }
     }
-
 
     @Override public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -1005,45 +1001,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (this.isShareLive) {
             // 视频截图 开始视频，上传图片
             GolukApplication.getInstance().getIPCControlManager().screenShot();
-        }
-    }
-
-    // 自己开启直播，返回接口
-    public void callBack_LiveLookStart(boolean isLive, int success, Object param1, Object param2) {
-        if (isAlreadExit) {
-            // 界面已经退出
-            return;
-        }
-        if (IPageNotifyFn.PAGE_RESULT_SUCESS != success) {
-            GolukDebugUtils.e("", "newlive-----LiveOperateVdcp-----callBack_LiveLookStart-------:  ");
-            liveFailedStart(isLive);
-            return;
-        }
-        final String data = (String) param2;
-        // 解析回调数据
-        LiveDataInfo dataInfo = JsonUtil.parseLiveDataJson2(data);
-        if (null == dataInfo) {
-            liveFailedStart(isLive);
-            return;
-        }
-        if (200 != dataInfo.code) {
-            liveFailedStart(isLive);
-            LiveDialogManager.getManagerInstance().dismissProgressDialog();
-            LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-                    LiveDialogManager.DIALOG_TYPE_LIVE_OFFLINE, this.getString(R.string.user_dialog_hint_title),
-                    this.getString(R.string.str_live_over));
-            return;
-        }
-        LiveDialogManager.getManagerInstance().dismissProgressDialog();
-        isKaiGeSucess = true;
-        if (this.isShareLive) {
-            // 视频截图 开始视频，上传图片
-            GolukApplication.getInstance().getIPCControlManager().screenShot();
-        }
-        startUploadMyPosition();
-        if (mIsFirstSucess) {
-            this.click_share(false);
-            mIsFirstSucess = false;
         }
     }
 
