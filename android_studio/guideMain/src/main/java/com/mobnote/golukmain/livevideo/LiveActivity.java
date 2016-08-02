@@ -44,8 +44,13 @@ import com.mobnote.golukmain.livevideo.livecomment.LiveCommentFragment;
 import com.mobnote.golukmain.thirdshare.ProxyThirdShare;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.thirdshare.ThirdShareBean;
+import com.mobnote.golukmain.videodetail.SingleDetailRequest;
+import com.mobnote.golukmain.videodetail.SingleVideoRequest;
+import com.mobnote.golukmain.videodetail.VideoDetailAvideoBean;
+import com.mobnote.golukmain.videodetail.VideoDetailRetBean;
 import com.mobnote.golukmain.videosuqare.ShareDataBean;
 import com.mobnote.golukmain.videosuqare.VideoSquareManager;
+import com.mobnote.user.UserUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
@@ -212,6 +217,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     private boolean isShowLiveInfoLayout;
 
     private View mSeparateLine;
+    private boolean mIsPollingDetail;
+    private VideoDetailRetBean mVideoDetailRetBean;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -249,6 +256,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             // 计时，90秒后，防止用户进入时没网
             start90Timer();
             mLiveCommentFragment.setmVid(mVid);
+            pollingRequestVideoDetail();
             getLiveDetail(mPublisher);
             mLiveCommentFragment.updateLikeCount(Integer.parseInt(mPublisher.zanCount));
             mLookCountTv.setText(GolukUtils.getFormatedNumber(mPublisher.persons));
@@ -265,10 +273,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     }
 
 
-    @Override
-
-    public
-    void onWindowFocusChanged(boolean hasFocus) {
+    @Override public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         int separateHeight = mSeparateLine.getBottom();
         if(mLiveCommentFragment != null){
@@ -418,6 +423,30 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     private void start90Timer() {
         mBaseHandler.removeMessages(MSG_H_UPLOAD_TIMEOUT);
         mBaseHandler.sendEmptyMessageDelayed(MSG_H_UPLOAD_TIMEOUT, DURATION_TIMEOUT);
+    }
+
+    /**
+     * 轮询获取视频详情数据
+     */
+    private void pollingRequestVideoDetail() {
+        if(!mIsPollingDetail){
+            if(!TextUtils.isEmpty(mVid)){
+                new Thread(){
+                    public void run(){
+                        mIsPollingDetail = true;
+                        while (!isAlreadExit){
+                            SingleDetailRequest request = new SingleDetailRequest(IPageNotifyFn.PageType_VideoDetail, LiveActivity.this);
+                            request.get(mVid);
+                            try {
+                                sleep(12000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }.start();
+            }
+        }
     }
 
     private void setCallBackListener() {
@@ -1828,6 +1857,21 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                     GolukUtils.startUserLogin(this);
                 }
             }
+        }else if (IPageNotifyFn.PageType_VideoDetail == requestType) {
+            if(result == null){
+                return;
+            }
+            VideoDetailRetBean tempVideoDetailRetBean = (VideoDetailRetBean) result;
+            if(tempVideoDetailRetBean == null || tempVideoDetailRetBean.data == null) {
+                return;
+            }
+            VideoDetailAvideoBean avideoInfoBean = tempVideoDetailRetBean.data.avideo;
+            if(avideoInfoBean == null && avideoInfoBean.video != null){
+                return;
+            }
+            mLiveCommentFragment.updateLikeCount(Integer.parseInt(avideoInfoBean.video.praisenumber));
+            mLookCountTv.setText(GolukUtils.getFormatedNumber(avideoInfoBean.video.clicknumber));
+            mVideoDetailRetBean = tempVideoDetailRetBean;
         }
     }
     @Override
@@ -1837,10 +1881,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onUploadLiveScreenShotSuccess() {
-//        if (mIsFirstSucess) {
-//            this.click_share(false);
-//            mIsFirstSucess = false;
-//        }
+        pollingRequestVideoDetail();
     }
 
     @Override
