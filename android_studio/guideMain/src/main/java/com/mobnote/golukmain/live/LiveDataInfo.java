@@ -52,4 +52,5 @@ public class LiveDataInfo implements Serializable {
      */
     public String desc;
 
+    public int link;
 }

@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
@@ -28,7 +29,11 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.PlayUrlManager;
 import com.mobnote.golukmain.carrecorder.util.GFileUtils;
 import com.mobnote.golukmain.carrecorder.util.ImageManager;
+import com.mobnote.golukmain.carrecorder.view.CustomDialog;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.cluster.bean.UserLabelBean;
+import com.mobnote.golukmain.follow.FollowRequest;
+import com.mobnote.golukmain.follow.bean.FollowRetBean;
 import com.mobnote.golukmain.following.FollowingConfig;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.live.ILive;
@@ -214,6 +219,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     private View mSeparateLine;
     private boolean mIsPollingDetail;
+    private CustomDialog mCustomDialog;
+    private CustomLoadingDialog mLoadingDialog;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -232,16 +239,14 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         getIntentData();
         // 界面初始化
         initView();
-        // 显示数据
-        setView();
         // 地图初始化
         initMapviewFragment();
         // 设置评论和地图的tab和fragment
         resetTabAndFragment();
-        // 获取我的登录信息
-        myInfo = mApp.getMyInfo();
         //初始化用户信息
+        myInfo = mApp.getMyInfo();
         initUserInfo();
+        setView();
 
         // 开始预览或开始直播
         mLiveManager = new TimerManager(10);
@@ -257,6 +262,10 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             mLookCountTv.setText(GolukUtils.getFormatedNumber(mPublisher.persons));
         }
         setCallBackListener();
+    }
+
+    private void initData() {
+
     }
 
     @Override
@@ -291,14 +300,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     private void initUserInfo() {
         if (isShareLive) {
-            if (mApp.mIPCControlManager.isT1Relative()) {
-                mLiveOperator = new LiveOperateVdcp(this);
-            } else {
-                mLiveOperator = new LiveOperateCarrecord(this, this);
-            }
-            mBaseApp.isAlreadyLive = true;
-            SharedPrefUtil.setIsLiveNormalExit(false);
-            startVideoAndLive("");
             mTitleTv.setText(this.getString(R.string.str_mylive_text));
             mNickName.setText(myInfo.nickname);
             if(!TextUtils.isEmpty((myInfo.desc))){
@@ -309,10 +310,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             setUserHeadImage(myInfo.head, myInfo.customavatar);
             setAuthentication(myInfo.mUserLabel);
         } else {
-            SharedPrefUtil.setIsLiveNormalExit(true);
-            if (null != mPublisher) {
-                mLiveCountSecond = mPublisher.liveDuration;
-            }
             mTitleTv.setText(mPublisher.nickname + this.getString(R.string.str_live_someone));
             mNickName.setText(mPublisher.nickname);
             if(!TextUtils.isEmpty((mPublisher.desc))){
@@ -321,39 +318,42 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 mIntroductionTv.setText(this.getResources().getText(R.string.str_let_sharevideo));
             }
             //设置连接状态图片及文字
-
-            if(mPublisher.link == FollowingConfig.LINK_TYPE_FOLLOW_ONLY){
-                mPublisherLinkLl.setVisibility(View.VISIBLE);
-                mPublisherLinkLl.setBackgroundResource(R.drawable.follow_button_border_followed);
-                mPublisherLinkTv.setText(R.string.str_usercenter_header_attention_already_text);
-                mPublisherLinkTv.setTextColor(getResources().getColor(R.color.white));
-                mPublisherLinkIv.setImageResource(R.drawable.icon_followed);
-
-            }else if(mPublisher.link == FollowingConfig.LINK_TYPE_FAN_ONLY){
-                mPublisherLinkLl.setVisibility(View.VISIBLE);
-                mPublisherLinkLl.setBackgroundResource(R.drawable.follow_button_border_normal);
-                mPublisherLinkTv.setText(R.string.str_follow);
-                mPublisherLinkTv.setTextColor(Color.parseColor("#0080ff"));
-                mPublisherLinkIv.setImageResource(R.drawable.icon_follow_normal);
-
-            }else if(mPublisher.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER){
-                mPublisherLinkLl.setVisibility(View.VISIBLE);
-                mPublisherLinkLl.setBackgroundResource(R.drawable.follow_button_border_mutual);
-                mPublisherLinkTv.setText(R.string.str_usercenter_header_attention_each_other_text);
-                mPublisherLinkTv.setTextColor(getResources().getColor(R.color.white));
-                mPublisherLinkIv.setImageResource(R.drawable.icon_follow_mutual);
-
-            }else if(mPublisher.link == FollowingConfig.LINK_TYPE_SELF){
-                mPublisherLinkLl.setVisibility(View.GONE);
-            }else{
-                mPublisherLinkLl.setVisibility(View.VISIBLE);
-                mPublisherLinkLl.setBackgroundResource(R.drawable.follow_button_border_normal);
-                mPublisherLinkTv.setText(R.string.str_follow);
-                mPublisherLinkTv.setTextColor(Color.parseColor("#0080ff"));
-                mPublisherLinkIv.setImageResource(R.drawable.icon_follow_normal);
-            }
+            resetLinkState();
             setUserHeadImage(mPublisher.head, mPublisher.customavatar);
             setAuthentication(mPublisher.mUserLabel);
+        }
+    }
+
+    private void resetLinkState() {
+        if(mPublisher.link == FollowingConfig.LINK_TYPE_FOLLOW_ONLY){
+            mPublisherLinkLl.setVisibility(View.VISIBLE);
+            mPublisherLinkLl.setBackgroundResource(R.drawable.follow_button_border_followed);
+            mPublisherLinkTv.setText(R.string.str_usercenter_header_attention_already_text);
+            mPublisherLinkTv.setTextColor(getResources().getColor(R.color.white));
+            mPublisherLinkIv.setImageResource(R.drawable.icon_followed);
+
+        }else if(mPublisher.link == FollowingConfig.LINK_TYPE_FAN_ONLY){
+            mPublisherLinkLl.setVisibility(View.VISIBLE);
+            mPublisherLinkLl.setBackgroundResource(R.drawable.follow_button_border_normal);
+            mPublisherLinkTv.setText(R.string.str_follow);
+            mPublisherLinkTv.setTextColor(Color.parseColor("#0080ff"));
+            mPublisherLinkIv.setImageResource(R.drawable.icon_follow_normal);
+
+        }else if(mPublisher.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER){
+            mPublisherLinkLl.setVisibility(View.VISIBLE);
+            mPublisherLinkLl.setBackgroundResource(R.drawable.follow_button_border_mutual);
+            mPublisherLinkTv.setText(R.string.str_usercenter_header_attention_each_other_text);
+            mPublisherLinkTv.setTextColor(getResources().getColor(R.color.white));
+            mPublisherLinkIv.setImageResource(R.drawable.icon_follow_mutual);
+
+        }else if(mPublisher.link == FollowingConfig.LINK_TYPE_SELF){
+            mPublisherLinkLl.setVisibility(View.GONE);
+        }else{
+            mPublisherLinkLl.setVisibility(View.VISIBLE);
+            mPublisherLinkLl.setBackgroundResource(R.drawable.follow_button_border_normal);
+            mPublisherLinkTv.setText(R.string.str_follow);
+            mPublisherLinkTv.setTextColor(Color.parseColor("#0080ff"));
+            mPublisherLinkIv.setImageResource(R.drawable.icon_follow_normal);
         }
     }
 
@@ -456,6 +456,57 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
+    protected void follow(){
+        if(isShareLive || mPublisher == null){
+            return;
+        }
+        if (GolukApplication.getInstance().isUserLoginSucess) {
+
+            if(mPublisher.link == FollowingConfig.LINK_TYPE_FOLLOW_ONLY||
+                    mPublisher.link == FollowingConfig.LINK_TYPE_FOLLOW_EACHOTHER){
+
+                if(mCustomDialog==null){
+                    mCustomDialog = new CustomDialog(this);
+                }
+
+                mCustomDialog.setMessage(this.getString(R.string.str_confirm_cancel_follow), Gravity.CENTER);
+                mCustomDialog.setLeftButton(this.getString(R.string.dialog_str_cancel), null);
+                mCustomDialog.setRightButton(this.getString(R.string.str_button_ok), new CustomDialog.OnRightClickListener() {
+
+                    @Override
+                    public void onClickListener() {
+                        // TODO Auto-generated method stub
+                        mCustomDialog.dismiss();
+                        sendFollowRequest( mPublisher.uid,"0");
+                    }
+
+                });
+                mCustomDialog.show();
+            }else{
+                sendFollowRequest( mPublisher.uid,"1");
+                return;
+            }
+        }else{
+            GolukUtils.startLoginActivity(this);
+        }
+    }
+
+    private void sendFollowRequest(String linkuid, String type) {
+
+        FollowRequest request = new FollowRequest(IPageNotifyFn.PageType_Follow, this);
+        GolukApplication app = GolukApplication.getInstance();
+        if(null != app && app.isUserLoginSucess) {
+            if(!TextUtils.isEmpty(app.mCurrentUId)) {
+                if(mLoadingDialog == null){
+                    mLoadingDialog = new CustomLoadingDialog(this, null);
+                }
+                if(!mLoadingDialog.isShowing()) {
+                    mLoadingDialog.show();
+                }
+                request.get("200", linkuid, type, app.mCurrentUId);
+            }
+        }
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -565,6 +616,21 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (null != mPublisher) {
             mLookCountTv.setText(mPublisher.persons);
         }
+        if (isShareLive) {
+            if (mApp.mIPCControlManager.isT1Relative()) {
+                mLiveOperator = new LiveOperateVdcp(this);
+            } else {
+                mLiveOperator = new LiveOperateCarrecord(this, this);
+            }
+            mBaseApp.isAlreadyLive = true;
+            SharedPrefUtil.setIsLiveNormalExit(false);
+            startVideoAndLive("");
+        }else{
+            SharedPrefUtil.setIsLiveNormalExit(true);
+            if (null != mPublisher) {
+                mLiveCountSecond = mPublisher.liveDuration;
+            }
+        }
     }
 
     /**
@@ -672,6 +738,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         mCommentTabLl.setOnClickListener(this);
         mMapTabLl.setOnClickListener(this);
         mRPVPalyVideo.setOnClickListener(this);
+        mPublisherLinkLl.setOnClickListener(this);
 
         hidePlayer();
     }
@@ -1104,6 +1171,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             // 视频无效下线
             return;
         }
+        mPublisher.link = liveData.link;
+        resetLinkState();
         GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----5555 : ");
         isCanVoice = liveData.voice.equals("1") ? true : false;
         this.isKaiGeSucess = true;
@@ -1146,6 +1215,11 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         LiveDialogManager.getManagerInstance().dismissLiveBackDialog();
         dissmissAllDialog();
         LiveDialogManager.getManagerInstance().dismissTwoButtonDialog();
+        if(mLoadingDialog!=null&&mLoadingDialog.isShowing()){
+            mLoadingDialog.close();
+        }
+
+        mLoadingDialog = null;
         super.onDestroy();
     }
 
@@ -1180,6 +1254,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             }else{
                 showLiveInfoLayout();
             }
+        } else if(id == R.id.ll_publisher_link){
+            follow();
         }
     }
 
@@ -1377,7 +1453,11 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         mBaseHandler.removeMessages(MSG_H_TO_GETMAP_PERSONS);
 
         dissmissAllDialog();
+        if(mLoadingDialog!=null&&mLoadingDialog.isShowing()){
+            mLoadingDialog.close();
+        }
 
+        mLoadingDialog = null;
         freePlayer();
 
         LiveDialogManager.getManagerInstance().setDialogManageFn(null);
@@ -1803,6 +1883,33 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             mLookCountTv.setText(GolukUtils.getFormatedNumber(avideoInfoBean.video.clicknumber));
         }else if (IPageNotifyFn.PageType_GetVideoDetail == requestType){
             LiveVideoDataCallBack(1,result);
+        }else if(requestType == IPageNotifyFn.PageType_Follow) {//关注
+            if (null != mLoadingDialog && mLoadingDialog.isShowing()) {
+                mLoadingDialog.close();
+            }
+            if(isShareLive || mPublisher == null){
+                return;
+            }
+            FollowRetBean bean = (FollowRetBean) result;
+            if (null != bean) {
+                if (bean.code != 0) {
+                    if (!GolukUtils.isTokenValid(bean.code)) {
+                        GolukUtils.startLoginActivity(LiveActivity.this);
+                    } else if (bean.code == 12011) {
+                        Toast.makeText(LiveActivity.this, getString(R.string.follow_operation_limit_total), Toast.LENGTH_SHORT).show();
+                    } else if (bean.code == 12016) {
+                        Toast.makeText(LiveActivity.this, getString(R.string.follow_operation_limit_day), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(LiveActivity.this, bean.msg, Toast.LENGTH_SHORT).show();
+                    }
+                    return;
+                }
+                if (bean.data == null) {
+                    return;
+                }
+                mPublisher.link = bean.data.link;
+                resetLinkState();
+            }
         }
     }
     @Override
