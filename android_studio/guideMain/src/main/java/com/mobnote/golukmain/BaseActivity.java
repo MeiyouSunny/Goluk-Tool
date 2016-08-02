@@ -39,6 +39,10 @@ public class BaseActivity extends FragmentActivity {
     protected BaseHandler mBaseHandler = new BaseHandler(this);
     protected GolukApplication mBaseApp = null;
 
+    public GolukApplication getApp(){
+        return mBaseApp;
+    }
+
 
     /**
      * 处理Handler消息，子类需要复写此方法

@@ -315,14 +315,6 @@ public class FragmentMine extends Fragment implements OnClickListener,
         }
     }
 
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        GolukDebugUtils.d(TAG, "onHiddenChanged");
-        if (!hidden) {
-            sendGetUserHomeRequest();
-        }
-    }
-
     public void onEventMainThread(EventMessageUpdate event) {
         if (null == event) {
             return;
@@ -659,7 +651,6 @@ public class FragmentMine extends Fragment implements OnClickListener,
      * 获取用户个人信息
      */
     private void sendGetUserHomeRequest() {
-
         UserInfohomeRequest request = new UserInfohomeRequest(
                 IPageNotifyFn.PageType_UserinfoHome, this);
 

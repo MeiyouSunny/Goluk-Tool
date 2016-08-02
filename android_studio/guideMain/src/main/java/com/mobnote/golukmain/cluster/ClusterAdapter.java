@@ -31,6 +31,7 @@ import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 import com.mobnote.view.ExpandableTextView;
+import com.mobnote.view.FlowLayout;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -153,30 +154,28 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
         }
     }
 
-    /**
-     * 获取当前分类列表类型
-     */
     public int getCurrentViewType() {
         return mCurrentViewType;
     }
 
-    // 每个convert view都会调用此方法，获得当前所需要的view样式
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
+        if(0 == position) {
             return VIEW_TYPE_HEAD;
-        } else {
-            if (mCurrentViewType == VIEW_TYPE_RECOMMEND) {
-                if (mRecommendList == null || mRecommendList.size() == 0) {
-                    return VIEW_TYPE_NO_DATA;
-                }
-            } else {
-                if (mNewestList == null || mNewestList.size() == 0) {
-                    return VIEW_TYPE_NO_DATA;
-                }
-            }
-            return mCurrentViewType;
         }
+
+        if (mCurrentViewType == VIEW_TYPE_RECOMMEND) {
+            if (mRecommendList == null || mRecommendList.size() == 0) {
+                return VIEW_TYPE_NO_DATA;
+            }
+        }
+
+        if(mCurrentViewType == VIEW_TYPE_NEWEST) {
+            if (mNewestList == null || mNewestList.size() == 0) {
+                return VIEW_TYPE_NO_DATA;
+            }
+        }
+        return mCurrentViewType;
     }
 
     @Override
@@ -407,238 +406,244 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
             break;
 
         case VIEW_TYPE_NEWEST:
-            case VIEW_TYPE_RECOMMEND:
-                int index_v = position - 1;
-                final VideoSquareInfo clusterInfo;
-                if (mCurrentViewType == VIEW_TYPE_RECOMMEND) {
-                    clusterInfo = this.mRecommendList.get(index_v);
+        case VIEW_TYPE_RECOMMEND:
+            int index_v = position - 1;
+            final VideoSquareInfo clusterInfo;
+            if (mCurrentViewType == VIEW_TYPE_RECOMMEND) {
+                clusterInfo = this.mRecommendList.get(index_v);
+            } else {
+                clusterInfo = this.mNewestList.get(index_v);
+            }
+
+            ViewHolder holder = null;
+            if (convertView == null) {
+                holder = new ViewHolder();
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.user_center_sharevideo, null);
+                holder.imageLayout = (ImageView) convertView.findViewById(R.id.imageLayout);
+                holder.headimg = (ImageView) convertView.findViewById(R.id.headimg);
+                holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
+                holder.time_location = (TextView) convertView.findViewById(R.id.time_location);
+                holder.videoGoldImg = (ImageView) convertView.findViewById(R.id.user_center_gold);
+                holder.userInfoLayout = (RelativeLayout) convertView.findViewById(R.id.user_info_layout);
+                holder.function = (ImageView) convertView.findViewById(R.id.function);
+                holder.v = (ImageView) convertView.findViewById(R.id.v);
+                holder.praiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
+                holder.zanIcon = (ImageView) convertView.findViewById(R.id.zanIcon);
+
+                holder.commentLayout = (LinearLayout) convertView.findViewById(R.id.commentLayout);
+                holder.commentIcon = (ImageView) convertView.findViewById(R.id.commentIcon);
+                holder.commentText = (TextView) convertView.findViewById(R.id.commentText);
+
+                holder.shareLayout = (LinearLayout) convertView.findViewById(R.id.shareLayout);
+                holder.shareIcon = (ImageView) convertView.findViewById(R.id.shareIcon);
+                holder.shareText = (TextView) convertView.findViewById(R.id.shareText);
+
+                holder.zText = (TextView) convertView.findViewById(R.id.zText);
+
+                holder.weiguan = (TextView) convertView.findViewById(R.id.weiguan);
+                holder.weiguan = (TextView) convertView.findViewById(R.id.weiguan);
+                holder.totalcomments = (TextView) convertView.findViewById(R.id.totalcomments);
+
+                holder.detail = (TextView) convertView.findViewById(R.id.detail);
+
+                holder.totlaCommentLayout = (LinearLayout) convertView.findViewById(R.id.totlaCommentLayout);
+                holder.comment1 = (TextView) convertView.findViewById(R.id.comment1);
+                holder.comment2 = (TextView) convertView.findViewById(R.id.comment2);
+                holder.comment3 = (TextView) convertView.findViewById(R.id.comment3);
+                holder.isopen = (ImageView) convertView.findViewById(R.id.isopen);
+                int height = (int) ((float) mWidth / 1.77f);
+                RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(mWidth, height);
+                mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
+                holder.imageLayout.setLayoutParams(mPlayerLayoutParams);
+                holder.tvPraiseCount = (TextView) convertView.findViewById(R.id.tv_share_video_list_item_praise_count);
+                holder.nTagsFL = (FlowLayout) convertView.findViewById(R.id.flowlayout_tag_page_video_item_tags);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            holder.isopen.setVisibility(View.GONE);
+
+            if (holder.VideoID == null || !holder.VideoID.equals(clusterInfo.mVideoEntity.videoid)) {
+                holder.VideoID = new String(clusterInfo.mVideoEntity.videoid);
+
+                GlideUtils.loadImage(mContext, holder.imageLayout, clusterInfo.mVideoEntity.picture,
+                        R.drawable.tacitly_pic);
+            }
+
+            String headUrl = clusterInfo.mUserEntity.mCustomAvatar;
+            if (clusterInfo.mUserEntity != null && clusterInfo.mUserEntity.label != null) {
+                if ("1".equals(clusterInfo.mUserEntity.label.approvelabel)) {//企业认证
+                    holder.v.setImageResource(R.drawable.authentication_bluev_icon);
+                    holder.v.setVisibility(View.VISIBLE);
                 } else {
-                    clusterInfo = this.mNewestList.get(index_v);
-                }
-
-                ViewHolder holder = null;
-                if (convertView == null) {
-                    holder = new ViewHolder();
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.user_center_sharevideo, null);
-                    holder.imageLayout = (ImageView) convertView.findViewById(R.id.imageLayout);
-                    holder.headimg = (ImageView) convertView.findViewById(R.id.headimg);
-                    holder.nikename = (TextView) convertView.findViewById(R.id.nikename);
-                    holder.time_location = (TextView) convertView.findViewById(R.id.time_location);
-                    holder.videoGoldImg = (ImageView) convertView.findViewById(R.id.user_center_gold);
-                    holder.userInfoLayout = (RelativeLayout) convertView.findViewById(R.id.user_info_layout);
-                    holder.function = (ImageView) convertView.findViewById(R.id.function);
-                    holder.v = (ImageView) convertView.findViewById(R.id.v);
-                    holder.praiseLayout = (LinearLayout) convertView.findViewById(R.id.praiseLayout);
-                    holder.zanIcon = (ImageView) convertView.findViewById(R.id.zanIcon);
-
-                    holder.commentLayout = (LinearLayout) convertView.findViewById(R.id.commentLayout);
-                    holder.commentIcon = (ImageView) convertView.findViewById(R.id.commentIcon);
-                    holder.commentText = (TextView) convertView.findViewById(R.id.commentText);
-
-                    holder.shareLayout = (LinearLayout) convertView.findViewById(R.id.shareLayout);
-                    holder.shareIcon = (ImageView) convertView.findViewById(R.id.shareIcon);
-                    holder.shareText = (TextView) convertView.findViewById(R.id.shareText);
-
-                    holder.zText = (TextView) convertView.findViewById(R.id.zText);
-
-                    holder.weiguan = (TextView) convertView.findViewById(R.id.weiguan);
-                    holder.weiguan = (TextView) convertView.findViewById(R.id.weiguan);
-                    holder.totalcomments = (TextView) convertView.findViewById(R.id.totalcomments);
-
-                    holder.detail = (TextView) convertView.findViewById(R.id.detail);
-
-                    holder.totlaCommentLayout = (LinearLayout) convertView.findViewById(R.id.totlaCommentLayout);
-                    holder.comment1 = (TextView) convertView.findViewById(R.id.comment1);
-                    holder.comment2 = (TextView) convertView.findViewById(R.id.comment2);
-                    holder.comment3 = (TextView) convertView.findViewById(R.id.comment3);
-                    holder.isopen = (ImageView) convertView.findViewById(R.id.isopen);
-                    int height = (int) ((float) mWidth / 1.77f);
-                    RelativeLayout.LayoutParams mPlayerLayoutParams = new RelativeLayout.LayoutParams(mWidth, height);
-                    mPlayerLayoutParams.addRule(RelativeLayout.BELOW, R.id.headlayout);
-                    holder.imageLayout.setLayoutParams(mPlayerLayoutParams);
-                    holder.tvPraiseCount = (TextView) convertView.findViewById(R.id.tv_share_video_list_item_praise_count);
-                    convertView.setTag(holder);
-                } else {
-                    holder = (ViewHolder) convertView.getTag();
-                }
-
-                holder.isopen.setVisibility(View.GONE);
-
-                if (holder.VideoID == null || !holder.VideoID.equals(clusterInfo.mVideoEntity.videoid)) {
-                    holder.VideoID = new String(clusterInfo.mVideoEntity.videoid);
-
-                    GlideUtils.loadImage(mContext, holder.imageLayout, clusterInfo.mVideoEntity.picture,
-                            R.drawable.tacitly_pic);
-                }
-
-                String headUrl = clusterInfo.mUserEntity.mCustomAvatar;
-                if (clusterInfo.mUserEntity != null && clusterInfo.mUserEntity.label != null) {
-                    if ("1".equals(clusterInfo.mUserEntity.label.approvelabel)) {//企业认证
-                        holder.v.setImageResource(R.drawable.authentication_bluev_icon);
+                    if ("1".equals(clusterInfo.mUserEntity.label.headplusv)) {//个人加V
+                        holder.v.setImageResource(R.drawable.authentication_yellowv_icon);
                         holder.v.setVisibility(View.VISIBLE);
                     } else {
-                        if ("1".equals(clusterInfo.mUserEntity.label.headplusv)) {//个人加V
-                            holder.v.setImageResource(R.drawable.authentication_yellowv_icon);
+                        if ("1".equals(clusterInfo.mUserEntity.label.tarento)) {//达人
+                            holder.v.setImageResource(R.drawable.authentication_star_icon);
                             holder.v.setVisibility(View.VISIBLE);
                         } else {
-                            if ("1".equals(clusterInfo.mUserEntity.label.tarento)) {//达人
-                                holder.v.setImageResource(R.drawable.authentication_star_icon);
-                                holder.v.setVisibility(View.VISIBLE);
-                            } else {
-                                holder.v.setVisibility(View.GONE);
-                            }
+                            holder.v.setVisibility(View.GONE);
                         }
                     }
-                } else {
-                    holder.v.setVisibility(View.GONE);
                 }
-                if (null != headUrl && !"".equals(headUrl)) {
-                    // 使用服务器头像地址
-                    GlideUtils.loadNetHead(mContext, holder.headimg, headUrl, R.drawable.editor_head_feault7);
-                } else {
-                    showHead(holder.headimg, clusterInfo.mUserEntity.headportrait);
+            } else {
+                holder.v.setVisibility(View.GONE);
+            }
+            if (null != headUrl && !"".equals(headUrl)) {
+                // 使用服务器头像地址
+                GlideUtils.loadNetHead(mContext, holder.headimg, headUrl, R.drawable.editor_head_feault7);
+            } else {
+                showHead(holder.headimg, clusterInfo.mUserEntity.headportrait);
+            }
+
+            holder.userInfoLayout.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startUserCenter(clusterInfo);
                 }
+            });
+            holder.headimg.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startUserCenter(clusterInfo);
+                }
+            });
+            holder.nikename.setText(clusterInfo.mUserEntity.nickname);
+            final String sharingTime = GolukUtils.getCommentShowFormatTime(mContext,
+                    clusterInfo.mVideoEntity.sharingtime);
+            final String location = clusterInfo.mVideoEntity.location;
+            String showTimeLocation = sharingTime;
+            if (null != location) {
+                showTimeLocation = showTimeLocation + " " + location;
+            }
+            holder.time_location.setText(showTimeLocation);
 
-                holder.userInfoLayout.setOnClickListener(new OnClickListener() {
+            setVideoExtra(holder, clusterInfo);
+            holder.weiguan.setText(clusterInfo.mVideoEntity.clicknumber + " " + mContext.getResources().getString(R.string.cluster_weiguan));
+            int count = Integer.parseInt(clusterInfo.mVideoEntity.comcount);
+            holder.totalcomments.setText(mContext.getString(R.string.str_see_comments, clusterInfo.mVideoEntity.comcount));
+            if (count > 3) {
+                holder.totalcomments.setVisibility(View.VISIBLE);
+            } else {
+                holder.totalcomments.setVisibility(View.GONE);
+            }
 
+            initListener(holder, index_v);
+            // 没点过
+            if ("0".equals(clusterInfo.mVideoEntity.ispraise)) {
+                holder.zText.setTextColor(Color.rgb(136, 136, 136));
+                holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like);
+            } else {// 点赞过
+                holder.zText.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
+                holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like_press);
+            }
+
+            if ("-1".equals(clusterInfo.mVideoEntity.praisenumber)) {
+                holder.tvPraiseCount.setText(mContext.getString(R.string.str_usercenter_praise));
+            } else {
+                holder.tvPraiseCount.setText(
+                        GolukUtils.getFormatNumber(clusterInfo.mVideoEntity.praisenumber) +
+                                mContext.getString(R.string.str_usercenter_praise));
+            }
+
+            if(null != clusterInfo.mVideoEntity && null != clusterInfo.mVideoEntity.tags) {
+                GolukUtils.addTagsViews(mContext, clusterInfo.mVideoEntity.tags, holder.nTagsFL);
+            } else {
+                holder.nTagsFL.setVisibility(View.GONE);
+            }
+
+            if (clusterInfo.mVideoEntity.commentList.size() >= 1) {
+                CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(0);
+                if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
+                        && !"".equals(comment.replyname)) {
+                    UserUtils.showReplyText(mContext, holder.comment1, comment.name, comment.replyname, comment.text);
+                } else {
+                    UserUtils.showCommentText(holder.comment1, comment.name, comment.text);
+                }
+                holder.comment1.setVisibility(View.VISIBLE);
+            } else {
+                holder.comment1.setVisibility(View.GONE);
+            }
+
+            if (clusterInfo.mVideoEntity.commentList.size() >= 2) {
+                CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(1);
+                if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
+                        && !"".equals(comment.replyname)) {
+                    UserUtils.showReplyText(mContext, holder.comment2, comment.name, comment.replyname, comment.text);
+                } else {
+                    UserUtils.showCommentText(holder.comment2, comment.name, comment.text);
+                }
+                holder.comment2.setVisibility(View.VISIBLE);
+            } else {
+                holder.comment2.setVisibility(View.GONE);
+            }
+
+            if (clusterInfo.mVideoEntity.commentList.size() >= 3) {
+                CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(2);
+                if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
+                        && !"".equals(comment.replyname)) {
+                    UserUtils.showReplyText(mContext, holder.comment3, comment.name, comment.replyname, comment.text);
+                } else {
+                    UserUtils.showCommentText(holder.comment3, comment.name, comment.text);
+                }
+                holder.comment3.setVisibility(View.VISIBLE);
+            } else {
+                holder.comment3.setVisibility(View.GONE);
+            }
+            ClusterActivity ca = (ClusterActivity) mContext;
+            ca.updateListViewBottom(mCurrentViewType);
+            break;
+
+        case VIEW_TYPE_NO_DATA:
+            NoVideoDataViewHolder noVideoDataViewHolder = null;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.user_center_novideodata, null);
+                noVideoDataViewHolder = new NoVideoDataViewHolder();
+                noVideoDataViewHolder.tipsText = (TextView) convertView.findViewById(R.id.tv_tipstext);
+                noVideoDataViewHolder.emptyImage = (TextView) convertView.findViewById(R.id.tipsimage);
+                noVideoDataViewHolder.bMeasureHeight = false;
+                convertView.setTag(noVideoDataViewHolder);
+            } else {
+                noVideoDataViewHolder = (NoVideoDataViewHolder) convertView.getTag();
+            }
+
+            if (noVideoDataViewHolder.bMeasureHeight == false) {
+                if (this.mFirstItemHeight > 0) {
+                    noVideoDataViewHolder.bMeasureHeight = true;
+                    RelativeLayout rl = (RelativeLayout) convertView.findViewById(R.id.subject_ll);
+                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) rl.getLayoutParams();
+                    lp.height = mIClusterInterface.OnGetListViewHeight() - this.mFirstItemHeight;
+                    rl.setLayoutParams(lp);
+                }
+            }
+
+            boolean bNeedRefrush = false;
+
+            noVideoDataViewHolder.emptyImage.setVisibility(View.GONE);
+            if (mCurrentViewType == VIEW_TYPE_NEWEST) {
+                noVideoDataViewHolder.tipsText.setText(mContext.getString(R.string.str_cluster_newest));
+            } else {
+                noVideoDataViewHolder.tipsText.setText(mContext.getString(R.string.str_cluster_wonderful));
+            }
+
+            bNeedRefrush = true;
+            if (bNeedRefrush == true) {
+                noVideoDataViewHolder.tipsText.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startUserCenter(clusterInfo);
-                    }
-                });
-                holder.headimg.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startUserCenter(clusterInfo);
-                    }
-                });
-                holder.nikename.setText(clusterInfo.mUserEntity.nickname);
-                final String sharingTime = GolukUtils.getCommentShowFormatTime(mContext,
-                        clusterInfo.mVideoEntity.sharingtime);
-                final String location = clusterInfo.mVideoEntity.location;
-                String showTimeLocation = sharingTime;
-                if (null != location) {
-                    showTimeLocation = showTimeLocation + " " + location;
-                }
-                holder.time_location.setText(showTimeLocation);
-
-                setVideoExtra(holder, clusterInfo);
-                holder.weiguan.setText(clusterInfo.mVideoEntity.clicknumber + " " + mContext.getResources().getString(R.string.cluster_weiguan));
-                int count = Integer.parseInt(clusterInfo.mVideoEntity.comcount);
-                holder.totalcomments.setText(mContext.getString(R.string.str_see_comments, clusterInfo.mVideoEntity.comcount));
-                if (count > 3) {
-                    holder.totalcomments.setVisibility(View.VISIBLE);
-                } else {
-                    holder.totalcomments.setVisibility(View.GONE);
-                }
-
-                initListener(holder, index_v);
-                // 没点过
-                if ("0".equals(clusterInfo.mVideoEntity.ispraise)) {
-                    holder.zText.setTextColor(Color.rgb(136, 136, 136));
-                    holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like);
-                } else {// 点赞过
-                    holder.zText.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
-                    holder.zanIcon.setBackgroundResource(R.drawable.videodetail_like_press);
-                }
-
-                if ("-1".equals(clusterInfo.mVideoEntity.praisenumber)) {
-                    holder.tvPraiseCount.setText(mContext.getString(R.string.str_usercenter_praise));
-                } else {
-                    holder.tvPraiseCount.setText(
-                            GolukUtils.getFormatNumber(clusterInfo.mVideoEntity.praisenumber) +
-                                    mContext.getString(R.string.str_usercenter_praise));
-                }
-
-                if (clusterInfo.mVideoEntity.commentList.size() >= 1) {
-                    CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(0);
-                    if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
-                            && !"".equals(comment.replyname)) {
-                        UserUtils.showReplyText(mContext, holder.comment1, comment.name, comment.replyname, comment.text);
-                    } else {
-                        UserUtils.showCommentText(holder.comment1, comment.name, comment.text);
-                    }
-                    holder.comment1.setVisibility(View.VISIBLE);
-                } else {
-                    holder.comment1.setVisibility(View.GONE);
-                }
-
-                if (clusterInfo.mVideoEntity.commentList.size() >= 2) {
-                    CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(1);
-                    if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
-                            && !"".equals(comment.replyname)) {
-                        UserUtils.showReplyText(mContext, holder.comment2, comment.name, comment.replyname, comment.text);
-                    } else {
-                        UserUtils.showCommentText(holder.comment2, comment.name, comment.text);
-                    }
-                    holder.comment2.setVisibility(View.VISIBLE);
-                } else {
-                    holder.comment2.setVisibility(View.GONE);
-                }
-
-                if (clusterInfo.mVideoEntity.commentList.size() >= 3) {
-                    CommentDataInfo comment = clusterInfo.mVideoEntity.commentList.get(2);
-                    if (null != comment.replyid && !"".equals(comment.replyid) && null != comment.replyname
-                            && !"".equals(comment.replyname)) {
-                        UserUtils.showReplyText(mContext, holder.comment3, comment.name, comment.replyname, comment.text);
-                    } else {
-                        UserUtils.showCommentText(holder.comment3, comment.name, comment.text);
-                    }
-                    holder.comment3.setVisibility(View.VISIBLE);
-                } else {
-                    holder.comment3.setVisibility(View.GONE);
-                }
-                ClusterActivity ca = (ClusterActivity) mContext;
-                ca.updateListViewBottom(mCurrentViewType);
-                break;
-
-            case VIEW_TYPE_NO_DATA:
-                NoVideoDataViewHolder noVideoDataViewHolder = null;
-                if (convertView == null) {
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.user_center_novideodata, null);
-                    noVideoDataViewHolder = new NoVideoDataViewHolder();
-                    noVideoDataViewHolder.tipsText = (TextView) convertView.findViewById(R.id.tv_tipstext);
-                    noVideoDataViewHolder.emptyImage = (TextView) convertView.findViewById(R.id.tipsimage);
-                    noVideoDataViewHolder.bMeasureHeight = false;
-                    convertView.setTag(noVideoDataViewHolder);
-                } else {
-                    noVideoDataViewHolder = (NoVideoDataViewHolder) convertView.getTag();
-                }
-
-                if (noVideoDataViewHolder.bMeasureHeight == false) {
-                    if (this.mFirstItemHeight > 0) {
-                        noVideoDataViewHolder.bMeasureHeight = true;
-                        RelativeLayout rl = (RelativeLayout) convertView.findViewById(R.id.subject_ll);
-                        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) rl.getLayoutParams();
-                        lp.height = mIClusterInterface.OnGetListViewHeight() - this.mFirstItemHeight;
-                        rl.setLayoutParams(lp);
-                    }
-                }
-
-                boolean bNeedRefrush = false;
-
-                noVideoDataViewHolder.emptyImage.setVisibility(View.GONE);
-                if (mCurrentViewType == VIEW_TYPE_NEWEST) {
-                    noVideoDataViewHolder.tipsText.setText(mContext.getString(R.string.str_cluster_newest));
-                } else {
-                    noVideoDataViewHolder.tipsText.setText(mContext.getString(R.string.str_cluster_wonderful));
-                }
-
-                bNeedRefrush = true;
-                if (bNeedRefrush == true) {
-                    noVideoDataViewHolder.tipsText.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (mIClusterInterface != null) {
-                                mIClusterInterface.OnRefrushMainPageData();
-                            }
+                        if (mIClusterInterface != null) {
+                            mIClusterInterface.OnRefrushMainPageData();
                         }
+                    }
+                 });
+            }
+            break;
 
-                    });
-                }
-                break;
             default:
-                break;
+            break;
         }
         return convertView;
     }
@@ -658,16 +663,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
     private String mVideoId = null;
 
-    public void setWillShareVideoId(String vid) {
-        mVideoId = vid;
-    }
-
-    public String getWillShareVideoId() {
-        return mVideoId;
-    }
-
     private void initListener(ViewHolder holder, int index) {
-
         VideoSquareInfo mVideoSquareInfo = null;
 
         if (mCurrentViewType == VIEW_TYPE_RECOMMEND) {
@@ -730,14 +726,6 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
             } else {
                 holder.time_location.setCompoundDrawables(null, null, null, null);
             }
-
-            if (clusterInfo.mVideoEntity.videoExtra.topicname == null || "".equals(clusterInfo.mVideoEntity.videoExtra.topicname)) {
-                got = "";
-            } else {
-                // 获得聚合字符串
-                got = "#" + clusterInfo.mVideoEntity.videoExtra.topicname + "#";
-            }
-
         } else {
             holder.videoGoldImg.setVisibility(View.GONE);
             holder.time_location.setCompoundDrawables(null, null, null, null);
@@ -762,30 +750,6 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
             return mNetworkInfo.isAvailable();
         }
         return false;
-    }
-
-
-    @SuppressLint("SimpleDateFormat")
-    public String formatTime(String date) {
-        if(null == date) {
-            return "";
-        }
-
-        String time = "";
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-
-        try {
-            Date str2date = formatter.parse(date);
-            if (null != str2date) {
-                formatter = new SimpleDateFormat(mContext.getResources().getString(R.string.cluster_time_format));
-                if (null != formatter) {
-                    time = formatter.format(str2date);
-                }
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return time;
     }
 
     public static class HeadViewHolder {
@@ -834,32 +798,33 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
         TextView comment3;
 
         ImageView isopen;
+        FlowLayout nTagsFL;
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         int action = event.getAction();
         int id = v.getId();
+
         if (id == R.id.share_btn) {
-            Button sharebtn = (Button) v;
+            Button sharebtn = (Button)v;
             switch (action) {
-                case MotionEvent.ACTION_DOWN:
-                    Drawable more_down = mContext.getResources().getDrawable(R.drawable.share_btn_press);
-                    sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_down, null, null, null);
-                    sharebtn.setTextColor(Color.rgb(59, 151, 245));
-                    break;
-                case MotionEvent.ACTION_UP:
-                    Drawable more_up = mContext.getResources().getDrawable(R.drawable.share_btn);
-                    sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_up, null, null, null);
-                    sharebtn.setTextColor(Color.rgb(136, 136, 136));
-                    break;
+            case MotionEvent.ACTION_DOWN:
+                Drawable more_down = mContext.getResources().getDrawable(R.drawable.share_btn_press);
+                sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_down, null, null, null);
+                sharebtn.setTextColor(Color.rgb(59, 151, 245));
+                break;
+            case MotionEvent.ACTION_UP:
+                Drawable more_up = mContext.getResources().getDrawable(R.drawable.share_btn);
+                sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_up, null, null, null);
+                sharebtn.setTextColor(Color.rgb(136, 136, 136));
+                break;
             }
         }
         return false;
     }
 
     public void startUserCenter(VideoSquareInfo clusterInfo) {
-        // 跳转当前点赞人的个人中心
         GolukUtils.startUserCenterActivity(mContext, clusterInfo.mUserEntity.uid);
     }
 
@@ -892,7 +857,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
         }
 
         ClusterVoteShareBean bean = (ClusterVoteShareBean) result;
-        if (!bean.success) {
+        if (!bean.success || null == bean.data) {
             if (!TextUtils.isEmpty(bean.msg)) {
                 Toast.makeText(mContext, bean.msg,
                         Toast.LENGTH_SHORT).show();
@@ -900,24 +865,23 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                 Toast.makeText(mContext, mContext.getString(R.string.network_error),
                         Toast.LENGTH_SHORT).show();
             }
+            return;
         }
 
-        if (null != bean.data) {
-            ClusterVoteShareDataBean data = bean.data;
-            String address = mHeadData.activity.voteaddress;
-            if (null == address || address.trim().equals("")) {
-                return;
-            } else {
-                Intent intent = new Intent(mContext, UserOpenUrlActivity.class);
-                intent.putExtra(GolukConfig.H5_URL, address);
-                intent.putExtra(GolukConfig.WEB_TYPE, GolukConfig.NEED_SHARE);
-                intent.putExtra(GolukConfig.NEED_H5_TITLE, data.title);
-                intent.putExtra(GolukConfig.NEED_SHARE_ID, data.voteid);
-                intent.putExtra(GolukConfig.NEED_SHARE_PICTURE, data.picture);
-                intent.putExtra(GolukConfig.NEED_SHARE_INTRO, data.introduction);
-                intent.putExtra(GolukConfig.URL_OPEN_PATH, "cluster_adapter");
-                mContext.startActivity(intent);
-            }
+        ClusterVoteShareDataBean data = bean.data;
+        String address = mHeadData.activity.voteaddress;
+        if (null == address || address.trim().equals("")) {
+            return;
+        } else {
+            Intent intent = new Intent(mContext, UserOpenUrlActivity.class);
+            intent.putExtra(GolukConfig.H5_URL, address);
+            intent.putExtra(GolukConfig.WEB_TYPE, GolukConfig.NEED_SHARE);
+            intent.putExtra(GolukConfig.NEED_H5_TITLE, data.title);
+            intent.putExtra(GolukConfig.NEED_SHARE_ID, data.voteid);
+            intent.putExtra(GolukConfig.NEED_SHARE_PICTURE, data.picture);
+            intent.putExtra(GolukConfig.NEED_SHARE_INTRO, data.introduction);
+            intent.putExtra(GolukConfig.URL_OPEN_PATH, "cluster_adapter");
+            mContext.startActivity(intent);
         }
     }
 }

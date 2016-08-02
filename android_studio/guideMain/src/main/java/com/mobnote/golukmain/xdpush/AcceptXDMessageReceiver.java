@@ -61,7 +61,7 @@ public class AcceptXDMessageReceiver extends XGPushBaseReceiver {
 	// 消息透传 收到消息
 	@Override
 	public void onTextMessage(Context context, XGPushTextMessage message) {
-		
+
 		String customContent = message.getContent();
 		String title = message.getTitle();
 		//Log.i("", "jyf----XG-----AcceptXdMessage  title:" + title + "  msg:" + customContent);
@@ -70,12 +70,12 @@ public class AcceptXDMessageReceiver extends XGPushBaseReceiver {
 
 	/**
 	 * 处理推送下来的自定义消息
-	 * 
+	 *
 	 * @param msg
 	 * @author jyf
 	 */
 	private void dealTextMsg(Context context, String title, String json) {
-		
+
 		if (null == json || json.equals("")) {
 			return;
 		}
@@ -110,8 +110,9 @@ public class AcceptXDMessageReceiver extends XGPushBaseReceiver {
 					// 103  follow
 					// 200~300 = system
 					// 300~400 = official notification
-					if(0 == type) {
-						//do nothing
+                    // 209 live video to followers
+                    if(0 == type) {
+                        //do nothing
 					} else if(101 == type) {
 						if(!TextUtils.isEmpty(mApp.mCurrentUId)) {
 							int num = MessageManager.getMessageManager().getCommentCount();

@@ -8,23 +8,24 @@ import com.mobnote.golukmain.http.request.GolukFastjsonRequest;
 
 public class GetShareUrlRequest extends GolukFastjsonRequest<GetClusterShareUrlData> {
 
-	public GetShareUrlRequest(int requestType, IRequestResultListener listener) {
-		super(requestType, GetClusterShareUrlData.class, listener);
-	}
+    public GetShareUrlRequest(int requestType, IRequestResultListener listener) {
+        super(requestType, GetClusterShareUrlData.class, listener);
+    }
 
-	@Override
-	protected String getPath() {
-		return "/navidog4MeetTrans/activity.htm";
-	}
+    @Override
+    protected String getPath() {
+        return "/navidog4MeetTrans/activity.htm";
+    }
 
-	@Override
-	protected String getMethod() {
-		return "share";
-	}
+    @Override
+    protected String getMethod() {
+        return "share";
+    }
 
-	public void get(String activityId) {
-		HashMap<String, String> headers = (HashMap<String, String>) getHeader();
-		headers.put("activityid", activityId);
-		get();
-	}
+    public void get(String protocol, String tagId) {
+        HashMap<String, String> headers = (HashMap<String, String>) getHeader();
+        headers.put("xieyi", protocol);
+        headers.put("tagid", tagId);
+        get();
+    }
 }

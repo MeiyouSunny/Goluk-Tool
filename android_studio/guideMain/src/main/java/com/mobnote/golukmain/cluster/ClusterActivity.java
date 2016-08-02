@@ -4,10 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -27,7 +23,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import de.greenrobot.event.EventBus;
 
 import com.mobnote.application.GolukApplication;
@@ -39,12 +34,14 @@ import com.mobnote.golukmain.carrecorder.util.ImageManager;
 import com.mobnote.golukmain.carrecorder.util.MD5Utils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.cluster.ClusterAdapter.IClusterInterface;
-import com.mobnote.golukmain.cluster.bean.ClusterHeadBean;
 import com.mobnote.golukmain.cluster.bean.GetClusterShareUrlData;
+import com.mobnote.golukmain.cluster.bean.TagActivityBean;
+import com.mobnote.golukmain.cluster.bean.TagDataBean;
 import com.mobnote.golukmain.cluster.bean.TagGeneralRetBean;
 import com.mobnote.golukmain.cluster.bean.TagGeneralVideoListBean;
 import com.mobnote.golukmain.cluster.bean.TagRetBean;
 import com.mobnote.golukmain.cluster.bean.ShareUrlDataBean;
+import com.mobnote.golukmain.cluster.bean.TagTagBean;
 import com.mobnote.golukmain.cluster.bean.VolleyDataFormat;
 import com.mobnote.golukmain.comment.CommentActivity;
 import com.mobnote.golukmain.comment.ICommentFn;
@@ -66,16 +63,19 @@ import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
 import com.mobnote.util.GlideUtils;
+import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
 
 public class ClusterActivity extends BaseActivity implements OnClickListener, IRequestResultListener, IClickShareView,
-        IClickPraiseView, IDialogDealFn, IClusterInterface, VideoSuqareManagerFn {
+        IClickPraiseView, IDialogDealFn, IClusterInterface {
 
     public static final String TAG = "ClusterActivity";
 
     public static final String CLUSTER_KEY_ACTIVITYID = "activityid";
     public static final String CLUSTER_KEY_TITLE = "cluster_key_title";
     public static final String CLUSTER_KEY_TYPE = "cluster_key_type";
+
+
     private RTPullListView mRTPullListView = null;
     private CustomLoadingDialog mCustomProgressDialog = null;
     private VolleyDataFormat vdf = new VolleyDataFormat();
@@ -84,11 +84,11 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
     /**
      * 保存列表一个显示项索引
      */
-    private int mWonderfulFirstVisible;
+    private int mListFirstVisible;
     /**
      * 保存列表显示item个数
      */
-    private int mWonderfulVisibleCount;
+    private int mListVisibleCount;
     /**
      * 返回按钮
      */
@@ -104,7 +104,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
     private Button mShareBtn;
     private EditText mEditText = null;
     private TextView mCommenCountTV = null;
-    public ClusterHeadBean mHeadData = null;
+    private TagDataBean mHeadData = null;
     public List<VideoSquareInfo> mRecommendList = null;
     public List<VideoSquareInfo> mNewestList = null;
     public ClusterAdapter mClusterAdapter;
@@ -113,6 +113,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
      * 活动id
      **/
     private String mTagId = null;
+    private String mActivityId = null;
     private String mClusterTitle = null;
 
     private TagGetRequest mTagGetRequest = null;
@@ -132,15 +133,10 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
     private boolean mIsRecommendLoad = false;
     private boolean mIsNewestLoad = false;
 
-    /**
-     * 是否在上拉刷新
-     **/
-    private boolean mIsLoadDataRecommend = false;
-    private boolean mIsLoadDataNews = false;
-
-    private String mTimeStamp = "00000000000000000";
+    private String mTimeStamp = "";
     private int mTagType;
     private View mClusterCommentRL;
+    private String mCurMotion = GolukConfig.LIST_REFRESH_NORMAL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,8 +153,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
         this.initData();// 初始化view
         this.initListener();// 初始化view的监听
 
-        GolukApplication.getInstance().getVideoSquareManager().addVideoSquareManagerListener(TAG, this);
         mIsfrist = true;
+        mCurMotion = GolukConfig.LIST_REFRESH_NORMAL;
         httpPost(mTagId);
         mRTPullListView.firstFreshState();
 
@@ -166,7 +162,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
     }
 
     public static class NoVideoDataViewHolder {
-        TextView tips;
         TextView emptyImage;
         TextView tipsText;
         boolean bMeasureHeight;
@@ -183,9 +178,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
     private void httpPost(String tagId) {
         mTagGetRequest = new TagGetRequest(IPageNotifyFn.PageType_TagGet, this);
-        mTagGetRequest.get("200", tagId);
-        sendTagRecommendListRequest(tagId, "0", mTimeStamp, LIST_PAGE_SIZE);
-        sendTagNewestListRequest(tagId, "0", mTimeStamp, LIST_PAGE_SIZE);
+        mTagGetRequest.get(GolukConfig.SERVER_PROTOCOL_V2, tagId);
+        sendTagRecommendListRequest(tagId, GolukConfig.LIST_REFRESH_NORMAL, mTimeStamp, LIST_PAGE_SIZE);
+        sendTagNewestListRequest(tagId, GolukConfig.LIST_REFRESH_NORMAL, mTimeStamp, LIST_PAGE_SIZE);
     }
 
     private void initData() {
@@ -221,6 +216,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
         mRTPullListView.setonRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mCurMotion = GolukConfig.LIST_REFRESH_NORMAL;
                 httpPost(mTagId);
             }
         });
@@ -236,7 +232,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
             }
 
             if(mRTPullListView.getAdapter().getCount() !=
-                    (mWonderfulFirstVisible + mWonderfulVisibleCount)) {
+                    (mListFirstVisible + mListVisibleCount)) {
                 return;
             }
 
@@ -249,11 +245,11 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
                     return;
                 }
 
+                mCurMotion = GolukConfig.LIST_REFRESH_PULL_UP;
                 mRecommendRequest = new TagRecommendListRequest(
                         IPageNotifyFn.PageType_ClusterRecommend, ClusterActivity.this);
-                mRecommendRequest.get(mTagId, "2", mTimeStamp, "20");
+                mRecommendRequest.get(mTagId, GolukConfig.SERVER_PROTOCOL_V2, mTimeStamp, LIST_PAGE_SIZE);
                 mIsRecommendLoad = false;
-                mIsLoadDataRecommend = true;
             } else {
                 if(mNewestList == null || mNewestList.size() == 0) {
                     return;
@@ -261,31 +257,33 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
                 if(!mIsNewestLoad) {
                     return;
                 }
+
+                mCurMotion = GolukConfig.LIST_REFRESH_PULL_UP;
                 mNewsRequest = new TagNewestListRequest(IPageNotifyFn.PageType_ClusterNews,
                         ClusterActivity.this);
-                mNewsRequest.get(mTagId, "2",
-                        mNewestList.get(mNewestList.size() - 1).mVideoEntity.sharingtime, "20");
-                mIsLoadDataNews = true;
+                mNewsRequest.get(mTagId, GolukConfig.SERVER_PROTOCOL_V2,
+                        mNewestList.get(mNewestList.size() - 1).mVideoEntity.sharingtime, LIST_PAGE_SIZE);
                 mIsNewestLoad = false;
             }
         }
 
         @Override
         public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
-            mWonderfulFirstVisible = firstVisibleItem;
-            mWonderfulVisibleCount = visibleItemCount;
+            mListFirstVisible = firstVisibleItem;
+            mListVisibleCount = visibleItemCount;
         }
     };
 
     @Override
     public void onClick(View view) {
         int id = view.getId();
+
         if (id == R.id.back_btn) {
-            this.finish();
+            finish();
         } else if (id == R.id.title_share) {
             showProgressDialog();
             mShareRequest = new GetShareUrlRequest(IPageNotifyFn.PageType_ClusterShareUrl, this);
-            mShareRequest.get(mTagId);
+            mShareRequest.get(GolukConfig.SERVER_PROTOCOL_V2, mTagId);
         } else if (id == R.id.custer_comment_send) {
             toCommentActivity(false);
         } else if (id == R.id.custer_comment_input) {
@@ -299,7 +297,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
             return;
         }
         Intent intent = new Intent(this, CommentActivity.class);
-        intent.putExtra(CommentActivity.COMMENT_KEY_MID, mTagId);
+        intent.putExtra(CommentActivity.COMMENT_KEY_MID, mActivityId);
         intent.putExtra(CommentActivity.COMMENT_KEY_TYPE, ICommentFn.COMMENT_TYPE_CLUSTER);
         intent.putExtra(CommentActivity.COMMENT_KEY_SHOWSOFT, isShowSoft);
         intent.putExtra(CommentActivity.COMMENT_KEY_ISCAN_INPUT, mIsCanInput);
@@ -328,17 +326,12 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
         }
 
         mClusterAdapter.notifyDataSetChanged();
-        if (count > 0) {
-            this.mRTPullListView.setSelection(count);
+        if (count > 0 && mCurMotion.equals(GolukConfig.LIST_REFRESH_PULL_UP)) {
+            mRTPullListView.setSelection(count);
         }
     }
 
-    /**
-     * 获取推荐的上拉刷新时间戳
-     *
-     * @param list
-     */
-    private void setTjTime(List<TagGeneralVideoListBean> list) {
+    private void setTimeStamp(List<TagGeneralVideoListBean> list) {
         if(null == list || list.size() == 0) {
             return;
         }
@@ -349,27 +342,29 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
         }
     }
 
-    private void setCommentData(ClusterHeadBean bean) {
+    private void setCommentData(TagActivityBean bean) {
         if (bean == null) {
             return;
         }
 
         mIsCanInput = false;
-        mTagId = bean.activity.activityid;
-        if (null != bean.activity.iscomment && !"".equals(bean.activity.iscomment)) {
-            if ("1".equals(bean.activity.iscomment)) {
-                mIsCanInput = true;
-            }
+        mActivityId = bean.activityid;
+
+        if(null != bean.iscomment && "1".equals(bean.iscomment)) {
+            mIsCanInput = true;
         }
-        setCommentCount(bean.activity.commentcount);
+
+        setCommentCount(bean.commentcount);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (null != mSharePlatform) {
-            mSharePlatform.onActivityResult(requestCode, resultCode, data);
+        if(null == mSharePlatform) {
+            return;
         }
+
+        mSharePlatform.onActivityResult(requestCode, resultCode, data);
     }
 
     public boolean sendPraiseRequest(String id) {
@@ -410,7 +405,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
             if (ret.data != null) {
                 mIsRequestSucess = true;
                 mClusterAdapter.setDataInfo(ret.data);
-
+                if(1 == ret.data.type) {
+                    setCommentData(ret.data.activity);
+                }
                 updateViewData(true, 0);
             } else {
                 updateViewData(false, 0);
@@ -418,7 +415,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
             mIsfrist = false;
         } else if (requestType == IPageNotifyFn.PageType_ClusterRecommend) {
-            mIsLoadDataRecommend = false;
             TagGeneralRetBean ret = (TagGeneralRetBean) result;
             if(ret == null || ret.code != 0) {
                 mIsRecommendLoad = true;
@@ -432,7 +428,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
                 return;
             }
 
-            setTjTime(ret.data.videolist);
+            setTimeStamp(ret.data.videolist);
             List<VideoSquareInfo> list = vdf.getClusterList(ret.data.videolist);
             if(null == list || list.size() == 0) {
                 mIsRecommendLoad = false;
@@ -450,7 +446,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
             mClusterAdapter.setDataInfo(mRecommendList, null);
             updateViewData(true, count);
         } else if (requestType == IPageNotifyFn.PageType_ClusterNews) {
-            mIsLoadDataNews = false;
             TagGeneralRetBean ret = (TagGeneralRetBean) result;
             if(null == ret || ret.code != 0) {
                 mIsNewestLoad = true;
@@ -481,55 +476,61 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
             }
         } else if (requestType == IPageNotifyFn.PageType_ClusterShareUrl) {
             closeProgressDialog();
-            GetClusterShareUrlData data = (GetClusterShareUrlData) result;
-            if (data != null && data.success) {
-                if (data.data != null) {
 
-                    ShareUrlDataBean sdb = data.data;
-                    if ("0".equals(sdb.result)) {
-                        String shareurl = sdb.shorturl;
-                        String coverurl = sdb.coverurl;
-                        String describe = sdb.description;
-                        String realDesc = this.getResources().getString(R.string.cluster_jxzt_share_txt);
-
-                        if (TextUtils.isEmpty(describe)) {
-                            describe = "";
-                        }
-                        String ttl = mClusterTitle;
-                        if (TextUtils.isEmpty(mClusterTitle)) {
-                            ttl = this.getResources().getString(R.string.cluster_jx_zt_share);
-                        }
-                        // 缩略图
-                        Bitmap bitmap = null;
-                        if (mHeadData != null) {
-                            bitmap = getThumbBitmap(mHeadData.activity.picture);
-                        }
-
-                        if (this != null && !this.isFinishing()) {
-                            ThirdShareBean bean = new ThirdShareBean();
-                            bean.surl = shareurl;
-                            bean.curl = coverurl;
-                            bean.db = describe;
-                            bean.tl = ttl;
-                            bean.bitmap = bitmap;
-                            bean.realDesc = realDesc;
-                            bean.videoId = mTagId;
-                            bean.from = this.getString(R.string.str_zhuge_action_tag);
-                            ProxyThirdShare shareBoard = new ProxyThirdShare(ClusterActivity.this, mSharePlatform, bean);
-                            shareBoard.showAtLocation(ClusterActivity.this.getWindow().getDecorView(), Gravity.BOTTOM,
-                                    0, 0);
-                        } else {
-                            GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
-                        }
-                    } else {
-                        GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
-                    }
-                } else {
-                    GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
-                }
-            } else {
+            GetClusterShareUrlData ret = (GetClusterShareUrlData) result;
+            if(null == ret || 0 != ret.code) {
                 GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
+                return;
             }
+
+            if(null == ret.data) {
+                GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
+                return;
+            }
+
+            ShareUrlDataBean sdb = ret.data;
+            String shareurl = sdb.shorturl;
+            String coverurl = sdb.coverurl;
+            String describe = sdb.description;
+            String realDesc = this.getResources().getString(R.string.cluster_jxzt_share_txt);
+
+            if (TextUtils.isEmpty(describe)) {
+                describe = "";
+            }
+            String ttl = mClusterTitle;
+            if (TextUtils.isEmpty(mClusterTitle)) {
+                ttl = this.getResources().getString(R.string.cluster_jx_zt_share);
+            }
+
+            Bitmap bitmap = null;
+
+            if(mHeadData != null) {
+                if (mHeadData.type == 0 && null != mHeadData.tag) {
+                    bitmap = getThumbBitmap(mHeadData.tag.picture);
+                } else if(mHeadData.type == 1 && null != mHeadData.activity) {
+                    bitmap = getThumbBitmap(mHeadData.activity.picture);
+                } else {
+                    // which should not happen
+                }
+            }
+
+            if(null == this || this.isFinishing()) {
+                GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
+                return;
+            }
+
+            ThirdShareBean bean = new ThirdShareBean();
+            bean.surl = shareurl;
+            bean.curl = coverurl;
+            bean.db = describe;
+            bean.tl = ttl;
+            bean.bitmap = bitmap;
+            bean.realDesc = realDesc;
+            bean.videoId = mTagId;
+            bean.from = this.getString(R.string.str_zhuge_action_tag);
+            ProxyThirdShare shareBoard = new ProxyThirdShare(ClusterActivity.this, mSharePlatform, bean);
+            shareBoard.showAtLocation(ClusterActivity.this.getWindow().getDecorView(), Gravity.BOTTOM,
+                        0, 0);
         } else if (requestType == IPageNotifyFn.PageType_Praise) {
             PraiseResultBean prBean = (PraiseResultBean) result;
             if (null == result || !prBean.success) {
@@ -538,19 +539,23 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
             }
 
             PraiseResultDataBean ret = prBean.data;
-            if (null != ret && !TextUtils.isEmpty(ret.result)) {
-                if ("0".equals(ret.result)) {
-                    if (null != mVideoSquareInfo) {
-                        if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
-                            mVideoSquareInfo.mVideoEntity.ispraise = "1";
-                            updateClickPraiseNumber(true, mVideoSquareInfo);
-                        }
-                    }
-                } else if ("7".equals(ret.result)) {
-                    GolukUtils.showToast(this, this.getString(R.string.str_no_duplicated_praise));
-                } else {
-                    GolukUtils.showToast(this, this.getString(R.string.str_praise_failed));
+            if(null == ret || TextUtils.isEmpty(ret.result)) {
+                return;
+            }
+
+            if ("0".equals(ret.result)) {
+                if(null == mVideoSquareInfo) {
+                    return;
                 }
+
+                if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
+                    mVideoSquareInfo.mVideoEntity.ispraise = "1";
+                    updateClickPraiseNumber(true, mVideoSquareInfo);
+                }
+            } else if ("7".equals(ret.result)) {
+                GolukUtils.showToast(this, this.getString(R.string.str_no_duplicated_praise));
+            } else {
+                GolukUtils.showToast(this, this.getString(R.string.str_praise_failed));
             }
         } else if (requestType == IPageNotifyFn.PageType_PraiseCancel) {
             PraiseCancelResultBean praiseCancelResultBean = (PraiseCancelResultBean) result;
@@ -560,17 +565,21 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
             }
 
             PraiseCancelResultDataBean cancelRet = praiseCancelResultBean.data;
-            if (null != cancelRet && !TextUtils.isEmpty(cancelRet.result)) {
-                if ("0".equals(cancelRet.result)) {
-                    if (null != mVideoSquareInfo) {
-                        if ("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
-                            mVideoSquareInfo.mVideoEntity.ispraise = "0";
-                            updateClickPraiseNumber(true, mVideoSquareInfo);
-                        }
-                    }
-                } else {
-                    GolukUtils.showToast(this, this.getString(R.string.str_cancel_praise_failed));
+            if(null == cancelRet || TextUtils.isEmpty(cancelRet.result)) {
+                return;
+            }
+
+            if ("0".equals(cancelRet.result)) {
+                if(null == mVideoSquareInfo) {
+                    return;
                 }
+
+                if ("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
+                    mVideoSquareInfo.mVideoEntity.ispraise = "0";
+                    updateClickPraiseNumber(true, mVideoSquareInfo);
+                }
+            } else {
+                GolukUtils.showToast(this, this.getString(R.string.str_cancel_praise_failed));
             }
         }
     }
@@ -583,7 +592,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
     public void updateListViewBottom(int type) {
         mRTPullListView.removeFooterView(1);
         mRTPullListView.removeFooterView(2);
-        if (ClusterAdapter.VIEW_TYPE_RECOMMEND == type) {// 推荐
+        if (ClusterAdapter.VIEW_TYPE_RECOMMEND == type) {
             if (mIsRecommendLoad) {
                 mRTPullListView.addFooterView(1);
             } else {
@@ -591,7 +600,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
                     mRTPullListView.addFooterView(2);
                 }
             }
-        } else {// 最新
+        } else {
             if (mIsNewestLoad) {
                 mRTPullListView.addFooterView(1);
             } else {
@@ -603,10 +612,15 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
     }
 
     public Bitmap getThumbBitmap(String netUrl) {
+        if(TextUtils.isEmpty(netUrl)) {
+            return null;
+        }
+
         String name = MD5Utils.hashKeyForDisk(netUrl) + ".0";
         String path = Environment.getExternalStorageDirectory() + File.separator + "goluk/image_cache";
         File file = new File(path + File.separator + name);
         Bitmap t_bitmap = null;
+
         if (file.exists()) {
             t_bitmap = ImageManager.getBitmapFromCache(file.getAbsolutePath(), 50, 50);
         }
@@ -646,25 +660,31 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
         if (!flag) {
             return;
         }
+
         if (null == mClusterAdapter) {
             return;
         }
+
         if (mClusterAdapter.getCurrentViewType() == ClusterAdapter.VIEW_TYPE_RECOMMEND) {
-            if (null != mRecommendList) {
-                for (int i = 0; i < mRecommendList.size(); i++) {
-                    VideoSquareInfo vs = this.mRecommendList.get(i);
-                    if (this.updatePraise(vs, mRecommendList, i)) {
-                        break;
-                    }
+            if(null == mRecommendList) {
+                return;
+            }
+
+            for (int i = 0; i < mRecommendList.size(); i++) {
+                VideoSquareInfo vs = this.mRecommendList.get(i);
+                if (this.updatePraise(vs, mRecommendList, i)) {
+                    break;
                 }
             }
         } else {
-            if (null != mNewestList) {
-                for (int i = 0; i < this.mNewestList.size(); i++) {
-                    VideoSquareInfo vs = this.mNewestList.get(i);
-                    if (this.updatePraise(vs, mNewestList, i)) {
-                        break;
-                    }
+            if(null == mNewestList) {
+                return;
+            }
+
+            for (int i = 0; i < this.mNewestList.size(); i++) {
+                VideoSquareInfo vs = this.mNewestList.get(i);
+                if (this.updatePraise(vs, mNewestList, i)) {
+                    break;
                 }
             }
         }
@@ -706,76 +726,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
     @Override
     public void OnRefrushMainPageData() {
 
-    }
-
-    @Override
-    public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-        if (event == VSquare_Req_VOP_GetShareURL_Video) {
-            Context topContext = mBaseApp.getContext();
-            if (topContext != this) {
-                return;
-            }
-            closeProgressDialog();
-            if (RESULE_SUCESS == msg) {
-                try {
-                    JSONObject result = new JSONObject((String) param2);
-                    if (result.getBoolean("success")) {
-                        JSONObject data = result.getJSONObject("data");
-                        String shareurl = data.getString("shorturl");
-                        String coverurl = data.getString("coverurl");
-                        String describe = data.optString("describe");
-
-                        String realDesc = this.getResources().getString(R.string.str_share_board_real_desc);
-
-                        if (TextUtils.isEmpty(describe)) {
-                            describe = this.getResources().getString(R.string.str_share_describe);
-                        }
-                        String ttl = this.getResources().getString(R.string.str_goluk_wonderful_video);
-
-                        if (!this.isFinishing()) {
-                            String videoId = null != mWillShareVideoSquareInfo ? mWillShareVideoSquareInfo.mVideoEntity.videoid
-                                    : "";
-                            String username = null != mWillShareVideoSquareInfo ? mWillShareVideoSquareInfo.mUserEntity.nickname
-                                    : "";
-                            describe = username + this.getString(R.string.str_colon) + describe;
-
-                            ThirdShareBean bean = new ThirdShareBean();
-                            bean.surl = shareurl;
-                            bean.curl = coverurl;
-                            bean.db = describe;
-                            bean.tl = ttl;
-                            bean.bitmap = null;
-                            bean.realDesc = realDesc;
-                            bean.videoId = videoId;
-                            bean.from = this.getString(R.string.str_zhuge_action_tag);
-
-                            ProxyThirdShare shareBoard = new ProxyThirdShare(this, mSharePlatform, bean);
-                            shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-                        }
-
-                    } else {
-                        GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
-            }
-        } else if (event == VSquare_Req_VOP_Praise) {
-            if (RESULE_SUCESS == msg) {
-                if (null != mVideoSquareInfo) {
-                    if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
-                        mVideoSquareInfo.mVideoEntity.ispraise = "1";
-                        updateClickPraiseNumber(true, mVideoSquareInfo);
-                    }
-                }
-
-            } else {
-                GolukUtils.showToast(this, this.getResources().getString(R.string.network_error));
-            }
-
-        }
     }
 
     @Override

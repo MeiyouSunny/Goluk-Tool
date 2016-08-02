@@ -95,7 +95,7 @@ public class GolukNotification {
 
 	/**
 	 * 显示程序外通知
-	 * 
+	 *
 	 * @param msgBean
 	 *            推送解析后的数据
 	 * @param json
@@ -109,7 +109,7 @@ public class GolukNotification {
 
 	/**
 	 * 创建一个通知显示体
-	 * 
+	 *
 	 * @author jyf
 	 */
 	@SuppressWarnings("deprecation")
@@ -162,7 +162,7 @@ public class GolukNotification {
 
 	/**
 	 * 设置显示状态栏通知时，配置的基本参数，比如声音等
-	 * 
+	 *
 	 * @author jyf
 	 */
 	private void setNoticationParam(Notification noti) {
@@ -188,7 +188,7 @@ public class GolukNotification {
 
 	/**
 	 * 如果是夜间，则推送来了，不响声音
-	 * 
+	 *
 	 * @return true/false 夜/白
 	 * @author jyf
 	 */
@@ -204,7 +204,7 @@ public class GolukNotification {
 
 	/**
 	 * 配置推送点击时发送的广播
-	 * 
+	 *
 	 * @return
 	 * @author jyf
 	 */
@@ -217,7 +217,7 @@ public class GolukNotification {
 
 	/**
 	 * 配置，点击下拉通知时，启动的Activity
-	 * 
+	 *
 	 * @param startActivity
 	 * @return
 	 * @author jyf
@@ -237,7 +237,7 @@ public class GolukNotification {
 
 	/**
 	 * 程序退出时调用
-	 * 
+	 *
 	 * @author jyf
 	 */
 	public void destroy() {
@@ -249,7 +249,7 @@ public class GolukNotification {
 
 	/**
 	 * 启动1分钟不弹框的计时
-	 * 
+	 *
 	 * @author jyf
 	 */
 	private void startTimer() {
@@ -265,7 +265,7 @@ public class GolukNotification {
 
 	/**
 	 * 销毁推送对话框
-	 * 
+	 *
 	 * @author jyf
 	 */
 	public void dimissPushDialog() {
@@ -277,7 +277,7 @@ public class GolukNotification {
 
 	/**
 	 * 判断接收到的推送消息是否可以显示
-	 * 
+	 *
 	 * @return true/false 可以显示/不显示
 	 * @author jyf
 	 */
@@ -295,7 +295,7 @@ public class GolukNotification {
 
 	/**
 	 * 程序内推送,显示对话框
-	 * 
+	 *
 	 * @author jyf
 	 */
 	public void showAppInnerPush(final Context cnt, final XingGeMsgBean msgBean) {
@@ -337,7 +337,7 @@ public class GolukNotification {
 
 	/**
 	 * 处理程序内推送点击，程序内Dialog弹出后，点击“确定”的处理
-	 * 
+	 *
 	 * @param msgBean
 	 *            消息体
 	 * @author jyf
@@ -435,6 +435,11 @@ public class GolukNotification {
 					context.startActivity(intent);
 				} else if (103 == type) {
 					EventBus.getDefault().post(new EventFollowPush(EventConfig.FOLLOW_PUSH));
+//                } else if (209 == type) {
+//                    Context context = GolukApplication.getInstance().getContext();
+//                    String vid = JsonUtil.getJsonStringValue( array.getString(1),"vid","");
+//                    GolukUtils.startPublishOrWatchLiveActivity(context,false,false,vid,null,null);
+//                    return;
 				} else if (type >= 200 && type < 300) {
 					Context context = GolukApplication.getInstance().getContext();
 					Intent intent = new Intent(context, SystemMsgActivity.class);
@@ -587,7 +592,7 @@ public class GolukNotification {
 
 	/**
 	 * 推送启动聚合活动
-	 * 
+	 *
 	 * @param cid
 	 *            聚合id
 	 * @param title
@@ -607,7 +612,7 @@ public class GolukNotification {
 
 	/**
 	 * 推送启动专题
-	 * 
+	 *
 	 * @param sid
 	 *            专题id
 	 * @param title
@@ -627,7 +632,7 @@ public class GolukNotification {
 
 	/**
 	 * 启动视频详情界面
-	 * 
+	 *
 	 * @param vid
 	 *            视频Id
 	 * @author jyf
@@ -644,7 +649,7 @@ public class GolukNotification {
 
 	/**
 	 * 清除某个通知
-	 * 
+	 *
 	 * @param activity
 	 * @param id
 	 * @author jyf
@@ -657,7 +662,7 @@ public class GolukNotification {
 
 	/**
 	 * 用户点击状态栏上的消息处理,跳转到主界面
-	 * 
+	 *
 	 * @param intent
 	 *            包含用户点击的数据
 	 * @author jyf

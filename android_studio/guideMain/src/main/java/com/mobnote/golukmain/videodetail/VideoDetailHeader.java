@@ -762,4 +762,11 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 		mVideoView.stopPlayback();
 		mHandler.removeCallbacksAndMessages(null);
 	}
+
+	public String getVideoThumbnailURL(){
+		if (mVideoDetailRetBean==null || mVideoDetailRetBean.data==null || mVideoDetailRetBean.data.avideo==null || mVideoDetailRetBean.data.avideo.video==null){
+			return "";
+		}
+		return mVideoDetailRetBean.data.avideo.video.picture;
+	}
 }

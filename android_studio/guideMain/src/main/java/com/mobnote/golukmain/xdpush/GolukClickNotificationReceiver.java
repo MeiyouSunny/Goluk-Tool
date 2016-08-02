@@ -34,6 +34,7 @@ public class GolukClickNotificationReceiver extends BroadcastReceiver {
 			}
 		}
 
+
 	}
 
 	/**
