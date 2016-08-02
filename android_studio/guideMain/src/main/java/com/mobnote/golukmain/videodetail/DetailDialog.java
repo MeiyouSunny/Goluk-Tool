@@ -25,12 +25,12 @@ public class DetailDialog extends Dialog implements android.view.View.OnClickLis
 	private TextView back;
 	private TextView cancle;
 	private Context mContext;
-	private VideoJson mVideoJson = null;
+	private VideoDetailRetBean mVideoDetailRetBean = null;
 	private AlertDialog ad;
 	private AlertDialog confirmation;
 	private boolean mIsMy = false;
 
-	public DetailDialog(Context context, VideoJson videoJson, boolean isMy) {
+	public DetailDialog(Context context, VideoDetailRetBean videoDetailRetBean, boolean isMy) {
 		super(context, R.style.CustomDialog);
 		mIsMy = isMy;
 		LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.video_detail_dialog,
@@ -43,7 +43,7 @@ public class DetailDialog extends Dialog implements android.view.View.OnClickLis
 		setContentView(linearLayout);
 		Window window = this.getWindow();
 		window.setGravity(Gravity.BOTTOM);
-		this.mVideoJson = videoJson;
+		this.mVideoDetailRetBean = videoDetailRetBean;
 		mContext = context;
 		initLayout();
 	}
@@ -76,7 +76,7 @@ public class DetailDialog extends Dialog implements android.view.View.OnClickLis
 		if (id == R.id.tuijian) {
 			dismiss();
 			Intent intent = new Intent(mContext, RecomVideoActivity.class);
-			intent.putExtra("videoid", mVideoJson.data.avideo.video.videoid);
+			intent.putExtra("videoid", mVideoDetailRetBean.data.avideo.video.videoid);
 			mContext.startActivity(intent);
 		} else if (id == R.id.jubao) {
 			dismiss();
@@ -156,7 +156,7 @@ public class DetailDialog extends Dialog implements android.view.View.OnClickLis
 			@Override
 			public void onClick(View v) {
 				boolean flog = GolukApplication.getInstance().getVideoSquareManager()
-						.report("1", mVideoJson.data.avideo.video.videoid, reporttype);
+						.report("1", mVideoDetailRetBean.data.avideo.video.videoid, reporttype);
 				if (flog) {
 					GolukUtils.showToast(mContext, mContext.getString(R.string.str_report_success));
 				} else {

@@ -10,10 +10,10 @@ import com.mobnote.golukmain.http.request.GolukFastjsonRequest;
 
 import android.text.TextUtils;
 
-public class SingleDetailRequest extends GolukFastjsonRequest<VideoJson> {
+public class SingleDetailRequest extends GolukFastjsonRequest<VideoDetailRetBean> {
 
 	public SingleDetailRequest(int requestType, IRequestResultListener listener) {
-		super(requestType, VideoJson.class, listener);
+		super(requestType, VideoDetailRetBean.class, listener);
 		// TODO Auto-generated constructor stub
 	}
 
