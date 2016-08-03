@@ -291,13 +291,13 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         }
         String type = ICommentFn.COMMENT_TYPE_LIVE;
         CommentAddRequest request = new CommentAddRequest(IPageNotifyFn.PageType_AddComment, this);
-        boolean isSucess = false;
+        boolean isSuccess = false;
         if (mIsReply) {
-            isSucess = request.get(mVid, type, txt, mReplyToUserId, mReplyToUserName, null);
+            isSuccess = request.get(mVid, type, txt, mReplyToUserId, mReplyToUserName, null);
         } else {
-            isSucess = request.get(mVid, type, txt, "", "", null);
+            isSuccess = request.get(mVid, type, txt, "", "", null);
         }
-        if (!isSucess) {
+        if (!isSuccess) {
             // 失败
             GolukUtils.showToast(getContext(), this.getString(R.string.str_comment_fail));
             return;
@@ -491,7 +491,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                             commentItemBean.text = addBean.text;
                             commentItemBean.time = addBean.time;
 
-                            List<CommentItemBean> tempList = new ArrayList<CommentItemBean>();
+                            List<CommentItemBean> tempList = new ArrayList<>();
                             tempList.add(commentItemBean);
                             addAndRefreshComments(tempList);
 
@@ -554,7 +554,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
             }
         }
         if (mCommentDataList == null) {
-            mCommentDataList = new ArrayList<CommentItemBean>();
+            mCommentDataList = new ArrayList<>();
         }
         int currCommentCount = mCommentDataList.size();
         boolean hasNewComment = false;
