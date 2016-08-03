@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import de.greenrobot.event.EventBus;
@@ -41,13 +42,10 @@ import com.mobnote.golukmain.cluster.bean.TagGeneralRetBean;
 import com.mobnote.golukmain.cluster.bean.TagGeneralVideoListBean;
 import com.mobnote.golukmain.cluster.bean.TagRetBean;
 import com.mobnote.golukmain.cluster.bean.ShareUrlDataBean;
-import com.mobnote.golukmain.cluster.bean.TagTagBean;
 import com.mobnote.golukmain.cluster.bean.VolleyDataFormat;
 import com.mobnote.golukmain.comment.CommentActivity;
 import com.mobnote.golukmain.comment.ICommentFn;
 import com.mobnote.golukmain.http.IRequestResultListener;
-import com.mobnote.golukmain.newest.ClickPraiseListener.IClickPraiseView;
-import com.mobnote.golukmain.newest.ClickShareListener.IClickShareView;
 import com.mobnote.golukmain.newest.IDialogDealFn;
 import com.mobnote.golukmain.praise.PraiseCancelRequest;
 import com.mobnote.golukmain.praise.PraiseRequest;
@@ -58,6 +56,8 @@ import com.mobnote.golukmain.praise.bean.PraiseResultDataBean;
 import com.mobnote.golukmain.thirdshare.ProxyThirdShare;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.thirdshare.ThirdShareBean;
+import com.mobnote.golukmain.videoshare.ShareVideoShortUrlRequest;
+import com.mobnote.golukmain.videoshare.bean.VideoShareRetBean;
 import com.mobnote.golukmain.videosuqare.RTPullListView;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
@@ -66,8 +66,7 @@ import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
 
-public class ClusterActivity extends BaseActivity implements OnClickListener, IRequestResultListener, IClickShareView,
-        IClickPraiseView, IDialogDealFn, IClusterInterface {
+public class ClusterActivity extends BaseActivity implements OnClickListener, IRequestResultListener, IDialogDealFn, IClusterInterface {
 
     public static final String TAG = "ClusterActivity";
 
@@ -137,6 +136,8 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
     private int mTagType;
     private View mClusterCommentRL;
     private String mCurMotion = GolukConfig.LIST_REFRESH_NORMAL;
+    private GolukApplication mApp;
+    private int mCurrentIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +150,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
         mTagType = intent.getIntExtra(CLUSTER_KEY_TYPE, 0);
         mRecommendList = new ArrayList<VideoSquareInfo>();
         mNewestList = new ArrayList<VideoSquareInfo>();
-
+        mApp = GolukApplication.getInstance();
         this.initData();// 初始化view
         this.initListener();// 初始化view的监听
 
@@ -581,6 +582,63 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
             } else {
                 GolukUtils.showToast(this, this.getString(R.string.str_cancel_praise_failed));
             }
+        } else if(requestType == IPageNotifyFn.PageType_GetShareURL) {
+            VideoShareRetBean bean = (VideoShareRetBean) result;
+            if (null == bean) {
+                Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!bean.success) {
+                Toast.makeText(this, bean.msg, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (null == mSharePlatform) {
+                return;
+            }
+            String shareurl = bean.data.shorturl;
+            String coverurl = bean.data.coverurl;
+            String describe = bean.data.describe;
+
+            String realDesc = getResources().getString(R.string.str_share_board_real_desc);
+            if (TextUtils.isEmpty(describe)) {
+                describe = getResources().getString(R.string.str_share_describe);
+            }
+            String ttl = getResources().getString(R.string.str_goluk_wonderful_video);
+            if(mCurrentIndex < 1) {
+                return;
+            }
+            VideoSquareInfo info = null;
+            if(mClusterAdapter.getCurrentViewType() == ClusterAdapter.VIEW_TYPE_RECOMMEND) {
+                info = mRecommendList.get(mCurrentIndex - 1);
+            }
+
+            if(mClusterAdapter.getCurrentViewType() == ClusterAdapter.VIEW_TYPE_NEWEST) {
+                info = mNewestList.get(mCurrentIndex - 1);
+            }
+
+            if(null == info) {
+                return;
+            }
+
+            String videoId = info.mVideoEntity.videoid;
+            String username = info.mUserEntity.nickname;
+            describe = username + this.getString(R.string.str_colon) + describe;
+
+
+            ThirdShareBean shareBean = new ThirdShareBean();
+            shareBean.surl = shareurl;
+            shareBean.curl = coverurl;
+            shareBean.db = describe;
+            shareBean.tl = ttl;
+            shareBean.bitmap = null;
+            shareBean.realDesc = realDesc;
+            shareBean.videoId = videoId;
+            shareBean.from = getString(R.string.str_zhuge_follow);
+
+            ProxyThirdShare shareBoard = new ProxyThirdShare(this, mSharePlatform, shareBean);
+            shareBoard.showAtLocation(this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
         }
     }
 
@@ -592,6 +650,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
     public void updateListViewBottom(int type) {
         mRTPullListView.removeFooterView(1);
         mRTPullListView.removeFooterView(2);
+
         if (ClusterAdapter.VIEW_TYPE_RECOMMEND == type) {
             if (mIsRecommendLoad) {
                 mRTPullListView.addFooterView(1);
@@ -600,7 +659,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
                     mRTPullListView.addFooterView(2);
                 }
             }
-        } else {
+        }
+
+        if(ClusterAdapter.VIEW_TYPE_NEWEST == type) {
             if (mIsNewestLoad) {
                 mRTPullListView.addFooterView(1);
             } else {
@@ -627,7 +688,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
         return t_bitmap;
     }
 
-    @Override
     public void showProgressDialog() {
         if (null == mCustomProgressDialog) {
             mCustomProgressDialog = new CustomLoadingDialog(this, null);
@@ -638,23 +698,14 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
     }
 
-    @Override
     public void closeProgressDialog() {
         if (null != mCustomProgressDialog) {
             mCustomProgressDialog.close();
         }
     }
 
-    private VideoSquareInfo mWillShareVideoSquareInfo;
-
-    @Override
-    public void setWillShareInfo(VideoSquareInfo info) {
-        mWillShareVideoSquareInfo = info;
-    }
-
     VideoSquareInfo mVideoSquareInfo;
 
-    @Override
     public void updateClickPraiseNumber(boolean flag, VideoSquareInfo info) {
         mVideoSquareInfo = info;
         if (!flag) {
@@ -745,7 +796,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
     @Override
     protected void hMessage(Message msg) {
-        // TODO Auto-generated method stub
         switch (msg.what) {
             case ClOSE_ACTIVITY:
                 this.finish();
@@ -754,5 +804,19 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
                 break;
         }
         super.hMessage(msg);
+    }
+
+    protected void sendGetShareVideoUrlRequest(String videoId, String type) {
+        ShareVideoShortUrlRequest request = new ShareVideoShortUrlRequest(
+                IPageNotifyFn.PageType_GetShareURL, this);
+        if (null != mApp && mApp.isUserLoginSucess) {
+            if (!TextUtils.isEmpty(mApp.mCurrentUId)) {
+                request.get(videoId, type);
+            }
+        }
+    }
+
+    protected void storeCurrentIndex(int index) {
+        mCurrentIndex = index;
     }
 }
