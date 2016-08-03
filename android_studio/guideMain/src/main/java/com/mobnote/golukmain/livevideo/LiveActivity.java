@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -829,6 +830,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (null != mLiveOperator) {
             StartLiveBean bean = new StartLiveBean();
             bean.url = mRtmpUrl;
+            Log.e("aaaaaaaaaaaaaaaaaaa",mRtmpUrl);
             bean.isVoice = mSettingData.isEnableVoice;
             bean.stream = "1";
             bean.time = "" + mLiveCountSecond;
@@ -1855,6 +1857,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                         } else {
                             mRtmpUrl = liveSignRetBean.data.liveurl;
                         }
+                        Log.e("aaaaaaaaaaaaaaaaaaa",mRtmpUrl);
                         startLiveForSetting();
                     }
                 } else {
