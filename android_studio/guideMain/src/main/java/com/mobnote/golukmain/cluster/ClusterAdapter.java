@@ -1,8 +1,5 @@
 package com.mobnote.golukmain.cluster;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import com.mobnote.application.GolukApplication;
@@ -661,37 +658,39 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
         }
     }
 
-    private String mVideoId = null;
-
-    private void initListener(ViewHolder holder, int index) {
-        VideoSquareInfo mVideoSquareInfo = null;
+    private void initListener(ViewHolder holder, final int index) {
+        VideoSquareInfo videoSquareInfo = null;
 
         if (mCurrentViewType == VIEW_TYPE_RECOMMEND) {
-            mVideoSquareInfo = this.mRecommendList.get(index);
+            videoSquareInfo = this.mRecommendList.get(index);
         } else {
-            mVideoSquareInfo = this.mNewestList.get(index);
+            videoSquareInfo = this.mNewestList.get(index);
         }
 
-        // 分享监听
-        ClickShareListener tempShareListener = new ClickShareListener(mContext, mVideoSquareInfo,
-                (ClusterActivity) mContext);
-        holder.shareLayout.setOnClickListener(tempShareListener);
-        // 举报监听
+        final String videoId = videoSquareInfo.mVideoEntity.videoid;
+        final String type = videoSquareInfo.mVideoEntity.type;
+        holder.shareText.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ClusterActivity)mContext).sendGetShareVideoUrlRequest(videoId, type);
+                ((ClusterActivity)mContext).storeCurrentIndex(index + 1);
+            }
+        });
 
-        holder.function.setOnClickListener(new ClickFunctionListener(mContext, mVideoSquareInfo,
+        holder.function.setOnClickListener(new ClickFunctionListener(mContext, videoSquareInfo,
                 false, (ClusterActivity) mContext)
                 .setConfirm(true));
-        // 评论监听
-        holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, true, mContext.getString(R.string.str_zhuge_play_video_page_cluster)));
+
+        holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, videoSquareInfo, true, mContext.getString(R.string.str_zhuge_play_video_page_cluster)));
         // 播放区域监听
-        holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, mVideoSquareInfo, null, ZHUGE_PLAY_VIDEO_PAGE_CLUSTER));
+        holder.imageLayout.setOnClickListener(new ClickNewestListener(mContext, videoSquareInfo, null, ZHUGE_PLAY_VIDEO_PAGE_CLUSTER));
         // 点赞
-        holder.praiseLayout.setOnClickListener(new ClusterPraiseListener(mContext, mVideoSquareInfo));
+        holder.praiseLayout.setOnClickListener(new ClusterPraiseListener(mContext, videoSquareInfo));
         // 评论总数监听
-        List<CommentDataInfo> comments = mVideoSquareInfo.mVideoEntity.commentList;
+        List<CommentDataInfo> comments = videoSquareInfo.mVideoEntity.commentList;
         if (comments.size() > 0) {
-            holder.totalcomments.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false, mContext.getString(R.string.str_zhuge_play_video_page_cluster)));
-            holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mContext, mVideoSquareInfo, false, mContext.getString(R.string.str_zhuge_play_video_page_cluster)));
+            holder.totalcomments.setOnClickListener(new ClickCommentListener(mContext, videoSquareInfo, false, mContext.getString(R.string.str_zhuge_play_video_page_cluster)));
+            holder.totlaCommentLayout.setOnClickListener(new ClickCommentListener(mContext, videoSquareInfo, false, mContext.getString(R.string.str_zhuge_play_video_page_cluster)));
         }
     }
 
