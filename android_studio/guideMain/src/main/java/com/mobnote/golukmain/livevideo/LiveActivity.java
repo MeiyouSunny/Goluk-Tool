@@ -1449,8 +1449,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StopUploadPosition, "");
             if (isConnServerSuccess) {
                 // 如果没有开启直播，则不需要调用服务器的退出直播
-                mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_LiveStop,
-                        JsonUtil.getStopLiveJson());
+                mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_LiveStop, JsonUtil.getStopLiveJson());
             }
             liveStopUploadVideo();
 
@@ -1546,8 +1545,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 if (LiveDialogManager.FUNCTION_DIALOG_OK == function) {
                     //用户手动退出直播统计
                     if (null != mSettingData) {
-                        int remianTime = mSettingData.duration - mRemainLiveTime;
-                        ZhugeUtils.eventCloseLive(this, this.getString(R.string.str_zhuge_close_live_hand), remianTime);
+                        int remainTime = mSettingData.duration - mRemainLiveTime;
+                        ZhugeUtils.eventCloseLive(this, this.getString(R.string.str_zhuge_close_live_hand), remainTime);
                     }
                     // 按了退出按钮
                     exit();

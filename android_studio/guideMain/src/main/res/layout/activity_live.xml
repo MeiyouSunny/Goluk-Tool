@@ -298,6 +298,7 @@
                 android:id="@+id/iv_tab_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/imgdes"
                 android:src="@drawable/videodetail_comment_solid"/>
             <TextView
                 android:id="@+id/tv_tab_comment"
