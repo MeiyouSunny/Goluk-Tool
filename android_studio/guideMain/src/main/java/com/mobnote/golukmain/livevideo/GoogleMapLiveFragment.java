@@ -45,40 +45,40 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
     private LatLng mPublisherLatLng;
     private LatLng mCurrUserLatLng;
     private int mTopMargin;
-    private SimpleTarget mPublisherTarget = new SimpleTarget<Bitmap>(48,48) {
+    private SimpleTarget mPublisherTarget = new SimpleTarget<Bitmap>(48, 48) {
         @Override
         public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
 
             if (mLiveActivity.isLiveUploadTimeOut) {
                 return;
             }
-            if(bitmap != null){
+            if (bitmap != null) {
 
                 BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
                 MarkerOptions markerOptions = new MarkerOptions().position(mPublisherLatLng).icon(bitmapDescriptor);
                 mPublisherMarker = mGoogleMap.addMarker(markerOptions);
-            }else{
-                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(mHeadImg[mHeadImg.length-1]);
+            } else {
+                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(mHeadImg[mHeadImg.length - 1]);
                 MarkerOptions markerOptions = new MarkerOptions().position(mPublisherLatLng).icon(bitmapDescriptor);
                 mPublisherMarker = mGoogleMap.addMarker(markerOptions);
             }
         }
     };
 
-    private SimpleTarget mCurrUserTarget = new SimpleTarget<Bitmap>(48,48) {
+    private SimpleTarget mCurrUserTarget = new SimpleTarget<Bitmap>(48, 48) {
         @Override
         public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
 
             if (mLiveActivity.isLiveUploadTimeOut) {
                 return;
             }
-            if(bitmap != null){
+            if (bitmap != null) {
 
                 BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
                 MarkerOptions markerOptions = new MarkerOptions().position(mCurrUserLatLng).icon(bitmapDescriptor);
                 mCurrUserMarker = mGoogleMap.addMarker(markerOptions);
-            }else{
-                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(mHeadImg[mHeadImg.length-1]);
+            } else {
+                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(mHeadImg[mHeadImg.length - 1]);
                 MarkerOptions markerOptions = new MarkerOptions().position(mCurrUserLatLng).icon(bitmapDescriptor);
                 mCurrUserMarker = mGoogleMap.addMarker(markerOptions);
             }
@@ -98,20 +98,20 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
             // 不更新数据
             return;
         }
-        if(TextUtils.isEmpty(gpsJson)){
+        if (TextUtils.isEmpty(gpsJson)) {
             return;
         }
         GolukPosition location = JsonUtil.parseLocatoinJson(gpsJson);
-        if(location != null){
-            updateCurrUserMarker(location.rawLat,location.rawLon);
+        if (location != null) {
+            updateCurrUserMarker(location.rawLat, location.rawLon);
         }
     }
 
     @Override
-    public void updatePublisherMarker(double lat , double lon){
-        if(mPublisherMarker == null){
+    public void updatePublisherMarker(double lat, double lon) {
+        if (mPublisherMarker == null) {
             drawPublisherMarker();
-        }else{
+        } else {
             LatLng point = new LatLng(lat, lon);
             mPublisherMarker.setPosition(point);
         }
@@ -120,29 +120,29 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
     /**
      * 绘制发布者的标记
      */
-    private void drawPublisherMarker(){
+    private void drawPublisherMarker() {
 
         if (null == mLiveActivity.mPublisher) {
             GolukUtils.showToast(mLiveActivity, this.getString(R.string.str_live_cannot_get_coordinates));
             return;
         }
-        if(null == mGoogleMap){
+        if (null == mGoogleMap) {
             return;
         }
 
         // 定义Maker坐标点
         mPublisherLatLng = new LatLng(Double.parseDouble(mLiveActivity.mPublisher.lat), Double.parseDouble(mLiveActivity.mPublisher.lon));
 
-        if(mPublisherMarker == null){
+        if (mPublisherMarker == null) {
 
-            if(TextUtils.isEmpty(mLiveActivity.mPublisher.customavatar)){
+            if (TextUtils.isEmpty(mLiveActivity.mPublisher.customavatar)) {
                 int utype = 1;
                 utype = Integer.valueOf(mLiveActivity.mPublisher.head);
-                if(utype <= 0){// 防止数组越界，且不能为第0个
+                if (utype <= 0) {// 防止数组越界，且不能为第0个
                     utype = 1;
                 }
-                if(utype >= mHeadImg.length){
-                    utype = mHeadImg.length -1;
+                if (utype >= mHeadImg.length) {
+                    utype = mHeadImg.length - 1;
                 }
                 int head = mHeadImg[utype];
 
@@ -152,40 +152,36 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
                 MarkerOptions markerOptions = new MarkerOptions().position(mPublisherLatLng).icon(bitmap);
                 // 在地图上添加Marker，并显示
                 mPublisherMarker = mGoogleMap.addMarker(markerOptions);
-            }else{
-                Glide.with( this ) // could be an issue!
+            } else {
+                Glide.with(this) // could be an issue!
                         .load(mLiveActivity.mPublisher.customavatar)
                         .asBitmap()
                         .transform(new GlideCircleTransform(mLiveActivity))
                         .into(mPublisherTarget);
             }
 
-        }else{
+        } else {
             mPublisherMarker.setPosition(mPublisherLatLng);
         }
 
     }
 
     @Override
-    public void updateCurrUserMarker(double lat , double lon){
-        if(mCurrUserMarker == null){
-            drawAudienceMarker(lat,lon);
-        }else{
-            LatLng point = new LatLng(lat,lon);
+    public void updateCurrUserMarker(double lat, double lon) {
+        if (mCurrUserMarker == null) {
+            drawCurrUserMarker(lat, lon);
+        } else {
+            LatLng point = new LatLng(lat, lon);
             mCurrUserMarker.setPosition(point);
         }
     }
 
     /**
-     * 绘制观看用户的标记
-     *
+     * 绘制当前用户的标记
      */
-    private void drawAudienceMarker(double lat , double lon){
+    private void drawCurrUserMarker(double lat, double lon) {
 
-        if(mLiveActivity.isShareLive){
-            return;
-        }
-        if(mGoogleMap == null){
+        if (mGoogleMap == null) {
             return;
         }
 
@@ -196,16 +192,16 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
                 mLiveActivity.myInfo = GolukApplication.getInstance().getMyInfo();
             }
 
-            if(mCurrUserMarker == null){
+            if (mCurrUserMarker == null) {
 
-                if(TextUtils.isEmpty(mLiveActivity.myInfo.customavatar)){
+                if (TextUtils.isEmpty(mLiveActivity.myInfo.customavatar)) {
                     int utype = 1;
                     utype = Integer.valueOf(mLiveActivity.myInfo.head);
-                    if(utype <= 0){// 防止数组越界，且不能为第0个
+                    if (utype <= 0) {// 防止数组越界，且不能为第0个
                         utype = 1;
                     }
-                    if(utype >= mHeadImg.length){
-                        utype = mHeadImg.length -1;
+                    if (utype >= mHeadImg.length) {
+                        utype = mHeadImg.length - 1;
                     }
                     int head = mHeadImg[utype];
 
@@ -215,26 +211,25 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
                     MarkerOptions markerOptions = new MarkerOptions().position(mCurrUserLatLng).icon(bitmap);
                     // 在地图上添加Marker，并显示
                     mCurrUserMarker = mGoogleMap.addMarker(markerOptions);
-                }else{
-                    Glide.with( this ) // could be an issue!
+                } else {
+                    Glide.with(this) // could be an issue!
                             .load(mLiveActivity.myInfo.customavatar)
                             .asBitmap()
                             .transform(new GlideCircleTransform(mLiveActivity))
                             .into(mCurrUserTarget);
                 }
 
-
-            }else{
+            } else {
                 mCurrUserMarker.setPosition(mCurrUserLatLng);
             }
         } else {
-            if(mCurrUserMarker == null){
+            if (mCurrUserMarker == null) {
                 BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.ic_my_location);
                 mCurrUserMarker = mGoogleMap.addMarker(
                         new MarkerOptions()
                                 .position(mCurrUserLatLng)
                                 .icon(bitmap));
-            }else{
+            } else {
                 mCurrUserMarker.setPosition(mCurrUserLatLng);
             }
         }
@@ -243,11 +238,11 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
     @Override
     public void onResume() {
         super.onResume();
-        if(isResetedView){
+        if (isResetedView) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);
-            params.setMargins(0,mTopMargin,0,0);
+            params.setMargins(0, mTopMargin, 0, 0);
         }
         mMapView.onResume();
     }
@@ -300,7 +295,7 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
     @Override
     public void toMyLocation() {
         // TODO Auto-generated method stub
-        if(mGoogleMap != null){
+        if (mGoogleMap != null) {
             mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(LngLat.lat, LngLat.lng)));
         }
     }
@@ -310,25 +305,25 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
         // TODO Auto-generated method stub
         mGoogleMap = map;
         mGoogleMap.setMyLocationEnabled(false);
-        if(!mLiveActivity.isShareLive && mLiveActivity.mPublisher != null){
+        if (!mLiveActivity.isShareLive && mLiveActivity.mPublisher != null) {
             drawPublisherMarker();
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(new LatLng(Double.valueOf(mLiveActivity.mPublisher.lat), Double.valueOf(mLiveActivity.mPublisher.lon)))      // Sets the center of the map to Mountain View
                     .zoom(9)                   // Sets the zoom
                     .build();
             mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        }else{
+        } else {
             toMyLocation();
         }
     }
 
     @Override
     public void onFramgentTopMarginReceived(int topMargin) {
-        if(!isResetedView && mMapView != null){
+        if (!isResetedView && mMapView != null) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);
-            params.setMargins(0,topMargin,0,0);
+            params.setMargins(0, topMargin, 0, 0);
             mMapView.setLayoutParams(params);
             isResetedView = true;
         }

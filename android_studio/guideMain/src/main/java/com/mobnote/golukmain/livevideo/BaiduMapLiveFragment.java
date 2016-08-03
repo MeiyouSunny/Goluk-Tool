@@ -163,7 +163,7 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
     @Override
     public void updateCurrUserMarker(double lat, double lon) {
         if (mCurrUserMarker == null) {
-            drawAudienceMarker(lat, lon);
+            drawCurrUserMarker(lat, lon);
         } else {
             LatLng point = new LatLng(lat, lon);
             mCurrUserMarker.setPosition(point);
@@ -171,13 +171,10 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
     }
 
     /**
-     * 绘制观看用户的标记
+     * 绘制当前用户的标记
      */
-    private void drawAudienceMarker(double lat, double lon) {
+    private void drawCurrUserMarker(double lat, double lon) {
 
-        if (mLiveActivity.isShareLive) {
-            return;
-        }
         if (mBaiduMap == null) {
             return;
         }
@@ -185,7 +182,7 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
         mCurrUserLatLng = new LatLng(lat, lon);
 
         if (GolukApplication.getInstance().isUserLoginSucess) {
-            if (null ==mLiveActivity. myInfo) {
+            if (null == mLiveActivity.myInfo) {
                 mLiveActivity.myInfo = GolukApplication.getInstance().getMyInfo();
             }
 
@@ -226,13 +223,13 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
 //                    .longitude(lon).build();
 //            // 确认地图我的位置点是否更新位置
 //            mBaiduMap.setMyLocationData(locData);
-            if(mCurrUserMarker == null){
+            if (mCurrUserMarker == null) {
                 BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.ic_my_location);
                 mCurrUserMarker = (Marker) mBaiduMap.addOverlay(
                         new MarkerOptions()
                                 .position(mCurrUserLatLng)
                                 .icon(bitmap));
-            }else{
+            } else {
                 mCurrUserMarker.setPosition(mCurrUserLatLng);
             }
         }
@@ -250,7 +247,7 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
 
     @Override
     public void onMapStatusChangeStart(MapStatus arg0) {
-       // mBaseHandler.removeMessages(MSG_H_TO_MYLOCATION);
+        // mBaseHandler.removeMessages(MSG_H_TO_MYLOCATION);
     }
 
     @Override
@@ -281,12 +278,12 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
         mBaiduMap.setOnMapStatusChangeListener(this);
         mBaiduMap.setOnMapLoadedCallback(this);
 
-        if(!mLiveActivity.isShareLive && mLiveActivity.mPublisher != null){
-            updatePublisherMarker(Double.valueOf(mLiveActivity.mPublisher.lat),Double.valueOf(mLiveActivity.mPublisher.lon));
-            LatLng ll = new LatLng(Double.valueOf(mLiveActivity.mPublisher.lat),Double.valueOf(mLiveActivity.mPublisher.lon));
+        if (!mLiveActivity.isShareLive && mLiveActivity.mPublisher != null) {
+            updatePublisherMarker(Double.valueOf(mLiveActivity.mPublisher.lat), Double.valueOf(mLiveActivity.mPublisher.lon));
+            LatLng ll = new LatLng(Double.valueOf(mLiveActivity.mPublisher.lat), Double.valueOf(mLiveActivity.mPublisher.lon));
             MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
             mBaiduMap.animateMapStatus(u);
-        }else{
+        } else {
             toMyLocation();
         }
     }
@@ -301,26 +298,28 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
 
     @Override
     public void onFramgentTopMarginReceived(int topMargin) {
-        if(!isResetedView && mMapView != null){
+        if (!isResetedView && mMapView != null) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);
-            params.setMargins(0,topMargin,0,0);
+            params.setMargins(0, topMargin, 0, 0);
             mTopMargin = topMargin;
             mMapView.setLayoutParams(params);
             isResetedView = true;
         }
     }
+
     @Override
     public void onResume() {
         super.onResume();
-        if(isResetedView){
+        if (isResetedView) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);
-            params.setMargins(0,mTopMargin,0,0);
+            params.setMargins(0, mTopMargin, 0, 0);
         }
     }
+
     @Override
     public void onExit() {
     }
