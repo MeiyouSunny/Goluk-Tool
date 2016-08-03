@@ -1476,7 +1476,7 @@ public class GolukUtils {
                 tagTV.setText("#" + tagsBean.name);
                 tagTV.setPadding(0, 0, 20, 0);
                 tagTV.setTextSize(14);
-                tagTV.setTextColor(Color.rgb(0x11, 0x63, 0xa2));
+                tagTV.setTextColor(Color.rgb(0x00, 0x80, 0xff));
                 tagTV.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

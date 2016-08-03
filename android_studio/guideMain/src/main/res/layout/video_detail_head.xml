@@ -415,6 +415,7 @@
         android:id="@+id/flowlayout_video_detail_header_tags"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"

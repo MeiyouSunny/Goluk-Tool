@@ -15,7 +15,6 @@ import com.mobnote.golukmain.live.ILive;
 import com.mobnote.golukmain.newest.ClickCommentListener;
 import com.mobnote.golukmain.newest.ClickFunctionListener;
 import com.mobnote.golukmain.newest.ClickNewestListener;
-import com.mobnote.golukmain.newest.ClickShareListener;
 import com.mobnote.golukmain.newest.CommentDataInfo;
 import com.mobnote.golukmain.photoalbum.FragmentAlbum;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
@@ -60,19 +59,7 @@ import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 
 @SuppressLint("InflateParams")
 public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IRequestResultListener, ZhugeParameterFn {
-
-    public interface IClusterInterface {
-        // 刷新页面数据
-        public void OnRefrushMainPageData();
-
-        public int OnGetListViewWidth();
-
-        public int OnGetListViewHeight();
-    }
-
     private Context mContext = null;
-
-    private IClusterInterface mIClusterInterface = null;
 
     static final int VIEW_TYPE_HEAD = 0;
     static final int VIEW_TYPE_RECOMMEND = 1; // 推荐视频列表
@@ -91,11 +78,9 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
     private String mTagId;
     Drawable mRecommendDrawable = null;
 
-    public ClusterAdapter(Context context, int tabType,
-                          IClusterInterface clusterInterface, String tagId) {
+    public ClusterAdapter(Context context, int tabType, String tagId) {
         mContext = context;
         loadRes();
-        mIClusterInterface = clusterInterface;
         // 默认进入分享视频列表类别
         mCurrentViewType = tabType;
 
@@ -612,7 +597,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                     noVideoDataViewHolder.bMeasureHeight = true;
                     RelativeLayout rl = (RelativeLayout) convertView.findViewById(R.id.subject_ll);
                     LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) rl.getLayoutParams();
-                    lp.height = mIClusterInterface.OnGetListViewHeight() - this.mFirstItemHeight;
+                    lp.height = ((ClusterActivity)mContext).getListViewHeight() - this.mFirstItemHeight;
                     rl.setLayoutParams(lp);
                 }
             }
@@ -631,9 +616,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                 noVideoDataViewHolder.tipsText.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mIClusterInterface != null) {
-                            mIClusterInterface.OnRefrushMainPageData();
-                        }
+                        // TODO: re-get list here
                     }
                  });
             }
@@ -678,7 +661,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
         });
 
         holder.function.setOnClickListener(new ClickFunctionListener(mContext, videoSquareInfo,
-                false, (ClusterActivity) mContext)
+                false, null)
                 .setConfirm(true));
 
         holder.commentLayout.setOnClickListener(new ClickCommentListener(mContext, videoSquareInfo, true, mContext.getString(R.string.str_zhuge_play_video_page_cluster)));

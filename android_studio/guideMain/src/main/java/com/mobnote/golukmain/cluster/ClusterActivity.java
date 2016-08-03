@@ -34,7 +34,6 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.util.ImageManager;
 import com.mobnote.golukmain.carrecorder.util.MD5Utils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
-import com.mobnote.golukmain.cluster.ClusterAdapter.IClusterInterface;
 import com.mobnote.golukmain.cluster.bean.GetClusterShareUrlData;
 import com.mobnote.golukmain.cluster.bean.TagActivityBean;
 import com.mobnote.golukmain.cluster.bean.TagDataBean;
@@ -46,7 +45,6 @@ import com.mobnote.golukmain.cluster.bean.VolleyDataFormat;
 import com.mobnote.golukmain.comment.CommentActivity;
 import com.mobnote.golukmain.comment.ICommentFn;
 import com.mobnote.golukmain.http.IRequestResultListener;
-import com.mobnote.golukmain.newest.IDialogDealFn;
 import com.mobnote.golukmain.praise.PraiseCancelRequest;
 import com.mobnote.golukmain.praise.PraiseRequest;
 import com.mobnote.golukmain.praise.bean.PraiseCancelResultBean;
@@ -66,7 +64,7 @@ import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
 
-public class ClusterActivity extends BaseActivity implements OnClickListener, IRequestResultListener, IDialogDealFn, IClusterInterface {
+public class ClusterActivity extends BaseActivity implements OnClickListener, IRequestResultListener {
 
     public static final String TAG = "ClusterActivity";
 
@@ -178,10 +176,14 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
     }
 
     private void httpPost(String tagId) {
-        mTagGetRequest = new TagGetRequest(IPageNotifyFn.PageType_TagGet, this);
-        mTagGetRequest.get(GolukConfig.SERVER_PROTOCOL_V2, tagId);
+        sendTagGetRequest(tagId);
         sendTagRecommendListRequest(tagId, GolukConfig.LIST_REFRESH_NORMAL, mTimeStamp, LIST_PAGE_SIZE);
         sendTagNewestListRequest(tagId, GolukConfig.LIST_REFRESH_NORMAL, mTimeStamp, LIST_PAGE_SIZE);
+    }
+
+    private void sendTagGetRequest(String tagId) {
+        mTagGetRequest = new TagGetRequest(IPageNotifyFn.PageType_TagGet, this);
+        mTagGetRequest.get(GolukConfig.SERVER_PROTOCOL_V2, tagId);
     }
 
     private void initData() {
@@ -203,7 +205,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
             mClusterCommentRL.setVisibility(View.GONE);
         }
         mSharePlatform = new SharePlatformUtil(this);
-        mClusterAdapter = new ClusterAdapter(this, 1, this, mTagId);
+        mClusterAdapter = new ClusterAdapter(this, 1, mTagId);
         mRTPullListView.setSelector(new ColorDrawable(Color.TRANSPARENT));
         mRTPullListView.setAdapter(mClusterAdapter);
     }
@@ -388,6 +390,10 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
         request.get(tagId, operation, timeStamp, pageSize);
     }
 
+    protected void sendTagNewestListRequest() {
+        sendTagNewestListRequest(mTagId, GolukConfig.LIST_REFRESH_NORMAL, "", LIST_PAGE_SIZE);
+    }
+
     @Override
     public void onLoadComplete(int requestType, Object result) {
         if (requestType == IPageNotifyFn.PageType_TagGet) {
@@ -415,6 +421,11 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
             }
 
             mIsfrist = false;
+            if(ret.data.type == 1) {
+                mClusterCommentRL.setVisibility(View.VISIBLE);
+            } else {
+                mClusterCommentRL.setVisibility(View.GONE);
+            }
         } else if (requestType == IPageNotifyFn.PageType_ClusterRecommend) {
             TagGeneralRetBean ret = (TagGeneralRetBean) result;
             if(ret == null || ret.code != 0) {
@@ -761,25 +772,6 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
     }
 
     @Override
-    public int OnGetListViewWidth() {
-        return mRTPullListView.getWidth();
-    }
-
-    @Override
-    public int OnGetListViewHeight() {
-        return mRTPullListView.getHeight();
-    }
-
-    @Override
-    public void CallBack_Del(int event, Object data) {
-    }
-
-    @Override
-    public void OnRefrushMainPageData() {
-
-    }
-
-    @Override
     protected void onDestroy() {
         if (null != mCustomProgressDialog) {
             if (mCustomProgressDialog.isShowing()) {
@@ -818,5 +810,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
 
     protected void storeCurrentIndex(int index) {
         mCurrentIndex = index;
+    }
+
+    public int getListViewHeight() {
+        return mRTPullListView.getHeight();
     }
 }
