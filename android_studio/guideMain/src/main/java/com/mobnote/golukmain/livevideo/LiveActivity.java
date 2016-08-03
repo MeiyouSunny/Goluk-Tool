@@ -241,8 +241,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         getIntentData();
         // 界面初始化
         initView();
-        // 地图初始化
-        initMapviewFragment();
+        initCommentAndMapFragment();
         // 设置评论和地图的tab和fragment
         resetTabAndFragment();
         //初始化用户信息
@@ -357,7 +356,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    private boolean initMapviewFragment() {
+    private boolean initCommentAndMapFragment() {
         mLiveCommentFragment = new LiveCommentFragment();
 
         String activityNameStr = "";
@@ -375,22 +374,22 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            return true;
+            return false;
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
-            return true;
+            return false;
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
             e.printStackTrace();
-            return true;
+            return false;
         } catch (InvocationTargetException e) {
             e.printStackTrace();
-            return true;
+            return false;
         }
         getSupportFragmentManager().beginTransaction().add(R.id.fl_more, mLiveMapViewFragment).commit();
         getSupportFragmentManager().beginTransaction().add(R.id.fl_more, mLiveCommentFragment).commit();
-        return false;
+        return true;
     }
 
     private boolean resetTabAndFragment() {
@@ -410,7 +409,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             mCommentTabIv.setImageResource(R.drawable.videodetail_comment_press);
             mMapTabIv.setImageResource(R.drawable.icon_location_selected);
         }
-        return false;
+        return true;
     }
 
     // 计时，90秒后
@@ -751,7 +750,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         switch (what) {
             case MSG_H_UPLOAD_TIMEOUT:
                 if (isAlreadyExit && null != mSettingData) {
-                    GolukDebugUtils.e("live", "-----fail------111");
                     //IPC发起直播失败
                     ZhugeUtils.eventOpenLive(this, mSettingData.duration,
                             mLiveOperator.getZhugeErrorCode() + "", mSettingData.isEnableVoice);
@@ -771,8 +769,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                     GolukDebugUtils.e("live", "-----fail------222");
                     //网络错误，直播关闭
                     if (null != mSettingData) {
-                        int remianTime = mSettingData.duration - mRemainLiveTime;
-                        ZhugeUtils.eventCloseLive(this, mLiveOperator.getZhugeErrorCode() + "", remianTime);
+                        int remainTime = mSettingData.duration - mRemainLiveTime;
+                        ZhugeUtils.eventCloseLive(this, mLiveOperator.getZhugeErrorCode() + "", remainTime);
                     }
                 }
                 break;
