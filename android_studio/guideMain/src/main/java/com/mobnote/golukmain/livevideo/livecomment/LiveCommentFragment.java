@@ -59,8 +59,8 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * 直播评论fragment
  * Created by leege100 on 2016/7/20.
  */
-public class LiveCommentFragment extends Fragment implements IRequestResultListener, View.OnClickListener,EmojiconGridFragment.OnEmojiconClickedListener,
-        EmojiconsFragment.OnEmojiconBackspaceClickedListener, View.OnLayoutChangeListener,ILiveUIChangeListener, ViewTreeObserver.OnGlobalLayoutListener, LiveCommentAdapter.OnReplySelectedListener, LiveCommentAdapter.OnCommentItemLongClickListener {
+public class LiveCommentFragment extends Fragment implements IRequestResultListener, View.OnClickListener, EmojiconGridFragment.OnEmojiconClickedListener,
+        EmojiconsFragment.OnEmojiconBackspaceClickedListener, View.OnLayoutChangeListener, ILiveUIChangeListener, ViewTreeObserver.OnGlobalLayoutListener, LiveCommentAdapter.OnReplySelectedListener, LiveCommentAdapter.OnCommentItemLongClickListener {
     public FrameLayout mEmojIconsLayout;
 
     private String mVid;
@@ -122,7 +122,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_live_comment,container,false);
+        mRootView = inflater.inflate(R.layout.fragment_live_comment, container, false);
         initView();
         updateLikeCount(0);
         initEmojIconFragment();
@@ -144,9 +144,9 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     @Override
     public void onResume() {
         super.onResume();
-        if(isInitedMargin){
+        if (isInitedMargin) {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLiveCommentRecyclerView.getLayoutParams();
-            layoutParams.setMargins(0,mTopMargin,0,0);
+            layoutParams.setMargins(0, mTopMargin, 0, 0);
         }
     }
 
@@ -156,16 +156,18 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         super.onDestroyView();
     }
 
-    public void updateLikeCount(int count){
+    public void updateLikeCount(int count) {
         mLikeCount = count;
-        if(getContext() != null){
+        if (getContext() != null) {
             mLikeCounterTs.setText(mLikeCount + getContext().getString(R.string.str_live_ok_praise_unit));
         }
     }
+
     private void initEmojIconFragment() {
         EmojiconsFragment fg = EmojiconsFragment.newInstance(false);
         getChildFragmentManager().beginTransaction().replace(R.id.layout_emoj_icons, fg).commit();
     }
+
     private void initView() {
         mCommentLikeAndEmojLayout = (LinearLayout) mRootView.findViewById(R.id.layout_comment_like_and_emoj);
         mEmojIconIv = (ImageView) mRootView.findViewById(R.id.iv_emojicon);
@@ -197,12 +199,14 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
 
     /**
      * 设置videoId
+     *
      * @param vid
      */
-    public void setmVid(String vid){
+    public void setmVid(String vid) {
         this.mVid = vid;
         startPollingCommentList();
     }
+
     // 发表评论
     private void click_send() {
         // 发评论／回复 前需要先判断用户是否登录
@@ -247,14 +251,14 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     /**
      * 开始轮询评论
      */
-    public void startPollingCommentList(){
-        if(isExit || isPollingCommentList || TextUtils.isEmpty(mVid)){
+    public void startPollingCommentList() {
+        if (isExit || isPollingCommentList || TextUtils.isEmpty(mVid)) {
             return;
         }
-        new Thread(){
-            public void run(){
+        new Thread() {
+            public void run() {
                 isPollingCommentList = true;
-                while(!isExit){
+                while (!isExit) {
                     getCommentList();
                     try {
                         sleep(10000);
@@ -265,16 +269,17 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
             }
         }.start();
     }
+
     /**
      * 获取评论列表数据
      */
     private void getCommentList() {
         String type = ICommentFn.COMMENT_TYPE_LIVE;
         CommentListRequest request = new CommentListRequest(IPageNotifyFn.PageType_CommentList, this);
-        if(TextUtils.isEmpty(mLastTimeStamp)){
-            request.getBySort(mVid, type, 0, mLastTimeStamp,"0");
-        }else{
-            request.getBySort(mVid, type, 1, mLastTimeStamp,"0");
+        if (TextUtils.isEmpty(mLastTimeStamp)) {
+            request.getBySort(mVid, type, 0, mLastTimeStamp, "0");
+        } else {
+            request.getBySort(mVid, type, 1, mLastTimeStamp, "0");
         }
     }
 
@@ -308,7 +313,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
             return false;
         }
         PraiseRequest request = new PraiseRequest(IPageNotifyFn.PageType_Praise, this);
-        return request.get("1", mVid,"1");
+        return request.get("1", mVid, "1");
     }
 
     private boolean isCanShowSoft() {
@@ -328,6 +333,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
             click_soft();
         }
     }
+
     private void click_soft() {
         if (!this.isCanShowSoft()) {
             return;
@@ -349,6 +355,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         hideEmojocon();
         this.setResize();
     }
+
     private void setSwitchState(boolean isTextInput) {
         mInputState = isTextInput;
         if (isTextInput) {
@@ -359,12 +366,15 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
             mEmojIconIv.setImageDrawable(this.getResources().getDrawable(R.drawable.input_state_txt));
         }
     }
+
     private void hideEmojocon() {
         mEmojIconsLayout.setVisibility(View.GONE);
     }
+
     private void setInputAdJust() {
         this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
+
     private void setResize() {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
@@ -381,7 +391,8 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
             }
         });
     }
-        // 点击“显示 表情”
+
+    // 点击“显示 表情”
     private void click_Emojocon() {
         if (!isCanShowSoft()) {
             return;
@@ -396,6 +407,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         lp.height = GolukUtils.getKeyBoardHeight();
         mEmojIconsLayout.setLayoutParams(lp);
     }
+
     private void showEmojocon() {
         setLayoutHeight();
         mEmojIconsLayout.setVisibility(View.VISIBLE);
@@ -403,9 +415,10 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
+
     @Override
     public void onLoadComplete(int requestType, Object result) {
-        if(isExit){
+        if (isExit) {
             return;
         }
         switch (requestType) {
@@ -427,12 +440,12 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                 }
                 if (null != delResultBean && delResultBean.success) {
                     GolukUtils.showToast(getContext(), this.getString(R.string.str_delete_success));
-                    for(CommentItemBean commentItemBean : mCommentDataList){
-                        if(TextUtils.isEmpty(commentItemBean.commentId) || delResultBean.data == null){
+                    for (CommentItemBean commentItemBean : mCommentDataList) {
+                        if (TextUtils.isEmpty(commentItemBean.commentId) || delResultBean.data == null) {
                             return;
                         }
                         String delCommentId = delResultBean.data.commentid;
-                        if(!TextUtils.isEmpty(delCommentId) && delCommentId.equals(commentItemBean.commentId)){
+                        if (!TextUtils.isEmpty(delCommentId) && delCommentId.equals(commentItemBean.commentId)) {
                             mCommentDataList.remove(commentItemBean);
                             mLiveCommentAdapter.notifyDataSetChanged();
                             return;
@@ -535,8 +548,8 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         if (null == commentList || commentList.size() <= 0) {
             return;
         }
-        if(null != commentList.get(0)){
-            if(!TextUtils.isEmpty(commentList.get(0).time)){
+        if (null != commentList.get(0)) {
+            if (!TextUtils.isEmpty(commentList.get(0).time)) {
                 mLastTimeStamp = commentList.get(0).time;
             }
         }
@@ -547,47 +560,47 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         boolean hasNewComment = false;
         for (CommentItemBean comment : commentList) {
             if (comment != null) {
-                if(!TextUtils.isEmpty(mLastSendCommentId) && !TextUtils.isEmpty(comment.commentId) && mLastSendCommentId.equals(comment.commentId)){
+                if (!TextUtils.isEmpty(mLastSendCommentId) && !TextUtils.isEmpty(comment.commentId) && mLastSendCommentId.equals(comment.commentId)) {
                     continue;
                 }
                 mCommentDataList.add(comment);
-                if(comment.author == null ||(comment.author != null && !GolukUtils.isLoginUser(comment.author.authorid))){
+                if (comment.author == null || (comment.author != null && !GolukUtils.isLoginUser(comment.author.authorid))) {
                     hasNewComment = true;
                 }
             }
         }
-        if(mLiveCommentAdapter == null){
+        if (mLiveCommentAdapter == null) {
             mLiveCommentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            mLiveCommentAdapter = new LiveCommentAdapter(getContext(),mCommentDataList,this,this);
+            mLiveCommentAdapter = new LiveCommentAdapter(getContext(), mCommentDataList, this, this);
             mLiveCommentRecyclerView.setAdapter(mLiveCommentAdapter);
-        }else{
-            mLiveCommentAdapter.notifyItemRangeChanged(currCommentCount - 1,mCommentDataList.size() - currCommentCount - 1);
+        } else {
+            mLiveCommentAdapter.notifyItemRangeChanged(currCommentCount - 1, mCommentDataList.size() - currCommentCount - 1);
         }
-        if(hasNewComment){
+        if (hasNewComment) {
             mNewCommentTv.setVisibility(View.VISIBLE);
         }
     }
 
     private void closeSoftKeyboard() {
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(mRootView,InputMethodManager.SHOW_FORCED);
+        imm.showSoftInput(mRootView, InputMethodManager.SHOW_FORCED);
         imm.hideSoftInputFromWindow(mRootView.getWindowToken(), 0); //强制隐藏键盘
     }
 
     @Override
     public void onClick(View view) {
         int viewId = view.getId();
-        if(viewId == R.id.iv_emojicon){
+        if (viewId == R.id.iv_emojicon) {
             click_switchInput();
-        }else if(viewId == R.id.layout_like){
-            if(!isLiked){
+        } else if (viewId == R.id.layout_like) {
+            if (!isLiked) {
                 sendPraiseRequest();
             }
-        }else if(viewId == R.id.tv_send_comment){
+        } else if (viewId == R.id.tv_send_comment) {
             click_send();
-        }else if(viewId == R.id.tv_new_comment){
-            if(mLiveCommentRecyclerView != null && mCommentDataList != null && mLiveCommentAdapter != null){
-                mLiveCommentRecyclerView.smoothScrollToPosition(mCommentDataList.size()-1);
+        } else if (viewId == R.id.tv_new_comment) {
+            if (mLiveCommentRecyclerView != null && mCommentDataList != null && mLiveCommentAdapter != null) {
+                mLiveCommentRecyclerView.smoothScrollToPosition(mCommentDataList.size() - 1);
                 mNewCommentTv.setVisibility(View.GONE);
             }
         }
@@ -624,7 +637,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     /**
      * 显示发送评论按钮
      */
-    private void showSendComment(){
+    private void showSendComment() {
         mLikeLayout.setVisibility(View.GONE);
         mSendCommentTv.setVisibility(View.VISIBLE);
     }
@@ -632,15 +645,16 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     /**
      * 显示喜欢（赞）按钮
      */
-    private void showLikeLayout(){
+    private void showLikeLayout() {
         mLikeLayout.setVisibility(View.VISIBLE);
         mSendCommentTv.setVisibility(View.GONE);
     }
+
     @Override
     public void onFramgentTopMarginReceived(int topMargin) {
-        if(mLiveCommentRecyclerView != null && !isInitedMargin){
+        if (mLiveCommentRecyclerView != null && !isInitedMargin) {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLiveCommentRecyclerView.getLayoutParams();
-            layoutParams.setMargins(0,topMargin,0,0);
+            layoutParams.setMargins(0, topMargin, 0, 0);
             this.mTopMargin = topMargin;
             isInitedMargin = true;
         }
@@ -649,7 +663,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     @Override
     public void onExit() {
         isExit = true;
-        if(mDelCommentDialog != null && mDelCommentDialog.isShowing()){
+        if (mDelCommentDialog != null && mDelCommentDialog.isShowing()) {
             mDelCommentDialog.dismiss();
         }
         mDelCommentDialog = null;
@@ -661,12 +675,12 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         if (heightDiff > 200) {//软键盘弹起
             mLikeLayout.setVisibility(View.GONE);
             mSendCommentTv.setVisibility(View.VISIBLE);
-        }else{//软键盘处于关闭状态
-            if(mEmojIconsLayout.getVisibility() == View.VISIBLE){
+        } else {//软键盘处于关闭状态
+            if (mEmojIconsLayout.getVisibility() == View.VISIBLE) {
                 mLikeLayout.setVisibility(View.GONE);
                 mSendCommentTv.setVisibility(View.VISIBLE);
-            }else{
-                if(TextUtils.isEmpty(mEmojiconEt.getText().toString())){
+            } else {
+                if (TextUtils.isEmpty(mEmojiconEt.getText().toString())) {
                     cleanReplyState();
                 }
                 mLikeLayout.setVisibility(View.VISIBLE);
@@ -675,18 +689,19 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         }
     }
 
-    public void cleanReplyState(){
+    public void cleanReplyState() {
         mReplyToUserId = "";
         mReplyToUserName = "";
         mEmojiconEt.setText("");
         mEmojiconEt.setHint("");
         mIsReply = false;
     }
+
     @Override
     public void onReplySelected(String replyId, String replyAuthorId, String replyAuthorName) {
-        if(GolukApplication.getInstance().isUserLoginToServerSuccess() && GolukApplication.getInstance().getMyInfo()!= null){
+        if (GolukApplication.getInstance().isUserLoginToServerSuccess() && GolukApplication.getInstance().getMyInfo() != null) {
             String loginUserId = GolukApplication.getInstance().getMyInfo().uid;
-            if(!TextUtils.isEmpty(loginUserId)&&replyAuthorId.equals(loginUserId)){
+            if (!TextUtils.isEmpty(loginUserId) && replyAuthorId.equals(loginUserId)) {
                 //不能回复自己的评论
                 cleanReplyState();
                 return;
@@ -695,15 +710,15 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         mReplyToUserId = replyAuthorId;
         mReplyToUserName = replyAuthorName;
         mIsReply = true;
-        if(TextUtils.isEmpty(mEmojiconEt.getText().toString())){
+        if (TextUtils.isEmpty(mEmojiconEt.getText().toString())) {
             mEmojiconEt.setHint(getContext().getResources().getString(R.string.str_reply) + "@" + replyAuthorName);
         }
     }
 
     @Override
     public void onCommentLongClicked(String commentId) {
-        if(mDelCommentDialog == null){
-            mDelCommentDialog = new DelCommentDialog(getContext(),this, commentId);
+        if (mDelCommentDialog == null) {
+            mDelCommentDialog = new DelCommentDialog(getContext(), this, commentId);
         }
         mDelCommentDialog.setmCommentId(commentId);
         mDelCommentDialog.show();
