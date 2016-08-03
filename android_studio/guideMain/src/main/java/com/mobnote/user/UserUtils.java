@@ -418,10 +418,11 @@ public class UserUtils {
 	 * @param text
 	 */
 	public static void showText(Context context, TextView view, String nikename, String text) {
+		String replyLabel = context.getString(R.string.str_reply);
 		String replyName = "@" + nikename + context.getString(R.string.str_colon);
 		String reply_str = context.getString(R.string.str_reply) + replyName + text;
 		SpannableStringBuilder style = new SpannableStringBuilder(reply_str);
-		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 2, replyName.length() + 2,
+		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), replyLabel.length(), replyName.length() + replyLabel.length() - 1,
 				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 		view.setText(style);
 	}
@@ -435,13 +436,15 @@ public class UserUtils {
 	 * @param text
 	 */
 	public static void showReplyText(Context context, TextView view, String nikename, String replyName, String text) {
+		String replyLabel = context.getString(R.string.str_reply);
 		String replyText = "@" + replyName + context.getString(R.string.str_colon);
-		String str = nikename + context.getString(R.string.str_reply) + replyText + text;
+		String str = nikename + " " + replyLabel + replyText + text;
 		SpannableStringBuilder style = new SpannableStringBuilder(str);
-		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
+
+		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)),
+				nikename.length() + 1 + replyLabel.length(),
+				nikename.length() + replyLabel.length() + replyText.length(),
 				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-		style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), nikename.length() + 2, nikename.length()
-				+ 2 + replyText.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 		view.setText(style);
 	}
 
