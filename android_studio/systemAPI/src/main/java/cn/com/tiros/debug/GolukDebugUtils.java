@@ -7,7 +7,7 @@ import com.tencent.bugly.crashreport.BuglyLog;
 import cn.com.tiros.api.BuildConfig;
 
 public class GolukDebugUtils {
-    private static final boolean DEBUG = BuildConfig.DEBUG;
+    private static final boolean DEBUG = true;
     /**
      * 是否启用Bugly来上传日志
      */
@@ -22,6 +22,7 @@ public class GolukDebugUtils {
      * {@link cn.com.mobnote.module.ipcmanager.IPCManagerFn#IPC_CommCmd_WifiChanged}
      * 执行连接IPC动作
      * 3.创建热点
+     * 发送热点密码与名称信息到IPC
      * 4.ipc连接手机热点
      */
     public static final String CHOOSE_WIFI_LOG_TAG = "ChooseWifi";
