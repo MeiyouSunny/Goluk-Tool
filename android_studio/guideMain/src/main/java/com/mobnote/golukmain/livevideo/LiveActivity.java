@@ -92,12 +92,12 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
      */
     private static String VIEW_SELF_PLAY = "";
     protected GolukApplication mApp = null;
-    private TextView mLiveBackBtn = null;
-    private Button mPauseBtn = null;
-    private TextView mTitleTv = null;
-    private RelativeLayout mVideoLoading = null;
-    private RelativeLayout mPlayLayout = null;
-    public RtmpPlayerView mRPVPlayVideo = null;
+    private TextView mLiveBackBtn;
+    private Button mPauseBtn;
+    private TextView mTitleTv;
+    private RelativeLayout mVideoLoading;
+    private RelativeLayout mPlayLayout;
+    public RtmpPlayerView mRPVPlayVideo;
     /**
      * 视频地址
      */
@@ -191,7 +191,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     //诸葛统计中记录直播剩余时间
     private int mRemainLiveTime = 0;
 
-    public static final int TIMING = 1 * 60 * 1000;
+    public static final int TIMING = 60 * 1000;
 
     private LinearLayout mPublisherLinkLl;
     private ImageView mPublisherLinkIv;
@@ -264,10 +264,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             mLookCountTv.setText(GolukUtils.getFormatedNumber(mPublisher.persons));
         }
         setCallBackListener();
-    }
-
-    private void initData() {
-
     }
 
     @Override
@@ -479,7 +475,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
                     @Override
                     public void onClickListener() {
-                        // TODO Auto-generated method stub
                         mCustomDialog.dismiss();
                         sendFollowRequest(mPublisher.uid, "0");
                     }
@@ -580,20 +575,20 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, TIMING);
                 return;
             }
-            GolukDebugUtils.e("", "jyf----20150406----LiveActivity----pointDataCallback----aid  : " + tempUserInfo.aid
-                    + " lon:" + tempUserInfo.lon + " lat:" + tempUserInfo.lat);
+            if(tempMyInfo == null){
+                return;
+            }
+
             mLiveMapViewFragment.updatePublisherMarker(Double.parseDouble(tempUserInfo.lat), Double.parseDouble(tempUserInfo.lon));
 
             mPublisher.lat = tempUserInfo.lat;
             mPublisher.lon = tempUserInfo.lon;
-            GolukDebugUtils.e(null, "jyf-------live----LiveActivity--pointDataCallback type55555:  ：");
-            // 设置“赞”的人数，和观看人数
+
             mLiveCommentFragment.updateLikeCount(Integer.parseInt(tempMyInfo.zanCount));
             mLookCountTv.setText(GolukUtils.getFormatedNumber(tempMyInfo.persons));
-            GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type66666:  ：");
+
         } catch (Exception e) {
             e.printStackTrace();
-            GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type999999:  Exception ：");
         }
 
         // 重新請求大头針数据
@@ -754,7 +749,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         }
         final int what = msg.what;
         switch (what) {
-            //TODO 发起直播失败
             case MSG_H_UPLOAD_TIMEOUT:
                 if (isAlreadyExit && null != mSettingData) {
                     GolukDebugUtils.e("live", "-----fail------111");
@@ -840,7 +834,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     boolean isStartTimer = false;
 
-    //TODO 发起直播上报成功
     private void uploadLiveSuccess() {
         if (null != mSettingData) {
             //IPC发起直播成功
@@ -872,7 +865,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
      * 设置用户标识，包括 认证，加V, 达人
      *
      * @param userLabel 用户标签实体类
-     * @author jyf
      */
     private void setAuthentication(UserLabelBean userLabel) {
         if (null == userLabel) {
@@ -904,8 +896,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     /**
      * 设置左上角视频发布者头像
      *
-     * @param headStr
-     * @param netURL
+     * @param headStr 系统头像
+     * @param netURL 网络头像
      */
     private void setUserHeadImage(String headStr, String netURL) {
         try {
@@ -996,13 +988,12 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (isShareLive) {
             // 预览自己的图像
             mFilePath = VIEW_SELF_PLAY;
-            if (null != mRPVPlayVideo) {
-                mRPVPlayVideo.setDataSource(mFilePath);
-                if (!isSetAudioMute) {
-                    mRPVPlayVideo.setAudioMute(true);
-                }
-                isSetAudioMute = true;
+
+            mRPVPlayVideo.setDataSource(mFilePath);
+            if (!isSetAudioMute) {
+                mRPVPlayVideo.setAudioMute(true);
             }
+            isSetAudioMute = true;
 
         } else {
             mRPVPlayVideo.setDataSource(url);
@@ -1134,9 +1125,9 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     }
 
     /**
-     * 查看别人直播
      *
      * @param obj
+     * @param success
      */
     public void LiveVideoDataCallBack(int success, Object obj) {
         GolukDebugUtils.e("", "视频直播数据返回--LiveVideoDataCallBack: success: " + success);
@@ -1323,7 +1314,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         // 视频播放出错
         GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----PlayerCallback----onPlayerError : " + arg2 + "  "
                 + arg3);
-        playerError(rpv);
+        playerError();
         // 加载画面
         return false;
     }
@@ -1332,7 +1323,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     public void onPlayerCompletion(RtmpPlayerView rpv) {
         // 视频播放完成
         GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----PlayerCallback----onPlayerCompletion : ");
-        playerError(rpv);
+        playerError();
     }
 
     @Override
@@ -1366,7 +1357,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     }
 
     // 播放器错误
-    private void playerError(RtmpPlayerView rpv) {
+    private void playerError() {
         if (isLiveUploadTimeOut) {
             // 90秒超时，直播结束
             return;
@@ -1390,9 +1381,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     /**
      * 隐藏播放器
-     *
-     * @author xuhw
-     * @date 2015年3月21日
      */
     private void hidePlayer() {
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVLayout.getLayoutParams();
@@ -1404,8 +1392,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     /**
      * 显示播放器
      *
-     * @author xuhw
-     * @date 2015年3月21日
      */
     private void showPlayer() {
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVLayout.getLayoutParams();
@@ -1426,8 +1412,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     /**
      * 退出直播或观看直播
      *
-     * @author jiayf
-     * @date Apr 2, 2015
      */
     public void exit() {
         mLiveCommentFragment.onExit();
@@ -1560,7 +1544,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 break;
             case LiveDialogManager.DIALOG_TYPE_LIVEBACK:
                 if (LiveDialogManager.FUNCTION_DIALOG_OK == function) {
-                    //TODO 用户手动退出
                     //用户手动退出直播统计
                     if (null != mSettingData) {
                         int remianTime = mSettingData.duration - mRemainLiveTime;
@@ -1607,9 +1590,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 }
                 break;
             case LiveDialogManager.DIALOG_TYPE_LIVE_SHARE:
-                if (LiveDialogManager.FUNCTION_DIALOG_CANCEL == function) {
-                    // 取消
-                }
                 break;
             case LiveDialogManager.DIALOG_TYPE_CONFIRM:
                 //report
@@ -1651,8 +1631,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                     //直播正常结束统计
                     if (null != mSettingData) {
                         GolukDebugUtils.e("zhibo", "-----fail------555正常结束");
-                        int remianTime = mSettingData.duration - mRemainLiveTime;
-                        ZhugeUtils.eventCloseLive(this, this.getString(R.string.str_zhuge_close_live_timeup), remianTime);
+                        int remainTime = mSettingData.duration - mRemainLiveTime;
+                        ZhugeUtils.eventCloseLive(this, this.getString(R.string.str_zhuge_close_live_timeup), remainTime);
                     }
                     // 计时器完成
                     liveEnd();
@@ -1661,11 +1641,9 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                                 LIVE_DIALOG_TITLE, this.getString(R.string.str_live_time_end));
                     }
                 }
-                GolukDebugUtils.e("aaaaaa", "-------------aaaaa-----stop------");
 
                 // 直播功能
                 updateCountDown(GolukUtils.secondToString(current));
-                //TODO 定义一个全局变量保存直播剩余时间
                 mRemainLiveTime = current;
 
             }
@@ -1699,8 +1677,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
      * @param msg   命令id
      * @param param1 ¨¨ 0:命令发送成功 非0:发送失败
      * @param param2 命令对应的json字符串
-     * @author xuhw
-     * @date 2015年3月17日
      */
     private void callBack_VDCP(int msg, int param1, Object param2) {
         GolukDebugUtils.d("", "m8sBtn===IPC_VDCPCmd_TriggerRecord===callBack_VDCP=====param1=   " + param1
@@ -1792,7 +1768,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
      * 得到分享中视频描述(便于异常处理)
      *
      * @param des 视频的原描述
-     * @author jyf
      */
     private String getShareDes(String des) {
         if (TextUtils.isEmpty(des)) {
@@ -1803,8 +1778,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     /**
      * 得到当前发起直播的用户名称
-     *
-     * @author jyf
      */
     private String getLiveUserName() {
         if (this.isShareLive) {

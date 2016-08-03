@@ -65,11 +65,8 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
 
     private String mVid;
     private View mRootView;
-    private LinearLayout mCommentLikeAndEmojLayout;
     private ImageView mEmojIconIv;
-    private LinearLayout mSendCommentAndLikeLayout;
     private LinearLayout mLikeLayout;
-    private ImageView mLikeIv;
     private TextSwitcher mLikeCounterTs;
     private TextView mSendCommentTv;
     private EmojiconEditText mEmojiconEt;
@@ -98,7 +95,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     /**
      * 评论超时时间为10 秒
      */
-    private final int COMMENT_CIMMIT_TIMEOUT = 10 * 1000;
+    private final int COMMENT_COMMIT_TIMEOUT = 10 * 1000;
     /**
      * 上传评论的时间
      */
@@ -169,11 +166,8 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     }
 
     private void initView() {
-        mCommentLikeAndEmojLayout = (LinearLayout) mRootView.findViewById(R.id.layout_comment_like_and_emoj);
         mEmojIconIv = (ImageView) mRootView.findViewById(R.id.iv_emojicon);
-        mSendCommentAndLikeLayout = (LinearLayout) mRootView.findViewById(R.id.layout_comment_and_like);
         mLikeLayout = (LinearLayout) mRootView.findViewById(R.id.layout_like);
-        mLikeIv = (ImageView) mRootView.findViewById(R.id.iv_like);
         mLikeCounterTs = (TextSwitcher) mRootView.findViewById(R.id.ts_likes_counter);
         mSendCommentTv = (TextView) mRootView.findViewById(R.id.tv_send_comment);
         mEmojiconEt = (EmojiconEditText) mRootView.findViewById(R.id.et_comment_input);
@@ -219,14 +213,14 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
             mIsReply = false;
         }
         long currentTime = System.currentTimeMillis();
-        if (currentTime - mLastCommentTime < COMMENT_CIMMIT_TIMEOUT) {
+        if (currentTime - mLastCommentTime < COMMENT_COMMIT_TIMEOUT) {
             LiveDialogManager.getManagerInstance().showSingleBtnDialog(getContext(),
                     LiveDialogManager.DIALOG_TYPE_COMMENT_TIMEOUT, "", this.getResources().getString(R.string.comment_sofast_text));
             return;
         }
 
         final String content = mEmojiconEt.getText().toString().trim();
-        if (null == content || "".equals(content)) {
+        if (TextUtils.isEmpty(content)) {
             mSendCommentTv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.shake_error));
             GolukUtils.showToast(getContext(), this.getString(R.string.str_input_comment_content));
             return;
@@ -564,7 +558,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                     continue;
                 }
                 mCommentDataList.add(comment);
-                if (comment.author == null || (comment.author != null && !GolukUtils.isLoginUser(comment.author.authorid))) {
+                if (comment.author == null || !GolukUtils.isLoginUser(comment.author.authorid)) {
                     hasNewComment = true;
                 }
             }
