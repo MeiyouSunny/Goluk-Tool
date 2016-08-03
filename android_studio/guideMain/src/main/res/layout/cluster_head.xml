@@ -41,7 +41,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:visibility="visible"
-        android:textColor="#216da8"
+        android:textColor="#0080ff"
         android:background="@android:color/white"/>
 
     <RelativeLayout

@@ -52,6 +52,7 @@
         android:layout_alignParentBottom="true"
         android:background="#eaeaea"
         android:focusable="true"
+        android:visibility="gone"
         android:focusableInTouchMode="true" >
 
         <TextView
