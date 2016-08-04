@@ -199,6 +199,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     private CustomDialog mCustomDialog;
     private CustomLoadingDialog mLoadingDialog;
 
+    private boolean isStopNormal;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -291,6 +293,24 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             mLiveOperator.onResume();
             continueOrStartLive();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(!isMineLiveVideo){
+            return;
+        }
+        if(isStopNormal){
+            return;
+        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        // 设置通知的基本信息：icon、标题、内容
+        builder.setSmallIcon(R.drawable.logo_copyright);
+        builder.setContentTitle(getString(R.string.str_goluk_hint));
+        builder.setContentText(getString(R.string.str_still_broadcast_video));
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(523632, builder.build());
     }
 
     private void resetLinkState(UserInfo user) {
@@ -1297,22 +1317,11 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    @Override
-    protected void onStop() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        // 设置通知的基本信息：icon、标题、内容
-        builder.setSmallIcon(R.drawable.logo_copyright);
-        builder.setContentTitle(getString(R.string.str_goluk_hint));
-        builder.setContentText(getString(R.string.str_still_broadcast_video));
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(523632, builder.build());
-        super.onStop();
-    }
-
     /**
      * 退出直播或观看直播
      */
     public void exit() {
+        isStopNormal = true;
         mLiveCommentFragment.onExit();
         mLiveMapViewFragment.onExit();
         if (isAlreadyExit) {
