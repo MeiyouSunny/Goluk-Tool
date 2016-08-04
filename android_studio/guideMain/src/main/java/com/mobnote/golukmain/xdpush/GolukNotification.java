@@ -453,7 +453,7 @@ public class GolukNotification {
                     EventBus.getDefault().post(new EventFollowPush(EventConfig.FOLLOW_PUSH));
                 } else if (209 == type) {
                     Context context = GolukApplication.getInstance().getContext();
-                    String vid = JsonUtil.getJsonStringValue(array.getString(1), "vid", "");
+                    String vid = obj.getString("vid");
                     GolukUtils.startPublishOrWatchLiveActivity(context, false, false, vid, null, null);
                     return;
                 } else if (type >= 200 && type < 300) {
