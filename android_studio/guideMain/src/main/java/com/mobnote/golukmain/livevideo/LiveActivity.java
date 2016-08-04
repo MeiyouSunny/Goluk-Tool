@@ -52,8 +52,9 @@ import com.mobnote.golukmain.videodetail.SingleDetailRequest;
 import com.mobnote.golukmain.videodetail.VideoDetailAvideoBean;
 import com.mobnote.golukmain.videodetail.VideoDetailRetBean;
 import com.mobnote.golukmain.videodetail.VideoInfo;
-import com.mobnote.golukmain.videosuqare.ShareDataBean;
-import com.mobnote.golukmain.videosuqare.VideoSquareManager;
+import com.mobnote.golukmain.videoshare.ShareVideoShortUrlRequest;
+import com.mobnote.golukmain.videoshare.bean.VideoShareDataBean;
+import com.mobnote.golukmain.videoshare.bean.VideoShareRetBean;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
@@ -86,7 +87,7 @@ import de.greenrobot.event.EventBus;
  */
 public class LiveActivity extends BaseActivity implements View.OnClickListener,
         RtmpPlayerView.RtmpPlayerViewLisener, LiveDialogManager.ILiveDialogManagerFn, TimerManager.ITimerManagerFn, IPCManagerFn, ILive,
-        VideoSuqareManagerFn, ILiveFnAdapter, IRequestResultListener, ILocationFn, UploadLiveScreenShotTask.CallbackUploadLiveScreenShot {
+        ILiveFnAdapter, IRequestResultListener, ILocationFn, UploadLiveScreenShotTask.CallbackUploadLiveScreenShot {
 
     private TextView mTitleTv;
     private RelativeLayout mVideoLoading;
@@ -149,7 +150,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
      */
     protected boolean isLiveUploadTimeOut = false;
 
-    private VideoSquareManager mVideoSquareManager = null;
     private SharePlatformUtil sharePlatform;
     /**
      * 设置是否返回
@@ -409,13 +409,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         LiveDialogManager.getManagerInstance().setDialogManageFn(this);
         // 注册回调监听
         GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("live", this);
-        mVideoSquareManager = GolukApplication.getInstance().getVideoSquareManager();
-        if (null != mVideoSquareManager) {
-            if (mVideoSquareManager.checkVideoSquareManagerListener("videosharehotlist")) {
-                mVideoSquareManager.removeVideoSquareManagerListener("videosharehotlist");
-            }
-            mVideoSquareManager.addVideoSquareManagerListener("live", this);
-        }
     }
 
     protected void follow() {
@@ -1128,10 +1121,10 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         } else if (id == R.id.btn_live_share) {
             if (this.isMineLiveVideo) {
                 if (isSettingCallBack) {
-                    click_share(true);
+                    click_share();
                 }
             } else {
-                click_share(true);
+                click_share();
             }
         } else if (id == R.id.ll_tab_comment) {
             if (mCurrTab == TAB_COMMENT) {
@@ -1154,7 +1147,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    private void click_share(boolean isClick) {
+    private void click_share() {
         GolukDebugUtils.e("", "live-----share-------click_share ");
         String vid;
         if (isMineLiveVideo) {
@@ -1165,18 +1158,11 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             }
             vid = liveData.vid;
         }
-        boolean isSuccess = mVideoSquareManager.getShareUrl(vid, "1");
-        if (!isSuccess) {
-            if (isClick) {
-                GolukUtils.showToast(this, this.getString(R.string.str_share_fail));
-            }
-        } else {
-            if (isClick) {
-                LiveDialogManager.getManagerInstance().showShareProgressDialog(this,
-                        LiveDialogManager.DIALOG_TYPE_LIVE_SHARE, this.getString(R.string.user_dialog_hint_title),
-                        this.getString(R.string.str_request_share_address));
-            }
-        }
+        ShareVideoShortUrlRequest getShareUrlReq = new ShareVideoShortUrlRequest( IPageNotifyFn.PageType_GetShareURL, this);
+        getShareUrlReq.get(vid,"1");
+        LiveDialogManager.getManagerInstance().showShareProgressDialog(this,
+                LiveDialogManager.DIALOG_TYPE_LIVE_SHARE, this.getString(R.string.user_dialog_hint_title),
+                this.getString(R.string.str_request_share_address));
     }
 
     /**
@@ -1336,7 +1322,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         SharedPrefUtil.setIsLiveNormalExit(true);
         // 注册回调监听
         GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("live");
-        mVideoSquareManager.removeVideoSquareManagerListener("live");
         // 移除监听
         mBaseApp.removeLocationListener(TAG);
         mBaseHandler.removeMessages(MSG_H_TO_MYLOCATION);
@@ -1640,42 +1625,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         new UploadLiveScreenShotTask(picName, mUserInfo.uid, mVid, this).execute();
     }
 
-    @Override
-    public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
-        if (event == VSquare_Req_VOP_GetShareURL_Video) {
-            // 销毁对话框
-            LiveDialogManager.getManagerInstance().dismissShareProgressDialog();
-            if (1 != msg) {
-                GolukUtils.showToast(this, this.getString(R.string.str_share_fail));
-                return;
-            }
-
-            ShareDataBean dataBean = JsonUtil.parseShareCallBackData((String) param2);
-            if (!dataBean.isSucess) {
-                GolukUtils.showToast(this, this.getString(R.string.str_share_fail));
-                return;
-            }
-            final String title = this.getString(R.string.str_wonderful_live);
-            final String describe = getLiveUserName() + this.getString(R.string.str_colon)
-                    + getShareDes(dataBean.describe);
-            final String sinaTxt = title + this.getString(R.string.str_user_goluk);
-            // 设置分享内容
-            ThirdShareBean bean = new ThirdShareBean();
-            bean.surl = dataBean.shareurl;
-            bean.curl = dataBean.coverurl;
-            bean.db = describe;
-            bean.tl = title;
-            bean.bitmap = mThumbBitmap;
-            bean.realDesc = sinaTxt;
-
-            bean.videoId = mVid;
-            bean.from = this.getString(R.string.str_zhuge_live_share_event);
-
-            ProxyThirdShare sb = new ProxyThirdShare(LiveActivity.this, sharePlatform, bean);
-            sb.showAtLocation(LiveActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-        }
-    }
-
     /**
      * 得到分享中视频描述(便于异常处理)
      *
@@ -1789,6 +1738,38 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 mUserInfo.link = bean.data.link;
                 resetLinkState(mUserInfo);
             }
+        } else if(requestType == IPageNotifyFn.PageType_GetShareURL){
+            //获取分享Url
+            LiveDialogManager.getManagerInstance().dismissShareProgressDialog();
+            VideoShareRetBean videoShareRetBean = (VideoShareRetBean) result;
+            if(videoShareRetBean == null){
+                GolukUtils.showToast(this, this.getString(R.string.str_share_fail));
+                return;
+            }
+
+            if (!videoShareRetBean.success) {
+                GolukUtils.showToast(this, this.getString(R.string.str_share_fail));
+                return;
+            }
+
+            VideoShareDataBean dataBean = videoShareRetBean.data;
+            final String title = this.getString(R.string.str_wonderful_live);
+            final String describe = getLiveUserName() + this.getString(R.string.str_colon) + getShareDes(dataBean.describe);
+            final String sinaTxt = title + this.getString(R.string.str_user_goluk);
+            // 设置分享内容
+            ThirdShareBean bean = new ThirdShareBean();
+            bean.surl = dataBean.shorturl;
+            bean.curl = dataBean.coverurl;
+            bean.db = describe;
+            bean.tl = title;
+            bean.bitmap = mThumbBitmap;
+            bean.realDesc = sinaTxt;
+
+            bean.videoId = mVid;
+            bean.from = this.getString(R.string.str_zhuge_live_share_event);
+
+            ProxyThirdShare sb = new ProxyThirdShare(LiveActivity.this, sharePlatform, bean);
+            sb.showAtLocation(LiveActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
         }
     }
 
