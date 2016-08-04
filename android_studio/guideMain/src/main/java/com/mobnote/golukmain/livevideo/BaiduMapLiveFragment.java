@@ -166,15 +166,10 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
         mCurrUserLatLng = new LatLng(lat, lon);
 
         if (GolukApplication.getInstance().isUserLoginSucess) {
-            if (null == mLiveActivity.mUserInfo) {
-                mLiveActivity.mUserInfo = GolukApplication.getInstance().getMyInfo();
-            }
-
             if (mCurrUserMarker == null) {
-
-                if (TextUtils.isEmpty(mLiveActivity.mUserInfo.customavatar)) {
+                if (TextUtils.isEmpty(myUserInfo.customavatar)) {
                     int utype = 1;
-                    utype = Integer.valueOf(mLiveActivity.mUserInfo.head);
+                    utype = Integer.valueOf(myUserInfo.head);
                     if (utype <= 0) {// 防止数组越界，且不能为第0个
                         utype = 1;
                     }
@@ -191,7 +186,7 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
                     mCurrUserMarker = (Marker) mBaiduMap.addOverlay(markerOptions);
                 } else {
                     Glide.with(this) // could be an issue!
-                            .load(mLiveActivity.mUserInfo.customavatar)
+                            .load(myUserInfo.customavatar)
                             .asBitmap()
                             .transform(new GlideCircleTransform(mLiveActivity))
                             .into(mCurrUserTarget);
