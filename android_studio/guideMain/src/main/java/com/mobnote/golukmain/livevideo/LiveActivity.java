@@ -200,6 +200,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     private CustomLoadingDialog mLoadingDialog;
 
     private boolean isStopNormal;
+    private int mOnStopTime;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -293,6 +294,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             mLiveOperator.onResume();
             continueOrStartLive();
         }
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.cancel(mOnStopTime);
     }
 
     @Override
@@ -310,7 +313,9 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         builder.setContentTitle(getString(R.string.str_goluk_hint));
         builder.setContentText(getString(R.string.str_still_broadcast_video));
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(523632, builder.build());
+        Date dt= new Date();
+        mOnStopTime= (int) dt.getTime();
+        notificationManager.notify(mOnStopTime, builder.build());
     }
 
     private void resetLinkState(UserInfo user) {
