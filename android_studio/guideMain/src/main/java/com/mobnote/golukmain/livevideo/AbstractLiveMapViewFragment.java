@@ -3,6 +3,8 @@ package com.mobnote.golukmain.livevideo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +13,17 @@ import android.widget.RelativeLayout;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.util.JsonUtil;
 
+import cn.com.mobnote.module.location.GolukPosition;
 import cn.com.mobnote.module.location.ILocationFn;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 
 /**
  * Created by leege100 on 2016/7/19.
  */
-abstract class AbstractLiveMapViewFragment extends Fragment implements ILiveMap ,ILiveUIChangeListener, ILocationFn, View.OnClickListener {
+abstract class AbstractLiveMapViewFragment extends Fragment implements ILiveMap ,ILiveUIChangeListener, ILocationFn, View.OnClickListener, IRequestResultListener {
     public static final int[] shootImg = { R.drawable.live_btn_6s_record, R.drawable.live_btn_5s_record,
             R.drawable.live_btn_4s_record, R.drawable.live_btn_3s_record, R.drawable.live_btn_2s_record,
             R.drawable.live_btn_1s_record };
@@ -38,6 +44,11 @@ abstract class AbstractLiveMapViewFragment extends Fragment implements ILiveMap 
     protected RelativeLayout mMapRootLayout;
     Bundle mSavedInstanceState;
     protected boolean isResetedView = false;
+    /** 是否已经开始上传地理位置信息 */
+    protected boolean isStartedUploadGEOInfo = false;
+    protected boolean isExit = false;
+    protected GolukPosition mLocation;
+    protected int mTopMargin;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -62,5 +73,51 @@ abstract class AbstractLiveMapViewFragment extends Fragment implements ILiveMap 
         if(view.getId() == R.id.btn_live_location)
         toMyLocation();
     }
+    @Override
+    public void LocationCallBack(String gpsJson) {
+        if (mLiveActivity.isLiveUploadTimeOut) {
+            return;
+        }
+        if (TextUtils.isEmpty(gpsJson)) {
+            return;
+        }
+        mLocation = JsonUtil.parseLocatoinJson(gpsJson);
+        if(mLocation == null){
+            return;
+        }
+        updateCurrUserMarker(mLocation.rawLat, mLocation.rawLon);
+        if(!mLiveActivity.isShareLive){
+            return;
+        }
+        if(isStartedUploadGEOInfo){
+            return;
+        }
+        isStartedUploadGEOInfo = true;
+        new Thread(){
+            public void run(){
+                while(!isExit){
+                    if(mLocation != null){
+                        UpdatePositionRequest updatePositionRequest = new UpdatePositionRequest(IPageNotifyFn.PAGE_TYPE_UPLOAD_POSITION,AbstractLiveMapViewFragment.this);
+                        updatePositionRequest.get(String.valueOf(mLocation.rawLon),String.valueOf(mLocation.rawLat));
+                    }
+                    try {
+                        sleep(15000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
+    }
 
+    @Override
+    public void onLoadComplete(int requestType, Object result) {
+        if(requestType == IPageNotifyFn.PAGE_TYPE_UPLOAD_POSITION){
+            Log.e("定位","获取到定位上传反馈");
+        }
+    }
+    @Override
+    public void onExit() {
+        isExit = true;
+    }
 }
