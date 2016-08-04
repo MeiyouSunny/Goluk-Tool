@@ -113,8 +113,7 @@ public class LiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 // 设置名称
                 mUserNicknameTv.setText(commentItemBean.author.name);
                 // 设置评论内容
-                if (null != commentItemBean.reply.id && !"".equals(commentItemBean.reply.id)
-                        && !"".equals(commentItemBean.reply.name) && null != commentItemBean.reply.id) {
+                if (!TextUtils.isEmpty(commentItemBean.reply.name)) {
                     UserUtils.showText(mContext,mCommentContentEmojTv, commentItemBean.reply.name, commentItemBean.text);
                 } else {
                     mCommentContentEmojTv.setText( commentItemBean.text);
