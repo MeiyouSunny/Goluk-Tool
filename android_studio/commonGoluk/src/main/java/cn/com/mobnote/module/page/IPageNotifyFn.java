@@ -175,6 +175,9 @@ public interface IPageNotifyFn extends IGolukCommFn {
     /** 获取直播签名*/
     public static final int PageType_LiveSign = 79;
 
+    /** 上传用户位置 */
+    public static final int PAGE_TYPE_UPLOAD_POSITION =  80;
+
 	/**
 	 * 
 	 * 以下为同步获取信息标识
