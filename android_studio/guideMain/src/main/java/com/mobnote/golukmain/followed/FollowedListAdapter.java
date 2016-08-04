@@ -747,13 +747,15 @@ public class FollowedListAdapter extends BaseAdapter {
     }
 
     private void showReplyText(TextView view, String nikename, String replyName, String text) {
-        String replyText = "@" + replyName + mFragment.getActivity().getString(R.string.str_colon);
-        String str = nikename + " " + mFragment.getActivity().getString(R.string.str_reply) + replyText + text;
+        String replyLabel = mFragment.getString(R.string.str_reply);
+        String replyText = "@" + replyName + mFragment.getString(R.string.str_colon);
+        String str = nikename + " " + replyLabel + replyText + text;
         SpannableStringBuilder style = new SpannableStringBuilder(str);
-        style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
+
+        style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)),
+                nikename.length() + 1 + replyLabel.length(),
+                nikename.length() + replyLabel.length() + replyText.length(),
                 Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-        style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), nikename.length() + 3, nikename.length()
-                + 3 + replyText.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         view.setText(style);
     }
 

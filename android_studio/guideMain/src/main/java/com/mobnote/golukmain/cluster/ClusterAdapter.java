@@ -242,16 +242,16 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                             R.drawable.tacitly_pic);
                 }
 
-                headViewHolder.headImg.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String url = getRtmpAddress() + "?type=9&activityid=" + mTagId;
-                        Intent intent = new Intent(mContext, UserOpenUrlActivity.class);
-                        intent.putExtra("url", url);
-                        intent.putExtra("need_h5_title", mContext.getString(R.string.str_activity_rule));
-                        mContext.startActivity(intent);
-                    }
-                });
+//                headViewHolder.headImg.setOnClickListener(new OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        String url = getRtmpAddress() + "?type=9&activityid=" + mTagId;
+//                        Intent intent = new Intent(mContext, UserOpenUrlActivity.class);
+//                        intent.putExtra("url", url);
+//                        intent.putExtra("need_h5_title", mContext.getString(R.string.str_activity_rule));
+//                        mContext.startActivity(intent);
+//                    }
+//                });
 
                 if (!TextUtils.isEmpty(mHeadData.activity.voteaddress)) {
                     headViewHolder.voteBtn.setVisibility(View.VISIBLE);

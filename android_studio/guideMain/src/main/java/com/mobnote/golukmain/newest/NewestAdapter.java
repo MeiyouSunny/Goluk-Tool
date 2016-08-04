@@ -459,13 +459,15 @@ public class NewestAdapter extends BaseAdapter {
     }
 
     private void showReplyText(TextView view, String nikename, String replyName, String text) {
+        String replyLabel = mContext.getString(R.string.str_reply);
         String replyText = "@" + replyName + mContext.getString(R.string.str_colon);
-        String str = nikename + " " + mContext.getString(R.string.str_reply) + replyText + text;
+        String str = nikename + " " + replyLabel + replyText + text;
         SpannableStringBuilder style = new SpannableStringBuilder(str);
-        style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
-                Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-        style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), nikename.length() + 3, nikename.length()
-                + 3 + replyText.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+
+        style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)),
+                      nikename.length() + 1 + replyLabel.length(),
+                      nikename.length() + replyLabel.length() + replyText.length(),
+                      Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         view.setText(style);
     }
 
