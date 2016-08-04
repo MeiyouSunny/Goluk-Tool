@@ -84,7 +84,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 	private int mVideoPosition = 0;
 
     private final Handler mHandler = new Handler();
- 
+
     private final Runnable mPlayingChecker = new Runnable() {
         @Override
         public void run() {
@@ -377,11 +377,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 		}
 		isCallVideo = true;
 		Uri uri = null;
-		if ("1".equals(mVideoDetailRetBean.data.avideo.video.type)) {
-			uri = Uri.parse(mVideoDetailRetBean.data.avideo.video.livesdkaddress);
-		} else if ("2".equals(mVideoDetailRetBean.data.avideo.video.type)) {
-			uri = Uri.parse(mVideoDetailRetBean.data.avideo.video.ondemandwebaddress);
-		}
+		uri = Uri.parse(mVideoDetailRetBean.data.avideo.video.ondemandwebaddress);
 		mVideoView.setVideoURI(uri);
 		mVideoView.requestFocus();
 		mVideoView.start();
@@ -392,7 +388,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 
 	/**
 	 * 显示视频描述和活动名称
-	 * 
+	 *
 	 * @param view
 	 * @param describe
 	 * @param text
@@ -435,7 +431,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 
 	/**
 	 * 隐藏加载中显示画面
-	 * 
+	 *
 	 * @author xuhw
 	 * @date 2015年3月8日
 	 */
@@ -454,7 +450,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 
 	/**
 	 * 提示对话框
-	 * 
+	 *
 	 * @param msg
 	 *            提示信息
 	 */
@@ -548,9 +544,9 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 						mTextZan.setTextColor(Color.rgb(136, 136, 136));
 						mTextZanName.setTextColor(Color.rgb(136, 136, 136));
 					}
-					
+
 				}
-				
+
 			}
 		} else {
 			Log.e("", "VideoDetailHeader click id = " + v.getId());
