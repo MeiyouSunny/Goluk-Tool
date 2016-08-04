@@ -46,8 +46,8 @@ import com.mobnote.golukmain.promotion.PromotionItem;
 import com.mobnote.golukmain.promotion.PromotionListRequest;
 import com.mobnote.golukmain.promotion.PromotionModel;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
-import com.mobnote.golukmain.startshare.bean.ShareDataBean;
-import com.mobnote.golukmain.startshare.bean.ShareDataFullBean;
+import com.mobnote.golukmain.startshare.bean.VideoSaveDataBean;
+import com.mobnote.golukmain.startshare.bean.VideoSaveRetBean;
 import com.mobnote.golukmain.startshare.bean.ShareTypeBean;
 import com.mobnote.golukmain.thirdshare.SharePlatformAdapter;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
@@ -405,7 +405,11 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         mRcShareList.addItemDecoration(new SpacesItemDecoration());
 
         mLocationLayout.setOnClickListener(this);
-        mJoinActivityTV.setOnClickListener(this);
+        if(mSelectedPromotionItem.type == 1) {
+            // only activity can re-select promotion
+            mJoinActivityTV.setOnClickListener(this);
+        }
+
         mShareLL.setOnClickListener(this);
         mShareTypeTv.setOnClickListener(this);
         mBackIv.setOnClickListener(this);
@@ -623,21 +627,27 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         final String t_type = String.valueOf(mVideoType);
         final String selectTypeJson = JsonUtil.createShareType(String.valueOf(mSelectedShareType));
         final String desc = (TextUtils.isEmpty(mShareDiscrible) ? this.getString(R.string.default_comment) : mShareDiscrible);
-        final String isSeque = "1";
+        final String isSquare = "1";
         final String t_location = (TextUtils.isEmpty(mLocationAddress) ? "" : mLocationAddress);
 
-        String channelid = "";
         String activityid = "";
+        String tagId = "";
 
         if (mSelectedPromotionItem != null) {
-            channelid = mSelectedPromotionItem.channelid;
-            activityid = mSelectedPromotionItem.activityid;
+            if(mSelectedPromotionItem.type == 0) {
+                tagId = mSelectedPromotionItem.activityid;
+            } else {
+                activityid = mSelectedPromotionItem.activityid;
+            }
+
             mActivityname = mSelectedPromotionItem.activitytitle;
         }
-        GetShareAddressRequest request = new GetShareAddressRequest(IPageNotifyFn.PageType_Share, this);
-        request.get(t_vid, t_type, desc, selectTypeJson, isSeque, videoCreateTime, t_signTime, channelid, activityid,
-                mActivityname, t_location, videoFrom);
+        GetVideoSaveAddressRequest request = new GetVideoSaveAddressRequest(IPageNotifyFn.PageType_Share, this);
+
+        request.get(t_vid, t_type, desc, selectTypeJson, isSquare, videoCreateTime, t_signTime, activityid,
+                t_location, "", tagId, "", "", "");
     }
+
     private void exit() {
         if (isExiting) {
             return;
@@ -725,9 +735,9 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
                 }
                 break;
             case IPageNotifyFn.PageType_Share:
-                ShareDataFullBean shareDataFull = (ShareDataFullBean) result;
-                if(shareDataFull != null && shareDataFull.data != null){
-                    if (!GolukUtils.isTokenValid(shareDataFull.data.result)){
+                VideoSaveRetBean shareDataFull = (VideoSaveRetBean) result;
+                if(shareDataFull != null && shareDataFull.data != null) {
+                    if (!GolukUtils.isTokenValid(shareDataFull.data.result)) {
                         GolukUtils.startLoginActivity(VideoShareActivity.this);
                         toInitState();
                         return;
@@ -740,6 +750,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
                 } else {
                     shareState = shareDataFull.msg;
                     GolukUtils.showToast(this, this.getString(R.string.str_get_share_address_fail));
+                    videoShareCallBack(null);
                 }
 //                ZhugeUtils.eventShareVideo(this, mSelectedShareType + "", mVideoQuality, mVideoDuration, mShareDiscrible, mCurrSelectedSharePlatform,
 //                        mActivityname, shareState);
@@ -763,17 +774,19 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     /**
      * 本地视频分享回调
      */
-    public void videoShareCallBack(ShareDataBean shareData) {
-        if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_NULL){
+    public void videoShareCallBack(VideoSaveDataBean shareData) {
+        if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_NULL) {
             EventBus.getDefault().post(new EventShareCompleted(true));
             return;
         }
-        if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_COPYLINK){
+
+        if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_COPYLINK) {
             ClipboardManager cmb = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
             cmb.setPrimaryClip(ClipData.newPlainText("goluk", shareData.shorturl));
             EventBus.getDefault().post(new EventShareCompleted(true));
             return;
         }
+
         if (mShareLoading == null || mUploadVideo == null) {
             toInitState();
             return;

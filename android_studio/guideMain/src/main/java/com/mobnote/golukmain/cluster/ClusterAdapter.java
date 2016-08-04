@@ -302,6 +302,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                             item.activityid = mHeadData.activity.activityid;
                             item.activitytitle = mHeadData.activity.activityname;
                             item.channelid = mHeadData.activity.channelid;
+                            item.type = 1;
                             photoalbum.putExtra(FragmentAlbum.ACTIVITY_INFO, item);
                             mContext.startActivity(photoalbum);
                         }
@@ -346,6 +347,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                         item.activityid = mHeadData.tag.tagid;
                         item.activitytitle = mHeadData.tag.name;
                         item.channelid = "";
+                        item.type = 0;
                         photoalbum.putExtra(FragmentAlbum.ACTIVITY_INFO, item);
                         mContext.startActivity(photoalbum);
                     }

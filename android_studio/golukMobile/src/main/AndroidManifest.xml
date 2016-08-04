@@ -182,12 +182,6 @@
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name="com.mobnote.golukmain.startshare.VideoEditActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden|adjustResize" />
-        <activity
             android:name="com.mobnote.golukmain.MainActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:hardwareAccelerated="true"

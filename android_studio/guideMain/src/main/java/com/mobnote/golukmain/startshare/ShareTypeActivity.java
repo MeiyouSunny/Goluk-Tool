@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.mobnote.eventbus.EventSharetypeSelected;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.startshare.bean.ShareDataBean;
 import com.mobnote.golukmain.startshare.bean.ShareTypeBean;
 
 import de.greenrobot.event.EventBus;
