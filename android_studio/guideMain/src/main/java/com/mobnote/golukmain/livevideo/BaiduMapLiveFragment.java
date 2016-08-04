@@ -116,7 +116,7 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
      */
     private void drawPublisherMarker() {
 
-        if (null == mLiveActivity.mPublisher) {
+        if (null == mLiveActivity.mUserInfo) {
             GolukUtils.showToast(mLiveActivity, this.getString(R.string.str_live_cannot_get_coordinates));
             return;
         }
@@ -125,13 +125,13 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
         }
 
         // 定义Maker坐标点
-        mPublisherLatLng = new LatLng(Double.parseDouble(mLiveActivity.mPublisher.lat), Double.parseDouble(mLiveActivity.mPublisher.lon));
+        mPublisherLatLng = new LatLng(Double.parseDouble(mLiveActivity.mUserInfo.lat), Double.parseDouble(mLiveActivity.mUserInfo.lon));
 
         if (mPublisherMarker == null) {
 
-            if (TextUtils.isEmpty(mLiveActivity.mPublisher.customavatar)) {
+            if (TextUtils.isEmpty(mLiveActivity.mUserInfo.customavatar)) {
                 int utype = 1;
-                utype = Integer.valueOf(mLiveActivity.mPublisher.head);
+                utype = Integer.valueOf(mLiveActivity.mUserInfo.head);
                 if (utype <= 0) {// 防止数组越界，且不能为第0个
                     utype = 1;
                 }
@@ -148,7 +148,7 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
                 mPublisherMarker = (Marker) mBaiduMap.addOverlay(markerOptions);
             } else {
                 Glide.with(this) // could be an issue!
-                        .load(mLiveActivity.mPublisher.customavatar)
+                        .load(mLiveActivity.mUserInfo.customavatar)
                         .asBitmap()
                         .transform(new GlideCircleTransform(mLiveActivity))
                         .into(mPublisherTarget);
@@ -182,15 +182,15 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
         mCurrUserLatLng = new LatLng(lat, lon);
 
         if (GolukApplication.getInstance().isUserLoginSucess) {
-            if (null == mLiveActivity.myInfo) {
-                mLiveActivity.myInfo = GolukApplication.getInstance().getMyInfo();
+            if (null == mLiveActivity.mUserInfo) {
+                mLiveActivity.mUserInfo = GolukApplication.getInstance().getMyInfo();
             }
 
             if (mCurrUserMarker == null) {
 
-                if (TextUtils.isEmpty(mLiveActivity.myInfo.customavatar)) {
+                if (TextUtils.isEmpty(mLiveActivity.mUserInfo.customavatar)) {
                     int utype = 1;
-                    utype = Integer.valueOf(mLiveActivity.myInfo.head);
+                    utype = Integer.valueOf(mLiveActivity.mUserInfo.head);
                     if (utype <= 0) {// 防止数组越界，且不能为第0个
                         utype = 1;
                     }
@@ -207,7 +207,7 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
                     mCurrUserMarker = (Marker) mBaiduMap.addOverlay(markerOptions);
                 } else {
                     Glide.with(this) // could be an issue!
-                            .load(mLiveActivity.myInfo.customavatar)
+                            .load(mLiveActivity.mUserInfo.customavatar)
                             .asBitmap()
                             .transform(new GlideCircleTransform(mLiveActivity))
                             .into(mCurrUserTarget);
@@ -278,9 +278,9 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
         mBaiduMap.setOnMapStatusChangeListener(this);
         mBaiduMap.setOnMapLoadedCallback(this);
 
-        if (!mLiveActivity.isShareLive && mLiveActivity.mPublisher != null) {
-            updatePublisherMarker(Double.valueOf(mLiveActivity.mPublisher.lat), Double.valueOf(mLiveActivity.mPublisher.lon));
-            LatLng ll = new LatLng(Double.valueOf(mLiveActivity.mPublisher.lat), Double.valueOf(mLiveActivity.mPublisher.lon));
+        if (!mLiveActivity.isMineLiveVideo && mLiveActivity.mUserInfo != null) {
+            updatePublisherMarker(Double.valueOf(mLiveActivity.mUserInfo.lat), Double.valueOf(mLiveActivity.mUserInfo.lon));
+            LatLng ll = new LatLng(Double.valueOf(mLiveActivity.mUserInfo.lat), Double.valueOf(mLiveActivity.mUserInfo.lon));
             MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
             mBaiduMap.animateMapStatus(u);
         } else {

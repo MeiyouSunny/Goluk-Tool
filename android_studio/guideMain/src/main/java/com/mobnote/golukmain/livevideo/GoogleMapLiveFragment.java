@@ -122,7 +122,7 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
      */
     private void drawPublisherMarker() {
 
-        if (null == mLiveActivity.mPublisher) {
+        if (null == mLiveActivity.mUserInfo) {
             GolukUtils.showToast(mLiveActivity, this.getString(R.string.str_live_cannot_get_coordinates));
             return;
         }
@@ -131,13 +131,13 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
         }
 
         // 定义Maker坐标点
-        mPublisherLatLng = new LatLng(Double.parseDouble(mLiveActivity.mPublisher.lat), Double.parseDouble(mLiveActivity.mPublisher.lon));
+        mPublisherLatLng = new LatLng(Double.parseDouble(mLiveActivity.mUserInfo.lat), Double.parseDouble(mLiveActivity.mUserInfo.lon));
 
         if (mPublisherMarker == null) {
 
-            if (TextUtils.isEmpty(mLiveActivity.mPublisher.customavatar)) {
+            if (TextUtils.isEmpty(mLiveActivity.mUserInfo.customavatar)) {
                 int utype = 1;
-                utype = Integer.valueOf(mLiveActivity.mPublisher.head);
+                utype = Integer.valueOf(mLiveActivity.mUserInfo.head);
                 if (utype <= 0) {// 防止数组越界，且不能为第0个
                     utype = 1;
                 }
@@ -154,7 +154,7 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
                 mPublisherMarker = mGoogleMap.addMarker(markerOptions);
             } else {
                 Glide.with(this) // could be an issue!
-                        .load(mLiveActivity.mPublisher.customavatar)
+                        .load(mLiveActivity.mUserInfo.customavatar)
                         .asBitmap()
                         .transform(new GlideCircleTransform(mLiveActivity))
                         .into(mPublisherTarget);
@@ -188,15 +188,15 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
         mCurrUserLatLng = new LatLng(lat, lon);
 
         if (GolukApplication.getInstance().isUserLoginSucess) {
-            if (null == mLiveActivity.myInfo) {
-                mLiveActivity.myInfo = GolukApplication.getInstance().getMyInfo();
+            if (null == mLiveActivity.mUserInfo) {
+                mLiveActivity.mUserInfo = GolukApplication.getInstance().getMyInfo();
             }
 
             if (mCurrUserMarker == null) {
 
-                if (TextUtils.isEmpty(mLiveActivity.myInfo.customavatar)) {
+                if (TextUtils.isEmpty(mLiveActivity.mUserInfo.customavatar)) {
                     int utype = 1;
-                    utype = Integer.valueOf(mLiveActivity.myInfo.head);
+                    utype = Integer.valueOf(mLiveActivity.mUserInfo.head);
                     if (utype <= 0) {// 防止数组越界，且不能为第0个
                         utype = 1;
                     }
@@ -213,7 +213,7 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
                     mCurrUserMarker = mGoogleMap.addMarker(markerOptions);
                 } else {
                     Glide.with(this) // could be an issue!
-                            .load(mLiveActivity.myInfo.customavatar)
+                            .load(mLiveActivity.mUserInfo.customavatar)
                             .asBitmap()
                             .transform(new GlideCircleTransform(mLiveActivity))
                             .into(mCurrUserTarget);
@@ -305,10 +305,10 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
         // TODO Auto-generated method stub
         mGoogleMap = map;
         mGoogleMap.setMyLocationEnabled(false);
-        if (!mLiveActivity.isShareLive && mLiveActivity.mPublisher != null) {
+        if (!mLiveActivity.isMineLiveVideo && mLiveActivity.mUserInfo != null) {
             drawPublisherMarker();
             CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(Double.valueOf(mLiveActivity.mPublisher.lat), Double.valueOf(mLiveActivity.mPublisher.lon)))      // Sets the center of the map to Mountain View
+                    .target(new LatLng(Double.valueOf(mLiveActivity.mUserInfo.lat), Double.valueOf(mLiveActivity.mUserInfo.lon)))      // Sets the center of the map to Mountain View
                     .zoom(9)                   // Sets the zoom
                     .build();
             mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
