@@ -1801,6 +1801,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         mUserInfo.mUserLabel = videoSquareInfo.user.label;
         mUserInfo.link = videoSquareInfo.user.link;
         getUserFansDetail();
+        initUserInfo(mUserInfo);
     }
 
     @Override
