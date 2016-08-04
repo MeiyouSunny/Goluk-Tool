@@ -3,6 +3,7 @@ package com.mobnote.golukmain.livevideo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.RelativeLayout;
 
 import com.baidu.mapapi.SDKInitializer;
@@ -23,12 +24,14 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.map.LngLat;
 import com.mobnote.util.GlideCircleTransform;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 
 import cn.com.mobnote.module.location.GolukPosition;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -44,7 +47,6 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
 
     private LatLng mPublisherLatLng;
     private LatLng mCurrUserLatLng;
-    private int mTopMargin;
     private SimpleTarget mPublisherTarget = new SimpleTarget<Bitmap>(48, 48) {
         @Override
         public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
@@ -53,7 +55,6 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
                 return;
             }
             if (bitmap != null) {
-
                 BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
                 OverlayOptions markerOptions = new MarkerOptions().position(mPublisherLatLng).icon(bitmapDescriptor).zIndex(1);
                 mPublisherMarker = (Marker) mBaiduMap.addOverlay(markerOptions);
@@ -73,7 +74,6 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
                 return;
             }
             if (bitmap != null) {
-
                 BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
                 OverlayOptions markerOptions = new MarkerOptions().position(mCurrUserLatLng).icon(bitmapDescriptor).zIndex(1);
                 mCurrUserMarker = (Marker) mBaiduMap.addOverlay(markerOptions);
@@ -84,22 +84,6 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
             }
         }
     };
-
-    @Override
-    public void LocationCallBack(String gpsJson) {
-        if (mLiveActivity.isLiveUploadTimeOut) {
-            // 不更新数据
-            return;
-        }
-        if (TextUtils.isEmpty(gpsJson)) {
-            return;
-        }
-        GolukPosition location = JsonUtil.parseLocatoinJson(gpsJson);
-        if (location != null) {
-            updateCurrUserMarker(location.rawLat, location.rawLon);
-        }
-
-    }
 
     @Override
     public void updatePublisherMarker(double lat, double lon) {
@@ -318,10 +302,6 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
                     RelativeLayout.LayoutParams.MATCH_PARENT);
             params.setMargins(0, mTopMargin, 0, 0);
         }
-    }
-
-    @Override
-    public void onExit() {
     }
 }
 

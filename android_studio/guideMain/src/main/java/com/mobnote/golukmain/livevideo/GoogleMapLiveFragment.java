@@ -44,7 +44,6 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
 
     private LatLng mPublisherLatLng;
     private LatLng mCurrUserLatLng;
-    private int mTopMargin;
     private SimpleTarget mPublisherTarget = new SimpleTarget<Bitmap>(48, 48) {
         @Override
         public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
@@ -89,22 +88,6 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    public void LocationCallBack(String gpsJson) {
-        // TODO Auto-generated method stub
-        if (mLiveActivity.isLiveUploadTimeOut) {
-            // 不更新数据
-            return;
-        }
-        if (TextUtils.isEmpty(gpsJson)) {
-            return;
-        }
-        GolukPosition location = JsonUtil.parseLocatoinJson(gpsJson);
-        if (location != null) {
-            updateCurrUserMarker(location.rawLat, location.rawLon);
-        }
     }
 
     @Override
@@ -327,9 +310,5 @@ public class GoogleMapLiveFragment extends AbstractLiveMapViewFragment implement
             mMapView.setLayoutParams(params);
             isResetedView = true;
         }
-    }
-
-    @Override
-    public void onExit() {
     }
 }

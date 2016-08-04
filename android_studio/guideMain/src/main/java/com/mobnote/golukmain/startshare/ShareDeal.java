@@ -315,8 +315,6 @@ public class ShareDeal implements OnClickListener {
 	 * @author jyf
 	 */
 	private void click_deal(String type) {
-		if (null != mActivity && mActivity instanceof VideoEditActivity) {
-			((VideoEditActivity) mActivity).shareClick(type);
-		}
+
 	}
 }

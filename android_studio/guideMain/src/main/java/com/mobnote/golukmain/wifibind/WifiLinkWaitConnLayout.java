@@ -25,17 +25,6 @@ public class WifiLinkWaitConnLayout extends ViewFrame implements OnClickListener
 
     private GolukAnimal mLoadingAnimal = null;
 
-    int[] animalRes_g = {R.drawable.finish_pic_14, R.drawable.finish_pic_13, R.drawable.finish_pic_12,
-            R.drawable.finish_pic_11, R.drawable.finish_pic_10, R.drawable.finish_pic_9, R.drawable.finish_pic_8,
-            R.drawable.finish_pic_7, R.drawable.finish_pic_6, R.drawable.finish_pic_5, R.drawable.finish_pic_4,
-            R.drawable.finish_pic_3, R.drawable.finish_pic_2, R.drawable.finish_pic_1};
-
-    int[] animalRes_t = {R.drawable.finish_t1_pic_14, R.drawable.finish_t1_pic_13, R.drawable.finish_t1_pic_12,
-            R.drawable.finish_t1_pic_11, R.drawable.finish_t1_pic_10, R.drawable.finish_t1_pic_9,
-            R.drawable.finish_t1_pic_8, R.drawable.finish_t1_pic_7, R.drawable.finish_t1_pic_6,
-            R.drawable.finish_t1_pic_5, R.drawable.finish_t1_pic_4, R.drawable.finish_t1_pic_3,
-            R.drawable.finish_t1_pic_2, R.drawable.finish_t1_pic_1};
-
     //通用
     int[] animalRes_gen = {
             R.drawable.finish_comm_pic_23,

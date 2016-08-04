@@ -81,6 +81,7 @@ public class LiveStartRequest extends GolukFastjsonRequest<LiveDataInfo> {
         httpAddHeader("commlon", String.valueOf(bean.lon));
         httpAddHeader("commlat",  String.valueOf(bean.lat));
         httpAddHeader("speed", "" + 10);
+        httpAddHeader("devicetag",GolukApplication.getInstance().mIPCControlManager.mProduceName);
         super.post();
         return true;
     }

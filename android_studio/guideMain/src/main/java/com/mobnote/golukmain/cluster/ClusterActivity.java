@@ -454,6 +454,11 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
             } else {
                 mIsRecommendLoad = false;
             }
+
+            if(GolukConfig.LIST_REFRESH_PULL_DOWN.equals(ret.data.operation) ||
+                    GolukConfig.LIST_REFRESH_NORMAL.equals(ret.data.operation)) {
+                mRecommendList.clear();
+            }
             mRecommendList.addAll(list);
             mClusterAdapter.setDataInfo(mRecommendList, null);
             updateViewData(true, count);
@@ -478,6 +483,11 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
                     mIsNewestLoad = true;
                 } else {
                     mIsNewestLoad = false;
+                }
+
+                if(GolukConfig.LIST_REFRESH_PULL_DOWN.equals(ret.data.operation) ||
+                        GolukConfig.LIST_REFRESH_NORMAL.equals(ret.data.operation)) {
+                    mNewestList.clear();
                 }
                 mNewestList.addAll(list);
                 mClusterAdapter.setDataInfo(null, mNewestList);

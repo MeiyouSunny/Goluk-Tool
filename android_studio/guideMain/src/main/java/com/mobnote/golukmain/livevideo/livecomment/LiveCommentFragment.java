@@ -706,6 +706,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         mIsReply = true;
         if (TextUtils.isEmpty(mEmojiconEt.getText().toString())) {
             mEmojiconEt.setHint(getContext().getResources().getString(R.string.str_reply) + "@" + replyAuthorName);
+
         }
     }
 
