@@ -86,7 +86,7 @@ abstract class AbstractLiveMapViewFragment extends Fragment implements ILiveMap 
             return;
         }
         updateCurrUserMarker(mLocation.rawLat, mLocation.rawLon);
-        if(!mLiveActivity.isShareLive){
+        if(!mLiveActivity.isMineLiveVideo){
             return;
         }
         if(isStartedUploadGEOInfo){
