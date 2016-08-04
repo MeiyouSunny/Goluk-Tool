@@ -521,10 +521,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     }
 
     private void startPlayVideo() {
-        WifiRsBean wrb = ReadWifiConfig.readConfig();
-        if (wrb != null) {
-            mConnectTip.setText(wrb.getIpc_ssid());
-        }
         mSettingBtn.setVisibility(View.VISIBLE);
         mPalyerLayout.setVisibility(View.VISIBLE);
         mNotconnected.setVisibility(View.GONE);
@@ -893,6 +889,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
      * @date 2015年1月28日
      */
     public void start() {
+        WifiRsBean wrb = ReadWifiConfig.readConfig();
+        if (wrb != null) {
+            mConnectTip.setText(wrb.getIpc_ssid());
+        }
         if (null != mRtspPlayerView) {
             mRtspPlayerView.setVisibility(View.VISIBLE);
             String url = PlayUrlManager.getRtspUrl();
@@ -1237,11 +1237,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             isShowPlayer = false;
             isConnecting = false;
             mPalyerLayout.setVisibility(View.VISIBLE);
-        }
-
-        WifiRsBean wrb = ReadWifiConfig.readConfig();
-        if (wrb != null) {
-            mConnectTip.setText(wrb.getIpc_ssid());
         }
         setVideoBtnState(true);
         mNotconnected.setVisibility(View.GONE);
