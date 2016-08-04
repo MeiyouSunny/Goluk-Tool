@@ -2,12 +2,15 @@ package com.mobnote.golukmain.livevideo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
@@ -33,6 +36,8 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
     private EditText mDescriptionEt;
     private Button mStartLiveBtn;
 
+    private TextView mDescWordCount;
+
     /** 默认直播时长 */
     private final int DEFAULT_SECOND = 30 * 60;
     private final int MAX_SECOND = 30 * 60;
@@ -46,6 +51,8 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
     public static final String CURR_LAT = "curr_lat";
     public static final String SHORT_LOCATION = "short_location";
 
+    private String mDescStr;
+    private final int MAX_DESCRIPTION_COUNT = 50;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +87,7 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
         mEnableSaveLiveBtn.setOnClickListener(this);
         mStartLiveBtn.setOnClickListener(this);
         mLiveDurationSeekBar.setOnSeekBarChangeListener(this);
+        mDescriptionEt.addTextChangedListener(mTextWatcher);
 
         mLiveDurationTv.setText(GolukUtils.secondToString(mCurrentLiveSecond));
         mLiveConsumeFlowTv.setText(getCurrentFlow(mCurrentLiveSecond));
@@ -89,6 +97,7 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
 
         mBackIv = (ImageView) findViewById(R.id.ib_live_back);
         mLiveDurationTv = (TextView) findViewById(R.id.tv_live_duration);
+        mDescWordCount = (TextView) findViewById(R.id.tv_live_desc_wordcount);
         mLiveConsumeFlowTv = (TextView) findViewById(R.id.tv_live_consumeflow);
         mLiveDurationSeekBar = (SeekBar) findViewById(R.id.seekbar_duration);
 
@@ -199,4 +208,39 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
 
     }
 
+    TextWatcher mTextWatcher = new TextWatcher() {
+        private CharSequence temp;
+        private int editStart ;
+        private int editEnd ;
+        @Override
+        public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3) {
+            temp = s;
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int arg1, int arg2, int arg3) {
+            if(s == null){
+                mDescStr = null;
+            }else{
+                mDescStr = s.toString().trim();
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            editStart = mDescriptionEt.getSelectionStart();
+            editEnd = mDescriptionEt.getSelectionEnd();
+            if (temp.length() > MAX_DESCRIPTION_COUNT) {
+                s.delete(editStart-1, editEnd);
+                int tempSelection = editStart;
+                mDescriptionEt.setText(s);
+                mDescriptionEt.setSelection(tempSelection);
+            }
+            if(s != null){
+                mDescWordCount.setText(s.length() + "/" + MAX_DESCRIPTION_COUNT);
+            }else{
+                mDescWordCount.setText(0 + "/" + MAX_DESCRIPTION_COUNT);
+            }
+        }
+    };
 }
