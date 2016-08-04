@@ -138,9 +138,7 @@ public class ShareLoading implements OnClickListener, OnTouchListener {
 			return;
 		}
 		if (v.getId() == R.id.share_loading_top) {
-			if (null != mContext && mContext instanceof VideoEditActivity) {
-				((VideoEditActivity) mContext).CallBack_Comm(VideoEditActivity.EVENT_COMM_EXIT, null);
-			}
+
 		}
 
 	}

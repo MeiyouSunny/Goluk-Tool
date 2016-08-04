@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <animation-list xmlns:android="http://schemas.android.com/apk/res/android" android:oneshot="false" >
 	<item android:drawable="@drawable/enter_passport1" android:duration="100"/>
-	<item android:drawable="@drawable/enter_passport2" android:duration="100"/>
-	<item android:drawable="@drawable/enter_passport3" android:duration="100"/>
-	<item android:drawable="@drawable/enter_passport4" android:duration="100"/>
-	<item android:drawable="@drawable/enter_passport5" android:duration="50"/>
+	<item android:drawable="@drawable/enter_passport1" android:duration="100"/>
+	<item android:drawable="@drawable/enter_passport1" android:duration="100"/>
+	<item android:drawable="@drawable/enter_passport1" android:duration="100"/>
+	<item android:drawable="@drawable/enter_passport1" android:duration="50"/>
 	<item android:drawable="@drawable/enter_passport6" android:duration="50"/>
 	<item android:drawable="@drawable/enter_passport7" android:duration="50"/>
 	<item android:drawable="@drawable/enter_passport8" android:duration="50"/>
@@ -12,5 +12,5 @@
 	<item android:drawable="@drawable/enter_passport10" android:duration="100"/>
 	<item android:drawable="@drawable/enter_passport11" android:duration="100"/>
 	<item android:drawable="@drawable/enter_passport12" android:duration="100"/>
-	<item android:drawable="@drawable/enter_passport13" android:duration="100"/>
+	<item android:drawable="@drawable/enter_passport1" android:duration="100"/>
 </animation-list>
