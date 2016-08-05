@@ -233,6 +233,9 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     public void deleteComment(String id) {
         CommentDeleteRequest request = new CommentDeleteRequest(IPageNotifyFn.PageType_DelComment, this);
         boolean isSucess = request.get(id);
+        if(getContext() == null){
+            return;
+        }
         if (!isSucess) {
             // 失败
             GolukUtils.showToast(getContext(), this.getString(R.string.str_delete_fail));
@@ -255,7 +258,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                 while (!isExit) {
                     getCommentList();
                     try {
-                        sleep(30000);
+                        sleep(6000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -279,6 +282,9 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
 
     // 添加评论
     private void httpPost_requestAdd(String txt) {
+        if(getContext() == null){
+            return;
+        }
         if (null == mVid) {
             GolukUtils.showToast(getContext(), this.getString(R.string.str_load_data_ongoing));
             return;
@@ -302,6 +308,9 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
 
     // 点赞请求
     public boolean sendPraiseRequest() {
+        if(getContext() == null){
+            return false;
+        }
         if (!GolukApplication.getInstance().isUserLoginSucess) {
             GolukUtils.startUserLogin(getContext());
             return false;
@@ -388,6 +397,9 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
 
     // 点击“显示 表情”
     private void click_Emojocon() {
+        if(getContext() == null){
+            return;
+        }
         if (!isCanShowSoft()) {
             return;
         }
@@ -412,6 +424,9 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
 
     @Override
     public void onLoadComplete(int requestType, Object result) {
+        if(getContext() == null){
+            return;
+        }
         if (isExit) {
             return;
         }
@@ -539,6 +554,9 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     }
 
     private void addAndRefreshComments(List<CommentItemBean> commentList) {
+        if(getContext() == null){
+            return;
+        }
         if (null == commentList || commentList.size() <= 0) {
             return;
         }
@@ -577,6 +595,9 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     }
 
     private void closeSoftKeyboard() {
+        if(getContext() == null){
+            return;
+        }
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(mRootView, InputMethodManager.SHOW_FORCED);
         imm.hideSoftInputFromWindow(mRootView.getWindowToken(), 0); //强制隐藏键盘
@@ -694,6 +715,9 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
 
     @Override
     public void onReplySelected(String replyId, String replyAuthorId, String replyAuthorName) {
+        if(getContext() == null){
+            return;
+        }
         if (GolukApplication.getInstance().isUserLoginToServerSuccess() && GolukApplication.getInstance().getMyInfo() != null) {
             String loginUserId = GolukApplication.getInstance().getMyInfo().uid;
             if (!TextUtils.isEmpty(loginUserId) && replyAuthorId.equals(loginUserId)) {
@@ -713,6 +737,9 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
 
     @Override
     public void onCommentLongClicked(String commentId) {
+        if(getContext() == null){
+            return;
+        }
         if (mDelCommentDialog == null) {
             mDelCommentDialog = new DelCommentDialog(getContext(), this, commentId);
         }
