@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -122,7 +121,6 @@ abstract class AbstractLiveMapViewFragment extends Fragment implements ILiveMap,
     @Override
     public void onLoadComplete(int requestType, Object result) {
         if (requestType == IPageNotifyFn.PAGE_TYPE_UPLOAD_POSITION) {
-            Log.e("定位", "获取到定位上传反馈");
         }
     }
 
