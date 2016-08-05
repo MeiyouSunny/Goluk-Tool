@@ -405,8 +405,10 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         mRcShareList.addItemDecoration(new SpacesItemDecoration());
 
         mLocationLayout.setOnClickListener(this);
-        if(mSelectedPromotionItem.type == 1) {
+        if(null != mSelectedPromotionItem && mSelectedPromotionItem.type == 0) {
             // only activity can re-select promotion
+            mJoinActivityTV.setOnClickListener(null);
+        } else {
             mJoinActivityTV.setOnClickListener(this);
         }
 
@@ -645,7 +647,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         GetVideoSaveAddressRequest request = new GetVideoSaveAddressRequest(IPageNotifyFn.PageType_Share, this);
 
         request.get(t_vid, t_type, desc, selectTypeJson, isSquare, videoCreateTime, t_signTime, activityid,
-                t_location, "", tagId, "", "", "");
+                t_location, "", tagId, "", mVideoQuality, "");
     }
 
     private void exit() {
