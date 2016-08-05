@@ -255,7 +255,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                 while (!isExit) {
                     getCommentList();
                     try {
-                        sleep(30000);
+                        sleep(6000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
