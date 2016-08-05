@@ -15,189 +15,191 @@ import java.util.ArrayList;
 
 public class PromotionDataAdapter extends BaseAdapter {
 
-	private static final int TYPE_CATEGORY_ITEM = 0;
-	private static final int TYPE_ITEM = 1;
-	Context mContext;
-	ArrayList<PromotionData> mListData;
-	private LayoutInflater mInflater;
-	private PromotionSelectItem mSelectItem;
-	private String mSelectedActivityID;
-	PromotionDataAdapter(Context context) {
-		mContext = context;
-		mInflater = LayoutInflater.from(context);
-		mSelectItem = new PromotionSelectItem();
-	}
+    private static final int TYPE_CATEGORY_ITEM = 0;
+    private static final int TYPE_ITEM = 1;
+    Context mContext;
+    ArrayList<PromotionData> mListData;
+    private LayoutInflater mInflater;
+    private PromotionSelectItem mSelectItem;
+    private String mSelectedActivityID;
 
-	public void setData(ArrayList<PromotionData> data) {
-		mListData = data;
-	}
+    PromotionDataAdapter(Context context) {
+        mContext = context;
+        mInflater = LayoutInflater.from(context);
+        mSelectItem = new PromotionSelectItem();
+    }
 
-	@Override
-	public int getCount() {
-		// TODO Auto-generated method stub
-		int count = 0;
+    public void setData(ArrayList<PromotionData> data) {
+        mListData = data;
+    }
 
-		if (null != mListData) {
+    @Override
+    public int getCount() {
+        // TODO Auto-generated method stub
+        int count = 0;
 
-			// 所有分类中item的总和是ListVIew Item的总个数
-			for (PromotionData category : mListData) {
-				count += category.getItemCount();
-			}
-		}
+        if (null != mListData) {
 
-		return count;
-	}
+            // 所有分类中item的总和是ListVIew Item的总个数
+            for (PromotionData category : mListData) {
+                count += category.getItemCount();
+            }
+        }
 
-	@Override
-	public Object getItem(int position) {
-		// TODO Auto-generated method stub
-		// 异常情况处理
-		if (null == mListData || position < 0 || position > getCount()) {
-			return null;
-		}
+        return count;
+    }
 
-		// 同一分类内，第一个元素的索引值
-		int categroyFirstIndex = 0;
+    @Override
+    public Object getItem(int position) {
+        // TODO Auto-generated method stub
+        // 异常情况处理
+        if (null == mListData || position < 0 || position > getCount()) {
+            return null;
+        }
 
-		for (PromotionData category : mListData) {
-			int size = category.getItemCount();
-			// 在当前分类中的索引值
-			int categoryIndex = position - categroyFirstIndex;
-			// item在当前分类内
-			if (categoryIndex < size) {
-				mSelectItem.channelid = category.channelid;
-				mSelectItem.channelname = category.channelname;
-				PromotionItem item = category.getItem(categoryIndex);
-				if (item != null) {
-					mSelectItem.activitytitle = item.name;
-					mSelectItem.activityid = item.id;
-				} else {
-					mSelectItem.activitytitle = null;
-					mSelectItem.activityid = null;
-				}
-				return mSelectItem;
-			}
+        // 同一分类内，第一个元素的索引值
+        int categroyFirstIndex = 0;
 
-			// 索引移动到当前分类结尾，即下一个分类第一个元素索引
-			categroyFirstIndex += size;
-		}
+        for (PromotionData category : mListData) {
+            int size = category.getItemCount();
+            // 在当前分类中的索引值
+            int categoryIndex = position - categroyFirstIndex;
+            // item在当前分类内
+            if (categoryIndex < size) {
+                mSelectItem.channelid = category.channelid;
+                mSelectItem.channelname = category.channelname;
+                PromotionItem item = category.getItem(categoryIndex);
+                if (item != null) {
+                    mSelectItem.activitytitle = item.name;
+                    mSelectItem.activityid = item.id;
+                } else {
+                    mSelectItem.activitytitle = null;
+                    mSelectItem.activityid = null;
+                }
+                mSelectItem.type = 1;
+                return mSelectItem;
+            }
 
-		return null;
-	}
+            // 索引移动到当前分类结尾，即下一个分类第一个元素索引
+            categroyFirstIndex += size;
+        }
 
-	@Override
-	public int getItemViewType(int position) {
-		// TODO Auto-generated method stub
-		if (null == mListData || position < 0 || position > getCount()) {
-			return TYPE_ITEM;
-		}
+        return null;
+    }
 
-		int categroyFirstIndex = 0;
+    @Override
+    public int getItemViewType(int position) {
+        // TODO Auto-generated method stub
+        if (null == mListData || position < 0 || position > getCount()) {
+            return TYPE_ITEM;
+        }
 
-		for (PromotionData category : mListData) {
-			int size = category.getItemCount();
-			// 在当前分类中的索引值
-			int categoryIndex = position - categroyFirstIndex;
-			if (categoryIndex == 0) {
-				return TYPE_CATEGORY_ITEM;
-			}
+        int categroyFirstIndex = 0;
 
-			categroyFirstIndex += size;
-		}
+        for (PromotionData category : mListData) {
+            int size = category.getItemCount();
+            // 在当前分类中的索引值
+            int categoryIndex = position - categroyFirstIndex;
+            if (categoryIndex == 0) {
+                return TYPE_CATEGORY_ITEM;
+            }
 
-		return TYPE_ITEM;
-	}
+            categroyFirstIndex += size;
+        }
 
-	@Override
-	public int getViewTypeCount() {
-		// TODO Auto-generated method stub
-		return 2;
-	}
+        return TYPE_ITEM;
+    }
 
-	@Override
-	public long getItemId(int position) {
-		// TODO Auto-generated method stub
-		return position;
-	}
+    @Override
+    public int getViewTypeCount() {
+        // TODO Auto-generated method stub
+        return 2;
+    }
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
-		GroupViewHolder groupHolder;
-		ItemViewHolder itemHolder;
-		
-		int itemViewType = getItemViewType(position);
-		String itemValue;
-		PromotionSelectItem item = (PromotionSelectItem) getItem(position);
-		switch (itemViewType) {
-		case TYPE_CATEGORY_ITEM:
-			if (null == convertView) {
-				convertView = mInflater.inflate(R.layout.promotion_group, null);
-				groupHolder = new GroupViewHolder();
-				groupHolder.title = (TextView) convertView
-						.findViewById(R.id.title_text);
-				convertView.setTag(groupHolder);
-			} else {
-				groupHolder = (GroupViewHolder) convertView.getTag();
-			}
+    @Override
+    public long getItemId(int position) {
+        // TODO Auto-generated method stub
+        return position;
+    }
 
-			itemValue = item.channelname + mContext.getString(R.string.str_colon_english);
-			groupHolder.title.setText(itemValue);
-			break;
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        // TODO Auto-generated method stub
+        GroupViewHolder groupHolder;
+        ItemViewHolder itemHolder;
 
-		case TYPE_ITEM:
-			if (null == convertView) {
+        int itemViewType = getItemViewType(position);
+        String itemValue;
+        PromotionSelectItem item = (PromotionSelectItem) getItem(position);
+        switch (itemViewType) {
+            case TYPE_CATEGORY_ITEM:
+                if (null == convertView) {
+                    convertView = mInflater.inflate(R.layout.promotion_group, null);
+                    groupHolder = new GroupViewHolder();
+                    groupHolder.title = (TextView) convertView
+                            .findViewById(R.id.title_text);
+                    convertView.setTag(groupHolder);
+                } else {
+                    groupHolder = (GroupViewHolder) convertView.getTag();
+                }
 
-				convertView = mInflater.inflate(R.layout.promotion_item, null);
+                itemValue = item.channelname + mContext.getString(R.string.str_colon_english);
+                groupHolder.title.setText(itemValue);
+                break;
 
-				itemHolder = new ItemViewHolder();
-				itemHolder.title = (TextView) convertView
-						.findViewById(R.id.title);
-				itemHolder.itemLayout = (LinearLayout) convertView
-						.findViewById(R.id.item_layout);
-				convertView.setTag(itemHolder);
-			} else {
-				itemHolder = (ItemViewHolder) convertView.getTag();
-			}
+            case TYPE_ITEM:
+                if (null == convertView) {
 
-			// 绑定数据
-			itemValue = "#" + item.activitytitle + "#";
-			itemHolder.title.setText(itemValue);
-			if (mSelectedActivityID != null && item.activityid.equalsIgnoreCase(mSelectedActivityID)) {
-				convertView.requestFocus();
-				itemHolder.title.setTextColor(Color.parseColor("#0080ff"));
-				itemHolder.title.setBackgroundResource(R.drawable.share_promotion_frame_selected);
-			} else {
-				itemHolder.title.setTextColor(Color.parseColor("#808080"));
-				itemHolder.title.setBackgroundResource(R.drawable.share_promotion_frame);
-			}
-			break;
-		}
+                    convertView = mInflater.inflate(R.layout.promotion_item, null);
 
-		return convertView;
-	}
+                    itemHolder = new ItemViewHolder();
+                    itemHolder.title = (TextView) convertView
+                            .findViewById(R.id.title);
+                    itemHolder.itemLayout = (LinearLayout) convertView
+                            .findViewById(R.id.item_layout);
+                    convertView.setTag(itemHolder);
+                } else {
+                    itemHolder = (ItemViewHolder) convertView.getTag();
+                }
 
-	@Override
-	public boolean areAllItemsEnabled() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+                // 绑定数据
+                itemValue = "#" + item.activitytitle + "#";
+                itemHolder.title.setText(itemValue);
+                if (mSelectedActivityID != null && item.activityid.equalsIgnoreCase(mSelectedActivityID)) {
+                    convertView.requestFocus();
+                    itemHolder.title.setTextColor(Color.parseColor("#0080ff"));
+                    itemHolder.title.setBackgroundResource(R.drawable.share_promotion_frame_selected);
+                } else {
+                    itemHolder.title.setTextColor(Color.parseColor("#808080"));
+                    itemHolder.title.setBackgroundResource(R.drawable.share_promotion_frame);
+                }
+                break;
+        }
 
-	@Override
-	public boolean isEnabled(int position) {
-		return getItemViewType(position) != TYPE_CATEGORY_ITEM;
-	}
+        return convertView;
+    }
 
-	private static class ItemViewHolder {
-		TextView title;
-		LinearLayout itemLayout;
-	}
+    @Override
+    public boolean areAllItemsEnabled() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
-	private static class GroupViewHolder {
-		TextView title;
-	}
+    @Override
+    public boolean isEnabled(int position) {
+        return getItemViewType(position) != TYPE_CATEGORY_ITEM;
+    }
 
-	public void setSelectId(String id) {
-		mSelectedActivityID = id;
-	}
+    private static class ItemViewHolder {
+        TextView title;
+        LinearLayout itemLayout;
+    }
+
+    private static class GroupViewHolder {
+        TextView title;
+    }
+
+    public void setSelectId(String id) {
+        mSelectedActivityID = id;
+    }
 }

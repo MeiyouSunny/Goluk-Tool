@@ -18,7 +18,6 @@ import com.mobnote.util.ZhugeUtils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
@@ -35,8 +34,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
-
-import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * ViewPager实现的轮播图广告自定义视图，如京东首页的广告轮播图效果；
