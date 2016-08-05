@@ -255,7 +255,7 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
                 while (!isExit) {
                     getCommentList();
                     try {
-                        sleep(10000);
+                        sleep(30000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -271,9 +271,9 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         String type = ICommentFn.COMMENT_TYPE_LIVE;
         CommentListRequest request = new CommentListRequest(IPageNotifyFn.PageType_CommentList, this);
         if (TextUtils.isEmpty(mLastTimeStamp)) {
-            request.getBySort(mVid, type, 0, mLastTimeStamp, "0");
+            request.getBySort(mVid, type, 0, mLastTimeStamp, "1");
         } else {
-            request.getBySort(mVid, type, 1, mLastTimeStamp, "0");
+            request.getBySort(mVid, type, 1, mLastTimeStamp, "1");
         }
     }
 
@@ -542,9 +542,10 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
         if (null == commentList || commentList.size() <= 0) {
             return;
         }
-        if (null != commentList.get(0)) {
-            if (!TextUtils.isEmpty(commentList.get(0).time)) {
-                mLastTimeStamp = commentList.get(0).time;
+        int commentSize = commentList.size();
+        if (null != commentList.get(commentSize -1)) {
+            if (!TextUtils.isEmpty(commentList.get(commentSize -1).time)) {
+                mLastTimeStamp = commentList.get(commentSize -1).time;
             }
         }
         if (mCommentDataList == null) {
