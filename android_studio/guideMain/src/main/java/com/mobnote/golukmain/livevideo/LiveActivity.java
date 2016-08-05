@@ -76,7 +76,6 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
-import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
@@ -201,6 +200,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     private boolean isStopNormal;
     private int mOnStopTime;
+    private boolean canVoice;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -234,7 +234,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             mLiveCommentFragment.setmVid(mVid);
             getUserFansDetail();
             pollingRequestVideoDetail();
-            SharedPrefUtil.setIsLiveNormalExit(true);
         }
         //2.初始化用户数据
         initUserInfo(mUserInfo);
@@ -301,10 +300,10 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onStop() {
         super.onStop();
-        if(!isMineLiveVideo){
+        if (!isMineLiveVideo) {
             return;
         }
-        if(isStopNormal){
+        if (isStopNormal) {
             return;
         }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
@@ -313,8 +312,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         builder.setContentTitle(getString(R.string.str_goluk_hint));
         builder.setContentText(getString(R.string.str_still_broadcast_video));
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Date dt= new Date();
-        mOnStopTime= (int) dt.getTime();
+        Date dt = new Date();
+        mOnStopTime = (int) dt.getTime();
         notificationManager.notify(mOnStopTime, builder.build());
     }
 
@@ -563,9 +562,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             mUserInfo.lat = tempUserInfo.lat;
             mUserInfo.lon = tempUserInfo.lon;
 
-            mLiveCommentFragment.updateLikeCount(Integer.parseInt(tempMyInfo.zanCount));
-            mLookCountTv.setText(GolukUtils.getFormatedNumber(tempMyInfo.persons));
-
+            updateZanAndLookNumber(Integer.parseInt(tempMyInfo.zanCount), GolukUtils.getFormatedNumber(tempMyInfo.persons));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1088,7 +1085,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         resetLinkState(mUserInfo);
         GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----5555 : ");
         //是否支持声音
-        boolean isCanVoice = liveData.voice.equals("1");
+        canVoice = liveData.voice.equals("1");
         this.isConnServerSuccess = true;
         mLiveCountSecond = liveData.restime;
 
@@ -1096,11 +1093,9 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
         if (1 == liveData.active) {
             GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----LiveVideoDataCallBack----6666 : " + liveData.vurl);
-            if (null != mRPVPlayVideo) {
-                // 主动直播
-                if (!mRPVPlayVideo.isPlaying()) {
-                    startVideoAndLive(liveData.vurl, isCanVoice);
-                }
+            // 主动直播
+            if (!mRPVPlayVideo.isPlaying()) {
+                startVideoAndLive(liveData.vurl, canVoice);
             }
         }
     }
@@ -1121,11 +1116,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onDestroy() {
         GolukDebugUtils.e("", "live---onDestroy");
-        if (null != mRPVPlayVideo) {
-            mRPVPlayVideo.stopPlayback();
-            mRPVPlayVideo.cleanUp();
-            mRPVPlayVideo = null;
-        }
+        freePlayer();
         LiveDialogManager.getManagerInstance().dismissLiveBackDialog();
         dissmissAllDialog();
         LiveDialogManager.getManagerInstance().dismissTwoButtonDialog();
@@ -1183,8 +1174,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             }
             vid = liveData.vid;
         }
-        ShareVideoShortUrlRequest getShareUrlReq = new ShareVideoShortUrlRequest( IPageNotifyFn.PageType_GetShareURL, this);
-        getShareUrlReq.get(vid,"1");
+        ShareVideoShortUrlRequest getShareUrlReq = new ShareVideoShortUrlRequest(IPageNotifyFn.PageType_GetShareURL, this);
+        getShareUrlReq.get(vid, "1");
         LiveDialogManager.getManagerInstance().showShareProgressDialog(this,
                 LiveDialogManager.DIALOG_TYPE_LIVE_SHARE, this.getString(R.string.user_dialog_hint_title),
                 this.getString(R.string.str_request_share_address));
@@ -1196,19 +1187,11 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     private Runnable retryRunnable = new Runnable() {
         @Override
         public void run() {
-            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----PlayerCallback----retryRunnable--1111 : ");
-            if (null != mRPVPlayVideo) {
-                GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----PlayerCallback----retryRunnable--22222 : ");
-                if (isMineLiveVideo) {
-                    GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----PlayerCallback----retryRunnable--3333 : ");
-                    mRPVPlayVideo.setDataSource(PlayUrlManager.getRtspUrl());
-                    mRPVPlayVideo.start();
-                    GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----PlayerCallback----retryRunnable--44444 : ");
-                } else {
-                    if (null != liveData) {
-                        mRPVPlayVideo.setDataSource(liveData.vurl);
-                        mRPVPlayVideo.start();
-                    }
+            if (isMineLiveVideo) {
+                startVideoAndLive(PlayUrlManager.getRtspUrl(), true);
+            } else {
+                if (null != liveData) {
+                    startVideoAndLive(liveData.vurl, canVoice);
                 }
             }
         }
@@ -1297,6 +1280,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
      * 隐藏播放器
      */
     private void hidePlayer() {
+//        mVLayout.setVisibility(View.GONE);
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVLayout.getLayoutParams();
         lp.width = lp.height = 1;
         lp.leftMargin = 2000;
@@ -1307,6 +1291,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
      * 显示播放器
      */
     private void showPlayer() {
+//        mVLayout.setVisibility(View.VISIBLE);
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVLayout.getLayoutParams();
         lp.width = RelativeLayout.LayoutParams.MATCH_PARENT;
         lp.height = RelativeLayout.LayoutParams.MATCH_PARENT;
@@ -1315,11 +1300,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void freePlayer() {
-        if (null != mRPVPlayVideo) {
-            mRPVPlayVideo.removeCallbacks(retryRunnable);
-            mRPVPlayVideo.cleanUp();
-            mRPVPlayVideo = null;
-        }
+        mRPVPlayVideo.removeCallbacks(retryRunnable);
+        mRPVPlayVideo.cleanUp();
     }
 
     /**
@@ -1752,11 +1734,11 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 mUserInfo.link = bean.data.link;
                 resetLinkState(mUserInfo);
             }
-        } else if(requestType == IPageNotifyFn.PageType_GetShareURL){
+        } else if (requestType == IPageNotifyFn.PageType_GetShareURL) {
             //获取分享Url
             LiveDialogManager.getManagerInstance().dismissShareProgressDialog();
             VideoShareRetBean videoShareRetBean = (VideoShareRetBean) result;
-            if(videoShareRetBean == null){
+            if (videoShareRetBean == null) {
                 GolukUtils.showToast(this, this.getString(R.string.str_share_fail));
                 return;
             }
