@@ -5,6 +5,12 @@
     android:layout_height="match_parent"
     android:background="@color/white" >
 
+    <FrameLayout
+        android:id="@+id/fl_more"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#00000000" >
+    </FrameLayout>
     <!-- 直播title -->
 
     <RelativeLayout
@@ -333,12 +339,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/fl_more"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#00000000" >
-    </FrameLayout>
     <View
         android:id="@+id/view_separate_line"
         android:layout_width="match_parent"
