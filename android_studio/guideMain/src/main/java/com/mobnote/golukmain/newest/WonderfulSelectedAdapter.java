@@ -19,9 +19,7 @@ import com.mobnote.view.SlideShowView;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -57,6 +55,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
     private final static String ACTIVITY_TOGETHER = "4";
     private final static String H5_PAGE = "5";
     private final static String SPECIAL_SOLO = "6";
+    private final static String TAG_PAGE = "10";
     private final static String TAG = "WonderfulSelectedAdapter";
 
     public WonderfulSelectedAdapter(Context context) {
@@ -407,7 +406,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
                 intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID,
                         body.getAccess());
                 // intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
-                String topName = "#" + body.getTitle() + "#";
+                String topName = "#" + body.getTitle();
                 intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
                 mContext.startActivity(intent);
             }
@@ -439,6 +438,20 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
                 // intent.putExtra("imageurl", body.getPicture());
                 intent.putExtra("ztid", body.getAccess());
                 intent.putExtra("title", body.getTitle());
+                mContext.startActivity(intent);
+            }
+        } else if (TAG_PAGE.equals(type)) {
+            // launch topic
+            String accessId = body.getAccess();
+            if (null == accessId || accessId.trim().equals("")) {
+                return;
+            } else {
+                intent = new Intent(mContext, ClusterActivity.class);
+                intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID,
+                        body.getAccess());
+                // intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
+                String topName = "#" + body.getTitle();
+                intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
                 mContext.startActivity(intent);
             }
         }

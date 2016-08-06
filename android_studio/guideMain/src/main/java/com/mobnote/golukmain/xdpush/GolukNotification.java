@@ -97,6 +97,7 @@ public class GolukNotification {
     private final static String H5_PAGE = "5";
     private final static String SPECIAL_SOLO = "6";
     private final static String HOME_PAGE = "9";
+    private final static String TAG_PAGE = "10";
     private final static String WEB_DIRECT = "/navidog4MeetTrans/redirect.htm";
 
     public void createXG() {
@@ -523,7 +524,7 @@ public class GolukNotification {
                         intent = new Intent(context, ClusterActivity.class);
                         intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, vidArray[0]);
                         // intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
-                        String topName = "#" + msgBean.title + "#";
+                        String topName = "#" + msgBean.title;
                         intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
                         context.startActivity(intent);
                     } else if (H5_PAGE.equals(msgBean.tarkey)) {
@@ -553,6 +554,15 @@ public class GolukNotification {
                     } else if (HOME_PAGE.equals(msgBean.tarkey)) {
                         Context context = GolukApplication.getInstance().getContext();
                         GolukUtils.startUserCenterActivity(context, vidArray[0]);
+                    } else if (TAG_PAGE.equals(msgBean.tarkey)) {
+                        // launch topic
+                        Context context = GolukApplication.getInstance().getContext();
+                        intent = new Intent(context, ClusterActivity.class);
+                        intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, vidArray[0]);
+                        // intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
+                        String topName = "#" + msgBean.title;
+                        intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
+                        context.startActivity(intent);
                     }
                 } else {
                     // do nothing
