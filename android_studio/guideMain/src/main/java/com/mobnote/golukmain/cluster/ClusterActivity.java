@@ -234,6 +234,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
                 return;
             }
 
+            mCurMotion = GolukConfig.LIST_REFRESH_PULL_UP;
             if(mRTPullListView.getAdapter().getCount() !=
                     (mListFirstVisible + mListVisibleCount)) {
                 return;
@@ -251,7 +252,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
                 mCurMotion = GolukConfig.LIST_REFRESH_PULL_UP;
                 mRecommendRequest = new TagRecommendListRequest(
                         IPageNotifyFn.PageType_ClusterRecommend, ClusterActivity.this);
-                mRecommendRequest.get(mTagId, GolukConfig.SERVER_PROTOCOL_V2, mTimeStamp, LIST_PAGE_SIZE);
+                mRecommendRequest.get(mTagId, mCurMotion, mTimeStamp, LIST_PAGE_SIZE);
                 mIsRecommendLoad = false;
             } else {
                 if(mNewestList == null || mNewestList.size() == 0) {
@@ -264,7 +265,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
                 mCurMotion = GolukConfig.LIST_REFRESH_PULL_UP;
                 mNewsRequest = new TagNewestListRequest(IPageNotifyFn.PageType_ClusterNews,
                         ClusterActivity.this);
-                mNewsRequest.get(mTagId, GolukConfig.SERVER_PROTOCOL_V2,
+                mNewsRequest.get(mTagId, mCurMotion,
                         mNewestList.get(mNewestList.size() - 1).mVideoEntity.sharingtime, LIST_PAGE_SIZE);
                 mIsNewestLoad = false;
             }
