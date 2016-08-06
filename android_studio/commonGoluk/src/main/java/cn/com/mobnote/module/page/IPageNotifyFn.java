@@ -178,6 +178,8 @@ public interface IPageNotifyFn extends IGolukCommFn {
     /** 上传用户位置 */
     public static final int PAGE_TYPE_UPLOAD_POSITION =  80;
 
+    /** 请求当前直播是否在线 */
+    public static final int PAGE_TYPE_IS_ALIVE = 81;
 	/**
 	 * 
 	 * 以下为同步获取信息标识

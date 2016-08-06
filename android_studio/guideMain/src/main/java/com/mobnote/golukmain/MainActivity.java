@@ -79,6 +79,8 @@ import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.live.GetBaiduAddress.IBaiduGeoCoderFn;
 import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
+import com.mobnote.golukmain.livevideo.IsLiveRequest;
+import com.mobnote.golukmain.livevideo.IsLiveRetBean;
 import com.mobnote.golukmain.msg.MessageBadger;
 import com.mobnote.golukmain.msg.MsgCenterCounterRequest;
 import com.mobnote.golukmain.msg.bean.MessageCounterBean;
@@ -945,7 +947,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         if (mApp.isIpcLoginSuccess && mApp.isNeedCheckLive) {
             mApp.isNeedCheckLive = false;
             mApp.isCheckContinuteLiveFinish = true;
-            showContinuteLive();
+            //requestIsAlive();
         }
 
         if (null != GolukApplication.getInstance().getIPCControlManager()) {
@@ -961,10 +963,23 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         super.onResume();
     }
 
-    public void showContinuteLive() {
-        GolukDebugUtils.e("", "jyf----20150406----checkContinueLive----checkContinueLive :");
-        // 标识正常退出
+    public void requestIsAlive(){
+//        GolukDebugUtils.e("", "jyf----20150406----checkContinueLive----checkContinueLive :");
+//        // 标识正常退出
+//        SharedPrefUtil.setIsLiveNormalExit(true);
+//        mApp.isNeedCheckLive = false;
+//        mApp.isCheckContinuteLiveFinish = true;
+//        if (mApp.getIpcIsLogin()) {
+//            LiveDialogManager.getManagerInstance().showTwoBtnDialog(this, LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE,
+//                    getString(R.string.user_dialog_hint_title), getString(R.string.str_live_continue));
+//        }
         SharedPrefUtil.setIsLiveNormalExit(true);
+        mApp.isNeedCheckLive = false;
+        mApp.isCheckContinuteLiveFinish = true;
+        IsLiveRequest isLiveRequest = new IsLiveRequest(IPageNotifyFn.PAGE_TYPE_IS_ALIVE,this);
+        isLiveRequest.request();
+    }
+    public void showContinuteLive() {
         if (mApp.getIpcIsLogin()) {
             LiveDialogManager.getManagerInstance().showTwoBtnDialog(this, LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE,
                     getString(R.string.user_dialog_hint_title), getString(R.string.str_live_continue));
@@ -1322,6 +1337,17 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             }
             if (bean.data.newvideo > 0) {
                 mFollowedVideoTipIV.setVisibility(View.VISIBLE);
+            }
+        } else if (requestType == IPageNotifyFn.PAGE_TYPE_IS_ALIVE) {
+            IsLiveRetBean isLiveRetBean = (IsLiveRetBean) result;
+            if(isLiveRetBean == null){
+                return;
+            }
+            if(TextUtils.isEmpty(isLiveRetBean.code)) {
+                return;
+            }
+            if("200".equals(isLiveRetBean.code)){
+                showContinuteLive();
             }
         }
     }

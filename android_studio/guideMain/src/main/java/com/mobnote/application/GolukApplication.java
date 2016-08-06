@@ -1110,7 +1110,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         if (mContext instanceof MainActivity) {
             isNeedCheckLive = false;
             isCheckContinuteLiveFinish = true;
-            ((MainActivity) mContext).showContinuteLive();
+            ((MainActivity) mContext).requestIsAlive();
         } else {
             isNeedCheckLive = true;
         }
@@ -1883,7 +1883,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         try {
             String user = SharedPrefUtil.getUserInfo();
 
-            Log.e("dengting", "getUserInfo------------------logic-userInfo:" + user);
+            Log.e("dengting", "getUserInfo------------------logic-userInfo2:" + user);
 
             if (null != user && !"".equals(user)) {
                 myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(user));
@@ -1899,7 +1899,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 
         String user = SharedPrefUtil.getUserInfo();
 
-        Log.e("dengting", "getUserInfo------------------logic-userInfo:" + user);
+        Log.e("dengting", "getUserInfo------------------logic-userInfo3:" + user);
 
         try {
             if (user != null && !"".equals(user)) {

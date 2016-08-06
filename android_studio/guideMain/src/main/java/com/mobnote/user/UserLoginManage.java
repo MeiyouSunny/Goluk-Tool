@@ -181,7 +181,7 @@ public class UserLoginManage implements IRequestResultListener {
 		UserInfo myInfo = null;
 		String userInfo = SharedPrefUtil.getUserInfo();
 
-		Log.e("dengting", "getUserInfo------------------logic-userInfo:" + userInfo);
+		Log.e("dengting", "getUserInfo------------------logic-userInfo1:" + userInfo);
 
 		if (null != userInfo && !"".equals(userInfo) && myInfo != null && myInfo.phone != null
 				&& !"".equals(myInfo.phone)) {

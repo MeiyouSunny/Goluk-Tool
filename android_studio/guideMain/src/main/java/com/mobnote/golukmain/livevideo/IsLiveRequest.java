@@ -22,16 +22,21 @@ public class IsLiveRequest extends GolukFastjsonRequest<IsLiveRetBean> {
 
     @Override
     protected String getMethod() {
+        return null;
+    }
+
+    public void request(){
         if(!GolukApplication.getInstance().isUserLoginToServerSuccess()) {
-            return null;
+            return;
         }
         if(GolukApplication.getInstance().getMyInfo() == null) {
-            return null;
+            return;
         }
         HashMap<String, String> headers = (HashMap<String, String>) getHeader();
-        headers.put("xieyi", "200");
+        headers.put("xieyi", "100");
+        headers.put("uid", GolukApplication.getInstance().getMyInfo().uid);
         headers.put("commuid", GolukApplication.getInstance().getMyInfo().uid);
         get();
-        return null;
+        return;
     }
 }

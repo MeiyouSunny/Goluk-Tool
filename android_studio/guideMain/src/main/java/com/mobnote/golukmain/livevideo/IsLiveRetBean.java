@@ -7,9 +7,9 @@ import com.alibaba.fastjson.annotation.JSONField;
  */
 public class IsLiveRetBean {
     @JSONField (name = "code")
-    String code;
+    public String code;
     @JSONField (name = "state")
-    boolean state;
+    public boolean state;
     @JSONField (name = "msg")
-    String msg;
+    public String msg;
 }
