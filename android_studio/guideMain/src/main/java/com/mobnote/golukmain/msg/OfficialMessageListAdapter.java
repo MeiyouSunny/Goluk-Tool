@@ -39,6 +39,7 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 	private final static String H5_PAGE = "5";
 	private final static String SPECIAL_SOLO = "6";
 	private final static String HOME_PAGE = "9";
+	private final static String TAG_PAGE = "10";
 	private final static String WEB_DIRECT = "/navidog4MeetTrans/redirect.htm";
 
 	private final static String TAG = "OfficialMessageListAdapter";
@@ -170,7 +171,7 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 							accessId);
 					// intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
 					if(null != finalBean.content.anycast) {
-						String topName = "#" + finalBean.content.anycast.title + "#";
+						String topName = "#" + finalBean.content.anycast.title;
 						intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE,
 								topName);
 					}
@@ -200,8 +201,20 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 					intent.putExtra(VideoDetailActivity.TYPE, "Wonderful");
 					intent.putExtra("ztid", accessId);
 					mContext.startActivity(intent);
-				}else if(HOME_PAGE.equals(type)) {
+				} else if(HOME_PAGE.equals(type)) {
 					GolukUtils.startUserCenterActivity(mContext,accessId);
+				} else if (TAG_PAGE.equals(type)) {
+					// launch topic
+					intent = new Intent(mContext, ClusterActivity.class);
+					intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID,
+							accessId);
+					// intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
+					if (null != finalBean.content.anycast) {
+						String topName = "#" + finalBean.content.anycast.title;
+						intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE,
+								topName);
+					}
+					mContext.startActivity(intent);
 				}
 			}
 		});

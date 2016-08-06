@@ -75,6 +75,7 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
     private final static String ACTIVITY_TOGETHER = "4";
     private final static String H5_PAGE = "5";
     private final static String SPECIAL_SOLO = "6";
+    private final static String TAG_PAGE = "10";
 
     private class ImageViewTag {
         public ImageViewTag(int position, BannerSlideBody data) {
@@ -174,7 +175,7 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
                     intent = new Intent(mContext, ClusterActivity.class);
                     intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, tag.data.getAccess());
 //                    intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
-                    String topName = "#" + tag.data.getTitle() + "#";
+                    String topName = "#" + tag.data.getTitle();
                     intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
                     mContext.startActivity(intent);
                 }
@@ -207,6 +208,18 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
                     intent.putExtra("imageurl", tag.data.getPicture());
                     intent.putExtra("ztid", tag.data.getAccess());
                     intent.putExtra("title", tag.data.getTitle());
+                    mContext.startActivity(intent);
+                }
+            } else if(TAG_PAGE.equals(type)) {
+                // launch topic
+                String accessId = tag.data.getAccess();
+                if (null == accessId || accessId.trim().equals("")) {
+                    return;
+                } else {
+                    intent = new Intent(mContext, ClusterActivity.class);
+                    intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, tag.data.getAccess());
+                    String topName = "#" + tag.data.getTitle();
+                    intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
                     mContext.startActivity(intent);
                 }
             }
