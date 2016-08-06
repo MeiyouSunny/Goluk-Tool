@@ -3,6 +3,7 @@ package com.mobnote.golukmain.usercenter;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -276,6 +277,9 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 				String describe = shareJson.data.describe;
 				String title = shareJson.data.title;
 				String customavatar = shareJson.data.customavatar;
+				if(TextUtils.isEmpty(customavatar)) {
+					customavatar = "http://pic.goluk.cn/cdccover/base/avatar.png";
+				}
 				String headportrait = shareJson.data.headportrait;
 				String realDesc = this.getString(R.string.str_usercenter_share_realdesc);
 
