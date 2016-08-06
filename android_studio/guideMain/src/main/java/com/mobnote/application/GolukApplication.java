@@ -1087,56 +1087,26 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         return true;
     }
 
-    // T1 续直播
-    private void T1ContinuteLive() {
-        GolukDebugUtils.e("", "newlive----Application---T1ContinuteLive----0");
+    //判断是否需要
+    public void checkContinueLive() {
+        // 如果是T1，在IPC回调的时候，发起直播
+        if (!mIPCControlManager.isT1Relative()) {
+            return;
+        }
         if (!isCanLive()) {
-            GolukDebugUtils.e("", "newlive----Application---T1ContinuteLive----1");
             return;
         }
         if (this.isAlreadyLive) {
-            GolukDebugUtils.e("", "newlive----Application---T1ContinuteLive----2");
             isCheckContinuteLiveFinish = true;
             return;
         }
         if (!isT1Success) {
-            GolukDebugUtils.e("", "newlive----Application---T1ContinuteLive----3");
             return;
         }
         if (isCallContinue) {
             return;
         }
         isCallContinue = true;
-        realStartContinuteLive();
-        isCallContinue = false;
-    }
-
-    // 显示
-    public void showContinuteLive() {
-        GolukDebugUtils.e("", "newlive----Application---showContinuteLive----0");
-        // 如果是T1，在IPC回调的时候，发起直播
-        if (mIPCControlManager.isT1Relative()) {
-            T1ContinuteLive();
-            return;
-        }
-        // 正常退出，不需要直播
-        if (SharedPrefUtil.getIsLiveNormalExit()) {
-            isCheckContinuteLiveFinish = true;
-            // 不需要续直播
-            return;
-        }
-        if (!isCanLive()) {
-            return;
-        }
-        if (isCallContinue) {
-            return;
-        }
-        isCallContinue = true;
-        realStartContinuteLive();
-        isCallContinue = false;
-    }
-
-    private void realStartContinuteLive() {
         if (mContext instanceof MainActivity) {
             isNeedCheckLive = false;
             isCheckContinuteLiveFinish = true;
@@ -1144,6 +1114,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         } else {
             isNeedCheckLive = true;
         }
+        isCallContinue = false;
     }
 
     /**
@@ -1167,7 +1138,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             isUserLoginSucess = true;
             EventBus.getDefault().post(new EventMessageUpdate(EventConfig.MESSAGE_REQUEST));
             EventBus.getDefault().post(new EventUserLoginRet(EventConfig.USER_LOGIN_RET, true, followedVideoNum));
-            this.showContinuteLive();
+            this.checkContinueLive();
             GolukDebugUtils.e(null, "jyf---------GolukApplication---------mCCurl:" + mCCUrl + " uid:" + mCurrentUId
                     + " aid:" + mCurrentAid);
         }
@@ -1178,7 +1149,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         isIpcLoginSuccess = isSucess;
         isIpcConnSuccess = isSucess;
         if (isSucess) {
-            showContinuteLive();
+            checkContinueLive();
         }
     }
 
@@ -1508,7 +1479,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 VdcpLiveBean bean = GolukFastJsonUtil.getParseObj((String) param2, VdcpLiveBean.class);
                 if ("sending".equals(bean.content)) {
                     isT1Success = true;
-                    showContinuteLive();
+                    checkContinueLive();
                 }
             } catch (Exception e) {
             }
