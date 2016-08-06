@@ -1005,10 +1005,16 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             newStartLive();
             return;
         }
-        final String data = (String) obj;
-        GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----liveCallBack_startLiveIsValid----222222 : " + data);
-        // 数据成功
-        liveData = JsonUtil.parseLiveDataJson(data);
+
+        final String data;
+        if (isContinueLive) {
+            liveData = (LiveDataInfo) obj;
+        } else {
+            data = (String) obj;
+            GolukDebugUtils.e(null, "jyf----20150406----LiveActivity----liveCallBack_startLiveIsValid----222222 : " + data);
+            // 数据成功
+            liveData = JsonUtil.parseLiveDataJson(data);
+        }
         if (null == liveData) {
             newStartLive();
             return;
@@ -1024,6 +1030,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 // 如果是T1,则不需要重新开启
                 startLive();
             }
+            mVid = liveData.vid;
+            mLiveCommentFragment.setmVid(mVid);
             startUploadMyPosition();
             isSettingCallBack = true;
             this.isConnServerSuccess = true;
@@ -1316,6 +1324,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             return;
         }
         isAlreadyExit = true;
+        mBaseApp.isAlreadyLive = false;
         SharedPrefUtil.setIsLiveNormalExit(true);
         // 注册回调监听
         GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("live");

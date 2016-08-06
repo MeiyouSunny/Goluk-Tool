@@ -128,7 +128,6 @@ public class LiveOperateVdcp implements ILiveOperateFn {
             }
         } catch (Exception e) {
             GolukDebugUtils.e("", "newlive-----LiveOperateVdcp-----CallBack_Ipc Exception:  ");
-
         }
     }
 
