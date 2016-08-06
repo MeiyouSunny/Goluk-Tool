@@ -148,7 +148,7 @@
         android:text="@string/str_new_comment"
         android:textColor="#0080ff"
         android:textSize="12sp"
-        android:background="#300080ff"
+        android:background="#d6c3e1fe"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="60dp"/>

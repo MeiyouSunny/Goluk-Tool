@@ -2,6 +2,8 @@ package com.mobnote.golukmain.livevideo.livecomment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -108,6 +110,17 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     private int mLikeCount = 0;
     private int mTopMargin = 0;
     private LiveCommentAdapter mLiveCommentAdapter;
+    private final int DISSMISS_NEW_TIPS = 1001;
+    Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case DISSMISS_NEW_TIPS:
+                    mNewCommentTv.setVisibility(View.GONE);
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     @Nullable
     @Override
@@ -614,6 +627,8 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
             mLiveCommentAdapter.notifyItemRangeChanged(currCommentCount - 1, mCommentDataList.size() - currCommentCount - 1);
         }
         if (hasNewComment) {
+            mHandler.removeMessages(DISSMISS_NEW_TIPS);
+            mHandler.sendEmptyMessageDelayed(DISSMISS_NEW_TIPS,2000);
             mNewCommentTv.setVisibility(View.VISIBLE);
         }
     }
