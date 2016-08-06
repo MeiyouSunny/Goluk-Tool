@@ -77,7 +77,7 @@ public class User implements IRequestResultListener{
 			StatusChange(2);
 			mApp.loginoutStatus = false;
 			mApp.isUserLoginSucess = true;
-			mApp.showContinuteLive();
+			mApp.checkContinueLive();
 		}else{
 			StatusChange(3);
 		}
@@ -175,7 +175,7 @@ public class User implements IRequestResultListener{
 						GolukDebugUtils.i("lily", "----ok---" + mApp.autoLoginStatus);
 						mApp.loginoutStatus = false;
 						mApp.isUserLoginSucess = true;
-						mApp.showContinuteLive();
+						mApp.checkContinueLive();
 						mApp.parseLoginData(userresult.data);
 						SharedPrefUtil.saveUserInfo(com.alibaba.fastjson.JSONObject.toJSONString(userresult.data));
 						break;

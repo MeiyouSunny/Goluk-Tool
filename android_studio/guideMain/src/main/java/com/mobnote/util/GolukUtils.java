@@ -1416,6 +1416,16 @@ public class GolukUtils {
         return false;
     }
 
+    public static boolean isIPCTypeG(final String model) {
+        if (TextUtils.isEmpty(model)) {
+            return false;
+        }
+        if (model.startsWith("g") || model.startsWith("G")) {
+            return true;
+        }
+        return false;
+    }
+
     public static String getExceptionStackString(Exception ex) {
         StringWriter errors = new StringWriter();
         ex.printStackTrace(new PrintWriter(errors));

@@ -306,6 +306,10 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (isStopNormal) {
             return;
         }
+        if(GolukUtils.isIPCTypeG(mBaseApp.mIPCControlManager.mProduceName)) {
+            return;
+        }
+        //如果是T系列，则发送notification提示
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         // 设置通知的基本信息：icon、标题、内容
         builder.setSmallIcon(R.drawable.logo_copyright);

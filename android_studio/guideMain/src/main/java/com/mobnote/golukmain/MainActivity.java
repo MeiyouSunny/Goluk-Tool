@@ -942,7 +942,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 
         GetBaiduAddress.getInstance().setCallBackListener(this);
 
-        if (mApp.isNeedCheckLive) {
+        if (mApp.isIpcLoginSuccess && mApp.isNeedCheckLive) {
             mApp.isNeedCheckLive = false;
             mApp.isCheckContinuteLiveFinish = true;
             showContinuteLive();
@@ -962,7 +962,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
     }
 
     public void showContinuteLive() {
-        GolukDebugUtils.e("", "jyf----20150406----showContinuteLive----showContinuteLive :");
+        GolukDebugUtils.e("", "jyf----20150406----checkContinueLive----checkContinueLive :");
         // 标识正常退出
         SharedPrefUtil.setIsLiveNormalExit(true);
         if (mApp.getIpcIsLogin()) {
