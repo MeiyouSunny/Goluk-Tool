@@ -799,7 +799,9 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         isTryingReUpload = false;
         // 取消90秒
         mBaseHandler.removeMessages(MSG_H_UPLOAD_TIMEOUT);
-        LiveDialogManager.getManagerInstance().dismissProgressDialog();
+        if(isConnServerSuccess || !isMineLiveVideo){
+            LiveDialogManager.getManagerInstance().dismissProgressDialog();
+        }
         if (!isRequestedForServer) {
             // 没有请求过服务器
             if (!isContinueLive) {
@@ -965,7 +967,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                     this.getString(R.string.str_live_over));
             return;
         }
-        LiveDialogManager.getManagerInstance().dismissProgressDialog();
         isConnServerSuccess = true;
         startScreenShot();
         startUploadMyPosition();
@@ -1807,6 +1808,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onUploadLiveScreenShotSuccess() {
+        LiveDialogManager.getManagerInstance().dismissProgressDialog();
         pollingRequestVideoDetail();
     }
 

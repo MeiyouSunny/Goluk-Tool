@@ -14,7 +14,7 @@ public class GetShareUrlRequest extends GolukFastjsonRequest<GetClusterShareUrlD
 
     @Override
     protected String getPath() {
-        return "/navidog4MeetTrans/activity.htm";
+        return "/navidog4MeetTrans/tag.htm";
     }
 
     @Override
