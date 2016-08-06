@@ -708,7 +708,9 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
                 // ignore close exception
             }
         }
-        if (TextUtils.isEmpty(preMd5String) || !preMd5String.equalsIgnoreCase(newMd5String)) {
+
+        if ((TextUtils.isEmpty(preMd5String) || !preMd5String.equalsIgnoreCase(newMd5String)) &&
+                ((null != mSelectedPromotionItem && mSelectedPromotionItem.type == 1) || (null == mSelectedPromotionItem))) {
             isShowNew = true;
             mNewActivityTv.setVisibility(View.VISIBLE);
         }
@@ -720,16 +722,6 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             case IPageNotifyFn.PageType_GetPromotion:
                 PromotionModel data = (PromotionModel) result;
                 if (data != null && data.success) {
-
-                    ArrayList<PromotionSelectItem> list = new ArrayList<PromotionSelectItem>(2);
-                    if (data.data.priorityacts != null) {
-                        for (PromotionItem item : data.data.priorityacts) {
-                            PromotionSelectItem promotionSelectItem = new PromotionSelectItem();
-                            promotionSelectItem.activityid = item.id;
-                            promotionSelectItem.activitytitle = item.name;
-                            list.add(promotionSelectItem);
-                        }
-                    }
                     mPromotionList = data.data.PromotionList;
                     if(mPromotionList != null && mPromotionList.size() > 0) {
                         checkNewActivity();
