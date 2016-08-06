@@ -482,6 +482,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
      */
     private void initIpcState(int ipcS) {
         if (mApp.getEnableSingleWifi() && mApp.isIpcConnSuccess) {
+            mLiveBtn.setVisibility(View.GONE);
             startPlayVideo();
             return;
         }
