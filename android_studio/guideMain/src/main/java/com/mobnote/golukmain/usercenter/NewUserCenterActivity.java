@@ -278,7 +278,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 				String title = shareJson.data.title;
 				String customavatar = shareJson.data.customavatar;
 				if(TextUtils.isEmpty(customavatar)) {
-					customavatar = "http://pic.goluk.cn/cdccover/base/avatar.png";
+					customavatar = "http://pic.goluk.cn/cdcavatar/defaultavatar.png";
 				}
 				String headportrait = shareJson.data.headportrait;
 				String realDesc = this.getString(R.string.str_usercenter_share_realdesc);

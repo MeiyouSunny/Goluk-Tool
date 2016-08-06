@@ -3,6 +3,7 @@ package com.mobnote.golukmain.newest;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpenUrlActivity;
+import com.mobnote.golukmain.cluster.ClusterActivity;
 import com.mobnote.golukmain.special.ClusterListActivity;
 import com.mobnote.golukmain.special.SpecialListActivity;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
@@ -66,9 +67,11 @@ public class ClickWonderfulSelectedListener implements OnTouchListener {
 			intent.putExtra("ztid", mJXListItemDataInfo.ztid);
 			intent.putExtra("title", mJXListItemDataInfo.ztitle);
 		} else if ("2".equals(mJXListItemDataInfo.ztype)) {// tag
-//			intent = new Intent(mContext, ClusterListActivity.class);
-//			intent.putExtra("ztid", mJXListItemDataInfo.ztid);
-//			intent.putExtra("title", mJXListItemDataInfo.ztitle);
+			intent = new Intent(mContext, ClusterActivity.class);
+			intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID,
+					mJXListItemDataInfo.tagid);
+			String topName = "#" + mJXListItemDataInfo.ztitle;
+			intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
 		} else if ("3".equals(mJXListItemDataInfo.ztype)) {// 单视频
 			//视频详情页访问
 			ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_wonderful_event));
