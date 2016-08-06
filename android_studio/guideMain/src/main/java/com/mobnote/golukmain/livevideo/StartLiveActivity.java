@@ -165,6 +165,10 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
                 showToast(R.string.str_disconnect_goluk);
                 return;
             }
+            if(!GolukUtils.isNetworkConnected(this)) {
+                showToast(R.string.network_error);
+                return;
+            }
             String liveDescription = null;
             liveDescription = mDescriptionEt.getText().toString();
             if(liveDescription == null){

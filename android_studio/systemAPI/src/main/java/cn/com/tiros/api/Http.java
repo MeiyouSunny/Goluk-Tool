@@ -38,6 +38,8 @@ import android.net.NetworkInfo;
 import android.net.Proxy;
 import android.os.AsyncTask;
 import android.provider.Settings;
+import android.util.Log;
+
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class Http implements IHttpFn {
@@ -245,6 +247,7 @@ public class Http implements IHttpFn {
 	}
 
 	public boolean sys_httpget(String url) {
+		Log.i("COMMON_REQUEST_URL",url);
 		isNeedWapConnect();
 		HttpConnectionParams.setConnectionTimeout(mParams, httpConnectTimeOutTime);
 		HttpConnectionParams.setSoTimeout(mParams, httpSoTimeOutTime);

@@ -144,6 +144,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
      * 隐藏adasView
      **/
     private static final int CLOSE_ADAS_VIEW = 120;
+    private LinearLayout mllStartLive;
 
     public enum VideoType {
         mounts, emergency, idle, classic
@@ -482,7 +483,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
      */
     private void initIpcState(int ipcS) {
         if (mApp.getEnableSingleWifi() && mApp.isIpcConnSuccess) {
-            mLiveBtn.setVisibility(View.GONE);
+            mllStartLive.setVisibility(View.GONE);
             startPlayVideo();
             return;
         }
@@ -510,9 +511,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 // GolukApplication.getInstance().stopDownloadList();
                 // 国际版T1设备隐藏直播
                 if (!mApp.isMainland() && GolukUtils.isIPCTypeT1(WiFiInfo.IPC_MODEL)) {
-                    mLiveBtn.setVisibility(View.GONE);
+                    mllStartLive.setVisibility(View.GONE);
                 } else {
-                    mLiveBtn.setVisibility(View.VISIBLE);
+                    mllStartLive.setVisibility(View.VISIBLE);
                 }
                 startPlayVideo();
                 break;
@@ -649,7 +650,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
       //  mLoading.setBackgroundResource(R.anim.video_loading);
     //    mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
         mLoadingText = (TextView) findViewById(R.id.mLoadingText);
-
+        mllStartLive = (LinearLayout) findViewById(R.id.ll_car_recorder_start_live);
         mLiveBtn = (ImageButton) findViewById(R.id.btn_carrecorder_live);
         mRtspPlayerView = (RtspPlayerView) findViewById(R.id.mRtmpPlayerView);
         image1 = (ImageView) findViewById(R.id.image1);

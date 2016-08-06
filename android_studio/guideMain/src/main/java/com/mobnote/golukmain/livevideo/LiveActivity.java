@@ -803,7 +803,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         isTryingReUpload = false;
         // 取消90秒
         mBaseHandler.removeMessages(MSG_H_UPLOAD_TIMEOUT);
-        if(isConnServerSuccess || !isMineLiveVideo){
+        if (isConnServerSuccess || !isMineLiveVideo) {
             LiveDialogManager.getManagerInstance().dismissProgressDialog();
         }
         if (!isRequestedForServer) {
@@ -1344,6 +1344,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         LiveDialogManager.getManagerInstance().setDialogManageFn(null);
         GolukDebugUtils.e("", "next live------------------LIve----setDialogManageFn: set NULL");
         if (isMineLiveVideo) {
+            sendRequestToServerStopPlay();
             // 如果是开启直播，则停止上报自己的位置
             mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StopUploadPosition, "");
             if (isConnServerSuccess) {
@@ -1512,12 +1513,19 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             if (isConnServerSuccess) {
                 // 调用服务器的退出直播
                 if (null != mBaseApp && null != mBaseApp.mGoluk) {
+                    sendRequestToServerStopPlay();
                     mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_LiveStop,
                             JsonUtil.getStopLiveJson());
                 }
             }
             liveStopUploadVideo();
         }
+    }
+
+    private void sendRequestToServerStopPlay() {
+        //FIXME so many function to start live,stop live . this need to be refactored
+        StopPlayRequest request = new StopPlayRequest(this);
+        request.getStopLive(mBaseApp.mCurrentUId);
     }
 
     // timer回调操作

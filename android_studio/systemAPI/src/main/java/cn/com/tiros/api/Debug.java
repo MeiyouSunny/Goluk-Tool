@@ -11,11 +11,11 @@ public class Debug {
     }
 
     public static void sys_dbgprintf(String msg) {
-        if (msg != null) {
-            Log.e("sys_dbgprintf", msg);
-        }
+
         if (GolukDebugUtils.BUGLY_ENABLE) {
             GolukDebugUtils.bt("sys_dbgprintf", msg);
+        } else {
+            Log.e("sys_dbgprintf", msg);
         }
     }
 }
