@@ -25,6 +25,7 @@ import android.widget.TextView;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class VideoDetailAdapter extends BaseAdapter {
+	private static final String COMMENT_ANONYMOUSE_PRE = "anonymous_";
 
 	public Context mContext = null;
 
@@ -200,6 +201,9 @@ public class VideoDetailAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View arg0) {
 				CommentBean bean = mDataList.get(index);
+				if (bean !=null && bean.mUserId.startsWith(COMMENT_ANONYMOUSE_PRE)){
+					return;
+				}
 				GolukUtils.startUserCenterActivity(mContext,bean.mUserId);
 			}
 		});
