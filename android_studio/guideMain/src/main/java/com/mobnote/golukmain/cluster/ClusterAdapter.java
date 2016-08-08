@@ -222,7 +222,6 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                 headViewHolder.partakeBtn = (Button) convertView.findViewById(R.id.partake_btn);
                 headViewHolder.voteBtn = (Button) convertView.findViewById(R.id.btn_cluster_head_vote);
                 headViewHolder.nTagDescriptionETV = (ExpandableTextView) convertView.findViewById(R.id.tag_description_expandable_textview);
-                headViewHolder.nTagTV = (TextView) convertView.findViewById(R.id.tv_tag_page_header_tag);
                 convertView.setTag(headViewHolder);
             } else {
                 headViewHolder = (HeadViewHolder) convertView.getTag();
@@ -271,10 +270,8 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
                 if(TextUtils.isEmpty(mHeadData.activity.activitycontent)) {
                     headViewHolder.nTagDescriptionETV.setVisibility(View.GONE);
-                    headViewHolder.nTagTV.setVisibility(View.GONE);
                 } else {
                     headViewHolder.nTagDescriptionETV.setText(mHeadData.activity.activitycontent);
-                    headViewHolder.nTagTV.setText("#" + mHeadData.activity.activityname);
                 }
                 String joinNumStr = mContext.getString(R.string.str_participation_prompt)
                         + "<font color='#216da8'>"
@@ -319,10 +316,8 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
                 if(TextUtils.isEmpty(mHeadData.tag.description)) {
                     headViewHolder.nTagDescriptionETV.setVisibility(View.GONE);
-                    headViewHolder.nTagTV.setVisibility(View.GONE);
                 } else {
                     headViewHolder.nTagDescriptionETV.setText(mHeadData.tag.description);
-                    headViewHolder.nTagTV.setText("#" + mHeadData.tag.name);
                 }
 
                 String joinNumStr = mContext.getString(R.string.str_participation_prompt)
@@ -744,7 +739,6 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
         Button newsBtn;
         Button partakeBtn;
         Button voteBtn;
-        TextView nTagTV;
         ExpandableTextView nTagDescriptionETV;
     }
 
