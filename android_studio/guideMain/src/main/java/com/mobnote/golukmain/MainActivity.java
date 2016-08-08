@@ -946,7 +946,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 
         if (mApp.isIpcLoginSuccess && mApp.isNeedCheckLive) {
             mApp.isNeedCheckLive = false;
-            mApp.isCheckContinuteLiveFinish = true;
+            mApp.isCheckContinueLiveFinish = true;
             //requestIsAlive();
         }
 
@@ -968,14 +968,14 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 //        // 标识正常退出
 //        SharedPrefUtil.setIsLiveNormalExit(true);
 //        mApp.isNeedCheckLive = false;
-//        mApp.isCheckContinuteLiveFinish = true;
+//        mApp.isCheckContinueLiveFinish = true;
 //        if (mApp.getIpcIsLogin()) {
 //            LiveDialogManager.getManagerInstance().showTwoBtnDialog(this, LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE,
 //                    getString(R.string.user_dialog_hint_title), getString(R.string.str_live_continue));
 //        }
         SharedPrefUtil.setIsLiveNormalExit(true);
         mApp.isNeedCheckLive = false;
-        mApp.isCheckContinuteLiveFinish = true;
+        mApp.isCheckContinueLiveFinish = true;
         IsLiveRequest isLiveRequest = new IsLiveRequest(IPageNotifyFn.PAGE_TYPE_IS_ALIVE,this);
         isLiveRequest.request();
     }
