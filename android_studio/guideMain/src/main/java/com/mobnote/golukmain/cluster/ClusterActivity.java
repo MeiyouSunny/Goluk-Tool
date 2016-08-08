@@ -445,7 +445,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
             List<VideoSquareInfo> list = vdf.getClusterList(ret.data.videolist);
             if(null == list || list.size() == 0) {
                 mIsRecommendLoad = false;
-                GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
+//                GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
                 return;
             }
 
@@ -495,7 +495,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
                 updateViewData(true, count);
             } else {
                 mIsNewestLoad = false;
-                GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
+//                GolukUtils.showToast(this, this.getResources().getString(R.string.request_data_error));
             }
         } else if (requestType == IPageNotifyFn.PageType_ClusterShareUrl) {
             closeProgressDialog();
