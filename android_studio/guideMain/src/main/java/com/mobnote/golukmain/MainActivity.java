@@ -964,22 +964,13 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
     }
 
     public void requestIsAlive(){
-//        GolukDebugUtils.e("", "jyf----20150406----checkContinueLive----checkContinueLive :");
-//        // 标识正常退出
-//        SharedPrefUtil.setIsLiveNormalExit(true);
-//        mApp.isNeedCheckLive = false;
-//        mApp.isCheckContinueLiveFinish = true;
-//        if (mApp.getIpcIsLogin()) {
-//            LiveDialogManager.getManagerInstance().showTwoBtnDialog(this, LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE,
-//                    getString(R.string.user_dialog_hint_title), getString(R.string.str_live_continue));
-//        }
         SharedPrefUtil.setIsLiveNormalExit(true);
         mApp.isNeedCheckLive = false;
         mApp.isCheckContinueLiveFinish = true;
         IsLiveRequest isLiveRequest = new IsLiveRequest(IPageNotifyFn.PAGE_TYPE_IS_ALIVE,this);
         isLiveRequest.request();
     }
-    public void showContinuteLive() {
+    public void showContinueLive() {
         if (mApp.getIpcIsLogin()) {
             LiveDialogManager.getManagerInstance().showTwoBtnDialog(this, LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE,
                     getString(R.string.user_dialog_hint_title), getString(R.string.str_live_continue));
@@ -1341,13 +1332,17 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         } else if (requestType == IPageNotifyFn.PAGE_TYPE_IS_ALIVE) {
             IsLiveRetBean isLiveRetBean = (IsLiveRetBean) result;
             if(isLiveRetBean == null){
+                mApp.mIPCControlManager.stopLive();
                 return;
             }
             if(TextUtils.isEmpty(isLiveRetBean.code)) {
+                mApp.mIPCControlManager.stopLive();
                 return;
             }
             if("200".equals(isLiveRetBean.code)){
-                showContinuteLive();
+                showContinueLive();
+            }else {
+                mApp.mIPCControlManager.stopLive();
             }
         }
     }
