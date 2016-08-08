@@ -1061,27 +1061,20 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 
     public boolean isNeedCheckLive = false;
     private boolean isCallContinue = false;
-    public boolean isCheckContinuteLiveFinish = false;
-    private final int CONTINUTE_TIME_OUT = 15 * 1000;
+    public boolean isCheckContinueLiveFinish = false;
     /**
      * T1回调的消息是否回来
      */
     private boolean isT1Success = false;
 
     private boolean isCanLive() {
-        if (isCheckContinuteLiveFinish) {
+        if (isCheckContinueLiveFinish) {
             GolukDebugUtils.e("", "newlive----Application---isCanLive----0");
             // 已经完成
             return false;
         }
         if (!isIpcLoginSuccess || !isUserLoginSucess) {
             GolukDebugUtils.e("", "newlive----Application---isCanLive----1");
-            return false;
-        }
-        if (System.currentTimeMillis() - startTime > CONTINUTE_TIME_OUT) {
-            // 超时,不需要直播
-            isCheckContinuteLiveFinish = true;
-            GolukDebugUtils.e("", "newlive----Application---isCanLive----2");
             return false;
         }
         return true;
@@ -1097,7 +1090,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             return;
         }
         if (this.isAlreadyLive) {
-            isCheckContinuteLiveFinish = true;
+            isCheckContinueLiveFinish = true;
             return;
         }
         if (!isT1Success) {
@@ -1109,7 +1102,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         isCallContinue = true;
         if (mContext instanceof MainActivity) {
             isNeedCheckLive = false;
-            isCheckContinuteLiveFinish = true;
+            isCheckContinueLiveFinish = true;
             ((MainActivity) mContext).requestIsAlive();
         } else {
             isNeedCheckLive = true;
