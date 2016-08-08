@@ -234,6 +234,17 @@
         </RelativeLayout>
     </LinearLayout>
 
+    <com.mobnote.view.FlowLayout
+        android:id="@+id/flowlayout_video_detail_header_tags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:visibility="gone"
+        android:background="@android:color/white"/>
+
     <!-- 获奖视频／推荐视频 -->
 
     <TextView
@@ -410,17 +421,6 @@
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:background="@color/user_login_bg" />
-
-    <com.mobnote.view.FlowLayout
-        android:id="@+id/flowlayout_video_detail_header_tags"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:visibility="gone"
-        android:background="@android:color/white"/>
 
     <!-- 操作 -->
     <RelativeLayout
