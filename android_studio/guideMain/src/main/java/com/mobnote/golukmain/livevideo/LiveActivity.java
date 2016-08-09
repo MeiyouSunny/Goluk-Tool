@@ -494,7 +494,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (null != sharePlatform) {
             sharePlatform.onActivityResult(requestCode, resultCode, data);
         }
-        if (!isUploadSuccess) {
+        if(isMineLiveVideo && !isUploadSuccess) {
             getLiveSign();
         }
     }
@@ -590,10 +590,17 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
      * 获取直播签名
      */
     private void getLiveSign() {
-        if (null != mUserInfo) {
-            LiveSignRequest liveSignRequest = new LiveSignRequest(IPageNotifyFn.PageType_LiveSign, this);
-            liveSignRequest.get(mUserInfo.uid, String.valueOf(mSettingData.lon), String.valueOf(mSettingData.lat));
+        if(!isMineLiveVideo) {
+            return;
         }
+        if(mUserInfo == null) {
+            return;
+        }
+        if(mSettingData == null) {
+            return;
+        }
+        LiveSignRequest liveSignRequest = new LiveSignRequest(IPageNotifyFn.PageType_LiveSign, this);
+        liveSignRequest.get(mUserInfo.uid, String.valueOf(mSettingData.lon), String.valueOf(mSettingData.lat));
     }
 
     // 开启自己的直播,请求服务器 (在用户点击完设置后开始请求)
