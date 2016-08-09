@@ -495,19 +495,19 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         } else if (id == R.id.tv_share_video_rightnow) {
             if (!SharePlatformUtil.checkShareableWhenNotHotspot(PhotoAlbumPlayer.this)) return;
             pauseVideo();
-//            ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
-//            GolukUtils.startVideoShareActivity(this, mType, mPath, mFileName, false,
-//                    mVideoView.getDuration(), mHP, (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
-            if (videoEditSupport()) {
-                doSimpleExport(mPath, mHP);
-            } else {
-
-                //竖屏播放页访问即刻分享页面统计
-                ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
-
-                GolukUtils.startVideoShareActivity(this, mType, mPath, mFileName, false,
-                        mVideoView.getDuration(), mHP, (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
-            }
+            ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
+            GolukUtils.startVideoShareActivity(this, mType, mPath, mFileName, false,
+                    mVideoView.getDuration(), mHP, (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
+//            if (videoEditSupport()) {
+//                doSimpleExport(mPath, mHP);
+//            } else {
+//
+//                //竖屏播放页访问即刻分享页面统计
+//                ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
+//
+//                GolukUtils.startVideoShareActivity(this, mType, mPath, mFileName, false,
+//                        mVideoView.getDuration(), mHP, (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
+//            }
         } else if (id == R.id.back_btn) {
 
             click_back();
