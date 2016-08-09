@@ -980,7 +980,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         }
         isConnServerSuccess = true;
         startScreenShot();
-        startUploadMyPosition();
         showLiveInfoLayout();
     }
 
@@ -996,11 +995,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             // 视频截图 开始视频，上传图片
             GolukApplication.getInstance().getIPCControlManager().screenShot();
         }
-    }
-
-    // 上报位置
-    private void startUploadMyPosition() {
-        mBaseApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_Talk, ITalkFn.Talk_Command_StartUploadPosition, "");
     }
 
     // 判断自己发起的直播是否有效
@@ -1043,7 +1037,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             }
             mVid = liveData.vid;
             mLiveCommentFragment.setmVid(mVid);
-            startUploadMyPosition();
             isSettingCallBack = true;
             this.isConnServerSuccess = true;
             mLiveCountSecond = liveData.restime;
