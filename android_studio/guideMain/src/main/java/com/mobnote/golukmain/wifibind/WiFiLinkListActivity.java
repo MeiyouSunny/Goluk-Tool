@@ -579,6 +579,10 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         // 保存默认的信息
         WiFiInfo.IPC_PWD = IPC_PWD_DEFAULT;
         String wifiName = WiFiInfo.IPC_SSID;
+        if (TextUtils.isEmpty(wifiName)) {
+            //TODO 为什么会存在为空的状态，还搞不清楚。暂时加入这个判断避免crash
+            return;
+        }
         String name = wifiName.replace("Goluk", "GOLUK");
         WiFiInfo.MOBILE_SSID = name + "_s";
         WiFiInfo.MOBILE_PWD = MOBILE_HOT_PWD_DEFAULT;

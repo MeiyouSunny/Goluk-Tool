@@ -255,7 +255,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					mWebView.loadUrl(withDrawUrl);
 				} else if(from_tag.equals("protocol")) {
 					String url;
-					if (mBaseApp.isMainland()){
+					if (!mBaseApp.isMainland()){
 						url = "http://www.goluk.com/legal_cn.html";
 					}else{
 						url = "http://surl3.goluk.cn/golukwebsite_phone/legal_cn.html?commlocale=zh";
@@ -422,8 +422,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 				this.finish();
 			}
 		} else {
-		}
-	}
+		}}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
