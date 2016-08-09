@@ -199,6 +199,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:background="#f8f8f8"
+                android:visibility="gone"
                 android:paddingLeft="14dp"
                 android:paddingRight="14dp">
 
