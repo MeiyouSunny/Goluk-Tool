@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.MainActivity;
@@ -155,6 +156,12 @@ public class DetailDialog extends Dialog implements android.view.View.OnClickLis
 		confirmation.getWindow().findViewById(R.id.sure).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				if(!GolukUtils.isNetworkConnected(mContext)) {
+					Toast.makeText(mContext,mContext.getString(R.string.network_error),Toast.LENGTH_SHORT).show();
+					confirmation.dismiss();
+					return;
+				}
+
 				boolean flog = GolukApplication.getInstance().getVideoSquareManager()
 						.report("1", mVideoDetailRetBean.data.avideo.video.videoid, reporttype);
 				if (flog) {
