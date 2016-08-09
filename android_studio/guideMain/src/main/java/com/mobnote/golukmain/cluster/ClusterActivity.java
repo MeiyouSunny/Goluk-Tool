@@ -234,12 +234,12 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
                 return;
             }
 
-            mCurMotion = GolukConfig.LIST_REFRESH_PULL_UP;
             if(mRTPullListView.getAdapter().getCount() !=
                     (mListFirstVisible + mListVisibleCount)) {
                 return;
             }
 
+            mCurMotion = GolukConfig.LIST_REFRESH_PULL_UP;
             if (mClusterAdapter.getCurrentViewType() == ClusterAdapter.VIEW_TYPE_RECOMMEND) {
                 if(mRecommendList == null || mRecommendList.size() == 0) {
                     return;
@@ -330,9 +330,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
         }
 
         mClusterAdapter.notifyDataSetChanged();
-        if (count > 0 && mCurMotion.equals(GolukConfig.LIST_REFRESH_PULL_UP)) {
-            mRTPullListView.setSelection(count);
-        }
+//        if (count > 0 && mCurMotion.equals(GolukConfig.LIST_REFRESH_PULL_UP)) {
+//            mRTPullListView.setSelection(count);
+//        }
     }
 
     private void setTimeStamp(List<TagGeneralVideoListBean> list) {
