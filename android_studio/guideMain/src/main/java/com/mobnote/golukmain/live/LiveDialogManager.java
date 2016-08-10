@@ -542,7 +542,7 @@ public class LiveDialogManager {
     public void showLiveBackDialog(Context context, int function, String message) {
         if(context instanceof LiveActivity && !GolukUtils.isActivityAlive((LiveActivity) context)) {
             return;
-        }git 
+        }
         dismissLiveBackDialog();
         mCurrentDialogType = function;
         mLiveBackDialog = new AlertDialog.Builder(context).create();
