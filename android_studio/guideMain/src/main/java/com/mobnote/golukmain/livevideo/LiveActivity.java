@@ -306,7 +306,9 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (isStopNormal) {
             return;
         }
-        if(GolukUtils.isIPCTypeG(mBaseApp.mIPCControlManager.mProduceName)) {
+        //G系列和T1s关闭时不需要发送notification
+        if(GolukUtils.isIPCTypeG(mBaseApp.mIPCControlManager.mProduceName)
+                || GolukUtils.isIPCTypeT1S(mBaseApp.mIPCControlManager.mProduceName)) {
             return;
         }
         //如果是T系列，则发送notification提示
@@ -1634,11 +1636,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         GFileUtils.makedir(dirname);
         String picName = dirname + File.separator + timeStr + ".jpg";
         GFileUtils.compressImageToDisk(path, picName);
-        File file = new File(picName);
-        if (!file.exists()) {
-            GolukDebugUtils.e("", "jyf----20150406----LiveActivity----callBack_VDCP----接收图片命令失败------22222");
-            return;
-        }
+
         mThumbBitmap = ImageManager.getBitmapFromCache(picName, 100, 100);
         new UploadLiveScreenShotTask(picName, mUserInfo.uid, mVid, this).execute();
     }

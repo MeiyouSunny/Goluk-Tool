@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.util.GolukUtils;
 
@@ -18,6 +19,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * Created by leege100 on 16/7/12.
@@ -40,13 +43,16 @@ public class UploadLiveScreenShotTask extends AsyncTask<String, Integer, String>
 
         final Map<String, File> files = new HashMap<String, File>();
         File file = new File(filePath);
-        files.put("pic", file);
+        if (file.exists()) {
+            files.put("pic", file);
+        }
 
         final Map<String, String> requestParams = new HashMap<String, String>();
         requestParams.put("xieyi", "200");
         requestParams.put("md5", GolukUtils.getFileMD5(file));
         requestParams.put("commuid",uid);
         requestParams.put("vid",vid);
+        requestParams.put("devicetag", GolukApplication.getInstance().mIPCControlManager.mProduceName);
 
         String result = null;
         try {
