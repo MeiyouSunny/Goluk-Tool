@@ -186,6 +186,9 @@ public class LiveDialogManager {
      * @author 曾浩
      */
     public void showDialog(final Context context, final int dialogId) {
+        if(null == context) {
+            return;
+        }
         if(context instanceof LiveActivity && !GolukUtils.isActivityAlive((LiveActivity) context)) {
             return;
         }
@@ -288,6 +291,9 @@ public class LiveDialogManager {
     }
 
     public void showCommProgressDialog(Context context, int type, String title, String message, boolean isCancel) {
+        if(null == context) {
+            return;
+        }
         if(context instanceof LiveActivity && !GolukUtils.isActivityAlive((LiveActivity) context)) {
             return;
         }
@@ -319,6 +325,9 @@ public class LiveDialogManager {
     }
 
     public void showShareProgressDialog(Context context, int type, String title, String message) {
+        if(null == context) {
+            return;
+        }
         if(context instanceof LiveActivity && !GolukUtils.isActivityAlive((LiveActivity) context)) {
             return;
         }
@@ -350,6 +359,9 @@ public class LiveDialogManager {
      * @date 2015年6月8日
      */
     public void showCustomDialog(Context context, String msg) {
+        if(null == context) {
+            return;
+        }
         if(context instanceof LiveActivity && !GolukUtils.isActivityAlive((LiveActivity) context)) {
             return;
         }
@@ -372,6 +384,9 @@ public class LiveDialogManager {
     }
 
     public void showProgressDialog(Context context, String title, String message) {
+        if(null == context) {
+            return;
+        }
         if(context instanceof LiveActivity && !GolukUtils.isActivityAlive((LiveActivity) context)) {
             return;
         }
@@ -394,10 +409,11 @@ public class LiveDialogManager {
     }
 
     public void showSingleBtnDialog(Context context, int type, String title, String message) {
-        if (context instanceof Activity) {
-            if (!GolukUtils.isActivityAlive((Activity) context)) {
+        if(null == context) {
+            return;
+        }
+        if (context instanceof Activity && !GolukUtils.isActivityAlive((Activity) context)) {
                 return;
-            }
         }
         if (null != mSingleButtonDialog) {
             return;
@@ -429,6 +445,9 @@ public class LiveDialogManager {
 
     public void showTwoBtnDialog(Context context, int function, String title, String message) {
 
+        if(null == context) {
+            return;
+        }
         if(context instanceof LiveActivity && !GolukUtils.isActivityAlive((LiveActivity) context)) {
             return;
         }
@@ -509,6 +528,9 @@ public class LiveDialogManager {
     }
 
     public void showLiveExitDialog(Context context, String title, String message) {
+        if(null == context) {
+            return;
+        }
         if(context instanceof LiveActivity && !GolukUtils.isActivityAlive((LiveActivity) context)) {
             return;
         }
@@ -540,6 +562,9 @@ public class LiveDialogManager {
     }
 
     public void showLiveBackDialog(Context context, int function, String message) {
+        if(null == context) {
+            return;
+        }
         if(context instanceof LiveActivity && !GolukUtils.isActivityAlive((LiveActivity) context)) {
             return;
         }
