@@ -112,6 +112,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	@Override
 	protected void onResume() {
 		super.onResume();
+		httpRequestData(mUserId, mCurrentUid, OPERATOR_FIRST, "");
 		ZhugeUtils.eventUserCenter(this);
 	}
 
@@ -166,27 +167,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 
 		});
 
-		httpRequestData(mUserId, mCurrentUid, OPERATOR_FIRST, "");
 		mIsFirst = true;
-
-	}
-
-	public void onEventMainThread(EventRefreshUserInfo event) {
-		if (null == event) {
-			return;
-		}
-		switch (event.getOpCode()) {
-		case EventConfig.REFRESH_USER_INFO:
-			if (mUserId != null) {
-				if (testUser()) {
-					mIsFirst = false;
-					httpRequestData(mUserId, mCurrentUid, OPERATOR_FIRST, "");
-				}
-			}
-			break;
-		default:
-			break;
-		}
 	}
 
 	public void onEventMainThread(EventDeleteVideo event) {

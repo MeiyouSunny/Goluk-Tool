@@ -275,6 +275,8 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 					Bundle bundle = data.getExtras();
 					if (bundle != null) {
 						Bitmap photo = (Bitmap) bundle.get("data"); // get bitmap
+						if (photo == null){
+						}
 						it.putExtra("imagebitmap",photo);
 					}
 				}
@@ -337,7 +339,6 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 //		if (null != UserCenterActivity.handler) {
 //			UserCenterActivity.handler.sendEmptyMessage(UserCenterActivity.refristUserInfo);
 //		}
-		EventBus.getDefault().post(new EventRefreshUserInfo(EventConfig.REFRESH_USER_INFO));
 		this.finish();
 	}
 
