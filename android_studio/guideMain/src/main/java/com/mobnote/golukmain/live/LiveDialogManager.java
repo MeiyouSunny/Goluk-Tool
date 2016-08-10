@@ -2,6 +2,7 @@ package com.mobnote.golukmain.live;
 
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.livevideo.LiveActivity;
 import com.mobnote.util.GolukUtils;
 
 import android.app.Activity;
@@ -185,6 +186,9 @@ public class LiveDialogManager {
      * @author 曾浩
      */
     public void showDialog(final Context context, final int dialogId) {
+        if(context instanceof LiveActivity && !GolukUtils.isActivityAlive((LiveActivity) context)) {
+            return;
+        }
         dialog = new AlertDialog.Builder(context, R.style.CustomDialog).create();
         dialog.show();
         dialog.getWindow().setContentView(R.layout.video_square_dialog_main);
@@ -284,6 +288,9 @@ public class LiveDialogManager {
     }
 
     public void showCommProgressDialog(Context context, int type, String title, String message, boolean isCancel) {
+        if(context instanceof LiveActivity && !GolukUtils.isActivityAlive((LiveActivity) context)) {
+            return;
+        }
         dissmissCommProgressDialog();
         mCurrentDialogType = type;
         mCommProgressDialog = ProgressDialog.show(context, title, message, true, isCancel);
@@ -312,6 +319,9 @@ public class LiveDialogManager {
     }
 
     public void showShareProgressDialog(Context context, int type, String title, String message) {
+        if(context instanceof LiveActivity && !GolukUtils.isActivityAlive((LiveActivity) context)) {
+            return;
+        }
         dismissShareProgressDialog();
         mCurrentDialogType = type;
         mShareDialog = ProgressDialog.show(context, title, message, true, false);
@@ -340,6 +350,9 @@ public class LiveDialogManager {
      * @date 2015年6月8日
      */
     public void showCustomDialog(Context context, String msg) {
+        if(context instanceof LiveActivity && !GolukUtils.isActivityAlive((LiveActivity) context)) {
+            return;
+        }
         dissmissCustomDialog();
         mCustomLoadingDialog = new CustomLoadingDialog(context, msg);
         mCustomLoadingDialog.show();
@@ -359,6 +372,9 @@ public class LiveDialogManager {
     }
 
     public void showProgressDialog(Context context, String title, String message) {
+        if(context instanceof LiveActivity && !GolukUtils.isActivityAlive((LiveActivity) context)) {
+            return;
+        }
         dismissProgressDialog();
         mProgressDialog = ProgressDialog.show(context, title, message, true, false);
         mProgressDialog.setCancelable(false);
@@ -413,6 +429,9 @@ public class LiveDialogManager {
 
     public void showTwoBtnDialog(Context context, int function, String title, String message) {
 
+        if(context instanceof LiveActivity && !GolukUtils.isActivityAlive((LiveActivity) context)) {
+            return;
+        }
         if (null != mLiveBackDialog) {
             return;
         }
@@ -490,6 +509,9 @@ public class LiveDialogManager {
     }
 
     public void showLiveExitDialog(Context context, String title, String message) {
+        if(context instanceof LiveActivity && !GolukUtils.isActivityAlive((LiveActivity) context)) {
+            return;
+        }
         if (null != mLiveExitDialog) {
             return;
         }
@@ -518,6 +540,9 @@ public class LiveDialogManager {
     }
 
     public void showLiveBackDialog(Context context, int function, String message) {
+        if(context instanceof LiveActivity && !GolukUtils.isActivityAlive((LiveActivity) context)) {
+            return;
+        }git 
         dismissLiveBackDialog();
         mCurrentDialogType = function;
         mLiveBackDialog = new AlertDialog.Builder(context).create();
