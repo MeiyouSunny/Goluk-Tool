@@ -514,6 +514,9 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
             ShareUrlDataBean sdb = ret.data;
             String shareurl = sdb.shorturl;
             String coverurl = sdb.coverurl;
+            if(TextUtils.isEmpty(coverurl)) {
+                coverurl = "http://pic.goluk.cn/cdcavatar/defaultavatar.png";
+            }
             String describe = sdb.description;
             String realDesc = this.getResources().getString(R.string.cluster_jxzt_share_txt);
 
