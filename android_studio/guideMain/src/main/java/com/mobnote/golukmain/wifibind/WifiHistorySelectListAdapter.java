@@ -59,7 +59,7 @@ public class WifiHistorySelectListAdapter extends BaseAdapter {
                         connectViewHodler.golukIcon.setImageResource(R.drawable.connect_g2_img);
                         break;
                     case IPCControlManager.T1s_SIGN:
-                        connectViewHodler.golukIcon.setImageResource(R.drawable.connect_t1_img);
+                        connectViewHodler.golukIcon.setImageResource(R.drawable.connect_t1s_img);
                         break;
                     case IPCControlManager.T1_SIGN:
                         connectViewHodler.golukIcon.setImageResource(R.drawable.connect_t1_img);
