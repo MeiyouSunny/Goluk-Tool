@@ -291,11 +291,15 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
     @Override
     public void onResume() {
         super.onResume();
-        if (isResetedView) {
+        if(null == mMapView) {
+            return;
+        }
+        if (isResetedView && mTopMargin > 0) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);
             params.setMargins(0, mTopMargin, 0, 0);
+            mMapView.setLayoutParams(params);
         }
     }
 }
