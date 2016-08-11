@@ -928,7 +928,7 @@ public class GolukUtils {
 
     public static boolean isFastDoubleClick() {
         long time = System.currentTimeMillis();
-        if (time - lastClickTime < MIN_CLICK_DELAY_TIME) {
+        if (Math.abs(time - lastClickTime) < MIN_CLICK_DELAY_TIME) {
             return true;
         }
         lastClickTime = time;
