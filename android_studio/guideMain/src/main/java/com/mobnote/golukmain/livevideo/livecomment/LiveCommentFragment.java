@@ -23,7 +23,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 
-import com.baidu.mapapi.map.Text;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.comment.CommentAddRequest;
@@ -118,11 +117,11 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
     private int mLikeCount = 0;
     private int mTopMargin = 0;
     private LiveCommentAdapter mLiveCommentAdapter;
-    private final int DISSMISS_NEW_TIPS = 1001;
+    private final int DISMISS_NEW_TIPS = 1001;
     Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case DISSMISS_NEW_TIPS:
+                case DISMISS_NEW_TIPS:
                     mNewCommentTv.setVisibility(View.GONE);
                     break;
             }
@@ -257,8 +256,8 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
             return;
         }
         CommentDeleteRequest request = new CommentDeleteRequest(IPageNotifyFn.PageType_DelComment, this);
-        boolean isSucess = request.get(id);
-        if (!isSucess) {
+        boolean isSuccess = request.get(id);
+        if (!isSuccess) {
             GolukUtils.showToast(getContext(), this.getString(R.string.str_delete_fail));
             return;
         }
@@ -635,8 +634,8 @@ public class LiveCommentFragment extends Fragment implements IRequestResultListe
             mLiveCommentAdapter.notifyItemRangeChanged(currCommentCount - 1, mCommentDataList.size() - currCommentCount - 1);
         }
         if (hasNewComment) {
-            mHandler.removeMessages(DISSMISS_NEW_TIPS);
-            mHandler.sendEmptyMessageDelayed(DISSMISS_NEW_TIPS,2000);
+            mHandler.removeMessages(DISMISS_NEW_TIPS);
+            mHandler.sendEmptyMessageDelayed(DISMISS_NEW_TIPS,2000);
             mNewCommentTv.setVisibility(View.VISIBLE);
         }
     }
