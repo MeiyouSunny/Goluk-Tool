@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ReplyDialog extends Dialog implements android.view.View.OnClickListener {
 
@@ -72,6 +73,10 @@ public class ReplyDialog extends Dialog implements android.view.View.OnClickList
 	 * 点击回复或删除后处理操作
 	 */
 	private void deal() {
+		if (!GolukUtils.isNetworkConnected(mContext)) {
+			Toast.makeText(mContext,mContext.getString(R.string.str_network_unavailable),Toast.LENGTH_SHORT).show();
+			return;
+		}
 		if (mFlagReply) {
 			mEditText.requestFocus();
 			GolukUtils.showSoft(mEditText);
