@@ -1704,22 +1704,24 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             CallBack_StartLiveServer(true, liveInfo);
         } else if (IPageNotifyFn.PageType_LiveSign == requestType) {
             LiveSignRetBean liveSignRetBean = (LiveSignRetBean) result;
-            if (liveSignRetBean != null) {
-                if (GolukUtils.isTokenValid(liveSignRetBean.code)) {
-                    if (liveSignRetBean.data != null) {
-                        mVid = liveSignRetBean.data.videoid;
-                        mLiveCommentFragment.setmVid(mVid);
-                        if (mSettingData.isEnableSaveReplay) {
-                            mRtmpUrl = liveSignRetBean.data.liveurl + "?vdoid=" + liveSignRetBean.data.videoid;
-                        } else {
-                            mRtmpUrl = liveSignRetBean.data.liveurl;
-                        }
-                        startLiveForSetting();
-                    }
-                } else {
-                    GolukUtils.startUserLogin(this);
-                }
+            if(liveSignRetBean == null) {
+                return;
             }
+            if(!GolukUtils.isTokenValid(liveSignRetBean.code)) {
+                GolukUtils.startUserLogin(this);
+                return;
+            }
+            if (liveSignRetBean.data == null) {
+                return;
+            }
+            mVid = liveSignRetBean.data.videoid;
+            mLiveCommentFragment.setmVid(mVid);
+            if (mSettingData.isEnableSaveReplay) {
+                mRtmpUrl = liveSignRetBean.data.liveurl + "?vdoid=" + liveSignRetBean.data.videoid;
+            } else {
+                mRtmpUrl = liveSignRetBean.data.liveurl;
+            }
+            startLiveForSetting();
         } else if (IPageNotifyFn.PageType_VideoDetail == requestType) {
             VideoDetailRetBean tempVideoDetailRetBean = (VideoDetailRetBean) result;
             if (tempVideoDetailRetBean == null
