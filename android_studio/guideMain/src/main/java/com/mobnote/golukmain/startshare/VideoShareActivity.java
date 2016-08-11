@@ -794,7 +794,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
         toInitState();
         final String title = this.getString(R.string.str_video_edit_share_title);
-        final String describe = mShareDiscrible;
+        final String describe = (TextUtils.isEmpty(mShareDiscrible) ? this.getString(R.string.default_comment) : mShareDiscrible);
         final String sinaTxt = this.getString(R.string.str_share_board_real_desc);
 
         ThirdShareBean bean = new ThirdShareBean();
