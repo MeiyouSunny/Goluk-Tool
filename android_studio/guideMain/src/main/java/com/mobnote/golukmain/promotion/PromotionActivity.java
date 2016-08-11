@@ -130,11 +130,10 @@ public class PromotionActivity extends BaseActivity implements OnClickListener, 
 		// TODO Auto-generated method stub
 		if (mPromotionDataAdapter.isEnabled(position)) {
 			PromotionSelectItem item = (PromotionSelectItem) mPromotionDataAdapter.getItem(position);
-			if (mSelectedId == null || !item.activityid.equalsIgnoreCase(mSelectedId)) {
-				Intent intent = new Intent();
-				intent.putExtra(PROMOTION_SELECTED_ITEM, item);
-				EventBus.getDefault().post(item);
-			}
+			Intent intent = new Intent();
+			intent.putExtra(PROMOTION_SELECTED_ITEM, item);
+			EventBus.getDefault().post(item);
+
 			finish();
 		}
 	}

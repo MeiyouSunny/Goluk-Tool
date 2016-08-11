@@ -271,7 +271,6 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     public void onEventMainThread(EventShareCompleted event){
         if(event != null){
             if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_COPYLINK){
-
                 Toast.makeText(this, getString(R.string.str_copy_link_success), Toast.LENGTH_SHORT).show();
             }else{
                 Toast.makeText(this, getString(R.string.str_share_success), Toast.LENGTH_SHORT).show();
@@ -283,11 +282,26 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
     public void onEventMainThread(PromotionSelectItem event){
 
-        if(event != null){
-            mSelectedPromotionItem = event;
-            mJoinActivityTV.setText(mSelectedPromotionItem.activitytitle);
-            mJoinActivityTV.setTextColor(Color.parseColor("#0080ff"));
+        if (event == null) {
+            return;
         }
+        if (mSelectedPromotionItem != null && mSelectedPromotionItem.activityid.equals(event.activityid)) {
+            //点击相同活动则取消
+            mSelectedPromotionItem = null;
+            mJoinActivityTV.setText(getResources().getString(R.string.join_activity));
+            mJoinActivityTV.setTextColor(Color.parseColor("#818385"));
+            return;
+        } else {
+            mSelectedPromotionItem = event;
+        }
+
+        String activityTitle = mSelectedPromotionItem.activitytitle;
+        if (!TextUtils.isEmpty(activityTitle) && activityTitle.length() > 10) {
+            mJoinActivityTV.setText(activityTitle.substring(0,10) + "...");
+        } else {
+            mJoinActivityTV.setText(mSelectedPromotionItem.activitytitle);
+        }
+        mJoinActivityTV.setTextColor(Color.parseColor("#0080ff"));
     }
 
     public void onEventMainThread(SharePlatformSelectedEvent event){
@@ -420,9 +434,17 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
         mShareTypeTv.setText(mSelectedShareString);
         mShareTypeTv.setText(mSelectedShareString);
-        if(mSelectedPromotionItem != null){
-            mJoinActivityTV.setText(mSelectedPromotionItem.activitytitle);
+        if (mSelectedPromotionItem != null) {
+            String activityTitle = mSelectedPromotionItem.activitytitle;
+            if (!TextUtils.isEmpty(activityTitle) && activityTitle.length() > 10) {
+                mJoinActivityTV.setText(activityTitle.substring(0,10) + "...");
+            } else {
+                mJoinActivityTV.setText(mSelectedPromotionItem.activitytitle);
+            }
             mJoinActivityTV.setTextColor(Color.parseColor("#0080ff"));
+        } else {
+            mJoinActivityTV.setText(getResources().getString(R.string.join_activity));
+            mJoinActivityTV.setTextColor(Color.parseColor("#818385"));
         }
     }
 

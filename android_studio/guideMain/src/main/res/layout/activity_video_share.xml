@@ -151,6 +151,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/icon__"
                         android:gravity="center"
+                        android:singleLine="true"
                         android:text="@string/join_activity"
                         android:textColor="#818385"
                         android:textSize="11sp" />
@@ -176,6 +177,7 @@
                         android:id="@+id/tv_share_location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:singleLine="true"
                         android:layout_marginLeft="5dp"
                         android:gravity="center"
                         android:maxLength="18"
