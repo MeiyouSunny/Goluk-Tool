@@ -1560,6 +1560,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                     // 计时器完成
                     liveEnd();
                     if (!isAlreadyExit) {
+                        LiveDialogManager.getManagerInstance().dismissProgressDialog();
                         LiveDialogManager.getManagerInstance().showLiveExitDialog(LiveActivity.this,
                                 LIVE_DIALOG_TITLE, this.getString(R.string.str_live_time_end));
                     }
@@ -1576,6 +1577,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 if (TimerManager.RESULT_FINISH == result) {
                     liveEnd();
                     if (!isAlreadyExit) {
+                        LiveDialogManager.getManagerInstance().dismissProgressDialog();
                         LiveDialogManager.getManagerInstance().showLiveExitDialog(LiveActivity.this,
                                 LIVE_DIALOG_TITLE, this.getString(R.string.str_live_over2));
                     }
