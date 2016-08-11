@@ -85,8 +85,15 @@ import de.greenrobot.event.EventBus;
  * 视频直播
  */
 public class LiveActivity extends BaseActivity implements View.OnClickListener,
-        RtmpPlayerView.RtmpPlayerViewLisener, LiveDialogManager.ILiveDialogManagerFn, TimerManager.ITimerManagerFn, IPCManagerFn, ILive,
-        ILiveFnAdapter, IRequestResultListener, ILocationFn, UploadLiveScreenShotTask.CallbackUploadLiveScreenShot {
+        RtmpPlayerView.RtmpPlayerViewLisener,
+        LiveDialogManager.ILiveDialogManagerFn,
+        TimerManager.ITimerManagerFn,
+        IPCManagerFn,
+        ILive,
+        ILiveFnAdapter,
+        IRequestResultListener,
+        ILocationFn,
+        UploadLiveScreenShotTask.CallbackUploadLiveScreenShot {
 
     private TextView mTitleTv;
     private RelativeLayout mVideoLoading;

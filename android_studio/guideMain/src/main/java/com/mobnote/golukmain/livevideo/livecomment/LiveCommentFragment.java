@@ -62,8 +62,16 @@ import cn.com.tiros.debug.GolukDebugUtils;
  * 直播评论fragment
  * Created by leege100 on 2016/7/20.
  */
-public class LiveCommentFragment extends Fragment implements IRequestResultListener, View.OnClickListener, EmojiconGridFragment.OnEmojiconClickedListener,
-        EmojiconsFragment.OnEmojiconBackspaceClickedListener, View.OnLayoutChangeListener, ILiveUIChangeListener, ViewTreeObserver.OnGlobalLayoutListener, LiveCommentAdapter.OnReplySelectedListener, LiveCommentAdapter.OnCommentItemLongClickListener {
+public class LiveCommentFragment extends Fragment implements IRequestResultListener,
+        View.OnClickListener,
+        EmojiconGridFragment.OnEmojiconClickedListener,
+        EmojiconsFragment.OnEmojiconBackspaceClickedListener,
+        View.OnLayoutChangeListener,
+        ILiveUIChangeListener,
+        ViewTreeObserver.OnGlobalLayoutListener,
+        LiveCommentAdapter.OnReplySelectedListener,
+        LiveCommentAdapter.OnCommentItemLongClickListener {
+
     public FrameLayout mEmojIconsLayout;
 
     private String mVid;
