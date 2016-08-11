@@ -589,7 +589,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         // 获取视频路径
         Intent intent = getIntent();
         isMineLiveVideo = intent.getBooleanExtra(KEY_IS_LIVE, true);
-        mUserInfo = (UserInfo) intent.getSerializableExtra(KEY_USERINFO);
         isContinueLive = intent.getBooleanExtra(KEY_LIVE_CONTINUE, false);
         mSettingData = (LiveSettingBean) intent.getSerializableExtra(KEY_LIVE_SETTING_DATA);
         mVid = intent.getStringExtra(KEY_VID);
@@ -1817,6 +1816,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
         mUserInfo.lon = videoSquareInfo.video.videodata.lon;
         mUserInfo.nickname = videoSquareInfo.user.nickname;
+        mUserInfo.desc = videoSquareInfo.user.desc;
         mUserInfo.persons = videoSquareInfo.video.clicknumber;
         mUserInfo.picurl = videoSquareInfo.video.picture;
         mUserInfo.sex = videoSquareInfo.user.sex;
