@@ -83,6 +83,12 @@ abstract class AbstractLiveMapViewFragment extends Fragment implements ILiveMap,
 
     @Override
     public void LocationCallBack(String gpsJson) {
+        if (!isAdded()) {
+            return;
+        }
+        if (isDetached()) {
+            return;
+        }
         if (mLiveActivity.isLiveUploadTimeOut) {
             return;
         }
