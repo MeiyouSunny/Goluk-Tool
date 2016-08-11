@@ -1704,10 +1704,10 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             CallBack_StartLiveServer(true, liveInfo);
         } else if (IPageNotifyFn.PageType_LiveSign == requestType) {
             LiveSignRetBean liveSignRetBean = (LiveSignRetBean) result;
-            if(liveSignRetBean == null) {
+            if (liveSignRetBean == null) {
                 return;
             }
-            if(!GolukUtils.isTokenValid(liveSignRetBean.code)) {
+            if (!GolukUtils.isTokenValid(liveSignRetBean.code)) {
                 GolukUtils.startUserLogin(this);
                 return;
             }
@@ -1744,25 +1744,28 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 return;
             }
             FollowRetBean bean = (FollowRetBean) result;
-            if (null != bean) {
-                if (bean.code != 0) {
-                    if (!GolukUtils.isTokenValid(bean.code)) {
-                        GolukUtils.startLoginActivity(LiveActivity.this);
-                    } else if (bean.code == 12011) {
-                        Toast.makeText(LiveActivity.this, getString(R.string.follow_operation_limit_total), Toast.LENGTH_SHORT).show();
-                    } else if (bean.code == 12016) {
-                        Toast.makeText(LiveActivity.this, getString(R.string.follow_operation_limit_day), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(LiveActivity.this, bean.msg, Toast.LENGTH_SHORT).show();
-                    }
-                    return;
-                }
-                if (bean.data == null) {
-                    return;
-                }
-                mUserInfo.link = bean.data.link;
-                resetLinkState(mUserInfo);
+            if (bean == null) {
+                return;
             }
+
+            if (bean.code != 0) {
+                if (!GolukUtils.isTokenValid(bean.code)) {
+                    GolukUtils.startLoginActivity(LiveActivity.this);
+                } else if (bean.code == 12011) {
+                    Toast.makeText(LiveActivity.this, getString(R.string.follow_operation_limit_total), Toast.LENGTH_SHORT).show();
+                } else if (bean.code == 12016) {
+                    Toast.makeText(LiveActivity.this, getString(R.string.follow_operation_limit_day), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(LiveActivity.this, bean.msg, Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+            if (bean.data == null) {
+                return;
+            }
+            mUserInfo.link = bean.data.link;
+            resetLinkState(mUserInfo);
+
         } else if (requestType == IPageNotifyFn.PageType_GetShareURL) {
             //获取分享Url
             LiveDialogManager.getManagerInstance().dismissShareProgressDialog();
