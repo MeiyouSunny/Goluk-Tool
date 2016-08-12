@@ -649,7 +649,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
         final String videoId = videoSquareInfo.mVideoEntity.videoid;
         final String type = videoSquareInfo.mVideoEntity.type;
-        holder.shareText.setOnClickListener(new OnClickListener() {
+        holder.shareLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((ClusterActivity)mContext).sendGetShareVideoUrlRequest(videoId, type);
