@@ -42,6 +42,8 @@ import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.LiveSettingBean;
 import com.mobnote.golukmain.live.TimerManager;
 import com.mobnote.golukmain.live.UserInfo;
+import com.mobnote.golukmain.livevideo.bean.GetPositionInfoBean;
+import com.mobnote.golukmain.livevideo.bean.GetPositionRetBean;
 import com.mobnote.golukmain.livevideo.bean.LiveSignRetBean;
 import com.mobnote.golukmain.livevideo.bean.StartLiveBean;
 import com.mobnote.golukmain.livevideo.livecomment.LiveCommentFragment;
@@ -432,6 +434,13 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 while (!isAlreadyExit) {
                     SingleDetailRequest request = new SingleDetailRequest(IPageNotifyFn.PageType_VideoDetail, LiveActivity.this);
                     request.get(mVid);
+
+                    if (!isMineLiveVideo) {
+                        // 如果是直播观看者，则定时获取发布者的定位信息
+                        GetPositionRequest getPositionRequest = new GetPositionRequest(IPageNotifyFn.GET_LIVE_POSITION_INFO,LiveActivity.this);
+                        getPositionRequest.request();
+                    }
+
                     try {
                         sleep(12000);
                     } catch (InterruptedException e) {
@@ -512,76 +521,76 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
      * 首页大头针数据返回
      */
     public void pointDataCallback(int success, Object obj) {
-        if (1 != success) {
-            GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type:  sucess:" + success);
-            // 重新請求大头針数据
-            mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, TIMING);
-            return;
-        }
-        final String str = (String) obj;
-        GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type111:  str：" + str);
-        try {
-            JSONObject json = new JSONObject(str);
-            // 请求成功
-            JSONArray memberJsonArray = json.getJSONArray("info");
-
-            UserInfo tempUserInfo = null;
-            UserInfo tempMyInfo = null;
-
-            int length = memberJsonArray.length();
-
-            for (int i = 0; i < length; i++) {
-                JSONObject tempObj = memberJsonArray.getJSONObject(i);
-                String aid = tempObj.getString("aid");
-                if (this.isMineLiveVideo) {
-                    if (aid.equals(mUserInfo.aid)) {
-                        // 我自己的信息
-                        tempMyInfo = JsonUtil.parseSingleUserInfoJson(tempObj);
-                        break;
-                    }
-                } else {
-                    if (aid.equals(mUserInfo.aid)) {
-                        tempUserInfo = JsonUtil.parseSingleUserInfoJson(tempObj);
-                        break;
-                    }
-                }
-            }
-
-            if (this.isMineLiveVideo) {
-                // 如果是我发起的直播,更新我的信息即可
-                if (null == tempMyInfo) {
-                    // 重新請求大头針数据
-                    mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, TIMING);
-                    return;
-                }
-                mLiveCommentFragment.updateLikeCount(Integer.parseInt(tempMyInfo.zanCount));
-                mLookCountTv.setText(GolukUtils.getFormatedNumber(tempMyInfo.persons));
-                // 重新請求大头針数据
-                mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, TIMING);
-                return;
-            }
-            if (null == tempUserInfo) {
-                GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type44444:  ：");
-                // 重新請求大头針数据
-                mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, TIMING);
-                return;
-            }
-            if (tempMyInfo == null) {
-                return;
-            }
-
-            mLiveMapViewFragment.updatePublisherMarker(Double.parseDouble(tempUserInfo.lat), Double.parseDouble(tempUserInfo.lon));
-
-            mUserInfo.lat = tempUserInfo.lat;
-            mUserInfo.lon = tempUserInfo.lon;
-
-            updateZanAndLookNumber(Integer.parseInt(tempMyInfo.zanCount), GolukUtils.getFormatedNumber(tempMyInfo.persons));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // 重新請求大头針数据
-        mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, TIMING);
+//        if (1 != success) {
+//            GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type:  sucess:" + success);
+//            // 重新請求大头針数据
+//            mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, TIMING);
+//            return;
+//        }
+//        final String str = (String) obj;
+//        GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type111:  str：" + str);
+//        try {
+//            JSONObject json = new JSONObject(str);
+//            // 请求成功
+//            JSONArray memberJsonArray = json.getJSONArray("info");
+//
+//            UserInfo tempUserInfo = null;
+//            UserInfo tempMyInfo = null;
+//
+//            int length = memberJsonArray.length();
+//
+//            for (int i = 0; i < length; i++) {
+//                JSONObject tempObj = memberJsonArray.getJSONObject(i);
+//                String aid = tempObj.getString("aid");
+//                if (this.isMineLiveVideo) {
+//                    if (aid.equals(mUserInfo.aid)) {
+//                        // 我自己的信息
+//                        tempMyInfo = JsonUtil.parseSingleUserInfoJson(tempObj);
+//                        break;
+//                    }
+//                } else {
+//                    if (aid.equals(mUserInfo.aid)) {
+//                        tempUserInfo = JsonUtil.parseSingleUserInfoJson(tempObj);
+//                        break;
+//                    }
+//                }
+//            }
+//
+//            if (this.isMineLiveVideo) {
+//                // 如果是我发起的直播,更新我的信息即可
+//                if (null == tempMyInfo) {
+//                    // 重新請求大头針数据
+//                    mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, TIMING);
+//                    return;
+//                }
+//                mLiveCommentFragment.updateLikeCount(Integer.parseInt(tempMyInfo.zanCount));
+//                mLookCountTv.setText(GolukUtils.getFormatedNumber(tempMyInfo.persons));
+//                // 重新請求大头針数据
+//                mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, TIMING);
+//                return;
+//            }
+//            if (null == tempUserInfo) {
+//                GolukDebugUtils.e("", "jyf-------live----LiveActivity--pointDataCallback type44444:  ：");
+//                // 重新請求大头針数据
+//                mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, TIMING);
+//                return;
+//            }
+//            if (tempMyInfo == null) {
+//                return;
+//            }
+//
+//            mLiveMapViewFragment.updatePublisherMarker(Double.parseDouble(tempUserInfo.lat), Double.parseDouble(tempUserInfo.lon));
+//
+//            mUserInfo.lat = tempUserInfo.lat;
+//            mUserInfo.lon = tempUserInfo.lon;
+//
+//            updateZanAndLookNumber(Integer.parseInt(tempMyInfo.zanCount), GolukUtils.getFormatedNumber(tempMyInfo.persons));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        // 重新請求大头針数据
+//        mBaseHandler.sendEmptyMessageDelayed(MSG_H_TO_GETMAP_PERSONS, TIMING);
 
     }
 
@@ -1799,6 +1808,22 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
             ProxyThirdShare sb = new ProxyThirdShare(LiveActivity.this, sharePlatform, bean);
             sb.showAtLocation(LiveActivity.this.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+        } else if (requestType == IPageNotifyFn.GET_LIVE_POSITION_INFO) {
+            GetPositionRetBean getPositionRetBean = (GetPositionRetBean) result;
+            if (getPositionRetBean == null || getPositionRetBean.info == null || getPositionRetBean.info.size() < 1) {
+                return;
+            }
+            GetPositionInfoBean getPositionInfoBean =  getPositionRetBean.info.get(0);
+            if (getPositionInfoBean == null || TextUtils.isEmpty(getPositionInfoBean.lat)
+                    || TextUtils.isEmpty(getPositionInfoBean.lon)) {
+                return;
+            }
+            if (mUserInfo == null) {
+                return;
+            }
+            mUserInfo.lat = getPositionInfoBean.lat;
+            mUserInfo.lon = getPositionInfoBean.lon;
+            mLiveMapViewFragment.updatePublisherMarker(Double.parseDouble(getPositionInfoBean.lat), Double.parseDouble(getPositionInfoBean.lon));
         }
     }
 
