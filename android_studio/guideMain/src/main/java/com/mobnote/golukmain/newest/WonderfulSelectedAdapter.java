@@ -149,8 +149,8 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 //						.findViewById(R.id.mLookLayout);
                 holder.mVideoNum = (TextView) convertView
                         .findViewById(R.id.mVideoNum);
-                holder.mLookNum = (TextView) convertView
-                        .findViewById(R.id.mLookNum);
+//                holder.mLookNum = (TextView) convertView
+//                        .findViewById(R.id.mLookNum);
 
                 RelativeLayout.LayoutParams mPreLoadingParams = new RelativeLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, height);
@@ -476,7 +476,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 //		LinearLayout mVideoLayout;
 //		LinearLayout mLookLayout;
         TextView mVideoNum;
-        TextView mLookNum;
+//        TextView mLookNum;
         TextView mDate;
     }
 

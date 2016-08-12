@@ -113,6 +113,11 @@ public class ClickWonderfulSelectedListener implements OnTouchListener {
 		show.setAnimationListener(new AnimationListener() {
 			@Override
 			public void onAnimationStart(Animation arg0) {
+				if ("-1".equals(mJXListItemDataInfo.clicknumber)) {
+					mVideoLayout.setVisibility(View.GONE);
+				} else {
+					mVideoLayout.setVisibility(View.VISIBLE);
+				}
 			}
 
 			@Override
