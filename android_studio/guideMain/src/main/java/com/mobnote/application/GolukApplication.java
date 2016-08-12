@@ -1015,10 +1015,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             case 7:
                 // 地图大头针数据
                 if (null != mContext) {
-                    if(mContext instanceof LiveActivity){
-                        // 为了更新直播界面的别人的位置信息
-                        ((LiveActivity) mContext).pointDataCallback(success, param2);
-                    }else if (mContext instanceof VideoCategoryActivity) {
+                   if (mContext instanceof VideoCategoryActivity) {
                         ((VideoCategoryActivity) mContext).pointDataCallback(success, param2);
                     }
                 }
