@@ -131,7 +131,9 @@ public class IPCControlManager implements IPCManagerFn {
      * @author jyf
      */
     private void setIpcMode(int mode) {
-        if (mode < 0) {
+        if (mode < 0
+                || null == mApplication
+                || null == mApplication.mGoluk) {
             return;
         }
         String json = JsonUtil.getIPCConnModeJson(mode);
