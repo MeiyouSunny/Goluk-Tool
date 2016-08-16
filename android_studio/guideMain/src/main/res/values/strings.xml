@@ -1072,4 +1072,5 @@
     <string name="str_participation_num_unit">&#160;%1$s&#160;人</string>
     <string name="str_goluk_hint">极路客提醒</string>
     <string name="str_still_broadcast_video">您的直播仍在进行中!</string>
+    <string name="str_cannot_start_activity">无法打开页面</string>
 </resources>

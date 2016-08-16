@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -93,7 +94,11 @@ public class BaseActivity extends FragmentActivity {
     @Override
     public void startActivity(Intent intent) {
         m_bJumpActivity = true;
-        super.startActivity(intent);
+        try {
+            super.startActivity(intent);
+        } catch (ActivityNotFoundException ex) {
+            showToast(R.string.str_cannot_start_activity);
+        }
     }
 
     public boolean isAllowedClicked() {
