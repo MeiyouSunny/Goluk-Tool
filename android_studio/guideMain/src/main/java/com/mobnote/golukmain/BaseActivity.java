@@ -39,7 +39,7 @@ public class BaseActivity extends FragmentActivity {
     protected BaseHandler mBaseHandler = new BaseHandler(this);
     protected GolukApplication mBaseApp = null;
 
-    public GolukApplication getApp(){
+    public GolukApplication getApp() {
         return mBaseApp;
     }
 
@@ -183,6 +183,9 @@ public class BaseActivity extends FragmentActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             BaseActivity activity = mActivityReference.get();
+            if (activity == null) {
+                return;
+            }
             activity.hMessage(msg);
         }
     }
