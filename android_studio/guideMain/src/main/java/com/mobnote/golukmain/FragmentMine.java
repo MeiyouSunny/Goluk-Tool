@@ -668,7 +668,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
             return;
         }
 
-        UserInfo userInfo = ma.mApp.getMyInfo();
+        UserInfo userInfo = GolukApplication.getInstance().getMyInfo();
         if (null != userInfo) {
             userHead = userInfo.head;
             userName = userInfo.nickname;

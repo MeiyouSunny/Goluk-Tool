@@ -24,9 +24,8 @@ public class VideoUserInfo {
     /**
      * 个性签名
      **/
-    @JSONField(name = "introduction")
-    public String introduction;
-
+    @JSONField(name = "desc")
+    public String desc;
     /**
      * 认证信息
      **/

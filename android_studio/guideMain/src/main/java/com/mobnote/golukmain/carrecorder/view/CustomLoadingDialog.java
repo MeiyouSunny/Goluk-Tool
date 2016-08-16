@@ -18,7 +18,7 @@ public class CustomLoadingDialog {
 	private String mMessage;
 
 	public CustomLoadingDialog(Context context, String txt) {
-		mDialog = new ProgressDialog(context,R.style.NewCustomDialog);
+		mDialog = new ProgressDialog(context,R.style.CustomDialog);
 		if (!"".equals(txt) && txt != null) {
 			mMessage = txt;
 		}else{

@@ -180,6 +180,9 @@ public interface IPageNotifyFn extends IGolukCommFn {
 
     /** 请求当前直播是否在线 */
     public static final int PAGE_TYPE_IS_ALIVE = 81;
+
+    /** 请求直播大头针数据 */
+    public static final int GET_LIVE_POSITION_INFO = 82;
 	/**
 	 * 
 	 * 以下为同步获取信息标识

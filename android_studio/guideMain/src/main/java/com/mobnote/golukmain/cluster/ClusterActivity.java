@@ -815,11 +815,7 @@ public class ClusterActivity extends BaseActivity implements OnClickListener, IR
     protected void sendGetShareVideoUrlRequest(String videoId, String type) {
         ShareVideoShortUrlRequest request = new ShareVideoShortUrlRequest(
                 IPageNotifyFn.PageType_GetShareURL, this);
-        if (null != mApp && mApp.isUserLoginSucess) {
-            if (!TextUtils.isEmpty(mApp.mCurrentUId)) {
-                request.get(videoId, type);
-            }
-        }
+        request.get(videoId, type);
     }
 
     protected void storeCurrentIndex(int index) {
