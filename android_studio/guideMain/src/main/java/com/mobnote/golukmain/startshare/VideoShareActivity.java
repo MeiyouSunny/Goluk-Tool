@@ -752,6 +752,10 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
                 break;
             case IPageNotifyFn.PageType_Share:
                 VideoSaveRetBean shareDataFull = (VideoSaveRetBean) result;
+                if (shareDataFull == null) {
+                    videoShareCallBack(null);
+                    return;
+                }
                 if(shareDataFull != null && shareDataFull.data != null) {
                     if (!GolukUtils.isTokenValid(shareDataFull.data.result)) {
                         GolukUtils.startLoginActivity(VideoShareActivity.this);
@@ -787,10 +791,17 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             mShareLoading = null;
         }
     }
+
     /**
      * 本地视频分享回调
      */
     public void videoShareCallBack(VideoSaveDataBean shareData) {
+        if (shareData == null) {
+            GolukUtils.showToast(this, this.getString(R.string.str_get_share_address_fail));
+            toInitState();
+            return;
+        }
+
         if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_NULL) {
             EventBus.getDefault().post(new EventShareCompleted(true));
             return;
@@ -808,11 +819,6 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             return;
         }
         mShareLoading.switchState(ShareLoading.STATE_SHAREING);
-        if (shareData == null) {
-            GolukUtils.showToast(this, this.getString(R.string.str_get_share_address_fail));
-            toInitState();
-            return;
-        }
 
         toInitState();
         final String title = this.getString(R.string.str_video_edit_share_title);
@@ -856,8 +862,8 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
                 mThirdShareTool.click_line();
             }
         }
-
     }
+
     private class SpacesItemDecoration extends RecyclerView.ItemDecoration {
 
         /**
