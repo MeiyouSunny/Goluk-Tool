@@ -764,6 +764,9 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
             Log.e(TAG, "This is really strange . how could be");
             return;
         }
+        if (mApp.getContext() == null) {
+            return;
+        }
         if (result == null) {
             if (mFunction == FUNCTION_SETTING_APP || mFunction == FUNCTION_SETTING_IPC) {
                 GolukUtils.showToast(mApp.getContext(), mApp.getContext().getResources().getString(R.string.str_timeout));
