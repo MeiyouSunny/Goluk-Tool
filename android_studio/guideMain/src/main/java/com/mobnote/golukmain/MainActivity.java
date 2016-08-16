@@ -555,7 +555,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             isDebug = true;
         }
         CrashReport.initCrashReport(getApplicationContext(), appId, isDebug);
-        GolukDebugUtils.BUGLY_ENABLE = isDebug;
+        //GolukDebugUtils.BUGLY_ENABLE = isDebug;
         final String mobileId = Tapi.getMobileId();
         CrashReport.setUserId(mobileId);
         GolukDebugUtils.e("", "jyf-----MainActivity-----mobileId:" + mobileId);
