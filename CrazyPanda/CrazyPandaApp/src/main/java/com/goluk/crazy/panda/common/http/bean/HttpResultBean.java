@@ -1,4 +1,4 @@
-package com.goluk.crazy.panda.http;
+package com.goluk.crazy.panda.common.http.bean;
 
 /**
  * Created by leege100 on 2016/8/16.
