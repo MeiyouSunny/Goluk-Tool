@@ -1,5 +1,6 @@
-package com.goluk.crazy.panda.http;
+package com.goluk.crazy.panda.common.http;
 
+import com.goluk.crazy.panda.common.http.bean.HttpResultBean;
 import com.goluk.crazy.panda.search.bean.SearchDataBean;
 
 import retrofit2.http.GET;

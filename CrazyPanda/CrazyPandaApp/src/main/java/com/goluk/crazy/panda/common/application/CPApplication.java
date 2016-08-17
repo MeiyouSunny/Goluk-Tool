@@ -1,4 +1,4 @@
-package com.goluk.crazy.panda.common;
+package com.goluk.crazy.panda.common.application;
 
 import android.app.Application;
 

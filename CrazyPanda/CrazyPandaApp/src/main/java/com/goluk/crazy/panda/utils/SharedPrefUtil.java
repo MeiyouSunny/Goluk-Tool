@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.goluk.crazy.panda.common.CPApplication;
+import com.goluk.crazy.panda.common.application.CPApplication;
 
 public class SharedPrefUtil {
     /**

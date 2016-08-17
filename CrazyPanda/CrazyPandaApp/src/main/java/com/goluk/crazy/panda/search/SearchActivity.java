@@ -7,8 +7,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.goluk.crazy.panda.R;
-import com.goluk.crazy.panda.http.HttpResultBean;
-import com.goluk.crazy.panda.http.SearchService;
+import com.goluk.crazy.panda.common.http.SearchService;
+import com.goluk.crazy.panda.common.http.bean.HttpResultBean;
 import com.goluk.crazy.panda.search.bean.SearchDataBean;
 import com.goluk.crazy.panda.search.bean.SearchUserInfoBean;
 
