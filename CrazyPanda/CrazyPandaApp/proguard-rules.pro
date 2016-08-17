@@ -125,17 +125,7 @@
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
 
-
-# OrmLite uses reflection
--keep class com.j256.**
--keepclassmembers class com.j256.** { *; }
--keep enum com.j256.**
--keepclassmembers enum com.j256.** { *; }
--keep interface com.j256.**
--keepclassmembers interface com.j256.** { *; }
-
-
-# butterknife
+# butterknife please refer to: https://github.com/JakeWharton/butterknife/blob/master/butterknife/proguard-rules.txt
 # Retain generated class which implement ViewBinder.
 -keep public class * implements butterknife.internal.ViewBinder { public <init>(); }
 # Prevent obfuscation of types which use ButterKnife annotations since the simple name
@@ -144,57 +134,60 @@
 -keepclasseswithmembernames class * { @butterknife.* <methods>; }
 -keepclasseswithmembernames class * { @butterknife.* <fields>; }
 
-# rxjava + rxanroid
--dontwarn sun.misc.**
--keep class rx.schedulers.Schedulers {
-    public static <methods>;
-}
--keep class rx.schedulers.ImmediateScheduler {
-    public <methods>;
-}
--keep class rx.schedulers.TestScheduler {
-    public <methods>;
-}
--keep class rx.schedulers.Schedulers {
-    public static ** test();
-}
--keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
-    long producerIndex;
-    long consumerIndex;
-}
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
-    long producerNode;
-    long consumerNode;
-}
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode consumerNode;
-}
-
-# retrofit2
+# retrofit2, please refer to http://square.github.io/retrofit/
 -dontnote retrofit2.Platform
 # Platform used when running on RoboVM on iOS. Will not be used at runtime.
 -dontnote retrofit2.Platform$IOS$MainThreadExecutor
 # Platform used when running on Java 8 VMs. Will not be used at runtime.
 -dontwarn retrofit2.Platform$Java8
-# Retain generic type information for use by reflection by converters and adapters.
--keepattributes Signature
-# Retain declared checked exceptions for use by a Proxy instance.
--keepattributes Exceptions
 
-# fastjson
+# rxjava + rxanroid
+-dontwarn sun.misc.**
+-keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
+    long producerIndex;
+    long consumerIndex;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+    long producerNode;
+    long consumerNode;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode consumerNode;
+}
+
+# Fastjson
+-keep public class * implements java.io.Serializable {
+    public *;
+}
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
 -dontwarn com.alibaba.fastjson.**
+
 -dontskipnonpubliclibraryclassmembers
--dontskipnonpubliclibraryclasses
--keep class com.alibaba.fastjson.**{*;}
--keep class * implements java.io.Serializable { *; }
--keepattributes *Annotation
--keepattributes Signature
 
-# 如果有问题直接使用
--dontwarn com.alibaba.fastjson.**
 -keep class com.alibaba.fastjson.** { *; }
--keepattributes Signature
+
+-keepclassmembers class * {
+    public <methods>;
+}
 
 # fastjson-converter-android
 -dontwarn retrofit2.converter.fastjson.**
--keep class retrofit2.converter.fastjson.**{ *;}
+-keep class retrofit2.converter.fastjson.**
+
+
+# OrmLite uses reflection
+-keep class com.j256.**
+-keepclassmembers class com.j256.** { *; }
+-keep enum com.j256.**
+-keepclassmembers enum com.j256.** { *; }
+-keep interface com.j256.**
+-keepclassmembers interface com.j256.** { *; }
