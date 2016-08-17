@@ -125,6 +125,16 @@
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
 
+
+# OrmLite uses reflection
+-keep class com.j256.**
+-keepclassmembers class com.j256.** { *; }
+-keep enum com.j256.**
+-keepclassmembers enum com.j256.** { *; }
+-keep interface com.j256.**
+-keepclassmembers interface com.j256.** { *; }
+
+
 # butterknife
 # Retain generated class which implement ViewBinder.
 -keep public class * implements butterknife.internal.ViewBinder { public <init>(); }
