@@ -17,10 +17,30 @@ android {
         }
     }
 
+    productFlavors {
+        mainland {
+            applicationId "cn.com.goluk.crazy.panda"
+        }
+
+        international {
+            applicationId "com.goluk.crazy.panda"
+        }
+    }
+
+    signingConfigs {
+        release {
+//            storeFile file("../../makeApk/xiaocheben.keystore")
+//            storePassword 'zhiquchelian#xiaocheben.com'
+//            keyAlias 'xiaocheben'
+//            keyPassword 'zhiquchelian#xiaocheben.com'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 
