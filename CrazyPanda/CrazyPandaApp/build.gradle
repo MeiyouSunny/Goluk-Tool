@@ -29,10 +29,10 @@ android {
 
     signingConfigs {
         release {
-//            storeFile file("../../makeApk/xiaocheben.keystore")
-//            storePassword 'zhiquchelian#xiaocheben.com'
-//            keyAlias 'xiaocheben'
-//            keyPassword 'zhiquchelian#xiaocheben.com'
+            storeFile file("../../makeApk/xiaocheben.keystore")
+            storePassword 'zhiquchelian#xiaocheben.com'
+            keyAlias 'xiaocheben'
+            keyPassword 'zhiquchelian#xiaocheben.com'
         }
     }
 
