@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">CrazyPanda</string>
+
+    <string name="str_square">广场</string>
+    <string name="str_device">设备</string>
+    <string name="str_album">相册</string>
+    <string name="str_mine">我的</string>
 </resources>

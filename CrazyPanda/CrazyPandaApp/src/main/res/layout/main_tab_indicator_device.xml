@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:gravity="center"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tab_host_device_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:text="@string/str_device"
+        android:textColor="@drawable/tab_host_item_txt_color_selector"
+        android:textSize="9sp"
+        android:drawablePadding="0dp"
+        android:drawableTop="@drawable/tab_host_follow_icon_selector" />
+</RelativeLayout>
