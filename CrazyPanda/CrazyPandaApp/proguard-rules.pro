@@ -183,3 +183,16 @@
 -dontwarn retrofit2.converter.fastjson.**
 -keep class retrofit2.converter.fastjson.**
 
+# OrmLite uses reflection
+-keepattributes *DatabaseField*
+-keepattributes *DatabaseTable*
+-keepattributes *SerializedName*
+-keep class com.j256.**
+-keepclassmembers class com.j256.** { *; }
+-keep enum com.j256.**
+-keepclassmembers enum com.j256.** { *; }
+-keep interface com.j256.**
+-keepclassmembers interface com.j256.** { *; }
+-dontwarn javax.**
+-dontwarn org.slf4j.**
+
