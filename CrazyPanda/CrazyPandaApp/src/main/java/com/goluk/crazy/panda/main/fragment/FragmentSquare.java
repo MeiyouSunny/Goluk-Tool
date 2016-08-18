@@ -98,6 +98,7 @@ public class FragmentSquare extends Fragment {
 
         //setPageTransformer 决定动画效果
         mSquareViewpager.setPageTransformer(true, new ScaleInTransformer(0.75f));
+        mSquareViewpager.setCurrentItem(2,true);
     }
 
     public class FragmentPagerAdapter extends FragmentStatePagerAdapter {
