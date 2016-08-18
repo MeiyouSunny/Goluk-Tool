@@ -3,4 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="color_main_tab_bg">#f7f7f8</color>
+    <color name="color_line_divider">#bbbbbb</color>
+    <color name="color_tab_host_txt_press">#007aff</color>
+    <color name="color_tab_host_txt_normal">#929292</color>
 </resources>

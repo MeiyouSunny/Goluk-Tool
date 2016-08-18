@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.goluk.crazy.panda.R;
+import com.goluk.crazy.panda.common.activity.BaseActivity;
 import com.goluk.crazy.panda.common.http.SearchService;
 import com.goluk.crazy.panda.common.http.bean.HttpResultBean;
 import com.goluk.crazy.panda.search.bean.SearchDataBean;
@@ -24,7 +25,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends BaseActivity {
 
     @BindView(R.id.btn_search)
     Button mBtnSearch;

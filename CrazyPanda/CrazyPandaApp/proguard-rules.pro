@@ -186,3 +186,17 @@
 # viewPagerTransformer
 -dontwarn com.zhy.magicviewpager.transformer.**
 -keep com.zhy.magicviewpager.transformer.**
+
+# OrmLite uses reflection
+-keepattributes *DatabaseField*
+-keepattributes *DatabaseTable*
+-keepattributes *SerializedName*
+-keep class com.j256.**
+-keepclassmembers class com.j256.** { *; }
+-keep enum com.j256.**
+-keepclassmembers enum com.j256.** { *; }
+-keep interface com.j256.**
+-keepclassmembers interface com.j256.** { *; }
+-dontwarn javax.**
+-dontwarn org.slf4j.**
+
