@@ -78,4 +78,5 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
     compile 'org.ligboy.retrofit2:converter-fastjson-android:2.1.0'
     compile 'com.zhy:magic-viewpager:1.0.1'
+    compile 'com.jpardogo.materialtabstrip:library:1.1.0'
 }

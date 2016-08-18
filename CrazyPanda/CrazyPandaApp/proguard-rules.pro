@@ -200,3 +200,6 @@
 -dontwarn javax.**
 -dontwarn org.slf4j.**
 
+# tabstrip
+-dontwarn com.astuetz.**
+-keep com.astuetz.**

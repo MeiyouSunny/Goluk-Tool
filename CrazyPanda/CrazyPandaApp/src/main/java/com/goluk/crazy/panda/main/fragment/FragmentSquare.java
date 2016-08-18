@@ -1,6 +1,7 @@
 package com.goluk.crazy.panda.main.fragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.goluk.crazy.panda.R;
 import com.zhy.magicviewpager.transformer.ScaleInTransformer;
 
@@ -28,6 +30,9 @@ public class FragmentSquare extends Fragment {
     ViewPager mSquareViewpager;
 
     List<Fragment> mFragmentList;
+    @BindView(R.id.tabstrip_square)
+    PagerSlidingTabStrip mSquareTabstrip;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +88,7 @@ public class FragmentSquare extends Fragment {
     }
 
     private void initData() {
+
         mFragmentList = new ArrayList<>();
         mFragmentList.add(new FragmentSquarePager());
         mFragmentList.add(new FragmentSquarePager());
@@ -96,9 +102,13 @@ public class FragmentSquare extends Fragment {
         mSquareViewpager.setOffscreenPageLimit(3);//>=3
         mSquareViewpager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()));
 
+
+        mSquareTabstrip.setTextColor(Color.parseColor("#303030"));
+        mSquareTabstrip.setTextColorStateListResource(R.color.tab_text);
+        mSquareTabstrip.setViewPager(mSquareViewpager);
         //setPageTransformer 决定动画效果
         mSquareViewpager.setPageTransformer(true, new ScaleInTransformer(0.75f));
-        mSquareViewpager.setCurrentItem(2,true);
+        mSquareViewpager.setCurrentItem(2, true);
     }
 
     public class FragmentPagerAdapter extends FragmentStatePagerAdapter {
@@ -114,6 +124,11 @@ public class FragmentSquare extends Fragment {
         @Override
         public int getCount() {
             return mFragmentList.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "单板滑雪";
         }
 
         /**
