@@ -185,7 +185,7 @@
 
 # viewPagerTransformer
 -dontwarn com.zhy.magicviewpager.transformer.**
--keep com.zhy.magicviewpager.transformer.**
+-keep class com.zhy.magicviewpager.transformer.**
 
 # OrmLite uses reflection
 -keepattributes *DatabaseField*
@@ -202,4 +202,4 @@
 
 # tabstrip
 -dontwarn com.astuetz.**
--keep com.astuetz.**
+-keep class com.astuetz.**

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#ffffff">
 
-    <com.astuetz.PagerSlidingTabStrip
+    <com.goluk.crazy.panda.common.widget.LockableTabStripView
         android:id="@+id/tabstrip_square"
         android:layout_width="match_parent"
         app:pstsIndicatorHeight="0dp"
