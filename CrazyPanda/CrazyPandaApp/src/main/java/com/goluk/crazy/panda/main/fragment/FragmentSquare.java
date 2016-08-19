@@ -11,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.astuetz.PagerSlidingTabStrip;
 import com.goluk.crazy.panda.R;
+import com.goluk.crazy.panda.common.widget.LockableTabStripView;
 import com.zhy.magicviewpager.transformer.ScaleInTransformer;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class FragmentSquare extends Fragment {
 
     List<Fragment> mFragmentList;
     @BindView(R.id.tabstrip_square)
-    PagerSlidingTabStrip mSquareTabstrip;
+    LockableTabStripView mSquareTabstrip;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,6 +105,7 @@ public class FragmentSquare extends Fragment {
 
         mSquareTabstrip.setTextColor(Color.parseColor("#303030"));
         mSquareTabstrip.setTextColorStateListResource(R.color.tab_text);
+        mSquareTabstrip.setScrollingEnabled(false);
         mSquareTabstrip.setViewPager(mSquareViewpager);
         //setPageTransformer 决定动画效果
         mSquareViewpager.setPageTransformer(true, new ScaleInTransformer(0.75f));
