@@ -183,6 +183,10 @@
 -dontwarn retrofit2.converter.fastjson.**
 -keep class retrofit2.converter.fastjson.**
 
+# viewPagerTransformer
+-dontwarn com.zhy.magicviewpager.transformer.**
+-keep class com.zhy.magicviewpager.transformer.**
+
 # OrmLite uses reflection
 -keepattributes *DatabaseField*
 -keepattributes *DatabaseTable*
@@ -195,3 +199,7 @@
 -keepclassmembers interface com.j256.** { *; }
 -dontwarn javax.**
 -dontwarn org.slf4j.**
+
+# tabstrip
+-dontwarn com.astuetz.**
+-keep class com.astuetz.**
