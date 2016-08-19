@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.goluk.crazy.panda.common.CPApplication;
+import com.goluk.crazy.panda.common.application.CPApplication;
 import com.goluk.crazy.panda.ipc.database.table.TableAlbum;
 import com.j256.ormlite.android.AndroidDatabaseConnection;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
