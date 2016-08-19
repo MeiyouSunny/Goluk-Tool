@@ -259,10 +259,7 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
     }
 
     @Override
-    public void onItemClicked(View view, int position, int columnIndex) {
-        if (position >= mDoubleDataList.size()) {
-            return;
-        }
+    public void onItemClicked(View view, DoubleVideoInfo videoInfo, int columnIndex) {
         RelativeLayout mTMLayout1 = (RelativeLayout) view.findViewById(R.id.mTMLayout1);
         RelativeLayout mTMLayout2 = (RelativeLayout) view.findViewById(R.id.mTMLayout2);
         String tag1 = (String) mTMLayout1.getTag();
@@ -274,7 +271,7 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
                 selectedVideoItem(tag2, mTMLayout2);
             }
         } else {
-            DoubleVideoInfo d = mDoubleDataList.get(position);
+            DoubleVideoInfo d = videoInfo;
             // 点击播放
             if (columnIndex == LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_FIRST) {
                 // 点击列表左边项,跳转到视频播放页面
@@ -285,7 +282,7 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
                 String filename = d.getVideoInfo1().filename;
                 updateNewState(filename);
 
-                mDoubleDataList.get(position).getVideoInfo1().isNew = false;
+                d.getVideoInfo1().isNew = false;
                 mWonderfulVideoAdapter.notifyDataSetChanged();
             } else {
                 // 点击列表右边项,跳转到视频播放页面
@@ -299,7 +296,7 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
                 String filename = info2.filename;
                 updateNewState(filename);
 
-                mDoubleDataList.get(position).getVideoInfo2().isNew = false;
+                d.getVideoInfo2().isNew = false;
                 mWonderfulVideoAdapter.notifyDataSetChanged();
             }
         }

@@ -620,44 +620,42 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
     }
 
     @Override
-    public void onItemClicked(View parent, int position, int columnIndex) {
-        if (position < mDoubleDataList.size()) {
-            RelativeLayout mTMLayout1 = (RelativeLayout) parent.findViewById(R.id.mTMLayout1);
-            RelativeLayout mTMLayout2 = (RelativeLayout) parent.findViewById(R.id.mTMLayout2);
-            String tag1 = (String) mTMLayout1.getTag();
-            String tag2 = (String) mTMLayout2.getTag();
-            if (mFragmentAlbum.getEditState()) {
-                if (columnIndex == LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_FIRST) {
-                    selectedVideoItem(tag1, mTMLayout1);
-                } else {
-                    selectedVideoItem(tag2, mTMLayout2);
-                }
+    public void onItemClicked(View parent, DoubleVideoInfo videoInfo, int columnIndex) {
+        RelativeLayout mTMLayout1 = (RelativeLayout) parent.findViewById(R.id.mTMLayout1);
+        RelativeLayout mTMLayout2 = (RelativeLayout) parent.findViewById(R.id.mTMLayout2);
+        String tag1 = (String) mTMLayout1.getTag();
+        String tag2 = (String) mTMLayout2.getTag();
+        if (mFragmentAlbum.getEditState()) {
+            if (columnIndex == LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_FIRST) {
+                selectedVideoItem(tag1, mTMLayout1);
             } else {
-                DoubleVideoInfo d = mDoubleDataList.get(position);
-                // 点击播放
-                if (columnIndex == LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_FIRST) {
-                    // 点击列表左边项,跳转到视频播放页面
-                    VideoInfo info1 = d.getVideoInfo1();
-                    gotoVideoPlayPage(PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP, info1.videoPath,
-                            info1.filename, info1.videoCreateDate, info1.videoHP, info1.videoSize);
-                    String filename = d.getVideoInfo1().filename;
-                    updateNewState(filename);
+                selectedVideoItem(tag2, mTMLayout2);
+            }
+        } else {
+            DoubleVideoInfo d = videoInfo;
+            // 点击播放
+            if (columnIndex == LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_FIRST) {
+                // 点击列表左边项,跳转到视频播放页面
+                VideoInfo info1 = d.getVideoInfo1();
+                gotoVideoPlayPage(PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP, info1.videoPath,
+                        info1.filename, info1.videoCreateDate, info1.videoHP, info1.videoSize);
+                String filename = d.getVideoInfo1().filename;
+                updateNewState(filename);
 
-                    mDoubleDataList.get(position).getVideoInfo1().isNew = false;
-                    mCloudWonderfulVideoAdapter.notifyDataSetChanged();
-                } else {
-                    // 点击列表右边项,跳转到视频播放页面
-                    VideoInfo info2 = d.getVideoInfo2();
-                    if (null == info2)
-                        return;
-                    gotoVideoPlayPage(PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP, info2.videoPath,
-                            info2.filename, info2.videoCreateDate, info2.videoHP, info2.videoSize);
-                    String filename = info2.filename;
-                    updateNewState(filename);
+                videoInfo.getVideoInfo1().isNew = false;
+                mCloudWonderfulVideoAdapter.notifyDataSetChanged();
+            } else {
+                // 点击列表右边项,跳转到视频播放页面
+                VideoInfo info2 = d.getVideoInfo2();
+                if (null == info2)
+                    return;
+                gotoVideoPlayPage(PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP, info2.videoPath,
+                        info2.filename, info2.videoCreateDate, info2.videoHP, info2.videoSize);
+                String filename = info2.filename;
+                updateNewState(filename);
 
-                    mDoubleDataList.get(position).getVideoInfo2().isNew = false;
-                    mCloudWonderfulVideoAdapter.notifyDataSetChanged();
-                }
+                videoInfo.getVideoInfo2().isNew = false;
+                mCloudWonderfulVideoAdapter.notifyDataSetChanged();
             }
         }
     }

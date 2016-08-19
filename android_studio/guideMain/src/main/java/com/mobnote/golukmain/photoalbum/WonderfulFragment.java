@@ -305,10 +305,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
 
 
     @Override
-    public void onItemClicked(View arg1, int arg2, int columnIndex) {
-        if (arg2 >= mDoubleDataList.size()) {
-            return;
-        }
+    public void onItemClicked(View arg1, DoubleVideoInfo videoInfo, int columnIndex) {
         RelativeLayout mTMLayout1 = (RelativeLayout) arg1.findViewById(R.id.mTMLayout1);
         RelativeLayout mTMLayout2 = (RelativeLayout) arg1.findViewById(R.id.mTMLayout2);
         String tag1 = (String) mTMLayout1.getTag();
@@ -320,7 +317,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
                 selectedVideoItem(tag2, mTMLayout2);
             }
         } else {
-            DoubleVideoInfo d = mDoubleDataList.get(arg2);
+            DoubleVideoInfo d = videoInfo;
             // 点击播放
             if (columnIndex == LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_FIRST) {
                 // 点击列表左边项,跳转到视频播放页面
@@ -330,7 +327,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
                 String filename = d.getVideoInfo1().filename;
                 updateNewState(filename);
 
-                mDoubleDataList.get(arg2).getVideoInfo1().isNew = false;
+                videoInfo.getVideoInfo1().isNew = false;
                 mCloudWonderfulVideoAdapter.notifyDataSetChanged();
             } else {
                 // 点击列表右边项,跳转到视频播放页面
@@ -342,7 +339,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
                 String filename = info2.filename;
                 updateNewState(filename);
 
-                mDoubleDataList.get(arg2).getVideoInfo2().isNew = false;
+                videoInfo.getVideoInfo2().isNew = false;
                 mCloudWonderfulVideoAdapter.notifyDataSetChanged();
             }
         }
