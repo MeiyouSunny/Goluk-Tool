@@ -40,17 +40,42 @@ public class FragmentAlbum extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mImageList = new ArrayList();
-        for(String path : TestData.album_image_str) {
+
+        AlbumItemText itemText = new AlbumItemText();
+        itemText.nDate = "Today";
+        itemText.nLocation = "Here";
+        mImageList.add(itemText);
+
+        for(int i = 0; i < TestData.album_image_str.length; i++) {
+            String path = TestData.album_image_str[i];
+            int drawable = TestData.album_image_drawable[i];
+
+            if(!path.contains("yestoday")) {
+                AlbumItemImage item = new AlbumItemImage();
+                item.nDesciption = path;
+                item.nImagePath = drawable;
+                mImageList.add(item);
+            } else {
+                break;
+            }
+        }
+
+        AlbumItemText itemText1 = new AlbumItemText();
+        itemText.nDate = "yestoday";
+        itemText.nLocation = "There";
+        mImageList.add(itemText1);
+
+        for(int i = 0; i < TestData.album_image_str.length; i++) {
+            String path = TestData.album_image_str[i];
+            int drawable = TestData.album_image_drawable[i];
+
             if(path.contains("yestoday")) {
                 AlbumItemImage item = new AlbumItemImage();
                 item.nDesciption = path;
-       //         item.nImagePath = path.substring(path.length() - 8);
+                item.nImagePath = drawable;
                 mImageList.add(item);
             } else {
-                AlbumItemText item = new AlbumItemText();
-                item.nDate = path;
-                item.nLocation = "Here";
-                mImageList.add(item);
+                continue;
             }
         }
     }
