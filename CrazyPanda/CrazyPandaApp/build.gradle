@@ -55,7 +55,7 @@ android {
     }
 
     lintOptions {
-        abortOnError true
+        abortOnError false
     }
 
 }
@@ -79,4 +79,5 @@ dependencies {
     compile 'org.ligboy.retrofit2:converter-fastjson-android:2.1.0'
     compile 'com.zhy:magic-viewpager:1.0.1'
     compile 'com.jpardogo.materialtabstrip:library:1.1.0'
+    compile 'com.android.support:recyclerview-v7:24.1.1'
 }
