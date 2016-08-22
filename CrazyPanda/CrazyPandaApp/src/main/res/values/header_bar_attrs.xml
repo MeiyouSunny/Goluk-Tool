@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <declare-styleable name="headerbar">
-        <attr name="leftText" format="string"/>
-        <attr name="rightText" format="string"/>
-        <attr name="centerText" format="string"/>
-        <attr name="centerResDrawable" format="reference"/>
-    </declare-styleable>
-</resources>
