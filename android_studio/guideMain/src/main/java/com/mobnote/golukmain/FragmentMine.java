@@ -115,6 +115,10 @@ public class FragmentMine extends Fragment implements OnClickListener,
      **/
     private TextView mProfitItem = null;
     /**
+     *  意见反馈
+     * */
+    private TextView mFeedBackItem = null;
+    /**
      * 消息中心
      */
     private RelativeLayout mMsgCenterItem = null;
@@ -368,7 +372,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
         mSkillItem = (TextView) mMineRootView.findViewById(R.id.skill_item);
         mInstallItem = (TextView) mMineRootView.findViewById(R.id.install_item);
         mQuestionItem = (TextView) mMineRootView
-                .findViewById(R.id.question_item);
+                .findViewById(R.id.about_item);
         mProfitItem = (TextView) mMineRootView.findViewById(R.id.profit_item);
         mMsgCenterItem = (RelativeLayout) mMineRootView
                 .findViewById(R.id.rl_my_message);
@@ -403,6 +407,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
         if (SharedPrefUtil.getUserIs4SShop()) {
             mLLSSSS.setVisibility(View.VISIBLE);
         }
+        mFeedBackItem = (TextView) mMineRootView.findViewById(R.id.opinion_item);
 
         // 注册事件
         // 个人中心 我的相册 摄像头管理 通用设置 极路客小技巧 安装指导 版本信息 购买极路客
@@ -421,6 +426,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
         mMsgCenterItem.setOnClickListener(this);
         mPraisedListItem.setOnClickListener(this);
         mLLSSSS.setOnClickListener(this);
+        mFeedBackItem.setOnClickListener(this);
     }
 
     // 获取登录状态及用户信息
@@ -508,7 +514,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
             Intent itInstall = new Intent(getActivity(), UserOpenUrlActivity.class);
             itInstall.putExtra(UserOpenUrlActivity.FROM_TAG, "install");
             getActivity().startActivity(itInstall);
-        } else if (id == R.id.question_item) {
+        } else if (id == R.id.about_item) {
             Intent itQuestion = new Intent(getActivity(), UserVersionActivity.class);
             getActivity().startActivity(itQuestion);
         } else if (id == R.id.profit_item) {
@@ -548,6 +554,9 @@ public class FragmentMine extends Fragment implements OnClickListener,
             }
         } else if (id == R.id.ll_advanced_setting) {
             gotoSSSSSetting();
+        } else if (id == R.id.opinion_item) {
+            Intent itOpinion = new Intent(getActivity(), UserOpinionActivity.class);
+            startActivity(itOpinion);
         }
     }
 

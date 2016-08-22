@@ -470,6 +470,27 @@
                 android:text="@string/my_install_title_text"
                 android:textColor="#333333"
                 android:textSize="14sp" />
+            <View
+                android:id="@+id/user_personal_solid_16"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="@drawable/solid" />
+            <!-- 意见反馈 -->
+            <TextView
+                android:id="@+id/opinion_item"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="#f4f4f4"
+                android:drawableLeft="@drawable/my_question_icon"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/editor_arrow"
+                android:gravity="center_vertical"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:text="@string/version_opinion_text"
+                android:textColor="#333333"
+                android:textSize="14sp" />
+
             <!-- 版本信息 -->
 
             <View
@@ -479,7 +500,7 @@
                 android:background="@drawable/solid" />
 
             <TextView
-                android:id="@+id/question_item"
+                android:id="@+id/about_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#f4f4f4"

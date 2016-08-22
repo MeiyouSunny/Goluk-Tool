@@ -39,8 +39,6 @@ public class UserVersionActivity extends BaseActivity implements OnClickListener
 	private RelativeLayout mAppUpdateLayout = null;
 	/** 欢迎页 **/
 	private RelativeLayout mWelcomeLayout = null;
-	/** 意见反馈 **/
-	private RelativeLayout mOpinionLayout = null;
 	/**固件版本**/
 	private String vIpc = null;
 	/**用户协议和隐私条款**/
@@ -80,7 +78,6 @@ public class UserVersionActivity extends BaseActivity implements OnClickListener
 		mTextVersion = (TextView) findViewById(R.id.user_version_text);
 		mAppUpdateLayout = (RelativeLayout) findViewById(R.id.app_update_item);
 		mWelcomeLayout = (RelativeLayout) findViewById(R.id.welcome_item);
-		mOpinionLayout = (RelativeLayout) findViewById(R.id.opinion_item);
 		mProtocolLayout = (RelativeLayout) findViewById(R.id.ry_protocol_item);
 
 		mTextTitle.setText(this.getResources().getString(R.string.my_question_title_text));
@@ -88,7 +85,6 @@ public class UserVersionActivity extends BaseActivity implements OnClickListener
 		mBtnBack.setOnClickListener(this);
 		mAppUpdateLayout.setOnClickListener(this);
 		mWelcomeLayout.setOnClickListener(this);
-		mOpinionLayout.setOnClickListener(this);
 		mProtocolLayout.setOnClickListener(this);
 	}
 
@@ -106,9 +102,6 @@ public class UserVersionActivity extends BaseActivity implements OnClickListener
 			Intent itWelcome = new Intent(UserVersionActivity.this,UserStartActivity.class);
 			itWelcome.putExtra("judgeVideo", true);
 			startActivity(itWelcome);
-		} else if (id == R.id.opinion_item) {
-			Intent itOpinion = new Intent(UserVersionActivity.this,UserOpinionActivity.class);
-			startActivity(itOpinion);
 		} else if (id == R.id.ry_protocol_item) {
 			Intent itProtocol = new Intent(this, UserOpenUrlActivity.class);
 			itProtocol.putExtra(UserOpenUrlActivity.FROM_TAG, "protocol");
