@@ -84,7 +84,7 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
     }
 
     @Override
-    public View getView(final int position, View view, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent) {
         ViewHolder holder;
         int width = (int) (screenWidth - 95 * density) / 2;
         int height = (int) ((float) width / 1.77f);
@@ -136,20 +136,19 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
             layoutParams2.setMargins(0, marginTop, 0, 0);
             layoutParams2.addRule(RelativeLayout.RIGHT_OF, R.id.mVideoLayout1);
             holder.mVideoLayout2.setLayoutParams(layoutParams2);
-
-            convertView.setTag(holder);
             holder.mVideoLayout1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onListViewItemClickColumnListener.onItemClicked(convertView, position, IListViewItemClickColumn.COLUMN_FIRST);
+                    onListViewItemClickColumnListener.onItemClicked(convertView, (DoubleVideoInfo) v.getTag(), IListViewItemClickColumn.COLUMN_FIRST);
                 }
             });
             holder.mVideoLayout2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onListViewItemClickColumnListener.onItemClicked(convertView, position, IListViewItemClickColumn.COLUMN_SECOND);
+                    onListViewItemClickColumnListener.onItemClicked(convertView, (DoubleVideoInfo) v.getTag(), IListViewItemClickColumn.COLUMN_SECOND);
                 }
             });
+            convertView.setTag(holder);
             view = convertView;
         } else {
             holder = (ViewHolder) view.getTag();
@@ -187,8 +186,6 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
         displayVideoQuality(mVideoInfo1.videoHP, holder.mVideoQuality1);
         loadImage(mVideoInfo1.filename, holder.image1);
         int type = getVideoType(mVideoInfo1.filename);
-
-
         if (type == 1) {
             holder.mVide1Type.setText(mContext.getResources().getString(R.string.str_wonderful_title));
             holder.mVide1Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_wonderful_txt_color));
@@ -236,7 +233,8 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
                 holder.mPreView2.setVisibility(View.GONE);
             }
         }
-
+        holder.mVideoLayout1.setTag(mDataList.get(position));
+        holder.mVideoLayout2.setTag(mDataList.get(position));
         updateEditState(mDataList.get(position), holder.mTMLayout1, holder.mTMLayout2);
 
         return view;
@@ -505,6 +503,6 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
         int COLUMN_FIRST = 1;
         int COLUMN_SECOND = 2;
 
-        void onItemClicked(View parent, int position, int columnIndex);
+        void onItemClicked(View parent, DoubleVideoInfo videoInfo, int columnIndex);
     }
 }

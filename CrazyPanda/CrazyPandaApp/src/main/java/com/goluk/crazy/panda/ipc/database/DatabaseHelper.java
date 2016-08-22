@@ -4,7 +4,9 @@ import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.goluk.crazy.panda.common.application.CPApplication;
 import com.goluk.crazy.panda.ipc.database.table.TableAlbum;
+import com.j256.ormlite.android.AndroidDatabaseConnection;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
@@ -28,15 +30,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     /**
      * 单例获取该Helper
      *
-     * @param context
      * @return
      */
-    public static synchronized DatabaseHelper getHelper(Context context) {
-        context = context.getApplicationContext();
+    public static synchronized DatabaseHelper getHelper() {
         if (instance == null) {
             synchronized (DatabaseHelper.class) {
                 if (instance == null)
-                    instance = new DatabaseHelper(context);
+                    instance = new DatabaseHelper(CPApplication.getApp());
             }
         }
         return instance;
@@ -84,7 +84,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void close() {
         super.close();
-
         for (String key : daos.keySet()) {
             Dao dao = daos.get(key);
             dao = null;

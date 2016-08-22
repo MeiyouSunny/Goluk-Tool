@@ -142,13 +142,13 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
             holder.mVideoLayout1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onListViewItemClickColumnListener.onItemClicked(convertView, position, LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_FIRST);
+                    onListViewItemClickColumnListener.onItemClicked(convertView, (DoubleVideoInfo) v.getTag(), LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_FIRST);
                 }
             });
             holder.mVideoLayout2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onListViewItemClickColumnListener.onItemClicked(convertView, position, LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_SECOND);
+                    onListViewItemClickColumnListener.onItemClicked(convertView, (DoubleVideoInfo) v.getTag(), LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_SECOND);
                 }
             });
             view = convertView;
@@ -202,7 +202,8 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 //				holder.mAsycnedFlag2.setVisibility(View.GONE);
 //			}
         }
-
+        holder.mVideoLayout1.setTag(mDataList.get(position));
+        holder.mVideoLayout2.setTag(mDataList.get(position));
         updateEditState(mDataList.get(position), holder.mTMLayout1, holder.mTMLayout2);
 
         return view;
