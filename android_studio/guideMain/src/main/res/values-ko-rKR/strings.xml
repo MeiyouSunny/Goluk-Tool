@@ -1040,4 +1040,10 @@
     <string name="connect_only_wifi_desc">차량용 블랙박스에 와이파이로만 연결됨.\n연결된 상태에서는 라이브스트림 기능 및 모바일 데이터 네트워크를 사용 할 수 없습니다.</string>
     <string name="disconnect_goluk_before_share">네트워크 공유를 사용하기 전에 차량용 블랙박스 와이파이에서 연결 해제되어야 합니다.</string>
     <string name="msg_system_certificate_success_sys">회원님은 이제 스타 멤버입니다. 확인 해보세요!</string>
+    <string name="install_new_firmware">설치</string>
+    <string name="newest_firmware">현재 버전은 최신 버전입니다</string>
+    <string name="str_fireware_is_downloading">다운로드 중</string>
+    <string name="str_system_window_not_allowed">팝업이 비활성화 되어 시스템 창을 열 수 없습니다.</string>
+    <string name="str_notification_error_ssl_cert_invalid">안전하지 않은 웹 페이지로 리디렉션됩니다. 계속 하시겠습니까?</string>
+    <string name="settting_notify_friends">친구가 새 업데이트를 포스팅 했습니다!</string>
 </resources>

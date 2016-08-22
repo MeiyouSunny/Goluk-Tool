@@ -1039,4 +1039,10 @@ Qualität der Speicherkarte kann zu gestörter Aufnahme führen.</string>
     <string name="connect_only_wifi_desc">Mit Dashcam nur via WLAN verbunden.\nWenn verbunden, sind die Livestream-Funktion sowie das mobile Datennetzwerk nicht verfügbar.</string>
     <string name="disconnect_goluk_before_share">Darf nicht mit Dashcam-WLAN verbunden sein, um Freigabe für Netzwerk nutzen zu können.</string>
     <string name="msg_system_certificate_success_sys">Du bist jetzt ein Stern-Mitglied. Probiere es aus!</string>
+    <string name="install_new_firmware">Installieren</string>
+    <string name="newest_firmware">Die derzeitige Version ist aktuell.</string>
+    <string name="str_fireware_is_downloading">Wird heruntergeladen</string>
+    <string name="str_system_window_not_allowed">Öffnen des Systemfensters nicht möglich, da Pop-ups deaktiviert sind. Bitte im Bereich App-Verwaltung den Zugriff einschalten.</string>
+    <string name="str_notification_error_ssl_cert_invalid">Du wirst auf eine unsichere Webseite umgeleitet. Möchtest du fortsetzen?</string>
+    <string name="settting_notify_friends">Dein Freund hat Neuigkeiten veröffentlicht!</string>
 </resources>

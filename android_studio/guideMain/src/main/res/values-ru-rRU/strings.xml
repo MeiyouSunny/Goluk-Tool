@@ -1039,4 +1039,10 @@
     <string name="connect_only_wifi_desc">Подключено по Wi-Fi только к видеорегистратору. \nПосле подключения нельзя использовать функцию трансляции и мобильную сеть передачи данных.</string>
     <string name="disconnect_goluk_before_share">Чтобы использовать общий доступ к сети, нужно отключиться от Wi-Fi видеорегистратора.</string>
     <string name="msg_system_certificate_success_sys">Вы стали звездным участником. Посмотрите!</string>
+    <string name="install_new_firmware">Установить</string>
+    <string name="newest_firmware">У вас установлена самая новая версия</string>
+    <string name="str_fireware_is_downloading">Загрузка</string>
+    <string name="str_system_window_not_allowed">Не удается открыть системное окно, так как отключены всплывающие окна. Откройте доступ в разделе «Управление приложениями».</string>
+    <string name="str_notification_error_ssl_cert_invalid">Вы будете перенаправлены на небезопасную веб-страницу. Действительно продолжить?</string>
+    <string name="settting_notify_friends">Ваш друг опубликовал новую запись!</string>
 </resources>

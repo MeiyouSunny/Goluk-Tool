@@ -1039,4 +1039,10 @@
     <string name="connect_only_wifi_desc">Wi-Fiによってダッシュカムのみが接続されます。\n接続時に、ライブストリーム機能とモバイルデータネットワークは使用できません。</string>
     <string name="disconnect_goluk_before_share">ネットワーク共有を使用する前に、ダッシュカムのWi-Fiから切断する必要があります。</string>
     <string name="msg_system_certificate_success_sys">スターメンバーになりました。チェックしに行こう！</string>
+    <string name="install_new_firmware">インストール</string>
+    <string name="newest_firmware">お使いのバージョンは最新です</string>
+    <string name="str_fireware_is_downloading">ダウンロード中</string>
+    <string name="str_system_window_not_allowed">ポップアップが無効になっているため、システムウィンドウを開くことができません。アプリの管理セクションでアクセスを有効にしてください。</string>
+    <string name="str_notification_error_ssl_cert_invalid">安全ではないウェブページにリダイレクトされます。続行しますか？</string>
+    <string name="settting_notify_friends">友達が新しいアップデートを投稿しました！</string>
 </resources>

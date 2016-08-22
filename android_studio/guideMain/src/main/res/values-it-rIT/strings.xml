@@ -1038,4 +1038,10 @@
     <string name="connect_only_wifi_desc">Connesso solo alla dashcam tramite wi-fi. Quando connesso, la funzione di streaming live e la rete dati del dispositivo non possono essere utilizzate.</string>
     <string name="disconnect_goluk_before_share">Per utilizzare la condivisione di rete, è necessario disconnettersi dalla dashcam.</string>
     <string name="msg_system_certificate_success_sys">Ora sei un socio stella. Dai un\'occhiata!</string>
+    <string name="install_new_firmware">Installa</string>
+    <string name="newest_firmware">La versione attuale è aggiornata</string>
+    <string name="str_fireware_is_downloading">Download in corso</string>
+    <string name="str_system_window_not_allowed">Popup disattivati, impossibile aprire la finestra del sistema. Consenti l\'accesso sulla sezione di Gestione delle app.</string>
+    <string name="str_notification_error_ssl_cert_invalid">Sarai reindirizzato ad una pagina web non sicura. Vuoi continuare?</string>
+    <string name="settting_notify_friends">Il tuo amico ha pubblicato un nuovo aggiornamento!</string>
 </resources>

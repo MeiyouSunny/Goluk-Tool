@@ -1039,4 +1039,10 @@ Une qualité médiocre de la carte mémoire provoquera des enregistrements anorm
     <string name="connect_only_wifi_desc">Seulement connecté à la caméra embarquée par Wi-Fi. Durant la connexion, la fonction de diffusion en direct et le réseau de données mobiles ne peuvent pas être utilisés.</string>
     <string name="disconnect_goluk_before_share">Doit être déconnecté du Wi-Fi de la caméra embarquée avant que le partage de réseau ne puisse être utilisé.</string>
     <string name="msg_system_certificate_success_sys">Vous êtes désormais un membre étoile. Allez y jeter un œil !</string>
+    <string name="install_new_firmware">Installer</string>
+    <string name="newest_firmware">La version actuelle est à jour</string>
+    <string name="str_fireware_is_downloading">Téléchargement en cours</string>
+    <string name="str_system_window_not_allowed">Impossible d\'ouvrir la fenêtre système, car les pop-up sont désactivés. Veuillez activer l\'accès dans la section de gestion des applications.</string>
+    <string name="str_notification_error_ssl_cert_invalid">Vous serez redirigé vers une page web non sécurisée. Voulez-vous continuer ?</string>
+    <string name="settting_notify_friends">Votre ami a publié une nouvelle mise à jour !</string>
 </resources>

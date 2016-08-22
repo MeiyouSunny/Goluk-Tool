@@ -1039,4 +1039,10 @@
     <string name="connect_only_wifi_desc">僅以 Wi-Fi 連接行車記錄儀\n連接時停用直播功能和流動數據</string>
     <string name="disconnect_goluk_before_share">記錄儀需斷開 Wi-Fi 連接，才可使用流動數據分享</string>
     <string name="msg_system_certificate_success_sys">您已成為星級會員。快來看看！</string>
+    <string name="install_new_firmware">安裝新韌體</string>
+    <string name="newest_firmware">已是最新版本</string>
+    <string name="str_fireware_is_downloading">正在下載新韌體</string>
+    <string name="str_system_window_not_allowed">無法顯示系統彈出式視窗，請於應用程式管理允許權限</string>
+    <string name="str_notification_error_ssl_cert_invalid">將要前往不安全的網頁，是否繼續？</string>
+    <string name="settting_notify_friends">有朋友最新動態</string>
 </resources>
