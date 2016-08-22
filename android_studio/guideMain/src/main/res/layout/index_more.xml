@@ -481,7 +481,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#f4f4f4"
-                android:drawableLeft="@drawable/my_question_icon"
+                android:drawableLeft="@drawable/user_feed_back"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/editor_arrow"
                 android:gravity="center_vertical"
