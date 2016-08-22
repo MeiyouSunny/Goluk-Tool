@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.goluk.crazy.panda.R;
 import com.goluk.crazy.panda.common.activity.BaseActivity;
+import com.goluk.crazy.panda.common.http.HttpMethods;
 import com.goluk.crazy.panda.common.http.SearchService;
 import com.goluk.crazy.panda.common.http.bean.HttpResultBean;
 import com.goluk.crazy.panda.common.widget.HeaderBar;
@@ -32,22 +33,20 @@ public class SearchActivity extends BaseActivity {
     @BindView(R.id.btn_search)
     Button mBtnSearch;
 
-    Subscriber<SearchUserInfoBean> mSearchUserSubscriber;
-    Retrofit mRetrofit;
     @BindView(R.id.tv_username)
     TextView tvUsername;
 
-    StringBuilder mUserNameStrBuilder;
     @BindView(R.id.headerbar_search)
     HeaderBar mSearchHeaderbar;
+
+    Subscriber<SearchUserInfoBean> mSearchUserSubscriber;
+    StringBuilder mUserNameStrBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
-
-        String baseUrl = "http://server.goluk.cn/cdcSearch/";
 
         mSearchHeaderbar.setOnLeftClickListener(new View.OnClickListener(){
             @Override
@@ -69,29 +68,24 @@ public class SearchActivity extends BaseActivity {
         });
 
         mUserNameStrBuilder = new StringBuilder();
-        mRetrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(FastJsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .build();
 
         mSearchUserSubscriber = new Subscriber<SearchUserInfoBean>() {
             @Override
             public void onCompleted() {
-
+                Log.i("SearchActivity", "onCompleted()");
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.i("SearchActivity", "name: " + e.getMessage());
+                Log.i("SearchActivity", "onError()  msg: " + e.getMessage());
             }
 
             @Override
             public void onNext(SearchUserInfoBean searchUserInfoBean) {
+                Log.i("SearchActivity", "onNext()");
                 if (searchUserInfoBean == null) {
                     return;
                 }
-                Log.i("SearchActivity", "errorCode: " + searchUserInfoBean.getNickname());
                 mUserNameStrBuilder.append("userName: " + searchUserInfoBean.getNickname() + "   ");
                 tvUsername.setText(mUserNameStrBuilder.toString());
             }
@@ -101,23 +95,8 @@ public class SearchActivity extends BaseActivity {
     @OnClick(R.id.btn_search)
     public void onClick() {
 
-        Log.i("baseUrl", "baseUrl: " + "http://server.goluk.cn/cdcSearch/");
-        SearchService searchService = mRetrofit.create(SearchService.class);
-        searchService.searchUser("searchUser", "200", "le", String.valueOf(1), 20, "2.0", "en")
-                .map(new Func1<HttpResultBean<SearchDataBean>, SearchDataBean>() {
-                    @Override
-                    public SearchDataBean call(HttpResultBean<SearchDataBean> searchDataBeanHttpResultBean) {
-                        if (searchDataBeanHttpResultBean == null) {
-                            mSearchUserSubscriber.onError(new Throwable("net error"));
-                            return null;
-                        }
-                        if (searchDataBeanHttpResultBean.getCode() != 0) {
-                            mSearchUserSubscriber.onError(new Throwable("" + searchDataBeanHttpResultBean.getCode()));
-                            return null;
-                        }
-                        return searchDataBeanHttpResultBean.getData();
-                    }
-                })
+        Log.i("SearchActivity", "onClick()");
+        HttpMethods.getInstance().searchUser("le", String.valueOf(1), 20, "2.0", "en")
                 .flatMap(new Func1<SearchDataBean, Observable<SearchUserInfoBean>>() {
                     @Override
                     public Observable<SearchUserInfoBean> call(SearchDataBean searchDataBean) {
