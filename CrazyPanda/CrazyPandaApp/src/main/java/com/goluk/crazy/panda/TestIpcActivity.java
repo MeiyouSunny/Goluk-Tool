@@ -7,8 +7,12 @@ import android.net.wifi.WifiManager;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.goluk.crazy.panda.ipc.base.IPCManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,6 +23,9 @@ public class TestIpcActivity extends AppCompatActivity {
 
     @BindView(R.id.textView2)
     TextView tvInfo;
+
+    @BindView(R.id.slContent)
+    ScrollView scrollView;
 
     private boolean clickButton;
 
@@ -43,14 +50,15 @@ public class TestIpcActivity extends AppCompatActivity {
             Toast.makeText(this, "WIfi Closed", Toast.LENGTH_SHORT).show();
             return;
         }
-//        int ipcMode = IPCUtils.adadpteIPCNameByWifiName(wifiInfo.getSSID());
-//        if (ipcMode == IPCConstant.IPC_MODE_UNKNOWN) {
-//            Toast.makeText(this, "Not a Goluk IPC ,please change another wifi.", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        IPCManager manager = IPCManager.getInstance();
-//        manager.setOnResultListener(this);
-//        manager.connect();
+        IPCManager manager = IPCManager.getInstance();
+        if (manager.bind(wifiInfo.getBSSID())) {
+            Toast.makeText(this, "bind ipc success ", Toast.LENGTH_SHORT).show();
+            tvInfo.setText("连接成功了");
+            scrollView.setVisibility(View.VISIBLE);
+        }
+        Toast.makeText(this, "bind ipc field ", Toast.LENGTH_SHORT).show();
+        tvInfo.setText("失败");
+        scrollView.setVisibility(View.GONE);
         clickButton = false;
     }
 
