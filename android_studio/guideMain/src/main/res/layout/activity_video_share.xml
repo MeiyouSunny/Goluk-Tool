@@ -196,7 +196,7 @@
             android:layout_marginLeft="9dp"
             android:layout_marginTop="16dp"
             android:maxLength="18"
-            android:text="分享到"
+            android:text="@string/str_share_to"
             android:textColor="#7a7f85"
             android:textSize="12sp" />
 
