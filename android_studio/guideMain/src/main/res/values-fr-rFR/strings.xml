@@ -1045,4 +1045,5 @@ Une qualité médiocre de la carte mémoire provoquera des enregistrements anorm
     <string name="str_system_window_not_allowed">Impossible d\'ouvrir la fenêtre système, car les pop-up sont désactivés. Veuillez activer l\'accès dans la section de gestion des applications.</string>
     <string name="str_notification_error_ssl_cert_invalid">Vous serez redirigé vers une page web non sécurisée. Voulez-vous continuer ?</string>
     <string name="settting_notify_friends">Votre ami a publié une nouvelle mise à jour !</string>
+    <string name="str_tag_tab_hot">Recommander</string>
 </resources>

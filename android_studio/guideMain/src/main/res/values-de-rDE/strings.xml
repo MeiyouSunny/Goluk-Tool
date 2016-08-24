@@ -1045,4 +1045,5 @@ Qualität der Speicherkarte kann zu gestörter Aufnahme führen.</string>
     <string name="str_system_window_not_allowed">Öffnen des Systemfensters nicht möglich, da Pop-ups deaktiviert sind. Bitte im Bereich App-Verwaltung den Zugriff einschalten.</string>
     <string name="str_notification_error_ssl_cert_invalid">Du wirst auf eine unsichere Webseite umgeleitet. Möchtest du fortsetzen?</string>
     <string name="settting_notify_friends">Dein Freund hat Neuigkeiten veröffentlicht!</string>
+    <string name="str_tag_tab_hot">Empfehlen</string>
 </resources>

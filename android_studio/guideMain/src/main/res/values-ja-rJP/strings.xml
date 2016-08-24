@@ -1045,4 +1045,5 @@
     <string name="str_system_window_not_allowed">ポップアップが無効になっているため、システムウィンドウを開くことができません。アプリの管理セクションでアクセスを有効にしてください。</string>
     <string name="str_notification_error_ssl_cert_invalid">安全ではないウェブページにリダイレクトされます。続行しますか？</string>
     <string name="settting_notify_friends">友達が新しいアップデートを投稿しました！</string>
+    <string name="str_tag_tab_hot">おすすめ</string>
 </resources>

@@ -1045,4 +1045,5 @@
     <string name="str_system_window_not_allowed">Не удается открыть системное окно, так как отключены всплывающие окна. Откройте доступ в разделе «Управление приложениями».</string>
     <string name="str_notification_error_ssl_cert_invalid">Вы будете перенаправлены на небезопасную веб-страницу. Действительно продолжить?</string>
     <string name="settting_notify_friends">Ваш друг опубликовал новую запись!</string>
+    <string name="str_tag_tab_hot">Рекомендовать</string>
 </resources>

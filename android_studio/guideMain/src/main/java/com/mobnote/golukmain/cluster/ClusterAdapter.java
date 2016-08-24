@@ -273,11 +273,17 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                 } else {
                     headViewHolder.nTagDescriptionETV.setText(mHeadData.activity.activitycontent);
                 }
-                String joinNumStr = mContext.getString(R.string.str_participation_prompt)
-                        + "<font color='#216da8'>"
-                        + mContext.getString(R.string.str_participation_num_unit, mHeadData.activity.participantcount)
-                        + "</font>";
-                headViewHolder.partakes.setText(Html.fromHtml(joinNumStr));
+//                String joinNumStr = mContext.getString(R.string.str_participation_prompt)
+//                        + "<font color='#216da8'>"
+//                        + mContext.getString(R.string.str_participation_num_unit, mHeadData.activity.participantcount)
+//                        + "</font>";
+                String joinNumStr = null;
+                if(TextUtils.isEmpty(mHeadData.activity.participantcount)) {
+                    joinNumStr = mContext.getString(R.string.str_participation_population, "0");
+                } else {
+                    joinNumStr = mContext.getString(R.string.str_participation_population, mHeadData.activity.participantcount);
+                }
+                headViewHolder.partakes.setText(joinNumStr);
 
                 if ("1".equals(mHeadData.activity.expiration)) {
                     headViewHolder.partakeBtn.setText(mContext.getResources().getString(R.string.activity_time_out));
@@ -320,11 +326,18 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                     headViewHolder.nTagDescriptionETV.setText(mHeadData.tag.description);
                 }
 
-                String joinNumStr = mContext.getString(R.string.str_participation_prompt)
-                        + "<font color='#216da8'>"
-                        + mContext.getString(R.string.str_participation_num_unit, mHeadData.tag.participantcount)
-                        + "</font>";
-                headViewHolder.partakes.setText(Html.fromHtml(joinNumStr));
+//                String joinNumStr = mContext.getString(R.string.str_participation_prompt)
+//                        + "<font color='#216da8'>"
+//                        + mContext.getString(R.string.str_participation_num_unit, mHeadData.tag.participantcount)
+//                        + "</font>";
+                String joinNumStr = null;
+                if(TextUtils.isEmpty(mHeadData.activity.participantcount)) {
+                    joinNumStr = mContext.getString(R.string.str_participation_population, "0");
+                } else {
+                    joinNumStr = mContext.getString(R.string.str_participation_population, mHeadData.activity.participantcount);
+                }
+//                headViewHolder.partakes.setText(Html.fromHtml(joinNumStr));
+                headViewHolder.partakes.setText(joinNumStr);
                 headViewHolder.voteBtn.setVisibility(View.GONE);
 
                 headViewHolder.partakeBtn.setText(mContext.getResources().getString(R.string.attend_activity));
