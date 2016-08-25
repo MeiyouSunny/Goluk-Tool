@@ -8,8 +8,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.json.JSONObject;
 
 import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.http.HttpCommHeaderBean;
+import com.mobnote.util.GolukFastJsonUtil;
+import com.mobnote.util.GolukUtils;
 
 import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -127,6 +131,9 @@ public class VideoSquareManager implements VideoSuqareManagerFn {
      * @date 2015年8月6日
      */
     public long getZXListData() {
+        HttpCommHeaderBean bean = new HttpCommHeaderBean();
+        String str = GolukFastJsonUtil.setParseObj(bean);
+        mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_AddCommHeader, str);
         return mApplication.mGoluk.CommRequestEx(GolukModule.Goluk_Module_Square, VSquare_Req_List_Catlog, "");
     }
 
