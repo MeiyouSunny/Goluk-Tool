@@ -1046,4 +1046,5 @@ Qualität der Speicherkarte kann zu gestörter Aufnahme führen.</string>
     <string name="str_notification_error_ssl_cert_invalid">Du wirst auf eine unsichere Webseite umgeleitet. Möchtest du fortsetzen?</string>
     <string name="settting_notify_friends">Dein Freund hat Neuigkeiten veröffentlicht!</string>
     <string name="str_tag_tab_hot">Empfehlen</string>
+    <string name="str_tag_description_more">more</string>
 </resources>

@@ -1059,7 +1059,7 @@
     <string name="str_live_play_back">直播回放</string>
     <string name="str_live_time">直播时长：%1$s</string>
     <string name="geo_location">地理位置</string>
-    <string name="str_tag_description_more">更多</string>
+    <string name="str_tag_description_more">more</string>
     <string name="str_tag_tab_hot">Recommend</string>
     <string name="str_new_comment">有新评论了</string>
     <string name="str_participation_prompt">参与</string>

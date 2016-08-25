@@ -1045,4 +1045,5 @@
     <string name="str_notification_error_ssl_cert_invalid">Sarai reindirizzato ad una pagina web non sicura. Vuoi continuare?</string>
     <string name="settting_notify_friends">Il tuo amico ha pubblicato un nuovo aggiornamento!</string>
     <string name="str_tag_tab_hot">Consigliati</string>
+    <string name="str_tag_description_more">more</string>
 </resources>

@@ -1047,4 +1047,5 @@
     <string name="str_notification_error_ssl_cert_invalid">안전하지 않은 웹 페이지로 리디렉션됩니다. 계속 하시겠습니까?</string>
     <string name="settting_notify_friends">친구가 새 업데이트를 포스팅 했습니다!</string>
     <string name="str_tag_tab_hot">추천</string>
+    <string name="str_tag_description_more">more</string>
 </resources>

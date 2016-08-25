@@ -1046,4 +1046,5 @@
     <string name="str_notification_error_ssl_cert_invalid">Вы будете перенаправлены на небезопасную веб-страницу. Действительно продолжить?</string>
     <string name="settting_notify_friends">Ваш друг опубликовал новую запись!</string>
     <string name="str_tag_tab_hot">Рекомендовать</string>
+    <string name="str_tag_description_more">more</string>
 </resources>

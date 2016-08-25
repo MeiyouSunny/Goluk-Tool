@@ -1046,4 +1046,5 @@
     <string name="str_notification_error_ssl_cert_invalid">將要前往不安全的網頁，是否繼續？</string>
     <string name="settting_notify_friends">有朋友最新動態</string>
     <string name="str_tag_tab_hot">推薦</string>
+    <string name="str_tag_description_more">more</string>
 </resources>
