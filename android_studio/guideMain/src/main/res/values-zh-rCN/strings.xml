@@ -404,7 +404,7 @@
     <string name="str_live_retry_live">正在恢复直播，请稍候...</string>
     <string name="str_live_create">正在创建直播，请稍候...</string>
     <string name="user_login_phone_hint">输入手机号码</string>
-    <string name="user_login_phone">手机快速注册</string>
+    <string name="user_login_phone">忘记密码?</string>
     <string name="login_in_facebook_btn">Facebook登录</string>
     <string name="user_insert_msg">还没有账号?</string>
     <string name="user_insert_btn_txt">注册</string>
