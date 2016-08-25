@@ -88,7 +88,7 @@ public class ExpandableTextView extends TextView {
         TypedArray attr = getTypedArray(context, attrs, R.styleable.ExpandableTextView);
         mCollapseText = attr.getString(R.styleable.ExpandableTextView_collapse_text);
         if (mCollapseText == null)
-            mCollapseText = context.getString(R.string.str_tag_description_more);
+            mCollapseText = context.getString(R.string.more_text);
 
         mExpandText = attr.getString(R.styleable.ExpandableTextView_fold_text);
         if (mExpandText == null)
