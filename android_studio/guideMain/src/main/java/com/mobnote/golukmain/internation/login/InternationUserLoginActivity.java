@@ -232,7 +232,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 			mSelectCountryText.setText(GolukUtils.getDefaultZone());
 		}
 		TextView text = (TextView) findViewById(R.id.user_login_phoneRegist);
-		text.setText(this.getString(R.string.user_login_phone)+"?");
+		text.setText(this.getString(R.string.user_login_phone));
 
 		// 登录按钮
 		mBtnLogin.setOnClickListener(this);
