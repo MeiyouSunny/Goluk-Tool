@@ -271,21 +271,22 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 			if (mCustomProgressDialog.isShowing()) {
 				mCustomProgressDialog.close();
 			}
-			if(upnameresult != null && upnameresult.data != null){
+			if(upnameresult ==null || !upnameresult.success){
+				GolukUtils.showToast(this, getString(R.string.user_personal_save_failed));
+				return;
+			}
+			if(upnameresult.data != null){
 				if (!GolukUtils.isTokenValid(upnameresult.data.result)){
 					startUserLogin();
 					return;
 				}
 			}
-			
 			if (upnameresult.success) {
 				mApplication.setMyinfo(mNameNewText, "", "",null);
 				Intent it = new Intent(UserPersonalNameActivity.this, UserPersonalInfoActivity.class);
 				it.putExtra("itName", mNameNewText);
 				this.setResult(RESULT_OK, it);
 				this.finish();
-			} else {
-				GolukUtils.showToast(this, getString(R.string.user_personal_save_failed));
 			}
 		}
 	}
