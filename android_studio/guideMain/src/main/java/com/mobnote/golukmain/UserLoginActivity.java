@@ -617,7 +617,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		// android.app.ActivityManager.getRunningTasks(int maxNum)
 		// 即最多取得的运行中的任务信息(RunningTaskInfo)数量
 		List<RunningTaskInfo> runningTaskInfos = activityManager.getRunningTasks(1);
-		if (runningTaskInfos != null) {
+		if (runningTaskInfos != null && runningTaskInfos.size() > 0) {
 			ComponentName f = runningTaskInfos.get(0).topActivity;
 			topActivityClassName = f.getClassName();
 
