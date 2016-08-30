@@ -12,6 +12,7 @@
 	<string name="smssdk_error_desc_406">AppKey is incorrect</string>
 	<string name="smssdk_error_desc_407">Argument missing</string>
 	<string name="smssdk_error_desc_408">Invalid parameter</string>
+	<string name="smssdk_error_desc_411">Unknown error</string>
 	<string name="smssdk_error_desc_418">Internal interface failure</string>
 	<string name="smssdk_error_desc_419">DUID not match</string>
 	

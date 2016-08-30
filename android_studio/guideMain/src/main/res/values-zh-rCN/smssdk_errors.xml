@@ -12,6 +12,7 @@
 	<string name="smssdk_error_desc_406">AppKey错误</string>
 	<string name="smssdk_error_desc_407">缺少数据</string>
 	<string name="smssdk_error_desc_408">无效参数</string>
+	<string name="smssdk_error_desc_411">未知错误</string>
 	<string name="smssdk_error_desc_418">内部接口调用失败</string>
 	<string name="smssdk_error_desc_419">duid对应的token不存在</string>
 	
