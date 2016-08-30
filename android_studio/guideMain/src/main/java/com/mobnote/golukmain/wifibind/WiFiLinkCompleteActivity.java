@@ -82,7 +82,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
      * 返回按钮
      */
     private ImageButton mBackBtn = null;
-    private WifiConnectManager mWac = null;
+    private WifiConnectManager mWac= null;
     private boolean isExit = false;
     private boolean mReturnToMainAlbum;
     /**
@@ -271,6 +271,10 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                 .e("", "创建手机热点---startWifiAp---1---" + wifiName + "---" + pwd + "---" + ipcssid + "---" + ipcmac);
 
         collectLog("createPhoneHot", wifiName + "---" + pwd + "---" + ipcssid + "---" + ipcmac);
+        if (mWac == null) {
+            connFailed();
+            return;
+        }
         mWac.createWifiAP(wifiName, pwd, ipcssid, ipcmac);
     }
 
@@ -473,7 +477,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
             if (null != mWac) {
                 mWac.unbind();
             }
-            mWac = null;
+//            mWac = null;
             // GolukApplication.getInstance().stopDownloadList();// 停止视频同步
 
             if (mReturnToMainAlbum) {
