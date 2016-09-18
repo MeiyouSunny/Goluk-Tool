@@ -384,6 +384,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         isNewVersion();
                         break;
                     case UPDATE_UPGRADE_FAIL:
+                        mIsUpgrading = false;
                         mApp.mIpcUpdateManage.stopIpcUpgrade();
                         timerCancel();
                         UserUtils.dismissUpdateDialog(mPrepareDialog);
@@ -407,6 +408,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         mNoBreakText.setVisibility(View.GONE);
                         break;
                     case UPDATE_UPGRADE_CHECK:
+                        mIsUpgrading = false;
                         if (mIsExit) {
                             return;
                         }
@@ -416,6 +418,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         mNoBreakText.setVisibility(View.GONE);
                         break;
                     case UPDATE_IPC_DISCONNECT:
+                        mIsUpgrading = false;
                         timerCancel();
                         UserUtils.dismissUpdateDialog(mPrepareDialog);
                         UserUtils.dismissUpdateDialog(mSendDialog);
@@ -431,6 +434,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         mNoBreakText.setVisibility(View.GONE);
                         break;
                     case UPDATE_IPC_FIRST_DISCONNECT:
+                        mIsUpgrading = false;
                         timerCancel();
                         UserUtils.dismissUpdateDialog(mPrepareDialog);
                         UserUtils.dismissUpdateDialog(mSendDialog);
@@ -451,6 +455,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         }
                         break;
                     case UPDATE_IPC_SECOND_DISCONNECT:
+                        mIsUpgrading = false;
                         timerCancel();
                         UserUtils.dismissUpdateDialog(mUpdateDialog);
                         mUpdateDialog = null;
