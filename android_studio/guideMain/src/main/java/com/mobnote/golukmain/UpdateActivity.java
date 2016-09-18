@@ -221,6 +221,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
      * T1升级检测存储卡
      **/
     private AlertDialog mCheckSDCard = null;
+    private boolean mIsUpgrading;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -233,6 +234,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         initView();
         mIsExit = false;
 
+        mIsUpgrading = false;
         Intent it = getIntent();
         boolean downloadOnCreate = it.getBooleanExtra(DOWNLOAD_ON_CREATE, false);
         mSign = it.getIntExtra(UPDATE_SIGN, 0);
@@ -363,9 +365,11 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         }
                         break;
                     case UPDATE_UPGRADE_OK:
+                        mIsUpgrading = false;
                         mApp.mIpcUpdateManage.stopIpcUpgrade();
                         UserUtils.dismissUpdateDialog(mUpdateDialog);
                         mUpdateDialog = null;
+                        SharedPrefUtil.saveIPCDownVersion("");
                         SharedPrefUtil.saveNewFirmware(mIpcVersion, false);
                         if (mIsExit) {
                             return;
@@ -381,6 +385,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         isNewVersion();
                         break;
                     case UPDATE_UPGRADE_FAIL:
+                        mIsUpgrading = false;
                         mApp.mIpcUpdateManage.stopIpcUpgrade();
                         timerCancel();
                         UserUtils.dismissUpdateDialog(mPrepareDialog);
@@ -404,6 +409,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         mNoBreakText.setVisibility(View.GONE);
                         break;
                     case UPDATE_UPGRADE_CHECK:
+                        mIsUpgrading = false;
                         if (mIsExit) {
                             return;
                         }
@@ -413,6 +419,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         mNoBreakText.setVisibility(View.GONE);
                         break;
                     case UPDATE_IPC_DISCONNECT:
+                        mIsUpgrading = false;
                         timerCancel();
                         UserUtils.dismissUpdateDialog(mPrepareDialog);
                         UserUtils.dismissUpdateDialog(mSendDialog);
@@ -428,6 +435,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         mNoBreakText.setVisibility(View.GONE);
                         break;
                     case UPDATE_IPC_FIRST_DISCONNECT:
+                        mIsUpgrading = false;
                         timerCancel();
                         UserUtils.dismissUpdateDialog(mPrepareDialog);
                         UserUtils.dismissUpdateDialog(mSendDialog);
@@ -448,6 +456,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         }
                         break;
                     case UPDATE_IPC_SECOND_DISCONNECT:
+                        mIsUpgrading = false;
                         timerCancel();
                         UserUtils.dismissUpdateDialog(mUpdateDialog);
                         mUpdateDialog = null;
@@ -992,6 +1001,10 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
     }
 
     public void exit() {
+        if (mIsUpgrading) {
+            return;
+        }
+
         mIsExit = true;
         mIsSendFileOk = false;
         mIsDisConnect = false;
@@ -1038,4 +1051,13 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         }
 
     }
+
+    @Override
+    public void onBackPressed() {
+        if (mIsUpgrading) {
+            return;
+        }
+        super.onBackPressed();
+    }
+
 }

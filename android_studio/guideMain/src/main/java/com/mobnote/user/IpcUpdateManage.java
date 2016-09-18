@@ -747,8 +747,8 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
         }
         for (String temp : cache) {
             if (vIPC.equals(temp)) {
-                if (!TextUtils.isEmpty(isHasIPCFile(vIPC))) {
-                    SharedPrefUtil.saveNewFirmware(vIPC, false);
+                if (!TextUtils.isEmpty(isHasIPCFile(SharedPrefUtil.getIPCDownVersion()))) {
+//                    SharedPrefUtil.saveNewFirmware(vIPC, false);
                     return true;
                 }
                 break;
