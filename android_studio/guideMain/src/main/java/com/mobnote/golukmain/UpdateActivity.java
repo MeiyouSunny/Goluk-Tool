@@ -221,6 +221,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
      * T1升级检测存储卡
      **/
     private AlertDialog mCheckSDCard = null;
+    private boolean mIsUpgrading;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -232,7 +233,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         mApp = (GolukApplication) getApplication();
         initView();
         mIsExit = false;
-
+        mIsUpgrading = false;
         Intent it = getIntent();
         boolean downloadOnCreate = it.getBooleanExtra(DOWNLOAD_ON_CREATE, false);
         mSign = it.getIntExtra(UPDATE_SIGN, 0);
@@ -363,9 +364,11 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         }
                         break;
                     case UPDATE_UPGRADE_OK:
+                        mIsUpgrading = false;
                         mApp.mIpcUpdateManage.stopIpcUpgrade();
                         UserUtils.dismissUpdateDialog(mUpdateDialog);
                         mUpdateDialog = null;
+                        SharedPrefUtil.saveIPCDownVersion("");
                         SharedPrefUtil.saveNewFirmware(mIpcVersion, false);
                         if (mIsExit) {
                             return;
@@ -635,6 +638,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         String file = mApp.mIpcUpdateManage.isHasIPCFile(mIpcVersion);
                         boolean b = mApp.mIpcUpdateManage.ipcInstall(file);
                         if (b) {
+                            mIsUpgrading = true;
                             mtfCardImage.setVisibility(View.GONE);
                             mtfCardText.setVisibility(View.GONE);
                             mNoBreakImage.setVisibility(View.VISIBLE);
@@ -992,6 +996,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
     }
 
     public void exit() {
+        if (mIsUpgrading) {
+            return;
+        }
         mIsExit = true;
         mIsSendFileOk = false;
         mIsDisConnect = false;
@@ -1037,5 +1044,13 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
             mCheckSDCard = null;
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mIsUpgrading) {
+            return;
+        }
+        super.onBackPressed();
     }
 }
