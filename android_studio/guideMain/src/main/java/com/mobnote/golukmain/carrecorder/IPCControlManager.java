@@ -38,6 +38,7 @@ public class IPCControlManager implements IPCManagerFn {
     public static final String T1_SIGN = "T1";
     public static final String T1s_SIGN = "T1S";
     public static final String T2_SIGN = "T2";
+    public static final String T3_SIGN = "T3";
 
     public static final String MODEL_T = "T";
     public static final String MODEL_G = "G";
@@ -83,7 +84,7 @@ public class IPCControlManager implements IPCManagerFn {
     }
 
     public void setIpcMode() {
-        if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName) || T1s_SIGN.equals(mProduceName)) {
+        if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName) || T1s_SIGN.equals(mProduceName) || T3_SIGN.equals(mProduceName)) {
             setIpcMode(IPCMgrMode_IPCDirect);
         } else if (T1_SIGN.equals(mProduceName) || T2_SIGN.equals(mProduceName)) {
             setIpcMode(IPCMgrMode_T1);
@@ -106,8 +107,9 @@ public class IPCControlManager implements IPCManagerFn {
     public boolean isG1Relative() {
         boolean isG1 = IPCControlManager.G1_SIGN.equals(mProduceName);
         boolean isT1S = IPCControlManager.T1s_SIGN.equals(mProduceName);
+        boolean isT3 = IPCControlManager.T3_SIGN.equals(mProduceName);
 
-        return isG1 || isT1S;
+        return isG1 || isT1S || isT3;
     }
 
     /**

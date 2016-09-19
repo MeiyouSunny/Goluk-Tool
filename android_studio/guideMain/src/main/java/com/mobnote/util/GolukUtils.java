@@ -106,10 +106,12 @@ public class GolukUtils {
 
     public static final String T2_WIFINAME_SIGN = "Goluk_T2";
     public static final String T1S_WIFINAME_SIGN = "Goluk_T1S";
+    public static final String T3_WIFINAME_SIGN = "Goluk_T3";
     public static final String T1_WIFINAME_SIGN = "Goluk_T1";
     public static final String G1G2_WIFINAME_SIGN = "Goluk";
     public static final String IPC_MODEL_T1 = "t1";
     public static final String IPC_MODEL_T1S = "t1s";
+    public static final String IPC_MODEL_T3 = "t3";
 
     // 键盘的高度
     private static int keyBoardHeight = 250;
@@ -955,6 +957,8 @@ public class GolukUtils {
             ipcType = IPCControlManager.MODEL_T;
         } else if (mWillConnName.startsWith(G1G2_WIFINAME_SIGN)) {
             ipcType = IPCControlManager.MODEL_G;
+        } else if (mWillConnName.startsWith(T3_WIFINAME_SIGN)) {
+            ipcType = IPCControlManager.MODEL_G;
         } else {
 
         }
@@ -1394,7 +1398,7 @@ public class GolukUtils {
         }
 
         model = model.toLowerCase();
-        if (model.startsWith("g") || model.equals("t1s")) {
+        if (model.startsWith("g") || model.equals("t1s") || model.equals("t3")) {
             return 1;
         }
 
@@ -1422,6 +1426,16 @@ public class GolukUtils {
             return false;
         }
         if (model.equalsIgnoreCase(IPC_MODEL_T1S)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isIPCTypeT3(final String model) {
+        if (TextUtils.isEmpty(model)) {
+            return false;
+        }
+        if (model.equalsIgnoreCase(IPC_MODEL_T3)) {
             return true;
         }
         return false;

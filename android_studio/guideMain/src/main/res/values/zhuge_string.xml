@@ -203,6 +203,7 @@
     <string name="str_zhuge_user_type_t1">T1</string>
     <string name="str_zhuge_user_type_t1s">T1s</string>
     <string name="str_zhuge_user_type_t2">T2</string>
+    <string name="str_zhuge_user_type_t3">T3</string>
     <string name="str_zhuge_user_type_no_ipc">无设备</string>
 
     <!-- ################### 视频后处理,添加,删除 ###################### -->

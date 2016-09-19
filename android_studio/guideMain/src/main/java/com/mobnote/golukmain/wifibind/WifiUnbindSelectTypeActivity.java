@@ -28,6 +28,7 @@ public class WifiUnbindSelectTypeActivity extends BaseActivity implements OnClic
 	private RelativeLayout mG1Layout;
 	private RelativeLayout mT1sLayout;
 	private RelativeLayout mT2Layout;
+	private RelativeLayout mT3Layout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class WifiUnbindSelectTypeActivity extends BaseActivity implements OnClic
 		mG1Layout = (RelativeLayout) findViewById(R.id.goluk_g1_layout);
 		mT1sLayout = (RelativeLayout) findViewById(R.id.goluk_t1s_layout);
 		mT2Layout = (RelativeLayout) findViewById(R.id.goluk_t2_layout);
+		mT3Layout = (RelativeLayout) findViewById(R.id.goluk_t3_layout);
 	}
 
 	/**
@@ -60,6 +62,7 @@ public class WifiUnbindSelectTypeActivity extends BaseActivity implements OnClic
 		mG1Layout.setOnClickListener(this);
 		mT1sLayout.setOnClickListener(this);
 		mT2Layout.setOnClickListener(this);
+		mT3Layout.setOnClickListener(this);
 	}
 
 	@Override
@@ -77,6 +80,8 @@ public class WifiUnbindSelectTypeActivity extends BaseActivity implements OnClic
 			click_BindIpc(IPCControlManager.MODEL_G, IPCControlManager.G1_SIGN);
 		} else if (id == R.id.goluk_t2_layout) {
 			click_BindIpc(IPCControlManager.MODEL_T, IPCControlManager.T2_SIGN);
+		} else if (id == R.id.goluk_t3_layout) {
+			click_BindIpc(IPCControlManager.MODEL_T, IPCControlManager.T3_SIGN);
 		} else {
 		}
 	}

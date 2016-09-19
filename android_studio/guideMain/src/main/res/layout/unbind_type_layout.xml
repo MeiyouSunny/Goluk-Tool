@@ -92,7 +92,7 @@
             android:src="@drawable/connect_arrow_icon"
             android:contentDescription="@string/def"/>
     </RelativeLayout>
-    
+
     <RelativeLayout 
          android:id="@+id/goluk_t1s_layout"
         android:layout_width="match_parent"
@@ -130,13 +130,49 @@
     </RelativeLayout>
 
     <RelativeLayout
+         android:id="@+id/goluk_t3_layout"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="#ffffff"
+        android:layout_marginTop="1dp"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/goluk_t3_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/connect_t3_img"
+            android:contentDescription="@string/def"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#565656"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/goluk_t3_icon"
+            android:textSize="14sp"
+            android:layout_centerVertical="true"
+            android:text="@string/unbind_select_type_t3"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/connect_arrow_icon"
+            android:contentDescription="@string/def"/>
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/goluk_g2_layout"
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:background="#ffffff"
         android:layout_marginTop="1dp">
-        
-        <ImageView 
+
+        <ImageView
             android:id="@+id/goluk_g2_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

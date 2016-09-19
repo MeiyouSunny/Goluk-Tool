@@ -660,6 +660,7 @@
     <string name="unbind_select_type_g2">Goluk G2</string>
     <string name="unbind_select_type_g1">Goluk G1</string>
     <string name="unbind_select_type_g1s">Goluk T1S</string>
+    <string name="unbind_select_type_t3">Goluk T3</string>
     <string name="str_tencent_weibo">Tencent Weibo</string>
     <string name="str_renren">RenRen</string>
     <string name="str_watercress">Douban</string>

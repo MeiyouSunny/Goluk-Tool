@@ -317,7 +317,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         }
         //G系列和T1s关闭时不需要发送notification
         if(GolukUtils.isIPCTypeG(mBaseApp.mIPCControlManager.mProduceName)
-                || GolukUtils.isIPCTypeT1S(mBaseApp.mIPCControlManager.mProduceName)) {
+                || GolukUtils.isIPCTypeT1S(mBaseApp.mIPCControlManager.mProduceName)
+                || GolukUtils.isIPCTypeT3(mBaseApp.mIPCControlManager.mProduceName)) {
             return;
         }
         //如果是T系列，则发送notification提示

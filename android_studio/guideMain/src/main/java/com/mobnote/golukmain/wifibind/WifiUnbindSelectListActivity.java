@@ -186,6 +186,8 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
             mHeadData.golukIcon.setImageResource(R.drawable.connect_t1_img);
         } else if (IPCControlManager.T2_SIGN.equals(mWifiBindConnectData.ipcSign)) {
             mHeadData.golukIcon.setImageResource(R.drawable.connect_t2_img);
+        } else if (IPCControlManager.T3_SIGN.equals(mWifiBindConnectData.ipcSign)) {
+            mHeadData.golukIcon.setImageResource(R.drawable.connect_t3_img);
         }
         // 设备连接成功
         if (mApp.isIpcLoginSuccess) {

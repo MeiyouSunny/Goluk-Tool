@@ -115,6 +115,11 @@ public class ZhugeUtils {
         if (context.getString(R.string.str_zhuge_user_type_t2).equals(ipcModle)) {
             return ipcModle;
         }
+
+        if (context.getString(R.string.str_zhuge_user_type_t3).equals(ipcModle) || "T3".equals(ipcModle)) {
+            return ipcModle;
+        }
+
         return context.getString(R.string.str_zhuge_share_video_network_other);
     }
 

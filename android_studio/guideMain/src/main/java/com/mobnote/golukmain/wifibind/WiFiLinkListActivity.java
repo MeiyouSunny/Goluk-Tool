@@ -63,6 +63,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     private final String G1G2_ShowName = " Goluk xxxxxx ";
     private final String T1_ShowName = " Goluk_T1_xxxxxx ";
     private final String T1S_ShowName = " Goluk_T1S_xxxxxx ";
+    private final String T3_ShowName = " Goluk_T3_xxxxxx ";
     private final String T2_ShowName = " Goluk_T2_xxxxxx ";
     private final String GOLUK_COMMON_SHOW_NAME = " Goluk_xx_xxxxxx ";
     /**

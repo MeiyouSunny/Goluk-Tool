@@ -34,7 +34,8 @@ public class PlayUrlManager {
 		String currentProduceName = GolukApplication.getInstance().mIPCControlManager.mProduceName;
 		if (IPCControlManager.G1_SIGN.equals(currentProduceName)
 				|| IPCControlManager.G2_SIGN.equals(currentProduceName)
-				|| IPCControlManager.T1s_SIGN.equals(currentProduceName)) {
+				|| IPCControlManager.T1s_SIGN.equals(currentProduceName)
+				|| IPCControlManager.T3_SIGN.equals(currentProduceName)) {
 			return getRtspUrl_G1G2();
 		} else if (IPCControlManager.T1_SIGN.equals(currentProduceName)
 				|| IPCControlManager.T2_SIGN.equals(currentProduceName)) {
