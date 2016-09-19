@@ -644,6 +644,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         String file = mApp.mIpcUpdateManage.isHasIPCFile(mIpcVersion);
                         boolean b = mApp.mIpcUpdateManage.ipcInstall(file);
                         if (b) {
+                            mIsUpgrading = true;
                             mtfCardImage.setVisibility(View.GONE);
                             mtfCardText.setVisibility(View.GONE);
                             mNoBreakImage.setVisibility(View.VISIBLE);
@@ -1059,5 +1060,4 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         }
         super.onBackPressed();
     }
-
 }
