@@ -1620,8 +1620,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         /** 初始没有设置同步数量，根据连接设备类型G1，T1S设置自动同步5条，其他设备自动同步20条 **/
         if (syncFlag == -1) {
             if (IPCControlManager.G1_SIGN.equals(mIPCControlManager.mProduceName)
-                    || IPCControlManager.T1s_SIGN.equalsIgnoreCase(mIPCControlManager.mProduceName)
-                    || IPCControlManager.T3_SIGN.equalsIgnoreCase(mIPCControlManager.mProduceName)) {
+                    || IPCControlManager.T1s_SIGN.equalsIgnoreCase(mIPCControlManager.mProduceName)) {
                 SettingUtils.getInstance().putInt(UserSetupActivity.MANUAL_SWITCH, 5);
             } else {
                 SettingUtils.getInstance().putInt(UserSetupActivity.MANUAL_SWITCH, 20);

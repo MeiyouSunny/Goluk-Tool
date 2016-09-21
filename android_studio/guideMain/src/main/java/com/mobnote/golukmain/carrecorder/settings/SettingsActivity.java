@@ -628,8 +628,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mVolumeLayout.setVisibility(View.GONE);
 			mPowerTimeLayout.setVisibility(View.GONE);
 			mVoiceTypeLayout.setVisibility(View.GONE);
-		} else if (mIPCName.equals(IPCControlManager.G2_SIGN)) {
-			mISPLayout.setVisibility(View.VISIBLE);
+		} else if (mIPCName.equals(IPCControlManager.G2_SIGN) || mIPCName.equals(IPCControlManager.T3_SIGN)) {
+			if(mIPCName.equals(IPCControlManager.T3_SIGN)) {
+				mISPLayout.setVisibility(View.GONE);
+			} else {
+				mISPLayout.setVisibility(View.VISIBLE);
+			}
 			mPhotoQualityLayout.setVisibility(View.GONE);
 			mAutoPhotoItem.setVisibility(View.GONE);
 			mHandsetLayout.setVisibility(View.GONE);

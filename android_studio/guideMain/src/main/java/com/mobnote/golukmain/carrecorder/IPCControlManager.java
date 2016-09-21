@@ -107,9 +107,8 @@ public class IPCControlManager implements IPCManagerFn {
     public boolean isG1Relative() {
         boolean isG1 = IPCControlManager.G1_SIGN.equals(mProduceName);
         boolean isT1S = IPCControlManager.T1s_SIGN.equals(mProduceName);
-        boolean isT3 = IPCControlManager.T3_SIGN.equals(mProduceName);
 
-        return isG1 || isT1S || isT3;
+        return isG1 || isT1S;
     }
 
     /**
