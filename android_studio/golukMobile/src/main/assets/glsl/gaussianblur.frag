@@ -1,5 +1,5 @@
 #extension GL_OES_EGL_image_external : require
-precision highp float;
+precision mediump float;
 precision mediump int;
 varying highp   vec2 offset[9];
 uniform samplerExternalOES sampler;
