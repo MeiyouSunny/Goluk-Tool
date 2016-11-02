@@ -1089,6 +1089,17 @@ public class IPCControlManager implements IPCManagerFn {
     }
 
     /**
+     * 因为特殊的原因 G1S 被放出来了， 所以需要屏蔽
+     * @return
+     */
+    public String getDisplayProductName(){
+        if (IPCControlManager.G1S_SIGN.equals(mProduceName)) {
+            return IPCControlManager.G2_SIGN;
+        }
+        return mProduceName;
+    }
+
+    /**
      * 重启IPC
      *
      * @return

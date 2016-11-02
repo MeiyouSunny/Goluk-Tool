@@ -108,7 +108,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
     private void initViewData() {
         // 固件版本号
         vIpc = SharedPrefUtil.getIPCVersion();
-        String ipcModel = GolukApplication.getInstance().mIPCControlManager.mProduceName;
+        String ipcModel = GolukApplication.getInstance().mIPCControlManager.getDisplayProductName();
         String ipcNumber = SharedPrefUtil.getIPCNumber();
         mUnbindBtn.setText(this.getResources().getString(R.string.str_ipc_change_others));
         // 获取当前使用的信息

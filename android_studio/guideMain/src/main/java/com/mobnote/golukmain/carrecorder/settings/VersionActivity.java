@@ -52,7 +52,7 @@ public class VersionActivity extends CarRecordBaseActivity implements IPCManager
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("carversion", this);
 		}
-		mIpcModelName = GolukApplication.getInstance().mIPCControlManager.mProduceName;
+		mIpcModelName = GolukApplication.getInstance().mIPCControlManager.getDisplayProductName();
 		mDeviceId = (TextView) findViewById(R.id.mDeviceId);
 		mVersion = (TextView) findViewById(R.id.mVersion);
 		mTextIpcModel = (TextView) findViewById(R.id.text_model);
