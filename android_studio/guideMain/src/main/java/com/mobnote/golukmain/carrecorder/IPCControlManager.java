@@ -1,5 +1,7 @@
 package com.mobnote.golukmain.carrecorder;
 
+import android.text.TextUtils;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TimeZone;
@@ -82,6 +84,10 @@ public class IPCControlManager implements IPCManagerFn {
     }
 
     public void setProduceName(String name) {
+        if(G1S_SIGN.equals(name)) {
+            mProduceName = G2_SIGN;
+            return;
+        }
         mProduceName = name;
     }
 
@@ -1086,17 +1092,6 @@ public class IPCControlManager implements IPCManagerFn {
         GolukDebugUtils.e("", "----------------------setVideoLogo-------str:" + str);
         return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
                 IPCManagerFn.IPC_VDCPCmd_SetOSDConf, str);
-    }
-
-    /**
-     * 因为特殊的原因 G1S 被放出来了， 所以需要屏蔽
-     * @return
-     */
-    public String getDisplayProductName(){
-        if (IPCControlManager.G1S_SIGN.equals(mProduceName)) {
-            return IPCControlManager.G2_SIGN;
-        }
-        return mProduceName;
     }
 
     /**
