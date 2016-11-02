@@ -6,14 +6,19 @@
     android:paddingTop="42dp">
 
     <RelativeLayout
-        android:id="@+id/close"
+        android:id="@+id/rl_1080p_high"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:layout_marginTop="15dp"
         android:background="@color/setting_white_color">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/setting_line_color" />
+
         <TextView
-            android:id="@+id/closeText"
+            android:id="@+id/tv_1080p_high"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
@@ -33,12 +38,7 @@
             android:contentDescription="@string/def"
             android:visibility="gone" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/setting_line_color" />
-
-        <TextView
+        <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_alignParentBottom="true"
@@ -48,13 +48,13 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/low"
+        android:id="@+id/rl_1080p_middle"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:background="@color/setting_white_color">
 
         <TextView
-            android:id="@+id/lowText"
+            android:id="@+id/tv_1080p_middle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
@@ -74,7 +74,7 @@
             android:contentDescription="@string/def"
             android:visibility="gone" />
 
-        <TextView
+        <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_alignParentBottom="true"
@@ -110,7 +110,7 @@
             android:contentDescription="@string/def"
             android:visibility="gone" />
 
-        <TextView
+        <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_alignParentBottom="true"
@@ -146,12 +146,11 @@
             android:contentDescription="@string/def"
             android:visibility="gone" />
 
-        <TextView
+        <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_alignParentBottom="true"
             android:background="@color/setting_line_color" />
-
     </RelativeLayout>
 
 </LinearLayout>

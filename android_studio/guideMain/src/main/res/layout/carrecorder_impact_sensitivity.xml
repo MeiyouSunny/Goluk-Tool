@@ -6,7 +6,7 @@
     android:paddingTop="42dp"  >
     
     <RelativeLayout
-        android:id="@+id/close"
+        android:id="@+id/rl_1080p_high"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:layout_marginTop="15dp"
@@ -14,7 +14,7 @@
         >
 
         <TextView
-            android:id="@+id/closeText"
+            android:id="@+id/tv_1080p_high"
             android:paddingLeft="15dp"
         	android:paddingRight="15dp" 
             android:layout_width="match_parent"
@@ -49,14 +49,14 @@
         
     </RelativeLayout>
     <RelativeLayout
-        android:id="@+id/low"
+        android:id="@+id/rl_1080p_middle"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:background="@color/setting_white_color"
         >
 
         <TextView
-            android:id="@+id/lowText"
+            android:id="@+id/tv_1080p_middle"
             android:paddingLeft="15dp"
         	android:paddingRight="15dp" 
             android:layout_width="match_parent"

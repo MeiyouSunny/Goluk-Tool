@@ -35,6 +35,8 @@ public class IPCControlManager implements IPCManagerFn {
 
     public static final String G1_SIGN = "G1";
     public static final String G2_SIGN = "G2";
+    //开发的适合叫G1S ，实际就是G2，解决BUG https://bugly.qq.com/v2/crash/apps/900012751/issues/3675?pid=1
+    public static final String G1S_SIGN = "G1S";
     public static final String T1_SIGN = "T1";
     public static final String T1s_SIGN = "T1S";
     public static final String T2_SIGN = "T2";
@@ -107,7 +109,6 @@ public class IPCControlManager implements IPCManagerFn {
     public boolean isG1Relative() {
         boolean isG1 = IPCControlManager.G1_SIGN.equals(mProduceName);
         boolean isT1S = IPCControlManager.T1s_SIGN.equals(mProduceName);
-
         return isG1 || isT1S;
     }
 

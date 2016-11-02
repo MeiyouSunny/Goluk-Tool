@@ -174,22 +174,22 @@
         <item>720P</item>
         <item>720P</item>
     </string-array>
-    <!-- G1码率 -->
-    <string-array name="list_quality_bitrate1">
+    <!-- G1,T1S码率 -->
+    <string-array name="list_quality_bitrate_g1_t1s">
         <item>8192</item>
         <item>6144</item>
         <item>4096</item>
         <item>3072</item>
     </string-array>
-    <!-- G2码率 -->
-    <string-array name="list_quality_bitrate2">
+    <!-- G2,T3码率 -->
+    <string-array name="list_quality_bitrate_g2_t3">
         <item>10240</item>
         <item>8192</item>
         <item>5120</item>
         <item>4096</item>
     </string-array>
-    <!-- T1码率 -->
-    <string-array name="list_quality_bitrate_t1">
+    <!-- T1,T2码率 -->
+    <string-array name="list_quality_bitrate_t1_t2">
         <item>12288</item>
         <item>10240</item>
         <item>6144</item>

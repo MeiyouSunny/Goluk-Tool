@@ -27,20 +27,6 @@ import cn.com.tiros.debug.GolukDebugUtils;
  */
 @SuppressLint("InflateParams")
 public class VideoQualityActivity extends CarRecordBaseActivity implements OnClickListener {
-    /**
-     * 视频类型文字显示
-     */
-    private TextView mCloseText = null;
-    private TextView mLowText = null;
-    private TextView mMiddleText = null;
-    private TextView mHighText = null;
-    /**
-     * 视频类型选中高亮
-     */
-    private ImageButton mCloseIcon = null;
-    private ImageButton mLowIcon = null;
-    private ImageButton mMiddleIcon = null;
-    private ImageButton mHighIcon = null;
 
     /**
      * 视频质量类型　1080高 1080低 720高 720低
@@ -99,14 +85,16 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
      * @date 2015年4月6日
      */
     private void initView() {
-        mCloseText = (TextView) findViewById(R.id.closeText);
-        mLowText = (TextView) findViewById(R.id.lowText);
-        mMiddleText = (TextView) findViewById(R.id.middleText);
-        mHighText = (TextView) findViewById(R.id.highText);
-        mCloseIcon = (ImageButton) findViewById(R.id.cRight);
-        mLowIcon = (ImageButton) findViewById(R.id.dRight);
-        mMiddleIcon = (ImageButton) findViewById(R.id.zRight);
-        mHighIcon = (ImageButton) findViewById(R.id.gRight);
+        //视频类型文字显示
+        TextView mCloseText = (TextView) findViewById(R.id.tv_1080p_high);
+        TextView mLowText = (TextView) findViewById(R.id.tv_1080p_middle);
+        TextView mMiddleText = (TextView) findViewById(R.id.middleText);
+        TextView mHighText = (TextView) findViewById(R.id.highText);
+        //视频类型选中高亮
+        ImageButton mCloseIcon = (ImageButton) findViewById(R.id.cRight);
+        ImageButton mLowIcon = (ImageButton) findViewById(R.id.dRight);
+        ImageButton mMiddleIcon = (ImageButton) findViewById(R.id.zRight);
+        ImageButton mHighIcon = (ImageButton) findViewById(R.id.gRight);
         mLayoutHigh720 = (RelativeLayout) findViewById(R.id.rl_video_quality_high720);
         mLayoutMiddle720 = (RelativeLayout) findViewById(R.id.rl_video_quality_middle720);
 
@@ -135,8 +123,8 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
      * @date 2015年4月7日
      */
     private void setListener() {
-        findViewById(R.id.close).setOnClickListener(this);
-        findViewById(R.id.low).setOnClickListener(this);
+        findViewById(R.id.rl_1080p_high).setOnClickListener(this);
+        findViewById(R.id.rl_1080p_middle).setOnClickListener(this);
         findViewById(R.id.rl_video_quality_high720).setOnClickListener(this);
         findViewById(R.id.rl_video_quality_middle720).setOnClickListener(this);
     }
@@ -147,9 +135,9 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
         int id = v.getId();
         if (id == R.id.back_btn) {
             exit();
-        } else if (id == R.id.close) {
+        } else if (id == R.id.rl_1080p_high) {
             setArrayUI(mArrayText[0]);
-        } else if (id == R.id.low) {
+        } else if (id == R.id.rl_1080p_middle) {
             setArrayUI(mArrayText[1]);
         } else if (id == R.id.rl_video_quality_high720) {
             setArrayUI(mArrayText[2]);
@@ -196,9 +184,7 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
         if (null != mArrayText) {
             int length = mArrayText.length;
             for (int i = 0; i < length; i++) {
-                for (int j = i; j < mText.length; j++) {
-                    mText[j].setText(mArrayText[i]);
-                }
+                mText[i].setText(mArrayText[i]);
             }
         }
     }
@@ -244,6 +230,7 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
                             mText[i].setTextColor(getResources().getColor(R.color.setting_text_color_sel));
                             selectType = mArrayText[i];
                             mSelect = i;
+                            return;
                         }
                     }
                 }

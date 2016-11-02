@@ -58,13 +58,13 @@ public class ImpactSensitivityActivity extends CarRecordBaseActivity implements 
 	 * @date 2015年4月6日
 	 */
 	private void initView() {
-		findViewById(R.id.close).setOnClickListener(this);
-		findViewById(R.id.low).setOnClickListener(this);
+		findViewById(R.id.rl_1080p_high).setOnClickListener(this);
+		findViewById(R.id.rl_1080p_middle).setOnClickListener(this);
 		findViewById(R.id.middle).setOnClickListener(this);
 		findViewById(R.id.high).setOnClickListener(this);
 
-		mCloseText = (TextView) findViewById(R.id.closeText);
-		mLowText = (TextView) findViewById(R.id.lowText);
+		mCloseText = (TextView) findViewById(R.id.tv_1080p_high);
+		mLowText = (TextView) findViewById(R.id.tv_1080p_middle);
 		mMiddleText = (TextView) findViewById(R.id.middleText);
 		mHighText = (TextView) findViewById(R.id.highText);
 		mCloseIcon = (ImageButton) findViewById(R.id.cRight);
@@ -114,9 +114,9 @@ public class ImpactSensitivityActivity extends CarRecordBaseActivity implements 
 		int id = v.getId();
 		if (id == R.id.back_btn) {
 			exit();
-		} else if (id == R.id.close) {
+		} else if (id == R.id.rl_1080p_high) {
 			updateSensitivity(0);
-		} else if (id == R.id.low) {
+		} else if (id == R.id.rl_1080p_middle) {
 			updateSensitivity(1);
 		} else if (id == R.id.middle) {
 			updateSensitivity(2);
