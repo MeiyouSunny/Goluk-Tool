@@ -62,7 +62,7 @@ public class VersionActivity extends CarRecordBaseActivity implements IPCManager
 		mVersion.setText("");
 		mTextIpcModel.setText(this.getResources().getString(R.string.str_goluk) + mIpcModelName);
 		if (IPCControlManager.T1_SIGN.equals(mIpcModelName) || IPCControlManager.T1s_SIGN.equals(mIpcModelName)
-				|| IPCControlManager.T2_SIGN.equals(mIpcModelName) || IPCControlManager.T3_SIGN.equals(mIpcModelName)) {
+				|| IPCControlManager.T2_SIGN.equals(mIpcModelName) || IPCControlManager.T3_SIGN.equals(mIpcModelName) || IPCControlManager.T3U_SIGN.equals(mIpcModelName)) {
 			mIPCImage.setImageResource(R.drawable.connect_t1_icon_1);
 		} else {
 			mIPCImage.setImageResource(R.drawable.ipc);

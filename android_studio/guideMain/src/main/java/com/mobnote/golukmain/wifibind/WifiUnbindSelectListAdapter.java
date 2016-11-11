@@ -91,7 +91,7 @@ public class WifiUnbindSelectListAdapter extends BaseAdapter {
                     connectViewHodler.golukIcon.setImageResource(R.drawable.connect_t1_img);
                 } else if (bindHistoryBean.ipcSign.equals(IPCControlManager.T2_SIGN)) {
                     connectViewHodler.golukIcon.setImageResource(R.drawable.connect_t2_img);
-                } else if (bindHistoryBean.ipcSign.equals(IPCControlManager.T3_SIGN)) {
+                } else if (bindHistoryBean.ipcSign.equals(IPCControlManager.T3_SIGN) ||bindHistoryBean.ipcSign.equals(IPCControlManager.T3U_SIGN)) {
                     connectViewHodler.golukIcon.setImageResource(R.drawable.connect_t3_img);
                 }
             } else {

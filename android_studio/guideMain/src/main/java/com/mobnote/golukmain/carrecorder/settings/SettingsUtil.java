@@ -39,7 +39,9 @@ public class SettingsUtil {
 		String[] bitrate = null;
 		if (GolukApplication.getInstance().mIPCControlManager.isG1Relative()) {
 			bitrate = context.getResources().getStringArray(R.array.list_quality_bitrate_g1_t1s);
-		} else if (IPCControlManager.G2_SIGN.equals(ipcName) || IPCControlManager.T3_SIGN.equals(ipcName)) {
+		} else if (IPCControlManager.G2_SIGN.equals(ipcName)
+				|| IPCControlManager.T3_SIGN.equals(ipcName)
+				|| IPCControlManager.T3U_SIGN.equals(ipcName)) {
 			bitrate = context.getResources().getStringArray(R.array.list_quality_bitrate_g2_t3);
 		} else {
 			bitrate = context.getResources().getStringArray(R.array.list_quality_bitrate_t1_t2);

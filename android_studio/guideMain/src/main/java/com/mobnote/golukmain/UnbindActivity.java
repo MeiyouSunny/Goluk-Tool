@@ -121,7 +121,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             mTextVersion.setText(vIpc);
             GolukApplication.getInstance().getIPCControlManager();
             if (IPCControlManager.T1_SIGN.equals(ipcModel) || IPCControlManager.T1s_SIGN.equals(ipcModel)
-                    || IPCControlManager.T2_SIGN.equals(ipcModel) || IPCControlManager.T3_SIGN.equals(ipcModel)) {
+                    || IPCControlManager.T2_SIGN.equals(ipcModel) || IPCControlManager.T3_SIGN.equals(ipcModel)|| IPCControlManager.T3U_SIGN.equals(ipcModel)) {
                 mIPCimage.setImageResource(R.drawable.connect_t1_icon_1);
             } else {
                 mIPCimage.setImageResource(R.drawable.ipc);

@@ -43,6 +43,7 @@ public class IPCControlManager implements IPCManagerFn {
     public static final String T1s_SIGN = "T1S";
     public static final String T2_SIGN = "T2";
     public static final String T3_SIGN = "T3";
+    public static final String T3U_SIGN = "T3U";
 
     public static final String MODEL_T = "T";
     public static final String MODEL_G = "G";
@@ -92,7 +93,7 @@ public class IPCControlManager implements IPCManagerFn {
     }
 
     public void setIpcMode() {
-        if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName) || T1s_SIGN.equals(mProduceName) || T3_SIGN.equals(mProduceName)) {
+        if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName) || T1s_SIGN.equals(mProduceName) || T3_SIGN.equals(mProduceName)|| T3U_SIGN.equals(mProduceName)) {
             setIpcMode(IPCMgrMode_IPCDirect);
         } else if (T1_SIGN.equals(mProduceName) || T2_SIGN.equals(mProduceName)) {
             setIpcMode(IPCMgrMode_T1);
@@ -125,6 +126,7 @@ public class IPCControlManager implements IPCManagerFn {
      * @author jyf
      */
     public void setIpcMode(String mode) {
+
         if (MODEL_T.equals(mode)) {
             setIpcMode(IPCMgrMode_T1);
         } else {

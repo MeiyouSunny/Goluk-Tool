@@ -82,7 +82,7 @@
                     android:layout_height="match_parent"
                     android:background="@null"
                     android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    android:hint="@string/user_login_password_hint"
+                    android:hint="@string/str_pwd_limit"
                     android:maxLength="16"
                     android:paddingLeft="10dp"
                     android:password="true"
