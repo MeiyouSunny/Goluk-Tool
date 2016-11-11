@@ -299,7 +299,7 @@ public class IPCControlManager implements IPCManagerFn {
      */
     public boolean setIPCSystemTime(long time) {
         String zone = "";
-        if (mProduceName.equals(T1_SIGN)) {
+        if (isT1Relative()) {
             zone = TimeZone.getDefault().getID();
         } else {
             zone = "";
