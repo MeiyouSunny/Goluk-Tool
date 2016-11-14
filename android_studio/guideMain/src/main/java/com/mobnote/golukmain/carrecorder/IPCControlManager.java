@@ -299,7 +299,7 @@ public class IPCControlManager implements IPCManagerFn {
      */
     public boolean setIPCSystemTime(long time) {
         String zone = "";
-        if (isT1Relative()) {
+        if (isT1Relative() || T3_SIGN.equals(mProduceName)|| T3U_SIGN.equals(mProduceName)) {
             zone = TimeZone.getDefault().getID();
         } else {
             zone = "";
@@ -951,6 +951,17 @@ public class IPCControlManager implements IPCManagerFn {
     public boolean getVideoResolution() {
         return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
                 IPCManagerFn.IPC_VDCPCmd_GetVideoResolution, "");
+    }
+
+    public boolean getAntiFlicker(){
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+                IPCManagerFn.IPC_VDCPCmd_GetDeflickerMode, "");
+    }
+
+    public boolean setAntiFlicker(String value){
+        String s = "{\"mode\":" + value + "}";
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+                IPCManagerFn.IPC_VDCPCmd_SetDeflickerMode, s);
     }
 
     /**

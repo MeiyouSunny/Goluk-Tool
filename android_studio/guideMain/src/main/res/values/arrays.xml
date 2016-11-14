@@ -241,4 +241,9 @@
         <item>30</item>
     </string-array>
 
+    <string-array name="list_anti_flicker_value">
+        <item>@string/anti_flicker_50hz</item>
+        <item>@string/anti_flicker_60hz</item>
+    </string-array>
+
 </resources>

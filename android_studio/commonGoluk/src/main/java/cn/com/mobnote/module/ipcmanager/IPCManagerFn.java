@@ -391,7 +391,14 @@ public interface IPCManagerFn extends IGolukCommFn {
      * 获取IPC水印Logo
      */
     int IPC_VDCP_Msg_GetIPCLogo = 2218;
-
+    /**
+     * 获取IPC抗闪烁模式
+     */
+    int IPC_VDCP_Msg_GetDeflickerMode = 2223;
+    /**
+     * 设置IPC抗闪烁模式
+     */
+    int IPC_VDCP_Msg_SetDeflickerMode = 2224;
 
     /**
      *
@@ -743,6 +750,15 @@ public interface IPCManagerFn extends IGolukCommFn {
      * 获取IPC水印Logo
      */
     int IPC_VDCPCmd_GetIPCLogo = 2218;
+    /**
+     * 获取IPC抗闪烁模式
+     */
+    int IPC_VDCPCmd_GetDeflickerMode = 2223;
+    /**
+     * 设置IPC抗闪烁模式
+     */
+    int IPC_VDCPCmd_SetDeflickerMode = 2224;
+
     /**
      * 命令数量
      */

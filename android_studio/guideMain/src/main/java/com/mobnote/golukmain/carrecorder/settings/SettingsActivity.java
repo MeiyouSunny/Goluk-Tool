@@ -19,7 +19,6 @@ import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.IpcDataParser;
 import com.mobnote.golukmain.carrecorder.entity.RecordStorgeState;
 import com.mobnote.golukmain.carrecorder.entity.VideoConfigState;
-import com.mobnote.golukmain.carrecorder.settings.bean.WonderfulVideoJson;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
@@ -36,7 +35,6 @@ import com.mobnote.util.SharedPrefUtil;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -76,6 +74,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	public static final int REQUEST_CODE_LANGUAGE = 36;
 	/**精彩视频类型**/
 	public static final int REQUEST_CODE_WONDERFUL_VIDEO_TYPE = 37;
+	public static final int REQUEST_CODE_ANTI_FLICKER = 38;
 	/** 录制状态 */
 	private boolean recordState = false;
 	/** 自动循环录像开关按钮 */
@@ -129,6 +128,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private Button mFatigueBtn = null;
 	/** 图像自动翻转 **/
 	private RelativeLayout mImageFlipLayout;
+	private RelativeLayout mRlAntiFlicker;
 	private Button mImageFlipBtn = null;
 	/** 停车休眠模式 **/
 	private RelativeLayout mParkingSleepLayout;
@@ -136,6 +136,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	/** 遥控器按键功能 **/
 	private RelativeLayout mHandsetLayout;
 	private TextView mHandsetText = null;
+	private TextView mTvAnti ;
 
 	/** 停车休眠模式提示文字 **/
 	private TextView mParkingSleepHintText = null;
@@ -193,6 +194,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private TextView mVideoTypeDesc = null;
 	private String mVideoType = "";
 	private String mCurrentVideoType = "";
+	private String mAntiFlicker = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -264,7 +266,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		boolean videoResolution = GolukApplication.getInstance().getIPCControlManager().getVideoResolution();
 		GolukDebugUtils.e("", "--------------SettingsActivity-----videoResolution：" + videoResolution);
 
-
+		boolean antiFlicker = GolukApplication.getInstance().getIPCControlManager().getAntiFlicker();
+		GolukDebugUtils.e("", "--------------SettingsActivity-----getAntiFlicker：" + antiFlicker);
 //		if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
 ////			// 获取遥控器按键功能false
 ////			boolean getKitMode = GolukApplication.getInstance().getIPCControlManager().getKitMode();
@@ -548,8 +551,21 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 //				refreshLDWUI();
 //			}
 //			break;
+			case REQUEST_CODE_ANTI_FLICKER:
+				activityResult_antiFlicker(resultCode, data);
+				break;
 		default:
 			break;
+		}
+	}
+
+	private void activityResult_antiFlicker(int resultCode, Intent data) {
+		if (Activity.RESULT_OK != resultCode) {
+			return;
+		}
+		if (null != data) {
+			mAntiFlicker = data.getStringExtra("params");
+			GolukApplication.getInstance().getIPCControlManager().setAntiFlicker(mAntiFlicker);
 		}
 	}
 
@@ -608,9 +624,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mPowerTimeLayout = (RelativeLayout) findViewById(R.id.rl_settings_shutdown_line);
 		mVoiceTypeText = (TextView) findViewById(R.id.tv_settings_language_text);
 		mVoiceTypeLayout = (RelativeLayout) findViewById(R.id.rl_settings_language_line);
-		
+		mRlAntiFlicker = (RelativeLayout) findViewById(R.id.rl_anti_flicker);
 		mVideoTypeLayout = (RelativeLayout) findViewById(R.id.ry_settings_wonderful_video_type);
 		mVideoTypeDesc = (TextView) findViewById(R.id.tv_settings_wonderfulvideo_type_desc);
+		mTvAnti = (TextView) findViewById(R.id.tv_carrecorder_settings_anti_flicker);
 
 		// ipc设备型号
 		if (GolukApplication.getInstance().mIPCControlManager.isG1Relative()) {
@@ -633,8 +650,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				|| mIPCName.equals(IPCControlManager.T3U_SIGN)) {
 			if(mIPCName.equals(IPCControlManager.T3_SIGN) || mIPCName.equals(IPCControlManager.T3U_SIGN)) {
 				mISPLayout.setVisibility(View.GONE);
+				mRlAntiFlicker.setVisibility(View.VISIBLE);
 			} else {
 				mISPLayout.setVisibility(View.VISIBLE);
+				mRlAntiFlicker.setVisibility(View.GONE);
 			}
 			mPhotoQualityLayout.setVisibility(View.GONE);
 			mAutoPhotoItem.setVisibility(View.GONE);
@@ -717,6 +736,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mVoiceTypeLayout.setOnClickListener(this);//语言设置
 		
 		mVideoTypeLayout.setOnClickListener(this);// 精彩视频类型
+		mRlAntiFlicker.setOnClickListener(this); //抗闪烁
 	}
 
 	/**
@@ -801,6 +821,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			} else if (id == R.id.btn_settings_image_flip) {
 				// 图像自动翻转
 				click_imageFlip();
+			}else if (id == R.id.rl_anti_flicker){
+				click_antiFlicker();
 			} else if (id == R.id.btn_settings_parking_sleep) {
 				// 停车休眠
 				click_parkingSleep();
@@ -913,6 +935,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		} else {
 			dialog();
 		}
+	}
+
+	private void click_antiFlicker() {
+		Intent intentFlicker = new Intent(this, SettingsItemActivity.class);
+		intentFlicker.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_ANTI_FLICKER);
+		intentFlicker.putExtra(SettingsItemActivity.PARAM, mAntiFlicker);
+		startActivityForResult(intentFlicker, REQUEST_CODE_ANTI_FLICKER);
 	}
 
 	/**
@@ -1477,11 +1506,36 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				callback_getWonderfulVideoType(event, msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_SetVideoTimeConf) {
 				callback_setWonderfulVideoType(event, msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_GetDeflickerMode) {
+				callback_getAntiFlicker(param1, param2);
+			} else if( msg == IPC_VDCP_Msg_SetDeflickerMode ){
+				if (param1 == RESULE_SUCESS) {
+					GolukApplication.getInstance().getIPCControlManager().getAntiFlicker();
+				}
+			}
 			} else if (msg == IPC_VDCP_Msg_Reboot) {// 重启IPC
 				GolukDebugUtils.e("", "SettingsActivity-----------IPC_VDCP_Msg_Reboot-----param2: " + param2);
 			}
 		}
+
+	private void callback_getAntiFlicker( int param1, Object param2) {
+		GolukDebugUtils.e("", "SettingsActivity-----------callback_getAntiFlicker-----param2: " + param2);
+		if (RESULE_SUCESS == param1) {
+			try {
+				JSONObject json = new JSONObject((String) param2);
+				int mode = json.getInt("mode");
+				if (mode == 0){
+					mTvAnti.setText(R.string.anti_flicker_50hz);
+				} else if(mode == 1){
+					mTvAnti.setText(R.string.anti_flicker_60hz);
+				}
+				mAntiFlicker = String.valueOf(mode);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
+
 
 	/**
 	 * 恢复出厂回调

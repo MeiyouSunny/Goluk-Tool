@@ -415,7 +415,7 @@
                     android:layout_alignParentBottom="true"
                     android:background="@color/setting_line_color" />
             </RelativeLayout>
-            
+
             <!-- 提示音音量大小 -->
 
             <RelativeLayout
@@ -564,6 +564,42 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="15dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rl_anti_flicker"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/setting_anti_flicker"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_carrecorder_settings_anti_flicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="15dp"
+                    android:drawablePadding="10dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:drawableRight="@drawable/icon_next_press"
+                    android:text="@string/anti_flicker_50hz"
+                    android:textSize="15sp" />
 
                 <TextView
                     android:layout_width="match_parent"

@@ -29,9 +29,10 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 	public static final String TYPE_SHUTDOWN_TIME = "shutdown_time";
 	public static final String TYPE_LANGUAGE = "language";
 	public static final String TYPE_WONDERFUL_VIDEO_TYPE = "wonderful_video_type";
+	public static final String TYPE_ANTI_FLICKER = "anti_flicker";
 	private TextView[] mTextViewList = null;
 	private String[] mWonderfulList, mVolumeList, mShutdownList, mLanguageList;
-	private String[] mVolumeValue, mWonderfulValue;
+	private String[] mVolumeValue, mWonderfulValue,mAntiFlickerList;
 	private ImageButton[] mImageList = null;
 	private String mCurrentItem = "";
 	private String mType = "";
@@ -74,6 +75,7 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 		
 		mWonderfulVideoTypeList = getResources().getStringArray(R.array.list_wonderful_video_type);
 		mWonderfulVideoTypeValue = getResources().getStringArray(R.array.list_wonderful_video_type_value);
+		mAntiFlickerList = getResources().getStringArray(R.array.list_anti_flicker_value);
 	}
 
 	private void initData() {
@@ -164,6 +166,15 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 				arrayList = new String[] { "0", "1" };
 			} else {
 				arrayList = mLanguageList;
+			}
+		} else if (TYPE_ANTI_FLICKER.equals(mType)) {
+			mThirdLayout.setVisibility(View.GONE);
+			mWonderfulVideoTypeText.setVisibility(View.GONE);
+			setTitle(this.getResources().getString(R.string.setting_anti_flicker));
+			if (0 == valueType) {
+				arrayList = new String[] { "0", "1" };
+			} else {
+				arrayList = mAntiFlickerList;
 			}
 		} else {
 			mThirdLayout.setVisibility(View.GONE);
