@@ -1047,4 +1047,5 @@
     <string name="settting_notify_friends">Il tuo amico ha pubblicato un nuovo aggiornamento!</string>
     <string name="str_tag_tab_hot">Consigliati</string>
     <string name="str_tag_description_more">more</string>
+    <string name="setting_anti_flicker" >Impostazioni anti-tremolio</string>
 </resources>

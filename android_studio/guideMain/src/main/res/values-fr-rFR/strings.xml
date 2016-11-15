@@ -1048,4 +1048,5 @@ Une qualité médiocre de la carte mémoire provoquera des enregistrements anorm
     <string name="settting_notify_friends">Votre ami a publié une nouvelle mise à jour !</string>
     <string name="str_tag_tab_hot">Recommander</string>
     <string name="str_tag_description_more">more</string>
+    <string name="setting_anti_flicker" >Paramètres anti-scintillement</string>
 </resources>

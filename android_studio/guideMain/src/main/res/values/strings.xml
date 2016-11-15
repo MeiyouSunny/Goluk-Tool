@@ -1074,7 +1074,7 @@
     <string name="str_system_window_not_allowed">Unable to open system window as popups are disabled. Please turn on access at the App Management section.</string>
     <string name="str_notification_error_ssl_cert_invalid">You will be redirected to an unsafe webpage. Do you want to continue?</string>
     <string name="settting_notify_friends">Your friend has posted a new update!</string>
-    <string name="setting_anti_flicker" >抗闪烁设置</string>
+    <string name="setting_anti_flicker" >Anti-flicker Settings</string>
     <string name="anti_flicker_50hz">50Hz</string>
     <string name="anti_flicker_60hz">60Hz</string>
 </resources>

@@ -1049,4 +1049,5 @@
     <string name="settting_notify_friends">친구가 새 업데이트를 포스팅 했습니다!</string>
     <string name="str_tag_tab_hot">추천</string>
     <string name="str_tag_description_more">more</string>
+    <string name="setting_anti_flicker" >깜박거림 방지 설정</string>
 </resources>

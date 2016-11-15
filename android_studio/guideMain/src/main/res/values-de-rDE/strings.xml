@@ -1048,4 +1048,5 @@ Qualität der Speicherkarte kann zu gestörter Aufnahme führen.</string>
     <string name="settting_notify_friends">Dein Freund hat Neuigkeiten veröffentlicht!</string>
     <string name="str_tag_tab_hot">Empfehlen</string>
     <string name="str_tag_description_more">more</string>
+    <string name="setting_anti_flicker" >Antiflimmer-Einstellungen</string>
 </resources>
