@@ -2,6 +2,7 @@ package com.mobnote.golukmain.carrecorder;
 
 import android.text.TextUtils;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TimeZone;
@@ -299,12 +300,22 @@ public class IPCControlManager implements IPCManagerFn {
      */
     public boolean setIPCSystemTime(long time) {
         String zone = "";
+        String json = "";
+        int hourOffset =0 ,minOffset = 0;
         if (isT1Relative() || T3_SIGN.equals(mProduceName)|| T3U_SIGN.equals(mProduceName)) {
             zone = TimeZone.getDefault().getID();
+            int seconds = TimeZone.getDefault().getOffset(Calendar.ZONE_OFFSET)/1000;
+            double minutes = seconds/60;
+            double hours = minutes/60;
+            hourOffset = (int) hours;
         } else {
             zone = "";
         }
-        String json = JsonUtil.getTimeJson(time, zone);
+        if(T3_SIGN.equals(mProduceName)|| T3U_SIGN.equals(mProduceName)){
+            json = JsonUtil.getTimeAndZoneJson(time, zone,hourOffset,minOffset);
+        }else {
+            json = JsonUtil.getTimeJson(time, zone);
+        }
         return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetTime, json);
     }
 

@@ -239,6 +239,31 @@ public class JsonUtil {
         return null;
     }
 
+
+    /**
+     *  T3 国际版组织设置IPC系统时间json串
+     *
+     * @param time 时间
+     * @return
+     * @author xuhw
+     * @date 2015年4月3日
+     */
+    public static String getTimeAndZoneJson(long time, String zone,int offsetHours,int offsetMins) {
+        try {
+
+            JSONObject obj = new JSONObject();
+            obj.put("time", time);
+            if (zone != null && !"".equals(zone)) {
+                obj.put("zone", zone);
+            }
+            obj.put("zone_offset_hours",offsetHours);
+            obj.put("zone_offset_minutes",offsetMins);
+            return obj.toString();
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
     public static String getGpsTimeJson(int state) {
         try {
             JSONObject obj = new JSONObject();
