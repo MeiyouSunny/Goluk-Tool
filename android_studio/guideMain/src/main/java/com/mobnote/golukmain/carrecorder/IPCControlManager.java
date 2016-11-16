@@ -309,7 +309,7 @@ public class IPCControlManager implements IPCManagerFn {
             Calendar cal = GregorianCalendar.getInstance(tz);
             int seconds = tz.getOffset(cal.getTimeInMillis())/1000;
             hourOffset = seconds/60 / 60;
-            minOffset  = seconds/60 % 60;
+            minOffset  = Math.abs(seconds/60 % 60);
         } else {
             zone = "";
         }

@@ -246,7 +246,7 @@
     <string name="str_middle">中</string>
     <string name="str_high">高</string>
     <string name="setting_tcaf_title">停车安防</string>
-    <string name="pzgy_text">自动判断车辆当前状态；当前车辆处于行驶状态极路客会根据自动循环录像的开关状态进行工作；当车辆处于停车状态极路客会触发1秒钟拍1张照片；同时会打开振动(触发前8秒+后8秒视频)与移动侦测(触发前8秒+后8秒视频)功能。</string>
+    <string name="pzgy_text">自动判断车辆当前状态；当前车辆处于行驶状态极路客会根据自动循环录像的开关状态进行工作；当车辆处于停车状态极路客会打开振动(触发前8秒+后8秒视频)与移动侦测(触发前8秒+后8秒视频)功能。</string>
     <string name="str_settings_security_hint_text_g2">此项启动后,当车辆处于停车状态,极路客会停止循环视频的录制,但同时会打开振动侦测(触发前 8 秒+后 8 秒视频)与移动侦测(触发前 8 秒+后 8 秒视频)功能。</string>
     <string name="sjsz">时间设置</string>
     <string name="bbxx">版本信息</string>

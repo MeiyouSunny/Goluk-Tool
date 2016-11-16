@@ -250,7 +250,6 @@ public class JsonUtil {
      */
     public static String getTimeAndZoneJson(long time, String zone,int offsetHours,int offsetMins) {
         try {
-
             JSONObject obj = new JSONObject();
             obj.put("time", time);
             if (zone != null && !"".equals(zone)) {

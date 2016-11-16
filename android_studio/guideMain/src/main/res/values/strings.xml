@@ -887,7 +887,7 @@
     <string name="str_share_title">Goluk Wonderful video sharing</string>
     <string name="str_special_default_title">Special Subject</string>
     <string name="str_ipc_unmatch">The current Firmware does not support this setting. Please try again after Firmware upgrade</string>
-    <string name="str_buy_dropline">Buy Goluk pressure sensor cable now</string>
+    <string name="str_buy_dropline">To enable the Parking Guard mode, connect a generic voltage regulator cable with 5V output and a mini USB port, here is an example</string>
     <string name="str_format_present_sdcard">Format this SD card</string>
     <string name="str_video_transfer_fail">Video transmission is not successful</string>
     <string name="str_video_transfer_ongoing">Videos are being transferred from Goluk</string>

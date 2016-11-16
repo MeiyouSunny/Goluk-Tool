@@ -226,8 +226,15 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 						return;
 					}
 //					mWebView.loadUrl(getRtmpAddress() + "?type=1" + getCommParams());
-					GolukDebugUtils.e("", "buystepdownline------"+HttpManager.getInstance().getWebDirectHost() + "/s/buystepdownline");
-					mWebView.loadUrl(HttpManager.getInstance().getWebDirectHost() + "/s/buystepdownline");
+					String url;
+					if(getApp().isMainland()) {
+						url = HttpManager.getInstance().getWebDirectHost() + "/s/buystepdownline";
+					}else{
+						//国际版固定链接
+						url = "https://www.amazon.com/Spy-Tec-Dash-Camera-Vehicle/dp/B00MH4ZVHO/ref=sr_1_8?ie=UTF8&qid=1478595877";
+					}
+					GolukDebugUtils.e("", "buystepdownline------"+url);
+					mWebView.loadUrl(url);
 				} else if (from_tag.equals("wifihelp")) {
 					mTextTitle.setText(this.getResources().getString(R.string.wifi_link_34_text));
 					if (mErrorState) {
