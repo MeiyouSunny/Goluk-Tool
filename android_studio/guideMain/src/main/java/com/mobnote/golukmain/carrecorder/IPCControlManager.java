@@ -3,6 +3,7 @@ package com.mobnote.golukmain.carrecorder;
 import android.text.TextUtils;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TimeZone;
@@ -303,11 +304,12 @@ public class IPCControlManager implements IPCManagerFn {
         String json = "";
         int hourOffset =0 ,minOffset = 0;
         if (isT1Relative() || T3_SIGN.equals(mProduceName)|| T3U_SIGN.equals(mProduceName)) {
-            zone = TimeZone.getDefault().getID();
-            int seconds = TimeZone.getDefault().getOffset(Calendar.ZONE_OFFSET)/1000;
-            double minutes = seconds/60;
-            double hours = minutes/60;
-            hourOffset = (int) hours;
+            TimeZone tz = TimeZone.getDefault();
+            zone = tz.getID();
+            Calendar cal = GregorianCalendar.getInstance(tz);
+            int seconds = tz.getOffset(cal.getTimeInMillis())/1000;
+            hourOffset = seconds/60 / 60;
+            minOffset  = seconds/60 % 60;
         } else {
             zone = "";
         }
