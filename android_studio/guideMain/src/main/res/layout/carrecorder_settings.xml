@@ -576,6 +576,7 @@
                 android:id="@+id/rl_anti_flicker"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
+                android:visibility="gone"
                 android:background="@color/setting_white_color" >
 
                 <TextView
