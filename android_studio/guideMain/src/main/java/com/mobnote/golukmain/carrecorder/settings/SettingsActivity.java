@@ -648,7 +648,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		} else if (mIPCName.equals(IPCControlManager.G2_SIGN)
 				|| mIPCName.equals(IPCControlManager.T3_SIGN)
 				|| mIPCName.equals(IPCControlManager.T3U_SIGN)) {
-			if(mIPCName.equals(IPCControlManager.T3_SIGN) || mIPCName.equals(IPCControlManager.T3U_SIGN)) {
+			if(mIPCName.equals(IPCControlManager.T3U_SIGN)) {
 				mISPLayout.setVisibility(View.GONE);
 				mRlAntiFlicker.setVisibility(View.VISIBLE);
 			} else {
