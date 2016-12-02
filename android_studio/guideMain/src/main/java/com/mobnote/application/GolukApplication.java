@@ -1225,6 +1225,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 ipcInfo.lasttime = String.valueOf(System.currentTimeMillis());
                 mIpcVersion = ipcInfo.version;
             }
+            if(getEnableSingleWifi()){
+                mIPCControlManager.setBindStatus();
+            }
 
             // 保存ipc设备型号,是G1, G2 还是T1
             saveIpcProductName(ipcInfo);

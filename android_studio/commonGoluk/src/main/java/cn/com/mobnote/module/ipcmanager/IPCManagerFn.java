@@ -320,6 +320,7 @@ public interface IPCManagerFn extends IGolukCommFn {
      * 设置ipc ADAS功能
      **/
     int IPC_VDCP_Msg_SetADASConfig = 2001;
+    int IPC_VDCPCmd_SetBindStatus = 2002;
     /**
      * 获取精彩视频分辨率
      **/

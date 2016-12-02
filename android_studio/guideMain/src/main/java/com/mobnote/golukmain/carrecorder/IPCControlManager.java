@@ -687,6 +687,13 @@ public class IPCControlManager implements IPCManagerFn {
     }
 
     /**
+     * wifi直连的之后，需要调用这个函数，设备就不会发出“下载app的语音提示”了
+     */
+    public boolean setBindStatus(){
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,IPC_VDCPCmd_SetBindStatus,"");
+    }
+
+    /**
      * SD卡图片查询
      *
      * @return
