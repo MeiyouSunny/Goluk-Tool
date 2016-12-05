@@ -156,7 +156,7 @@
     <string name="user_login_password_show_error">비밀번호를 입력하세요 (6-16자리)</string>
     <string name="unbind_select_title_txt">기기 선택</string>
     <string name="edit_text">편집</string>
-    <string name="wifi_link_17_text">와이파이 표시등이 깜박이는지 확인하세요</string>
+    <string name="wifi_link_17_text">와이파이 표시등이 깜박이는지 확인하세요（T2에서 완전함）</string>
     <string name="wifi_link_17_2_text">와이파이 설정으로 가서 연결하세요</string>
     <string name="wifi_link_33_text">자주하는 질문</string>
     <string name="wifi_link_success_conn">연결됨</string>

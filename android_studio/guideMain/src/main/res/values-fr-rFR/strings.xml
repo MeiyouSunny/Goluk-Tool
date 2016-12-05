@@ -155,7 +155,7 @@
     <string name="user_login_password_show_error">Veuillez saisir le mot de passe (6-16 chiffres)</string>
     <string name="unbind_select_title_txt">Sélectionner l\'appareil</string>
     <string name="edit_text">Modifier</string>
-    <string name="wifi_link_17_text">Confirmez que l\'indicateur lumineux du Wi-Fi clignote</string>
+    <string name="wifi_link_17_text">Confirmez que l'indicateur lumineux du Wi-Fi clignote（Solide sur T2）</string>
     <string name="wifi_link_17_2_text">Accédez aux paramètres de Wi-Fi pour vous connecter</string>
     <string name="wifi_link_33_text">FAQ</string>
     <string name="wifi_link_success_conn">Connecté</string>
