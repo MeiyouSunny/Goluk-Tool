@@ -655,6 +655,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				mISPLayout.setVisibility(View.VISIBLE);
 				mRlAntiFlicker.setVisibility(View.GONE);
 			}
+			if(mIPCName.equals(IPCControlManager.T3_SIGN)) {
+				mISPLayout.setVisibility(View.GONE);
+			}
 			mPhotoQualityLayout.setVisibility(View.GONE);
 			mAutoPhotoItem.setVisibility(View.GONE);
 			mHandsetLayout.setVisibility(View.GONE);

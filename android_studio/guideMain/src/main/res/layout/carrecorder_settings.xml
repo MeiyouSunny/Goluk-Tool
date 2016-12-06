@@ -173,6 +173,15 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginLeft="15dp"
                     android:background="@color/setting_line_color" />
+
+                <TextView
+                    android:text="@string/hdr_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignLeft="@+id/hdr"
+                    android:layout_marginLeft="12dp"
+                    android:id="@+id/textView" />
             </RelativeLayout>
 
             <!-- 自动循环录像 -->

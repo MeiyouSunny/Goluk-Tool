@@ -246,7 +246,7 @@
     <string name="str_middle">Medio</string>
     <string name="str_high">Alto</string>
     <string name="setting_tcaf_title">Modalità di parcheggio sicuro</string>
-    <string name="pzgy_text">Rilevamento dello stato del veicolo: quando il veicolo si trova in movimento, Goluk funzionerà in modalità di registrazione in loop. Se il veicolo è parcheggiato, Goluk scatterà 1 foto al secondo ed attiverà i sensori di vibrazione (8 secondi di video sia prima che dopo l\'attivazione) e di movimento (8 secondi di video sia prima che dopo l\'attivazione).</string>
+    <string name="pzgy_text">Rilevamento automatico dello stato del veicolo: quando il veicolo si trova in movimento, Goluk funzionerà in modalità di registrazione in loop. Se il veicolo è parcheggiato, Goluk attiverà i sensori di vibrazione e i sensori di movimento (entrambe le modalità filmeranno 8 secondi di video sia prima che dopo l\'attivazione).</string>
     <string name="str_settings_security_hint_text_g2">Rilevamento dello stato del veicolo: quando il veicolo si trova in movimento, Goluk funzionerà in modalità di registrazione in loop. Se il veicolo è parcheggiato, Goluk scatterà 1 foto al secondo ed attiverà i sensori di vibrazione (8 secondi di video sia prima che dopo l\'attivazione) e di movimento (8 secondi di video sia prima che dopo l\'attivazione).</string>
     <string name="sjsz">Data e ora</string>
     <string name="bbxx">Informazioni</string>

@@ -246,7 +246,7 @@
     <string name="str_middle">Mittel</string>
     <string name="str_high">Hoch</string>
     <string name="setting_tcaf_title">Parkplatz-Sicherheitsmodus</string>
-    <string name="pzgy_text">Fahrzeugstatuserkennung: Wenn das Fahrzeug in Bewegung ist, verwendet Goluk die Einstellungen für die Endlosaufzeichnung. Wenn das Fahrzeug geparkt ist, nimmt Goluk 1 Foto pro Sekunde auf und aktiviert die Sensoren für Vibration und Bewegung (8 Sekunden langes Video vor und nach der Auslösung).</string>
+    <string name="pzgy_text">Automatische Fahrzeugstatuserkennung: Wenn das Fahrzeug in Bewegung ist, verwendet Goluk den Modus für die automatische Endlosaufzeichnung. Wenn das Fahrzeug geparkt ist, aktiviert Goluk den Vibraktionserkennungsmodus und den Bewegungserkennungsmodus (beide nehmen 8 Sekunden Video sowohl vor als auch nach dem Auslösen auf).</string>
     <string name="str_settings_security_hint_text_g2">Fahrzeugstatuserkennung: Wenn das Fahrzeug in Bewegung ist, verwendet Goluk die Einstellungen für die Endlosaufzeichnung. Wenn das Fahrzeug geparkt ist, nimmt Goluk 1 Foto pro Sekunde auf und aktiviert die Sensoren für Vibration und Bewegung (8 Sekunden langes Video vor und nach der Auslösung).</string>
     <string name="sjsz">Datum und Zeit</string>
     <string name="bbxx">Über</string>

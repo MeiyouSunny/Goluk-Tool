@@ -246,7 +246,7 @@
     <string name="str_middle">Moyenne</string>
     <string name="str_high">Élevée</string>
     <string name="setting_tcaf_title">Mode de sécurité de stationnement</string>
-    <string name="pzgy_text">Détection de l\'état du véhicule : Lorsque le véhicule est en mouvement, Goluk fonctionnera en se basant sur les paramètres du mode d\'enregistrement en boucle. Lorsque le véhicule est garé, Goluk prendra une photo chaque seconde et activera les capteurs de vibration (8 secondes de vidéo avant et après le déclencheur) et de mouvement (8 secondes de vidéo avant et après le déclencheur)</string>
+    <string name="pzgy_text"> Détection automatique de l\'état du véhicule : lorsque le véhicule est en mouvement, Goluk fonctionnera en se basant sur l\'état du mode d\'enregistrement automatique en boucle. Lorsque le véhicule est garé, Goluk activera le mode détection de la vibration et le mode de détection du mouvement (les deux modes capturent 8 secondes de vidéo avant et après le déclenchement.)</string>
     <string name="str_settings_security_hint_text_g2">Détection de l\'état du véhicule : Lorsque le véhicule est en mouvement, Goluk fonctionnera en se basant sur les paramètres du mode d\'enregistrement en boucle. Lorsque le véhicule est garé, Goluk prendra une photo chaque seconde et activera les capteurs de vibration (8 secondes de vidéo avant et après le déclencheur) et de mouvement (8 secondes de vidéo avant et après le déclencheur)</string>
     <string name="sjsz">Date et heure</string>
     <string name="bbxx">À propos</string>

@@ -247,7 +247,7 @@
     <string name="str_middle">중</string>
     <string name="str_high">고</string>
     <string name="setting_tcaf_title">주차 보안 모드</string>
-    <string name="pzgy_text">차량 상태 감지: 차량이 움직일 때 Goluk은 루프 촬영 모드 설정을 기반으로 작동합니다. 차량이 주차되어 있을 때 Goluk은 매 초마다 사진을 1장 찍고 진동 센서 (트리거 이전 및 이후 8초 간의 동영상)뿐만 아니라 움직임 센서도 (트리거 이전 및 이후 8초 간의 동영상) 활성화 합니다.</string>
+    <string name="pzgy_text">자동 차량 상태 감지: 차량이 움직이는 상태일 때 Goluk은 자동 루프 촬영 모드의 상태에 따라 작동합니다. 차량이 멈춘 상태일 때 Goluk은 진동 감지 모드 및 동작 감지 모드를 활성화합니다 (두 모드 다 트리거링 전후 8초 동안의 동영상을 캡처합니다).</string>
     <string name="str_settings_security_hint_text_g2">차량 상태 감지: 차량이 움직일 때 Goluk은 루프 촬영 모드 설정을 기반으로 작동합니다. 차량이 주차되어 있을 때 Goluk은 매 초마다 사진을 1장 찍고 진동 센서 (트리거 이전 및 이후 8초 간의 동영상)뿐만 아니라 움직임 센서도 (트리거 이전 및 이후 8초 간의 동영상) 활성화 합니다.</string>
     <string name="sjsz">날짜 및 시간</string>
     <string name="bbxx">소개</string>

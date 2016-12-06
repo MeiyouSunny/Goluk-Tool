@@ -246,7 +246,7 @@
     <string name="str_middle">Medium</string>
     <string name="str_high">High</string>
     <string name="setting_tcaf_title">Parking Guard</string>
-    <string name="pzgy_text">Vehicle status detection: When the vehicle is moving, Goluk will operate based on the loop recording mode setting; when the vehicle is parked, Goluk will take 1 photo every second and enable vibration (8 seconds of video both before and after the trigger) as well as motion (8 seconds of video both before and after the trigger) sensors.</string>
+    <string name="pzgy_text">Automatic Vehicle Status Detection: when the vehicle is in motion, Goluk will operate according to the state of the Automatic Loop Recording Mode; when the vehicle is stopped, Goluk will enable the Vibration Detection Mode and Motion Detection Mode (both modes will capture 8 seconds of video both before and after triggering).</string>
     <string name="str_settings_security_hint_text_g2">Vehicle status detection: When the vehicle is moving, Goluk will operate based on the loop recording mode setting; when the vehicle is parked, Goluk will take 1 photo every second and enable vibration (8 seconds of video both before and after the trigger) as well as motion (8 seconds of video both before and after the trigger) sensors.</string>
     <string name="sjsz">Time setting</string>
     <string name="bbxx">About</string>

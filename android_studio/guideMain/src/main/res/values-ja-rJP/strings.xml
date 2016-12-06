@@ -246,7 +246,7 @@
     <string name="str_middle">中</string>
     <string name="str_high">高</string>
     <string name="setting_tcaf_title">駐車セキュリティモード</string>
-    <string name="pzgy_text">車両状態の自動検知：Golukは、車両が走行中の間は、ループ記録モードの設定に基づいて動作し、駐車中の間は、毎秒1枚の写真を撮影し、振動センサー（検知前後の8秒間をビデオ記録）とモーションセンサー（検知前後の8秒間をビデオ記録）を有効にします。</string>
+    <string name="pzgy_text">車両状態の自動検知: 車両が走行中の間は、Golukは自動ループ記録モードの状態に基づいて動作し、停止中の間は、振動検知モードとモーション検知モードを有効にします（振動検知、モーション検知ともに、検知前後の8秒間をキャプチャします）。</string>
     <string name="str_settings_security_hint_text_g2">車両状態の自動検知：Golukは、車両が走行中の間は、ループ記録モードの設定に基づいて動作し、駐車中の間は、毎秒1枚の写真を撮影し、振動センサー（検知前後の8秒間をビデオ記録）とモーションセンサー（検知前後の8秒間をビデオ記録）を有効にします。</string>
     <string name="sjsz">日付＆時間</string>
     <string name="bbxx">バージョン情報</string>
