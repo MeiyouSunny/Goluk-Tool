@@ -764,7 +764,7 @@
     <string name="wifi_link_35_text">Goluk 와이파이 핫스팟 비밀번호 재설정</string>
     <string name="wifi_link_36_text">와이파이 이름: GolukXXXX</string>
     <string name="wifi_link_conn_failed">연결 실패</string>
-    <string name="wifi_link_twinkle">반짝이는</string>
+    <string name="wifi_link_twinkle">반짝이는（T2에서 완전함）</string>
     <string name="wifi_link_wifi_light">와이파이 표시등</string>
     <string name="wifi_link_wifi_name">이름</string>
     <string name="wifi_link_wifi_name2"> 와이파이</string>
@@ -824,7 +824,6 @@
     <string name="str_photo_check_ipc_state">카메라 연결 상태를 확인하세요</string>
     <string name="str_photo_delete_ok">동영상이 성공적으로 삭제되었습니다</string>
     <string name="str_load_below_txt">로딩 중</string>
-    <string name="str_settings_security_hint_text_g1">Goluk은 자동으로 차량의 현재 상태를 판단해, 차량이 주행 상태일 경우, 자동 루프 촬영 모드에 따라 작동하게 됩니다. 차량이 주차 상태일 경우, Goluk은 매 초마다 사진 촬영을 캡처하며 진동 감지 모드 (트리거 전 8초, 트리거 후 8초 동영상) 및 움직임 감지 모드를 (트리거 전 8초, 트리거 후 8초 동영상) 시작합니다.</string>
     <string name="str_settings_sleep_hint_text_t1">이 기능이 활성화 된 후, 차량이 10분 이상 정지 상태임을 감지 할 경우, 배터리 전력 손실을 막기 위해 자동으로 초절전 \'주차 절전 모드\'로 전환됩니다. 주차 상태에서 차량 엔진이 꺼져있는 경우, 라이터 어댑터가 정상적으로 전기를 공급할 수 있습니다. 이 기능을 키는 것을 강력하게 추천합니다.</string>
     <string name="str_carrecoder_setting_photo_title">이미지 품질</string>
     <string name="str_ipc_dialog_normal">카메라가 제대로 연결되어 있는지 확인하세요</string>

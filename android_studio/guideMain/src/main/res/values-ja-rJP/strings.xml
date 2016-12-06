@@ -763,7 +763,7 @@
     <string name="wifi_link_35_text">GolukのWi-Fiホットスポットのパスワードをリセット</string>
     <string name="wifi_link_36_text">Wi-Fi名はGolukXXXX</string>
     <string name="wifi_link_conn_failed">接続できませんでした</string>
-    <string name="wifi_link_twinkle">点滅</string>
+    <string name="wifi_link_twinkle">点滅（T2デバイスで点灯）</string>
     <string name="wifi_link_wifi_light">Wi-Fiインジケータライト</string>
     <string name="wifi_link_wifi_name">付けた名前：</string>
     <string name="wifi_link_wifi_name2"> Wi-Fi</string>
@@ -823,7 +823,6 @@
     <string name="str_photo_check_ipc_state">カメラの接続状況を確認してください</string>
     <string name="str_photo_delete_ok">ビデオが削除されました</string>
     <string name="str_load_below_txt">読み込み中</string>
-    <string name="str_settings_security_hint_text_g1">Golukは車両状態を自動的に検知し、車両が走行中の間は、自動ループ記録モードで動作します。駐車中の間は、写真を毎秒1枚撮影し、振動検知モード（検知前後の8秒間をビデオ記録）とモーション検知モード（検知前後の8秒間をビデオ記録）を開始します</string>
     <string name="str_settings_sleep_hint_text_t1">この機能を有効にすると、車両が10分以上停車しているのが検知された場合、自動的に超低電力消費の駐車スリープモードに切り替わり、バッテリーの電力消費を抑えます。停車中エンジンを切っている状態でも、シガーライターアダプタからは普通に電気が供給されます。この機能を有効にすることを強くお勧めします。</string>
     <string name="str_carrecoder_setting_photo_title">画質</string>
     <string name="str_ipc_dialog_normal">カメラが正しく接続されているか確認してください</string>

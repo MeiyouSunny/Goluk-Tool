@@ -763,7 +763,7 @@
     <string name="wifi_link_35_text">Reimposta la password dell\'hotspot Wi-Fi di Goluk</string>
     <string name="wifi_link_36_text">Wi-Fi chiamato GolukXXXX</string>
     <string name="wifi_link_conn_failed">Connessione non riuscita</string>
-    <string name="wifi_link_twinkle">luccichio</string>
+    <string name="wifi_link_twinkle">luccichio（Sicuro in T2）</string>
     <string name="wifi_link_wifi_light">Luce indicatrice del Wi-Fi</string>
     <string name="wifi_link_wifi_name">Chiamato</string>
     <string name="wifi_link_wifi_name2"> Wi-Fi</string>
@@ -823,7 +823,6 @@
     <string name="str_photo_check_ipc_state">Controlla lo stato della connessione della videocamera</string>
     <string name="str_photo_delete_ok">Il video è stato cancellato</string>
     <string name="str_load_below_txt">In caricamento</string>
-    <string name="str_settings_security_hint_text_g1">Quando il veicolo si trova in movimento, Goluk funzionerà in modalità di registrazione in loop, determinando automaticamente lo stato attuale del veicolo. Se il veicolo è parcheggiato, Goluk scatterà 1 foto al secondo ed attiverà i sensori di vibrazione (8 secondi di video sia prima che dopo l\'attivazione) e di movimento (8 secondi di video sia prima che dopo l\'attivazione)</string>
     <string name="str_settings_sleep_hint_text_t1">Una volta attivata la funzione, per proteggere la batteria, una volta rilevato che il veicolo si trova immobile per oltre 10 minuti sarà attivata la modalità di Riposo in Parcheggio, con un consumo ultra ridotto. Se il motore è spento durante il parcheggio, l\'adattatore dell\'accendino può comunque continuare a fornire energia elettrica. Ti consigliamo vivamente di attivare questa funzione.</string>
     <string name="str_carrecoder_setting_photo_title">Qualità dell\'immagine</string>
     <string name="str_ipc_dialog_normal">Controlla he la videocamera sia connessa</string>

@@ -638,8 +638,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mFatigueLayout.setVisibility(View.VISIBLE);
 			mImageFlipLayout.setVisibility(View.VISIBLE);
 			mParkingSleepLayout.setVisibility(View.VISIBLE);
-			mParkingSecurityHintText
-					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g1));
 			mCarrecorderWonderfulLine.setVisibility(View.GONE);
 			mWonderfulVideoQualityLayout.setVisibility(View.GONE);
 			mVolumeLayout.setVisibility(View.GONE);
@@ -664,8 +662,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mFatigueLayout.setVisibility(View.VISIBLE);
 			mImageFlipLayout.setVisibility(View.VISIBLE);
 			mParkingSleepLayout.setVisibility(View.VISIBLE);
-			mParkingSecurityHintText
-					.setText(this.getResources().getString(R.string.str_settings_security_hint_text_g2));
 			mCarrecorderWonderfulLine.setVisibility(View.VISIBLE);
 			mWonderfulVideoQualityLayout.setVisibility(View.VISIBLE);
 			mVolumeLayout.setVisibility(View.GONE);

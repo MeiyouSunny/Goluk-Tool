@@ -764,7 +764,7 @@
     <string name="wifi_link_35_text">Reset your Goluk Wi-Fi hotspot password</string>
     <string name="wifi_link_36_text">Wi-Fi named GolukXXXX</string>
     <string name="wifi_link_conn_failed">Connection failed</string>
-    <string name="wifi_link_twinkle">twinkling</string>
+    <string name="wifi_link_twinkle">twinkling(Solid on T2)</string>
     <string name="wifi_link_wifi_light">Wi-Fi indicator light</string>
     <string name="wifi_link_wifi_name">Named</string>
     <string name="wifi_link_wifi_name2"> Wi-Fi</string>
@@ -824,7 +824,6 @@
     <string name="str_photo_check_ipc_state">Check the camera connection status</string>
     <string name="str_photo_delete_ok">Video has been removed successfully</string>
     <string name="str_load_below_txt">Loading</string>
-    <string name="str_settings_security_hint_text_g1">When the vehicle is in travelling state, Goluk will operate in accordance with the Automatic Loop Recording mode; by automatically determining the vehicle\'s current status. When the vehicle is parked, Goluk will capture every photo shoot for every second; and initiate Vibration Detection mode  (8 seconds Video before and 8 seconds Video after trigger) and Motion Detection mode  (8 seconds Video before and 8 seconds Video after trigger)</string>
     <string name="str_settings_sleep_hint_text_t1">Once the function is activated, it will automatically go into the Parking Sleep Mode with ultra low power consumption; after detecting the vehicle is stationary for more than 10 minutes,  in order  to protect your battery from power loss . If your vehicle engine is off at the parking, the cigarette lighter adaptor still can supply electricity normally. It is strongly recommended that you turn on this function.</string>
     <string name="str_carrecoder_setting_photo_title">Image quality</string>
     <string name="str_ipc_dialog_normal">Check that the camera is properly connected</string>

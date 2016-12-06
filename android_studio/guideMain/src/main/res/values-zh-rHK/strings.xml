@@ -763,7 +763,7 @@
     <string name="wifi_link_35_text">重設您的極路客 Wi-Fi 熱點密碼</string>
     <string name="wifi_link_36_text">Wi-Fi 已命名為「極路客XXXX」</string>
     <string name="wifi_link_conn_failed">連線失敗</string>
-    <string name="wifi_link_twinkle">閃爍</string>
+    <string name="wifi_link_twinkle">閃爍（T2 為長亮）</string>
     <string name="wifi_link_wifi_light">Wi-Fi 指示燈</string>
     <string name="wifi_link_wifi_name">已命名</string>
     <string name="wifi_link_wifi_name2"> Wi-Fi</string>
@@ -823,7 +823,6 @@
     <string name="str_photo_check_ipc_state">請檢查相機的連線狀況</string>
     <string name="str_photo_delete_ok">已成功移除影片</string>
     <string name="str_load_below_txt">載入中</string>
-    <string name="str_settings_security_hint_text_g1">當車輛處於行駛狀態，極路客將通過自動確定車輛目前的狀態，按照「自動循環攝錄模式」進行操作。完成泊車後，極路客會每秒都會進行拍攝，並啟用震動偵測模式（觸發前後 8 秒的影片）和動態偵測模式（觸發前後 8 秒的影片）</string>
     <string name="str_settings_sleep_hint_text_t1">一旦啟用該功能，系統便會在偵測到車輛靜止多於 10 分鐘後，自動進入超低功耗的泊車睡眠模式，以防止電池損耗。如果您在泊車後關閉了車輛引擎，點煙適配器仍能正常供電。我們強烈建議您開啟此功能。</string>
     <string name="str_carrecoder_setting_photo_title">影像質素</string>
     <string name="str_ipc_dialog_normal">請檢查相機是否正常連接</string>

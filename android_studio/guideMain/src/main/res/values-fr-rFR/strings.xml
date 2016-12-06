@@ -763,7 +763,7 @@
     <string name="wifi_link_35_text">Réinitialiser le mot de passe de votre point d\'accès Wi-Fi Goluk</string>
     <string name="wifi_link_36_text">Wi-Fi ayant le nom GolukXXXX</string>
     <string name="wifi_link_conn_failed">Échec de la connexion</string>
-    <string name="wifi_link_twinkle">scintillement</string>
+    <string name="wifi_link_twinkle">scintillement（Solide sur T2）</string>
     <string name="wifi_link_wifi_light">Indicateur lumineux du Wi-Fi</string>
     <string name="wifi_link_wifi_name">Nommé</string>
     <string name="wifi_link_wifi_name2"> Wi-Fi</string>
@@ -823,7 +823,6 @@
     <string name="str_photo_check_ipc_state">Vérifier l\'état de connexion de la caméra</string>
     <string name="str_photo_delete_ok">La vidéo a été bien retirée</string>
     <string name="str_load_below_txt">Chargement</string>
-    <string name="str_settings_security_hint_text_g1">Lorsque le véhicule est en état de déplacement, Goluk fonctionnera conformément au mode d\'enregistrement en boucle automatique en déterminant automatiquement l\'état actuel du véhicule. Lorsque le véhicule est garé, Goluk prendra une photo chaque seconde et lancera le mode de détection de vibration (8 secondes de vidéo avant et après le déclencheur) et le mode de détection de mouvement (8 secondes de vidéo avant et après le déclencheur)</string>
     <string name="str_settings_sleep_hint_text_t1">Une fois la fonction activée, la caméra passera automatiquement en mode veille de stationnement qui offre une consommation électrique très réduite après avoir détecté que le véhicule a été immobile pendant plus de 10 minutes, afin de protéger votre batterie de la perte d\'énergie. Si le moteur de votre véhicule est éteint au parking, l\'adaptateur d\'allume-cigare peut fournir quand même du courant normalement. Il est vivement conseillé d\'activer cette fonction.</string>
     <string name="str_carrecoder_setting_photo_title">Qualité d\'image</string>
     <string name="str_ipc_dialog_normal">Vérifiez que la caméra est correctement connectée</string>

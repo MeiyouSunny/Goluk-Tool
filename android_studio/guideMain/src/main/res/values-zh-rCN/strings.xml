@@ -763,7 +763,7 @@
     <string name="wifi_link_35_text">重置你的极路客WiFi热点密码</string>
     <string name="wifi_link_36_text">名称为GolukXXXX的WiFi</string>
     <string name="wifi_link_conn_failed">连接失败</string>
-    <string name="wifi_link_twinkle">闪烁</string>
+    <string name="wifi_link_twinkle">闪烁(T2为长亮)</string>
     <string name="wifi_link_wifi_light">WiFi指示灯</string>
     <string name="wifi_link_wifi_name">名称为</string>
     <string name="wifi_link_wifi_name2">的WiFi</string>
@@ -823,7 +823,6 @@
     <string name="str_photo_check_ipc_state">请检查摄像头连接状态</string>
     <string name="str_photo_delete_ok">删除视频成功</string>
     <string name="str_load_below_txt">正在加载…</string>
-    <string name="str_settings_security_hint_text_g1">启动此项后，极路客将自动判断车辆当前的状态：当车辆处于行驶状态，则极路客会根据自动循环录像的开关状态进行工作；当车辆处于停车状态，则极路客会触发1秒1拍，同时会打开异常振动（触发前8秒+后8秒视频）与移动侦测（触发前8秒+后8秒视频）功能。</string>
     <string name="str_settings_sleep_hint_text_t1">此项开启后，当检测到车辆静止时间超过 10 分钟以上，且未开启停车安防功能，则自动进入超低功耗的停车休眠模式，以便保护您的电瓶不会亏电。如果您的车在停车熄火后，点烟器仍可正常供电，则强烈建议开启此项。</string>
     <string name="str_carrecoder_setting_photo_title">图片质量</string>
     <string name="str_ipc_dialog_normal">请检查摄像头是否正常连接</string>

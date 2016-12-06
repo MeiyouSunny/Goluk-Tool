@@ -763,7 +763,7 @@
     <string name="wifi_link_35_text">Setzen Sie Ihr Passwort für den Goluk-WLAN-Hotspot zurück.</string>
     <string name="wifi_link_36_text">WLAN namens GolukXXXX</string>
     <string name="wifi_link_conn_failed">Verbindung fehlgeschlagen</string>
-    <string name="wifi_link_twinkle">blinken</string>
+    <string name="wifi_link_twinkle">blinken（Durchgängig für T2）</string>
     <string name="wifi_link_wifi_light">WLAN-Anzeige</string>
     <string name="wifi_link_wifi_name">Benannt</string>
     <string name="wifi_link_wifi_name2"> WLAN</string>
@@ -823,7 +823,6 @@
     <string name="str_photo_check_ipc_state">Prüfen Sie den Verbindungsstatus der Kamera.</string>
     <string name="str_photo_delete_ok">Video wurde erfolgreich entfernt.</string>
     <string name="str_load_below_txt">Wird geladen</string>
-    <string name="str_settings_security_hint_text_g1">Wenn das Fahrzeug in Bewegung ist, wird Goluk durch automatische Bestimmung des aktuellen Fahrzeugstatus mit der automatischen Schleifen-Aufnahme arbeiten. Wenn das Fahrzeugt parkt, wird Goluk jede Sekunde ein Foto aufnehmen und den Erkennungsmodus für Vibration (8 Sekunden Video vor und 8 Sekunden Video nach dem Auslösen) und den Erkennungsmodus für Bewegung (8 Sekunden Video vor und 8 Sekunden Video nach dem Auslösen) auslösen.</string>
     <string name="str_settings_sleep_hint_text_t1">Sobald die Funktion aktiviert ist, wird es automatisch in den Park-Schlafmodus mit sehr geringem Stromverbrauch gehen, nachdem festgestellt wurde, dass sich das Fahrzeug für mehr als 10 Minuten nicht bewegte, damit Ihre Batterie vor Stromverlust geschützt wird. Falls Ihr Fahrzeugmotor beim Parken ausgeschaltet wird, kann der Zigarettenanzünder normalerweise trotzdem noch Elektrizität liefern. Es wird stärkstens empfohlen, diese Funktion abzuschalten.</string>
     <string name="str_carrecoder_setting_photo_title">Bildqualität</string>
     <string name="str_ipc_dialog_normal">Prüfen Sie, ob die Kamera korrekt verbunden ist.</string>

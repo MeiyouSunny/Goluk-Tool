@@ -763,7 +763,7 @@
     <string name="wifi_link_35_text">Сбросьте свой пароль к точке доступа Wi-Fi Goluk</string>
     <string name="wifi_link_36_text">Wi-Fi с именем GolukXXXX</string>
     <string name="wifi_link_conn_failed">Не удалось подключиться</string>
-    <string name="wifi_link_twinkle">мерцание</string>
+    <string name="wifi_link_twinkle">мерцание（Горит индикатор на T2）</string>
     <string name="wifi_link_wifi_light">Индикатор Wi-Fi</string>
     <string name="wifi_link_wifi_name">Названо</string>
     <string name="wifi_link_wifi_name2"> Wi-Fi</string>
@@ -823,7 +823,6 @@
     <string name="str_photo_check_ipc_state">Проверьте статус подключения к видеорегистратору</string>
     <string name="str_photo_delete_ok">Видео успешно удалено</string>
     <string name="str_load_below_txt">Загрузка</string>
-    <string name="str_settings_security_hint_text_g1">Когда автомобиль находится в движении, Goluk работает в режиме автоматической циклической записи; при этом текущее состояние автомобиля определяется автоматически. Когда автомобиль припаркован, Goluk делает снимок каждую секунду, а также включает режим определения вибрации (8 секунд видео до и 8 секунд видео после активации) и режим определения движения (8 секунд видео до и 8 секунд видео после активации)</string>
     <string name="str_settings_sleep_hint_text_t1">После активации этой функции устройство, обнаружив, что автомобиль не двигается уже 10 минут, для экономии заряда аккумулятора автоматически активирует режим сна на парковке со сверхнизким потреблением питания. Если при выключенном двигателе автомобиль продолжает питать прикуриватель в обычном режиме, эту функцию настоятельно рекомендуется отключить.</string>
     <string name="str_carrecoder_setting_photo_title">Качество изображения</string>
     <string name="str_ipc_dialog_normal">Убедитесь, что камера подключена надлежащим образом</string>
