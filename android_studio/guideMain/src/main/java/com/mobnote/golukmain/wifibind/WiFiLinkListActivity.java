@@ -335,7 +335,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         collectLog("isGetWifiBean", "willConnName2:" + mWillConnName + "  willConnMac2:" + mWillConnMac);
         saveConnectWifiMsg(mWillConnName, IPC_PWD_DEFAULT, mWillConnMac);
         setIpcMode(mWillConnName);
-        GolukDebugUtils.bt(GolukDebugUtils.CHOOSE_WIFI_LOG_TAG, "1.2 selected wifi :" + mWillConnName);
+        collectLog(GolukDebugUtils.CHOOSE_WIFI_LOG_TAG, "1.2 selected wifi :" + mWillConnName);
         return true;
     }
 
@@ -349,10 +349,10 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
     private void dealAutoConn() {
         collectLog("dealAutoConn", "-----1");
-        GolukDebugUtils.bt(GolukDebugUtils.CHOOSE_WIFI_LOG_TAG, "1.1 get selected wifi");
+        collectLog(GolukDebugUtils.CHOOSE_WIFI_LOG_TAG, "1.1 get selected wifi");
         // 获取当前连接的wifi
         if (!isGetWifiBean()) {
-            GolukDebugUtils.bt(GolukDebugUtils.CHOOSE_WIFI_LOG_TAG, "1.2 No selected wifi :");
+            collectLog(GolukDebugUtils.CHOOSE_WIFI_LOG_TAG, "1.2 No selected wifi :");
             return;
         }
         collectLog("dealAutoConn", "-----2");
@@ -392,17 +392,17 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         } else {
             mApp.mIpcIp = "";
         }
-        GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.1 setIpcWifiState");
+        collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.1 setIpcWifiState");
         boolean b = mApp.mIPCControlManager.setIPCWifiState(true, CONNECT_IPC_IP);
         GolukDebugUtils.e("", "bindbind-------------sendLogicLinkIpc  :" + b);
         collectLog("sendLogicLinkIpc", "--------3------: " + b);
         if (b) {
-            GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.2 setIpcWifiState return true");
+            collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.2 setIpcWifiState return true");
             this.showLoadingDialog();
             mCurrentState = STATE_CONNING;
             this.setStateSwitch();
         } else {
-            GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.2 setIpcWifiState return false");
+            collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.2 setIpcWifiState return false");
             connFailed();
         }
         GolukDebugUtils.e("", "WiFiLinkListActivity 通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
@@ -442,7 +442,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         // }
 
         GolukDebugUtils.e("", "bindbind-------------ipcFailedCallBack  :");
-        GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.3 Ipc Wifi Failed");
+        collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.3 Ipc Wifi Failed");
         collectLog("ipcLinkFailedCallBack", "--------2");
         mIsCanAcceptIPC = false;
         this.dimissLoadingDialog();
@@ -469,12 +469,12 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         // 标识已连接ipc热点,可以点击下一步
 //        this.nextCan();
 //        this.setStateSwitch();
-        GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.3 Ipc Wifi Connected");
+        collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.3 Ipc Wifi Connected");
         if (!mApp.isMainland()) {
             mApp.setBinding(true);
             mCurrentState = STATE_FAILED;
             mNeverReceiveMessage = true;
-            GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.3.1 International check version");
+            collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.3.1 International check version");
             mApp.getIPCControlManager().getVersion();
         } else {
             mCurrentState = STATE_SUCCESS;
@@ -616,7 +616,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     protected void toNextView() {
         setDefaultInfo();
         if (mApp.getEnableSingleWifi()) {
-            GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.4 Only Wifi Connected success");
+            collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.4 Only Wifi Connected success");
             if (mReturnToMainAlbum) {
                 Intent mainIntent = new Intent(WiFiLinkListActivity.this, MainActivity.class);
                 startActivity(mainIntent);
@@ -629,7 +629,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                 EventBus.getDefault().post(new EventFinishWifiActivity());
             }
         } else {
-            GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.4 to Hotspot");
+            collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.4 to Hotspot");
             Intent modifyPwd = new Intent(WiFiLinkListActivity.this, WiFiLinkCompleteActivity.class);
             modifyPwd.putExtra("com.mobnote.golukmain.wifiname", WiFiInfo.IPC_SSID);
             modifyPwd.putExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, mReturnToMainAlbum);
@@ -709,7 +709,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             if (param1 == RESULE_SUCESS) {
                 String str = (String) param2;
                 if (TextUtils.isEmpty(str)) {
-                    GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.3.2 International check version Failed");
+                    collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.3.2 International check version Failed");
                     return;
                 }
                 try {
@@ -722,11 +722,11 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                         mApp.isIpcConnSuccess = false;
                         mCurrentState = STATE_FAILED;
                         mBaseHandler.sendEmptyMessage(MSG_H_REGION);
-                        GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.3.2 International check version forbidden");
+                        collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.3.2 International check version forbidden");
                     } else {
                         mCurrentState = STATE_SUCCESS;
                         mNeverReceiveMessage = false;
-                        GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.3.2 International check version allowed");
+                        collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.3.2 International check version allowed");
                         doConnect();
                     }
                 } catch (JSONException e) {

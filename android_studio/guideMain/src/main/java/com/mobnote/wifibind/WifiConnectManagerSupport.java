@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 
+import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -30,6 +31,9 @@ import android.net.wifi.WifiConfiguration.AuthAlgorithm;
 import android.net.wifi.WifiConfiguration.KeyMgmt;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.mobnote.golukmain.reportlog.ReportLogManager;
+import com.mobnote.util.JsonUtil;
 
 public class WifiConnectManagerSupport {
 
@@ -161,9 +165,9 @@ public class WifiConnectManagerSupport {
             bRet = wifiManager.setWifiEnabled(true);
         } else {
             if (!wifiManager.isWifiEnabled()) {
-                GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "setWifiEnabled started");
+                collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "setWifiEnabled started");
                 bRet = wifiManager.setWifiEnabled(true);
-                GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "setWifiEnabled finished");
+                collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "setWifiEnabled finished");
             }
         }
         return bRet;
@@ -171,7 +175,7 @@ public class WifiConnectManagerSupport {
 
     // 关闭wifi功能
     boolean closeWifi() {
-        GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "setWifi not Enabled");
+        collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "setWifi not Enabled");
         setWifiApEnabled(null, false);
         boolean bRet = wifiManager.isWifiEnabled();
         int count = 0;
@@ -181,14 +185,14 @@ public class WifiConnectManagerSupport {
                     return false;
                 }
                 Thread.sleep(500);
-                GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "setWifi not Enabled waiting 500 MS");
+                collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "setWifi not Enabled waiting 500 MS");
                 bRet = wifiManager.isWifiEnabled();
                 count++;
             } catch (Exception e) {
             }
 
         }
-        GolukDebugUtils.bt(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "setWifi not Enabled");
+        collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "setWifi not Enabled");
         return bRet;
     }
 
@@ -285,13 +289,17 @@ public class WifiConnectManagerSupport {
      */
     public WifiRsBean getConnResult(String title) {
         String regEx = "^" + title;
-
+        ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "before getConnectionInfo"));
         WifiInfo info = wifiManager.getConnectionInfo();
+        ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "after getConnectionInfo"));
         WifiRsBean bean = null;
         if (info != null && info.getSSID() != null) {
+
             String tmpSsid = info.getSSID().replace("\"", "");
+            ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "info true :ssid " + tmpSsid));
             Matcher matcher = Pattern.compile(regEx).matcher(tmpSsid);
             if (matcher != null && matcher.find()) {
+                ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "matcher.find() true "));
                 bean = new WifiRsBean();
                 bean.setIpc_ssid(tmpSsid);
                 bean.setIpc_bssid(info.getMacAddress());
@@ -299,7 +307,7 @@ public class WifiConnectManagerSupport {
                 bean.setIpc_ip(int2ip(info.getIpAddress()));
             }
         }
-
+        ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "bean Result: " + bean ==null?" is null" : bean.getIpc_ip()));
         return bean;
     }
 
@@ -611,5 +619,10 @@ public class WifiConnectManagerSupport {
             Log.e(this.getClass().toString(), "", e);
             return false;
         }
+    }
+
+    private void collectLog(String method, String msg) {
+        ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND)
+                .addLogData(JsonUtil.getReportData(TAG, method, msg));
     }
 }

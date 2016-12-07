@@ -5,7 +5,9 @@ import org.json.JSONObject;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.multicast.IMultiCastFn;
 import com.mobnote.golukmain.multicast.NetUtil;
+import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.JsonUtil;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import android.annotation.SuppressLint;
@@ -16,6 +18,7 @@ import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
 
+import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
@@ -390,17 +393,17 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
             Message msg = new Message();
 
             public void run() {
-                GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3 " + type + " create hotspot");
+                collectLog(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3 " + type + " create hotspot");
                 int sTime = 0;
                 try {
-                    GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, type + "3.1.1 " + type + "  open wifi");
+                    collectLog(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, type + "3.1.1 " + type + "  open wifi");
                     sTime = openWifi(false, outTime);
-                    GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.1.2  " + type + " close wifi");
+                    collectLog(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.1.2  " + type + " close wifi");
                     wifiSupport.closeWifi();
-                    GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.1.2  " + type + " create cellphone hotspot " + ssid);
+                    collectLog(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.1.2  " + type + " create cellphone hotspot " + ssid);
                     apManagesupport.createWifiHot(ssid, password);
                 } catch (Exception e) {
-                    GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.1  " + type + " create hotspot Exception " + GolukUtils.getExceptionStackString(e));
+                    collectLog(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.1  " + type + " create hotspot Exception " + GolukUtils.getExceptionStackString(e));
                     e.printStackTrace();
                     CrashReport.postCatchedException(e);
                 }
@@ -416,7 +419,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
                         if (tempTime > sTime) {
                             wifiSupport.closeWifi();
                             msg.what = Integer.parseInt("-" + type + "4");
-                            GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.2 " + type + " create cellphone timeout " + String.valueOf(outTime));
+                            collectLog(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.2 " + type + " create cellphone timeout " + String.valueOf(outTime));
                             try {
                                 throw new RuntimeException(type + " create cellphone timeout: " + String.valueOf(outTime));
                             } catch (Exception e) {
@@ -428,7 +431,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
                             return;
                         }
                     } catch (InterruptedException e) {
-                        GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.2  " + type + " create hotspot InterruptedException " + GolukUtils.getExceptionStackString(e));
+                        collectLog(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.2  " + type + " create hotspot InterruptedException " + GolukUtils.getExceptionStackString(e));
                         e.printStackTrace();
                         CrashReport.postCatchedException(e);
                     }
@@ -437,7 +440,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
                 GolukDebugUtils.i(TAG, "创建热成功");
                 msg.what = Integer.parseInt(type + "1");
                 WifiRsBean rs = wifiSupport.getConnResult();
-                GolukDebugUtils.bt(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.3  " + type + " create hotspot success " + rs.getIpc_ssid());
+                collectLog(GolukDebugUtils.CREATE_HOTSOPT_LOG_TAG, "3.3  " + type + " create hotspot success " + rs.getIpc_ssid());
                 msg.obj = rs;
                 handler.sendMessage(msg);
                 GolukDebugUtils.i(TAG, "创建热点等待ipc接入");
@@ -839,5 +842,11 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
         } else {
             this.unbind();
         }
+    }
+
+
+    private void collectLog(String method, String msg) {
+        ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND)
+                .addLogData(JsonUtil.getReportData(TAG, method, msg));
     }
 }

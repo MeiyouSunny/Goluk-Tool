@@ -368,6 +368,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
      * 退出页面设置
      */
     private void backSetup() {
+        ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setType(ReportLog.TYPE_FAILED);
+        reportLog();
         if (isExit) {
             return;
         }
