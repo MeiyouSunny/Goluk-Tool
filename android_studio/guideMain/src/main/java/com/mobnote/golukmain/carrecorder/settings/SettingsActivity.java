@@ -669,12 +669,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mVoiceTypeLayout.setVisibility(View.GONE);
 		}
 
-        //国际版不显示购买链接
-        if (GolukApplication.getInstance().isMainland()) {
+        //国际版不显示购买链接     --- 2016.12.7 国际版显示统一的亚马逊链接
+        //if (GolukApplication.getInstance().isMainland()) {
             findViewById(R.id.mBugLayout).setVisibility(View.VISIBLE);
-        } else {
-            findViewById(R.id.mBugLayout).setVisibility(View.GONE);
-        }
+        //} else {
+         //   findViewById(R.id.mBugLayout).setVisibility(View.GONE);
+        //}
 
 		mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
 		findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_close_btn);// 打开

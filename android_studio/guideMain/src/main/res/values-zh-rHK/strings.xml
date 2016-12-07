@@ -246,7 +246,7 @@
     <string name="str_middle">中</string>
     <string name="str_high">高</string>
     <string name="setting_tcaf_title">泊車安全模式</string>
-    <string name="pzgy_text">汽車狀態檢測：行車時，極路客會按循環錄影模式的設運作；泊車期間，極路客會每秒拍 1 張片，同時啟動震動感應器 (震動前後 8 秒影片) 和移動感應器 (移動前後 8 秒影片) 。</string>
+    <string name="pzgy_text">自動判斷車輛目前狀態；當車輛正在行駛，極路客將按照「自動循環攝錄模式」的狀態進行操作。停車後，極路客會啟用震動偵測模式（觸發前後 8 秒的影片）和動態偵測模式（觸發前後 8 秒的影片）。</string>
     <string name="str_settings_security_hint_text_g2">汽車狀態檢測：行車時，極路客會按循環錄影模式的設運作；泊車期間，極路客會每秒拍 1 張片，同時啟動震動感應器 (震動前後 8 秒影片) 和移動感應器 (移動前後 8 秒影片) 。</string>
     <string name="sjsz">日期和時間</string>
     <string name="bbxx">關於</string>
