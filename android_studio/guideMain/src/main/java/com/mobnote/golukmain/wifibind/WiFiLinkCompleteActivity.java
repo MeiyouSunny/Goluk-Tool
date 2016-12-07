@@ -584,6 +584,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         mainIntent.putExtra(WiFiLinkNoHotspotActivity.AUTO_START_CONNECT, false);
         mainIntent.putExtra(WiFiLinkNoHotspotActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, mReturnToMainAlbum);
         startActivity(mainIntent);
+        ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setType(ReportLog.TYPE_FAILED);
+        reportLog();
         finish();
 //        if (0 == mStep) {
 //            collectLog("connFailed", "connFailed show Dialog  please 5~10s");
