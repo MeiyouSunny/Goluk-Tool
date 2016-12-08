@@ -491,7 +491,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			findViewById(R.id.tv_t_settings_security_desc).setVisibility(View.GONE);
 		}
 //		if(!getApp().isMainland()){
-//			findViewById(R.id.ly_t_settings_buy).setVisibility(View.VISIBLE);
+			findViewById(R.id.ly_t_settings_buy).setVisibility(View.VISIBLE);
 //		}else{
 //			findViewById(R.id.ly_t_settings_buy).setVisibility(View.GONE);
 //		}
