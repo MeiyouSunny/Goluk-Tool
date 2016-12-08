@@ -723,8 +723,7 @@
                 android:layout_marginTop="8dp"
                 android:contentDescription="@string/def"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="gone" >
+                android:orientation="horizontal" >
 
                 <ImageView
                     android:layout_width="14dp"

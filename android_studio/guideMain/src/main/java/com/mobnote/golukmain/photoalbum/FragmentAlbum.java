@@ -186,8 +186,9 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         mCBAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mCBAll.setText(isChecked?R.string.un_select_all:R.string.select_all);
-                mLocalFragment.allSelect(isChecked);
+                boolean all = mCBAll.getText().equals(getString(R.string.select_all));
+                adaptCbAllText(!all);
+                mLocalFragment.allSelect(all);
             }
         });
     }
@@ -295,7 +296,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         mTitleName.setVisibility(View.GONE);
         mEditLayout.setVisibility(View.GONE);
         selectedListData.clear();
-
+        adaptCbAllText(true);
     }
 
     @Override
@@ -453,6 +454,10 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
             mDeleteIcon.setBackgroundResource(R.drawable.select_video_del_icon);
             mDownLoadIcon.setBackgroundResource(R.drawable.photo_download_icon);
         }
+    }
+
+    public void adaptCbAllText(boolean all){
+       mCBAll.setText(all?R.string.select_all:R.string.un_select_all);
     }
 
     public void updateTitleName(String titlename) {

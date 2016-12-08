@@ -212,6 +212,7 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
             mFragmentAlbum.updateTitleName(getActivity().getString(R.string.str_photo_select,
                     selectedListData.size() + ""));
         }
+        mFragmentAlbum.adaptCbAllText(selectedListData.size() != mDataList.size());
     }
 
 

@@ -467,7 +467,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		}
 		if (mAutoRecycleLayout.getVisibility() == View.VISIBLE) {
 			mVoiceRecordLayout.setVisibility(View.VISIBLE);
-			mAutoPhotoLayout.setVisibility(View.VISIBLE);
+//			mAutoPhotoLayout.setVisibility(View.VISIBLE);
 		} else {
 			mVoiceRecordLayout.setVisibility(View.GONE);
 			mAutoPhotoLayout.setVisibility(View.GONE);

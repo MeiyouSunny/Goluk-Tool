@@ -307,7 +307,13 @@ public class WifiConnectManagerSupport {
                 bean.setIpc_ip(int2ip(info.getIpAddress()));
             }
         }
-        ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "bean Result: " + bean ==null?" is null" : bean.getIpc_ip()));
+        String msg ;
+        if(bean == null){
+            msg = "bean Result: is null ";
+        }else{
+            msg = "bean Result: "+ bean.toString();
+        }
+        ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", msg));
         return bean;
     }
 

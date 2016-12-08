@@ -143,4 +143,24 @@ public class WifiRsBean {
 
     }
 
+
+    @Override
+    public String toString() {
+        return "WifiRsBean{" +
+                "ipc_bssid='" + ipc_bssid + '\'' +
+                ", ipc_ssid='" + ipc_ssid + '\'' +
+                ", ipc_mac='" + ipc_mac + '\'' +
+                ", ipc_model='" + ipc_model + '\'' +
+                ", ipc_ip='" + ipc_ip + '\'' +
+                ", ipc_pass='" + ipc_pass + '\'' +
+                ", ph_ssid='" + ph_ssid + '\'' +
+                ", ph_mac='" + ph_mac + '\'' +
+                ", ph_pass='" + ph_pass + '\'' +
+                ", ph_ip='" + ph_ip + '\'' +
+                ", ph_bssid='" + ph_bssid + '\'' +
+                ", isconn=" + isconn +
+                ", passnull=" + passnull +
+                ", wifiSignal=" + wifiSignal +
+                '}';
+    }
 }
