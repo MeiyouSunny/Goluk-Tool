@@ -198,18 +198,40 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
                 selectedListData.add(tag1);
                 mTMLayout1.setVisibility(View.VISIBLE);
             }
-
-            if (selectedListData.size() == 0) {
-                mFragmentAlbum.updateTitleName(getActivity().getResources()
-                        .getString(R.string.local_video_title_text));
-                mFragmentAlbum.updateDeleteState(false);
-            } else {
-                mFragmentAlbum.updateDeleteState(true);
-                mFragmentAlbum.updateTitleName(getActivity().getString(R.string.str_photo_select,
-                        selectedListData.size() + ""));
-            }
+            updateView(selectedListData);
         }
     }
+
+    private void updateView(List<String> selectedListData){
+        if (selectedListData.size() == 0) {
+            mFragmentAlbum.updateTitleName(getActivity().getResources()
+                    .getString(R.string.local_video_title_text));
+            mFragmentAlbum.updateDeleteState(false);
+        } else {
+            mFragmentAlbum.updateDeleteState(true);
+            mFragmentAlbum.updateTitleName(getActivity().getString(R.string.str_photo_select,
+                    selectedListData.size() + ""));
+        }
+    }
+
+
+    public void allSelect(boolean selected){
+        List<String> selectedListData = mFragmentAlbum.getSelectedList();
+        selectedListData.clear();
+        if(selected) {
+            for (DoubleVideoInfo doubleVideoInfo : mDoubleDataList) {
+                if (doubleVideoInfo.getVideoInfo1() != null) {
+                    selectedListData.add(doubleVideoInfo.getVideoInfo1().videoPath);
+                }
+                if (doubleVideoInfo.getVideoInfo2() != null) {
+                    selectedListData.add(doubleVideoInfo.getVideoInfo2().videoPath);
+                }
+            }
+        }
+        updateView(selectedListData);
+        mWonderfulVideoAdapter.notifyDataSetChanged();
+    }
+
 
     /**
      * 跳转到本地视频播放页面
@@ -316,6 +338,7 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
             loadData(true);
         }
     }
+
 
     @Override
     public void onDestroy() {

@@ -247,6 +247,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         } else {
             if (connectCount > 3) {
                 GolukUtils.showToast(this, this.getResources().getString(R.string.wifi_link_bind_failed));
+                connFailed();
             } else {
                 GolukUtils.showToast(this, this.getResources().getString(R.string.wifi_link_bind_failed_retry));
                 setIpcLinkInfo();

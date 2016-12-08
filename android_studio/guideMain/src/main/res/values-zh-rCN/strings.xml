@@ -1047,4 +1047,6 @@
     <string name="str_tag_tab_hot">热门</string>
     <string name="str_tag_description_more">更多</string>
     <string name="setting_anti_flicker" >抗闪烁设置</string>
+    <string name="select_all">全选</string>
+    <string name="un_select_all">取消全选</string>
 </resources>

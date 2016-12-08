@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -52,7 +54,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
     private TextView mTabWonderful;
     private TextView mTabUrgent;
     private TextView mTabLoop;
-
+    private CheckBox mCBAll;
     private Button mCancelBtn;
 
     private ImageView mEditBtn;
@@ -75,6 +77,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
     private boolean editState = false;
 
     private LinearLayout mDownLoadBtn = null;
+    private LinearLayout mLLAll;
 
     private List<String> selectedListData = null;
 
@@ -158,12 +161,12 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         mTitleName = (TextView) mAlbumRootView.findViewById(R.id.video_title_text);
         mLinearLayoutTab = (LinearLayout) mAlbumRootView.findViewById(R.id.tab_type);
         mDownLoadBtn = (LinearLayout) mAlbumRootView.findViewById(R.id.mDownLoadBtn);
-
+        mLLAll = (LinearLayout) mAlbumRootView.findViewById(R.id.ll_select_all);
         mDownLoadIcon = (ImageView) mAlbumRootView.findViewById(R.id.mDownLoadIcon);
         mDeleteIcon = (ImageView) mAlbumRootView.findViewById(R.id.mDeleteIcon);
         mCancelBtn = (Button) mAlbumRootView.findViewById(R.id.cancel_btn);
         ImageView mBackBtn = (ImageView) mAlbumRootView.findViewById(R.id.back_btn);
-
+        mCBAll = (CheckBox) mAlbumRootView.findViewById(R.id.cb_select_all);
         if (parentViewIsMainActivity) {
             mBackBtn.setVisibility(View.GONE);
         } else {
@@ -179,6 +182,14 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         mTabUrgent.setOnClickListener(this);
         mTabLoop.setOnClickListener(this);
         mEditBtn.setOnClickListener(this);
+        mLLAll.setOnClickListener(this);
+        mCBAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mCBAll.setText(isChecked?R.string.un_select_all:R.string.select_all);
+                mLocalFragment.allSelect(isChecked);
+            }
+        });
     }
 
     @Override
@@ -310,7 +321,12 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                 return;
             }
             downloadVideoFlush();
-        } else if (id == R.id.cancel_btn) {
+        }else if(id == R.id.ll_select_all){
+            if (selectedListData.size() <= 0) {
+                return;
+            }
+            mCBAll.setChecked(!mCBAll.isChecked());
+        }else if (id == R.id.cancel_btn) {
             resetEditState();
             setEditBtnState(true);
             GolukUtils.setTabHostVisibility(true, getActivity());
@@ -407,12 +423,16 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 
             if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
                 mDownLoadBtn.setVisibility(View.GONE);
+                mLLAll.setVisibility(View.VISIBLE);
             } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
                 mDownLoadBtn.setVisibility(View.VISIBLE);
+                mLLAll.setVisibility(View.GONE);
             } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
                 mDownLoadBtn.setVisibility(View.VISIBLE);
+                mLLAll.setVisibility(View.GONE);
             } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
                 mDownLoadBtn.setVisibility(View.VISIBLE);
+                mLLAll.setVisibility(View.GONE);
             }
         }
     }
