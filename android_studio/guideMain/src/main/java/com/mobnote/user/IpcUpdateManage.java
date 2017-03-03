@@ -9,6 +9,11 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.mobnote.application.GolukApplication;
@@ -313,11 +318,27 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
      * ipc下载文件
      */
     public void ipcUpgrade(final int type, final IPCInfo ipcInfo, String message) {
+        if (ipcInfo == null || TextUtils.isEmpty(ipcInfo.version)) {
+            return;
+        }
+        // 如果当前版本被忽略更新过，则不弹框
+        String latestIgnoredIpcUpgradeVersion = SharedPrefUtil.getLatestIgnoredIpcUpgradeVersion();
+        if (!TextUtils.isEmpty(latestIgnoredIpcUpgradeVersion) && latestIgnoredIpcUpgradeVersion.equals(ipcInfo.version)) {
+            return;
+        }
+
         GolukDebugUtils.i(TAG, "------------isConnect-----------" + mApp.isIpcLoginSuccess);
         GolukDebugUtils.i(TAG, "=======弹出Dialog=======type：" + type);
         final String[] operate = {""};
         final String msg = TYPE_DOWNLOAD == type ? mApp.getContext().getResources().getString(R.string.str_download)
                 : mApp.getContext().getResources().getString(R.string.str_update);
+
+        LayoutInflater layoutInflater = LayoutInflater.from(mApp.getContext());
+        View ignoreView = layoutInflater.inflate(R.layout.upgrade_ignore, null);
+        TextView ignoreTV = (TextView) ignoreView.findViewById(R.id.tv_ignore);
+        ignoreTV.setText(R.string.ignore_curr_ipc_version);
+        final CheckBox ignoreCheckbox = (CheckBox) ignoreView.findViewById(R.id.checkbox_ignore);
+
         mDownloadDialog = new AlertDialog.Builder(mApp.getContext())
                 .setTitle(mApp.getContext().getResources().getString(R.string.str_ipc_update_prompt))
                 .setMessage(message).setPositiveButton(msg, new DialogInterface.OnClickListener() {
@@ -332,6 +353,9 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                 }).setNegativeButton(mApp.getContext().getResources().getString(R.string.str_update_later), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
+                        if (ignoreCheckbox.isChecked()) {
+                            SharedPrefUtil.setLatestIgnoredIpcUpgradeVersion(ipcInfo.version);
+                        }
                         operate[0] = mApp.getContext().getString(R.string.str_zhuge_ipc_update_dialog_operate_ignore);
                         if (type == 0) {
                             EventBus.getDefault().post(new EventIPCCheckUpgradeResult(EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_DELAY, ipcInfo));
@@ -341,7 +365,7 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                     }
                 })
                 .setCancelable(false).create();
-
+        mDownloadDialog.setView(ignoreView, 20,0,0,0);
         ZhugeUtils.eventIpcUpdateDialog(mApp.getContext(), operate[0]);
 
         mDownloadDialog.show();

@@ -5,6 +5,7 @@ import com.mobnote.application.GolukApplication;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import org.json.JSONException;
@@ -176,6 +177,20 @@ public class SharedPrefUtil {
 
     public static final String PROPERTY_CACHE_ALL_CAR_BRAND = "is_cache_all_car_brand";
 
+    /**
+     * 最近被忽略更新的ipc版本号
+     */
+    public static final String LATEST_IGNORED_IPC_UPGRADE_VERSION = "latest_ignored_ipc_upgrade_version";
+
+    public static String getLatestIgnoredIpcUpgradeVersion() {
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(GolukApplication.getInstance().getContext());
+        return preference.getString(LATEST_IGNORED_IPC_UPGRADE_VERSION, "");
+    }
+
+    public static boolean setLatestIgnoredIpcUpgradeVersion(String ipcVersion) {
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(GolukApplication.getInstance().getContext());
+        return preference.edit().putString(LATEST_IGNORED_IPC_UPGRADE_VERSION, ipcVersion).commit();
+    }
 
     public static void setTokenId(String tokenid) {
         SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);

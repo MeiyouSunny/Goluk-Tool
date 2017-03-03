@@ -1078,4 +1078,5 @@
     <string name="anti_flicker_60hz">60Hz</string>
     <string name="select_all">Select All</string>
     <string name="un_select_all">Deselect</string>
+    <string name="ignore_curr_ipc_version">忽略此版本</string>
 </resources>
