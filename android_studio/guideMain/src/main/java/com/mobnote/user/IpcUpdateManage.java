@@ -159,7 +159,7 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                 // 上次检查结果的Dialog还存在，不进行下次操作
                 return false;
             }
-            this.cancelHttpRequest();
+//            this.cancelHttpRequest();
 //            String ipcString = JsonUtil.putIPC(VERSION_PATH, vipc, mApp.mIPCControlManager.mProduceName);
 //            boolean b = mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage,
 //                    IPageNotifyFn.PageType_CheckUpgrade, ipcString);
@@ -324,7 +324,7 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
         // 如果当前的请求来自启动页，且当前版本被忽略更新过，则不弹框
         String latestIgnoredIpcUpgradeVersion = SharedPrefUtil.getLatestIgnoredIpcUpgradeVersion();
         if (!TextUtils.isEmpty(latestIgnoredIpcUpgradeVersion)
-                && FUNCTION_AUTO == mFunction
+                && mFunction == FUNCTION_AUTO
                 && latestIgnoredIpcUpgradeVersion.equals(ipcInfo.version)) {
             return;
         }
@@ -355,7 +355,7 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                 }).setNegativeButton(mApp.getContext().getResources().getString(R.string.str_update_later), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        if (ignoreCheckbox.isChecked()) {
+                        if (mFunction == FUNCTION_AUTO && ignoreCheckbox.isChecked()) {
                             SharedPrefUtil.setLatestIgnoredIpcUpgradeVersion(ipcInfo.version);
                         }
                         operate[0] = mApp.getContext().getString(R.string.str_zhuge_ipc_update_dialog_operate_ignore);
@@ -367,7 +367,9 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                     }
                 })
                 .setCancelable(false).create();
-        mDownloadDialog.setView(ignoreView, 20,0,0,0);
+        if (mFunction == FUNCTION_AUTO) {
+            mDownloadDialog.setView(ignoreView, 20,0,0,0);
+        }
         ZhugeUtils.eventIpcUpdateDialog(mApp.getContext(), operate[0]);
 
         mDownloadDialog.show();
@@ -918,6 +920,5 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
             }
             e.printStackTrace();
         }
-        mFunction = -1;
     }
 }
