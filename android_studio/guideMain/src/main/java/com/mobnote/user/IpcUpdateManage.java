@@ -321,9 +321,11 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
         if (ipcInfo == null || TextUtils.isEmpty(ipcInfo.version)) {
             return;
         }
-        // 如果当前版本被忽略更新过，则不弹框
+        // 如果当前的请求来自启动页，且当前版本被忽略更新过，则不弹框
         String latestIgnoredIpcUpgradeVersion = SharedPrefUtil.getLatestIgnoredIpcUpgradeVersion();
-        if (!TextUtils.isEmpty(latestIgnoredIpcUpgradeVersion) && latestIgnoredIpcUpgradeVersion.equals(ipcInfo.version)) {
+        if (!TextUtils.isEmpty(latestIgnoredIpcUpgradeVersion)
+                && FUNCTION_AUTO == mFunction
+                && latestIgnoredIpcUpgradeVersion.equals(ipcInfo.version)) {
             return;
         }
 
