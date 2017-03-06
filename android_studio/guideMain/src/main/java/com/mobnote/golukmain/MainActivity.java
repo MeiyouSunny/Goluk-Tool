@@ -46,6 +46,7 @@ import cn.com.tiros.baidu.LocationAddressDetailBean;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.elvishew.xlog.XLog;
 import com.google.widget.FragmentTabHost;
 import com.mobnote.application.GlobalWindow;
 import com.mobnote.application.GolukApplication;
@@ -204,7 +205,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         GolukDebugUtils.e("", "crash zh start App ------ MainActivity-----onCreate------------:");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.index);
-
+        XLog.i("main onCreate");
         initView();
 
         // 在使用SDK各组件之前初始化context信息，传入ApplicationContext

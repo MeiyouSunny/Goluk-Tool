@@ -31,6 +31,7 @@ import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.tiros.api.BuildConfig;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.baidu.BaiduLocation;
@@ -38,6 +39,15 @@ import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.baidu.mapapi.SDKInitializer;
+import com.elvishew.xlog.LogConfiguration;
+import com.elvishew.xlog.LogLevel;
+import com.elvishew.xlog.XLog;
+import com.elvishew.xlog.printer.AndroidPrinter;
+import com.elvishew.xlog.printer.ConsolePrinter;
+import com.elvishew.xlog.printer.Printer;
+import com.elvishew.xlog.printer.file.FilePrinter;
+import com.elvishew.xlog.printer.file.backup.NeverBackupStrategy;
+import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventIpcConnState;
 import com.mobnote.eventbus.EventMessageUpdate;
@@ -334,6 +344,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             WifiBindDataCenter.getInstance().setAdatper(new JsonWifiBindManager());
             GolukVideoInfoDbManager.getInstance().initDb(this.getApplicationContext());
             GolukUmConfig.UmInit();
+            initXLog();
 
             GolukMobUtils.initMob(this);
 
@@ -344,6 +355,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 
         // TODO 此处不要做初始化相关的工作
     }
+
 
     public Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
@@ -366,6 +378,30 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 
         ;
     };
+
+    private void initXLog() {
+        LogConfiguration config = new LogConfiguration.Builder()
+                .logLevel(LogLevel.ALL)            // Specify log level, logs below this level won't be printed, default: LogLevel.ALL
+                .tag("goluk")                                         // Specify TAG, default: "X-LOG"
+                .nt()                                                   // Enable thread info, disabled by default
+                .st(1)                                                 // Enable stack trace info with depth 2, disabled by default
+                .b()                                                   // Enable border, disabled by default
+                .build();
+
+        Printer androidPrinter = new AndroidPrinter();             // Printer that print the log using android.util.Log
+        Printer consolePrinter = new ConsolePrinter();             // Printer that print the log to console using System.out
+        Printer filePrinter = new FilePrinter                      // Printer that print the log to the file system
+                .Builder("/sdcard/golukLog")                              // Specify the path to save log file
+                .fileNameGenerator(new DateFileNameGenerator())        // Default: ChangelessFileNameGenerator("log")
+                .backupStrategy(new NeverBackupStrategy())             // Default: FileSizeBackupStrategy(1024 * 1024)
+                .build();
+
+        XLog.init(                                                 // Initialize XLog
+                config,                                                // Specify the log configuration, if not specified, will use new LogConfiguration.Builder().build()
+                androidPrinter,                                        // Specify printers, if no printer is specified, AndroidPrinter(for Android)/ConsolePrinter(for java) will be used.
+                consolePrinter,
+                filePrinter);
+    }
 
     public void initLogic() {
         if (null != mGoluk) {

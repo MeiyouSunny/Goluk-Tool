@@ -76,5 +76,6 @@ dependencies {
     compile files('libs/SocialSDK_instagram.jar')
     compile files('libs/mta-sdk-1.6.2.jar')
     compile 'com.android.support:recyclerview-v7:23.3.0'
+    compile 'com.elvishew:xlog:1.3.0'
 }
 

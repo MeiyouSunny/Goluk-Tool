@@ -1,5 +1,6 @@
 package com.mobnote.golukmobile;
 
+import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventStartApp;
 import com.mobnote.golukmain.BaseActivity;
@@ -56,6 +57,7 @@ public class GuideActivity extends BaseActivity {
 		mPreExist = mApp.isExit();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.guide);
+		XLog.i("guide on create");
 		mContext = this;
 		GolukApplication.getInstance().setContext(this, "GuideActivity");
 		mBackground = (RelativeLayout) findViewById(R.id.ry_guide_background_layout);

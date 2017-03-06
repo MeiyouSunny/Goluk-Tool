@@ -16,6 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventIPCCheckUpgradeResult;
@@ -147,6 +148,7 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
      * 升级 将appVersion和ipcVersion信息请求给服务器
      */
     public boolean requestInfo(int function, String vIpc) {
+        XLog.i("start versionCheckRequest, curr function = " + function);
         CheckUpgradeRequest checkRequest = new CheckUpgradeRequest(IPageNotifyFn.PageType_CheckUpgrade, this);
         if (!UserUtils.isNetDeviceAvailable(mApp.getContext())) {
             if (function == FUNCTION_SETTING_APP || function == FUNCTION_SETTING_IPC) {
@@ -371,6 +373,7 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
             mDownloadDialog.setView(ignoreView, 20,0,0,0);
         }
         ZhugeUtils.eventIpcUpdateDialog(mApp.getContext(), operate[0]);
+        XLog.i("show the ipc upgrade dialog");
 
         mDownloadDialog.show();
     }
@@ -631,6 +634,7 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                     }
                 }).create();
         mAppUpdateDialog.show();
+        XLog.i("show the app force upgrade dialog");
     }
 
     /**
@@ -665,6 +669,7 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                     }
                 }).create();
         mAppUpdateDialog.show();
+        XLog.i("show the app normal upgrade dialog");
     }
 
     /**
@@ -807,7 +812,10 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
         }
         try {
             JSONObject jsonData = new JSONObject(JSON.toJSONString(bean.dataInfo));
-
+            if (jsonData != null) {
+                XLog.i("follow is versionCheckResponse");
+                XLog.json(JSON.toJSONString(bean.dataInfo));
+            }
             final String goluk = jsonData.getString("goluk");
             JSONArray ipc = jsonData.getJSONArray("ipc");
             // 保存ipc匹配信息
