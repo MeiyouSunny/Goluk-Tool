@@ -653,7 +653,7 @@
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:paddingTop="10dp"
-                android:text="@string/pzgy_text"
+                android:text="@string/str_settings_sleep_hint_text_g1"
                 android:textColor="#999999"
                 android:textSize="12sp"
                 android:visibility="gone" />
