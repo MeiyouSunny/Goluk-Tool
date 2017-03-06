@@ -345,7 +345,8 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
 
         mDownloadDialog = new AlertDialog.Builder(mApp.getContext())
                 .setTitle(mApp.getContext().getResources().getString(R.string.str_ipc_update_prompt))
-                .setMessage(message).setPositiveButton(msg, new DialogInterface.OnClickListener() {
+                .setMessage(message)
+                .setPositiveButton(msg, new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
@@ -359,7 +360,7 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                     public void onClick(DialogInterface arg0, int arg1) {
                         if (mFunction == FUNCTION_AUTO && ignoreCheckbox.isChecked()) {
                             SharedPrefUtil.setLatestIgnoredIpcUpgradeVersion(ipcInfo.version);
-                            XLog.i("later with ignore");
+                            XLog.i("later with ignore ipc update");
                         }
                         operate[0] = mApp.getContext().getString(R.string.str_zhuge_ipc_update_dialog_operate_ignore);
                         if (type == 0) {
@@ -491,7 +492,7 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
             if (isUpdate.equals("1")) {
                 showUpgradeGoluk(mApp.getContext(), appcontent, url);
             } else if (isUpdate.equals("0")) {
-                showUpgradeGoluk2(mApp.getContext(), appcontent, url);
+                showUpgradeGoluk2(mApp.getContext(), appcontent, url, appInfo);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -641,20 +642,41 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
     /**
      * 非强制升级提示
      */
-    public void showUpgradeGoluk2(final Context mContext, String message, final String url) {
+    public void showUpgradeGoluk2(final Context mContext, String message, final String url, final APPInfo appInfo) {
+        if (appInfo == null || TextUtils.isEmpty(appInfo.version)) {
+            return;
+        }
+        // 如果当前的请求来自启动页，且当前版本被忽略更新过，则不弹框
+        String latestIgnoredAppUpgradeVersion = SharedPrefUtil.getLatestIgnoredAppUpgradeVersion();
+        if (!TextUtils.isEmpty(latestIgnoredAppUpgradeVersion)
+                && mFunction == FUNCTION_AUTO
+                && latestIgnoredAppUpgradeVersion.equals(appInfo.version)) {
+            return;
+        }
+
+        LayoutInflater layoutInflater = LayoutInflater.from(mApp.getContext());
+        View ignoreView = layoutInflater.inflate(R.layout.upgrade_ignore, null);
+        TextView ignoreTV = (TextView) ignoreView.findViewById(R.id.tv_ignore);
+        ignoreTV.setText(R.string.ignore_curr_ipc_version);
+        final CheckBox ignoreCheckbox = (CheckBox) ignoreView.findViewById(R.id.checkbox_ignore);
+
         mBuilder = new AlertDialog.Builder(mContext);
         mAppUpdateDialog = mBuilder
                 .setTitle(mApp.getContext().getResources().getString(R.string.str_app_update_prompt))
                 .setMessage(message)
-                .setPositiveButton(mApp.getContext().getResources().getString(R.string.str_update_later),
+                .setNegativeButton(mApp.getContext().getResources().getString(R.string.str_update_later),
                         new DialogInterface.OnClickListener() {
 
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
+                                if (mFunction == FUNCTION_AUTO && ignoreCheckbox.isChecked()) {
+                                    SharedPrefUtil.setLatestIgnoredAppUpgradeVersion(appInfo.version);
+                                    XLog.i("later with ignore app upgrade");
+                                }
                                 dimissAppDialog();
                             }
                         })
-                .setNegativeButton(mApp.getContext().getResources().getString(R.string.str_app_download),
+                .setPositiveButton(mApp.getContext().getResources().getString(R.string.str_app_download),
                         new DialogInterface.OnClickListener() {
 
                             @Override
@@ -669,6 +691,9 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                         return keyCode == KeyEvent.KEYCODE_BACK;
                     }
                 }).create();
+        if (mFunction == FUNCTION_AUTO) {
+            mAppUpdateDialog.setView(ignoreView, 20,0,0,0);
+        }
         mAppUpdateDialog.show();
         XLog.i("show the app normal upgrade dialog");
     }
