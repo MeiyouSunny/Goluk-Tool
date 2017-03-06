@@ -478,6 +478,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             mApp.getIPCControlManager().getVersion();
         } else {
             mCurrentState = STATE_SUCCESS;
+            mApp.setBinding(false);
             doConnect();
         }
     }
