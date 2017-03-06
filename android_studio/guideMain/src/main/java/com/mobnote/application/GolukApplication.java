@@ -31,7 +31,6 @@ import cn.com.mobnote.module.location.ILocationFn;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.talk.ITalkFn;
-import cn.com.tiros.api.BuildConfig;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.baidu.BaiduLocation;
@@ -391,7 +390,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         Printer androidPrinter = new AndroidPrinter();             // Printer that print the log using android.util.Log
         Printer consolePrinter = new ConsolePrinter();             // Printer that print the log to console using System.out
         Printer filePrinter = new FilePrinter                      // Printer that print the log to the file system
-                .Builder("/sdcard/golukLog")                              // Specify the path to save log file
+                .Builder(new File(Environment.getExternalStorageDirectory(), GolukFileUtils.GOLUK_LOG_PATH).getPath())// Specify the path to save log file
                 .fileNameGenerator(new DateFileNameGenerator())        // Default: ChangelessFileNameGenerator("log")
                 .backupStrategy(new NeverBackupStrategy())             // Default: FileSizeBackupStrategy(1024 * 1024)
                 .build();

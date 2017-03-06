@@ -359,6 +359,7 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                     public void onClick(DialogInterface arg0, int arg1) {
                         if (mFunction == FUNCTION_AUTO && ignoreCheckbox.isChecked()) {
                             SharedPrefUtil.setLatestIgnoredIpcUpgradeVersion(ipcInfo.version);
+                            XLog.i("later with ignore");
                         }
                         operate[0] = mApp.getContext().getString(R.string.str_zhuge_ipc_update_dialog_operate_ignore);
                         if (type == 0) {
@@ -813,7 +814,6 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
         try {
             JSONObject jsonData = new JSONObject(JSON.toJSONString(bean.dataInfo));
             if (jsonData != null) {
-                XLog.i("follow is versionCheckResponse");
                 XLog.json(JSON.toJSONString(bean.dataInfo));
             }
             final String goluk = jsonData.getString("goluk");
