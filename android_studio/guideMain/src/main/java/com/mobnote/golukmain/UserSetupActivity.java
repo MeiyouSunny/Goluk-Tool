@@ -1,6 +1,9 @@
 package com.mobnote.golukmain;
 
 import com.alibaba.fastjson.JSON;
+import com.elvishew.xlog.LogLevel;
+import com.elvishew.xlog.printer.file.backup.FileSizeBackupStrategy;
+import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventBindPhoneNum;
 import com.mobnote.golukmain.carrecorder.base.CarRecordBaseActivity;
@@ -35,6 +38,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -46,8 +50,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.api.Const;
+import cn.com.tiros.api.Tapi;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
@@ -328,12 +335,36 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
             itRegist.putExtra("fromRegist", "fromBindPhone");
             startActivity(itRegist);
         } else if (id == R.id.tv_upload_log) {
-            // todo startUpload
-            Toast.makeText(this, "待操作", Toast.LENGTH_SHORT).show();
+            uploadLog();
         } else {
         }
     }
 
+    /**
+     *  todo startUpload
+     * upload today`s log only
+     */
+    private void uploadLog() {
+        String today = new DateFileNameGenerator().generateFileName(LogLevel.ALL, System.currentTimeMillis());
+        String logPath = Environment.getExternalStorageDirectory() + File.separator + GolukFileUtils.GOLUK_LOG_PATH + File.separator + today;
+        File file = new File(logPath);
+        if (!file.exists()) {
+            Toast.makeText(this, "no log file in today!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        new LogUploadTask(logPath, GolukApplication.getInstance().mCurrentUId, Tapi.getMobileId(), new LogUploadTask.CallbackLogUpload() {
+            @Override
+            public void onUploadLogSuccess() {
+                Toast.makeText(UserSetupActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onUploadLogFail() {
+                Toast.makeText(UserSetupActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+            }
+        }).execute();
+
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
