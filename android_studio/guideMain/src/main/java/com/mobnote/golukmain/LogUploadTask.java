@@ -43,10 +43,9 @@ public class LogUploadTask extends AsyncTask<String, Integer, String> {
     @Override
     protected String doInBackground(String... params) {
 
-        Map<String, File> files = new HashMap<String, File>();
         File file = new File(filePath);
-        if (file.exists()) {
-            files.put("file", file);
+        if (!file.exists()) {
+            return null;
         }
 
         Map<String, String> requestParams = new HashMap<String, String>();
