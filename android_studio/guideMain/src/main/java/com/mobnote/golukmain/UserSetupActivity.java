@@ -319,7 +319,9 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface arg0, int arg1) {
+                                        String logPath = Environment.getExternalStorageDirectory() + File.separator + GolukFileUtils.GOLUK_LOG_PATH;
                                         DataCleanManage.deleteFile(Const.getAppContext().getCacheDir());
+                                        DataCleanManage.deleteFile(new File(logPath));
                                         mTextCacheSize.setText("0.00B");
                                     }
                                 }).create().show();

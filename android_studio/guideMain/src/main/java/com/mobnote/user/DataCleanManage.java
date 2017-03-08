@@ -4,21 +4,28 @@ import java.io.File;
 import java.math.BigDecimal;
 
 import com.mobnote.golukmain.UserSetupActivity;
+import com.mobnote.util.GolukFileUtils;
 
 import cn.com.tiros.api.Const;
 import cn.com.tiros.debug.GolukDebugUtils;
 import android.content.Context;
+import android.os.Environment;
 
 public class DataCleanManage {
 
 	public static String getTotalCacheSize(Context context) throws Exception {
 		long cacheSize = getFolderSize(Const.getAppContext().getCacheDir());
+		String logPath = Environment.getExternalStorageDirectory() + File.separator + GolukFileUtils.GOLUK_LOG_PATH;
+		long logSize = getFolderSize(new File(logPath));
 		GolukDebugUtils.i("lily", "===cacheDir====="+Const.getAppContext().getCacheDir()+"==cacheSize=="+cacheSize);
-		return getFormatSize(cacheSize);
+		return getFormatSize(cacheSize + logSize);
 	}
 
 	// 获取文件
 	public static long getFolderSize(File file) throws Exception {
+		if (!file.exists()) {
+			return 0;
+		}
 		long size = 0;
 		try {
 			if(file.isDirectory()){
