@@ -113,15 +113,20 @@ public class UploadLiveScreenShotTask extends AsyncTask<String, Integer, String>
 
         outStream.flush();
         // 得到响应码
-        int res = conn.getResponseCode();
-        InputStream in = conn.getInputStream();
-        StringBuilder sb2 = new StringBuilder();
-        if (res == 200) {
-            int ch;
-            while ((ch = in.read()) != -1) {
-                sb2.append((char) ch);
-            }
+        int statusCode = conn.getResponseCode();
+        InputStream is = null;
+        if (statusCode >= 200 && statusCode < 400) {
+            is = conn.getInputStream();
+        } else {
+            is = conn.getErrorStream();
         }
+
+        StringBuilder sb2 = new StringBuilder();
+        int ch;
+        while ((ch = is.read()) != -1) {
+            sb2.append((char) ch);
+        }
+
         outStream.close();
         conn.disconnect();
         return sb2.toString();
