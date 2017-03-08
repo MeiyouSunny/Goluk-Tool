@@ -13,6 +13,7 @@ import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
 import com.mobnote.golukmain.live.UserInfo;
+import com.mobnote.golukmain.multicast.NetUtil;
 import com.mobnote.golukmain.userlogin.CancelResult;
 import com.mobnote.golukmain.userlogin.UserCancelBeanRequest;
 import com.mobnote.golukmain.xdpush.GolukNotification;
@@ -343,10 +344,14 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
     }
 
     /**
-     *  todo startUpload
      * upload today`s log only
+     *
      */
     private void uploadLog() {
+        if (!UserUtils.isNetDeviceAvailable(this)) {
+            showToast(R.string.network_error);
+            return;
+        }
         String today = new DateFileNameGenerator().generateFileName(LogLevel.ALL, System.currentTimeMillis());
         String logPath = Environment.getExternalStorageDirectory() + File.separator + GolukFileUtils.GOLUK_LOG_PATH + File.separator + today;
         File file = new File(logPath);
