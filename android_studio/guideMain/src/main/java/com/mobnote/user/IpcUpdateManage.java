@@ -391,12 +391,12 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
         IPCInfo[] upgradeArray = JsonUtil.upgradeJson(ipc);
         if (upgradeArray != null) {
             for (IPCInfo ipcInstance : upgradeArray) {
-                String ipc_filesize = ipcInstance.filesize;
-                String ipc_content = ipcInstance.appcontent;
-                // 保存ipc文件大小
-                SharedPrefUtil.saveIpcFileSize(ipc_filesize);
-                // 保存ipc更新信息
-                SharedPrefUtil.saveIpcContent(ipc_content);
+//                String ipc_filesize = ipcInstance.filesize;
+//                String ipc_content = ipcInstance.appcontent;
+//                // 保存ipc文件大小
+//                SharedPrefUtil.saveIpcFileSize(ipc_filesize);
+//                // 保存ipc更新信息
+//                SharedPrefUtil.saveIpcContent(ipc_content);
 
                 String ipc_isnew = ipcInstance.isnew;
                 if ("0".equals(ipc_isnew)) {
