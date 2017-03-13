@@ -575,6 +575,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 			mTextViewForgetPwd.setEnabled(true);
 			mBtnLogin.setEnabled(true);
 			mBackButton.setEnabled(true);
+			mImageViewWeiXinLogin.setEnabled(true);
 		}
 	}
 
