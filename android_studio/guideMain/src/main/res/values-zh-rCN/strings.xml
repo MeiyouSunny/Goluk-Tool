@@ -739,7 +739,7 @@
     <string name="str_start_album_fail">打开相册失败</string>
     <string name="str_user_name_warn">数据修改失败，昵称不能为空</string>
     <string name="option_suggest_hint">必选内容（500字以内）</string>
-    <string name="change_wifi_password_hint">密码必须为8&amp;#8211;15个字符。更改密码将在30秒之后生效。</string>
+    <string name="change_wifi_password_hint">密码必须为8 - 15个字符。更改密码将在30秒之后生效。</string>
     <string name="imgdes">图片说明</string>
     <string name="my_video_text">我的视频</string>
     <string name="share_str_join_int">快来参加活动，努力被小编选为精选，赢取活动奖励。</string>
