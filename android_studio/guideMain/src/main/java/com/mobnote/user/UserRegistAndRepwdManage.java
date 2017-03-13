@@ -253,6 +253,9 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
     public void onLoadComplete(int requestType, Object result) {
         if (requestType == IPageNotifyFn.PageType_BindInfo) {
             BindPhoneRetBean retBean = (BindPhoneRetBean) result;
+			if (retBean == null) {
+				return;
+			}
             if (null == retBean) {
                 registAndRepwdStatusChange(9);
                 return;
@@ -300,6 +303,9 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
             }
         }else if(requestType == IPageNotifyFn.PageType_ModifyPwd ){
 			UserRepwdBean urr = (UserRepwdBean) result;
+			if (urr == null) {
+				return;
+			}
 			int code = Integer.parseInt(urr.code);
 				try {
 					switch (code) {
@@ -329,6 +335,9 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
 				}
 		}else if(requestType == IPageNotifyFn.PageType_Register ){
 			UserRegistBean urr = (UserRegistBean) result;
+			if (urr == null) {
+				return;
+			}
 				int code = Integer.parseInt(urr.code);
 					try {
 						switch (code) {
