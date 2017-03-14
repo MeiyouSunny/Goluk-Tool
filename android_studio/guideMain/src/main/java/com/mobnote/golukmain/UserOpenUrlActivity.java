@@ -166,6 +166,9 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			@Override
 			public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 				mErrorState = true;
+				if (mWebView == null) {
+					return;
+				}
 				mWebView.setVisibility(View.GONE);
 				mErrorLayout.setVisibility(View.VISIBLE);
 			}
