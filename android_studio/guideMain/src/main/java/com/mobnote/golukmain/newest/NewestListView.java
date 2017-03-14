@@ -174,6 +174,9 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 			List<String> attribute = new ArrayList<String>();
 			attribute.add("0");
 			dataLoading = true;
+			if (GolukApplication.getInstance().getVideoSquareManager() == null) {
+				return;
+			}
 			typeVideoRequestId = GolukApplication.getInstance().getVideoSquareManager()
 					.getTypeVideoList("1", "2", attribute, operation, timestamp);
 			GolukDebugUtils.e("", "GGGGGG=====222222=======tv=" + typeVideoRequestId);
