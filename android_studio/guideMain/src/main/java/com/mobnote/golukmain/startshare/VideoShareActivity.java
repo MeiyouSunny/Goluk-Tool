@@ -529,6 +529,9 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             return;
         }
         isSharing = true;
+        if (mUploadVideo == null) {
+            return;
+        }
         this.mUploadVideo.setUploadInfo(mVideoPath, mVideoType, videoName);
         if(null == mShareLoading){
             mShareLoading = new ShareLoading(this, mRootLayout);
