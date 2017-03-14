@@ -1,5 +1,6 @@
 package com.mobnote.golukmain.msg;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mobnote.application.GolukApplication;
@@ -47,6 +48,9 @@ public class MsgCenterCommentAdapter extends BaseAdapter {
 	}
 
 	public void appendData(List<MessageMsgsBean> list) {
+		if (mList == null) {
+			mList =new ArrayList<MessageMsgsBean>();
+		}
 		mList.addAll(list);
 		this.notifyDataSetChanged();
 	}
