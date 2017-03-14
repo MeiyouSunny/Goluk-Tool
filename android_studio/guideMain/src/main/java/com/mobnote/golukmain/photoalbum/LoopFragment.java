@@ -422,7 +422,11 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
 
     @SuppressLint("NewApi")
     public void loadData(boolean flag) {
-        if (isGetFileListDataing) {
+        if (isGetFileListDataing || mFragmentAlbum==null || empty ==null) {
+            return;
+        }
+
+        if(null == empty || null == mStickyListHeadersListView) {
             return;
         }
 

@@ -514,6 +514,10 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
             return;
         }
 
+        if(null == empty || null == mStickyListHeadersListView) {
+            return;
+        }
+
         if (flag) {
             if (null != mCustomProgressDialog && !mCustomProgressDialog.isShowing()) {
                 mCustomProgressDialog.show();

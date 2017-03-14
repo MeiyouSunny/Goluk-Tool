@@ -424,6 +424,10 @@ public class UrgentFragment extends Fragment implements IPCManagerFn, LocalWonde
             return;
         }
 
+        if(null == empty || null == mStickyListHeadersListView) {
+            return;
+        }
+
         if (flag) {
             if (null != mCustomProgressDialog && !mCustomProgressDialog.isShowing()) {
                 mCustomProgressDialog.show();
