@@ -1320,6 +1320,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         initVideoImage();// 初始化相册列表
 
         // 获取精彩视频类型
+        if (GolukApplication.getInstance().getIPCControlManager() == null) {
+            return;
+        }
         boolean wonderfulType = GolukApplication.getInstance().getIPCControlManager().getWonderfulVideoType();
         GolukDebugUtils.e("", "CarRecorderActivity-------------------wonderfulType：" + wonderfulType);
     }
