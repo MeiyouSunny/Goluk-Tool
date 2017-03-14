@@ -232,6 +232,9 @@ public class MyProfitDetailActivity extends BaseActivity implements OnClickListe
 		closeLoadingDialog();
 		if (requestType == IPageNotifyFn.PageType_ProfitDetail) {
 			detailInfo = (ProfitDetailInfo) result;
+			if (detailInfo == null) {
+				return;
+			}
 			if(detailInfo.data != null){
 				if(!GolukUtils.isTokenValid(detailInfo.data.result)){
 					mImageRefresh.setVisibility(View.GONE);
