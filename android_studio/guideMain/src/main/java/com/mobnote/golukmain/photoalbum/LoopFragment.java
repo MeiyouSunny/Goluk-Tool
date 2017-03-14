@@ -293,6 +293,9 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
                         // mCloudWonderfulVideoAdapter.unlock();
                         GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====11111111111=");
+                        if (mStickyListHeadersListView == null || mStickyListHeadersListView.getAdapter() == null) {
+                            return;
+                        }
                         if (mStickyListHeadersListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
                             GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====22222222=");
                             final int size = mDataList.size();
