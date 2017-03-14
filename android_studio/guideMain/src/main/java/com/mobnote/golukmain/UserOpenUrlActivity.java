@@ -129,6 +129,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 		}
 		WebSettings webSettings = mWebView.getSettings();
 		webSettings.setJavaScriptEnabled(true);
+		mWebView.getSettings().setDomStorageEnabled(true);
 		mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE); // 设置
 																		// 缓存模式
 		mWebView.setDownloadListener(this);
