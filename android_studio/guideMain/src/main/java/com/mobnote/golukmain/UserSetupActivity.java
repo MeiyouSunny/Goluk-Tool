@@ -362,12 +362,12 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
         new LogUploadTask(logPath, GolukApplication.getInstance().mCurrentUId, Tapi.getMobileId(), new LogUploadTask.CallbackLogUpload() {
             @Override
             public void onUploadLogSuccess() {
-                Toast.makeText(UserSetupActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserSetupActivity.this, R.string.upload_success, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onUploadLogFail() {
-                Toast.makeText(UserSetupActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserSetupActivity.this, R.string.upload_fail, Toast.LENGTH_SHORT).show();
             }
         }).execute();
 
