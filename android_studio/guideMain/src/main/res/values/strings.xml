@@ -1082,4 +1082,7 @@
     <!--2.9.6-->
     <string name="ignore_curr_ipc_version">忽略此版本</string>
     <string name="upload_log">上传日志</string>
+    <string name="input_pwd_hint">请输入6-16位数字或字母密码</string>
+    <string name="upload_success">上传成功</string>
+    <string name="upload_fail">上传失败</string>
 </resources>
