@@ -490,13 +490,6 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			findViewById(R.id.tv_t_settings_parking_sleep_desc).setVisibility(View.GONE);
 			findViewById(R.id.tv_t_settings_security_desc).setVisibility(View.GONE);
 		}
-//		if(!getApp().isMainland()){
-			findViewById(R.id.ly_t_settings_buy).setVisibility(View.VISIBLE);
-//		}else{
-//			findViewById(R.id.ly_t_settings_buy).setVisibility(View.GONE);
-//		}
-//		findViewById(R.id.ly_t_settings_buy).setVisibility(View.VISIBLE);
-		//国际版购买链接https://www.amazon.com/Spy-Tec-Dash-Camera-Vehicle/dp/B00MH4ZVHO/ref=sr_1_8?ie=UTF8&qid=1478595877
 		//国际版不显示语言设置
 		if (!GolukApplication.getInstance().mIpcVersion.toLowerCase().startsWith("t1u")
 				|| GolukApplication.getInstance().mIpcVersion.toUpperCase().startsWith(T3U_SIGN)) {
