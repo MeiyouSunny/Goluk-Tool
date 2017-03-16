@@ -1085,4 +1085,7 @@
     <string name="input_pwd_hint">请输入6-16位数字或字母密码</string>
     <string name="upload_success">上传成功</string>
     <string name="upload_fail">上传失败</string>
+
+    <!--2.10.0-->
+    <string name="change_resolution_hint">点击这里选择分辨率，让播放更流畅</string>
 </resources>

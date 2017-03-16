@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:textColor="#ffffff"
         android:textSize="16sp"
-        android:text="点击这里选择分辨率，让播放更流畅"
+        android:text="@string/change_resolution_hint"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/iv_resolution_hud"/>
     <TextView
