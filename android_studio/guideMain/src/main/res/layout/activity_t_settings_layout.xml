@@ -707,7 +707,6 @@
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:paddingTop="10dp"
-                android:paddingBottom="10dp"
                 android:text="@string/pzgy_text"
                 android:textColor="#999999"
                 android:textSize="12sp"

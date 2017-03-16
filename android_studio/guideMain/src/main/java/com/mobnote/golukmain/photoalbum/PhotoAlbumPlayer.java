@@ -10,7 +10,6 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.graphics.drawable.AnimationDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -22,10 +21,12 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewStub;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -34,6 +35,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -67,6 +69,7 @@ import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.ZhugeUtils;
 
 import java.io.File;
@@ -88,6 +91,7 @@ import de.greenrobot.event.EventBus;
 public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, OnPreparedListener, OnErrorListener,
         OnCompletionListener, IOrientationFn {
     private static final String TAG = "PhotoAlbumPlayer";
+    private final String MICRO_RESOLUTION = "240p";
 
     public static final String VIDEO_FROM = "video_from";
     public static final String PATH = "path";
@@ -103,7 +107,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
     private GolukApplication mApp = null;
     private ImageButton mBackBtn = null;
-    private String mDate, mHP, mPath, mVideoFrom, mSize, mFileName, mVideoUrl, mImageUrl;
+    private String mDate, mHP, mPath, mVideoFrom, mSize, mFileName, mVideoUrl, mMicroVideoUrl, mImageUrl;
     private int mType;
     private RelativeLayout mVideoViewLayout;
     private FullScreenVideoView mVideoView;
@@ -141,6 +145,13 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
     private TextView mTvShareRightnow;
     private LinearLayout mStartVideoeditLl;
 
+    private ViewStub mResolutionHUDViewStub;
+
+    private TextView mResolutionTV;
+    private PopupWindow mResolutionPopupWindow;
+    private TextView mOriginResolutionTV; //原始码流的分辨率
+    private TextView mMicroResolutionTV; //微码流的分辨率
+
     /**
      * 加载中布局
      */
@@ -160,6 +171,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
     private boolean mDragging;
     private OrientationManager mOrignManager = null;
     private AddTailerDialogFragment mAddTailerDialog;
+
+    /** 是否正在使用微码流 */
+    private boolean mIsUsingMicro;
 
     private boolean isExporting;
     private String mExportedFilename;
@@ -204,6 +218,47 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
         setOrientation(true);
 
+        getPlayAddr();
+
+        GlideUtils.loadImage(this, mPlayImg, mImageUrl, R.drawable.tacitly_pic);
+        startPlay();
+        mHandler.postDelayed(mPlayingChecker, 250);
+
+    }
+
+    private void startPlay() {
+        if (!TextUtils.isEmpty(mMicroVideoUrl)) {
+            mVideoView.setVideoPath(mMicroVideoUrl);
+            mIsUsingMicro = true;
+            mResolutionTV.setText(MICRO_RESOLUTION);
+        } else {
+            mVideoView.setVideoPath(mVideoUrl);
+            mIsUsingMicro = false;
+            mResolutionTV.setText(mHP);
+        }
+        showLoading();
+        mVideoView.requestFocus();
+        mVideoView.start();
+    }
+
+    private void changeResolution(boolean playMicro) {
+        if (mIsUsingMicro == playMicro) {
+            // if curr resolution equals changeTo resolution， do nothing
+            return;
+        }
+        if (playMicro) {
+            mVideoView.setVideoPath(mMicroVideoUrl);
+            mIsUsingMicro = true;
+            mResolutionTV.setText(MICRO_RESOLUTION);
+        } else {
+            mVideoView.setVideoPath(mVideoUrl);
+            mIsUsingMicro = false;
+            mResolutionTV.setText(mHP);
+        }
+        mVideoView.requestFocus();
+        if (mVideoView.isPlaying()) {
+            mVideoView.start();
+        }
     }
 
     private void initData(Bundle savedInstanceState) {
@@ -305,6 +360,21 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         }
         mHandler.post(mProgressChecker);
         mHandler.post(mPlayingChecker);
+
+        /**
+         * if it`is the first time show the page, show the resolution HUD
+         */
+        if (!SharedPrefUtil.getIsShowedResolutionHud() && !TextUtils.isEmpty(mMicroVideoUrl)) {
+            mResolutionHUDViewStub = (ViewStub) findViewById(R.id.stub_resolution_hud);
+            View view = mResolutionHUDViewStub.inflate();
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mResolutionHUDViewStub.setVisibility(View.GONE);
+                }
+            });
+            SharedPrefUtil.setIsShowedResolutionHud(true);
+        }
     }
 
     private boolean mResume = false;
@@ -361,6 +431,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         mTopView = findViewById(R.id.upper_layout);
         mBottomView = findViewById(R.id.bottom_layout);
         mLoadingLayout = (LinearLayout) findViewById(R.id.mLoadingLayout);
+        mResolutionTV = (TextView) findViewById(R.id.tv_resolution);
         mLoading = (ProgressBar) findViewById(R.id.mLoading);
      //   mLoading.setBackgroundResource(R.anim.video_loading);
    //     mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
@@ -376,17 +447,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             tvSize.setText(mSize);
         }
 
-        if (mHP != null) {
-            ImageView ivHP = (ImageView) findViewById(R.id.iv_hp);
-            if (!TextUtils.isEmpty(mHP)) {
-                if ("480p".equalsIgnoreCase(mHP)) {
-                    ivHP.setImageResource(R.drawable.icon_480p);
-                } else if ("720p".equalsIgnoreCase(mHP)) {
-                    ivHP.setImageResource(R.drawable.icon_720p);
-                } else if ("1080p".equalsIgnoreCase(mHP)) {
-                    ivHP.setImageResource(R.drawable.icon_1080p);
-                }
-            }
+        if (!TextUtils.isEmpty(mHP)) {
+            mResolutionTV.setText(mHP);
         }
 
         if (mDate != null) {
@@ -405,6 +467,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         mStartVideoeditLl = (LinearLayout) findViewById(R.id.ll_start_videoedit);
         mTvShareRightnow = (TextView) findViewById(R.id.tv_share_video_rightnow);
 
+        mResolutionTV.setOnClickListener(this);
         mBtnDownload.setOnClickListener(this);
         mBtnDelete.setOnClickListener(this);
         mStartVideoeditLl.setOnClickListener(this);
@@ -432,14 +495,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         mVideoView.setOnErrorListener(this);
 
         mVideoView.setOnCompletionListener(this);
-
-        getPlayAddr();
-        GlideUtils.loadImage(this, mPlayImg, mImageUrl, R.drawable.tacitly_pic);
-        mVideoView.setVideoPath(mVideoUrl);
-        mVideoView.requestFocus();
-        mVideoView.start();
-        showLoading();
-        mHandler.postDelayed(mPlayingChecker, 250);
 
         if (mVideoFrom.equals("local")) {
             /** 如果是本地循环视频，不显示分享按钮，但要显示编辑按钮 */
@@ -480,11 +535,57 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         }
     }
 
+    private void showOrHideResolutionPopupwindow() {
+        if (mVideoFrom.equals("local")) {
+            return;
+        }
+        if (mType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG || mType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
+            return;
+        }
+
+        if (mResolutionPopupWindow == null) {
+            View resolutionView = LayoutInflater.from(this).inflate(R.layout.resolution_pop_window, null);
+            mOriginResolutionTV = (TextView) resolutionView.findViewById(R.id.tv_resolution_origin);
+            mMicroResolutionTV = (TextView) resolutionView.findViewById(R.id.tv_resolution_micro);
+
+            mOriginResolutionTV.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mResolutionPopupWindow.dismiss();
+                    changeResolution(false);
+                }
+            });
+            mMicroResolutionTV.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mResolutionPopupWindow.dismiss();
+                    changeResolution(true);
+                }
+            });
+
+            if(!TextUtils.isEmpty(mHP)) {
+                mOriginResolutionTV.setText(mHP);
+            }
+
+            mResolutionPopupWindow = new PopupWindow(this);
+            mResolutionPopupWindow.setContentView(resolutionView);
+            mResolutionPopupWindow.setBackgroundDrawable(null);
+        }
+       if (mResolutionPopupWindow.isShowing()) {
+           mResolutionPopupWindow.dismiss();
+       } else {
+           mResolutionPopupWindow.showAsDropDown(mResolutionTV);
+       }
+    }
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
         if (GolukUtils.isFastDoubleClick()) {
             return;
+        }
+        if (id == R.id.tv_resolution) {
+            showOrHideResolutionPopupwindow();
         }
         if (id == R.id.ll_start_videoedit) {
             pauseVideo();
@@ -562,6 +663,12 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
      * @param bFull true:全屏　false:普通
      */
     public void setFullScreen(boolean isAuto, boolean bFull) {
+        if (mResolutionHUDViewStub != null) {
+            mResolutionHUDViewStub.setVisibility(View.GONE);
+        }
+        if (mResolutionPopupWindow != null && mResolutionPopupWindow.isShowing()) {
+            mResolutionPopupWindow.dismiss();
+        }
         if (bFull == mIsFullScreen) {
             // GolukUtils.showToast(this, "已处于全屏状态.");
             return;
@@ -702,6 +809,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 }
                 mVideoUrl = "http://" + ip + "/api/video?id=" + fileName;
                 mImageUrl = "http://" + ip + "/api/thumb?id=" + fileName;
+                mMicroVideoUrl = "http://" + ip + "/api/mini_mp4?id=" + fileName;
             } else {
                 String fileName = mFileName;
                 fileName = fileName.replace(".mp4", ".jpg");

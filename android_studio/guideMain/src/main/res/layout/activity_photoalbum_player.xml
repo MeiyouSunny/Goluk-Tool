@@ -57,27 +57,37 @@
     <RelativeLayout
         android:id="@+id/RelativeLayout_videoinfo"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_below="@+id/relativelayout_title"
-        android:paddingBottom="8dp">
+        android:layout_height="wrap_content"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/relativelayout_title">
 
-        <ImageView
-            android:id="@+id/iv_hp"
+        <TextView
+            android:id="@+id/tv_resolution"
+            android:visibility="visible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="8dp" />
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:background="@drawable/bg_resolution"
+            android:layout_marginLeft="8dp"
+            android:layout_centerVertical="true"
+            android:text="1080p"
+            android:textColor="#333333"
+            android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/tv_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="9dp"
             android:textColor="#b8b8b8"
-            android:textSize="13sp" />"
+            android:textSize="13sp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -216,6 +226,7 @@
                     android:thumb="@drawable/player_time_control_btn" />
             </RelativeLayout>
         </RelativeLayout>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -321,4 +332,11 @@
             android:textSize="16sp" />
     </LinearLayout>
 
+    <ViewStub
+        android:id="@+id/stub_resolution_hud"
+        android:inflatedId="@+id/id_resolution_hud"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/RelativeLayout_videoinfo"
+        android:layout="@layout/vid_resolution_hud" />
 </RelativeLayout>

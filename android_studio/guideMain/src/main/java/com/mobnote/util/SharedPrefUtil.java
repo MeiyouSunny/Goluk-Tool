@@ -182,6 +182,21 @@ public class SharedPrefUtil {
      */
     public static final String LATEST_IGNORED_APP_UPGRADE_VERSION = "latest_ignored_app_upgrade_version";
 
+    /**
+     * 是否已经显示过分辨率平行指示层
+     */
+    public static final String IS_SHOWED_RESOLUTION_HUD = "is_show_resolution_hud";
+
+    public static boolean getIsShowedResolutionHud() {
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(GolukApplication.getInstance().getContext());
+        return preference.getBoolean(IS_SHOWED_RESOLUTION_HUD, false);
+    }
+
+    public static boolean setIsShowedResolutionHud(boolean isShowed) {
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(GolukApplication.getInstance().getContext());
+        return preference.edit().putBoolean(IS_SHOWED_RESOLUTION_HUD, isShowed).commit();
+    }
+
     public static String getLatestIgnoredAppUpgradeVersion() {
         SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(GolukApplication.getInstance().getContext());
         return preference.getString(LATEST_IGNORED_APP_UPGRADE_VERSION, "");
