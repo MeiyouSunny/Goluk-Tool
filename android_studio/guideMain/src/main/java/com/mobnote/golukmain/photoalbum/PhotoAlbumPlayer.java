@@ -814,7 +814,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 }
                 mVideoUrl = "http://" + ip + "/api/video?id=" + fileName;
                 mImageUrl = "http://" + ip + "/api/thumb?id=" + fileName;
-                mMicroVideoUrl = "http://" + ip + "/api/mini_mp4?id=" + fileName;
+
+                // 仅远程循环视频支持微码流播放
+                if (mType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
+                    mMicroVideoUrl = "http://" + ip + "/api/mini_mp4?id=" + fileName;
+                }
             } else {
                 String fileName = mFileName;
                 fileName = fileName.replace(".mp4", ".jpg");
