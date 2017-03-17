@@ -101,7 +101,7 @@ public class MovieActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.movie_view);
 		View rootView = findViewById(R.id.movie_view_root);
 
