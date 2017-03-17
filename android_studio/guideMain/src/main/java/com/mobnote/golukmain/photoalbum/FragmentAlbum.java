@@ -364,6 +364,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                     new OnRightClickListener() {
                         @Override
                         public void onClickListener() {
+                            editState = false;
                             setEditBtnState(true);
                             GolukUtils.setTabHostVisibility(true, getActivity());
                             resetEditState();
