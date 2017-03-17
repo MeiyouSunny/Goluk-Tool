@@ -541,6 +541,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
     }
 
     private void showOrHideResolutionPopupwindow() {
+        if (TextUtils.isEmpty(mMicroVideoUrl)) {
+            return;
+        }
         if (mVideoFrom.equals("local")) {
             return;
         }
