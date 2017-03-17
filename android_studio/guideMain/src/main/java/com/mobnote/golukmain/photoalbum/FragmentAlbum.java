@@ -468,7 +468,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         if (null == mEditBtn) {
             return;
         }
-        if (isShow) {
+        if (isShow && !editState) {
             mEditBtn.setVisibility(View.VISIBLE);
         } else {
             mEditBtn.setVisibility(View.GONE);
