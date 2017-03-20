@@ -583,6 +583,38 @@
                     android:background="@color/setting_line_color" />
             </RelativeLayout>
             <RelativeLayout
+                android:id="@+id/ry_t_settings_video_logo"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color"
+                android:visibility="gone" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_video_logo_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btn_t_settings_video_logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+            <RelativeLayout
                 android:id="@+id/rl_anti_flicker"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
@@ -835,38 +867,7 @@
                     android:textSize="10sp" />
             </LinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/ry_t_settings_video_logo"
-                android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:background="@color/setting_white_color"
-                android:visibility="gone" >
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/str_settings_video_logo_title"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
-
-                <Button
-                    android:id="@+id/btn_t_settings_video_logo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:background="@drawable/set_open_btn" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/setting_line_color" />
-            </RelativeLayout>
 
             <!-- ADAS 驾驶安全辅助-->
             <RelativeLayout
@@ -1271,12 +1272,6 @@
                     android:textColor="@color/setting_right_text_color"
                     android:textSize="15sp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="15dp"
-                    android:background="@color/setting_line_color" />
             </RelativeLayout>
 
             <!-- 时间设置 -->

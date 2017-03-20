@@ -211,10 +211,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		// 固件版本号
 		ipcVersion = SharedPrefUtil.getIPCVersion();
 		GolukDebugUtils.e("", "=========ipcVersion：" + ipcVersion);
-
+		mIPCName = GolukApplication.getInstance().mIPCControlManager.mProduceName;
 		loadRes();
 
-		mIPCName = GolukApplication.getInstance().mIPCControlManager.mProduceName;
 		GolukDebugUtils.e("", "=========mIPCName：" + mIPCName);
 		mAutoState = GolukFileUtils.loadBoolean(GolukFileUtils.PROMOTION_AUTO_PHOTO, true);
 		initView();
@@ -301,10 +300,11 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 //			// 获取关机时间
 //			boolean powerOffTime = GolukApplication.getInstance().getIPCControlManager().getPowerOffTime();
 //			GolukDebugUtils.e("", "--------------SettingsActivity-----powerOffTime：" + powerOffTime);
-//			// 获取语言设置
-//			boolean voiceType = GolukApplication.getInstance().getIPCControlManager().getVoiceType();
-//			GolukDebugUtils.e("", "--------------SettingsActivity-----voiceType：" + voiceType);
-//		}
+			// 获取语言设置
+        if(IPCControlManager.T3U_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)){
+			boolean voiceType = GolukApplication.getInstance().getIPCControlManager().getVoiceType();
+			GolukDebugUtils.e("", "--------------SettingsActivity-----voiceType：" + voiceType);
+		}
 		// 获取视频水印
 		boolean videoLogo = GolukApplication.getInstance().getIPCControlManager().getVideoLogo();
 		GolukDebugUtils.e("", "TSettingsActivity-------------------videoLogo：" + videoLogo);
@@ -660,6 +660,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			if(mIPCName.equals(IPCControlManager.T3U_SIGN)) {
 				mISPLayout.setVisibility(View.GONE);
 				mRlAntiFlicker.setVisibility(View.VISIBLE);
+				mVoiceTypeLayout.setVisibility(View.VISIBLE);
 			} else {
 				mISPLayout.setVisibility(View.VISIBLE);
 				mRlAntiFlicker.setVisibility(View.GONE);
@@ -678,10 +679,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mVolumeLayout.setVisibility(View.GONE);
 			mPowerTimeLayout.setVisibility(View.GONE);
 			if(mIPCName.equals(IPCControlManager.T3_SIGN) || mIPCName.equals(IPCControlManager.T3U_SIGN)) {
-				mVoiceTypeLayout.setVisibility(View.VISIBLE);
 				mVideoLogoLayout.setVisibility(View.VISIBLE);
-			}else{
-				mVoiceTypeLayout.setVisibility(View.GONE);
 			}
 		}
 
@@ -931,7 +929,11 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				startActivityForResult(itPowerTime, REQUEST_CODE_SHUTDOWN_TIME);
 			} else if (id == R.id.rl_settings_language_line) {
 				Intent itVoiceType = new Intent(this, SettingsItemActivity.class);
-				itVoiceType.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_LANGUAGE);
+				if(mIPCName.equals(IPCControlManager.T3U_SIGN)){
+					itVoiceType.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_LANGUAGE_T);
+				}else {
+					itVoiceType.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_LANGUAGE);
+				}
 				itVoiceType.putExtra(SettingsItemActivity.PARAM, mVoiceType);
 				startActivityForResult(itVoiceType, REQUEST_CODE_LANGUAGE);
 			} else if (id == R.id.ry_settings_wonderful_video_type) {
@@ -1765,15 +1767,16 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	 */
 	private void callback_getVideoLogo(int msg, int param1, Object param2) {
 		GolukDebugUtils.e("", "TSettingsActivity-----------callback_getVideoLogo-----param2: " + param2);
+		closeLoading();
 		if (RESULE_SUCESS == param1) {
 			WonderfulVideoDisplay videoLogo = GolukFastJsonUtil.getParseObj((String) param2, WonderfulVideoDisplay.class);
 			if (null != videoLogo) {
-					mDisplay = videoLogo;
-					if (0 == mDisplay.logo_visible) {
-						mVideoLogoBtn.setBackgroundResource(R.drawable.set_close_btn);
-					} else {
-						mVideoLogoBtn.setBackgroundResource(R.drawable.set_open_btn);
-					}
+				mDisplay = videoLogo;
+				if (0 == mDisplay.logo_visible) {
+					mVideoLogoBtn.setBackgroundResource(R.drawable.set_close_btn);
+				} else {
+					mVideoLogoBtn.setBackgroundResource(R.drawable.set_open_btn);
+				}
 			}
 		}
 	}
@@ -1971,7 +1974,11 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mVolumeList = getResources().getStringArray(R.array.list_tone_volume);
 		mVolumeValue = getResources().getStringArray(R.array.list_tone_volume_value);
 		mPowerTimeList = getResources().getStringArray(R.array.list_shutdown_time);
-		mVoiceTypeList = getResources().getStringArray(R.array.list_language);
+		if (mIPCName.equals(IPCControlManager.T3U_SIGN)) {
+			mVoiceTypeList = getResources().getStringArray(R.array.list_language_t);
+		}else{
+			mVoiceTypeList = getResources().getStringArray(R.array.list_language);
+		}
 	}
 
 	private void parsePhotoQualityJson(String str) {
@@ -2382,13 +2389,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			}
 		}
 	}
-	
+
 	/**
 	 * 更新语言设置
 	 */
 	private void refreshVoiceType() {
 		int length = mVoiceTypeList.length;
-		String[] type = { "0", "1" };
+		String[] type = { "0", "1" ,"2"};
 		for (int i = 0; i < length; i++) {
 			if (mVoiceType.equals(type[i])) {
 				mVoiceTypeText.setText(mVoiceTypeList[i]);

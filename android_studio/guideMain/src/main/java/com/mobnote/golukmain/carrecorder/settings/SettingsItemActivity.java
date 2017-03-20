@@ -28,6 +28,7 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 	public static final String TYPE_TONE_VOLUME = "tone_volume";
 	public static final String TYPE_SHUTDOWN_TIME = "shutdown_time";
 	public static final String TYPE_LANGUAGE = "language";
+	public static final String TYPE_LANGUAGE_T = "language_t";
 	public static final String TYPE_WONDERFUL_VIDEO_TYPE = "wonderful_video_type";
 	public static final String TYPE_ANTI_FLICKER = "anti_flicker";
 	private TextView[] mTextViewList = null;
@@ -167,6 +168,15 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 			} else {
 				arrayList = mLanguageList;
 			}
+		} else if (TYPE_LANGUAGE_T.equals(mType)) {
+			mThirdLayout.setVisibility(View.VISIBLE);
+			mWonderfulVideoTypeText.setVisibility(View.GONE);
+			setTitle(this.getResources().getString(R.string.str_settings_language_title));
+			if (0 == valueType) {
+				arrayList = new String[] { "0", "1" ,"2"};
+			} else {
+				arrayList = getResources().getStringArray(R.array.list_language_t);
+			}
 		} else if (TYPE_ANTI_FLICKER.equals(mType)) {
 			mThirdLayout.setVisibility(View.GONE);
 			mWonderfulVideoTypeText.setVisibility(View.GONE);
@@ -199,6 +209,8 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 			mTextViewList = new TextView[] { mFirstText, mSecondText };
 		} else if (TYPE_LANGUAGE.equals(mType)) {
 			mTextViewList = new TextView[] { mFirstText, mSecondText };
+		} else if (TYPE_LANGUAGE_T.equals(mType)) {
+			mTextViewList = new TextView[] { mFirstText, mSecondText, mThirdText };
 		} else {
 			mTextViewList = new TextView[] { mFirstText, mSecondText };
 		}
@@ -214,6 +226,8 @@ public class SettingsItemActivity extends CarRecordBaseActivity implements OnCli
 			mImageList = new ImageButton[] { mFirstBtn, mSecondBtn };
 		} else if (TYPE_LANGUAGE.equals(mType)) {
 			mImageList = new ImageButton[] { mFirstBtn, mSecondBtn };
+		} else if (TYPE_LANGUAGE_T.equals(mType)) {
+			mImageList = new ImageButton[] { mFirstBtn, mSecondBtn, mThirdBtn };
 		} else {
 			mImageList = new ImageButton[] { mFirstBtn, mSecondBtn };
 		}
