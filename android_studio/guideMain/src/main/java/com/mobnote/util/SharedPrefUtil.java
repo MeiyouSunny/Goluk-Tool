@@ -763,7 +763,7 @@ public class SharedPrefUtil {
 
     public static boolean getEnableSingleWifi() {
         SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
-        return preference.getBoolean(PROPERTY_ENABLE_SINGLE_WIFI, false);
+        return preference.getBoolean(PROPERTY_ENABLE_SINGLE_WIFI, true);
     }
 
     public static boolean getUserIs4SShop() {

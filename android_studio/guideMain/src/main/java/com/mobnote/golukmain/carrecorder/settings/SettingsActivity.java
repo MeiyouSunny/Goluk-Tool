@@ -19,6 +19,8 @@ import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.IpcDataParser;
 import com.mobnote.golukmain.carrecorder.entity.RecordStorgeState;
 import com.mobnote.golukmain.carrecorder.entity.VideoConfigState;
+import com.mobnote.golukmain.carrecorder.settings.bean.VideoLogoJson;
+import com.mobnote.golukmain.carrecorder.settings.bean.WonderfulVideoDisplay;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
@@ -48,6 +50,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.util.List;
+
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
@@ -118,7 +123,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private String[] mBitrateArray = null;
 	private String[] mArrayText = null;
 	/** 照片质量line **/
-	private RelativeLayout mPhotoQualityLayout;
+	private RelativeLayout mPhotoQualityLayout,mVideoLogoLayout;
 	private TextView mPhotoQualityText = null;
 	/** 自动同步开关 **/
 	private RelativeLayout mAutoPhotoItem;
@@ -163,6 +168,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	/**前向车辆启动提示**/
 	private RelativeLayout mADASFcarSetupLayout = null;
 	private Button mADASFcarSetupBtn = null;
+	private Button mVideoLogoBtn;
 	/**辅助信息显示**/
 //	private RelativeLayout mADASOsdLayout = null;
 //	private Button mADASOsdBtn = null;
@@ -195,6 +201,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private String mVideoType = "";
 	private String mCurrentVideoType = "";
 	private String mAntiFlicker = "";
+	/**视频水印参数**/
+	private WonderfulVideoDisplay mDisplay;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -297,7 +305,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 //			boolean voiceType = GolukApplication.getInstance().getIPCControlManager().getVoiceType();
 //			GolukDebugUtils.e("", "--------------SettingsActivity-----voiceType：" + voiceType);
 //		}
-		
+		// 获取视频水印
+		boolean videoLogo = GolukApplication.getInstance().getIPCControlManager().getVideoLogo();
+		GolukDebugUtils.e("", "TSettingsActivity-------------------videoLogo：" + videoLogo);
 		showLoading();
 	}
 
@@ -595,7 +605,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mPhotoQualityText = (TextView) findViewById(R.id.tv_settings_photographic_quality);
 		mHandsetText = (TextView) findViewById(R.id.tv_settings_handset);
 		mCarrecorderWonderfulLine = (TextView) findViewById(R.id.tv_carrecorder_line);
-
+		mVideoLogoLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_video_logo);
+		mVideoLogoBtn = (Button) findViewById(R.id.btn_t_settings_video_logo);
 //		mCarrecorderSensitivityLine = (TextView) findViewById(R.id.tv_carrecorder_sensitivity_line);
 
 		mADASAssistanceLayout = (RelativeLayout) findViewById(R.id.layout_adas_assistance);
@@ -666,7 +677,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mWonderfulVideoQualityLayout.setVisibility(View.VISIBLE);
 			mVolumeLayout.setVisibility(View.GONE);
 			mPowerTimeLayout.setVisibility(View.GONE);
-			mVoiceTypeLayout.setVisibility(View.GONE);
+			if(mIPCName.equals(IPCControlManager.T3_SIGN) || mIPCName.equals(IPCControlManager.T3U_SIGN)) {
+				mVoiceTypeLayout.setVisibility(View.VISIBLE);
+				mVideoLogoLayout.setVisibility(View.VISIBLE);
+			}else{
+				mVoiceTypeLayout.setVisibility(View.GONE);
+			}
 		}
 
 		mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
@@ -726,7 +742,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mVolumeLayout.setOnClickListener(this);//提示音音量
 		mPowerTimeLayout.setOnClickListener(this);//关机时间
 		mVoiceTypeLayout.setOnClickListener(this);//语言设置
-		
+		mVideoLogoBtn.setOnClickListener(this);//视频水印
 		mVideoTypeLayout.setOnClickListener(this);// 精彩视频类型
 		mRlAntiFlicker.setOnClickListener(this); //抗闪烁
 	}
@@ -808,6 +824,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				click_opencloseVoice();
 			} else if (id == R.id.jcsp) {
 				click_wonderfulVoice();
+			} else if(id == R.id.btn_t_settings_video_logo) {//视频水印
+				click_videoLogo();
 			} else if (id == R.id.btn_settings_fatigue) {
 				click_Fatigue();
 			} else if (id == R.id.btn_settings_image_flip) {
@@ -1439,6 +1457,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				IPCCallBackGetPhotoQuality(event, msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_SetPicCfg) {// 设置照片质量
 				IPCCallBackSetPhotoQuality(event, msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_GetOSDConf) {// 视频水印
+				callback_getVideoLogo(msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_SetOSDConf) {
+				callback_setVideoLogo(msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_GetFunctionSwitch) {// 获取疲劳驾驶、图像自动翻转、停车休眠模式
 				getFunctionCallback(event, msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_SetFunctionSwitch) {// 设置疲劳驾驶、图像自动翻转、停车休眠模式
@@ -1731,6 +1753,61 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				+ (String) param2 + "---param1:" + param1);
 		if (RESULE_SUCESS == param1) {
 			parseJson((String) param2);
+		}
+	}
+
+
+	/**
+	 * 获取视频水印
+	 * @param msg
+	 * @param param1
+	 * @param param2
+	 */
+	private void callback_getVideoLogo(int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "TSettingsActivity-----------callback_getVideoLogo-----param2: " + param2);
+		if (RESULE_SUCESS == param1) {
+			WonderfulVideoDisplay videoLogo = GolukFastJsonUtil.getParseObj((String) param2, WonderfulVideoDisplay.class);
+			if (null != videoLogo) {
+					mDisplay = videoLogo;
+					if (0 == mDisplay.logo_visible) {
+						mVideoLogoBtn.setBackgroundResource(R.drawable.set_close_btn);
+					} else {
+						mVideoLogoBtn.setBackgroundResource(R.drawable.set_open_btn);
+					}
+			}
+		}
+	}
+
+	private void callback_setVideoLogo(int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "TSettingsActivity-----------callback_setVideoLogo-----param2: " + param2);
+		closeLoading();
+		if (RESULE_SUCESS == param1) {
+			if (null != mDisplay) {
+				if (0 == mDisplay.logo_visible) {
+					mVideoLogoBtn.setBackgroundResource(R.drawable.set_close_btn);
+				} else {
+					mVideoLogoBtn.setBackgroundResource(R.drawable.set_open_btn);
+				}
+			} else {
+				GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
+			}
+		} else {
+			GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
+		}
+	}
+
+	private void click_videoLogo() {
+		if (null != mDisplay) {
+			if (0 == mDisplay.logo_visible) {
+				mDisplay.logo_visible = 1;
+			} else {
+				mDisplay.logo_visible = 0;
+			}
+			boolean a = GolukApplication.getInstance().getIPCControlManager()
+					.setVideoLogo(mDisplay.logo_visible, mDisplay.time_visible);
+			if (a) {
+				showLoading();
+			}
 		}
 	}
 
