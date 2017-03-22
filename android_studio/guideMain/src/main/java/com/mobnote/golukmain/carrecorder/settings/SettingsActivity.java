@@ -661,8 +661,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			if(mIPCName.equals(IPCControlManager.T3U_SIGN)) {
 				mISPLayout.setVisibility(View.GONE);
 				mRlAntiFlicker.setVisibility(View.VISIBLE);
-				mVoiceTypeLayout.setVisibility(View.VISIBLE);
-				mVideoLogoLayout.setVisibility(View.VISIBLE);
+				if(mIPCName.equals(IPCControlManager.T3U_SIGN) && getApp().isMainland()){
+					mVoiceTypeLayout.setVisibility(View.GONE);
+					mVideoLogoLayout.setVisibility(View.GONE);
+				}else{
+					mVoiceTypeLayout.setVisibility(View.VISIBLE);
+					mVideoLogoLayout.setVisibility(View.VISIBLE);
+				}
 			} else {
 				mISPLayout.setVisibility(View.VISIBLE);
 				mRlAntiFlicker.setVisibility(View.GONE);
@@ -670,6 +675,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				mVideoLogoLayout.setVisibility(View.GONE);
 			}
 			if(mIPCName.equals(IPCControlManager.T3_SIGN)) {
+				mISPLayout.setVisibility(View.GONE);
+			}
+			if(mIPCName.equals(IPCControlManager.T3U_SIGN)) {
 				mISPLayout.setVisibility(View.GONE);
 			}
 			mPhotoQualityLayout.setVisibility(View.GONE);
