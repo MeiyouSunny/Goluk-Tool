@@ -664,6 +664,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				if(mIPCName.equals(IPCControlManager.T3U_SIGN) && getApp().isMainland()){
 					mVoiceTypeLayout.setVisibility(View.GONE);
 					mVideoLogoLayout.setVisibility(View.GONE);
+					mRlAntiFlicker.setVisibility(View.GONE);
 				}else{
 					mVoiceTypeLayout.setVisibility(View.VISIBLE);
 					mVideoLogoLayout.setVisibility(View.VISIBLE);
