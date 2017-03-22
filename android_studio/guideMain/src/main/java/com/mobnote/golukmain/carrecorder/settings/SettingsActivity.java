@@ -304,10 +304,11 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
         if(IPCControlManager.T3U_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)){
 			boolean voiceType = GolukApplication.getInstance().getIPCControlManager().getVoiceType();
 			GolukDebugUtils.e("", "--------------SettingsActivity-----voiceType：" + voiceType);
+			// 获取视频水印
+			boolean videoLogo = GolukApplication.getInstance().getIPCControlManager().getVideoLogo();
+			GolukDebugUtils.e("", "TSettingsActivity-------------------videoLogo：" + videoLogo);
 		}
-		// 获取视频水印
-		boolean videoLogo = GolukApplication.getInstance().getIPCControlManager().getVideoLogo();
-		GolukDebugUtils.e("", "TSettingsActivity-------------------videoLogo：" + videoLogo);
+
 		showLoading();
 	}
 
@@ -661,9 +662,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				mISPLayout.setVisibility(View.GONE);
 				mRlAntiFlicker.setVisibility(View.VISIBLE);
 				mVoiceTypeLayout.setVisibility(View.VISIBLE);
+				mVideoLogoLayout.setVisibility(View.VISIBLE);
 			} else {
 				mISPLayout.setVisibility(View.VISIBLE);
 				mRlAntiFlicker.setVisibility(View.GONE);
+				mVoiceTypeLayout.setVisibility(View.GONE);
+				mVideoLogoLayout.setVisibility(View.GONE);
 			}
 			if(mIPCName.equals(IPCControlManager.T3_SIGN)) {
 				mISPLayout.setVisibility(View.GONE);
@@ -678,9 +682,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mWonderfulVideoQualityLayout.setVisibility(View.VISIBLE);
 			mVolumeLayout.setVisibility(View.GONE);
 			mPowerTimeLayout.setVisibility(View.GONE);
-			if(mIPCName.equals(IPCControlManager.T3_SIGN) || mIPCName.equals(IPCControlManager.T3U_SIGN)) {
-				mVideoLogoLayout.setVisibility(View.VISIBLE);
-			}
 		}
 
 		mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
