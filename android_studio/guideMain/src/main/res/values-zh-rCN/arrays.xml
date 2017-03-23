@@ -222,12 +222,12 @@
     
     <string-array name="list_language">
         <item>中文</item>
-        <item>英文</item>
+        <item>English</item>
     </string-array>
 
     <string-array name="list_language_t">
         <item>中文</item>
-        <item>英文</item>
+        <item>English</item>
         <item>Русский</item>
     </string-array>
     
