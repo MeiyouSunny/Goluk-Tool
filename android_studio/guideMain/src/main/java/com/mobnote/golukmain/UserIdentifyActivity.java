@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventBindPhoneNum;
+import com.mobnote.eventbus.EventLoginSuccess;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.http.IRequestResultListener;
@@ -111,10 +112,15 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 	
 	private UserloginBeanRequest userloginBean = null;
 
+	public void onEventMainThread(EventLoginSuccess event) {
+		finish();
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		EventBus.getDefault().register(this);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		setContentView(R.layout.user_identify_layout);
 
@@ -857,6 +863,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
+		EventBus.getDefault().unregister(this);
 		if (click == 1) {
 			unregisterReceiver(smsReceiver);
 		}
@@ -911,30 +918,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 					SharedPrefUtil.saveUserPwd(json.toString());
 				
 					GolukApplication.getInstance().parseLoginData(userresult.data);
-					if ("fromStart".equals(intentRegistInter)) {
-						it = new Intent(UserIdentifyActivity.this, MainActivity.class);
-						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-						startActivity(it);
-					} else if ("fromIndexMore".equals(intentRegistInter)) {
-						it = new Intent(UserIdentifyActivity.this, MainActivity.class);
-						it.putExtra("showMe", "showMe");
-						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-						startActivity(it);
-					} else if ("fromSetup".equals(intentRegistInter)) {
-						it = new Intent(UserIdentifyActivity.this, UserSetupActivity.class);
-						it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-						startActivity(it);
-					} else if("fromProfit".equals(intentRegistInter)) {
-						it = new Intent(UserIdentifyActivity.this,MyProfitActivity.class);
-//						it.putExtra("uid", uid);
-//						it.putExtra("phone", title_phone.replaceAll("-", ""));
-						it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						startActivity(it);
-						UserUtils.exit();
-					}
+					EventBus.getDefault().post(new EventLoginSuccess());
 					finish();
 					break;
 

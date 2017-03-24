@@ -2,6 +2,7 @@ package com.mobnote.golukmain;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventBindPhoneNum;
+import com.mobnote.eventbus.EventLoginSuccess;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.user.UserIdentifyInterface;
@@ -71,6 +72,10 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 	private String registOk = null;
 
 	private TextView mHintText = null;
+
+	public void onEventMainThread(EventLoginSuccess event) {
+		finish();
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

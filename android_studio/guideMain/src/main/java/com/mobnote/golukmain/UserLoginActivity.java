@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventLoginSuccess;
 import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
@@ -50,6 +51,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import cn.com.mobnote.eventbus.EventShortLocationFinish;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
@@ -99,6 +102,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		// getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		super.onCreate(savedInstanceState);
+		EventBus.getDefault().register(this);
 		setContentView(R.layout.user_login);
 		mContext = this;
 		// 获得GolukApplication对象
@@ -117,6 +121,10 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 
 		mShareAPI = UMShareAPI.get(mContext);
 
+	}
+
+	public void onEventMainThread(EventLoginSuccess event) {
+		finish();
 	}
 
 	@Override
@@ -589,6 +597,7 @@ public class UserLoginActivity extends BaseActivity implements OnClickListener, 
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
+		EventBus.getDefault().unregister(this);
 		if (mCustomProgressDialog != null) {
 			if (mCustomProgressDialog.isShowing()) {
 				mCustomProgressDialog.close();
