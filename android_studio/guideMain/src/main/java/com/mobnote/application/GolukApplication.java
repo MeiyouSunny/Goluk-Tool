@@ -2040,4 +2040,10 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
     public boolean isUserLoginToServerSuccess(){
         return (loginStatus==1) || (autoLoginStatus == 2) || (autoLoginStatus ==1);
     }
+
+
+    public boolean isDownloading() {
+        return isDownloading;
+    }
+
 }

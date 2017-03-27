@@ -1,6 +1,8 @@
 package com.mobnote.golukmain.carrecorder;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -971,7 +973,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             if (m_bIsFullScreen) {
                 return;
             }
-            exit();
+            if(!downloadCheck()){
+                exit();
+            }
         } else if (id == R.id.m8sBtn) {
             if (m_bIsFullScreen) {
                 return;
@@ -2216,7 +2220,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         if (m_bIsFullScreen) {
             // 全屏时，退出全屏
             setFullScreen(false);
-        } else {
+        } else if (!downloadCheck()) {
             super.onBackPressed();
         }
     }
@@ -2224,6 +2228,38 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     public void exit() {
         mWonderfulTime = 0;
         finish();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        mApp.mIPCControlManager.setVdcpDisconnect();
+        mApp.setIpcLoginOut();
+    }
+
+    private boolean downloadCheck(){
+        if(mApp.isDownloading()){
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.user_dialog_hint_title)
+                    .setMessage(R.string.current_downloading)
+                    .setPositiveButton(R.string.exit_download, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            mApp.stopDownloadList();
+                            exit();
+                        }})
+                    .setNegativeButton(R.string.cancel_download, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create().show();
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**
