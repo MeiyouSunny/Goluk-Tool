@@ -38,10 +38,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
-import cn.com.tiros.api.WIFIInfo;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
@@ -66,10 +64,11 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
      * 释放第二个界面
      */
     private static final int MSG_H_FREE_2 = 103;
+    private static final int MSG_H_WAITING_TIMEOUT = 104;
     /**
      * 设置IPC配置消息超时时间
      */
-    private static final int TIMEOUT_SETIPC = 6 * 1000;
+    private static final int TIMEOUT_SETIPC = 60 * 1000;
     /**
      * application
      */
@@ -174,6 +173,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
             freeLayout1();
         } else if (MSG_H_FREE_2 == msg.what) {
             freeLayout2();
+        } else if( TIMEOUT_SETIPC == msg.what){
+            connFailed();
         }
     }
 
@@ -200,6 +201,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---2---josn---" + json);
         collectLog("setIpcLinkInfo", "--setIpcLinkPhoneHot---2---josn---" + json);
         boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
+        mBaseHandler.sendEmptyMessageDelayed(MSG_H_WAITING_TIMEOUT,TIMEOUT_SETIPC);
         GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---3---b---" + b);
         collectLog("setIpcLinkInfo", "--setIpcLinkPhoneHot---3---b---" + b);
     }
@@ -237,6 +239,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
      * 设置IPC信息成功回调
      */
     public void setIpcLinkWiFiCallBack(int state) {
+        mBaseHandler.removeMessages(MSG_H_WAITING_TIMEOUT);
         if (STATE_SET_IPC_INFO != mState) {
             return;
         }
@@ -277,6 +280,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
             return;
         }
         mWac.createWifiAP(wifiName, pwd, ipcssid, ipcmac);
+        mBaseHandler.sendEmptyMessageDelayed(MSG_H_WAITING_TIMEOUT,TIMEOUT_SETIPC);
     }
 
     /**
@@ -289,8 +293,8 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         GolukApplication.mIpcIp = ip;
         mWiFiIp = ip;
         boolean b = mApp.mIPCControlManager.setIPCWifiState(true, ip);
+        mBaseHandler.sendEmptyMessageDelayed(MSG_H_WAITING_TIMEOUT,TIMEOUT_SETIPC);
         GolukDebugUtils.e("", "通知logic连接ipc---sendLogicLinkIpc---2---b---" + b);
-
         collectLog("sendLogicLinkIpc", "2---b:  " + b);
     }
 
@@ -298,6 +302,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
      * ipc连接成功回调
      */
     public void ipcLinkWiFiCallBack(Object param2) {
+        mBaseHandler.removeMessages(MSG_H_WAITING_TIMEOUT);
         collectLog("ipcLinkWiFiCallBack", "*****   Bind Sucess ! *****");
         //TODO 这里需要好好的研究下，当连接成功时，改函数会调用两次，第一次是正常连接回掉，第二次从何而来。暂时先加null判断。程序运行没有问题
         if (mWac == null) {
@@ -392,6 +397,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
     private void removeHMsg() {
         this.mBaseHandler.removeMessages(MSG_H_FREE_1);
         this.mBaseHandler.removeMessages(MSG_H_FREE_2);
+        mBaseHandler.removeMessages(MSG_H_WAITING_TIMEOUT);
     }
 
     @Override
@@ -405,8 +411,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         }
         return super.onKeyDown(keyCode, event);
     }
-
-    ;
 
     public void onEventMainThread(EventFinishWifiActivity event) {
         finish();
@@ -558,10 +562,12 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                             }
                         }
                     } catch (Exception e) {
+                        connFailed();
                     }
                     break;
                 default:
                     GolukUtils.showToast(mContext, message);
+                    connFailed();
                     break;
             }
         } else {
@@ -624,6 +630,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                     connFailed();
                     break;
                 default:
+                    connFailed();
                     break;
             }
         } else {
@@ -640,6 +647,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
     private void wifiCallBack_ipcConnHotSucess(String message, Object arrays) {
         WifiRsBean[] bean = (WifiRsBean[]) arrays;
         if (null == bean) {
+            connFailed();
             return;
         }
         GolukDebugUtils.e("", "自动wifi链接IPC连接上WIFI热点回调---length---" + bean.length);
@@ -649,6 +657,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
             collectLog("wifiCallBack_ipcConnHotSucess", "1");
             sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
         } else {
+            connFailed();
             collectLog("wifiCallBack_ipcConnHotSucess", "2 ");
         }
     }
@@ -659,7 +668,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                 + message;
         collectLog("wifiCallBack", log);
         GolukDebugUtils.e("", log);
-
+        mBaseHandler.removeMessages(MSG_H_WAITING_TIMEOUT);
         switch (type) {
             case 3:
                 wifiCallBack_3(state, process, message, arrays);

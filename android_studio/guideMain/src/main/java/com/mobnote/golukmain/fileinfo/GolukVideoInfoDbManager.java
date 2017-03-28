@@ -129,30 +129,35 @@ public class GolukVideoInfoDbManager implements IVideoInfoDataFn {
 
 	@Override
 	public VideoFileInfoBean selectSingleData(String fileName) {
+		Cursor cursor = null;
+		VideoFileInfoBean bean = null;
 		if (!isOpen) {
 			openDBPre();
 			return null;
 		}
-		VideoFileInfoBean bean = null;
-		final String selectSql = "select * from " + CreateTableUtil.T_VIDEOINFO + " where "
-				+ CreateTableUtil.KEY_VIDEOINFO_FILENAME + "= ?";
-		final String[] selectArg = { fileName };
-		Cursor cursor = db.rawQuery(selectSql, selectArg);
-		if (null == cursor || cursor.getCount() == 0) {
-			if (null != cursor) {
+		try {
+			final String selectSql = "select * from " + CreateTableUtil.T_VIDEOINFO + " where "
+					+ CreateTableUtil.KEY_VIDEOINFO_FILENAME + "= ?";
+			final String[] selectArg = {fileName};
+			cursor = db.rawQuery(selectSql, selectArg);
+			if (null == cursor || cursor.getCount() == 0) {
+				if (null != cursor) {
+					cursor.close();
+				}
+				return null;
+			}
+			bean = new VideoFileInfoBean();
+			while (cursor.moveToNext()) {
+				bean = cursorToBean(cursor);
+				if (null != bean) {
+					break;
+				}
+			}
+		}finally {
+			if(cursor!=null){
 				cursor.close();
 			}
-			return null;
 		}
-
-		bean = new VideoFileInfoBean();
-		while (cursor.moveToNext()) {
-			bean = cursorToBean(cursor);
-			if (null != bean) {
-				break;
-			}
-		}
-		cursor.close();
 		return bean;
 	}
 

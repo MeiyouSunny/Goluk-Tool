@@ -1,6 +1,9 @@
 package com.mobnote.golukmain;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,6 +17,7 @@ import android.widget.TextView;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventIPCCheckUpgradeResult;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
+import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
@@ -113,7 +117,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         mUnbindBtn.setText(this.getResources().getString(R.string.str_ipc_change_others));
         // 获取当前使用的信息
         WifiBindHistoryBean bean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
-        if (mApplication.isBindSucess() && null != bean) {
+        if ((mApplication.isBindSucess() || mApplication.isIpcLoginSuccess) && null != bean) {
             mIPCViewLayout.setVisibility(View.VISIBLE);
             mPwdLayout.setEnabled(true);
             // String ipcName = this.ipcName();
@@ -138,7 +142,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             mTextPasswordName.setText("");
         }
         // 密码
-        if (null != mApplication && mApplication.isBindSucess() && mApplication.isIpcLoginSuccess) {
+        if (null != mApplication && mApplication.isIpcLoginSuccess) {
             mApplication.getIPCControlManager().getIpcWifiConfig();
         }
     }
@@ -163,6 +167,9 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             if (mApplication.mIpcUpdateManage.isDownloadCached(vIpc)) {
                 canOfflineInstall = true;
                 mTextVersion.setText(R.string.install_new_firmware);
+                return;
+            }
+            if (mApplication.isIpcLoginSuccess) {
                 return;
             }
             boolean canCheckServer = mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
@@ -208,7 +215,11 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             Intent itWifiLink = new Intent(UnbindActivity.this, WifiUnbindSelectListActivity.class);
             startActivity(itWifiLink);
         } else if (id == R.id.unbind_layout_password) {
-            if (!isGetIPCSucess) {
+            if (!GolukApplication.getInstance().isIpcLoginSuccess) {
+                Intent intent = new Intent();
+                intent.setClass(this, WiFiLinkListActivity.class);
+                intent.putExtra(WiFiLinkListActivity.ACTION_FROM_CAM_SETTING, true);
+                startActivity(intent);
                 return;
             }
             String password = mTextPasswordName.getText().toString();
@@ -271,7 +282,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             mApSSID = obj.getString("AP_SSID");
             mApPWD = obj.getString("AP_PWD");
             // SharedPrefUtil.saveIpcPwd(mApPWD);
-            if (mApplication.isBindSucess()) {
+            if (mApplication.isBindSucess() || mApplication.isIpcLoginSuccess) {
                 mTextPasswordName.setText(mApPWD);
             }
             isGetIPCSucess = true;
@@ -293,6 +304,15 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
     protected void onDestroy() {
         if (mApplication.getIPCControlManager() != null) {
             mApplication.getIPCControlManager().removeIPCManagerListener(TAG);
+        }
+        if (GolukApplication.getInstance().isIpcLoginSuccess) {
+            GolukApplication.getInstance().mIPCControlManager.setVdcpDisconnect();
+            GolukApplication.getInstance().setIpcLoginOut();
+            WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+            if (wifiInfo != null) {
+                wifiManager.disableNetwork(wifiInfo.getNetworkId());
+            }
         }
         EventBus.getDefault().unregister(this);
         super.onDestroy();

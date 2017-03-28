@@ -118,10 +118,16 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         selectedListData = new ArrayList<>();
 
         fragmentList = new ArrayList<>();
-        fragmentList.add(mLocalFragment);
-        fragmentList.add(mWonderfulFragment);
-        fragmentList.add(mUrgentFragment);
-        fragmentList.add(mLoopFragment);
+        if(parentViewIsMainActivity) {
+            fragmentList.add(mLocalFragment);
+            mCurrentType = PhotoAlbumConfig.PHOTO_BUM_LOCAL;
+        } else {
+            fragmentList.add(mWonderfulFragment);
+            fragmentList.add(mUrgentFragment);
+            fragmentList.add(mLoopFragment);
+            mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
+        }
+
         mViewPager.setCurrentItem(0);
         initView();
         mViewPager.setAdapter(new MyViewPagerAdapter(getChildFragmentManager()));
@@ -136,8 +142,21 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                 } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
                     mLoopFragment.removeFooterView();
                 }
-                mCurrentType = position;
-                setItemLineState(position);
+
+                if(parentViewIsMainActivity) {
+                    mCurrentType = PhotoAlbumConfig.PHOTO_BUM_LOCAL;
+                } else {
+                    if(position == 0) {
+                        mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
+                    } else if(position == 1) {
+                        mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
+                    } else {
+                        mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
+                    }
+                }
+//                mCurrentType = position;
+//                setItemLineState(position);
+                setItemLineState(mCurrentType);
             }
 
             @Override
@@ -169,8 +188,16 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         mCBAll = (CheckBox) mAlbumRootView.findViewById(R.id.cb_select_all);
         if (parentViewIsMainActivity) {
             mBackBtn.setVisibility(View.GONE);
+            mTabLocal.setVisibility(View.VISIBLE);
+            mTabWonderful.setVisibility(View.GONE);
+            mTabUrgent.setVisibility(View.GONE);
+            mTabLoop.setVisibility(View.GONE);
         } else {
             mBackBtn.setVisibility(View.VISIBLE);
+            mTabLocal.setVisibility(View.GONE);
+            mTabWonderful.setVisibility(View.VISIBLE);
+            mTabUrgent.setVisibility(View.VISIBLE);
+            mTabLoop.setVisibility(View.VISIBLE);
         }
 
         mCancelBtn.setOnClickListener(this);
@@ -226,21 +253,21 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
      *
      * @param position 位置index
      */
-    public void setItemLineState(int position) {
+    public void setItemLineState(int currentType) {
         mTabLocal.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
         mTabWonderful.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
         mTabUrgent.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
         mTabLoop.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
-        if (position == 0) {
+        if (currentType == PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
             mLocalFragment.loadData(true);
             mTabLocal.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
-        } else if (position == 1) {
+        } else if (currentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
             mWonderfulFragment.loadData(GolukApplication.getInstance().isIpcLoginSuccess);
             mTabWonderful.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
-        } else if (position == 2) {
+        } else if (currentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
             mUrgentFragment.loadData(GolukApplication.getInstance().isIpcLoginSuccess);
             mTabUrgent.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
-        } else if (position == 3) {
+        } else if (currentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
             mLoopFragment.loadData(GolukApplication.getInstance().isIpcLoginSuccess);
             mTabLoop.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
         }
@@ -306,13 +333,13 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
             mViewPager.setCurrentItem(0);
             mCurrentType = PhotoAlbumConfig.PHOTO_BUM_LOCAL;
         } else if (id == R.id.tab_wonderful) {
-            mViewPager.setCurrentItem(1);
+            mViewPager.setCurrentItem(0);
             mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
         } else if (id == R.id.tab_urgent) {
-            mViewPager.setCurrentItem(2);
+            mViewPager.setCurrentItem(1);
             mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
         } else if (id == R.id.tab_loop) {
-            mViewPager.setCurrentItem(3);
+            mViewPager.setCurrentItem(2);
             mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
         } else if (id == R.id.edit_btn) {
             mViewPager.setCanScroll(false);
@@ -364,7 +391,6 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                     new OnRightClickListener() {
                         @Override
                         public void onClickListener() {
-                            editState = false;
                             setEditBtnState(true);
                             GolukUtils.setTabHostVisibility(true, getActivity());
                             resetEditState();
@@ -469,7 +495,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         if (null == mEditBtn) {
             return;
         }
-        if (isShow && !editState) {
+        if (isShow) {
             mEditBtn.setVisibility(View.VISIBLE);
         } else {
             mEditBtn.setVisibility(View.GONE);

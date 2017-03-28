@@ -1,21 +1,18 @@
 package com.mobnote.golukmain.photoalbum;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,15 +22,15 @@ import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import com.mobnote.eventbus.EventDownloadIpcVid;
 import com.mobnote.eventbus.EventIpcConnState;
-import com.mobnote.golukmain.MainActivity;
+import com.mobnote.eventbus.EventSingleConnSuccess;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.IpcDataParser;
 import com.mobnote.golukmain.carrecorder.entity.DoubleVideoInfo;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
-import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
+import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 
@@ -116,6 +113,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
      */
     List<Boolean> exist = new ArrayList<Boolean>();
 
+    private boolean mIntent2WifiConn;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,6 +142,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
     public void onResume() {
         super.onResume();
         isShowPlayer = false;
+        mIntent2WifiConn = false;
         if (null != GolukApplication.getInstance().getIPCControlManager()) {
             GolukApplication.getInstance().getIPCControlManager()
                     .addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_CIRCULATE, this);
@@ -193,6 +192,12 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
             List<String> list = new ArrayList<String>();
             list.add(event.getVidPath());
             downloadVideoFlush(list);
+        }
+    }
+
+    public void onEventMainThread(EventSingleConnSuccess event) {
+        if (mIntent2WifiConn) {
+            loadData(true);
         }
     }
 
@@ -293,9 +298,6 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
                         // mCloudWonderfulVideoAdapter.unlock();
                         GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====11111111111=");
-                        if (mStickyListHeadersListView == null || mStickyListHeadersListView.getAdapter() == null) {
-                            return;
-                        }
                         if (mStickyListHeadersListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
                             GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====22222222=");
                             final int size = mDataList.size();
@@ -341,13 +343,11 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
             @Override
             public void onClick(View arg0) {
                 if (GolukApplication.getInstance().isIpcLoginSuccess == false) {
-                    if (!mFragmentAlbum.parentViewIsMainActivity) {
-                        getActivity().finish();
-                    } else {
-                        //相册页面-连接记录仪
-                        ZhugeUtils.eventAlbumClickToConnectIPC(getActivity());
-                        ((MainActivity) getActivity()).connectGoluk(true);
-                    }
+                    ZhugeUtils.eventAlbumClickToConnectIPC(getActivity());
+                    mIntent2WifiConn = true;
+                    Intent intent = new Intent(getContext(), WiFiLinkListActivity.class);
+                    intent.putExtra(WiFiLinkListActivity.ACTION_FROM_REMOTE_ALBUM, true);
+                    startActivity(intent);
                 }
             }
         });
@@ -446,6 +446,9 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
             GolukDebugUtils.e("", "YYYYYY=====queryFileListInfo====isSucess=" + isSucess);
             if (!isSucess) {
                 isGetFileListDataing = false;
+                if (null != mCustomProgressDialog && mCustomProgressDialog.isShowing()) {
+                    mCustomProgressDialog.close();
+                }
             }
         } else {
             mFragmentAlbum.setEditBtnState(false);

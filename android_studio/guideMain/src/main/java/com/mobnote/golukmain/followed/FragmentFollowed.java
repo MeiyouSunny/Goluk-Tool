@@ -301,6 +301,9 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
 
     @Override
     public void onLoadComplete(int requestType, Object result) {
+        if(FragmentFollowed.this.isDetached()){
+            return;
+        }
         mListView.onRefreshComplete();
         if (null != mLoadingDialog) {
             mLoadingDialog.close();
@@ -361,11 +364,18 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
             List<FollowedListBean> followedBeanList = bean.data.list;
             if (null == followedBeanList || followedBeanList.size() == 0) {
                 if (REFRESH_NORMAL.equals(mCurMotion) || REFRESH_PULL_DOWN.equals(mCurMotion)) {
-                    Toast.makeText(getActivity(), getString(
-                            R.string.str_follow_no_content), Toast.LENGTH_SHORT).show();
+                    if(isAdded()) {
+                        Toast.makeText(getActivity(), getString(
+                                R.string.str_follow_no_content), Toast.LENGTH_SHORT).show();
+                    }
+                    mFollowedList.clear();
+                    mAdapter.notifyDataSetChanged();
+                    mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
                 } else {
-                    Toast.makeText(getActivity(), getString(
-                            R.string.str_pull_refresh_listview_bottom_reach), Toast.LENGTH_SHORT).show();
+                    if(isAdded()) {
+                        Toast.makeText(getActivity(), getString(
+                                R.string.str_pull_refresh_listview_bottom_reach), Toast.LENGTH_SHORT).show();
+                    }
                 }
                 return;
             }

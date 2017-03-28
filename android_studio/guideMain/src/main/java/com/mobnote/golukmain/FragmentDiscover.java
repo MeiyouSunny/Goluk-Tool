@@ -65,7 +65,7 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
         View rootView = inflater.inflate(R.layout.video_square_main, null);
         mSquareRootView = rootView;
         density = SoundUtils.getInstance().getDisplayMetrics().density;
-        lineParams = new RelativeLayout.LayoutParams((int) (50 * density), (int) (2 * density));
+        lineParams = new RelativeLayout.LayoutParams((int) (60 * density), (int) (2 * density));
         lineTop = (int) (5 * density);
 //        textColorSelect = getResources().getColor(R.color.textcolor_select);
 //        textcolorQx = getResources().getColor(R.color.textcolor_qx);

@@ -17,6 +17,8 @@ import android.media.MediaMetadataRetriever;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
@@ -1525,5 +1527,19 @@ public class GolukUtils {
         } else {
             flowLayout.setVisibility(View.GONE);
         }
+    }
+    public static boolean isCurrWifiGolukT(Context context) {
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        if (wifiInfo != null && !TextUtils.isEmpty(wifiInfo.getSSID())) {
+            String currSSID = wifiInfo.getSSID().toLowerCase();
+            if (!TextUtils.isEmpty(currSSID) && currSSID.contains("\"")) {
+                currSSID = currSSID.replaceAll("\"","");
+            }
+            if (currSSID.startsWith("goluk_t")) {
+                return true;
+            }
+        }
+        return false;
     }
 }

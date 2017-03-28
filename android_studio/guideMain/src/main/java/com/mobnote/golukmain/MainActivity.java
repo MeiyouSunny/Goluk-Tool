@@ -90,9 +90,7 @@ import com.mobnote.golukmain.special.SpecialListActivity;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.golukmain.wifibind.WiFiInfo;
-import com.mobnote.golukmain.wifibind.WiFiLinkCompleteActivity;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
-import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
 import com.mobnote.golukmain.xdpush.GolukNotification;
@@ -250,21 +248,21 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         refreshIpcDataToFile();
 
         // 初始化连接与綁定状态
-        if (mApp.isBindSucess()) {
-            if (mApp.getEnableSingleWifi()) {
-                mApp.mIpcIp = WiFiLinkListActivity.CONNECT_IPC_IP;
+//        if (mApp.isBindSucess()) {
+//            if (mApp.getEnableSingleWifi()) {
+//                mApp.mIpcIp = WiFiLinkListActivity.CONNECT_IPC_IP;
                 //什么都不干
-            } else {
-                startWifi();
+//            } else {
+//                startWifi();
                 // 启动创建热点
-                autoConnWifi();
+//                autoConnWifi();
                 // 等待IPC连接时间
 
-                mBaseHandler.sendEmptyMessageDelayed(MSG_H_WIFICONN_TIME, 40 * 1000);
-            }
-        } else {
-            wifiConnectFailed();
-        }
+//                mBaseHandler.sendEmptyMessageDelayed(MSG_H_WIFICONN_TIME, 40 * 1000);
+//            }
+//        } else {
+//            wifiConnectFailed();
+//        }
 
         // 不是第一次登录，并且上次登录成功过，进行自动登录
         mPreferencesAuto = getSharedPreferences("firstLogin", MODE_PRIVATE);
@@ -401,30 +399,22 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
     }
 
     public void connectGoluk(boolean returnToMainActivityWhenSuccess) {
-        //如果没有历史纪录的话， mApp.mWiFiStatus 一定为 WIFI_STATE_FAILED
-        if (!WifiBindDataCenter.getInstance().isHasDataHistory() || (mApp.getEnableSingleWifi() && !mApp.isIpcLoginSuccess)) {
-            Intent intent = new Intent(MainActivity.this, WiFiLinkListActivity.class);
-            intent.putExtra(INTENT_ACTION_RETURN_MAIN_ALBUM, returnToMainActivityWhenSuccess);
-            startActivity(intent);
-            return;
-        }
-        if (mApp.mWiFiStatus == WIFI_STATE_SUCCESS || (mApp.getEnableSingleWifi() && mApp.isIpcLoginSuccess)) {
+        if (mApp.isIpcLoginSuccess) {
             Intent intent = new Intent(MainActivity.this, CarRecorderActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             return;
         }
-        if (mApp.mWiFiStatus == WIFI_STATE_CONNING) {
-            Intent intent = new Intent(MainActivity.this, WiFiLinkCompleteActivity.class);
+        Intent intent = new Intent(MainActivity.this, WiFiLinkListActivity.class);
             intent.putExtra(INTENT_ACTION_RETURN_MAIN_ALBUM, returnToMainActivityWhenSuccess);
             startActivity(intent);
-            return;
-        } else {
-            Intent intent = new Intent(this, WifiHistorySelectListActivity.class);
-            intent.putExtra(INTENT_ACTION_RETURN_MAIN_ALBUM, returnToMainActivityWhenSuccess);
-            startActivity(intent);
-        }
+
+//        } else {
+//            Intent intent = new Intent(this, WifiHistorySelectListActivity.class);
+//            intent.putExtra(INTENT_ACTION_RETURN_MAIN_ALBUM, returnToMainActivityWhenSuccess);
+//            startActivity(intent);
+//        }
     }
 
     public void setTabHostVisibility(boolean visible) {

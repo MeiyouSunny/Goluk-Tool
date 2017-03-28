@@ -70,6 +70,9 @@ public class LiveOperateVdcp implements ILiveOperateFn {
 
     @Override
     public boolean startLive(StartLiveBean bean) {
+        if (bean == null || TextUtils.isEmpty(bean.url)) {
+            return false;
+        }
         GolukDebugUtils.e("", "newlive-----LiveOperateVdcp-----startLive  " + bean.url);
         bean.url = Base64.encodeBase64String(bean.url.getBytes());
         String jsonData = GolukFastJsonUtil.setParseObj(bean);

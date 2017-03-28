@@ -2,12 +2,15 @@ package com.mobnote.golukmain.carrecorder;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -205,7 +208,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     /**
      * 进入相册
      **/
-    private ImageView image3 = null;
+    private TextView image3 = null;
 
     /**
      * 加载中动画对象
@@ -352,6 +355,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     private RelativeLayout mAdasStatusLayout = null;
 
     private ImageView mAdasIcon = null;
+    private AlertDialog mExitAlertDialog;
     public static final String ADAS_LINE_ST_LEFT = "adas_line_st_left";
     public static final String ADAS_LINE_ST_RIGHT = "adas_line_st_right";
     public static final String ADAS_DISTANCE_ST_LEFT = "adas_distance_left";
@@ -512,7 +516,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             case WIFI_STATE_SUCCESS:
                 // GolukApplication.getInstance().stopDownloadList();
                 // 国际版T1设备隐藏直播
-                if (!mApp.isMainland() && GolukUtils.isIPCTypeT1(WiFiInfo.IPC_MODEL)) {
+                if (!mApp.isMainland()) {
                     mllStartLive.setVisibility(View.GONE);
                 } else {
                     mllStartLive.setVisibility(View.VISIBLE);
@@ -646,6 +650,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         mTime = (TextView) findViewById(R.id
                 .mTime);
         mAddr = (TextView) findViewById(R.id.mAddr);
+        if(GolukApplication.getInstance().isMainland()) {
+            mAddr.setVisibility(View.VISIBLE);
+        } else {
+            mAddr.setVisibility(View.GONE);
+        }
         mConnectTip = (TextView) findViewById(R.id.mConnectTip);
         mLoadingLayout = (LinearLayout) findViewById(R.id.mLoadingLayout);
         mLoading = (ProgressBar) findViewById(R.id.mLoading);
@@ -657,7 +666,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         mRtspPlayerView = (RtspPlayerView) findViewById(R.id.mRtmpPlayerView);
         image1 = (ImageView) findViewById(R.id.image1);
         image2 = (ImageView) findViewById(R.id.image2);
-        image3 = (ImageView) findViewById(R.id.image3);
+        image3 = (TextView) findViewById(R.id.image3);
         downloadSize = (RingView) findViewById(R.id.downloadSize);
         mChangeBtn = (ImageView) findViewById(R.id.changeBtn);
 
@@ -902,6 +911,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             String url = PlayUrlManager.getRtspUrl();
             GolukDebugUtils.e("xuhw", "CarrecorderActivity-------start--YYYYYY======url==" + url + "   "
                     + mApp.mIPCControlManager.mProduceName);
+            if(TextUtils.isEmpty(url)){
+                return;
+            }
             mRtspPlayerView.setDataSource(url);
             mRtspPlayerView.start();
         }
@@ -973,9 +985,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             if (m_bIsFullScreen) {
                 return;
             }
-            if(!downloadCheck()){
-                exit();
-            }
+            preExit();
         } else if (id == R.id.m8sBtn) {
             if (m_bIsFullScreen) {
                 return;
@@ -1324,9 +1334,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         initVideoImage();// 初始化相册列表
 
         // 获取精彩视频类型
-        if (GolukApplication.getInstance().getIPCControlManager() == null) {
-            return;
-        }
         boolean wonderfulType = GolukApplication.getInstance().getIPCControlManager().getWonderfulVideoType();
         GolukDebugUtils.e("", "CarRecorderActivity-------------------wonderfulType：" + wonderfulType);
     }
@@ -1361,6 +1368,16 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
     @Override
     protected void onDestroy() {
+        //disable wifi if ipcConnected
+        if (mApp.isIpcLoginSuccess) {
+            mApp.mIPCControlManager.setVdcpDisconnect();
+            mApp.setIpcLoginOut();
+            WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+            if (wifiInfo != null) {
+                wifiManager.disableNetwork(wifiInfo.getNetworkId());
+            }
+        }
         GolukDebugUtils.e("xuhw", "YYYYYY======onDestroy======");
         if (null != mRtspPlayerView) {
             mRtspPlayerView.removeCallbacks(retryRunnable);
@@ -1384,6 +1401,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         }
         mWonderfulTime = 0;
         EventBus.getDefault().unregister(this);
+        if(mExitAlertDialog != null) {
+            if (mExitAlertDialog.isShowing()) {
+                mExitAlertDialog.dismiss();
+            }
+            mExitAlertDialog = null;
+        }
         super.onDestroy();
     }
 
@@ -2220,46 +2243,47 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         if (m_bIsFullScreen) {
             // 全屏时，退出全屏
             setFullScreen(false);
-        } else if (!downloadCheck()) {
-            super.onBackPressed();
+        } else {
+            preExit();
         }
     }
 
-    public void exit() {
+    private void preExit() {
+        if (mApp.getDownLoadList() == null || mApp.getDownLoadList().size() == 0) {
+            exit();
+            return;
+        }
+        if (mExitAlertDialog == null) {
+            mExitAlertDialog = new AlertDialog.Builder(this).create();
+            mExitAlertDialog.setTitle(getString(R.string.str_global_dialog_title));
+            mExitAlertDialog.setMessage(getString(R.string.msg_of_exit_when_download));
+            mExitAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.str_button_ok), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    mExitAlertDialog.dismiss();
+                    exit();
+                }
+            });
+            mExitAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.dialog_str_cancel), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    mExitAlertDialog.dismiss();
+                }
+            });
+        }
+        if (mExitAlertDialog.isShowing()) {
+            return;
+        }
+
+        mExitAlertDialog.show();
+        mExitAlertDialog.setCancelable(true);
+        mExitAlertDialog.setCanceledOnTouchOutside(true);
+
+    }
+
+    private void exit() {
         mWonderfulTime = 0;
         finish();
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        mApp.mIPCControlManager.setVdcpDisconnect();
-        mApp.setIpcLoginOut();
-    }
-
-    private boolean downloadCheck(){
-        if(mApp.isDownloading()){
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.user_dialog_hint_title)
-                    .setMessage(R.string.current_downloading)
-                    .setPositiveButton(R.string.exit_download, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            mApp.stopDownloadList();
-                            exit();
-                        }})
-                    .setNegativeButton(R.string.cancel_download, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .create().show();
-            return true;
-        }else{
-            return false;
-        }
     }
 
     /**

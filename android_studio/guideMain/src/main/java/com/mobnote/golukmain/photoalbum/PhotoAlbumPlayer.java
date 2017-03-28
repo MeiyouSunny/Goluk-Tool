@@ -210,9 +210,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_photoalbum_player);
         EventBus.getDefault().register(this);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         initData(savedInstanceState);
 
