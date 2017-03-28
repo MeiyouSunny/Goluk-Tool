@@ -1088,7 +1088,7 @@
 
     <!--2.10.0-->
     <string name="change_resolution_hint">点击这里选择分辨率，让播放更流畅</string>
-    <string name="current_downloading">你有下载任务正在进行，退出将取消下载</string>
+    <string name="msg_of_exit_when_download">你有下载任务正在进行，退出将取消下载</string>
     <string name="exit_download">退出</string>
     <string name="cancel_download">留下</string>
 </resources>

@@ -1205,9 +1205,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     connectionDialog();
                 }
                 if (this.isBindSucess()) {
-                    if (null != mMainActivity) {
-                        mMainActivity.wiFiLinkStatus(1);
-                    }
+//                    if (null != mMainActivity) {
+//                        mMainActivity.wiFiLinkStatus(1);
+//                    }
                 }
                 break;
             case ConnectionStateMsg_Connected:
@@ -1246,7 +1246,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         isIpcConnSuccess = true;
         // 如果在wifi连接页面,通知连接成功
         if (mPageSource == "WiFiLinkList") {
-            ((WiFiLinkListActivity) mContext).ipcSucessCallBack();
+            ((WiFiLinkListActivity) mContext).ipcSucessCallBack(param2);
         }
         // 如果在wifi连接页面,通知连接成功
         if (mPageSource.equals("WiFiLinkBindAll")) {

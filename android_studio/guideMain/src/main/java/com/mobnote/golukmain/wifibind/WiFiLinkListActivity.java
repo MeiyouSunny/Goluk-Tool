@@ -642,7 +642,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             mainIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(mainIntent);
             EventBus.getDefault().post(new EventFinishWifiActivity());
-            }
         } else {
             collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.4 to Hotspot");
             Intent modifyPwd = new Intent(WiFiLinkListActivity.this, WiFiLinkCompleteActivity.class);

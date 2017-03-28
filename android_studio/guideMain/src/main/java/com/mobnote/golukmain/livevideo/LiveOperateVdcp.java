@@ -5,6 +5,7 @@ import java.util.TimerTask;
 
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
