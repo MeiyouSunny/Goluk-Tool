@@ -410,7 +410,7 @@
     <string name="user_insert_btn_txt">注册</string>
     <string name="user_insert_add_number">输入手机号</string>
     <string name="str_user_regist_below_hint">注册即代表你同意用户协议和隐私条款</string>
-    <string name="user_insert_sign_in">我有账号？</string>
+    <string name="user_insert_sign_in">我有账号?</string>
     <string name="user_sign_in">登录</string>
     <string name="test_code_icon_txt">输入验证码</string>
     <string name="test_code_icon_txt_number">输入以下手机号收到的验证码</string>
@@ -1049,4 +1049,27 @@
     <string name="setting_anti_flicker" >抗闪烁设置</string>
     <string name="select_all">全选</string>
     <string name="un_select_all">取消全选</string>
+
+    <!-- v1.2.6 -->
+    <string name="phone_account">手机</string>
+    <string name="email_account">邮箱</string>
+    <string name="email_invalid">请输入有效邮箱</string>
+    <string name="email_hint">请输入邮箱</string>
+    <string name="email_not_registered">邮箱未注册</string>
+    <string name="vcode_has_send_to">验证码已发送到</string>
+
+    <!-- optimize ipc conn -->
+    <string name="msg_of_exit_when_download">你有下载任务正在进行，退出将取消下载</string>
+    <string name="please_change_network_from_car_recorder_to_others">当前网络被记录仪wifi占用，需要联网请切换到有效网络</string>
+    <string name="sd_card_album">SD卡相册</string>
+    <string name="local_album">本地相册</string>
+
+    <!--1.3.0-->
+    <string name="ignore_curr_ipc_version">忽略此版本</string>
+    <string name="upload_log">上传日志</string>
+    <string name="upload_success">上传成功</string>
+    <string name="upload_fail">上传失败</string>
+    <string name="str_vk">VKontakte</string>
+    <string name="input_pwd">请输入6-16位数字或字母密码</string>
+    <string name="change_resolution_hint">点击这里可选择分辨率，让播放更流畅</string>
 </resources>

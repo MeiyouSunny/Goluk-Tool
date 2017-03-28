@@ -20,26 +20,27 @@
 
             <TextView
                 android:id="@+id/tab_local"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textColor="#0080ff"
                 android:layout_weight="1"
-                android:text="@string/str_local_title"
+                android:gravity="center"
+                android:text="@string/local_album"
                 android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tab_wonderful"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="#ffffff"
+                android:textColor="#0080ff"
                 android:gravity="center"
                 android:text="@string/str_wonderful_title"
                 android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tab_urgent"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="#ffffff"
@@ -49,7 +50,7 @@
 
             <TextView
                 android:id="@+id/tab_loop"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="#ffffff"

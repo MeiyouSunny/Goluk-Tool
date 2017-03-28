@@ -1048,4 +1048,23 @@
     <string name="str_tag_tab_hot">Рекомендовать</string>
     <string name="str_tag_description_more">more</string>
     <string name="setting_anti_flicker" >Настройки подавления мерцания</string>
+    <string name="select_all">Выбрать все</string>
+    <string name="un_select_all">Отмена</string>
+    <string name="phone_account">Моб. телефон</string>
+    <string name="email_account">Эл. почта</string>
+    <string name="email_invalid">Введите допустимый адрес эл. почты</string>
+    <string name="email_hint">Введите эл. адрес</string>
+    <string name="email_not_registered">Недопустимый адрес эл. почты</string>
+    <string name="vcode_has_send_to">Проверочный код отправлен на</string>
+    <string name="msg_of_exit_when_download">Идет загрузка. Если выйти, она будет отменена.</string>
+    <string name="please_change_network_from_car_recorder_to_others">Подключение к WiFi на регистраторе. Переключите, если вам нужно подключиться к Интернету.</string>
+    <string name="sd_card_album">Альбом на SD-карте</string>
+    <string name="local_album">Локальный альбом</string>
+    <string name="ignore_curr_ipc_version">Игнорировать обновление</string>
+    <string name="upload_log">диагностических данных</string>
+    <string name="upload_success">Успешно</string>
+    <string name="upload_fail">Ошибка</string>
+    <string name="str_vk">VKontakte</string>
+    <string name="input_pwd">Введите пароль (6 – 16 цифр)</string>
+    <string name="change_resolution_hint">Выберите оптимальное разрешение для быстрого воспроизведения видео</string>
 </resources>

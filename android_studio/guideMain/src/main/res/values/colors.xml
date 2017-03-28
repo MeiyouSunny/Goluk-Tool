@@ -141,4 +141,8 @@
     <color name="btn_startAE_press">#0080ff</color>
 
     <color name="color_ae_function_pressed">#929394</color>
+    <color name="tab_color_grey">#60ffffff</color>
+    <color name="tab_color_white">#ffffff</color>
+    <color name="tab_color_darker">#333333</color>
+    <color name="tab_color_lighter">#999999</color>
 </resources>

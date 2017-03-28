@@ -403,7 +403,7 @@
     <string name="str_profit_unit">GCoin</string>
     <string name="str_live_retry_live">ライブを復元中</string>
     <string name="str_live_create">ライブを作成中</string>
-    <string name="user_login_phone_hint">写真</string>
+    <string name="user_login_phone_hint">携帯電話</string>
     <string name="user_login_phone">パスワードをお忘れですか？</string>
     <string name="login_in_facebook_btn">Facebookでログイン</string>
     <string name="user_insert_msg">アカウントをお持ちではないですか？</string>
@@ -1048,4 +1048,29 @@
     <string name="str_tag_tab_hot">おすすめ</string>
     <string name="str_tag_description_more">more</string>
     <string name="setting_anti_flicker" >ちらつき防止設定</string>
+    <string name="select_all">すべて選択</string>
+    <string name="un_select_all">キャンセル</string>
+
+    <!-- v1.2.6 -->
+    <string name="phone_account">携帯電話</string>
+    <string name="email_account">Eメール</string>
+    <string name="email_invalid">有効なメールアドレスを入力してください</string>
+    <string name="email_hint">メールアドレスを入力</string>
+    <string name="email_not_registered">無効なメールアドレス</string>
+    <string name="vcode_has_send_to">認証コード送信先：</string>
+
+    <!-- optimize ipc conn -->
+    <string name="msg_of_exit_when_download">進行中のダウンロードがあります。 終了するとダウンロードがキャンセルされます</string>
+    <string name="please_change_network_from_car_recorder_to_others">現在、レコーダーのWiFiに接続されています。 インターネットに接続する必要がある場合は切り替えてください。</string>
+    <string name="sd_card_album">SDカード上のアルバム</string>
+    <string name="local_album">ローカルアルバム</string>
+
+    <!--1.3.0-->
+    <string name="ignore_curr_ipc_version">このバージョンを無視する</string>
+    <string name="upload_log">診断データ</string>
+    <string name="upload_success">成功</string>
+    <string name="upload_fail">エラー</string>
+    <string name="str_vk">VKontakte</string>
+    <string name="input_pwd">パスワードを入力してください（6～16桁）</string>
+    <string name="change_resolution_hint">変更画面解像度のビデオをよりスムーズに再生できるようになります</string>
 </resources>

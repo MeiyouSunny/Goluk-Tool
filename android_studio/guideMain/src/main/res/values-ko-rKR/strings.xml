@@ -1049,4 +1049,29 @@
     <string name="str_tag_tab_hot">추천</string>
     <string name="str_tag_description_more">more</string>
     <string name="setting_anti_flicker" >깜박거림 방지 설정</string>
+    <string name="select_all">모두 선택</string>
+    <string name="un_select_all">취소</string>
+
+    <!-- v1.2.6 -->
+    <string name="phone_account">휴대전화</string>
+    <string name="email_account">이메일</string>
+    <string name="email_invalid">유효한 이메일 주소를 입력하세요</string>
+    <string name="email_hint">이메일 입력</string>
+    <string name="email_not_registered">잘못된 이메일 주소</string>
+    <string name="vcode_has_send_to">인증 코드가 다음으로 전송되었습니다:</string>
+
+    <!-- optimize ipc conn -->
+    <string name="msg_of_exit_when_download">다운로드가 진행 중입니다. 지금 종료하면 다운로드가 취소됩니다.</string>
+    <string name="please_change_network_from_car_recorder_to_others">현재 녹음기의 와이파이에 연결되어 있습니다. 인터넷에 연결하려면 전환하세요.</string>
+    <string name="sd_card_album">SD 카드에 있는 앨범</string>
+    <string name="local_album">로컬 앨범</string>
+
+    <!--1.3.0-->
+    <string name="ignore_curr_ipc_version">이 버전 무시</string>
+    <string name="upload_log">진단 데이터</string>
+    <string name="upload_success">성공적으로</string>
+    <string name="upload_fail">오류</string>
+    <string name="str_vk">VKontakte</string>
+    <string name="input_pwd">비밀번호를 입력하세요 (6-16자리)</string>
+    <string name="change_resolution_hint">결의 바꿀 수 사진 비디오 재생 더 잘</string>
 </resources>

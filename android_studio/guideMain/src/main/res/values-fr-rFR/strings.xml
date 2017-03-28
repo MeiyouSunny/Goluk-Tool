@@ -1048,4 +1048,29 @@ Une qualité médiocre de la carte mémoire provoquera des enregistrements anorm
     <string name="str_tag_tab_hot">Recommander</string>
     <string name="str_tag_description_more">more</string>
     <string name="setting_anti_flicker" >Paramètres anti-scintillement</string>
+    <string name="select_all">Tout sélectionner</string>
+    <string name="un_select_all">Annuler</string>
+
+    <!-- v1.2.6 -->
+    <string name="phone_account">Téléphone</string>
+    <string name="email_account">E-mail</string>
+    <string name="email_invalid">Veuillez saisir une adresse e-mail valide</string>
+    <string name="email_hint">Saisir l\'e-mail</string>
+    <string name="email_not_registered">Adresse e-mail invalide</string>
+    <string name="vcode_has_send_to">Code de vérification envoyé à</string>
+
+    <!-- optimize ipc conn -->
+    <string name="msg_of_exit_when_download">Il y a un téléchargement en cours. Quitter annulera le téléchargement</string>
+    <string name="please_change_network_from_car_recorder_to_others">Actuellement connecté au WiFi de l\'enregistreur. Veuillez basculer si vous devez vous connecter à Internet.</string>
+    <string name="sd_card_album">Album sur la carte SD</string>
+    <string name="local_album">Album local</string>
+
+    <!--1.3.0-->
+    <string name="ignore_curr_ipc_version">Ignorer cette version</string>
+    <string name="upload_log">Les données de diagnostic</string>
+    <string name="upload_success">Avec succès</string>
+    <string name="upload_fail">Erreur</string>
+    <string name="str_vk">VKontakte</string>
+    <string name="input_pwd">Veuillez saisir le mot de passe (6-16 chiffres)</string>
+    <string name="change_resolution_hint">modification de résolution permettra à la lecture plus en douceur des vidéos</string>
 </resources>

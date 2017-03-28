@@ -208,7 +208,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     /**
      * 进入相册
      **/
-    private TextView image3 = null;
+    private ImageView image3 = null;
 
     /**
      * 加载中动画对象
@@ -666,7 +666,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         mRtspPlayerView = (RtspPlayerView) findViewById(R.id.mRtmpPlayerView);
         image1 = (ImageView) findViewById(R.id.image1);
         image2 = (ImageView) findViewById(R.id.image2);
-        image3 = (TextView) findViewById(R.id.image3);
+        image3 = (ImageView) findViewById(R.id.image3);
         downloadSize = (RingView) findViewById(R.id.downloadSize);
         mChangeBtn = (ImageView) findViewById(R.id.changeBtn);
 

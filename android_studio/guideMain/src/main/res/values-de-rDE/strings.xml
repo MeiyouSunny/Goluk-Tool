@@ -502,8 +502,8 @@
     <string name="str_sys_msg_gaward_text">Gratulation! Du hast gewonnen!</string>
     <string name="str_live_someone">Livestream von *</string>
     <string name="str_reward_text">Ausgezeichnet</string>
-    <string name="str_guide_have_goluk_text">Possiedo Goluk</string>
-    <string name="str_guide_look_text">Dai un\'occhiata</string>
+    <string name="str_guide_have_goluk_text">Ich besitze Goluk</string>
+    <string name="str_guide_look_text">Schau dich einfach um</string>
     <string name="str_photo_delete_confirm">Confermi la cancellazione di questo video?</string>
     <string name="str_qzone">QQ Zone</string>
     <string name="str_qq_friends">QQ Friend</string>
@@ -1048,4 +1048,29 @@ Qualität der Speicherkarte kann zu gestörter Aufnahme führen.</string>
     <string name="str_tag_tab_hot">Empfehlen</string>
     <string name="str_tag_description_more">more</string>
     <string name="setting_anti_flicker" >Antiflimmer-Einstellungen</string>
+    <string name="select_all">Alles auswählen</string>
+    <string name="un_select_all">Abbrechen</string>
+
+    <!-- v1.2.6 -->
+    <string name="phone_account">Mobiltelefon</string>
+    <string name="email_account">E-Mail</string>
+    <string name="email_invalid">Bitte geben Sie eine gültige E-Mail-Adresse ein.</string>
+    <string name="email_hint">E-Mail eingeben</string>
+    <string name="email_not_registered">Ungültige E-Mail-Adresse</string>
+    <string name="vcode_has_send_to">Verifizierungscode gesendet an</string>
+
+    <!-- optimize ipc conn -->
+    <string name="msg_of_exit_when_download">Es wird gerade ein Download ausgeführt. Beim Verlassen wird der Download abgebrochen</string>
+    <string name="please_change_network_from_car_recorder_to_others">Momentan mit WLAN auf dem Recorder verbunden. Bitte wechseln, wenn Sie eine Internetverbindung benötigen.</string>
+    <string name="sd_card_album">Album auf SD-Karte</string>
+    <string name="local_album">Lokales Album</string>
+
+    <!--1.3.0-->
+    <string name="ignore_curr_ipc_version">Ignorieren sie diese version</string>
+    <string name="upload_log">Diagnose Daten</string>
+    <string name="upload_success">Erfolgreich</string>
+    <string name="upload_fail">Fehler</string>
+    <string name="str_vk">VKontakte</string>
+    <string name="input_pwd">Bitte Passwort eingeben (6-16 Zeichen)</string>
+    <string name="change_resolution_hint">wechselndes bild entschließung ermöglicht videos abspielen reibungslos laufen</string>
 </resources>

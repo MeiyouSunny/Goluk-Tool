@@ -61,7 +61,7 @@
                     android:layout_height="40dp"
                     android:background="@null"
                     android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    android:hint="@string/input_pwd_hint"
+                    android:hint="@string/user_login_password_hint"
                     android:maxLength="16"
                     android:paddingLeft="10dp"
                     android:password="true"
