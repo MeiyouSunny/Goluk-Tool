@@ -1,6 +1,7 @@
 package com.mobnote.golukmain.photoalbum;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -583,8 +584,21 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
        if (mResolutionPopupWindow.isShowing()) {
            mResolutionPopupWindow.dismiss();
        } else {
-           mResolutionPopupWindow.showAsDropDown(mResolutionTV);
+           if (android.os.Build.VERSION.SDK_INT >=24) {
+               int[] a = new int[2];
+               mResolutionTV.getLocationInWindow(a);
+               mResolutionPopupWindow.showAtLocation(getWindow().getDecorView(), Gravity.NO_GRAVITY, 0 , a[1]+mResolutionTV.getHeight());
+           } else {
+               mResolutionPopupWindow.showAsDropDown(mResolutionTV);
+           }
        }
+        mResolutionTV.post(new Runnable() {
+            @Override
+            public void run() {
+                mResolutionPopupWindow.showAsDropDown(mResolutionTV);
+                mResolutionPopupWindow.update(mResolutionTV, 0, 0, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            }
+        });
     }
 
     @Override
