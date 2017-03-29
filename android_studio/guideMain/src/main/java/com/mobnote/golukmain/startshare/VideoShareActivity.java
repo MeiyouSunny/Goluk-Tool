@@ -478,6 +478,10 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             intent.putExtra(ShareTypeActivity.SHARE_TYPE_KEY,mSelectedShareType);
             VideoShareActivity.this.startActivity(intent);
         }else if(vId == R.id.tv_share_joniActivity){
+            if (GolukApplication.getInstance().isIpcLoginSuccess) {
+                showToast(getString(R.string.please_change_network_from_car_recorder_to_others));
+                return;
+            }
             isShowNew = false;
             if (!UserUtils.isNetDeviceAvailable(VideoShareActivity.this)) {
                 GolukUtils.showToast(VideoShareActivity.this, VideoShareActivity.this.getResources().getString(R.string.user_net_unavailable));
@@ -521,6 +525,10 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     }
 
     private void startShare(){
+        if (GolukApplication.getInstance().isIpcLoginSuccess) {
+            showToast(getString(R.string.please_change_network_from_car_recorder_to_others));
+            return;
+        }
         if(!GolukApplication.getInstance().isUserLoginSucess){
             GolukUtils.startLoginActivity(this);
             return;
