@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.UserLoginActivity;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.LiveSettingBean;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
@@ -168,6 +170,17 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
             if(!GolukUtils.isNetworkConnected(this)) {
                 showToast(R.string.network_error);
                 return;
+            }
+
+            if (!mBaseApp.isUserLoginSucess) {
+                Intent intent = null;
+                if (mBaseApp.isMainland() == false) {
+                    intent = new Intent(this, InternationUserLoginActivity.class);
+                } else {
+                    intent = new Intent(this, UserLoginActivity.class);
+                }
+                intent.putExtra("isInfo", "back");
+                startActivity(intent);
             }
             String liveDescription = null;
             liveDescription = mDescriptionEt.getText().toString();

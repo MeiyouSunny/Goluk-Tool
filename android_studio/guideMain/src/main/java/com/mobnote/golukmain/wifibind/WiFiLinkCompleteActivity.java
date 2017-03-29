@@ -12,6 +12,7 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
+import com.mobnote.golukmain.livevideo.StartLiveActivity;
 import com.mobnote.golukmain.reportlog.ReportLog;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
@@ -25,7 +26,9 @@ import com.mobnote.wifibind.WifiConnectManager;
 import com.mobnote.wifibind.WifiRsBean;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -45,7 +48,7 @@ import de.greenrobot.event.EventBus;
 
 public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickListener, WifiConnCallBack,
         ILiveDialogManagerFn {
-
+    public static final String INTENT_ACTION_RETURN_LIVE = "returnToLive";
     private static final String TAG = "WiFiLinkBindAll";
     private static final String TAG_LOG = "WiFiLinkCompleteActivity";
     /**
@@ -84,6 +87,10 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
     private WifiConnectManager mWac= null;
     private boolean isExit = false;
     private boolean mReturnToMainAlbum;
+    private boolean mReturnToLive;
+    private String mShortLocation;
+    private double mLocationLat;
+    private double mLocationLon;
     /**
      * 中间的根布局
      */
@@ -111,6 +118,10 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
      * 用户要绑定的设备类型
      */
     private String mIPcType = "";
+    private int mErrorCode = 0;
+    private final int ERROR_TIME_OUT = -1;
+    private final int ERROR_CREATE_HOT = -2;
+    private final int ERROR_IPC_CONN_HOT = -3;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -144,6 +155,10 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         if (null != intent) {
 //            mIPcType = intent.getStringExtra(WifiUnbindSelectTypeActivity.KEY_IPC_TYPE);
             mReturnToMainAlbum = intent.getBooleanExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, false);
+            mReturnToLive = intent.getBooleanExtra(INTENT_ACTION_RETURN_LIVE, false);
+            mShortLocation = intent.getStringExtra(StartLiveActivity.SHORT_LOCATION);
+            mLocationLat = intent.getDoubleExtra(StartLiveActivity.CURR_LAT,0.0);
+            mLocationLon = intent.getDoubleExtra(StartLiveActivity.CURR_LON,0.0);
         }
     }
 
@@ -174,6 +189,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         } else if (MSG_H_FREE_2 == msg.what) {
             freeLayout2();
         } else if( TIMEOUT_SETIPC == msg.what){
+            mErrorCode = ERROR_TIME_OUT;
             connFailed();
         }
     }
@@ -250,6 +266,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         } else {
             if (connectCount > 3) {
                 GolukUtils.showToast(this, this.getResources().getString(R.string.wifi_link_bind_failed));
+                mErrorCode = ERROR_IPC_CONN_HOT;
                 connFailed();
             } else {
                 GolukUtils.showToast(this, this.getResources().getString(R.string.wifi_link_bind_failed_retry));
@@ -276,6 +293,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
         collectLog("createPhoneHot", wifiName + "---" + pwd + "---" + ipcssid + "---" + ipcmac);
         if (mWac == null) {
+            mErrorCode = ERROR_CREATE_HOT;
             connFailed();
             return;
         }
@@ -484,12 +502,16 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
             if (null != mWac) {
                 mWac.unbind();
             }
-//            mWac = null;
-            // GolukApplication.getInstance().stopDownloadList();// 停止视频同步
-
             if (mReturnToMainAlbum) {
                 Intent it = new Intent(WiFiLinkCompleteActivity.this, MainActivity.class);
                 startActivity(it);
+                finish();
+            } if(mReturnToLive){
+                Intent intent = new Intent(this, StartLiveActivity.class);
+                intent.putExtra(StartLiveActivity.SHORT_LOCATION,mShortLocation);
+                intent.putExtra(StartLiveActivity.CURR_LON,mLocationLon);
+                intent.putExtra(StartLiveActivity.CURR_LAT,mLocationLat);
+                startActivity(intent);
                 finish();
             } else {
                 Intent it = new Intent(WiFiLinkCompleteActivity.this, CarRecorderActivity.class);
@@ -562,11 +584,13 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                             }
                         }
                     } catch (Exception e) {
+                        mErrorCode = ERROR_IPC_CONN_HOT;
                         connFailed();
                     }
                     break;
                 default:
                     GolukUtils.showToast(mContext, message);
+                    mErrorCode = ERROR_IPC_CONN_HOT;
                     connFailed();
                     break;
             }
@@ -577,6 +601,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                 ZhugeUtils.eventHotspotCreatFailed(this, getResources().getString(R.string.str_zhuge_ipc_hotspot_connect_type_manual), getResources().getString(R.string.str_zhuge_ipc_hotspot_error_ipc_connect));
             }
             GolukUtils.showToast(mContext, message);
+            mErrorCode = ERROR_CREATE_HOT;
             connFailed();
         }
     }
@@ -585,14 +610,38 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         collectLog("connFailed", "WifiLinkCompleteActivity-----------connFailed : " + mStep);
 
         //当连接失败的时候，直接跳转到支持单项连接的页面
-        Intent mainIntent = new Intent(WiFiLinkCompleteActivity.this, WiFiLinkNoHotspotActivity.class);
-        mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        mainIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        mainIntent.putExtra(WiFiLinkNoHotspotActivity.AUTO_START_CONNECT, false);
-        mainIntent.putExtra(WiFiLinkNoHotspotActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, mReturnToMainAlbum);
-        startActivity(mainIntent);
+//        Intent mainIntent = new Intent(WiFiLinkCompleteActivity.this, WiFiLinkNoHotspotActivity.class);
+//        mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        mainIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        mainIntent.putExtra(WiFiLinkNoHotspotActivity.AUTO_START_CONNECT, false);
+//        mainIntent.putExtra(WiFiLinkNoHotspotActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, mReturnToMainAlbum);
+//        startActivity(mainIntent);
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setType(ReportLog.TYPE_FAILED);
         reportLog();
+        String msg="";
+        switch (mErrorCode){
+            case ERROR_CREATE_HOT:
+                msg = getString(R.string.live_hot_spot_failed_create);
+                break;
+            case ERROR_IPC_CONN_HOT:
+                msg = getString(R.string.live_hot_spot_failed_con);
+                break;
+            case ERROR_TIME_OUT:
+                msg = getString(R.string.live_hot_spot_failed_timeout);
+                break;
+            default:break;
+        }
+        final AlertDialog dialog = new  AlertDialog.Builder(this).create();
+        dialog.setTitle(getString(R.string.live_hot_spot_failed_title));
+        dialog.setMessage(msg);
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.keep_on_text), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialog.dismiss();
+                finish();
+            }
+        });
+        dialog.show();
         finish();
 //        if (0 == mStep) {
 //            collectLog("connFailed", "connFailed show Dialog  please 5~10s");
@@ -627,9 +676,11 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                     break;
                 case 3:
                     // 用户已经连接到其它wifi，按连接失败处理
+                    mErrorCode = ERROR_CREATE_HOT;
                     connFailed();
                     break;
                 default:
+                    mErrorCode = ERROR_IPC_CONN_HOT;
                     connFailed();
                     break;
             }
@@ -640,6 +691,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                 ZhugeUtils.eventHotspotCreatFailed(this, getResources().getString(R.string.str_zhuge_ipc_hotspot_connect_type_auto), getResources().getString(R.string.str_zhuge_ipc_hotspot_error_ipc_connect));
             }
             // 未连接
+            mErrorCode = ERROR_IPC_CONN_HOT;
             connFailed();
         }
     }
@@ -647,6 +699,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
     private void wifiCallBack_ipcConnHotSucess(String message, Object arrays) {
         WifiRsBean[] bean = (WifiRsBean[]) arrays;
         if (null == bean) {
+            mErrorCode = ERROR_CREATE_HOT;
             connFailed();
             return;
         }
@@ -657,6 +710,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
             collectLog("wifiCallBack_ipcConnHotSucess", "1");
             sendLogicLinkIpc(bean[0].getIpc_ip(), bean[0].getIpc_mac());
         } else {
+            mErrorCode = ERROR_CREATE_HOT;
             connFailed();
             collectLog("wifiCallBack_ipcConnHotSucess", "2 ");
         }

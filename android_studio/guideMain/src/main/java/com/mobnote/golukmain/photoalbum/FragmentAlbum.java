@@ -1,5 +1,6 @@
 package com.mobnote.golukmain.photoalbum;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -7,6 +8,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -15,15 +18,18 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
+import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 
@@ -78,6 +84,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 
     private LinearLayout mDownLoadBtn = null;
     private LinearLayout mLLAll;
+    private ImageView mBackBtn;
 
     private List<String> selectedListData = null;
 
@@ -184,10 +191,11 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         mDownLoadIcon = (ImageView) mAlbumRootView.findViewById(R.id.mDownLoadIcon);
         mDeleteIcon = (ImageView) mAlbumRootView.findViewById(R.id.mDeleteIcon);
         mCancelBtn = (Button) mAlbumRootView.findViewById(R.id.cancel_btn);
-        ImageView mBackBtn = (ImageView) mAlbumRootView.findViewById(R.id.back_btn);
+        mBackBtn = (ImageView) mAlbumRootView.findViewById(R.id.back_btn);
         mCBAll = (CheckBox) mAlbumRootView.findViewById(R.id.cb_select_all);
         if (parentViewIsMainActivity) {
-            mBackBtn.setVisibility(View.GONE);
+            mBackBtn.setVisibility(View.VISIBLE);
+            mBackBtn.setImageResource(R.drawable.my_cloud_no_link);
             mTabLocal.setVisibility(View.VISIBLE);
             mTabWonderful.setVisibility(View.GONE);
             mTabUrgent.setVisibility(View.GONE);
@@ -359,7 +367,31 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
             setEditBtnState(true);
             GolukUtils.setTabHostVisibility(true, getActivity());
         } else if (id == R.id.back_btn) {
-            getActivity().finish();
+            if(parentViewIsMainActivity){
+                final PopupMenu mPopMenu = new PopupMenu(getContext(), mBackBtn);
+                mPopMenu.getMenuInflater().inflate(R.menu.menu_album_change, mPopMenu.getMenu());
+                mPopMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        mPopMenu.dismiss();
+                        if(item.getItemId() == R.id.action_sd){
+                            if (GolukApplication.getInstance().getIpcIsLogin()) {
+                                Intent photoalbum = new Intent(FragmentAlbum.this.getActivity(), PhotoAlbumActivity.class);
+                                photoalbum.putExtra("from", "cloud");
+                                startActivity(photoalbum);
+                            } else {
+                                Intent intent = new Intent(getContext(), WiFiLinkListActivity.class);
+                                intent.putExtra(WiFiLinkListActivity.ACTION_GO_To_ALBUM, true);
+                                startActivity(intent);
+                            }
+                        }
+                        return false;
+                    }
+                });
+                mPopMenu.show();
+            }else{
+                getActivity().finish();
+            }
         } else if (id == R.id.mDeleteBtn) {
             if (selectedListData.size() <= 0) {
                 return;

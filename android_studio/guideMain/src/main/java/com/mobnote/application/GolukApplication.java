@@ -1658,12 +1658,12 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 + mIPCControlManager.mProduceName);
         /** 初始没有设置同步数量，根据连接设备类型G1，T1S设置自动同步5条，其他设备自动同步20条 **/
         if (syncFlag == -1) {
-            if (IPCControlManager.G1_SIGN.equals(mIPCControlManager.mProduceName)
-                    || IPCControlManager.T1s_SIGN.equalsIgnoreCase(mIPCControlManager.mProduceName)) {
+           // if (IPCControlManager.G1_SIGN.equals(mIPCControlManager.mProduceName)
+               //     || IPCControlManager.T1s_SIGN.equalsIgnoreCase(mIPCControlManager.mProduceName)) {
                 SettingUtils.getInstance().putInt(UserSetupActivity.MANUAL_SWITCH, 5);
-            } else {
-                SettingUtils.getInstance().putInt(UserSetupActivity.MANUAL_SWITCH, 20);
-            }
+//            } else {
+//                SettingUtils.getInstance().putInt(UserSetupActivity.MANUAL_SWITCH, 20);
+//            }
         }
     }
 
@@ -1823,12 +1823,12 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     String filePath = "";
                     if (filename.contains("WND")) {
                         filePath = "fs1:/video/wonderful/";
-                    } else if (filename.contains("URG")) {
-                        filePath = "fs1:/video/urgent/";
-                    }
+                    }// else if (filename.contains("URG")) {
+                     //   filePath = "fs1:/video/urgent/";
+                   // }
 
                     if (TextUtils.isEmpty(filePath)) {
-                        break;
+                        continue;
                     }
 
                     filePath = FileUtils.javaToLibPath(filePath);

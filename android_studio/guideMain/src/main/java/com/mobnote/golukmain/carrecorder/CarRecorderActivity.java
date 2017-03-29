@@ -9,6 +9,8 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -34,6 +36,7 @@ import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import com.mobnote.eventbus.EventUpdateAddr;
 import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserLoginActivity;
 import com.mobnote.golukmain.carrecorder.IpcDataParser.TriggerRecord;
@@ -54,11 +57,13 @@ import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.live.LiveSettingBean;
 import com.mobnote.golukmain.livevideo.StartLiveActivity;
+import com.mobnote.golukmain.multicast.NetUtil;
 import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.videosuqare.RingView;
 import com.mobnote.golukmain.wifibind.WiFiInfo;
+import com.mobnote.golukmain.wifibind.WiFiLinkCompleteActivity;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
 import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
@@ -84,6 +89,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -489,7 +495,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
      */
     private void initIpcState(int ipcS) {
         if (mApp.getEnableSingleWifi() && mApp.isIpcConnSuccess) {
-            mllStartLive.setVisibility(View.GONE);
+            //mllStartLive.setVisibility(View.GONE);
             startPlayVideo();
             return;
         }
@@ -1084,23 +1090,51 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             click_ConnFailed();
         } else if (id == R.id.btn_carrecorder_live) {
             if (GolukApplication.getInstance().getIpcIsLogin()) {
-                Intent intent = null;
-                if (mApp.isUserLoginSucess == false) {
-                    Intent it = null;
-                    if (GolukApplication.getInstance().isMainland() == false) {
-                        intent = new Intent(this, InternationUserLoginActivity.class);
-                    } else {
-                        intent = new Intent(this, UserLoginActivity.class);
-                    }
-                    intent.putExtra("isInfo", "back");
-                    startActivity(intent);
-                } else {
-                    intent = new Intent(this, StartLiveActivity.class);
-                    intent.putExtra(StartLiveActivity.SHORT_LOCATION,mShortLocation);
-                    intent.putExtra(StartLiveActivity.CURR_LON,mLocationLon);
-                    intent.putExtra(StartLiveActivity.CURR_LAT,mLocationLat);
-                    startActivity(intent);
+                if(!NetUtil.isMobile(this)){
+                    final AlertDialog dialog = new AlertDialog.Builder(this).create();
+                    dialog.setTitle(getString(R.string.str_global_dialog_title));
+                    dialog.setMessage(getString(R.string.live_need_mobile_data));
+                    dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.str_button_ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.dialog_str_cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+                    dialog.setCancelable(true);
+                    dialog.setCanceledOnTouchOutside(true);
+                    return;
                 }
+                final AlertDialog dialog = new AlertDialog.Builder(this).create();
+                dialog.setTitle(getString(R.string.str_global_dialog_title));
+                dialog.setMessage(getString(R.string.open_ate_before_live));
+                dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.keep_on_text), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialog.dismiss();
+                        Intent intent = new Intent(CarRecorderActivity.this, WiFiLinkCompleteActivity.class);
+                        intent.putExtra(WiFiLinkCompleteActivity.INTENT_ACTION_RETURN_LIVE, true);
+                        intent.putExtra(StartLiveActivity.SHORT_LOCATION,mShortLocation);
+                        intent.putExtra(StartLiveActivity.CURR_LON,mLocationLon);
+                        intent.putExtra(StartLiveActivity.CURR_LAT,mLocationLat);
+                        startActivity(intent);
+                    }
+                });
+                dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.dialog_str_cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+                dialog.setCancelable(true);
+                dialog.setCanceledOnTouchOutside(true);
             }
         } else if (id == R.id.image1) {
             new1.setVisibility(View.GONE);

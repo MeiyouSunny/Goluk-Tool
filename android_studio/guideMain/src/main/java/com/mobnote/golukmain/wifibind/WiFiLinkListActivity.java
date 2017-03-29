@@ -35,6 +35,8 @@ import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import com.mobnote.golukmain.live.LiveDialogManager;
+import com.mobnote.golukmain.photoalbum.FragmentAlbum;
+import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
@@ -121,6 +123,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     private boolean mIsCanAcceptNetState = false;
     private boolean mStartSystemWifi = false;
     protected boolean mReturnToMainAlbum;
+    protected boolean mGotoAlbum = false;
 
     /**
      * 用于表示当前的状态 0/1/2 未连接/连接中/已连接
@@ -138,6 +141,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 //    private String mIpcRealtype = null;
 
     public static final String ACTION_FROM_CAM_SETTING = "action_from_cam_setting";
+    public static final String ACTION_GO_To_ALBUM = "action_go_to_album";
     public static final String ACTION_FROM_REMOTE_ALBUM= "action_from_remote_album";
     private boolean mIsFromUpgrade;
     private boolean mIsFromRemoteAlbum;
@@ -189,6 +193,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             mIsFromRemoteAlbum = intent.getBooleanExtra(ACTION_FROM_REMOTE_ALBUM, false);
 //            mIpcRealtype = intent.getStringExtra(WifiUnbindSelectTypeActivity.KEY_IPC_REAL_TYPE);
             mReturnToMainAlbum = intent.getBooleanExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, false);
+            mGotoAlbum = intent.getBooleanExtra(ACTION_GO_To_ALBUM, false);
         }
     }
 
@@ -622,6 +627,13 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.4 Only Wifi Connected success");
             if (mIsFromUpgrade) {
                 //EventBus.getDefault().post(new EventSingleConnSuccess());
+                finish();
+                return;
+            }
+            if(mGotoAlbum) {
+                Intent photoalbum = new Intent(this, PhotoAlbumActivity.class);
+                photoalbum.putExtra("from", "cloud");
+                startActivity(photoalbum);
                 finish();
                 return;
             }
