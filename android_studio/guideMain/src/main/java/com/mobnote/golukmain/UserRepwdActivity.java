@@ -1,6 +1,7 @@
 package com.mobnote.golukmain;
 
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventLoginSuccess;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.user.UserIdentifyInterface;
@@ -31,6 +32,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 /**
  * 重置密码
@@ -65,6 +67,7 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		EventBus.getDefault().register(this);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_repwd);
 
@@ -94,6 +97,16 @@ public class UserRepwdActivity extends BaseActivity implements OnClickListener, 
 		mApplication.setContext(mContext, "UserRepwd");
 		getInfo();
 		ZhugeUtils.eventForgetPwd(this);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		EventBus.getDefault().unregister(this);
+	}
+
+	public void onEventMainThread(EventLoginSuccess event) {
+		finish();
 	}
 
 	public void initView() {
