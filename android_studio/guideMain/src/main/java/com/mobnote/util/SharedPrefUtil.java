@@ -153,6 +153,7 @@ public class SharedPrefUtil {
      * ipc型号
      **/
     public static final String PROPERTY_SAVE_IPC_MODEL = "property_ipc_model";
+    public static final String PROPERTY_MANUAL_DOWNLOAD = "property_ipc_manual_download";
     /**
      * 下载的ipc升级文件型号
      **/
@@ -240,6 +241,16 @@ public class SharedPrefUtil {
     public static boolean getIsLiveNormalExit() {
         SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
         return preference.getBoolean(PROPERTY_LIVE_NORMAL_EXIT, true);
+    }
+
+    public static void setManualDownloadVideo(boolean manual) {
+        SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
+        preference.edit().putBoolean(PROPERTY_MANUAL_DOWNLOAD, manual).commit();
+    }
+
+    public static boolean getManualDownloadVideo() {
+        SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
+        return preference.getBoolean(PROPERTY_MANUAL_DOWNLOAD, false);
     }
 
     /**

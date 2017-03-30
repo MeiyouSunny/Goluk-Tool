@@ -751,7 +751,10 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             final double filesize = json.optDouble("size");
             final int type = json.getInt("type");
             final String savePath = getSavePath(type);
-
+            //需求2.10 只有手动才能够下载紧急
+            if(!SharedPrefUtil.getManualDownloadVideo() && IPCManagerFn.TYPE_URGENT == type){
+                return;
+            }
             if (!GolukUtils.checkSDStorageCapacity(filesize)) {
                 isSDCardFull = true;
                 if (!mDownLoadFileList.contains(fileName)) {
@@ -958,6 +961,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                         autodownloadfile = false;
                         mDownLoadFileList.clear();
                         mNoDownLoadFileList.clear();
+                        if(SharedPrefUtil.getManualDownloadVideo()){
+                            SharedPrefUtil.setManualDownloadVideo(false);
+                        }
                         GlobalWindow.getInstance().topWindowSucess(
                                 this.getResources().getString(R.string.str_video_transfer_success));
                     }

@@ -143,8 +143,10 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     public static final String ACTION_FROM_CAM_SETTING = "action_from_cam_setting";
     public static final String ACTION_GO_To_ALBUM = "action_go_to_album";
     public static final String ACTION_FROM_REMOTE_ALBUM= "action_from_remote_album";
+    public static final String ACTION_FROM_CAM= "action_from_cam";
     private boolean mIsFromUpgrade;
     private boolean mIsFromRemoteAlbum;
+    private boolean mAutoConn;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -194,6 +196,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 //            mIpcRealtype = intent.getStringExtra(WifiUnbindSelectTypeActivity.KEY_IPC_REAL_TYPE);
             mReturnToMainAlbum = intent.getBooleanExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, false);
             mGotoAlbum = intent.getBooleanExtra(ACTION_GO_To_ALBUM, false);
+            mAutoConn = intent.getBooleanExtra(ACTION_FROM_CAM, true);
         }
     }
 
@@ -429,7 +432,9 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         collectLog("ipcLinkFailedCallBack", "--------2");
         mIsCanAcceptIPC = false;
         this.dimissLoadingDialog();
-        GolukUtils.showToast(this, getResources().getString(R.string.wifi_link_conn_failed));
+        if(mAutoConn) {
+            GolukUtils.showToast(this, getResources().getString(R.string.wifi_link_conn_failed));
+        }
         mCurrentState = STATE_FAILED;
         this.setStateSwitch();
         this.nextNotCan();
@@ -494,6 +499,12 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     protected void onResume() {
         mApp.setContext(this, "WiFiLinkList");
         super.onResume();
+        if(!mAutoConn){
+            mStartSystemWifi = true;
+            GolukUtils.startSystemWifiList(this);
+            mAutoConn = true;
+            return;
+        }
         collectLog("onResume", "----1:");
         if (WifiBindDataCenter.getInstance().isHasDataHistory() || mStartSystemWifi)
             autoConnWifi();

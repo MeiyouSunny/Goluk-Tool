@@ -105,6 +105,8 @@ import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
+import static com.mobnote.golukmain.wifibind.WiFiLinkListActivity.ACTION_GO_To_ALBUM;
+
 /**
  * 行车记录仪处理类
  * <p/>
@@ -514,7 +516,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                     mConncetLayout.setVisibility(View.GONE);
                 }
                 mSettingBtn.setVisibility(View.GONE);
-                mChangeBtn.setVisibility(View.GONE);
+//                mChangeBtn.setVisibility(View.GONE);
                 m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
                 mLiveBtn.setImageResource(R.drawable.driving_car_living_icon);
                 setVideoBtnState(false);
@@ -727,7 +729,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         image3.setOnClickListener(this);
         mRtspPlayerView.setOnClickListener(this);
         mConncetLayout.setOnClickListener(this);
-//        mChangeBtn.setOnClickListener(this);
+        mChangeBtn.setOnClickListener(this);
 
         findViewById(R.id.back_btn).setOnClickListener(this);
         findViewById(R.id.mSettingBtn).setOnClickListener(this);
@@ -1178,7 +1180,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             }
         } else if (id == R.id.mConncetLayout
                 || id == R.id.changeBtn) {
-            Intent intent = new Intent(this, WifiUnbindSelectListActivity.class);
+            Intent intent = new Intent(this, WiFiLinkListActivity.class);
+            intent.putExtra(ACTION_GO_To_ALBUM,false);
             startActivity(intent);
         } else {
         }

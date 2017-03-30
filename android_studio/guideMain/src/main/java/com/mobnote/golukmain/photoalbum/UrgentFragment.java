@@ -32,6 +32,7 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.ZhugeUtils;
 
 import org.json.JSONException;
@@ -206,6 +207,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn, LocalWonde
 
     public void downloadVideoFlush(List<String> selectedListData) {
         exist.clear();
+        SharedPrefUtil.setManualDownloadVideo(true);
         for (String filename : selectedListData) {
             // 下载视频对应的图片
             String imgFileName = filename.replace(".mp4", ".jpg");
