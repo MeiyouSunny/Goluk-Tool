@@ -659,7 +659,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 .mTime);
         mAddr = (TextView) findViewById(R.id.mAddr);
         if(GolukApplication.getInstance().isMainland()) {
-            mAddr.setVisibility(View.VISIBLE);
+            //mAddr.setVisibility(View.VISIBLE);
         } else {
             mAddr.setVisibility(View.GONE);
         }
