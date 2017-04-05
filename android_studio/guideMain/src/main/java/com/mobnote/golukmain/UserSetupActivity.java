@@ -379,7 +379,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
                 requestCode == GolukConfig.REQUEST_CODE_VIDEO_SYNC_SETTING) {
             // save new sync value
             if (null != data) {
-                int syncValue = data.getIntExtra(GolukConfig.STRING_VIDEO_SYNC_SETTING_VALUE, -1);
+                int syncValue = data.getIntExtra(GolukConfig.STRING_VIDEO_SYNC_SETTING_VALUE, 5);
                 SettingUtils.getInstance().putInt(MANUAL_SWITCH, syncValue);
             }
         }

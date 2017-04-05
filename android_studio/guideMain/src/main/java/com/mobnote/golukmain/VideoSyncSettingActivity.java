@@ -37,7 +37,7 @@ public class VideoSyncSettingActivity extends BaseActivity implements OnClickLis
 		mBackIV = (ImageView) findViewById(R.id.iv_video_sync_setting_back_btn);
 		mBackIV.setOnClickListener(this);
 
-		mCurSyncMode = SettingUtils.getInstance().getInt(UserSetupActivity.MANUAL_SWITCH, -1);
+		mCurSyncMode = SettingUtils.getInstance().getInt(UserSetupActivity.MANUAL_SWITCH, 5);
 		
 		GolukDebugUtils.e("","sync count ---SettingActivity-----onCreate ---mCurSyncMode:  " + mCurSyncMode );
 		

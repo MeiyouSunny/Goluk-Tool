@@ -780,7 +780,7 @@
     <string name="video_live_desc_text">Young Wanderers Club(Travel Typography)</string>
     <string name="watch_live_text">Touch slightly and keep watching</string>
     <string name="video_live_5s_tip">Wait a moment, live will start instantly</string>
-    <string name="set_ipc_item_hint_text">Automatic synchronizing the five last recorded Highligt and Emergency Video, after device connects and synchronizes successfully with Goluk</string>
+    <string name="set_ipc_item_hint_text">Automatic synchronizing the five last recorded Highligt Video, after device connects and synchronizes successfully with Goluk</string>
     <string name="my_install_title_text">Installation Instructions</string>
     <string name="goluk_pull_to_refresh_footer_release_label">Upload after release</string>
     <string name="goluk_pull_to_refresh_footer_refreshing_label">Loading\u2026</string>

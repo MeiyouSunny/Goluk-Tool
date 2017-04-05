@@ -106,6 +106,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 import static com.mobnote.golukmain.wifibind.WiFiLinkListActivity.ACTION_GO_To_ALBUM;
+import static com.mobnote.golukmain.wifibind.WiFiLinkListActivity.isWifiConnected;
 
 /**
  * 行车记录仪处理类
@@ -1091,7 +1092,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         }else if (id == R.id.mNotconnected) {
             click_ConnFailed();
         } else if (id == R.id.btn_carrecorder_live) {
-            if (GolukApplication.getInstance().getIpcIsLogin()) {
+            //发起直播进需要移动网络和热点，此时IPC断开不影响判断热点和移动网络
+//            if (GolukApplication.getInstance().getIpcIsLogin()) {
                 if(!NetUtil.isMobile(this)){
                     final AlertDialog dialog = new AlertDialog.Builder(this).create();
                     dialog.setTitle(getString(R.string.str_global_dialog_title));
@@ -1137,7 +1139,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 dialog.show();
                 dialog.setCancelable(true);
                 dialog.setCanceledOnTouchOutside(true);
-            }
         } else if (id == R.id.image1) {
             new1.setVisibility(View.GONE);
             if (images[0] != null) {
@@ -1178,10 +1179,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 mFullScreen.setVisibility(View.GONE);
                 mVideoOff.setVisibility(View.GONE);
             }
-        } else if (id == R.id.mConncetLayout
-                || id == R.id.changeBtn) {
+        } else if (id == R.id.mConncetLayout) {
             Intent intent = new Intent(this, WiFiLinkListActivity.class);
-            intent.putExtra(ACTION_GO_To_ALBUM,false);
+            startActivity(intent);
+        } else if (id == R.id.changeBtn) {
+            Intent intent = new Intent(this, WiFiLinkListActivity.class);
+            intent.putExtra(WiFiLinkListActivity.ACTION_FROM_CAM,false);
             startActivity(intent);
         } else {
         }
@@ -1244,7 +1247,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         mFullScreen.setVisibility(View.GONE);
         mVideoOff.setVisibility(View.GONE);
         mSettingBtn.setVisibility(View.GONE);
-        mChangeBtn.setVisibility(View.GONE);
+//        mChangeBtn.setVisibility(View.GONE);
         setVideoBtnState(false);
         if (mApp.isBindSucess()) {
             mPalyerLayout.setVisibility(View.GONE);
@@ -1271,7 +1274,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         mNotconnected.setVisibility(View.VISIBLE);
         mConncetLayout.setVisibility(View.GONE);
         mSettingBtn.setVisibility(View.GONE);
-        mChangeBtn.setVisibility(View.GONE);
+//        mChangeBtn.setVisibility(View.GONE);
 
         setVideoBtnState(false);
 

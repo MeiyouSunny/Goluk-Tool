@@ -432,7 +432,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         collectLog("ipcLinkFailedCallBack", "--------2");
         mIsCanAcceptIPC = false;
         this.dimissLoadingDialog();
-        if(mAutoConn) {
+        if(!mAutoConn) {
             GolukUtils.showToast(this, getResources().getString(R.string.wifi_link_conn_failed));
         }
         mCurrentState = STATE_FAILED;
