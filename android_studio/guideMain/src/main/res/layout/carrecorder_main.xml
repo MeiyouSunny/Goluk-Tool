@@ -313,13 +313,21 @@
                     android:visibility="gone" />
             </RelativeLayout>
 
-            <ImageView
+            <TextView
                 android:id="@+id/image3"
                 android:layout_width="114dp"
                 android:layout_height="64dp"
                 android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/layout2"
-                android:src="@drawable/share_video_pic" />
+                android:paddingTop="4dp"
+                android:drawableTop="@drawable/share_video_pic"
+                android:background="#383e46"
+                android:textColor="#7c8085"
+                android:gravity="center"
+                android:drawablePadding="0dp"
+                android:text="@string/sd_card_album"
+                android:textSize="12sp"
+                android:layout_toRightOf="@+id/layout2" />
+
         </RelativeLayout>
     </RelativeLayout>
 
