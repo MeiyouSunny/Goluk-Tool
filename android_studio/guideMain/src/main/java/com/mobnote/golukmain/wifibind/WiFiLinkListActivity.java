@@ -29,6 +29,8 @@ import com.mobnote.eventbus.EventWifiState;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.UnbindActivity;
+import com.mobnote.golukmain.UpdateActivity;
 import com.mobnote.golukmain.UserOpenUrlActivity;
 import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
@@ -40,6 +42,7 @@ import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
+import com.mobnote.user.IPCInfo;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.ZhugeUtils;
@@ -141,12 +144,15 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 //    private String mIpcRealtype = null;
 
     public static final String ACTION_FROM_CAM_SETTING = "action_from_cam_setting";
+    public static final String ACTION_FROM_MANAGER = "action_from_cam_manager";
     public static final String ACTION_GO_To_ALBUM = "action_go_to_album";
     public static final String ACTION_FROM_REMOTE_ALBUM= "action_from_remote_album";
     public static final String ACTION_FROM_CAM= "action_from_cam";
     private boolean mIsFromUpgrade;
     private boolean mIsFromRemoteAlbum;
     private boolean mAutoConn;
+    private boolean mIsFromManagerToUpgrade;
+    private IPCInfo mIpcInfo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -197,6 +203,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             mReturnToMainAlbum = intent.getBooleanExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, false);
             mGotoAlbum = intent.getBooleanExtra(ACTION_GO_To_ALBUM, false);
             mAutoConn = intent.getBooleanExtra(ACTION_FROM_CAM, true);
+            mIsFromManagerToUpgrade = intent.getBooleanExtra(ACTION_FROM_MANAGER,false);
+            mIpcInfo = (IPCInfo) intent.getSerializableExtra(UpdateActivity.UPDATE_DATA);
         }
     }
 
@@ -638,6 +646,11 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.4 Only Wifi Connected success");
             if (mIsFromUpgrade) {
                 //EventBus.getDefault().post(new EventSingleConnSuccess());
+                finish();
+                return;
+            }
+            if (mIsFromManagerToUpgrade) {
+                GolukUtils.startUpdateActivity(this, 1, mIpcInfo, false);
                 finish();
                 return;
             }
