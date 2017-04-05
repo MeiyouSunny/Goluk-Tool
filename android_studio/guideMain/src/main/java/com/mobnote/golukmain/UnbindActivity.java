@@ -241,7 +241,9 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
                     intent.putExtra(WiFiLinkListActivity.ACTION_FROM_MANAGER, true);
                     intent.putExtra(UpdateActivity.UPDATE_DATA, mIpcInfo);
                     startActivity(intent);
+                    return;
                 }
+                GolukUtils.startUpdateActivity(this, 1, mIpcInfo, false);
             }
         }
     }
