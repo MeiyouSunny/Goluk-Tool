@@ -772,7 +772,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 }
                 return;
             }
-            isDownloading = true;
+
             downloadCount++;
             // 保存文件信息到数据库
             VideoFileInfoBean bean = JsonUtil.jsonToVideoFileInfoBean(data, mIPCControlManager.mProduceName);

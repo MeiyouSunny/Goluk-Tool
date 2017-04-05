@@ -2289,7 +2289,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     }
 
     private void preExit() {
-        if (mApp.getDownLoadList() == null || mApp.getDownLoadList().size() == 0) {
+        if (mApp.getDownLoadList() == null || mApp.getDownLoadList().size() == 0 || !mApp.isDownloading()) {
             exit();
             return;
         }
