@@ -8,12 +8,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 public class PhotoAlbumActivity extends BaseActivity {
+    public static final String CLOSE_WHEN_EXIT = "should_close_conn";
+
+    private boolean mShouldClose;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_album_activity);
-
+        mShouldClose = getIntent().getBooleanExtra(CLOSE_WHEN_EXIT, false);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Bundle bundle = new Bundle();
@@ -22,5 +25,14 @@ public class PhotoAlbumActivity extends BaseActivity {
         fa.setArguments(bundle);
         fragmentTransaction.add(R.id.photo_album_fragment, fa);
         fragmentTransaction.commitAllowingStateLoss();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mShouldClose) {
+            mBaseApp.setIpcDisconnect();
+        }
     }
 }

@@ -643,6 +643,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             }
             if(mGotoAlbum) {
                 Intent photoalbum = new Intent(this, PhotoAlbumActivity.class);
+                photoalbum.putExtra(PhotoAlbumActivity.CLOSE_WHEN_EXIT,true);
                 photoalbum.putExtra("from", "cloud");
                 startActivity(photoalbum);
                 finish();
