@@ -899,6 +899,15 @@ public class IPCControlManager implements IPCManagerFn {
     }
 
 
+    public boolean setT1SW(String status) {
+        String s = "{\"MoveMonitor\":" + status + "}";
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+                IPCManagerFn.IPC_VDCPCmd_SetMotionSW, s);
+    }
+    public boolean getT1SW() {
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+                IPCManagerFn.IPC_VDCPCmd_GetMotionSW, "");
+    }
     /**
      * 获取T1 ADAS配置
      *

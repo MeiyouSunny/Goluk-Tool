@@ -711,6 +711,10 @@
                 android:textColor="#999999"
                 android:textSize="12sp"
                 android:visibility="gone" />
+		
+		
+
+		
             <!-- 购买连接 -->
 
             <LinearLayout
@@ -741,6 +745,7 @@
                     android:textColor="#047cf3"
                     android:textSize="10sp" />
             </LinearLayout>
+
 
             <!-- ADAS 驾驶安全辅助 -->
 

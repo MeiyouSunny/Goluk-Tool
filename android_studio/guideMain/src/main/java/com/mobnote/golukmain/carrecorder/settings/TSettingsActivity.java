@@ -67,14 +67,14 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 	private RelativeLayout mSdLayout, mRecycleQualityLayout, mAutoRecycleLayout, mWonderfulTypeLayout,
 			mWonderfulQualityLayout, mVoiceRecordLayout, mAutoPhotoLayout, mVolumeLayout, mKgjtsyLayout,
 			mWonderfulTakephtotLayout, mImageFlipLayout, mVideoLogoLayout, mFatigueLayout, mUrgentCrashLayout,
-			mParkingsleepLayout,mAFLayout,mAdasAssistanceLayout,
+			mParkingsleepLayout,mAFLayout,mAdasAssistanceLayout, mMSLayout,
 			mShutdownTimeLayout, mLanguageLayout, mTimeSetupLayout, mVersionLayout, mRestoreLayout;
 	private TextView mSDDesc, mRecycleQualityDesc, mWonderfulTypeDesc, mWonderfulQualityDesc, mVolumeDesc,
 			mUrgentCrashDesc, mShutdownTimeDesc, mLanguageDesc;
 	private Button mAutoRecycleBtn, mVoiceRecordBtn, mAutophotoBtn, mKgjtsyBtn, mWonderfulTakephotoBtn, mImageFlipBtn,
 			mVideoLogoBtn, mFatigueBtn, mParkingsleepBtn, mAFBtn;
 	/** ADAS **/
-	private Button mAdasAssistanceBtn, mForwardCloseBtn, mForwardSetupBtn;
+	private Button mAdasAssistanceBtn, mForwardCloseBtn, mForwardSetupBtn, mMoveMotionBtn;
 	private RelativeLayout mForwardCloseLayout, mForwardSetupLayout, mAdasConfigLayout;
 	
 	private static final String GOLUK_LOCAL_LIST_T1 = "goluk_local_list_T1";
@@ -143,6 +143,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 	private int speakerSwitch = 0;
 	/**疲劳驾驶**/
 	private int enableSecurity = 0;
+	private int enableMoveMonitor = 0;
 	/**停车休眠**/
 	private int snapInterval = 0;
 	/**ADAS参数**/
@@ -232,6 +233,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		mAFBtn = (Button) findViewById(R.id.btn_t_settings_tcaf);
 		mAdasAssistanceLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_adas_assistance);
 		mAdasAssistanceBtn = (Button) findViewById(R.id.btn_t_settings_adas_assistance);
+		mMoveMotionBtn = (Button) findViewById(R.id.btn_t_settings_adas_move_motion);
 		mForwardCloseLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_forward_car_close_warning);
 		mForwardCloseBtn = (Button) findViewById(R.id.btn_t_settings_forward_car_close_warning);
 		mForwardSetupLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_forward_car_setup_hint);
@@ -244,7 +246,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		mTimeSetupLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_time);
 		mVersionLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_version);
 		mRestoreLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_restore);
-		
+		mMSLayout =  (RelativeLayout) findViewById(R.id.ry_t_settings_adas_move_motion);
 		mLayoutList = new RelativeLayout[] { mSdLayout, mRecycleQualityLayout, mAutoRecycleLayout,
 				mWonderfulTypeLayout, mWonderfulQualityLayout, mVolumeLayout, mKgjtsyLayout, mImageFlipLayout,
 				mVideoLogoLayout, mUrgentCrashLayout, mParkingsleepLayout, mAdasAssistanceLayout, mShutdownTimeLayout,
@@ -283,6 +285,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		mParkingsleepBtn.setOnClickListener(this);//停车休眠
 		mAFBtn.setOnClickListener(this);//停车安防
 		mAdasAssistanceBtn.setOnClickListener(this);//前向距离安全预警
+		mMoveMotionBtn.setOnClickListener(this);
 		mForwardCloseBtn.setOnClickListener(this);//前向距离过近提示
 		mForwardSetupBtn.setOnClickListener(this);//前向车辆启动提示
 		mAdasConfigLayout.setOnClickListener(this);//前向距离预警配置
@@ -346,7 +349,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		// 获取视频水印
 		boolean videoLogo = GolukApplication.getInstance().getIPCControlManager().getVideoLogo();
 		GolukDebugUtils.e("", "TSettingsActivity-------------------videoLogo：" + videoLogo);
-		
+		GolukApplication.getInstance().getIPCControlManager().getT1SW();
 		showLoading();
 	}
 
@@ -393,6 +396,8 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			click_tcaf();
 		} else if (id == R.id.btn_t_settings_adas_assistance) {// 前向距离安全预警
 			click_assistance();
+		} else if(id == R.id.btn_t_settings_adas_move_motion) {//停车安防
+			click_move();
 		} else if (id == R.id.btn_t_settings_forward_car_close_warning) {// 前向车距过近提示
 			click_carClose();
 		} else if (id == R.id.btn_t_settings_forward_car_setup_hint) {// 前向车辆启动提示
@@ -556,6 +561,10 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 				callback_setGSensorControlCfg(msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_GetMotionCfg) {// 停车安防
 				callback_getMotionCfg(msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_GetMotionSW) {
+				callback_getMotionSW(msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_SetMotionSW) {// 停车安防
+				callback_setMotionSW(msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_SetMotionCfg) {
 				callback_setMotionCfg(msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_GetADASConfig) {// ADAS
@@ -578,6 +587,35 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		}
 	}
 	
+	private void callback_setMotionSW(int msg, int param1, Object param2) {
+		closeLoading();
+		if (RESULE_SUCESS == param1) {
+			if (1 == enableMoveMonitor) {
+				enableMoveMonitor = 0;
+				mMoveMotionBtn.setBackgroundResource(R.drawable.set_close_btn);// 关闭
+			} else {
+				enableMoveMonitor = 1;
+				mMoveMotionBtn.setBackgroundResource(R.drawable.set_open_btn);// 打开
+			}
+		}
+	}
+	private void callback_getMotionSW(int msg, int param1, Object param2) {
+		closeLoading();
+		if (RESULE_SUCESS == param1) {
+			try {
+				JSONObject obj = new JSONObject((String) param2);
+				enableMoveMonitor = obj.optInt("MoveMonitor");
+				if (1 == enableMoveMonitor) {
+					mMoveMotionBtn.setBackgroundResource(R.drawable.set_open_btn);// 打开
+				}
+				else {
+					mMoveMotionBtn.setBackgroundResource(R.drawable.set_close_btn);// 关闭
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	/**
 	 * 获取全设置列表
 	 * @param event
@@ -1059,6 +1097,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 					enableSecurity = json.getInt("enableSecurity");
 					snapInterval = json.getInt("snapInterval");
 					if (1 == enableSecurity) {
+						mMSLayout.setVisibility(View.VISIBLE);
 						mAFBtn.setBackgroundResource(R.drawable.set_open_btn);// 打开
 						if (1 == dormant) {
 							dormant = 0;
@@ -1068,6 +1107,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 						}
 					} else {
 						mAFBtn.setBackgroundResource(R.drawable.set_close_btn);// 关闭
+						mMSLayout.setVisibility(View.GONE);
 					}
 				}
 			} catch (JSONException e) {
@@ -1081,6 +1121,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		if (RESULE_SUCESS == param1) {
 			if (1 == enableSecurity) {
 				mAFBtn.setBackgroundResource(R.drawable.set_open_btn);// 打开
+				mMSLayout.setVisibility(View.VISIBLE);
 				// TODO 判断休眠是否打开
 				if (1 == dormant) {
 					dormant = 0;
@@ -1090,6 +1131,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 				}
 			} else {
 				mAFBtn.setBackgroundResource(R.drawable.set_close_btn);// 关闭
+				mMSLayout.setVisibility(View.GONE);
 			}
 		} else {
 			if (1 == enableSecurity) {
@@ -1750,6 +1792,12 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			enableSecurity = 1;
 		}
 		boolean c = GolukApplication.getInstance().getIPCControlManager().setMotionCfg(enableSecurity, snapInterval);
+		if(c) {
+			showLoading();
+		}
+	}
+	private void click_move() {
+		boolean c = GolukApplication.getInstance().getIPCControlManager().setT1SW(String.valueOf(enableMoveMonitor==0?1:0));
 		if(c) {
 			showLoading();
 		}
