@@ -115,6 +115,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         String ipcModel = GolukApplication.getInstance().mIPCControlManager.mProduceName;
         String ipcNumber = SharedPrefUtil.getIPCNumber();
         mUnbindBtn.setText(this.getResources().getString(R.string.str_ipc_change_others));
+        mUnbindBtn.setVisibility(View.GONE);
         // 获取当前使用的信息
         WifiBindHistoryBean bean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
         if ((mApplication.isBindSucess() || mApplication.isIpcLoginSuccess) && null != bean) {
