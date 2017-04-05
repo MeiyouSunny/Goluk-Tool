@@ -42,8 +42,10 @@ public class IPCControlManager implements IPCManagerFn {
     //开发的适合叫G1S ，实际就是G2，解决BUG https://bugly.qq.com/v2/crash/apps/900012751/issues/3675?pid=1
     public static final String G1S_SIGN = "G1S";
     public static final String T1_SIGN = "T1";
+    public static final String T1U_SIGN = "T1U";
     public static final String T1s_SIGN = "T1S";
     public static final String T2_SIGN = "T2";
+    public static final String T2U_SIGN = "T2U";
     public static final String T3_SIGN = "T3";
     public static final String T3U_SIGN = "T3U";
 

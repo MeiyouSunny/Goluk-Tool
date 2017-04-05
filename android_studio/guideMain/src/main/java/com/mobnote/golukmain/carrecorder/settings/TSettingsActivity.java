@@ -55,6 +55,7 @@ import com.mobnote.util.JsonUtil;
 
 import de.greenrobot.event.EventBus;
 
+import static com.mobnote.golukmain.carrecorder.IPCControlManager.T1_SIGN;
 import static com.mobnote.golukmain.carrecorder.IPCControlManager.T3U_SIGN;
 
 public class TSettingsActivity extends BaseActivity implements OnClickListener,IPCManagerFn,ForbidBack {
@@ -349,7 +350,11 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		// 获取视频水印
 		boolean videoLogo = GolukApplication.getInstance().getIPCControlManager().getVideoLogo();
 		GolukDebugUtils.e("", "TSettingsActivity-------------------videoLogo：" + videoLogo);
-		GolukApplication.getInstance().getIPCControlManager().getT1SW();
+		if(IPCControlManager.T1U_SIGN.equals(mIPCName) || IPCControlManager.T2U_SIGN.equals(mIPCName)) {
+			GolukApplication.getInstance().getIPCControlManager().getT1SW();
+		}else{
+			mMSLayout.setVisibility(View.GONE);
+		}
 		showLoading();
 	}
 
@@ -563,7 +568,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 				callback_getMotionCfg(msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_GetMotionSW) {
 				callback_getMotionSW(msg, param1, param2);
-			} else if (msg == IPC_VDCP_Msg_SetMotionSW) {// 停车安防
+			} else if (msg == IPC_VDCP_Msg_SetMotionSW) {
 				callback_setMotionSW(msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_SetMotionCfg) {
 				callback_setMotionCfg(msg, param1, param2);
@@ -1097,7 +1102,9 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 					enableSecurity = json.getInt("enableSecurity");
 					snapInterval = json.getInt("snapInterval");
 					if (1 == enableSecurity) {
-						mMSLayout.setVisibility(View.VISIBLE);
+						if(IPCControlManager.T1U_SIGN.equals(mIPCName) ||  IPCControlManager.T2U_SIGN.equals(mIPCName)) {
+							mMSLayout.setVisibility(View.VISIBLE);
+						}
 						mAFBtn.setBackgroundResource(R.drawable.set_open_btn);// 打开
 						if (1 == dormant) {
 							dormant = 0;
@@ -1121,7 +1128,9 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		if (RESULE_SUCESS == param1) {
 			if (1 == enableSecurity) {
 				mAFBtn.setBackgroundResource(R.drawable.set_open_btn);// 打开
-				mMSLayout.setVisibility(View.VISIBLE);
+				if(IPCControlManager.T1U_SIGN.equals(mIPCName) ||  IPCControlManager.T2U_SIGN.equals(mIPCName)) {
+					mMSLayout.setVisibility(View.VISIBLE);
+				}
 				// TODO 判断休眠是否打开
 				if (1 == dormant) {
 					dormant = 0;

@@ -666,7 +666,20 @@ public interface IPCManagerFn extends IGolukCommFn {
      * 设置ipc时间同步配置
      **/
     int IPC_VDCPCmd_SetAutoRotationCfg = 1052;
+
+
+    int  IPC_VDCP_Msg_GetMotionSW = 1053;
+    int  IPC_VDCP_Msg_SetMotionSW = 1054;
     /**
+     * 获取ipc移动侦测开关
+     **/
+    int IPC_VDCPCmd_GetMotionSW = 1053;
+    /**
+     * 设置ipc移动侦测开关
+     **/
+    int IPC_VDCPCmd_SetMotionSW = 1054;
+
+    /**`
      * 获取ipc ADAS功能
      **/
     int IPC_VDCPCmd_GetADASConfig = 2000;

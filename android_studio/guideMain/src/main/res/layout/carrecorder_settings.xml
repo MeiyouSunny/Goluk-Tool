@@ -839,6 +839,46 @@
                 android:textColor="#999999"
                 android:textSize="12sp" />
 
+            <RelativeLayout
+                android:id="@+id/ry_t_settings_adas_move_motion"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:visibility="gone"
+                android:background="@color/setting_white_color" >
+
+                <Button
+                    android:id="@+id/btn_t_settings_adas_move_motion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:layout_toLeftOf="@id/btn_t_settings_adas_move_motion"
+                    android:text="@string/carrecorder_tcaf_move"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+
+
             <LinearLayout
                 android:id="@+id/mBugLayout"
                 android:visibility="gone"
