@@ -650,7 +650,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                 return;
             }
             if (mIsFromManagerToUpgrade) {
-                GolukUtils.startUpdateActivity(this, 1, mIpcInfo, false);
                 finish();
                 return;
             }

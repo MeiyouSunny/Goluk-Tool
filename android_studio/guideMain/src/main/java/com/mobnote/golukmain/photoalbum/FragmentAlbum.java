@@ -196,6 +196,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         if (parentViewIsMainActivity) {
             mBackBtn.setVisibility(View.VISIBLE);
             mBackBtn.setImageResource(R.drawable.my_cloud_no_link);
+            mBackBtn.setBackgroundResource(0);
             mTabLocal.setVisibility(View.VISIBLE);
             mTabWonderful.setVisibility(View.GONE);
             mTabUrgent.setVisibility(View.GONE);

@@ -235,14 +235,6 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             if (mApplication.mIpcUpdateManage.isDownloading() || downloadLater) {// 下载中
                 GolukUtils.startUpdateActivity(UnbindActivity.this, 0, mIpcInfo, false);
             } else if (mApplication.mIpcUpdateManage.isDownloadSuccess() || canOfflineInstall || canOfflineInstallLater) {
-                if (!GolukApplication.getInstance().isIpcLoginSuccess) {
-                    Intent intent = new Intent();
-                    intent.setClass(this, WiFiLinkListActivity.class);
-                    intent.putExtra(WiFiLinkListActivity.ACTION_FROM_MANAGER, true);
-                    intent.putExtra(UpdateActivity.UPDATE_DATA, mIpcInfo);
-                    startActivity(intent);
-                    return;
-                }
                 GolukUtils.startUpdateActivity(this, 1, mIpcInfo, false);
             }
         }

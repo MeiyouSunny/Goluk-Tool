@@ -181,6 +181,7 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
                 }
                 intent.putExtra("isInfo", "back");
                 startActivity(intent);
+                return;
             }
             String liveDescription = null;
             liveDescription = mDescriptionEt.getText().toString();

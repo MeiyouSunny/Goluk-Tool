@@ -1094,27 +1094,27 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         } else if (id == R.id.btn_carrecorder_live) {
             //发起直播进需要移动网络和热点，此时IPC断开不影响判断热点和移动网络
 //            if (GolukApplication.getInstance().getIpcIsLogin()) {
-                if(!NetUtil.isMobile(this)){
-                    final AlertDialog dialog = new AlertDialog.Builder(this).create();
-                    dialog.setTitle(getString(R.string.str_global_dialog_title));
-                    dialog.setMessage(getString(R.string.live_need_mobile_data));
-                    dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.str_button_ok), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialog.dismiss();
-                        }
-                    });
-                    dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.dialog_str_cancel), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialog.dismiss();
-                        }
-                    });
-                    dialog.show();
-                    dialog.setCancelable(true);
-                    dialog.setCanceledOnTouchOutside(true);
-                    return;
-                }
+//                if(!NetUtil.isMobile(this)){
+//                    final AlertDialog dialog = new AlertDialog.Builder(this).create();
+//                    dialog.setTitle(getString(R.string.str_global_dialog_title));
+//                    dialog.setMessage(getString(R.string.live_need_mobile_data));
+//                    dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.str_button_ok), new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//                            dialog.dismiss();
+//                        }
+//                    });
+//                    dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.dialog_str_cancel), new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//                            dialog.dismiss();
+//                        }
+//                    });
+//                    dialog.show();
+//                    dialog.setCancelable(true);
+//                    dialog.setCanceledOnTouchOutside(true);
+//                    return;
+//                }
                 final AlertDialog dialog = new AlertDialog.Builder(this).create();
                 dialog.setTitle(getString(R.string.str_global_dialog_title));
                 dialog.setMessage(getString(R.string.open_ate_before_live));

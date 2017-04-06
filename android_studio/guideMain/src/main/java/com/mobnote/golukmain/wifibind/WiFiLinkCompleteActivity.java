@@ -631,13 +631,13 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                 break;
             default:break;
         }
-        final AlertDialog dialog = new  AlertDialog.Builder(this).create();
+        AlertDialog dialog = new  AlertDialog.Builder(this).create();
         dialog.setTitle(getString(R.string.live_hot_spot_failed_title));
         dialog.setMessage(msg);
         dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.keep_on_text), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                dialog.dismiss();
+                dialogInterface.dismiss();
                 finish();
             }
         });

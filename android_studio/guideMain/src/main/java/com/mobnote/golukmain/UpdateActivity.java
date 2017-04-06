@@ -23,6 +23,7 @@ import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventIPCUpdate;
 import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
+import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.user.DataCleanManage;
 import com.mobnote.user.IPCInfo;
 import com.mobnote.user.IpcUpdateManage;
@@ -630,9 +631,14 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                     if (mIsExit) {
                         return;
                     }
+                    Intent intent = new Intent();
+                    intent.setClass(this, WiFiLinkListActivity.class);
+                    intent.putExtra(WiFiLinkListActivity.ACTION_FROM_MANAGER, true);
+                    startActivity(intent);
+                    /*
                     UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, this.getResources()
                             .getString(R.string.update_no_connect_ipc_hint));
-                    mIsDisConnect = true;
+                    mIsDisConnect = true;*/
                 } else {
                     String version = SharedPrefUtil.getIPCVersion();
                     GolukDebugUtils.i("lily", "-------version-----" + version + "------ipc_version-----" + mIpcVersion);

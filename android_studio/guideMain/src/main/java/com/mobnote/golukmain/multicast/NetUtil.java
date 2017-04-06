@@ -223,9 +223,9 @@ public class NetUtil {
     public static boolean isMobile(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        NetworkInfo networkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
         if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
-            return true;
+            return networkInfo.isAvailable();
         }
         return false;
     }
