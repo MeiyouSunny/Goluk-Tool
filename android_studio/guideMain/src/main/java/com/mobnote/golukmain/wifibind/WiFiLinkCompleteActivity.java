@@ -6,6 +6,7 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventBindResult;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventFinishWifiActivity;
+import com.mobnote.eventbus.EventHotSpotSuccess;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
@@ -507,6 +508,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                 startActivity(it);
                 finish();
             } if(mReturnToLive){
+                EventBus.getDefault().post(new EventHotSpotSuccess());
                 Intent intent = new Intent(this, StartLiveActivity.class);
                 intent.putExtra(StartLiveActivity.SHORT_LOCATION,mShortLocation);
                 intent.putExtra(StartLiveActivity.CURR_LON,mLocationLon);

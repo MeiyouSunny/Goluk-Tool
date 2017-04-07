@@ -33,6 +33,8 @@ import android.widget.TextView;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
+import com.mobnote.eventbus.EventFinishWifiActivity;
+import com.mobnote.eventbus.EventHotSpotSuccess;
 import com.mobnote.eventbus.EventUpdateAddr;
 import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.golukmain.BaseActivity;
@@ -2513,6 +2515,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         mShortLocation = eventShortLocationFinish.getShortAddress();
         mLocationLon = eventShortLocationFinish.getLon();
         mLocationLat = eventShortLocationFinish.getLat();
+    }
+
+
+
+    public void onEventMainThread(EventHotSpotSuccess eventShortLocationFinish){
+        this.finish();
     }
 
     public void onEventMainThread(EventLocationFinish event) {

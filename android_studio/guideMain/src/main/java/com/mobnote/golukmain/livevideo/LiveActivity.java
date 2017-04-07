@@ -1079,7 +1079,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
             mLoadingDialog.close();
         }
-
+        mBaseApp.setIpcDisconnect();
         mLoadingDialog = null;
         super.onDestroy();
     }
