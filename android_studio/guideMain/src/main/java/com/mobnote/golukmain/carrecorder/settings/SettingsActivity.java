@@ -51,7 +51,6 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.List;
 
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -193,6 +192,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private String mPowerTime = "";
 	/** 语言 **/
 	private String mVoiceType = "";
+	private boolean mSetMove = false;
 	/**提示摄像头重启**/
 	private AlertDialog mRestartDialog = null;
 	/** 精彩视频类型 **/
@@ -203,7 +203,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private String mAntiFlicker = "";
 	/**视频水印参数**/
 	private WonderfulVideoDisplay mDisplay;
-	private int enableMoveMonitor = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -611,8 +610,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mVideoLogoLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_video_logo);
 		mVideoLogoBtn = (Button) findViewById(R.id.btn_t_settings_video_logo);
 //		mCarrecorderSensitivityLine = (TextView) findViewById(R.id.tv_carrecorder_sensitivity_line);
-		mMoveMotionBtn = (Button) findViewById(R.id.btn_t_settings_adas_move_motion);
-		mMSLayout =  (RelativeLayout) findViewById(R.id.ry_t_settings_adas_move_motion);
+
 		mADASAssistanceLayout = (RelativeLayout) findViewById(R.id.layout_adas_assistance);
 		mADASAssistanceBtn = (Button) findViewById(R.id.btn_adas_assistance);
 		/**adas需求变更 暂时拿掉**/
@@ -643,7 +641,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mVideoTypeLayout = (RelativeLayout) findViewById(R.id.ry_settings_wonderful_video_type);
 		mVideoTypeDesc = (TextView) findViewById(R.id.tv_settings_wonderfulvideo_type_desc);
 		mTvAnti = (TextView) findViewById(R.id.tv_carrecorder_settings_anti_flicker);
-
+		mMSLayout =  (RelativeLayout) findViewById(R.id.ry_t_settings_adas_move_motion);
+		mMoveMotionBtn = (Button) findViewById(R.id.btn_t_settings_adas_move_motion);
 		// ipc设备型号
 		if (GolukApplication.getInstance().mIPCControlManager.isG1Relative()) {
 			mISPLayout.setVisibility(View.GONE);
@@ -759,6 +758,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mVideoLogoBtn.setOnClickListener(this);//视频水印
 		mVideoTypeLayout.setOnClickListener(this);// 精彩视频类型
 		mRlAntiFlicker.setOnClickListener(this); //抗闪烁
+		mMoveMotionBtn.setOnClickListener(this);
 	}
 
 	/**
@@ -853,6 +853,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			} else if (id == R.id.handset_line) {
 				// 遥控器按键功能
 				click_handset();
+			} else if(id == R.id.btn_t_settings_adas_move_motion) {//停车安防
+				click_move();
 			} else if (id == R.id.photographic_quality_line) {
 				// 点击图片质量
 				click_photoQuality();
@@ -957,8 +959,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				itWonderful.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_WONDERFUL_VIDEO_TYPE);
 				itWonderful.putExtra(SettingsItemActivity.PARAM, mVideoType);
 				startActivityForResult(itWonderful, REQUEST_CODE_WONDERFUL_VIDEO_TYPE);
-			}  else if(id == R.id.btn_t_settings_adas_move_motion) {//停车安防
-				click_move();
+			} else {
+				
 			}
 		} else {
 			dialog();
@@ -1330,6 +1332,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 				}
 			} else if (msg == IPC_VDCP_Msg_GetMotionCfg) {// 读取安防模式和移动侦测参数
+				closeLoading();
 				getMotionCfg = true;
 				checkGetState();
 				if (RESULE_SUCESS == param1) {
@@ -1358,18 +1361,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 						e.printStackTrace();
 					}
 				}
-			} else if (msg == IPC_VDCP_Msg_GetMotionSW) {
-				callback_getMotionSW(msg, param1, param2);
-			} else if (msg == IPC_VDCP_Msg_SetMotionSW) {
-				callback_setMotionSW(msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_SetMotionCfg) {// 设置安防模式和移动侦测参数
 				closeLoading();
 				if (RESULE_SUCESS == param1) {
 					if (1 == enableSecurity) {
 						findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_open_btn);// 打开
-						if(IPCControlManager.T3U_SIGN.equals(mIPCName)) {
 							mMSLayout.setVisibility(View.VISIBLE);
-						}
 						// TODO 判断休眠是否打开
 						if (1 == dormant) {
 							dormant = 0;
@@ -1666,6 +1663,30 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		}
 	}
 
+	private void callback_setMotionSW() {
+		if (1 == moveMonitor) {
+			moveMonitor = 0;
+			mMoveMotionBtn.setBackgroundResource(R.drawable.set_close_btn);// 关闭
+		} else {
+			moveMonitor = 1;
+			mMoveMotionBtn.setBackgroundResource(R.drawable.set_open_btn);// 打开
+		}
+	}
+	private void getMotionSW() {
+		if (1 == moveMonitor) {
+			mMoveMotionBtn.setBackgroundResource(R.drawable.set_open_btn);// 打开
+		}
+		else {
+			mMoveMotionBtn.setBackgroundResource(R.drawable.set_close_btn);// 关闭
+		}
+	}
+	private void click_move() {
+		mSetMove = true;
+		boolean c = GolukApplication.getInstance().getIPCControlManager().setT1SW(String.valueOf(moveMonitor==0?1:0));
+		if(c) {
+			showLoading();
+		}
+	}
 	private void setT1AutoRotaingCallback(int msg, int param1, Object param2) {
 		if (RESULE_SUCESS == param1) {
 			GolukDebugUtils.e("", "------------setT1AutoRotaingCallback------param2:" + (String) param2);
@@ -1843,9 +1864,15 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	}
 
 	private void setFunctionCallback(int event, int msg, int param1, Object param2) {
+		closeLoading();
 		GolukDebugUtils.e("", "----IPCManage_CallBack------new----------event:" + event + " msg:" + msg + "==data:"
 				+ (String) param2 + "---param1:" + param1);
 		if (RESULE_SUCESS == param1) {
+			if(mSetMove){
+				callback_setMotionSW();
+				mSetMove = false;
+				return;
+			}
 			if (1 == dormant) {
 				mParkingSleepBtn.setBackgroundResource(R.drawable.set_open_btn);
 				if (1 == enableSecurity) {
@@ -1942,7 +1969,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			} else {
 				mFatigueBtn.setBackgroundResource(R.drawable.set_close_btn);
 			}
-
+			getMotionSW();
 			if (!IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)
 					&& !IPCControlManager.T2_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
 				if (1 == autoRotation) {
@@ -2160,6 +2187,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if (1 == backKey) {
 			finish();
 		}
+		mSetMove = false;
 	}
 
 	public void onEventMainThread(EventAdasConfigStatus event) {
@@ -2431,41 +2459,6 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		}
 	}
 
-	private void callback_setMotionSW(int msg, int param1, Object param2) {
-		closeLoading();
-		if (RESULE_SUCESS == param1) {
-			if (1 == enableMoveMonitor) {
-				enableMoveMonitor = 0;
-				mMoveMotionBtn.setBackgroundResource(R.drawable.set_close_btn);// 关闭
-			} else {
-				enableMoveMonitor = 1;
-				mMoveMotionBtn.setBackgroundResource(R.drawable.set_open_btn);// 打开
-			}
-		}
-	}
-	private void callback_getMotionSW(int msg, int param1, Object param2) {
-		closeLoading();
-		if (RESULE_SUCESS == param1) {
-			try {
-				JSONObject obj = new JSONObject((String) param2);
-				enableMoveMonitor = obj.optInt("MoveMonitor");
-				if (1 == enableMoveMonitor) {
-					mMoveMotionBtn.setBackgroundResource(R.drawable.set_open_btn);// 打开
-				}
-				else {
-					mMoveMotionBtn.setBackgroundResource(R.drawable.set_close_btn);// 关闭
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 
-	private void click_move() {
-		boolean c = GolukApplication.getInstance().getIPCControlManager().setT1SW(String.valueOf(enableMoveMonitor==0?1:0));
-		if(c) {
-			showLoading();
-		}
-	}
 	
 }
