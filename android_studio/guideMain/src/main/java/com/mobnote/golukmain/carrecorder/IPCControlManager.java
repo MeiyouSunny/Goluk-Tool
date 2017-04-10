@@ -1190,4 +1190,26 @@ public class IPCControlManager implements IPCManagerFn {
 
     }
 
+    public boolean isSupportMoveDection() {
+        //t3u从 1.2版本开始支持移动探测
+        if (T3U_SIGN.equals(mProduceName) && getVersionCode().compareTo("1.2") >= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public String getVersionCode() {
+        if (TextUtils.isEmpty(mApplication.mIpcVersion)) {
+            return "";
+        }
+        String version = "";
+        try {
+            version = mApplication.mIpcVersion.split("_")[1].substring(1, 4);
+        } catch (Exception ex) {
+            return "";
+        }
+        return version;
+    }
+
 }

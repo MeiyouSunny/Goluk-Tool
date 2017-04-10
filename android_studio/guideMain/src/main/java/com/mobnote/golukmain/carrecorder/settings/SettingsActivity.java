@@ -56,6 +56,8 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
+import static com.mobnote.golukmain.carrecorder.IPCControlManager.T3U_SIGN;
+
 /**
  * 
  * IPC设置界面
@@ -301,7 +303,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 //			boolean powerOffTime = GolukApplication.getInstance().getIPCControlManager().getPowerOffTime();
 //			GolukDebugUtils.e("", "--------------SettingsActivity-----powerOffTime：" + powerOffTime);
 			// 获取语言设置
-        if(IPCControlManager.T3U_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)){
+        if(T3U_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)){
 			boolean voiceType = GolukApplication.getInstance().getIPCControlManager().getVoiceType();
 			GolukDebugUtils.e("", "--------------SettingsActivity-----voiceType：" + voiceType);
 			// 获取视频水印
@@ -659,11 +661,11 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mVoiceTypeLayout.setVisibility(View.GONE);
 		} else if (mIPCName.equals(IPCControlManager.G2_SIGN)
 				|| mIPCName.equals(IPCControlManager.T3_SIGN)
-				|| mIPCName.equals(IPCControlManager.T3U_SIGN)) {
-			if(mIPCName.equals(IPCControlManager.T3U_SIGN)) {
+				|| mIPCName.equals(T3U_SIGN)) {
+			if(mIPCName.equals(T3U_SIGN)) {
 				mISPLayout.setVisibility(View.GONE);
 				mRlAntiFlicker.setVisibility(View.VISIBLE);
-				if(mIPCName.equals(IPCControlManager.T3U_SIGN) && getApp().isMainland()){
+				if(mIPCName.equals(T3U_SIGN) && getApp().isMainland()){
 					mVoiceTypeLayout.setVisibility(View.GONE);
 					mVideoLogoLayout.setVisibility(View.GONE);
 					mRlAntiFlicker.setVisibility(View.GONE);
@@ -680,9 +682,11 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			if(mIPCName.equals(IPCControlManager.T3_SIGN)) {
 				mISPLayout.setVisibility(View.GONE);
 			}
-			if(mIPCName.equals(IPCControlManager.T3U_SIGN)) {
+			if(T3U_SIGN.equals(mIPCName)) {
 				mISPLayout.setVisibility(View.GONE);
-				mMSLayout.setVisibility(View.VISIBLE);
+				if (GolukApplication.getInstance().mIPCControlManager.isSupportMoveDection()) {
+					mMSLayout.setVisibility(View.VISIBLE);
+				}
 			}else{
 				mMSLayout.setVisibility(View.GONE);
 			}
@@ -947,7 +951,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				startActivityForResult(itPowerTime, REQUEST_CODE_SHUTDOWN_TIME);
 			} else if (id == R.id.rl_settings_language_line) {
 				Intent itVoiceType = new Intent(this, SettingsItemActivity.class);
-				if(mIPCName.equals(IPCControlManager.T3U_SIGN)){
+				if(mIPCName.equals(T3U_SIGN)){
 					itVoiceType.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_LANGUAGE_T);
 				}else {
 					itVoiceType.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_LANGUAGE);
@@ -1343,7 +1347,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 							snapInterval = json.getInt("snapInterval");
 							if (1 == enableSecurity) {
 								findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_open_btn);// 打开
-								if(IPCControlManager.T3U_SIGN.equals(mIPCName)) {
+								if (GolukApplication.getInstance().mIPCControlManager.isSupportMoveDection()) {
 									mMSLayout.setVisibility(View.VISIBLE);
 								}
 								if (1 == dormant) {
@@ -1366,7 +1370,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				if (RESULE_SUCESS == param1) {
 					if (1 == enableSecurity) {
 						findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_open_btn);// 打开
+						if (GolukApplication.getInstance().mIPCControlManager.isSupportMoveDection()) {
 							mMSLayout.setVisibility(View.VISIBLE);
+						}
 						// TODO 判断休眠是否打开
 						if (1 == dormant) {
 							dormant = 0;
@@ -2029,7 +2035,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mVolumeList = getResources().getStringArray(R.array.list_tone_volume);
 		mVolumeValue = getResources().getStringArray(R.array.list_tone_volume_value);
 		mPowerTimeList = getResources().getStringArray(R.array.list_shutdown_time);
-		if (mIPCName.equals(IPCControlManager.T3U_SIGN)) {
+		if (mIPCName.equals(T3U_SIGN)) {
 			mVoiceTypeList = getResources().getStringArray(R.array.list_language_t);
 		}else{
 			mVoiceTypeList = getResources().getStringArray(R.array.list_language);
