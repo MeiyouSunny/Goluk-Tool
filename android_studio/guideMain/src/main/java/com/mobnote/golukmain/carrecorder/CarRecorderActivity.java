@@ -161,6 +161,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
      **/
     private static final int CLOSE_ADAS_VIEW = 120;
     private LinearLayout mllStartLive;
+    private boolean mIsLive = false;
 
     public enum VideoType {
         mounts, emergency, idle, classic
@@ -1095,7 +1096,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             click_ConnFailed();
         } else if (id == R.id.btn_carrecorder_live) {
             //发起直播进需要移动网络和热点，此时IPC断开不影响判断热点和移动网络
-//            if (GolukApplication.getInstance().getIpcIsLogin()) {
+            if (GolukApplication.getInstance().getIpcIsLogin()) {
 //                if(!NetUtil.isMobile(this)){
 //                    final AlertDialog dialog = new AlertDialog.Builder(this).create();
 //                    dialog.setTitle(getString(R.string.str_global_dialog_title));
@@ -1116,7 +1117,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 //                    dialog.setCancelable(true);
 //                    dialog.setCanceledOnTouchOutside(true);
 //                    return;
-//                }
                 final AlertDialog dialog = new AlertDialog.Builder(this).create();
                 dialog.setTitle(getString(R.string.str_global_dialog_title));
                 dialog.setMessage(getString(R.string.open_ate_before_live));
@@ -1139,8 +1139,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                     }
                 });
                 dialog.show();
-                dialog.setCancelable(true);
-                dialog.setCanceledOnTouchOutside(true);
+                dialog.setCancelable(false);
+            } else {
+                showToast(R.string.str_update_ipc_ununited);
+            }
         } else if (id == R.id.image1) {
             new1.setVisibility(View.GONE);
             if (images[0] != null) {
@@ -1411,7 +1413,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     @Override
     protected void onDestroy() {
         //disable wifi if ipcConnected
-        if (mApp.isIpcLoginSuccess) {
+        if (mApp.isIpcLoginSuccess && !mIsLive) {
             mApp.mIPCControlManager.setVdcpDisconnect();
             mApp.setIpcLoginOut();
             WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
@@ -2520,6 +2522,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
 
     public void onEventMainThread(EventHotSpotSuccess eventShortLocationFinish){
+        mIsLive = true;
         this.finish();
     }
 
