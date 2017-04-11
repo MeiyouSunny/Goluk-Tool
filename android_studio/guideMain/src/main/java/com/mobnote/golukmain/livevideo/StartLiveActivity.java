@@ -1,6 +1,9 @@
 package com.mobnote.golukmain.livevideo;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -40,11 +43,15 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
 
     private TextView mDescWordCount;
 
-    /** 默认直播时长 */
+    /**
+     * 默认直播时长
+     */
     private final int DEFAULT_SECOND = 30 * 60;
     private final int MAX_SECOND = 30 * 60;
 
-    /** 直播时长 */
+    /**
+     * 直播时长
+     */
     private int mCurrentLiveSecond = DEFAULT_SECOND;
 
     private LiveSettingBean mLiveSettingBean;
@@ -78,8 +85,8 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
 
         Intent intent = getIntent();
         mLiveSettingBean.shortLocation = intent.getStringExtra(SHORT_LOCATION);
-        mLiveSettingBean.lat = intent.getDoubleExtra(CURR_LAT,0.0);
-        mLiveSettingBean.lon = intent.getDoubleExtra(CURR_LON,0.0);
+        mLiveSettingBean.lat = intent.getDoubleExtra(CURR_LAT, 0.0);
+        mLiveSettingBean.lon = intent.getDoubleExtra(CURR_LON, 0.0);
     }
 
     private void setupView() {
@@ -109,21 +116,21 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
         mDescriptionEt = (EditText) findViewById(R.id.et_live_description);
         mStartLiveBtn = (Button) findViewById(R.id.btn_start_live);
 
-        if(mLiveSettingBean.isEnablePublic){
+        if (mLiveSettingBean.isEnablePublic) {
             mEnablePublicBtn.setBackgroundResource(R.drawable.set_open_btn);
-        }else{
+        } else {
             mEnablePublicBtn.setBackgroundResource(R.drawable.set_close_btn);
         }
 
-        if(mLiveSettingBean.isEnableSaveReplay){
+        if (mLiveSettingBean.isEnableSaveReplay) {
             mEnableSaveLiveBtn.setBackgroundResource(R.drawable.set_open_btn);
-        }else{
+        } else {
             mEnableSaveLiveBtn.setBackgroundResource(R.drawable.set_close_btn);
         }
 
-        if(mLiveSettingBean.isEnableVoice){
+        if (mLiveSettingBean.isEnableVoice) {
             mEnableVoiceBtn.setBackgroundResource(R.drawable.set_open_btn);
-        }else{
+        } else {
             mEnableVoiceBtn.setBackgroundResource(R.drawable.set_close_btn);
         }
 
@@ -139,35 +146,35 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         int vId = view.getId();
-        if(vId == R.id.ib_live_back){
+        if (vId == R.id.ib_live_back) {
             this.finish();
-        }else if(vId == R.id.btn_enable_public_live){
-            if(mLiveSettingBean.isEnablePublic){
+        } else if (vId == R.id.btn_enable_public_live) {
+            if (mLiveSettingBean.isEnablePublic) {
                 mEnablePublicBtn.setBackgroundResource(R.drawable.set_close_btn);
-            }else{
+            } else {
                 mEnablePublicBtn.setBackgroundResource(R.drawable.set_open_btn);
             }
             mLiveSettingBean.isEnablePublic = !mLiveSettingBean.isEnablePublic;
-        }else if(vId == R.id.btn_enable_live_voice){
-            if(mLiveSettingBean.isEnableVoice){
+        } else if (vId == R.id.btn_enable_live_voice) {
+            if (mLiveSettingBean.isEnableVoice) {
                 mEnableVoiceBtn.setBackgroundResource(R.drawable.set_close_btn);
-            }else{
+            } else {
                 mEnableVoiceBtn.setBackgroundResource(R.drawable.set_open_btn);
             }
             mLiveSettingBean.isEnableVoice = !mLiveSettingBean.isEnableVoice;
-        }else if(vId == R.id.btn_enable_save_live){
-            if(mLiveSettingBean.isEnableSaveReplay){
+        } else if (vId == R.id.btn_enable_save_live) {
+            if (mLiveSettingBean.isEnableSaveReplay) {
                 mEnableSaveLiveBtn.setBackgroundResource(R.drawable.set_close_btn);
-            }else{
+            } else {
                 mEnableSaveLiveBtn.setBackgroundResource(R.drawable.set_open_btn);
             }
             mLiveSettingBean.isEnableSaveReplay = !mLiveSettingBean.isEnableSaveReplay;
-        }else if(vId == R.id.btn_start_live){
-            if (!mBaseApp.isIpcConnSuccess){
+        } else if (vId == R.id.btn_start_live) {
+            if (!mBaseApp.isIpcConnSuccess) {
                 showToast(R.string.str_disconnect_goluk);
                 return;
             }
-            if(!GolukUtils.isNetworkConnected(this)) {
+            if (!GolukUtils.isNetworkConnected(this)) {
                 showToast(R.string.network_error);
                 return;
             }
@@ -185,14 +192,14 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
             }
             String liveDescription = null;
             liveDescription = mDescriptionEt.getText().toString();
-            if(liveDescription == null){
+            if (liveDescription == null) {
                 liveDescription = "";
             }
             mLiveSettingBean.desc = liveDescription;
             //直播页面
             ZhugeUtils.eventLive(this, this.getString(R.string.str_zhuge_live_ipc_page));
 
-            GolukUtils.startPublishOrWatchLiveActivity(this,true,false,null,mLiveSettingBean,null);
+            GolukUtils.startPublishOrWatchLiveActivity(this, true, false, null, mLiveSettingBean, null);
             finish();
         }
     }
@@ -229,8 +236,9 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
 
     TextWatcher mTextWatcher = new TextWatcher() {
         private CharSequence temp;
-        private int editStart ;
-        private int editEnd ;
+        private int editStart;
+        private int editEnd;
+
         @Override
         public void beforeTextChanged(CharSequence s, int arg1, int arg2, int arg3) {
             temp = s;
@@ -238,9 +246,9 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
 
         @Override
         public void onTextChanged(CharSequence s, int arg1, int arg2, int arg3) {
-            if(s == null){
+            if (s == null) {
                 mDescStr = null;
-            }else{
+            } else {
                 mDescStr = s.toString().trim();
             }
         }
@@ -250,16 +258,31 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
             editStart = mDescriptionEt.getSelectionStart();
             editEnd = mDescriptionEt.getSelectionEnd();
             if (temp.length() > MAX_DESCRIPTION_COUNT) {
-                s.delete(editStart-1, editEnd);
+                s.delete(editStart - 1, editEnd);
                 int tempSelection = editStart;
                 mDescriptionEt.setText(s);
                 mDescriptionEt.setSelection(tempSelection);
             }
-            if(s != null){
+            if (s != null) {
                 mDescWordCount.setText(s.length() + "/" + MAX_DESCRIPTION_COUNT);
-            }else{
+            } else {
                 mDescWordCount.setText(0 + "/" + MAX_DESCRIPTION_COUNT);
             }
         }
     };
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mBaseApp.isIpcLoginSuccess) {
+            mBaseApp.mIPCControlManager.setVdcpDisconnect();
+            mBaseApp.setIpcLoginOut();
+            WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+            if (wifiInfo != null) {
+                wifiManager.disableNetwork(wifiInfo.getNetworkId());
+            }
+        }
+    }
 }

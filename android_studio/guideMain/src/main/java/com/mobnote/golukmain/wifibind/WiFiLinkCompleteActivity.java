@@ -73,6 +73,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
      * 设置IPC配置消息超时时间
      */
     private static final int TIMEOUT_SETIPC = 60 * 1000;
+    private static final int TIMEOUT_HOTSPOT_SETIPC = 15 * 1000;
     /**
      * application
      */
@@ -299,7 +300,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
             return;
         }
         mWac.createWifiAP(wifiName, pwd, ipcssid, ipcmac);
-        mBaseHandler.sendEmptyMessageDelayed(MSG_H_WAITING_TIMEOUT,TIMEOUT_SETIPC);
+        mBaseHandler.sendEmptyMessageDelayed(MSG_H_WAITING_TIMEOUT,TIMEOUT_HOTSPOT_SETIPC);
     }
 
     /**
@@ -644,7 +645,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
             }
         });
         dialog.show();
-        finish();
+        //finish();
 //        if (0 == mStep) {
 //            collectLog("connFailed", "connFailed show Dialog  please 5~10s");
 //            // 弹框提示用户重启GoLUK
