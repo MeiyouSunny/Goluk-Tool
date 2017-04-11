@@ -73,7 +73,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
      * 设置IPC配置消息超时时间
      */
     private static final int TIMEOUT_SETIPC = 60 * 1000;
-    private static final int TIMEOUT_HOTSPOT_SETIPC = 15 * 1000;
+    private static final int TIMEOUT_HOTSPOT_SETIPC = 30 * 1000;
     /**
      * application
      */
@@ -190,7 +190,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
             freeLayout1();
         } else if (MSG_H_FREE_2 == msg.what) {
             freeLayout2();
-        } else if( TIMEOUT_SETIPC == msg.what){
+        } else if( MSG_H_WAITING_TIMEOUT == msg.what){
             mErrorCode = ERROR_TIME_OUT;
             connFailed();
         }
@@ -219,7 +219,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---2---josn---" + json);
         collectLog("setIpcLinkInfo", "--setIpcLinkPhoneHot---2---josn---" + json);
         boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
-        mBaseHandler.sendEmptyMessageDelayed(MSG_H_WAITING_TIMEOUT,TIMEOUT_SETIPC);
+        mBaseHandler.sendEmptyMessageDelayed(MSG_H_WAITING_TIMEOUT,TIMEOUT_HOTSPOT_SETIPC);
         GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---3---b---" + b);
         collectLog("setIpcLinkInfo", "--setIpcLinkPhoneHot---3---b---" + b);
     }
