@@ -155,7 +155,7 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 		mApp.stopDownloadList();
 		boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
 		if (!b) {
-			GolukUtils.showToast(this, this.getResources().getString(R.string.str_wifi_hotspot_fail));
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_disconnect_ipc));
 		} else {
 			LiveDialogManager.getManagerInstance().showCustomDialog(this,
 					this.getResources().getString(R.string.str_wait));

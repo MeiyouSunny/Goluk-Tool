@@ -276,8 +276,7 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
     protected void onDestroy() {
         super.onDestroy();
         if (mBaseApp.isIpcLoginSuccess) {
-            mBaseApp.mIPCControlManager.setVdcpDisconnect();
-            mBaseApp.setIpcLoginOut();
+            mBaseApp.setIpcDisconnect();
             WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
             WifiInfo wifiInfo = wifiManager.getConnectionInfo();
             if (wifiInfo != null) {
