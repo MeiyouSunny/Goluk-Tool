@@ -124,6 +124,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
     private final int ERROR_TIME_OUT = -1;
     private final int ERROR_CREATE_HOT = -2;
     private final int ERROR_IPC_CONN_HOT = -3;
+    private boolean isShowError = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -611,7 +612,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 
     private void connFailed() {
         collectLog("connFailed", "WifiLinkCompleteActivity-----------connFailed : " + mStep);
-
+        removeHMsg();
         //当连接失败的时候，直接跳转到支持单项连接的页面
 //        Intent mainIntent = new Intent(WiFiLinkCompleteActivity.this, WiFiLinkNoHotspotActivity.class);
 //        mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -621,7 +622,32 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 //        startActivity(mainIntent);
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setType(ReportLog.TYPE_FAILED);
         reportLog();
+        showErrorMessage();
+        //finish();
+//        if (0 == mStep) {
+//            collectLog("connFailed", "connFailed show Dialog  please 5~10s");
+//            // 弹框提示用户重启GoLUK
+//            LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
+//                    LiveDialogManager.DIALOG_TYPE_WIFIBIND_RESTART_IPC,
+//                    getResources().getString(R.string.wifi_link_prompt),
+//                    getResources().getString(R.string.wifi_link_blackout));
+//            mStep++;
+//        } else {
+//            collectLog("connFailed", "connFailed show Dialog Conn Failed");
+//            // 提示用户绑定失败，重新退出程序绑定
+//            LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
+//                    LiveDialogManager.DIALOG_TYPE_WIFIBIND_FAILED,
+//                    this.getResources().getString(R.string.wifi_link_prompt),
+//                    getResources().getString(R.string.wifi_link_goluk_bind_failed));
+//        }
+    }
+
+    private void showErrorMessage() {
         String msg="";
+        if(isShowError){
+            return;
+        }
+        isShowError = true;
         switch (mErrorCode){
             case ERROR_CREATE_HOT:
                 msg = getString(R.string.live_hot_spot_failed_create);
@@ -645,23 +671,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
             }
         });
         dialog.show();
-        //finish();
-//        if (0 == mStep) {
-//            collectLog("connFailed", "connFailed show Dialog  please 5~10s");
-//            // 弹框提示用户重启GoLUK
-//            LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-//                    LiveDialogManager.DIALOG_TYPE_WIFIBIND_RESTART_IPC,
-//                    getResources().getString(R.string.wifi_link_prompt),
-//                    getResources().getString(R.string.wifi_link_blackout));
-//            mStep++;
-//        } else {
-//            collectLog("connFailed", "connFailed show Dialog Conn Failed");
-//            // 提示用户绑定失败，重新退出程序绑定
-//            LiveDialogManager.getManagerInstance().showSingleBtnDialog(this,
-//                    LiveDialogManager.DIALOG_TYPE_WIFIBIND_FAILED,
-//                    this.getResources().getString(R.string.wifi_link_prompt),
-//                    getResources().getString(R.string.wifi_link_goluk_bind_failed));
-//        }
     }
 
     private void wifiCallBack_5(int state, int process, String message, Object arrays) {
