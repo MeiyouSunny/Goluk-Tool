@@ -125,6 +125,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
     private final int ERROR_CREATE_HOT = -2;
     private final int ERROR_IPC_CONN_HOT = -3;
     private boolean isShowError = false;
+    private boolean openHotSpot = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -269,7 +270,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         } else {
             if (connectCount > 3) {
                 GolukUtils.showToast(this, this.getResources().getString(R.string.wifi_link_bind_failed));
-                mErrorCode = ERROR_IPC_CONN_HOT;
+                mErrorCode = ERROR_CREATE_HOT;
                 connFailed();
             } else {
                 GolukUtils.showToast(this, this.getResources().getString(R.string.wifi_link_bind_failed_retry));
@@ -579,6 +580,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                 case 1:
                     // ipc成功连接上热点
                     try {
+                        openHotSpot = true;
                         WifiRsBean[] bean = (WifiRsBean[]) arrays;
                         if (null != bean) {
                             GolukDebugUtils.e("", "IPC连接上WIFI热点回调---length---" + bean.length);
@@ -656,7 +658,11 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                 msg = getString(R.string.live_hot_spot_failed_con);
                 break;
             case ERROR_TIME_OUT:
-                msg = getString(R.string.live_hot_spot_failed_timeout);
+                if(openHotSpot){
+                    msg = getString(R.string.live_hot_spot_failed_create);
+                }else {
+                    msg = getString(R.string.live_hot_spot_failed_con);
+                }
                 break;
             default:break;
         }
