@@ -595,7 +595,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                     }
                     break;
                 default:
-                    GolukUtils.showToast(mContext, message);
+                    //GolukUtils.showToast(mContext, message);
                     mErrorCode = ERROR_IPC_CONN_HOT;
                     connFailed();
                     break;
@@ -658,7 +658,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                 msg = getString(R.string.live_hot_spot_failed_con);
                 break;
             case ERROR_TIME_OUT:
-                if(openHotSpot){
+                if(!openHotSpot){
                     msg = getString(R.string.live_hot_spot_failed_create);
                 }else {
                     msg = getString(R.string.live_hot_spot_failed_con);
