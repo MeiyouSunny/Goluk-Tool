@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
@@ -1081,6 +1083,11 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         }
         mBaseApp.setIpcDisconnect();
         mLoadingDialog = null;
+        WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        if (wifiInfo != null) {
+            wifiManager.disableNetwork(wifiInfo.getNetworkId());
+        }
         super.onDestroy();
     }
 

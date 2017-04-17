@@ -42,6 +42,7 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
     private Button mStartLiveBtn;
 
     private TextView mDescWordCount;
+    private boolean mIsLive = false;
 
     /**
      * 默认直播时长
@@ -198,7 +199,7 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
             mLiveSettingBean.desc = liveDescription;
             //直播页面
             ZhugeUtils.eventLive(this, this.getString(R.string.str_zhuge_live_ipc_page));
-
+            mIsLive = true;
             GolukUtils.startPublishOrWatchLiveActivity(this, true, false, null, mLiveSettingBean, null);
             finish();
         }
@@ -275,7 +276,7 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mBaseApp.isIpcLoginSuccess) {
+        if (mBaseApp.isIpcLoginSuccess && !mIsLive) {
             mBaseApp.setIpcDisconnect();
             WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
             WifiInfo wifiInfo = wifiManager.getConnectionInfo();
