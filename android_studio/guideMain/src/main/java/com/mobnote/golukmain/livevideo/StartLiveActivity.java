@@ -1,6 +1,8 @@
 package com.mobnote.golukmain.livevideo;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -172,7 +174,18 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
             mLiveSettingBean.isEnableSaveReplay = !mLiveSettingBean.isEnableSaveReplay;
         } else if (vId == R.id.btn_start_live) {
             if (!mBaseApp.isIpcConnSuccess) {
-                showToast(R.string.str_disconnect_goluk);
+                AlertDialog dialog = new AlertDialog.Builder(this)
+                        .setTitle(R.string.user_dialog_hint_title)
+                        .setMessage(R.string.unbind_select_connect_ing)
+                        .setPositiveButton(R.string.str_button_ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                StartLiveActivity.this.finish();
+                            }
+                        })
+                        .setCancelable(false)
+                        .create();
+                dialog.show();
                 return;
             }
             if (!GolukUtils.isNetworkConnected(this)) {
