@@ -36,6 +36,7 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 	private Button mBtnSave = null;// 保存
 	/** body **/
 	private EditText mEditText = null;
+	private EditText mEditText2 = null;
 
 	private GolukApplication mApp = null;
 
@@ -80,6 +81,7 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 		mBtnBack = (ImageButton) findViewById(R.id.back_btn);
 		mBtnSave = (Button) findViewById(R.id.user_title_right);
 		mEditText = (EditText) findViewById(R.id.changewifi_password_editText);
+		mEditText2 = (EditText) findViewById(R.id.changewifi_password_editText_2);
 		mTextTitle = (TextView) findViewById(R.id.user_title_text);
 		mImageView1 = (ImageView) findViewById(R.id.imageView1);
 		mImageView2 = (ImageView) findViewById(R.id.imageView2);
@@ -92,12 +94,12 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 		Intent it = getIntent();
 		String password = it.getStringExtra("wifiPwd").toString();
 		GolukDebugUtils.i("lily", password + "------ChangeWiFiPassword----");
-		if (!"".equals(password)) {
-			mEditText.setText(password);
-			mEditText.setSelection(password.length());
-		} else {
-			mEditText.setText("");
-		}
+//		if (!"".equals(password)) {
+//			mEditText.setText(password);
+//			mEditText.setSelection(password.length());
+//		} else {
+//			mEditText.setText("");
+//		}
 		
 		if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
 				|| IPCControlManager.T1s_SIGN.equals(mApp.mIPCControlManager.mProduceName)
@@ -148,6 +150,20 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 		final String newPwd = mEditText.getText().toString();
 		if (newPwd.length() < 8 || newPwd.length() > 15) {
 			GolukUtils.showToast(this, this.getResources().getString(R.string.str_wifi_pwd_limit));
+			mEditText.requestFocus();
+			return;
+		}
+
+		final String newPwdConfirm = mEditText2.getText().toString();
+		if (newPwdConfirm.length() < 8 || newPwdConfirm.length() > 15) {
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_wifi_pwd_limit));
+			mEditText2.requestFocus();
+			return;
+		}
+
+		if(!newPwd.equals(newPwdConfirm)){
+			GolukUtils.showToast(this, this.getResources().getString(R.string.str_wifi_pwd_limit));
+			mEditText.requestFocus();
 			return;
 		}
 
