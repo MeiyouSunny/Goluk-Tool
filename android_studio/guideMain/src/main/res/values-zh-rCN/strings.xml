@@ -1072,4 +1072,9 @@
     <string name="str_vk">VKontakte</string>
     <string name="input_pwd">请输入6-16位数字或字母密码</string>
     <string name="change_resolution_hint">点击这里可选择分辨率，让播放更流畅</string>
+
+    <string name="stop_play_remote">提示：播放SD卡视频时，记录仪将停止录像，退出播放30s后恢复录像。</string>
+    <string name="new_password">请输入新密码</string>
+    <string name="confirm_password">请确认新密码</string>
+    <string name="confirm_password_error">两次输入的密码不一致, 请重新输入</string>
 </resources>

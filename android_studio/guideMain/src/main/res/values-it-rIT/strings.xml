@@ -1072,4 +1072,9 @@
     <string name="str_vk">VKontakte</string>
     <string name="input_pwd">Inserisci la password (6-16 caratteri)</string>
     <string name="change_resolution_hint">evoluzione risoluzione permetterà di riproduzione video più scorrevole</string>
+
+    <string name="stop_play_remote">Dritta: quando guardi un video sulla SD card, la dashcam interromperà temporaneamente la registrazione e riprenderà a registrare 30 secondi dopo la chiusura del video.</string>
+    <string name="new_password">Inserisci una nuova password</string>
+    <string name="confirm_password">Conferma la nuova password</string>
+    <string name="confirm_password_error">Le password da te inserite non coincidono. Riprova</string>
 </resources>

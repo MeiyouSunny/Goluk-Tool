@@ -1073,4 +1073,10 @@ Une qualité médiocre de la carte mémoire provoquera des enregistrements anorm
     <string name="str_vk">VKontakte</string>
     <string name="input_pwd">Veuillez saisir le mot de passe (6-16 chiffres)</string>
     <string name="change_resolution_hint">modification de résolution permettra à la lecture plus en douceur des vidéos</string>
+
+    <string name="stop_play_remote">Astuce : lors de la lecture d\'une vidéo sur une carte SD, la caméra embarquée s\'arrêtera momentanément d'enregistrer et reprendra l'enregistrement 30s après la fermeture de la vidéo.</string>
+    <string name="new_password">Entrez le nouveau mot de passe</string>
+    <string name="confirm_password">Confirmez le nouveau mot de passe </string>
+    <string name="confirm_password_error">Les mots de passe saisis ne correspondent pas. Veuillez réessayer</string>
+
 </resources>

@@ -1073,4 +1073,9 @@
     <string name="str_vk">VKontakte</string>
     <string name="input_pwd">請輸入密碼 (6-16 個字元)</string>
     <string name="change_resolution_hint">改變分辯率將使視頻播放更加流暢</string>
+
+    <string name="stop_play_remote">提示：播放 SD 卡影片時，記錄儀將停止錄影，停出播放 30 秒後再恢復錄影。</string>
+    <string name="new_password">輸入新密碼</string>
+    <string name="confirm_password">確認新密碼</string>
+    <string name="confirm_password_error">兩次輪入的密碼不一致，請重新輸入</string>
 </resources>
