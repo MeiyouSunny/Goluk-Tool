@@ -156,26 +156,26 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 
 		final String newPwdConfirm = mEditText2.getText().toString();
 		if (newPwdConfirm.length() < 8 || newPwdConfirm.length() > 15) {
-			GolukUtils.showToast(this, this.getResources().getString(R.string.str_wifi_pwd_limit));
+			GolukUtils.showToast(this, this.getResources().getString(R.string.confirm_password));
 			mEditText2.requestFocus();
 			return;
 		}
 
 		if(!newPwd.equals(newPwdConfirm)){
-			GolukUtils.showToast(this, this.getResources().getString(R.string.str_wifi_pwd_limit));
+			GolukUtils.showToast(this, this.getResources().getString(R.string.confirm_password_error));
 			mEditText.requestFocus();
 			return;
 		}
 
 		String json = getSetIPCJson();
 		mApp.stopDownloadList();
-		boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
-		if (!b) {
-			GolukUtils.showToast(this, this.getResources().getString(R.string.str_disconnect_ipc));
-		} else {
+//		boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
+//		if (!b) {
+//			GolukUtils.showToast(this, this.getResources().getString(R.string.str_disconnect_ipc));
+//		} else {
 			LiveDialogManager.getManagerInstance().showCustomDialog(this,
 					this.getResources().getString(R.string.str_wait));
-		}
+//		}
 	}
 
 	private String getSetIPCJson() {
