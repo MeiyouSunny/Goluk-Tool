@@ -57,6 +57,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 import static com.mobnote.golukmain.carrecorder.IPCControlManager.T3U_SIGN;
+import static com.mobnote.golukmain.carrecorder.IPCControlManager.T3_SIGN;
 
 /**
  * 
@@ -660,7 +661,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mPowerTimeLayout.setVisibility(View.GONE);
 			mVoiceTypeLayout.setVisibility(View.GONE);
 		} else if (mIPCName.equals(IPCControlManager.G2_SIGN)
-				|| mIPCName.equals(IPCControlManager.T3_SIGN)
+				|| mIPCName.equals(T3_SIGN)
 				|| mIPCName.equals(T3U_SIGN)) {
 			if(mIPCName.equals(T3U_SIGN)) {
 				mISPLayout.setVisibility(View.GONE);
@@ -679,10 +680,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				mVoiceTypeLayout.setVisibility(View.GONE);
 				mVideoLogoLayout.setVisibility(View.GONE);
 			}
-			if(mIPCName.equals(IPCControlManager.T3_SIGN)) {
+			if(mIPCName.equals(T3_SIGN)) {
 				mISPLayout.setVisibility(View.GONE);
 			}
-			if(T3U_SIGN.equals(mIPCName)) {
+			if(T3U_SIGN.equals(mIPCName) ||T3_SIGN.equals(mIPCName)) {
 				mISPLayout.setVisibility(View.GONE);
 				if (GolukApplication.getInstance().mIPCControlManager.isSupportMoveDection()) {
 					mMSLayout.setVisibility(View.VISIBLE);
