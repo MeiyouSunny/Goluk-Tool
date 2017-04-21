@@ -277,6 +277,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/rl_operation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/rl_vt_seek"
@@ -308,6 +309,18 @@
             android:layout_centerVertical="true"
             android:background="@drawable/btn_vt_pause" />
     </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/tv_t3_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_operation"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:gravity="center"
+        android:text="@string/stop_play_remote"/>
 
     <LinearLayout
         android:id="@+id/ll_start_videoedit"

@@ -145,6 +145,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
     private Button mBtnDownload;
 
     private TextView mTvShareRightnow;
+    private TextView mTvT3Hint;
     private LinearLayout mStartVideoeditLl;
 
     private ViewStub mResolutionHUDViewStub;
@@ -513,7 +514,12 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             mStartVideoeditLl.setVisibility(View.GONE);
             mTvShareRightnow.setVisibility(View.GONE);
         }
-
+        mTvT3Hint = (TextView) findViewById(R.id.tv_t3_hint);
+        if(mType!=PhotoAlbumConfig.PHOTO_BUM_LOCAL && GolukApplication.getInstance().getIPCControlManager().needShowT3Hint()) {
+            mTvT3Hint.setVisibility(View.VISIBLE);
+        }else {
+            mTvT3Hint.setVisibility(View.GONE);
+        }
     }
 
     private boolean videoEditSupport() {

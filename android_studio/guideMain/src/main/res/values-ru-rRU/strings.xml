@@ -1068,7 +1068,7 @@
     <string name="input_pwd">Введите пароль (6 – 16 цифр)</string>
     <string name="change_resolution_hint">Выберите оптимальное разрешение для быстрого воспроизведения видео</string>
 
-    <string name="stop_play_remote">Совет. При воспроизведении видео с SD-карты видеорегистратор временно превращает запись, возобновляя ее только через 30 секунд после закрытия видео.</string>
+    <string name="stop_play_remote">Совет: при воспроизведении видео с SD-карты запись будет приостановлена. Запись возобновится через 30 секунд после закрытия видео.</string>
     <string name="new_password">Введите новый пароль</string>
     <string name="confirm_password">Подтвердите новый пароль</string>
     <string name="confirm_password_error">Введенные пароли не совпадают. Повторите попытку</string>

@@ -1201,6 +1201,14 @@ public class IPCControlManager implements IPCManagerFn {
         }
     }
 
+    public boolean needShowT3Hint() {
+        if (T3U_SIGN.equals(mProduceName) || T3_SIGN.equals(mProduceName)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public String getVersionCode() {
         if (TextUtils.isEmpty(mApplication.mIpcVersion)) {
             return "";

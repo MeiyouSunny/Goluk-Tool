@@ -1110,7 +1110,7 @@
     <string name="live_hot_spot_failed_timeout">连接超时</string>
     <string name="live_hot_spot_failed_create">开启手机热点失败，请允许极路客开启wifi后重试</string>
     <string name="live_hot_spot_failed_con">记录仪连接手机热点失败，请重试</string>
-    <string name="stop_play_remote">Hint: When playing a video on the SD card, the dashcam will temporarily stop recording and resume recording 30s after exiting the video.</string>
+    <string name="stop_play_remote">Tip: during video playback on the SD card, video recording will temporarily stop and resume 30s after exiting the video.</string>
     <string name="new_password">Enter new password</string>
     <string name="confirm_password">Enter new password</string>
     <string name="confirm_password_error">Confirm new password</string>
