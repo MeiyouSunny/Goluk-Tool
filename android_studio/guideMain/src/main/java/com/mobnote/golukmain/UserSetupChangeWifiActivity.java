@@ -169,7 +169,7 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 
 		String json = getSetIPCJson();
 		mApp.stopDownloadList();
-//		boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
+		boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
 //		if (!b) {
 //			GolukUtils.showToast(this, this.getResources().getString(R.string.str_disconnect_ipc));
 //		} else {
