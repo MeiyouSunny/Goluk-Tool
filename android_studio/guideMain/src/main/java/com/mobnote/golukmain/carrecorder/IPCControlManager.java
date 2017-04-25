@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.TimeZone;
 
 import org.json.JSONException;
@@ -1222,6 +1223,34 @@ public class IPCControlManager implements IPCManagerFn {
             return "";
         }
         return version;
+    }
+
+    public boolean getT3WifiMode(){
+        if(T3_SIGN.equals(mProduceName) || T3U_SIGN.equals(mProduceName)){
+            return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+                    IPCManagerFn.IPC_VDCPCmd_GetWirelessMode, "");
+        }
+        return false;
+    }
+
+
+    /**
+     * @param mode  0 //0:单Ap模式，1：单Station模式，2：Ap+Station混合模式
+     */
+    public boolean setT3WifiMode(int mode){
+        String s = "{\"mode\":" + mode + "}";
+        return mApplication.mGoluk.GolukLogicCommRequest(
+                                                        GolukModule.Goluk_Module_IPCManager,
+                                                        IPCManagerFn.IPC_VDCPCmd_SetWirelessMode,
+                                                        s);
+    }
+
+    public boolean getSupportT3DualMode(){
+        if(T3_SIGN.equals(mProduceName) && getVersionCode().compareTo("1.3") >= 0){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 }

@@ -1431,6 +1431,11 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     ((UserSetupChangeWifiActivity) mContext).setIpcLinkWiFiCallBack(param1);
                 }
                 break;
+            case IPC_VDCPCmd_SetWirelessMode:
+                if (mPageSource.equals("WiFiLinkBindAll")) {
+                    ((WiFiLinkCompleteActivity) mContext).changeT3WifiMode(param1);
+                }
+                break;
             case IPC_VDCP_Msg_GetVedioEncodeCfg:
                 if (param1 == RESULE_SUCESS) {
                     VideoConfigState videocfg = IpcDataParser.parseVideoConfigState((String) param2);

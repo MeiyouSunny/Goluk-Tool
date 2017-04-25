@@ -85,6 +85,8 @@ import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
+import static com.mobnote.golukmain.carrecorder.IPCControlManager.T3_SIGN;
+
 /**
  * Created by leege100 on 2016/7/19.
  * 视频直播
@@ -1073,6 +1075,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     protected void onDestroy() {
+        // 注册回调监听
+        GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("live");
         GolukDebugUtils.e("", "live---onDestroy");
         freePlayer();
         LiveDialogManager.getManagerInstance().dismissLiveBackDialog();
@@ -1267,10 +1271,22 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         mRPVPlayVideo.cleanUp();
     }
 
+    private void exit(){
+        if(mBaseApp.mIPCControlManager.getSupportT3DualMode()){
+            mBaseApp.mIPCControlManager.setT3WifiMode(0);
+            exit(false);
+        }else{
+            exit(true);
+        }
+    }
+
     /**
      * 退出直播或观看直播
      */
-    public void exit() {
+    public void exit(boolean realExit) {
+        if(!realExit){
+            return;
+        }
         isStopNormal = true;
         mLiveCommentFragment.onExit();
         mLiveMapViewFragment.onExit();
@@ -1280,8 +1296,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         isAlreadyExit = true;
         mBaseApp.isAlreadyLive = false;
         SharedPrefUtil.setIsLiveNormalExit(true);
-        // 注册回调监听
-        GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("live");
         // 移除监听
         mBaseApp.removeLocationListener(TAG);
         mBaseHandler.removeMessages(MSG_H_TO_MYLOCATION);
@@ -1553,6 +1567,9 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             case IPC_VDCPCmd_SnapPic:
                 dealSnapCallBack(param1, param2);
                 break;
+            case IPC_VDCP_Msg_SetWirelessMode:
+                exit(true);
+                break;
             default:
                 break;
         }
@@ -1806,4 +1823,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onUploadLiveScreenShotFail() {
     }
+
+
 }

@@ -321,6 +321,13 @@ public interface IPCManagerFn extends IGolukCommFn {
      **/
     int IPC_VDCP_Msg_SetADASConfig = 2001;
     int IPC_VDCPCmd_SetBindStatus = 2002;
+
+    /**
+     * T3设置wifi模式
+     */
+    int IPC_VDCP_Msg_GetWirelessMode = 2101;
+
+    int IPC_VDCP_Msg_SetWirelessMode = 2102;
     /**
      * 获取精彩视频分辨率
      **/
@@ -658,7 +665,7 @@ public interface IPCManagerFn extends IGolukCommFn {
      * 设置ipc时间同步配置
      **/
     int IPC_VDCPCmd_SetTimeSyncCfg = 1050;
-    /**
+    /**h
      * 获取ipc时间同步配置
      **/
     int IPC_VDCPCmd_GetAutoRotationCfg = 1051;
@@ -687,6 +694,9 @@ public interface IPCManagerFn extends IGolukCommFn {
      * 设置ipc ADAS功能
      **/
     int IPC_VDCPCmd_SetADASConfig = 2001;
+    int IPC_VDCPCmd_GetWirelessMode = 2101;
+    int IPC_VDCPCmd_SetWirelessMode = 2102;
+
     /**
      * 获取精彩视频分辨率
      **/

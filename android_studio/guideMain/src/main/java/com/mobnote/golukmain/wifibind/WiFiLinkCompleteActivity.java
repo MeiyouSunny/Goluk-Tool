@@ -47,6 +47,8 @@ import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
+import static com.mobnote.golukmain.carrecorder.IPCControlManager.T3_SIGN;
+
 public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickListener, WifiConnCallBack,
         ILiveDialogManagerFn {
     public static final String INTENT_ACTION_RETURN_LIVE = "returnToLive";
@@ -215,14 +217,11 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
     private void setIpcLinkInfo() {
         connectCount++;
         // 连接ipc热点wifi---调用ipc接口
-        GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---1");
         collectLog("setIpcLinkInfo", "--setIpcLinkPhoneHot---1");
         final String json = getSetIPCJson();
-        GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---2---josn---" + json);
         collectLog("setIpcLinkInfo", "--setIpcLinkPhoneHot---2---josn---" + json);
         boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
         mBaseHandler.sendEmptyMessageDelayed(MSG_H_WAITING_TIMEOUT,TIMEOUT_HOTSPOT_SETIPC);
-        GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---3---b---" + b);
         collectLog("setIpcLinkInfo", "--setIpcLinkPhoneHot---3---b---" + b);
     }
 
@@ -266,7 +265,12 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         collectLog("setIpcLinkWiFiCallBack", "---1 :   " + state);
         if (0 == state) {
             // 开始创建手机热点
-            mBaseHandler.sendEmptyMessage(MSG_H_CREATE_HOT);
+            if(mApp.mIPCControlManager.getSupportT3DualMode()){
+                //只能是2
+                mApp.mIPCControlManager.setT3WifiMode(2);
+            }else {
+                mBaseHandler.sendEmptyMessage(MSG_H_CREATE_HOT);
+            }
         } else {
             if (connectCount > 3) {
                 GolukUtils.showToast(this, this.getResources().getString(R.string.wifi_link_bind_failed));
@@ -276,6 +280,16 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                 GolukUtils.showToast(this, this.getResources().getString(R.string.wifi_link_bind_failed_retry));
                 setIpcLinkInfo();
             }
+        }
+    }
+
+
+    public void changeT3WifiMode(int state){
+        if (0 == state) {
+            mBaseHandler.sendEmptyMessage(MSG_H_CREATE_HOT);
+        } else {
+            mErrorCode = ERROR_CREATE_HOT;
+            connFailed();
         }
     }
 
