@@ -668,20 +668,20 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				mRlAntiFlicker.setVisibility(View.VISIBLE);
 				if(mIPCName.equals(T3U_SIGN) && getApp().isMainland()){
 					mVoiceTypeLayout.setVisibility(View.GONE);
-					mVideoLogoLayout.setVisibility(View.GONE);
 					mRlAntiFlicker.setVisibility(View.GONE);
 				}else{
 					mVoiceTypeLayout.setVisibility(View.VISIBLE);
-					mVideoLogoLayout.setVisibility(View.VISIBLE);
 				}
 			} else {
 				mISPLayout.setVisibility(View.VISIBLE);
 				mRlAntiFlicker.setVisibility(View.GONE);
 				mVoiceTypeLayout.setVisibility(View.GONE);
-				mVideoLogoLayout.setVisibility(View.GONE);
 			}
 			if(mIPCName.equals(T3_SIGN)) {
 				mISPLayout.setVisibility(View.GONE);
+			}
+			if(GolukApplication.getInstance().mIPCControlManager.isSupportVideoLogo()){
+				mVideoLogoLayout.setVisibility(View.VISIBLE);
 			}
 			if(T3U_SIGN.equals(mIPCName) ||T3_SIGN.equals(mIPCName)) {
 				mISPLayout.setVisibility(View.GONE);
