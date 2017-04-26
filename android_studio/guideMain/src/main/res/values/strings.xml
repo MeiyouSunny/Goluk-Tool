@@ -480,7 +480,7 @@
     <string name="str_quality_middle">Medium quality</string>
     <string name="str_quality_low">Low quality</string>
     <string name="str_settings_shutdown_title">Delay shutdown time</string>
-    <string name="str_settings_language_title">Language</string>
+    <string name="str_settings_language_title">Firmware Language</string>
     <string name="str_wonderful_video_type_title">Wonderful Video Type</string>
     <string name="str_settings_video_logo_title">Show Goluk Logo</string>
     <string name="str_settings_video_type1">12s</string>
@@ -510,7 +510,7 @@
     <string name="str_qq_friends">QQ Friends</string>
     <string name="str_copy_link">Copy link</string>
     <string name="str_copy_link_success">Link successfully copied</string>
-    <string name="join_activity">Join event</string>
+    <string name="join_activity">Join</string>
     <string name="share_to_jishe">Share to Goluk</string>
     <string name="str_usercenter_login_hint_text">Please log in before operate</string>
     <string name="str_wonderful_share">Goluk Wonderful Video</string>

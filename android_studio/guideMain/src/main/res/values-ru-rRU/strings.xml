@@ -480,7 +480,7 @@
     <string name="str_quality_middle">Среднее</string>
     <string name="str_quality_low">Низкое</string>
     <string name="str_settings_shutdown_title">Время выключения</string>
-    <string name="str_settings_language_title">Настройки языка</string>
+    <string name="str_settings_language_title">Язык прошивки</string>
     <string name="str_wonderful_video_type_title">Тип видео особого момента</string>
     <string name="str_settings_video_logo_title">Показывать «водяной знак» на видео</string>
     <string name="str_settings_video_type1">Захват особого момента (6+6)</string>
@@ -509,7 +509,7 @@
     <string name="str_qq_friends">QQ Friend</string>
     <string name="str_copy_link">Скопировать ссылку</string>
     <string name="str_copy_link_success">Ссылка успешно скопирована</string>
-    <string name="join_activity">Принять участие</string>
+    <string name="join_activity">Добавить</string>
     <string name="share_to_jishe">Передать на Goluk</string>
     <string name="str_usercenter_login_hint_text">Сначала войдите</string>
     <string name="str_wonderful_share">Замечательное видео Goluk</string>
@@ -1045,7 +1045,7 @@
     <string name="str_system_window_not_allowed">Не удается открыть системное окно, так как отключены всплывающие окна. Откройте доступ в разделе «Управление приложениями».</string>
     <string name="str_notification_error_ssl_cert_invalid">Вы будете перенаправлены на небезопасную веб-страницу. Действительно продолжить?</string>
     <string name="settting_notify_friends">Ваш друг опубликовал новую запись!</string>
-    <string name="str_tag_tab_hot">Рекомендовать</string>
+    <string name="str_tag_tab_hot">Предложить</string>
     <string name="str_tag_description_more">more</string>
     <string name="setting_anti_flicker" >Настройки подавления мерцания</string>
     <string name="select_all">Выбрать все</string>
