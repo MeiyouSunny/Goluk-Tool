@@ -1080,5 +1080,6 @@
     <string name="new_password"> 새 비밀번호를 입력하세요</string>
     <string name="confirm_password"> 새 비밀번호를 확인하세요</string>
     <string name="confirm_password_error"> 입력하신 비밀번호가 일치하지 않습니다. 다시 시도하세요</string>
+    <string name="Acknowledged">인정됨</string>
 
 </resources>

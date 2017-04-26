@@ -1077,4 +1077,6 @@
     <string name="new_password">请输入新密码</string>
     <string name="confirm_password">请确认新密码</string>
     <string name="confirm_password_error">两次输入的密码不一致, 请重新输入</string>
+    <string name="Acknowledged">知道了</string>
+
 </resources>

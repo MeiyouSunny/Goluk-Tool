@@ -1077,4 +1077,6 @@
     <string name="new_password">Inserisci una nuova password</string>
     <string name="confirm_password">Conferma la nuova password</string>
     <string name="confirm_password_error">Le password da te inserite non coincidono. Riprova</string>
+    <string name="Acknowledged">Riconosciuti</string>
+
 </resources>

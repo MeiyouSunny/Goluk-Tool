@@ -1114,4 +1114,5 @@
     <string name="new_password">Enter new password</string>
     <string name="confirm_password">Enter new password</string>
     <string name="confirm_password_error">Confirm new password</string>
+    <string name="Acknowledged">Acknowledged</string>
 </resources>

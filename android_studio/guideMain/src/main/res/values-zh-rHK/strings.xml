@@ -1078,4 +1078,6 @@
     <string name="new_password">輸入新密碼</string>
     <string name="confirm_password">確認新密碼</string>
     <string name="confirm_password_error">兩次輪入的密碼不一致，請重新輸入</string>
+    <string name="Acknowledged">已確認</string>
+
 </resources>

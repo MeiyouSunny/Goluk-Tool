@@ -1078,4 +1078,6 @@
     <string name="new_password">新しいパスワードを入力します</string>
     <string name="confirm_password">新しいパスワードを再入力します</string>
     <string name="confirm_password_error">入力した2つのパスワードが一致していません。もう一度やり直してください</string>
+    <string name="Acknowledged">認知されました</string>
+
 </resources>

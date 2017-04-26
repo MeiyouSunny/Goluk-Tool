@@ -1072,4 +1072,6 @@
     <string name="new_password">Введите новый пароль</string>
     <string name="confirm_password">Подтвердите новый пароль</string>
     <string name="confirm_password_error">Введенные пароли не совпадают. Повторите попытку</string>
+    <string name="Acknowledged">Подтверждено</string>
+
 </resources>

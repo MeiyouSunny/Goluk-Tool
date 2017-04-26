@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:textColor="#333333"
-        android:text="知道了"
+        android:text="@string/Acknowledged"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
         android:paddingTop="5dp"
