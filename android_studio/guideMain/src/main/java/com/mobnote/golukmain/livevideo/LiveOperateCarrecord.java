@@ -96,8 +96,11 @@ public class LiveOperateCarrecord implements ILiveOperateFn {
     @Override
     public void onResume() {
         if (!isSucessBind) {
-            mContext.registerReceiver(managerReceiver, new IntentFilter(CarRecorderManager.ACTION_RECORDER_MESSAGE));
-            isSucessBind = true;
+            try {
+                mContext.registerReceiver(managerReceiver, new IntentFilter(CarRecorderManager.ACTION_RECORDER_MESSAGE));
+                isSucessBind = true;
+            }catch (Exception ex){
+            }
         }
     }
 

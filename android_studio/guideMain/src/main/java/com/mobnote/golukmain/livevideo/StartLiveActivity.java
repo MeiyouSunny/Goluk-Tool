@@ -77,8 +77,9 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
 
     private void initData() {
         mLiveSettingBean = new LiveSettingBean();
-
         mLiveSettingBean.vtype = 0;
+//        mBaseApp.mIPCControlManager.setT3WifiMode(0);
+
         // 时长
         mLiveSettingBean.duration = mCurrentLiveSecond;
         mLiveSettingBean.netCountStr = getCurrentFlow(mCurrentLiveSecond);

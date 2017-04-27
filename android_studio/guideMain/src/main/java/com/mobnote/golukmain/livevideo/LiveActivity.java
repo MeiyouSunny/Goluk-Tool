@@ -1085,7 +1085,6 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
             mLoadingDialog.close();
         }
-        mBaseApp.setIpcDisconnect();
         mLoadingDialog = null;
         WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
@@ -1271,22 +1270,10 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         mRPVPlayVideo.cleanUp();
     }
 
-    private void exit(){
-        if(mBaseApp.mIPCControlManager.getSupportT3DualMode()){
-            mBaseApp.mIPCControlManager.setT3WifiMode(0);
-            exit(false);
-        }else{
-            exit(true);
-        }
-    }
-
     /**
      * 退出直播或观看直播
      */
-    public void exit(boolean realExit) {
-        if(!realExit){
-            return;
-        }
+    public void exit() {
         isStopNormal = true;
         mLiveCommentFragment.onExit();
         mLiveMapViewFragment.onExit();
@@ -1333,7 +1320,11 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (null != mLiveManager) {
             mLiveManager.cancelTimer();
         }
-        finish();
+        if(mBaseApp.mIPCControlManager.getSupportT3DualMode()) {
+            mBaseApp.mIPCControlManager.setT3WifiMode(0);
+        }else {
+            finish();
+        }
     }
 
     private void dissmissAllDialog() {
@@ -1568,7 +1559,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
                 dealSnapCallBack(param1, param2);
                 break;
             case IPC_VDCP_Msg_SetWirelessMode:
-                exit(true);
+                mBaseApp.setIpcDisconnect();
+                finish();
                 break;
             default:
                 break;
