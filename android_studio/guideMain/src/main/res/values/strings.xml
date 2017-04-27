@@ -128,7 +128,7 @@
     <string name="str_vote_now">Vote now</string>
     <string name="str_cluster_newest">Event is online \n Wait for your upload</string>
     <string name="str_cluster_wonderful">No recommended excellent videos yet \n Wait for your upload</string>
-    <string name="attend_activity">Join the event</string>
+    <string name="attend_activity">Join</string>
     <string name="activity_time_out">Event has ended</string>
     <string name="str_participation_population">%1$s Shares</string>
     <string name="str_adas_guide_des1">Please drive in the middle of a lane with fewer vehicles.</string>
@@ -510,7 +510,7 @@
     <string name="str_qq_friends">QQ Friends</string>
     <string name="str_copy_link">Copy link</string>
     <string name="str_copy_link_success">Link successfully copied</string>
-    <string name="join_activity">Join</string>
+    <string name="join_activity">Join event</string>
     <string name="share_to_jishe">Share to Goluk</string>
     <string name="str_usercenter_login_hint_text">Please log in before operate</string>
     <string name="str_wonderful_share">Goluk Wonderful Video</string>

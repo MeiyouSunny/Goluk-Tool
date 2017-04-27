@@ -350,6 +350,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
                         ZhugeUtils.eventCallAlbum(mContext, mContext.getString(R.string.str_zhuge_call_album_source_cluster));
 
                         Intent photoalbum = new Intent(mContext, PhotoAlbumActivity.class);
+                        photoalbum.putExtra(FragmentAlbum.PARENT_VIEW,true);
                         photoalbum.putExtra("from", "cloud");
 
                         PromotionSelectItem item = new PromotionSelectItem();

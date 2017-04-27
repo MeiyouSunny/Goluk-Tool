@@ -128,7 +128,7 @@
     <string name="str_vote_now">Голосовать</string>
     <string name="str_cluster_newest">Событие уже проводится</string>
     <string name="str_cluster_wonderful">Еще нет рекомендованных замечательных видео</string>
-    <string name="attend_activity">Принять участие</string>
+    <string name="attend_activity">Добавить</string>
     <string name="activity_time_out">Событие завершено</string>
     <string name="str_participation_population">Публикаций: %1$s</string>
     <string name="str_adas_guide_des1">Вам нужно проехать по средней линии, где меньше автомобилей.</string>
@@ -509,7 +509,7 @@
     <string name="str_qq_friends">QQ Friend</string>
     <string name="str_copy_link">Скопировать ссылку</string>
     <string name="str_copy_link_success">Ссылка успешно скопирована</string>
-    <string name="join_activity">Добавить</string>
+    <string name="join_activity">Принять участие</string>
     <string name="share_to_jishe">Передать на Goluk</string>
     <string name="str_usercenter_login_hint_text">Сначала войдите</string>
     <string name="str_wonderful_share">Замечательное видео Goluk</string>
