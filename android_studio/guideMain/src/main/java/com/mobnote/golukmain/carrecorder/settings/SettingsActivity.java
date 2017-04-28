@@ -307,12 +307,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
         if(T3U_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)){
 			boolean voiceType = GolukApplication.getInstance().getIPCControlManager().getVoiceType();
 			GolukDebugUtils.e("", "--------------SettingsActivity-----voiceType：" + voiceType);
-			// 获取视频水印
-			boolean videoLogo = GolukApplication.getInstance().getIPCControlManager().getVideoLogo();
-			GolukDebugUtils.e("", "TSettingsActivity-------------------videoLogo：" + videoLogo);
 			GolukApplication.getInstance().getIPCControlManager().getT1SW();
 		}
-
+		// 获取视频水印
+		if(GolukApplication.getInstance().getIPCControlManager().isSupportVideoLogo()){
+			boolean videoLogo = GolukApplication.getInstance().getIPCControlManager().getVideoLogo();
+			GolukDebugUtils.e("", "TSettingsActivity-------------------videoLogo：" + videoLogo);
+		}
 		showLoading();
 	}
 

@@ -1263,4 +1263,14 @@ public class IPCControlManager implements IPCManagerFn {
         }
     }
 
+    public boolean getSupportT3Logo(){
+        if((T3_SIGN.equals(mProduceName) && getVersionCode().compareTo("1.3") >= 0)
+                ||
+                T3U_SIGN.equals(mProduceName)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 }
