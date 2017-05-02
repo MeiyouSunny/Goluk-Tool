@@ -1,5 +1,7 @@
 package com.mobnote.golukmain.photoalbum;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -391,7 +393,13 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                 });
                 mPopMenu.show();
             }else{
-                getActivity().finish();
+                if (GolukApplication.getInstance().getDownLoadList() == null
+                        || GolukApplication.getInstance().getDownLoadList().size() == 0
+                        || !GolukApplication.getInstance().isDownloading()) {
+                    getActivity().finish();
+                }else{
+                    preExit();
+                }
             }
         } else if (id == R.id.mDeleteBtn) {
             if (selectedListData.size() <= 0) {
@@ -431,6 +439,29 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                     });
             mCustomDialog.show();
         }
+    }
+
+    private void preExit() {
+        final AlertDialog dialog = new AlertDialog.Builder(getContext()).create();
+        dialog.setTitle(getString(R.string.str_global_dialog_title));
+        dialog.setMessage(getString(R.string.msg_of_exit_when_download));
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.str_button_ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialog.dismiss();
+                GolukApplication.getInstance().stopDownloadList();
+                getActivity().finish();
+            }
+        });
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.dialog_str_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
     }
 
     private void deleteDataFlush() {
