@@ -691,7 +691,7 @@
     <string name="str_slash">/</string>
     <string name="like_num_text">56</string>
     <string name="wifibind_defaultpassword">123456789</string>
-    <string name="version_bottom_copyright">Copyright@2016 Goluk.All Rights Reserved</string>
+    <string name="version_bottom_copyright">Copyright©2016 Goluk.All Rights Reserved</string>
     <string name="pwd_digits">[] {}:;,./~!@#$%^*()_+=-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
     <string name="wifi_pwd_digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
     <string name="cluster_time_format">MM月dd日 HH时mm分</string>
