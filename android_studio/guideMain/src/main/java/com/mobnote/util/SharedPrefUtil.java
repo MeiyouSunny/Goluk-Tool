@@ -198,6 +198,20 @@ public class SharedPrefUtil {
         return preference.edit().putBoolean(IS_SHOWED_RESOLUTION_HUD, isShowed).commit();
     }
 
+
+    public static final String IS_CHNAGE_IPC_HUD = "is_change_ipc_hud";
+
+    public static boolean isShowChangeIpc() {
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(GolukApplication.getInstance().getContext());
+        return preference.getBoolean(IS_CHNAGE_IPC_HUD, false);
+    }
+
+    public static boolean setShowChangeIpc(boolean isShowed) {
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(GolukApplication.getInstance().getContext());
+        return preference.edit().putBoolean(IS_CHNAGE_IPC_HUD, isShowed).commit();
+    }
+
+
     public static String getLatestIgnoredAppUpgradeVersion() {
         SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(GolukApplication.getInstance().getContext());
         return preference.getString(LATEST_IGNORED_APP_UPGRADE_VERSION, "");

@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -74,6 +75,7 @@ import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.GolukVideoUtils;
+import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.SortByDate;
 import com.mobnote.util.ZhugeUtils;
 import com.mobnote.wifibind.WifiRsBean;
@@ -452,7 +454,21 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         if (null != GolukApplication.getInstance().getIPCControlManager()) {
             GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("main", this);
         }
+        firstShowHint();
+    }
 
+    private void firstShowHint() {
+        if(!SharedPrefUtil.isShowChangeIpc()){
+            SharedPrefUtil.setShowChangeIpc(true);
+            final ViewStub stub = (ViewStub) findViewById(R.id.stub_change);
+            View view = stub.inflate();
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    stub.setVisibility(View.GONE);
+                }
+            });
+        }
     }
 
     @Override
