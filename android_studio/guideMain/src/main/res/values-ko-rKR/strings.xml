@@ -1073,7 +1073,7 @@
     <string name="upload_fail">오류</string>
     <string name="str_vk">VKontakte</string>
     <string name="input_pwd">비밀번호를 입력하세요 (6-16자리)</string>
-    <string name="change_resolution_hint">결의 바꿀 수 사진 비디오 재생 더 잘</string>
+    <string name="change_resolution_hint">바꿀 수 사진 비디오 재생</string>
 
 
     <string name="stop_play_remote">힌트: SD 카드에서 동영상을 재생하면 블랙박스에서 잠시 녹화가 중단되고 동영상 종료 30초 후에 녹화가 다시 시작됩니다.</string>

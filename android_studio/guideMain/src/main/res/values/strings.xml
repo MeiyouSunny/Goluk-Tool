@@ -1102,7 +1102,7 @@
     <string name="upload_fail">Error</string>
     <string name="str_vk">VKontakte</string>
     <string name="input_pwd">Please enter password (6-16 digits)</string>
-    <string name="change_resolution_hint">Changing picture resolution will allow videos to playback more smoothly</string>
+    <string name="change_resolution_hint">Change picture resolution</string>
     <string name="open_ate_before_live">直播需使用移动网络和手机热点，请允许极路客开启移动网路和手机热点</string>
     <string name="live_need_mobile_data">直播需使用移动网络，请打开移动网络</string>
     <string name="live_hot_spot_failed_title">发起直播失败</string>

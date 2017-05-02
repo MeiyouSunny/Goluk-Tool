@@ -1066,7 +1066,7 @@
     <string name="upload_fail">Ошибка</string>
     <string name="str_vk">VKontakte</string>
     <string name="input_pwd">Введите пароль (6 – 16 цифр)</string>
-    <string name="change_resolution_hint">Выберите оптимальное разрешение для быстрого воспроизведения видео</string>
+    <string name="change_resolution_hint">Выберите оптимальное разрешение</string>
 
     <string name="stop_play_remote">Совет: при воспроизведении видео с SD-карты запись будет приостановлена. Запись возобновится через 30 секунд после закрытия видео.</string>
     <string name="new_password">Введите новый пароль</string>

@@ -1072,7 +1072,7 @@
     <string name="upload_fail">エラー</string>
     <string name="str_vk">VKontakte</string>
     <string name="input_pwd">パスワードを入力してください（6～16桁）</string>
-    <string name="change_resolution_hint">変更画面解像度のビデオをよりスムーズに再生できるようになります</string>
+    <string name="change_resolution_hint">変更画面解像度</string>
 
     <string name="stop_play_remote">ヒント: SDカードで動画を再生すると、ドライブレコーダーが録画を一時的に停止し、動画終了30秒後に録画を再開します。</string>
     <string name="new_password">新しいパスワードを入力します</string>

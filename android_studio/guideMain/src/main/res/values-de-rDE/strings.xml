@@ -1072,7 +1072,7 @@ Qualität der Speicherkarte kann zu gestörter Aufnahme führen.</string>
     <string name="upload_fail">Fehler</string>
     <string name="str_vk">VKontakte</string>
     <string name="input_pwd">Bitte Passwort eingeben (6-16 Zeichen)</string>
-    <string name="change_resolution_hint">wechselndes bild entschließung ermöglicht videos abspielen reibungslos laufen</string>
+    <string name="change_resolution_hint">wechselndes bild entschließung ermöglicht videos</string>
 
 
     <string name="stop_play_remote">Tipp: Wenn ein Video von der SD-Karte abgespielt wird, wird die Dashcam die Aufzeichnung temporär anhalten und diese 30s nach Beendigung des Videos fortsetzen.</string>
