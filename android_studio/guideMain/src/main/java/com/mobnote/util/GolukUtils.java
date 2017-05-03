@@ -1315,6 +1315,7 @@ public class GolukUtils {
             intent.putExtra(LiveActivity.KEY_LIVE_SETTING_DATA, mSettingData);
             intent.putExtra(LiveActivity.KEY_USERINFO, userInfo);
             mContext.startActivity(intent);
+            ((Activity)mContext).finish();
         }
     }
 
