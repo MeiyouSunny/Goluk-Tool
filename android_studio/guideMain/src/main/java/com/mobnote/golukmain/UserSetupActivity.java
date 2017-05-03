@@ -356,7 +356,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
         String logPath = Environment.getExternalStorageDirectory() + File.separator + GolukFileUtils.GOLUK_LOG_PATH + File.separator + today;
         File file = new File(logPath);
         if (!file.exists()) {
-            Toast.makeText(this, "no log file in today!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.no_log_file, Toast.LENGTH_SHORT).show();
             return;
         }
         new LogUploadTask(logPath, GolukApplication.getInstance().mCurrentUId, Tapi.getMobileId(), new LogUploadTask.CallbackLogUpload() {

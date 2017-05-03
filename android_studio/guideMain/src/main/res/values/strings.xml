@@ -1115,4 +1115,5 @@
     <string name="confirm_password">Enter new password</string>
     <string name="confirm_password_error">Confirm new password</string>
     <string name="Acknowledged">Acknowledged</string>
+    <string name="no_log_file">no log file in today!</string>
 </resources>
