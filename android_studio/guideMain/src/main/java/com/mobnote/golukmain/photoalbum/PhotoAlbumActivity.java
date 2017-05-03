@@ -15,21 +15,32 @@ public class PhotoAlbumActivity extends BaseActivity {
 
     private boolean mShouldClose;
     private boolean mShowLocal;
+    private FragmentAlbum fa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_album_activity);
         mShouldClose = getIntent().getBooleanExtra(CLOSE_WHEN_EXIT, false);
-        mShowLocal = getIntent().getBooleanExtra(FragmentAlbum.PARENT_VIEW,false);
+        mShowLocal = getIntent().getBooleanExtra(FragmentAlbum.PARENT_VIEW, false);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putBoolean(FragmentAlbum.PARENT_VIEW, mShowLocal);
-        FragmentAlbum fa = new FragmentAlbum();
+        fa = new FragmentAlbum();
         fa.setArguments(bundle);
         fragmentTransaction.add(R.id.photo_album_fragment, fa);
         fragmentTransaction.commitAllowingStateLoss();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (fa != null && mShouldClose) {
+            fa.checkDowningExit();
+        }else{
+            super.onBackPressed();
+        }
     }
 
 

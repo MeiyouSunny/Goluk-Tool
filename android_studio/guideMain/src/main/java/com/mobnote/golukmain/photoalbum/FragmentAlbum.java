@@ -393,13 +393,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                 });
                 mPopMenu.show();
             }else{
-                if (GolukApplication.getInstance().getDownLoadList() == null
-                        || GolukApplication.getInstance().getDownLoadList().size() == 0
-                        || !GolukApplication.getInstance().isDownloading()) {
-                    getActivity().finish();
-                }else{
-                    preExit();
-                }
+                checkDowningExit();
             }
         } else if (id == R.id.mDeleteBtn) {
             if (selectedListData.size() <= 0) {
@@ -438,6 +432,16 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                         }
                     });
             mCustomDialog.show();
+        }
+    }
+
+    public void checkDowningExit() {
+        if (GolukApplication.getInstance().getDownLoadList() == null
+                || GolukApplication.getInstance().getDownLoadList().size() == 0
+                || !GolukApplication.getInstance().isDownloading()) {
+            getActivity().finish();
+        }else{
+            preExit();
         }
     }
 
