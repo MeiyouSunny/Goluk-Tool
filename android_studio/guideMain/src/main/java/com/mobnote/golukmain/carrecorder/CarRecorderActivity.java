@@ -1289,7 +1289,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     private void ipcConnFailed() {
         mFullScreen.setVisibility(View.GONE);
         mVideoOff.setVisibility(View.GONE);
-        mConnectTip.setText(wifiname);
+        mConnectTip.setText(R.string.str_disconnect_ipc);
         mPalyerLayout.setVisibility(View.GONE);
         mNotconnected.setVisibility(View.VISIBLE);
         mConncetLayout.setVisibility(View.GONE);
