@@ -761,12 +761,12 @@
     <string name="wifi_link_32_text">等待极路客连接到手机</string>
     <string name="wifi_link_34_text">极路客视频安装帮助</string>
     <string name="wifi_link_35_text">重置你的极路客WiFi热点密码</string>
-    <string name="wifi_link_36_text">名称为GolukXXXX的WiFi\n(默认密码：123465789)</string>
+    <string name="wifi_link_36_text">名称为GolukXXXX的WiFi</string>
     <string name="wifi_link_conn_failed">连接失败</string>
     <string name="wifi_link_twinkle">闪烁(T2为长亮)</string>
     <string name="wifi_link_wifi_light">WiFi指示灯</string>
     <string name="wifi_link_wifi_name">名称为</string>
-    <string name="wifi_link_wifi_name2">的WiFi</string>
+    <string name="wifi_link_wifi_name2">的WiFi\n(默认密码：123465789)</string>
     <string name="wifi_link_complete_wait">等待极路客</string>
     <string name="wifi_link_complete_conn">连接</string>
     <string name="wifi_link_complete_mobile">到手机…</string>

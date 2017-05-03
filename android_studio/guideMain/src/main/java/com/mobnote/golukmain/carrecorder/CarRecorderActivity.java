@@ -931,7 +931,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
      */
     public void start() {
         WifiRsBean wrb = ReadWifiConfig.readConfig();
-        if (wrb != null) {
+        if (wrb != null && GolukApplication.getInstance().getIpcIsLogin()) {
             mConnectTip.setText(wrb.getIpc_ssid());
         }
         if (null != mRtspPlayerView) {
