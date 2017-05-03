@@ -526,7 +526,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 ipcConnFailed();
                 break;
             case WIFI_STATE_CONNING:
-                mConnectTip.setText(wifiname);
                 mPalyerLayout.setVisibility(View.GONE);
                 if (mApp.isBindSucess()) {
                     mNotconnected.setVisibility(View.GONE);
@@ -542,6 +541,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 setVideoBtnState(false);
                 break;
             case WIFI_STATE_SUCCESS:
+                mConnectTip.setText(wifiname);
                 // GolukApplication.getInstance().stopDownloadList();
                 // 国际版T1设备隐藏直播
                 if (!mApp.isMainland()) {
@@ -1263,7 +1263,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     }
 
     private void ipcConnecting() {
-        mConnectTip.setText(wifiname);
+//        mConnectTip.setText(wifiname);
         mFullScreen.setVisibility(View.GONE);
         mVideoOff.setVisibility(View.GONE);
         mSettingBtn.setVisibility(View.GONE);
