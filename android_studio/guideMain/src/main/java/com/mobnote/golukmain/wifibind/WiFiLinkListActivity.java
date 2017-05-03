@@ -65,6 +65,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
     private static final String TAG = "WiFiLinkList";
     public static final String CONNECT_IPC_IP = "192.168.62.1";
+    private static final int SHOW_TOAST = 10;
     private final String GOLUK_COMMON_SHOW_NAME = " Goluk_xx_xxxxxx ";
     /**
      * IPC默认要修改的密码
@@ -427,6 +428,9 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         }
     }
 
+
+
+    int POST_FAILED_DELAY = 5*1000;
     public void ipcFailedCallBack() {
         collectLog("ipcLinkFailedCallBack", "--------1");
         GolukDebugUtils.e("", "WiFiLinkListActivity  通知logic连接ipc---dealAutoConn--------ipcLinkFailedCallBack：");
@@ -441,7 +445,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         mIsCanAcceptIPC = false;
         this.dimissLoadingDialog();
         if(mAutoConn) {
-            GolukUtils.showToast(this, getResources().getString(R.string.wifi_link_conn_failed));
+            mBaseHandler.sendEmptyMessageDelayed(SHOW_TOAST,POST_FAILED_DELAY);
         }
         mCurrentState = STATE_FAILED;
         this.setStateSwitch();
@@ -642,6 +646,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
     protected void toNextView() {
         setDefaultInfo();
+        mBaseHandler.removeMessages(SHOW_TOAST);
         if (mApp.getEnableSingleWifi()) {
             collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.4 Only Wifi Connected success");
             if (mIsFromUpgrade) {
@@ -796,6 +801,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             this.dimissLoadingDialog();
             GolukUtils.showToast(WiFiLinkListActivity.this, getResources().getString(R.string.interantion_ban_mainland_goluk));
             finish();
+        }else if(SHOW_TOAST  == msg.what){
+            GolukUtils.showToast(this, getResources().getString(R.string.wifi_link_conn_failed));
         }
     }
 
