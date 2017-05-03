@@ -38,7 +38,7 @@ public class PhotoAlbumActivity extends BaseActivity {
     public void onBackPressed() {
         if (fa != null && mShouldClose) {
             fa.checkDowningExit();
-        }else{
+        }else {
             super.onBackPressed();
         }
     }

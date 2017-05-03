@@ -393,7 +393,8 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                 });
                 mPopMenu.show();
             }else{
-                checkDowningExit();
+                PhotoAlbumActivity activity = (PhotoAlbumActivity) getActivity();
+                activity.onBackPressed();
             }
         } else if (id == R.id.mDeleteBtn) {
             if (selectedListData.size() <= 0) {
