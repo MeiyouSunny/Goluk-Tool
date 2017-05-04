@@ -1320,7 +1320,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (null != mLiveManager) {
             mLiveManager.cancelTimer();
         }
-        if(mBaseApp.mIPCControlManager.getSupportT3DualMode()) {
+        if(mBaseApp.isIpcLoginSuccess && mBaseApp.mIPCControlManager.getSupportT3DualMode()) {
             mBaseApp.mIPCControlManager.setT3WifiMode(0);
         }else {
             mBaseApp.setIpcDisconnect();
