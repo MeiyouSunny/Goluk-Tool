@@ -49,6 +49,7 @@ public class GlobalWindow implements View.OnClickListener {
 	private Context mContext = null;
 	private static GlobalWindow mInstance = new GlobalWindow();
 	public final int MSG_H_COUNT = 10;
+	private boolean toastShowed = false;
 	private ProgressBar mProgressBar = null;
 
 	@SuppressLint("HandlerLeak")
@@ -107,7 +108,8 @@ public class GlobalWindow implements View.OnClickListener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if(!allowDrawOverlays) {
+            if(!allowDrawOverlays && !toastShowed) {
+				toastShowed = true;
                 Toast.makeText(mContext, mContext.getString(R.string.str_system_window_not_allowed), Toast.LENGTH_LONG).show();
                 return;
             }
@@ -285,6 +287,11 @@ public class GlobalWindow implements View.OnClickListener {
 		mPrecentTv = null;
 		mProgressBar = null;
 		mVideoUploadLayout = null;
+	}
+
+
+	public void reset(){
+		toastShowed = false;
 	}
 
 	private AlertDialog mTwoButtonDialog = null;

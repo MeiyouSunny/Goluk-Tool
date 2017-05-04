@@ -745,6 +745,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         }
         GolukDebugUtils.e("", "ipcVideoSingleQueryCallBack------:  " + data);
         try {
+            GlobalWindow.getInstance().reset();
             JSONObject json = new JSONObject(data);
             final String fileName = json.getString("location");
             final long time = json.optLong("time");
