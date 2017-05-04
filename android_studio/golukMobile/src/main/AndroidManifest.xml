@@ -229,7 +229,6 @@
         <activity
             android:name="com.mobnote.golukmain.livevideo.StartLiveActivity"
             android:screenOrientation="portrait"
-            android:noHistory="true"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             android:theme="@android:style/Theme.NoTitleBar"/>
         <activity

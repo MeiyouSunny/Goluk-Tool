@@ -1306,6 +1306,9 @@ public class GolukUtils {
             return;
         }
         if (intent != null) {
+            if(isLive) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            }
             intent.putExtra(LiveActivity.KEY_IS_LIVE, isLive);
             intent.putExtra(LiveActivity.KEY_LIVE_CONTINUE, isContinue);
             intent.putExtra(LiveActivity.KEY_GROUPID, "");
@@ -1315,7 +1318,6 @@ public class GolukUtils {
             intent.putExtra(LiveActivity.KEY_LIVE_SETTING_DATA, mSettingData);
             intent.putExtra(LiveActivity.KEY_USERINFO, userInfo);
             mContext.startActivity(intent);
-            ((Activity)mContext).finish();
         }
     }
 
