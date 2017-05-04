@@ -430,7 +430,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
 
 
-    int POST_FAILED_DELAY = 5*1000;
+    int POST_FAILED_DELAY = 10*1000;
     public void ipcFailedCallBack() {
         collectLog("ipcLinkFailedCallBack", "--------1");
         GolukDebugUtils.e("", "WiFiLinkListActivity  通知logic连接ipc---dealAutoConn--------ipcLinkFailedCallBack：");

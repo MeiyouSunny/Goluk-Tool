@@ -1256,7 +1256,9 @@ public class IPCControlManager implements IPCManagerFn {
     }
 
     public boolean getSupportT3DualMode(){
-        if(T3_SIGN.equals(mProduceName) && getVersionCode().compareTo("1.3") >= 0){
+        if((T3_SIGN.equals(mProduceName) && getVersionCode().compareTo("1.3") >= 0)
+                ||
+                (T3U_SIGN.equals(mProduceName) && getVersionCode().compareTo("1.3") >= 0)){
             return true;
         }else{
             return false;
