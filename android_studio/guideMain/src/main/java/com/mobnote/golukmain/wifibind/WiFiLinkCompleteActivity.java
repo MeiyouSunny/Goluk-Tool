@@ -128,6 +128,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
     private final int ERROR_IPC_CONN_HOT = -3;
     private boolean isShowError = false;
     private boolean openHotSpot = false;
+    private boolean notStartActivity = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -513,6 +514,9 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
     }
 
     private void click_complete() {
+        if (!notStartActivity) {
+            return;
+        }
         if (this.STATE_SUCESS == mState) {
             // 綁定成功后，可以进入行车记录仪
             // 关闭wifi绑定全部页面
@@ -525,6 +529,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                 startActivity(it);
                 finish();
             } if(mReturnToLive){
+                notStartActivity = false;
                 EventBus.getDefault().post(new EventHotSpotSuccess());
                 Intent intent = new Intent(this, StartLiveActivity.class);
                 intent.putExtra(StartLiveActivity.SHORT_LOCATION,mShortLocation);

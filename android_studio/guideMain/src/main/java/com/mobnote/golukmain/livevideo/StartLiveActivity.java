@@ -193,7 +193,9 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
                 showToast(R.string.network_error);
                 return;
             }
-
+            if (GolukUtils.isFastDoubleClick()) {
+                return;
+            }
             if (!mBaseApp.isUserLoginSucess) {
                 Intent intent = null;
                 if (mBaseApp.isMainland() == false) {
@@ -214,8 +216,8 @@ public class StartLiveActivity extends BaseActivity implements View.OnClickListe
             //直播页面
             ZhugeUtils.eventLive(this, this.getString(R.string.str_zhuge_live_ipc_page));
             mIsLive = true;
-            finish();
             GolukUtils.startPublishOrWatchLiveActivity(this, true, false, null, mLiveSettingBean, null);
+            finish();
         }
     }
 

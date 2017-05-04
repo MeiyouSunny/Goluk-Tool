@@ -1306,9 +1306,6 @@ public class GolukUtils {
             return;
         }
         if (intent != null) {
-            if(isLive) {
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            }
             intent.putExtra(LiveActivity.KEY_IS_LIVE, isLive);
             intent.putExtra(LiveActivity.KEY_LIVE_CONTINUE, isContinue);
             intent.putExtra(LiveActivity.KEY_GROUPID, "");
