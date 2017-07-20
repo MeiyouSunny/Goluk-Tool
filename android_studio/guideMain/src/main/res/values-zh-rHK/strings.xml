@@ -1081,4 +1081,10 @@
     <string name="Acknowledged">已確認</string>
     <string name="no_log_file">暫無日誌數據</string>
 
+    <string name="change_wifi_hint">Wi-Fi名稱必須為1-10個英文或數位。更改後將斷開手機與極路客的連接，再連接新的Wi-Fi。</string>
+    <string name="str_wifi_limit">請輸入Wi-Fi名稱 (1-10 個字元)</string>
+    <string name="str_wifi_title">Wi-Fi名稱</string>
+    <string name="str_wifi_success">已設定 Wi-Fi名稱</string>
+    <string name="str_wifi_name_fail">無法設定Wi-Fi名稱</string>
+
 </resources>

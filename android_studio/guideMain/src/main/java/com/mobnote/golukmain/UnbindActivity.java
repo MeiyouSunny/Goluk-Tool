@@ -66,6 +66,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
     private TextView mIPCModelText, mIPCNumberText, mIPCVersionText;
     private ImageView mIPCimage;
     private IPCInfo mIpcInfo;
+    private RelativeLayout mNameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +90,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         mTextCameraName = (TextView) findViewById(R.id.unbind_camera_name);
         mUnbindBtn = (Button) findViewById(R.id.unbind_layout_btn);
         mPwdLayout = (RelativeLayout) findViewById(R.id.unbind_layout_password);
+        mNameLayout = (RelativeLayout) findViewById(R.id.unbind_layout_camera);
         mTextPasswordName = (TextView) findViewById(R.id.unbind_password_name);
         mTextVersion = (TextView) findViewById(R.id.unbind_update_name);
         mUpdateLayout = (RelativeLayout) findViewById(R.id.unbind_layout_update);
@@ -107,6 +109,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         mUnbindBtn.setOnClickListener(this);
         mPwdLayout.setOnClickListener(this);
         mUpdateLayout.setOnClickListener(this);
+        mNameLayout.setOnClickListener(this);
     }
 
     private void initViewData() {
@@ -126,7 +129,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             mTextVersion.setText(vIpc);
             GolukApplication.getInstance().getIPCControlManager();
             if (IPCControlManager.T1_SIGN.equals(ipcModel) || IPCControlManager.T1s_SIGN.equals(ipcModel)
-                    || IPCControlManager.T2_SIGN.equals(ipcModel) || IPCControlManager.T3_SIGN.equals(ipcModel)|| IPCControlManager.T3U_SIGN.equals(ipcModel)) {
+                    || IPCControlManager.T2_SIGN.equals(ipcModel) || IPCControlManager.T3_SIGN.equals(ipcModel) || IPCControlManager.T3U_SIGN.equals(ipcModel)) {
                 mIPCimage.setImageResource(R.drawable.connect_t1_icon_1);
             } else {
                 mIPCimage.setImageResource(R.drawable.ipc);
@@ -231,6 +234,22 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             it.putExtra("apssid", mApSSID);
             it.putExtra("appwd", mApPWD);
             startActivityForResult(it, 10);
+        } else if (id == R.id.unbind_layout_camera) {
+            if (!GolukApplication.getInstance().isIpcLoginSuccess) {
+                Intent intent = new Intent();
+                intent.setClass(this, WiFiLinkListActivity.class);
+                intent.putExtra(WiFiLinkListActivity.ACTION_FROM_CAM_SETTING, true);
+                startActivity(intent);
+                return;
+            }
+            String password = mTextPasswordName.getText().toString();
+            Intent it = new Intent(UnbindActivity.this, UserSetupWifiActivity.class);
+            it.putExtra("wifiPwd", password);
+            it.putExtra("golukssid", mGolukSSID);
+            it.putExtra("golukpwd", mGolukPWD);
+            it.putExtra("apssid", mApSSID);
+            it.putExtra("appwd", mApPWD);
+            startActivityForResult(it, 11);
         } else if (id == R.id.unbind_layout_update) {
             if (mApplication.mIpcUpdateManage.isDownloading() || downloadLater) {// 下载中
                 GolukUtils.startUpdateActivity(UnbindActivity.this, 0, mIpcInfo, false);
@@ -297,6 +316,8 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         super.onActivityResult(requestCode, resultCode, data);
         GolukDebugUtils.e("", "-----UnbindActivity------onActivityResult request:" + requestCode + "  resultCode:" + resultCode);
         if (10 == requestCode && 10 == resultCode) {
+            this.finish();
+        } else if (11 == requestCode && 11 == resultCode) {
             this.finish();
         }
     }

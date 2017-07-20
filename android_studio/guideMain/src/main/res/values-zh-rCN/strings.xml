@@ -1080,4 +1080,10 @@
     <string name="Acknowledged">知道了</string>
     <string name="no_log_file">暂无日志数据</string>
 
+    <string name="change_wifi_hint">Wi-Fi名称必须为1-10个英文或数字。更改后将断开手机与极路客的连接，再连接新的Wi-Fi。</string>
+    <string name="str_wifi_limit">请输入1-10位数字或字母</string>
+    <string name="str_wifi_title">Wi-Fi名称</string>
+    <string name="str_wifi_success">Wi-Fi名称设置成功</string>
+    <string name="str_wifi_name_fail">Wi-Fi名称设置失败</string>
+
 </resources>

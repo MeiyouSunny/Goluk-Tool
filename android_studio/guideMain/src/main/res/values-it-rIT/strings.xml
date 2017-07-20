@@ -1079,4 +1079,10 @@
     <string name="confirm_password_error">Le password da te inserite non coincidono. Riprova</string>
     <string name="Acknowledged">Riconosciuti</string>
 
+    <string name="change_wifi_hint"></string>
+    <string name="str_wifi_limit"></string>
+    <string name="str_wifi_title"></string>
+    <string name="str_wifi_success"></string>
+    <string name="str_wifi_name_fail"></string>
+
 </resources>

@@ -1080,4 +1080,10 @@ Une qualité médiocre de la carte mémoire provoquera des enregistrements anorm
     <string name="confirm_password_error">Les mots de passe saisis ne correspondent pas. Veuillez réessayer</string>
     <string name="Acknowledged">Noté</string>
 
+    <string name="change_wifi_hint"></string>
+    <string name="str_wifi_limit"></string>
+    <string name="str_wifi_title"></string>
+    <string name="str_wifi_success"></string>
+    <string name="str_wifi_name_fail"></string>
+
 </resources>

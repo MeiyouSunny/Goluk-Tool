@@ -57,6 +57,7 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpinionActivity;
 import com.mobnote.golukmain.UserSetupActivity;
 import com.mobnote.golukmain.UserSetupChangeWifiActivity;
+import com.mobnote.golukmain.UserSetupWifiActivity;
 import com.mobnote.golukmain.adas.AdasConfigParamterBean;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.IpcDataParser;
@@ -312,7 +313,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 
     private boolean mIsQuery = false;
 
-    /** 保存区分国际版与国内版的标示 例如：国际版 T1U 国内版 T1**/
+    /**
+     * 保存区分国际版与国内版的标示 例如：国际版 T1U 国内版 T1
+     **/
     public String mIpcVersion = "";
 
     static {
@@ -753,7 +756,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             final int type = json.getInt("type");
             final String savePath = getSavePath(type);
             //需求2.10 只有手动才能够下载紧急
-            if(!SharedPrefUtil.getManualDownloadVideo() && IPCManagerFn.TYPE_URGENT == type){
+            if (!SharedPrefUtil.getManualDownloadVideo() && IPCManagerFn.TYPE_URGENT == type) {
                 return;
             }
             if (!GolukUtils.checkSDStorageCapacity(filesize)) {
@@ -962,7 +965,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                         autodownloadfile = false;
                         mDownLoadFileList.clear();
                         mNoDownLoadFileList.clear();
-                        if(SharedPrefUtil.getManualDownloadVideo()){
+                        if (SharedPrefUtil.getManualDownloadVideo()) {
                             SharedPrefUtil.setManualDownloadVideo(false);
                         }
                         GlobalWindow.getInstance().topWindowSucess(
@@ -1058,7 +1061,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             case 7:
                 // 地图大头针数据
                 if (null != mContext) {
-                   if (mContext instanceof VideoCategoryActivity) {
+                    if (mContext instanceof VideoCategoryActivity) {
                         ((VideoCategoryActivity) mContext).pointDataCallback(success, param2);
                     }
                 }
@@ -1268,7 +1271,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 ipcInfo.lasttime = String.valueOf(System.currentTimeMillis());
                 mIpcVersion = ipcInfo.version;
             }
-            if(getEnableSingleWifi()){
+            if (getEnableSingleWifi()) {
                 mIPCControlManager.setBindStatus();
             }
 
@@ -1291,7 +1294,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
             // 获取ipc版本号
             GolukApplication.getInstance().getIPCControlManager().getVersion();
-            queryNewFileList();
+                queryNewFileList();
             if (null != mMainActivity) {
                 mMainActivity.wiFiLinkStatus(2);
             }
@@ -1430,6 +1433,8 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     ((WiFiLinkCompleteActivity) mContext).setIpcLinkWiFiCallBack(param1);
                 } else if (mPageSource.equals("changePassword")) {
                     ((UserSetupChangeWifiActivity) mContext).setIpcLinkWiFiCallBack(param1);
+                } else if (mPageSource.equals("changewifi")) {
+                    ((UserSetupWifiActivity) mContext).setIpcLinkWiFiCallBack(param1);
                 }
                 break;
             case IPC_VDCPCmd_SetWirelessMode:
@@ -1670,9 +1675,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 + mIPCControlManager.mProduceName);
         /** 初始没有设置同步数量，根据连接设备类型G1，T1S设置自动同步5条，其他设备自动同步20条 **/
         if (syncFlag == -1) {
-           // if (IPCControlManager.G1_SIGN.equals(mIPCControlManager.mProduceName)
-               //     || IPCControlManager.T1s_SIGN.equalsIgnoreCase(mIPCControlManager.mProduceName)) {
-                SettingUtils.getInstance().putInt(UserSetupActivity.MANUAL_SWITCH, 5);
+            // if (IPCControlManager.G1_SIGN.equals(mIPCControlManager.mProduceName)
+            //     || IPCControlManager.T1s_SIGN.equalsIgnoreCase(mIPCControlManager.mProduceName)) {
+            SettingUtils.getInstance().putInt(UserSetupActivity.MANUAL_SWITCH, 5);
 //            } else {
 //                SettingUtils.getInstance().putInt(UserSetupActivity.MANUAL_SWITCH, 20);
 //            }
@@ -2006,7 +2011,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         //直播页面
         ZhugeUtils.eventLive(this, this.getString(R.string.str_zhuge_share_video_network_other));
 
-        GolukUtils.startPublishOrWatchLiveActivity(mContext,false,false,null,null,userInfo);
+        GolukUtils.startPublishOrWatchLiveActivity(mContext, false, false, null, null, userInfo);
     }
 
     private boolean isMainProcess() {
@@ -2049,10 +2054,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         enableSingleWifi = value;
     }
 
-    public boolean isUserLoginToServerSuccess(){
-        return (loginStatus==1) || (autoLoginStatus == 2) || (autoLoginStatus ==1);
+    public boolean isUserLoginToServerSuccess() {
+        return (loginStatus == 1) || (autoLoginStatus == 2) || (autoLoginStatus == 1);
     }
-
 
     public boolean isDownloading() {
         return isDownloading;

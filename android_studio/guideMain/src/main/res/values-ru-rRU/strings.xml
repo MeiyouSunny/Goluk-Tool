@@ -1074,4 +1074,10 @@
     <string name="confirm_password_error">Введенные пароли не совпадают. Повторите попытку</string>
     <string name="Acknowledged">Подтверждено</string>
 
+    <string name="change_wifi_hint"></string>
+    <string name="str_wifi_limit"></string>
+    <string name="str_wifi_title"></string>
+    <string name="str_wifi_success"></string>
+    <string name="str_wifi_name_fail"></string>
+
 </resources>

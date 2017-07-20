@@ -1081,4 +1081,10 @@ Qualität der Speicherkarte kann zu gestörter Aufnahme führen.</string>
     <string name="confirm_password_error">Die eingegebenen Passwörter stimmen nicht überein. Bitte erneut versuchen</string>
     <string name="Acknowledged">Bestätigt</string>
 
+    <string name="change_wifi_hint"></string>
+    <string name="str_wifi_limit"></string>
+    <string name="str_wifi_title"></string>
+    <string name="str_wifi_success"></string>
+    <string name="str_wifi_name_fail"></string>
+
 </resources>

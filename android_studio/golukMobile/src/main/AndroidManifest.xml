@@ -107,6 +107,9 @@
             android:name="com.mobnote.golukmain.UserSetupChangeWifiActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.mobnote.golukmain.UserSetupWifiActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.mobnote.golukmain.UserSetupActivity"
             android:screenOrientation="portrait" />
         <activity

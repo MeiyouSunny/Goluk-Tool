@@ -1116,4 +1116,11 @@
     <string name="confirm_password_error">Confirm new password</string>
     <string name="Acknowledged">Acknowledged</string>
     <string name="no_log_file">no log file in today!</string>
+
+    <string name="change_wifi_hint">The Wi-Fi name must be 1-10 characters long. After changing your Wi-Fi name, your phone will be disconnected from Goluk and will need to be reconnected to your new Wi-Fi.</string>
+    <string name="str_wifi_limit">Please enter Wi-Fi name (1-10 digits)</string>
+    <string name="str_wifi_title">Wi-Fi name</string>
+    <string name="str_wifi_success">Wi-Fi successfully renamed</string>
+    <string name="str_wifi_name_fail">Unable to rename Wi-Fi</string>
+
 </resources>

@@ -1,6 +1,7 @@
 package com.mobnote.golukmain;
 
 import com.alibaba.fastjson.JSON;
+import com.bumptech.glide.Glide;
 import com.elvishew.xlog.LogLevel;
 import com.elvishew.xlog.printer.file.backup.FileSizeBackupStrategy;
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator;
@@ -323,6 +324,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
                                         String logPath = Environment.getExternalStorageDirectory() + File.separator + GolukFileUtils.GOLUK_LOG_PATH;
                                         DataCleanManage.deleteFile(Const.getAppContext().getCacheDir());
                                         DataCleanManage.deleteFile(new File(logPath));
+                                        Glide.get(UserSetupActivity.this).clearDiskCache();
                                         mTextCacheSize.setText("0.00B");
                                     }
                                 }).create().show();
