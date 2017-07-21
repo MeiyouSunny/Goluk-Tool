@@ -112,6 +112,14 @@ public class IPCControlManager implements IPCManagerFn {
         return T1_SIGN.equals(mProduceName) || T2_SIGN.equals(mProduceName);
     }
 
+
+    // 判断是否是T1设备
+    public boolean isT1RelativeWifiName() {
+        return T1_SIGN.equals(mProduceName) || T2_SIGN.equals(mProduceName) || T3_SIGN.equals(mProduceName) ||
+                T1U_SIGN.equals(mProduceName) || T2U_SIGN.equals(mProduceName) || T3U_SIGN.equals(mProduceName) ||
+                T1s_SIGN.equals(mProduceName);
+    }
+
     /**
      * 判断是否是G1与T1S，两个处理流程是一样的
      *

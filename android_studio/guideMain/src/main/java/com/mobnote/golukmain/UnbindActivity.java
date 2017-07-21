@@ -247,7 +247,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             it.putExtra("wifiPwd", password);
             it.putExtra("golukssid", mGolukSSID);
             it.putExtra("golukpwd", mGolukPWD);
-            it.putExtra("apssid", mApSSID);
+            it.putExtra("apssid", mTextCameraName.getText().toString());
             it.putExtra("appwd", mApPWD);
             startActivityForResult(it, 11);
         } else if (id == R.id.unbind_layout_update) {

@@ -128,7 +128,7 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
             return "";
         }
         String part_ssid = "";
-        if (mBaseApp.getIPCControlManager().isT1Relative()) {
+        if (mBaseApp.getIPCControlManager().isT1RelativeWifiName()) {
             int sp = ssid.lastIndexOf("_") + 1;
             part_ssid = ssid.substring(0, sp);
         } else {
@@ -142,7 +142,7 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
             return "";
         }
         String part_ssid = "";
-        if (mBaseApp.getIPCControlManager().isT1Relative()) {
+        if (mBaseApp.getIPCControlManager().isT1RelativeWifiName()) {
             part_ssid = ssid.substring(ssid.lastIndexOf("_") + 1);
         } else {
             part_ssid = ssid.substring(5);
