@@ -64,6 +64,7 @@ import com.mobnote.golukmain.multicast.NetUtil;
 import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
+import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.golukmain.videosuqare.RingView;
 import com.mobnote.golukmain.wifibind.WiFiInfo;
 import com.mobnote.golukmain.wifibind.WiFiLinkCompleteActivity;
@@ -75,6 +76,7 @@ import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.GolukVideoUtils;
+import com.mobnote.util.JsonUtil;
 import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.SortByDate;
 import com.mobnote.util.ZhugeUtils;
@@ -105,6 +107,7 @@ import java.util.TimerTask;
 import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.mobnote.eventbus.EventShortLocationFinish;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
@@ -766,6 +769,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 hidePlayer();
                 rpv.removeCallbacks(retryRunnable);
                 showLoading();
+                collectLog("RD Rtsp Player Error, what id["+String.valueOf(what)+"],extra id["+String.valueOf(extra)+"],Errorinfo is:["+strErrorInfo+"]");
                 rpv.postDelayed(retryRunnable, RECONNECTIONTIME);
                 if (m_bIsFullScreen) {
                     setFullScreen(false);
@@ -838,6 +842,19 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             }
         });
     }
+
+    private void reportLog() {
+        final String jsonData = ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_RTSP_REVIEW)
+                .getReportData();
+        mApp.uploadMsg(jsonData, false);
+        ReportLogManager.getInstance().removeKey(IMessageReportFn.KEY_RTSP_REVIEW);
+    }
+
+    private void collectLog(String msg) {
+        ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_RTSP_REVIEW)
+                .addLogData(JsonUtil.getReportData("CarRecorderActivity", "rtsp", msg));
+    }
+
 
     /**
      * 隐藏播放器
@@ -2343,6 +2360,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
     private void exit() {
         mWonderfulTime = 0;
+        reportLog();
         finish();
     }
 

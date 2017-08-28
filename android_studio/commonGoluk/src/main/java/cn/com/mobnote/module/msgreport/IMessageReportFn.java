@@ -12,4 +12,5 @@ public interface IMessageReportFn {
 	public static final String KEY_WIFI_BIND = "key_wifi_bind";
 	/** 绑定成功后上报设备号 */
 	public static final String KEY_ACTIVATION_TIME = "activation_time";
+	public static final String KEY_RTSP_REVIEW = "rtsp_view";
 }
