@@ -1,4 +1,4 @@
-include ':emojicon'
+include ':emojicon', ':rdVECore', ':rdVEUISdk'
 include ':systemAPI'
 include ':commonGoluk'
 include ':guideMain'

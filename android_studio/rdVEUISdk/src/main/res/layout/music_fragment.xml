@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:gravity="center_vertical"
+        android:clipChildren="false"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnVoice2"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:background="@drawable/more_music_menu_bg_selected"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/audio"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_15"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:clipChildren="false"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minWidth="45dp"
+                android:text="@string/musicVoice"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_12"/>
+
+            <SeekBar
+                android:id="@+id/musicfactor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:max="100"
+                android:maxHeight="1.5dp"
+                android:maxWidth="1.5dp"
+                android:minHeight="1.5dp"
+                android:minWidth="1.5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:progress="50"
+                android:progressDrawable="@drawable/music_factor_progress"
+                android:thumb="@drawable/music_factor_thumb"
+                android:thumbOffset="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minWidth="45dp"
+                android:text="@string/videoVoice"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_12"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/mlineView"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/public_background_color"/>
+
+    <com.rd.veuisdk.ui.HorizontalListViewMV
+        android:id="@+id/lvListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <include layout="@layout/camare_filters_container"/>
+    </com.rd.veuisdk.ui.HorizontalListViewMV>
+
+</LinearLayout>

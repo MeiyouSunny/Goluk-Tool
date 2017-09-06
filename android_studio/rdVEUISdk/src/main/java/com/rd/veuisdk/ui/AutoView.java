@@ -1,0 +1,138 @@
+package com.rd.veuisdk.ui;
+
+import android.content.Context;
+import android.graphics.Paint;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.rd.veuisdk.R;
+
+/***
+ * popwind 位置
+ */
+public class AutoView extends LinearLayout {
+    private final int SRCWIDTH = 45;
+    private Paint mTextPaint = new Paint();
+    private boolean mOnUp, mIsLeft;
+    private int mOffXPx;
+
+    private double mPcenterX;
+    private View mAutoView;
+    private TextView mTextView;
+    private String mText;
+
+
+    public AutoView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        float textSize = getResources().getDimensionPixelSize(
+                R.dimen.text_size_10);
+        this.setOrientation(LinearLayout.VERTICAL);
+        mTextView = new TextView(context);
+        mTextView.setText(mText);
+        textSize = 15;
+        mTextView.setTextSize(textSize);
+        mTextPaint.setTextSize(textSize);
+        mTextPaint.setAntiAlias(true);
+        mTextView.setTextColor(getResources().getColor(R.color.black));
+        mTextView.setPadding(8, 8, 8, 8);
+        mTextView.setBackgroundResource(R.drawable.autoview_bg);
+
+        mAutoView = new View(context);
+
+    }
+
+
+    public void setUpOrDown(boolean mOnUp, int offXpx, int strId, boolean isLeft,
+                            double pCenterX) {
+        this.mOnUp = mOnUp;
+        this.mIsLeft = isLeft;
+        mPcenterX = pCenterX;
+
+        if (offXpx == -1) {
+            mAutoView.setVisibility(View.GONE);
+        }
+
+        mText = mTextView.getResources().getString(strId);
+
+        offXpx = offXpx - SRCWIDTH / 2;
+        this.mOffXPx = (int) offXpx;
+
+        mTextView.setText(mText);
+
+        LayoutParams ltv = new LayoutParams(LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
+
+        mTextView.setLayoutParams(ltv);
+
+        LayoutParams lp = new LayoutParams(SRCWIDTH, SRCWIDTH);
+
+        if (mOnUp) {
+            mAutoView.setBackgroundResource(R.drawable.up);
+            if (mIsLeft) {
+                lp.setMargins(mOffXPx, 0, mOffXPx + lp.width, lp.height);
+            } else {
+                int right = mTextView.getWidth() - mOffXPx;
+                lp.setMargins(right - SRCWIDTH, 0, right, lp.height);
+            }
+
+            mAutoView.setLayoutParams(lp);
+            this.addView(mAutoView);
+
+            ltv.setMargins(0, -lp.bottomMargin, 0, 0);
+            mTextView.setLayoutParams(ltv);
+            this.addView(mTextView);
+        } else {
+            mTextView.setLayoutParams(ltv);
+            this.addView(mTextView);
+
+            if (mIsLeft) {
+                lp.setMargins(mOffXPx, 0, mOffXPx + lp.width, lp.height);
+            } else {
+                int right = mTextView.getWidth() - mOffXPx;
+                lp.setMargins(right - SRCWIDTH, 0, right, lp.height);
+            }
+            mAutoView.setBackgroundResource(R.drawable.down);
+            mAutoView.setLayoutParams(lp);
+
+            this.addView(mAutoView);
+        }
+
+    }
+
+    /**
+     * 重新刷新位置
+     *
+     * @return
+     */
+    public int[] setLocation() {
+        LayoutParams lp = new LayoutParams(SRCWIDTH, SRCWIDTH);
+
+        if (mPcenterX != 0) {
+            mOffXPx = (int) (mTextView.getWidth() * mPcenterX - mAutoView.getWidth() / 2);
+        }
+
+        if (mOnUp) {
+            if (mIsLeft) {
+                lp.setMargins(mOffXPx, 0, mOffXPx + lp.width, lp.height);
+            } else {
+                int right = mTextView.getWidth() - mOffXPx;
+                lp.setMargins(right - SRCWIDTH, 0, right, lp.height);
+            }
+            mAutoView.setLayoutParams(lp);
+        } else {
+            if (mIsLeft) {
+                lp.setMargins(mOffXPx, 0, mOffXPx + lp.width, lp.height);
+            } else {
+                int right = mTextView.getWidth() - mOffXPx;
+                lp.setMargins(right - SRCWIDTH, 0, right, lp.height);
+            }
+            mAutoView.setLayoutParams(lp);
+        }
+        int[] size = new int[]{mTextView.getWidth(),
+                mTextView.getHeight() + mAutoView.getHeight()};
+        return size;
+    }
+
+}

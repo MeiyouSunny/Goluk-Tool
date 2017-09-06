@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/edit_menu_bg"
+    android:orientation="vertical" >
+
+    <include layout="@layout/rdveuisdk_public_title_bar" />
+
+    <HorizontalScrollView
+        android:id="@+id/hsvMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbarSize="0dp"
+        android:scrollbarStyle="@null"
+        android:scrollbars="none"
+        android:scrollbarThumbHorizontal="@color/transparent" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <RadioGroup
+                android:id="@+id/rgMusicGroup"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/edit_menu_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/rbMyMusic"
+                    android:layout_width="0dp"
+                    android:layout_height="24dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/more_music_menu_bg"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/mymusic"
+                    android:textColor="@drawable/radio_music_txcolor" />
+
+                <RadioButton
+                    android:id="@+id/rbLocalMusic"
+                    android:layout_width="0dp"
+                    android:layout_height="24dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/more_music_menu_bg"
+                    android:button="@null"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:text="@string/localmusic"
+                    android:textColor="@drawable/radio_music_txcolor" />
+
+                <RadioButton
+                    android:id="@+id/rbHistoryMusic"
+                    android:layout_width="0dp"
+                    android:layout_height="24dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/more_music_menu_bg"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/histroymusic"
+                    android:textColor="@drawable/radio_music_txcolor" />
+            </RadioGroup>
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/edit_music_divider" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vpMusicMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/edit_menu_bg" />
+
+</LinearLayout>

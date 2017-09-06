@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="60dp"
+              android:gravity="bottom"
+              android:orientation="horizontal">
+
+    <ImageButton
+        android:id="@+id/public_menu_cancel"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_marginRight="1dp"
+        android:layout_weight="1"
+        android:background="@color/sub_menu_bgcolor"
+        android:onClick="clickView"
+        android:src="@drawable/bottom_menu_cancel"/>
+
+    <View
+        android:id="@+id/menu_line"
+        android:layout_width="0.5dp"
+        android:layout_height="match_parent"/>
+
+    <ImageButton
+        android:id="@+id/public_menu_sure"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="1dp"
+        android:layout_weight="1"
+        android:background="@color/sub_menu_bgcolor"
+        android:onClick="clickView"
+        android:src="@drawable/bottom_menu_sure"/>
+
+</LinearLayout>

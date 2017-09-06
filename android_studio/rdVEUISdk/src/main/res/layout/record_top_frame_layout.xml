@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/waiting_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="@color/transparent"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="120sp"
+        android:visibility="gone">
+    </TextView>
+
+    <!-- 黑屏铺满 -->
+
+    <FrameLayout
+        android:id="@+id/flBlackScreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:clickable="true"
+        android:visibility="gone">
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- 防止部分分辨率机型中间合不拢 -->
+        <!-- 闸门底部 -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:background="@color/transparent"/>
+
+            <ImageView
+                android:id="@+id/ivOpenCamAnimBottom"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:contentDescription="@string/empty"
+                android:scaleType="fitXY"
+                android:src="@drawable/video_edit_start_anim_bottom"/>
+        </LinearLayout>
+        <!-- 闸门顶部 -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/ivOpenCamAnimTop"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.57"
+                android:contentDescription="@string/empty"
+                android:scaleType="fitXY"
+                android:src="@drawable/video_edit_start_anim_top"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.43"
+                android:background="@color/transparent"/>
+        </LinearLayout>
+    </FrameLayout>
+</FrameLayout>

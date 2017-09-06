@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+
+    <!--摄像头的父容器-->
+    <com.rd.lib.ui.PreviewFrameLayout
+        android:id="@+id/cameraPreviewLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <RelativeLayout
+            android:id="@+id/cameraParentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </com.rd.lib.ui.PreviewFrameLayout>
+
+
+    <!-- 全屏录制 -->
+
+    <include layout="@layout/camera_preview_screen_layout"/>
+
+
+    <!-- 正方形录制 -->
+
+    <include layout="@layout/camera_preview_square_layout"/>
+
+    <!-- 左右切换滤镜-->
+    <com.rd.lib.ui.PreviewFrameLayout
+        android:id="@+id/focus_frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="100dp">
+        <!-- 100dp =(正方形界面的titlebarheight   + 选音乐按钮.height())-->
+        <com.rd.veuisdk.ui.GlTouchView
+            android:id="@+id/glTouch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="100dp"
+            />
+    </com.rd.lib.ui.PreviewFrameLayout>
+
+    <include layout="@layout/camera_filter_more_layout"/>
+
+    <include layout="@layout/record_top_frame_layout"/>
+
+</FrameLayout>

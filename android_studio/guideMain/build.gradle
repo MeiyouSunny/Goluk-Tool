@@ -1,12 +1,13 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 23
     buildToolsVersion "25.0.2"
+    useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 14
+        minSdkVersion 18
+        targetSdkVersion 23
     }
 
     buildTypes {
@@ -28,11 +29,13 @@ android {
 }
 
 dependencies {
+    compile project(':rdVEUISdk')
+
     compile project(':emojicon')
     compile project(':commonGoluk')
  //   compile project(':vitamio')
     compile 'com.google.android.gms:play-services-maps:8.4.0'
-    compile 'com.android.support:support-v4:21.0.0'
+    compile 'com.android.support:support-v4:23.3.0'
     compile files('libs/mid-sdk-2.20.jar')
   //  compile files('libs/bolts-android-1.1.4.jar')
     compile files('libs/com.rd.car.player.jar')

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.rd.veuisdk.ui.InterceptRelative xmlns:android="http://schemas.android.com/apk/res/android"
+                                     android:id="@+id/rlFilterList"
+                                     android:layout_width="wrap_content"
+                                     android:layout_height="0dp"
+                                     android:layout_gravity="bottom"
+                                     android:gravity="bottom">
+
+    <LinearLayout
+        android:id="@+id/filter_parent_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/record_filter_parent_layout_height_vertical"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/edit_music_soundtrack_bg"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.rd.lib.ui.RotateImageView
+                    android:id="@+id/btncloseFilterList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_close_filterlist"
+                    android:clickable="true"/>
+
+                <View
+                    style="@style/baseline_style"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/edit_menu_bg"/>
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                >
+                <!--android:layout_height="@dimen/camera_filter_more_content_height"-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical">
+
+                    <com.rd.veuisdk.ui.HorizontalListViewCamera
+                        android:id="@+id/lvFilterList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:scrollbars="none">
+
+                        <include
+                            layout="@layout/camare_filters_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"/>
+                    </com.rd.veuisdk.ui.HorizontalListViewCamera>
+                </RelativeLayout>
+
+                <!-- 开启美颜可自动调节瘦脸、磨皮  横竖屏切换layout -->
+
+                <LinearLayout
+                    android:id="@+id/fuLayout_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="invisible"/>
+
+                <LinearLayout
+                    android:id="@+id/fuLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="invisible">
+                </LinearLayout>
+            </FrameLayout>
+
+            <com.rd.lib.ui.RotateRelativeLayout
+                android:id="@+id/camare_filter_layout"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/edit_menu_bg"
+                android:gravity="center_vertical">
+
+                <RadioGroup
+                    android:id="@+id/camare_filter_s"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/camare_filter"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:button="@null"
+                        android:checked="true"
+                        android:gravity="center"
+                        android:text="@string/camare_filter"
+                        android:textColor="@drawable/record_menu_txt_color"
+                        android:textSize="@dimen/text_size_15"/>
+
+                    <RadioButton
+                        android:id="@+id/camare_face_beauty"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="@string/camare_fu_beauty"
+                        android:textColor="@drawable/record_menu_txt_color"
+                        android:textSize="@dimen/text_size_15"/>
+
+                    <RadioButton
+                        android:id="@+id/camare_face_filter"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:text="@string/camare_face_filter"
+                        android:textColor="@drawable/record_menu_txt_color"
+                        android:textSize="@dimen/text_size_15"/>
+                </RadioGroup>
+            </com.rd.lib.ui.RotateRelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</com.rd.veuisdk.ui.InterceptRelative>

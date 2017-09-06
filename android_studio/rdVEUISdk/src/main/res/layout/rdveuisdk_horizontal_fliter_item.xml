@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:extCircle="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@null"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" >
+
+        <!-- <com.rd.xpkuisdk.ui.CircleImageView -->
+        <!-- android:id="@+id/ivFliter" -->
+        <!-- android:layout_width="wrap_content" -->
+        <!-- android:layout_height="wrap_content" -->
+        <!-- android:layout_centerInParent="true" -->
+        <!-- android:background="@drawable/camare_filter_0" /> -->
+
+        <com.rd.veuisdk.ui.ExtCircleImageView
+            android:id="@+id/ivFliter"
+            android:layout_width="@dimen/filter_list_item_size"
+            android:layout_height="@dimen/filter_list_item_size"
+            android:background="@null"
+            android:src="@drawable/camare_filter_0"
+            extCircle:circleBgColor="@color/transparent"
+            extCircle:circleBorderColor="@color/main_orange"
+            extCircle:circleChecked="false" />
+
+        <!-- <ImageView -->
+        <!-- android:id="@+id/ivFliterSelectedBg" -->
+        <!-- android:layout_width="wrap_content" -->
+        <!-- android:layout_height="wrap_content" -->
+        <!-- android:layout_centerInParent="true" -->
+        <!-- android:background="@drawable/fliter_item_selected_bg" /> -->
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tvFliter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="3dp"
+        android:text="@string/camare_filter_0"
+        android:textColor="@color/transparent_white"
+        android:textSize="@dimen/text_size_13" />
+
+</LinearLayout>

@@ -77,6 +77,7 @@ import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.livevideo.LiveActivity;
 import com.mobnote.golukmain.livevideo.LiveOperateVdcp;
 import com.mobnote.golukmain.livevideo.VdcpLiveBean;
+import com.mobnote.golukmain.player.SdkHandler;
 import com.mobnote.golukmain.thirdshare.GolukUmConfig;
 import com.mobnote.golukmain.userlogin.UserData;
 import com.mobnote.golukmain.videosuqare.VideoCategoryActivity;
@@ -110,9 +111,19 @@ import de.greenrobot.event.EventBus;
 import android.support.multidex.MultiDexApplication;
 
 import com.mobnote.golukmain.userlogin.UserResult;
+import com.rd.veuisdk.SdkEntry;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
 public class GolukApplication extends MultiDexApplication implements IPageNotifyFn, IPCManagerFn, ITalkFn, ILocationFn {
+    /**
+     * 已获取的AppKey
+     */
+    public static final String RD_APP_KEY = "41eac6f6b1c85813";
+    /**
+     * 已获取的AppSecret
+     */
+    public static final String RD_APP_SECRET = "a80a41b54d7b96cb25ca99ed91434cf0k97fslnArlsN+7dWdHzjboqg+yI1OD/ewFvfUEQjtnBh0P14BDBEKkChuhU061CzlOXWV6bdTHRm9bV7Qmdo0Nx7Hd/K+g0yx8bx6msffygdfJmbOrnemenq4gF2UfLNt7wAMcklEnB7lxPORqnpZ74NXLMwYgWy95IAZclPeiWcEBJUOFu8WVxr/JbmaX78zVzmkPZAfmu88/Yec9iB0+TLpm6uisWzjTiSZ5SkK8JmVW5DJ55U1pWi7T0qhcq2hz+Y9X8GB0oH/ZfxS/ftK2Bv8xPJ1RygSqjR3Saj88Jq/uRw2InUHcDbibIa4OcfpCUbfmtPMQ+WNEBcKSQx3A/dS3nGyD704zbXREIDJuevtXJGNMh63dktyZCtXAw9QcGd8id2Zg9gIrhpS5AC7op8GCUOXAeX7iV42I+H3FcmvCKnna0LmkhsI3NrVkPoFv6tjrNAagS98xhL0qj06jcEnAV1pvhg2bQTAzYdWXc=";
+
     /**
      * JIN接口类
      */
@@ -353,10 +364,18 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             //初始化诸葛io
 //            ZhugeSDK.getInstance().openDebug();
             ZhugeSDK.getInstance().init(getApplicationContext());
-
+            initializeSDK();
         }
 
         // TODO 此处不要做初始化相关的工作
+    }
+
+    /**
+     * 锐动SDK文档
+     */
+    private void initializeSDK() {
+        SdkEntry.enableDebugLog(true);
+        SdkEntry.initialize(this,"",RD_APP_KEY,RD_APP_SECRET,new SdkHandler().getCallBack());
     }
 
 
@@ -453,6 +472,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
     }
 
     public void appFree() {
+        SdkEntry.onExitApp(this);
         mIpcIp = null;
         mContext = null;
         mPageSource = "";

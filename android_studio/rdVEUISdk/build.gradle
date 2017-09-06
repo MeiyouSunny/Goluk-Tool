@@ -1,0 +1,61 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.jakewharton.butterknife'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "25.0.3"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            consumerProguardFiles 'proguard.cfg'
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+            assets.srcDirs = ['src/main/assets']
+        }
+    }
+
+    lintOptions {
+        disable "ResourceType"
+    }
+}
+
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.rd:base:0.2.8'
+    compile 'com.rd:recorderbase:0.3.4'
+    compile project(':rdVECore')
+
+    compile ('com.facebook.fresco:fresco:1.3.0')
+            {exclude group: 'com.parse.bolts',
+                        module: 'bolts-tasks'
+                exclude group: 'com.parse.bolts',
+                        module: 'bolts-applinks';
+            }
+    compile ('com.facebook.fresco:webpsupport:1.3.0'){
+        exclude group: 'com.parse.bolts',
+                module: 'bolts-tasks'
+            exclude group: 'com.parse.bolts',
+                    module: 'bolts-applinks';
+    }
+
+    compile 'com.squareup.okio:okio:1.13.0'
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
+
+    compile('com.jakewharton:butterknife:8.5.1') {
+        exclude module: 'support-compat'
+    }
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    compile 'com.android.support:appcompat-v7:23.3.0'
+}

@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.rd.lib.ui.RotateRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                    android:id="@+id/rrlIndicatorBar"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1">
+
+    <RelativeLayout
+        android:id="@+id/living_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/record_titlebar_height"
+        android:layout_alignParentTop="true"
+        android:background="@color/camera_list_back_color">
+
+        <RelativeLayout
+            android:id="@+id/lrliving_bar0"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <com.rd.lib.ui.RotateImageView
+                android:id="@+id/btnCancelRecord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="12dp"
+                android:background="@null"
+                android:padding="8dp"
+                android:src="@drawable/edit_back_button"
+                android:visibility="visible"/>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/btnMenuBlackScreen"
+                android:orientation="horizontal">
+
+                <com.rd.lib.ui.RotateImageView
+                    android:id="@+id/btnShootingRatio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
+                    android:clickable="true"
+                    android:src="@drawable/btn_shooting_ratio"
+                    android:visibility="visible"/>
+
+                <com.rd.lib.ui.RotateImageView
+                    android:id="@+id/btnWating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
+                    android:clickable="true"
+                    android:src="@drawable/living_waiting"
+                    android:visibility="visible"/>
+            </LinearLayout>
+
+            <com.rd.lib.ui.RotateImageView
+                android:id="@+id/btnMenuBlackScreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="18dp"
+                android:background="@null"
+                android:src="@drawable/main_camera_blackscreen_btn_back"
+                android:visibility="visible"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/llliving_bar90"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <com.rd.lib.ui.RotateImageView
+                android:id="@+id/btnCancelRecord90"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="30dp"
+                android:background="@null"
+                android:clickable="true"
+                android:padding="8dp"
+                android:src="@drawable/edit_back_button"
+                android:visibility="visible"/>
+
+            <com.rd.lib.ui.RotateImageView
+                android:id="@+id/btnShootingRatio90"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:clickable="true"
+                android:src="@drawable/btn_shooting_ratio"
+                android:visibility="visible"/>
+
+            <com.rd.lib.ui.RotateImageView
+                android:id="@+id/btnWating90"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:clickable="true"
+                android:src="@drawable/living_waiting"
+                android:visibility="visible"/>
+
+            <com.rd.lib.ui.RotateImageView
+                android:id="@+id/btnMenuBlackScreen90"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@null"
+                android:src="@drawable/main_camera_blackscreen_btn_back"
+                android:visibility="visible"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llliving_bar270"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <com.rd.lib.ui.RotateImageView
+                android:id="@+id/btnMenuBlackScreen270"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="25dp"
+                android:background="@null"
+                android:src="@drawable/main_camera_blackscreen_btn_back"
+                android:visibility="visible"/>
+
+            <com.rd.lib.ui.RotateImageView
+                android:id="@+id/btnWating270"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="25dp"
+                android:clickable="true"
+                android:src="@drawable/living_waiting"
+                android:visibility="visible"/>
+
+            <com.rd.lib.ui.RotateImageView
+                android:id="@+id/btnShootingRatio270"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="25dp"
+                android:clickable="true"
+                android:src="@drawable/btn_shooting_ratio"
+                android:visibility="visible"/>
+
+            <com.rd.lib.ui.RotateImageView
+                android:id="@+id/btnCancelRecord270"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="35dp"
+                android:background="@null"
+                android:clickable="true"
+                android:padding="8dp"
+                android:src="@drawable/edit_back_button"
+                android:visibility="visible"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- 进度条图片 -->
+
+    <RelativeLayout
+        android:id="@+id/video_new_relative"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/message_text_hint">
+
+        <ImageView
+            android:id="@+id/video_new_img_time_atlast"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="#fff87a00"/>
+
+        <LinearLayout
+            android:id="@+id/video_new_seekbar"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/record_progress_flash_screen"
+            android:layout_width="5dp"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/video_new_seekbar"
+            android:background="@android:color/white"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+    <!-- 添加云音乐布局 -->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/living_bar"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="12dp">
+
+        <com.rd.lib.ui.RotateRelativeLayout
+            android:id="@+id/rrlAddMusic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
+
+                <com.rd.lib.ui.RotateImageView
+                    android:id="@+id/btnAddMusic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@null"
+                    android:paddingRight="10dp"
+                    android:src="@drawable/edit_music_icon"
+                    android:visibility="visible"/>
+
+                <LinearLayout
+                    android:id="@+id/llAddMusic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:background="@drawable/round_editstyle"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center"
+                        android:scrollHorizontally="false"
+                        android:src="@drawable/edit_music_icon"/>
+
+
+                    <TextView
+                        android:id="@+id/edit_text_music_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="0dp"
+                        android:gravity="center"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="4dp"
+                        android:paddingTop="5dp"
+                        android:scrollHorizontally="false"
+                        android:text="添加音乐"
+                        android:textColor="#b3ffffff"
+                        android:textSize="@dimen/text_size_12"/>
+
+
+                    <ImageView
+                        android:id="@+id/btn_edit_text_music_del"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:paddingLeft="4dp"
+                        android:scaleType="centerInside"
+                        android:scrollHorizontally="false"
+                        android:src="@drawable/edit_text_music_del"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </com.rd.lib.ui.RotateRelativeLayout>
+    </RelativeLayout>
+
+
+    <!-- 时间布局 -->
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/living_bar">
+
+        <com.rd.lib.ui.RotateRelativeLayout
+            android:id="@+id/rrltvTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvTimer"
+                style="@style/TimerTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/record_timer_back"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:textSize="@dimen/text_size_18"
+                android:visibility="gone"/>
+        </com.rd.lib.ui.RotateRelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/living_cameramore_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/living_bar"
+        android:visibility="invisible">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="vertical">
+
+            <com.rd.lib.ui.RotateImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="right"
+                android:layout_marginRight="56dp"
+                android:src="@drawable/iving_cameramore_bar_bg1"
+                android:visibility="visible"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/corners_bg"
+                android:orientation="horizontal">
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</com.rd.lib.ui.RotateRelativeLayout>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/public_background_color"
+              android:orientation="vertical">
+
+    <include layout="@layout/rdveuisdk_public_title_bar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <CheckBox
+            android:id="@+id/cbRandomTransition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:button="@drawable/transition_apply_to_all"
+            android:padding="10dp"
+            android:text="@string/transition_default"
+            android:textColor="@color/transparent_white"
+            android:textSize="@dimen/text_size_14"/>
+
+        <GridView
+            android:id="@+id/gridview_transition"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:cacheColorHint="@color/transparent"
+            android:listSelector="@color/transparent"
+            android:numColumns="4"
+            android:scrollbars="none">
+
+        </GridView>
+
+        <CheckBox
+            android:id="@+id/cbTransitionApplyToAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:button="@drawable/transition_apply_to_all"
+            android:minHeight="60dp"
+            android:padding="10dp"
+            android:text="@string/transition_apply_to_all"
+            android:textColor="@color/transparent_white"
+            android:textSize="@dimen/text_size_14"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:minHeight="40dp"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/tvTransitionDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_vertical"
+                android:text="1.00秒"
+                android:textColor="@color/transparent_white"
+                android:textSize="@dimen/text_size_14"/>
+
+            <SeekBar
+                android:id="@+id/sbTransitionTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:max="170"
+                android:maxHeight="3dp"
+                android:minHeight="3dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="20dp"
+                android:progressDrawable="@drawable/transition_duration_progress"
+                android:thumb="@drawable/transition_duration_thumb"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

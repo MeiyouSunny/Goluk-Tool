@@ -171,11 +171,21 @@ public class GolukNotification {
      * @author jyf
      */
     private Notification createNotification(Context startActivity, String json, String title, String content) {
-        Notification noti = new Notification();
-        setNoticationParam(noti);
+//        Notification noti = new Notification();
+//        setNoticationParam(noti);
         PendingIntent contentIntent = getPendingIntent(startActivity, json);
-        noti.setLatestEventInfo(startActivity, title, content, contentIntent);
-        return noti;
+        //noti.setLatestEventInfo(startActivity, title, content, contentIntent);
+
+        Notification.Builder builder = new Notification.Builder(startActivity);
+        builder.setContentTitle(title);//设置标题
+        builder.setContentText(content);//设置内容
+        builder.setContentIntent(contentIntent);//执行intent
+        builder.setSmallIcon(R.drawable.ic_launcher);
+        Notification notification = builder.getNotification();//将builder对象转换为普通的notification
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        NotificationManager manager = (NotificationManager) startActivity.getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.notify(1,notification);
+        return notification;
     }
 
     /**

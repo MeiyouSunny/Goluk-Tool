@@ -1,0 +1,89 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:attrdata="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/public_menu_back_color"
+              android:orientation="vertical">
+
+    <include layout="@layout/rdveuisdk_public_title_bar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <com.rd.lib.ui.PreviewFrameLayout
+            android:id="@+id/rlPreviewLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black">
+
+            <com.rd.lib.ui.PreviewFrameLayout
+                android:id="@+id/rlPreview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:onClick="clickView">
+
+                <com.rd.vecore.VirtualVideoView
+                    android:id="@+id/epvPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <ImageView
+                    android:id="@+id/ivPlayerState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@string/empty"
+                    android:scaleType="center"
+                    android:src="@drawable/btn_play"/>
+            </com.rd.lib.ui.PreviewFrameLayout>
+
+            <com.rd.veuisdk.ui.RdSeekBar
+                android:id="@+id/pbPreview"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_alignParentBottom="true"
+                android:indeterminateOnly="false"
+                android:progressDrawable="@drawable/video_editor_progress"
+                android:thumb="@null"/>
+
+            <TextView
+                android:id="@+id/tvEditorDuration"
+                style="@style/styleEditorDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/pbPreview"
+                android:layout_alignParentRight="true"/>
+        </com.rd.lib.ui.PreviewFrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.rd.veuisdk.ui.DragItemScrollView
+            android:id="@+id/dragViewSpeed"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/speed_height"
+            android:layout_gravity="center"
+            attrdata:sArrays="@array/speed_array"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        >
+
+        <include layout="@layout/public_menu"/>
+    </LinearLayout>
+
+</LinearLayout>

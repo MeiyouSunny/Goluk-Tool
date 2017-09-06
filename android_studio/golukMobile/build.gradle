@@ -1,19 +1,21 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 23
     buildToolsVersion "25.0.2"
     dexOptions {
         jumboMode = true
-        incremental true
         javaMaxHeapSize "4g"
     }
 
     defaultConfig {
         applicationId "cn.com.mobnote.golukmobile"
-        minSdkVersion 14
-        targetSdkVersion 14
+        minSdkVersion 18
+        targetSdkVersion 23
         multiDexEnabled true
+        ndk{
+            abiFilters 'armeabi'
+        }
     }
     productFlavors {
         internal {
