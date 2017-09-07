@@ -27,28 +27,28 @@ public class ConfigData implements Parcelable {
     public boolean enableVideoSpeed = true;
     public boolean enableSplit = true;
     public boolean enableCopy = true;
-    public boolean enableProportion = true;
-    public boolean enableSort = true;
-    public boolean enableText = true;
-    public boolean enableReverse = true;
+    public boolean enableProportion = false;
+    public boolean enableSort = false;
+    public boolean enableText = false;
+    public boolean enableReverse = false;
 
     public boolean enableSoundTrack = true;
-    public boolean enableDubbing = true;
+    public boolean enableDubbing = false;
     public boolean enableFilter = true;
-    public boolean enableTitling = true;
-    public boolean enableSpecialEffects = true;
+    public boolean enableTitling = false;
+    public boolean enableSpecialEffects = false;
     public boolean enableClipEditing = true;
 
     public int videoProportionType = UIConfiguration.PROPORTION_AUTO;
-    public int albumSupportFormatType = UIConfiguration.ALBUM_SUPPORT_DEFAULT;
+    public int albumSupportFormatType = UIConfiguration.ALBUM_SUPPORT_VIDEO_ONLY;
     public int albumMediaCountLimit = 0;
 
     public int voiceLayoutType = UIConfiguration.VOICE_LAYOUT_1;
     public String musicUrl = WEB_MUSIC_URL;
     public String cloudMusicUrl = CLOUDMUSIC_URL;
-    public int filterLayoutType = UIConfiguration.FILTER_LAYOUT_1;
+    public int filterLayoutType = UIConfiguration.FILTER_LAYOUT_2;
 
-    public boolean enableAlbumCamera = true;
+    public boolean enableAlbumCamera = false;
 
     // 导出配置参数
     public boolean enableWatermark = true;

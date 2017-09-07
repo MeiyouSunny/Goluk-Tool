@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -53,6 +54,7 @@ import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import com.mobnote.eventbus.EventDownloadIpcVid;
 import com.mobnote.eventbus.EventShareCompleted;
 import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.BuildConfig;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.util.GFileUtils;
@@ -1524,6 +1526,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         if (configData == null) {
             configData = new ConfigData();
         }
+//        Uri fileUri = Uri.parse("android.resource://"+  BuildConfig.APPLICATION_ID +"/" + R.drawable.img_ae_trailer);
+//        File tempFile = new File(fileUri.getPath());
+//        configData.videoTrailerPath = tempFile.getAbsolutePath();
         return configData;
     }
 
@@ -1593,9 +1598,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                         configData.enableReverse)
 
                 // 设置自定义的网络音乐
-                .setMusicUrl(ConfigData.WEB_MUSIC_URL)
+                .setMusicUrl("")
                 // 设置云音乐
-                .setCloudMusicUrl(ConfigData.CLOUDMUSIC_URL)
+                .setCloudMusicUrl("")
                 // 字幕、特效在mv的上面
                 .enableTitlingAndSpecialEffectOuter(configData.enableTitlingAndSpecialEffectOuter)
                 .get();
@@ -1604,7 +1609,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         ExportConfiguration exportConfig = new ExportConfiguration.Builder()
                 // 设置保存路径，传null或不设置
                 // 将保存至默认路径(即调用SdkEntry.initialize初始时自定义路径）
-                .setSavePath(null)
+                //.setSavePath(null)
                 // 设置片尾图片路径，传null或者不设置 将没有片尾
                 .setTrailerPath(configData.videoTrailerPath)
                 // 设置片尾时长 单位s 默认2s

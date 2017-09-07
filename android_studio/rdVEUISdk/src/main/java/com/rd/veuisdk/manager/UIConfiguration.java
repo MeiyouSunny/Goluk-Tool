@@ -69,7 +69,7 @@ public class UIConfiguration implements Parcelable {
 
     public int videoProportion = PROPORTION_AUTO;
     public int mediaCountLimit = 0;
-    public int albumSupportFormatType = ALBUM_SUPPORT_DEFAULT;
+    public int albumSupportFormatType = ALBUM_SUPPORT_VIDEO_ONLY;
     public int voiceLayoutTpye = VOICE_LAYOUT_1;
     public int filterLayoutTpye = FILTER_LAYOUT_1;
     public boolean enableAlbumCamera = true;
