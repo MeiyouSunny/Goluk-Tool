@@ -60,9 +60,7 @@ public class LocalMusicFragment extends BaseV4Fragment {
         mLocalMusic = getString(R.string.local_music);
         SDMusicData.getInstance().initilize(getActivity());
         mPageName = getString(R.string.mymusic);
-        mAllKxMusicItems = new MusicItems();
         Context context = getActivity();
-        mAllKxMusicItems.loadAssetsMusic(context);
         mAllLocalMusicItems = new MusicItems(context);
         mReceiver = new MySdReceiver();
         getActivity().registerReceiver(mReceiver, new IntentFilter(ACTION_SHOW));
@@ -198,10 +196,6 @@ public class LocalMusicFragment extends BaseV4Fragment {
 
     private PinnedSectionListView mListView;
     private MyMusicAdapter mMusicAdapter;
-    /**
-     * 快秀音乐
-     */
-    private MusicItems mAllKxMusicItems;
     /**
      * 本地音乐
      */

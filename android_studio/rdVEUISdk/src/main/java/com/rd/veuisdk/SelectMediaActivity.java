@@ -49,9 +49,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * 媒体选择页
  *
@@ -80,13 +77,9 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector 
 
     private boolean mAddPhoto;
 
-    @BindView(R2.id.rbVideo)
     RadioButton mRbVideo;
-    @BindView(R2.id.rbPhoto)
     RadioButton mRbPhoto;
-    @BindView(R2.id.mediaViewPager)
     ExtViewPagerNoScroll mVpMedia;
-    @BindView(R2.id.import_info_text)
     TextView mTvImportInfo;
 
     public final static String ALBUM_FORMAT_TYPE = "album_format_type";
@@ -110,7 +103,6 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector 
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_media_layout);
-        ButterKnife.bind(this);
         mStrActivityPageName = getString(R.string.select_medias);
         mAddPhoto = getIntent().getBooleanExtra(
                 EditPreviewActivity.APPEND_IMAGE, false);
@@ -403,6 +395,11 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector 
     }
 
     private void initView() {
+        mRbVideo = (RadioButton) findViewById(R.id.rbVideo);
+        mRbPhoto = (RadioButton) findViewById(R.id.rbPhoto);
+        mVpMedia = (ExtViewPagerNoScroll) findViewById(R.id.mediaViewPager);
+        mTvImportInfo = (TextView) findViewById(R.id.import_info_text);
+
         mVpMedia.setOnPageChangeListener(new OnPageChangeListener() {
 
             @Override

@@ -75,6 +75,7 @@ import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
+import com.mobnote.util.SDKUtils;
 import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.ZhugeUtils;
 import com.rd.veuisdk.SdkEntry;
@@ -1527,8 +1528,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             configData = new ConfigData();
         }
 //        Uri fileUri = Uri.parse("android.resource://"+  BuildConfig.APPLICATION_ID +"/" + R.drawable.img_ae_trailer);
-//        File tempFile = new File(fileUri.getPath());
-//        configData.videoTrailerPath = tempFile.getAbsolutePath();
+        configData.videoTrailerPath = SDKUtils.createVideoTrailerImage(this, "", 480, 50, 50);
         return configData;
     }
 

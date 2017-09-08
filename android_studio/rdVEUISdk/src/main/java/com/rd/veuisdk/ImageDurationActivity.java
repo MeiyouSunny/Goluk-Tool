@@ -29,9 +29,6 @@ import com.rd.veuisdk.utils.SysAlertDialog;
 import com.rd.veuisdk.utils.Utils;
 import com.rd.veuisdk.utils.ViewUtils;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * 图片时长
  *
@@ -42,19 +39,13 @@ public class ImageDurationActivity extends BaseActivity {
     private Scene mScene;
     int mTimeIndex = 0;
     private int mCurTime;
-    @BindView(R2.id.btnLeft)
+
     ExtButton mBtnLeft;
-    @BindView(R2.id.tvTitle)
     TextView mTvTitle;
-    @BindView(R2.id.vvMediaPlayer)
     VirtualVideoView mMediaPlayer;
-    @BindView(R2.id.ivPlayerState)
     ImageView mIvPlayState;
-    @BindView(R2.id.sbEditor)
     SeekBar mSbEditor;
-    @BindView(R2.id.tvEditorDuration)
     TextView mTvCurrentDuration;
-    @BindView(R2.id.drag_image_duration)
     DragItemScrollView mDragDuration;
 
 
@@ -63,7 +54,6 @@ public class ImageDurationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mStrActivityPageName = getString(R.string.photo_duration);
         setContentView(R.layout.activity_image_duration);
-        ButterKnife.bind(this);
         mScene = getIntent().getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
         if (null == mScene) {
             finish();
@@ -153,6 +143,14 @@ public class ImageDurationActivity extends BaseActivity {
     }
 
     private void initViews() {
+        mBtnLeft = (ExtButton) findViewById(R.id.btnLeft);
+        mTvTitle = (TextView) findViewById(R.id.tvTitle);
+        mMediaPlayer = (VirtualVideoView) findViewById(R.id.vvMediaPlayer);
+        mIvPlayState = (ImageView) findViewById(R.id.ivPlayerState);
+        mSbEditor = (SeekBar) findViewById(R.id.sbEditor);
+        mTvCurrentDuration = (TextView) findViewById(R.id.tvEditorDuration);
+        mDragDuration = (DragItemScrollView) findViewById(R.id.drag_image_duration);
+
         PreviewFrameLayout layout = (PreviewFrameLayout) findViewById(R.id.rlImageLayout);
         layout.setAspectRatio(AppConfiguration.ASPECTRATIO);
         mBtnLeft.setVisibility(View.INVISIBLE);

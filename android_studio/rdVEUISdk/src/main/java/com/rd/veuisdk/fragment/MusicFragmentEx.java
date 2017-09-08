@@ -100,12 +100,14 @@ public class MusicFragmentEx extends BaseFragment {
      * 监听回调
      */
     private IMusicListener mMusicListener;
+    private boolean enableLocalMusic = true;
 
     public void init(float trailerDuration, String _musicUrl,
-                     int _voiceLayout, IMusicListener ilistener, String url) {
+                     int _voiceLayout, IMusicListener ilistener, String url, boolean enable) {
         mTrailerDuration = trailerDuration;
         mMusicListener = ilistener;
         voiceLayout = _voiceLayout;
+        this.enableLocalMusic = enable;
         mMusicUrl = TextUtils.isEmpty(_musicUrl) ? "" : _musicUrl.trim();
         mCloudMusicUrl = url;
     }
@@ -694,9 +696,12 @@ public class MusicFragmentEx extends BaseFragment {
                         mListView.addListItem(nItemId, R.drawable.music_none,
                                 getString(R.string.music_none));
                         nItemId++;
-                        mListView.addListItem(nItemId, R.drawable.music_local,
-                                getString(R.string.local));
+                        if (enableLocalMusic) {
+                            mListView.addListItem(nItemId, R.drawable.music_local,
+                                    getString(R.string.local));
+                        }
                         nItemId++;
+
                         if (!TextUtils.isEmpty(mCloudMusicUrl)) {
                             mListView.addListItem(nItemId, R.drawable.music_yun,
                                     getString(R.string.music_yun));

@@ -97,7 +97,6 @@ public class DraggableGridView extends ViewGroup {
         void onLong(int index, View item);
 
         void onCancel();
-
     }
 
     private onLonglistener mOnLongListener;

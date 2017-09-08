@@ -128,18 +128,18 @@ public class VideoEditActivity extends BaseActivity implements
      * 请求权限code:读取外置存储
      */
     private final int REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSIONS = 1;
-    /*
-     * MVURL
-     */
+    //    /*
+//     * MVURL
+//     */
     public static final String WEB_MV_URL = "http://dianbook.17rd.com/api/shortvideo/getmvprop2";
-    /*
-     * MUSICURL
-     */
-    public static final String WEB_MUSIC_URL = "http://dianbook.17rd.com/api/shortvideo/getbgmusic";
-    /*
-     * 云音乐URL
-     */
-    public static final String CLOUDMUSIC_URL = "http://dianbook.17rd.com/api/shortvideo/getcloudmusic";
+    //    /*
+//     * MUSICURL
+//     */
+//    public static final String WEB_MUSIC_URL = "http://dianbook.17rd.com/api/shortvideo/getbgmusic";
+//    /*
+//     * 云音乐URL
+//     */
+//    public static final String CLOUDMUSIC_URL = "http://dianbook.17rd.com/api/shortvideo/getcloudmusic";
     /*
       * 预览播放器的容器 (支持可变长宽比例)
       */
@@ -1685,23 +1685,23 @@ public class VideoEditActivity extends BaseActivity implements
         if (null == mMusicFragmentEx) {
             mMusicFragmentEx = new MusicFragmentEx();
 
-            if (TextUtils.isEmpty(mUIConfig.musicUrl)) {
-                if (TextUtils.isEmpty(mUIConfig.cloudMusicUrl)) {
-                    mMusicFragmentEx.init(mExportConfig.trailerDuration, WEB_MUSIC_URL, mUIConfig.voiceLayoutTpye,
-                            mMusicListener, CLOUDMUSIC_URL);
-                } else {
-                    mMusicFragmentEx.init(mExportConfig.trailerDuration, WEB_MUSIC_URL, mUIConfig.voiceLayoutTpye,
-                            mMusicListener, mUIConfig.cloudMusicUrl);
-                }
-            } else {
-                if (TextUtils.isEmpty(mUIConfig.cloudMusicUrl)) {
-                    mMusicFragmentEx.init(mExportConfig.trailerDuration, mUIConfig.musicUrl, mUIConfig.voiceLayoutTpye,
-                            mMusicListener, CLOUDMUSIC_URL);
-                } else {
-                    mMusicFragmentEx.init(mExportConfig.trailerDuration, mUIConfig.musicUrl, mUIConfig.voiceLayoutTpye,
-                            mMusicListener, mUIConfig.cloudMusicUrl);
-                }
-            }
+//            if (TextUtils.isEmpty(mUIConfig.musicUrl)) {
+//                if (TextUtils.isEmpty(mUIConfig.cloudMusicUrl)) {
+//                    mMusicFragmentEx.init(mExportConfig.trailerDuration, WEB_MUSIC_URL, mUIConfig.voiceLayoutTpye,
+//                            mMusicListener, CLOUDMUSIC_URL, mUIConfig.enableLocalMusic);
+//                } else {
+//                    mMusicFragmentEx.init(mExportConfig.trailerDuration, WEB_MUSIC_URL, mUIConfig.voiceLayoutTpye,
+//                            mMusicListener, mUIConfig.cloudMusicUrl, mUIConfig.enableLocalMusic);
+//                }
+//            } else {
+//                if (TextUtils.isEmpty(mUIConfig.cloudMusicUrl)) {
+//                    mMusicFragmentEx.init(mExportConfig.trailerDuration, mUIConfig.musicUrl, mUIConfig.voiceLayoutTpye,
+//                            mMusicListener, CLOUDMUSIC_URL, mUIConfig.enableLocalMusic);
+//                } else {
+            mMusicFragmentEx.init(mExportConfig.trailerDuration, mUIConfig.musicUrl, mUIConfig.voiceLayoutTpye,
+                    mMusicListener, mUIConfig.cloudMusicUrl, mUIConfig.enableLocalMusic);
+//                }
+//            }
         }
         changeToFragment(mMusicFragmentEx, true);
 
@@ -2401,7 +2401,7 @@ public class VideoEditActivity extends BaseActivity implements
         if (mExportDuration != 0) {
             mVirtualVideoSave.setExportDuration(mExportDuration);
         }
-        mVirtualVideoSave.save(this, mStrSaveMp4FileName, vc, mExportListener);
+        mVirtualVideoSave.export(this, mStrSaveMp4FileName, vc, mExportListener);
     }
 
     private String saveBitmap(Bitmap bmp, Bitmap trailerBmp) {
@@ -2450,15 +2450,15 @@ public class VideoEditActivity extends BaseActivity implements
     }
 
     private ExportListener mExportListener = new ExportListener() {
-        private HorizontalProgressDialog mepdExport = null;
+        private HorizontalProgressDialog epdExport = null;
         private Dialog dialog = null;
         private boolean cancelExport = false;
 
         @Override
         public boolean onExporting(int nProgress, int nMax) {
-            if (null != mepdExport) {
-                mepdExport.setProgress(nProgress);
-                mepdExport.setMax(nMax);
+            if (null != epdExport) {
+                epdExport.setProgress(nProgress);
+                epdExport.setMax(nMax);
             }
             if (cancelExport) {
                 return false;
@@ -2469,22 +2469,20 @@ public class VideoEditActivity extends BaseActivity implements
         @Override
         public void onExportStart() {
             cancelExport = false;
-            if (mepdExport == null) {
-                mepdExport = SysAlertDialog.showHoriProgressDialog(
+            if (epdExport == null) {
+                epdExport = SysAlertDialog.showHoriProgressDialog(
                         VideoEditActivity.this, getString(R.string.exporting),
                         false, true, new DialogInterface.OnCancelListener() {
 
                             @Override
                             public void onCancel(DialogInterface dialog) {
-                                mVirtualVideoSave.cancelSave();
-                                mepdExport = null;
-                                mHandler.obtainMessage(CANCEL_EXPORT)
-                                        .sendToTarget();
+                                cancelExport = true;
+                                mHandler.obtainMessage(CANCEL_EXPORT).sendToTarget();
 
                             }
                         });
-                mepdExport.setCanceledOnTouchOutside(false);
-                mepdExport.setOnCancelClickListener(new onCancelClickListener() {
+                epdExport.setCanceledOnTouchOutside(false);
+                epdExport.setOnCancelClickListener(new onCancelClickListener() {
 
                     @Override
                     public void onCancel() {
@@ -2506,9 +2504,9 @@ public class VideoEditActivity extends BaseActivity implements
                                     @Override
                                     public void onClick(DialogInterface dialog,
                                                         int which) {
-                                        cancelExport = true;
-                                        mepdExport.cancel();
-                                        mepdExport.dismiss();
+                                        if (epdExport != null) {
+                                            epdExport.cancel();
+                                        }
                                     }
                                 });
                     }
@@ -2525,7 +2523,6 @@ public class VideoEditActivity extends BaseActivity implements
             // 启用硬件编解码检查结束
             AppConfiguration.setHWCoderChecking(false);
             if (null != mVirtualVideoSave) {
-                mVirtualVideoSave.release();
                 mVirtualVideoSave = null;
             }
             mGotoBack = false;
@@ -2572,13 +2569,6 @@ public class VideoEditActivity extends BaseActivity implements
                         FileLog.writeLog(strMessage + ",result:" + nResult);
                         Log.e(TAG, strMessage + ",result:" + nResult);
                     }
-                } else {
-                    if (mepdExport != null) {
-                        if (mCancelLoading != null) {
-                            mCancelLoading.dismiss();
-                            mCancelLoading = null;
-                        }
-                    }
                 }
                 reload(false);
                 if (!mIsPausing) {
@@ -2590,9 +2580,9 @@ public class VideoEditActivity extends BaseActivity implements
                 dialog.cancel();
                 dialog = null;
             }
-            if (mepdExport != null) {
-                mepdExport.dismiss();
-                mepdExport = null;
+            if (epdExport != null) {
+                epdExport.dismiss();
+                epdExport = null;
             }
 
         }
@@ -2633,13 +2623,13 @@ public class VideoEditActivity extends BaseActivity implements
                                     }
                                 }
                             });
-                    mCancelLoading.show();
                     mHandler.postDelayed(new Runnable() {
 
                         @Override
                         public void run() {
-                            if (null != mCancelLoading)
+                            if (null != mCancelLoading) {
                                 mCancelLoading.setCancelable(true);
+                            }
                         }
                     }, 5000);
                 } else if (msg.what == RESULT_STYLE) {

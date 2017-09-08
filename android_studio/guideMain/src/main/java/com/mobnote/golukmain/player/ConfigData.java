@@ -8,12 +8,13 @@ import com.rd.veuisdk.manager.CameraConfiguration;
 import com.rd.veuisdk.manager.TrimConfiguration;
 import com.rd.veuisdk.manager.UIConfiguration;
 
+
 /**
  * 演示配置数据
  */
 public class ConfigData implements Parcelable {
     public static final String WEB_MV_URL = "http://dianbook.17rd.com/api/shortvideo/getmvprop2";
-    public static final String WEB_MUSIC_URL = "http://dianbook.17rd.com/api/shortvideo/getbgmusic";
+    public static final String MUSIC_URL = "http://dianbook.17rd.com/api/shortvideo/getbgmusic";
     // 云音乐
     public static final String CLOUDMUSIC_URL = "http://dianbook.17rd.com/api/shortvideo/getcloudmusic";
     public String videoTrailerPath = null; // 片尾图片路径
@@ -27,28 +28,28 @@ public class ConfigData implements Parcelable {
     public boolean enableVideoSpeed = true;
     public boolean enableSplit = true;
     public boolean enableCopy = true;
-    public boolean enableProportion = false;
-    public boolean enableSort = false;
-    public boolean enableText = false;
-    public boolean enableReverse = false;
+    public boolean enableProportion = true;
+    public boolean enableSort = true;
+    public boolean enableText = true;
+    public boolean enableReverse = true;
 
     public boolean enableSoundTrack = true;
-    public boolean enableDubbing = false;
+    public boolean enableDubbing = true;
     public boolean enableFilter = true;
-    public boolean enableTitling = false;
-    public boolean enableSpecialEffects = false;
+    public boolean enableTitling = true;
+    public boolean enableSpecialEffects = true;
     public boolean enableClipEditing = true;
 
     public int videoProportionType = UIConfiguration.PROPORTION_AUTO;
-    public int albumSupportFormatType = UIConfiguration.ALBUM_SUPPORT_VIDEO_ONLY;
+    public int albumSupportFormatType = UIConfiguration.ALBUM_SUPPORT_DEFAULT;
     public int albumMediaCountLimit = 0;
 
     public int voiceLayoutType = UIConfiguration.VOICE_LAYOUT_1;
-    public String musicUrl = WEB_MUSIC_URL;
+    public String musicUrl = MUSIC_URL;
     public String cloudMusicUrl = CLOUDMUSIC_URL;
-    public int filterLayoutType = UIConfiguration.FILTER_LAYOUT_2;
+    public int filterLayoutType = UIConfiguration.FILTER_LAYOUT_1;
 
-    public boolean enableAlbumCamera = false;
+    public boolean enableAlbumCamera = true;
 
     // 导出配置参数
     public boolean enableWatermark = true;
@@ -99,7 +100,8 @@ public class ConfigData implements Parcelable {
     // 截取行为
     public int mTrimReturnMode = TrimConfiguration.TRIM_RETURN_MEDIA;
 
-
+    //是否打开本地音乐
+    public boolean enableLocalMusic = false;
     /**
      * 为true时，字幕、特效在mv的外面
      */
@@ -229,6 +231,7 @@ public class ConfigData implements Parcelable {
         dest.writeInt(this.mRecordOrientation);
         dest.writeByte(this.enableBeauty ? (byte) 1 : (byte) 0);
         dest.writeByte(this.enablePlayMusic ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.enableLocalMusic ? (byte) 1 : (byte) 0);
     }
 
     protected ConfigData readFromParcel(Parcel in) {
@@ -301,10 +304,11 @@ public class ConfigData implements Parcelable {
         this.mRecordOrientation = in.readInt();
         this.enableBeauty = in.readByte() == 1;
         this.enablePlayMusic = in.readByte() == 1;
+        this.enableLocalMusic = in.readByte() == 1;
         return this;
     }
 
-    public static final Creator<ConfigData> CREATOR = new Creator<ConfigData>() {
+    public static final Parcelable.Creator<ConfigData> CREATOR = new Parcelable.Creator<ConfigData>() {
         @Override
         public ConfigData createFromParcel(Parcel source) {
             return new ConfigData().readFromParcel(source);
@@ -316,3 +320,4 @@ public class ConfigData implements Parcelable {
         }
     };
 }
+

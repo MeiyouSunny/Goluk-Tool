@@ -48,21 +48,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class ExtPhotoActivity extends BaseActivity {
-    @BindView(R2.id.etEditPic)
     ExtEditPic mEtInput;
-    @BindView(R2.id.rgMainType)
     RadioGroup mRgMainType;
-    @BindView(R2.id.rgTextSide)
     RadioGroup mRgTextSide;
-    @BindView(R2.id.txColorPicker)
     ExtColorPicker mColorPicker;
-    @BindView(R2.id.bgColorPicker)
     ExtColorPicker mBgPicker;
-    @BindView(R2.id.gvTTF)
     GridView mGvTTF;
 
     private ExtPicInfo mExtPicInfo;
@@ -86,7 +77,6 @@ public class ExtPhotoActivity extends BaseActivity {
         mStrActivityPageName = getString(R.string.blackboard_text);
         mFrameRect = new Rect();
         setContentView(R.layout.activity_edit_pic);
-        ButterKnife.bind(this);
         mExtPicInfo = getIntent().getParcelableExtra(IntentConstants.EXTRA_EXT_PIC_INFO);
         initView();
 
@@ -287,6 +277,13 @@ public class ExtPhotoActivity extends BaseActivity {
     };
 
     private void initView() {
+        mEtInput = (ExtEditPic) findViewById(R.id.etEditPic);
+        mRgMainType = (RadioGroup) findViewById(R.id.rgMainType);
+        mRgTextSide = (RadioGroup) findViewById(R.id.rgTextSide);
+        mColorPicker = (ExtColorPicker) findViewById(R.id.txColorPicker);
+        mBgPicker = (ExtColorPicker) findViewById(R.id.bgColorPicker);
+        mGvTTF = (GridView) findViewById(R.id.gvTTF);
+
         mBgPicker.setColorListener(mBgPickListener);
         mBgPicker.setCheckId(DEFAULT_BG_COLOR);
 

@@ -23,9 +23,6 @@ import com.rd.veuisdk.utils.SysAlertDialog;
 import com.rd.veuisdk.utils.Utils;
 import com.rd.veuisdk.utils.ViewUtils;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * 视频调速
  *
@@ -34,19 +31,12 @@ import butterknife.ButterKnife;
 public class SpeedPreviewActivity extends BaseActivity {
     private static final String TAG = "SpeedPreviewActivity";
 
-    @BindView(R2.id.rlPreview)
     PreviewFrameLayout mPflVideoPreview;
-    @BindView(R2.id.tvEditorDuration)
     TextView mTvVideoDuration;
-    @BindView(R2.id.ivPlayerState)
     ImageView mIvVideoPlayState;
-    @BindView(R2.id.epvPreview)
     VirtualVideoView mMediaPlayer;
-    @BindView(R2.id.pbPreview)
     RdSeekBar mPbPreview;
-    @BindView(R2.id.dragViewSpeed)
     DragItemScrollView mDragSpeed;
-
 
     private int mLastPlayPostion;
     private MediaObject mMedia;
@@ -55,7 +45,6 @@ public class SpeedPreviewActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speed_prieview);
-        ButterKnife.bind(this);
 
         mStrActivityPageName = getString(R.string.speed_priview);
 
@@ -189,6 +178,13 @@ public class SpeedPreviewActivity extends BaseActivity {
 
 
     private void initView() {
+        mPflVideoPreview = (PreviewFrameLayout) findViewById(R.id.rlPreview);
+        mTvVideoDuration = (TextView) findViewById(R.id.tvEditorDuration);
+        mIvVideoPlayState = (ImageView) findViewById(R.id.ivPlayerState);
+        mMediaPlayer = (VirtualVideoView) findViewById(R.id.epvPreview);
+        mPbPreview = (RdSeekBar) findViewById(R.id.pbPreview);
+        mDragSpeed = (DragItemScrollView) findViewById(R.id.dragViewSpeed);
+
         PreviewFrameLayout layout = (PreviewFrameLayout) findViewById(R.id.rlPreviewLayout);
 
         layout.setAspectRatio(AppConfiguration.ASPECTRATIO);

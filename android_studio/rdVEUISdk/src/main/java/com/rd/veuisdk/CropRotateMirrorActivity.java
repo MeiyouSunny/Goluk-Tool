@@ -24,8 +24,6 @@ import com.rd.veuisdk.model.VideoOb;
 import com.rd.veuisdk.utils.IntentConstants;
 import com.rd.veuisdk.utils.SysAlertDialog;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * 视频编辑
@@ -38,19 +36,12 @@ public class CropRotateMirrorActivity extends BaseActivity {
     private final int CROP_MODE_1x1 = 1;
     private final int CROP_MODE_FREE = 0;
 
-    @BindView(R2.id.vvMediaPlayer)
     VirtualVideoView mMediaPlayer;
-    @BindView(R2.id.tvTitle)
     TextView mTvTitle;
-    @BindView(R2.id.btnLeft)
     ExtButton mBtnLeft;
-    @BindView(R2.id.btnRight)
     ExtButton mBtnRight;
-    @BindView(R2.id.cvVideoCrop)
     CropView mCvCrop;
-    @BindView(R2.id.tvResetAll)
     TextView mTvResetAll;
-    @BindView(R2.id.rlVideoCropFramePreview)
     PreviewFrameLayout mPlayout;
 
     private VirtualVideo mVirtualVideo;
@@ -66,7 +57,6 @@ public class CropRotateMirrorActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mStrActivityPageName = getString(R.string.preview_edit_pic);
         setContentView(R.layout.activity_video_rotate_crop);
-        ButterKnife.bind(this);
 
         mScene = getIntent().getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
         if (null == mScene) {
@@ -135,6 +125,13 @@ public class CropRotateMirrorActivity extends BaseActivity {
     }
 
     private void initViews() {
+        mMediaPlayer = (VirtualVideoView) findViewById(R.id.vvMediaPlayer);
+        mTvTitle = (TextView) findViewById(R.id.tvTitle);
+        mBtnLeft = (ExtButton) findViewById(R.id.btnLeft);
+        mBtnRight = (ExtButton) findViewById(R.id.btnRight);
+        mCvCrop = (CropView) findViewById(R.id.cvVideoCrop);
+        mTvResetAll = (TextView) findViewById(R.id.tvResetAll);
+        mPlayout = (PreviewFrameLayout) findViewById(R.id.rlVideoCropFramePreview);
         mBtnLeft.setVisibility(View.INVISIBLE);
         mBtnRight.setVisibility(View.INVISIBLE);
 

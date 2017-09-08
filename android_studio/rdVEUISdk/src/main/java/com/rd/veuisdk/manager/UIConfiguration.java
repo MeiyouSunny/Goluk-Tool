@@ -69,7 +69,7 @@ public class UIConfiguration implements Parcelable {
 
     public int videoProportion = PROPORTION_AUTO;
     public int mediaCountLimit = 0;
-    public int albumSupportFormatType = ALBUM_SUPPORT_VIDEO_ONLY;
+    public int albumSupportFormatType = ALBUM_SUPPORT_DEFAULT;
     public int voiceLayoutTpye = VOICE_LAYOUT_1;
     public int filterLayoutTpye = FILTER_LAYOUT_1;
     public boolean enableAlbumCamera = true;
@@ -91,6 +91,9 @@ public class UIConfiguration implements Parcelable {
      * 配乐2->云音乐
      */
     public String cloudMusicUrl = null;
+
+    //是否打开本地音乐
+    public boolean enableLocalMusic = true;
 
     /**
      * 片断编辑功能枚举
@@ -212,6 +215,7 @@ public class UIConfiguration implements Parcelable {
         this.musicUrl = builder.musicUrl;
         this.cloudMusicUrl = builder.cloudMusicUrl;
         this.enableTitlingAndSpecialEffectOuter = builder.enableTitlingAllOuter;
+        this.enableLocalMusic = builder.enableLocalMusic;
 
     }
 
@@ -231,11 +235,25 @@ public class UIConfiguration implements Parcelable {
         int b_filterLayoutType = FILTER_LAYOUT_1;
         boolean b_enableAlbumCamera = true;
         boolean b_hideMusic = false;
-        private String mvUrl = "http://dianbook.17rd.com/api/shortvideo/getmvprop2";
+        private String mvUrl = "";
         boolean enableTitlingAllOuter = true;
 
-        private String musicUrl = "http://dianbook.17rd.com/api/shortvideo/getbgmusic";
-        private String cloudMusicUrl = "http://dianbook.17rd.com/api/shortvideo/getcloudmusic";
+        //不设置就默认关闭
+        private String musicUrl = "";
+        private String cloudMusicUrl = "";
+
+        private boolean enableLocalMusic = true;
+
+        /**
+         * 是否打开本地音乐
+         *
+         * @param enable
+         * @return
+         */
+        public Builder enableLocalMusic(boolean enable) {
+            this.enableLocalMusic = enable;
+            return this;
+        }
 
         /**
          * @param musicUrl
@@ -488,6 +506,7 @@ public class UIConfiguration implements Parcelable {
         dest.writeByte(this.hideMusic ? (byte) 1 : (byte) 0);
         dest.writeString(this.musicUrl);
         dest.writeString(this.cloudMusicUrl);
+        dest.writeByte(this.enableLocalMusic ? (byte) 1 : (byte) 0);
     }
 
     protected UIConfiguration(Parcel in) {
@@ -505,6 +524,7 @@ public class UIConfiguration implements Parcelable {
         this.enableTitlingAndSpecialEffectOuter = in.readByte() == 1;
         this.musicUrl = in.readString();
         this.cloudMusicUrl = in.readString();
+        this.enableLocalMusic = in.readByte() != 0;
     }
 
     public static final Parcelable.Creator<UIConfiguration> CREATOR = new Parcelable.Creator<UIConfiguration>() {

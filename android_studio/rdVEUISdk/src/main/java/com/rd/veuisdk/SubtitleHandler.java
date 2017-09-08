@@ -364,19 +364,31 @@ class SubtitleHandler {
         }
     };
 
+    /**
+     *
+     * @param txtSize
+     * @return
+     */
+    private float getCustomSize(int txtSize) {
+        //像素大小转成缩放比
+        float disf = mSizePicker.textToDisf(txtSize);
+        mSizePicker.setDisf(disf);
+        return disf;
+    }
+
     private void onStyleItem(int position, WordInfo winfo) {
         StyleInfo info = mAnimAdapter.getItem(position);
         if (null == info) {
             return;
         }
-        // Log.e(this.toString() + "onStyleItem...." + position,
-        // info.isdownloaded
-        // + "cccc" + winfo.getDisf() + "........." + info.disf
-        // + "...styleId" + info.pid);
+//        Log.e(this.toString() + "onStyleItem...." + position,
+//                info.isdownloaded
+//                        + "cccc" + winfo.getDisf() + "........." + info.disf
+//                        + "...styleId" + info.pid);
         if (info.isdownloaded) {
-
             if (winfo.getDisf() == 1) {
-                winfo.setDisf(info.disf);
+                float mdisf = getCustomSize(30);
+                winfo.setDisf(mdisf);
             }
             winfo.setStyleId(info.pid);
             mAnimAdapter.setCheckItem(position);
@@ -402,7 +414,7 @@ class SubtitleHandler {
                 if (info.frameArry.size() > 0) {
                     mSprCurView.setStyleInfo(true, info,
                             (int) (winfo.getEnd() - winfo.getStart()), true,
-                            info.disf);
+                            winfo.getDisf());
                 }
 
                 if (info.type == 0) {
@@ -791,10 +803,13 @@ class SubtitleHandler {
     }
 
     private void setDisf(int scrollX) {
+        double[] ds = mSizePicker.getInfo(scrollX);
         if (null != mSprCurView) {
-            double[] ds = mSizePicker.getInfo(scrollX);
             mSprCurView.setDisf((float) ds[0]);
             setDisfText(ds[1]);
+        }
+        if (null != mCurrentInfo) {
+            mCurrentInfo.setDisf((float) ds[0]);
         }
     }
 

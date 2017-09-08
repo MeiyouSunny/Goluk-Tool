@@ -40,5 +40,9 @@ public final class IntentConstants {
     public static final String INTENT_EXTRA_TRANSITION = "intent_extra_transition";
     public static final String INTENT_TRANSITION_COUNT = "intent_transition_count";
     public static final String TRANSITION_APPLY_TO_ALL = "transition_apply_to_all";
+    /**
+     * 画中画信息
+     */
+    public static final String INTENT_POSTER_INDEX = "intent_poster_index";
 
 }

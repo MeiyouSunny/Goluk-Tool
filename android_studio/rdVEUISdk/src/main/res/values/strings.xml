@@ -337,6 +337,17 @@
 
     <string name="hint_music_search">搜索音乐</string>
 
+    <!-- 拼图-->
+    <string name="prompt.save">保存</string>
+    <string name="prompt.edit">编辑</string>
+    <string name="prompt.replace">替换</string>
+    <string name="prompt.rotate">旋转</string>
+    <string name="prompt.flip.horizontal">镜像</string>
+    <string name="prompt.flip.vertical">翻转</string>
+    <string name="prompt.border">边框</string>
+    <string name="prompt.format">版式</string>
+    <string name="prompt.ratio">比例</string>
+
     <!--
     <string name="camare_filter_1">欧洲</string>
     <string name="camare_filter_2">街拍</string>

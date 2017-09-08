@@ -139,8 +139,7 @@ public class MusicItems extends ArrayList<MusicItem> {
 
 	/**
 	 * 扫描内容提供者
-	 * 
-	 * @param context
+	 *
 	 */
 	private void scanContentProvider() {
 		// ******************系统内容提供者************************
@@ -224,7 +223,7 @@ public class MusicItems extends ArrayList<MusicItem> {
 					}
 					if (isFilterDirectoryOrFile(files[i].getAbsolutePath()
 							.toLowerCase())
-							|| fCheck.exists()
+//							|| fCheck.exists()
 							|| (ROOT_SD_DIR.getParentFile().equals(
 									files[i].getParentFile()) && !ROOT_SD_DIR
 									.equals(files[i]))) {

@@ -63,8 +63,6 @@ import com.rd.veuisdk.utils.ViewUtils;
 
 import java.io.File;
 
-import butterknife.ButterKnife;
-
 
 /**
  * 截取
@@ -143,7 +141,6 @@ public class TrimMediaActivity extends BaseActivity {
 
         mStrActivityPageName = getString(R.string.preview_intercept);
         setContentView(R.layout.activity_trim_meida);
-        ButterKnife.bind(this);
 
         mTrimConfig = SdkEntry.getSdkService().getTrimConfig();
         mPlaybackWidth = getWindowManager().getDefaultDisplay().getWidth();
@@ -820,7 +817,7 @@ public class TrimMediaActivity extends BaseActivity {
 
                             @Override
                             public void onCancel(DialogInterface dialog) {
-                                mVideoSave.cancelSave();
+                                mVideoSave.cancelExport();
                                 hpdSave = null;
                                 mHandler.obtainMessage(CANCEL_EXPORT)
                                         .sendToTarget();
@@ -1418,6 +1415,6 @@ public class TrimMediaActivity extends BaseActivity {
         vc.enableHWEncoder(mHWCodecEnabled);
         vc.enableHWDecoder(mHWCodecEnabled);
 
-        mVideoSave.save(TrimMediaActivity.this, mStrSaveMp4FileName, vc, mListenerSave);
+        mVideoSave.export(TrimMediaActivity.this, mStrSaveMp4FileName, vc, mListenerSave);
     }
 }

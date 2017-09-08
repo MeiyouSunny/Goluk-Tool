@@ -203,4 +203,16 @@ public class SizePicker extends View {
 
     }
 
+    /**
+     * 字幕特效目标大小转成缩放比
+     *
+     * @param targetSize SizePicker#START_SIZE--SizePicker#END_SIZE
+     * @return
+     */
+    public float textToDisf(int targetSize) {
+        targetSize = Math.min(END_SIZE, Math.max(START_SIZE, targetSize));
+        return MIN + ((MAX - MIN) * (targetSize - START_SIZE) / (END_SIZE - START_SIZE + 0.0f));
+    }
+
+
 }

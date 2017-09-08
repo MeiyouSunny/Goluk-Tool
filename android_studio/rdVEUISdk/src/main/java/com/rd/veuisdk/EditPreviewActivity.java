@@ -73,9 +73,6 @@ import com.rd.veuisdk.utils.ViewUtils;
 import java.io.File;
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * 剪辑
  *
@@ -105,25 +102,15 @@ public class EditPreviewActivity extends BaseActivity {
     private VirtualVideo mVirtualVideo;
     private Scene mCurrentScene;
 
-    @BindView(R2.id.vvMediaPlayer)
     VirtualVideoView mMediaPlayer;
-    @BindView(R2.id.rlPreview)
     PreviewFrameLayout mVideoPreview;
-    @BindView(R2.id.ivPlayerState)
     ImageView mIvVideoPlayState;
-    @BindView(R2.id.tvEditorDuration)
     TextView mTvVideoDuration;
-    @BindView(R2.id.sbPreview)
     RdSeekBar mSbPreview;
-    @BindView(R2.id.rlSplitView)
     RelativeLayout mRlSplitView;
-    @BindView(R2.id.gridVideosDstArray)
     DraggableAddGridView mGridVideosArray;
-    @BindView(R2.id.preview_edit_layout)
     View mMainView;
-    @BindView(R2.id.split_layout)
     View mSplitLayout;
-    @BindView(R2.id.rlPreview_player)
     PreviewFrameLayout mPreviewPlayer;
 
     @Override
@@ -131,7 +118,6 @@ public class EditPreviewActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mStrActivityPageName = getString(R.string.editvideopriview);
         setContentView(R.layout.activity_edit_preview);
-        ButterKnife.bind(this);
         if (!Utils.checkDeviceHasNavigationBar(this)) {
             AppConfiguration.setAspectRatio(1);
         }
@@ -167,6 +153,7 @@ public class EditPreviewActivity extends BaseActivity {
             addVideoObToMedia(scene.getAllMedia().get(0), 0, null);
             mAdapterScene.addItem(scene);
         }
+
         mTempRecfile = in.getStringExtra(TEMP_FILE);
 
         initView();
@@ -354,6 +341,7 @@ public class EditPreviewActivity extends BaseActivity {
         public void onCancel() {
 
         }
+
     };
 
 
@@ -531,44 +519,52 @@ public class EditPreviewActivity extends BaseActivity {
         }
     }
 
-    @BindView(R2.id.preview_trim)
-    ExtButton mTrim;
-    @BindView(R2.id.preview_spilt)
-    ExtButton mSplit;
-    @BindView(R2.id.preview_speed)
-    ExtButton mSpeed;
-    @BindView(R2.id.preview_duration)
-    ExtButton mDuration;
-    @BindView(R2.id.preview_text)
-    ExtButton mText;
-    @BindView(R2.id.preview_edit)
-    ExtButton mEdit;
-    @BindView(R2.id.preview_reverse)
-    ExtButton mReverse;
-    @BindView(R2.id.tvTitle)
+    ExtButton mTrim, mSplit, mSpeed, mDuration, mText, mEdit, mReverse;
     TextView mTvTitle;
-    @BindView(R2.id.btnLeft)
     ExtButton mBtnTitleBarLeft;
-    @BindView(R2.id.btnRight)
     ExtButton mBtnTitleBarRight;
 
-    @BindView(R2.id.ivProportion)
     ImageView mIvProportion;
-    @BindView(R2.id.mroot_priview_layout)
     PriviewLayout mParentFrame;
-    @BindView(R2.id.thelinearDraggedLayout)
     DraggedTrashLayout mDraggedLayout;
-    @BindView(R2.id.dragged_info_trash_View)
     DraggedView mDraggedView;
-    @BindView(R2.id.the_priview_layout_content)
     PriviewLinearLayout mPriviewLinearLayout;
 
-    @BindView(R2.id.menus)
     LinearLayout mMenuLayout;
-    @BindView(R2.id.addmenus)
     LinearLayout mAddMenuLayout;
 
     private void initView() {
+        mMediaPlayer = (VirtualVideoView) findViewById(R.id.vvMediaPlayer);
+        mVideoPreview = (PreviewFrameLayout) findViewById(R.id.rlPreview);
+        mIvVideoPlayState = (ImageView) findViewById(R.id.ivPlayerState);
+        mTvVideoDuration = (TextView) findViewById(R.id.tvEditorDuration);
+        mSbPreview = (RdSeekBar) findViewById(R.id.sbPreview);
+        mRlSplitView = (RelativeLayout) findViewById(R.id.rlSplitView);
+        mGridVideosArray = (DraggableAddGridView) findViewById(R.id.gridVideosDstArray);
+        mMainView = findViewById(R.id.preview_edit_layout);
+        mSplitLayout = findViewById(R.id.split_layout);
+        mPreviewPlayer = (PreviewFrameLayout) findViewById(R.id.rlPreview_player);
+
+        mTrim = (ExtButton) findViewById(R.id.preview_trim);
+        mSplit = (ExtButton) findViewById(R.id.preview_spilt);
+        mSpeed = (ExtButton) findViewById(R.id.preview_speed);
+        mDuration = (ExtButton) findViewById(R.id.preview_duration);
+        mText = (ExtButton) findViewById(R.id.preview_text);
+        mEdit = (ExtButton) findViewById(R.id.preview_edit);
+        mReverse = (ExtButton) findViewById(R.id.preview_reverse);
+        mTvTitle = (TextView) findViewById(R.id.tvTitle);
+        mBtnTitleBarLeft = (ExtButton) findViewById(R.id.btnLeft);
+        mBtnTitleBarRight = (ExtButton) findViewById(R.id.btnRight);
+
+        mIvProportion = (ImageView) findViewById(R.id.ivProportion);
+        mParentFrame = (PriviewLayout) findViewById(R.id.mroot_priview_layout);
+        mDraggedLayout = (DraggedTrashLayout) findViewById(R.id.thelinearDraggedLayout);
+        mDraggedView = (DraggedView) findViewById(R.id.dragged_info_trash_View);
+        mPriviewLinearLayout = (PriviewLinearLayout) findViewById(R.id.the_priview_layout_content);
+
+        mMenuLayout = (LinearLayout) findViewById(R.id.menus);
+        mAddMenuLayout = (LinearLayout) findViewById(R.id.addmenus);
+
         mVirtualVideo = new VirtualVideo();
 
         mVideoPreview.setClickable(true);
@@ -1004,9 +1000,11 @@ public class EditPreviewActivity extends BaseActivity {
 
             for (int i = 0; i < mIndex; i++) {
                 newList.add(list.get(i));
+
             }
 
             newList.add(newScene);
+
             for (int i = mIndex; i < mSceneList.size(); i++) {
                 newList.add(list.get(i));
             }
@@ -1017,6 +1015,8 @@ public class EditPreviewActivity extends BaseActivity {
             mSceneList.clear();
             mSceneList.addAll(newList);
             newList.clear();
+
+
             mAdapterScene.updateDisplay();
 
             initListView(mIndex);
@@ -1734,7 +1734,6 @@ public class EditPreviewActivity extends BaseActivity {
             }
             mTempRecfile = null;
         }
-
     }
 
     @Override

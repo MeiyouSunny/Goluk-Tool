@@ -19,13 +19,9 @@ import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.rd.veuisdk.R;
-import com.rd.veuisdk.R2;
 import com.rd.veuisdk.model.TransitionInfo;
 
 import java.util.ArrayList;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * 转场列表adapter
@@ -86,11 +82,15 @@ public class TransitionAdapter extends BaseAdapter {
         ViewHolder vh;
         if (null == view) {
             view = mLayoutInflater.inflate(R.layout.transiton_item_layout, null);
-            vh = new ViewHolder(view);
+            vh = new ViewHolder();
+            vh.mIcon = (SimpleDraweeView) view.findViewById(R.id.transition_item_icon);
+            vh.mText = (CheckedTextView) view.findViewById(R.id.transition_item_text);
             view.setTag(vh);
         } else {
             vh = (ViewHolder) view.getTag();
         }
+
+
         TransitionInfo info = getItem(i);
         if (null != info) {
             vh.mText.setText(info.getText());
@@ -122,13 +122,7 @@ public class TransitionAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        @BindView(R2.id.transition_item_icon)
         SimpleDraweeView mIcon;
-        @BindView(R2.id.transition_item_text)
         CheckedTextView mText;
-
-        ViewHolder(View view) {
-            ButterKnife.bind(this, view);
-        }
     }
 }

@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -26,10 +26,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
-import butterknife.Unbinder;
 
 /**
  * 切换转场
@@ -42,16 +38,11 @@ public class TransitionActivity extends BaseActivity {
     private Transition mTransition;
     private boolean mApplyToAll = false;
     private TransitionAdapter mTransitionAdapter;
-    private Unbinder unBinder;
     private int mTransitionCount;
 
-    @BindView(R2.id.gridview_transition)
     GridView mGridview;
-    @BindView(R2.id.cbRandomTransition)
     CheckBox mCbRandomTransition;
-    @BindView(R2.id.tvTransitionDuration)
     TextView mTvTransitionDuration;
-    @BindView(R2.id.sbTransitionTime)
     SeekBar mSbTransitionDuration;
 
     @Override
@@ -59,7 +50,7 @@ public class TransitionActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mStrActivityPageName = getString(R.string.addmenu_transition);
         setContentView(R.layout.activity_transition_preview);
-        unBinder = ButterKnife.bind(this);
+
         mTransitionAdapter = new TransitionAdapter(this);
         mTransition = getIntent().getParcelableExtra(IntentConstants.INTENT_EXTRA_TRANSITION);
         mTransitionCount = getIntent().getIntExtra(IntentConstants.INTENT_TRANSITION_COUNT, 1);
@@ -88,17 +79,6 @@ public class TransitionActivity extends BaseActivity {
         });
     }
 
-    @OnCheckedChanged(R2.id.cbRandomTransition)
-    public void useRandomTransition(boolean isChecked) {
-        if (isChecked) {
-            mTransitionAdapter.setChecked(-1);
-        }
-    }
-
-    @OnCheckedChanged(R2.id.cbTransitionApplyToAll)
-    public void applyToAll(boolean isChecked) {
-        mApplyToAll = isChecked;
-    }
 
     private Transition getTransition(int itemPosition) {
         TransitionInfo info = mTransitionAdapter.getItem(itemPosition);
@@ -173,7 +153,6 @@ public class TransitionActivity extends BaseActivity {
         if (null != mTransitionAdapter) {
             mTransitionAdapter.recycle();
         }
-        unBinder.unbind();
         super.onDestroy();
 
         if (null != mTransHandler) {
@@ -202,6 +181,26 @@ public class TransitionActivity extends BaseActivity {
     }
 
     private void initViews() {
+         mGridview = (GridView) findViewById(R.id.gridview_transition);
+         mCbRandomTransition = (CheckBox) findViewById(R.id.cbRandomTransition);
+         mTvTransitionDuration = (TextView) findViewById(R.id.tvTransitionDuration);
+         mSbTransitionDuration= (SeekBar) findViewById(R.id.sbTransitionTime);
+
+        mCbRandomTransition.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mTransitionAdapter.setChecked(-1);
+                }
+            }
+        });
+
+        ((CheckBox)findViewById(R.id.cbTransitionApplyToAll)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mApplyToAll = isChecked;
+            }
+        });
 
         ExtButton left = (ExtButton) findViewById(R.id.btnLeft);
         ExtButton right = (ExtButton) findViewById(R.id.btnRight);

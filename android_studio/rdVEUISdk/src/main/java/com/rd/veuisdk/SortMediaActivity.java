@@ -38,9 +38,6 @@ import com.rd.veuisdk.utils.SysAlertDialog;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * 视频调序
  *
@@ -54,15 +51,10 @@ public class SortMediaActivity extends BaseActivity {
 
     private final int REQUESTCODE_FOR_APPEND = 1;
 
-    @BindView(R2.id.gridSceneDstArray)
     DraggableGridView mSortScenesArray;
-    @BindView(R2.id.draggedView)
     DraggedView mDraggedView;
-    @BindView(R2.id.thelinearDraggedLayout)
     DraggedTrashLayout mDraggedLayout;
-    @BindView(R2.id.priviewLayoutContent)
     PriviewLinearLayout mPriviewLinearLayout;
-    @BindView(R2.id.rootPriviewLayout)
     PriviewLayout mParentFrame;
 
     @Override
@@ -70,7 +62,6 @@ public class SortMediaActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mStrActivityPageName = getString(R.string.preview_sort);
         setContentView(R.layout.activity_sort_media);
-        ButterKnife.bind(this);
 
         mSceneList = getIntent().getParcelableArrayListExtra(
                 IntentConstants.INTENT_EXTRA_SCENE);
@@ -124,6 +115,12 @@ public class SortMediaActivity extends BaseActivity {
     }
 
     private void initViews() {
+        mSortScenesArray = (DraggableGridView) findViewById(R.id.gridSceneDstArray);
+        mDraggedView = (DraggedView) findViewById(R.id.draggedView);
+        mDraggedLayout = (DraggedTrashLayout) findViewById(R.id.thelinearDraggedLayout);
+        mPriviewLinearLayout = (PriviewLinearLayout) findViewById(R.id.priviewLayoutContent);
+        mParentFrame = (PriviewLayout) findViewById(R.id.rootPriviewLayout);
+
         findViewById(R.id.titlebar_layout).setBackgroundResource(R.color.sub_menu_bgcolor);
         findViewById(R.id.btnLeft).setVisibility(View.INVISIBLE);
         ((TextView) findViewById(R.id.tvTitle)).setText(mStrActivityPageName);
@@ -298,6 +295,7 @@ public class SortMediaActivity extends BaseActivity {
             mDraggedView.onCancel();
 
         }
+
     };
 
     private DraggedView.onTrashListener mTashListener = new DraggedView.onTrashListener() {

@@ -30,7 +30,6 @@ import com.rd.gallery.ImageManager;
 import com.rd.lib.utils.ThreadPoolUtils;
 import com.rd.veuisdk.ExtPhotoActivity;
 import com.rd.veuisdk.R;
-import com.rd.veuisdk.R2;
 import com.rd.veuisdk.SelectMediaActivity;
 import com.rd.veuisdk.adapter.BucketListAdapter;
 import com.rd.veuisdk.adapter.MediaListAdapter;
@@ -47,9 +46,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class PhotoSelectFragment extends BaseV4Fragment {
     private final String TAG = "PhotoSelectFragment";
     private MediaListAdapter mAdapterMedias;
@@ -65,13 +61,9 @@ public class PhotoSelectFragment extends BaseV4Fragment {
     private IMediaSelector mMediaSelector;
 
     // 视频源列表
-    @BindView(R2.id.gridVideosSelector)
     BounceGridView mGridVideosSelector;
-    @BindView(R2.id.rlNoVideos)
     RelativeLayout mRlNoVideos;
-    @BindView(R2.id.tvPhotoBuckname)
     TextView tvBucketName;
-    @BindView(R2.id.ivSelectBucket)
     ImageView ivSelectBucket;
 
     @Override
@@ -117,7 +109,11 @@ public class PhotoSelectFragment extends BaseV4Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRoot = inflater.inflate(R.layout.photo_select_layout, null);
-        ButterKnife.bind(this, mRoot);
+
+        mGridVideosSelector = (BounceGridView) findViewById(R.id.gridVideosSelector);
+        mRlNoVideos = (RelativeLayout) findViewById(R.id.rlNoVideos);
+        tvBucketName = (TextView) findViewById(R.id.tvPhotoBuckname);
+        ivSelectBucket = (ImageView) findViewById(R.id.ivSelectBucket);
 
         tvBucketName.setText(R.string.ablum);
 

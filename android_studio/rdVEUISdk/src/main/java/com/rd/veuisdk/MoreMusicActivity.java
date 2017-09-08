@@ -57,9 +57,6 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * 更多音乐
  *
@@ -72,17 +69,11 @@ public class MoreMusicActivity extends BaseActivity {
     public static final int TYPE_MUSIC_LOCAL = 1;// 配乐方式2 -》本地
     public static final int TYPE_MUSIC_YUN = 2;// 配乐方式2->云音乐
 
-    @BindView(R2.id.vpMusicMain)
     ViewPager mVpMusicMain;
-    @BindView(R2.id.rgMusicGroup)
     RadioGroup mRgMusicGroup;
-    @BindView(R2.id.hsvMenu)
     HorizontalScrollView hsvMenuScroll;
-    @BindView(R2.id.btnRight)
     ExtButton mBtnRight;
-    @BindView(R2.id.btnLeft)
     ExtButton mBtnLeft;
-    @BindView(R2.id.tvTitle)
     TextView mTvTitle;
 
     private IntentFilter mIntentFilter;
@@ -268,7 +259,13 @@ public class MoreMusicActivity extends BaseActivity {
         SDMusicData.getInstance().initilize(this);
         WebMusicData.getInstance().initilize(this);
         setContentView(R.layout.activity_more_music);
-        ButterKnife.bind(this);
+
+        mVpMusicMain = (ViewPager) findViewById(R.id.vpMusicMain);
+        mRgMusicGroup = (RadioGroup) findViewById(R.id.rgMusicGroup);
+        hsvMenuScroll = (HorizontalScrollView) findViewById(R.id.hsvMenu);
+        mBtnRight = (ExtButton) findViewById(R.id.btnRight);
+        mBtnLeft = (ExtButton) findViewById(R.id.btnLeft);
+        mTvTitle = (TextView) findViewById(R.id.tvTitle);
 
         if (mMusicLayoutType == TYPE_MUSIC_YUN) {
             HistoryMusicCloud.getInstance().initilize(this);

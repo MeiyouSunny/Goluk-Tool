@@ -988,6 +988,7 @@ public class DraggableAddGridView extends ViewGroup {
                 // if (mDraggedIndex != 0) {
                 Collections.swap(mArrSceneInfo, mDraggedIndex, mDraggedIndex + 1);
                 // }
+
                 mDraggedIndex++;
             } else if (mDraggedIndex > mLastTarget) // shift to the left
             {

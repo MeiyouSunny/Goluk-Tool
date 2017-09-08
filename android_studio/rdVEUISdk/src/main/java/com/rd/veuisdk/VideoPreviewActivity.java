@@ -22,9 +22,6 @@ import android.widget.VideoView;
 import com.rd.lib.ui.PreviewFrameLayout;
 import com.rd.veuisdk.utils.DateTimeUtils;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * 预览视频
  *
@@ -32,17 +29,11 @@ import butterknife.ButterKnife;
  */
 @SuppressLint("HandlerLeak")
 public class VideoPreviewActivity extends BaseActivity {
-    @BindView(R2.id.rlPreview)
     PreviewFrameLayout mPflVideoPreview;
-    @BindView(R2.id.tvEditorCurrentPos)
     TextView mTvVideoCurrentPos;
-    @BindView(R2.id.tvEditorDuration)
     TextView mTvVideoDuration;
-    @BindView(R2.id.sbEditor)
     SeekBar mSbPlayControl;
-    @BindView(R2.id.ivPlayerState)
     ImageView mIvVideoPlayState;
-    @BindView(R2.id.vvPriview)
     VideoView mVideoPlayer;
 
     private int mLastPlayPostion;
@@ -68,7 +59,7 @@ public class VideoPreviewActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mStrActivityPageName = getString(R.string.priview_title);
         setContentView(R.layout.activity_video_prieview);
-        ButterKnife.bind(this);
+
         Intent in = getIntent();
         Uri uri = null;
         if (Intent.ACTION_VIEW.equals(in.getAction())) {
@@ -76,6 +67,14 @@ public class VideoPreviewActivity extends BaseActivity {
         } else {
             mPath = in.getStringExtra(ACTION_PATH);
         }
+
+        mPflVideoPreview = (PreviewFrameLayout) findViewById(R.id.rlPreview);
+        mTvVideoCurrentPos = (TextView) findViewById(R.id.tvEditorCurrentPos);
+        mTvVideoDuration = (TextView) findViewById(R.id.tvEditorDuration);
+        mSbPlayControl = (SeekBar) findViewById(R.id.sbEditor);
+        mIvVideoPlayState = (ImageView) findViewById(R.id.ivPlayerState);
+        mVideoPlayer = (VideoView) findViewById(R.id.vvPriview);
+
         findViewById(R.id.btnLeft).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

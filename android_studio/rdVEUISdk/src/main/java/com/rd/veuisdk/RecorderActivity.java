@@ -531,7 +531,7 @@ public class RecorderActivity extends BaseActivity {
         if (isScreen) {//初始化全屏模式
             //在设置录制父容器大小之前设置录制视频的参数
             RecorderConfig config = new RecorderConfig().setVideoSize(360, 640)
-                    .setVideoFrameRate(30).setVideoBitrate(BIT).setEnableFront(isFrontCamera)
+                    .setVideoFrameRate(24).setVideoBitrate(BIT).setEnableFront(isFrontCamera)
                     .setEnableBeautify(canBeautiy).setBeauitifyLevel(5)
                     .setEnableFrontMirror(enableFrontMirror);
             RecorderCore.setEncoderConfig(config);
@@ -546,7 +546,7 @@ public class RecorderActivity extends BaseActivity {
 
             //在设置录制父容器大小之前设置录制视频的参数
             RecorderConfig config = new RecorderConfig().setVideoSize(480, 480)
-                    .setVideoFrameRate(30).setVideoBitrate(BIT).setEnableFront(isFrontCamera)
+                    .setVideoFrameRate(24).setVideoBitrate(BIT).setEnableFront(isFrontCamera)
                     .setEnableBeautify(canBeautiy).setBeauitifyLevel(5)
                     .setEnableFrontMirror(enableFrontMirror)
                     .setEnableAutoFocus(true).setEnableAutoFocusRecording(false);
