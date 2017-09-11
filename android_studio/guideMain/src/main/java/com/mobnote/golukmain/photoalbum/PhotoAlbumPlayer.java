@@ -1528,7 +1528,14 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             configData = new ConfigData();
         }
 //        Uri fileUri = Uri.parse("android.resource://"+  BuildConfig.APPLICATION_ID +"/" + R.drawable.img_ae_trailer);
-        configData.videoTrailerPath = SDKUtils.createVideoTrailerImage(this, "", 480, 50, 50);
+        String nickName;
+        if (GolukApplication.getInstance().isUserLoginSucess) {
+            UserInfo userInfo = mApp.getMyInfo();
+            nickName = userInfo.nickname;
+        } else {
+            nickName = getString(R.string.str_default_video_edit_user_name);
+        }
+        configData.videoTrailerPath = SDKUtils.createVideoTrailerImage(this, nickName, 480, 50, 50);
         return configData;
     }
 
@@ -1596,9 +1603,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                         configData.enableText)
                 .setClipEditingModuleVisibility(UIConfiguration.ClipEditingModules.REVERSE,
                         configData.enableReverse)
-
+                .enableLocalMusic(configData.enableLocalMusic)
                 // 设置自定义的网络音乐
-                .setMusicUrl("")
+                .setMusicUrl(ConfigData.MUSIC_URL)
                 // 设置云音乐
                 .setCloudMusicUrl("")
                 // 字幕、特效在mv的上面
@@ -1651,8 +1658,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 String mediaPath = data.getStringExtra(SdkEntry.EDIT_RESULT);
                 if (mediaPath != null) {
                     Log.d(TAG, mediaPath);
-                    Toast.makeText(context, mediaPath, Toast.LENGTH_LONG)
-                            .show();
+                    //Toast.makeText(context, mediaPath, Toast.LENGTH_LONG).show();
                 }
             }
         }

@@ -8,6 +8,8 @@ import android.provider.MediaStore.Video;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
+import com.mobnote.util.GolukUtils;
 import com.rd.veuisdk.SdkEntry;
 import com.rd.veuisdk.callback.ISdkCallBack;
 
@@ -37,6 +39,7 @@ public class SdkHandler {
         if (!TextUtils.isEmpty(videoPath)) {
             // 读取导出视频的媒体信息，如宽度，持续时间等
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            int duration= 0 ;
             try {
                 retriever.setDataSource(videoPath);
                 int nVideoWidth = Integer
@@ -45,7 +48,7 @@ public class SdkHandler {
                 int nVideoHeight = Integer
                         .parseInt(retriever
                                 .extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
-                int duration = Integer
+                duration = Integer
                         .parseInt(retriever
                                 .extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
                 // 写入系统相册
@@ -56,7 +59,10 @@ public class SdkHandler {
                 retriever.release();
             }
             // 播放该视频
-            SdkEntry.playVideo(context, videoPath);
+            //SdkEntry.playVideo(context, videoPath);
+            GolukUtils.startVideoShareActivity(context, PhotoAlbumConfig.PHOTO_BUM_IPC_WND,
+                    videoPath, videoPath, false, duration, "",
+                    null);
         } else {
             Log.d(TAG, "获取视频地址失败");
         }
