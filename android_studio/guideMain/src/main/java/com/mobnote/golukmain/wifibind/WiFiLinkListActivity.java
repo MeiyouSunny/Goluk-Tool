@@ -180,7 +180,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
 //        ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setHdType(mIpcRealtype);
 
-        mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         mWac = new WifiConnectManager(mWifiManager, this);
         // 页面初始化
         initView();

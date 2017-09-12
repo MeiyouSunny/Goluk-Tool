@@ -37,7 +37,7 @@ public class Tapi {
 		// mTelephonyManager = (TelephonyManager)
 		// Const.getAppContext().getSystemService(Context.TELEPHONY_SERVICE);
 		initTeleManager();
-		wifiManager = (WifiManager) Const.getAppContext().getSystemService(Context.WIFI_SERVICE);
+		wifiManager = (WifiManager) Const.getAppContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 		mType = mTelephonyManager.getPhoneType();
 		if (null == mobileFilePath) {
 			mobileFilePath = FileUtils.libToJavaPath(LIB_PATH_MOBILEID);

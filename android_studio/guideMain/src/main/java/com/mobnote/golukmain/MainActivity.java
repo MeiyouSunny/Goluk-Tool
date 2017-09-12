@@ -208,7 +208,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 
         // 在使用SDK各组件之前初始化context信息，传入ApplicationContext
         // 注意该方法要再setContentView方法之前实现
-        mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         mSoundPool = new SoundPool(1, AudioManager.STREAM_NOTIFICATION, 0);
         // Register EventBus
         EventBus.getDefault().register(this);
@@ -693,7 +693,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         if (this.isFinishing() == false) {
             AnimationDrawable ad = null;
             if (state == WIFI_STATE_CONNING && mApp.isBindSucess()) {
-                mCarrecorderIv.setImageResource(R.anim.carrecoder_btn);
+                mCarrecorderIv.setImageResource(R.drawable.carrecoder_btn);
                 ad = (AnimationDrawable) mCarrecorderIv.getDrawable();
                 if (ad.isRunning() == false) {
                     ad.setOneShot(false);

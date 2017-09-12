@@ -120,7 +120,7 @@ public class DeviceUtil {
 			String m_szAndroidID = Secure.getString(
 					appContext.getContentResolver(), Secure.ANDROID_ID);
 			// 4. The WLAN MAC Address string, 是另�?��唯一ID�?
-			WifiManager wm = (WifiManager) appContext
+			WifiManager wm = (WifiManager) appContext.getApplicationContext()
 					.getSystemService(appContext.WIFI_SERVICE);
 			String m_szWLANMAC = wm.getConnectionInfo().getMacAddress();
 			// 5. The BT MAC Address string, 只在有蓝牙的设备上运行�?

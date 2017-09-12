@@ -1449,7 +1449,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         if (mApp.isIpcLoginSuccess && !mIsLive) {
             mApp.mIPCControlManager.setVdcpDisconnect();
             mApp.setIpcLoginOut();
-            WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+            WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             WifiInfo wifiInfo = wifiManager.getConnectionInfo();
             if (wifiInfo != null) {
                 wifiManager.disableNetwork(wifiInfo.getNetworkId());
@@ -2602,14 +2602,14 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             mAdasImg.setImageResource(R.drawable.recorder_carright_img);//车向右偏移
         } else if (status == 3) {
             AnimationDrawable photoAnimation;
-            mAdasImg.setBackgroundResource(R.anim.adas_warning_animation_front_nearby);//距前车进
+            mAdasImg.setBackgroundResource(R.drawable.adas_warning_animation_front_nearby);//距前车进
             photoAnimation = (AnimationDrawable) mAdasImg.getBackground();
             photoAnimation.start();
         } else if (status == 4) {
             mAdasImg.setImageResource(R.drawable.recorder_verynear_img);//距前车过进
         } else if (status == 5) {
             AnimationDrawable photoAnimation;
-            mAdasImg.setBackgroundResource(R.anim.adas_warning_animation_front_startup);//前车起步
+            mAdasImg.setBackgroundResource(R.drawable.adas_warning_animation_front_startup);//前车起步
             photoAnimation = (AnimationDrawable) mAdasImg.getBackground();
             photoAnimation.start();
         }

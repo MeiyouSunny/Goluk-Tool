@@ -199,7 +199,7 @@ public class WifiUnbindSelectListActivity extends BaseActivity implements OnClic
                 mHeadData.golukPointgreyIcon.setBackgroundResource(R.drawable.connect_pointgreen_icon);
                 mHeadData.connTxt.setText(this.getResources().getString(R.string.unbind_select_connect_yes));
             } else {
-                mHeadData.golukPointgreyIcon.setBackgroundResource(R.anim.wifi_connect_animation);
+                mHeadData.golukPointgreyIcon.setBackgroundResource(R.drawable.wifi_connect_animation);
                 // 获取AnimationDrawable对象
                 AnimationDrawable animationDrawable = (AnimationDrawable) mHeadData.golukPointgreyIcon.getBackground();
                 animationDrawable.start();

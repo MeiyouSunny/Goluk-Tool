@@ -330,7 +330,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         if (GolukApplication.getInstance().isIpcLoginSuccess) {
             GolukApplication.getInstance().mIPCControlManager.setVdcpDisconnect();
             GolukApplication.getInstance().setIpcLoginOut();
-            WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+            WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             WifiInfo wifiInfo = wifiManager.getConnectionInfo();
             if (wifiInfo != null) {
                 wifiManager.disableNetwork(wifiInfo.getNetworkId());

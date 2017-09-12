@@ -202,7 +202,7 @@ public class UserPersonalNameActivity extends BaseActivity implements OnClickLis
 			if (number < 0) {
 				mTextCount.setTextColor(Color.RED);
 			} else {
-				mTextCount.setTextColor(getResources().getInteger(R.color.setting_right_text_color));
+				mTextCount.setTextColor(getResources().getColor(R.color.setting_right_text_color));
 			}
 			mTextCount.setText(number + "");
 		}

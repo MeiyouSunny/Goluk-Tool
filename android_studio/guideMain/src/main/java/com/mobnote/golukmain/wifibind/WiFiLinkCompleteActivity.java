@@ -141,7 +141,7 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
         getIntentData();
         collectLog("onCreate", "-----1");
         mContext = this;
-        mWifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         mWac = new WifiConnectManager(mWifiManager, this);
         initChildView();
         mMiddleLayout = (FrameLayout) findViewById(R.id.wifi_link_complete_frmelayout);
