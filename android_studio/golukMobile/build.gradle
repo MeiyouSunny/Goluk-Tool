@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId "cn.com.mobnote.golukmobile"
         minSdkVersion 18
-        targetSdkVersion 23
+        targetSdkVersion 22
         multiDexEnabled true
         ndk{
             abiFilters 'armeabi'
