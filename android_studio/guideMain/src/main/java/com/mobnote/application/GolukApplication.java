@@ -114,6 +114,8 @@ import com.mobnote.golukmain.userlogin.UserResult;
 import com.rd.veuisdk.SdkEntry;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
+import static com.mobnote.videoedit.constant.VideoEditConstant.EXPORT_FOLDER_NAME;
+
 public class GolukApplication extends MultiDexApplication implements IPageNotifyFn, IPCManagerFn, ITalkFn, ILocationFn {
     /**
      * 已获取的AppKey
@@ -375,7 +377,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
      */
     private void initializeSDK() {
         SdkEntry.enableDebugLog(true);
-        String videoPath = android.os.Environment.getExternalStorageDirectory().getPath() + "/goluk/video/";
+        String videoPath = android.os.Environment.getExternalStorageDirectory().getPath() + EXPORT_FOLDER_NAME;
         SdkEntry.initialize(this,videoPath,RD_APP_KEY,RD_APP_SECRET,new SdkHandler().getCallBack());
     }
 
