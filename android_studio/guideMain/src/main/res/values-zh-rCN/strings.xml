@@ -766,7 +766,7 @@
     <string name="wifi_link_twinkle">闪烁(T2为长亮)</string>
     <string name="wifi_link_wifi_light">WiFi指示灯</string>
     <string name="wifi_link_wifi_name">名称为</string>
-    <string name="wifi_link_wifi_name2">的WiFi\n(默认密码：123465789)</string>
+    <string name="wifi_link_wifi_name2">的WiFi\n(默认密码：123456789)</string>
     <string name="wifi_link_complete_wait">等待极路客</string>
     <string name="wifi_link_complete_conn">连接</string>
     <string name="wifi_link_complete_mobile">到手机…</string>
