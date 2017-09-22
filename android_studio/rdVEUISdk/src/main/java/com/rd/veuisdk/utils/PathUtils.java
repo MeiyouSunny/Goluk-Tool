@@ -639,6 +639,9 @@ public class PathUtils {
                     public boolean accept(File dir, String filename) {
                         return filename.startsWith(TEMP_THUMBNAIL)
                                 || filename.startsWith(TEMP_WORD)
+                                || filename.startsWith(TEMP_MIX)
+                                || filename.startsWith(TEMP_MIX_EDIT)
+                                || filename.startsWith(TEMP_RECORDVIDEO)
                                 || filename.startsWith(TEMP_RECORDING);
                     }
                 });
@@ -652,7 +655,7 @@ public class PathUtils {
     }
 
     public static final String TEMP_THUMBNAIL = "Temp_thumbnail_",
-            TEMP_WORD = "word_", TEMP_RECORDING = "recording_";
+            TEMP_WORD = "word_", TEMP_RECORDING = "recording_", TEMP_RECORDVIDEO="record_",TEMP_MIX = "mix", TEMP_MIX_EDIT= "mix_edit",TEMP_MIX_RECORD="mix_recorder";
 
     /**
      * 判断指定文件路径是否有效并存在

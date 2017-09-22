@@ -24,9 +24,11 @@ public class HorizontalScrollViewEx extends HorizontalScrollView {
         super(context, attrs, defStyleAttr);
     }
 
+    String TAG = "HorizontalScrollViewEx";
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+//        Log.e(TAG, mEnableScroll+"onInterceptTouchEvent: " + ev.getAction());
         if (mEnableScroll) {
             return super.onInterceptTouchEvent(ev);
         } else {

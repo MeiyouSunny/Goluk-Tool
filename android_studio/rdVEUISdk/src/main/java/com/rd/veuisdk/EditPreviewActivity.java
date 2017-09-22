@@ -82,7 +82,7 @@ import java.util.ArrayList;
 public class EditPreviewActivity extends BaseActivity {
     private static final String TAG = "EditPreviewActivity";
 
-    static final String ACTION_APPEND = "action_append";
+    public static final String ACTION_APPEND = "action_append";
     static final String APPEND_IMAGE = "edit.addmenu.addimage";
     public static final String TEMP_FILE = "temp_file";
     public static float mCurAspect;
@@ -918,6 +918,33 @@ public class EditPreviewActivity extends BaseActivity {
     private final int REQUESTCODE_FOR_EDIT = 16;
     private final int REQUESTCODE_FOR_CAMERA = 17;
     private final int REQUESTCODE_FOR_ADVANCED_EDIT = 18;
+    private final int REQUESTCODE_FOR_POSTER_PROCESS = 19;
+
+//    private String saveBitmap(Bitmap bmp) {
+//        String tempPath = PathUtils
+//                .getTempFileNameForSdcard("Temp_bmp_", "png");
+//
+//        File file = new File(tempPath);
+//        if (!file.exists()) {
+//            try {
+//                file.createNewFile();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        try {
+//            FileOutputStream out = new FileOutputStream(file);
+//            bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
+//            out.flush();
+//            out.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        bmp.recycle();
+//        bmp = null;
+//        return tempPath;
+//    }
 
     /**
      * 响应剪辑功能按钮点击
@@ -1101,8 +1128,6 @@ public class EditPreviewActivity extends BaseActivity {
                 overridePendingTransition(0, 0);
             }
         } else if (id == R.id.preview_addimage) {
-            Log.e("addimage", this.toString());
-
             Intent intent = new Intent(EditPreviewActivity.this,
                     com.rd.veuisdk.SelectMediaActivity.class);
             intent.putExtra(EditPreviewActivity.ACTION_APPEND, true);

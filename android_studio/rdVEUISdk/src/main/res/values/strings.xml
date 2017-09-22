@@ -315,6 +315,7 @@
     <string name="photo_save_success">已保存照片</string>
     <string name="photo_save_fail">照片保存失败</string>
     <string name="exporting">视频导出中，请耐心等待...</string>
+    <string name="exportining">视频导入中，请耐心等待...</string>
     <string name="reversing">倒序处理中，请稍后...</string>
     <string name="reverse_cancel">视频尚未倒序完成，是否取消？</string>
     <string name="export_preparing">导出准备中...</string>
@@ -521,5 +522,16 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!-- 画中画-->
+
+    <string name="mixVideo">画中画</string>
+    <string name="next">下一步</string>
+    <string name="preview">预览</string>
+    <string name="mixEdit">编辑</string>
+    <string name="mode_title">选择模板</string>
+    <string name="volume">音量</string>
+    <string name="channel">声道</string>
 
 </resources>

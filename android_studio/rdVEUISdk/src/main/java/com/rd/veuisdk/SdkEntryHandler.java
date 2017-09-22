@@ -5,6 +5,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
+import com.rd.veuisdk.utils.Utils;
+
 /**
  * @author JIAN
  * @date 2016-12-8 上午9:40:39
@@ -118,15 +120,15 @@ public class SdkEntryHandler {
      * 截取定长导出时间
      *
      * @param context
-     * @param startTime
+     * @param startTime 单位秒
      * @param endTime
      */
-    void onInterceptVideoDuration(Context context, int startTime, int endTime) {
+    void onInterceptVideoDuration(Context context, float startTime, float endTime) {
         if (null != isdk) {
             Message msg = mhandler.obtainMessage(MSG_TRIM_DURATION_VIDEO);
             msg.obj = context;
-            msg.arg1 = startTime;
-            msg.arg2 = endTime;
+            msg.arg1 = Utils.s2ms(startTime);
+            msg.arg2 = Utils.s2ms(endTime);
             msg.sendToTarget();
         }
     }
@@ -238,7 +240,7 @@ public class SdkEntryHandler {
                             ((com.rd.veuisdk.callback.ISdkCallBack) isdk)
                                     .onGetVideoTrimTime((Context) msg.obj,
                                             SdkEntry.TRIMVIDEO_DURATION_EXPORT,
-                                            msg.arg1, msg.arg2);
+                                            Utils.ms2s(msg.arg1), Utils.ms2s(msg.arg2));
                         }
                     }
                     break;

@@ -88,6 +88,16 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.rd.fullscreen"/>
         <activity
+            android:name=".SelectModeActivity"
+            android:configChanges="keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.rd.fullscreen"/>
+        <activity
+            android:name=".MixRecordActivity"
+            android:configChanges="keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.rd.fullscreen"/>
+        <activity
             android:name=".SortMediaActivity"
             android:configChanges="keyboardHidden"
             android:screenOrientation="portrait"

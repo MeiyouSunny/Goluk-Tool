@@ -27,6 +27,20 @@ public class VideoView extends FrameLayout {
         addView(mVideoPreview);
     }
 
+    /**
+     * 清理操作
+     */
+    public void cleanUp() {
+        mVideoPreview.cleanUp();
+    }
+
+    /**
+     * 停止播放
+     */
+    public void stop() {
+        mVideoPreview.stop();
+    }
+
     private void playVideo() {
         mVideoPreview.start();
     }
@@ -84,7 +98,6 @@ public class VideoView extends FrameLayout {
                 listener.onGetCurrentPosition(VideoView.this, position);
             }
         }
-
     };
 
     /**

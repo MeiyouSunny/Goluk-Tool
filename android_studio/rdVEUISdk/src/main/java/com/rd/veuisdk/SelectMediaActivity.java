@@ -86,6 +86,7 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector 
     public final static String ALBUM_ONLY = "album_only";
 
     private int mFormatType = -1;
+    //是否直接返回文件路径string  (true)，还是返回mediaobject (false)
     private boolean mIsAlbumOnly = false;
 
     private int mMediaCountLimit;

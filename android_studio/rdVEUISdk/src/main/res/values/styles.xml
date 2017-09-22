@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
+    <style name="menuSideButtonStyle">
+        <item name="android:textSize">12.5dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:shadowColor">@color/transparent_black</item>
+        <item name="android:shadowRadius">5</item>
+        <item name="android:layout_gravity">right</item>
+        <item name="android:minWidth">40dp</item>
+        <item name="android:button">@null</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="voiceFactorSeekbarStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:max">100</item>
+        <item name="android:maxHeight">2.0dip</item>
+        <item name="android:minHeight">2.0dip</item>
+        <item name="android:progressDrawable">@drawable/voice_seekbar_progress</item>
+        <item name="android:thumb">@drawable/voice_seekbar_thumb</item>
+    </style>
+
     <style name="Animation.EffectsLiveCameraSetting" parent="@android:style/Animation">
         <item name="android:windowEnterAnimation">@anim/live_setting_open</item>
         <item name="android:windowExitAnimation">@anim/live_setting_close</item>

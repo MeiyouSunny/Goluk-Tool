@@ -488,6 +488,7 @@ public class RecorderActivity extends BaseActivity {
 
 
     }
+
     /***
      * 当前状态是否是正方形
      *
@@ -528,11 +529,15 @@ public class RecorderActivity extends BaseActivity {
             mSquareTitlebarHeight = getResources().getDimensionPixelSize(R.dimen.record_titlebar_height);
             mCameraParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         }
+        VirtualVideo.Size size = new VirtualVideo.Size(0, 0);
         if (isScreen) {//初始化全屏模式
+            SdkEntry.getSdkService().getCameraConfig().getRecordVideoSize(9.0f / 16, size, true, false);
             //在设置录制父容器大小之前设置录制视频的参数
-            RecorderConfig config = new RecorderConfig().setVideoSize(360, 640)
-                    .setVideoFrameRate(24).setVideoBitrate(BIT).setEnableFront(isFrontCamera)
-                    .setEnableBeautify(canBeautiy).setBeauitifyLevel(5)
+            RecorderConfig config = new RecorderConfig().setVideoSize(size.getWidth(), size.getHeight())
+                    .setVideoFrameRate(SdkEntry.getSdkService().getCameraConfig().getRecordVideoFrameRate())
+                    .setVideoBitrate(SdkEntry.getSdkService().getCameraConfig().getRecordVideoBitRate())
+                    .setEnableFront(isFrontCamera).setEnableBeautify(canBeautiy).setBeauitifyLevel(5)
+                    .setKeyFrameTime(SdkEntry.getSdkService().getCameraConfig().recordVideoKeyFrameTime)
                     .setEnableFrontMirror(enableFrontMirror);
             RecorderCore.setEncoderConfig(config);
             RecorderCore.enableFaceU(enableFace);
@@ -543,12 +548,15 @@ public class RecorderActivity extends BaseActivity {
             cameraPreview.setLayoutParams(mCameraParams);
             cameraPreview.setAspectRatio(display.widthPixels / (display.heightPixels + 0.0));
         } else {//初始化正方形模式
-
+            SdkEntry.getSdkService().getCameraConfig().getRecordVideoSize(1, size, true, true);
             //在设置录制父容器大小之前设置录制视频的参数
-            RecorderConfig config = new RecorderConfig().setVideoSize(480, 480)
-                    .setVideoFrameRate(24).setVideoBitrate(BIT).setEnableFront(isFrontCamera)
+            RecorderConfig config = new RecorderConfig().setVideoSize(size.getWidth(), size.getHeight())
+                    .setVideoFrameRate(SdkEntry.getSdkService().getCameraConfig().getRecordVideoFrameRate())
+                    .setVideoBitrate(SdkEntry.getSdkService().getCameraConfig().getRecordVideoBitRate())
+                    .setEnableFront(isFrontCamera)
                     .setEnableBeautify(canBeautiy).setBeauitifyLevel(5)
                     .setEnableFrontMirror(enableFrontMirror)
+                    .setKeyFrameTime(SdkEntry.getSdkService().getCameraConfig().recordVideoKeyFrameTime)
                     .setEnableAutoFocus(true).setEnableAutoFocusRecording(false);
             RecorderCore.setEncoderConfig(config);
             RecorderCore.enableFaceU(enableFace);
@@ -2019,7 +2027,6 @@ public class RecorderActivity extends BaseActivity {
 
     }
 
-    private final int BIT = 2500 * 1000;
     private boolean isFrontCamera = true;
     private boolean canBeautiy = false;
 

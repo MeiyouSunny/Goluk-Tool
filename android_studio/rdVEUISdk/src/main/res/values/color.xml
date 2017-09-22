@@ -140,4 +140,9 @@
 
     <color name="speed_item_text_ed">#33333b</color>
     <color name="record_type_textcolor_p">#f53333</color>
+
+
+    <!-- 音量 -->
+    <color name="voice_progress_secondary">#817775</color>
+    <color name="voice_progress_p">#2CB2F5</color>
 </resources>

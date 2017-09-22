@@ -49,33 +49,51 @@ public class ExportConfiguration implements Parcelable {
     public RectF watermarkShowRectF = null;
 
     private ExportConfiguration(Builder builder) {
-        this.savePath = builder.b_savePath;
-        this.trailerPath = builder.b_trailerPath;
-        this.trailerDuration = builder.b_trailerDuration;
-        this.exportVideoBitRate = builder.m_exportVideoBitRate;
-        this.exportVideoDuration = builder.b_exportVideoDuration;
-        this.exportVideoHeight = builder.b_exportVideoHeight;
-        this.exportVideoWidth = builder.b_exportVideoWidth;
-        this.watermarkPath = builder.b_watermarkPath;
-        if (builder.b_watermarkShowRectF != null) {
-            watermarkShowRectF = builder.b_watermarkShowRectF;
+        this.savePath = builder.savePath;
+        this.trailerPath = builder.trailerPath;
+        this.trailerDuration = builder.trailerDuration;
+        this.exportVideoBitRate = builder.exportVideoBitRate;
+        this.exportVideoDuration = builder.exportVideoDuration;
+        this.exportVideoHeight = builder.exportVideoHeight;
+        this.exportVideoWidth = builder.exportVideoWidth;
+        this.watermarkPath = builder.watermarkPath;
+        if (builder.watermarkShowRectF != null) {
+            watermarkShowRectF = builder.watermarkShowRectF;
         }
+    }
+
+    /**
+     * 获取导出视频的最大边
+     *
+     * @return 最大边
+     */
+    public int getVideoMaxWH() {
+        return Math.min(3480, Math.max(exportVideoWidth, exportVideoHeight));
+    }
+
+    /**
+     * 获取导出视频码率(bps)
+     *
+     * @return 码率(bps)
+     */
+    public int getVideoBitratebps() {
+        return (int) (exportVideoBitRate * 1000 * 1000);
     }
 
     /**
      * Builder class for {@link ExportConfiguration} objects.
      */
     public static class Builder {
-        String b_savePath = null;
-        String b_trailerPath = null;
-        float b_trailerDuration = 2;
-        int b_exportVideoWidth = 640;
-        int b_exportVideoHeight = 360;
-        double m_exportVideoBitRate = 4;
-        float b_exportVideoDuration = 0;
-        float b_trailerFadeDuration = 0.5f;
-        String b_watermarkPath = null;
-        RectF b_watermarkShowRectF = null;
+        String savePath = null;
+        String trailerPath = null;
+        float trailerDuration = 2;
+        int exportVideoWidth = 640;
+        int exportVideoHeight = 360;
+        double exportVideoBitRate = 4;
+        float exportVideoDuration = 0;
+        float trailerFadeDuration = 0.5f;
+        String watermarkPath = null;
+        RectF watermarkShowRectF = null;
 
         /**
          * 设置导出视频路径
@@ -83,21 +101,21 @@ public class ExportConfiguration implements Parcelable {
          * @param savePath 导出视频路径,传null将保存到默认路径
          */
         public Builder setSavePath(String savePath) {
-            this.b_savePath = savePath;
+            this.savePath = savePath;
             return this;
         }
 
         /**
          * 设置导出视频分辨率
          *
-         * @param width
-         * @param height
+         * @param width  视频宽度
+         * @param height 视频高度
          */
-        // public Builder setVideoSize(int width, int height) {
-        // b_exportVideoWidth = width;
-        // b_exportVideoHeight = height;
-        // return this;
-        // }
+        public Builder setVideoSize(int width, int height) {
+            exportVideoWidth = Math.max(176, Math.min(width, 3840));
+            exportVideoHeight = Math.max(176, Math.min(height, 3840));
+            return this;
+        }
 
         /**
          * 设置导出视频码率
@@ -105,8 +123,8 @@ public class ExportConfiguration implements Parcelable {
          * @param bitRate 导出视频码率,单位M，传null默认4M
          */
         public Builder setVideoBitRate(double bitRate) {
-            m_exportVideoBitRate = bitRate;
-            SdkEntry.setVideoEncodingBitRate(m_exportVideoBitRate);
+            exportVideoBitRate = bitRate;
+            SdkEntry.setVideoEncodingBitRate(exportVideoBitRate);
             return this;
         }
 
@@ -117,9 +135,9 @@ public class ExportConfiguration implements Parcelable {
          */
         public Builder setVideoDuration(float exportVideoDuration) {
             if (exportVideoDuration <= 0) {
-                this.b_exportVideoDuration = 0;
+                this.exportVideoDuration = 0;
             }
-            this.b_exportVideoDuration = exportVideoDuration;
+            this.exportVideoDuration = exportVideoDuration;
             return this;
         }
 
@@ -129,7 +147,7 @@ public class ExportConfiguration implements Parcelable {
          * @param trailerPath 导出视频片尾图片路径
          */
         public Builder setTrailerPath(String trailerPath) {
-            this.b_trailerPath = trailerPath;
+            this.trailerPath = trailerPath;
             return this;
         }
 
@@ -139,7 +157,7 @@ public class ExportConfiguration implements Parcelable {
          * @param trailerDuration 导出视频片尾时长，单位为秒(s)，不设置时默认为2s，最小0.5s
          */
         public Builder setTrailerDuration(float trailerDuration) {
-            this.b_trailerDuration = Math.max(0.5f, trailerDuration);
+            this.trailerDuration = Math.max(0.5f, trailerDuration);
             return this;
         }
 
@@ -149,7 +167,7 @@ public class ExportConfiguration implements Parcelable {
          * @param fadeDuration 片尾淡入淡出时间，单位为秒(s)
          */
         public Builder setTrailerFadeDuration(float fadeDuration) {
-            this.b_trailerFadeDuration = fadeDuration;
+            this.trailerFadeDuration = fadeDuration;
             return this;
         }
 
@@ -160,7 +178,7 @@ public class ExportConfiguration implements Parcelable {
          * @param path 水印路径
          */
         public Builder setWatermarkPath(String path) {
-            this.b_watermarkPath = path;
+            this.watermarkPath = path;
             return this;
         }
 
@@ -182,7 +200,7 @@ public class ExportConfiguration implements Parcelable {
                 if (rectF.bottom == 0) {
                     rectF.bottom = 1;
                 }
-                b_watermarkShowRectF = rectF;
+                watermarkShowRectF = rectF;
             }
             return this;
         }

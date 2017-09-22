@@ -19,6 +19,7 @@ import com.rd.vecore.exception.InvalidStateException;
 import com.rd.vecore.models.FlipType;
 import com.rd.vecore.models.MediaObject;
 import com.rd.vecore.models.Scene;
+import com.rd.vecore.models.VideoConfig;
 import com.rd.veuisdk.crop.CropView;
 import com.rd.veuisdk.model.VideoOb;
 import com.rd.veuisdk.utils.IntentConstants;
@@ -31,7 +32,7 @@ import com.rd.veuisdk.utils.SysAlertDialog;
  * @author abreal
  */
 public class CropRotateMirrorActivity extends BaseActivity {
-    private static final String TAG = "VideoCropRotateActivity";
+    private static final String TAG = "CropRotateMirrorActivity";
     private final int CROP_MODE_NORMAL = 2;
     private final int CROP_MODE_1x1 = 1;
     private final int CROP_MODE_FREE = 0;
@@ -52,6 +53,10 @@ public class CropRotateMirrorActivity extends BaseActivity {
     private RectF mRectVideoClipBound;
 
 
+    public static final String SHOW_CROP = "bgonecrop";
+    private boolean bCropShow = true;//显示裁剪功能
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +64,10 @@ public class CropRotateMirrorActivity extends BaseActivity {
         setContentView(R.layout.activity_video_rotate_crop);
 
         mScene = getIntent().getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
+        bCropShow = getIntent().getBooleanExtra(SHOW_CROP, true);
+        if (!bCropShow) {
+            findViewById(R.id.ivProportion).setVisibility(View.GONE);
+        }
         if (null == mScene) {
             finish();
             return;
@@ -90,7 +99,6 @@ public class CropRotateMirrorActivity extends BaseActivity {
             mRectVideoClipBound = videoBound;
             mCvCrop.initialize(videoBound, videoBound, 0);
         }
-        // m_tvpMain.start();
         videoPlay();
         super.onResume();
     }
@@ -130,6 +138,10 @@ public class CropRotateMirrorActivity extends BaseActivity {
         mBtnLeft = (ExtButton) findViewById(R.id.btnLeft);
         mBtnRight = (ExtButton) findViewById(R.id.btnRight);
         mCvCrop = (CropView) findViewById(R.id.cvVideoCrop);
+
+        if (!bCropShow) {
+            mCvCrop.setVisibility(View.GONE);
+        }
         mTvResetAll = (TextView) findViewById(R.id.tvResetAll);
         mPlayout = (PreviewFrameLayout) findViewById(R.id.rlVideoCropFramePreview);
         mBtnLeft.setVisibility(View.INVISIBLE);
@@ -259,15 +271,21 @@ public class CropRotateMirrorActivity extends BaseActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             if (which == 0) {
                                 changeCropMode(CROP_MODE_NORMAL);
-                                mRectVideoClipBound.setEmpty();
+                                if (bCropShow) {
+                                    mRectVideoClipBound.setEmpty();
+                                }
                                 setResetClickable(true);
                             } else if (which == 1) {
                                 changeCropMode(CROP_MODE_1x1);
-                                mRectVideoClipBound.setEmpty();
+                                if (bCropShow) {
+                                    mRectVideoClipBound.setEmpty();
+                                }
                                 setResetClickable(true);
                             } else if (which == 2) {
                                 changeCropMode(CROP_MODE_FREE);
-                                mRectVideoClipBound.setEmpty();
+                                if (bCropShow) {
+                                    mRectVideoClipBound.setEmpty();
+                                }
                             }
                         }
                     });
@@ -278,10 +296,18 @@ public class CropRotateMirrorActivity extends BaseActivity {
             if ((mMedia.getAngle() == 90 || mMedia.getAngle() == 270)
                     && (mMedia.getFlipType() == FlipType.FLIP_TYPE_HORIZONTAL || mMedia
                     .getFlipType() == FlipType.FLIP_TYPE_VERTICAL)) {
-                rcCrop = new RectF(mMedia.getWidth() - crop.right,
-                        mMedia.getHeight() - crop.bottom,
-                        mMedia.getWidth() - crop.left,
-                        mMedia.getHeight() - crop.top);
+
+
+                VideoConfig vc = new VideoConfig();
+                fixVideoSize(vc);
+
+                int tmpW = vc.getVideoWidth();
+                int tmpH = vc.getVideoHeight();
+
+                rcCrop = new RectF(tmpW - crop.right,
+                        tmpH - crop.bottom,
+                        tmpW - crop.left,
+                        tmpH - crop.top);
             } else {
                 rcCrop = new RectF(crop.left, crop.top, crop.right, crop.bottom);
             }
@@ -299,6 +325,36 @@ public class CropRotateMirrorActivity extends BaseActivity {
             onBackPressed();
         }
     }
+
+    /**
+     * * 旋转90、270 且镜像时，要修正宽高
+     *
+     * @return
+     */
+    private boolean needFixVideoSize() {
+        return (mMedia.getAngle() == 90 || mMedia.getAngle() == 270)
+                && (mMedia.getFlipType() == FlipType.FLIP_TYPE_HORIZONTAL || mMedia
+                .getFlipType() == FlipType.FLIP_TYPE_VERTICAL);
+    }
+
+    /**
+     * 旋转90、270 且镜像时，要修正宽高
+     *
+     * @param vc
+     */
+    private void fixVideoSize(VideoConfig vc) {
+        VirtualVideo.getMediaInfo(mMedia.getMediaPath(), vc);
+        int tmpW = vc.getVideoWidth();
+        int tmpH = vc.getVideoHeight();
+        if (mMedia.getAngle() == 90 || mMedia.getAngle() == 270) {
+            int tmp = tmpW;
+            tmpW = tmpH;
+            tmpH = tmp;
+        }
+        //旋转90、270 且镜像时，要修正宽高
+        vc.setVideoSize(tmpW, tmpH);
+    }
+
 
     private VirtualVideo.OnInfoListener mInfoListener = new VirtualVideo.OnInfoListener() {
 
@@ -353,19 +409,27 @@ public class CropRotateMirrorActivity extends BaseActivity {
             public void onGetCurrentPosition(float position) {
             }
         });
-        mRectVideoClipBound = new RectF(mMedia.getClipRectF());
+
+
+        if (needFixVideoSize()) {
+            VideoConfig vc = new VideoConfig();
+            fixVideoSize(vc);
+            int tmpW = vc.getVideoWidth();
+            int tmpH = vc.getVideoHeight();
+
+            RectF rcCrop = mMedia.getClipRectF();
+
+            RectF srcClip = new RectF(tmpW - rcCrop.right,
+                    tmpH - rcCrop.bottom,
+                    tmpW - rcCrop.left,
+                    tmpH - rcCrop.top);
+            mRectVideoClipBound = new RectF(srcClip);
+        } else {
+            mRectVideoClipBound = new RectF(mMedia.getClipRectF());
+        }
         if (mRectVideoClipBound.isEmpty()) {
             setResetClickable(false);
         } else {
-            if ((mMedia.getAngle() == 90 || mMedia.getAngle() == 270)
-                    && (mMedia.getFlipType() == FlipType.FLIP_TYPE_HORIZONTAL ||
-                    mMedia.getFlipType() == FlipType.FLIP_TYPE_VERTICAL)) {
-                RectF rcCrop = new RectF(Math.round(mMedia.getWidth() - mRectVideoClipBound.right),
-                        Math.round(mMedia.getHeight() - mRectVideoClipBound.bottom),
-                        Math.round(mMedia.getWidth() - mRectVideoClipBound.left),
-                        Math.round(mMedia.getHeight() - mRectVideoClipBound.top));
-                mRectVideoClipBound = new RectF(rcCrop);
-            }
             if (Math.abs(mRectVideoClipBound.width() - mMedia.getWidth()) >= 0.05
                     || Math.abs(mRectVideoClipBound.height() - mMedia.getHeight()) >= 0.05) {
                 setResetClickable(true);
@@ -402,7 +466,9 @@ public class CropRotateMirrorActivity extends BaseActivity {
 
     protected void onVideoViewPrepared() {
         changeCropMode(mVideoOb.getCropMode());
-        mRectVideoClipBound.setEmpty();
+        if (bCropShow) {
+            mRectVideoClipBound.setEmpty();
+        }
         setViewVisibility(R.id.ivVideoConver, false);
     }
 
@@ -431,13 +497,18 @@ public class CropRotateMirrorActivity extends BaseActivity {
             mRectVideoClipBound = videoBound;
         }
         mCvCrop.initialize(mRectVideoClipBound, videoBound, 0);
-        mCvCrop.applyAspectText(getText(R.string.preview_crop).toString());
-        if (nCropMode == CROP_MODE_1x1) {
-            mCvCrop.applySquareAspect(); // 方格，1:1
-        } else if (nCropMode == CROP_MODE_NORMAL) {
-            mCvCrop.applyAspect(mMedia.getWidth(), mMedia.getHeight());
+        if (bCropShow) {
+            mCvCrop.applyAspectText(getText(R.string.preview_crop).toString());
+            if (nCropMode == CROP_MODE_1x1) {
+                mCvCrop.applySquareAspect(); // 方格，1:1
+            } else if (nCropMode == CROP_MODE_NORMAL) {
+                mCvCrop.applyAspect(mMedia.getWidth(), mMedia.getHeight());
+            } else {
+                mCvCrop.applyFreeAspect();
+            }
         } else {
-            mCvCrop.applyFreeAspect();
+            mCvCrop.applyAspect(1, 1 / (mRectVideoClipBound.width() / mRectVideoClipBound.height()));
+            mCvCrop.setCanMove(true);
         }
     }
 

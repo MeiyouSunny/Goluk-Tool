@@ -61,9 +61,12 @@ public class MVFragment extends BaseFragment {
         super();
     }
 
+    private static final String WEB_MV_URL = "http://dianbook.17rd.com/api/shortvideo/getmvprop2";
+
     @SuppressLint("ValidFragment")
     public MVFragment(String _url, boolean _isfirst) {
-        mMvUrl = _url;
+        //启用mv功能未设置mvUrl
+        mMvUrl = TextUtils.isEmpty(_url) ? WEB_MV_URL : _url.trim();
         mIsFirstCreate = _isfirst;
     }
 
@@ -242,7 +245,7 @@ public class MVFragment extends BaseFragment {
                     // Log.e("onProgress" + Thread.currentThread().toString(),
                     // mid
                     // + "---" + progress);
-                    if (isRunning&&null != mHanlder) {
+                    if (isRunning && null != mHanlder) {
                         mHanlder.obtainMessage(MSG_WEB_DOWNLOADING, (int) mid,
                                 progress).sendToTarget();
                     }
@@ -289,7 +292,7 @@ public class MVFragment extends BaseFragment {
                 }
             });
 
-            if (isRunning&&null != mHanlder) {
+            if (isRunning && null != mHanlder) {
                 mDownloading.add((long) itemId);
                 mHanlder.obtainMessage(MSG_WEB_DOWN_START, itemId, 0)
                         .sendToTarget();
@@ -319,7 +322,6 @@ public class MVFragment extends BaseFragment {
                     }
                 } else {
                     File f = new File(mCacheDir, MD5.getMD5("mv_data.json"));
-                    boolean bNeedLoadLocal = true;//加载网络数据失败就加载本地离线
                     if (!mLoadWebDataSuccessed && CoreUtils.checkNetworkInfo(mContext) != CoreUtils.UNCONNECTED) {
                         String str = RdHttpClient.PostJson(mMvUrl,
                                 new NameValuePair("type", "android"));
@@ -330,7 +332,6 @@ public class MVFragment extends BaseFragment {
                                 FileUtils.writeText2File(data,
                                         f.getAbsolutePath());
                                 mLoadWebDataSuccessed = true;
-                                bNeedLoadLocal = false;
                             } catch (UnsupportedEncodingException e) {
                                 e.printStackTrace();
 

@@ -86,48 +86,14 @@ public class SdkHandler {
         @Override
         public void onGetVideoPath(Context context, int exportType,
                                    String videoPath) {
-
-            if (exportType == SdkEntry.EDIT_EXPORT) {
-                Log.i(TAG, "getvideoPath  普通编辑");
-            } else if (exportType == SdkEntry.CAMERA_EXPORT) {
-                Log.i(TAG, "getvideoPath  简单录制");
-            } else if (exportType == SdkEntry.CAMERA_EDIT_EXPORT) {
-                Log.i(TAG, "getvideoPath  录制并编辑");
-            } else if (exportType == SdkEntry.TRIMVIDEO_EXPORT) {
-                Log.i(TAG, "getvideoPath  普通截取");
-            } else if (exportType == SdkEntry.TRIMVIDEO_DURATION_EXPORT) {
-                Log.i(TAG, "getvideoPath  定长截取");
-            } else {
-                Log.e(TAG, "getvideoPath  未知");
-            }
-
             onVideoExport(context, videoPath);
         }
 
-        /**
-         * 响应截取视频时间
-         *
-         * @param context
-         *            应用上下文
-         * @param exportType
-         *            回调类型 来自普通截取视频的时间导出{@link SdkEntry#TRIMVIDEO_EXPORT}<br>
-         *            来自定长截取视频的时间导出{@link SdkEntry#TRIMVIDEO_DURATION_EXPORT}<br>
-         * @param startTime
-         *            开始时间
-         * @param endTime
-         *            结束时间
-         */
         @Override
-        public void onGetVideoTrimTime(Context context, int exportType,
-                                       int startTime, int endTime) {
-            if (exportType == SdkEntry.TRIMVIDEO_EXPORT) {
-                Log.i(TAG, "onGetVideoTrimTime  普通截取");
-            } else if (exportType == SdkEntry.TRIMVIDEO_DURATION_EXPORT) {
-                Log.i(TAG, "onGetVideoTrimTime  定长截取");
-            } else {
-                Log.e(TAG, "onGetVideoTrimTime  未知");
-            }
+        public void onGetVideoTrimTime(Context context, int exportType, float startTime, float endTime) {
+
         }
+
 
         /**
          * 响应确认截取按钮
@@ -140,15 +106,6 @@ public class SdkHandler {
          */
         @Override
         public void onGetVideoTrim(Context context, int exportType) {
-            if (exportType == SdkEntry.TRIMVIDEO_EXPORT) {
-                Log.i(TAG, "onGetVideoTrimTime  普通截取的确认按钮");
-            } else if (exportType == SdkEntry.TRIMVIDEO_DURATION_EXPORT) {
-                Log.i(TAG, "onGetVideoTrimTime  定长截取的确认按钮");
-            } else {
-                Log.e(TAG, "onGetVideoTrimTime  未知");
-            }
-//            Intent intent = new Intent(context, DialogActivity.class);
-//            context.startActivity(intent);
         }
 
         /**
@@ -159,10 +116,6 @@ public class SdkHandler {
          */
         @Override
         public void onGetPhoto(Context context) {
-            // 自定义相册调用位置
-//            Intent intent = new Intent(context, AlbumActivity.class);
-//            intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//            context.startActivity(intent);
         }
 
         /**
@@ -173,10 +126,6 @@ public class SdkHandler {
          */
         @Override
         public void onGetVideo(Context context) {
-            // 自定义视频集调用位置
-//            Intent intent = new Intent(context, AlbumActivity.class);
-//            intent.setData(Video.Media.EXTERNAL_CONTENT_URI);
-//            context.startActivity(intent);
         }
 
     };
@@ -191,21 +140,6 @@ public class SdkHandler {
      */
     private void insertToGalleryr(Context context, String path, int duration,
                                   int width, int height) {
-//        ContentValues videoValues = new ContentValues();
-//        videoValues.put(Video.Media.TITLE, "未定义");
-//        videoValues.put(Video.Media.MIME_TYPE, "video/mp4");
-//        videoValues.put(Video.Media.DATA, path);
-//        videoValues.put(Video.Media.ARTIST,
-//                context.getString(R.string.app_name));
-//        videoValues.put(Video.Media.DATE_TAKEN,
-//                String.valueOf(System.currentTimeMillis()));
-//        videoValues.put(Video.Media.DESCRIPTION,
-//                context.getString(R.string.app_name));
-//        videoValues.put(Video.Media.DURATION, duration);
-//        videoValues.put(Video.Media.WIDTH, width);
-//        videoValues.put(Video.Media.HEIGHT, height);
-//        context.getContentResolver().insert(Video.Media.EXTERNAL_CONTENT_URI,
-//                videoValues);
 
     }
 

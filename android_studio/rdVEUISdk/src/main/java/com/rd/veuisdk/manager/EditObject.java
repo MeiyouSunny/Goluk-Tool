@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
+ * 时间单位统一:秒
  * xpk媒体对象
  */
 public class EditObject implements Parcelable {
@@ -18,13 +19,13 @@ public class EditObject implements Parcelable {
      */
     private RectF cropRect;
     /**
-     * 媒体对象开始时间
+     * 媒体对象开始时间 单位:秒
      */
-    private int startTime;
+    private float startTime;
     /**
-     * 媒体对象结束时间
+     * 媒体对象结束时间 单位:秒
      */
-    private int endTime;
+    private float endTime;
 
     /**
      * 构造函数
@@ -54,39 +55,39 @@ public class EditObject implements Parcelable {
     }
 
     /**
-     * 获取截取开始时间(ms)
+     * 获取截取开始时间(秒)
      *
-     * @return 开始时间(ms)
+     * @return 开始时间(秒)
      */
-    public int getStartTime() {
+    public float getStartTime() {
         return startTime;
     }
 
     /**
-     * 设置开始时间(ms)
+     * 设置开始时间(秒)
      *
-     * @param startTime 开始时间(ms)
+     * @param startTime 开始时间(秒)
      */
-    public void setStartTime(int startTime) {
+    public void setStartTime(float startTime) {
         this.startTime = startTime;
     }
 
 
     /**
-     * 获取截取结束时间(ms)
+     * 获取截取结束时间(秒)
      *
-     * @return 结束时间(ms)
+     * @return 结束时间(秒)
      */
-    public int getEndTime() {
+    public float getEndTime() {
         return endTime;
     }
 
     /**
-     * 设置截取结束时间(ms)
+     * 设置截取结束时间(秒)
      *
-     * @param endTime 结束时间(ms)
+     * @param endTime 结束时间(秒)
      */
-    public void setEndTime(int endTime) {
+    public void setEndTime(float endTime) {
         this.endTime = endTime;
     }
 
@@ -117,15 +118,15 @@ public class EditObject implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.editObjectPath);
         dest.writeParcelable(this.cropRect, flags);
-        dest.writeInt(this.startTime);
-        dest.writeInt(this.endTime);
+        dest.writeFloat(this.startTime);
+        dest.writeFloat(this.endTime);
     }
 
     protected EditObject(Parcel in) {
         this.editObjectPath = in.readString();
         this.cropRect = in.readParcelable(Rect.class.getClassLoader());
-        this.startTime = in.readInt();
-        this.endTime = in.readInt();
+        this.startTime = in.readFloat();
+        this.endTime = in.readFloat();
     }
 
     public static final Parcelable.Creator<EditObject> CREATOR = new Parcelable.Creator<EditObject>() {

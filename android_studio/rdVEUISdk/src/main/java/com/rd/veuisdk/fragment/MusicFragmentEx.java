@@ -109,7 +109,7 @@ public class MusicFragmentEx extends BaseFragment {
         voiceLayout = _voiceLayout;
         this.enableLocalMusic = enable;
         mMusicUrl = TextUtils.isEmpty(_musicUrl) ? "" : _musicUrl.trim();
-        mCloudMusicUrl = url;
+        mCloudMusicUrl = TextUtils.isEmpty(url) ? "" : url.trim();
     }
 
     @SuppressWarnings("deprecation")
@@ -386,8 +386,8 @@ public class MusicFragmentEx extends BaseFragment {
      */
     private void onSelectedImp(int nItemId, boolean user) {
         boolean bReload = true;
-        // Log.e("onSelectedImp", mThemeType + "...." + nItemId + "..." +
-        // user);
+//         Log.e("onSelectedImp", mThemeType + "...." + nItemId + "..." +
+//                 user);
         mThemeType = nItemId;
         if (nItemId == MENU_ORIGIN) {
             if (user) {
@@ -705,8 +705,8 @@ public class MusicFragmentEx extends BaseFragment {
                         if (!TextUtils.isEmpty(mCloudMusicUrl)) {
                             mListView.addListItem(nItemId, R.drawable.music_yun,
                                     getString(R.string.music_yun));
-                            nItemId++;
                         }
+                        nItemId++;
 
                         break;
                     }

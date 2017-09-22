@@ -42,7 +42,9 @@ import com.rd.vecore.models.MediaObject;
 import com.rd.vecore.models.MediaType;
 import com.rd.vecore.models.Scene;
 import com.rd.vecore.models.VideoConfig;
+import com.rd.veuisdk.crop.CropView;
 import com.rd.veuisdk.manager.TrimConfiguration;
+import com.rd.veuisdk.mix.ModeUtils;
 import com.rd.veuisdk.model.VideoOb;
 import com.rd.veuisdk.ui.ExtProgressDialog;
 import com.rd.veuisdk.ui.HorizontalProgressDialog;
@@ -52,7 +54,6 @@ import com.rd.veuisdk.ui.VideoThumbNailAlterView;
 import com.rd.veuisdk.ui.extrangseekbar.ExtRangeSeekbarPlus;
 import com.rd.veuisdk.ui.extrangseekbar.ExtRangeSeekbarPlus.onRangDurationListener;
 import com.rd.veuisdk.ui.extrangseekbar.RangSeekBarBase;
-import com.rd.veuisdk.utils.AppConfiguration;
 import com.rd.veuisdk.utils.DateTimeUtils;
 import com.rd.veuisdk.utils.FileLog;
 import com.rd.veuisdk.utils.IntentConstants;
@@ -133,10 +134,24 @@ public class TrimMediaActivity extends BaseActivity {
 
     public static boolean mTrimFromEdit = false;
 
+    //直接返回数据(画中画直接返回trim之后的视频路径)
+    public static final String RESULT_DATA = "result_data";
+    //仅裁剪时间轴
+    public static final String ONLYLINE = "only_line_trime";
+    public static final String CROP_ASPECTRATIO = "crop_aspectratio";
+    //bFromMix  true, 画中画裁剪，预览时，视频内容完全显示，裁剪指定比例的视频内容
+    private boolean bFromMix = false;
+    private boolean bOnlyLine = true;
+    private CropView cvCropView;
+    private float cropAspRatio = 1f;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Intent in = getIntent();
         mTrimFromEdit = in.getBooleanExtra(IntentConstants.TRIM_FROM_EDIT, false);
+        bFromMix = in.getBooleanExtra(RESULT_DATA, false);
+        bOnlyLine = in.getBooleanExtra(ONLYLINE, true);
+        cropAspRatio = in.getFloatExtra(CROP_ASPECTRATIO, 1f);
         super.onCreate(savedInstanceState);
 
         mStrActivityPageName = getString(R.string.preview_intercept);
@@ -176,7 +191,9 @@ public class TrimMediaActivity extends BaseActivity {
         } else {
             mIsLandVideo = false;
         }
-
+        if (bFromMix) {//画中画裁剪，固定显示方式
+            mIsLandVideo = true;
+        }
         initView();
         loadVideo();
     }
@@ -191,8 +208,6 @@ public class TrimMediaActivity extends BaseActivity {
                     mMediaObject.getTrimEnd(), mMediaObject.getTrimStart(),
                     mMediaObject.getTrimEnd(), mMediaObject.getTrimStart(),
                     mMediaObject.getTrimEnd(), 0, null, 0);
-        } else {
-//            Log.e(TAG, mMediaObject.getSpeed() + "--oncreate    T" + mOb.TStart + "<>" + mOb.TEnd + ".....n......." + mOb.nStart + "...<>." + mOb.nEnd + ".....R:" + mOb.rStart + "<>" + mOb.rEnd);
         }
 
 
@@ -231,9 +246,12 @@ public class TrimMediaActivity extends BaseActivity {
             mSvPlayer.setVisibility(View.GONE);
             mHsvPlayer.setVisibility(View.VISIBLE);
             mProgressView = (ProgressView) findViewById(R.id.progressViewHori);
+            //外层框
             mPflVideoPreview = (PreviewFrameLayout) findViewById(R.id.rlPreviewHori);
+            //播放器的框
             mPreviewPlayer = (PreviewFrameLayout) findViewById(R.id.rlPreview_playerHori);
             mMediaPlayer = (VirtualVideoView) findViewById(R.id.epvPreviewHori);
+            cvCropView = (CropView) findViewById(R.id.cvVideoCropHori);
 
         } else {
             mSvPlayer.setVisibility(View.VISIBLE);
@@ -241,17 +259,33 @@ public class TrimMediaActivity extends BaseActivity {
             mPflVideoPreview = (PreviewFrameLayout) findViewById(R.id.rlPreview);
             mPreviewPlayer = (PreviewFrameLayout) findViewById(R.id.rlPreview_player);
             mMediaPlayer = (VirtualVideoView) findViewById(R.id.epvPreview);
+            cvCropView = (CropView) findViewById(R.id.cvVideoCrop);
             mProgressView = (ProgressView) findViewById(R.id.progressView);
         }
+        if (bFromMix) {
+            if (bOnlyLine) {
+                cvCropView.setVisibility(View.GONE);
+            } else {
+                cvCropView.setVisibility(View.VISIBLE);
+                cvCropView.setCanMove(true);
+                cvCropView.setIcropListener(new CropView.ICropListener() {
+                    @Override
+                    public void onPlayState() {
+                    }
 
-        mProgressView.setScroll(true);
-        mProgressView.setListener(mOnProListener);
+                    @Override
+                    public void onMove() {
+                    }
+                });
+            }
 
 
+        } else {
+            cvCropView.setVisibility(View.GONE);
+        }
         LinearLayout.LayoutParams rlVideolp = new LinearLayout.LayoutParams(
                 mPlaybackWidth, mPlaybackWidth);
         mPflVideoPreview.setLayoutParams(rlVideolp);
-
         mHsvPlayer.enableScroll(false);
         mRlTitleBar = (RelativeLayout) findViewById(R.id.rlTitleBar);
         mPflVideoPreview.setAspectRatio(1);
@@ -280,10 +314,17 @@ public class TrimMediaActivity extends BaseActivity {
         // 切换裁切比例
         mCbSquare = (CheckBox) findViewById(R.id.cbTrim1x1);
         mCbSquare.setOnCheckedChangeListener(mOnSquareCheckListener);
-        if (mEnableSquare) {
-            mCbSquare.setVisibility(View.VISIBLE);
-        } else {
+        if (bFromMix) {
             mCbSquare.setVisibility(View.INVISIBLE);
+            mProgressView.setVisibility(View.GONE);
+        } else {
+            mProgressView.setScroll(true);
+            mProgressView.setListener(mOnProListener);
+            if (mEnableSquare) {
+                mCbSquare.setVisibility(View.VISIBLE);
+            } else {
+                mCbSquare.setVisibility(View.INVISIBLE);
+            }
         }
 
         mMenuGroup = (RadioGroup) findViewById(R.id.trim_menu_group);
@@ -321,8 +362,6 @@ public class TrimMediaActivity extends BaseActivity {
             mMenuGroup.setOnCheckedChangeListener(mOnMenuGroupListener);
         }
 
-//        mRangeSeekBar.setVisibility(View.INVISIBLE);
-
         mPreviewPlayer.setOnClickListener(mOnPlayListener);
 
         mIvVideoPlayState = (ImageView) findViewById(R.id.ivPlayerState);
@@ -352,10 +391,13 @@ public class TrimMediaActivity extends BaseActivity {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             mIsSquare = isChecked;
-
             if (isChecked) {
                 mProgressView.setScroll(false);
-                mHsvPlayer.enableScroll(true);
+                if (bFromMix) {
+                    mHsvPlayer.enableScroll(false);
+                } else {
+                    mHsvPlayer.enableScroll(true);
+                }
                 RelativeLayout.LayoutParams lpSvPlayer = new RelativeLayout.LayoutParams(
                         mPlaybackWidth, mPlaybackWidth);
                 mSvPlayer.setLayoutParams(lpSvPlayer);
@@ -374,19 +416,22 @@ public class TrimMediaActivity extends BaseActivity {
                                 ((int) (mPlaybackWidth * mMediaRatio) - mPlaybackWidth) / 2, 0);
                     }
                 });
-
-                LinearLayout.LayoutParams rlVideolp;
-                if (mMediaRatio > 1.0) {
-                    rlVideolp = new LinearLayout.LayoutParams(
-                            (int) (mPlaybackWidth * mMediaRatio),
-                            mPlaybackWidth);
+                if (bFromMix) {
+                    mPflVideoPreview.setAspectRatio(1);
                 } else {
-                    rlVideolp = new LinearLayout.LayoutParams(
-                            mPlaybackWidth,
-                            (int) (mPlaybackWidth / mMediaRatio));
+                    LinearLayout.LayoutParams rlVideolp;
+                    if (mMediaRatio > 1.0) {
+                        rlVideolp = new LinearLayout.LayoutParams(
+                                (int) (mPlaybackWidth * mMediaRatio),
+                                mPlaybackWidth);
+                    } else {
+                        rlVideolp = new LinearLayout.LayoutParams(
+                                mPlaybackWidth,
+                                (int) (mPlaybackWidth / mMediaRatio));
+                    }
+                    mPflVideoPreview.setAspectRatio(mMediaRatio);
+                    mPflVideoPreview.setLayoutParams(rlVideolp);
                 }
-                mPflVideoPreview.setAspectRatio(mMediaRatio);
-                mPflVideoPreview.setLayoutParams(rlVideolp);
             } else {
                 mProgressView.setScroll(true);
                 mHsvPlayer.enableScroll(false);
@@ -583,6 +628,7 @@ public class TrimMediaActivity extends BaseActivity {
     };
     private ExtProgressDialog mPdLoading;
     private MediaObject mTempObjThumb;
+    private RectF mRectVideoClipBound = new RectF();
     /**
      * 播放器
      */
@@ -590,6 +636,8 @@ public class TrimMediaActivity extends BaseActivity {
 
         @Override
         public void onPlayerPrepared() {
+
+
             if (mIsFirst) {
                 if (mTrimConfig.default1x1CropMode) {
                     mCbSquare.setChecked(true);
@@ -600,8 +648,6 @@ public class TrimMediaActivity extends BaseActivity {
 
                     @Override
                     public void run() {
-
-
                         VirtualVideo virtualVideo = new VirtualVideo();
                         Scene scene = VirtualVideo.createScene();
                         mTempObjThumb = mMediaObject.clone();
@@ -615,6 +661,8 @@ public class TrimMediaActivity extends BaseActivity {
                 });
                 mIsFirst = false;
             }
+
+
             SysAlertDialog.cancelLoadingDialog();
             updatePreviewFrameAspect(mMediaPlayer.getVideoWidth(), mMediaPlayer.getVideoHeight());
 
@@ -648,7 +696,34 @@ public class TrimMediaActivity extends BaseActivity {
                     mMediaPlayer.seekTo(Math.max(mOb.nEnd, 0.3f));
                 }
             });
+
+
+            VideoConfig srcConfig = new VideoConfig();
+            RectF videoBound = new RectF(0, 0, mMediaPlayer.getVideoWidth(), mMediaPlayer.getVideoHeight());
+            if (VirtualVideo.getMediaInfo(mMediaObject.getMediaPath(), srcConfig) > 0) {
+                videoBound.set(0, 0, srcConfig.getVideoWidth(), srcConfig.getVideoHeight());
+            }
+
+            if (mRectVideoClipBound.isEmpty()) {
+                int tmpW = (int) videoBound.width(), tmpH = (int) videoBound.height();
+                Rect temp = new Rect();
+                MediaObject.getClipSrcRect(tmpW, tmpH, cropAspRatio, temp);
+                mRectVideoClipBound = new RectF(temp);
+//                Log.i(TAG, bCanScaleBigger + "." + tmpW + "*" + tmpH + "onPlayerPrepared: " + mRectVideoClipBound.toShortString() + "....temp.>" + temp.toShortString() + "....>" + temp.width() + "*" + temp.height());
+
+            }
+            if (!bOnlyLine) {
+                cvCropView.initialize(mRectVideoClipBound, videoBound, 0);
+                cvCropView.applyAspect(1, 1 / cropAspRatio);
+                if (!bCanScaleBigger) {
+                    cvCropView.setLockSize(true);
+                }
+                cvCropView.setCanMove(true);
+            }
+//            Log.e(TAG + cropAspRatio, mMediaPlayer.getVideoWidth() + "*" + mMediaPlayer.getVideoHeight() + "onPlayerPrepared: videoBound" + videoBound.toShortString() + "...clip:" + mRectVideoClipBound.toShortString());
         }
+
+        private boolean bCanScaleBigger = true;
 
         @Override
         public boolean onPlayerError(int what, int extra) {
@@ -730,10 +805,7 @@ public class TrimMediaActivity extends BaseActivity {
      * 更新预览视频播放器比例
      */
     protected void updatePreviewFrameAspect(int nVideoWidth, int nVideoHeight) {
-        if (mPflVideoPreview != null) {
-            mPreviewPlayer
-                    .setAspectRatio((float) (nVideoWidth / (nVideoHeight + 0.0)));
-        }
+        mPreviewPlayer.setAspectRatio(nVideoWidth / (nVideoHeight + 0.0f));
     }
 
     private PreviewFrameLayout mPreviewPlayer;
@@ -754,9 +826,7 @@ public class TrimMediaActivity extends BaseActivity {
         if (id == R.id.public_menu_sure || id == R.id.ebtnSure) {
             if (mTrimFromEdit) {
                 Intent data = new Intent();
-//                Log.e(TAG, "sure    T" + mOb.TStart + "<>" + mOb.TEnd + ".....n......." + mOb.nStart + "...<>." + mOb.nEnd + ".....R:" + mOb.rStart + "<>" + mOb.rEnd);
                 mMediaObject.setTimeRange(mOb.TStart + mOb.rStart, mOb.TStart + mOb.rEnd);
-//                Log.e(TAG, "sure out" + mMediaObject.getTrimStart() + "<>" + mMediaObject.getTrimEnd());
                 Scene scene = new Scene();
                 scene.addMedia(mMediaObject);
                 data.putExtra(IntentConstants.INTENT_EXTRA_SCENE, scene);
@@ -769,13 +839,15 @@ public class TrimMediaActivity extends BaseActivity {
                             TrimMediaActivity.this,
                             SdkEntry.TRIMVIDEO_DURATION_EXPORT);
                 } else if (mTrimReturnType == TrimConfiguration.TRIM_RETURN_MEDIA) {
-                    pauseVideo();
+                    stopVideo();
                     exportVideo();
                 } else {
                     if (mOb != null) {
                         Intent i = new Intent();
-                        i.putExtra(SdkEntry.TRIM_START_TIME, mOb.nStart);
-                        i.putExtra(SdkEntry.TRIM_END_TIME, mOb.nEnd);
+                        float start = mOb.nStart;
+                        float end = mOb.nEnd;
+                        i.putExtra(SdkEntry.TRIM_START_TIME, start);
+                        i.putExtra(SdkEntry.TRIM_END_TIME, end);
                         i.putExtra(SdkEntry.TRIM_MEDIA_PATH, mMediaObject.getMediaPath());
                         if (mIsSquare) {
                             int left = (int) (mMediaObject.getWidth() * ((float) mHsvPlayer
@@ -791,7 +863,7 @@ public class TrimMediaActivity extends BaseActivity {
                         }
                         setResult(RESULT_OK, i);
                         SdkEntryHandler.getInstance().onInterceptVideoDuration(
-                                TrimMediaActivity.this, Utils.s2ms(mOb.nStart), Utils.s2ms(mOb.nEnd));
+                                TrimMediaActivity.this, start, end);
                         TrimMediaActivity.this.finish();
                     }
                 }
@@ -806,13 +878,14 @@ public class TrimMediaActivity extends BaseActivity {
 
 
         private HorizontalProgressDialog hpdSave;
-        private Dialog dialog;
 
         @Override
         public void onExportStart() {
             if (hpdSave == null) {
+                String str = bFromMix ? getString(R.string.exportining) : getString(R.string.exporting);
+
                 hpdSave = SysAlertDialog.showHoriProgressDialog(
-                        TrimMediaActivity.this, getString(R.string.exporting),
+                        TrimMediaActivity.this, str,
                         false, true, new DialogInterface.OnCancelListener() {
 
                             @Override
@@ -828,7 +901,7 @@ public class TrimMediaActivity extends BaseActivity {
 
                     @Override
                     public void onCancel() {
-                        dialog = SysAlertDialog.showAlertDialog(
+                        SysAlertDialog.showAlertDialog(
                                 TrimMediaActivity.this,
                                 "",
                                 getString(R.string.cancel_export_video),
@@ -847,12 +920,12 @@ public class TrimMediaActivity extends BaseActivity {
                                     public void onClick(DialogInterface dialog, int which) {
                                         hpdSave.cancel();
                                         hpdSave.dismiss();
+                                        mVideoSave.cancelExport();
                                     }
                                 });
                     }
                 });
             }
-            // m_lUseTimeChecker = SystemClock.uptimeMillis();
             getWindow()
                     .addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
@@ -878,8 +951,17 @@ public class TrimMediaActivity extends BaseActivity {
 
             if (nResult >= VirtualVideo.RESULT_SUCCESS) {
                 if (!TextUtils.isEmpty(mStrSaveMp4FileName)) {
-                    SdkEntryHandler.getInstance().onTrimDurationExport(
-                            TrimMediaActivity.this, mStrSaveMp4FileName);
+                    if (bFromMix) {
+                        Intent i = new Intent();
+                        i.putExtra(SdkEntry.INTENT_KEY_VIDEO_PATH, mStrSaveMp4FileName);
+                        setResult(RESULT_OK, i);
+                    } else {
+                        Intent intent = new Intent();
+                        intent.putExtra(SdkEntry.TRIM_MEDIA_PATH, mStrSaveMp4FileName);
+                        TrimMediaActivity.this.setResult(RESULT_OK, intent);
+                        SdkEntryHandler.getInstance().onTrimDurationExport(
+                                TrimMediaActivity.this, mStrSaveMp4FileName);
+                    }
                     TrimMediaActivity.this.finish();
                 }
             } else {
@@ -900,7 +982,6 @@ public class TrimMediaActivity extends BaseActivity {
                     mCancelLoading.dismiss();
                     mCancelLoading = null;
                 }
-                loadVideo();
             }
             if (hpdSave != null) {
                 hpdSave.dismiss();
@@ -960,9 +1041,7 @@ public class TrimMediaActivity extends BaseActivity {
 
     @SuppressWarnings("unused")
     private void stopVideo() {
-        if (mMediaPlayer.isPlaying()) {
-            mMediaPlayer.stop();
-        }
+        mMediaPlayer.stop();
         mIvVideoPlayState.setImageResource(R.drawable.btn_play);
         mIvVideoPlayState.setVisibility(View.VISIBLE);
     }
@@ -1329,7 +1408,7 @@ public class TrimMediaActivity extends BaseActivity {
                 int type = intent.getIntExtra(SdkEntry.TRIM_RETURN_TYPE, -1);
                 mFromReceiver = true;
                 if (type == 0) {
-                    pauseVideo();
+                    stopVideo();
                     exportVideo();
                 } else if (type == 1) {
                     if (mOb != null) {
@@ -1366,55 +1445,91 @@ public class TrimMediaActivity extends BaseActivity {
     private boolean mHWCodecEnabled = CoreUtils.hasJELLY_BEAN_MR2();
 
     private void exportVideo() {
-        if (AppConfiguration.isHWCoderChecking()) {
-            // 如果一直处于检查状态，代表启用硬件编解码失败
-            mHWCodecEnabled = false;
-            AppConfiguration.enableHWCodec(false);
-        }
 
-        if (mIsSquare) {
-            int left = (int) (mMediaObject.getWidth() * ((float) mHsvPlayer
-                    .getScrollX() / mPflVideoPreview.getWidth()));
-            int right = (int) (mMediaObject.getWidth()
-                    * ((float) mHsvPlayer.getScrollX() + mPlaybackWidth) / mPflVideoPreview
-                    .getWidth());
-            int top = (int) (mMediaObject.getHeight() * ((float) mSvPlayer
-                    .getScrollY() / mPflVideoPreview.getHeight()));
-            int bottom = (int) (mMediaObject.getHeight()
-                    * ((float) mSvPlayer.getScrollY() + mPlaybackWidth) / mPflVideoPreview
-                    .getHeight());
-            RectF rcCrop = new RectF(left, top, right, bottom);
+//        Log.e(TAG, "exportVideo: " + cvCropView.getCrop().toShortString() + "...." + cvCropView.getPhoto().toShortString());
+        VideoConfig vc = new VideoConfig();
+        if (bFromMix) {
+            if (!bOnlyLine) {
+                RectF clip = cvCropView.getCrop();
+                mMediaObject.setClipRectF(new RectF(clip.left, clip.top, clip.right, clip.bottom));
+                mMediaObject.setShowRectF(null);
+            }
+        } else {
+            float aspClip = 1f;
+            if (mIsSquare) {
+                int left = (int) (mMediaObject.getWidth() * ((float) mHsvPlayer
+                        .getScrollX() / mPflVideoPreview.getWidth()));
+                int right = (int) (mMediaObject.getWidth()
+                        * ((float) mHsvPlayer.getScrollX() + mPlaybackWidth) / mPflVideoPreview
+                        .getWidth());
+                int top = (int) (mMediaObject.getHeight() * ((float) mSvPlayer
+                        .getScrollY() / mPflVideoPreview.getHeight()));
+                int bottom = (int) (mMediaObject.getHeight()
+                        * ((float) mSvPlayer.getScrollY() + mPlaybackWidth) / mPflVideoPreview
+                        .getHeight());
 
+                mMediaObject.setClipRectF(new RectF(left, top, right, bottom));
+                mMediaObject.setShowRectF(null);
 
-            mMediaObject.setClipRectF(rcCrop);
-            mMediaObject.setShowRectF(null);
+                RectF clip = mMediaObject.getClipRectF();
+                aspClip = clip.width() / clip.height();
+
+            } else {
+                aspClip = mMediaObject.getWidth() / (mMediaObject.getHeight() + 0.0f);
+            }
+            //根据裁剪比例设置输出尺寸
+            int maxWH = SdkEntry.getSdkService().getExportConfig().getVideoMaxWH();
+            if (aspClip > 1) {
+                vc.setVideoSize(maxWH, (int) (maxWH / aspClip));
+            } else {
+                vc.setVideoSize((int) (maxWH * aspClip), maxWH);
+            }
         }
         mMediaObject.setTimeRange(mOb.nStart, mOb.nEnd);
-        AppConfiguration.setHWCoderChecking(true);
-
 
         mVideoSave = new VirtualVideo();
-
-
         Scene scene = VirtualVideo.createScene();
         scene.addMedia(mMediaObject);
         mVideoSave.addScene(scene);
-        VideoConfig vc = new VideoConfig();
-        if (SdkEntry.getVideoEncodingBitRate() != -1) {
-            vc.setVideoEncodingBitRate((int) (SdkEntry.getVideoEncodingBitRate() * 1000000));
-        }
-        if (mSavePath != null || !TextUtils.isEmpty(mSavePath)) {
-            File path = new File(mSavePath);
-            PathUtils.checkPath(path);
-            mStrSaveMp4FileName = PathUtils.getTempFileNameForSdcard(mSavePath,
-                    "VIDEO", "mp4");
+
+
+        VideoConfig trimVideoInfo = new VideoConfig();
+        if (VirtualVideo.getMediaInfo(mMediaObject.getMediaPath(), trimVideoInfo, true) > 0) {
+            vc.setVideoFrameRate(Math.min(trimVideoInfo.getVideoFrameRate(), 30));
+            if (bFromMix) {
+                vc.setVideoEncodingBitRate(Math.min(trimVideoInfo.getVideoEncodingBitRate(), 3500 * 1000));
+            } else {
+                vc.setVideoEncodingBitRate(Math.min(trimVideoInfo.getVideoEncodingBitRate(),
+                        SdkEntry.getSdkService().getExportConfig().getVideoBitratebps()));
+            }
         } else {
-            mStrSaveMp4FileName = PathUtils.getMp4FileNameForSdcard();
+            vc.setVideoEncodingBitRate(Math.min(trimVideoInfo.getVideoEncodingBitRate(),
+                    SdkEntry.getSdkService().getExportConfig().getVideoBitratebps()));
+        }
+
+        if (bFromMix) {
+            //新版画中画截取时生成临时文件
+            mStrSaveMp4FileName = PathUtils.getTempFileNameForSdcard(
+                    PathUtils.TEMP_MIX, "mp4");
+        } else {
+            if (mSavePath != null || !TextUtils.isEmpty(mSavePath)) {
+                File path = new File(mSavePath);
+                PathUtils.checkPath(path);
+                mStrSaveMp4FileName = PathUtils.getTempFileNameForSdcard(mSavePath,
+                        "VIDEO", "mp4");
+            } else {
+                mStrSaveMp4FileName = PathUtils.getMp4FileNameForSdcard();
+            }
         }
 
         vc.enableHWEncoder(mHWCodecEnabled);
         vc.enableHWDecoder(mHWCodecEnabled);
-
+        if (bFromMix) {
+            RectF outSize = ModeUtils.getFixOutSize((int) cvCropView.getCrop().width(), (int) cvCropView.getCrop().height());
+            vc.setVideoSize((int) outSize.width(), (int) outSize.height());
+            vc.setAspectRatio(outSize.width() / outSize.height());
+        }
         mVideoSave.export(TrimMediaActivity.this, mStrSaveMp4FileName, vc, mListenerSave);
     }
+
 }

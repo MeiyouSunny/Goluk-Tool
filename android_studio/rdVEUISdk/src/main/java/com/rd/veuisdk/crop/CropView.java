@@ -139,6 +139,28 @@ public class CropView extends View {
 
     private int px = 0, py = 0;
     private final int MAXOFF = 5;
+    String TAG = "CropView";
+
+//    @Override
+//    public boolean onInterceptTouchEvent(MotionEvent ev) {
+//        Log.e(TAG, "onInterceptTouchEvent: " + ev.getAction());
+//        if (mEnableScroll) {
+//            return super.onInterceptTouchEvent(ev);
+//        } else {
+//            return false;
+//        }
+//    }
+
+    private boolean bLock = false;
+
+    /**
+     * 是否锁定size,仅移动区域的位置，不改变(int)width*(int)height
+     *
+     * @param lock
+     */
+    public void setLockSize(boolean lock) {
+        bLock = lock;
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -164,7 +186,12 @@ public class CropView extends View {
                         return false;
                     }
                 if (mState == Mode.NONE) {
+
                     if (!mCropObj.selectEdge(x, y)) {
+                        mMovingBlock = mCropObj.selectEdge(CropObject.MOVE_BLOCK);
+                    }
+                    if (bLock) {
+                        //强制固定比例，只能滑动位置left，top，不能改变width*height
                         mMovingBlock = mCropObj.selectEdge(CropObject.MOVE_BLOCK);
                     }
                     mPrevX = x;
@@ -218,6 +245,7 @@ public class CropView extends View {
             default:
                 break;
         }
+
         invalidate();
         return true;
     }
@@ -226,6 +254,7 @@ public class CropView extends View {
         Log.w(LOGTAG, "crop reset called");
         mState = Mode.NONE;
         mCropObj = null;
+        bLock = false;
         mRotation = 0;
         mMovingBlock = false;
         clearDisplay();
@@ -267,6 +296,12 @@ public class CropView extends View {
         applyAspect(1, 1);
     }
 
+    /**
+     * 固定宽高比
+     *
+     * @param x
+     * @param y
+     */
     public void applyAspect(float x, float y) {
         if (x <= 0 || y <= 0) {
             throw new IllegalArgumentException("Bad arguments to applyAspect");

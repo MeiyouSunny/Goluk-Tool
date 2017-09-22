@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.RectF;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -20,9 +21,15 @@ import com.rd.net.RdHttpClient;
 import com.rd.recorder.api.RecorderCore;
 import com.rd.vecore.RdVECore;
 import com.rd.vecore.VirtualVideo;
+import com.rd.vecore.listener.ExportListener;
+import com.rd.vecore.models.AspectRatioFitMode;
 import com.rd.vecore.models.MediaObject;
 import com.rd.vecore.models.MediaType;
+import com.rd.vecore.models.PermutationMode;
 import com.rd.vecore.models.Scene;
+import com.rd.vecore.models.Trailer;
+import com.rd.vecore.models.VideoConfig;
+import com.rd.vecore.models.Watermark;
 import com.rd.veuisdk.callback.ICompressVideoCallback;
 import com.rd.veuisdk.callback.ISdkCallBack;
 import com.rd.veuisdk.database.SDMusicData;
@@ -265,6 +272,25 @@ public final class SdkEntry {
             Log.e(TAG, LOW_API_LEVEL_18);
         }
     }
+
+//    /**
+//     * 画中画功能
+//     *
+//     * @param context
+//     * @param requestCode
+//     */
+//    public static void mixVideo(Context context, int requestCode) {
+//        if (!checkAppKey(context)) {
+//            return;
+//        }
+//        Intent intent = new Intent(context,
+//                com.rd.veuisdk.SelectModeActivity.class);
+//        if (context instanceof Activity && requestCode > 0) {
+//            ((Activity) context).startActivityForResult(intent, requestCode);
+//        } else {
+//            context.startActivity(intent);
+//        }
+//    }
 
     /**
      * 选择媒体资源
@@ -536,7 +562,9 @@ public final class SdkEntry {
 
 
     private static double _VideoEncodingBitRate = -1;
+    private static int maxWH = 640;
 
+    @Deprecated
     static double getVideoEncodingBitRate() {
         return _VideoEncodingBitRate;
     }
@@ -546,6 +574,7 @@ public final class SdkEntry {
      *
      * @param videoEncodingBitRate 码流大小（单位：M）
      */
+    @Deprecated
     public static void setVideoEncodingBitRate(double videoEncodingBitRate) {
         _VideoEncodingBitRate = Math.max(videoEncodingBitRate, 1);
     }
@@ -556,6 +585,7 @@ public final class SdkEntry {
      * @param context   上下文
      * @param videoPath 本地视频播放地址
      */
+    @Deprecated
     public static void playVideo(Context context, String videoPath) {
         if (!checkAppKey(context)) {
             return;
@@ -760,4 +790,91 @@ public final class SdkEntry {
         builder.setDownsampleEnabled(true);
         return builder.build();
     }
+
+    private static VirtualVideo exportVideo;
+
+    /**
+     * * 简单文件导出
+     *
+     * @param context
+     * @param videoConfig    输出文件的参数
+     * @param videoList      文件源
+     * @param outPath        输出文件的路径
+     * @param watermark      水印
+     * @param trailer        视频片尾
+     * @param exportListener 视频导出回调
+     */
+    public static void exportVideo(Context context, VideoConfig videoConfig, ArrayList<String> videoList, String outPath, Watermark watermark, Trailer trailer, final ExportListener exportListener) {
+        if ((null != context) && !TextUtils.isEmpty(outPath) && (null != videoList && videoList.size() > 0)) {
+
+            Scene scene = VirtualVideo.createScene();
+            int len = videoList.size();
+            for (int i = 0; i < len; i++) {
+                MediaObject media = new MediaObject(videoList.get(i));
+                media.setShowRectF(new RectF(0, 0, 1f, 1f));
+                media.setAspectRatioFitMode(AspectRatioFitMode.KEEP_ASPECTRATIO_EXPANDING);
+                scene.addMedia(media);
+            }
+            scene.setPermutationMode(PermutationMode.LINEAR_MODE);
+
+            exportVideo = new VirtualVideo();
+            exportVideo.addScene(scene);
+            if (watermark != null) {
+                exportVideo.addWatermark(watermark);
+            }
+
+            if (null != trailer) {
+                exportVideo.setTrailer(trailer);
+            }
+
+            VideoConfig vc;
+            if (null != videoConfig) {
+                vc = videoConfig;
+            } else {
+                vc = new VideoConfig();
+            }
+
+            exportVideo.export(context, outPath, vc, new ExportListener() {
+                @Override
+                public void onExportStart() {
+                    if (null != exportListener) {
+                        exportListener.onExportStart();
+                    }
+                }
+
+                @Override
+                public boolean onExporting(int progress, int max) {
+                    if (null != exportListener) {
+                        exportListener.onExporting(progress, max);
+                    }
+                    return true;
+                }
+
+                @Override
+                public void onExportEnd(int result) {
+                    if (null != exportVideo) {
+                        exportVideo.release();
+                        exportVideo = null;
+                    }
+                    if (null != exportListener) {
+                        exportListener.onExportEnd(result);
+                    }
+                }
+            });
+
+        } else {
+            Log.e(TAG, "onExportVideo:  videoPath  or  outPath  is null");
+        }
+
+    }
+
+    /**
+     * 取消导出
+     */
+    public static void cancelExport() {
+        if (null != exportVideo) {
+            exportVideo.cancelExport();
+        }
+    }
+
 }

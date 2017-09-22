@@ -128,18 +128,7 @@ public class VideoEditActivity extends BaseActivity implements
      * 请求权限code:读取外置存储
      */
     private final int REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSIONS = 1;
-    //    /*
-//     * MVURL
-//     */
-    public static final String WEB_MV_URL = "http://dianbook.17rd.com/api/shortvideo/getmvprop2";
-    //    /*
-//     * MUSICURL
-//     */
-//    public static final String WEB_MUSIC_URL = "http://dianbook.17rd.com/api/shortvideo/getbgmusic";
-//    /*
-//     * 云音乐URL
-//     */
-//    public static final String CLOUDMUSIC_URL = "http://dianbook.17rd.com/api/shortvideo/getcloudmusic";
+
     /*
       * 预览播放器的容器 (支持可变长宽比例)
       */
@@ -184,7 +173,6 @@ public class VideoEditActivity extends BaseActivity implements
     * 音乐类对象
    */
     private MusicFragmentEx mMusicFragmentEx;
-    // private ThemeFragment themeFragment;
     /*
     * MV类对象
    */
@@ -1684,24 +1672,9 @@ public class VideoEditActivity extends BaseActivity implements
 
         if (null == mMusicFragmentEx) {
             mMusicFragmentEx = new MusicFragmentEx();
-
-//            if (TextUtils.isEmpty(mUIConfig.musicUrl)) {
-//                if (TextUtils.isEmpty(mUIConfig.cloudMusicUrl)) {
-//                    mMusicFragmentEx.init(mExportConfig.trailerDuration, WEB_MUSIC_URL, mUIConfig.voiceLayoutTpye,
-//                            mMusicListener, CLOUDMUSIC_URL, mUIConfig.enableLocalMusic);
-//                } else {
-//                    mMusicFragmentEx.init(mExportConfig.trailerDuration, WEB_MUSIC_URL, mUIConfig.voiceLayoutTpye,
-//                            mMusicListener, mUIConfig.cloudMusicUrl, mUIConfig.enableLocalMusic);
-//                }
-//            } else {
-//                if (TextUtils.isEmpty(mUIConfig.cloudMusicUrl)) {
-//                    mMusicFragmentEx.init(mExportConfig.trailerDuration, mUIConfig.musicUrl, mUIConfig.voiceLayoutTpye,
-//                            mMusicListener, CLOUDMUSIC_URL, mUIConfig.enableLocalMusic);
-//                } else {
             mMusicFragmentEx.init(mExportConfig.trailerDuration, mUIConfig.musicUrl, mUIConfig.voiceLayoutTpye,
                     mMusicListener, mUIConfig.cloudMusicUrl, mUIConfig.enableLocalMusic);
-//                }
-//            }
+
         }
         changeToFragment(mMusicFragmentEx, true);
 
@@ -1736,11 +1709,7 @@ public class VideoEditActivity extends BaseActivity implements
         menu = getString(R.string.mv);
         resetTitlebar();
         if (mMVFragment == null) {
-            if (TextUtils.isEmpty(SdkEntry.getSdkService().getUIConfig().mvUrl)) {
-                mMVFragment = new MVFragment(WEB_MV_URL, true);
-            } else {
-                mMVFragment = new MVFragment(mUIConfig.mvUrl, true);
-            }
+            mMVFragment = new MVFragment(mUIConfig.mvUrl, true);
         }
         changeToFragment(mMVFragment, true);
         if (!isPlaying()) {
@@ -2302,8 +2271,7 @@ public class VideoEditActivity extends BaseActivity implements
             return;
         }
         mVirtualVideoView.stop();
-        mHWCodecEnabled = AppConfiguration.HWCoderEnabled();
-
+        mHWCodecEnabled = CoreUtils.hasJELLY_BEAN_MR2();
         exportVideo();
     }
 
@@ -2326,7 +2294,6 @@ public class VideoEditActivity extends BaseActivity implements
      */
     private void exportVideo() {
         mVirtualVideoSave = new VirtualVideo();
-
         ArrayList<Scene> alReloadScenes = new ArrayList<Scene>();
         loadAllMediaObjects(alReloadScenes);
 
@@ -2378,17 +2345,9 @@ public class VideoEditActivity extends BaseActivity implements
             vc.setVideoEncodingBitRate((int) (SdkEntry.getVideoEncodingBitRate() * 1000000));
         }
 
-        if (AppConfiguration.isHWCoderChecking()) {
-            // 如果一直处于检查状态，代表启用硬件编解码失败
-            mHWCodecEnabled = false;
-            AppConfiguration.enableHWCodec(false);
-        }
-        AppConfiguration.setHWCoderChecking(true);
-
         vc.enableHWEncoder(mHWCodecEnabled);
         vc.enableHWDecoder(mHWCodecEnabled);
         vc.setAspectRatio(mCurProportion);
-
 
         if (!TextUtils.isEmpty(mSavePath)) {
             File path = new File(mSavePath);
@@ -2520,8 +2479,7 @@ public class VideoEditActivity extends BaseActivity implements
 
         @Override
         public void onExportEnd(int nResult) {
-            // 启用硬件编解码检查结束
-            AppConfiguration.setHWCoderChecking(false);
+
             if (null != mVirtualVideoSave) {
                 mVirtualVideoSave = null;
             }
@@ -2530,9 +2488,6 @@ public class VideoEditActivity extends BaseActivity implements
                     WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
             if (nResult >= VirtualVideo.RESULT_SUCCESS) {
-//                if (null != mExportConfig.trailerPath) {
-//                    Utils.cleanTempFile(mExportConfig.trailerPath);
-//                }
                 if (mIsFromCamera) {
                     SdkEntryHandler.getInstance().onExportRecorderEdit(
                             VideoEditActivity.this, mStrSaveMp4FileName);

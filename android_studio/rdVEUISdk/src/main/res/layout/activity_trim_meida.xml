@@ -38,13 +38,22 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_centerInParent="true"/>
+
+
+                        <com.rd.veuisdk.crop.CropView
+                            android:id="@+id/cvVideoCrop"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_centerInParent="true"
+                            />
                     </com.rd.lib.ui.PreviewFrameLayout>
 
                     <com.rd.veuisdk.ui.ProgressView
                         android:id="@+id/progressView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_alignParentBottom="true"/>
+                        android:layout_alignParentBottom="true"
+                        android:visibility="gone"/>
                 </com.rd.lib.ui.PreviewFrameLayout>
             </LinearLayout>
         </ScrollView>
@@ -79,13 +88,21 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_centerInParent="true"/>
+
+                        <com.rd.veuisdk.crop.CropView
+                            android:id="@+id/cvVideoCropHori"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_centerInParent="true"
+                            />
                     </com.rd.lib.ui.PreviewFrameLayout>
 
                     <com.rd.veuisdk.ui.ProgressView
                         android:id="@+id/progressViewHori"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_alignParentBottom="true"/>
+                        android:layout_alignParentBottom="true"
+                        android:visibility="gone"/>
                 </com.rd.lib.ui.PreviewFrameLayout>
             </LinearLayout>
         </com.rd.veuisdk.ui.HorizontalScrollViewEx>
@@ -128,13 +145,13 @@
                 android:textSize="@dimen/text_size_18"/>
         </RelativeLayout>
     </RelativeLayout>
-
+    <!--  android:background="@color/public_menu_back_color"-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/llmenu"
         android:layout_below="@+id/rlPlayer"
-        android:background="@color/public_menu_back_color"
+
         android:gravity="center"
         android:orientation="vertical">
 
@@ -149,8 +166,8 @@
             <RelativeLayout
                 android:id="@+id/progresslayout"
                 android:layout_width="wrap_content"
-                android:layout_marginBottom="-15dp"
-                android:layout_height="@dimen/preview_intercept_margintop">
+                android:layout_height="@dimen/preview_intercept_margintop"
+                android:layout_marginBottom="-15dp">
 
                 <TextView
                     android:id="@+id/tvRemainDuration"
