@@ -2,6 +2,7 @@ package com.mobnote.golukmain.photoalbum;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -78,12 +79,18 @@ import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SDKUtils;
 import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.ZhugeUtils;
+import com.rd.lib.utils.CoreUtils;
+import com.rd.vecore.VirtualVideo;
+import com.rd.vecore.listener.ExportListener;
+import com.rd.vecore.models.Trailer;
+import com.rd.vecore.models.VideoConfig;
 import com.rd.veuisdk.SdkEntry;
 import com.rd.veuisdk.SdkService;
 import com.rd.veuisdk.manager.CameraConfiguration;
 import com.rd.veuisdk.manager.ExportConfiguration;
 import com.rd.veuisdk.manager.UIConfiguration;
 import com.rd.veuisdk.manager.VEOSDBuilder;
+import com.rd.veuisdk.utils.PathUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -191,7 +198,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
     private OrientationManager mOrignManager = null;
     private AddTailerDialogFragment mAddTailerDialog;
 
-    /** 是否正在使用微码流 */
+    /**
+     * 是否正在使用微码流
+     */
     private boolean mIsUsingMicro;
 
     private boolean isExporting;
@@ -437,7 +446,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         }
         mConfirmDeleteDialog = null;
 
-        if(mAddTailerDialog != null && mAddTailerDialog.isVisible()) {
+        if (mAddTailerDialog != null && mAddTailerDialog.isVisible()) {
             mAddTailerDialog.dismissAllowingStateLoss();
         }
         mAddTailerDialog = null;
@@ -461,8 +470,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         mLoadingLayout = (LinearLayout) findViewById(R.id.mLoadingLayout);
         mResolutionTV = (TextView) findViewById(R.id.tv_resolution);
         mLoading = (ProgressBar) findViewById(R.id.mLoading);
-     //   mLoading.setBackgroundResource(R.anim.video_loading);
-   //     mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
+        //   mLoading.setBackgroundResource(R.anim.video_loading);
+        //     mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
 
         mPlayImg = (ImageView) findViewById(R.id.play_img);
         mBtnVtPlay = (Button) findViewById(R.id.btn_vt_play);
@@ -535,9 +544,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             mTvShareRightnow.setVisibility(View.GONE);
         }
         mTvT3Hint = (TextView) findViewById(R.id.tv_t3_hint);
-        if(mType==PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP && mVideoFrom.equals("ipc") && GolukApplication.getInstance().getIPCControlManager().needShowT3Hint()) {
+        if (mType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP && mVideoFrom.equals("ipc") && GolukApplication.getInstance().getIPCControlManager().needShowT3Hint()) {
             mTvT3Hint.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             mTvT3Hint.setVisibility(View.GONE);
         }
     }
@@ -599,7 +608,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 }
             });
 
-            if(!TextUtils.isEmpty(mHP)) {
+            if (!TextUtils.isEmpty(mHP)) {
                 mOriginResolutionTV.setText(mHP);
             }
 
@@ -607,17 +616,17 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             mResolutionPopupWindow.setContentView(resolutionView);
             mResolutionPopupWindow.setBackgroundDrawable(null);
         }
-       if (mResolutionPopupWindow.isShowing()) {
-           mResolutionPopupWindow.dismiss();
-       } else {
-           if (android.os.Build.VERSION.SDK_INT >=24) {
-               int[] a = new int[2];
-               mResolutionTV.getLocationInWindow(a);
-               mResolutionPopupWindow.showAtLocation(getWindow().getDecorView(), Gravity.NO_GRAVITY, 0 , a[1]+mResolutionTV.getHeight());
-           } else {
-               mResolutionPopupWindow.showAsDropDown(mResolutionTV);
-           }
-       }
+        if (mResolutionPopupWindow.isShowing()) {
+            mResolutionPopupWindow.dismiss();
+        } else {
+            if (android.os.Build.VERSION.SDK_INT >= 24) {
+                int[] a = new int[2];
+                mResolutionTV.getLocationInWindow(a);
+                mResolutionPopupWindow.showAtLocation(getWindow().getDecorView(), Gravity.NO_GRAVITY, 0, a[1] + mResolutionTV.getHeight());
+            } else {
+                mResolutionPopupWindow.showAsDropDown(mResolutionTV);
+            }
+        }
         mResolutionTV.post(new Runnable() {
             @Override
             public void run() {
@@ -646,18 +655,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             if (!SharePlatformUtil.checkShareableWhenNotHotspot(PhotoAlbumPlayer.this)) return;
             pauseVideo();
             ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
-            GolukUtils.startVideoShareActivity(this, mType, mPath, mFileName, false,
-                    mVideoView.getDuration(), mHP, (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
-//            if (videoEditSupport()) {
-//                doSimpleExport(mPath, mHP);
-//            } else {
-//
-//                //竖屏播放页访问即刻分享页面统计
-//                ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
-//
-//                GolukUtils.startVideoShareActivity(this, mType, mPath, mFileName, false,
-//                        mVideoView.getDuration(), mHP, (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
-//            }
+            addTailerByRd();
         } else if (id == R.id.back_btn) {
 
             click_back();
@@ -695,7 +693,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             Log.e(TAG, "id = " + id);
         }
     }
-
 
     private int getType() {
         int tempType = 0;
@@ -1519,7 +1516,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
     }
 
 
-
     private SparseArray<ActivityResultHandler> registeredActivityResultHandlers;
 
 
@@ -1761,6 +1757,82 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                         .enablePlayMusic(configData.enablePlayMusic)
                         // 是否美颜
                         .enableBeauty(configData.enableBeauty).get());
+    }
+
+    private void addTailerByRd() {
+        VideoConfig config = new VideoConfig();
+        config.enableHWEncoder(CoreUtils.hasJELLY_BEAN_MR2());
+        config.enableHWDecoder(CoreUtils.hasJELLY_BEAN_MR2());
+        String strSaveMp4FileName = PathUtils.getMp4FileNameForSdcard();
+        config.setVideoEncodingBitRate(4000 * 1000);
+        Trailer trailer = new Trailer(configData.videoTrailerPath, 2, 0.5f);
+        ArrayList<String> videos = new ArrayList<>();
+        videos.add(mPath);
+        ExportVideoLisenter mExportListener = new ExportVideoLisenter(strSaveMp4FileName);
+        SdkEntry.exportVideo(this, config, videos, strSaveMp4FileName, null, trailer, mExportListener);
+    }
+
+
+    /**
+     * 导出视频的回调演示
+     */
+    private class ExportVideoLisenter implements ExportListener {
+        private String mPath;
+        private AlertDialog mDialog;
+        private ProgressBar mProgressBar;
+        private Button mBtnCancel;
+        private TextView mTvTitle;
+
+        public ExportVideoLisenter(String videoPath) {
+            mPath = videoPath;
+        }
+
+        @Override
+        public void onExportStart() {
+            View v = LayoutInflater.from(PhotoAlbumPlayer.this).inflate(
+                    R.layout.progress_view, null);
+            mTvTitle = (TextView) v.findViewById(R.id.tvTitle);
+            mTvTitle.setText(R.string.exporting);
+            mProgressBar = (ProgressBar) v.findViewById(R.id.pbCompress);
+            mBtnCancel = (Button) v.findViewById(R.id.btnCancelCompress);
+            mBtnCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    SdkEntry.cancelExport();
+                }
+            });
+            mDialog = new AlertDialog.Builder(PhotoAlbumPlayer.this).setView(v)
+                    .show();
+            mDialog.setCanceledOnTouchOutside(false);
+        }
+
+        /**
+         * 导出进度回调
+         *
+         * @param progress 当前进度
+         * @param max      最大进度
+         * @return 返回是否继续执行，false为终止导出
+         */
+        @Override
+        public boolean onExporting(int progress, int max) {
+            if (mProgressBar != null) {
+                mProgressBar.setMax(max);
+                mProgressBar.setProgress(progress);
+            }
+            return true;
+        }
+
+        @Override
+        public void onExportEnd(int result) {
+            mDialog.dismiss();
+            if (result >= VirtualVideo.RESULT_SUCCESS) {
+                GolukUtils.startVideoShareActivity(PhotoAlbumPlayer.this, mType, mPath, mFileName, false,
+                        mVideoView.getDuration(), mHP, (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
+            } else if (result != VirtualVideo.RESULT_SAVE_CANCEL) {
+                Log.e(TAG, "onExportEnd: " + result);
+                Toast.makeText(PhotoAlbumPlayer.this, getString(R.string.export_error) + result, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
 

@@ -1122,5 +1122,8 @@
     <string name="str_wifi_title">Wi-Fi name</string>
     <string name="str_wifi_success">Wi-Fi successfully renamed</string>
     <string name="str_wifi_name_fail">Unable to rename Wi-Fi</string>
+    <string name="compress_video">正在压缩视频...</string>
+    <string name="export_error">导出失败</string>
+    <string name="exporting">正在导出...</string>
 
 </resources>
