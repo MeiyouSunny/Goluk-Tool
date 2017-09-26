@@ -324,7 +324,12 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
                                         String logPath = Environment.getExternalStorageDirectory() + File.separator + GolukFileUtils.GOLUK_LOG_PATH;
                                         DataCleanManage.deleteFile(Const.getAppContext().getCacheDir());
                                         DataCleanManage.deleteFile(new File(logPath));
-                                        Glide.get(UserSetupActivity.this).clearDiskCache();
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Glide.get(UserSetupActivity.this).clearDiskCache();
+                                            }
+                                        }).start();
                                         mTextCacheSize.setText("0.00B");
                                     }
                                 }).create().show();
