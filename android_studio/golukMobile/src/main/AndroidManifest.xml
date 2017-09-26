@@ -578,7 +578,7 @@
             android:name="com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:hardwareAccelerated="true"
-
+            android:launchMode="singleTop"
             android:theme="@android:style/Theme.NoTitleBar"></activity>
         <activity android:name="com.mobnote.golukmain.watermark.CarBrandsListActivity">
         </activity>

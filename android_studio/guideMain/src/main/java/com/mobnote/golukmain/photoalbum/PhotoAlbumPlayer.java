@@ -246,6 +246,10 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
         initData(savedInstanceState);
 
+        loadMedia();
+    }
+
+    private void loadMedia() {
         initView();
 
         setOrientation(true);
@@ -257,6 +261,13 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         mHandler.postDelayed(mPlayingChecker, 250);
         initEditorUIAndExportConfig();
         registerAllResultHandlers();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        initData(intent.getExtras());
+        loadMedia();
     }
 
     private void startPlay() {
@@ -1765,6 +1776,14 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         config.enableHWDecoder(CoreUtils.hasJELLY_BEAN_MR2());
         String strSaveMp4FileName = PathUtils.getMp4FileNameForSdcard();
         config.setVideoEncodingBitRate(4000 * 1000);
+        String nickName;
+        if (GolukApplication.getInstance().isUserLoginSucess) {
+            UserInfo userInfo = mApp.getMyInfo();
+            nickName = userInfo.nickname;
+        } else {
+            nickName = getString(R.string.str_default_video_edit_user_name);
+        }
+        configData.videoTrailerPath = SDKUtils.createVideoTrailerImage(this, nickName, 480, 50, 50);
         Trailer trailer = new Trailer(configData.videoTrailerPath, 2, 0.5f);
         ArrayList<String> videos = new ArrayList<>();
         videos.add(mPath);
