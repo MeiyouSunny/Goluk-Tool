@@ -567,7 +567,6 @@ class SpecialHandler {
 
         @Override
         public void onEditorPreviewComplete() {
-//            android.util.Log.e(TAG, "onEditorPreviewComplete: ");
             onScrollCompleted();
             if (mAddStep) {
                 onWordEnd();
@@ -576,8 +575,7 @@ class SpecialHandler {
 
         @Override
         public void onEditorPrepred() {
-
-            if (null != mEditorHandler) { // 清除另一种方式下的字幕,取消loading...
+            if (null != mEditorHandler) { // 取消loading...
                 mEditorHandler.cancelLoading();
             }
             initThumbTimeLine(mEditorHandler.getSnapshotEditor());
@@ -585,14 +583,12 @@ class SpecialHandler {
 
         @Override
         public void onEditorGetPosition(int nPosition, int nDuration) {
-//            android.util.Log.e(TAG, "onEditorGetPosition: " + nPosition + "..." + nDuration);
             onScrollProgress(nPosition);
             if (mAddStep) {
                 int mleft = mSubLine.getCurrent();
                 if (-1 != mleft) {
                     int maxMs = mSubLine.getMaxRightbyMs(mleft);
                     if (nPosition >= maxMs) {
-//                        android.util.Log.e(TAG, "onEditorGetPosition>>>>>.: " + nPosition + "..." + nDuration + "---->" + maxMs);
                         onWordEnd();
                     }
                 }
@@ -1941,12 +1937,12 @@ class SpecialHandler {
                     if (null != info) {
                         mCurInfo.setStyleId(info.pid);
                     }
-                }
-                if (null != mCurInfo) {
                     initsp();
                     onStyleItem(position);
                 }
-                mSpAapter.notifyDataSetChanged();
+                if (null != mSpAapter) {
+                    mSpAapter.notifyDataSetChanged();
+                }
             }
 
         }

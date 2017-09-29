@@ -225,7 +225,13 @@ public class TransitionActivity extends BaseActivity {
                         arrTransitions.add(getRandomTransition());
                     }
                 } else {
-                    arrTransitions.add(mTransition);
+                    if (mApplyToAll) {
+                        for (int nTemp = 0; nTemp < mTransitionCount; nTemp++) {
+                            arrTransitions.add(mTransition);
+                        }
+                    } else {
+                        arrTransitions.add(mTransition);
+                    }
                 }
                 for (Transition transition : arrTransitions) {
                     transition.setDuration(mTransitionDuration);

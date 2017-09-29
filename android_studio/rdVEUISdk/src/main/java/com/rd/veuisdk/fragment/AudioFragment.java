@@ -2,7 +2,6 @@ package com.rd.veuisdk.fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -63,7 +62,7 @@ public class AudioFragment extends BaseFragment implements
     /**
      * 最小录制时间(ms)
      */
-    private static final int MIN_RECORD_TIME = 100;
+    private static final float MIN_RECORD_TIME = 0.1f;
     /**
      * 某段录音录制结束后需要偏移的时间(ms)
      */
@@ -119,7 +118,7 @@ public class AudioFragment extends BaseFragment implements
     /**
      * 视频编辑预览处理器
      */
-    private IVideoEditorHandler mhlrVideoEditor;
+    private IVideoEditorHandler mVideoEditorHandler;
 
     /**
      * 是否正在录音
@@ -170,10 +169,6 @@ public class AudioFragment extends BaseFragment implements
      */
     private TextView mCurrentPositionTextView;
     private int[] mArrSubLineParam = null;
-
-    /**
-     *
-     */
     private VerticalSeekBar mVsbAudioFactor;
 
     /**
@@ -188,11 +183,7 @@ public class AudioFragment extends BaseFragment implements
      * 按住配音提示
      */
     private TextView mtvAudioRecord;
-
     private TextView mtvCenterTime;
-    /**
-     *
-     */
     private LinearLayout mllAudioFactor;
 
     private boolean mShowFactor = false;
@@ -207,18 +198,11 @@ public class AudioFragment extends BaseFragment implements
     public AudioFragment() {
     }
 
-    @SuppressLint("ValidFragment")
-    public AudioFragment(View mRightView) {
-        this.mRightView = mRightView;
-    }
-
-    @SuppressWarnings("deprecation")
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mhlrVideoEditor = (IVideoEditorHandler) activity;
-        mAudioManager = (AudioManager) activity
-                .getSystemService(Context.AUDIO_SERVICE);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mVideoEditorHandler = (IVideoEditorHandler) context;
+        mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
     }
 
     @Override
@@ -242,9 +226,6 @@ public class AudioFragment extends BaseFragment implements
 
             @Override
             public void onEditorGetPosition(int nPosition, int nDuration) {
-
-
-                //Log.e(TAG, "onEditorGetPosition: "+nPosition+"....."+nDuration +".........."+mDuration);
                 int progress = nPosition;
 
                 int last = TempVideoParams.getInstance().getThemeLast();
@@ -256,8 +237,6 @@ public class AudioFragment extends BaseFragment implements
 
                 // 让配音缩略图滚动起来
                 onScrollProgress(nPosition);
-//				 Log.e("onEditorGetPosition " + mIsRecording, nPosition
-//				 + "......" + nDuration + "..........." + mRecordId);
                 // 是否在录音
                 if (mIsRecording) {
                     if (mSubLine != null) {
@@ -278,8 +257,6 @@ public class AudioFragment extends BaseFragment implements
 
             @Override
             public void onEditorPreviewComplete() {
-                // Log.e("onEditorPreviewComplte", "....." + mIsRecording
-                // + mRecordId);
                 if (mIsRecording) {
                     if (mSubLine != null) {
                         mSubLine.update(mRecordId, mStartRecordingPosition,
@@ -292,11 +269,12 @@ public class AudioFragment extends BaseFragment implements
 
             @Override
             public void onEditorPrepred() {
+                checkInitThumb();
             }
         };
-        mhlrVideoEditor
+        mVideoEditorHandler
                 .registerEditorPostionListener(mEditorPreivewPositionListener);
-        mDuration = mhlrVideoEditor.getDuration();
+        mDuration = mVideoEditorHandler.getDuration();
     }
 
     @SuppressLint("InflateParams")
@@ -307,11 +285,26 @@ public class AudioFragment extends BaseFragment implements
         mRoot = inflater.inflate(R.layout.fragment_video_edit_audio, null);
 
         initLayout(mRoot);
-        onInitThumbTimeLine();
+        bThumbPrepared = false;
+        checkInitThumb();
         return mRoot;
     }
 
-    private void resetItem() {
+    private boolean bThumbPrepared = false;
+
+    /**
+     * 是否缩略图初始时间轴
+     */
+    private void checkInitThumb() {
+        mDuration = mVideoEditorHandler.getDuration();
+        if (mDuration > 1 && (!bThumbPrepared)) {
+            bThumbPrepared = true;
+            //播放器已准备好且未初始化时间轴
+            initThumbTimeLine();
+        }
+    }
+
+    private void invalideButtonStatus() {
         if (mTempList.size() == 0) {
             mAuditionTextView.setVisibility(View.INVISIBLE);
             mResetTextView.setVisibility(View.INVISIBLE);
@@ -383,8 +376,8 @@ public class AudioFragment extends BaseFragment implements
 
             @Override
             public void onClick(View v) {
-                if (mhlrVideoEditor != null) {
-                    if (mhlrVideoEditor.isPlaying()) {
+                if (mVideoEditorHandler != null) {
+                    if (mVideoEditorHandler.isPlaying()) {
                         editorPause();
                     } else {
                         editorStart();
@@ -409,11 +402,11 @@ public class AudioFragment extends BaseFragment implements
                     mSubLine.clearAll();
                 }
                 mTempList.clear();
-                mhlrVideoEditor.reload(true);
-                mhlrVideoEditor.seekTo(0);
+                mVideoEditorHandler.reload(true);
+                mVideoEditorHandler.seekTo(0);
                 mPlayState.setImageResource(R.drawable.edit_music_play);
                 onScrollProgress(0);
-                resetItem();
+                invalideButtonStatus();
             }
         });
 
@@ -422,11 +415,7 @@ public class AudioFragment extends BaseFragment implements
             @Override
             public void onClick(View v) {
                 saveAudioData();
-
-                // 播放录音
-                mhlrVideoEditor.reload(false);
                 editorStart();
-                mhlrVideoEditor.seekTo(0);
             }
         });
 
@@ -454,7 +443,7 @@ public class AudioFragment extends BaseFragment implements
                                         .toArray(new String[permissions.size()]), 1);
                             }
                         }
-                        int progress = mhlrVideoEditor.getCurrentPosition();
+                        int progress = mVideoEditorHandler.getCurrentPosition();
 
                         if (isInEditingRegion(progress, true)) {
                             removeAudio();
@@ -492,7 +481,7 @@ public class AudioFragment extends BaseFragment implements
                         // + mIsRecording);
                         if (mEditAudioIdCurrent == -1 && mIsRecording) {
                             // 停止录音
-                            stopRecording(mhlrVideoEditor.getCurrentPosition());
+                            stopRecording(mVideoEditorHandler.getCurrentPosition());
                             return true;
                         }
                         break;
@@ -501,10 +490,7 @@ public class AudioFragment extends BaseFragment implements
             }
         });
 
-        resetItem();
-
         // 录音标示
-
         mScrollView = (TimelineHorizontalScrollView) layout
                 .findViewById(R.id.audio_horizontal_scrollview);
         mScrollView.enableUserScrolling(true);
@@ -517,16 +503,6 @@ public class AudioFragment extends BaseFragment implements
         mSubLine.setSubtitleThumbNailListener(iSublistener);
         mSubLine.setMoveItem(false);
         mSubLine.setIsAudio(true);
-
-        mScrollView.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                onInitThumbTimeLine(
-                        mhlrVideoEditor.getSnapshotEditor());
-            }
-        }, 200);
-
     }
 
     private void removeAudio() {
@@ -540,49 +516,29 @@ public class AudioFragment extends BaseFragment implements
             // 现在可以从临时链表中将配音删除
             mTempList.remove(index);
         }
-        resetItem();
+        invalideButtonStatus();
         mEditAudioIdCurrent = -1;
 
-        int nLastPosition = mhlrVideoEditor.getCurrentPosition();
-        boolean isPlaying = mhlrVideoEditor.isPlaying();
-        mhlrVideoEditor.reload(true);
+        int nLastPosition = mVideoEditorHandler.getCurrentPosition();
+        boolean isPlaying = mVideoEditorHandler.isPlaying();
+        mVideoEditorHandler.reload(true);
         if (isPlaying) {
             editorStart();
         }
-        mhlrVideoEditor.seekTo(nLastPosition);
+        mVideoEditorHandler.seekTo(nLastPosition);
 
         // 删除完之后，将图片设置为配音
         setAudioRecordImageViewStatue(true);
     }
 
     private void editorStart() {
-        mhlrVideoEditor.start();
+        mVideoEditorHandler.start();
         mPlayState.setImageResource(R.drawable.edit_music_pause);
-        // ArrayList<SubInfo> mlist = mSubLine.getData();
-        //
-        // for (int i = 0; i < mlist.size(); i++) {
-        //
-        // Log.d("editorStart", " item--" + i + "...."
-        // + mlist.get(i).toString());
-        // }
     }
 
     private void editorPause() {
-        mhlrVideoEditor.pause();
+        mVideoEditorHandler.pause();
         mPlayState.setImageResource(R.drawable.edit_music_play);
-    }
-
-    /**
-     * 初始化缩略图时间轴
-     */
-    private void onInitThumbTimeLine(VirtualVideo enhplayer) {
-
-
-        mSubLine.setVirtualVideo(enhplayer);
-
-        mSubLine.setStartThumb(mScrollView.getScrollX());
-
-
     }
 
     private int mStateSize = 0;
@@ -590,8 +546,7 @@ public class AudioFragment extends BaseFragment implements
     /**
      * 初始化缩略图时间轴
      */
-    private void onInitThumbTimeLine() {
-        mDuration = mhlrVideoEditor.getDuration();
+    private void initThumbTimeLine() {
         int half;
         if (mIsLandscape) {
             half = CoreUtils.getMetrics().widthPixels / 2;
@@ -612,9 +567,9 @@ public class AudioFragment extends BaseFragment implements
 
             @Override
             public void onActionDown() {
-                isplaying = mhlrVideoEditor.isPlaying();
+                isplaying = mVideoEditorHandler.isPlaying();
                 editorPause();
-                mhlrVideoEditor.seekTo(getProgress(mScrollView.getScrollX()));
+                mVideoEditorHandler.seekTo(getProgress(mScrollView.getScrollX()));
 
             }
 
@@ -622,7 +577,7 @@ public class AudioFragment extends BaseFragment implements
             public void onActionMove() {
                 int sx = mScrollView.getScrollX();
                 mSubLine.setStartThumb(sx);
-                mhlrVideoEditor.seekTo(getProgress(sx));
+                mVideoEditorHandler.seekTo(getProgress(sx));
                 onScrollChanged();
             }
 
@@ -630,7 +585,7 @@ public class AudioFragment extends BaseFragment implements
             public void onActionUp() {
                 int sx = mScrollView.getScrollX();
                 mSubLine.setStartThumb(sx);
-                mhlrVideoEditor.seekTo(getProgress(sx));
+                mVideoEditorHandler.seekTo(getProgress(sx));
                 onScrollChanged();
                 if (isplaying) {
                     isplaying = false;
@@ -661,7 +616,8 @@ public class AudioFragment extends BaseFragment implements
         // 设置可以触摸
         mSubLine.setCantouch(true);
 
-        reStartAudio();
+        resetLastAudioInfo();
+        invalideButtonStatus();
 
         ArrayList<SubInfo> sublist = new ArrayList<SubInfo>();
         int len = mTempList.size();
@@ -674,16 +630,20 @@ public class AudioFragment extends BaseFragment implements
 
             @Override
             public void run() {
-                if (mTempList.size() > 0) {
-                    mhlrVideoEditor.seekTo(30);
-                    onScrollProgress(30);
-                } else {
-                    mhlrVideoEditor.seekTo(0);
-                    onScrollProgress(0);
+                if (mVideoEditorHandler != null) {
+                    if (mTempList.size() > 0) {
+                        mVideoEditorHandler.seekTo(30);
+                        onScrollProgress(30);
+                    } else {
+                        mVideoEditorHandler.seekTo(0);
+                        onScrollProgress(0);
+                    }
                 }
             }
         }, 150);
 
+        mSubLine.setVirtualVideo(mVideoEditorHandler.getSnapshotEditor());
+        mSubLine.setStartThumb(mScrollView.getScrollX());
     }
 
     /**
@@ -801,21 +761,21 @@ public class AudioFragment extends BaseFragment implements
     // private boolean isCheckItem = true;
 
     protected void onScrollChanged() {
-        if (mhlrVideoEditor != null) {
+        if (mVideoEditorHandler != null) {
             // 设置当前时间
             if (mIsLandscape) {
                 mtvCenterTime.setText(DateTimeUtils
-                        .stringForTime(mhlrVideoEditor.getCurrentPosition()));
+                        .stringForTime(mVideoEditorHandler.getCurrentPosition()));
             } else {
                 mCurrentPositionTextView.setText(DateTimeUtils
                         .stringForMillisecondTime(
-                                mhlrVideoEditor.getCurrentPosition(), true,
+                                mVideoEditorHandler.getCurrentPosition(), true,
                                 true));
             }
 
             if (!mIsRecording) {
                 // 如果当前位置在录音区间
-                if (isInEditingRegion(mhlrVideoEditor.getCurrentPosition(),
+                if (isInEditingRegion(mVideoEditorHandler.getCurrentPosition(),
                         false)) {
                     // 设置为删除状态
                     setAudioRecordImageViewStatue(false);
@@ -841,8 +801,8 @@ public class AudioFragment extends BaseFragment implements
             // Log.e("onScrollProgress", scrollX + "...." + appScroll);
 
             sx = mScrollView.getScrollX();
-            if (!appScroll && mhlrVideoEditor != null && !mIsRecording) {
-                mhlrVideoEditor.seekTo(getProgress(scrollX));
+            if (!appScroll && mVideoEditorHandler != null && !mIsRecording) {
+                mVideoEditorHandler.seekTo(getProgress(scrollX));
             }
             if (null != mSubLine) {
                 mSubLine.setStartThumb(sx);
@@ -856,8 +816,8 @@ public class AudioFragment extends BaseFragment implements
                                 boolean appScroll) {
             // Log.e("onScrollEnd", scrollX + "...." + appScroll);
             sx = mScrollView.getScrollX();
-            if (!appScroll && mhlrVideoEditor != null && !mIsRecording) {
-                mhlrVideoEditor.seekTo(getProgress(scrollX));
+            if (!appScroll && mVideoEditorHandler != null && !mIsRecording) {
+                mVideoEditorHandler.seekTo(getProgress(scrollX));
             }
             if (null != mSubLine) {
                 mSubLine.setStartThumb(sx);
@@ -878,8 +838,6 @@ public class AudioFragment extends BaseFragment implements
 
     /**
      * 播放中的进度
-     *
-     * @param progress
      */
     private void onScrollProgress(int progress) {
         onScrollTo(getItemScrollX(progress));
@@ -887,8 +845,6 @@ public class AudioFragment extends BaseFragment implements
 
     /**
      * 设置播放进度
-     *
-     * @param mScrollX
      */
     private void onScrollTo(int mScrollX) {
         mScrollView.appScrollTo(mScrollX, true);
@@ -898,12 +854,12 @@ public class AudioFragment extends BaseFragment implements
         return (int) (progress * (mArrSubLineParam[0]) / mDuration);
     }
 
-    private boolean isrunning = false;
+    private boolean mIsOnFront = false;
 
     @Override
     public void onResume() {
         super.onResume();
-        isrunning = true;
+        mIsOnFront = true;
     }
 
     @Override
@@ -913,38 +869,36 @@ public class AudioFragment extends BaseFragment implements
         if (null != mllAudioFactor) {
             mllAudioFactor.setVisibility(View.GONE);
         }
-        isrunning = false;
+        mIsOnFront = false;
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
-        boolean isPlaying = mhlrVideoEditor.isPlaying();
-        mhlrVideoEditor.reload(false);
-        if (isPlaying) {
-            mhlrVideoEditor.start();
-        }
+//
+//        boolean isPlaying = mVideoEditorHandler.isPlaying();
+//        mVideoEditorHandler.reload(false);
+//        if (isPlaying) {
+//            mVideoEditorHandler.start();
+//        }
     }
 
     @Override
     public void onDestroy() {
-        if (mhlrVideoEditor != null && mEditorPreivewPositionListener != null) {
-            mhlrVideoEditor
+        if (mVideoEditorHandler != null && mEditorPreivewPositionListener != null) {
+            mVideoEditorHandler
                     .unregisterEditorProgressListener(mEditorPreivewPositionListener);
             mEditorPreivewPositionListener = null;
-            mhlrVideoEditor = null;
         }
         if (null != mSubLine) {
             mSubLine.recycle(false);
-            mSubLine = null;
         }
         super.onDestroy();
     }
 
     @Override
     public List<Music> getMusicObjects() {
-        if (isrunning) {
+        if (mIsOnFront) {
             addAudioData(mTempList);
         } else {
             addAudioData(TempVideoParams.getInstance().getAudios());
@@ -973,12 +927,15 @@ public class AudioFragment extends BaseFragment implements
         // }
 
         TempVideoParams.getInstance().setAudioList(temp);
+        // 播放录音
+        mVideoEditorHandler.reload(false);
+        mVideoEditorHandler.seekTo(0);
     }
 
     /**
      * 还原配音链表
      */
-    private void reStartAudio() {
+    private void resetLastAudioInfo() {
         mOldList.clear();
         mTempList.clear();
         ArrayList<AudioInfo> temp = TempVideoParams.getInstance().getAudios();
@@ -996,7 +953,6 @@ public class AudioFragment extends BaseFragment implements
 
     private void addAudioData(ArrayList<AudioInfo> temp) {
         /** 配音链表 */
-
         if (m_alAudioTracks != null) {
             m_alAudioTracks.clear();
             int len = temp.size();
@@ -1027,11 +983,11 @@ public class AudioFragment extends BaseFragment implements
     private void startRecording() {
 
         // Log.e("startRecording.",
-        // "当前精度:" + mhlrVideoEditor.getCurrentPosition() + "......");
+        // "当前精度:" + mVideoEditorHandler.getCurrentPosition() + "......");
         mScrollView.setCanTouch(false);
         int sx = mScrollView.getScrollX();
         mScrollView.scrollTo(sx, 0);
-        mhlrVideoEditor.seekTo(getProgress(sx));
+        mVideoEditorHandler.seekTo(getProgress(sx));
         // // 录音的时候静音
         setMusicStreamMute(true);
 
@@ -1054,8 +1010,8 @@ public class AudioFragment extends BaseFragment implements
                     Toast.LENGTH_SHORT);
             return;
         }
-        mStartRecordingPosition = mhlrVideoEditor.getCurrentPosition();
-        if (!mhlrVideoEditor.isPlaying()) {
+        mStartRecordingPosition = mVideoEditorHandler.getCurrentPosition();
+        if (!mVideoEditorHandler.isPlaying()) {
             editorStart();
         }
         if (Math.abs(mStartRecordingPosition - mDuration) < 100) {
@@ -1115,15 +1071,16 @@ public class AudioFragment extends BaseFragment implements
             }
             if (mAudioFile != null) {
                 // 如果配音文件有错或者时间为０，则提示一下
-                File temp = new File(mAudioFile.getAbsolutePath());
-                if (mAudioInfo == null || temp.length() <= MIN_RECORD_TIME) {
+                float fDuration = 0;
+                if (mAudioFile.exists()) {
+                    fDuration = VirtualVideo.getMediaInfo(mAudioFile.getAbsolutePath(), null);
+                }
+                if (fDuration <= MIN_RECORD_TIME) {
                     SysAlertDialog.showAutoHideDialog(getActivity(), null,
                             getString(R.string.record_audio_too_short_retry),
                             Toast.LENGTH_SHORT);
                     onRecordingFailed();
-                    if (temp != null) {
-                        temp.delete();
-                    }
+                    mAudioFile.delete();
                 } else {
                     // 停止录音之后，将录音文件添加到视频编辑预览处理器
                     onRecordingFinish(mAudioInfo, end);
@@ -1148,36 +1105,30 @@ public class AudioFragment extends BaseFragment implements
      * 配音完成
      *
      * @param info
-     * @param end  配音结束时刻
+     * @param endRecordingPosition  配音结束时刻
      */
-    private void onRecordingFinish(AudioInfo info, int end) {
-
+    private void onRecordingFinish(AudioInfo info, int endRecordingPosition) {
         if (info != null) {
-            int endRecordingPosition = end;
-            info.setEndRecordTime(endRecordingPosition);
-
-            mSubLine.update(mRecordId, Math.round(info.getStartRecordTime()),
-                    Math.round(info.getEndRecordTime()));
-            // Log.e("onRecordingFinish",
-            // mRecordId + "start-" + info.getStartRecordTime() + "--end-"
-            // + info.getEndRecordTime());
             // 同步滚动组件到实际配音结束位置
             info.setSeekBarValue(mVsbAudioFactor.getProgress());
             mTempList.add(info);
             endRecordingPosition += OFFSET_END_POSTION;
             endRecordingPosition = Math.min(mDuration, endRecordingPosition);
             onScrollProgress(endRecordingPosition);
-            mhlrVideoEditor.seekTo(endRecordingPosition);
-            resetItem();
+
+            mVideoEditorHandler.seekTo(endRecordingPosition);
+            info.setEndRecordTime(endRecordingPosition);
+            mSubLine.update(mRecordId, Math.round(info.getStartRecordTime()),
+                    Math.round(info.getEndRecordTime()));
+            invalideButtonStatus();
         }
     }
 
     /**
      * 设定音乐流是否禁音
      *
-     * @param bMute
+     * @param bMute 是否禁音
      */
-    @SuppressWarnings("deprecation")
     public synchronized void setMusicStreamMute(boolean bMute) {
         if (mbMusicStreamMute != bMute) {
             mAudioManager.setStreamMute(AudioManager.STREAM_MUSIC, bMute);
@@ -1195,8 +1146,8 @@ public class AudioFragment extends BaseFragment implements
             mSubLine.clearAll();
         }
         mTempList.clear();
-        mhlrVideoEditor.reload(true);
-        // mhlrVideoEditor.seekTo(0);
+        mVideoEditorHandler.reload(true);
+        // mVideoEditorHandler.seekTo(0);
         mEditAudioIdCurrent = -1;
 
     }
@@ -1252,10 +1203,10 @@ public class AudioFragment extends BaseFragment implements
         // isCheckItem = false;
         // 在点击了重配之后，配音又没有保存，那就要把上一次保存的配音再重置回来
 
-        if (mhlrVideoEditor != null) {
-            mhlrVideoEditor.reload(true);
+        if (mVideoEditorHandler != null) {
+            mVideoEditorHandler.reload(true);
             editorStart();
-            mhlrVideoEditor.seekTo(0);
+            mVideoEditorHandler.seekTo(0);
         }
     }
 

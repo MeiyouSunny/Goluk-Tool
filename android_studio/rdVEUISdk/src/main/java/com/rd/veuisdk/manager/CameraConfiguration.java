@@ -35,11 +35,11 @@ public class CameraConfiguration implements Parcelable {
     /**
      * 视频导出码率(Mbps)
      */
-    private double recordVideoBitRate = 4;
+    private final double recordVideoBitRate;
     /**
      * 视频录制关键帧间隔时间(秒),设置为0代表全关键帧,默认1
      */
-    public int recordVideoKeyFrameTime = 1;
+    public final int recordVideoKeyFrameTime;
 
     /**
      * 视频录制最大宽度
@@ -94,11 +94,11 @@ public class CameraConfiguration implements Parcelable {
     /**
      * 设置限制录制的视频最大时长 单位为秒 0代表没有最大时间限制
      */
-    public int videoMaxTime = 0;
+    public final int videoMaxTime;
     /**
      * 设置限制录制的视频最小时长 单位为秒 0代表没有最小时间限制
      */
-    public int videoMinTime = 0;
+    public final int videoMinTime;
     /**
      * 录制界面启动页面 CODE 值 WIDE_SCREEN_CAN_CHANGE 代表默认启动16：9宽屏录制界面并可切换到1：1界面
      */
@@ -121,104 +121,107 @@ public class CameraConfiguration implements Parcelable {
     /**
      * 录制界面启动默认页面
      */
-    public int cameraUIType = WIDE_SCREEN_CAN_CHANGE;
+    public final int cameraUIType;
 
     /**
      * 录制时静音
      */
-    public boolean audioMute = false;
+    public final boolean audioMute;
     /**
      * 默认后置摄像头
      */
-    public boolean dafaultRearCamera = false;
+    public final boolean dafaultRearCamera;
     /**
      * 是否允许多次拍摄
      */
-    public boolean useMultiShoot = false;
+    public final boolean useMultiShoot;
     /**
      * 单次拍摄是否将媒体保存至相册
      */
-    public boolean isSaveToAlbum = false;
+    public final boolean isSaveToAlbum;
     /**
      * 是否使用水印
      */
-    public boolean enableWatermark = false;
+    public final boolean enableWatermark;
     /**
      * 片尾水印时长 (0-1.0f) 单位秒
      */
-    private float cameraTrailerTime = 0.0f;
+    public final float cameraTrailerTime;
     // 相机水印片头、片尾 水印时长 (0-1.0f) 单位秒
-    public float cameraOsdHeader = 0f;
-    public float cameraOsdEnd = 0f;
+    public final float cameraOsdHeader;
+    public final float cameraOsdEnd;
 
     /**
      * 录制时支持播放音乐
      */
-    public boolean enablePlayMusic = false;
+    public final boolean enablePlayMusic;
 
     /**
      * 是否显示相册
      */
-    public boolean enableAlbum = true;
+    public final boolean enableAlbum;
     /**
      * 是否使用自定义相册
      */
-    public boolean useCustomAlbum = false;
+    public final boolean useCustomAlbum;
 
     /**
      * 是否开启人脸贴纸功能
      */
-    public boolean enableFaceU = false;
+    public final boolean enableFaceU;
 
     /**
      * 是否加密录制文件
      */
-    public boolean enableAntiChange = false;
+    public final boolean enableAntiChange;
 
     /**
      * 设置水印显示区域
      */
-    public RectF cameraWatermarkRectF = null;
+    public final RectF cameraWatermarkRectF;
 
     /**
      * 是否隐藏mv
      */
-    public boolean hideMV = false;
+    public final boolean hideMV;
 
     /**
      * 是否隐藏视频录制
      */
-    public boolean hideRec = false;
+    public final boolean hideRec;
 
     /**
      * 是否隐藏相机
      */
-    public boolean hidePhoto = false;
+    public final boolean hidePhoto;
     /**
      * 设置MV最小时长 单位为秒 设置0将无限制
      */
-    public int cameraMVMinTime = 0;
+    public final int cameraMVMinTime;
     /**
      * 设置MV最大时长 单位为秒 设置0将默认为15秒
      */
-    public int cameraMVMaxTime = 0;
+    public final int cameraMVMaxTime;
 
-    public byte[] pack = null;
+    public final byte[] pack;
     /**
      * 录制方向默认可自定旋转
      */
-    public int orientation = ORIENTATION_AUTO;
+    public final int orientation;
 
-    public boolean enableBeauty = true;
+    public final boolean enableBeauty;
 
     /**
      * 前置输出镜像
      */
-    public boolean enableFrontMirror = false;
+    public final boolean enableFrontMirror;
 
     public CameraConfiguration(Builder builder) {
-        this.videoMinTime = builder.mVideoMinTime;
-        this.videoMaxTime = builder.mVideoMaxTime;
+        this.recordVideoBitRate = builder.mRecordVideoBitRate;
+        this.recordVideoKeyFrameTime = builder.mRecordVideoKeyFrameTime;
+        this.recordVideoFrameRate = builder.mRecordVideoFrameRate;
+        this.recordVideoMaxWH = builder.mRecordVideoMaxWH;
+
         this.cameraUIType = builder.mCameraUIType;
         this.audioMute = builder.mAudioMute;
         this.dafaultRearCamera = builder.mDefaultRearCamera;
@@ -236,24 +239,30 @@ public class CameraConfiguration implements Parcelable {
 
         this.hideMV = builder.mHideMV;
         this.hidePhoto = builder.mHidePhoto;
-        this.hideRec = builder.mHideRec;
 
+        if (builder.mCameraMVMinTime > builder.mCameraMVMaxTime) {
+            cameraMVMinTime = builder.mCameraMVMaxTime;
+        } else {
+            cameraMVMinTime = 0;
+        }
         this.cameraMVMaxTime = builder.mCameraMVMaxTime;
-        this.cameraMVMinTime = builder.mCameraMVMinTime;
-        if (hideMV && hidePhoto && hideRec) {
+
+        if (hideMV && hidePhoto && builder.mHideRec) {
             Log.e(this.toString(), "不能同时隐藏所有功能，现已显示视频拍摄功能");
             this.hideRec = false;
+        } else {
+            this.hideRec = builder.mHideRec;
         }
 
-        if (builder.mCameraWatermarkRectF != null) {
-            this.cameraWatermarkRectF = builder.mCameraWatermarkRectF;
+        this.cameraWatermarkRectF = builder.mCameraWatermarkRectF;
+
+        this.videoMaxTime = builder.mVideoMaxTime;
+        if (builder.mVideoMinTime > builder.mVideoMaxTime && builder.mVideoMaxTime != 0) {
+            videoMinTime = builder.mVideoMaxTime;
+        } else {
+            videoMinTime = 0;
         }
-        if (videoMinTime > videoMaxTime && videoMaxTime != 0) {
-            videoMinTime = videoMaxTime;
-        }
-        if (cameraMVMinTime > cameraMVMaxTime) {
-            cameraMVMinTime = cameraMVMaxTime;
-        }
+
         this.cameraOsdHeader = builder.mCameraOsdHeader;
         this.cameraOsdEnd = builder.mCameraOsdEnd;
         this.cameraTrailerTime = builder.mCameraOsdEnd;
@@ -545,7 +554,7 @@ public class CameraConfiguration implements Parcelable {
         /**
          * 设置是否可以录制的时候播放音乐
          *
-         * @param enable
+         * @param enable 为true代表录制时播放音乐
          */
         public Builder enablePlayMusic(boolean enable) {
             this.mEnablePlayMusic = enable;
@@ -631,7 +640,6 @@ public class CameraConfiguration implements Parcelable {
             return this;
         }
 
-
         public CameraConfiguration get() {
             return new CameraConfiguration(this);
         }
@@ -644,6 +652,10 @@ public class CameraConfiguration implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeDouble(this.recordVideoBitRate);
+        dest.writeInt(this.recordVideoKeyFrameTime);
+        dest.writeInt(this.recordVideoMaxWH);
+        dest.writeInt(this.recordVideoFrameRate);
         dest.writeInt(this.videoMaxTime);
         dest.writeInt(this.videoMinTime);
         dest.writeInt(this.cameraUIType);
@@ -653,8 +665,10 @@ public class CameraConfiguration implements Parcelable {
         dest.writeByte(this.isSaveToAlbum ? (byte) 1 : (byte) 0);
         dest.writeByte(this.enableWatermark ? (byte) 1 : (byte) 0);
         dest.writeFloat(this.cameraTrailerTime);
-        dest.writeByte(this.enableAlbum ? (byte) 1 : (byte) 0);
+        dest.writeFloat(this.cameraOsdHeader);
+        dest.writeFloat(this.cameraOsdEnd);
         dest.writeByte(this.enablePlayMusic ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.enableAlbum ? (byte) 1 : (byte) 0);
         dest.writeByte(this.useCustomAlbum ? (byte) 1 : (byte) 0);
         dest.writeByte(this.enableFaceU ? (byte) 1 : (byte) 0);
         dest.writeByte(this.enableAntiChange ? (byte) 1 : (byte) 0);
@@ -665,14 +679,16 @@ public class CameraConfiguration implements Parcelable {
         dest.writeInt(this.cameraMVMinTime);
         dest.writeInt(this.cameraMVMaxTime);
         dest.writeByteArray(this.pack);
-        dest.writeFloat(this.cameraOsdHeader);
-        dest.writeFloat(this.cameraOsdEnd);
-        dest.writeByte(this.enableFrontMirror ? (byte) 1 : (byte) 0);
         dest.writeInt(this.orientation);
-        dest.writeInt(this.enableBeauty ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.enableBeauty ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.enableFrontMirror ? (byte) 1 : (byte) 0);
     }
 
     protected CameraConfiguration(Parcel in) {
+        this.recordVideoBitRate = in.readDouble();
+        this.recordVideoKeyFrameTime = in.readInt();
+        this.recordVideoMaxWH = in.readInt();
+        this.recordVideoFrameRate = in.readInt();
         this.videoMaxTime = in.readInt();
         this.videoMinTime = in.readInt();
         this.cameraUIType = in.readInt();
@@ -682,24 +698,23 @@ public class CameraConfiguration implements Parcelable {
         this.isSaveToAlbum = in.readByte() != 0;
         this.enableWatermark = in.readByte() != 0;
         this.cameraTrailerTime = in.readFloat();
-        this.enableAlbum = in.readByte() != 0;
+        this.cameraOsdHeader = in.readFloat();
+        this.cameraOsdEnd = in.readFloat();
         this.enablePlayMusic = in.readByte() != 0;
+        this.enableAlbum = in.readByte() != 0;
         this.useCustomAlbum = in.readByte() != 0;
         this.enableFaceU = in.readByte() != 0;
         this.enableAntiChange = in.readByte() != 0;
-        this.cameraWatermarkRectF = in.readParcelable(RectF.class
-                .getClassLoader());
+        this.cameraWatermarkRectF = in.readParcelable(RectF.class.getClassLoader());
         this.hideMV = in.readByte() != 0;
         this.hideRec = in.readByte() != 0;
         this.hidePhoto = in.readByte() != 0;
         this.cameraMVMinTime = in.readInt();
         this.cameraMVMaxTime = in.readInt();
         this.pack = in.createByteArray();
-        this.cameraOsdHeader = in.readFloat();
-        this.cameraOsdEnd = in.readFloat();
-        this.enableFrontMirror = in.readByte() != 0;
         this.orientation = in.readInt();
-        this.enableBeauty = in.readInt() == 1;
+        this.enableBeauty = in.readByte() != 0;
+        this.enableFrontMirror = in.readByte() != 0;
     }
 
     public static final Parcelable.Creator<CameraConfiguration> CREATOR = new Parcelable.Creator<CameraConfiguration>() {

@@ -12,6 +12,7 @@ import com.rd.vecore.VirtualVideo;
 import com.rd.vecore.models.MediaObject;
 import com.rd.vecore.models.Scene;
 import com.rd.vecore.models.VideoConfig;
+import com.rd.vecore.utils.MiscUtils;
 import com.rd.veuisdk.R;
 import com.rd.veuisdk.SdkEntry;
 import com.rd.veuisdk.SelectMediaActivity;
@@ -361,10 +362,10 @@ public class ModeUtils {
         int targetH = MAXSIZE;
         if (vAspRatio > 1f) {
             targetW = MAXSIZE;
-            targetH = VirtualVideo.fixAlign((int) (targetW / vAspRatio));
+            targetH = MiscUtils.alignValue((int) (targetW / vAspRatio), 2);
         } else {
             targetH = MAXSIZE;
-            targetW = VirtualVideo.fixAlign((int) (targetH * vAspRatio));
+            targetW = MiscUtils.alignValue((int) (targetH * vAspRatio), 16);
         }
         videoConfig.setVideoSize(targetW, targetH);
     }

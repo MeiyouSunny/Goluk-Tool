@@ -382,10 +382,13 @@ public class SysAlertDialog {
         } else {
             textView.setVisibility(View.GONE);
         }
-
-        wrToast.get().setView(v);
-        wrToast.get().setGravity(Gravity.CENTER, 0, 0);
-        wrToast.get().setDuration(duration);
+        if (null == wrToast) {
+            newToast(context, strTitle, strMessage, duration);
+        } else {
+            wrToast.get().setView(v);
+            wrToast.get().setGravity(Gravity.CENTER, 0, 0);
+            wrToast.get().setDuration(duration);
+        }
     }
 
     public static Dialog createAlertDialog(Context context, String strTitle,

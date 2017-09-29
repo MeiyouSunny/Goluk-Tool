@@ -344,14 +344,12 @@ class SubtitleHandler {
         mHandler.removeCallbacks(resetSubDataRunnable);
         if (mSubtitleLine != null) {
             mSubtitleLine.recycle(true);
-            mSubtitleLine = null;
         }
         if (null != mTreeView) {
             mTreeView.getViewTreeObserver().addOnGlobalLayoutListener(null);
         }
         mHandler.removeMessages(MSG_LISTVIEW);
         mHandler = null;
-
     }
 
     private OnItemClickListener mStyleItemlistener = new OnItemClickListener() {
@@ -365,7 +363,6 @@ class SubtitleHandler {
     };
 
     /**
-     *
      * @param txtSize
      * @return
      */
@@ -386,8 +383,12 @@ class SubtitleHandler {
 //                        + "cccc" + winfo.getDisf() + "........." + info.disf
 //                        + "...styleId" + info.pid);
         if (info.isdownloaded) {
+            if (null == winfo) {
+                Log.e(TAG, "onStyleItem:  winfo is null");
+                return;
+            }
             if (winfo.getDisf() == 1) {
-                float mdisf = getCustomSize(30);
+                float mdisf = getCustomSize(22);
                 winfo.setDisf(mdisf);
             }
             winfo.setStyleId(info.pid);
@@ -400,11 +401,10 @@ class SubtitleHandler {
                     mSprCurView.setRotate(info.rotateAngle);
                 }
 
-                int x = 0;
-                int y = 0;
+
                 if (info.lashen != 1) {
-                    x = (int) (mLayoutWidth * info.centerxy[0]);
-                    y = (int) (mLayoutHeight * info.centerxy[1]);
+                    int x = (int) (mLayoutWidth * info.centerxy[0]);
+                    int y = (int) (mLayoutHeight * info.centerxy[1]);
                     mSprCurView.setCenter(new Point(x, y));
                     mSprCurView.setFirstIn(false);
                 } else {
@@ -436,7 +436,7 @@ class SubtitleHandler {
             }
         } else {
             // 执行下载
-            int visiblep = position % mGvSubtitleStyle.getChildCount();
+            int visiblep = position % Math.max(1, mGvSubtitleStyle.getChildCount());
             View child = mGvSubtitleStyle.getChildAt(visiblep);
             if (null != child) {
                 mAnimAdapter.onDown(position, (ImageView) child
@@ -742,7 +742,6 @@ class SubtitleHandler {
      * @param virtualVideo
      */
     private void onInitThumbTimeLine(VirtualVideo virtualVideo) {
-
         mSubtitleLine.setVirtualVideo(virtualVideo);
         mSubtitleLine.prepare(mScrollView.getHalfParentWidth() + mHalfWidth);
         onScrollProgress(0);

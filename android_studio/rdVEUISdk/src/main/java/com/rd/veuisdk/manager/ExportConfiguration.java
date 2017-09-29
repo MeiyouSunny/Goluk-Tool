@@ -13,54 +13,65 @@ public class ExportConfiguration implements Parcelable {
     /**
      * 视频保存路径
      */
-    public String savePath = null;
+    public final String savePath;
     /**
      * 淡入淡出时长(单位秒)
      */
-    public float trailerFadeDuration = 0.5f;
+    public final float trailerFadeDuration;
     /**
      * 片尾图片路径
      */
-    public String trailerPath = null;
+    public final String trailerPath;
     /**
      * 片尾时长(单位秒)
      */
-    public float trailerDuration = 2;
-    /**
-     * 视频分辨率
-     */
-    public int exportVideoWidth = 640;
-    public int exportVideoHeight = 360;
-    /**
-     * 视频导出码率(M)
-     */
-    public double exportVideoBitRate = 4;
+    public final float trailerDuration;
+
     /**
      * 视频导出时间(单位秒)
      */
-    public float exportVideoDuration = 0;
+    public final float exportVideoDuration;
     /**
      * 是否水印路径
      */
-    public String watermarkPath = null;
+    public final String watermarkPath;
+    /**
+     * 是否为文字水印
+     */
+    public boolean enableTextWatermark = false;
+    /**
+     * 文字水印内容
+     */
+    public String textWatermarkContent = null;
+    /**
+     * 文字水印大小
+     */
+    public int textWatermarkSize;
+    /**
+     * 文字水印颜色
+     */
+    public int textWatermarkColor;
+    /**
+     * 文字阴影颜色
+     */
+    public int textWatermarkShadowColor;
     /**
      * 设置水印显示区域
      */
-    public RectF watermarkShowRectF = null;
+    public final RectF watermarkShowRectF;
 
-    private ExportConfiguration(Builder builder) {
-        this.savePath = builder.savePath;
-        this.trailerPath = builder.trailerPath;
-        this.trailerDuration = builder.trailerDuration;
-        this.exportVideoBitRate = builder.exportVideoBitRate;
-        this.exportVideoDuration = builder.exportVideoDuration;
-        this.exportVideoHeight = builder.exportVideoHeight;
-        this.exportVideoWidth = builder.exportVideoWidth;
-        this.watermarkPath = builder.watermarkPath;
-        if (builder.watermarkShowRectF != null) {
-            watermarkShowRectF = builder.watermarkShowRectF;
-        }
-    }
+    /**
+     * 导出视频帧率
+     */
+    public final int exportVideoFrameRate;
+    /**
+     * 视频导出码率(M)
+     */
+    private double exportVideoBitRate;
+    /**
+     * 视频分辨率
+     */
+    private int exportVideoMaxWH = 640;
 
     /**
      * 获取导出视频的最大边
@@ -68,7 +79,7 @@ public class ExportConfiguration implements Parcelable {
      * @return 最大边
      */
     public int getVideoMaxWH() {
-        return Math.min(3480, Math.max(exportVideoWidth, exportVideoHeight));
+        return Math.min(3480, exportVideoMaxWH);
     }
 
     /**
@@ -80,20 +91,45 @@ public class ExportConfiguration implements Parcelable {
         return (int) (exportVideoBitRate * 1000 * 1000);
     }
 
+    private ExportConfiguration(Builder builder) {
+        this.savePath = builder.mSavePath;
+        this.trailerPath = builder.mTrailerPath;
+        this.trailerDuration = builder.trailerDuration;
+        this.trailerFadeDuration = builder.mTrailerFadeDuration;
+        this.exportVideoMaxWH = builder.mExportVideoMaxWH;
+        this.watermarkPath = builder.mWatermarkPath;
+        this.enableTextWatermark = builder.mEnableTextWatermark;
+        this.textWatermarkContent = builder.mTextWatermarkContent;
+        this.textWatermarkSize = builder.mTextWatermarkSize;
+        this.textWatermarkColor = builder.mTextWatermarkColor;
+        this.textWatermarkShadowColor = builder.mTextWatermarkShadowColor;
+        this.watermarkShowRectF = builder.mWatermarkShowRectF;
+
+        this.exportVideoBitRate = builder.mExportVideoBitRate;
+        this.exportVideoDuration = builder.mExportVideoDuration;
+        this.exportVideoFrameRate = builder.mExportVideoFrameRate;
+    }
+
     /**
      * Builder class for {@link ExportConfiguration} objects.
      */
     public static class Builder {
-        String savePath = null;
-        String trailerPath = null;
-        float trailerDuration = 2;
-        int exportVideoWidth = 640;
-        int exportVideoHeight = 360;
-        double exportVideoBitRate = 4;
-        float exportVideoDuration = 0;
-        float trailerFadeDuration = 0.5f;
-        String watermarkPath = null;
-        RectF watermarkShowRectF = null;
+        private int mExportVideoMaxWH = 640;
+        private double mExportVideoBitRate = 4;
+        private int mExportVideoFrameRate = 30;
+
+        private String mSavePath = null;
+        private String mTrailerPath = null;
+        private float trailerDuration = 2;
+        private float mExportVideoDuration = 0;
+        private float mTrailerFadeDuration = 0.5f;
+        private String mWatermarkPath = null;
+        private boolean mEnableTextWatermark = false;
+        private String mTextWatermarkContent = "";
+        private int mTextWatermarkSize = 10;
+        private int mTextWatermarkColor = 0;
+        private int mTextWatermarkShadowColor = 0;
+        private RectF mWatermarkShowRectF = null;
 
         /**
          * 设置导出视频路径
@@ -101,19 +137,17 @@ public class ExportConfiguration implements Parcelable {
          * @param savePath 导出视频路径,传null将保存到默认路径
          */
         public Builder setSavePath(String savePath) {
-            this.savePath = savePath;
+            this.mSavePath = savePath;
             return this;
         }
 
         /**
-         * 设置导出视频分辨率
+         * 设置导出视频最大边
          *
-         * @param width  视频宽度
-         * @param height 视频高度
+         * @param maxWH 导出视频最大边
          */
-        public Builder setVideoSize(int width, int height) {
-            exportVideoWidth = Math.max(176, Math.min(width, 3840));
-            exportVideoHeight = Math.max(176, Math.min(height, 3840));
+        public Builder setVideoMaxWH(int maxWH) {
+            mExportVideoMaxWH = Math.max(176, Math.min(maxWH, 3840));
             return this;
         }
 
@@ -123,8 +157,13 @@ public class ExportConfiguration implements Parcelable {
          * @param bitRate 导出视频码率,单位M，传null默认4M
          */
         public Builder setVideoBitRate(double bitRate) {
-            exportVideoBitRate = bitRate;
-            SdkEntry.setVideoEncodingBitRate(exportVideoBitRate);
+            mExportVideoBitRate = bitRate;
+            SdkEntry.setVideoEncodingBitRate(mExportVideoBitRate);
+            return this;
+        }
+
+        public Builder setVideoFrameRate(int frameRate) {
+            mExportVideoFrameRate = Math.max(10, Math.min(30, frameRate));
             return this;
         }
 
@@ -135,9 +174,9 @@ public class ExportConfiguration implements Parcelable {
          */
         public Builder setVideoDuration(float exportVideoDuration) {
             if (exportVideoDuration <= 0) {
-                this.exportVideoDuration = 0;
+                this.mExportVideoDuration = 0;
             }
-            this.exportVideoDuration = exportVideoDuration;
+            this.mExportVideoDuration = exportVideoDuration;
             return this;
         }
 
@@ -147,7 +186,7 @@ public class ExportConfiguration implements Parcelable {
          * @param trailerPath 导出视频片尾图片路径
          */
         public Builder setTrailerPath(String trailerPath) {
-            this.trailerPath = trailerPath;
+            this.mTrailerPath = trailerPath;
             return this;
         }
 
@@ -167,18 +206,68 @@ public class ExportConfiguration implements Parcelable {
          * @param fadeDuration 片尾淡入淡出时间，单位为秒(s)
          */
         public Builder setTrailerFadeDuration(float fadeDuration) {
-            this.trailerFadeDuration = fadeDuration;
+            this.mTrailerFadeDuration = fadeDuration;
             return this;
         }
 
 
         /**
-         * 设置水印路径
+         * 设置图片水印路径
          *
          * @param path 水印路径
          */
         public Builder setWatermarkPath(String path) {
-            this.watermarkPath = path;
+            this.mWatermarkPath = path;
+            return this;
+        }
+
+        /**
+         * 设置是否使用文字水印（启用文字水印，图片水印将失效）
+         *
+         * @param enable
+         */
+        public Builder enableTextWatermark(boolean enable) {
+            this.mEnableTextWatermark = enable;
+            return this;
+        }
+
+        /**
+         * 设置文字水印内容
+         *
+         * @param content
+         */
+        public Builder setTextWatermarkContent(String content) {
+            this.mTextWatermarkContent = content;
+            return this;
+        }
+
+        /**
+         * 设置文字水印大小
+         *
+         * @param size
+         */
+        public Builder setTextWatermarkSize(int size) {
+            this.mTextWatermarkSize = size;
+            return this;
+        }
+
+        /**
+         * 设置文字水印颜色
+         *
+         * @param color 文字颜色（默认白色）
+         */
+        public Builder setTextWatermarkColor(int color) {
+            this.mTextWatermarkColor = color;
+            return this;
+        }
+
+        /**
+         * 设置文字水印阴影颜色（不设置将没有阴影）
+         *
+         * @param color 文字阴影颜色（默认无阴影）
+         */
+        public Builder setTextWatermarkShadowColor(int color) {
+            this.mTextWatermarkShadowColor = color;
             return this;
         }
 
@@ -200,7 +289,7 @@ public class ExportConfiguration implements Parcelable {
                 if (rectF.bottom == 0) {
                     rectF.bottom = 1;
                 }
-                watermarkShowRectF = rectF;
+                mWatermarkShowRectF = rectF;
             }
             return this;
         }
@@ -208,7 +297,6 @@ public class ExportConfiguration implements Parcelable {
         public ExportConfiguration get() {
             return new ExportConfiguration(this);
         }
-
     }
 
     @Override
@@ -222,12 +310,17 @@ public class ExportConfiguration implements Parcelable {
         dest.writeFloat(this.trailerFadeDuration);
         dest.writeString(this.trailerPath);
         dest.writeFloat(this.trailerDuration);
-        dest.writeInt(this.exportVideoWidth);
-        dest.writeInt(this.exportVideoHeight);
-        dest.writeDouble(this.exportVideoBitRate);
         dest.writeFloat(this.exportVideoDuration);
         dest.writeString(this.watermarkPath);
+        dest.writeByte(this.enableTextWatermark ? (byte) 1 : (byte) 0);
+        dest.writeString(this.textWatermarkContent);
+        dest.writeInt(this.textWatermarkSize);
+        dest.writeInt(this.textWatermarkColor);
+        dest.writeInt(this.textWatermarkShadowColor);
         dest.writeParcelable(this.watermarkShowRectF, flags);
+        dest.writeInt(this.exportVideoFrameRate);
+        dest.writeDouble(this.exportVideoBitRate);
+        dest.writeInt(this.exportVideoMaxWH);
     }
 
     protected ExportConfiguration(Parcel in) {
@@ -235,12 +328,17 @@ public class ExportConfiguration implements Parcelable {
         this.trailerFadeDuration = in.readFloat();
         this.trailerPath = in.readString();
         this.trailerDuration = in.readFloat();
-        this.exportVideoWidth = in.readInt();
-        this.exportVideoHeight = in.readInt();
-        this.exportVideoBitRate = in.readDouble();
         this.exportVideoDuration = in.readFloat();
         this.watermarkPath = in.readString();
+        this.enableTextWatermark = in.readByte() != 0;
+        this.textWatermarkContent = in.readString();
+        this.textWatermarkSize = in.readInt();
+        this.textWatermarkColor = in.readInt();
+        this.textWatermarkShadowColor = in.readInt();
         this.watermarkShowRectF = in.readParcelable(RectF.class.getClassLoader());
+        this.exportVideoFrameRate = in.readInt();
+        this.exportVideoBitRate = in.readDouble();
+        this.exportVideoMaxWH = in.readInt();
     }
 
     public static final Creator<ExportConfiguration> CREATOR = new Creator<ExportConfiguration>() {

@@ -5,7 +5,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.rd.vecore.utils.ExportUtils;
-import com.rd.veuisdk.SdkEntry;
 
 /**
  * RdVEUISdk压缩配置类
@@ -35,32 +34,32 @@ public class CompressConfiguration implements Parcelable {
     /**
      * 视频分辨率
      */
-    public double bitRate = 4;
+    private final double bitRate;
     /**
      * 是否显示水印
      */
-    public boolean enableWatermark = false;
+    public final boolean enableWatermark;
     /**
      * 是否使用硬件加速
      */
-    public boolean enableHWCode = true;
+    private final boolean enableHWCode;
     /**
      * 水印位置
      */
-    public int watermarkPosition = WATERMARK_LEFT_BOTTOM;
+    private final int watermarkPosition;
     /**
      * 视频分辨率
      */
-    public int videoWidth = 0;
-    public int videoHeight = 0;
+    private final int videoWidth;
+    private final int videoHeight;
     /**
      * 保存视频地址
      */
-    public String savePath = null;
+    public final String savePath;
     /**
      * 压缩视频水印显示区域
      */
-    public RectF compressWatermarkRectF = null;
+    private final RectF compressWatermarkRectF;
 
     public ExportUtils.CompressConfig toCompressConfig() {
         return new ExportUtils.CompressConfig(bitRate, enableWatermark, enableHWCode, watermarkPosition, videoWidth, videoHeight, compressWatermarkRectF);
@@ -73,12 +72,8 @@ public class CompressConfiguration implements Parcelable {
         videoWidth = builder.mVideoWidth;
         videoHeight = builder.mVideoHeight;
         enableHWCode = builder.mEnableHWCode;
-        if (builder.mSavePath != null) {
-            savePath = builder.mSavePath;
-        }
-        if (builder.mCompressWatermarkRectF != null) {
-            compressWatermarkRectF = builder.mCompressWatermarkRectF;
-        }
+        savePath = builder.mSavePath;
+        compressWatermarkRectF = builder.mCompressWatermarkRectF;
     }
 
     /**
@@ -102,7 +97,6 @@ public class CompressConfiguration implements Parcelable {
          */
         public Builder setBitRate(double bitRate) {
             this.mBitRate = Math.max(1, bitRate);
-            SdkEntry.setVideoEncodingBitRate(mBitRate);
             return this;
         }
 

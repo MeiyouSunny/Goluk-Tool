@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -219,8 +220,8 @@ public class MusicFragmentEx extends BaseFragment {
         mListView = (HorizontalListViewMV) findViewById(R.id.lvListView);
         mListView.setIsMusic();
         mListView.setListItemSelectListener(listener);
+        mListView.setCheckFastRepeat(true);
         mListView.setRepeatSelection(true);
-
         getWebMusic();
         return mRoot;
     }
@@ -236,6 +237,7 @@ public class MusicFragmentEx extends BaseFragment {
             if (resultCode == Activity.RESULT_OK) {
                 AudioMusicInfo audioMusic = (AudioMusicInfo) data
                         .getParcelableExtra(MoreMusicActivity.MUSIC_INFO);
+                mFactor.setEnabled(true);
                 if (mThemeType == MENU_LOCAL) {
                     try {
                         mListView.setCurrentCaption(audioMusic.getName());
@@ -284,6 +286,7 @@ public class MusicFragmentEx extends BaseFragment {
         mIsFirstCreate = true;
         mFetcher.cleanUpCache();
         mFetcher = null;
+        mListView = null;
     }
 
     @Override
@@ -295,7 +298,6 @@ public class MusicFragmentEx extends BaseFragment {
         }
         if (null != mListView) {
             mListView.recycle();
-            mListView = null;
         }
         mHanlder = null;
         listener = null;
@@ -389,6 +391,7 @@ public class MusicFragmentEx extends BaseFragment {
 //         Log.e("onSelectedImp", mThemeType + "...." + nItemId + "..." +
 //                 user);
         mThemeType = nItemId;
+        mFactor.setEnabled(true);
         if (nItemId == MENU_ORIGIN) {
             if (user) {
                 boolean voiceIsOpen = mHlrVideoEditor.isMediaMute();
@@ -415,6 +418,10 @@ public class MusicFragmentEx extends BaseFragment {
                 Music audio = TempVideoParams.getInstance().getMusic();
                 if (null != audio) {
                     audio.setMixFactor(factor);
+                } else {
+                    if (null != mFactor) {
+                        mFactor.setEnabled(false);
+                    }
                 }
                 if (null != mMusicListener) {
                     mMusicListener.onVoiceChanged(voiceIsOpen);
@@ -431,6 +438,7 @@ public class MusicFragmentEx extends BaseFragment {
                     e.printStackTrace();
                 }
                 factor = 50;
+                mFactor.setProgress(factor);
                 TempVideoParams.getInstance().recycleMusicObject();
                 onlyReloadMusic(true);
                 mListView.onItemChecked(nItemId);
@@ -438,6 +446,7 @@ public class MusicFragmentEx extends BaseFragment {
                     mIsFirstCreate = false;// 第一次创建fragment
                 }
             }
+            mFactor.setEnabled(false);
             lastItemId = nItemId;
         } else if (nItemId == MENU_LOCAL) {
             if (user) {
@@ -675,7 +684,7 @@ public class MusicFragmentEx extends BaseFragment {
      * 初始化消息接收
      */
     private void initHandler() {
-        mHanlder = new Handler() {
+        mHanlder = new Handler(Looper.getMainLooper()) {
             int nItemId = 0;
 
             @Override
@@ -688,51 +697,52 @@ public class MusicFragmentEx extends BaseFragment {
                                 R.string.isloading);
                         break;
                     case MSG_LOCAL_MENU: {
-                        mListView.removeAllListItem();
-                        nItemId = 0;
-                        mListView.addListItem(nItemId, R.drawable.video_origin_n,
-                                getString(R.string.video_voice_n));
-                        nItemId++;
-                        mListView.addListItem(nItemId, R.drawable.music_none,
-                                getString(R.string.music_none));
-                        nItemId++;
-                        if (enableLocalMusic) {
-                            mListView.addListItem(nItemId, R.drawable.music_local,
-                                    getString(R.string.local));
-                        }
-                        nItemId++;
+                        if (null != mListView) {
+                            mListView.removeAllListItem();
+                            nItemId = 0;
+                            mListView.addListItem(nItemId, R.drawable.video_origin_n,
+                                    getString(R.string.video_voice_n));
+                            nItemId++;
+                            mListView.addListItem(nItemId, R.drawable.music_none,
+                                    getString(R.string.music_none));
+                            nItemId++;
+                            if (enableLocalMusic) {
+                                mListView.addListItem(nItemId, R.drawable.music_local,
+                                        getString(R.string.local));
+                            }
+                            nItemId++;
 
-                        if (!TextUtils.isEmpty(mCloudMusicUrl)) {
-                            mListView.addListItem(nItemId, R.drawable.music_yun,
-                                    getString(R.string.music_yun));
+                            if (!TextUtils.isEmpty(mCloudMusicUrl)) {
+                                mListView.addListItem(nItemId, R.drawable.music_yun,
+                                        getString(R.string.music_yun));
+                            }
+                            nItemId++;
                         }
-                        nItemId++;
-
                         break;
                     }
                     case MSG_WEB_PREPARED: {
                         SysAlertDialog.cancelLoadingDialog();
+                        if (null != mListView) {
+                            int len = mlist.size();
+                            for (int i = 0; i < len; i++) {
+                                WebInfo info = mlist.get(i);
+                                mListView.addListItem(nItemId, info.getImg(),
+                                        info.getName(), mFetcher);
+                                mListView.setDownLayout(nItemId, info.existsMusic());
+                                nItemId++;
+                            }
 
-                        int len = mlist.size();
-                        for (int i = 0; i < len; i++) {
-                            WebInfo info = mlist.get(i);
-                            mListView.addListItem(nItemId, info.getImg(),
-                                    info.getName(), mFetcher);
-                            mListView.setDownLayout(nItemId, info.existsMusic());
-                            nItemId++;
-                        }
-
-                        Music audio = TempVideoParams.getInstance()
-                                .getMusic();
-                        if (null == audio) {// 防止mv 清空配乐
-                            lastItemId = MENU_NONE;
-                        }
-                        mListView.selectListItem(lastItemId, mThemeType > MENU_YUN);
-                        if (lastItemId == MENU_LOCAL || lastItemId == MENU_YUN) {
-                            mListView.setCurrentCaption(musicName);
+                            Music audio = TempVideoParams.getInstance()
+                                    .getMusic();
+                            if (null == audio) {// 防止mv 清空配乐
+                                lastItemId = MENU_NONE;
+                            }
+                            mListView.selectListItem(lastItemId, mThemeType > MENU_YUN);
+                            if (lastItemId == MENU_LOCAL || lastItemId == MENU_YUN) {
+                                mListView.setCurrentCaption(musicName);
+                            }
                         }
                     }
-
                     break;
                     case MSG_WEB_DOWNLOADING: {
                         int id = msg.arg1;
@@ -751,7 +761,6 @@ public class MusicFragmentEx extends BaseFragment {
                         if (null != mListView) {
                             mListView.setdownEnd(id);
                             mListView.selectListItem(id, true);
-                            // onSelectedImp(id, false);
                         }
 
                     }
@@ -761,7 +770,6 @@ public class MusicFragmentEx extends BaseFragment {
                         if (null != mListView)
                             mListView.setdownFailed(id);
                     }
-
                     break;
                     default:
                         break;

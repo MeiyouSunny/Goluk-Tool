@@ -233,7 +233,6 @@ public class RecorderActivity extends BaseActivity {
     private int mMVMinTime = 0;
     private boolean mUseMultiShoot = false;
     private boolean mIsSaveToAlbum = false;
-    private int formatType = -1;
     private boolean enableRecPhotoSwitch = true;
     private int buttonState = BUTTON_STATE_START;
     private boolean hideAlbum = false, isEncryption = false;
@@ -296,7 +295,6 @@ public class RecorderActivity extends BaseActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);// 去掉信息栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-//        Log.e("oncreate", "______>>>>>>>>>>>>>" + this.toString());
         lastEnableBeauty = AppConfiguration.enableBeauty();
         iListener = new IRecoder();
         gotoEdit = getIntent().getBooleanExtra(ACTION_TO_EDIT, false);
@@ -333,10 +331,6 @@ public class RecorderActivity extends BaseActivity {
         osdEnd = Math.max(0,
                 Math.min(2000, (int) (cameraConfig.cameraOsdEnd * 1000)));
         trailerTime = osdEnd;
-
-        // Log.e("osdHeader", osdHeader + "..." + osdEnd + "..." +
-        // enableWatermark
-        // + "...." + isEncryption);
 
         hideAlbum = !cameraConfig.enableAlbum;
         isEncryption = cameraConfig.enableAntiChange;
@@ -377,8 +371,6 @@ public class RecorderActivity extends BaseActivity {
 
         initLayouts();
 
-        // Log.e("editResult", editResult + "...." + mRecordOrientation
-        // + "......." + cameraConfig.orientation);
         mRecordOrientation = CameraConfiguration.ORIENTATION_AUTO;
         if (editResult) {
             mSquareCameraLayout.setVisibility(View.INVISIBLE);
@@ -495,8 +487,6 @@ public class RecorderActivity extends BaseActivity {
      * @param nowIsSQUARE
      */
     private void onCheckLock(boolean nowIsSQUARE) {
-        // Log.e("onCheckLock", nowIsSQUARE + ".." + editResult + "...."
-        // + mRecordOrientation + "...." + mUIType);
         tempVideoOrientaion = VIDEO_OUT_ORIENTAION;
         if (mRecordOrientation == CameraConfiguration.ORIENTATION_AUTO) {
             enableLockScreen = false;// zidong
@@ -674,7 +664,6 @@ public class RecorderActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        android.util.Log.e(TAG, "onStart:" + bCameraPrepared);
         if (!ImageManager.hasStorage()) {
             Dialog dlg = SysAlertDialog.showAlertDialog(this,
                     R.string.app_name, R.string.record_no_external_storage,
@@ -692,7 +681,6 @@ public class RecorderActivity extends BaseActivity {
 
     @Override
     protected void onResume() {
-//        android.util.Log.e(TAG, "onResume:" + bCameraPrepared);
         try {
             mLayoutBlackScreen.setVisibility(View.INVISIBLE);// 取消黑屏
 
@@ -730,7 +718,6 @@ public class RecorderActivity extends BaseActivity {
 
     @Override
     public void onPause() {
-        // Log.e("onPause", this.toString());
         mOrientationListener.disable();
         synchronized (this) {
             if (mIsRecording) {
@@ -755,8 +742,6 @@ public class RecorderActivity extends BaseActivity {
                 handler.removeCallbacks(runnable);
             }
         }
-        // Log.e("onStop", this.toString());
-
     }
 
     private Runnable mRunnableEffect = new Runnable() {
@@ -768,8 +753,6 @@ public class RecorderActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-//        Log.e("ondestory", this.toString());
-
         if (null != mAudioPlayer) {
             mAudioPlayer.stop();
             mAudioPlayer.release();
@@ -845,8 +828,6 @@ public class RecorderActivity extends BaseActivity {
      * @param nOrientation 0 90 180 etc...
      */
     protected void setOrientationIndicator(int nOrientation) {
-        // Log.e("setOrientationIndicator liveActivty", "nOrientation-- "
-        // + nOrientation);
         tempOrientation = nOrientation;
         // if (!mIsRecording) // 录制进行中时不进行界面旋转同步
         {
@@ -1202,9 +1183,6 @@ public class RecorderActivity extends BaseActivity {
                 return;
             }
         }
-        // Log.e("gotoEdit", osdHeader + "..." + osdEnd + "..." +
-        // enableWatermark
-        // + "...." + isEncryption);
         if (enableWatermark) {
             if (startTrailer) {
                 saveMedia();
@@ -1316,7 +1294,6 @@ public class RecorderActivity extends BaseActivity {
      * 保存媒体
      */
     private void saveMedia() {
-//        Log.e("savemdea", gotoEdit + "___" + mUseMultiShoot + "....." + mRecordVideoList.size() + "....." + mIsSaveToAlbum + "...." + editResult);
         if (gotoEdit) {
             saveMediaGoEdit();
         } else if (mUseMultiShoot) {
@@ -1599,7 +1576,6 @@ public class RecorderActivity extends BaseActivity {
             if (f.exists() && f.length() > 0) {
                 if (RecorderCore.apiIsRDEncyptVideo(path) <= 0) {
                     RecorderCore.apiRDVideoEncypt(path);
-                    // Log.e("apiIsRDEncyptVideo", re + "");
                 }
             }
         }
@@ -1983,20 +1959,15 @@ public class RecorderActivity extends BaseActivity {
     }
 
     protected void onSwitchCameraButtonClick() {
-        // Log.e("switch", "--before");
-
         if (null != faceUnityHandler) {
             faceUnityHandler.onSwitchCamare(true);
         }
-
         try {
             RecorderCore.switchCamera();
             checkFlashMode();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
-        // Log.e("switch", "--end");
         if (null != faceUnityHandler) {
             faceUnityHandler.onSwitchCamare(false);
         }
@@ -2118,7 +2089,6 @@ public class RecorderActivity extends BaseActivity {
 
             mOrientation = Utils.roundOrientation(orientation, mOrientation);
 
-            // Log.e("onOrientationChanged", mOrientation + "....");
             // 根据显示方向和当前手机方向，得出当前各个需要与方向适应的控件修正方向
             int orientationCompensation = mOrientation
                     + Utils.getDisplayRotation(RecorderActivity.this);
@@ -2130,8 +2100,6 @@ public class RecorderActivity extends BaseActivity {
                     mOrientationCompensation = orientationCompensation;
                 }
                 if (tempOrientation != mOrientationCompensation) {
-                    // Log.e("tempOrientation", tempOrientation + "...");
-
                     if (!RecorderCore.isRecording() && (mRecordVideoList.size() <= 0)) {//合并视频(必须视频尺寸、码率、帧率一致)
                         setOrientationIndicator(mOrientationCompensation);
                         onOrientationFilter();
@@ -2247,8 +2215,6 @@ public class RecorderActivity extends BaseActivity {
 
     @Override
     public void finish() {
-//        Log.e("finsih", this.toString() + ".........over" +
-//                finishWithoutGate);
         //清理回调接口
         //必须调用清除广播的方法
         RecorderCore.unRegisterReceiver();
@@ -2259,12 +2225,10 @@ public class RecorderActivity extends BaseActivity {
         // 静态对象被置NULL
         // RecorderCore.onExit(this);
         if (finishWithoutGate) {
-            // Log.e("finsih", this.toString() + "......super...over");
             super.finish();
             return;
         }
         finishCamGate();
-
     }
 
     /**
@@ -2656,8 +2620,6 @@ public class RecorderActivity extends BaseActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        android.util.Log.e(TAG, "onClick:  buttonState" + buttonState);
                         if (buttonState == BUTTON_STATE_START) {
                             goToAlbum();
                         } else if (buttonState == BUTTON_STATE_LIVING) {
@@ -3306,7 +3268,6 @@ public class RecorderActivity extends BaseActivity {
 
         @Override
         public void onSwitchFilterToRight() {
-            // Log.e("re", "onSwitchFilterToRight-->");
             if (!enableRecPhotoSwitch) {
                 return;
             }
@@ -3333,7 +3294,6 @@ public class RecorderActivity extends BaseActivity {
 
         @Override
         public void onSwitchFilterToLeft() {
-//            Log.e("re", "onSwitchFilterToLeft-->");
             if (!enableRecPhotoSwitch) {
                 return;
             }
@@ -3435,7 +3395,6 @@ public class RecorderActivity extends BaseActivity {
      */
     private void onSureBg() {
         mTempCurrentIndex = mLvCameraFilter.getCurrentItemId();
-        // Log.e("onSureBg", "onSureBg: " + nTempId);
         int count = mCameraEffectHandler.getEffectCount();
         mEffectLeftIndex = 0;
         if ((mEffectLeftIndex = (mTempCurrentIndex - 1)) < 0) {
@@ -3804,7 +3763,6 @@ public class RecorderActivity extends BaseActivity {
 
         @Override
         public void onPermissionFailed(int nResult, String strResultInfo) {
-            android.util.Log.e(TAG, "onPermissionFailed: " + nResult + "->" + strResultInfo);
             if (isScreen) {
                 mIsRecording = false;
                 setLiveStreamStatus(false);
@@ -4201,8 +4159,6 @@ public class RecorderActivity extends BaseActivity {
 
         @Override
         public void onGetRecordStatus(int nPosition, int arg1, int arg2) {
-            // android.util.Log.e("onGetRecordStatus", nPosition + "...." + arg1
-            // + "..." + arg2);
             if (isScreen) {
                 if (startTrailer) {
                     if (nPosition > trailerTime || nPosition > osdEnd) {
@@ -4416,22 +4372,6 @@ public class RecorderActivity extends BaseActivity {
                 mAudioPlayer.stop();
             } else {
                 mAudioPlayer = new AudioPlayer();
-                mAudioPlayer
-                        .setOnPreparedListener(new AudioPlayer.OnPreparedListener() {
-
-                            @Override
-                            public void onPrepared(AudioPlayer mp) {
-//                                Log.e("onPrepared", "onPrepared.." + mp.getDuration());
-                            }
-                        });
-                mAudioPlayer.setOnInfoListener(new AudioPlayer.OnInfoListener() {
-
-                    @Override
-                    public boolean onInfo(AudioPlayer mp, int what, int extra) {
-//                        Log.e("onInfo", "onInfo.." + what + "..." + extra);
-                        return false;
-                    }
-                });
                 mAudioPlayer.setOnErrorListener(new AudioPlayer.OnErrorListener() {
 
                     @Override
@@ -4507,8 +4447,6 @@ public class RecorderActivity extends BaseActivity {
      * 改变设备方向，防止m_btnRecord响应onTouch();
      */
     private void onOrientationFilter() {
-        // Log.e("re-onOrientationChanged--", mOrientationCompensation + ".."
-        // + bShowFitlerListLayout);
         if (mOrientationCompensation == 0 && bShowFitlerListLayout) {
             mBtnRecord.setEnabled(false);
         } else {

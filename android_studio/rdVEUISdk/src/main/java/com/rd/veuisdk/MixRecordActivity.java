@@ -2101,7 +2101,7 @@ public class MixRecordActivity extends Activity {
                             mCancelLoading.dismiss();
                             mCancelLoading = null;
                         }
-                        if (nResult == VirtualVideo.RESULT_SAVE_CANCEL) {
+                        if (nResult == VirtualVideo.RESULT_EXPORT_CANCEL) {
                             onToast(getString(R.string.export_canceled));
                         } else {
                             onToast(getString(R.string.export_failed));

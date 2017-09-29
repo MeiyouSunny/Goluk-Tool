@@ -67,33 +67,33 @@ public class UIConfiguration implements Parcelable {
     public static final int PROPORTION_LANDSCAPE = 2;
 
 
-    public int videoProportion = PROPORTION_AUTO;
-    public int mediaCountLimit = 0;
-    public int albumSupportFormatType = ALBUM_SUPPORT_DEFAULT;
-    public int voiceLayoutTpye = VOICE_LAYOUT_1;
-    public int filterLayoutTpye = FILTER_LAYOUT_1;
-    public boolean enableAlbumCamera = true;
-    public boolean hideMusic = false;
-    public boolean useCustomAlbum = false;
-    public boolean openEditbyPicture = false;
+    public final int videoProportion;
+    public final int mediaCountLimit;
+    public final int albumSupportFormatType;
+    public final int voiceLayoutTpye;
+    public final int filterLayoutTpye;
+    public final boolean enableAlbumCamera;
+    public final boolean hideMusic;
+    public final boolean useCustomAlbum;
+    public final boolean openEditbyPicture;
 
     // 是否打开mv功能，默认关闭
-    public boolean enableMV = false;
-    public boolean enableAutoRepeat = false;
+    public final boolean enableMV;
+    public final boolean enableAutoRepeat;
 
-    public String mvUrl = null;
+    public final String mvUrl;
     //字幕、特效在mv之上
-    public boolean enableTitlingAndSpecialEffectOuter = true;
+    public final boolean enableTitlingAndSpecialEffectOuter;
 
-    public String musicUrl = null;// 配乐2的网络音乐
+    public final String musicUrl;// 配乐2的网络音乐
 
     /**
      * 配乐2->云音乐
      */
-    public String cloudMusicUrl = null;
+    public final String cloudMusicUrl;
 
     //是否打开本地音乐
-    public boolean enableLocalMusic = true;
+    public final boolean enableLocalMusic;
 
     /**
      * 片断编辑功能枚举
@@ -197,9 +197,9 @@ public class UIConfiguration implements Parcelable {
         this.enableMV = builder.enableMV;
         this.mvUrl = builder.mvUrl;
         this.enableAutoRepeat = builder.enableAutoRepeat;
-        this.hideMusic = builder.b_hideMusic;
-        this.filterLayoutTpye = builder.b_filterLayoutType;
-        this.enableAlbumCamera = builder.b_enableAlbumCamera;
+        this.hideMusic = builder.mHideMusic;
+        this.filterLayoutTpye = builder.mFilterLayoutType;
+        this.enableAlbumCamera = builder.mEnableAlbumCamera;
 
         if (enableMV) {
             this.videoProportion = PROPORTION_SQUARE;
@@ -216,7 +216,6 @@ public class UIConfiguration implements Parcelable {
         this.cloudMusicUrl = builder.cloudMusicUrl;
         this.enableTitlingAndSpecialEffectOuter = builder.enableTitlingAllOuter;
         this.enableLocalMusic = builder.enableLocalMusic;
-
     }
 
     /**
@@ -232,9 +231,9 @@ public class UIConfiguration implements Parcelable {
         boolean b_openEditbyPicture = false;
         boolean enableMV = false;
         boolean enableAutoRepeat = false;
-        int b_filterLayoutType = FILTER_LAYOUT_1;
-        boolean b_enableAlbumCamera = true;
-        boolean b_hideMusic = false;
+        int mFilterLayoutType = FILTER_LAYOUT_1;
+        boolean mEnableAlbumCamera = true;
+        boolean mHideMusic = false;
         private String mvUrl = "";
         boolean enableTitlingAllOuter = true;
 
@@ -247,8 +246,7 @@ public class UIConfiguration implements Parcelable {
         /**
          * 是否打开本地音乐
          *
-         * @param enable
-         * @return
+         * @param enable 打开本地音乐
          */
         public Builder enableLocalMusic(boolean enable) {
             this.enableLocalMusic = enable;
@@ -256,8 +254,9 @@ public class UIConfiguration implements Parcelable {
         }
 
         /**
-         * @param musicUrl
-         * @return
+         * 设置简单后台网络音乐url
+         *
+         * @param musicUrl 网络音乐url
          */
         public Builder setMusicUrl(String musicUrl) {
             this.musicUrl = musicUrl;
@@ -265,8 +264,9 @@ public class UIConfiguration implements Parcelable {
         }
 
         /**
-         * @param cloudMusicUrl
-         * @return
+         * 设置云音乐url
+         *
+         * @param cloudMusicUrl 云音乐url
          */
         public Builder setCloudMusicUrl(String cloudMusicUrl) {
             this.cloudMusicUrl = cloudMusicUrl;
@@ -277,7 +277,6 @@ public class UIConfiguration implements Parcelable {
          * 启用字幕特效在mv的外面(不受MV影响)
          *
          * @param enable 为true代表字幕在mv的外面
-         * @return
          */
         public Builder enableTitlingAndSpecialEffectOuter(boolean enable) {
             this.enableTitlingAllOuter = enable;
@@ -288,10 +287,10 @@ public class UIConfiguration implements Parcelable {
         /**
          * 设置相册界面是否显示跳转拍摄按钮(仅相册api生效)
          *
-         * @param enable
+         * @param enable 是否显示跳转拍摄按钮(
          */
         public Builder enableAlbumCamera(boolean enable) {
-            this.b_enableAlbumCamera = enable;
+            this.mEnableAlbumCamera = enable;
             return this;
         }
 
@@ -300,7 +299,6 @@ public class UIConfiguration implements Parcelable {
          * 启用自动重播
          *
          * @param enable true代表启用
-         * @return
          */
         public Builder enableAutoRepeat(boolean enable) {
             this.enableAutoRepeat = enable;
@@ -312,7 +310,6 @@ public class UIConfiguration implements Parcelable {
          *
          * @param voiceType UIConfiguration#VOICE_LAYOUT_1 <br/>
          *                  UIConfiguration#VOICE_LAYOUT_2
-         * @return
          */
         public Builder setVoiceLayoutType(int voiceType) {
             this.b_voiceLayoutType = Math.max(VOICE_LAYOUT_1,
@@ -380,7 +377,6 @@ public class UIConfiguration implements Parcelable {
          *
          * @param enable true 打开;flase 关闭
          * @param url    网络MV地址
-         * @return
          */
         public Builder enableMV(boolean enable, String url) {
             this.enableMV = enable;
@@ -406,7 +402,7 @@ public class UIConfiguration implements Parcelable {
          *             风格二：{@link UIConfiguration#FILTER_LAYOUT_2}<br>
          */
         public Builder setFilterType(int type) {
-            this.b_filterLayoutType = Math.min(FILTER_LAYOUT_2,
+            this.mFilterLayoutType = Math.min(FILTER_LAYOUT_2,
                     Math.max(FILTER_LAYOUT_1, type));
             return this;
         }
@@ -492,18 +488,18 @@ public class UIConfiguration implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.videoProportion);
-        dest.writeInt(this.albumSupportFormatType);
         dest.writeInt(this.mediaCountLimit);
+        dest.writeInt(this.albumSupportFormatType);
         dest.writeInt(this.voiceLayoutTpye);
         dest.writeInt(this.filterLayoutTpye);
         dest.writeByte(this.enableAlbumCamera ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.hideMusic ? (byte) 1 : (byte) 0);
         dest.writeByte(this.useCustomAlbum ? (byte) 1 : (byte) 0);
         dest.writeByte(this.openEditbyPicture ? (byte) 1 : (byte) 0);
         dest.writeByte(this.enableMV ? (byte) 1 : (byte) 0);
         dest.writeByte(this.enableAutoRepeat ? (byte) 1 : (byte) 0);
         dest.writeString(this.mvUrl);
         dest.writeByte(this.enableTitlingAndSpecialEffectOuter ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.hideMusic ? (byte) 1 : (byte) 0);
         dest.writeString(this.musicUrl);
         dest.writeString(this.cloudMusicUrl);
         dest.writeByte(this.enableLocalMusic ? (byte) 1 : (byte) 0);
@@ -512,16 +508,17 @@ public class UIConfiguration implements Parcelable {
     protected UIConfiguration(Parcel in) {
         this.videoProportion = in.readInt();
         this.mediaCountLimit = in.readInt();
-        this.enableAlbumCamera = in.readByte() != 0;
+        this.albumSupportFormatType = in.readInt();
         this.voiceLayoutTpye = in.readInt();
         this.filterLayoutTpye = in.readInt();
+        this.enableAlbumCamera = in.readByte() != 0;
+        this.hideMusic = in.readByte() != 0;
         this.useCustomAlbum = in.readByte() != 0;
         this.openEditbyPicture = in.readByte() != 0;
         this.enableMV = in.readByte() != 0;
-        this.albumSupportFormatType = in.readInt();
         this.enableAutoRepeat = in.readByte() != 0;
         this.mvUrl = in.readString();
-        this.enableTitlingAndSpecialEffectOuter = in.readByte() == 1;
+        this.enableTitlingAndSpecialEffectOuter = in.readByte() != 0;
         this.musicUrl = in.readString();
         this.cloudMusicUrl = in.readString();
         this.enableLocalMusic = in.readByte() != 0;

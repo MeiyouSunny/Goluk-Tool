@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,6 +24,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
@@ -85,6 +85,7 @@ import com.rd.veuisdk.fragment.MenuUncheckedFragment;
 import com.rd.veuisdk.fragment.MusicFragmentEx;
 import com.rd.veuisdk.fragment.MusicFragmentEx.IMusicListener;
 import com.rd.veuisdk.manager.ExportConfiguration;
+import com.rd.veuisdk.manager.TextWatermarkBuilder;
 import com.rd.veuisdk.manager.UIConfiguration;
 import com.rd.veuisdk.model.MusicItem;
 import com.rd.veuisdk.model.SpecialInfo;
@@ -117,7 +118,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * 编辑预览界面2
+ * 编辑预览页
  */
 @SuppressLint("HandlerLeak")
 public class VideoEditActivity extends BaseActivity implements
@@ -145,6 +146,10 @@ public class VideoEditActivity extends BaseActivity implements
       * 记录最后的播放时间
      */
     private float mLastPlayPostion;
+    /**
+     * 记录最后的播放状态
+     */
+    private boolean mLastPlaying;
     /*
       * 不同显示页面下的代表 取消、返回、确定、下一步 功能的按钮
      */
@@ -514,13 +519,18 @@ public class VideoEditActivity extends BaseActivity implements
     protected void onPause() {
         super.onPause();
         mIsPausing = true;
-        if (mSubtitleHandler != null && mSpecialHandler != null
-                && mVirtualVideoView != null) {
-            mSubtitleHandler.onPasue();
-            mSpecialHandler.onPasue();
-            mVirtualVideoView.pause();
+        if (mVirtualVideoView != null) {
             mLastPlayPostion = mVirtualVideoView.getCurrentPosition();
-            pause();
+            mLastPlaying = mVirtualVideoView.isPlaying();
+            if (mLastPlaying) {
+                pause();
+            }
+        }
+        if (mSubtitleHandler != null) {
+            mSubtitleHandler.onPasue();
+        }
+        if (mSpecialHandler != null) {
+            mSpecialHandler.onPasue();
         }
     }
 
@@ -529,25 +539,22 @@ public class VideoEditActivity extends BaseActivity implements
         super.onResume();
         mIsPausing = false;
 
-        if (mSubtitleHandler != null && mSpecialHandler != null
-                && mVirtualVideoView != null) {
+        if (mSubtitleHandler != null) {
             mSubtitleHandler.onResume();
+        }
+        if (mSpecialHandler != null) {
             mSpecialHandler.onResume();
-            if (mLastPlayPostion == 0) {
+        }
+
+        if (mVirtualVideoView != null) {
+            if (mLastPlayPostion > 0) {
+                mVirtualVideoView.seekTo(mLastPlayPostion);
+                mLastPlayPostion = -1;
+                if (!isThemeMenuItem() && mLastPlaying) {
+                    start();
+                }
+            } else {
                 mVirtualVideoView.seekTo(0);
-            }
-            if (!mSubtitleHandler.isEditing() && !mSpecialHandler.isEditing()
-                    && mLastPlayPostion > 0) {
-                if (mVirtualVideo != null) {
-                    return;
-                }
-                if (null != mVirtualVideoView) {
-                    mVirtualVideoView.seekTo(mLastPlayPostion);
-                    mLastPlayPostion = -1;
-                    if (!isThemeMenuItem()) {
-                        start();
-                    }
-                }
             }
         }
     }
@@ -623,7 +630,15 @@ public class VideoEditActivity extends BaseActivity implements
                 mTempRecfile = null;
             }
         }
-
+        // 删除自定义水印临时文件
+        if (!TextUtils.isEmpty(mStrCustomWatermarkTempPath)) {
+            try {
+                new File(mStrCustomWatermarkTempPath).delete();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            mStrCustomWatermarkTempPath = null;
+        }
         if (null != mTimerTask) {
             mTimerTask.cancel();
             mTimerTask = null;
@@ -672,7 +687,7 @@ public class VideoEditActivity extends BaseActivity implements
             if (mAudioFragment != null) {
                 for (Music mo : mAudioFragment.getMusicObjects()) {
                     try {
-                        virtualVideo.addMusic(mo, true);
+                        virtualVideo.addMusic(mo);
                     } catch (InvalidArgumentException e) {
                         e.printStackTrace();
                     }
@@ -902,21 +917,17 @@ public class VideoEditActivity extends BaseActivity implements
             mVirtualVideoView.setFilterType(nFilterType);
         }
 
-//        if (null != mFiterFragmentEx) {
-//            mCurrentFilterType = FilterFragmentEx.mCurrentFilterType;
-//        }
-//        if (null != mFilterFragment) {
-//            mCurrentFilterType = FilterFragment.checkFilterId;
-//        }
     }
 
     @Override
     public int getCurrentFilterType() {
         return mCurrentFilterType;
     }
-
     @Override
     public int getDuration() {
+        if (null == mVirtualVideoView) {
+            return 1;
+        }
         return Utils.s2ms(mVirtualVideoView.getDuration());
     }
 
@@ -1301,15 +1312,14 @@ public class VideoEditActivity extends BaseActivity implements
             @Override
             public boolean onInfo(int what, int extra,
                                   Object obj) {
-                if (what == VirtualVideoView.INFO_WHAT_PLAYBACK_PREPARING) {
+                if (what == VirtualVideo.INFO_WHAT_PLAYBACK_PREPARING) {
                     SysAlertDialog.showLoadingDialog(VideoEditActivity.this,
                             getString(R.string.isloading), false, null);
                     if (mIsOnCreate) {
                         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                         mIsOnCreate = false;
                     }
-                } else if (what == VirtualVideoView.MEDIA_INFO_GET_VIDEO_HIGHTLIGHTS
-                        && obj != null) {
+                } else if (what == VirtualVideo.INFO_WHAT_GET_VIDEO_HIGHTLIGHTS && obj != null) {
                     int[] arrHightLights = (int[]) obj; // hightlight时间数组，单位为ms
                     mSbPlayControl.setHighLights(arrHightLights);
                 }
@@ -1431,7 +1441,14 @@ public class VideoEditActivity extends BaseActivity implements
 
     private FilterFragmentEx mFiterFragmentEx;
 
-    private int mDuration;
+
+    private void notifyCurrentPosition(int positionMs) {
+        for (int nTmp = 0; nTmp < mSaEditorPostionListener.size(); nTmp++) {
+            mSaEditorPostionListener.valueAt(nTmp).onEditorGetPosition(
+                    positionMs, Utils.s2ms(mVirtualVideoView.getDuration()));
+        }
+    }
+
     /**
      * 播放器Listener
      */
@@ -1441,9 +1458,9 @@ public class VideoEditActivity extends BaseActivity implements
 
         @Override
         public void onPlayerPrepared() {
-            mDuration = Utils.s2ms(mVirtualVideoView.getDuration());
+            int duration = Utils.s2ms(mVirtualVideoView.getDuration());
             if (!mIsFastPreview) {
-                TempVideoParams.getInstance().setEditingVideoDuration(mDuration);
+                TempVideoParams.getInstance().setEditingVideoDuration(duration);
             }
             if (isCheckFilter
                     && (mCurrentFilterType != 0)) {
@@ -1451,12 +1468,12 @@ public class VideoEditActivity extends BaseActivity implements
                 isCheckFilter = false;
             }
 
-            mProgressView.setDuration(mDuration);
+            mProgressView.setDuration(duration);
             SysAlertDialog.cancelLoadingDialog();
             setText(R.id.tvEditorDuration,
-                    getFormatTime(mDuration));
-            mTvTotalTime.setText(getFormatTime(mDuration));
-            mSbPlayControl.setMax(mDuration);
+                    getFormatTime(duration));
+            mTvTotalTime.setText(getFormatTime(duration));
+            mSbPlayControl.setMax(duration);
             int len = mSaEditorPostionListener.size();
             for (int nTmp = 0; nTmp < len; nTmp++) {
                 mSaEditorPostionListener.valueAt(nTmp).onEditorPrepred();
@@ -1468,12 +1485,11 @@ public class VideoEditActivity extends BaseActivity implements
                 updateMenuStatus(isCheckDefaultMenu);
                 isCheckDefaultMenu = false;
             }
+            notifyCurrentPosition(Utils.s2ms(mVirtualVideoView.getCurrentPosition()));
         }
 
         @Override
-        public boolean onPlayerError(int what,
-                                     int extra) {
-
+        public boolean onPlayerError(int what, int extra) {
             SysAlertDialog.cancelLoadingDialog();
             com.rd.veuisdk.utils.Utils.autoToastNomal(VideoEditActivity.this,
                     R.string.preview_error);
@@ -1497,17 +1513,13 @@ public class VideoEditActivity extends BaseActivity implements
         }
 
         @Override
-        public void onGetCurrentPosition(float nPosition) {
-
-            int pms = Utils.s2ms(nPosition);
-            mProgressView.setProgress(pms);
-            mSbPlayControl.setProgress(pms);
-            mLastPlayPostion = nPosition;
-            mTvCurTime.setText(getFormatTime(pms));
-            for (int nTmp = 0; nTmp < mSaEditorPostionListener.size(); nTmp++) {
-                mSaEditorPostionListener.valueAt(nTmp).onEditorGetPosition(
-                        pms, Utils.s2ms(mVirtualVideoView.getDuration()));
-            }
+        public void onGetCurrentPosition(float position) {
+            int positionMs = Utils.s2ms(position);
+            mProgressView.setProgress(positionMs);
+            mSbPlayControl.setProgress(positionMs);
+            mLastPlayPostion = position;
+            mTvCurTime.setText(getFormatTime(positionMs));
+            notifyCurrentPosition(positionMs);
         }
     };
 
@@ -1983,8 +1995,7 @@ public class VideoEditActivity extends BaseActivity implements
         }
         try {
             if (!enableAnimation) {
-                FragmentTransaction ft = getFragmentManager()
-                        .beginTransaction();
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fl_fragment_container, fragment);
                 ft.commit();
                 setFragmentCurrent(fragment);
@@ -2007,8 +2018,7 @@ public class VideoEditActivity extends BaseActivity implements
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
-                                FragmentTransaction ft = getFragmentManager()
-                                        .beginTransaction();
+                                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                                 ft.replace(R.id.fl_fragment_container, fragment);
                                 ft.commit();
                                 Animation aniSlideIn = AnimationUtils
@@ -2281,6 +2291,10 @@ public class VideoEditActivity extends BaseActivity implements
      */
     protected String mStrSaveMp4FileName;
     /**
+     * 自定义水印临保存路径
+     */
+    private String mStrCustomWatermarkTempPath;
+    /**
      * 当前需要导出视频结尾图片路径
      */
     protected String mStrSaveVideoTrailerFileName;
@@ -2327,10 +2341,19 @@ public class VideoEditActivity extends BaseActivity implements
         addMusic(mVirtualVideoSave);
         mVirtualVideoSave.updateMusic(mVirtualVideoView);
 
-        if (mExportConfig.watermarkPath != null) {
+        if (mExportConfig.enableTextWatermark) {  // 自定义view水印
+            mStrCustomWatermarkTempPath = PathUtils.getTempFileNameForSdcard(mSavePath, "png");
+            TextWatermarkBuilder textWatermarkBuilder = new TextWatermarkBuilder(this, mStrCustomWatermarkTempPath);
+            textWatermarkBuilder.setWatermarkContent(mExportConfig.textWatermarkContent);
+            textWatermarkBuilder.setTextSize(mExportConfig.textWatermarkSize);
+            textWatermarkBuilder.setTextColor(mExportConfig.textWatermarkColor);
+            textWatermarkBuilder.setShowRect(mExportConfig.watermarkShowRectF);
+            textWatermarkBuilder.setTextShadowColor(mExportConfig.textWatermarkShadowColor);
+            mVirtualVideoSave.setWatermark(textWatermarkBuilder);
+        } else if (mExportConfig.watermarkPath != null) {  //图片水印
             Watermark watermark = new Watermark(mExportConfig.watermarkPath);
             watermark.setShowRect(mExportConfig.watermarkShowRectF);
-            mVirtualVideoSave.addWatermark(watermark);
+            mVirtualVideoSave.setWatermark(watermark);
         }
 
         if (mExportConfig.trailerPath != null) {
@@ -2341,13 +2364,11 @@ public class VideoEditActivity extends BaseActivity implements
         mVirtualVideoSave.changeFilter(mCurrentFilterType);
 
         VideoConfig vc = new VideoConfig();
-        if (SdkEntry.getVideoEncodingBitRate() != -1) {
-            vc.setVideoEncodingBitRate((int) (SdkEntry.getVideoEncodingBitRate() * 1000000));
-        }
-
+        vc.setVideoEncodingBitRate(SdkEntry.getSdkService().getExportConfig().getVideoBitratebps());
+        vc.setVideoFrameRate(SdkEntry.getSdkService().getExportConfig().exportVideoFrameRate);
         vc.enableHWEncoder(mHWCodecEnabled);
         vc.enableHWDecoder(mHWCodecEnabled);
-        vc.setAspectRatio(mCurProportion);
+        vc.setAspectRatio(SdkEntry.getSdkService().getExportConfig().getVideoMaxWH(), mCurProportion);
 
         if (!TextUtils.isEmpty(mSavePath)) {
             File path = new File(mSavePath);
@@ -2506,7 +2527,7 @@ public class VideoEditActivity extends BaseActivity implements
                 }
             } else {
                 new File(mStrSaveMp4FileName).delete();
-                if (nResult != VirtualVideo.RESULT_SAVE_CANCEL) {
+                if (nResult != VirtualVideo.RESULT_EXPORT_CANCEL) {
                     if (nResult == VirtualVideo.RESULT_CORE_ERROR_ENCODE_VIDEO
                             && mHWCodecEnabled) {
                         // FIXME:开启硬编后出现了编码错误，使用软编再试一次

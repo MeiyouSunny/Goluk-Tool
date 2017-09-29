@@ -25,8 +25,8 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:minHeight="23dp"
-                android:singleLine="true"
-                android:text="00:00"
+                android:maxLines="1"
+                android:text="0:0"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_16"/>
 

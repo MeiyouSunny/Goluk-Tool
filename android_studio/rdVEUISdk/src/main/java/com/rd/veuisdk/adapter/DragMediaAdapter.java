@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.rd.http.MD5;
 import com.rd.vecore.VirtualVideo;
-import com.rd.vecore.exception.InvalidStateException;
 import com.rd.vecore.models.MediaObject;
 import com.rd.vecore.models.MediaType;
 import com.rd.vecore.models.Scene;
@@ -217,6 +216,7 @@ public class DragMediaAdapter extends VideoSelectorAdapter implements RearrangeL
         notifyDataSetChanged();
     }
 
+
     private void getThumb(Scene tempScene, final int nId, ExtListItemView itemview) {
 
         float kind = getKind(tempScene);
@@ -230,27 +230,19 @@ public class DragMediaAdapter extends VideoSelectorAdapter implements RearrangeL
                     ThumbNailUtils.THUMB_HEIGHT, Config.ARGB_8888);
             VirtualVideo virtualVideo = new VirtualVideo();
             virtualVideo.addScene(tempScene);
-            try {
-                virtualVideo.build(mContext);
-            } catch (InvalidStateException e) {
-                e.printStackTrace();
-            }
-            if (virtualVideo.getSnapshot(kind, bmp)) {
+            if (virtualVideo.getSnapshot(mContext, kind, bmp)) {
                 if (null != maps) {
                     maps.put(key, bmp);
                     mhandler.sendMessage(mhandler.obtainMessage(
                             ITEM_THUMB_OK, nId, 0, itemview));
                 } else {
                     bmp.recycle();
-                    bmp = null;
                 }
             } else {
                 bmp.recycle();
-                bmp = null;
             }
             virtualVideo.release();
         }
-
     }
 
     /**

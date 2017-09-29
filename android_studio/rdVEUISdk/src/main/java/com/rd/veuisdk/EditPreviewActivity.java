@@ -1,6 +1,5 @@
 package com.rd.veuisdk;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -72,13 +71,11 @@ import com.rd.veuisdk.utils.ViewUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * 剪辑
- *
- * @author ADMIN
+ * 片段编辑页
  */
-@SuppressLint("HandlerLeak")
 public class EditPreviewActivity extends BaseActivity {
     private static final String TAG = "EditPreviewActivity";
 
@@ -112,6 +109,7 @@ public class EditPreviewActivity extends BaseActivity {
     View mMainView;
     View mSplitLayout;
     PreviewFrameLayout mPreviewPlayer;
+    private int mPlaybackDurationMs = 0; //实际播放时间
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -221,21 +219,23 @@ public class EditPreviewActivity extends BaseActivity {
             Transition transition = scene.getTransition();
             progress += scene.getDuration();
             if (transition != null) {
-                if (transition.getType() != TransitionType.TRANSITION_NULL &&
-                        transition.getType() != TransitionType.TRANSITION_BLINK_BLACK &&
-                        transition.getType() != TransitionType.TRANSITION_BLINK_WHITE) {
-                    progress -= transition.getDuration();
-                    if (!isAddItem) {
-                        if (n == position - 1) {
-                            progress += transition.getDuration();
+                if (checkMediaDuration(n + 1)) {
+                    if (transition.getType() != TransitionType.TRANSITION_NULL &&
+                            transition.getType() != TransitionType.TRANSITION_BLINK_BLACK &&
+                            transition.getType() != TransitionType.TRANSITION_BLINK_WHITE) {
+                        progress -= transition.getDuration();
+                        if (!isAddItem) {
+                            if (n == position - 1) {
+                                progress += transition.getDuration();
+                            }
                         }
-                    }
-                } else {
-                    if (n == position - 1) {
-                        if (isAddItem) {
-                            progress -= transition.getDuration();
-                        } else {
-                            progress += transition.getDuration();
+                    } else {
+                        if (n == position - 1) {
+                            if (isAddItem) {
+                                progress -= transition.getDuration();
+                            } else {
+                                progress += transition.getDuration();
+                            }
                         }
                     }
                 }
@@ -249,9 +249,15 @@ public class EditPreviewActivity extends BaseActivity {
         if (progress < 0) {
             progress = 0;
         }
-        mMediaPlayer.seekTo(progress);
-        mSbPreview.setProgress(Utils.s2ms(progress));
-        mTvVideoDuration.setText(gettime(Utils.s2ms(progress)) + "/" + gettime(Utils.s2ms(mMediaPlayer.getDuration())));
+        playBackSeekTo(progress);
+    }
+
+    private void playBackSeekTo(float progress) {
+        if (null != mMediaPlayer) {
+            mMediaPlayer.seekTo(progress);
+            mSbPreview.setProgress(Utils.s2ms(progress));
+            mTvVideoDuration.setText(gettime(Utils.s2ms(mMediaPlayer.getCurrentPosition())) + "/" + gettime(mPlaybackDurationMs));
+        }
     }
 
     private void onDragItemClick(int position) {
@@ -720,7 +726,7 @@ public class EditPreviewActivity extends BaseActivity {
             mDraggedView.setTrash(false);
             reload();
 
-            mIsSeekTo = true;
+            setSeekTo(true);
             seekToPosition(mIndex, false);
         }
 
@@ -792,7 +798,7 @@ public class EditPreviewActivity extends BaseActivity {
         mHasChanged = false;
         reload();
 
-        mIsSeekTo = true;
+        setSeekTo(true);
         seekToPosition(mIndex, false);
     }
 
@@ -800,10 +806,10 @@ public class EditPreviewActivity extends BaseActivity {
 
         @Override
         public boolean onInfo(int what, int extra, Object obj) {
-            if (what == VirtualVideoView.INFO_WHAT_PLAYBACK_PREPARING) {
+            if (what == VirtualVideo.INFO_WHAT_PLAYBACK_PREPARING) {
                 SysAlertDialog.showLoadingDialog(EditPreviewActivity.this,
                         R.string.isloading, false, null);
-            } else if (what == VirtualVideoView.MEDIA_INFO_GET_VIDEO_HIGHTLIGHTS) {
+            } else if (what == VirtualVideo.INFO_WHAT_GET_VIDEO_HIGHTLIGHTS) {
                 int[] ls = (int[]) obj;
                 mSbPreview.setHighLights(ls);
             }
@@ -817,7 +823,6 @@ public class EditPreviewActivity extends BaseActivity {
      */
     private VirtualVideoView.VideoViewListener mPlayViewListener = new VirtualVideoView.VideoViewListener() {
 
-        private int durationMs = 0;
 
         @Override
         public void onPlayerPrepared() {
@@ -826,16 +831,16 @@ public class EditPreviewActivity extends BaseActivity {
             mAdapterScene.notifyDataSetChanged();
             mMediaPlayer.setFilterType(VideoEditActivity.mCurrentFilterType);
 
-            durationMs = Utils.s2ms(mMediaPlayer.getDuration());
-            mTvVideoDuration.setText(gettime(0) + "/" + gettime(durationMs));
+            mPlaybackDurationMs = Utils.s2ms(mMediaPlayer.getDuration());
+            mTvVideoDuration.setText(gettime(Utils.s2ms(mMediaPlayer.getCurrentPosition())) + "/" + gettime(mPlaybackDurationMs));
 
             if (mSplitHandler.isSpliting()) {
                 mSplitHandler.setPrepared(true);
             } else {
-                mSbPreview.setMax(durationMs);
+                mSbPreview.setMax(mPlaybackDurationMs);
             }
             if (mIsSeekTo && mMediaPlayer != null) {
-                mIsSeekTo = false;
+                setSeekTo(false);
             }
         }
 
@@ -860,7 +865,7 @@ public class EditPreviewActivity extends BaseActivity {
             mMediaPlayer.seekTo(0);
             mSbPreview.setProgress(0);
             mTvVideoDuration.setText(gettime(0) + "/"
-                    + gettime(durationMs));
+                    + gettime(mPlaybackDurationMs));
             if (mSplitHandler.isSpliting()) {
                 mSplitHandler.onScrollCompleted();
             }
@@ -873,7 +878,7 @@ public class EditPreviewActivity extends BaseActivity {
             }
             int pms = Utils.s2ms(nPosition);
             mTvVideoDuration.setText(gettime(pms) + "/"
-                    + gettime(durationMs));
+                    + gettime(mPlaybackDurationMs));
             mSbPreview.setProgress(pms);
             if (mHasChanged) {
                 if (mSplitHandler.isSpliting()) {
@@ -919,32 +924,6 @@ public class EditPreviewActivity extends BaseActivity {
     private final int REQUESTCODE_FOR_CAMERA = 17;
     private final int REQUESTCODE_FOR_ADVANCED_EDIT = 18;
     private final int REQUESTCODE_FOR_POSTER_PROCESS = 19;
-
-//    private String saveBitmap(Bitmap bmp) {
-//        String tempPath = PathUtils
-//                .getTempFileNameForSdcard("Temp_bmp_", "png");
-//
-//        File file = new File(tempPath);
-//        if (!file.exists()) {
-//            try {
-//                file.createNewFile();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        try {
-//            FileOutputStream out = new FileOutputStream(file);
-//            bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
-//            out.flush();
-//            out.close();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        bmp.recycle();
-//        bmp = null;
-//        return tempPath;
-//    }
 
     /**
      * 响应剪辑功能按钮点击
@@ -1049,7 +1028,7 @@ public class EditPreviewActivity extends BaseActivity {
             initListView(mIndex);
             reload();
 
-            mIsSeekTo = true;
+            setSeekTo(true);
             seekToPosition(mIndex, false);
 
             playVideo();
@@ -1096,9 +1075,8 @@ public class EditPreviewActivity extends BaseActivity {
                     mSceneList.set(mIndex, reverseScene);
                     reload();
 
-                    mIsSeekTo = true;
+                    setSeekTo(true);
                     seekToPosition(mIndex, false);
-
                 }
 
             } else {
@@ -1147,7 +1125,7 @@ public class EditPreviewActivity extends BaseActivity {
                     ExtPhotoActivity.class);
             startActivityForResult(intent, REQUESTCODE_FOR_APPEND);
         } else if (id == R.id.preview_transition) {
-            if (checkMediaDuration()) {
+            if (checkMediaDuration(mAddItemIndex)) {
                 Intent intent = new Intent(EditPreviewActivity.this,
                         com.rd.veuisdk.TransitionActivity.class);
 
@@ -1259,7 +1237,7 @@ public class EditPreviewActivity extends BaseActivity {
                     initListView(mIndex);
                     reload();
                 }
-                mIsSeekTo = true;
+                setSeekTo(true);
                 seekToPosition(mIndex, false);
                 playVideo();
             }
@@ -1306,12 +1284,15 @@ public class EditPreviewActivity extends BaseActivity {
         outputmo.setClipRectF(rectNewClip);
     }
 
-    private boolean checkMediaDuration() {
-        Scene sceneFront = mSceneList.get(mAddItemIndex - 1);
-        Scene sceneBelow = mSceneList.get(mAddItemIndex);
-
-
-        Log.e(TAG, "checkMediaDuration: " + sceneFront.getDuration() + "---" + sceneBelow.getDuration());
+    private boolean checkMediaDuration(int addIndex) {
+        if (addIndex == 0) {
+            return false;
+        }
+        if (addIndex == mSceneList.size()) {
+            return false;
+        }
+        Scene sceneFront = mSceneList.get(addIndex - 1);
+        Scene sceneBelow = mSceneList.get(addIndex);
         if (sceneFront.getDuration() < 0.5f || sceneBelow.getDuration() < 0.5f) {
             return false;
         } else {
@@ -1417,6 +1398,11 @@ public class EditPreviewActivity extends BaseActivity {
      * 退出编辑
      */
     private static final int DIALOG_EXIT_ID = 5;
+
+    private void setSeekTo(boolean seekTo) {
+        mIsSeekTo = seekTo;
+    }
+
     private boolean mIsSeekTo = false;
     private boolean mAddNewTran = false;
 
@@ -1426,7 +1412,7 @@ public class EditPreviewActivity extends BaseActivity {
         mSbPreview.setHighLights(null);
         if (resultCode == RESULT_OK) {
             mBackDiaglog = true;
-            mIsSeekTo = true;
+            setSeekTo(true);
 
             if (requestCode == REQUESTCODE_FOR_SPEED) {
                 Scene scene = data.getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
@@ -1611,12 +1597,7 @@ public class EditPreviewActivity extends BaseActivity {
                 finish();
                 return;
             }
-            mIsSeekTo = true;
-            if (mAddItemIndex == -1) {
-                seekToPosition(mIndex, true);
-            } else {
-                seekToPosition(mAddItemIndex, false);
-            }
+            setSeekTo(false);
         }
         updateView();
     }
@@ -1759,6 +1740,8 @@ public class EditPreviewActivity extends BaseActivity {
             }
             mTempRecfile = null;
         }
+        System.gc();
+        System.runFinalization();
     }
 
     @Override
@@ -1770,21 +1753,17 @@ public class EditPreviewActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!mSplitHandler.isSpliting() && !mIsSeekTo) {
+        if (mSplitHandler.isSpliting()) {
+            mMediaPlayer.seekTo(mLastPlayPostion);
+        } else if (!mIsSeekTo) {
             if (mLastPlayPostion == 0) {
                 mMediaPlayer.seekTo(0);
             }
             if (mLastPlayPostion > 0) {
-                if (null != mMediaPlayer) {
-                    mMediaPlayer.seekTo(mLastPlayPostion);
-                    mLastPlayPostion = -1;
-                }
+                playBackSeekTo(mLastPlayPostion);
+                mLastPlayPostion = -1;
             }
         }
-        if (mSplitHandler.isSpliting()) {
-            mMediaPlayer.seekTo(mLastPlayPostion);
-        }
-
     }
 
     private void playVideo() {
@@ -1949,6 +1928,29 @@ public class EditPreviewActivity extends BaseActivity {
             // 竖屏
             mCurProportion = 0;
             mMediaPlayer.setPreviewAspectRatio(mCurProportion);
+            for (Scene mo : mSceneList) {
+                List<MediaObject> list = mo.getAllMedia();
+                if (null != list && list.size() > 0) {
+                    MediaObject tmp = list.get(0);
+                    int height, width;
+                    if (tmp.getMediaType() == MediaType.MEDIA_VIDEO_TYPE) {
+                        height = tmp.getHeight();
+                        width = tmp.getWidth();
+                    } else {
+                        height = tmp.getHeight();
+                        width = tmp.getWidth();
+                    }
+                    if (width > height) {
+                        SysAlertDialog.showAutoHideDialog(this, null,
+                                getString(R.string.proportion_change_to_auto),
+                                Toast.LENGTH_LONG);
+                        mProportionDialog.mIndex = ProportionDialog.ORIENTATION_AUTO;
+                        break;
+                    }
+                }
+
+            }
+
         } else {
         }
         reload();

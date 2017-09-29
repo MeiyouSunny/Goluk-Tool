@@ -39,9 +39,6 @@ public class Utils {
 
     /**
      * 初始Utils
-     *
-     * @param context
-     * @param strRootDirPath
      */
     public static void initialize(Context context, String strRootDirPath) {
         PathUtils.initialize(context, TextUtils.isEmpty(strRootDirPath) ? null
@@ -54,8 +51,8 @@ public class Utils {
     /**
      * 获取某个activity根View
      *
-     * @param activity
-     * @return
+     * @param activity 某个activity
+     * @return 根View
      */
     public static View getRootView(Activity activity) {
         return ((ViewGroup) activity.findViewById(android.R.id.content))
@@ -67,8 +64,6 @@ public class Utils {
 
     /**
      * 主线程延迟指定时间执行的消息
-     *
-     * @param runnable
      */
     public static void postMainHandlerMsg(Runnable runnable, int delayMillis) {
         m_sMainHandler.postDelayed(runnable, delayMillis);
@@ -76,8 +71,6 @@ public class Utils {
 
     /**
      * 主线程执行的消息
-     *
-     * @param runnable
      */
     public static void postMainHandlerMsg(Runnable runnable) {
         m_sMainHandler.post(runnable);
@@ -112,7 +105,7 @@ public class Utils {
     /**
      * 字幕的id
      *
-     * @return
+     * @return id
      */
     public static int getWordId() {
         String time = String.valueOf(System.currentTimeMillis());
@@ -122,13 +115,9 @@ public class Utils {
 
     /**
      * 查找是否受支持的项目
-     *
-     * @param value
-     * @param supported
-     * @return
      */
     public static boolean isSupported(String value, List<String> supported) {
-        return supported == null ? false : supported.indexOf(value) >= 0;
+        return supported != null && supported.indexOf(value) >= 0;
     }
 
     public static int getDisplayRotation(Activity activity) {
@@ -152,9 +141,9 @@ public class Utils {
     /**
      * 根据需要设置的方向角度和当前(旧的)方向角度,计算出合适的新的角度
      *
-     * @param orientation
-     * @param orientationHistory
-     * @return
+     * @param orientation        方向角度
+     * @param orientationHistory 方向角度历史
+     * @return 新的角度
      */
     public static int roundOrientation(int orientation, int orientationHistory) {
         boolean changeOrientation = false;
@@ -175,7 +164,7 @@ public class Utils {
     /**
      * 清理临时文件
      *
-     * @param strTmpFilePath
+     * @param strTmpFilePath 临时文件目录
      */
     public static void cleanTempFile(String strTmpFilePath) {
         if (!TextUtils.isEmpty(strTmpFilePath)) {
@@ -192,9 +181,6 @@ public class Utils {
 
     /**
      * 毫秒数转换为时间格式化字符串
-     *
-     * @param timeMs
-     * @return
      */
     public static String stringForTime(long timeMs) {
         return stringForTime(timeMs, false, false);
@@ -202,9 +188,6 @@ public class Utils {
 
     /**
      * 毫秒数转换为时间格式化字符串 existsHours支持是否显示小时,existsMs支持是否显示毫秒
-     *
-     * @param timeMs
-     * @return
      */
     public static String stringForTime(long timeMs, boolean existsHours,
                                        boolean existsMs) {
@@ -243,8 +226,6 @@ public class Utils {
 
     /**
      * 使用App内置录制
-     *
-     * @return
      */
     public static boolean isUseInternalRecorder() {
         return m_bUseInternalRecorder;
@@ -254,8 +235,6 @@ public class Utils {
 
     /**
      * 设置是否允许设置MP4元数据
-     *
-     * @param bSetValue
      */
     public static void setCanWriteMP4Metadata(boolean bSetValue) {
         m_bNoMP4Metadata = bSetValue;
@@ -263,8 +242,6 @@ public class Utils {
 
     /**
      * 获取是否允许设置MP4元数据
-     *
-     * @return
      */
     public static boolean isCanWriteMp4Metadata() {
         return m_bNoMP4Metadata;
@@ -272,8 +249,6 @@ public class Utils {
 
     /**
      * 获取是否支持扩展特效滤镜
-     *
-     * @return
      */
     public static boolean getSupportExpandEffects() {
         return m_sSupportExpandEffects;
@@ -281,9 +256,6 @@ public class Utils {
 
     /**
      * 调转到应用权限设置
-     *
-     * @param context
-     * @param packagename
      */
 
     public static void gotoAppInfo(Context context, String packagename) {
@@ -299,11 +271,6 @@ public class Utils {
 
     /**
      * 将asset文件保存为指定文件
-     *
-     * @param am
-     * @param strAssetFile
-     * @param strDstFile
-     * @throws IOException
      */
     public static boolean assetRes2File(AssetManager am, String strAssetFile,
                                         String strDstFile) {
@@ -347,11 +314,6 @@ public class Utils {
 
     /**
      * 获取Asset文件长度
-     *
-     * @param am
-     * @param strAssetFile
-     * @return
-     * @throws IOException
      */
     public static long getAssetResourceLen(AssetManager am, String strAssetFile)
             throws IOException {
@@ -366,8 +328,6 @@ public class Utils {
 
     /**
      * 判断是否存在虚拟导航键
-     *
-     * @param context
      */
     public static boolean checkDeviceHasNavigationBar(Context context) {
         boolean hasNavigationBar = false;
@@ -377,8 +337,8 @@ public class Utils {
             hasNavigationBar = rs.getBoolean(id);
         }
         try {
-            Class systemPropertiesClass = Class.forName("android.os.SystemProperties");
-            Method m = systemPropertiesClass.getMethod("get", String.class);
+            Class<?> systemPropertiesClass = Class.forName("android.os.SystemProperties");
+            Method m = systemPropertiesClass.getMethod("get", (Class<?>) String.class);
             String navBarOverride = (String) m.invoke(systemPropertiesClass, "qemu.hw.mainkeys");
             if ("1".equals(navBarOverride)) {
                 hasNavigationBar = false;
@@ -386,16 +346,12 @@ public class Utils {
                 hasNavigationBar = true;
             }
         } catch (Exception e) {
-
         }
         return hasNavigationBar;
     }
 
     /**
      * 时长单位的转换 秒->毫秒
-     *
-     * @param s
-     * @return
      */
     public static int s2ms(float s) {
         return (int) (s * 1000);
@@ -403,21 +359,17 @@ public class Utils {
 
     /**
      * 时长单位的转换 毫秒->秒
-     *
-     * @param ms
-     * @return
      */
     public static float ms2s(int ms) {
         return (ms / 1000.0f);
     }
 
     /**
+     * 时长单位的转换 毫秒->秒
+     *
      * @param ms 时长单位的转换 毫秒->秒
-     * @return
      */
     public static float ms2s(long ms) {
         return (ms / 1000.0f);
     }
-
-
 }

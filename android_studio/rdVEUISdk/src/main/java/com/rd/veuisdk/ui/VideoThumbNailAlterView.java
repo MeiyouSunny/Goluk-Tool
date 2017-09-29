@@ -246,7 +246,7 @@ public class VideoThumbNailAlterView extends View {
                                 Config.ARGB_8888);
 
                         if (null != mVirtualVideo
-                                && mVirtualVideo.getSnapshot(Utils.ms2s(nTime), bitmap)) {
+                                && mVirtualVideo.getSnapshot(getContext(),Utils.ms2s(nTime), bitmap)) {
                             // 将Bitmap 加入内存缓存
                             addBitmapToMemoryCache(nTime, src, dst, isleft,
                                     isright, bitmap);

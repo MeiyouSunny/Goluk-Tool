@@ -56,6 +56,7 @@ public class MyMusicAdapter extends BaseAdapter implements
     private ArrayList<TreeNode> mTreeNodeGroups = new ArrayList<TreeNode>(),
             mSections = new ArrayList<TreeNode>();
     private LayoutInflater mGroupInflater;
+    private final String EXTENSION = "mp3";
 
     /**
      * 清空全部数据
@@ -210,8 +211,11 @@ public class MyMusicAdapter extends BaseAdapter implements
                 Log.e("onitemclick", "不响应重复点击");
                 return;
             } else {
-
-                setCanAutoPlay(true);
+                if (isRunning) {
+                    setCanAutoPlay(true);
+                } else {
+                    setCanAutoPlay(false);
+                }
                 View itemView = getItemView();
                 if (null != itemView) {
                     msb = (ExpRangeSeekBar) itemView
@@ -251,7 +255,6 @@ public class MyMusicAdapter extends BaseAdapter implements
             return;
         }
 
-        // Log.e("iscurrent", iscurrent + "");
 
         mduration = Utils.s2ms(VirtualVideo.getMediaInfo(info.getLocalPath(), null));
 
@@ -264,7 +267,6 @@ public class MyMusicAdapter extends BaseAdapter implements
             tempm_rbBar.canTouchRight();
         }
         onPrePare(0, mduration);
-
         tempstate.setVisibility(View.VISIBLE);
 
         addbtn.setVisibility(View.VISIBLE);
@@ -284,16 +286,13 @@ public class MyMusicAdapter extends BaseAdapter implements
             in.putExtra(MyMusicFragment.BCANSHOW, true);
             mContext.sendBroadcast(in);
         }
-        // }
 
     }
 
-    private final String EXTENSION = "mp3";
+
     private ArrayList<String> mDownloading = new ArrayList<String>();
 
     private void onDownMusic(final int position, final WebMusicInfo info) {
-        // android.util.Log.e("onDownMusic",
-        // position + "..." + info.getMusicName());
         if (CoreUtils.checkNetworkInfo(mContext) == CoreUtils.UNCONNECTED) {
             SysAlertDialog.showAutoHideDialog(mContext, 0,
                     R.string.please_check_network, Toast.LENGTH_SHORT);
@@ -325,7 +324,6 @@ public class MyMusicAdapter extends BaseAdapter implements
 
                 @Override
                 public void onProgress(long arg0, int arg1) {
-                    // Log.e("onProgress", "onProgress" + arg0);
                     if (null != mHandler) {
                         mHandler.obtainMessage(MSG_PROGRESS, (int) arg0, arg1)
                                 .sendToTarget();
@@ -367,7 +365,18 @@ public class MyMusicAdapter extends BaseAdapter implements
 
     }
 
+
+    public void onResume() {
+        isRunning = true;
+    }
+
+    /**
+     * fragment是否在前台
+     */
+    private boolean isRunning = false;
+
     public void onPause() {
+        isRunning = false;
 //		Log.e("onPause", this.toString());
         if (null != mAudioPlayer) {
             mAudioPlayer.stop();
@@ -391,6 +400,7 @@ public class MyMusicAdapter extends BaseAdapter implements
 
     public void onStart() {
         mIsStoped = false;
+        isRunning = true;
     }
 
     public void onStartReload() {
@@ -403,6 +413,7 @@ public class MyMusicAdapter extends BaseAdapter implements
     private boolean mIsStoped = false;
 
     public void onStop() {
+        isRunning = false;
         mIsStoped = true;
         if (null != mAudioPlayer) {
             // Log.e("onstop", "stopmusic");
@@ -478,6 +489,24 @@ public class MyMusicAdapter extends BaseAdapter implements
                         ImageView state = (ImageView) itemView
                                 .findViewById(R.id.iv_select_music_state);
                         state.setImageResource(R.drawable.edit_music_pause);
+                    }
+
+                }
+            } else {
+                if (isRunning) {
+                    setCanAutoPlay(true);
+                    TreeNode node = getItem(mTempPosition);
+                    if (null != node) {
+                        MyMusicInfo info = node.childs;
+                        if (null != info) {
+                            String path = info.getmInfo().getLocalPath();
+                            if (!TextUtils.isEmpty(path)) {
+                                mduration = Utils.s2ms(VirtualVideo.getMediaInfo(path, null));
+                                if (mduration > 10) {
+                                    onPrePare(0, mduration);
+                                }
+                            }
+                        }
                     }
 
                 }
@@ -612,7 +641,6 @@ public class MyMusicAdapter extends BaseAdapter implements
                         min = start;
                         max = end;
                         mAudioPlayer.setProgressListener(mOnProgressListener);
-
                         mAudioPlayer.setOnPreparedListener(mOnPrepareListener);
                         mAudioPlayer.setOnErrorListener(mOnErrorListener);
                         mAudioPlayer.setOnInfoListener(mOnInfoListener);
@@ -717,11 +745,7 @@ public class MyMusicAdapter extends BaseAdapter implements
 
         if (null != mAudioPlayer) {
             mAudioPlayer.start();
-            // Log.e("onMediaPlay", "..." + mAudioPlayer.getCurrentPosition());
-        } else {
-            // Log.e("onMediaPlay", "failed....");
         }
-
         View itemView = getItemView();
         if (null != itemView) {
             ImageView state = (ImageView) itemView
@@ -781,7 +805,7 @@ public class MyMusicAdapter extends BaseAdapter implements
                     }
                     break;
                 case MSG_FINISHED: {
-                    // Log.e("MSG_FINISHED", "MSG_FINISHED---" + mTempPosition);
+//                    Log.e(TAG, "MSG_FINISHED---" + mTempPosition + "..." + this.toString());
                     View v = getItemView();
                     if (null != v) {
                         v.findViewById(R.id.music_state).setVisibility(View.GONE);
@@ -791,6 +815,7 @@ public class MyMusicAdapter extends BaseAdapter implements
                     }
                     notifyDataSetChanged();
                     if (!mIsStoped) {
+
                         onItemClick(getItemView(), mTempPosition, true);
                     }
                 }

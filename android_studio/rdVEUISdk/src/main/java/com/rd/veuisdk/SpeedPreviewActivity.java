@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.rd.lib.ui.PreviewFrameLayout;
@@ -182,19 +183,15 @@ public class SpeedPreviewActivity extends BaseActivity {
         mTvVideoDuration = (TextView) findViewById(R.id.tvEditorDuration);
         mIvVideoPlayState = (ImageView) findViewById(R.id.ivPlayerState);
         mMediaPlayer = (VirtualVideoView) findViewById(R.id.epvPreview);
-        mPbPreview = (RdSeekBar) findViewById(R.id.pbPreview);
         mDragSpeed = (DragItemScrollView) findViewById(R.id.dragViewSpeed);
 
         PreviewFrameLayout layout = (PreviewFrameLayout) findViewById(R.id.rlPreviewLayout);
-
         layout.setAspectRatio(AppConfiguration.ASPECTRATIO);
+
         TextView title = (TextView) findViewById(R.id.tvTitle);
         title.setText(mStrActivityPageName);
         findViewById(R.id.btnLeft).setVisibility(View.INVISIBLE);
-
         mPflVideoPreview.setClickable(true);
-
-
         mLastPlayPostion = -1;
 
         mMediaPlayer = (VirtualVideoView) findViewById(R.id.epvPreview);
@@ -204,19 +201,42 @@ public class SpeedPreviewActivity extends BaseActivity {
             @Override
             public boolean onInfo(int what, int extra, Object obj) {
 
-                if (what == VirtualVideoView.INFO_WHAT_PLAYBACK_PREPARING) {
+                if (what == VirtualVideo.INFO_WHAT_PLAYBACK_PREPARING) {
                     SysAlertDialog.showLoadingDialog(SpeedPreviewActivity.this,
                             R.string.isloading, false, null);
                     VirtualVideo v;
-                } else if (what == VirtualVideo.MEDIA_INFO_GET_VIDEO_HIGHTLIGHTS) {
+                } else if (what == VirtualVideo.INFO_WHAT_GET_VIDEO_HIGHTLIGHTS) {
                     int[] ls = (int[]) obj;
                     mPbPreview.setHighLights(ls);
                 }
-
                 return false;
             }
         });
+        mPbPreview = (RdSeekBar) findViewById(R.id.pbPreview);
+        mPbPreview.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            boolean mLastPlaying;
 
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    mMediaPlayer.seekTo(Utils.ms2s(progress));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                if ((mLastPlaying = mMediaPlayer.isPlaying())) {
+                    mMediaPlayer.pause();
+                }
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if (mLastPlaying) {
+                    mMediaPlayer.start();
+                }
+            }
+        });
     }
 
     private void onComplete() {

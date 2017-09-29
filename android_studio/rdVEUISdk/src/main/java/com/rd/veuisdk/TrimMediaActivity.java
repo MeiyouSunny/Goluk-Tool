@@ -181,7 +181,6 @@ public class TrimMediaActivity extends BaseActivity {
             finish();
             return;
         }
-
         mMediaObject = mScene.getAllMedia().get(0);
         mOb = (VideoOb) mMediaObject.getTag();
 
@@ -526,7 +525,6 @@ public class TrimMediaActivity extends BaseActivity {
             switch (msg.what) {
                 case PREPARED:
                     int halfScreenWidth = CoreUtils.getMetrics().widthPixels / 2;
-
                     VirtualVideo player = (VirtualVideo) msg.obj;
                     try {
                         player.build(TrimMediaActivity.this);
@@ -610,12 +608,11 @@ public class TrimMediaActivity extends BaseActivity {
 
         @Override
         public boolean onInfo(int what, int extra, Object obj) {
-            if (what == VirtualVideoView.INFO_WHAT_PLAYBACK_PREPARING) {
+            if (what == VirtualVideo.INFO_WHAT_PLAYBACK_PREPARING) {
                 SysAlertDialog.showLoadingDialog(TrimMediaActivity.this,
                         R.string.isloading, false, null);
-            } else if (what == VirtualVideoView.MEDIA_INFO_GET_VIDEO_HIGHTLIGHTS
-                    && obj != null) {
-                int[] arrHightLights = (int[]) obj; //
+            } else if (what == VirtualVideo.INFO_WHAT_GET_VIDEO_HIGHTLIGHTS && obj != null) {
+                int[] arrHightLights = (int[]) obj;
                 // TODO:hightlight时间数组，单位为ms
                 if (mIsShowLight) {
                     mRangeSeekBar.setHighLights(arrHightLights);
@@ -966,7 +963,7 @@ public class TrimMediaActivity extends BaseActivity {
                 }
             } else {
                 new File(mStrSaveMp4FileName).delete();
-                if (nResult != VirtualVideo.RESULT_SAVE_CANCEL) {
+                if (nResult != VirtualVideo.RESULT_EXPORT_CANCEL) {
                     if (nResult == VirtualVideo.RESULT_CORE_ERROR_ENCODE_VIDEO
                             && mHWCodecEnabled) {
                         // FIXME:开启硬编后出现了编码错误，使用软编再试一次
@@ -1477,13 +1474,7 @@ public class TrimMediaActivity extends BaseActivity {
             } else {
                 aspClip = mMediaObject.getWidth() / (mMediaObject.getHeight() + 0.0f);
             }
-            //根据裁剪比例设置输出尺寸
-            int maxWH = SdkEntry.getSdkService().getExportConfig().getVideoMaxWH();
-            if (aspClip > 1) {
-                vc.setVideoSize(maxWH, (int) (maxWH / aspClip));
-            } else {
-                vc.setVideoSize((int) (maxWH * aspClip), maxWH);
-            }
+            vc.setAspectRatio(mTrimConfig.getVideoMaxWH(), aspClip);
         }
         mMediaObject.setTimeRange(mOb.nStart, mOb.nEnd);
 
@@ -1495,16 +1486,16 @@ public class TrimMediaActivity extends BaseActivity {
 
         VideoConfig trimVideoInfo = new VideoConfig();
         if (VirtualVideo.getMediaInfo(mMediaObject.getMediaPath(), trimVideoInfo, true) > 0) {
-            vc.setVideoFrameRate(Math.min(trimVideoInfo.getVideoFrameRate(), 30));
-            if (bFromMix) {
-                vc.setVideoEncodingBitRate(Math.min(trimVideoInfo.getVideoEncodingBitRate(), 3500 * 1000));
+            vc.setVideoFrameRate(Math.max(10, Math.min(trimVideoInfo.getVideoFrameRate(), 30)));
+            if (trimVideoInfo.getVideoEncodingBitRate() <= 0) {
+                vc.setVideoEncodingBitRate(
+                        SdkEntry.getSdkService().getTrimConfig().getVideoBitratebps());
             } else {
                 vc.setVideoEncodingBitRate(Math.min(trimVideoInfo.getVideoEncodingBitRate(),
-                        SdkEntry.getSdkService().getExportConfig().getVideoBitratebps()));
+                        SdkEntry.getSdkService().getTrimConfig().getVideoBitratebps()));
             }
         } else {
-            vc.setVideoEncodingBitRate(Math.min(trimVideoInfo.getVideoEncodingBitRate(),
-                    SdkEntry.getSdkService().getExportConfig().getVideoBitratebps()));
+            vc.setVideoEncodingBitRate(SdkEntry.getSdkService().getTrimConfig().getVideoBitratebps());
         }
 
         if (bFromMix) {

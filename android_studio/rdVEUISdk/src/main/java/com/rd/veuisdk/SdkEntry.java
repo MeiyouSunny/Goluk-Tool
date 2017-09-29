@@ -562,7 +562,6 @@ public final class SdkEntry {
 
 
     private static double _VideoEncodingBitRate = -1;
-    private static int maxWH = 640;
 
     @Deprecated
     static double getVideoEncodingBitRate() {
@@ -820,7 +819,7 @@ public final class SdkEntry {
             exportVideo = new VirtualVideo();
             exportVideo.addScene(scene);
             if (watermark != null) {
-                exportVideo.addWatermark(watermark);
+                exportVideo.setWatermark(watermark);
             }
 
             if (null != trailer) {

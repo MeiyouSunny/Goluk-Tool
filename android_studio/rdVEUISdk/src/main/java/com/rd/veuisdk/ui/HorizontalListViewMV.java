@@ -535,7 +535,7 @@ public class HorizontalListViewMV extends HorizontalScrollView implements
      * @param clickItem
      */
     private void onListItemClick(ListViewItem clickItem) {
-        if (isFastRepeatClick() && mEnabledCheckFastRepeat) {
+        if (mEnabledCheckFastRepeat && isFastRepeatClick()) {
             return;
         }
         selectListItem(clickItem.getItemId(), true);

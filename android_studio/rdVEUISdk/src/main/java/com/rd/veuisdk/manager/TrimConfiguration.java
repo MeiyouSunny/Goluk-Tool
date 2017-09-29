@@ -38,70 +38,95 @@ public class TrimConfiguration implements Parcelable {
     /**
      * 默认裁切为1：1
      */
-    public boolean default1x1CropMode = false;
+    public final boolean default1x1CropMode;
 
     /**
      * 是否显示1:1裁切按钮
      */
-    public boolean enable1x1 = true;
+    public final boolean enable1x1;
 
     /**
      * 截取返回方式
      */
-    public int trimReturnMode = TRIM_DYNAMIC_RETURN;
+    public final int trimReturnMode;
 
     /**
      * 截取方式
      */
-    public int trimType = TRIM_TYPE_FREE;
+    public final int trimType;
 
     /**
      * 保存路径
      */
-    public String savePath = null;
+    public final String savePath;
 
     /**
      * 单个截取定长
      */
-    public int trimSingleFixDuration = 0;
+    public final int trimSingleFixDuration;
 
     /**
      * 两定长截取定长1
      */
-    public int trimDuration1 = 0;
+    public final int trimDuration1;
 
     /**
      * 两定长截取定长2
      */
-    public int trimDuration2 = 0;
+    public int trimDuration2;
 
     /**
      * 标题栏标题文字
      */
-    public String title = null;
+    public final String title;
 
     /**
      * 截取界面标题栏背景色
      */
-    public int titleBarColor = 0;
+    public final int titleBarColor;
 
     /**
      * 取消按钮文字
      */
-    public String buttonCancelText = null;
+    public final String buttonCancelText;
 
     /**
      * 确认按钮文字
      */
-    public String buttonConfirmText = null;
+    public final String buttonConfirmText;
 
     /**
      * 按钮背景色
      */
-    public int buttonColor = 0;
+    public final int buttonColor;
+    private int exportVideoMaxWH = 640;
 
+    /**
+     * 获取实际截取导出视频时的最大边
+     *
+     * @return 最大边
+     */
+    public int getVideoMaxWH() {
+        return Math.min(3480, exportVideoMaxWH);
+    }
+
+    /**
+     * 视频导出码率(M)
+     */
+    public final double exportVideoBitRate;
+
+    /**
+     * 获取导出视频码率(bps)
+     *
+     * @return 码率(bps)
+     */
+    public int getVideoBitratebps() {
+        return (int) (exportVideoBitRate * 1000 * 1000);
+    }
 
     public TrimConfiguration(Builder builder) {
+        this.exportVideoMaxWH = builder.mExportVideoMaxWH;
+        this.exportVideoBitRate = builder.mExportVideoBitRate;
         this.enable1x1 = builder.mEnable1x1;
         this.trimType = builder.mTrimType;
         this.trimReturnMode = builder.mTrimReturnMode;
@@ -135,28 +160,28 @@ public class TrimConfiguration implements Parcelable {
         this.trimSingleFixDuration = builder.mTrimSingleFixedDuration;
         this.trimDuration1 = builder.mTrimDuration1;
         this.trimDuration2 = builder.mTrimDuration2;
-        if (builder.mSavePath != null) {
-            this.savePath = builder.mSavePath;
-        }
+        this.savePath = builder.mSavePath;
     }
 
     /**
      * Builder class for {@link TrimConfiguration} objects.
      */
     public static class Builder {
-        boolean mEnable1x1 = true;
-        int mTrimType = TRIM_TYPE_FREE;
-        int mTrimReturnMode = TRIM_DYNAMIC_RETURN;
-        String mSavePath = null;
-        int mTrimSingleFixedDuration = 0;
-        int mTrimDuration1 = 0;
-        int mTrimDuration2 = 0;
-        String mTitle = null;
-        boolean mDefault1x1CropMode = false;
-        String mButtonCancelText = null;
-        String mButtonConfirmText = null;
-        int mTitleBarColor = 0;
-        int mButtonColor = 0;
+        private boolean mEnable1x1 = true;
+        private         int mTrimType = TRIM_TYPE_FREE;
+        private int mTrimReturnMode = TRIM_DYNAMIC_RETURN;
+        private String mSavePath = null;
+        private int mTrimSingleFixedDuration = 0;
+        private int mTrimDuration1 = 0;
+        private int mTrimDuration2 = 0;
+        private String mTitle = null;
+        private boolean mDefault1x1CropMode = false;
+        private String mButtonCancelText = null;
+        private String mButtonConfirmText = null;
+        private int mTitleBarColor = 0;
+        private int mButtonColor = 0;
+        private int mExportVideoMaxWH = 640;
+        private double mExportVideoBitRate = 4;
 
         /**
          * 设置标题栏文字
@@ -288,6 +313,25 @@ public class TrimConfiguration implements Parcelable {
             return this;
         }
 
+        /**
+         * 实际截取时，设置导出视频最大边
+         *
+         * @param maxWH 导出视频最大边
+         */
+        public Builder setVideoMaxWH(int maxWH) {
+            mExportVideoMaxWH = Math.max(176, Math.min(maxWH, 3840));
+            return this;
+        }
+
+        /**
+         * 实际截取时，设置导出视频码率
+         *
+         * @param bitRate 导出视频码率,单位M，传null默认4M
+         */
+        public Builder setVideoBitRate(double bitRate) {
+            mExportVideoBitRate = bitRate;
+            return this;
+        }
 
         public TrimConfiguration get() {
             return new TrimConfiguration(this);
@@ -314,6 +358,8 @@ public class TrimConfiguration implements Parcelable {
         dest.writeString(this.buttonCancelText);
         dest.writeString(this.buttonConfirmText);
         dest.writeInt(this.buttonColor);
+        dest.writeInt(this.exportVideoMaxWH);
+        dest.writeDouble(this.exportVideoBitRate);
     }
 
     protected TrimConfiguration(Parcel in) {
@@ -330,6 +376,8 @@ public class TrimConfiguration implements Parcelable {
         this.buttonCancelText = in.readString();
         this.buttonConfirmText = in.readString();
         this.buttonColor = in.readInt();
+        this.exportVideoMaxWH = in.readInt();
+        this.exportVideoBitRate = in.readDouble();
     }
 
     public static final Parcelable.Creator<TrimConfiguration> CREATOR = new Parcelable.Creator<TrimConfiguration>() {

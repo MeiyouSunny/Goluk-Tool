@@ -321,7 +321,11 @@ public class DraggableAddGridView extends ViewGroup {
                             if (nTmp < mArrSceneInfo.size()) {
                                 Transition transition = mArrSceneInfo.get(nTmp).getTransition();
                                 if (transition != null) {
-                                    itemAdd.setTransitionType(transition.getTitle());
+                                    if (checkMediaDuration(nTmp+1)) {
+                                        itemAdd.setTransitionType(transition.getTitle());
+                                    } else {
+                                        itemAdd.setTransitionType("无");
+                                    }
                                 } else {
                                     itemAdd.setTransitionType("无");
                                 }
@@ -1135,6 +1139,23 @@ public class DraggableAddGridView extends ViewGroup {
             mRearrageAdapter.registerDataSetObserver(mDataSetObserver);
         }
         requestLayout();
+    }
+
+
+    private boolean checkMediaDuration(int addIndex) {
+        if (addIndex == 0) {
+            return false;
+        }
+        if (addIndex >= mArrSceneInfo.size()) {
+            return false;
+        }
+        Scene sceneFront = mArrSceneInfo.get(addIndex - 1);
+        Scene sceneBelow = mArrSceneInfo.get(addIndex);
+        if (sceneFront.getDuration() < 0.5f || sceneBelow.getDuration() < 0.5f) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public void setOnItemClickListener(OnItemClickListener l) {

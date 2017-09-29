@@ -45,7 +45,6 @@ public class CropRotateMirrorActivity extends BaseActivity {
     TextView mTvResetAll;
     PreviewFrameLayout mPlayout;
 
-    private VirtualVideo mVirtualVideo;
     private Scene mScene;
     private MediaObject mMedia;
     private VideoOb mVideoOb;
@@ -360,7 +359,7 @@ public class CropRotateMirrorActivity extends BaseActivity {
 
         @Override
         public boolean onInfo(int what, int extra, Object obj) {
-            if (what == VirtualVideoView.INFO_WHAT_PLAYBACK_PREPARING) {
+            if (what == VirtualVideo.INFO_WHAT_PLAYBACK_PREPARING) {
                 SysAlertDialog.showLoadingDialog(CropRotateMirrorActivity.this,
                         R.string.isloading, false, null);
             }
@@ -449,19 +448,26 @@ public class CropRotateMirrorActivity extends BaseActivity {
         mMedia.setClipRectF(null);
         mMedia.setShowRectF(null);
 
-        mVirtualVideo = new VirtualVideo();
+        reload();
+        mMediaPlayer.setAutoRepeat(true);
+        mMediaPlayer.setOnInfoListener(mInfoListener);
+        mMediaPlayer.start();
+    }
+
+    /**
+     * 加载媒体资源
+     */
+    private void reload() {
+        VirtualVideo mVirtualVideo = mMediaPlayer.getVirtualVideo();
+        mVirtualVideo.reset();
         Scene scene = VirtualVideo.createScene();
         scene.addMedia(mMedia);
         mVirtualVideo.addScene(scene);
         try {
-            mVirtualVideo.build(mMediaPlayer);
+            mMediaPlayer.build();
         } catch (InvalidStateException e) {
             e.printStackTrace();
         }
-
-        mMediaPlayer.setAutoRepeat(true);
-        mMediaPlayer.setOnInfoListener(mInfoListener);
-        mMediaPlayer.start();
     }
 
     protected void onVideoViewPrepared() {
@@ -472,7 +478,7 @@ public class CropRotateMirrorActivity extends BaseActivity {
         setViewVisibility(R.id.ivVideoConver, false);
     }
 
-    void changeCropMode(int nCropMode) {
+    private void changeCropMode(int nCropMode) {
         int width = 0;
         int height = 0;
         if (checkIsLandRotate()) {
@@ -583,12 +589,4 @@ public class CropRotateMirrorActivity extends BaseActivity {
         videoPlay();
     }
 
-    private void reload() {
-        mMediaPlayer.reset();
-        try {
-            mVirtualVideo.build(mMediaPlayer);
-        } catch (InvalidStateException e) {
-            e.printStackTrace();
-        }
-    }
 }

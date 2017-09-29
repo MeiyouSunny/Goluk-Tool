@@ -1,22 +1,16 @@
 package com.rd.veuisdk.fragment;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.rd.veuisdk.R;
 import com.rd.veuisdk.adapter.MyMusicAdapter;
@@ -24,12 +18,9 @@ import com.rd.veuisdk.adapter.MyMusicAdapter.TreeNode;
 import com.rd.veuisdk.database.SDMusicData;
 import com.rd.veuisdk.database.WebMusicData;
 import com.rd.veuisdk.hb.views.PinnedSectionListView;
-import com.rd.veuisdk.model.AudioMusicInfo;
 import com.rd.veuisdk.model.IMusicApi;
 import com.rd.veuisdk.model.MyMusicInfo;
 import com.rd.veuisdk.model.WebMusicInfo;
-import com.rd.veuisdk.utils.ExtScanMediaDialog;
-import com.rd.veuisdk.utils.SysAlertDialog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,21 +33,17 @@ import java.util.ArrayList;
  */
 public class CloudMusicFragment extends BaseV4Fragment {
     public CloudMusicFragment() {
-
+        TAG = "CloudMusicFragment";
     }
 
-    private MySdReceiver mReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mIsDownloaded = getString(R.string.downloaded);
         WebMusicData.getInstance().initilize(getActivity());
         SDMusicData.getInstance().initilize(getActivity());
         mPageName = getString(R.string.mymusic);
-        mReceiver = new MySdReceiver();
-        getActivity().registerReceiver(mReceiver, new IntentFilter(ACTION_SHOW));
     }
 
     private View mDownloadMusic;
@@ -64,7 +51,6 @@ public class CloudMusicFragment extends BaseV4Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//		Log.e("oncreateview", this.toString());
         mRoot = inflater.inflate(R.layout.rdveuisdk_mymusic_layout, null);
         init(getActivity());
         return mRoot;
@@ -74,18 +60,10 @@ public class CloudMusicFragment extends BaseV4Fragment {
 
         findViewById(R.id.llTitle).setVisibility(View.GONE);
         mDownloadMusic = findViewById(R.id.download);
-        mDownloadMusic.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-            }
-        });
+        mDownloadMusic.setVisibility(View.GONE);
         mListView = (PinnedSectionListView) mRoot
                 .findViewById(R.id.expandable_mymusic);
 
-        context.registerReceiver(updateReceiver, new IntentFilter(
-                ExtScanMediaDialog.INTENT_SIGHTSEEING_UPATE));
-        mListView.setOnItemLongClickListener(longlistener);
         mListView.setOnItemClickListener(itemlistener);
 
         mMusicAdapter = new MyMusicAdapter(context);
@@ -98,11 +76,7 @@ public class CloudMusicFragment extends BaseV4Fragment {
                         + view.getChildCount();
                 if (mlast - 1 == mMusicAdapter.getCheckId()
                         || mlast - 2 == mMusicAdapter.getCheckId()) {
-                    // if (scan_sd.getVisibility() == View.VISIBLE)
-                    // scan_sd.setVisibility(View.GONE);
                 } else {
-                    // if (scan_sd.getVisibility() != View.VISIBLE)
-                    // scan_sd.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -112,24 +86,12 @@ public class CloudMusicFragment extends BaseV4Fragment {
 
             }
         });
-        downLoadListener = new DownLoadListener();
-        mReload = true;
-        context.registerReceiver(downLoadListener, new IntentFilter(
-                ACTION_DOWNLOAD));
 
     }
 
     private ArrayList<TreeNode> list = new ArrayList<MyMusicAdapter.TreeNode>();
     private String mlastMusic = "", mIsDownloaded = "";
 
-    /**
-     * 之前的mp3路径
-     *
-     * @param lastmp3
-     */
-    public void setLastMp3(String lastmp3) {
-        mlastMusic = lastmp3;
-    }
 
     private PinnedSectionListView mListView;
     private MyMusicAdapter mMusicAdapter;
@@ -137,7 +99,6 @@ public class CloudMusicFragment extends BaseV4Fragment {
     /**
      * 本地音乐
      */
-    private DownLoadListener downLoadListener;
 
     private OnItemClickListener itemlistener = new OnItemClickListener() {
 
@@ -152,11 +113,9 @@ public class CloudMusicFragment extends BaseV4Fragment {
 
     public void setIMusic(IMusicApi music) {
         iapi = music;
-        mReload = true;
     }
 
     private void getMusic() {
-        mReload = false;
         mHandler.sendEmptyMessage(CLEAR); // 清空adapter
         list.clear();
         min = -1;
@@ -235,42 +194,13 @@ public class CloudMusicFragment extends BaseV4Fragment {
         mHandler.sendEmptyMessage(NOTIFI);
     }
 
-    private OnItemLongClickListener longlistener = new OnItemLongClickListener() {
-
-        @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view,
-                                       final int position, long id) {
-            if (min != -1 && max != -1 && position >= min && position <= max) {
-                showDialog(position);
-            }
-            return true;
-        }
-
-    };
-    static final String ACTION_DOWNLOAD = "action_download_music";
-    /**
-     * 重新加载数据
-     */
-    private boolean mReload = false;
-    private final String TAG = "mymusicfragment";
-
-    private class DownLoadListener extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context arg0, Intent arg1) {
-            mReload = true;
-            // Log.d(TAG, mReload + "onReceive_DownLoadListener");
-        }
-
-    }
-
 
     @Override
     public void onStart() {
         super.onStart();
-//		Log.e("onStart", this.toString());
         mMusicAdapter.onStart();
         mMusicAdapter.onStartReload();
+        getMusic();
     }
 
     private int sectionPosition = 0, listPosition = 0, min = -1, max = -1;
@@ -283,7 +213,6 @@ public class CloudMusicFragment extends BaseV4Fragment {
                     mMusicAdapter.clear();
                     break;
                 case NOTIFI:
-                    // Log.d(TAG, "notihadnler..." + list.size() + "...");
                     mMusicAdapter.setCanAutoPlay(false);
                     if (!TextUtils.isEmpty(mlastMusic)
                             && !new File(mlastMusic).exists()) {
@@ -305,17 +234,12 @@ public class CloudMusicFragment extends BaseV4Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        onReLoad();
-
-    }
-
-    public void onReLoad() {
-        // Log.d(TAG, mReload + "...onReLoad......");
-        if (mReload) {
-            mReload = false;
-            getMusic();
+        if (null != mMusicAdapter) {
+            mMusicAdapter.onResume();
         }
+
     }
+
 
     @Override
     public void onPause() {
@@ -326,15 +250,9 @@ public class CloudMusicFragment extends BaseV4Fragment {
 
     }
 
-    public void pausePlay() {
-        if (null != mMusicAdapter) {
-            mMusicAdapter.onPause();
-        }
-    }
 
     @Override
     public void onStop() {
-//		Log.e("onstop", this.toString());
         mMusicAdapter.onStop();
         super.onStop();
 
@@ -342,97 +260,10 @@ public class CloudMusicFragment extends BaseV4Fragment {
 
     @Override
     public void onDestroy() {
-//		Log.e("onDestroy", this.toString());
         mMusicAdapter.onDestroy();
         super.onDestroy();
-        getActivity().unregisterReceiver(downLoadListener);
-        getActivity().unregisterReceiver(updateReceiver);
-        getActivity().unregisterReceiver(mReceiver);
-        mReceiver = null;
 
     }
 
-    ;
-
-    public void setCanAutoPlay(boolean canAutoPlay) {
-        if (null != mMusicAdapter)
-            mMusicAdapter.setCanAutoPlay(canAutoPlay);
-    }
-
-    public AudioMusicInfo getCheckMusicInfo() {
-        if (null != mMusicAdapter) {
-            return mMusicAdapter.getCheckedMusic();
-        }
-        return null;
-    }
-
-    /**
-     * 接收浏览刷新音乐文件的广播
-     */
-    private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getBooleanExtra(
-                    ExtScanMediaDialog.INTENT_SIGHTSEEING_DATA, false)) {
-                mReload = true;
-                onReLoad();
-            }
-        }
-    };
-
-    private void showDialog(final int position) {
-
-        TreeNode tdownloaded = mMusicAdapter.getItem(position);
-        if (null != tdownloaded) {
-
-            final WebMusicInfo wmi = tdownloaded.childs.getmInfo();
-            if (null == wmi) {
-                return;
-            }
-
-            SysAlertDialog.createAlertDialog(getActivity(), null,
-                    getString(R.string.sure_delete),
-                    getString(R.string.cancel),
-                    new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }, getString(R.string.sure),
-                    new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            onDeleteMusic(wmi);
-
-                        }
-                    }, false, null).show();
-        }
-
-    }
-
-    public static final String ACTION_SHOW = "action_showscansd",
-            BCANSHOW = "bcanshowvalue";
-
-    private class MySdReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (TextUtils.equals(ACTION_SHOW, action)) {
-                if (intent.getBooleanExtra(BCANSHOW, true)) {
-                    // if (null != scan_sd)
-                    // scan_sd.setVisibility(View.VISIBLE);
-                } else {
-                    // if (null != scan_sd)
-                    // scan_sd.setVisibility(View.GONE);
-                }
-
-            }
-        }
-
-    }
 
 }

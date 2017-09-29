@@ -20,7 +20,6 @@ import android.view.MotionEvent;
 import android.widget.HorizontalScrollView;
 
 import com.rd.vecore.VirtualVideo;
-import com.rd.vecore.exception.InvalidStateException;
 import com.rd.veuisdk.R;
 import com.rd.veuisdk.TempVideoParams;
 import com.rd.veuisdk.ui.extrangseekbar.RangSeekBarBase;
@@ -1145,11 +1144,6 @@ public class ThumbNailLine extends RangSeekBarBase {
      */
     public void setVirtualVideo(VirtualVideo virtualVideo) {
         mVirtualVideo = virtualVideo;
-        try {
-            mVirtualVideo.build(getContext());
-        } catch (InvalidStateException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -1333,7 +1327,7 @@ public class ThumbNailLine extends RangSeekBarBase {
 
     private int maxCount = 40;
 
-    private int itemTime = 0;
+    private int itemTime = 100;
 
     private int visibleCount = 10; // 屏幕区域内左边第一个可见的缩略图的时刻
 
@@ -1350,7 +1344,6 @@ public class ThumbNailLine extends RangSeekBarBase {
      * @param scrollX 已向左偏移的像素
      */
     public void setStartThumb(int scrollX) {
-//        Log.e(TAG, "setStartThumb: " + scrollX);
         long tempflesh = System.currentTimeMillis();
         leftCount = (int) Math.ceil((scrollX - halfParentWidth + .0)
                 / ThumbNailUtils.THUMB_WIDTH) - 2;// 已滑动到左边的个数
@@ -1422,14 +1415,12 @@ public class ThumbNailLine extends RangSeekBarBase {
                     public void run() {
                         if (mlefttime <= nTime && nTime <= mrighttime
                                 || nTime == lastTime) {
-//                            Log.e("准备趣图", nTime + ".." + (mVirtualVideo !=
-//                                    null));
                             Bitmap bitmap = Bitmap.createBitmap(
                                     ThumbNailUtils.THUMB_WIDTH,
                                     ThumbNailUtils.THUMB_HEIGHT,
                                     Config.ARGB_8888);
 
-                            if (mVirtualVideo != null && mVirtualVideo.getSnapshot(Utils.ms2s(nTime), bitmap)) {
+                            if (mVirtualVideo != null && mVirtualVideo.getSnapshot(getContext(), Utils.ms2s(nTime), bitmap)) {
                                 // 将Bitmap 加入内存缓存
                                 addBitmapToMemoryCache(nTime, rect, bitmap);
                                 mHandler.sendEmptyMessage(THUMB_ITEM);
@@ -1443,8 +1434,6 @@ public class ThumbNailLine extends RangSeekBarBase {
                                 bitmap.recycle();
                             }
                         } else {
-                            // Log.e("不趣图", mlefttime + "xxxxxx" + nTime + ".."
-                            // + mrighttime);
                             ThumbInfo info = new ThumbInfo(nTime, rect, null);
                             info.isloading = false;
                             mMemoryCache.put(nTime, info);
@@ -1473,10 +1462,7 @@ public class ThumbNailLine extends RangSeekBarBase {
         isEditorPrepared = false;
         mLastRefleshTime = 0;
         if (includeSnapshotEditor) {
-            if (null != mVirtualVideo) {
-                mVirtualVideo.release();
-                mVirtualVideo = null;
-            }
+            mVirtualVideo = null;
             if (null != mLeftBmp && !mLeftBmp.isRecycled()) {
                 mLeftBmp.recycle();
             }

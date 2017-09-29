@@ -116,6 +116,7 @@ public class MVFragment extends BaseFragment {
         mListView = (HorizontalListViewMV) findViewById(R.id.lvListView);
         mListView.setListItemSelectListener(mOnMvSelectListener);
         mListView.setRepeatSelection(false);
+        mListView.setCheckFastRepeat(true);
         getWebMV();
         return mRoot;
 
