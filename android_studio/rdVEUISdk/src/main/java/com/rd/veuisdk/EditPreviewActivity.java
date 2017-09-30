@@ -93,6 +93,7 @@ public class EditPreviewActivity extends BaseActivity {
     private boolean mIsLongClick;
     private boolean mBackDiaglog = false;
     private boolean mHasChanged = false;
+    private boolean mIsUseCustomUI = false;
 
     private ArrayList<Scene> mSceneList = new ArrayList<>();
     private int mProportionStatus;
@@ -125,6 +126,8 @@ public class EditPreviewActivity extends BaseActivity {
         mProportionStatus = in.getIntExtra(IntentConstants.EDIT_PROPORTION_STATUS, 0);
 
         UIConfiguration uiConfig = SdkEntry.getSdkService().getUIConfig();
+
+        mIsUseCustomUI = uiConfig.useCustomAlbum;
 
         if (SubFunctionUtils.isEnableWizard()) {
             if (uiConfig.videoProportion == 0) {
@@ -708,9 +711,7 @@ public class EditPreviewActivity extends BaseActivity {
                 VideoOb vob = (VideoOb) mediaObject.getTag();
                 if (vob != null) {
                     int isextpic = vob.isExtPic;
-
                     for (int i = 0; i < list.size(); i++) {
-
                         MediaObject mo = list.get(i);
                         Scene newScene = VirtualVideo.createScene();
                         newScene.addMedia(mo);
@@ -721,6 +722,15 @@ public class EditPreviewActivity extends BaseActivity {
                     }
                 }
             }
+            if (null != scene) {
+                scene.getAllMedia().clear();
+                scene = null;
+            }
+            if (null != list) {
+                list.clear();
+                list = null;
+            }
+
             mHasChanged = false;
             initListView(mIndex);
             mDraggedView.setTrash(false);
@@ -761,6 +771,11 @@ public class EditPreviewActivity extends BaseActivity {
                 pauseVideo();
             }
             mOnTemp = true;
+            if (null != list) {
+                list.clear();
+                list = null;
+            }
+
         }
 
         @Override
@@ -1106,20 +1121,28 @@ public class EditPreviewActivity extends BaseActivity {
                 overridePendingTransition(0, 0);
             }
         } else if (id == R.id.preview_addimage) {
-            Intent intent = new Intent(EditPreviewActivity.this,
-                    com.rd.veuisdk.SelectMediaActivity.class);
-            intent.putExtra(EditPreviewActivity.ACTION_APPEND, true);
-            intent.putExtra(APPEND_IMAGE, true);
-            startActivityForResult(intent, REQUESTCODE_FOR_APPEND);
 
+            if (mIsUseCustomUI) {
+                SdkEntryHandler.getInstance().onSelectImage(
+                        EditPreviewActivity.this);
+            } else {
+                Intent intent = new Intent(EditPreviewActivity.this,
+                        com.rd.veuisdk.SelectMediaActivity.class);
+                intent.putExtra(EditPreviewActivity.ACTION_APPEND, true);
+                intent.putExtra(APPEND_IMAGE, true);
+                startActivityForResult(intent, REQUESTCODE_FOR_APPEND);
+            }
 
         } else if (id == R.id.preview_addvideo) {
-
-            Intent intent = new Intent(EditPreviewActivity.this,
-                    com.rd.veuisdk.SelectMediaActivity.class);
-            intent.putExtra(EditPreviewActivity.ACTION_APPEND, true);
-            startActivityForResult(intent, REQUESTCODE_FOR_APPEND);
-
+            if (mIsUseCustomUI) {
+                SdkEntryHandler.getInstance().onSelectVideo(
+                        EditPreviewActivity.this);
+            } else {
+                Intent intent = new Intent(EditPreviewActivity.this,
+                        com.rd.veuisdk.SelectMediaActivity.class);
+                intent.putExtra(EditPreviewActivity.ACTION_APPEND, true);
+                startActivityForResult(intent, REQUESTCODE_FOR_APPEND);
+            }
         } else if (id == R.id.preview_addtext) {
             Intent intent = new Intent(EditPreviewActivity.this,
                     ExtPhotoActivity.class);
@@ -1285,10 +1308,7 @@ public class EditPreviewActivity extends BaseActivity {
     }
 
     private boolean checkMediaDuration(int addIndex) {
-        if (addIndex == 0) {
-            return false;
-        }
-        if (addIndex == mSceneList.size()) {
+        if (addIndex < 1 || addIndex > (mSceneList.size() - 1)) {
             return false;
         }
         Scene sceneFront = mSceneList.get(addIndex - 1);
@@ -1994,12 +2014,15 @@ public class EditPreviewActivity extends BaseActivity {
         public void addItemClick(int type) {
             if (type == 1) {
                 mAddItemIndex = -1;
-
-                Intent intent = new Intent(EditPreviewActivity.this,
-                        com.rd.veuisdk.SelectMediaActivity.class);
-                intent.putExtra(EditPreviewActivity.ACTION_APPEND, true);
-                startActivityForResult(intent, REQUESTCODE_FOR_APPEND);
-
+                if (mIsUseCustomUI) {
+                    SdkEntryHandler.getInstance().onSelectVideo(
+                            EditPreviewActivity.this);
+                } else {
+                    Intent intent = new Intent(EditPreviewActivity.this,
+                            com.rd.veuisdk.SelectMediaActivity.class);
+                    intent.putExtra(EditPreviewActivity.ACTION_APPEND, true);
+                    startActivityForResult(intent, REQUESTCODE_FOR_APPEND);
+                }
             } else if (type == 2) {
                 Intent intent = new Intent();
 

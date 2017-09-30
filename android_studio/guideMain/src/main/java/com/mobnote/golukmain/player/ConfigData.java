@@ -64,7 +64,7 @@ public class ConfigData implements Parcelable {
     public boolean isDefaultRearCamera = false;
     public boolean isDefaultFace = false;
     public boolean enableAlbum = true;
-    public boolean useCustomAlbum = false;
+    public boolean useCustomAlbum = true;
 
     public int cameraMinTime = 0;
     public int cameraMaxTime = 0;

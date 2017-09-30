@@ -388,8 +388,8 @@ public class MusicFragmentEx extends BaseFragment {
      */
     private void onSelectedImp(int nItemId, boolean user) {
         boolean bReload = true;
-//         Log.e("onSelectedImp", mThemeType + "...." + nItemId + "..." +
-//                 user);
+//        Log.e("onSelectedImp", mThemeType + "...." + nItemId + "..." +
+//                user + "...." + lastItemId);
         mThemeType = nItemId;
         mFactor.setEnabled(true);
         if (nItemId == MENU_ORIGIN) {
@@ -457,7 +457,7 @@ public class MusicFragmentEx extends BaseFragment {
                 onMusicYUN();
             }
         } else {
-            if (user && lastItemId != nItemId) {
+            if (user) {
                 WebInfo info = mlist.get(nItemId - (MENU_YUN + 1));
                 if (info.existsMusic()) {
                     try {
@@ -477,6 +477,9 @@ public class MusicFragmentEx extends BaseFragment {
                 } else {
                     if (CoreUtils.checkNetworkInfo(mContext
                             .getApplicationContext()) == CoreUtils.UNCONNECTED) {
+                        int temp=nItemId;
+                        mListView.resetItem(temp);
+                        mListView.selectListItem(lastItemId, true);
                         onToast(getString(R.string.please_open_wifi));
                     } else {
                         // 下载

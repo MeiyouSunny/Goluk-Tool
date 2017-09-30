@@ -153,9 +153,10 @@ public class MVFragment extends BaseFragment {
         return lastMVId;
     }
 
+    private int lastItemId = 0;
+
     private void onSelectedImp(int nItemId, boolean user) {
         boolean bReload = true;
-
         mThemeType = nItemId;
         TempVideoParams.getInstance().setThemeId(mThemeType);
         if (nItemId >= 1) {
@@ -166,16 +167,19 @@ public class MVFragment extends BaseFragment {
                     TempVideoParams.getInstance().setThemeHeader(info.getHeadDuration());
                     TempVideoParams.getInstance().setThemeLast(info.getLastDuration());
                     mHlrVideoEditor.getEditorVideo().setMV(lastMVId);
-
+                    lastItemId = nItemId;
+                    mListView.onItemChecked(nItemId);
                 } else {  //此MV未注册，下载该MV
                     bReload = false;
-                    if (CoreUtils.checkNetworkInfo(mContext
-                            .getApplicationContext()) == CoreUtils.UNCONNECTED) {
+                    if (CoreUtils.checkNetworkInfo(mContext) == CoreUtils.UNCONNECTED) {
+                        mListView.selectListItem(lastItemId, true);
+                        mListView.resetItem(nItemId);
                         onToast(getString(R.string.please_open_wifi));
                     } else {
                         // 下载
                         lastMVId = 0;
                         downMV(nItemId, info);
+                        mListView.onItemChecked(nItemId);
                     }
                 }
             }
@@ -186,8 +190,9 @@ public class MVFragment extends BaseFragment {
             TempVideoParams.getInstance().setThemeLast(0);
             lastMVId = 0;
             mHlrVideoEditor.getEditorVideo().setMV(RdVECore.DEFAULT_MV_ID);
+            mListView.onItemChecked(nItemId);
         }
-        mListView.onItemChecked(nItemId);
+
 
         if (mIsFirstCreate) {
             mIsFirstCreate = false;// 第一次创建fragment
@@ -339,10 +344,10 @@ public class MVFragment extends BaseFragment {
                             }
                         }
                     }
-                    if (mLoadWebDataSuccessed && null != f && f.exists()) {// 加载离线数据
+                    if (!mLoadWebDataSuccessed && null != f && f.exists()) {// 加载离线数据
                         String offline = FileUtils.readTxtFile(f
                                 .getAbsolutePath());
-                        // Log.e("str", str + "");
+                        Log.e(TAG, "offline" + offline);
                         try {
                             offline = URLDecoder.decode(offline, "UTF-8");
                             if (!TextUtils.isEmpty(offline)) {
@@ -467,7 +472,6 @@ public class MVFragment extends BaseFragment {
                         int len = mlist.size();
                         for (int i = 0; i < len; i++) {
                             MVWebInfo info = mlist.get(i);
-//                            Log.e("info" + i, info.getUrl() + "..." + info.getName());
                             mListView.addListItem(nItemId, info.getImg(),
                                     info.getName(), mFetcher);
                             mListView.setDownLayout(nItemId, info.getId() != MVWebInfo.DEFAULT_MV_NO_REGISTED);

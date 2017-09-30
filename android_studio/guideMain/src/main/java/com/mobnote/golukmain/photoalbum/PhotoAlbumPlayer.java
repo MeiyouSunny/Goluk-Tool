@@ -1552,7 +1552,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         // 视频编辑UI配置
         UIConfiguration uiConfig = new UIConfiguration.Builder()
                 // 设置是否使用自定义相册
-                .useCustomAlbum(false)
+                .useCustomAlbum(true)
                 // 设置向导化
                 .enableWizard(configData.enableWizard)
                 // 设置自动播放

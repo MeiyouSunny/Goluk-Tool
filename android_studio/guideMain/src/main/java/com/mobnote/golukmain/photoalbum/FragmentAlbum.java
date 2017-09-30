@@ -48,6 +48,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
     public static final String ACTIVITY_INFO = "activityinfo";
     private static final String TAG = "FragmentAlbum";
     public static final String PARENT_VIEW = "MainActivity";
+    public static final String SELECT_MODE  = "select_item";
 
     private CustomViewPager mViewPager;
     private LocalFragment mLocalFragment;
@@ -95,6 +96,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
      * 如果为true 表示父页面为MainActivity，否则相反
      */
     public boolean parentViewIsMainActivity = true;
+    public boolean selectMode = false;
 
     public PromotionSelectItem mPromotionSelectItem;
 
@@ -105,6 +107,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         Bundle bundle = getArguments();
         if (bundle != null) {
             parentViewIsMainActivity = bundle.getBoolean(PARENT_VIEW,true);
+            selectMode = bundle.getBoolean(SELECT_MODE,false);
         }
 
         if (savedInstanceState == null) {
@@ -197,8 +200,12 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         mCBAll = (CheckBox) mAlbumRootView.findViewById(R.id.cb_select_all);
         if (parentViewIsMainActivity) {
             mBackBtn.setVisibility(View.VISIBLE);
-            mBackBtn.setImageResource(R.drawable.remote_album_sd);
-            mBackBtn.setBackgroundResource(0);
+            if(!selectMode) {
+                mBackBtn.setImageResource(R.drawable.remote_album_sd);
+                mBackBtn.setBackgroundResource(0);
+            }else{
+                mTabLocal.setText(R.string.str_ae_add_video_title);
+            }
             mTabLocal.setVisibility(View.VISIBLE);
             mTabWonderful.setVisibility(View.GONE);
             mTabUrgent.setVisibility(View.GONE);
@@ -370,7 +377,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
             setEditBtnState(true);
             GolukUtils.setTabHostVisibility(true, getActivity());
         } else if (id == R.id.back_btn) {
-            if(parentViewIsMainActivity){
+            if(parentViewIsMainActivity && !selectMode){
                 final PopupMenu mPopMenu = new PopupMenu(getContext(), mBackBtn);
                 mPopMenu.getMenuInflater().inflate(R.menu.menu_album_change, mPopMenu.getMenu());
                 mPopMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -564,7 +571,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         if (null == mEditBtn) {
             return;
         }
-        if (isShow) {
+        if (isShow && !selectMode) {
             mEditBtn.setVisibility(View.VISIBLE);
         } else {
             mEditBtn.setVisibility(View.GONE);

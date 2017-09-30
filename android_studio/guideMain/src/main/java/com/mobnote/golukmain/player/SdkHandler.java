@@ -8,6 +8,8 @@ import android.provider.MediaStore.Video;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.mobnote.golukmain.photoalbum.FragmentAlbum;
+import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.util.GolukUtils;
 import com.rd.veuisdk.SdkEntry;
@@ -126,6 +128,11 @@ public class SdkHandler {
          */
         @Override
         public void onGetVideo(Context context) {
+            Intent intent = new Intent(context, PhotoAlbumActivity.class);
+            intent.putExtra("from", "local");
+            intent.putExtra(FragmentAlbum.PARENT_VIEW,true);
+            intent.putExtra(FragmentAlbum.SELECT_MODE,true);
+            context.startActivity(intent);
         }
 
     };

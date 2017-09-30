@@ -15,6 +15,7 @@ public class PhotoAlbumActivity extends BaseActivity {
 
     private boolean mShouldClose;
     private boolean mShowLocal;
+    private boolean mSelectMode;
     private FragmentAlbum fa;
 
     @Override
@@ -23,10 +24,12 @@ public class PhotoAlbumActivity extends BaseActivity {
         setContentView(R.layout.photo_album_activity);
         mShouldClose = getIntent().getBooleanExtra(CLOSE_WHEN_EXIT, false);
         mShowLocal = getIntent().getBooleanExtra(FragmentAlbum.PARENT_VIEW, false);
+        mSelectMode = getIntent().getBooleanExtra(FragmentAlbum.SELECT_MODE, false);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putBoolean(FragmentAlbum.PARENT_VIEW, mShowLocal);
+        bundle.putBoolean(FragmentAlbum.SELECT_MODE, mSelectMode);
         fa = new FragmentAlbum();
         fa.setArguments(bundle);
         fragmentTransaction.add(R.id.photo_album_fragment, fa);

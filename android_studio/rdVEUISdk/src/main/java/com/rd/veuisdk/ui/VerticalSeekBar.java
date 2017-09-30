@@ -38,9 +38,9 @@ public class VerticalSeekBar extends SeekBar {
         setMeasuredDimension(getMeasuredHeight(), getMeasuredWidth());
     }
 
-    protected void onDraw(Canvas c) {
-        c.rotate(-90);
-        c.translate(-getHeight(), 0);
+    protected void onDraw(Canvas canvas) {
+        canvas.rotate(-90);
+        canvas.translate(-getHeight(), 0);
         Rect progressRect = getProgressDrawable().getBounds();
         Drawable thumbDrawable = getThumb();
         Rect thumbRect = thumbDrawable.getBounds();
@@ -49,7 +49,7 @@ public class VerticalSeekBar extends SeekBar {
         thumbDrawable.setBounds((int) left, thumbRect.top,
                 (int) left + thumbDrawable.getIntrinsicWidth(),
                 thumbRect.bottom);
-        super.onDraw(c);
+        super.onDraw(canvas);
     }
 
     @Override
@@ -65,7 +65,9 @@ public class VerticalSeekBar extends SeekBar {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                listener.onStartTouch();
+                if(listener!=null){
+                    listener.onStartTouch();
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 int i = 0;
@@ -80,7 +82,9 @@ public class VerticalSeekBar extends SeekBar {
                 progress(i);
                 break;
             case MotionEvent.ACTION_UP:
-                listener.onStopTouch();
+                if(listener!=null){
+                    listener.onStopTouch();
+                }
                 break;
             case MotionEvent.ACTION_CANCEL:
                 break;

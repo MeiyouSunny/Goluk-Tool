@@ -24,6 +24,7 @@ import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
+import com.rd.veuisdk.SdkEntry;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -287,7 +288,12 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
         RelativeLayout mTMLayout2 = (RelativeLayout) view.findViewById(R.id.mTMLayout2);
         String tag1 = (String) mTMLayout1.getTag();
         String tag2 = (String) mTMLayout2.getTag();
-        if (mFragmentAlbum.getEditState()) {
+        if (mFragmentAlbum.selectMode) {
+            ArrayList<String> tempList = new ArrayList<>();
+            tempList.add(tag1);
+            SdkEntry.onCustomizeAlbum(getContext(),tempList);
+            getActivity().finish();
+        } else if (mFragmentAlbum.getEditState()) {
             if (columnIndex == LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_FIRST) {
                 selectedVideoItem(tag1, mTMLayout1);
             } else {

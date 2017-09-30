@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.util.ByteConstants;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -49,6 +50,7 @@ import com.rd.veuisdk.utils.PathUtils;
 import com.rd.veuisdk.utils.SysAlertDialog;
 import com.rd.veuisdk.utils.Utils;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 
@@ -273,24 +275,24 @@ public final class SdkEntry {
         }
     }
 
-//    /**
-//     * 画中画功能
-//     *
-//     * @param context
-//     * @param requestCode
-//     */
-//    public static void mixVideo(Context context, int requestCode) {
-//        if (!checkAppKey(context)) {
-//            return;
-//        }
-//        Intent intent = new Intent(context,
-//                com.rd.veuisdk.SelectModeActivity.class);
-//        if (context instanceof Activity && requestCode > 0) {
-//            ((Activity) context).startActivityForResult(intent, requestCode);
-//        } else {
-//            context.startActivity(intent);
-//        }
-//    }
+    /**
+     * 画中画功能
+     *
+     * @param context
+     * @param requestCode
+     */
+    public static void mixVideo(Context context, int requestCode) {
+        if (!checkAppKey(context)) {
+            return;
+        }
+        Intent intent = new Intent(context,
+                com.rd.veuisdk.SelectModeActivity.class);
+        if (context instanceof Activity && requestCode > 0) {
+            ((Activity) context).startActivityForResult(intent, requestCode);
+        } else {
+            context.startActivity(intent);
+        }
+    }
 
     /**
      * 选择媒体资源
@@ -769,6 +771,7 @@ public final class SdkEntry {
     }
 
     private static int MAX_MEM = 30 * ByteConstants.MB;
+    public static final int MAX_DISK_CACHE_SIZE = 300 * ByteConstants.MB;
 
     private static ImagePipelineConfig getFrescoConfigureCaches(Context context) {
         final MemoryCacheParams bitmapCacheParams = new MemoryCacheParams(
@@ -786,8 +789,19 @@ public final class SdkEntry {
         };
         ImagePipelineConfig.Builder builder = ImagePipelineConfig.newBuilder(context);
         builder.setBitmapMemoryCacheParamsSupplier(mSupplierMemoryCacheParams);
+        File cache = getExternalCacheDir(context);
+        builder.setMainDiskCacheConfig(DiskCacheConfig.newBuilder(context)
+                .setBaseDirectoryPath(cache)
+                .setBaseDirectoryName("fresco")
+                .setMaxCacheSize(MAX_DISK_CACHE_SIZE)
+                .build());
         builder.setDownsampleEnabled(true);
         return builder.build();
+    }
+
+
+    public static File getExternalCacheDir(Context context) {
+        return context.getExternalCacheDir();
     }
 
     private static VirtualVideo exportVideo;

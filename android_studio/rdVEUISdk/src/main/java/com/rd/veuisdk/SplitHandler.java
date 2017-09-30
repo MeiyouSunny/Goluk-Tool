@@ -38,7 +38,7 @@ import com.rd.veuisdk.videoeditor.widgets.TimelineHorizontalScrollView.onLongLis
 import java.util.ArrayList;
 
 class SplitHandler {
-    private static String TAG = "SplitHandler";
+    private String TAG = "SplitHandler";
 
     private View mRoot;
     private LinearLayout mMediaLinearLayout;
@@ -524,6 +524,8 @@ class SplitHandler {
         mPriviewLinearLayout.setEnableTouch(true);
         mScrollView.appScrollTo(0, true);
         mIsSpliting = false;
+        System.gc();
+        System.runFinalization();
     }
 
     private OnClickListener mSplitLisenter = new OnClickListener() {

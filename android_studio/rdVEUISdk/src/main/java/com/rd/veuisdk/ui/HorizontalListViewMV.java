@@ -363,6 +363,22 @@ public class HorizontalListViewMV extends HorizontalScrollView implements
     }
 
     /**
+     * 单项恢复到默认状态
+     *
+     * @param nItemId
+     */
+    public void resetItem(int nItemId) {
+        ListViewItem clickItem = mSaCameraFilter.get(nItemId);
+        if (null != clickItem) {
+            clickItem.enabledSelect(false);
+            clickItem.mTvItemCaption.setTextColor(mColorNormal);
+
+
+        }
+
+    }
+
+    /**
      * 选择列表项(支持是否组件内触发)
      *
      * @param nItemId
@@ -380,13 +396,16 @@ public class HorizontalListViewMV extends HorizontalScrollView implements
 
                 } else {
                     mLastSelectedItem.enabledSelect(false);
-                    mLastSelectedItem.mTvItemCaption
-                            .setTextColor(mColorNormal);
+                    mLastSelectedItem.mTvItemCaption.setTextColor(mColorNormal);
                 }
             }
             clickItem.enabledSelect(true);
             if (null != mOnSelectListener
                     && (!bRepeatClick || (bRepeatClick && mRepeatSelection))) {
+                if (!isjlkMusicVoice) {
+                    mLastSelectedItem = clickItem;
+                    mLastSelectedItem.mTvItemCaption.setTextColor(mColorSelected);
+                }
                 if (!mOnSelectListener.onBeforeSelect(
                         mLastSelectedItem != null ? mLastSelectedItem
                                 .getItemView() : null,
@@ -398,11 +417,6 @@ public class HorizontalListViewMV extends HorizontalScrollView implements
                 }
             }
             mCurrentItemId = nItemId;
-            if (!isjlkMusicVoice) {
-                mLastSelectedItem = clickItem;
-                mLastSelectedItem.mTvItemCaption.setTextColor(mColorSelected);
-            }
-
             int nCurrentScrollX = this.getScrollX();
             int nScrollLeft = clickItem.getLeft()
                     - mLlFiltersContainer.getPaddingLeft();
@@ -580,6 +594,10 @@ public class HorizontalListViewMV extends HorizontalScrollView implements
         }
     }
 
+    /***
+     * 设置为选中状态
+     * @param nItemId
+     */
     public void onItemChecked(int nItemId) {
         ListViewItem item = mSaCameraFilter.get(nItemId);
         if (null != item) {
@@ -587,6 +605,7 @@ public class HorizontalListViewMV extends HorizontalScrollView implements
 
         }
     }
+
 
     public void setdownStart(int nItemId) {
         ListViewItem item = mSaCameraFilter.get(nItemId);
