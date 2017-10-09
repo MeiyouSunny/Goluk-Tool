@@ -120,11 +120,11 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
     /**
      * 已获取的AppKey
      */
-    public static final String RD_APP_KEY = "41eac6f6b1c85813";
+    public static final String RD_APP_KEY = "3ac4ec3b83ff2b46";
     /**
      * 已获取的AppSecret
      */
-    public static final String RD_APP_SECRET = "a80a41b54d7b96cb25ca99ed91434cf0k97fslnArlsN+7dWdHzjboqg+yI1OD/ewFvfUEQjtnBh0P14BDBEKkChuhU061CzlOXWV6bdTHRm9bV7Qmdo0Nx7Hd/K+g0yx8bx6msffygdfJmbOrnemenq4gF2UfLNt7wAMcklEnB7lxPORqnpZ74NXLMwYgWy95IAZclPeiWcEBJUOFu8WVxr/JbmaX78zVzmkPZAfmu88/Yec9iB0+TLpm6uisWzjTiSZ5SkK8JmVW5DJ55U1pWi7T0qhcq2hz+Y9X8GB0oH/ZfxS/ftK2Bv8xPJ1RygSqjR3Saj88Jq/uRw2InUHcDbibIa4OcfpCUbfmtPMQ+WNEBcKSQx3A/dS3nGyD704zbXREIDJuevtXJGNMh63dktyZCtXAw9QcGd8id2Zg9gIrhpS5AC7op8GCUOXAeX7iV42I+H3FcmvCKnna0LmkhsI3NrVkPoFv6tjrNAagS98xhL0qj06jcEnAV1pvhg2bQTAzYdWXc=";
+    public static final String RD_APP_SECRET = "51b6e9f5866392a68f7515fe51746459PQhgN2vXUaqBFf49k9KmDRFR3ctgB19buZwHpfRXrOvJFWlltIVyYRRkahx7GMK4urpv0blxaIPjArqFKKpG2FG2mmXZ6Q/IRh9WFEv7a//LYG6L8NMx6pgGGU6lplTzrRsBxJRJjfFEKn9uJn7NZsJg0UkIyQRy7YELPV9AN5ce1ObP4ZxZeD/bOGGpGFA1qTatDjrsjsqY41ts/Tei0EcEQi/vQeHflxqzHBRs5X+fIRAC205pbXECo+OnUTzibQLiAuHD9pi9xjgDjizv4WD7thr7Rv01qFt5j1msNsGM54Ud8QK2L85x0ZPq1nwLxDTWm2SnkOb2e+np7HOHMmX0vom+1ZXUbeMaJByR1gTZ+FlyytIp5BcBUCOIJtgSUZ86QHJAGVgMTwVHDayAmIvzV9iFgwjREb7318ClF+OpBk+XQSl2+GVrPRZNYysAQZeSgknCobiB3jhdfkyKUBwUDMchBZfw4th1RfWAFBWK1epupyj5Tb/lId8GKOdHWY/BX2Sdd71IX19XjTYcPiSHdTReQaMrBRflysJYkLE=";
 
     /**
      * JIN接口类

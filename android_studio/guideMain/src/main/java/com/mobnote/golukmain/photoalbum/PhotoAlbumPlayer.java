@@ -1843,7 +1843,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
         @Override
         public void onExportEnd(int result) {
-            mDialog.dismiss();
+            if(mDialog!=null && mDialog.isShowing()) {
+                mDialog.dismiss();
+            }
             if (result >= VirtualVideo.RESULT_SUCCESS) {
                 GolukUtils.startVideoShareActivity(PhotoAlbumPlayer.this, mType, mPath, mFileName, false,
                         mVideoView.getDuration(), mHP, (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
