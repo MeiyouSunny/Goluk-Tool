@@ -1,120 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="list_dpi_value">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-    <string-array name="list_dpi_key">
-        <item>1920*1080</item>
-        <item>1280*720</item>
-        <item>640*480</item>
-    </string-array>
-    <string-array name="list_frame_value">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-    <string-array name="list_frame_key">
-        <item>@string/str_frame24</item>
-        <item>@string/str_frame18</item>
-    </string-array>
-
     <integer-array name="list_frame_source_local">
         <item>24</item>
         <item>18</item>
     </integer-array>
-
-    <string-array name="list_ma_value_local">
-        <item>0</item>
-        <item>1</item>
-    </string-array>
-    <string-array name="list_ma_key_local">
-        <item>11M</item>
-        <item>5M</item>
-    </string-array>
 
     <integer-array name="list_ma_source_local">
         <item>11</item>
         <item>5</item>
     </integer-array>
 
-    <string-array name="list_dpi_live_value">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-    <string-array name="list_dpi_live_key">
-        <item>360*240</item>
-        <item>480*360</item>
-        <item>640*480</item>
-        <item>1280*720</item>
-    </string-array>
-    <string-array name="list_frame_live_value">
-        <item>0</item>
-        <item>1</item>
-    </string-array>
-    <string-array name="list_frame_live_key">
-        <item>@string/str_frame24</item>
-        <item>@string/str_frame15</item>
-    </string-array>
-
-    <integer-array name="list_frame_source_live">
-        <item>24</item>
-        <item>15</item>
-    </integer-array>
-
     <item name="tag_slideshow_item" type="id"></item>
 
-    <string-array name="list_ma_live_value">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-    </string-array>
-    <string-array name="list_ma_live_key">
-        <item>300K</item>
-        <item>500K</item>
-        <item>800K</item>
-        <item>1M</item>
-        <item>1.2M</item>
-        <item>1.5M</item>
-        <item>2M</item>
-    </string-array>
-
-    <integer-array name="list_ma_source_live">
-        <item>300</item>
-        <item>500</item>
-        <item>800</item>
-        <item>1000</item>
-        <item>1200</item>
-        <item>1500</item>
-        <item>2000</item>
-    </integer-array>
-
-    <string-array name="list_hw_live_value">
-        <item>0</item>
-        <item>1</item>
-    </string-array>
-    <string-array name="list_hw_live_key">
-        <item>@string/str_no_enable</item>
-        <item>@string/str_enable</item>
-    </string-array>
-    <string-array name="list_maxsize_value_local">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-    </string-array>
     <string-array name="list_maxsize_key_local">
         <item>2</item>
         <item>3</item>
@@ -132,11 +30,6 @@
         <item>@string/str_middle1080</item>
         <item>@string/str_high720</item>
         <item>@string/str_middle720</item>
-    </string-array>
-    <string-array name="list_quality_list">
-        <item>1080P</item>
-        <item>720P</item>
-        <item>480P</item>
     </string-array>
     <string-array name="list_photo_quality_ui">
         <item>@string/str_quality_high</item>

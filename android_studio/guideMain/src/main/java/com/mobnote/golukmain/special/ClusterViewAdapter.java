@@ -35,7 +35,7 @@ import android.widget.TextView;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 
 @SuppressLint("InflateParams")
-public class ClusterViewAdapter extends BaseAdapter implements OnTouchListener {
+public class ClusterViewAdapter extends BaseAdapter{
 	private Context mContext = null;
 	private List<ClusterInfo> clusterListData = null;
 	private int count = 0;
@@ -386,27 +386,4 @@ public class ClusterViewAdapter extends BaseAdapter implements OnTouchListener {
 		}
 		return t_bitmap;
 	}
-
-	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-		int action = event.getAction();
-		int id = v.getId();
-		if (id == R.id.share_btn) {
-			Button sharebtn = (Button) v;
-			switch (action) {
-			case MotionEvent.ACTION_DOWN:
-				Drawable more_down = mContext.getResources().getDrawable(R.drawable.share_btn_press);
-				sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_down, null, null, null);
-				sharebtn.setTextColor(Color.rgb(59, 151, 245));
-				break;
-			case MotionEvent.ACTION_UP:
-				Drawable more_up = mContext.getResources().getDrawable(R.drawable.share_btn);
-				sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_up, null, null, null);
-				sharebtn.setTextColor(Color.rgb(136, 136, 136));
-				break;
-			}
-		}
-		return false;
-	}
-
 }

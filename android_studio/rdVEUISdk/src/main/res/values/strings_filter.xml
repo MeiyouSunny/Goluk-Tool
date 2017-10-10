@@ -37,40 +37,11 @@
     <string name="camera_effect_36">节气</string>
     <string name="camera_effect_37">晚霞</string>
     <string name="camera_effect_38">朦胧</string>
-    <string name="camera_effect_39">记忆</string>
     <!-- 配乐方式1 (内置配乐) -->
-    <string name="music_1_1">悦动</string>
-    <string name="music_1_2">励志</string>
-    <string name="music_1_3">浪漫</string>
-    <string name="music_1_4">旅行</string>
-    <string name="music_1_5">小清新</string>
-    <string name="music_1_6">小资</string>
-    <string name="music_1_7">时尚</string>
-    <string name="music_1_8">回忆</string>
-    <string name="music_1_9">轻松</string>
-    <string name="music_1_10">乡村</string>
-    <string name="music_1_11">悠闲</string>
 
     <!-- 配乐方式二 -->
-    <string name="music_2_0">潮玩</string>
-    <string name="music_2_1">发现</string>
-    <string name="music_2_2">黑白</string>
-    <string name="music_2_3">回忆</string>
-    <string name="music_2_4">街头</string>
-    <string name="music_2_5">旅行</string>
-    <string name="music_2_6">清新</string>
-    <string name="music_2_7">撒野</string>
 
     <!-- 极录客使用 (配乐方式二 ) 同上-->
-    <string name="sp_music_null">无</string>
-    <string name="sp_music_chaowan">潮玩</string>
-    <string name="sp_music_faxian">发现</string>
-    <string name="sp_music_heibai">黑白</string>
-    <string name="sp_music_huiyi">回忆</string>
-    <string name="sp_music_jietou">街头</string>
-    <string name="sp_music_lvxing">旅行</string>
-    <string name="sp_music_qingxin">清新</string>
-    <string name="sp_music_saye">撒野</string>
 
     <!-- 滤镜方式1(多组滤镜) -->
     <string name="filter_1_0">原图</string>
@@ -108,7 +79,6 @@
     <string name="filter_1_36">节气</string>
     <string name="filter_1_37">晚霞</string>
     <string name="filter_1_38">朦胧</string>
-    <string name="filter_1_39">记忆</string>
 
     <!-- 滤镜方式二 (jlk) -->
     <string name="sp_filter_1">原片</string>

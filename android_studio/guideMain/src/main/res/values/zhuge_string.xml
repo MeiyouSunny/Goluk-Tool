@@ -46,7 +46,6 @@
     <!--事件-->
     <string name="str_zhuge_share_event">即刻分享页面访问</string>
     <!--参数-->
-    <string name="str_zhuge_share_video_edit">视频后处理</string>
     <string name="str_zhuge_share_video_player">竖屏播放页</string>
 
 <!-- ################### 视频后处理页面访问 ###################### -->
@@ -57,11 +56,9 @@
     <string name="str_zhuge_ipc_event">IPC页面访问</string>
     <!--参数-->
     <string name="str_zhuge_ipc_carrecorder">记录仪</string>
-    <string name="str_zhuge_ipc_carrecorder_connecting">记录仪-连接中</string>
     <string name="str_zhuge_ipc_album">相册</string>
-    <string name="str_zhuge_ipc_album_connecting">相册-连接中</string>
 
-<!-- ################### 相册竖屏播放页面访问 ###################### -->
+    <!-- ################### 相册竖屏播放页面访问 ###################### -->
     <!--事件-->
     <string name="str_zhuge_album_player_event">相册竖屏播放页面访问</string>
     <!--属性-->
@@ -83,21 +80,6 @@
     <string name="str_zhuge_after_effect_music_type">音乐类型</string>
     <string name="str_zhuge_after_effect_resolution">导出分辨率</string>
     <!--参数-->
-    <string name="str_zhuge_after_effect_video_duration1">10~13s</string>
-    <string name="str_zhuge_after_effect_video_duration2">14~30s</string>
-    <string name="str_zhuge_after_effect_video_duration3">30~60s</string>
-    <string name="str_zhuge_after_effect_video_duration4">60s~90s</string>
-    <string name="str_zhuge_after_effect_music_wave">潮玩</string>
-    <string name="str_zhuge_after_effect_music_discover">发现</string>
-    <string name="str_zhuge_after_effect_music_humor">幽默</string>
-    <string name="str_zhuge_after_effect_music_memory">回忆</string>
-    <string name="str_zhuge_after_effect_music_crowd">街头</string>
-    <string name="str_zhuge_after_effect_music_travel">旅行</string>
-    <string name="str_zhuge_after_effect_music_fresh">新鲜</string>
-    <string name="str_zhuge_after_effect_music_wild">撒野</string>
-    <string name="str_zhuge_after_effect_resolution480">480p</string>
-    <string name="str_zhuge_after_effect_resolution720">720p</string>
-    <string name="str_zhuge_after_effect_resolution1080">1080p</string>
 
     <!-- ################### 导出后处理视频失败 ###################### -->
     <!--事件-->
@@ -196,7 +178,6 @@
     <string name="str_zhuge_user_followed_number">关注好友数</string>
     <string name="str_zhuge_user_fans_number">粉丝数</string>
     <!-- 参数 -->
-    <string name="str_zhuge_user_login_style_weixin">微信用户</string>
     <string name="str_zhuge_user_login_style_goluk">极路客用户</string>
     <string name="str_zhuge_user_type_g1">G1</string>
     <string name="str_zhuge_user_type_g2">G2</string>
@@ -316,7 +297,6 @@
 
 <!-- ################### 相册详情页面 ###################### -->
     <!-- 事件 -->
-    <string name="str_zhuge_album_detail_event">相册详情页面</string>
     <!-- 属性 -->
     <string name="str_zhuge_album_detail_style">页面类型</string>
 
@@ -326,9 +306,8 @@
 
 <!-- ################### 相册页面-保存视频到系统相册 ###################### -->
     <!-- 事件 -->
-    <string name="str_zhuge_album_save_video_event">相册页面-保存视频到系统相册</string>
 
-<!-- ################### 相册页面-批量下载到本地 ###################### -->
+    <!-- ################### 相册页面-批量下载到本地 ###################### -->
     <!-- 事件 -->
     <string name="str_zhuge_album_batch_download_video_event">相册页面-批量下载到本地</string>
 
