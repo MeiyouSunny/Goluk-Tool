@@ -45,11 +45,12 @@ public class SharePlatformUtil {
         if (null == mShareAPI) {
             return false;
         }
-        UMSSOHandler handler = mShareAPI.getHandler(platform);
-        if (null == handler) {
-            return true;
+        try {
+            UMSSOHandler handler = mShareAPI.getHandler(platform);
+            return null == handler || handler.isInstall(mContext);
+        }catch (Exception ex) {
+            return false;
         }
-        return handler.isInstall(mContext);
     }
 
     public boolean isSinaWBValid() {
