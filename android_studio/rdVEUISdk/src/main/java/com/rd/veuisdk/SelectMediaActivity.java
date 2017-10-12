@@ -31,16 +31,17 @@ import com.rd.gallery.IVideo;
 import com.rd.lib.utils.CoreUtils;
 import com.rd.lib.utils.ThreadPoolUtils;
 import com.rd.vecore.VirtualVideo;
+import com.rd.vecore.exception.InvalidArgumentException;
 import com.rd.vecore.models.MediaObject;
 import com.rd.vecore.models.Scene;
 import com.rd.vecore.models.VideoConfig;
+import com.rd.veuisdk.fragment.IStateCallBack;
 import com.rd.veuisdk.fragment.PhotoSelectFragment;
 import com.rd.veuisdk.fragment.PhotoSelectFragment.IMediaSelector;
 import com.rd.veuisdk.fragment.VideoSelectFragment;
 import com.rd.veuisdk.manager.UIConfiguration;
 import com.rd.veuisdk.model.ImageItem;
 import com.rd.veuisdk.ui.ExtViewPagerNoScroll;
-import com.rd.veuisdk.ui.SubFunctionUtils;
 import com.rd.veuisdk.utils.IntentConstants;
 import com.rd.veuisdk.utils.SysAlertDialog;
 import com.rd.veuisdk.utils.Utils;
@@ -55,7 +56,7 @@ import java.util.List;
  * @author jian
  * @author abreal
  */
-public class SelectMediaActivity extends BaseActivity implements IMediaSelector {
+public class SelectMediaActivity extends BaseActivity implements IMediaSelector, IStateCallBack {
     private final String TAG = "SelectMediaActivity";
     // 请求code:读取外置存储
     private static final int REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSIONS = 1;
@@ -77,10 +78,10 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector 
 
     private boolean mAddPhoto;
 
-    RadioButton mRbVideo;
-    RadioButton mRbPhoto;
-    ExtViewPagerNoScroll mVpMedia;
-    TextView mTvImportInfo;
+    private RadioButton mRbVideo;
+    private RadioButton mRbPhoto;
+    private ExtViewPagerNoScroll mVpMedia;
+    private TextView mTvImportInfo;
 
     public final static String ALBUM_FORMAT_TYPE = "album_format_type";
     public final static String ALBUM_ONLY = "album_only";
@@ -321,6 +322,11 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector 
         if (null != mPhotoFragment) {
             mPhotoFragment.onBackPressed();
         }
+    }
+
+    @Override
+    public boolean isHideText() {
+        return SdkEntry.getSdkService().getUIConfig().isHideText();
     }
 
     private class MPageAdapter extends FragmentPagerAdapter {
@@ -724,16 +730,24 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector 
 
                     MediaObject io = null;
                     if (item != null && item instanceof IVideo) {
-                        io = VirtualVideo.createScene().addMedia(item
-                                .getDataPath());
+                        try {
+                            io = VirtualVideo.createScene().addMedia(item
+                                    .getDataPath());
+                        } catch (InvalidArgumentException e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         if (mPhotoFragment != null) {
                             item = mPhotoFragment.getMedia().get(
                                     nMediaKey.intValue());
                         }
                         if (item != null) {
-                            io = VirtualVideo.createScene().addMedia(item
-                                    .getDataPath());
+                            try {
+                                io = VirtualVideo.createScene().addMedia(item
+                                        .getDataPath());
+                            } catch (InvalidArgumentException e) {
+                                e.printStackTrace();
+                            }
                         } else {
                             continue;
                         }
@@ -769,8 +783,10 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector 
 
                 if (getIntent().getBooleanExtra(IntentConstants.EDIT_TWO_WAY,
                         false)) {
-                    if (SubFunctionUtils.isEnableWizard()
-                            && !SubFunctionUtils.isHidePartEdit()) {
+                    UIConfiguration config = SdkEntry.getSdkService().getUIConfig();
+
+                    if (config.isEnableWizard()
+                            && !config.isHidePartEdit()) {
                         intent = new Intent(SelectMediaActivity.this,
                                 EditPreviewActivity.class);
                     } else {

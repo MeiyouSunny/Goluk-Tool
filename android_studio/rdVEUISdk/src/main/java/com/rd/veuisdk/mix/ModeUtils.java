@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.rd.vecore.VirtualVideo;
+import com.rd.vecore.exception.InvalidArgumentException;
 import com.rd.vecore.models.MediaObject;
 import com.rd.vecore.models.Scene;
 import com.rd.vecore.models.VideoConfig;
@@ -271,10 +272,14 @@ public class ModeUtils {
     public static void gotoTrim(Context context, String filePath, int requestCode, float aspRatio, boolean onlyTrimLine) {
 
         Scene scene = VirtualVideo.createScene();
-        scene.addMedia(filePath);
-        Log.e(TAG, "gotoTrim: " + aspRatio);
+        try {
+            scene.addMedia(filePath);
+            Log.e(TAG, "gotoTrim: " + aspRatio);
+            gotoTrim(context, scene, requestCode, aspRatio, onlyTrimLine);
+        } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        }
 
-        gotoTrim(context, scene, requestCode, aspRatio, onlyTrimLine);
     }
 
     public static void gotoTrim(Context context, Scene scene, int requestCode, float aspRatio, boolean onlyTrimLine) {

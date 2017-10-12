@@ -33,6 +33,7 @@ import com.rd.lib.ui.PreviewFrameLayout;
 import com.rd.lib.utils.CoreUtils;
 import com.rd.vecore.VirtualVideo;
 import com.rd.vecore.VirtualVideoView;
+import com.rd.vecore.exception.InvalidArgumentException;
 import com.rd.vecore.exception.InvalidStateException;
 import com.rd.vecore.listener.ExportListener;
 import com.rd.vecore.models.AspectRatioFitMode;
@@ -59,7 +60,6 @@ import com.rd.veuisdk.ui.PriviewLayout;
 import com.rd.veuisdk.ui.PriviewLinearLayout;
 import com.rd.veuisdk.ui.ProportionDialog;
 import com.rd.veuisdk.ui.RdSeekBar;
-import com.rd.veuisdk.ui.SubFunctionUtils;
 import com.rd.veuisdk.utils.AppConfiguration;
 import com.rd.veuisdk.utils.BitmapUtils;
 import com.rd.veuisdk.utils.DateTimeUtils;
@@ -77,7 +77,7 @@ import java.util.List;
  * 片段编辑页
  */
 public class EditPreviewActivity extends BaseActivity {
-    private static final String TAG = "EditPreviewActivity";
+    private final String TAG = "EditPreviewActivity";
 
     public static final String ACTION_APPEND = "action_append";
     static final String APPEND_IMAGE = "edit.addmenu.addimage";
@@ -100,23 +100,25 @@ public class EditPreviewActivity extends BaseActivity {
     private VirtualVideo mVirtualVideo;
     private Scene mCurrentScene;
 
-    VirtualVideoView mMediaPlayer;
-    PreviewFrameLayout mVideoPreview;
-    ImageView mIvVideoPlayState;
-    TextView mTvVideoDuration;
-    RdSeekBar mSbPreview;
-    RelativeLayout mRlSplitView;
-    DraggableAddGridView mGridVideosArray;
-    View mMainView;
-    View mSplitLayout;
-    PreviewFrameLayout mPreviewPlayer;
+    private VirtualVideoView mMediaPlayer;
+    private PreviewFrameLayout mVideoPreview;
+    private ImageView mIvVideoPlayState;
+    private TextView mTvVideoDuration;
+    private RdSeekBar mSbPreview;
+    private RelativeLayout mRlSplitView;
+    private DraggableAddGridView mGridVideosArray;
+    private View mMainView;
+    private View mSplitLayout;
+    private PreviewFrameLayout mPreviewPlayer;
     private int mPlaybackDurationMs = 0; //实际播放时间
+    private UIConfiguration mUIConfig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mStrActivityPageName = getString(R.string.editvideopriview);
         setContentView(R.layout.activity_edit_preview);
+        mUIConfig = SdkEntry.getSdkService().getUIConfig();
         if (!Utils.checkDeviceHasNavigationBar(this)) {
             AppConfiguration.setAspectRatio(1);
         }
@@ -129,7 +131,7 @@ public class EditPreviewActivity extends BaseActivity {
 
         mIsUseCustomUI = uiConfig.useCustomAlbum;
 
-        if (SubFunctionUtils.isEnableWizard()) {
+        if (mUIConfig.isEnableWizard()) {
             if (uiConfig.videoProportion == 0) {
                 mCurProportion = 0;
                 mProportionStatus = 0;
@@ -170,7 +172,7 @@ public class EditPreviewActivity extends BaseActivity {
 
         mGridVideosArray.setAddItemInfo(mSceneList);
 
-        if (SubFunctionUtils.isHideSort()) {
+        if (mUIConfig.isHideSort()) {
             mGridVideosArray.hideSort(true);
         }
 
@@ -212,6 +214,12 @@ public class EditPreviewActivity extends BaseActivity {
         }
     };
 
+    /**
+     * 选中当前位置的开始时刻
+     *
+     * @param position
+     * @param isAddItem
+     */
     private void seekToPosition(int position, boolean isAddItem) {
         float progress = 0;
         if (isAddItem) {
@@ -250,6 +258,10 @@ public class EditPreviewActivity extends BaseActivity {
             progress += 0.1f;
         }
         if (progress < 0) {
+            progress = 0;
+        }
+        if (position == 0) {
+            //特别处理，第0个media，开始位置强制为0
             progress = 0;
         }
         playBackSeekTo(progress);
@@ -404,7 +416,7 @@ public class EditPreviewActivity extends BaseActivity {
 
     private void updateView() {
         mTvTitle.setText(R.string.partedit);
-        if (SubFunctionUtils.isHideProportion()) {
+        if (mUIConfig.isHideProportion()) {
             mIvProportion.setVisibility(View.GONE);
         } else {
             mIvProportion.setVisibility(View.VISIBLE);
@@ -414,6 +426,10 @@ public class EditPreviewActivity extends BaseActivity {
 
     private void onListViewItemSelected() {
         mCurrentScene = mAdapterScene.getItem(mIndex);
+        if (null == mCurrentScene) {
+            Log.e(TAG, "onListViewItemSelected:  mCurrentScene is null");
+            return;
+        }
         MediaObject mediaObject = mCurrentScene.getAllMedia().get(0);
         mMenuLayout.setVisibility(View.VISIBLE);
         onUI(false);
@@ -426,27 +442,27 @@ public class EditPreviewActivity extends BaseActivity {
             mReverse.setVisibility(View.VISIBLE);
             mText.setVisibility(View.GONE);
             mDuration.setVisibility(View.GONE);
-            if (SubFunctionUtils.isHideSpeed()) {
+            if (mUIConfig.isHideSpeed()) {
                 buttonCount -= 1;
                 mSpeed.setVisibility(View.GONE);
             }
-            if (SubFunctionUtils.isHideEdit()) {
+            if (mUIConfig.isHideEdit()) {
                 buttonCount -= 1;
                 mEdit.setVisibility(View.GONE);
             }
-            if (SubFunctionUtils.isHideTrim()) {
+            if (mUIConfig.isHideTrim()) {
                 buttonCount -= 1;
                 mTrim.setVisibility(View.GONE);
             }
-            if (SubFunctionUtils.isHideSplit()) {
+            if (mUIConfig.isHideSplit()) {
                 buttonCount -= 1;
                 mSplit.setVisibility(View.GONE);
             }
-            if (SubFunctionUtils.isHideReverse()) {
+            if (mUIConfig.isHideReverse()) {
                 buttonCount -= 1;
                 mReverse.setVisibility(View.GONE);
             }
-            if (SubFunctionUtils.isHideCopy()) {
+            if (mUIConfig.isHideCopy()) {
                 buttonCount -= 1;
                 if (buttonCount == 0) {
                     findViewById(R.id.preview_copy).setVisibility(
@@ -509,15 +525,15 @@ public class EditPreviewActivity extends BaseActivity {
                 mMenuLayout.setLayoutParams(lp);
             }
             int count = 3;
-            if (SubFunctionUtils.isHideDuration()) {
+            if (mUIConfig.isHideDuration()) {
                 mDuration.setVisibility(View.GONE);
                 count -= 1;
             }
-            if (SubFunctionUtils.isHideEdit()) {
+            if (mUIConfig.isHideEdit()) {
                 mEdit.setVisibility(View.GONE);
                 count -= 1;
             }
-            if (SubFunctionUtils.isHideCopy()) {
+            if (mUIConfig.isHideCopy()) {
                 if (count == 1 && vo.isExtPic != 1) {
                     findViewById(R.id.preview_copy).setVisibility(
                             View.INVISIBLE);
@@ -528,19 +544,19 @@ public class EditPreviewActivity extends BaseActivity {
         }
     }
 
-    ExtButton mTrim, mSplit, mSpeed, mDuration, mText, mEdit, mReverse;
-    TextView mTvTitle;
-    ExtButton mBtnTitleBarLeft;
-    ExtButton mBtnTitleBarRight;
+    private ExtButton mTrim, mSplit, mSpeed, mDuration, mText, mEdit, mReverse;
+    private TextView mTvTitle;
+    private ExtButton mBtnTitleBarLeft;
+    private ExtButton mBtnTitleBarRight;
 
-    ImageView mIvProportion;
-    PriviewLayout mParentFrame;
-    DraggedTrashLayout mDraggedLayout;
-    DraggedView mDraggedView;
-    PriviewLinearLayout mPriviewLinearLayout;
+    private ImageView mIvProportion;
+    private PriviewLayout mParentFrame;
+    private DraggedTrashLayout mDraggedLayout;
+    private DraggedView mDraggedView;
+    private PriviewLinearLayout mPriviewLinearLayout;
 
-    LinearLayout mMenuLayout;
-    LinearLayout mAddMenuLayout;
+    private LinearLayout mMenuLayout;
+    private LinearLayout mAddMenuLayout;
 
     private void initView() {
         mMediaPlayer = (VirtualVideoView) findViewById(R.id.vvMediaPlayer);
@@ -582,7 +598,7 @@ public class EditPreviewActivity extends BaseActivity {
         mBtnTitleBarLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (SubFunctionUtils.isEnableWizard()) {
+                if (mUIConfig.isEnableWizard()) {
                     onCreateDialog(DIALOG_EXIT_ID).show();
                     return;
                 }
@@ -601,7 +617,7 @@ public class EditPreviewActivity extends BaseActivity {
                 R.drawable.public_menu_cancel, 0, 0, 0);
         mBtnTitleBarRight.setVisibility(View.VISIBLE);
         mBtnTitleBarRight.setText("");
-        if (SubFunctionUtils.isEnableWizard()) {
+        if (mUIConfig.isEnableWizard()) {
             mBtnTitleBarRight.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             mBtnTitleBarRight.setText(R.string.next_step);
             mBtnTitleBarRight.setTextColor(getResources().getColor(R.color.main_orange));
@@ -654,6 +670,7 @@ public class EditPreviewActivity extends BaseActivity {
         mGridVideosArray.setAddItemListener(mAddItemListener);
         // 设置项目大小
         mGridVideosArray.setItemSize(R.dimen.priview_item_width_plus, R.dimen.priview_item_height_plus);
+        mGridVideosArray.setHideAddItemWithoutSort(mUIConfig.isHideTransition());
     }
 
 
@@ -915,7 +932,7 @@ public class EditPreviewActivity extends BaseActivity {
         i.putExtra(IntentConstants.EXTRA_MEDIA_PROPORTION, mCurProportion);
         i.putExtra(IntentConstants.EDIT_PROPORTION_STATUS, mProportionStatus);
 
-        if (SubFunctionUtils.isEnableWizard()) {
+        if (mUIConfig.isEnableWizard()) {
             i.setClass(this, VideoEditActivity.class);
             startActivityForResult(i, REQUESTCODE_FOR_ADVANCED_EDIT);
         } else {
@@ -946,7 +963,7 @@ public class EditPreviewActivity extends BaseActivity {
      * @param v
      */
 
-    public void onPreviewOptionClick(View v) {
+    public void onPreviewOptionClick(View v) throws Exception {
         int id = v.getId();
         if (mIndex < 0) {
             return;
@@ -955,6 +972,7 @@ public class EditPreviewActivity extends BaseActivity {
         Scene scene = mAdapterScene.getItem(mIndex);
         MediaObject mediaObject = scene.getAllMedia().get(0);
         if (id == R.id.preview_spilt) {
+
             if (mediaObject.getMediaType() == MediaType.MEDIA_VIDEO_TYPE) {
                 mCurrentScene = mAdapterScene.getItem(mIndex);
                 if (mCurrentScene.getDuration() <= 0.5f) {
@@ -1239,26 +1257,28 @@ public class EditPreviewActivity extends BaseActivity {
                 }
                 if (result >= VirtualVideo.RESULT_SUCCESS) {
                     Scene scene = VirtualVideo.createScene();
-                    MediaObject outputmo = scene.addMedia(strTempOutPath);
+                    MediaObject outputmo = null;
+                    try {
+                        outputmo = scene.addMedia(strTempOutPath);
+                        computeShowRect(outputmo, mediaObject);
+                        VideoOb oldvo = (VideoOb) mediaObject.getTag();
+                        oldvo.setVideoObjectPack(null);
+                        VideoOb newvo = new VideoOb(0, outputmo.getTrimEnd(), 0, outputmo.getTrimEnd(), 0,
+                                outputmo.getTrimEnd(), 0, null, oldvo.getCropMode());
+                        mediaObject.setTag(oldvo);
+                        newvo.setVideoObjectPack(new VideoObjectPack(mediaObject, true,
+                                oldvo.rStart, oldvo.rStart + outputmo.getTrimEnd()));
+                        outputmo.setTag(newvo);
 
-                    computeShowRect(outputmo, mediaObject);
-
-                    VideoOb oldvo = (VideoOb) mediaObject.getTag();
-
-                    oldvo.setVideoObjectPack(null);
-
-                    VideoOb newvo = new VideoOb(0, outputmo.getTrimEnd(), 0, outputmo.getTrimEnd(), 0,
-                            outputmo.getTrimEnd(), 0, null, oldvo.getCropMode());
-                    mediaObject.setTag(oldvo);
-                    newvo.setVideoObjectPack(new VideoObjectPack(mediaObject, true,
-                            oldvo.rStart, oldvo.rStart + outputmo.getTrimEnd()));
-                    outputmo.setTag(newvo);
-
-                    mAdapterScene.getMediaList().set(mIndex, scene);
-                    mAdapterScene.notifyDataSetChanged();
-                    mSceneList.set(mIndex, scene);
+                        mAdapterScene.getMediaList().set(mIndex, scene);
+                        mAdapterScene.notifyDataSetChanged();
+                        mSceneList.set(mIndex, scene);
+                    } catch (InvalidArgumentException e) {
+                        e.printStackTrace();
+                    }
                     initListView(mIndex);
                     reload();
+
                 }
                 setSeekTo(true);
                 seekToPosition(mIndex, false);
@@ -1633,7 +1653,6 @@ public class EditPreviewActivity extends BaseActivity {
 
 
     private void initListView(final int index) {
-
         mGridVideosArray.setAdapter(mAdapterScene);
         mCurrentScene = mAdapterScene.getItem(mIndex);
         mGridVideosArray.post(new Runnable() {
@@ -1694,7 +1713,7 @@ public class EditPreviewActivity extends BaseActivity {
                 onListViewItemSelected();
             }
         } else {
-            if (SubFunctionUtils.isEnableWizard()) {
+            if (mUIConfig.isEnableWizard()) {
                 onCreateDialog(DIALOG_EXIT_ID).show();
                 return;
             }
@@ -1746,7 +1765,7 @@ public class EditPreviewActivity extends BaseActivity {
 
         super.onDestroy();
         unregisterReceiver(mReceiver);
-        if (null != TempVideoParams.getInstance() && SubFunctionUtils.isEnableWizard()) {
+        if (null != TempVideoParams.getInstance() && mUIConfig.isEnableWizard()) {
             // 删除倒序临时文件
             PathUtils.cleanTempFilesByPrefix("reverse");
             TempVideoParams.getInstance().recycle();
@@ -1770,9 +1789,11 @@ public class EditPreviewActivity extends BaseActivity {
         super.finish();
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
+        mParsedata = true;
         if (mSplitHandler.isSpliting()) {
             mMediaPlayer.seekTo(mLastPlayPostion);
         } else if (!mIsSeekTo) {
@@ -1920,7 +1941,7 @@ public class EditPreviewActivity extends BaseActivity {
             e.printStackTrace();
         }
 
-        if (!SubFunctionUtils.isHideSoundTrack()) {
+        if (!mUIConfig.isHideSoundTrack()) {
 //            mVirtualVideo.addMusic(TempVideoParams.getInstance()
 //                    .getMusic().getMediaFilePath(),true);
         }
@@ -1988,7 +2009,7 @@ public class EditPreviewActivity extends BaseActivity {
         if (null != mAddMenuLayout) {
             if (show) {
                 mAddMenuLayout.setVisibility(View.VISIBLE);
-                if (SubFunctionUtils.isHideText()) {
+                if (mUIConfig.isHideText()) {
                     findViewById(R.id.preview_addtext).setVisibility(View.GONE);
                 }
             } else {
@@ -2024,11 +2045,11 @@ public class EditPreviewActivity extends BaseActivity {
                     startActivityForResult(intent, REQUESTCODE_FOR_APPEND);
                 }
             } else if (type == 2) {
+                //排序界面时，禁用当前activity中的广播追加的回调
+                mParsedata = false;
                 Intent intent = new Intent();
-
                 intent.setClass(EditPreviewActivity.this, com.rd.veuisdk.SortMediaActivity.class);
                 intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, mSceneList);
-
                 startActivityForResult(intent, REQUESTCODE_FOR_SORT);
                 overridePendingTransition(0, 0);
             }
@@ -2040,15 +2061,19 @@ public class EditPreviewActivity extends BaseActivity {
             onDragItemClick(drag);
         }
     };
-
-
+    /**
+     * 是否解析自定义相册发送的广播
+     */
+    private boolean mParsedata = true;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (TextUtils.equals(action, SdkEntry.ALBUM_CUSTOMIZE)) {
-                boardcastResult(intent);
+            if (mParsedata) {
+                String action = intent.getAction();
+                if (TextUtils.equals(action, SdkEntry.ALBUM_CUSTOMIZE)) {
+                    boardcastResult(intent);
+                }
             }
         }
 
@@ -2066,10 +2091,19 @@ public class EditPreviewActivity extends BaseActivity {
                 for (String nMediaKey : arrPath) {
                     if (null != nMediaKey) {
                         Scene scene = VirtualVideo.createScene();
-                        MediaObject mo = scene.addMedia(nMediaKey);
-                        if (scene != null && mo != null) {
-                            alMedias.add(scene);
+                        MediaObject mo = null;
+                        try {
+                            mo = scene.addMedia(nMediaKey);
+                            if (scene != null && mo != null) {
+                                mo.setTag(VideoOb.createVideoOb(mo.getMediaPath()));
+                                alMedias.add(scene);
+                            }
+                        } catch (InvalidArgumentException e) {
+                            e.printStackTrace();
+                            onToast(getString(R.string.media_exception));
                         }
+
+
                     }
                 }
                 if (alMedias.size() == 0) {
@@ -2080,7 +2114,6 @@ public class EditPreviewActivity extends BaseActivity {
                 int len = alMedias.size();
                 for (int i = 0; i < len; i++) {
                     Scene scene = alMedias.get(i);
-                    MediaObject mo = scene.getAllMedia().get(0);
                     int addPosition;
                     if (mAddItemIndex != -1) {
                         addPosition = mAddItemIndex + i;

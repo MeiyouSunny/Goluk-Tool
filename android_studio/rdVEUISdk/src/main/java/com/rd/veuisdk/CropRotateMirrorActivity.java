@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
@@ -73,6 +74,15 @@ public class CropRotateMirrorActivity extends BaseActivity {
         }
         mMedia = mScene.getAllMedia().get(0);
         mVideoOb = (VideoOb) mMedia.getTag();
+        if (null == mVideoOb) {
+            mVideoOb = VideoOb.createVideoOb(mMedia.getMediaPath());
+            if (null != mVideoOb) {
+                mMedia.setTag(mVideoOb);
+            } else {
+                finish();
+                return;
+            }
+        }
         initViews();
         initPlayer();
     }

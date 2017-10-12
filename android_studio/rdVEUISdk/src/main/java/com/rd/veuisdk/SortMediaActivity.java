@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rd.vecore.VirtualVideo;
+import com.rd.vecore.exception.InvalidArgumentException;
 import com.rd.vecore.models.MediaObject;
 import com.rd.vecore.models.MediaType;
 import com.rd.vecore.models.Scene;
@@ -51,11 +52,11 @@ public class SortMediaActivity extends BaseActivity {
 
     private final int REQUESTCODE_FOR_APPEND = 1;
 
-    DraggableGridView mSortScenesArray;
-    DraggedView mDraggedView;
-    DraggedTrashLayout mDraggedLayout;
-    PriviewLinearLayout mPriviewLinearLayout;
-    PriviewLayout mParentFrame;
+    private DraggableGridView mSortScenesArray;
+    private DraggedView mDraggedView;
+    private DraggedTrashLayout mDraggedLayout;
+    private PriviewLinearLayout mPriviewLinearLayout;
+    private PriviewLayout mParentFrame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,7 +149,6 @@ public class SortMediaActivity extends BaseActivity {
             ArrayList<Scene> scenes = mScenesAdapter.getMediaList();
             scenes.remove(scenes.size() - 1);
             intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, scenes);
-
             setResult(RESULT_OK, intent);
             onBackPressed();
         }
@@ -393,11 +393,18 @@ public class SortMediaActivity extends BaseActivity {
                     @Override
                     public void run() {
                         for (String nMediaKey : arrPath) {
-                            if (null != nMediaKey) {
-
-                                MediaObject mo = VirtualVideo.createScene().addMedia(nMediaKey);
-                                if (mo != null) {
-                                    alMedias.add(mo);
+                            if (!TextUtils.isEmpty(nMediaKey)) {
+                                Scene scene = VirtualVideo.createScene();
+                                MediaObject mo = null;
+                                try {
+                                    mo = scene.addMedia(nMediaKey);
+                                    if (mo != null) {
+                                        mo.setTag(VideoOb.createVideoOb(mo.getMediaPath()));
+                                        alMedias.add(mo);
+                                    }
+                                } catch (InvalidArgumentException e) {
+                                    e.printStackTrace();
+                                    onToast(getString(R.string.media_exception));
                                 }
                             }
                         }

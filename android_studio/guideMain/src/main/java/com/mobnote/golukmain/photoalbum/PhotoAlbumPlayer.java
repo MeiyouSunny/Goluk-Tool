@@ -81,6 +81,7 @@ import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.ZhugeUtils;
 import com.rd.lib.utils.CoreUtils;
 import com.rd.vecore.VirtualVideo;
+import com.rd.vecore.exception.InvalidArgumentException;
 import com.rd.vecore.listener.ExportListener;
 import com.rd.vecore.models.Trailer;
 import com.rd.vecore.models.VideoConfig;
@@ -1610,6 +1611,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                         configData.enableText)
                 .setClipEditingModuleVisibility(UIConfiguration.ClipEditingModules.REVERSE,
                         configData.enableReverse)
+                .setClipEditingModuleVisibility(UIConfiguration.ClipEditingModules.TRANSITION, false)
                 .enableLocalMusic(configData.enableLocalMusic)
                 // 设置自定义的网络音乐
                 .setMusicUrl(ConfigData.MUSIC_URL)
@@ -1703,7 +1705,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 //                        new CameraConfiguration.Builder().get());
         ArrayList<String> list = new ArrayList<String>();
         list.add(videoPath);
-        editMedia(this, list, EDIT_REQUEST_CODE);
+        try {
+            editMedia(this, list, EDIT_REQUEST_CODE);
+        } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -1788,7 +1794,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         ArrayList<String> videos = new ArrayList<>();
         videos.add(mPath);
         ExportVideoLisenter mExportListener = new ExportVideoLisenter(strSaveMp4FileName);
-        SdkEntry.exportVideo(this, config, videos, strSaveMp4FileName, null, trailer, mExportListener);
+        try {
+            SdkEntry.exportVideo(this, config, videos, strSaveMp4FileName, null, trailer, mExportListener);
+        } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
 

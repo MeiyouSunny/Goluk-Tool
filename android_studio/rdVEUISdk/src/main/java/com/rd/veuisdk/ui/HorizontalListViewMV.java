@@ -560,7 +560,7 @@ public class HorizontalListViewMV extends HorizontalScrollView implements
     private boolean isFastRepeatClick() {
         long time = System.currentTimeMillis();
         long timeD = time - lastClickTime;
-        if (0 < timeD && timeD < 1500) {
+        if (0 < timeD && timeD < 800) {
             return true;
         }
         lastClickTime = time;
@@ -637,8 +637,19 @@ public class HorizontalListViewMV extends HorizontalScrollView implements
         ListViewItem item = mSaCameraFilter.get(nItemId);
         if (null != item) {
             if (null != item.mItemImageView) {
-                // item.mItemImageView.setProgress()
+                item.mItemImageView.setProgress(0);
             }
+        }
+    }
+
+    /***
+     * 下载失败
+     * @param nItemId
+     */
+    public void setdownFailedUI(int nItemId) {
+        ListViewItem item = mSaCameraFilter.get(nItemId);
+        if (null != item) {
+            resetItem(item.getItemId());
         }
     }
 

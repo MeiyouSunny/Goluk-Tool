@@ -5,17 +5,7 @@
 
     <!-- android:background="@color/grid_listview_item_outer" -->
 
-    <!--<com.rd.lib.ui.RotateImageView-->
-    <!--android:id="@+id/ivPhotoListThumbnail"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_centerInParent="true"-->
-    <!--android:contentDescription="@null"-->
-    <!--android:minHeight="@dimen/video_list_grid_item_height"-->
-    <!--android:minWidth="@dimen/video_list_grid_item_width"/>-->
-
-
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.rd.lib.ui.RotateImageView
         android:id="@+id/ivPhotoListThumbnail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -23,7 +13,6 @@
         android:contentDescription="@null"
         android:minHeight="@dimen/video_list_grid_item_height"
         android:minWidth="@dimen/video_list_grid_item_width"/>
-
 
     <TextView
         android:id="@+id/ivVideoDur"

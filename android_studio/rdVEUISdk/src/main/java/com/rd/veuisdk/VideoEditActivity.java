@@ -97,7 +97,6 @@ import com.rd.veuisdk.ui.HorizontalProgressDialog;
 import com.rd.veuisdk.ui.HorizontalProgressDialog.onCancelClickListener;
 import com.rd.veuisdk.ui.ProgressView;
 import com.rd.veuisdk.ui.RdSeekBar;
-import com.rd.veuisdk.ui.SubFunctionUtils;
 import com.rd.veuisdk.utils.AppConfiguration;
 import com.rd.veuisdk.utils.CommonStyleUtils;
 import com.rd.veuisdk.utils.DateTimeUtils;
@@ -240,7 +239,6 @@ public class VideoEditActivity extends BaseActivity implements
     */
     private FrameLayout mLinearWords;
 
-    //private RelativeLayout musicTrackLayout;
     /*
     * 记录播放器暂停状态
     */
@@ -362,7 +360,6 @@ public class VideoEditActivity extends BaseActivity implements
         mUIConfig = SdkEntry.getSdkService().getUIConfig();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_edit);
-
         mStrActivityPageName = getString(R.string.video_edit_ac_name);
 
         if (!Utils.checkDeviceHasNavigationBar(this)) {
@@ -437,7 +434,7 @@ public class VideoEditActivity extends BaseActivity implements
 
         mContent = findViewById(android.R.id.content);
 
-        if (!SubFunctionUtils.isEnableWizard()) {
+        if (!mUIConfig.isEnableWizard()) {
             if (mUIConfig.videoProportion == 0) {
                 mCurProportion = 0;
                 mProportionStatus = 0;
@@ -615,7 +612,7 @@ public class VideoEditActivity extends BaseActivity implements
         SubUtils.getInstance().recycle();
         SpecialUtils.getInstance().recycle();
 
-        if (!SubFunctionUtils.isEnableWizard()) {
+        if (!mUIConfig.isEnableWizard()) {
             // 删除倒序临时文件
             PathUtils.cleanTempFilesByPrefix("reverse");
             if (null != TempVideoParams.getInstance()) {
@@ -798,7 +795,6 @@ public class VideoEditActivity extends BaseActivity implements
 
             addMusic(mVirtualVideo);
             mVirtualVideo.changeFilter(mCurrentFilterType);
-//            mVirtualVideo.updateMusic(mVirtualVideoView);
             try {
                 mVirtualVideo.build(mVirtualVideoView);
             } catch (InvalidStateException e) {
@@ -923,6 +919,7 @@ public class VideoEditActivity extends BaseActivity implements
     public int getCurrentFilterType() {
         return mCurrentFilterType;
     }
+
     @Override
     public int getDuration() {
         if (null == mVirtualVideoView) {
@@ -956,7 +953,12 @@ public class VideoEditActivity extends BaseActivity implements
         return mDuration;
     }
 
-    private void onResultWord(final boolean isSub, final boolean isExport) {
+    /**
+     * 字幕、特效导出按钮
+     *
+     * @param isSub
+     */
+    private void onResultWord(boolean isSub) {
         mCanAutoPlay = false;
         stop();
         SysAlertDialog.showLoadingDialog(this, getString(R.string.isloading),
@@ -976,11 +978,8 @@ public class VideoEditActivity extends BaseActivity implements
                     });
 
         } else {
-
-
             mSpecialHandler.onExport(mVirtualVideoView.getVideoWidth(),
                     mVirtualVideoView.getVideoHeight(), new IExportSpecial() {
-
                         @Override
                         public void onSpecial(ArrayList<SpecialInfo> infos) {
                             TempVideoParams.getInstance().setSpEffects(infos);
@@ -1046,7 +1045,7 @@ public class VideoEditActivity extends BaseActivity implements
             }
             return;
         }
-        if (SubFunctionUtils.isEnableWizard() && !SubFunctionUtils.isHidePartEdit()) {
+        if (mUIConfig.isEnableWizard() && !mUIConfig.isHidePartEdit()) {
             backToPartEdit(false);
             return;
         }
@@ -1152,7 +1151,7 @@ public class VideoEditActivity extends BaseActivity implements
             setViewVisibility(R.id.rb_mv, false);
             rbCount -= 1;
         }
-        if (SubFunctionUtils.isHideDubbing()) {
+        if (mUIConfig.isHideDubbing()) {
             mHideMusicFragmentAudioBtn = true;
             setViewVisibility(R.id.rb_audio, false);
             setViewVisibility(R.id.btnVoice2, false);
@@ -1169,7 +1168,7 @@ public class VideoEditActivity extends BaseActivity implements
             }
         }
 
-        if (SubFunctionUtils.isHideSoundTrack()) {
+        if (mUIConfig.isHideSoundTrack()) {
             setViewVisibility(R.id.rb_music, false);
             View llEditorGroups = findViewById(R.id.llEditorGroups);
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) llEditorGroups
@@ -1178,15 +1177,15 @@ public class VideoEditActivity extends BaseActivity implements
             llEditorGroups.setLayoutParams(layoutParams);
             rbCount -= 1;
         }
-        if (SubFunctionUtils.isHideTitling()) {
+        if (mUIConfig.isHideTitling()) {
             setViewVisibility(R.id.rb_word, false);
             rbCount -= 1;
         }
-        if (SubFunctionUtils.isHideFilter()) {
+        if (mUIConfig.isHideFilter()) {
             setViewVisibility(R.id.rb_filter, false);
             rbCount -= 1;
         }
-        if (SubFunctionUtils.isHideSpecialEffects()) {
+        if (mUIConfig.isHideSpecialEffects()) {
             setViewVisibility(R.id.rb_special, false);
             rbCount -= 1;
         }
@@ -1196,7 +1195,7 @@ public class VideoEditActivity extends BaseActivity implements
         int rbWidth = findViewById(R.id.rb_word).getMeasuredWidth();
         int padding = 0;
 
-        if (SubFunctionUtils.isHidePartEdit() || SubFunctionUtils.isEnableWizard()) {
+        if (mUIConfig.isHidePartEdit() || mUIConfig.isEnableWizard()) {
             setViewVisibility(R.id.rb_partedit, false);
             rbCount -= 1;
             padding = (pntDisplay.x
@@ -1504,7 +1503,6 @@ public class VideoEditActivity extends BaseActivity implements
                 if (mPlayStatusShowing) {
                     mIvVideoPlayState.setVisibility(View.VISIBLE);
                 }
-                seekTo(0);
             }
             for (int nTmp = 0; nTmp < mSaEditorPostionListener.size(); nTmp++) {
                 mSaEditorPostionListener.valueAt(nTmp)
@@ -1644,7 +1642,7 @@ public class VideoEditActivity extends BaseActivity implements
         if (bCheckDefaultMenu) {
             if (mUIConfig.enableMV) {
                 mLastEditorMenuCheckId = R.id.rb_mv;
-            } else if (!SubFunctionUtils.isHideSoundTrack()) {
+            } else if (!mUIConfig.isHideSoundTrack()) {
                 mLastEditorMenuCheckId = R.id.rb_music;
             } else {
                 mLastEditorMenuCheckId = -1;
@@ -1685,7 +1683,7 @@ public class VideoEditActivity extends BaseActivity implements
         if (null == mMusicFragmentEx) {
             mMusicFragmentEx = new MusicFragmentEx();
             mMusicFragmentEx.init(mExportConfig.trailerDuration, mUIConfig.musicUrl, mUIConfig.voiceLayoutTpye,
-                    mMusicListener, mUIConfig.cloudMusicUrl, mUIConfig.enableLocalMusic);
+                    mMusicListener, mUIConfig.cloudMusicUrl, mUIConfig.enableLocalMusic, mUIConfig.isHideDubbing());
 
         }
         changeToFragment(mMusicFragmentEx, true);
@@ -1831,7 +1829,7 @@ public class VideoEditActivity extends BaseActivity implements
                     changeToFragment(mFiterFragmentEx, true);
                     resetTitlebar();
                 } else {
-                    boolean hideSoundTrack = SubFunctionUtils.isHideSoundTrack();
+                    boolean hideSoundTrack = mUIConfig.isHideSoundTrack();
                     if (mFilterFragment == null) {
                         mFilterFragment = new FilterFragment(hideSoundTrack);
                     }
@@ -2098,7 +2096,7 @@ public class VideoEditActivity extends BaseActivity implements
 
         @Override
         public void onBackPressed() {
-            onResultWord(true, false);
+            onResultWord(true);
         }
 
         @Override
@@ -2120,7 +2118,7 @@ public class VideoEditActivity extends BaseActivity implements
 
         @Override
         public void onBackPressed() {
-            onResultWord(false, false);
+            onResultWord(false);
 
         }
     };
@@ -2516,7 +2514,7 @@ public class VideoEditActivity extends BaseActivity implements
                     SdkEntryHandler.getInstance().onExport(
                             VideoEditActivity.this, mStrSaveMp4FileName);
                 }
-                if (SubFunctionUtils.isEnableWizard()) {
+                if (mUIConfig.isEnableWizard()) {
                     backToPartEdit(true);
                 } else {
                     Intent intent = new Intent();

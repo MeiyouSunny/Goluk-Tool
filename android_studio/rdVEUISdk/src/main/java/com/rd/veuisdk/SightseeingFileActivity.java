@@ -198,14 +198,18 @@ public class SightseeingFileActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onStop() {
+        super.onStop();
+        if (null != m_alLocalMusicItems) {
+            m_alLocalMusicItems.setIsCancel(true);
+        }
     }
 
     /**
      * 过滤文件
      */
-    private FileFilter ff = new FileFilter() {
+    private FileFilter mFileFilter = new FileFilter() {
+        @Override
         public boolean accept(File pathname) {
             return !pathname.isHidden();
         }
@@ -213,7 +217,6 @@ public class SightseeingFileActivity extends BaseActivity {
 
     /**
      * 根据File[]加载相应数据的集合
-     *
      */
     private void loadingFileList(final String directory) {
         if (isLoading) {
@@ -238,7 +241,7 @@ public class SightseeingFileActivity extends BaseActivity {
                                 m_tvRootPath.setText(file.getPath()); // 更新TextView组件显示的目录结构
                             }
                         });
-                        files = file.listFiles(ff); // 获取该目录的所有文件及目录
+                        files = file.listFiles(mFileFilter); // 获取该目录的所有文件及目录
                     } else {
                         // 获取根目录File对象
                         final File sdCardFile = new File(rootPath);
@@ -249,7 +252,7 @@ public class SightseeingFileActivity extends BaseActivity {
                                 m_tvRootPath.setText(sdCardFile.getPath()); // 设置TextView组件显示的目录结构
                             }
                         });
-                        files = sdCardFile.listFiles(ff); // 获取根目录的所有文件及目录
+                        files = sdCardFile.listFiles(mFileFilter); // 获取根目录的所有文件及目录
                     }
 
                     if (files != null) {

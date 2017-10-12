@@ -37,7 +37,7 @@
                 android:layout_centerVertical="true"
                 android:gravity="center"
                 android:text="@string/show_style_item_null"
-                android:textColor="@color/black"
+                android:textColor="@drawable/add_item_text_color"
                 android:textSize="@dimen/dimen_10"/>
 
         </RelativeLayout>

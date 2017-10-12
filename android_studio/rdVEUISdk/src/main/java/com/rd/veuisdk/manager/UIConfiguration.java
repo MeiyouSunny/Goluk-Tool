@@ -4,12 +4,126 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.rd.veuisdk.ui.SubFunctionUtils;
-
 /**
  * RdVEUISdk界面配置类
  */
 public class UIConfiguration implements Parcelable {
+    private String TAG = "UIConfiguration";
+
+
+    public boolean isHideText() {
+        return hideText;
+    }
+
+
+    public boolean isHideFilter() {
+        return hideFilter;
+    }
+
+
+    public boolean isHideTitling() {
+        return hideTitling;
+    }
+
+
+    public boolean isHideSpecialEffects() {
+        return hideSpecialEffects;
+    }
+
+
+    public boolean isHideSoundTrack() {
+        return hideSoundTrack;
+    }
+
+
+    public boolean isHideDubbing() {
+        return hideDubbing;
+    }
+
+
+    public boolean isHideSort() {
+        return hideSort;
+    }
+
+
+    public boolean isHideProportion() {
+        return hideProportion;
+    }
+
+
+    public boolean isHidePartEdit() {
+        return hidePartEdit;
+    }
+
+
+    public boolean isHideTrim() {
+        return hideTrim;
+    }
+
+
+    public boolean isHideSplit() {
+        return hideSplit;
+    }
+
+
+    public boolean isHideSpeed() {
+        return hideSpeed;
+    }
+
+
+    public boolean isHideDuration() {
+        return hideDuration;
+    }
+
+
+    public boolean isHideEdit() {
+        return hideEdit;
+    }
+
+
+    public boolean isHideCopy() {
+        return hideCopy;
+    }
+
+
+    public boolean isHideReverse() {
+        return hideReverse;
+    }
+
+
+    public boolean isHideTransition() {
+        return hideTransition;
+    }
+
+    public boolean isEnableWizard() {
+        return enableWizard;
+    }
+
+
+    // 片段编辑
+    private boolean hideSort = false;
+    private boolean hideProportion = false;
+    private boolean hideTrim = false;
+    private boolean hideSplit = false;
+    private boolean hideSpeed = false;
+    private boolean hideDuration = false;
+    private boolean hideEdit = false;
+    private boolean hideCopy = false;
+    private boolean hideText = false;
+    private boolean hideReverse = false;//倒序
+    private boolean hideTransition = false;
+
+    // 编辑与导出
+    private boolean hidePartEdit = false;
+    private boolean hideDubbing = false; //隐藏配音
+    private boolean hideSoundTrack = false;
+    private boolean hideSpecialEffects = false;
+    private boolean hideTitling = false;
+    private boolean hideFilter = false;
+
+
+    //向导化
+    private boolean enableWizard = false;
 
     /**
      * 相册支持格式：<br>
@@ -152,6 +266,10 @@ public class UIConfiguration implements Parcelable {
          * 倒序
          */
         REVERSE,
+        /**
+         * 转场
+         */
+        TRANSITION;
     }
 
     /**
@@ -203,7 +321,7 @@ public class UIConfiguration implements Parcelable {
 
         if (enableMV) {
             this.videoProportion = PROPORTION_SQUARE;
-            SubFunctionUtils.setHideProportion(true);
+            this.hideProportion = true;
         } else {
             this.videoProportion = builder.b_videoProportion;
         }
@@ -216,6 +334,32 @@ public class UIConfiguration implements Parcelable {
         this.cloudMusicUrl = builder.cloudMusicUrl;
         this.enableTitlingAndSpecialEffectOuter = builder.enableTitlingAllOuter;
         this.enableLocalMusic = builder.enableLocalMusic;
+
+
+        // 片段编辑
+        this.hideSort = builder.hideSort;
+        this.hideProportion = builder.hideProportion;
+        this.hideTrim = builder.hideTrim;
+        this.hideSplit = builder.hideSplit;
+        this.hideSpeed = builder.hideSpeed;
+        this.hideDuration = builder.hideDuration;
+        this.hideEdit = builder.hideEdit;
+        this.hideCopy = builder.hideCopy;
+        this.hideText = builder.hideText;
+        this.hideReverse = builder.hideReverse;//倒序
+        this.hideTransition = builder.hideTransition;
+
+        // 编辑与导出
+        this.hidePartEdit = builder.hidePartEdit;
+        this.hideDubbing = builder.hideDubbing; //隐藏配音
+        this.hideSoundTrack = builder.hideSoundTrack;
+        this.hideSpecialEffects = builder.hideSpecialEffects;
+        this.hideTitling = builder.hideTitling;
+        this.hideFilter = builder.hideFilter;
+
+
+        this.enableWizard = builder.b_enableWizard;
+
     }
 
     /**
@@ -234,6 +378,7 @@ public class UIConfiguration implements Parcelable {
         int mFilterLayoutType = FILTER_LAYOUT_1;
         boolean mEnableAlbumCamera = true;
         boolean mHideMusic = false;
+        boolean mHideAddItem = false;
         private String mvUrl = "";
         boolean enableTitlingAllOuter = true;
 
@@ -242,6 +387,36 @@ public class UIConfiguration implements Parcelable {
         private String cloudMusicUrl = "";
 
         private boolean enableLocalMusic = true;
+
+
+        // 片段编辑
+        private boolean hideSort = false;
+        private boolean hideProportion = false;
+        private boolean hideTrim = false;
+        private boolean hideSplit = false;
+        private boolean hideSpeed = false;
+        private boolean hideDuration = false;
+        private boolean hideEdit = false;
+        private boolean hideCopy = false;
+        private boolean hideText = false;
+        private boolean hideReverse = false;//倒序
+        private boolean hideTransition = false;
+
+        // 编辑与导出
+        private boolean hidePartEdit = false;
+        private boolean hideDubbing = false; //隐藏配音
+        private boolean hideSoundTrack = false;
+        private boolean hideSpecialEffects = false;
+        private boolean hideTitling = false;
+        private boolean hideFilter = false;
+
+        // only功能
+        private boolean onlySoundTrack = false;
+        private boolean onlyTitling = false;
+        private boolean onlyFilter = false;
+        private boolean onlySpecialEffects = false;
+        private boolean onlyDubbing = false;
+        private boolean onlyModule = false;
 
         /**
          * 是否打开本地音乐
@@ -362,12 +537,11 @@ public class UIConfiguration implements Parcelable {
          * @param enable true为片断编辑在前，编辑导出在后
          */
         public Builder enableWizard(boolean enable) {
-            if (SubFunctionUtils.isOnlyModule() && !enable) {
+            if (onlyModule && !enable) {
                 Log.e(this.toString(), "只显示某一功能模块将强制向导化");
                 return this;
             }
             this.b_enableWizard = enable;
-            SubFunctionUtils.setEnableWizard(enable);
             return this;
         }
 
@@ -428,30 +602,33 @@ public class UIConfiguration implements Parcelable {
                 ClipEditingModules module, boolean visibility) {
             visibility = !visibility;
             if (module.equals(ClipEditingModules.ALL)) {
-                SubFunctionUtils.setHidePartEdit(visibility);
+                this.hidePartEdit = visibility;
             } else if (module.equals(ClipEditingModules.COPY)) {
-                SubFunctionUtils.setHideCopy(visibility);
+                this.hideCopy = visibility;
             } else if (module.equals(ClipEditingModules.EDIT)) {
-                SubFunctionUtils.setHideEdit(visibility);
+                this.hideEdit = visibility;
             } else if (module.equals(ClipEditingModules.IMAGE_DURATION_CONTROL)) {
-                SubFunctionUtils.setHideDuration(visibility);
+                this.hideDuration = visibility;
             } else if (module.equals(ClipEditingModules.VIDEO_SPEED_CONTROL)) {
-                SubFunctionUtils.setHideSpeed(visibility);
+                this.hideSpeed = visibility;
             } else if (module.equals(ClipEditingModules.PROPORTION)) {
-                SubFunctionUtils.setHideProportion(visibility);
+                this.hideProportion = visibility;
             } else if (module.equals(ClipEditingModules.SORT)) {
-                SubFunctionUtils.setHideSort(visibility);
+                this.hideSort = visibility;
             } else if (module.equals(ClipEditingModules.TRIM)) {
-                SubFunctionUtils.setHideTrim(visibility);
+                this.hideTrim = visibility;
             } else if (module.equals(ClipEditingModules.SPLIT)) {
-                SubFunctionUtils.setHideSplit(visibility);
+                this.hideSplit = visibility;
             } else if (module.equals(ClipEditingModules.TEXT)) {
-                SubFunctionUtils.setHideText(visibility);
+                this.hideText = visibility;
             } else if (module.equals(ClipEditingModules.REVERSE)) {
-                SubFunctionUtils.setHideReverse(visibility);
+                this.hideReverse = visibility;
+            } else if (module.equals(ClipEditingModules.TRANSITION)) {
+                this.hideTransition = visibility;
             }
             return this;
         }
+
 
         /**
          * 设置编辑导出功能模块显示与隐藏
@@ -460,17 +637,17 @@ public class UIConfiguration implements Parcelable {
                 EditAndExportModules module, boolean visibility) {
             visibility = !visibility;
             if (module.equals(EditAndExportModules.DUBBING)) {
-                SubFunctionUtils.setHideDubbing(visibility);
+                hideDubbing = visibility;
             } else if (module.equals(EditAndExportModules.SOUNDTRACK)) {
-                SubFunctionUtils.setHideSoundTrack(visibility);
+                hideSoundTrack = visibility;
             } else if (module.equals(EditAndExportModules.FILTER)) {
-                SubFunctionUtils.setHideFilter(visibility);
+                hideFilter = visibility;
             } else if (module.equals(EditAndExportModules.SPECIAL_EFFECTS)) {
-                SubFunctionUtils.setHideSpecialEffects(visibility);
+                hideSpecialEffects = visibility;
             } else if (module.equals(EditAndExportModules.TITLING)) {
-                SubFunctionUtils.setHideTitling(visibility);
+                hideTitling = visibility;
             } else if (module.equals(EditAndExportModules.CLIP_EDITING)) {
-                SubFunctionUtils.setHidePartEdit(visibility);
+                hidePartEdit = visibility;
             }
             return this;
         }
@@ -503,7 +680,36 @@ public class UIConfiguration implements Parcelable {
         dest.writeString(this.musicUrl);
         dest.writeString(this.cloudMusicUrl);
         dest.writeByte(this.enableLocalMusic ? (byte) 1 : (byte) 0);
+
+
+        // 片段编辑
+        dest.writeByte(this.hideSort ? (byte) 0 : (byte) 1);
+        dest.writeByte(this.hideProportion ? (byte) 0 : (byte) 1);
+        dest.writeByte(this.hideTrim ? (byte) 0 : (byte) 1);
+        dest.writeByte(this.hideSplit ? (byte) 0 : (byte) 1);
+        dest.writeByte(this.hideSpeed ? (byte) 0 : (byte) 1);
+        dest.writeByte(this.hideDuration ? (byte) 0 : (byte) 1);
+        dest.writeByte(this.hideEdit ? (byte) 0 : (byte) 1);
+        dest.writeByte(this.hideCopy ? (byte) 0 : (byte) 1);
+        dest.writeByte(this.hideText ? (byte) 0 : (byte) 1);
+        dest.writeByte(this.hideReverse ? (byte) 0 : (byte) 1);//倒序
+        dest.writeByte(this.hideTransition ? (byte) 0 : (byte) 1);
+
+        // 编辑与导出
+        dest.writeByte(this.hidePartEdit ? (byte) 0 : (byte) 1);
+        dest.writeByte(this.hideDubbing ? (byte) 0 : (byte) 1); //隐藏配音
+        dest.writeByte(this.hideSoundTrack ? (byte) 0 : (byte) 1);
+        dest.writeByte(this.hideSpecialEffects ? (byte) 0 : (byte) 1);
+        dest.writeByte(this.hideTitling ? (byte) 0 : (byte) 1);
+        dest.writeByte(this.hideFilter ? (byte) 0 : (byte) 1);
+
+
+        //向导
+        dest.writeByte(this.enableWizard ? (byte) 1 : (byte) 0);
+
+
     }
+
 
     protected UIConfiguration(Parcel in) {
         this.videoProportion = in.readInt();
@@ -522,6 +728,33 @@ public class UIConfiguration implements Parcelable {
         this.musicUrl = in.readString();
         this.cloudMusicUrl = in.readString();
         this.enableLocalMusic = in.readByte() != 0;
+
+
+        // 片段编辑
+        this.hideSort = in.readByte() == 0;
+        this.hideProportion = in.readByte() == 0;
+        this.hideTrim = in.readByte() == 0;
+        this.hideSplit = in.readByte() == 0;
+        this.hideSpeed = in.readByte() == 0;
+        this.hideDuration = in.readByte() == 0;
+        this.hideEdit = in.readByte() == 0;
+        this.hideCopy = in.readByte() == 0;
+        this.hideText = in.readByte() == 0;
+        this.hideReverse = in.readByte() == 0;//倒序
+        this.hideTransition = in.readByte() == 0;
+
+        // 编辑与导出
+        this.hidePartEdit = in.readByte() == 0;
+        this.hideDubbing = in.readByte() == 0; //隐藏配音
+        this.hideSoundTrack = in.readByte() == 0;
+        this.hideSpecialEffects = in.readByte() == 0;
+        this.hideTitling = in.readByte() == 0;
+        this.hideFilter = in.readByte() == 0;
+
+
+        //向导
+        this.enableWizard = in.readByte() != 0;
+
     }
 
     public static final Parcelable.Creator<UIConfiguration> CREATOR = new Parcelable.Creator<UIConfiguration>() {
@@ -535,4 +768,6 @@ public class UIConfiguration implements Parcelable {
             return new UIConfiguration[size];
         }
     };
+
+
 }

@@ -23,6 +23,7 @@ import com.rd.downfile.utils.DownLoadUtils;
 import com.rd.downfile.utils.IDownFileListener;
 import com.rd.lib.utils.CoreUtils;
 import com.rd.lib.utils.FileUtils;
+import com.rd.lib.utils.LogUtil;
 import com.rd.recorder.AudioPlayer;
 import com.rd.recorder.AudioPlayer.OnCompletionListener;
 import com.rd.recorder.AudioPlayer.OnPreparedListener;
@@ -203,12 +204,18 @@ public class MyMusicAdapter extends BaseAdapter implements
         View cbCheckBox = convertView.findViewById(R.id.cbHistoryCheck);
 
         ExpRangeSeekBar msb;
-        WebMusicInfo info = getItem(position).childs.getmInfo();
+
+        MyMusicInfo myMusicInfo = getItem(position).childs;
+        if (null == myMusicInfo) {
+            LogUtil.e(TAG, "onItemClick: " + position);
+            return;
+        }
+        WebMusicInfo info = myMusicInfo.getmInfo();
 
         if (mTempPosition != DEFALUTPOSITION) {
 
             if (mTempPosition == position && (!bForceClick)) {
-                Log.e("onitemclick", "不响应重复点击");
+                Log.i("onItemClick", "不响应重复点击");
                 return;
             } else {
                 if (isRunning) {

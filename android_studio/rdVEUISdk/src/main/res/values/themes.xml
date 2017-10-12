@@ -5,9 +5,18 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="Theme.rd.disableSplitTouch" parent="@android:style/Theme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowEnableSplitTouch" tools:ignore="NewApi">false</item>
+    </style>
+
     <style name="Theme.rd.fullscreen" parent="@style/Theme.rd">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="Theme.rd.sharesdk" parent="@android:style/Theme.Translucent.NoTitleBar">
+        <item name="android:backgroundDimEnabled">true</item>
     </style>
 
 </resources>

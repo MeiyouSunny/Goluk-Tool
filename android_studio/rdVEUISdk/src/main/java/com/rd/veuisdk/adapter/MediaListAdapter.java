@@ -1,27 +1,20 @@
 package com.rd.veuisdk.adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.common.RotationOptions;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.rd.cache.GalleryImageFetcher;
 import com.rd.gallery.IVideo;
 import com.rd.lib.ui.PreviewFrameLayout;
+import com.rd.lib.ui.RotateImageView;
 import com.rd.veuisdk.R;
 import com.rd.veuisdk.SelectMediaActivity;
 import com.rd.veuisdk.model.ImageItem;
 import com.rd.veuisdk.ui.NumItemView;
-import com.rd.veuisdk.ui.SubFunctionUtils;
 import com.rd.veuisdk.utils.DateTimeUtils;
 
 import java.util.ArrayList;
@@ -30,16 +23,19 @@ public class MediaListAdapter extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<ImageItem> mArrImageItems;
-    private ResizeOptions mResizeOptions = new ResizeOptions(120, 120);
+    private GalleryImageFetcher mGifVideoThumbnail; // 获取视频缩略图
+    private boolean bHideText;
 
-    public MediaListAdapter(Context c) {
+    public MediaListAdapter(Context c, GalleryImageFetcher fetcher, boolean hideText) {
         this.mContext = c;
+        mGifVideoThumbnail = fetcher;
         mArrImageItems = new ArrayList<ImageItem>();
+        bHideText = hideText;
     }
 
     public void addAll(ArrayList<ImageItem> list) {
         mArrImageItems.clear();
-        if (SelectMediaActivity.mIsAppend && !SubFunctionUtils.isHideText()) {
+        if (SelectMediaActivity.mIsAppend && !bHideText) {
             mArrImageItems.add(null);
         }
         mArrImageItems.addAll(list);
@@ -81,7 +77,7 @@ public class MediaListAdapter extends BaseAdapter {
             pflConvertView = (PreviewFrameLayout) LayoutInflater.from(mContext)
                     .inflate(R.layout.select_photo_list_item, null);
             holder = new ViewHolder();
-            holder.thumbnail = (SimpleDraweeView) pflConvertView
+            holder.thumbnail = (RotateImageView) pflConvertView
                     .findViewById(R.id.ivPhotoListThumbnail);
             pflConvertView.setAspectRatio(1f);
             convertView = pflConvertView;
@@ -97,18 +93,9 @@ public class MediaListAdapter extends BaseAdapter {
         if (null != item) {
             if (item.image.isValid()) {
                 if (item.image.equals(holder.thumbnail.getTag())) {
-
+                    mGifVideoThumbnail.loadImage(item.image, holder.thumbnail);
                 } else {
-                    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse("file://"+item.image.getDataPath()))
-                            .setRotationOptions(RotationOptions.autoRotate())
-                            .setLocalThumbnailPreviewsEnabled(true)
-                            .setResizeOptions(mResizeOptions)
-                            .build();
-                    DraweeController placeHolderDraweeController = Fresco.newDraweeControllerBuilder()
-                            .setOldController(holder.thumbnail.getController())
-                            .setImageRequest(request)
-                            .build();
-                    holder.thumbnail.setController(placeHolderDraweeController);
+                    mGifVideoThumbnail.loadImage(item.image, holder.thumbnail);
                     holder.thumbnail.setTag(item.image);
                 }
 
@@ -119,7 +106,6 @@ public class MediaListAdapter extends BaseAdapter {
                     holder.thumbnail.setImageResource(R.drawable.gallery_image_failed);
                 }
             }
-
             if (item.image instanceof IVideo) {
                 videoDur.setVisibility(View.VISIBLE);
                 videoDur.setText(DateTimeUtils
@@ -156,7 +142,7 @@ public class MediaListAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        com.facebook.drawee.view.SimpleDraweeView thumbnail;
+        RotateImageView thumbnail;
     }
 
 }

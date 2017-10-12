@@ -22,6 +22,8 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.rd.cache.GalleryImageFetcher;
+import com.rd.cache.ImageCache.ImageCacheParams;
 import com.rd.gallery.IImage;
 import com.rd.gallery.IImageList;
 import com.rd.gallery.ImageManager;
@@ -34,8 +36,8 @@ import com.rd.veuisdk.adapter.MediaListAdapter;
 import com.rd.veuisdk.model.ImageItem;
 import com.rd.veuisdk.ui.BounceGridView;
 import com.rd.veuisdk.ui.BucketListView;
-import com.rd.veuisdk.ui.SubFunctionUtils;
 import com.rd.veuisdk.utils.StorageUtils;
+import com.rd.veuisdk.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,6 +49,7 @@ public class PhotoSelectFragment extends BaseV4Fragment {
     private final String TAG = "PhotoSelectFragment";
     private MediaListAdapter mAdapterMedias;
     private boolean mMediaLoading, mMediaBreakLoad; // 媒体加载中...
+    private GalleryImageFetcher mGifVideoThumbnail; // 获取视频缩略图
     private SparseArray<IImage> mPhotoSelected = new SparseArray<IImage>();
     private ArrayList<ImageItem> mPhotos = new ArrayList<ImageItem>();
     private IImageList ilTmp;
@@ -57,22 +60,26 @@ public class PhotoSelectFragment extends BaseV4Fragment {
     private IMediaSelector mMediaSelector;
 
     // 视频源列表
-    BounceGridView mGridVideosSelector;
-    RelativeLayout mRlNoVideos;
-    TextView tvBucketName;
-    ImageView ivSelectBucket;
+    private BounceGridView mGridVideosSelector;
+    private RelativeLayout mRlNoVideos;
+    private TextView tvBucketName;
+    private ImageView ivSelectBucket;
+    private IStateCallBack mStateCallBack;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mMediaSelector = (IMediaSelector) activity;
+
+        mStateCallBack = (IStateCallBack) activity;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPageName = getString(R.string.select_media_title_photo);
-        mAdapterMedias = new MediaListAdapter(getActivity());
+        initImageFetcher();
+
     }
 
     public void resetAdapter() {
@@ -81,13 +88,30 @@ public class PhotoSelectFragment extends BaseV4Fragment {
         }
     }
 
+    /**
+     * 实现获取视频缩略图相关
+     */
+    private void initImageFetcher() {
+        ImageCacheParams cacheParams = new ImageCacheParams(getActivity(),
+                Utils.VIDEO_THUMBNAIL_CACHE_DIR);
+        // 缓冲占用系统内存的25%
+        cacheParams.setMemCacheSizePercent(0.05f);
 
+        mGifVideoThumbnail = new GalleryImageFetcher(getActivity(),
+                getResources().getDimensionPixelSize(
+                        R.dimen.video_list_grid_item_width), getResources()
+                .getDimensionPixelSize(
+                        R.dimen.video_list_grid_item_height));
+
+        mGifVideoThumbnail.setLoadingImage(null);
+        mGifVideoThumbnail.addImageCache(getActivity(), cacheParams);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRoot = inflater.inflate(R.layout.photo_select_layout, null);
-
+        mAdapterMedias = new MediaListAdapter(getActivity(), mGifVideoThumbnail, mStateCallBack.isHideText());
         mGridVideosSelector = (BounceGridView) findViewById(R.id.gridVideosSelector);
         mRlNoVideos = (RelativeLayout) findViewById(R.id.rlNoVideos);
         tvBucketName = (TextView) findViewById(R.id.tvPhotoBuckname);
@@ -113,7 +137,9 @@ public class PhotoSelectFragment extends BaseV4Fragment {
             public void onScrollStateChanged(AbsListView view,
                                              int scrollState) {
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
+                    mGifVideoThumbnail.setPauseWork(true);
                 } else {
+                    mGifVideoThumbnail.setPauseWork(false);
                 }
             }
 
@@ -315,6 +341,7 @@ public class PhotoSelectFragment extends BaseV4Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        mGifVideoThumbnail.setExitTasksEarly(false);
     }
 
     ;
@@ -323,6 +350,9 @@ public class PhotoSelectFragment extends BaseV4Fragment {
     public void onPause() {
         super.onPause();
         cancelLoadPhotos();
+        mGifVideoThumbnail.setPauseWork(false);
+        mGifVideoThumbnail.setExitTasksEarly(true);
+        mGifVideoThumbnail.flushCache();
     }
 
     public SparseArray<IImage> getMedia() {
@@ -337,6 +367,8 @@ public class PhotoSelectFragment extends BaseV4Fragment {
     @Override
     public void onDestroy() {
         mGridVideosSelector.setAdapter(null);
+        mGifVideoThumbnail.cleanUpCache();
+        mGifVideoThumbnail = null;
         super.onDestroy();
     }
 
@@ -348,7 +380,7 @@ public class PhotoSelectFragment extends BaseV4Fragment {
      */
     protected void onIImageItemClick(View view, int position) {
         if (position == 0 && SelectMediaActivity.mIsAppend
-                && !SubFunctionUtils.isHideText()) {
+                && !mStateCallBack.isHideText()) {
 
             getActivity().startActivityForResult(
                     new Intent(getActivity(), ExtPhotoActivity.class),
@@ -458,7 +490,6 @@ public class PhotoSelectFragment extends BaseV4Fragment {
                     rebakePhotos(true);
                 } else {
                     tvBucketName.setText(mBucketNameList.get(position - 2));
-
                     mPhotos.clear();
                     mMediaBreakLoad = false;
                     loadPhotoList(mBucketIdList.get(position - 2));

@@ -22,6 +22,7 @@ import com.rd.net.RdHttpClient;
 import com.rd.recorder.api.RecorderCore;
 import com.rd.vecore.RdVECore;
 import com.rd.vecore.VirtualVideo;
+import com.rd.vecore.exception.InvalidArgumentException;
 import com.rd.vecore.listener.ExportListener;
 import com.rd.vecore.models.AspectRatioFitMode;
 import com.rd.vecore.models.MediaObject;
@@ -43,7 +44,6 @@ import com.rd.veuisdk.manager.EditObject;
 import com.rd.veuisdk.manager.UIConfiguration;
 import com.rd.veuisdk.manager.VEOSDBuilder;
 import com.rd.veuisdk.model.ImageCacheUtils;
-import com.rd.veuisdk.ui.SubFunctionUtils;
 import com.rd.veuisdk.utils.AppConfiguration;
 import com.rd.veuisdk.utils.IntentConstants;
 import com.rd.veuisdk.utils.PathUtils;
@@ -338,7 +338,7 @@ public final class SdkEntry {
      * @return true代表直播进入编辑界面成功
      */
     public static boolean editMedia(Context context,
-                                    ArrayList<String> medialist, int requestCode) {
+                                    ArrayList<String> medialist, int requestCode) throws InvalidArgumentException {
         if (!checkAppKey(context)) {
             return false;
         }
@@ -351,7 +351,9 @@ public final class SdkEntry {
                 for (String nMediaKey : medialist) {
                     if (null != nMediaKey) {
                         Scene scene = VirtualVideo.createScene();
-                        MediaObject mo = new MediaObject(nMediaKey);
+                        MediaObject mo = null;
+                        mo = new MediaObject(nMediaKey);
+
                         if (mo != null) {
                             mo.setTimeRange(0, mo.getDuration());
                             scene.addMedia(mo);
@@ -365,7 +367,7 @@ public final class SdkEntry {
                     return false;
                 }
                 Intent intent;
-                if (SubFunctionUtils.isEnableWizard()) {
+                if (getSdkService().getUIConfig().isEnableWizard()) {
                     intent = new Intent(context, EditPreviewActivity.class);
                 } else {
                     intent = new Intent(context, VideoEditActivity.class);
@@ -393,7 +395,7 @@ public final class SdkEntry {
      * @return true代表直播进入编辑界面成功
      */
     public static boolean editMedia(Context context, EditObject editObject,
-                                    int requestCode) {
+                                    int requestCode) throws InvalidArgumentException {
         if (!checkAppKey(context)) {
             return false;
         }
@@ -418,7 +420,7 @@ public final class SdkEntry {
                     return false;
                 }
                 Intent intent;
-                if (SubFunctionUtils.isEnableWizard()) {
+                if (getSdkService().getUIConfig().isEnableWizard()) {
                     intent = new Intent(context, EditPreviewActivity.class);
                 } else {
                     intent = new Intent(context, VideoEditActivity.class);
@@ -443,7 +445,7 @@ public final class SdkEntry {
      *            媒体资源路径集合
      * @return true代表直播进入编辑界面成功
      */
-    public static boolean editMedia(Context context, ArrayList<String> medialist) {
+    public static boolean editMedia(Context context, ArrayList<String> medialist) throws InvalidArgumentException {
         return editMedia(context, medialist, -1);
     }
 
@@ -456,7 +458,7 @@ public final class SdkEntry {
      * @param requestCode 返回所需要的requestCode
      */
     public static void trimVideo(Context context, String videoPath,
-                                 int requestCode) {
+                                 int requestCode) throws InvalidArgumentException {
         if (!checkAppKey(context)) {
             return;
         }
@@ -817,7 +819,7 @@ public final class SdkEntry {
      * @param trailer        视频片尾
      * @param exportListener 视频导出回调
      */
-    public static void exportVideo(Context context, VideoConfig videoConfig, ArrayList<String> videoList, String outPath, Watermark watermark, Trailer trailer, final ExportListener exportListener) {
+    public static void exportVideo(Context context, VideoConfig videoConfig, ArrayList<String> videoList, String outPath, Watermark watermark, Trailer trailer, final ExportListener exportListener) throws InvalidArgumentException {
         if ((null != context) && !TextUtils.isEmpty(outPath) && (null != videoList && videoList.size() > 0)) {
 
             Scene scene = VirtualVideo.createScene();

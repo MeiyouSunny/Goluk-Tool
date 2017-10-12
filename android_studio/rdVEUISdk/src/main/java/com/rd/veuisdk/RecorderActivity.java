@@ -59,6 +59,7 @@ import com.rd.recorder.api.IRecorderCallBackShot;
 import com.rd.recorder.api.RecorderConfig;
 import com.rd.recorder.api.RecorderCore;
 import com.rd.vecore.VirtualVideo;
+import com.rd.vecore.exception.InvalidArgumentException;
 import com.rd.vecore.listener.ExportListener;
 import com.rd.vecore.models.MediaObject;
 import com.rd.vecore.models.VideoConfig;
@@ -1240,7 +1241,11 @@ public class RecorderActivity extends BaseActivity {
                 SysAlertDialog.cancelLoadingDialog();
                 onCheckRDEncypt(mLocalSaveFileNameStr);
                 if (result >= VirtualVideo.RESULT_SUCCESS) {
-                    gotoEdit(VirtualVideo.createScene().addMedia(mLocalSaveFileNameStr));
+                    try {
+                        gotoEdit(VirtualVideo.createScene().addMedia(mLocalSaveFileNameStr));
+                    } catch (InvalidArgumentException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     gotoEdit(mRecordVideoList.get(0));
                 }
@@ -3908,7 +3913,12 @@ public class RecorderActivity extends BaseActivity {
                 }
                 curTotal = totalTime;
 
-                MediaObject vo = VirtualVideo.createScene().addMedia(mLocalSaveFileNameStr);
+                MediaObject vo = null;
+                try {
+                    vo = VirtualVideo.createScene().addMedia(mLocalSaveFileNameStr);
+                } catch (InvalidArgumentException e) {
+                    e.printStackTrace();
+                }
                 mRecordVideoList.add(vo);
 
                 setLiveStreamStatus(false);
@@ -3983,7 +3993,11 @@ public class RecorderActivity extends BaseActivity {
 
                 }
 
-                mRecordVideoList.add(VirtualVideo.createScene().addMedia(mLocalSaveFileNameStr));
+                try {
+                    mRecordVideoList.add(VirtualVideo.createScene().addMedia(mLocalSaveFileNameStr));
+                } catch (InvalidArgumentException e) {
+                    e.printStackTrace();
+                }
                 if (!startTrailer) {
                     setLiveStreamStatus(false);
                     addView_black();

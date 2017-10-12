@@ -472,6 +472,14 @@ public class LocalMusicFragment extends BaseV4Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        //强制取消扫描
+        if (null != mAllLocalMusicItems) {
+            mAllLocalMusicItems.setIsCancel(true);
+        }
+    }
+    @Override
     public void onDestroy() {
         mMusicAdapter.onDestroy();
         super.onDestroy();

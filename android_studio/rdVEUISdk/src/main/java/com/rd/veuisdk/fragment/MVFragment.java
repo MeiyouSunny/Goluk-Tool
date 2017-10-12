@@ -61,7 +61,7 @@ public class MVFragment extends BaseFragment {
         super();
     }
 
-    private static final String WEB_MV_URL = "http://dianbook.17rd.com/api/shortvideo/getmvprop2";
+    private final String WEB_MV_URL = "http://dianbook.17rd.com/api/shortvideo/getmvprop2";
 
     @SuppressLint("ValidFragment")
     public MVFragment(String _url, boolean _isfirst) {
@@ -134,15 +134,25 @@ public class MVFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
         if (null != mDownloading) {
             DownLoadUtils.forceCancelAll();
             mDownloading.clear();
+        }
+        if (null != mHanlder) {
+            mHanlder.removeMessages(MSG_NONE_PREPARED);
+            mHanlder.removeMessages(MSG_WEB_DOWNLOADING);
+            mHanlder.removeMessages(MSG_ASSET_EXPORT_START);
+            mHanlder.removeMessages(MSG_WEB_PREPARED);
+            mHanlder.removeMessages(MSG_WEB_DOWN_START);
+            mHanlder.removeMessages(MSG_WEB_DOWN_END);
+            mHanlder.removeMessages(MSG_WEB_DOWN_FAILED);
+            mHanlder = null;
         }
         if (null != mListView) {
             mListView.recycle();
             mListView = null;
         }
-        mHanlder = null;
         mOnMvSelectListener = null;
 
     }
@@ -320,7 +330,6 @@ public class MVFragment extends BaseFragment {
 
             @Override
             public void run() {
-
                 if (TextUtils.isEmpty(mMvUrl)) {
                     Log.e(TAG, "mv  config.getUrl()  is null");
                     if (null != mHanlder) {
@@ -459,10 +468,12 @@ public class MVFragment extends BaseFragment {
                         break;
 
                     case MSG_NONE_PREPARED: {
-                        mListView.removeAllListItem();
-                        nItemId = 0;
-                        mListView.addListItem(nItemId, R.drawable.none_filter_n,
-                                getString(R.string.none));
+                        if (null != mListView) {
+                            mListView.removeAllListItem();
+                            nItemId = 0;
+                            mListView.addListItem(nItemId, R.drawable.none_filter_n,
+                                    getString(R.string.none));
+                        }
                         nItemId++;
                         break;
 
@@ -470,15 +481,17 @@ public class MVFragment extends BaseFragment {
                     case MSG_WEB_PREPARED: {
                         SysAlertDialog.cancelLoadingDialog();
                         int len = mlist.size();
-                        for (int i = 0; i < len; i++) {
-                            MVWebInfo info = mlist.get(i);
-                            mListView.addListItem(nItemId, info.getImg(),
-                                    info.getName(), mFetcher);
-                            mListView.setDownLayout(nItemId, info.getId() != MVWebInfo.DEFAULT_MV_NO_REGISTED);
-                            nItemId++;
-                        }
+                        if (null != mListView) {
+                            for (int i = 0; i < len; i++) {
+                                MVWebInfo info = mlist.get(i);
+                                mListView.addListItem(nItemId, info.getImg(),
+                                        info.getName(), mFetcher);
+                                mListView.setDownLayout(nItemId, info.getId() != MVWebInfo.DEFAULT_MV_NO_REGISTED);
+                                nItemId++;
+                            }
 
-                        mListView.selectListItem(mThemeType);
+                            mListView.selectListItem(mThemeType);
+                        }
                     }
 
                     break;

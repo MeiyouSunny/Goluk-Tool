@@ -3,6 +3,8 @@ package com.rd.veuisdk.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.rd.vecore.VirtualVideo;
+
 public class VideoOb implements Parcelable {
 
     public VideoOb(float tstart, float tend, float nStart, float nEnd, float rstart,
@@ -16,6 +18,20 @@ public class VideoOb implements Parcelable {
         this.isExtPic = isExtpic;
         this.extpic = info;
         this.cropMode = cropMode;
+    }
+
+    /**
+     * 创建一个视频的正常Vob ( 1X )
+     *
+     * @param path 可以是图库图片、图库视频
+     * @return
+     */
+    public static VideoOb createVideoOb(String path) {
+        float fdu = VirtualVideo.getMediaInfo(path, null);
+        if (fdu < 0) {
+            fdu = 0;
+        }
+        return new VideoOb(0, fdu, 0, fdu, 0, fdu, 0, null, 0);
     }
 
     public float nStart, nEnd; // 控制rangseekbar3 的min ,max 相对于当前视频段、速率的进度

@@ -6,6 +6,7 @@ import android.widget.FrameLayout;
 
 import com.rd.vecore.VirtualVideo;
 import com.rd.vecore.VirtualVideoView;
+import com.rd.vecore.exception.InvalidArgumentException;
 import com.rd.vecore.exception.InvalidStateException;
 import com.rd.vecore.models.Scene;
 
@@ -105,7 +106,7 @@ public class VideoView extends FrameLayout {
      *
      * @param videoPath 视频路径
      */
-    public void setVideoPath(String videoPath) throws InvalidStateException {
+    public void setVideoPath(String videoPath) throws InvalidStateException, InvalidArgumentException {
         mVideoPreview.reset();
         VirtualVideo virtualVideo = new VirtualVideo();
         Scene scene = new Scene(videoPath);

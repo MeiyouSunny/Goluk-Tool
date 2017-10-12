@@ -37,6 +37,7 @@ import com.rd.recorder.api.RecorderConfig;
 import com.rd.recorder.api.RecorderCore;
 import com.rd.vecore.VirtualVideo;
 import com.rd.vecore.VirtualVideoView;
+import com.rd.vecore.exception.InvalidArgumentException;
 import com.rd.vecore.exception.InvalidStateException;
 import com.rd.vecore.listener.ExportListener;
 import com.rd.vecore.models.AspectRatioFitMode;
@@ -573,10 +574,16 @@ public class MixRecordActivity extends Activity {
         Scene scene = VirtualVideo.createScene();
         int len = recordingList.size();
         for (int i = 0; i < len; i++) {
-            MediaObject media = new MediaObject(recordingList.get(i).getPath());
-            media.setShowRectF(new RectF(0, 0, 1f, 1f));
-            media.setAspectRatioFitMode(AspectRatioFitMode.KEEP_ASPECTRATIO_EXPANDING);
-            scene.addMedia(media);
+            MediaObject media = null;
+            try {
+                media = new MediaObject(recordingList.get(i).getPath());
+                media.setShowRectF(new RectF(0, 0, 1f, 1f));
+                media.setAspectRatioFitMode(AspectRatioFitMode.KEEP_ASPECTRATIO_EXPANDING);
+                scene.addMedia(media);
+            } catch (InvalidArgumentException e) {
+                e.printStackTrace();
+            }
+
         }
         recordVideo.addScene(scene);
         final String outRecord = PathUtils.getTempFileNameForSdcard(PathUtils.TEMP_RECORDVIDEO, "mp4");
@@ -875,25 +882,29 @@ public class MixRecordActivity extends Activity {
     private void onActivityResultVideo(String filePath) {
         if (null != currentMix && !TextUtils.isEmpty(filePath)) {
 
-            MediaObject media = new MediaObject(filePath);
-            float duration = ModeUtils.getDuration(filePath);
-            media.setTimeRange(0, duration);
-
-            VideoOb videoOb = new VideoOb(0, duration, 0, duration, 0, duration, 0, null, 0);
-            media.setTag(videoOb);
-            currentMix.setMediaObject(media);
-            currentMix.setState(MixInfo.GALLERY_VIDEO);
-            currentMix.setAspectRatioFitMode(AspectRatioFitMode.KEEP_ASPECTRATIO_EXPANDING);
-            MixItemHolder holder = holderList.get(getMixHolderIndex(currentMix.getId()));
-            if (null != holder) {
-                holder.setBindMix(currentMix);
-                //状态改为编辑
-                onAddedVideoUI(holder);
-                asyncLoadThumb(currentMix);
-            } else {
+            MediaObject media = null;
+            try {
+                media = new MediaObject(filePath);
+                float duration = ModeUtils.getDuration(filePath);
+                media.setTimeRange(0, duration);
+                VideoOb videoOb = new VideoOb(0, duration, 0, duration, 0, duration, 0, null, 0);
+                media.setTag(videoOb);
+                currentMix.setMediaObject(media);
+                currentMix.setState(MixInfo.GALLERY_VIDEO);
+                currentMix.setAspectRatioFitMode(AspectRatioFitMode.KEEP_ASPECTRATIO_EXPANDING);
+                MixItemHolder holder = holderList.get(getMixHolderIndex(currentMix.getId()));
+                if (null != holder) {
+                    holder.setBindMix(currentMix);
+                    //状态改为编辑
+                    onAddedVideoUI(holder);
+                    asyncLoadThumb(currentMix);
+                } else {
+                    initPlayerData(null);
+                }
+            } catch (InvalidArgumentException e) {
+                e.printStackTrace();
                 initPlayerData(null);
             }
-
         } else {
             initPlayerData(null);
         }
@@ -1241,6 +1252,8 @@ public class MixRecordActivity extends Activity {
             }
         } catch (InvalidStateException e) {
             e.printStackTrace();
+        } catch (InvalidArgumentException e) {
+            e.printStackTrace();
         }
         onSeekTo(0);
     }
@@ -1489,14 +1502,19 @@ public class MixRecordActivity extends Activity {
             holder.getBindMix().setState(MixInfo.RECORDED_VIDEO);//摄像头视频
 
 
-            MediaObject tmp = new MediaObject(outPath);
-            float duration = ModeUtils.getDuration(outPath);
-            tmp.setTimeRange(0, duration);
+            MediaObject tmp = null;
+            try {
+                tmp = new MediaObject(outPath);
+                float duration = ModeUtils.getDuration(outPath);
+                tmp.setTimeRange(0, duration);
+                VideoOb tOb = new VideoOb(0, duration, 0, duration, 0, duration, 0, null, 0);
+                tmp.setTag(tOb);
 
-            VideoOb tOb = new VideoOb(0, duration, 0, duration, 0, duration, 0, null, 0);
-            tmp.setTag(tOb);
+                holder.getBindMix().setMediaObject(tmp);
+            } catch (InvalidArgumentException e) {
+                e.printStackTrace();
+            }
 
-            holder.getBindMix().setMediaObject(tmp);
 
             //画框改为可编辑状态
             onAddedVideoUI(holder);
@@ -1855,12 +1873,18 @@ public class MixRecordActivity extends Activity {
                             info = getMixData(ModeUtils.getRect2Id(lastChecked.getVideoRectF()));
                             if (info != null) {
                                 float duration = ModeUtils.getDuration(editHandler.getOutPath());
-                                MediaObject mediaObject = new MediaObject(editHandler.getOutPath());
-                                mediaObject.setTimeRange(0, duration);
-                                mediaObject.setTimelineRange(0, duration);
-                                VideoOb vob = new VideoOb(0, duration, 0, duration, 0, duration, 0, null, 0);
-                                mediaObject.setTag(vob);
-                                info.setMediaObject(mediaObject);
+                                MediaObject mediaObject = null;
+                                try {
+                                    mediaObject = new MediaObject(editHandler.getOutPath());
+                                    mediaObject.setTimeRange(0, duration);
+                                    mediaObject.setTimelineRange(0, duration);
+                                    VideoOb vob = new VideoOb(0, duration, 0, duration, 0, duration, 0, null, 0);
+                                    mediaObject.setTag(vob);
+                                    info.setMediaObject(mediaObject);
+                                } catch (InvalidArgumentException e) {
+                                    e.printStackTrace();
+                                }
+
 
                             }
                         }
@@ -1942,13 +1966,19 @@ public class MixRecordActivity extends Activity {
         hasVideo = false;
         if (!TextUtils.isEmpty(assetBg)) {
 //            Log.e(TAG, "reload: assetbg:" + assetBg);
-            MediaObject mediabg = new MediaObject(this, assetBg);
-            mediabg.setShowRectF(new RectF(0, 0, 1, 1));//显示区域
-            if (len > 0) {
-                mediabg.setTimelineRange(0, maxDuration);//设置背景图的时长
+            MediaObject mediabg = null;
+            try {
+                mediabg = new MediaObject(this, assetBg);
+                mediabg.setShowRectF(new RectF(0, 0, 1, 1));//显示区域
+                if (len > 0) {
+                    mediabg.setTimelineRange(0, maxDuration);//设置背景图的时长
+                }
+                scene.addMedia(mediabg);
+                canBuild = true;
+            } catch (InvalidArgumentException e) {
+                e.printStackTrace();
             }
-            scene.addMedia(mediabg);
-            canBuild = true;
+
         }
 
         for (int i = 0; i < len; i++) {
@@ -2167,9 +2197,14 @@ public class MixRecordActivity extends Activity {
                         if (FileUtils.isExist(info.getThumbPath())) {
                             thumb = info.getThumbObject();
                             if (null == thumb) {
-                                thumb = new MediaObject(info.getThumbPath());
+                                try {
+                                    thumb = new MediaObject(info.getThumbPath());
+                                    thumb.setTimelineRange(info.getMediaObject().getDuration(), maxDuration);
+                                } catch (InvalidArgumentException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                            thumb.setTimelineRange(info.getMediaObject().getDuration(), maxDuration);
+
                         }
                     }
                     holder.getBindMix().setThumbObject(thumb);

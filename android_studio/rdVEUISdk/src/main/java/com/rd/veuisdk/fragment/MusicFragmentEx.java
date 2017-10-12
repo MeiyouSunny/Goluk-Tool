@@ -20,7 +20,7 @@ import com.rd.cache.HttpImageFetcher;
 import com.rd.cache.ImageCache.ImageCacheParams;
 import com.rd.cache.ImageResizer;
 import com.rd.downfile.utils.DownLoadUtils;
-import com.rd.downfile.utils.IDownFileListener;
+import com.rd.downfile.utils.IDownListener;
 import com.rd.http.MD5;
 import com.rd.http.NameValuePair;
 import com.rd.lib.utils.CoreUtils;
@@ -39,7 +39,6 @@ import com.rd.veuisdk.model.AudioMusicInfo;
 import com.rd.veuisdk.model.WebInfo;
 import com.rd.veuisdk.ui.HorizontalListViewMV;
 import com.rd.veuisdk.ui.HorizontalListViewMV.OnListViewItemSelectListener;
-import com.rd.veuisdk.ui.SubFunctionUtils;
 import com.rd.veuisdk.utils.FileUtils;
 import com.rd.veuisdk.utils.PathUtils;
 import com.rd.veuisdk.utils.SysAlertDialog;
@@ -102,13 +101,24 @@ public class MusicFragmentEx extends BaseFragment {
      */
     private IMusicListener mMusicListener;
     private boolean enableLocalMusic = true;
+    private boolean isHideDubbing = false;
 
+    /**
+     * @param trailerDuration
+     * @param _musicUrl        背景音乐
+     * @param _voiceLayout
+     * @param ilistener
+     * @param url              云音乐
+     * @param enableLocalMusic 是否显示本地音乐
+     * @param isHideDubbing    是否隐藏配音
+     */
     public void init(float trailerDuration, String _musicUrl,
-                     int _voiceLayout, IMusicListener ilistener, String url, boolean enable) {
+                     int _voiceLayout, IMusicListener ilistener, String url, boolean enableLocalMusic, boolean isHideDubbing) {
         mTrailerDuration = trailerDuration;
         mMusicListener = ilistener;
         voiceLayout = _voiceLayout;
-        this.enableLocalMusic = enable;
+        this.enableLocalMusic = enableLocalMusic;
+        this.isHideDubbing = isHideDubbing;
         mMusicUrl = TextUtils.isEmpty(_musicUrl) ? "" : _musicUrl.trim();
         mCloudMusicUrl = TextUtils.isEmpty(url) ? "" : url.trim();
     }
@@ -195,7 +205,7 @@ public class MusicFragmentEx extends BaseFragment {
         }
 
         mBtnVoice = findViewById(R.id.btnVoice2);
-        if (SubFunctionUtils.isHideDubbing()) {
+        if (isHideDubbing) {
             mBtnVoice.setVisibility(View.GONE);
         } else {
             if (voiceLayout == UIConfiguration.VOICE_LAYOUT_2) {
@@ -394,15 +404,15 @@ public class MusicFragmentEx extends BaseFragment {
         mFactor.setEnabled(true);
         if (nItemId == MENU_ORIGIN) {
             if (user) {
-                boolean voiceIsOpen = mHlrVideoEditor.isMediaMute();
+                boolean isOriginMute = mHlrVideoEditor.isMediaMute();
 
                 mListView.setItemSrc(nItemId,
-                        voiceIsOpen ? R.drawable.video_origin_n
+                        isOriginMute ? R.drawable.video_origin_n
                                 : R.drawable.video_origin_p,
-                        voiceIsOpen ? R.string.video_voice_n
+                        isOriginMute ? R.string.video_voice_n
                                 : R.string.video_voice_p);
 
-                if (voiceIsOpen) {
+                if (isOriginMute) {
                     factor = 50;
                     if (null != mFactor) {
                         mFactor.setProgress(50);
@@ -424,7 +434,7 @@ public class MusicFragmentEx extends BaseFragment {
                     }
                 }
                 if (null != mMusicListener) {
-                    mMusicListener.onVoiceChanged(voiceIsOpen);
+                    mMusicListener.onVoiceChanged(isOriginMute);
                 }
 
             }
@@ -437,8 +447,10 @@ public class MusicFragmentEx extends BaseFragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                factor = 50;
-                mFactor.setProgress(factor);
+                //原音关闭时，设置配乐->最大（100)
+                boolean isOriginMute = mHlrVideoEditor.isMediaMute();
+                factor = isOriginMute ? 100 : 50;
+                mFactor.setProgress(100 - factor);
                 TempVideoParams.getInstance().recycleMusicObject();
                 onlyReloadMusic(true);
                 mListView.onItemChecked(nItemId);
@@ -477,7 +489,7 @@ public class MusicFragmentEx extends BaseFragment {
                 } else {
                     if (CoreUtils.checkNetworkInfo(mContext
                             .getApplicationContext()) == CoreUtils.UNCONNECTED) {
-                        int temp=nItemId;
+                        int temp = nItemId;
                         mListView.resetItem(temp);
                         mListView.selectListItem(lastItemId, true);
                         onToast(getString(R.string.please_open_wifi));
@@ -502,11 +514,25 @@ public class MusicFragmentEx extends BaseFragment {
             mDownloading = new ArrayList<Long>();
         }
         if (!mDownloading.contains((long) itemId)) {
-            final DownLoadUtils download = new DownLoadUtils(itemId,
+            final DownLoadUtils download = new DownLoadUtils(getContext(), itemId,
                     info.getUrl(), "mp3");
             download.setConfig(0, 50, 100);
             download.setMethod(true);
-            download.DownFile(new IDownFileListener() {
+            download.DownFile(new IDownListener() {
+
+                @Override
+                public void onFailed(long mid, int code) {
+//                    Log.e(TAG, "onFailed" + mid + "---" + code);
+                    if (isRunning) {
+                        if (null != mHanlder) {
+                            mHanlder.obtainMessage(MSG_WEB_DOWN_FAILED, (int) mid,
+                                    0).sendToTarget();
+                        }
+                    }
+                    if (null != mDownloading) {
+                        mDownloading.remove((long) mid);
+                    }
+                }
 
                 @Override
                 public void onProgress(long mid, int progress) {
@@ -521,6 +547,7 @@ public class MusicFragmentEx extends BaseFragment {
 
                 @Override
                 public void Finished(long mid, String localPath) {
+//                    Log.e(TAG, "Finished: " + localPath);
                     if (isRunning) {
                         try {
                             File ftar = new File(localPath);
@@ -532,27 +559,28 @@ public class MusicFragmentEx extends BaseFragment {
                             mHanlder.obtainMessage(MSG_WEB_DOWN_END, (int) mid, 0)
                                     .sendToTarget();
                         }
-                        if (null != mDownloading) {
-                            mDownloading.remove((long) mid);
-                        }
+
+                    }
+                    if (null != mDownloading) {
+                        mDownloading.remove((long) mid);
                     }
 
                 }
 
                 @Override
                 public void Canceled(long mid) {
-                    // Log.e("Canceled" + Thread.currentThread().toString(), mid
-                    // + "---");
+//                    Log.e(TAG, "Canceled" + Thread.currentThread().toString() + "..." + mid
+//                            + "---");
                     if (isRunning) {
                         if (null != mHanlder) {
                             mHanlder.obtainMessage(MSG_WEB_DOWN_FAILED, (int) mid,
                                     0).sendToTarget();
                         }
-                        if (null != mDownloading) {
-                            mDownloading.remove((long) mid);
-                        }
-
                     }
+                    if (null != mDownloading) {
+                        mDownloading.remove((long) mid);
+                    }
+
 
                 }
             });
@@ -703,8 +731,15 @@ public class MusicFragmentEx extends BaseFragment {
                         if (null != mListView) {
                             mListView.removeAllListItem();
                             nItemId = 0;
-                            mListView.addListItem(nItemId, R.drawable.video_origin_n,
-                                    getString(R.string.video_voice_n));
+
+                            boolean isMute = mHlrVideoEditor.isMediaMute();
+                            if (isMute) {
+                                mListView.addListItem(nItemId, R.drawable.video_origin_p,
+                                        getString(R.string.video_voice_p));
+                            } else {
+                                mListView.addListItem(nItemId, R.drawable.video_origin_n,
+                                        getString(R.string.video_voice_n));
+                            }
                             nItemId++;
                             mListView.addListItem(nItemId, R.drawable.music_none,
                                     getString(R.string.music_none));
@@ -770,8 +805,13 @@ public class MusicFragmentEx extends BaseFragment {
                     break;
                     case MSG_WEB_DOWN_FAILED: {
                         int id = msg.arg1;
-                        if (null != mListView)
-                            mListView.setdownFailed(id);
+                        if (null != mListView) {
+                            if (isRunning) {
+                                onToast(getString(R.string.please_open_wifi));
+                            }
+                            mListView.setdownFailedUI(id);
+                            mListView.selectListItem(lastItemId, true);
+                        }
                     }
                     break;
                     default:

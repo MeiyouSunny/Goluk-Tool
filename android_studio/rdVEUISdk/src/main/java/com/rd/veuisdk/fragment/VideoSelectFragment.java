@@ -24,6 +24,8 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.rd.cache.GalleryImageFetcher;
+import com.rd.cache.ImageCache.ImageCacheParams;
 import com.rd.gallery.IImage;
 import com.rd.gallery.IImageList;
 import com.rd.gallery.IVideo;
@@ -38,8 +40,8 @@ import com.rd.veuisdk.model.ImageItem;
 import com.rd.veuisdk.ui.BounceGridView;
 import com.rd.veuisdk.ui.BucketListView;
 import com.rd.veuisdk.ui.ExtProgressDialog;
-import com.rd.veuisdk.ui.SubFunctionUtils;
 import com.rd.veuisdk.utils.SysAlertDialog;
+import com.rd.veuisdk.utils.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,6 +55,7 @@ public class VideoSelectFragment extends BaseV4Fragment {
     private ExtProgressDialog mPdMediaScanning;
     private IImageList mIlVideos;
 
+    private GalleryImageFetcher mGifVideoThumbnail; // 获取视频缩略图
     private SparseArray<IImage> mVideoSelected = new SparseArray<IImage>();
     private ArrayList<ImageItem> mVideos = new ArrayList<ImageItem>();
     private ArrayList<String> mBucketNameList = new ArrayList<String>();
@@ -62,23 +65,25 @@ public class VideoSelectFragment extends BaseV4Fragment {
     private IMediaSelector mMediaSelector;
 
     // 视频源列表
-    BounceGridView mGridVideosSelector;
-    RelativeLayout mRlNoVideos;
-    TextView tvBucketName;
-    ImageView ivSelectBucket;
+    private BounceGridView mGridVideosSelector;
+    private RelativeLayout mRlNoVideos;
+    private TextView tvBucketName;
+    private ImageView ivSelectBucket;
 
+    private IStateCallBack mStateCallBack;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mMediaSelector = (IMediaSelector) activity;
-
+        mStateCallBack = (IStateCallBack) activity;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPageName = getString(R.string.select_media_title_video);
+        initImageFetcher();
     }
 
     public void resetAdapter() {
@@ -87,6 +92,23 @@ public class VideoSelectFragment extends BaseV4Fragment {
         }
     }
 
+    /**
+     * 实现获取视频缩略图相关
+     */
+    private void initImageFetcher() {
+        ImageCacheParams cacheParams = new ImageCacheParams(getActivity(),
+                Utils.VIDEO_THUMBNAIL_CACHE_DIR);
+        // 缓冲占用系统内存的25%
+        cacheParams.setMemCacheSizePercent(0.05f);
+
+        mGifVideoThumbnail = new GalleryImageFetcher(getActivity(),
+                getResources().getDimensionPixelSize(
+                        R.dimen.video_list_grid_item_width), getResources()
+                .getDimensionPixelSize(
+                        R.dimen.video_list_grid_item_height));
+        mGifVideoThumbnail.setLoadingImage(null);
+        mGifVideoThumbnail.addImageCache(getActivity(), cacheParams);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -109,8 +131,8 @@ public class VideoSelectFragment extends BaseV4Fragment {
             }
         });
 
-        mAdapterMedias = new MediaListAdapter(getActivity()
-        );
+        mAdapterMedias = new MediaListAdapter(getActivity(),
+                mGifVideoThumbnail, mStateCallBack.isHideText());
         mBucketListAdapter = new BucketListAdapter(getActivity(),
                 mBucketNameList, true);
         mVideoSelected.clear();
@@ -122,7 +144,9 @@ public class VideoSelectFragment extends BaseV4Fragment {
             public void onScrollStateChanged(AbsListView view,
                                              int scrollState) {
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
+                    mGifVideoThumbnail.setPauseWork(true);
                 } else {
+                    mGifVideoThumbnail.setPauseWork(false);
                 }
             }
 
@@ -156,7 +180,7 @@ public class VideoSelectFragment extends BaseV4Fragment {
     protected void onIImageItemClick(View view, int position) {
 
         if (position == 0 && SelectMediaActivity.mIsAppend
-                && !SubFunctionUtils.isHideText()) {
+                && !mStateCallBack.isHideText()) {
             getActivity().startActivityForResult(
                     new Intent(getActivity(), ExtPhotoActivity.class),
                     CODE_EXT_PIC);
@@ -266,7 +290,9 @@ public class VideoSelectFragment extends BaseV4Fragment {
             SysAlertDialog.showLoadingDialog(getActivity(), R.string.isloading);
         }
         mVideos.clear();
+        mGifVideoThumbnail.setExitTasksEarly(true);
         if (mIlVideos == null) {
+            mGifVideoThumbnail.setExitTasksEarly(false);
             return;
         }
         for (int nTmp = 0; nTmp < mIlVideos.getCount(); nTmp++) {
@@ -290,6 +316,7 @@ public class VideoSelectFragment extends BaseV4Fragment {
         }
 
         mAdapterMedias.addAll(mVideos);
+        mGifVideoThumbnail.setExitTasksEarly(false);
         if (bGetVideoHashable) {
             SysAlertDialog.cancelLoadingDialog();
         }
@@ -457,6 +484,8 @@ public class VideoSelectFragment extends BaseV4Fragment {
             mIlVideos = null;
         }
         mGridVideosSelector.setAdapter(null);
+        mGifVideoThumbnail.cleanUpCache();
+        mGifVideoThumbnail = null;
         super.onDestroy();
     }
 

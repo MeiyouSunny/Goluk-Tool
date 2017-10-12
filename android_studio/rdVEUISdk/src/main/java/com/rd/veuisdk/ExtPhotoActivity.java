@@ -32,6 +32,7 @@ import com.rd.lib.ui.ExtButton;
 import com.rd.lib.ui.PreviewFrameLayout;
 import com.rd.lib.utils.CoreUtils;
 import com.rd.lib.utils.InputUtls;
+import com.rd.vecore.exception.InvalidArgumentException;
 import com.rd.vecore.models.MediaObject;
 import com.rd.veuisdk.TTFHandler.ITTFHandlerListener;
 import com.rd.veuisdk.adapter.TTFAdapter;
@@ -431,10 +432,16 @@ public class ExtPhotoActivity extends BaseActivity {
         int[] wh = save(path);
 
 
-        MediaObject media = new MediaObject(path);
-        RectF rectF = new RectF(0, 0, wh[0], wh[1]);
-        media.setClipRectF(rectF);
-        media.setShowRectF(rectF);
+        MediaObject media = null;
+        try {
+            media = new MediaObject(path);
+            RectF rectF = new RectF(0, 0, wh[0], wh[1]);
+            media.setClipRectF(rectF);
+            media.setShowRectF(rectF);
+        } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        }
+
         Intent intent = new Intent();
 
         if (null != mExtPicInfo) {

@@ -458,8 +458,18 @@ public class DraggableGridView extends ViewGroup {
     }
 
     protected Point getCoorFromIndex(int index) {
-        int col = index % mColumnCount;
-        int row = index / mColumnCount;
+        int col = 0, row = 0;
+        if (mColumnCount <= 0) {
+            col = index;
+            row = index;
+        } else {
+            try {
+                col = index % mColumnCount;
+                row = index / mColumnCount;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         if (mOrientation == VERTICAL) {
             return new Point(mPadding + (mChildSize + mPadding) * col, (mChildSize)
                     * row - mScrollPosition);

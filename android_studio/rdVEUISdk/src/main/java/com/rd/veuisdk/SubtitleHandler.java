@@ -616,6 +616,11 @@ class SubtitleHandler {
 
     }
 
+    /**
+     * 进入字幕的入口
+     *
+     * @param sublayout
+     */
     public void init(FrameLayout sublayout) {
         mIsSubing = true;
         mLinearWords = sublayout;
@@ -632,7 +637,6 @@ class SubtitleHandler {
 
         SubUtils.getInstance().recycle();
         onListReset(true);
-
         onInitThumbTimeLine();
         setImage(R.drawable.edit_music_play);
         mTvAddSubtitle.setText(R.string.add_subtitle);
@@ -980,13 +984,12 @@ class SubtitleHandler {
                 if (re == CoreUtils.UNCONNECTED) {
                     com.rd.veuisdk.utils.Utils.autoToastNomal(v.getContext(),
                             R.string.please_check_network);
-                } else
-
-                {
+                } else {
                     SysAlertDialog.showLoadingDialog(mContext,
                             mContext.getString(R.string.isloading));
+                    getData(true);
                 }
-                getData(true);
+
 
             } else {
                 String menu = mTvAddSubtitle.getText().toString();
@@ -1322,14 +1325,14 @@ class SubtitleHandler {
 
 
     /**
-     * 导出字幕
+     * * 导出字幕
      *
      * @param nOutVideoWidth  保存视频高度
      * @param nOutVideoHeight 保存视频宽度
-     * @return
+     * @param back
      */
     public void onExport(int nOutVideoWidth, int nOutVideoHeight,
-                         IExportSub back) {
+                          IExportSub back) {
 
         SubExportUtils expUtils = new SubExportUtils(mContext, mWordInfoList,
                 mLayoutWidth, mLayoutHeight);
