@@ -667,7 +667,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             if (!SharePlatformUtil.checkShareableWhenNotHotspot(PhotoAlbumPlayer.this)) return;
             pauseVideo();
             ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
-            addTailerByRd();
+            //addTailerByRd();
+            GolukUtils.startVideoShareActivity(PhotoAlbumPlayer.this, mType, mPath, mFileName, false,
+                    mVideoView.getDuration(), mHP, (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
         } else if (id == R.id.back_btn) {
 
             click_back();
@@ -1780,8 +1782,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         VideoConfig config = new VideoConfig();
         config.enableHWEncoder(CoreUtils.hasJELLY_BEAN_MR2());
         config.enableHWDecoder(CoreUtils.hasJELLY_BEAN_MR2());
+        config.setVideoSize(mVideoView.getVideoWidth(),mVideoView.getVideoHeight());
         String strSaveMp4FileName = PathUtils.getMp4FileNameForSdcard();
-        config.setVideoEncodingBitRate(4000 * 1000);
         String nickName;
         if (GolukApplication.getInstance().isUserLoginSucess) {
             UserInfo userInfo = mApp.getMyInfo();
