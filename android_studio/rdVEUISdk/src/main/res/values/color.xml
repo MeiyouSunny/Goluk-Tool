@@ -31,17 +31,17 @@
     <color name="orientation_text">#afafaf</color>
     <color name="orientation_text_translucent">#80afafaf</color>
     <color name="public_gradient_background_color">#0027262C</color>
-    <color name="edit_item_more">#f87a00</color>
-    <color name="edit_item_more_press">#80f87a00</color>
+    <color name="edit_item_more">#0080ff</color>
+    <color name="edit_item_more_press">#0080ff</color>
     <color name="crop_rotate_main_bg">#0e0e10</color>
     <color name="edit_menu_bg">#33333b</color>
     <color name="edit_menu_bg_transparent">#0033333b</color>
     <color name="edit_music_divider">#62626e</color>
     <color name="edit_music_soundtrack_bg">#19181d</color>
-    <color name="main_orange_old">#f87a00</color>
-    <color name="main_orange">#ffd500</color>
-    <color name="main_orange_transparent_66">#b2ffd500</color>
-    <color name="main_orange_transparent_50">#b2ffd500</color>
+    <color name="main_orange_old">#0080ff</color>
+    <color name="main_orange">#0080ff</color>
+    <color name="main_orange_transparent_66">#0080ff</color>
+    <color name="main_orange_transparent_50">#0080ff</color>
     <color name="edit_text_gray">#545454</color>
 
     <!-- <color name="apk_download_progressbar_color">#11a9e8</color> -->
@@ -128,12 +128,12 @@
     <color name="special_checked">#13cadb</color>
     <color name="camera_list_back_color">#70000000</color>
     <color name="auto_tx_color">#13cadb</color>
-    <color name="progress_between">#ffd500</color>
-    <color name="progress_progress">#fcbc7f</color>
+    <color name="progress_between">#0080ff</color>
+    <color name="progress_progress">#0080ff</color>
     <color name="progress_n">#2a2a2c</color>
     <color name="doodle_text_color">#13cada</color>
-    <color name="linear_seekbar_color">#fff87a00</color>
-    <color name="linear_seekbar_color_translucent">#80f87a00</color>
+    <color name="linear_seekbar_color">#0080ff</color>
+    <color name="linear_seekbar_color_translucent">#0080ff</color>
     <color name="sp_music_divider">#323337</color>
     <color name="trim_point_color">#D7225A</color>
 
