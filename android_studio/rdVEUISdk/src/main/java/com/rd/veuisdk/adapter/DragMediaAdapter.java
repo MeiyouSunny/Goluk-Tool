@@ -206,7 +206,7 @@ public class DragMediaAdapter extends VideoSelectorAdapter implements RearrangeL
         MediaObject mediaObject = tempScene.getAllMedia().get(0);
         return MD5.getMD5(mediaObject.getMediaPath() + mediaObject.getTrimStart() + "..."
                 + mediaObject.getTrimEnd())
-                + getKind(tempScene);
+                + getKind(tempScene) + "id:" + mediaObject.getId();
     }
 
     private int selectedIndex = -1;
@@ -320,6 +320,22 @@ public class DragMediaAdapter extends VideoSelectorAdapter implements RearrangeL
             maps.clear();
             maps = null;
             all.clear();
+        }
+    }
+
+    /**
+     * 清除缓存，重新load缩略图
+     *
+     * @param scene
+     */
+    public void onClear(Scene scene) {
+        if (maps != null && maps.size() > 0 && null != scene) {
+            String key = getKey(scene);
+            Bitmap bmp = maps.remove(key);
+            if (null != bmp && !bmp.isRecycled()) {
+                bmp.recycle();
+            }
+            bmp = null;
         }
     }
 

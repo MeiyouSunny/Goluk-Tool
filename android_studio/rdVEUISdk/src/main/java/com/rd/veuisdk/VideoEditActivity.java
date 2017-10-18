@@ -670,10 +670,6 @@ public class VideoEditActivity extends BaseActivity implements
         virtualVideo.clearMusic();
         Music ao = TempVideoParams.getInstance().getMusic();
         if (ao != null) {
-//            if (mExportConfig.trailerFadeDuration != null) {
-//                ao.setFadeInOut(Utils.ms2s(mVideoTrailer.fadeDuration),
-//                        Utils.ms2s(mVideoTrailer.fadeDuration));
-//            }
             try {
                 virtualVideo.addMusic(ao);
             } catch (InvalidArgumentException e) {
@@ -1341,8 +1337,6 @@ public class VideoEditActivity extends BaseActivity implements
                         media.setAudioMute(mMediaMute);
                     }
                 }
-                reload(false);
-                start();
             } else {
                 mMediaMute = true;
                 for (MediaObject media : mEditingMediaObjects) {
@@ -1350,9 +1344,9 @@ public class VideoEditActivity extends BaseActivity implements
                         media.setAudioMute(mMediaMute);
                     }
                 }
-                reload(false);
-                start();
             }
+            reload(false);
+            start();
         }
 
         @Override
@@ -1366,15 +1360,6 @@ public class VideoEditActivity extends BaseActivity implements
         stop();
         Intent i = new Intent(VideoEditActivity.this, EditPreviewActivity.class);
         ArrayList<MediaObject> arrTrans = new ArrayList<MediaObject>();
-//        for (MediaObject mo : mEditingMediaObjects) {
-//            if (mo == null) {
-//                continue;
-//            }
-//            if (mo instanceof Transition) {
-//                arrTrans.add(mo);
-//            }
-//            mo.resetSortWeight();
-//        }
         for (MediaObject mo : arrTrans) {
             mEditingMediaObjects.remove(mo);
         }
@@ -1404,7 +1389,7 @@ public class VideoEditActivity extends BaseActivity implements
                     .setVisibility(View.GONE);
             mTimerCount = 0;
             mIsFullScreen = true;
-            if (mVirtualVideoView.getWidth() > mVirtualVideoView.getHeight()) {
+            if (mVirtualVideoView.getVideoWidth() > mVirtualVideoView.getVideoHeight()) {
                 mPreviewLayout.setAspectRatio(1 / mScreenRatio);
                 if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
@@ -1503,6 +1488,13 @@ public class VideoEditActivity extends BaseActivity implements
                 if (mPlayStatusShowing) {
                     mIvVideoPlayState.setVisibility(View.VISIBLE);
                 }
+                //seekto 0
+                mProgressView.setProgress(0);
+                mSbPlayControl.setProgress(0);
+                notifyCurrentPosition(0);
+                mTvCurTime.setText(getFormatTime(0));
+                mLastPlayPostion=0;
+                mVirtualVideoView.seekTo(0);
             }
             for (int nTmp = 0; nTmp < mSaEditorPostionListener.size(); nTmp++) {
                 mSaEditorPostionListener.valueAt(nTmp)

@@ -90,6 +90,7 @@ public class EditPreviewActivity extends BaseActivity {
     private ProportionDialog mProportionDialog;
     private float mCurProportion = 0;
     private float mLastPlayPostion;
+    private boolean mLastPlaying;
     private boolean mIsLongClick;
     private boolean mBackDiaglog = false;
     private boolean mHasChanged = false;
@@ -1463,6 +1464,10 @@ public class EditPreviewActivity extends BaseActivity {
                 reload();
             } else if (requestCode == REQUESTCODE_FOR_EDIT) {
                 Scene scene = data.getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
+
+
+                Scene old=    mAdapterScene.getItem(mIndex);
+                mAdapterScene.onClear(old);
                 mSceneList.set(mIndex, scene);
                 mAdapterScene.getMediaList().set(mIndex, scene);
 
@@ -1473,6 +1478,7 @@ public class EditPreviewActivity extends BaseActivity {
                         initListView(mIndex);
                     }
                 });
+
                 reload();
             } else if (requestCode == REQUESTCODE_FOR_APPEND) {
                 ArrayList<MediaObject> tempMedias = data
@@ -1612,16 +1618,6 @@ public class EditPreviewActivity extends BaseActivity {
                     }
                 });
             } else if (requestCode == REQUESTCODE_FOR_ADVANCED_EDIT) {
-//                mAdapterScene.clear();
-//                mSceneList.clear();
-//                ArrayList<MediaObject> allMedia = data.getParcelableArrayListExtra(IntentConstants.EXTRA_MEDIA_LIST);
-//                for (MediaObject mo : allMedia) {
-//                    Scene scene = VirtualVideo.createScene();
-//                    scene.addMedia(mo);
-//                    mAdapterScene.addItem(scene);
-//                    mSceneList.add(scene);
-//                }
-//                mGridVideosArray.setAddItemInfo(mSceneList);
                 reload();
             }
             if (!mAddNewTran) {
@@ -1740,17 +1736,6 @@ public class EditPreviewActivity extends BaseActivity {
     }
 
     @Override
-    protected void onPause() {
-        // listView.setResume(false);
-        super.onPause();
-        if (null != mMediaPlayer) {
-            mLastPlayPostion = mMediaPlayer.getCurrentPosition();
-            pauseVideo();
-        }
-
-    }
-
-    @Override
     protected void onDestroy() {
         SysAlertDialog.cancelLoadingDialog();
 
@@ -1780,7 +1765,6 @@ public class EditPreviewActivity extends BaseActivity {
             mTempRecfile = null;
         }
         System.gc();
-        System.runFinalization();
     }
 
     @Override
@@ -1789,6 +1773,16 @@ public class EditPreviewActivity extends BaseActivity {
         super.finish();
     }
 
+    @Override
+    protected void onPause() {
+        // listView.setResume(false);
+        super.onPause();
+        if (null != mMediaPlayer) {
+            mLastPlayPostion = mMediaPlayer.getCurrentPosition();
+            mLastPlaying = mMediaPlayer.isPlaying();
+            pauseVideo();
+        }
+    }
 
     @Override
     protected void onResume() {
@@ -1803,6 +1797,9 @@ public class EditPreviewActivity extends BaseActivity {
             if (mLastPlayPostion > 0) {
                 playBackSeekTo(mLastPlayPostion);
                 mLastPlayPostion = -1;
+            }
+            if (mLastPlaying){
+                playVideo();
             }
         }
     }

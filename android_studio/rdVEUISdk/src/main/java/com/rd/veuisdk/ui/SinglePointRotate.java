@@ -556,6 +556,15 @@ public class SinglePointRotate extends View {
         mOnDraw(canvas);
     }
 
+    /**
+     * 是否只是横向拉升 (部分字幕,第一个字幕、自拍 等）
+     *
+     * @return
+     */
+    private boolean isLaShen() {
+        return (msi.lashen == 1);
+    }
+
     private Point mTemp = new Point(); // 减少获取字体大小
     private HashMap<Long, Bitmap> maps = new HashMap<Long, Bitmap>(),
             mapWords = new HashMap<Long, Bitmap>();
@@ -587,9 +596,16 @@ public class SinglePointRotate extends View {
             Log.e("mOriginalBitmap...", "no has mOriginalBitmap.... ");
             return;
         }
-
-        int bwidth = mOriginalBitmap.getWidth(), bheight = mOriginalBitmap
-                .getHeight();
+        int bwidth = 100, bheight = 50;
+        boolean isLaShen = isLaShen();
+        if (isLaShen) {
+            bwidth = mOriginalBitmap.getWidth();
+            bheight = mOriginalBitmap.getHeight();
+        } else {
+            //非横向拉升的字幕，以json定义的宽高为准
+            bwidth = (int) msi.w;
+            bheight = (int) msi.h;
+        }
         Bitmap newb = Bitmap.createBitmap(bwidth, bheight, Config.ARGB_8888);
 
         Canvas canvasTmp = new Canvas();
@@ -597,8 +613,7 @@ public class SinglePointRotate extends View {
         canvasTmp.setBitmap(newb);
         canvasTmp.setDrawFilter(new PaintFlagsDrawFilter(0,
                 Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
-
-        canvasTmp.drawBitmap(mOriginalBitmap, 0, 0, null);
+        canvasTmp.drawBitmap(mOriginalBitmap, new Rect(0, 0, mOriginalBitmap.getWidth(), mOriginalBitmap.getHeight()), new Rect(0, 0, bwidth, bheight), null);
         FilterInfo2 currentFilter = msi.getFilterInfo2();
         if (null != currentFilter) {
             float[] fstart = currentFilter.getStart();
@@ -1188,10 +1203,16 @@ public class SinglePointRotate extends View {
         // 图片旋转的角度
         mRotateAngle = rotateAngle;
         // 图片缩放系数
-        int sbmpW = 100, sbmpH = 100;
+        int sbmpW = 100, sbmpH = 50;
         try {
-            sbmpW = (int) (mOriginalBitmap.getWidth() * zoomFactor);
-            sbmpH = (int) (mOriginalBitmap.getHeight() * zoomFactor);
+            if (isLaShen()) {
+                sbmpW = (int) (mOriginalBitmap.getWidth() * zoomFactor);
+                sbmpH = (int) (mOriginalBitmap.getHeight() * zoomFactor);
+            } else {
+                sbmpW = (int) (msi.w * zoomFactor);
+                sbmpH = (int) (msi.h * zoomFactor);
+            }
+//            Log.e(TAG, "setImageViewParams: " + msi.w + "*" + msi.h + "......sb:" + sbmpW + "*" + sbmpH);
         } catch (Exception e) {
             sbmpW = 100;
             sbmpH = 100;
@@ -1555,8 +1576,12 @@ public class SinglePointRotate extends View {
         mZoomFactor = disf;
         nMaxTextDrawWidth = (int) (nMaxTextDrawWidth / disf);
         // 获取原图宽\高
+//        int bwidth = (int) msi.w;
+//        int bheight = (int) msi.h;
         int bwidth = mOriginalBackupBitmap.getWidth();
         int bheight = mOriginalBackupBitmap.getHeight();
+
+//        Log.e(TAG, "setSameParamWithText: " + mOriginalBackupBitmap.getWidth() + "*" + mOriginalBackupBitmap.getHeight());
         // 获取文字原始可写入区域的高度
         int nSourceDrawTextWidth = bwidth - msi.tLeft - msi.tRight;
         int nSourceDrawTextHeight = bheight - newtTop - newtButtom;
@@ -1648,7 +1673,9 @@ public class SinglePointRotate extends View {
         canvasTmp.setBitmap(newb);
         canvasTmp.setDrawFilter(new PaintFlagsDrawFilter(0,
                 Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
-        canvasTmp.drawBitmap(mOriginalBackupBitmap, 0, 0, null);
+
+        canvasTmp.drawBitmap(mOriginalBackupBitmap, new Rect(0, 0, mOriginalBackupBitmap.getWidth(), mOriginalBackupBitmap.getHeight()), new Rect(0, 0, bwidth, bheight), null);
+//        canvasTmp.drawBitmap(mOriginalBackupBitmap, 0, 0, null);
 
         // 把原图按从走到右从上倒下依次分割成9张小图，用于拉伸 分割的的1 3 7 9 小图分别处于四个边角，不需要拉伸处理
         Bitmap bitmap1 = Bitmap.createBitmap(newb, 0, 0, (int) (msi.left),
@@ -1981,8 +2008,8 @@ public class SinglePointRotate extends View {
 
                 int twidth = mwidth + 50;
 
-                if (mscaWidth <= twidth) {// 放大disf
-
+                if (mscaWidth <= twidth) {
+                    // 放大disf
                     float canMaxDisf = (float) ((display.widthPixels - 100.0) / mRectWidth);
                     int targetWidth = mscaWidth;
                     while (targetWidth < twidth) {

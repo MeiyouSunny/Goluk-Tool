@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import com.rd.lib.ui.PreviewFrameLayout;
 import com.rd.vecore.VirtualVideo;
 import com.rd.vecore.VirtualVideoView;
 import com.rd.vecore.exception.InvalidStateException;
+import com.rd.vecore.models.AspectRatioFitMode;
 import com.rd.vecore.models.FlipType;
 import com.rd.vecore.models.MediaObject;
 import com.rd.vecore.models.Scene;
@@ -38,13 +40,13 @@ public class CropRotateMirrorActivity extends BaseActivity {
     private final int CROP_MODE_1x1 = 1;
     private final int CROP_MODE_FREE = 0;
 
-    VirtualVideoView mMediaPlayer;
-    TextView mTvTitle;
-    ExtButton mBtnLeft;
-    ExtButton mBtnRight;
-    CropView mCvCrop;
-    TextView mTvResetAll;
-    PreviewFrameLayout mPlayout;
+    private VirtualVideoView mMediaPlayer;
+    private TextView mTvTitle;
+    private ExtButton mBtnLeft;
+    private ExtButton mBtnRight;
+    private CropView mCvCrop;
+    private TextView mTvResetAll;
+    private PreviewFrameLayout mPlayout;
 
     private Scene mScene;
     private MediaObject mMedia;
@@ -323,7 +325,6 @@ public class CropRotateMirrorActivity extends BaseActivity {
 
             mMedia.setClipRectF(rcCrop);
             mMedia.setShowRectF(null);
-
             intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, mScene);
             setResult(RESULT_OK, intent);
             mBackClick = true;
@@ -485,7 +486,12 @@ public class CropRotateMirrorActivity extends BaseActivity {
         if (bCropShow) {
             mRectVideoClipBound.setEmpty();
         }
-        setViewVisibility(R.id.ivVideoConver, false);
+        View frame = findViewById(R.id.ivVideoConver);
+        if (null != frame) {
+            //淡出遮罩
+            frame.startAnimation(AnimationUtils.loadAnimation(this, R.anim.alpha_out));
+            frame.setVisibility(View.GONE);
+        }
     }
 
     private void changeCropMode(int nCropMode) {

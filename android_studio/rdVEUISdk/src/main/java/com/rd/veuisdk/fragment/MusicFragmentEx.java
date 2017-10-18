@@ -244,6 +244,7 @@ public class MusicFragmentEx extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         // Log.e("onActivityResult", resultCode + "");
         if (requestCode == VideoEditActivity.REQUSET_MUSICEX) {
+            onCheckMediaMute();
             if (resultCode == Activity.RESULT_OK) {
                 AudioMusicInfo audioMusic = (AudioMusicInfo) data
                         .getParcelableExtra(MoreMusicActivity.MUSIC_INFO);
@@ -267,6 +268,7 @@ public class MusicFragmentEx extends BaseFragment {
                 }
                 lastItemId = mThemeType;
                 musicName = audioMusic.getName();
+
                 HistoryMusicCloud.getInstance().replaceMusic(
                         audioMusic.getPath(), audioMusic.getName(),
                         audioMusic.getDuration());
@@ -405,7 +407,7 @@ public class MusicFragmentEx extends BaseFragment {
         if (nItemId == MENU_ORIGIN) {
             if (user) {
                 boolean isOriginMute = mHlrVideoEditor.isMediaMute();
-
+                Log.e(TAG, "onSelectedImp: " + isOriginMute);
                 mListView.setItemSrc(nItemId,
                         isOriginMute ? R.drawable.video_origin_n
                                 : R.drawable.video_origin_p,
@@ -470,6 +472,7 @@ public class MusicFragmentEx extends BaseFragment {
             }
         } else {
             if (user) {
+                onCheckMediaMute();
                 WebInfo info = mlist.get(nItemId - (MENU_YUN + 1));
                 if (info.existsMusic()) {
                     try {
@@ -486,6 +489,7 @@ public class MusicFragmentEx extends BaseFragment {
                         onMusicChecked(ao, true);
                     }
                     lastItemId = nItemId;
+
                 } else {
                     if (CoreUtils.checkNetworkInfo(mContext
                             .getApplicationContext()) == CoreUtils.UNCONNECTED) {
@@ -502,6 +506,23 @@ public class MusicFragmentEx extends BaseFragment {
 
         }
 
+    }
+
+    /**
+     * 切换配乐时，设置seekbar是否可用
+     */
+    private void onCheckMediaMute() {
+        //当前是否关闭原音
+        boolean isOriginMute = mHlrVideoEditor.isMediaMute();
+        if (isOriginMute) {
+            if (null != mFactor) {
+                mFactor.setEnabled(false);
+            }
+        } else {
+            if (null != mFactor) {
+                mFactor.setEnabled(true);
+            }
+        }
     }
 
     private ArrayList<Long> mDownloading = null;

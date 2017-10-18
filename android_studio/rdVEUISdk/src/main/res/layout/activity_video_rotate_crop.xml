@@ -39,7 +39,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/public_editor_backgroup"
                 android:contentDescription="@string/empty"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
         </com.rd.lib.ui.PreviewFrameLayout>
     </RelativeLayout>
 

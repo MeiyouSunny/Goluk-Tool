@@ -275,16 +275,14 @@
 
     <style name="public_titlebar_style_new">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">@dimen/public_titlebar_minheight</item>
         <item name="android:gravity">center</item>
-        <item name="android:minHeight">@dimen/public_titlebar_minheight</item>
     </style>
 
     <style name="public_titlebar_style">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">@dimen/public_titlebar_minheight</item>
         <item name="android:gravity">center</item>
-        <item name="android:minHeight">@dimen/public_titlebar_minheight</item>
     </style>
 
     <style name="video_list_grid_view_style" parent="android:Widget.GridView">

@@ -1,5 +1,7 @@
 package com.rd.veuisdk;
 
+import android.util.Log;
+
 import com.rd.vecore.Music;
 import com.rd.vecore.models.SubtitleObject;
 import com.rd.veuisdk.fragment.AudioInfo;
@@ -71,10 +73,6 @@ public class TempVideoParams {
         len = mSubEffects.size();
         for (int i = 0; i < len; i++) {
             SubtitleObject info = mSubEffects.get(i);
-//            float nstart = Utils.ms2s((int) info.getTimeLineStart()), nend = Utils.ms2s((int) info.getTimeLineEnd());
-//            nstart = nstart + poff;
-//            nend = nend + poff;
-//            info.setTimelineRange(Utils.s2ms(nstart), Utils.s2ms(nend));
             float nstart = info.getTimelineStart(), nend = info.getTimelineEnd();
             nstart = nstart + Utils.ms2s(poff);
             nend = nend + Utils.ms2s(poff);
@@ -153,13 +151,6 @@ public class TempVideoParams {
             mSpecails = new ArrayList<WordInfo>();
 
     public void setSubs(ArrayList<WordInfo> msubs) {
-        // Log.e("....setSubs..........", msubs.size() + "....");
-        // for (int i = 0; i < msubs.size(); i++) {
-        // WordInfo info = msubs.get(i);
-        // Log.e("setSubs",
-        // i + "...." + info.getId() + "........" + info.getText()
-        // + ".............styleid:" + info.getStyleId());
-        // }
         mSubtitles.clear();
         mSubtitles.addAll(msubs);
 
@@ -240,21 +231,6 @@ public class TempVideoParams {
                     info = new WordInfo(info);
                     info.setEnd(duration);
                 }
-
-                // if (mAspectRatio) {
-                // ArrayList<SubtitleObject> list = info.getList();
-                // int msize = list.size();
-                // for (int j = 0; j < msize; j++) {
-                // SubtitleObject subtemp = list.get(j);
-                // Rect rect = new Rect(info.getRealx().intValue(), info
-                // .getRealy().intValue(),
-                // (int) (info.getRealx() + info.getWidth()),
-                // (int) (info.getRealy() + info.getHeight()));
-                // subtemp.setShowRectangle(rect, rect, nOutVideoWidth,
-                // nOutVideoHeight);
-                // list.set(j, subtemp);
-                // }
-                // }
                 temp.add(info);
             }
         }
@@ -297,47 +273,6 @@ public class TempVideoParams {
         mSpEffects.clear();
         VideoEditActivity.mCurrentFilterType = 0;
     }
-
-    /**
-     * 多段配乐
-     */
-    //private ArrayList<MoreMusicInfo> moreMusics = new ArrayList<MoreMusicInfo>();
-
-
-    /**
-     * 多段配乐
-     *
-     * @param moreAudio
-     * @param auList
-     */
-//	public void setMoreAudio(ArrayList<MoreMusicInfo> moreAudio,
-//			ArrayList<SubInfo> auList) {
-//		moreMusics.clear();
-//		moreMusics.addAll(moreAudio);
-//
-//	}
-
-//	public ArrayList<MoreMusicInfo> getMoreAudios() {
-//		int duration = mEditingVideoDuration;
-//		ArrayList<MoreMusicInfo> temp = new ArrayList<MoreMusicInfo>();
-//		MoreMusicInfo moremusic;
-//		int len = moreMusics.size();
-//		for (int i = 0; i < len; i++) {
-//			moremusic = moreMusics.get(i);
-//			AudioObject audioobject = moremusic.getAudioObj();
-//			if (audioobject.getTimelineFrom() < duration) {
-//				if (audioobject.getTimelineTo() > duration) {
-//					moremusic = new MoreMusicInfo(moremusic);
-//					moremusic.getAudioObj().setTimeRange(
-//							audioobject.getTimelineFrom(), duration);
-//
-//				}
-//				temp.add(moremusic);
-//			}
-//		}
-//
-//		return temp;
-//	}
 
     /**
      * 配音
@@ -433,20 +368,6 @@ public class TempVideoParams {
             }
         }
 
-        /**
-         *
-         * 判断多段配乐
-         */
-//		MoreMusicInfo moremusic;
-//		for (int i = 0; i < moreMusics.size(); i++) {
-//			moremusic = moreMusics.get(i);
-//			if (moremusic.getAudioObj().getTimelineTo() > duration) {
-//				moreMusics.remove(i);
-//				i--;
-//
-//			}
-//		}
-
         if (null != mMusicObject) {
             if (Utils.s2ms(mMusicObject.getTimelineStart()) > duration) {
                 mMusicObject = null;
@@ -455,136 +376,13 @@ public class TempVideoParams {
                         Utils.ms2s(duration));
             }
         }
-//        if (null != mMusicObject) {
-//            if ((mMusicObject.getTimeLineStart()) > duration) {
-//                mMusicObject = null;
-//            } else if ((mMusicObject.getTimeLineEnd()) > duration) {
-//                mMusicObject.setTimeLineRange(mMusicObject.getTimeLineEnd(),
-//                        (duration));
-//            }
-//        }
     }
 
-    /**
-     * 使用场景(保存配音，配乐，字幕，特效等 ->转场之后视频长度变短，修正末尾的阴影)
-     *
-     * @param duration
-     */
-//    public void fixParams(int duration) {
-//        /**
-//         * 判断配音
-//         */
-//        for (int i = 0; i < mAudios.size(); i++) {
-//            AudioInfo info = mAudios.get(i);
-//            if (info.getStartRecordTime() >= duration) {
-//                mAudios.remove(i);
-//                i--;
-//            } else {
-//                if (info.getEndRecordTime() > duration) {
-//                    info.setEndRecordTime(duration);
-//                }
-//            }
-//        }
-//        /**
-//         * 判断字幕
-//         */
-//
-//        int len = mSubtitles.size();
-//        for (int i = 0; i < len; i++) {
-//            WordInfo info = mSubtitles.get(i);
-//            if (info.getStart() >= duration) {
-//                mSubtitles.remove(i);
-//                i--;
-//                len--;
-//            } else {
-//                if (info.getEnd() > duration) {
-//                    info.setEnd(duration);
-//                }
-//            }
-//        }
-//        // Log.d(TAG, "fix...."+mSubtitles.size()+"..........."+duration);
-//
-//        SubtitleObject mitem;
-//        len = mSubEffects.size();
-//        for (int m = 0; m < len; m++) {
-//            mitem = mSubEffects.get(m);
-//            if (mitem.getTimeLineEnd() >= duration) {
-//                mSubEffects.remove(m);
-////                mitem.recycle();
-//                m--;
-//                len--;
-//            } else {
-//                if (Utils.s2ms(mitem.getTimeLineEnd()) > duration) {
-//                    mitem.setTimelineRange(mitem.getTimeLineStart(), Utils.ms2s(duration));
-//                }
-//            }
-//        }
-//
-//        /**
-//         * 判断特效
-//         */
-//        len = mSpecails.size();
-//        for (int i = 0; i < len; i++) {
-//            WordInfo info = mSpecails.get(i);
-//            if (info.getStart() >= duration) {
-//                mSpecails.remove(i);
-//                i--;
-//                len--;
-//            } else {
-//                if (info.getEnd() > duration) {
-//                    info.setEnd(duration);
-//                }
-//            }
-//        }
-//        SpecialInfo spInfo;
-//        len = mSpEffects.size();
-//        for (int m = 0; m < len; m++) {
-//            spInfo = mSpEffects.get(m);
-//            if (spInfo.getTimelineFrom() >= duration) {
-//                mSpEffects.remove(m);
-//                m--;
-//                len--;
-//            } else {
-//                if (spInfo.getTimelineTo() > duration) {
-//                    spInfo.setTimelineTo(duration);
-//                    spInfo.fixLast(duration);
-//                }
-//            }
-//        }
-//
-//        /**
-//         *
-//         * 判断多段配乐
-//         */
-////		MoreMusicInfo moremusic;
-////		len = moreMusics.size();
-////		for (int i = 0; i < len; i++) {
-////			moremusic = moreMusics.get(i);
-////			AudioObject audioobject = moremusic.getAudioObj();
-////			if (audioobject.getTimelineFrom() >= duration) {
-////				moreMusics.remove(i);
-////				i--;
-////				len--;
-////			} else {
-////				if (audioobject.getTimelineTo() > duration) {
-////					audioobject.setTimeRange(audioobject.getTimelineFrom(),
-////							duration);
-////
-////				}
-////			}
-////		}
-//
-//        if (null != mMusicObject) {
-//            if (mMusicObject.getTimeLineEnd() > duration) {
-//                mMusicObject.setTimeLineRange(mMusicObject.getTimeLineStart(),
-//                        duration);
-//            }
-//        }
-//    }
 
     private Music mMusicObject;
 
     public void setMusicObject(Music music) {
+        Log.e(TAG, "setMusicObject: " + music.getMusicPath());
         mMusicObject = music;
     }
 
@@ -593,7 +391,6 @@ public class TempVideoParams {
      */
     public void recycleMusicObject() {
         if (null != mMusicObject) {
-            //mMusicObject.recycle();
             mMusicObject = null;
         }
     }
@@ -605,6 +402,7 @@ public class TempVideoParams {
      */
     public Music getMusic() {
         if (null != mMusicObject) {
+            Log.e(TAG, "getMusic: " + mMusicObject.getMusicPath());
             mMusicObject.setTimelineRange(Utils.ms2s(this.mHeadTime), -Utils.ms2s(this.mTailTime));
             mMusicObject.setFadeInOut(Utils.ms2s(800), Utils.ms2s(800));// 淡入淡出
             return mMusicObject;
@@ -616,13 +414,6 @@ public class TempVideoParams {
     private ArrayList<SpecialInfo> mSpEffects = new ArrayList<SpecialInfo>();
 
     public void setSubEffects(ArrayList<SubtitleObject> sublist) {
-        //
-        // for (int i = 0; i < sublist.size(); i++) {
-        //
-        // Log.e("setsubeffect...." + i, sublist.get(i).getId() + "........"
-        // + sublist.get(i).getTimeStart());
-        // }
-
         mSubEffects.clear();
         mSubEffects.addAll(sublist);
     }

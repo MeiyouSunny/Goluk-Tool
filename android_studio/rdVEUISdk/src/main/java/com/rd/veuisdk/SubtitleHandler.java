@@ -391,6 +391,8 @@ class SubtitleHandler {
                 float mdisf = getCustomSize(22);
                 winfo.setDisf(mdisf);
             }
+
+//            Log.e(TAG, "onStyleItem: "+winfo.getDisf() );
             winfo.setStyleId(info.pid);
             mAnimAdapter.setCheckItem(position);
             if (mSprCurView != null) {
@@ -1332,7 +1334,7 @@ class SubtitleHandler {
      * @param back
      */
     public void onExport(int nOutVideoWidth, int nOutVideoHeight,
-                          IExportSub back) {
+                         IExportSub back) {
 
         SubExportUtils expUtils = new SubExportUtils(mContext, mWordInfoList,
                 mLayoutWidth, mLayoutHeight);

@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -68,107 +69,138 @@ public class GlTouchView extends FrameLayout {
         mEnableMoveFilter = enable;
     }
 
+    private boolean isZoomTouch = false;
+    private int i = 0;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        int re = event.getAction();
+
         if (null != mFlignerDetector) {
             mFlignerDetector.onTouchEvent(event);
         }
-        // if (null != mZoomHandler) {
-        // mZoomHandler.onTouch(event);
-        // }
-//		Log.e("onTouchEvent", "onTouchEvent: " + re + "........"
-//				+ mEnableMoveFilter);
-        if (mEnableMoveFilter) {
-            if (re == MotionEvent.ACTION_DOWN) {
-                mDoEnd = false;
-                mXPosition = event.getX();
-                mIsMoving = false;
-                if (null != mValueAnimator) {
-                    mValueAnimator.end();
-                    mValueAnimator = null;
-                }
-                mHandler.removeMessages(MSG_END);
-            } else if (re == MotionEvent.ACTION_MOVE) {
-                float nx = event.getX();
-                if (nx - mXPosition > 10) {// 从左到右
-                    if (!mIsLeftToRight) {// 防止滑动----->右到左---->左到右
-                        mIsMoving = false;
-                        mIsLeftToRight = true;
-                    }
-                    int nleft = getLeft();
-                    mOffX = (int) (nx - mXPosition);
-                    double temp = (mOffX + 0.0f) / getWidth();
-                    if (mFilterProportion != temp) {
-                        mFilterProportion = temp;
-                        mCurrentX = mOffX;
-                        mDstRect.set(nleft, getTop(), nleft + mOffX, getBottom());
-                        mTargetX = getRight();
-                        if (!mIsMoving) {
-                            mIsMoving = true;
-                            if (null != mCcvlListener) {
-                                mCcvlListener.onFilterChangeStart(false,
-                                        mFilterProportion);
-                            }
-                        } else {
-                            if (null != mCcvlListener) {
-                                mCcvlListener.onFilterChanging(false,
-                                        mFilterProportion);
-                            }
-                        }
-                        invalidate();
-                    }
-
-                } else if (mXPosition - nx > 10) {// 从右到左
-                    if (mIsLeftToRight) {// 防止滑动---左到右-->右到左
-                        mIsMoving = false;
-                        mIsLeftToRight = false;
-                    }
-                    mTargetX = getLeft();
-                    mOffX = (int) (mXPosition - nx);
-                    double temp = 1 - ((mOffX + 0.0) / getWidth());
-                    if (mFilterProportion != temp) {
-                        mFilterProportion = temp;
-                        mCurrentX = getWidth() - mOffX;
-                        mDstRect.set(mCurrentX, getTop(), getRight(), getBottom());
-                        if (!mIsMoving) {
-                            mIsMoving = true;
-                            if (null != mCcvlListener) {
-                                mCcvlListener.onFilterChangeStart(true,
-                                        mFilterProportion);
-                            }
-                        } else {
-                            if (null != mCcvlListener) {
-                                mCcvlListener.onFilterChanging(true,
-                                        mFilterProportion);
-                            }
-                        }
-
-                        invalidate();
-                    }
-                }
-            } else if (re == MotionEvent.ACTION_CANCEL
-                    || re == MotionEvent.ACTION_UP) {
-
-                float poffx = Math.abs(event.getX() - mXPosition);
-                if ((mDoEnd && poffx >= getWidth() / 5)
-                        || (!mDoEnd && poffx > getWidth() / 2)) {
-                    if (mIsMoving) {// 松开手势时，执行切换
-                        getNewAnimationSet(mCurrentX, mTargetX, true);
-                    }
-                } else {
-                    if (mIsMoving) {// 松开手势时，取消切换
-                        if (mIsLeftToRight) {
-                            mTargetX = 0;
-                        } else {
-                            mTargetX = getRight();
-                        }
-                        getNewAnimationSet(mCurrentX, mTargetX, false);
-                    }
-                }
-                mFocuView.removeAll();
+        int re = event.getAction();
+        if (re == MotionEvent.ACTION_DOWN) {
+            i = 0;
+        }
+        i++;
+        if (i == 9) {
+            //新增i ==9防止双指时，刚开始的几次取MotionEventCompat.getPointerCount(event)值！=2
+            int pCount = MotionEventCompat.getPointerCount(event);
+            if (pCount > 1) {
+                isZoomTouch = true;
+            } else {
+                isZoomTouch = false;
             }
+        }
+        if (i < 9) {
+            return true;
+        }
+        if (isZoomTouch) {
+            //缩放相机
+            if (null != mZoomHandler) {
+                mZoomHandler.onTouch(event);
+            }
+        } else {
+//
+//            if (pCount <= 1 || (re == MotionEvent.ACTION_CANCEL || re == MotionEvent.ACTION_UP)) {
+            //左右滑动切换相机滤镜
+
+            if (mEnableMoveFilter) {
+                if (re == MotionEvent.ACTION_DOWN) {
+                    mDoEnd = false;
+                    mXPosition = event.getX();
+                    mIsMoving = false;
+                    if (null != mValueAnimator) {
+                        mValueAnimator.end();
+                        mValueAnimator = null;
+                    }
+                    mHandler.removeMessages(MSG_END);
+                } else if (re == MotionEvent.ACTION_MOVE) {
+                    float nx = event.getX();
+                    if (nx - mXPosition > 10) {// 从左到右
+                        if (!mIsLeftToRight) {// 防止滑动----->右到左---->左到右
+                            mIsMoving = false;
+                            mIsLeftToRight = true;
+                        }
+                        int nleft = getLeft();
+                        mOffX = (int) (nx - mXPosition);
+                        double temp = (mOffX + 0.0f) / getWidth();
+                        if (mFilterProportion != temp) {
+                            mFilterProportion = temp;
+                            mCurrentX = mOffX;
+                            mDstRect.set(nleft, getTop(), nleft + mOffX, getBottom());
+                            mTargetX = getRight();
+                            if (!mIsMoving) {
+                                mIsMoving = true;
+                                if (null != mCcvlListener) {
+                                    mCcvlListener.onFilterChangeStart(false,
+                                            mFilterProportion);
+                                }
+                            } else {
+                                if (null != mCcvlListener) {
+                                    mCcvlListener.onFilterChanging(false,
+                                            mFilterProportion);
+                                }
+                            }
+                            invalidate();
+                        }
+
+                    } else if (mXPosition - nx > 10) {// 从右到左
+                        if (mIsLeftToRight) {// 防止滑动---左到右-->右到左
+                            mIsMoving = false;
+                            mIsLeftToRight = false;
+                        }
+                        mTargetX = getLeft();
+                        mOffX = (int) (mXPosition - nx);
+                        double temp = 1 - ((mOffX + 0.0) / getWidth());
+                        if (mFilterProportion != temp) {
+                            mFilterProportion = temp;
+                            mCurrentX = getWidth() - mOffX;
+                            mDstRect.set(mCurrentX, getTop(), getRight(), getBottom());
+                            if (!mIsMoving) {
+                                mIsMoving = true;
+                                if (null != mCcvlListener) {
+                                    mCcvlListener.onFilterChangeStart(true,
+                                            mFilterProportion);
+                                }
+                            } else {
+                                if (null != mCcvlListener) {
+                                    mCcvlListener.onFilterChanging(true,
+                                            mFilterProportion);
+                                }
+                            }
+
+                            invalidate();
+                        }
+                    }
+                } else if (re == MotionEvent.ACTION_CANCEL
+                        || re == MotionEvent.ACTION_UP) {
+
+                    float poffx = Math.abs(event.getX() - mXPosition);
+                    if ((mDoEnd && poffx >= getWidth() / 5)
+                            || (!mDoEnd && poffx > getWidth() / 2)) {
+                        if (mIsMoving) {// 松开手势时，执行切换
+                            getNewAnimationSet(mCurrentX, mTargetX, true);
+                        }
+                    } else {
+                        if (mIsMoving) {// 松开手势时，取消切换
+                            if (mIsLeftToRight) {
+                                mTargetX = 0;
+                            } else {
+                                mTargetX = getRight();
+                            }
+                            getNewAnimationSet(mCurrentX, mTargetX, false);
+                        }
+                    }
+                    mFocuView.removeAll();
+                }
+            }
+
+        }
+
+        if (re == MotionEvent.ACTION_UP || re == MotionEvent.ACTION_CANCEL) {
+            isZoomTouch = false;
         }
         return true;
     }

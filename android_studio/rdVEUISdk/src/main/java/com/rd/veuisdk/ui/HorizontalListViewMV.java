@@ -560,7 +560,7 @@ public class HorizontalListViewMV extends HorizontalScrollView implements
     private boolean isFastRepeatClick() {
         long time = System.currentTimeMillis();
         long timeD = time - lastClickTime;
-        if (0 < timeD && timeD < 800) {
+        if (0 < timeD && timeD < 10) {
             return true;
         }
         lastClickTime = time;

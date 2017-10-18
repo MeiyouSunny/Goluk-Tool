@@ -7,9 +7,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="47dp"
-        android:gravity="center_vertical"
+        android:layout_height="@dimen/music_bar_height"
         android:clipChildren="false"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <Button
@@ -28,8 +28,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
             android:clipChildren="false"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView

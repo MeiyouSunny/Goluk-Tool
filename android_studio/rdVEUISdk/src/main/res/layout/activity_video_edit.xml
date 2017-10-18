@@ -1,5 +1,4 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:verseekbar="http://schemas.android.com/apk/res-auto"
              android:id="@+id/roottreeview"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
@@ -27,16 +26,17 @@
                     android:layout_height="wrap_content"
                     android:background="@color/black">
 
+                    <com.rd.vecore.VirtualVideoView
+                        android:id="@+id/epvPreview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
                     <com.rd.lib.ui.PreviewFrameLayout
                         android:id="@+id/rlPreview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true">
 
-                        <com.rd.vecore.VirtualVideoView
-                            android:id="@+id/epvPreview"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"/>
 
                         <FrameLayout
                             android:id="@+id/linear_words"

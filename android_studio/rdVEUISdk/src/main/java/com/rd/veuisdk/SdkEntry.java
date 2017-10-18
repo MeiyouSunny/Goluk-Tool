@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.RectF;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -24,10 +23,8 @@ import com.rd.vecore.RdVECore;
 import com.rd.vecore.VirtualVideo;
 import com.rd.vecore.exception.InvalidArgumentException;
 import com.rd.vecore.listener.ExportListener;
-import com.rd.vecore.models.AspectRatioFitMode;
 import com.rd.vecore.models.MediaObject;
 import com.rd.vecore.models.MediaType;
-import com.rd.vecore.models.PermutationMode;
 import com.rd.vecore.models.Scene;
 import com.rd.vecore.models.Trailer;
 import com.rd.vecore.models.VideoConfig;
@@ -819,18 +816,18 @@ public final class SdkEntry {
      * @param trailer        视频片尾
      * @param exportListener 视频导出回调
      */
-    public static void exportVideo(Context context, VideoConfig videoConfig, ArrayList<String> videoList, String outPath, Watermark watermark, Trailer trailer, final ExportListener exportListener) throws InvalidArgumentException {
-        if ((null != context) && !TextUtils.isEmpty(outPath) && (null != videoList && videoList.size() > 0)) {
+    public static void exportVideo(Context context, VideoConfig videoConfig,
+                                   ArrayList<String> videoList, String outPath,
+                                   Watermark watermark, Trailer trailer,
+                                   final ExportListener exportListener) throws InvalidArgumentException {
+        if ((null != context) && !TextUtils.isEmpty(outPath)
+                && (null != videoList && videoList.size() > 0)) {
 
             Scene scene = VirtualVideo.createScene();
             int len = videoList.size();
             for (int i = 0; i < len; i++) {
-                MediaObject media = new MediaObject(videoList.get(i));
-                media.setShowRectF(new RectF(0, 0, 1f, 1f));
-                media.setAspectRatioFitMode(AspectRatioFitMode.KEEP_ASPECTRATIO_EXPANDING);
-                scene.addMedia(media);
+                scene.addMedia(videoList.get(i));
             }
-            scene.setPermutationMode(PermutationMode.LINEAR_MODE);
 
             exportVideo = new VirtualVideo();
             exportVideo.addScene(scene);
