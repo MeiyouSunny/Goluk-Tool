@@ -290,7 +290,11 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
         String tag2 = (String) mTMLayout2.getTag();
         if (mFragmentAlbum.selectMode) {
             ArrayList<String> tempList = new ArrayList<>();
-            tempList.add(tag1);
+            if (columnIndex == LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_FIRST) {
+                tempList.add(tag1);
+            } else {
+                tempList.add(tag2);
+            }
             SdkEntry.onCustomizeAlbum(getContext(),tempList);
             getActivity().finish();
         } else if (mFragmentAlbum.getEditState()) {
