@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "25.0.2"
+    buildToolsVersion '26.0.2'
     dexOptions {
         jumboMode = true
         javaMaxHeapSize "4g"
@@ -17,8 +17,11 @@ android {
             abiFilters 'armeabi'
         }
     }
+
+    flavorDimensions "default"
     productFlavors {
         internal {
+            dimension "default"
             applicationId "cn.com.mobnote.golukmobile"
             resValue 'string', 'FacebookID', '"771491992987541"'
             resValue 'string', 'ZhugeAppkey', '"1eda80f18ad84c5d8c5add807fc1664f"'
@@ -29,6 +32,7 @@ android {
         }
 
         international {
+            dimension "default"
             applicationId "com.mobnote.golukmobile"
             resValue 'string', 'FacebookID', '"1693308594241132"'
             resValue 'string', 'ZhugeAppkey', '"373eb7ba28214c33810577442304d9fa"'
