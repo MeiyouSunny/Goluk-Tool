@@ -38,9 +38,9 @@ public interface ILive {
     public static final String KEY_LIVE_CONTINUE = "key_live_continue";
     public static final String KEY_LIVE_SETTING_DATA = "key_live_setting_data";
 
-    public static final int[] shootImg = {R.drawable.live_btn_6s_record, R.drawable.live_btn_5s_record,
-            R.drawable.live_btn_4s_record, R.drawable.live_btn_3s_record, R.drawable.live_btn_2s_record,
-            R.drawable.live_btn_1s_record};
+//    public static final int[] shootImg = {R.drawable.live_btn_6s_record, R.drawable.live_btn_5s_record,
+//            R.drawable.live_btn_4s_record, R.drawable.live_btn_3s_record, R.drawable.live_btn_2s_record,
+//            R.drawable.live_btn_1s_record};
 
     public static final int[] mHeadImg = {0, R.drawable.editor_boy_one, R.drawable.editor_boy_two,
             R.drawable.editor_boy_three, R.drawable.editor_girl_one, R.drawable.editor_girl_two,

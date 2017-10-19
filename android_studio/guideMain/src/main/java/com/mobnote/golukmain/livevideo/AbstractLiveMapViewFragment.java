@@ -24,9 +24,9 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
  * Created by leege100 on 2016/7/19.
  */
 abstract class AbstractLiveMapViewFragment extends Fragment implements ILiveMap, ILiveUIChangeListener, ILocationFn, View.OnClickListener, IRequestResultListener {
-    public static final int[] shootImg = {R.drawable.live_btn_6s_record, R.drawable.live_btn_5s_record,
-            R.drawable.live_btn_4s_record, R.drawable.live_btn_3s_record, R.drawable.live_btn_2s_record,
-            R.drawable.live_btn_1s_record};
+//    public static final int[] shootImg = {R.drawable.live_btn_6s_record, R.drawable.live_btn_5s_record,
+//            R.drawable.live_btn_4s_record, R.drawable.live_btn_3s_record, R.drawable.live_btn_2s_record,
+//            R.drawable.live_btn_1s_record};
 
     public static final int[] mHeadImg = {0, R.drawable.editor_boy_one, R.drawable.editor_boy_two,
             R.drawable.editor_boy_three, R.drawable.editor_girl_one, R.drawable.editor_girl_two,

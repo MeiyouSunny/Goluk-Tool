@@ -180,27 +180,27 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 
     String[] mMusicNames;
     final int[] mMusicCoversNormal = {
-            R.drawable.no_music,
-            R.drawable.music_wave,
-            R.drawable.music_discover,
-            R.drawable.music_humor,
-            R.drawable.music_memory,
-            R.drawable.music_crowd,
-            R.drawable.music_travel,
-            R.drawable.music_fresh,
-            R.drawable.music_wild
+//            R.drawable.no_music,
+//            R.drawable.music_wave,
+//            R.drawable.music_discover,
+//            R.drawable.music_humor,
+//            R.drawable.music_memory,
+//            R.drawable.music_crowd,
+//            R.drawable.music_travel,
+//            R.drawable.music_fresh,
+//            R.drawable.music_wild
     };
 
     final int[] mMusicCoversSelected = {
             R.drawable.ic_ae_cd_selected,
-            R.drawable.music_selected_wave,
-            R.drawable.music_selected_discover,
-            R.drawable.music_selected_humor,
-            R.drawable.music_selected_memory,
-            R.drawable.music_selected_crowd,
-            R.drawable.music_selected_travel,
-            R.drawable.music_selected_fresh,
-            R.drawable.music_selected_wild
+//            R.drawable.music_selected_wave,
+//            R.drawable.music_selected_discover,
+//            R.drawable.music_selected_humor,
+//            R.drawable.music_selected_memory,
+//            R.drawable.music_selected_crowd,
+//            R.drawable.music_selected_travel,
+//            R.drawable.music_selected_fresh,
+//            R.drawable.music_selected_wild
     };
 
     public int getTailWidth() {
